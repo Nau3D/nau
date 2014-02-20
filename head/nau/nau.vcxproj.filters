@@ -1,0 +1,1016 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\geometry">
+      <UniqueIdentifier>{2059a5be-436c-40e9-bd81-1003f85016bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loader">
+      <UniqueIdentifier>{633ce31f-81ff-49fb-beb3-ae5f0fe50277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material">
+      <UniqueIdentifier>{da580031-3073-4f44-a328-72023003cf69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{15fdb1a2-5a3f-4842-8a8f-346351195f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render">
+      <UniqueIdentifier>{9c7124ea-8c6e-4e77-a004-10149fc839b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\opengl">
+      <UniqueIdentifier>{59c66afc-fe07-4b24-a2e2-371639e2a34a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\resource">
+      <UniqueIdentifier>{1a029650-639a-4a35-a1c0-3b04ba49c418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{65b7c584-74f9-4204-ba4e-b6598200d052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\system">
+      <UniqueIdentifier>{d1b65763-adcc-40b3-b35a-6cafbd3b9d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\world">
+      <UniqueIdentifier>{26f3088a-0502-4e2a-9223-6a47109247d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\debug">
+      <UniqueIdentifier>{b321e896-4b75-4edb-b494-007d5ac5f944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\event">
+      <UniqueIdentifier>{16bfeae6-9449-4790-8ea5-d564f6c84750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Source Files\render\optix">
+      <UniqueIdentifier>{2dd6d8f3-2d35-4172-b707-9ec420118505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OPTIX">
+      <UniqueIdentifier>{14c68e0a-3c69-4513-bdd2-1b86bdc8d583}</UniqueIdentifier>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\nau\clogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\nau.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\enums.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\slogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\axis.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\bbox.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\boundingbox.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\boundingvolumefactory.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\box.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\frustum.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\mesh.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\meshbones.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\meshposeanim.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\meshposekeyframe.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\meshwithpose.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\poseoffset.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\primitive.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\quad.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\skeletonanim.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\skeletonbone.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\sphere.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\cboloader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\deviltextureloader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\objLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\ogremeshloader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\projectloader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\textureloader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\colormaterial.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\material.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materialgroup.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materialid.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materiallib.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materiallibmanager.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\programvalue.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\teximage.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\texturemat.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\mat3.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\mat4.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\plane.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\randomgen.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\simpletransform.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\spherical.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\transformfactory.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\vec2.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\vec3.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\vec4.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\depthmappass.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\indexdata.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\iprogram.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\irenderer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\istate.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\materialsortrenderqueue.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\pass.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passfactory.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\pipeline.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\quadpass.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\renderfactory.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\rendermanager.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\renderqueuefactory.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\rendertarget.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\texture.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\textureCubeMap.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\vertexdata.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\viewport.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glindexarray.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glprogram.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glrenderer.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glrendertarget.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glstate.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glteximage.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\gltexture.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\gltextureCubeMap.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\gluniform.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glvertexarray.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\resource\resourcemanager.cpp">
+      <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\resource\texturemanager.cpp">
+      <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\camera.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\geometryobject.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\light.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\lightFactory.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\lightWithSwitch.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octree.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreenode.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreescene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\scene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneaux.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\scenefactory.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneobject.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneobjectfactory.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneposeobject.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneposes.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneskeleton.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\system\file.cpp">
+      <Filter>Source Files\system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\system\fileutil.cpp">
+      <Filter>Source Files\system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\system\textfile.cpp">
+      <Filter>Source Files\system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\system\textutil.cpp">
+      <Filter>Source Files\system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\world\bulletworld.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\world\naubulletmotionstate.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\world\physicalobject.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\world\worldfactory.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\debug\profile.cpp">
+      <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\cameraMotion.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\cameraOrientation.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventCameraMotion.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventCameraOrientation.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventFactory.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventFloat.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventInt.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventManager.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventString.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventVec3.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\eventVec4.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\interpolatorFactory.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\listenerType.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\objectAnimation.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\positionInterpolator.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\proximitySensor.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\route.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\sensorFactory.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\timeSensor.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\event\touchSensor.cpp">
+      <Filter>Source Files\event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\assimploader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\resource\font.cpp">
+      <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\resource\fontmanager.cpp">
+      <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\fontxmlloader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\profilerpass.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\distancemap.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeByMat.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeByMatnode.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeByMatscene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passOptix.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixMaterialLib.cpp">
+      <Filter>Source Files\render\optix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixRenderer.cpp">
+      <Filter>Source Files\render\optix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixGeometry.cpp">
+      <Filter>Source Files\render\optix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixBufferLib.cpp">
+      <Filter>Source Files\render\optix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixTextureLib.cpp">
+      <Filter>Source Files\render\optix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixMaterial.cpp">
+      <Filter>Source Files\render\optix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\square.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\textureSampler.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\bvec4.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\imageTexture.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passCompute.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\nau\clogger.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\config.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\enums.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\errors.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\slogger.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\axis.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\bbox.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\boundingbox.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\boundingvolumefactory.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\box.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\frustum.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\iboundingvolume.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\mesh.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\meshbones.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\meshposeanim.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\meshwithpose.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\poseoffset.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\primitive.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\quad.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\skeletonanim.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\skeletonbone.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\sphere.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\cboloader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\deviltextureloader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\objLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\projectloader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\colormaterial.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\imaterialgroup.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\material.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materialgroup.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materialid.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materiallib.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materiallibmanager.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\programvalue.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\texturemat.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\itransform.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\mat3.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\mat4.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\mtrand.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\plane.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\randomgen.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\simpletransform.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\transformfactory.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\utils.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vec2.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vec3.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vec4.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\depthmappass.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\indexdata.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iprogram.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\irenderable.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\irenderer.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\irenderqueue.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\istate.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\materialsortrenderqueue.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\pass.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passfactory.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\pipeline.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\renderfactory.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\rendermanager.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\renderqueuefactory.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\rendertarget.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\texture.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\textureCubeMap.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\vertexdata.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\viewport.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glindexarray.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glprogram.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glrenderer.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glrendertarget.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glstate.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glteximage.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\gltexture.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\gltextureCubeMap.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\gluniform.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glvertexarray.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\resource\resourcemanager.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\resource\texturemanager.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\camera.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\geometryobject.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\iscene.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\iscenepartitioned.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\light.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\lightFactory.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\lightWithSwitch.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octree.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreenode.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreescene.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\scene.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneaux.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\scenefactory.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneobject.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneobjectfactory.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneposeobject.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneposes.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneskeleton.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\system\dirent.h">
+      <Filter>Source Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\system\file.h">
+      <Filter>Source Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\system\fileutil.h">
+      <Filter>Source Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\system\textfile.h">
+      <Filter>Source Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\system\textutil.h">
+      <Filter>Source Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\bulletworld.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\naubulletmotionstate.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\iworld.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\physicalobject.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\worldfactory.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\debug\profile.h">
+      <Filter>Source Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\cameraMotion.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\cameraOrientation.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventCameraMotion.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventCameraOrientation.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventFactory.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventFloat.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventInt.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventManager.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventString.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventVec3.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\eventVec4.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\iEventData.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\ilistener.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\interpolator.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\interpolatorFactory.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\listenerType.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\objectAnimation.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\positionInterpolator.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\proximitySensor.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\route.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\sensor.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\sensorFactory.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\timeSensor.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\assimploader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\resource\font.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\resource\fontmanager.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\fontxmlloader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\profilerpass.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\distancemap.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeByMat.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeByMatnode.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeByMatscene.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passOptix.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixMaterialLib.h">
+      <Filter>Source Files\render\optix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixRenderer.h">
+      <Filter>Source Files\render\optix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixGeometry.h">
+      <Filter>Source Files\render\optix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixBufferLib.h">
+      <Filter>Source Files\render\optix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixTextureLib.h">
+      <Filter>Source Files\render\optix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixMaterial.h">
+      <Filter>Source Files\render\optix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\square.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\textureSampler.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\textureloader.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\bimap.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\attribute.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\attributeValues.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\bvec4.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\imageTexture.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passCompute.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\patchLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="..\src\nau\geometry\meshposekeyframe.h">
+      <Filter>Source Files\geometry</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\src\nau\loader\ogremeshloader.h">
+      <Filter>Source Files\loader</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\src\nau\material\teximage.h">
+      <Filter>Source Files\material</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\src\nau\math\spherical.h">
+      <Filter>Source Files\math</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\src\nau\render\quadpass.h">
+      <Filter>Source Files\render</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\src\nau\event\touchSensor.h">
+      <Filter>Source Files\event</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\optix\common.cu">
+      <Filter>OPTIX</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\optix\deferredShadows.cu">
+      <Filter>OPTIX</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\optix\rtvssm.cu">
+      <Filter>OPTIX</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

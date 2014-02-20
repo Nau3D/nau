@@ -1,0 +1,627 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Optix|Win32">
+      <Configuration>Debug Optix</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Optix|Win32">
+      <Configuration>Release Optix</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B2A55A68-A417-4C52-BFE7-8193BA388ABF}</ProjectGuid>
+    <RootNamespace>curitiba_new</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(LibraryPath)</LibraryPath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">nau</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nau_with_optix</TargetName>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
+    <TargetName>nauOptix_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>nau_d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nau_d.lib</OutputFile>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)nau_d.lib d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../src;C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.0\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;CURITIBA_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nauOptix_d.lib</OutputFile>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)nauOptix_d.lib" d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;GLEW_STATIC;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nau.lib</OutputFile>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)nau.lib d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../src;C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;CURITIBA_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nauOptix.lib</OutputFile>
+      <AdditionalDependencies>optix.1.lib</AdditionalDependencies>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)nauOptix.lib" d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\curitiba\clogger.cpp" />
+    <ClCompile Include="..\src\curitiba\curitiba.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\enums.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\distancemap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\geometry\square.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\assimploader.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\fontxmlloader.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\patchLoader.cpp" />
+    <ClCompile Include="..\src\curitiba\material\textureSampler.cpp" />
+    <ClCompile Include="..\src\curitiba\math\bvec4.cpp" />
+    <ClCompile Include="..\src\curitiba\render\imageTexture.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\glimagetexture.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\gltextureMS.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\gltexturesampler.cpp" />
+    <ClCompile Include="..\src\curitiba\render\optix\optixBufferLib.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\render\optix\optixGeometry.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\render\optix\optixMaterial.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\render\optix\optixMaterialLib.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\render\optix\optixRenderer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\render\optix\optixTextureLib.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\render\passCompute.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\render\passOptix.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\render\profilerpass.cpp" />
+    <ClCompile Include="..\src\curitiba\resource\font.cpp" />
+    <ClCompile Include="..\src\curitiba\resource\fontmanager.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\octreeByMat.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\octreeByMatnode.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\octreeByMatscene.cpp" />
+    <ClCompile Include="..\src\curitiba\slogger.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\axis.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\bbox.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\boundingbox.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\boundingvolumefactory.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\box.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\frustum.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\mesh.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\meshbones.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\meshposeanim.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\meshposekeyframe.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\curitiba\geometry\meshwithpose.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\poseoffset.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\primitive.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\quad.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\skeletonanim.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\skeletonbone.cpp" />
+    <ClCompile Include="..\src\curitiba\geometry\sphere.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\cboloader.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\deviltextureloader.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\objLoader.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\ogremeshloader.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\projectloader.cpp" />
+    <ClCompile Include="..\src\curitiba\loader\textureloader.cpp" />
+    <ClCompile Include="..\src\curitiba\material\colormaterial.cpp" />
+    <ClCompile Include="..\src\curitiba\material\material.cpp" />
+    <ClCompile Include="..\src\curitiba\material\materialgroup.cpp" />
+    <ClCompile Include="..\src\curitiba\material\materialid.cpp" />
+    <ClCompile Include="..\src\curitiba\material\materiallib.cpp" />
+    <ClCompile Include="..\src\curitiba\material\materiallibmanager.cpp" />
+    <ClCompile Include="..\src\curitiba\material\programvalue.cpp" />
+    <ClCompile Include="..\src\curitiba\material\teximage.cpp" />
+    <ClCompile Include="..\src\curitiba\material\texturemat.cpp" />
+    <ClCompile Include="..\src\curitiba\math\mat3.cpp" />
+    <ClCompile Include="..\src\curitiba\math\mat4.cpp" />
+    <ClCompile Include="..\src\curitiba\math\plane.cpp" />
+    <ClCompile Include="..\src\curitiba\math\randomgen.cpp" />
+    <ClCompile Include="..\src\curitiba\math\simpletransform.cpp" />
+    <ClCompile Include="..\src\curitiba\math\spherical.cpp" />
+    <ClCompile Include="..\src\curitiba\math\transformfactory.cpp" />
+    <ClCompile Include="..\src\curitiba\math\vec2.cpp" />
+    <ClCompile Include="..\src\curitiba\math\vec3.cpp" />
+    <ClCompile Include="..\src\curitiba\math\vec4.cpp" />
+    <ClCompile Include="..\src\curitiba\render\depthmappass.cpp" />
+    <ClCompile Include="..\src\curitiba\render\indexdata.cpp" />
+    <ClCompile Include="..\src\curitiba\render\iprogram.cpp" />
+    <ClCompile Include="..\src\curitiba\render\irenderer.cpp" />
+    <ClCompile Include="..\src\curitiba\render\istate.cpp" />
+    <ClCompile Include="..\src\curitiba\render\materialsortrenderqueue.cpp" />
+    <ClCompile Include="..\src\curitiba\render\pass.cpp" />
+    <ClCompile Include="..\src\curitiba\render\passfactory.cpp" />
+    <ClCompile Include="..\src\curitiba\render\pipeline.cpp" />
+    <ClCompile Include="..\src\curitiba\render\quadpass.cpp" />
+    <ClCompile Include="..\src\curitiba\render\renderfactory.cpp" />
+    <ClCompile Include="..\src\curitiba\render\rendermanager.cpp" />
+    <ClCompile Include="..\src\curitiba\render\renderqueuefactory.cpp" />
+    <ClCompile Include="..\src\curitiba\render\rendertarget.cpp" />
+    <ClCompile Include="..\src\curitiba\render\texture.cpp" />
+    <ClCompile Include="..\src\curitiba\render\textureCubeMap.cpp" />
+    <ClCompile Include="..\src\curitiba\render\vertexdata.cpp" />
+    <ClCompile Include="..\src\curitiba\render\viewport.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\glindexarray.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\glprogram.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\glrenderer.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\glrendertarget.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\glstate.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\glteximage.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\gltexture.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\gltextureCubeMap.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\gluniform.cpp" />
+    <ClCompile Include="..\src\curitiba\render\opengl\glvertexarray.cpp" />
+    <ClCompile Include="..\src\curitiba\resource\resourcemanager.cpp" />
+    <ClCompile Include="..\src\curitiba\resource\texturemanager.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\camera.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\geometryobject.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\light.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\lightFactory.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\lightWithSwitch.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\octree.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\octreenode.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\octreescene.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\scene.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\sceneaux.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\scenefactory.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\sceneobject.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\sceneobjectfactory.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\sceneposeobject.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\sceneposes.cpp" />
+    <ClCompile Include="..\src\curitiba\scene\sceneskeleton.cpp" />
+    <ClCompile Include="..\src\curitiba\system\file.cpp" />
+    <ClCompile Include="..\src\curitiba\system\fileutil.cpp" />
+    <ClCompile Include="..\src\curitiba\system\textfile.cpp" />
+    <ClCompile Include="..\src\curitiba\system\textutil.cpp" />
+    <ClCompile Include="..\src\curitiba\world\bulletworld.cpp" />
+    <ClCompile Include="..\src\curitiba\world\curitibabulletmotionstate.cpp" />
+    <ClCompile Include="..\src\curitiba\world\physicalobject.cpp" />
+    <ClCompile Include="..\src\curitiba\world\worldfactory.cpp" />
+    <ClCompile Include="..\src\curitiba\debug\profile.cpp" />
+    <ClCompile Include="..\src\curitiba\event\cameraMotion.cpp" />
+    <ClCompile Include="..\src\curitiba\event\cameraOrientation.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventCameraMotion.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventCameraOrientation.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventFactory.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventFloat.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventInt.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventManager.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventString.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventVec3.cpp" />
+    <ClCompile Include="..\src\curitiba\event\eventVec4.cpp" />
+    <ClCompile Include="..\src\curitiba\event\interpolatorFactory.cpp" />
+    <ClCompile Include="..\src\curitiba\event\listenerType.cpp" />
+    <ClCompile Include="..\src\curitiba\event\objectAnimation.cpp" />
+    <ClCompile Include="..\src\curitiba\event\positionInterpolator.cpp" />
+    <ClCompile Include="..\src\curitiba\event\proximitySensor.cpp" />
+    <ClCompile Include="..\src\curitiba\event\route.cpp" />
+    <ClCompile Include="..\src\curitiba\event\sensorFactory.cpp" />
+    <ClCompile Include="..\src\curitiba\event\timeSensor.cpp" />
+    <ClCompile Include="..\src\curitiba\event\touchSensor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\curitiba\attribute.h" />
+    <ClInclude Include="..\src\curitiba\attributeValues.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\bimap.hpp" />
+    <ClInclude Include="..\src\curitiba\clogger.h" />
+    <ClInclude Include="..\src\curitiba\config.h" />
+    <ClInclude Include="..\src\curitiba.h" />
+    <ClInclude Include="..\src\curitiba\enums.h" />
+    <ClInclude Include="..\src\curitiba\errors.h" />
+    <ClInclude Include="..\src\curitiba\geometry\distancemap.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\geometry\square.h" />
+    <ClInclude Include="..\src\curitiba\loader\assimploader.h" />
+    <ClInclude Include="..\src\curitiba\loader\fontxmlloader.h" />
+    <ClInclude Include="..\src\curitiba\loader\patchLoader.h" />
+    <ClInclude Include="..\src\curitiba\material\textureSampler.h" />
+    <ClInclude Include="..\src\curitiba\math\bvec4.h" />
+    <ClInclude Include="..\src\curitiba\render\imageTexture.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\glimagetexture.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\gltextureMS.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\gltexturesampler.h" />
+    <ClInclude Include="..\src\curitiba\render\optix\optixBufferLib.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\render\optix\optixGeometry.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\render\optix\optixMaterial.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\render\optix\optixMaterialLib.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\render\optix\optixRenderer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\render\optix\optixTextureLib.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\render\passCompute.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\curitiba\render\passOptix.h" />
+    <ClInclude Include="..\src\curitiba\render\profilerpass.h" />
+    <ClInclude Include="..\src\curitiba\resource\font.h" />
+    <ClInclude Include="..\src\curitiba\resource\fontmanager.h" />
+    <ClInclude Include="..\src\curitiba\scene\octreeByMat.h" />
+    <ClInclude Include="..\src\curitiba\scene\octreeByMatnode.h" />
+    <ClInclude Include="..\src\curitiba\scene\octreeByMatscene.h" />
+    <ClInclude Include="..\src\curitiba\slogger.h" />
+    <ClInclude Include="..\src\curitiba\geometry\axis.h" />
+    <ClInclude Include="..\src\curitiba\geometry\bbox.h" />
+    <ClInclude Include="..\src\curitiba\geometry\boundingbox.h" />
+    <ClInclude Include="..\src\curitiba\geometry\boundingvolumefactory.h" />
+    <ClInclude Include="..\src\curitiba\geometry\box.h" />
+    <ClInclude Include="..\src\curitiba\geometry\frustum.h" />
+    <ClInclude Include="..\src\curitiba\geometry\iboundingvolume.h" />
+    <ClInclude Include="..\src\curitiba\geometry\mesh.h" />
+    <ClInclude Include="..\src\curitiba\geometry\meshbones.h" />
+    <ClInclude Include="..\src\curitiba\geometry\meshposeanim.h" />
+    <CustomBuildStep Include="..\src\curitiba\geometry\meshposekeyframe.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="..\src\curitiba\geometry\meshwithpose.h" />
+    <ClInclude Include="..\src\curitiba\geometry\poseoffset.h" />
+    <ClInclude Include="..\src\curitiba\geometry\primitive.h" />
+    <ClInclude Include="..\src\curitiba\geometry\quad.h" />
+    <ClInclude Include="..\src\curitiba\geometry\skeletonanim.h" />
+    <ClInclude Include="..\src\curitiba\geometry\skeletonbone.h" />
+    <ClInclude Include="..\src\curitiba\geometry\sphere.h" />
+    <ClInclude Include="..\src\curitiba\loader\cboloader.h" />
+    <ClInclude Include="..\src\curitiba\loader\deviltextureloader.h" />
+    <ClInclude Include="..\src\curitiba\loader\objLoader.h" />
+    <CustomBuildStep Include="..\src\curitiba\loader\ogremeshloader.h" />
+    <ClInclude Include="..\src\curitiba\loader\projectloader.h" />
+    <ClInclude Include="..\src\curitiba\loader\textureloader.h" />
+    <ClInclude Include="..\src\curitiba\material\colormaterial.h" />
+    <ClInclude Include="..\src\curitiba\material\imaterialgroup.h" />
+    <ClInclude Include="..\src\curitiba\material\material.h" />
+    <ClInclude Include="..\src\curitiba\material\materialgroup.h" />
+    <ClInclude Include="..\src\curitiba\material\materialid.h" />
+    <ClInclude Include="..\src\curitiba\material\materiallib.h" />
+    <ClInclude Include="..\src\curitiba\material\materiallibmanager.h" />
+    <ClInclude Include="..\src\curitiba\material\programvalue.h" />
+    <CustomBuildStep Include="..\src\curitiba\material\teximage.h" />
+    <ClInclude Include="..\src\curitiba\material\texturemat.h" />
+    <ClInclude Include="..\src\curitiba\math\itransform.h" />
+    <ClInclude Include="..\src\curitiba\math\mat3.h" />
+    <ClInclude Include="..\src\curitiba\math\mat4.h" />
+    <ClInclude Include="..\src\curitiba\math\mtrand.h" />
+    <ClInclude Include="..\src\curitiba\math\plane.h" />
+    <ClInclude Include="..\src\curitiba\math\randomgen.h" />
+    <ClInclude Include="..\src\curitiba\math\simpletransform.h" />
+    <CustomBuildStep Include="..\src\curitiba\math\spherical.h" />
+    <ClInclude Include="..\src\curitiba\math\transformfactory.h" />
+    <ClInclude Include="..\src\curitiba\math\utils.h" />
+    <ClInclude Include="..\src\curitiba\math\vec2.h" />
+    <ClInclude Include="..\src\curitiba\math\vec3.h" />
+    <ClInclude Include="..\src\curitiba\math\vec4.h" />
+    <ClInclude Include="..\src\curitiba\render\depthmappass.h" />
+    <ClInclude Include="..\src\curitiba\render\indexdata.h" />
+    <ClInclude Include="..\src\curitiba\render\iprogram.h" />
+    <ClInclude Include="..\src\curitiba\render\irenderable.h" />
+    <ClInclude Include="..\src\curitiba\render\irenderer.h" />
+    <ClInclude Include="..\src\curitiba\render\irenderqueue.h" />
+    <ClInclude Include="..\src\curitiba\render\istate.h" />
+    <ClInclude Include="..\src\curitiba\render\materialsortrenderqueue.h" />
+    <ClInclude Include="..\src\curitiba\render\pass.h" />
+    <ClInclude Include="..\src\curitiba\render\passfactory.h" />
+    <ClInclude Include="..\src\curitiba\render\pipeline.h" />
+    <CustomBuildStep Include="..\src\curitiba\render\quadpass.h" />
+    <ClInclude Include="..\src\curitiba\render\renderfactory.h" />
+    <ClInclude Include="..\src\curitiba\render\rendermanager.h" />
+    <ClInclude Include="..\src\curitiba\render\renderqueuefactory.h" />
+    <ClInclude Include="..\src\curitiba\render\rendertarget.h" />
+    <ClInclude Include="..\src\curitiba\render\texture.h" />
+    <ClInclude Include="..\src\curitiba\render\textureCubeMap.h" />
+    <ClInclude Include="..\src\curitiba\render\vertexdata.h" />
+    <ClInclude Include="..\src\curitiba\render\viewport.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\glindexarray.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\glprogram.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\glrenderer.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\glrendertarget.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\glstate.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\glteximage.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\gltexture.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\gltextureCubeMap.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\gluniform.h" />
+    <ClInclude Include="..\src\curitiba\render\opengl\glvertexarray.h" />
+    <ClInclude Include="..\src\curitiba\resource\resourcemanager.h" />
+    <ClInclude Include="..\src\curitiba\resource\texturemanager.h" />
+    <ClInclude Include="..\src\curitiba\scene\camera.h" />
+    <ClInclude Include="..\src\curitiba\scene\geometryobject.h" />
+    <ClInclude Include="..\src\curitiba\scene\iscene.h" />
+    <ClInclude Include="..\src\curitiba\scene\iscenepartitioned.h" />
+    <ClInclude Include="..\src\curitiba\scene\light.h" />
+    <ClInclude Include="..\src\curitiba\scene\lightFactory.h" />
+    <ClInclude Include="..\src\curitiba\scene\lightWithSwitch.h" />
+    <ClInclude Include="..\src\curitiba\scene\octree.h" />
+    <ClInclude Include="..\src\curitiba\scene\octreenode.h" />
+    <ClInclude Include="..\src\curitiba\scene\octreescene.h" />
+    <ClInclude Include="..\src\curitiba\scene\scene.h" />
+    <ClInclude Include="..\src\curitiba\scene\sceneaux.h" />
+    <ClInclude Include="..\src\curitiba\scene\scenefactory.h" />
+    <ClInclude Include="..\src\curitiba\scene\sceneobject.h" />
+    <ClInclude Include="..\src\curitiba\scene\sceneobjectfactory.h" />
+    <ClInclude Include="..\src\curitiba\scene\sceneposeobject.h" />
+    <ClInclude Include="..\src\curitiba\scene\sceneposes.h" />
+    <ClInclude Include="..\src\curitiba\scene\sceneskeleton.h" />
+    <ClInclude Include="..\src\curitiba\system\dirent.h" />
+    <ClInclude Include="..\src\curitiba\system\file.h" />
+    <ClInclude Include="..\src\curitiba\system\fileutil.h" />
+    <ClInclude Include="..\src\curitiba\system\textfile.h" />
+    <ClInclude Include="..\src\curitiba\system\textutil.h" />
+    <ClInclude Include="..\src\curitiba\world\bulletworld.h" />
+    <ClInclude Include="..\src\curitiba\world\curitibabulletmotionstate.h" />
+    <ClInclude Include="..\src\curitiba\world\iworld.h" />
+    <ClInclude Include="..\src\curitiba\world\physicalobject.h" />
+    <ClInclude Include="..\src\curitiba\world\worldfactory.h" />
+    <ClInclude Include="..\src\curitiba\debug\profile.h" />
+    <ClInclude Include="..\src\curitiba\event\cameraMotion.h" />
+    <ClInclude Include="..\src\curitiba\event\cameraOrientation.h" />
+    <ClInclude Include="..\src\curitiba\event\eventCameraMotion.h" />
+    <ClInclude Include="..\src\curitiba\event\eventCameraOrientation.h" />
+    <ClInclude Include="..\src\curitiba\event\eventFactory.h" />
+    <ClInclude Include="..\src\curitiba\event\eventFloat.h" />
+    <ClInclude Include="..\src\curitiba\event\eventInt.h" />
+    <ClInclude Include="..\src\curitiba\event\eventManager.h" />
+    <ClInclude Include="..\src\curitiba\event\eventString.h" />
+    <ClInclude Include="..\src\curitiba\event\eventVec3.h" />
+    <ClInclude Include="..\src\curitiba\event\eventVec4.h" />
+    <ClInclude Include="..\src\curitiba\event\iEventData.h" />
+    <ClInclude Include="..\src\curitiba\event\ilistener.h" />
+    <ClInclude Include="..\src\curitiba\event\interpolator.h" />
+    <ClInclude Include="..\src\curitiba\event\interpolatorFactory.h" />
+    <ClInclude Include="..\src\curitiba\event\listenerType.h" />
+    <ClInclude Include="..\src\curitiba\event\objectAnimation.h" />
+    <ClInclude Include="..\src\curitiba\event\positionInterpolator.h" />
+    <ClInclude Include="..\src\curitiba\event\proximitySensor.h" />
+    <ClInclude Include="..\src\curitiba\event\route.h" />
+    <ClInclude Include="..\src\curitiba\event\sensor.h" />
+    <ClInclude Include="..\src\curitiba\event\sensorFactory.h" />
+    <ClInclude Include="..\src\curitiba\event\timeSensor.h" />
+    <CustomBuildStep Include="..\src\curitiba\event\touchSensor.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\optix\common.cu">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">nvcc -ptx -I "D:\NVIDIA\OptiX SDK 2.5.0\include" D:/Curitiba/head/src/optix/common.cu</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32  -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/Curitiba2/head/src/optix/common.cu
+copy common.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common.cu.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">common.ptx</Outputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.0\include" D:/Curitiba2/head/src/optix/common.cu
+copy common.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">common.ptx</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\src\optix\deferredShadows.cu">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/Curitiba2/head/src/optix/deferredShadows.cu
+copy deferredShadows.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">deferredShadows.ptx</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/Curitiba2/head/src/optix/deferredShadows.cu
+copy deferredShadows.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">deferredShadows.ptx</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\src\optix\rtvssm.cu">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc --machine 32 --use_fast_math -ptx -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/Curitiba2/head/src/optix/rtvssm.cu
+copy rtvssm.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">rtvssm.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">rtvssm.ptx</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/Curitiba2/head/src/optix/rtvssm.cu
+copy rtvssm.ptx ..\build\samples\optix</Command>
+    </CustomBuild>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,85 @@
+Relations Between Dialogs
+
+	Camera
+		Materials (Shader panel)
+		Pass (Pass Camera List)
+		
+	Materials
+		Pass (Material Maps)
+		
+	Lights
+		Materials (Shader panel)
+		Pass (Light List)	
+		
+	Scene
+		Pass (Scene List)
+		Class Pass (When scene changes)
+		
+	Viewport (to do)
+		Pass
+		Camera
+		
+	RenderTargets (to do)
+		Pass			
+		Texture ?
+		
+	Texture
+		Materials 
+		RenderTargets ?	
+		
+	Pipelines and Passes	
+		
+________________________________________________
+Scene Dialog
+
+Toolbar
+	New Add Build Compile CBO
+
+Props (non-editable)
+	type
+	total vertices
+	transform <- it does not exist yet!
+	bounding box
+		max XYZ
+		min XYZ
+		center
+		
+List (non-editable)		
+	sceneObjects
+_____________________________________________________
+		
+		
+		
+	
+Priority
+	Materials with negative priority are never drawn (usefull to exclude some materials from a particular pass
+	Materials with lower priority number are drawn first.
+
+Pass
+	REMAP_DISABLED -> no remaps
+	REMAP_ONE_TO_ONE -> remaps materials individually
+	REMAP_TO_ONE -> remaps all materials to one mat
+	REMAP_TO_ONE_FROM_PRIORITY -> only remaps materials with a given priority
+	REMAP_TO_LIBRARY -> rempas to same name materials on another library
+
+PICKING
+	activar
+
+
+	
+CHECK OCTREE SAVE AND LOAD
+
+	
+MENU
+	Add a list of scenes and allow the camera to be placed such that the scene is visible
+	
+WRITE PROJECTS
+
+There is a dependency on the scene name "MainScene" to build, write, and compile, the octree
+Append Model should append each to different scene
+
+LIGHTS
+	Add Geometry
+
+LIGHTS
+	Allow Mouse Movement

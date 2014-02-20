@@ -1,0 +1,627 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Optix|Win32">
+      <Configuration>Debug Optix</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Optix|Win32">
+      <Configuration>Release Optix</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B2A55A68-A417-4C52-BFE7-8193BA388ABF}</ProjectGuid>
+    <RootNamespace>nau_new</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(LibraryPath)</LibraryPath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">nau</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nau_with_optix</TargetName>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
+    <TargetName>nauOptix_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>nau_d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nau_d.lib</OutputFile>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)nau_d.lib d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../src;C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.0\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;nau_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nauOptix_d.lib</OutputFile>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)nauOptix_d.lib" d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;GLEW_STATIC;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nau.lib</OutputFile>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)nau.lib d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../src;C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;nau_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nauOptix.lib</OutputFile>
+      <AdditionalDependencies>optix.1.lib</AdditionalDependencies>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)nauOptix.lib" d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\nau\clogger.cpp" />
+    <ClCompile Include="..\src\nau\nau.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\enums.cpp" />
+    <ClCompile Include="..\src\nau\geometry\distancemap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\square.cpp" />
+    <ClCompile Include="..\src\nau\loader\assimploader.cpp" />
+    <ClCompile Include="..\src\nau\loader\fontxmlloader.cpp" />
+    <ClCompile Include="..\src\nau\loader\patchLoader.cpp" />
+    <ClCompile Include="..\src\nau\material\textureSampler.cpp" />
+    <ClCompile Include="..\src\nau\math\bvec4.cpp" />
+    <ClCompile Include="..\src\nau\render\imageTexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp" />
+    <ClCompile Include="..\src\nau\render\optix\optixBufferLib.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixGeometry.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixMaterial.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixMaterialLib.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixRenderer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\optix\optixTextureLib.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passCompute.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passOptix.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\profilerpass.cpp" />
+    <ClCompile Include="..\src\nau\resource\font.cpp" />
+    <ClCompile Include="..\src\nau\resource\fontmanager.cpp" />
+    <ClCompile Include="..\src\nau\scene\octreeByMat.cpp" />
+    <ClCompile Include="..\src\nau\scene\octreeByMatnode.cpp" />
+    <ClCompile Include="..\src\nau\scene\octreeByMatscene.cpp" />
+    <ClCompile Include="..\src\nau\slogger.cpp" />
+    <ClCompile Include="..\src\nau\geometry\axis.cpp" />
+    <ClCompile Include="..\src\nau\geometry\bbox.cpp" />
+    <ClCompile Include="..\src\nau\geometry\boundingbox.cpp" />
+    <ClCompile Include="..\src\nau\geometry\boundingvolumefactory.cpp" />
+    <ClCompile Include="..\src\nau\geometry\box.cpp" />
+    <ClCompile Include="..\src\nau\geometry\frustum.cpp" />
+    <ClCompile Include="..\src\nau\geometry\mesh.cpp" />
+    <ClCompile Include="..\src\nau\geometry\meshbones.cpp" />
+    <ClCompile Include="..\src\nau\geometry\meshposeanim.cpp" />
+    <ClCompile Include="..\src\nau\geometry\meshposekeyframe.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\meshwithpose.cpp" />
+    <ClCompile Include="..\src\nau\geometry\poseoffset.cpp" />
+    <ClCompile Include="..\src\nau\geometry\primitive.cpp" />
+    <ClCompile Include="..\src\nau\geometry\quad.cpp" />
+    <ClCompile Include="..\src\nau\geometry\skeletonanim.cpp" />
+    <ClCompile Include="..\src\nau\geometry\skeletonbone.cpp" />
+    <ClCompile Include="..\src\nau\geometry\sphere.cpp" />
+    <ClCompile Include="..\src\nau\loader\cboloader.cpp" />
+    <ClCompile Include="..\src\nau\loader\deviltextureloader.cpp" />
+    <ClCompile Include="..\src\nau\loader\objLoader.cpp" />
+    <ClCompile Include="..\src\nau\loader\ogremeshloader.cpp" />
+    <ClCompile Include="..\src\nau\loader\projectloader.cpp" />
+    <ClCompile Include="..\src\nau\loader\textureloader.cpp" />
+    <ClCompile Include="..\src\nau\material\colormaterial.cpp" />
+    <ClCompile Include="..\src\nau\material\material.cpp" />
+    <ClCompile Include="..\src\nau\material\materialgroup.cpp" />
+    <ClCompile Include="..\src\nau\material\materialid.cpp" />
+    <ClCompile Include="..\src\nau\material\materiallib.cpp" />
+    <ClCompile Include="..\src\nau\material\materiallibmanager.cpp" />
+    <ClCompile Include="..\src\nau\material\programvalue.cpp" />
+    <ClCompile Include="..\src\nau\material\teximage.cpp" />
+    <ClCompile Include="..\src\nau\material\texturemat.cpp" />
+    <ClCompile Include="..\src\nau\math\mat3.cpp" />
+    <ClCompile Include="..\src\nau\math\mat4.cpp" />
+    <ClCompile Include="..\src\nau\math\plane.cpp" />
+    <ClCompile Include="..\src\nau\math\randomgen.cpp" />
+    <ClCompile Include="..\src\nau\math\simpletransform.cpp" />
+    <ClCompile Include="..\src\nau\math\spherical.cpp" />
+    <ClCompile Include="..\src\nau\math\transformfactory.cpp" />
+    <ClCompile Include="..\src\nau\math\vec2.cpp" />
+    <ClCompile Include="..\src\nau\math\vec3.cpp" />
+    <ClCompile Include="..\src\nau\math\vec4.cpp" />
+    <ClCompile Include="..\src\nau\render\depthmappass.cpp" />
+    <ClCompile Include="..\src\nau\render\indexdata.cpp" />
+    <ClCompile Include="..\src\nau\render\iprogram.cpp" />
+    <ClCompile Include="..\src\nau\render\irenderer.cpp" />
+    <ClCompile Include="..\src\nau\render\istate.cpp" />
+    <ClCompile Include="..\src\nau\render\materialsortrenderqueue.cpp" />
+    <ClCompile Include="..\src\nau\render\pass.cpp" />
+    <ClCompile Include="..\src\nau\render\passfactory.cpp" />
+    <ClCompile Include="..\src\nau\render\pipeline.cpp" />
+    <ClCompile Include="..\src\nau\render\quadpass.cpp" />
+    <ClCompile Include="..\src\nau\render\renderfactory.cpp" />
+    <ClCompile Include="..\src\nau\render\rendermanager.cpp" />
+    <ClCompile Include="..\src\nau\render\renderqueuefactory.cpp" />
+    <ClCompile Include="..\src\nau\render\rendertarget.cpp" />
+    <ClCompile Include="..\src\nau\render\texture.cpp" />
+    <ClCompile Include="..\src\nau\render\textureCubeMap.cpp" />
+    <ClCompile Include="..\src\nau\render\vertexdata.cpp" />
+    <ClCompile Include="..\src\nau\render\viewport.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glindexarray.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glprogram.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glrenderer.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glrendertarget.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glstate.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glteximage.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\gltexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\gltextureCubeMap.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\gluniform.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glvertexarray.cpp" />
+    <ClCompile Include="..\src\nau\resource\resourcemanager.cpp" />
+    <ClCompile Include="..\src\nau\resource\texturemanager.cpp" />
+    <ClCompile Include="..\src\nau\scene\camera.cpp" />
+    <ClCompile Include="..\src\nau\scene\geometryobject.cpp" />
+    <ClCompile Include="..\src\nau\scene\light.cpp" />
+    <ClCompile Include="..\src\nau\scene\lightFactory.cpp" />
+    <ClCompile Include="..\src\nau\scene\lightWithSwitch.cpp" />
+    <ClCompile Include="..\src\nau\scene\octree.cpp" />
+    <ClCompile Include="..\src\nau\scene\octreenode.cpp" />
+    <ClCompile Include="..\src\nau\scene\octreescene.cpp" />
+    <ClCompile Include="..\src\nau\scene\scene.cpp" />
+    <ClCompile Include="..\src\nau\scene\sceneaux.cpp" />
+    <ClCompile Include="..\src\nau\scene\scenefactory.cpp" />
+    <ClCompile Include="..\src\nau\scene\sceneobject.cpp" />
+    <ClCompile Include="..\src\nau\scene\sceneobjectfactory.cpp" />
+    <ClCompile Include="..\src\nau\scene\sceneposeobject.cpp" />
+    <ClCompile Include="..\src\nau\scene\sceneposes.cpp" />
+    <ClCompile Include="..\src\nau\scene\sceneskeleton.cpp" />
+    <ClCompile Include="..\src\nau\system\file.cpp" />
+    <ClCompile Include="..\src\nau\system\fileutil.cpp" />
+    <ClCompile Include="..\src\nau\system\textfile.cpp" />
+    <ClCompile Include="..\src\nau\system\textutil.cpp" />
+    <ClCompile Include="..\src\nau\world\bulletworld.cpp" />
+    <ClCompile Include="..\src\nau\world\naubulletmotionstate.cpp" />
+    <ClCompile Include="..\src\nau\world\physicalobject.cpp" />
+    <ClCompile Include="..\src\nau\world\worldfactory.cpp" />
+    <ClCompile Include="..\src\nau\debug\profile.cpp" />
+    <ClCompile Include="..\src\nau\event\cameraMotion.cpp" />
+    <ClCompile Include="..\src\nau\event\cameraOrientation.cpp" />
+    <ClCompile Include="..\src\nau\event\eventCameraMotion.cpp" />
+    <ClCompile Include="..\src\nau\event\eventCameraOrientation.cpp" />
+    <ClCompile Include="..\src\nau\event\eventFactory.cpp" />
+    <ClCompile Include="..\src\nau\event\eventFloat.cpp" />
+    <ClCompile Include="..\src\nau\event\eventInt.cpp" />
+    <ClCompile Include="..\src\nau\event\eventManager.cpp" />
+    <ClCompile Include="..\src\nau\event\eventString.cpp" />
+    <ClCompile Include="..\src\nau\event\eventVec3.cpp" />
+    <ClCompile Include="..\src\nau\event\eventVec4.cpp" />
+    <ClCompile Include="..\src\nau\event\interpolatorFactory.cpp" />
+    <ClCompile Include="..\src\nau\event\listenerType.cpp" />
+    <ClCompile Include="..\src\nau\event\objectAnimation.cpp" />
+    <ClCompile Include="..\src\nau\event\positionInterpolator.cpp" />
+    <ClCompile Include="..\src\nau\event\proximitySensor.cpp" />
+    <ClCompile Include="..\src\nau\event\route.cpp" />
+    <ClCompile Include="..\src\nau\event\sensorFactory.cpp" />
+    <ClCompile Include="..\src\nau\event\timeSensor.cpp" />
+    <ClCompile Include="..\src\nau\event\touchSensor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\nau\attribute.h" />
+    <ClInclude Include="..\src\nau\attributeValues.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\bimap.hpp" />
+    <ClInclude Include="..\src\nau\clogger.h" />
+    <ClInclude Include="..\src\nau\config.h" />
+    <ClInclude Include="..\src\nau.h" />
+    <ClInclude Include="..\src\nau\enums.h" />
+    <ClInclude Include="..\src\nau\errors.h" />
+    <ClInclude Include="..\src\nau\geometry\distancemap.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\square.h" />
+    <ClInclude Include="..\src\nau\loader\assimploader.h" />
+    <ClInclude Include="..\src\nau\loader\fontxmlloader.h" />
+    <ClInclude Include="..\src\nau\loader\patchLoader.h" />
+    <ClInclude Include="..\src\nau\material\textureSampler.h" />
+    <ClInclude Include="..\src\nau\math\bvec4.h" />
+    <ClInclude Include="..\src\nau\render\imageTexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h" />
+    <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h" />
+    <ClInclude Include="..\src\nau\render\optix\optixBufferLib.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixGeometry.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixMaterial.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixMaterialLib.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixRenderer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\optix\optixTextureLib.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passCompute.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passOptix.h" />
+    <ClInclude Include="..\src\nau\render\profilerpass.h" />
+    <ClInclude Include="..\src\nau\resource\font.h" />
+    <ClInclude Include="..\src\nau\resource\fontmanager.h" />
+    <ClInclude Include="..\src\nau\scene\octreeByMat.h" />
+    <ClInclude Include="..\src\nau\scene\octreeByMatnode.h" />
+    <ClInclude Include="..\src\nau\scene\octreeByMatscene.h" />
+    <ClInclude Include="..\src\nau\slogger.h" />
+    <ClInclude Include="..\src\nau\geometry\axis.h" />
+    <ClInclude Include="..\src\nau\geometry\bbox.h" />
+    <ClInclude Include="..\src\nau\geometry\boundingbox.h" />
+    <ClInclude Include="..\src\nau\geometry\boundingvolumefactory.h" />
+    <ClInclude Include="..\src\nau\geometry\box.h" />
+    <ClInclude Include="..\src\nau\geometry\frustum.h" />
+    <ClInclude Include="..\src\nau\geometry\iboundingvolume.h" />
+    <ClInclude Include="..\src\nau\geometry\mesh.h" />
+    <ClInclude Include="..\src\nau\geometry\meshbones.h" />
+    <ClInclude Include="..\src\nau\geometry\meshposeanim.h" />
+    <CustomBuildStep Include="..\src\nau\geometry\meshposekeyframe.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="..\src\nau\geometry\meshwithpose.h" />
+    <ClInclude Include="..\src\nau\geometry\poseoffset.h" />
+    <ClInclude Include="..\src\nau\geometry\primitive.h" />
+    <ClInclude Include="..\src\nau\geometry\quad.h" />
+    <ClInclude Include="..\src\nau\geometry\skeletonanim.h" />
+    <ClInclude Include="..\src\nau\geometry\skeletonbone.h" />
+    <ClInclude Include="..\src\nau\geometry\sphere.h" />
+    <ClInclude Include="..\src\nau\loader\cboloader.h" />
+    <ClInclude Include="..\src\nau\loader\deviltextureloader.h" />
+    <ClInclude Include="..\src\nau\loader\objLoader.h" />
+    <CustomBuildStep Include="..\src\nau\loader\ogremeshloader.h" />
+    <ClInclude Include="..\src\nau\loader\projectloader.h" />
+    <ClInclude Include="..\src\nau\loader\textureloader.h" />
+    <ClInclude Include="..\src\nau\material\colormaterial.h" />
+    <ClInclude Include="..\src\nau\material\imaterialgroup.h" />
+    <ClInclude Include="..\src\nau\material\material.h" />
+    <ClInclude Include="..\src\nau\material\materialgroup.h" />
+    <ClInclude Include="..\src\nau\material\materialid.h" />
+    <ClInclude Include="..\src\nau\material\materiallib.h" />
+    <ClInclude Include="..\src\nau\material\materiallibmanager.h" />
+    <ClInclude Include="..\src\nau\material\programvalue.h" />
+    <CustomBuildStep Include="..\src\nau\material\teximage.h" />
+    <ClInclude Include="..\src\nau\material\texturemat.h" />
+    <ClInclude Include="..\src\nau\math\itransform.h" />
+    <ClInclude Include="..\src\nau\math\mat3.h" />
+    <ClInclude Include="..\src\nau\math\mat4.h" />
+    <ClInclude Include="..\src\nau\math\mtrand.h" />
+    <ClInclude Include="..\src\nau\math\plane.h" />
+    <ClInclude Include="..\src\nau\math\randomgen.h" />
+    <ClInclude Include="..\src\nau\math\simpletransform.h" />
+    <CustomBuildStep Include="..\src\nau\math\spherical.h" />
+    <ClInclude Include="..\src\nau\math\transformfactory.h" />
+    <ClInclude Include="..\src\nau\math\utils.h" />
+    <ClInclude Include="..\src\nau\math\vec2.h" />
+    <ClInclude Include="..\src\nau\math\vec3.h" />
+    <ClInclude Include="..\src\nau\math\vec4.h" />
+    <ClInclude Include="..\src\nau\render\depthmappass.h" />
+    <ClInclude Include="..\src\nau\render\indexdata.h" />
+    <ClInclude Include="..\src\nau\render\iprogram.h" />
+    <ClInclude Include="..\src\nau\render\irenderable.h" />
+    <ClInclude Include="..\src\nau\render\irenderer.h" />
+    <ClInclude Include="..\src\nau\render\irenderqueue.h" />
+    <ClInclude Include="..\src\nau\render\istate.h" />
+    <ClInclude Include="..\src\nau\render\materialsortrenderqueue.h" />
+    <ClInclude Include="..\src\nau\render\pass.h" />
+    <ClInclude Include="..\src\nau\render\passfactory.h" />
+    <ClInclude Include="..\src\nau\render\pipeline.h" />
+    <CustomBuildStep Include="..\src\nau\render\quadpass.h" />
+    <ClInclude Include="..\src\nau\render\renderfactory.h" />
+    <ClInclude Include="..\src\nau\render\rendermanager.h" />
+    <ClInclude Include="..\src\nau\render\renderqueuefactory.h" />
+    <ClInclude Include="..\src\nau\render\rendertarget.h" />
+    <ClInclude Include="..\src\nau\render\texture.h" />
+    <ClInclude Include="..\src\nau\render\textureCubeMap.h" />
+    <ClInclude Include="..\src\nau\render\vertexdata.h" />
+    <ClInclude Include="..\src\nau\render\viewport.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glindexarray.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glprogram.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glrenderer.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glrendertarget.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glstate.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glteximage.h" />
+    <ClInclude Include="..\src\nau\render\opengl\gltexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\gltextureCubeMap.h" />
+    <ClInclude Include="..\src\nau\render\opengl\gluniform.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glvertexarray.h" />
+    <ClInclude Include="..\src\nau\resource\resourcemanager.h" />
+    <ClInclude Include="..\src\nau\resource\texturemanager.h" />
+    <ClInclude Include="..\src\nau\scene\camera.h" />
+    <ClInclude Include="..\src\nau\scene\geometryobject.h" />
+    <ClInclude Include="..\src\nau\scene\iscene.h" />
+    <ClInclude Include="..\src\nau\scene\iscenepartitioned.h" />
+    <ClInclude Include="..\src\nau\scene\light.h" />
+    <ClInclude Include="..\src\nau\scene\lightFactory.h" />
+    <ClInclude Include="..\src\nau\scene\lightWithSwitch.h" />
+    <ClInclude Include="..\src\nau\scene\octree.h" />
+    <ClInclude Include="..\src\nau\scene\octreenode.h" />
+    <ClInclude Include="..\src\nau\scene\octreescene.h" />
+    <ClInclude Include="..\src\nau\scene\scene.h" />
+    <ClInclude Include="..\src\nau\scene\sceneaux.h" />
+    <ClInclude Include="..\src\nau\scene\scenefactory.h" />
+    <ClInclude Include="..\src\nau\scene\sceneobject.h" />
+    <ClInclude Include="..\src\nau\scene\sceneobjectfactory.h" />
+    <ClInclude Include="..\src\nau\scene\sceneposeobject.h" />
+    <ClInclude Include="..\src\nau\scene\sceneposes.h" />
+    <ClInclude Include="..\src\nau\scene\sceneskeleton.h" />
+    <ClInclude Include="..\src\nau\system\dirent.h" />
+    <ClInclude Include="..\src\nau\system\file.h" />
+    <ClInclude Include="..\src\nau\system\fileutil.h" />
+    <ClInclude Include="..\src\nau\system\textfile.h" />
+    <ClInclude Include="..\src\nau\system\textutil.h" />
+    <ClInclude Include="..\src\nau\world\bulletworld.h" />
+    <ClInclude Include="..\src\nau\world\naubulletmotionstate.h" />
+    <ClInclude Include="..\src\nau\world\iworld.h" />
+    <ClInclude Include="..\src\nau\world\physicalobject.h" />
+    <ClInclude Include="..\src\nau\world\worldfactory.h" />
+    <ClInclude Include="..\src\nau\debug\profile.h" />
+    <ClInclude Include="..\src\nau\event\cameraMotion.h" />
+    <ClInclude Include="..\src\nau\event\cameraOrientation.h" />
+    <ClInclude Include="..\src\nau\event\eventCameraMotion.h" />
+    <ClInclude Include="..\src\nau\event\eventCameraOrientation.h" />
+    <ClInclude Include="..\src\nau\event\eventFactory.h" />
+    <ClInclude Include="..\src\nau\event\eventFloat.h" />
+    <ClInclude Include="..\src\nau\event\eventInt.h" />
+    <ClInclude Include="..\src\nau\event\eventManager.h" />
+    <ClInclude Include="..\src\nau\event\eventString.h" />
+    <ClInclude Include="..\src\nau\event\eventVec3.h" />
+    <ClInclude Include="..\src\nau\event\eventVec4.h" />
+    <ClInclude Include="..\src\nau\event\iEventData.h" />
+    <ClInclude Include="..\src\nau\event\ilistener.h" />
+    <ClInclude Include="..\src\nau\event\interpolator.h" />
+    <ClInclude Include="..\src\nau\event\interpolatorFactory.h" />
+    <ClInclude Include="..\src\nau\event\listenerType.h" />
+    <ClInclude Include="..\src\nau\event\objectAnimation.h" />
+    <ClInclude Include="..\src\nau\event\positionInterpolator.h" />
+    <ClInclude Include="..\src\nau\event\proximitySensor.h" />
+    <ClInclude Include="..\src\nau\event\route.h" />
+    <ClInclude Include="..\src\nau\event\sensor.h" />
+    <ClInclude Include="..\src\nau\event\sensorFactory.h" />
+    <ClInclude Include="..\src\nau\event\timeSensor.h" />
+    <CustomBuildStep Include="..\src\nau\event\touchSensor.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\optix\common.cu">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">nvcc -ptx -I "D:\NVIDIA\OptiX SDK 2.5.0\include" D:/nau/head/src/optix/common.cu</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32  -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau2/head/src/optix/common.cu
+copy common.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common.cu.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">common.ptx</Outputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.0\include" D:/nau2/head/src/optix/common.cu
+copy common.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">common.ptx</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\src\optix\deferredShadows.cu">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/nau2/head/src/optix/deferredShadows.cu
+copy deferredShadows.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">deferredShadows.ptx</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau2/head/src/optix/deferredShadows.cu
+copy deferredShadows.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">deferredShadows.ptx</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\src\optix\rtvssm.cu">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc --machine 32 --use_fast_math -ptx -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/nau2/head/src/optix/rtvssm.cu
+copy rtvssm.ptx ..\build\samples\optix</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">rtvssm.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">rtvssm.ptx</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau2/head/src/optix/rtvssm.cu
+copy rtvssm.ptx ..\build\samples\optix</Command>
+    </CustomBuild>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

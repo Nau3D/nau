@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\glcanvas.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\dialogs\dlgAtomics.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgCameras.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgLights.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgLog.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgMaterials.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgOGL.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgOGLPanels.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgPass.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgScenes.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgShaders.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgTextureLib.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\glcanvas.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\dialogs\dlgAtomics.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgCameras.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgLights.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgLog.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgMaterials.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgOGL.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgOGLpanels.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgPass.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgScenes.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgShaders.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgTextureLib.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="dialogs">
+      <UniqueIdentifier>{024471a4-0fd2-4ee2-9b3a-24a43df3d006}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<materiallib name="nau_material_lib">
+
+	<textures>
+		<texture name="__FontCourierNew10" filename="couriernew10.tga" />		
+	</textures>
+	
+	<shaders>
+		<shader name="quadShader" 	ps="shaders/quadShader.frag" 
+									vs="shaders/quadShader.vert" />
+		<shader name="dirLightDifAmbPix" 	ps="shaders/dirlightdiffambpix.frag" 
+											vs="shaders/dirlightdiffambpix.vert" />
+	</shaders>
+	
+	<states>
+		<state name="__No Render">
+			<ORDER value="-1" />
+		</state>
+		
+		<state name ="__Transparent">
+			<DEPTH_TEST value="0" />
+			<ORDER value="1" />
+			<BLEND_SRC value="SRC_ALPHA" />
+			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
+		</state>
+	</states>
+	
+	<materials>
+		<material name="dirLightDifAmbPix">
+			<shader>
+				<name>dirLightDifAmbPix</name>
+				<values>
+					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightColor"     	type="CURRENT" context="LIGHT" 
+														id=0 component="COLOR" />
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="CURRENT" context="COLOR" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="CURRENT" context="MATRIX" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="V"          		type="CURRENT" context="MATRIX" 
+														component="VIEW" />
+
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />														
+				</values>
+			</shader>
+		</material>		
+
+		<material name="__Light Grey">
+			<color>
+				<ambient r="0.8" g="0.8" b="0.8" a="1.0" />
+				<diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__Quad">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+			<shader>
+				<name>quadShader</name>
+				<values>
+					<valueof uniform="texUnit" 	type="CURRENT" context="TEXTURE" 
+												component="UNIT" id="0" />			
+				</values>
+			</shader>
+		</material>
+		
+		<material name="__Emission White">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="1.0" g="1.0" b="1.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__Emission Red">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="1.0" g="0.0" b="0.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="1.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__Emission Green">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="0.0" g="1.0" b="0.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="1.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__Emission Blue">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="0.0" g="0.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="1.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__Emission Cyan">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="0.0" g="1.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="1.0" b="1.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__Emission Purple">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="1.0" g="0.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="1.0" g="0.0" b="1.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__Emission Yellow">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="1.0" g="1.0" b="0.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="1.0" g="1.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__Black">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+		</material>
+		
+		<material name="__No Render">
+			<state name = "__No Render"/>
+		</material>
+		
+		<material name="__FontCourierNew10">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="0.0" />
+				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="1.0" g="1.0" b="1.0" a="0.0" />
+				<shininess value="0.0" />
+			</color>
+			<state name="__Transparent"/>
+			<textures>
+				<texture UNIT="0" name="__FontCourierNew10" >
+					
+				</texture>
+			</textures>
+		</material>
+	</materials>
+</materiallib>
