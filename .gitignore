@@ -3,7 +3,6 @@
 
 # User-specific files
 *.suo
-*.user
 *.sln.docstates
 
 # Build results
@@ -21,6 +20,8 @@ x64/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+*.bsc
+*.map
 *_i.c
 *_p.c
 *.ilk
