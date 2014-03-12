@@ -87,11 +87,11 @@ GLRenderer::init()
 }
 
 
-void 
-GLRenderer::setCore(bool flag) 
-{
-	nau::render::GLVertexArray::setCore(flag);
-}
+//void 
+//GLRenderer::setCore(bool flag) 
+//{
+//	nau::render::GLVertexArray::setCore(flag);
+//}
 
 
 
@@ -164,7 +164,7 @@ GLRenderer::drawGroup (IMaterialGroup* aMatGroup)
 #endif
 		}
 		else {
-			
+			size = aRenderable.getVertexData().getNumberOfVertices();
 			glDrawArrays(drawPrimitive, 0, size);
 		}
 	}

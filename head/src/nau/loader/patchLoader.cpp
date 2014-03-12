@@ -29,13 +29,16 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	fscanf(fp, "%d\n", &verticesPerPatch);
 	fscanf(fp, "%d\n", &numPatches);
 
-	int pv = 0; 
-	unsigned int index;
-	for (int i = 0; i < numPatches; ++i) {
-		for (unsigned int j = 0; j < verticesPerPatch; ++j) {
+	char hasIndices[128];
+	fscanf(fp,"%s\n", hasIndices);
+	if (hasIndices[0] == 'y') {
+		unsigned int index;
+		for (int i = 0; i < numPatches; ++i) {
+			for (unsigned int j = 0; j < verticesPerPatch; ++j) {
 		
-			fscanf(fp, "%u,", &index);
-			indices->push_back(index);
+				fscanf(fp, "%u,", &index);
+				indices->push_back(index);
+			}
 		}
 	}
 
@@ -94,7 +97,8 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	MaterialGroup *aMatGroup = new MaterialGroup;
 	aMatGroup->setParent(aRenderable);
 	aMatGroup->setMaterialName("dirLightDifAmbPix");
-	aMatGroup->setIndexList(indices);
+	if (hasIndices[0] == 'y')
+		aMatGroup->setIndexList(indices);
 
 	aRenderable->addMaterialGroup(aMatGroup);
 	aRenderable->setDrawingPrimitive(IRenderer::PATCH);

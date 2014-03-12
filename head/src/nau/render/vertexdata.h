@@ -71,6 +71,8 @@ namespace nau
 		public:
 			virtual ~VertexData(void);
 
+			int getNumberOfVertices();
+
 			//std::vector<Attr>& getDataOf (VertexDataType type);
 			std::vector<Attr>& getDataOf (unsigned int type);
 			//void setDataFor (VertexDataType type, 

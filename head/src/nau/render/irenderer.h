@@ -156,7 +156,7 @@ namespace nau
 
 
 			static void getPropId(std::string &s, int *id);
-			virtual void setCore(bool flag) {};
+			//virtual void setCore(bool flag) {};
 
 			virtual bool init() = 0;
 			virtual void drawGroup (nau::material::IMaterialGroup* aMaterialGroup) = 0;

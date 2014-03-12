@@ -6,17 +6,10 @@ using namespace nau::render;
 using namespace nau::math;
 
 //  STATIC METHODS
+
 unsigned int GLVertexArray::m_OpenGLOwnAttribs = VertexData::getAttribIndex("texCoord7")+1;
 
 
-void 
-GLVertexArray::setCore(bool flag)
-{
-	if (flag)
-		m_OpenGLOwnAttribs = 0;
-	else
-		m_OpenGLOwnAttribs = VertexData::getAttribIndex("texCoord7")+1;
-}
 
 //	CONST e DEST
 GLVertexArray::GLVertexArray(void):
@@ -68,60 +61,7 @@ GLVertexArray::getBufferID(unsigned int vertexAttrib)
 }
 
 
-// INSTANCE METHODS
 
-
-//std::vector<VertexData::Attr>& 
-//GLVertexArray::getAttributeDataOf (VertexDataType type)
-//{
-//	if (type < CUSTOM_ATTRIBUTE_ARRAY0 || type > CUSTOM_ATTRIBUTE_ARRAY7) {
-//		return VertexData::NoData;
-//	}
-//	/***MARK***/ //I will assume that the array is not compiled. Otherwise it is necessary to lock the array on the graphic card
-//	if (0 == m_InternalArrays[type]) {
-//		return VertexData::NoData;
-//	}
-//	return (*m_InternalArrays[type]);
-//}
-
-
-//std::vector<VertexData::Attr>& 
-//GLVertexArray::getAttributeDataOf (unsigned int type)
-//{
-//	if (type < CUSTOM_ATTRIBUTE_ARRAY0 || type > CUSTOM_ATTRIBUTE_ARRAY7) {
-//		return VertexData::NoData;
-//	}
-//	/***MARK***/ //I will assume that the array is not compiled. Otherwise it is necessary to lock the array on the graphic card
-//	if (0 == m_InternalArrays[type]) {
-//		return VertexData::NoData;
-//	}
-//	return (*m_InternalArrays[type]);
-//}
-
-
-//std::vector<unsigned int>&
-//GLVertexArray::getIndexData (void)
-//{
-//	if (0 == m_InternalIndexArray || true == m_IsCompiled) {
-//		return VertexData::NoIndexData;
-//	}
-//	return (*m_InternalIndexArray);
-//}
-
-//void 
-//GLVertexArray::setAttributeDataFor (VertexDataType type, std::vector<VertexData::Attr>* dataArray, int location)
-//{
-//	if (type < CUSTOM_ATTRIBUTE_ARRAY0 || type > CUSTOM_ATTRIBUTE_ARRAY7) {
-//		return;
-//	}
-//	
-//	if (*dataArray != VertexData::NoData) {
-//		m_InternalArrays[type] = dataArray;
-//		if (NOLOC == m_AttributesLocations[type - CUSTOM_ATTRIBUTE_ARRAY0]) {
-//			m_AttributesLocations[type - CUSTOM_ATTRIBUTE_ARRAY0] = location;
-//		}
-//	}
-//}
 
 void 
 GLVertexArray::setAttributeDataFor (unsigned int type, std::vector<VertexData::Attr>* dataArray, int location)
@@ -133,16 +73,6 @@ GLVertexArray::setAttributeDataFor (unsigned int type, std::vector<VertexData::A
 		}
 	}
 }
-
-//void 
-//GLVertexArray::setAttributeLocationFor (VertexDataType type, int location)
-//{
-//	if (type < CUSTOM_ATTRIBUTE_ARRAY0 || type > CUSTOM_ATTRIBUTE_ARRAY7) {
-//		return;
-//	}
-//	m_AttributesLocations[type - CUSTOM_ATTRIBUTE_ARRAY0] = location;
-//}
-
 
 void 
 GLVertexArray::setAttributeLocationFor (unsigned int type, int location)
@@ -205,14 +135,6 @@ GLVertexArray::appendVertex(unsigned int index)
 
 }
 
-//void
-//GLVertexArray::prepareTangents() 
-//{
-//	unsigned index = VertexData::getAttribIndex("tangent");
-//	if (0 != m_InternalArrays[index])
-//		m_AttributesLocations[index] = 0;
-//	
-//}
 
 bool
 GLVertexArray::isCompiled() {
@@ -331,50 +253,6 @@ GLVertexArray::bind (void)
 	/***MARK***/ // Only vec3 
 
 }
-
-
-
-
-
-//void 
-//GLVertexArray::bind (unsigned int buffers)
-//{
-//	if (true == m_IsCompiled) {
-//		int i;
-//		unsigned int markedBuffer;
-//		for (markedBuffer = DRAW_TEXTURE_COORDS, i = TEXTURE_COORD_ARRAY0; 
-//				i >= VERTEX_ARRAY; 
-//				markedBuffer >>= 1, i--){
-//			if (0 != m_GLBuffers[i]){ /***MARK***/ //URGENT CLEAN UP!!!
-//				if (buffers & markedBuffer) {
-//					if (INDEX_ARRAY != i){
-//						if (TEXTURE_COORD_ARRAY0 == i) {
-//							for (int i = TEXTURE_COORD_ARRAY0; i <= TEXTURE_COORD_ARRAY7; i++) {
-//								if (0 != m_GLBuffers[i]) {
-//									glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
-//									setGLArray ((VertexDataType)i, 0);
-//								}
-//							}
-//						} else {
-//							glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
-//							setGLArray ((VertexDataType)i, 0);
-//						}
-//					} else {
-//						glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffers[i]);
-//					}
-//					glEnableClientState (translate ((VertexDataType)i));
-//				}
-//			}
-//		}
-//	} else {
-//		for (int i = VERTEX_ARRAY; i <= TEXTURE_COORD_ARRAY7; i++){
-//			if (0 != m_InternalArrays[i]){
-//				glEnableClientState (translate ((VertexDataType)i));
-//				setGLArray ((VertexDataType)i, (float*) (&(*m_InternalArrays[i])[0]));
-//			}
-//		}
-//	}
-//}
 
 void 
 GLVertexArray::unbind (void)
@@ -521,6 +399,132 @@ GLVertexArray::translate (unsigned int type)
 	}
 
 }
+
+
+//void 
+//GLVertexArray::setCore(bool flag)
+//{
+//	if (flag)
+//		m_OpenGLOwnAttribs = 0;
+//	else
+//		m_OpenGLOwnAttribs = VertexData::getAttribIndex("texCoord7")+1;
+//}
+
+// INSTANCE METHODS
+
+
+//std::vector<VertexData::Attr>& 
+//GLVertexArray::getAttributeDataOf (VertexDataType type)
+//{
+//	if (type < CUSTOM_ATTRIBUTE_ARRAY0 || type > CUSTOM_ATTRIBUTE_ARRAY7) {
+//		return VertexData::NoData;
+//	}
+//	/***MARK***/ //I will assume that the array is not compiled. Otherwise it is necessary to lock the array on the graphic card
+//	if (0 == m_InternalArrays[type]) {
+//		return VertexData::NoData;
+//	}
+//	return (*m_InternalArrays[type]);
+//}
+
+
+//std::vector<VertexData::Attr>& 
+//GLVertexArray::getAttributeDataOf (unsigned int type)
+//{
+//	if (type < CUSTOM_ATTRIBUTE_ARRAY0 || type > CUSTOM_ATTRIBUTE_ARRAY7) {
+//		return VertexData::NoData;
+//	}
+//	/***MARK***/ //I will assume that the array is not compiled. Otherwise it is necessary to lock the array on the graphic card
+//	if (0 == m_InternalArrays[type]) {
+//		return VertexData::NoData;
+//	}
+//	return (*m_InternalArrays[type]);
+//}
+
+
+//std::vector<unsigned int>&
+//GLVertexArray::getIndexData (void)
+//{
+//	if (0 == m_InternalIndexArray || true == m_IsCompiled) {
+//		return VertexData::NoIndexData;
+//	}
+//	return (*m_InternalIndexArray);
+//}
+
+//void 
+//GLVertexArray::setAttributeDataFor (VertexDataType type, std::vector<VertexData::Attr>* dataArray, int location)
+//{
+//	if (type < CUSTOM_ATTRIBUTE_ARRAY0 || type > CUSTOM_ATTRIBUTE_ARRAY7) {
+//		return;
+//	}
+//	
+//	if (*dataArray != VertexData::NoData) {
+//		m_InternalArrays[type] = dataArray;
+//		if (NOLOC == m_AttributesLocations[type - CUSTOM_ATTRIBUTE_ARRAY0]) {
+//			m_AttributesLocations[type - CUSTOM_ATTRIBUTE_ARRAY0] = location;
+//		}
+//	}
+//}
+//void 
+//GLVertexArray::setAttributeLocationFor (VertexDataType type, int location)
+//{
+//	if (type < CUSTOM_ATTRIBUTE_ARRAY0 || type > CUSTOM_ATTRIBUTE_ARRAY7) {
+//		return;
+//	}
+//	m_AttributesLocations[type - CUSTOM_ATTRIBUTE_ARRAY0] = location;
+//}
+
+
+//void
+//GLVertexArray::prepareTangents() 
+//{
+//	unsigned index = VertexData::getAttribIndex("tangent");
+//	if (0 != m_InternalArrays[index])
+//		m_AttributesLocations[index] = 0;
+//	
+//}
+
+
+//void 
+//GLVertexArray::bind (unsigned int buffers)
+//{
+//	if (true == m_IsCompiled) {
+//		int i;
+//		unsigned int markedBuffer;
+//		for (markedBuffer = DRAW_TEXTURE_COORDS, i = TEXTURE_COORD_ARRAY0; 
+//				i >= VERTEX_ARRAY; 
+//				markedBuffer >>= 1, i--){
+//			if (0 != m_GLBuffers[i]){ /***MARK***/ //URGENT CLEAN UP!!!
+//				if (buffers & markedBuffer) {
+//					if (INDEX_ARRAY != i){
+//						if (TEXTURE_COORD_ARRAY0 == i) {
+//							for (int i = TEXTURE_COORD_ARRAY0; i <= TEXTURE_COORD_ARRAY7; i++) {
+//								if (0 != m_GLBuffers[i]) {
+//									glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
+//									setGLArray ((VertexDataType)i, 0);
+//								}
+//							}
+//						} else {
+//							glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
+//							setGLArray ((VertexDataType)i, 0);
+//						}
+//					} else {
+//						glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffers[i]);
+//					}
+//					glEnableClientState (translate ((VertexDataType)i));
+//				}
+//			}
+//		}
+//	} else {
+//		for (int i = VERTEX_ARRAY; i <= TEXTURE_COORD_ARRAY7; i++){
+//			if (0 != m_InternalArrays[i]){
+//				glEnableClientState (translate ((VertexDataType)i));
+//				setGLArray ((VertexDataType)i, (float*) (&(*m_InternalArrays[i])[0]));
+//			}
+//		}
+//	}
+//}
+
+
 
 //std::vector<unsigned int>& 
 //GLVertexArray::_getReallyIndexData (void)

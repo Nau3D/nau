@@ -137,7 +137,8 @@ Camera::Camera (const std::string &name) :
 
 	aMaterialGroup->setIndexList (indices);
 	aMaterialGroup->setParent (renderable);
-	aMaterialGroup->setMaterialName("__Emission White");
+	aMaterialGroup->setMaterialName("__Black");
+//	aMaterialGroup->setMaterialName("__Emission White");
 
 	renderable->addMaterialGroup (aMaterialGroup);
 	m_Transform = & m_Mat4Props[VIEW_INVERSE_MATRIX];
@@ -152,7 +153,8 @@ Camera::Camera (const std::string &name) :
 
 	aMaterialGroup->setIndexList (indices);
 	aMaterialGroup->setParent (renderable);
-	aMaterialGroup->setMaterialName("__Emission Red");
+	aMaterialGroup->setMaterialName("__Black");
+//	aMaterialGroup->setMaterialName("__Emission Red");
 
 	renderable->addMaterialGroup (aMaterialGroup);
 	setRenderable (renderable);
@@ -174,6 +176,7 @@ Camera::~Camera (void)
 void
 Camera::setOrtho(float left, float right, float bottom, float top, float near, float far)
 {
+	m_EnumProps[PROJECTION_TYPE] = ORTHO;
 	m_FloatProps[LEFT] = left;
 	m_FloatProps[RIGHT] = right;
 	m_FloatProps[BOTTOM] = bottom;
@@ -190,6 +193,7 @@ Camera::setOrtho(float left, float right, float bottom, float top, float near, f
 void 
 Camera::setPerspective (float fov, float near, float far)
 {
+	m_EnumProps[PROJECTION_TYPE] = PERSPECTIVE;
 	m_FloatProps[FOV] = fov;
 	m_FloatProps[NEARP] = near;
 	m_FloatProps[FARP] = far;

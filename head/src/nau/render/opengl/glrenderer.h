@@ -44,12 +44,10 @@ namespace nau
 			void setProp(IRenderer::BoolProps prop, bool value);
 			bool getPropb(IRenderer::BoolProps prop);
 
-			//static void getPropTypeAndId(std::string &s, MatrixType *dt , int *id);
 
 			//! \name Methods
 			//@{
 			bool init();
-			virtual void setCore(bool flag);
 
 
 			// RENDER
@@ -59,11 +57,6 @@ namespace nau
 
 			void setDepthClearValue(float v);
 			void setDepthFunc(int f);
-			//void setDepthMask(bool b);
-			//void enableDepthTest (void);
-			//void disableDepthTest (void);
-			//void enableDepthClamping (void);
-			//void disableDepthClamping (void);
 
 			void setStencilClearValue(int v);
 			void setStencilMaskValue(int i);
@@ -78,7 +71,6 @@ namespace nau
 			void saveAttrib(Attribute aAttrib);
 			void restoreAttrib();
 			virtual void setCullFace (Face aFace);
-			//virtual void setFixedFunction (bool fixed);
 			void colorMask (bool r, bool g, bool b, bool a);
 
 			// SHADERS
@@ -152,13 +144,6 @@ namespace nau
 			void setUserClipPlane (ClipPlane aClipPlane, double *plane);
 			void deactivateUserClipPlane (ClipPlane aClipPlane);
 
-			// STEREO
-			//void enableStereo (void);
-			//void disableStereo (void);
-			//bool isStereo (void);
-
-			// MISC
-			//void renderBoundingVolume (const nau::geometry::IBoundingVolume* aBoundingVolume);
 			nau::math::vec3 readpixel (int x, int y);
 
 			void flush (void);
@@ -173,6 +158,21 @@ namespace nau
 			virtual void deactivateLighting (void);
 			virtual void positionLight (nau::scene::Light& aLight);
 #endif
+			//void setDepthMask(bool b);
+			//void enableDepthTest (void);
+			//void disableDepthTest (void);
+			//void enableDepthClamping (void);
+			//void disableDepthClamping (void);
+			//virtual void setCore(bool flag);
+			//static void getPropTypeAndId(std::string &s, MatrixType *dt , int *id);
+			//virtual void setFixedFunction (bool fixed);
+			// STEREO
+			//void enableStereo (void);
+			//void disableStereo (void);
+			//bool isStereo (void);
+
+			// MISC
+			//void renderBoundingVolume (const nau::geometry::IBoundingVolume* aBoundingVolume);
 
 		private:
 
@@ -218,7 +218,7 @@ namespace nau
 			GLenum translateMaterialComponent (ColorMaterial::ColorComponent aMaterialComponent);
 			unsigned int translateDrawingPrimitive(unsigned int aDrawPrimitive);
 
-		//	bool m_FixedFunction;
+			//bool m_FixedFunction;
 			//bool m_Stereo;
 			//void doRender (nau::scene::ISceneObject *aRenderable, unsigned int buffers, int priority);
 			//std::multimap<int, nau::render::IRenderable*> m_RenderQueue;

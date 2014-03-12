@@ -20,8 +20,31 @@ namespace nau
 
 		public:
 			GLVertexArray(void);
+			~GLVertexArray(void);
 
-			static void setCore(bool flag);
+			void setAttributeDataFor (unsigned int type, 
+				                      std::vector<VertexData::Attr>* dataArray, 
+									  int location = -1);
+			void setAttributeLocationFor (unsigned int type, int location);
+
+			virtual void prepareTriangleIDs(unsigned int sceneObjID, 
+													   unsigned int primitiveOffset, 
+													   std::vector<unsigned int> *index);
+
+			virtual void appendVertex(unsigned int i);
+
+			virtual bool compile (void);
+			virtual void bind (void);
+			virtual void unbind (void);
+			virtual bool isCompiled();
+			virtual void resetCompilationFlag();
+			virtual unsigned int getBufferID(unsigned int vertexAttrib);
+
+			//void setAttributeLocationFor (VertexDataType type, int location);
+//			virtual void prepareTangents();
+			//virtual void bind (unsigned int buffers);
+//			virtual std::vector<unsigned int>& _getReallyIndexData (void);
+//			static void setCore(bool flag);
 
 			//std::vector<VertexData::Attr>& getAttributeDataOf (VertexDataType type);
 			//std::vector<VertexData::Attr>& getAttributeDataOf (unsigned int type);
@@ -29,35 +52,12 @@ namespace nau
 			//void setAttributeDataFor (VertexDataType type, 
 			//	                      std::vector<VertexData::Attr>* dataArray, 
 			//						  int location);
-			void setAttributeDataFor (unsigned int type, 
-				                      std::vector<VertexData::Attr>* dataArray, 
-									  int location = -1);
-			//void setAttributeLocationFor (VertexDataType type, int location);
-			void setAttributeLocationFor (unsigned int type, int location);
-
-			virtual void prepareTriangleIDs(unsigned int sceneObjID, 
-													   unsigned int primitiveOffset, 
-													   std::vector<unsigned int> *index);
-
-//			virtual void prepareTangents();
-			virtual void appendVertex(unsigned int i);
-
-			virtual bool compile (void);
-			virtual void bind (void);
-			//virtual void bind (unsigned int buffers);
-			virtual void unbind (void);
-			virtual bool isCompiled();
-			virtual void resetCompilationFlag();
-//			virtual std::vector<unsigned int>& _getReallyIndexData (void);
-			virtual unsigned int getBufferID(unsigned int vertexAttrib);
-		public:
-			~GLVertexArray(void);
 
 		private:
-			//void setGLArray (VertexDataType type, float* pointer);
 			void setGLArray (unsigned int type, float* pointer);
-//			GLenum translate (VertexDataType type);
 			GLenum translate (unsigned int type);
+			//void setGLArray (VertexDataType type, float* pointer);
+			//GLenum translate (VertexDataType type);
 		};
 	};
 };

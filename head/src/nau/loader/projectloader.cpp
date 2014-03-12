@@ -198,13 +198,13 @@ ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, 
 		else
 			*triangleIDs = false;
 
-		bool core;
-		const char *pCoreProfile = pElem->Attribute("core");
-		if (pCoreProfile)
-			core = !strcmp(pCoreProfile, "yes");
-		else
-			core = false;
-		RENDERER->setCore(core);
+		//bool core;
+		//const char *pCoreProfile = pElem->Attribute("core");
+		//if (pCoreProfile)
+		//	core = !strcmp(pCoreProfile, "yes");
+		//else
+		//	core = false;
+		//RENDERER->setCore(core);
 		
 		loadAssets (hRoot, matLibs);
 		loadPipelines (hRoot);
