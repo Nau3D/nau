@@ -258,7 +258,7 @@ ResourceManager::createRenderable(std::string type, std::string name, std::strin
 	}
 
 	if (hasRenderable(name,filename))
-		return(NULL);
+		return(getRenderable(name, filename));
 
 	if (0 == type.compare ("Mesh")) 
 		r = new Mesh();
