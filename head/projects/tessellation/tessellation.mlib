@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<materiallib name="tessellation">
+
+	<textures>
+		<texture name="tex" filename="../../models/Texturas/calcada.jpg" />		
+	</textures>
+	
+	<shaders>
+		<shader name="tessShader" 	ps="shaders/tessDemo.frag" 
+									tc="shaders/tessDemo.tesc"
+									te="shaders/tessDemo.tese"
+									vs="shaders/tessDemo.vert" />
+	</shaders>
+	
+	
+	<materials>
+		<material name="tessMat">
+			<shader>
+				<name>tessShader</name>
+				<values>
+					<valueof uniform="lightDir" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="viewMatrix" 	type="CURRENT" context="MATRIX" 
+														component="VIEW" />
+					<valueof uniform="normalMatrix" type="CURRENT" context="MATRIX" 
+														component="NORMAL" />
+					
+					<valueof uniform="projModelViewMatrix"          	
+													type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+																									
+					<valueof uniform="texUnit" 		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />														
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT=0 name="tex" />
+			</textures>
+		</material>		
+
+	</materials>
+</materiallib>

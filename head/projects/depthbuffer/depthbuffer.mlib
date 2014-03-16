@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<materiallib name="Depth Buffer">
+
+	<rendertargets>
+		<rendertarget name = "depth">
+			<size width="1024" height="1024" />
+			<depth name="shadowMap" noreadandwrite="true"  
+									internalFormat="DEPTH_COMPONENT32"
+									format="DEPTH_COMPONENT" 
+									type="FLOAT"  />
+		</rendertarget>
+	</rendertargets>
+	
+	<shaders>
+		<shader name="depthOnly" 
+							ps="shaders/depthOnly.frag" 
+							vs="shaders/depthOnly.vert" />
+	</shaders>
+
+	<materials>
+		<material  name="depthOnlyNoCull" >
+			<color>
+				<ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+				<diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+			<shader>
+				<name>depthOnly</name>
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+											component="PROJECTION_VIEW_MODEL" />		
+				</values>
+			</shader>
+		</material>
+		
+	</materials>
+</materiallib>

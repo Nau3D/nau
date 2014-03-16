@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<project name="Render Target Test" width=1024 height=512>
+	<assets>
+		<scenes>
+			<scene name="MainScene">
+				<file>..\..\models\al.obj</file>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="Left" >
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="Right" >
+				<ORIGIN x = 0.5 y =0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR  r=0.0 g=0.0 b=0.0 />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera">
+				<viewport name="Left" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=100.0 />
+				<POSITION x=0 y=-0.5 z=7.5 />
+				<VIEW x=0.0 y=0.0 z=-1.0 />
+				<UP x=0 y=1 z=0 />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun" >
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-0.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.0" b="0.0" />
+			</light>
+		</lights>
+		<materialLibs>
+			<mlib filename="imageLoadStore.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<materialMaps>
+					<map fromMaterial="*" 
+						 toLibrary="Image Load Store" toMaterial="imageStore" />
+				</materialMaps>
+			</pass>
+			
+			<pass class="quad" name="pass2">
+				<viewport>Right</viewport>
+				<texture name="tex" fromLibrary="Image Load Store" />
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

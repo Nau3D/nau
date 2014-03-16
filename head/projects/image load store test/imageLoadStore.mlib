@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<materiallib name="Image Load Store">
+
+	<textures>
+		<texture name="tex" width=512 height=512 internalFormat="RGBA8" />
+		<texture name="Grade_01_02_03" filename="../../Texturas/AL01_Grade1.tif" mipmap="1" />
+	</textures>
+
+	<shaders>
+		<shader name="testImageLS" 	vs="shaders/testImageLS.vert" 
+									ps="shaders/testImageLS.frag" /> 
+		
+	</shaders>
+	
+	<materials>
+		<material name ="imageStore">
+			<shader>
+				<name>testImageLS</name>
+				<values>
+					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" /> 
+																
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+														component="NORMAL" />
+														
+					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
+														id=1 component="UNIT" />
+														
+				</values>
+			</shader>
+			
+			<imageTextures>
+				<imageTexture UNIT=1 texture="tex" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+		
+		</material>
+	
+	</materials>
+
+</materiallib>

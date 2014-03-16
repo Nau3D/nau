@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<project name="depth buffer" width=800 height=400>
+	<assets>
+		<scenes>
+			<scene name="MainScene">
+				<folder>../../models/pl3dsecxiv</folder>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="SmallViewport1" >
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
+			</viewport>
+			<viewport name="SmallViewport2" >
+				<ORIGIN x=0.5 y=0.0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR="1000.0" />
+				<POSITION x="0.0" y="20.0" z="20" />
+				<VIEW x="0.0" y="0.0" z="-1.0" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-52" y="77.0" z="-27.0" />
+				<DIRECTION x="1" y="-1" z="1" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<mlib filename="depthbuffer.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="depth buffer" default="true" defaultCamera="MainCamera">
+		
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<rendertarget name="depth" fromLibrary="Depth Buffer"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="Depth Buffer" toMaterial="depthOnlyNoCull" />
+				</materialMaps>
+			</pass>
+			
+			<pass class="quad" name="pass3">
+				<viewport>SmallViewport1</viewport>				
+				<texture name="shadowMap" fromLibrary="Depth Buffer"/>
+			</pass>
+			
+			<pass class="default" name="pass2">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>SmallViewport2</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			
+			
+
+		</pipeline>
+	</pipelines>
+</project>

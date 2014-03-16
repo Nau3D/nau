@@ -128,7 +128,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../src;C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.0\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;nau_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NAU_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -171,7 +171,7 @@
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../src;C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;nau_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;NAU_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -597,13 +597,13 @@ copy common.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common.cu.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">common.ptx</Outputs>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.0\include" D:/nau2/head/src/optix/common.cu
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.0\include" D:/nau/head/src/optix/common.cu
 copy common.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">common.ptx</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\src\optix\deferredShadows.cu">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/nau2/head/src/optix/deferredShadows.cu
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/nau/head/src/optix/deferredShadows.cu
 copy deferredShadows.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">deferredShadows.ptx</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau2/head/src/optix/deferredShadows.cu
@@ -612,7 +612,7 @@ copy deferredShadows.ptx ..\build\samples\optix</Command>
     </CustomBuild>
     <CustomBuild Include="..\src\optix\rtvssm.cu">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc --machine 32 --use_fast_math -ptx -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/nau2/head/src/optix/rtvssm.cu
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc --machine 32 --use_fast_math -ptx -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/nau/head/src/optix/rtvssm.cu
 copy rtvssm.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">rtvssm.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">rtvssm.ptx</Outputs>

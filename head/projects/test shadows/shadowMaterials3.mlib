@@ -1,0 +1,117 @@
+<?xml version="1.0" ?>
+<materiallib name="Shadow Materials">
+
+	<rendertargets>
+		<rendertarget name = "depth">
+			<size width="1024" height="1024" />
+			<depth name="shadowMap" noreadandwrite="true"  
+									internalFormat="DEPTH_COMPONENT32"
+									format="DEPTH_COMPONENT" 
+									type="FLOAT"  />
+		</rendertarget>
+		
+		<rendertarget name="simple">
+			<size width="1024" height="1024" />
+			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
+			<colors>
+				<color name="offscreenrender" format="RGBA" 
+												internalFormat="RGBA8" 
+												type="UNSIGNED_BYTE" />
+			</colors>
+		</rendertarget>
+
+	</rendertargets>
+	
+	<shaders>
+		<shader name="perpixel-color-shadow" 
+							ps="shaders/perpixel-color-shadow.frag" 
+							vs="shaders/perpixel-color-shadow.vert" />
+		
+		<shader name="depthOnly" 
+							ps="shaders/depthOnly.frag" 
+							vs="shaders/depthOnly.vert" />
+	</shaders>
+	
+	<states>
+		<state name="frontCull">
+			<CULL_TYPE value="FRONT" />
+		</state>
+	</states>
+	
+	<materials>
+		<material name="flat-with-shadow">
+			<color>
+				<ambient r="0.3" g="0.3" b="0.3" a="1.0" />
+				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+			
+			<shader>
+				<name>perpixel-color-shadow</name>
+				<values>
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="V"          		type="CURRENT" context="MATRIX" 
+														component="VIEW" />
+														
+					<valueof uniform="M"          		type="CURRENT" context="MATRIX" 
+														component="MODEL" />
+														
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+														component="NORMAL" />
+					
+					<!--valueof uniform="lightDirection" 	type="CAMERA" 
+														context="shadow#getShadowMap-LightCam" 
+														component="VIEW" /--> 
+														
+					<valueof uniform="lightDirection" 	type="LIGHT" 
+														context="Sun" 
+														component="DIRECTION" /> 
+														
+					<valueof uniform="diffuse" 			type="CURRENT" 
+														context="COLOR" 
+														component="DIFFUSE" />
+														
+ 					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
+														context="shadow#getShadowMap-LightCam" 
+														component="TS05_PVM_MATRIX" />
+					<valueof uniform="shadowMap" 		type="CURRENT" 
+														context="TEXTURE" id=1 
+														component="UNIT" />	
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />		
+				</values>
+			</shader>
+			
+			<textures>
+				<texture UNIT="1" name="shadowMap" >
+					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="LINEAR" />
+					<MAG_FILTER value="LINEAR" />
+					
+					<!--depthCompare mode="COMPARE_REF_TO_TEXTURE" func="LEQUAL" />
+					<filtering min="LINEAR" mag="LINEAR" /-->
+				</texture>	
+			</textures>
+		</material>		
+		
+		<material  name="depthOnly" >
+			<shader>
+				<name>depthOnly</name>
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+											component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
+			<state name="frontCull" />	
+		</material>
+		
+	</materials>
+</materiallib>

@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<materiallib name="Complexity Map">
+	<states>
+		<state name="CountPixelTest">
+			<DEPTH_TEST value="0" />
+			<BLEND value = "true" />
+			<BLEND_SRC value="ONE" />
+			<BLEND_DST value="ONE" />
+		</state>	
+		<state name="CountPixelDraw"> 
+			<BLEND value = "true" />
+			<BLEND_SRC value="ONE" />
+			<BLEND_DST value="ONE" />
+		</state>			
+	</states>
+	
+	<materials>
+		<material name="fivePerCentTest">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission  r="0.05" g="0.05" b="0.05" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+			<state name="CountPixelTest" />
+		</material>
+		
+		<material name="fivePerCentDraw">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="0.05" g="0.05" b="0.05" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+			<state name="CountPixelDraw" />
+		</material>
+		
+	</materials>
+</materiallib>

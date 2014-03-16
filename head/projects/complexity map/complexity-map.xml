@@ -1,0 +1,95 @@
+<?xml version="1.0" ?>
+<project name="complexity map" width=900 height=300>
+	<assets>
+		<scenes>
+			<scene name="MainScene">
+				<folder>../../models/pl3dsecxiv</folder>
+				<!--folder>..\..\ntg-bin-terrain</folder-->
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="SmallViewport1" >
+				<SIZE width=0.33 ratio=1 />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="SmallViewport2" >
+				<ORIGIN x = 0.33 y =0 />
+				<SIZE width=0.34 ratio=1 />
+				<CLEAR_COLOR  r=0.0 g=0.0 b=0.0 />
+			</viewport>
+			<viewport name="SmallViewport3" >
+				<ORIGIN x = 0.67 y =0 />
+				<SIZE  width=".33"  ratio=1/>
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera">
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="0.0" y="20.0" z="20" />
+				<VIEW x="0.0" y="0.0" z="-1.0" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<POSITION x="-52" y="77.0" z="-27.0" />
+				<DIRECTION x="1" y="-1" z="1" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<mlib filename="complexity map.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="complexityMap" default="true">
+			
+			<pass class="default" name="normal">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>SmallViewport1</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			
+			<pass class="default" name="tested pixels">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>SmallViewport2</viewport>
+				<materialMaps>
+					<map fromMaterial="*" 
+						 toLibrary="Complexity Map" toMaterial="fivePerCentTest" />
+				</materialMaps>
+				
+			</pass>
+			
+			<pass class="default" name="written pixels">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>SmallViewport3</viewport>
+				<materialMaps>
+					<map fromMaterial="*" 
+						 toLibrary="Complexity Map" toMaterial="fivePerCentDraw" />
+				</materialMaps>
+				
+			</pass>
+
+		</pipeline>
+	</pipelines>
+</project>

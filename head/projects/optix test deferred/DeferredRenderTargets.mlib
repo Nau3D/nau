@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<materiallib name="Deferred Render Targets">
+	<rendertargets>
+		<rendertarget name ="deferred">
+			<size width="1024" height="1024" />
+			<!--multisampling samples=32 /-->
+			<colors>
+				<color name="color" format="RGBA" 
+												internalFormat="RGBA8" 
+												type="UNSIGNED_BYTE" />
+				<color name="pos" format="RGBA" 
+												internalFormat="RGBA32F" 
+												type="FLOAT" />
+			</colors>
+		</rendertarget>
+	</rendertargets>
+	
+	<shaders>
+		<shader name="deferred" 	ps="shaders/deferredShading.frag" 
+									vs="shaders/deferredShading.vert" />
+		<shader name="combine" 	ps="shaders/combine.frag" 
+									vs="shaders/combine.vert" />
+									
+	</shaders>
+
+	<materials>
+
+		<material name="deferred">
+			<shader>
+				<name>deferred</name>
+				<values>
+					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightColor"     	type="CURRENT" context="LIGHT" 
+														id=0 component="COLOR" />
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="V"          	type="CURRENT" context="MATRIX" 
+														component="VIEW" />
+					<valueof uniform="M"          	type="CURRENT" context="MATRIX" 
+														component="MODEL" />
+														
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />														
+				</values>
+			</shader>
+		</material>	
+		
+		<material name="combine">
+			<shader>
+				<name>combine</name>
+				<values>
+					<valueof uniform="color" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />		
+					<valueof uniform="shadow" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="1" />
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="color" />
+				<texture UNIT="1" name="Optix Ray Tracer Render Target::offscreenrender" />
+			</textures>	
+		</material>
+	</materials>
+</materiallib>

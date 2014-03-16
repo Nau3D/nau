@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<materiallib name="Test Render Targets">
+	<rendertargets>
+		<rendertarget name ="test">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+			<depth name="shadowMapA"  internalFormat="DEPTH_COMPONENT32" />
+		</rendertarget>
+	</rendertargets>
+
+</materiallib>

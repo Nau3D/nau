@@ -54,7 +54,7 @@ namespace nau
 			// For Texture Storage
 			GLTexture(std::string label, std::string anInternalFormat, int width, int height, int levels = 1);
 
-			GLTexture() {};
+			GLTexture():Texture() {};
 
 			// For ...
 			//GLTexture (std::string label);

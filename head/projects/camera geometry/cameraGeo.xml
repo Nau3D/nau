@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<project name="Geometric Primitives" width=1024 height = 512>
+	<assets>
+	
+		<scenes>
+			<scene name="CubeLand" >
+				<geometry name = "axis" type = "Axis" scale = 5 />
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="LeftViewport">
+				<ORIGIN x = 0 y =0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="RightViewport">
+				<ORIGIN x = 0.5 y =0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="0.3" FAR="100.0" />
+				<POSITION x="12.83" y="7.23" z="3.2" />
+				<VIEW x="-0.83" y="-0.51" z="-0.21" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+			<camera name="Perspective" >
+				<projection TYPE="PERSPECTIVE" FOV="50.0" NEAR="1" FAR="4.0" />
+				<POSITION x="0" y="0.0" z="0" />
+				<VIEW x="0.0" y="0.0" z="-1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+			<camera name="Orthographics" >
+				<projection TYPE="ORTHO" LEFT="-1" RIGHT="1" BOTTOM="-1" TOP="1" NEAR="1" FAR="3" />
+				<POSITION x="0" y="0.0" z="2" />
+				<VIEW x="0.0" y="-0.0" z="-1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+			
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" />
+			</light>
+		</lights>
+		
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1" >
+				<scenes>
+					<scene>CubeLand</scene>
+					<scene>Perspective</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>LeftViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			<pass class="default" name="pass2" >
+				<scenes>
+					<scene>CubeLand</scene>
+					<scene>Orthographics</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>RightViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

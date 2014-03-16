@@ -14,9 +14,10 @@ GLTextureMS::InitGL() {
 
 	
 	
-GLTextureMS::GLTextureMS (std::string label, std::string anInternalFormat, int width, int height, int samples)/* :
-	GLTexture (label)*/
+GLTextureMS::GLTextureMS (std::string label, std::string anInternalFormat, int width, int height, int samples) :
+	GLTexture ()
 {
+	m_Label = label;
 	m_IntProps[WIDTH] = width;
 	m_IntProps[HEIGHT] = height;
 	m_IntProps[DEPTH] = 1;
