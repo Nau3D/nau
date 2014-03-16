@@ -35,6 +35,7 @@ namespace nau
 			bool hasTexture(std::string name);
 			int getNumTextures();
 			nau::render::Texture* getTexture(unsigned int i);
+			nau::render::Texture* getTextureByID(unsigned int id);
 			nau::render::Texture* getTexture (std::string name);
 			nau::render::Texture* addTexture (std::string fn, std::string label = "", bool mipmap = 1);
 			nau::render::Texture* addTexture (std::vector<std::string> fn, std::string label, bool mipmap = 1);

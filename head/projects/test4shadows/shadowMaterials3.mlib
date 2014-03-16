@@ -1,0 +1,176 @@
+<?xml version="1.0" ?>
+<materiallib name="Shadow Materials">
+
+	<rendertargets>
+		<rendertarget name="shadowMap1">
+			<size width="2048" height="2048" />
+			<depth name="shadowMap1" noreadandwrite="true"  
+									internalFormat="DEPTH_COMPONENT32"
+									format="DEPTH_COMPONENT" 
+									type="FLOAT"  />
+		</rendertarget>
+		
+		<rendertarget name="shadowMap2">
+			<size width="2048" height="2048" />
+			<depth name="shadowMap2" noreadandwrite="true"  
+									internalFormat="DEPTH_COMPONENT32"
+									format="DEPTH_COMPONENT" 
+									type="FLOAT"  />
+		</rendertarget>
+		
+		<rendertarget name="shadowMap3">
+			<size width="2048" height="2048" />
+			<depth name="shadowMap3" noreadandwrite="true"  
+									internalFormat="DEPTH_COMPONENT32"
+									format="DEPTH_COMPONENT" 
+									type="FLOAT"  />
+		</rendertarget>
+		
+		<rendertarget name="shadowMap4">
+			<size width="2048" height="2048" />
+			<depth name="shadowMap4" noreadandwrite="true"  
+									internalFormat="DEPTH_COMPONENT32"
+									format="DEPTH_COMPONENT" 
+									type="FLOAT"  />
+		</rendertarget>
+
+				
+		<rendertarget name="simple">
+			<size width="1024" height="1024" />
+			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
+			<colors>
+				<color name="offscreenrender" format="RGBA" 
+												internalFormat="RGBA8" 
+												type="UNSIGNED_BYTE" />
+			</colors>
+		</rendertarget>
+
+	</rendertargets>
+	<shaders>	
+		<shader name="perpixel-color-shadow-4-depths" 
+							ps="shaders/perpixel-color-shadow-4-depths.frag" 
+							vs="shaders/perpixel-color-shadow-4-depths.vert" />
+													
+		<shader name="depthOnly" 
+							ps="shaders/depthOnly.frag" 
+							vs="shaders/depthOnly.vert" />
+	</shaders>
+	<states>
+		<state name="frontCull">
+			<CULL_TYPE value="FRONT" />
+		</state>
+	</states>
+	<materials>
+
+		<material name="flat-with-shadow-4-depths">
+			<color>
+				<ambient r="0.3" g="0.3" b="0.3" a="1.0" />
+				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+			<shader>
+				<name>perpixel-color-shadow-4-depths</name>
+				<values>
+					<valueof uniform="PVM"          type="CURRENT" context="MATRIX" 
+													component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="V"          	type="CURRENT" context="MATRIX" 
+													component="VIEW" />
+														
+					<valueof uniform="M"          	type="CURRENT" context="MATRIX" 
+													component="MODEL" />
+														
+					<valueof uniform="NormalMatrix" type="CURRENT" context="MATRIX" 
+													component="NORMAL" />
+					
+					<valueof uniform="lightDirection" 	type="LIGHT" 
+														context="Sun" 
+														component="DIRECTION" /> 
+														
+ 					<valueof uniform="lightSpaceMat1" type="CAMERA" 
+														context="shadow#pass1-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="lightSpaceMat2" type="CAMERA" 
+														context="shadow#pass2-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="lightSpaceMat3" type="CAMERA" 
+														context="shadow#pass3-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="lightSpaceMat4" type="CAMERA" 
+														context="shadow#pass4-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="split1" type="PASS" context="shadow#pass1" component="To" />
+					<valueof uniform="split2" type="PASS" context="shadow#pass2" component="To" />
+					<valueof uniform="split3" type="PASS" context="shadow#pass3" component="To" />
+					<valueof uniform="split4" type="PASS" context="shadow#pass4" component="To" />
+					<!--valueof uniform="split" type="PASS" context="shadow#pass1" component="To" />
+					<valueof uniform="split[1]" type="PASS" context="shadow#pass2" component="To" />
+					<valueof uniform="split[2]" type="PASS" context="shadow#pass3" component="To" />
+					<valueof uniform="split[3]" type="PASS" context="shadow#pass4" component="To" /-->
+					<!--valueof uniform="split[1]" type="DATA" context="15" component="FLOAT" />
+					<valueof uniform="split[2]" type="DATA" context="50" component="FLOAT" />
+					<valueof uniform="split[3]" type="DATA" context="500" component="FLOAT" /-->
+					<valueof uniform="shadowMap1" 	type="CURRENT" 
+														context="TEXTURE" 
+														id=0 component="UNIT" />
+														
+					<valueof uniform="shadowMap2" 	type="CURRENT" 
+														context="TEXTURE" 
+														id=1 component="UNIT" />
+														
+					<valueof uniform="shadowMap3" 	type="CURRENT" 
+														context="TEXTURE" 
+														id=2 component="UNIT" />
+														
+					<valueof uniform="shadowMap4" 	type="CURRENT" 
+														context="TEXTURE" 
+														id=3 component="UNIT" />
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="shadowMap1" >
+					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="LINEAR" />
+					<MAG_FILTER value="LINEAR" />
+				</texture>	
+				<texture UNIT="1" name="shadowMap2" >
+					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="LINEAR" />
+					<MAG_FILTER value="LINEAR" />
+				</texture>	
+				<texture UNIT="2" name="shadowMap3" >
+					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="LINEAR" />
+					<MAG_FILTER value="LINEAR" />
+				</texture>	
+				<texture UNIT="3" name="shadowMap4" >
+					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="LINEAR" />
+					<MAG_FILTER value="LINEAR" />
+				</texture>	
+			</textures>
+		</material>	
+		
+		<material  name="depthOnly" >
+			<shader>
+				<name>depthOnly</name>
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+											component="PROJECTION_VIEW_MODEL" />	
+				</values>
+			</shader>
+			<state name="frontCull" />	
+		</material>	
+
+	</materials>
+</materiallib>

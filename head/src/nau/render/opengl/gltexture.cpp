@@ -97,6 +97,7 @@ GLTexture::GetCompatibleType(int aFormat) {
 }
 //#endif
 
+
 	
 GLTexture::GLTexture(std::string label, std::string anInternalFormat, int width, int height, int levels):
 	Texture(label, "TEXTURE_2D", anInternalFormat, width, height)

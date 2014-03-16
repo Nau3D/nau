@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<project name="Multiple Cameras and Viewports"  width="1024" height="512">
+	<assets>
+		<scenes>
+			<scene name="MainScene">
+				<file>..\..\models\ntg-bench\bench.obj</file>
+				<!--folder>..\..\ntg-bin-5</folder-->
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="RightViewport" >
+				<ORIGIN x=0.5 y=0.0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.4" />
+			</viewport>
+			<viewport name="LeftViewport" >
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.4" />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera" >
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=100.0 />
+				<POSITION x="1.80" y="13.40" z="-22.74" />
+				<VIEW x="-0.124" y="-0.314" z="0.941" />
+				<UP x="0.0" y="1.0" z="0.0" />
+				<LEFT value = -20 />
+				<BOTTOM value = -20 />
+				<RIGHT value = 20 />
+				<TOP value = 20 />
+			</camera>
+			<camera name="GodCamera" >
+				<viewport name="LeftViewport" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=10000.0 />
+				<POSITION x="-230.0" y="67.0" z="35.0" />
+				<VIEW x="0.925" y="-0.342" z="-0.058" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-1.0" z="-1.0" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.5" b="0.5" />
+			</light>
+		</lights>	
+	</assets>
+	<pipelines>
+		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
+			<pass class="default" name="Gods View">
+				<scenes>
+					<scene>MainScene</scene>
+					<scene>MainCamera</scene>
+				</scenes>
+				<camera>GodCamera</camera>
+				<viewport>LeftViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			<pass class="default" name="Main View">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>RightViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

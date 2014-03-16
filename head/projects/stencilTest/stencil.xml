@@ -1,0 +1,131 @@
+<?xml version="1.0" ?>
+<project name="Stencil Settings" width="512" height="512">
+	<assets>
+	
+		<scenes>
+			<scene name="Ground" >
+				<geometry name="plane"  type="Square" 
+												scale=10 material="ground"/>
+			</scene>
+			
+			<scene name="CubeLand" >
+				<geometry name = "sphere1" type = "Sphere" slices=10 stacks=10 
+												transX=-2.5 transY=2.0 transZ=0 
+												 material="crateBox"/>
+				<geometry name = "box2" type = "Box" transX= 2.5 transY = 2 transZ=0 
+													 material="crateBox" />
+			</scene>
+			
+			<scene name="CubeLandReflected"  scaleZ=1 scaleX=1 scaleY=-1>
+				<geometry name = "sphere2" type = "Sphere" slices=10 stacks=10 
+												transX=-2.5 transY=2.0 transZ=0 
+												 material="crateBox"/>
+				<geometry name = "box2r" type = "Box" transX= 2.5 transY = 2 transZ=0 
+													 material="crateBox" />
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" type="perspective">
+			<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=100.0 />
+				<POSITION x="-0.2" y="0.05" z="10" />
+				<VIEW x="0.0" y="0.0" z="-1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<mlib filename = "stencil.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="Real Scene" axis="5">
+				<scenes>
+					<scene>CubeLand</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crateBox" toLibrary="Stencil" toMaterial="simpleTextured" />
+				</materialMaps>
+			</pass>
+
+			<pass class="default" name="Set Ground On Stencil" >
+				<scenes>
+					<scene>Ground</scene>
+				</scenes>
+				<color clear=false />
+				<depth clear=false write=false/>
+				<stencil clear=true clearValue=0 test=true mask=255>
+					<stencilFunc  func=NEVER ref=1 mask=255 />
+					<stencilOp sfail=REPLACE dfail=REPLACE dpass=REPLACE/>
+				</stencil>
+				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<materialMaps>
+					<map fromMaterial="ground" toLibrary="Stencil" toMaterial="simpleTextured2" />
+				</materialMaps>
+			</pass>
+
+		<pass class="default" name="Draw Reflection" >
+				<scenes>
+					<scene>CubeLandReflected</scene>
+				</scenes>
+				<color clear=false />
+				<depth clear=false />
+				<stencil clear=false test=true mask=255>
+					<stencilFunc  func=EQUAL ref=1 mask=255 />
+					<stencilOp sfail=KEEP dfail=KEEP dpass=KEEP/>
+				</stencil>
+			<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crateBox" toLibrary="Stencil" toMaterial="simpleTextured3" />
+				</materialMaps>
+			</pass>
+			
+		<pass class="default" name="Draw Ground">
+				<scenes>
+					<scene>Ground</scene>
+				</scenes>
+				<color clear=false />
+				<depth clear=false />
+				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<materialMaps>
+					<map fromMaterial="ground" toLibrary="Stencil" toMaterial="simpleTexturedBlend" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

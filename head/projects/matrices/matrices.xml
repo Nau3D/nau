@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<project name="depth buffer" width=1200 height=400 >
+	<assets>
+		<scenes>
+			<scene name="CubeLand">
+				<file>..\..\models\bench.obj</file>
+			</scene>	
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="SmallViewport1" >
+				<SIZE width=0.33 ratio=1 />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="SmallViewport2" >
+				<ORIGIN x = 0.33 y =0 />
+				<SIZE width=0.34 ratio=1 />
+				<CLEAR_COLOR  r=0.0 g=0.0 b=0.0 />
+			</viewport>
+			<viewport name="SmallViewport3" >
+				<ORIGIN x = 0.67 y =0 />
+				<SIZE  width=".33"  ratio=1/>
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="ClipSpaceCamera" type="perspective" >
+				<viewport name="SmallViewport3" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="-3.127" y="-0.06" z="4.301" />
+				<VIEW x="0.936" y="-0.03" z="-0.35" />
+				<UP x="0.028" y="0.995" z="-0.01" />
+			</camera>
+			<camera name="GodCamera" type="perspective" >
+				<viewport name="SmallViewport2" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="-1.49" y="28.41" z="-58-17" />
+				<VIEW x="0.15" y="-0.37" z="0.91" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+			<camera name="UserCamera" type="perspective" >
+				<viewport name="SmallViewport1" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="-18.734" y="6.51" z="-3.13" />
+				<VIEW x="0.934" y="-0.189" z="0.3" />
+				<UP x="0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" >
+				<POSITION x="-52" y="77.0" z="-27.0" />
+				<DIRECTION x="-1" y="1" z="1" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<mlib filename="matricesDemoMaterials.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="shadow" default="true" defaultCamera="UserCamera">
+		
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene>CubeLand</scene>
+				</scenes>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<camera>UserCamera</camera>
+			</pass>
+			
+			<pass class="default" name="pass2">
+				<scenes>
+					<scene>CubeLand</scene>
+					<scene>UserCamera</scene>
+				</scenes>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<camera>GodCamera</camera>
+			</pass>
+			
+			<pass class="default" name="pass3">
+				<scenes>
+					<scene>CubeLand</scene>
+					<scene>UserCamera</scene>
+				</scenes>
+				<camera>ClipSpaceCamera</camera>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="imageSpace" fromLibrary="Matrices Demo Materials" />
+					</map>
+				</injectionMaps>
+			</pass>
+			
+			
+
+		</pipeline>
+	</pipelines>
+</project>

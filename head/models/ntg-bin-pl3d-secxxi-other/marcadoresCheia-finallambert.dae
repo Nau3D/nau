@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+    <asset>
+        <contributor>
+            <author>bruno</author>
+            <authoring_tool>Maya 8.5 Service Pack 1 | ColladaMaya v3.02 | FCollada v3.2</authoring_tool>
+            <comments>Collada Maya Export Options: bakeTransforms=1;exportPolygonMeshes=1;bakeLighting=0;isSampling=0;
+curveConstrainSampling=0;exportCameraAsLookat=0;
+exportLights=0;exportCameras=0;exportJointsAndSkin=0;
+exportAnimations=0;exportTriangles=1;exportInvisibleNodes=0;
+exportNormals=1;exportTexCoords=1;exportVertexColors=0;exportTangents=1;
+exportTexTangents=0;exportConstraints=0;exportPhysics=0;exportXRefs=1;
+dereferenceXRefs=1;cameraXFov=0;cameraYFov=1</comments>
+            <source_data>file:///C:/PL3D/Maya2/ALtorre01.mb</source_data>
+        </contributor>
+        <created>2007-09-21T09:37:17Z</created>
+        <modified>2007-09-21T09:37:18Z</modified>
+        <unit name="meter"/>
+        <up_axis>Y_UP</up_axis>
+    </asset>
+    <library_images>
+        <image id="file75" name="file75">
+            <init_from>../Texturas/painelTorre1.jpg</init_from>
+        </image>
+    </library_images>
+    <library_materials>
+        <material id="PainelTorre1" name="PainelTorre1">
+            <instance_effect url="#PainelTorre1-fx"/>
+        </material>
+    </library_materials>
+    <library_effects>
+        <effect id="PainelTorre1-fx">
+            <profile_COMMON>
+                <newparam sid="file75-surface">
+                    <surface type="2D">
+                        <init_from>file75</init_from>
+                        <format>A8R8G8B8</format>
+                    </surface>
+                </newparam>
+                <newparam sid="file75-sampler">
+                    <sampler2D>
+                        <source>file75-surface</source>
+                        <minfilter>LINEAR_MIPMAP_LINEAR</minfilter>
+                        <magfilter>LINEAR</magfilter>
+                    </sampler2D>
+                </newparam>
+                <technique sid="common">
+                    <lambert>
+                        <emission>
+                            <color>0 0 0 1</color>
+                        </emission>
+                        <ambient>
+                            <color>0 0 0 1</color>
+                        </ambient>
+                        <diffuse>
+                            <texture texture="file75-sampler" texcoord="TEX0">
+                                <extra>
+                                    <technique profile="MAYA">
+                                        <wrapU>1</wrapU>
+                                        <wrapV>1</wrapV>
+                                        <mirrorU>0</mirrorU>
+                                        <mirrorV>0</mirrorV>
+                                        <coverageU>1</coverageU>
+                                        <coverageV>1</coverageV>
+                                        <translateFrameU>48</translateFrameU>
+                                        <translateFrameV>48</translateFrameV>
+                                        <rotateFrame>48</rotateFrame>
+                                        <stagger>0</stagger>
+                                        <fast>0</fast>
+                                        <repeatU>1</repeatU>
+                                        <repeatV>1</repeatV>
+                                        <offsetU>48</offsetU>
+                                        <offsetV>48</offsetV>
+                                        <rotateUV>48</rotateUV>
+                                        <noiseU>48</noiseU>
+                                        <noiseV>48</noiseV>
+                                        <blend_mode>NONE</blend_mode>
+                                    </technique>
+                                </extra>
+                            </texture>
+                        </diffuse>
+                        <transparent>
+                            <color>0 0 0 1</color>
+                        </transparent>
+                        <transparency>
+                            <float>1</float>
+                        </transparency>
+                        <index_of_refraction>
+                            <float>1</float>
+                        </index_of_refraction>
+                    </lambert>
+                    <extra>
+                        <technique profile="FCOLLADA"/>
+                    </extra>
+                </technique>
+            </profile_COMMON>
+        </effect>
+    </library_effects>
+    <library_geometries>
+        <geometry id="cheia2qwe" name="cheia2qwe">
+            <mesh>
+                <source id="cheia2qwe-positions" name="position">
+                    <float_array id="cheia2qwe-positions-array" count="18">-5.0514 0 -0.304979 -5.06529 0 -0.312182 -5.32356 0 -0.304979 -5.0514 0 -0.319899 -5.32304 0 -0.319899 -5.34568 0 -0.312696</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheia2qwe-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="cheia2qwe-normals" name="normal">
+                    <float_array id="cheia2qwe-normals-array" count="18">0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheia2qwe-normals-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="cheia2qwe-geotangent" name="geotangent">
+                    <float_array id="cheia2qwe-geotangent-array" count="18">0 0 -1 -0.460315 0 0.887755 0.329369 0 -0.944201 -0.485641 0 -0.874159 0 0 1 0.3032 0 0.952927</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheia2qwe-geotangent-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="cheia2qwe-geobinormal" name="geobinormal">
+                    <float_array id="cheia2qwe-geobinormal-array" count="18">-1 0 0 0.887755 0 0.460315 -0.944201 0 -0.329369 -0.874159 0 0.485641 1 0 0 0.952927 0 -0.3032</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheia2qwe-geobinormal-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="cheia2qwe-map1" name="map1">
+                    <float_array id="cheia2qwe-map1-array" count="12">0.859769 -0.055444 0.845867 -0.043885 0.57977 -0.056819 0.859769 -0.031499 0.580285 -0.032874 0.557629 -0.044434</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheia2qwe-map1-array" stride="2">
+                            <param name="S" type="float"/>
+                            <param name="T" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="cheia2qwe-vertices">
+                    <input semantic="POSITION" source="#cheia2qwe-positions"/>
+                    <input semantic="NORMAL" source="#cheia2qwe-normals"/>
+                    <input semantic="TANGENT" source="#cheia2qwe-geotangent"/>
+                    <input semantic="BINORMAL" source="#cheia2qwe-geobinormal"/>
+                </vertices>
+                <triangles count="4" material="lambert82SG">
+                    <input offset="0" semantic="VERTEX" source="#cheia2qwe-vertices"/>
+                    <input offset="0" semantic="TEXCOORD" source="#cheia2qwe-map1" set="0"/>
+                    <p>0 1 2 3 4 1 5 2 4 4 2 1</p>
+                </triangles>
+            </mesh>
+            <extra>
+                <technique profile="MAYA">
+                    <double_sided>0</double_sided>
+                </technique>
+            </extra>
+        </geometry>
+        <geometry id="cheiaShape1" name="cheiaShape1">
+            <mesh>
+                <source id="cheiaShape1-positions" name="position">
+                    <float_array id="cheiaShape1-positions-array" count="18">-5.0514 0 -0.304979 -5.06529 0 -0.312182 -5.32356 0 -0.304979 -5.0514 0 -0.319899 -5.32304 0 -0.319899 -5.34568 0 -0.312696</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheiaShape1-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="cheiaShape1-normals" name="normal">
+                    <float_array id="cheiaShape1-normals-array" count="18">0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheiaShape1-normals-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="cheiaShape1-geotangent" name="geotangent">
+                    <float_array id="cheiaShape1-geotangent-array" count="18">0 0 -1 -0.460315 0 0.887755 0.329369 0 -0.944201 -0.485641 0 -0.874159 0 0 1 0.3032 0 0.952927</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheiaShape1-geotangent-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="cheiaShape1-geobinormal" name="geobinormal">
+                    <float_array id="cheiaShape1-geobinormal-array" count="18">-1 0 0 0.887755 0 0.460315 -0.944201 0 -0.329369 -0.874159 0 0.485641 1 0 0 0.952927 0 -0.3032</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheiaShape1-geobinormal-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="cheiaShape1-map1" name="map1">
+                    <float_array id="cheiaShape1-map1-array" count="12">0.420134 -0.043523 0.406232 -0.031963 0.147756 -0.042736 0.420134 -0.019578 0.148271 -0.018791 0.125615 -0.03035</float_array>
+                    <technique_common>
+                        <accessor count="6" source="#cheiaShape1-map1-array" stride="2">
+                            <param name="S" type="float"/>
+                            <param name="T" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="cheiaShape1-vertices">
+                    <input semantic="POSITION" source="#cheiaShape1-positions"/>
+                    <input semantic="NORMAL" source="#cheiaShape1-normals"/>
+                    <input semantic="TANGENT" source="#cheiaShape1-geotangent"/>
+                    <input semantic="BINORMAL" source="#cheiaShape1-geobinormal"/>
+                </vertices>
+                <triangles count="4" material="lambert82SG">
+                    <input offset="0" semantic="VERTEX" source="#cheiaShape1-vertices"/>
+                    <input offset="0" semantic="TEXCOORD" source="#cheiaShape1-map1" set="0"/>
+                    <p>0 1 2 3 4 1 5 2 4 4 2 1</p>
+                </triangles>
+            </mesh>
+            <extra>
+                <technique profile="MAYA">
+                    <double_sided>0</double_sided>
+                </technique>
+            </extra>
+        </geometry>
+    </library_geometries>
+    <library_visual_scenes>
+        <visual_scene id="VisualSceneNode" name="ALtorre01">
+            <node id="cheia2" name="cheia2">
+                <matrix sid="transform">-1.84213 -2.46622 0 -24.573 0 0 -3.07826 9.74449 2.46622 -1.84213 0 32.0421 0 0 0 1</matrix>
+                <instance_geometry url="#cheia2qwe">
+                    <bind_material>
+                        <technique_common>
+                            <instance_material symbol="lambert82SG" target="#PainelTorre1">
+                                <bind_vertex_input semantic="TEX0" input_semantic="TEXCOORD" input_set="0"/>
+                            </instance_material>
+                        </technique_common>
+                    </bind_material>
+                </instance_geometry>
+            </node>
+            <node id="cheia1" name="cheia1">
+                <matrix sid="transform">-1.84213 -2.46622 0 -24.573 0 0 -3.07826 10.8671 2.46622 -1.84213 0 32.0421 0 0 0 1</matrix>
+                <instance_geometry url="#cheiaShape1">
+                    <bind_material>
+                        <technique_common>
+                            <instance_material symbol="lambert82SG" target="#PainelTorre1">
+                                <bind_vertex_input semantic="TEX0" input_semantic="TEXCOORD" input_set="0"/>
+                            </instance_material>
+                        </technique_common>
+                    </bind_material>
+                </instance_geometry>
+            </node>
+            <extra>
+                <technique profile="FCOLLADA">
+                    <start_time>0.041666</start_time>
+                    <end_time>2</end_time>
+                </technique>
+            </extra>
+        </visual_scene>
+    </library_visual_scenes>
+    <scene>
+        <instance_visual_scene url="#VisualSceneNode"/>
+    </scene>
+</COLLADA>

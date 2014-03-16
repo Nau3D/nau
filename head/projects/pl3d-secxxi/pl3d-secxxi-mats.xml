@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<project name="teste1">
+	<assets>
+		<scenes>
+			<scene name="Other" type="Scene">
+				<folder>..\..\models\ntg-bin-pl3d-secxxi-other</folder>
+			</scene>
+			<!--scene name="Arvores" type="Octree" 
+				   filename="..\ntg-bin-pl3d-secxxi\avPlatanosArvoresIII.cbo" /-->
+			<!--scene name="Main" type="Octree" 
+				   filename="..\ntg-bin-pl3d-secxxi\ponteLimaSecXX_with_octreeVI.cbo" /-->
+			<scene name="Arvores" type="OctreeByMat" 
+				   filename="..\..\models\ntg-bin-pl3d-secxxi\arvores.cbo" />
+			<scene name="Main" type="OctreeByMat" 
+				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3dsecXXI-octreeByMat-testUnify4000.cbo" />
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.4" />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=10000.0 />
+				<POSITION x="-2.0" y="18.0" z="1.0" />
+				<VIEW x="1.0" y="0.0" z="1.0" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun" >
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-1.0" z="-0.25" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.5" b="0.5" />
+			</light>
+		</lights>
+		<materialLibs>
+			<mlib filename = "PL3D_Materials.mlib"/>
+		</materialLibs> 
+	</assets>
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene>Main</scene>
+					<scene>Arvores</scene>
+					<scene>Other</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>				
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<materialMaps>
+					<map fromMaterial="Vidro" 
+						 toLibrary="PL3D_Materials" toMaterial="Vidro" />
+					<map fromMaterial="AguaComposer" 
+						 toLibrary="PL3D_Materials" toMaterial="Aqua" />
+					<map fromMaterial="skydome" 
+						 toLibrary="PL3D_Materials" toMaterial="Sky" />
+				</materialMaps>
+				<injectionMaps>
+					<map toMaterial="Grade*">
+						<state name="Grades" fromLibrary="PL3D_Materials" />
+					</map>
+				</injectionMaps>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

@@ -26,7 +26,7 @@ GLImageTexture::GLImageTexture(std::string label, unsigned int texID, unsigned i
 	m_EnumProps[ACCESS] = access;
 	m_UIntProps[LEVEL] = level;
 	m_UIntProps[TEX_ID] = texID;
-	m_InternalFormat = RESOURCEMANAGER->getTexture(texID)->getPrope(Texture::INTERNAL_FORMAT);
+	m_InternalFormat = RESOURCEMANAGER->getTextureByID(texID)->getPrope(Texture::INTERNAL_FORMAT);
 	m_Label = label;
 	m_Unit = 0;
 }
