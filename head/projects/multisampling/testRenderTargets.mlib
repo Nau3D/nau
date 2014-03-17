@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<materiallib name="Test Multisampling">
+
+	<rendertargets>
+		<rendertarget name="test">
+			<size width=1024 height=1024 samples=16/>
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA8" />
+			</colors>
+			<depth name="depth" internalFormat="DEPTH_COMPONENT32" />
+		</rendertarget>
+	</rendertargets>
+
+	<shaders>
+		<shader name="resolveMS" 		ps="shaders/resolve.frag" 
+										vs="shaders/resolve.vert" />
+	</shaders>
+
+	<materials>
+		<material name="quadpass2">
+			<color>
+				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+			<shader>
+				<name>resolveMS</name>
+				<values>
+					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />		
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="offscreenrender" />
+			</textures>			
+		</material>
+	</materials>
+</materiallib>

@@ -29,10 +29,10 @@ Camera::Init() {
 	// VEC4
 	Attribs.add(Attribute(POSITION, "POSITION",Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 1.0f)));
 	Attribs.add(Attribute(VIEW_VEC, "VIEW", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
-	Attribs.add(Attribute(NORMALIZED_VIEW_VEC, "NORMALIZED_VIEW_VEC", Enums::DataType::VEC4, true));
+	Attribs.add(Attribute(NORMALIZED_VIEW_VEC, "NORMALIZED_VIEW_VEC", Enums::DataType::VEC4, true,new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	Attribs.add(Attribute(UP_VEC, "UP", Enums::DataType::VEC4, false, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
-	Attribs.add(Attribute(NORMALIZED_UP_VEC, "NORMALIZED_UP" ,Enums::DataType::VEC4, true));
-	Attribs.add(Attribute(NORMALIZED_RIGHT_VEC, "NORMALIZED_RIGHT" ,Enums::DataType::VEC4, true));
+	Attribs.add(Attribute(NORMALIZED_UP_VEC, "NORMALIZED_UP" ,Enums::DataType::VEC4, true, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
+	Attribs.add(Attribute(NORMALIZED_RIGHT_VEC, "NORMALIZED_RIGHT" ,Enums::DataType::VEC4, true, new vec4(1.0f, 0.0f, 0.0f, 0.0f)));
 	Attribs.add(Attribute(LOOK_AT_POINT, "LOOK_AT_POINT" ,Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 1.0f)));
 	// MAT4
 	Attribs.add(Attribute(VIEW_MATRIX, "VIEW_MATRIX",Enums::DataType::MAT4, true));
@@ -137,8 +137,8 @@ Camera::Camera (const std::string &name) :
 
 	aMaterialGroup->setIndexList (indices);
 	aMaterialGroup->setParent (renderable);
-	aMaterialGroup->setMaterialName("__Black");
-//	aMaterialGroup->setMaterialName("__Emission White");
+//	aMaterialGroup->setMaterialName("__Black");
+	aMaterialGroup->setMaterialName("__Emission White");
 
 	renderable->addMaterialGroup (aMaterialGroup);
 	m_Transform = & m_Mat4Props[VIEW_INVERSE_MATRIX];
@@ -153,8 +153,8 @@ Camera::Camera (const std::string &name) :
 
 	aMaterialGroup->setIndexList (indices);
 	aMaterialGroup->setParent (renderable);
-	aMaterialGroup->setMaterialName("__Black");
-//	aMaterialGroup->setMaterialName("__Emission Red");
+//	aMaterialGroup->setMaterialName("__Black");
+	aMaterialGroup->setMaterialName("__Emission Red");
 
 	renderable->addMaterialGroup (aMaterialGroup);
 	setRenderable (renderable);

@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<project name="Simple" width="512" height="512">
+	<assets>
+		<viewports>
+			<viewport name="Main" >
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+	
+		<materialLibs>
+			<mlib filename="computeShader.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="compute" name="pass1">
+				<material mat="computeShader" lib="Compute" dimX=64, dimY=64 dimZ=1 />
+			</pass>
+			<pass class="quad" name="pass2" >
+				<viewport>Main</viewport>
+				<texture name="tex" fromLibrary="Compute" />
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>	

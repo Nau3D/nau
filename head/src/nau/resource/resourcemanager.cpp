@@ -168,6 +168,13 @@ ResourceManager::getTexture (std::string name)
 }
 
 
+Texture*
+ResourceManager::getTextureByID (unsigned int id)
+{
+	return (m_pTextureManager->getTexture (id));
+}
+
+
 Texture *
 ResourceManager::getTexture(unsigned int i) {
 

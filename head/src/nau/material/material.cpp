@@ -1,5 +1,6 @@
 #include <nau/material/material.h>
 #include <nau/debug/profile.h>
+#include <nau/slogger.h>
 #include <nau.h>
 
 using namespace nau::material;
@@ -332,8 +333,10 @@ Material::createTexture (int unit, std::string fn)
 		m_Texmat->setTexture (unit, tex);
 		return(true);
    }
-   else
+   else {
+	   SLOG("Texture not found: %s", fn.c_str());
 	   return(false);
+   }
 }
 
 

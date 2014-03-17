@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<materiallib name="Compute">
+
+	<textures>
+		<texture name="tex" width=512 height=512 internalFormat="RGBA8" />
+		<texture name="source" filename="../../models/Texturas/CuboEstrada.tif" mipmap="1" />
+	</textures>
+
+	<shaders>
+		<shader name="compute" 	cs="shaders/contour.comp" /> 
+	</shaders>
+	
+	<materials>
+		<material name ="computeShader">
+			<shader>
+				<name>compute</name>
+				<values>
+														
+					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
+														id=1 component="UNIT" />
+					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE"
+														id=1 component="UNIT" />
+														
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="1" name="source" />				
+			</textures>
+			<imageTextures>
+				<imageTexture UNIT=1 texture="tex" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+		
+		</material>
+	
+	</materials>
+
+</materiallib>

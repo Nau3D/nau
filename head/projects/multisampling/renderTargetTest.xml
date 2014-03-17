@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<project name="Multisampling Test" width = 1024 height = 512>
+	<assets>
+		<scenes>
+			<scene name="MainScene">
+				<folder>models</folder>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="RightViewport">
+				<ORIGIN x=0.5 y=0.0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="LeftViewport">
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=0.5 ratio=1 />
+				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera">
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=10000.0 />
+				<POSITION x=0.0 y=0.0 z=5.0 />
+				<VIEW x=1.0 y=0.0 z=-1.0 />
+				<UP x=0.0 y=1.0 z=0.0 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="-1.0" y="-1.0" z="-1.0" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.5" b="0.5" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<mlib filename="testRenderTargets.mlib"/>
+		</materialLibs>
+		
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<rendertarget name="test" fromLibrary="Test Multisampling" />
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			
+			<pass class="quad" name="pass2">
+				<viewport>LeftViewport</viewport>
+				<texture name="offscreenrender" fromLibrary="Test Multisampling" />
+				<materialMaps>
+					<map fromMaterial="__Quad" toLibrary="Test Multisampling" 
+											 toMaterial="quadpass2" />
+				</materialMaps>
+			</pass>
+			<pass class="default" name="pass3">
+				<scenes>
+					<scene>MainScene</scene>
+				</scenes>
+				<viewport>RightViewport</viewport>
+				<camera>MainCamera</camera>
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass> 
+		</pipeline>
+	</pipelines>
+</project>

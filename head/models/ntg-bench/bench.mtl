@@ -1,0 +1,90 @@
+newmtl Y5458_flower10:mat3
+illum 4
+Kd 0.62 0.30 0.00
+Ka 0.31 0.15 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl Y5458_flower10:mat5
+illum 4
+Kd 0.10 0.50 0.09
+Ka 0.05 0.25 0.04
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl Y5458_flower10:mat7
+illum 4
+Kd 1.00 1.00 0.00
+Ka 0.50 0.50 0.50
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl lambert2SG
+illum 4
+Kd 0.80 0.80 0.80
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+map_Kd avPlatanosLosango.jpg
+Ni 1.00
+newmtl lambert3SG
+illum 4
+Kd 0.18 0.93 0.90
+Ka 0.09 0.41 0.40
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl pasted__ArvoreSG
+illum 4
+Kd 0.80 0.80 0.80
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+map_Kd arv3.jpg
+Ni 1.00
+newmtl pasted__GreySG
+illum 4
+Kd 0.80 0.80 0.80
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl pasted__GuiaCubosSG
+illum 4
+Kd 0.80 0.80 0.80
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+map_Kd cubo_cinza2.tif
+Ni 1.00
+newmtl pasted__TerraRelvaSG
+illum 4
+Kd 0.80 0.80 0.80
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+map_Kd terra_relva.jpg
+Ni 1.00
+newmtl pasted__VidroSG
+illum 4
+Kd 0.43 0.58 0.69
+Ka 0.21 0.29 0.35
+Tf 0.59 0.59 0.59
+Ni 1.00
+Ks 0.50 0.50 0.50
+newmtl pasted__bancoMadeiraSG
+illum 4
+Kd 0.66 0.08 0.04
+Ka 0.33 0.04 0.02
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl pasted__bancoPernasSG
+illum 4
+Kd 0.012 0.50 0.20
+Ka 0.06 0.25 0.10
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl pasted__file1SG
+illum 4
+Kd 0.80 0.80 0.80
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+map_Kd walnutwood.jpg
+Ni 1.00
