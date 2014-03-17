@@ -210,9 +210,10 @@ void DlgShaders::OnPropsChange( wxPropertyGridEvent& e) {
 		p->setShaderFile(IProgram::GEOMETRY_SHADER, fn);
 	else if (name == wxT("FragmentFile"))
 		p->setShaderFile(IProgram::FRAGMENT_SHADER,fn);
+#if (NAU_OPENGL_VERSION >= 430)
 	else if (name == wxT("ComputeFile"))
 		p->setShaderFile(IProgram::COMPUTE_SHADER,fn);
-
+#endif
 
 	updateShaderAux();
 	notifyUpdate(PROPS_CHANGED, m_active,std::string(name.mb_str()));
@@ -288,10 +289,17 @@ DlgShaders::updateShaderAux() {
 	GlProgram *p = (GlProgram *)RESOURCEMANAGER->getProgram(m_active);
 	std::string vfn = p->getShaderFile(IProgram::VERTEX_SHADER),
 				ffn = p->getShaderFile(IProgram::FRAGMENT_SHADER),
-					gfn = p->getShaderFile(IProgram::GEOMETRY_SHADER),
-					cfn = p->getShaderFile(IProgram::COMPUTE_SHADER);
+					gfn = p->getShaderFile(IProgram::GEOMETRY_SHADER)
+#if (NAU_OPENGL_VERSION >= 430)
+					,cfn = p->getShaderFile(IProgram::COMPUTE_SHADER)
+#endif
+					;
 
-	if (vfn != "" || ffn != "" || gfn != "" || cfn != "") {
+	if (vfn != "" || ffn != "" || gfn != ""  
+#if (NAU_OPENGL_VERSION >= 430)
+		|| cfn != ""
+#endif
+		) {
 		m_bCompile->Enable();
 	}
 	else {

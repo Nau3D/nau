@@ -219,7 +219,7 @@ ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, 
 Specification of User Attributes:
 
 		<attributes>
-			<attribute context="Light" name="Testing" type="FLOAT" default=0.0 rangeMax =1.0 rangeMin=1.0/>
+			<attribute context="Light" name="Testing" type="FLOAT" default=0.0 rangeMax =1.0 rangeMin=-1.0/>
 			...
 		</attributes>
 
@@ -3228,6 +3228,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			NAU_THROW("Mat Lib %s: Shader %s: Mixing Compute Shader with other shader stages",aLib->getName().c_str(), pProgramName);
 
 		if (pCSFile) {
+#if (NAU_OPENGL_VERSION >= 430)
 			std::string CSFileName(FileUtil::GetFullPath(path, pCSFile));
 			if (!FileUtil::exists(CSFileName))
 				NAU_THROW("Shader file %s in MatLib %s does not exist", pCSFile, aLib->getName().c_str());
@@ -3236,6 +3237,9 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			aShader->loadShader(IProgram::COMPUTE_SHADER, FileUtil::GetFullPath(path,pCSFile));
 			aShader->linkProgram();
 			SLOG("Linker: %s", aShader->getProgramInfoLog());
+#else
+			NAU_THROW("Mat Lib %s: Shader %s: Compute shader is not allowed with OpenGL < 4.3",aLib->getName().c_str(), pProgramName);
+#endif
 		}
 		else {
 			std::string GSFileName;
