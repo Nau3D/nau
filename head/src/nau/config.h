@@ -6,7 +6,7 @@
 
 // enable and disable functionalities 
 // based on OpenGL version
-#define NAU_OPENGL_VERSION 330
+#define NAU_OPENGL_VERSION 210
 
 // use atomic counters
 #define NAU_USE_ATOMICS 1
