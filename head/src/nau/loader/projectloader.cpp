@@ -3251,9 +3251,13 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				NAU_THROW("Shader file %s in MatLib %s does not exist", pVSFile, aLib->getName().c_str());
 
 			if (pGSFile) {
+#if NAU_OPENGL_VERSION >= 320
 				GSFileName = FileUtil::GetFullPath(path,pGSFile);
 				if (!FileUtil::exists(GSFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", pGSFile, aLib->getName().c_str());
+#else
+				NAU_THROW("Geometry Shader is only supported if OpenGL version >= 320");
+#endif
 			}
 			if (pPSFile) {
 				FSFileName = FileUtil::GetFullPath(path,pPSFile);
@@ -3261,14 +3265,22 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 					NAU_THROW("Shader file %s in MatLib %s does not exist", FSFileName.c_str(), aLib->getName().c_str());
 			}
 			if (pTEFile) {
+#if NAU_OPENGL_VERSION >= 400
 				TEFileName = FileUtil::GetFullPath(path,pTEFile);
 				if (!FileUtil::exists(TEFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", TEFileName.c_str(), aLib->getName().c_str());
+#else
+				NAU_THROW("Tessellation Evaluator Shader is only supported if OpenGL version >= 400");
+#endif
 			}
 			if (pTCFile) {
+#if NAU_OPENGL_VERSION >= 400
 				TCFileName = FileUtil::GetFullPath(path,pTCFile);
 				if (!FileUtil::exists(TCFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", TCFileName.c_str(), aLib->getName().c_str());
+#else
+				NAU_THROW("Tessellation Control Shader is only supported if OpenGL version >= 400");
+#endif
 			}
 
 	
@@ -3280,10 +3292,12 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				aShader->loadShader(IProgram::FRAGMENT_SHADER, FileUtil::GetFullPath(path,pPSFile));
 				SLOG("Shader file %s - %s",pPSFile, aShader->getShaderInfoLog(IProgram::FRAGMENT_SHADER).c_str());
 			}
+#if NAU_OPENGL_VERSION >= 320
 			if (pGSFile) {
 				aShader->loadShader(IProgram::GEOMETRY_SHADER, FileUtil::GetFullPath(path,pGSFile));
 				SLOG("Shader file %s - %s",pGSFile, aShader->getShaderInfoLog(IProgram::GEOMETRY_SHADER).c_str());
 			}
+#elif NAU_OPENGL_VERSION >= 400			
 			if (pTCFile) {
 				aShader->loadShader(IProgram::TESS_CONTROL_SHADER, FileUtil::GetFullPath(path,pTCFile));
 				SLOG("Shader file %s - %s",pTCFile, aShader->getShaderInfoLog(IProgram::TESS_CONTROL_SHADER).c_str());
@@ -3292,6 +3306,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				aShader->loadShader(IProgram::TESS_EVALUATION_SHADER, FileUtil::GetFullPath(path,pTEFile));
 				SLOG("Shader file %s - %s",pTEFile, aShader->getShaderInfoLog(IProgram::TESS_EVALUATION_SHADER).c_str());
 			}
+#endif
 			aShader->linkProgram();
 			SLOG("Linker: %s", aShader->getProgramInfoLog());
 		}

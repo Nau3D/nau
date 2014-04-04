@@ -153,8 +153,8 @@ Camera::Camera (const std::string &name) :
 
 	aMaterialGroup->setIndexList (indices);
 	aMaterialGroup->setParent (renderable);
-//	aMaterialGroup->setMaterialName("__Black");
-	aMaterialGroup->setMaterialName("__Emission Red");
+	aMaterialGroup->setMaterialName("__Black");
+//	aMaterialGroup->setMaterialName("__Emission Red");
 
 	renderable->addMaterialGroup (aMaterialGroup);
 	setRenderable (renderable);

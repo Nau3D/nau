@@ -98,7 +98,7 @@ namespace nau
 
 #if NAU_OPENGL_VERSION >= 400
 			const static int PRIMITIVE_TYPE_COUNT = 7;
-#elif
+#else
 			const static int PRIMITIVE_TYPE_COUNT = 6;
 #endif
 
