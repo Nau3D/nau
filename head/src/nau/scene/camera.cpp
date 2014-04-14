@@ -137,8 +137,8 @@ Camera::Camera (const std::string &name) :
 
 	aMaterialGroup->setIndexList (indices);
 	aMaterialGroup->setParent (renderable);
-//	aMaterialGroup->setMaterialName("__Black");
-	aMaterialGroup->setMaterialName("__Emission White");
+	aMaterialGroup->setMaterialName("__Black");
+//	aMaterialGroup->setMaterialName("__Emission White");
 
 	renderable->addMaterialGroup (aMaterialGroup);
 	m_Transform = & m_Mat4Props[VIEW_INVERSE_MATRIX];
