@@ -4,34 +4,30 @@
 	<rendertargets>
 		<rendertarget name="shadowMap1">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap1" noreadandwrite="true"  
+			<depth name="shadowMap1" 
 									internalFormat="DEPTH_COMPONENT32"
-									format="DEPTH_COMPONENT" 
-									type="FLOAT"  />
+									  />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap2">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap2" noreadandwrite="true"  
+			<depth name="shadowMap2"   
 									internalFormat="DEPTH_COMPONENT32"
-									format="DEPTH_COMPONENT" 
-									type="FLOAT"  />
+									  />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap3">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap3" noreadandwrite="true"  
+			<depth name="shadowMap3"  
 									internalFormat="DEPTH_COMPONENT32"
-									format="DEPTH_COMPONENT" 
-									type="FLOAT"  />
+									  />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap4">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap4" noreadandwrite="true"  
+			<depth name="shadowMap4" 
 									internalFormat="DEPTH_COMPONENT32"
-									format="DEPTH_COMPONENT" 
-									type="FLOAT"  />
+									  />
 		</rendertarget>
 
 				
