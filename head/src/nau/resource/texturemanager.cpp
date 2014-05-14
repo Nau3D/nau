@@ -118,7 +118,7 @@ TextureManager::createTexture (std::string label,
 Texture*
 TextureManager::createTexture (std::string label, 
 							   std::string internalFormat, 
-							   int width, int height)
+							   int width, int height, int layers)
 {
 	Texture *tex;
 
@@ -127,7 +127,7 @@ TextureManager::createTexture (std::string label,
 		return(tex);
 	}
 
-	tex = Texture::Create (label, internalFormat, width, height);
+	tex = Texture::Create (label, internalFormat, width, height,layers);
 	m_Lib.push_back(tex);
 
 	return(tex);

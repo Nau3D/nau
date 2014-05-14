@@ -34,7 +34,8 @@ RenderTarget::RenderTarget (std::string name, unsigned int width, unsigned int h
 	m_Name (name),
 	m_Width (width),
 	m_Height (height),
-	m_Samples(0)
+	m_Samples(0),
+	m_Layers(0)
 
 {
 	for (int i = 0; i < MAXFBOs+1; i++)
@@ -56,6 +57,13 @@ void
 RenderTarget::setSampleCount(int samples) 
 {
 	m_Samples = samples;
+}
+
+
+void 
+RenderTarget::setLayerCount(int layers) 
+{
+	m_Layers = layers;
 }
 
 

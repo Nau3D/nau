@@ -496,6 +496,9 @@
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -977,6 +980,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\patchLoader.h">
       <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h">
+      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
