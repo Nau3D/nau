@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<project name="Geometric Primitives" width=512 height = 512>
+	<assets>
+	
+		<scenes>
+			<scene name="CubeLand" scaleY = 0.5 scaleX=1.0 scaleZ=1.0>
+				<geometry name = "box1" type = "Sphere" slices=10 stacks=10 
+												transX=-2.5 transY=0 transZ=0 
+												scale=2 material="crateBox"/>
+				<geometry name = "box2" type = "Box" transX= 2.5 transY = 0 transZ=0 
+													 scaleX= 2 scaleY = 4 scaleZ =2 
+													 material="crateBox" />
+				<geometry name = "axis" type = "Axis" scale = 5 />
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="0.3" FAR="100.0" />
+				<POSITION x="0" y="0.0" z="10" />
+				<VIEW x="0.0" y="-0.0" z="-1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<mlib filename = "geometry.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1" axis="5">
+				<scenes>
+					<scene>CubeLand</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
+				</materialMaps>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+	<debug>
+		<functionlog>
+			<logname value="nau_geometry_debug_log"/>
+			<enabled value="true"/>
+		</functionlog>
+		<logperframe>
+			<logperframe value="false"/>
+			<logoneframeonly value="true"/>
+		</logperframe>
+		<errorchecking>
+			<errorgetopenglchecks value="true"/>
+			<errorthreadchecking value="false"/>
+			<errorbreakonerror value="false"/>
+			<errorlogonerror value="true"/>
+			<errorextendedlogerror value="false"/>
+			<errordebuggererrorlog value="true"/>
+		</errorchecking>
+		<imagelog>
+			<enabled value="false"/>
+		</imagelog>
+		<shaderlog>
+			<enabled value="false"/>
+		</shaderlog>
+		<displaylistlog>
+			<enabled value="false"/>
+		</displaylistlog>
+		<framelog>
+			<enabled value="false"/>
+		</framelog>
+		<timerlog>
+			<enabled value="false"/>
+		</timerlog>
+	</debug>
+</project>

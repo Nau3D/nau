@@ -34,6 +34,10 @@
 #include <sys/types.h>
 #endif
 
+#ifdef GLINTERCEPTDEBUG
+#include <nau/loader/projectloaderdebuglinker.h>
+#endif
+
 
 using namespace nau::loader;
 using namespace nau::math;
@@ -206,6 +210,9 @@ ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, 
 		//	core = false;
 		//RENDERER->setCore(core);
 		
+#ifdef GLINTERCEPTDEBUG
+		loadDebug(hRoot);
+#endif
 		loadAssets (hRoot, matLibs);
 		loadPipelines (hRoot);
 	}
@@ -3791,4 +3798,539 @@ ProjectLoader::loadMatLib (std::string file)
 
 		//aLib->addMaterial (mat);
 	}
+
+
+}
+
+/* ----------------------------------------------------------------
+Specification of the debug:
+
+Configuration of attributes are in projectloaderdebuglinler.cpp
+see void initGLInterceptFunctions() and initAttributeListMaps() for
+details.
+
+Generic values:
+"bool" means a true or false string
+"uint" means a a positive integer string
+"string" means any string goes
+
+glilog attribute in debug tag is an optional value, if not present
+it'll default to true, creates glilog.log which output's glIntercept's
+errors.
+
+	<debug glilog="bool">
+		<functionlog>
+			... see loadDebugFunctionlog
+		</functionlog>
+		<logperframe>
+			... see loadDebugLogperframe
+		</logperframe>
+		<errorchecking>
+			... see loadDebugErrorchecking
+		</errorchecking>
+		<imagelog>
+			... see loadDebugImagelog
+		</imagelog>
+		<shaderlog>
+			... see loadDebugShaderlog
+		</shaderlog>
+		<displaylistlog>
+			... see loadDebugDisplaylistlog
+		</displaylistlog>
+		<framelog>
+			... see loadDebugFramelog
+		</framelog>
+		<timerlog>
+			... see loadDebugTimerlog
+		</timerlog>
+		<plugins>
+			<plugin>
+				...
+			</plugin>
+			...
+		</plugins>
+	</assets>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebug (TiXmlHandle &hRoot)
+{
+#ifdef GLINTERCEPTDEBUG
+	
+	TiXmlElement *pElem;
+	TiXmlHandle handle (hRoot.FirstChild ("debug").Element());
+	bool startGliLog = true;
+
+	if (handle.Element()){
+		pElem = handle.Element();
+
+		initGLInterceptFunctions();
+	
+		if (pElem->Attribute("glilog")){
+			pElem->QueryBoolAttribute("glilog",&startGliLog);
+		}
+		if (startGliLog){
+			startGlilog();
+		}
+
+		//TiXmlElement *pElem;
+		loadDebugFunctionlog(handle);
+		loadDebugLogperframe(handle);
+		loadDebugErrorchecking(handle);
+		loadDebugImagelog(handle);
+		loadDebugShaderlog(handle);
+		loadDebugDisplaylistlog(handle);
+		loadDebugFramelog(handle);
+		loadDebugTimerlog(handle);
+		loadDebugPlugins(handle);
+		startGLIConfiguration();
+	}
+#endif
+}
+
+/* ----------------------------------------------------------------
+Specification of the functionlog:
+
+		<functionlog>
+			<enabled value="bool"/>
+			<logxmlformat value="bool"/>
+			<logflush value="bool"/>
+			<logmaxframeloggingenabled value="bool"/>
+			<logmaxnumlogframes value="uint"/>
+			<logpath value="bool"/>
+			<logname value="bool"/>
+			<xmlformat>
+				... see loadDebugFunctionlogXmlFormat
+			</xmlformat>
+		</functionlog>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugFunctionlog (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("functionlog").Element());
+
+	loadDebugConfigData(handle,"functionlog");
+
+	loadDebugFunctionlogXmlFormat(hRoot);
+}
+
+
+
+/* ----------------------------------------------------------------
+Specification of the xmlformat:
+
+logxslfile requires an existing .xsl
+
+logxslbasedir will specify where the logxslfile exists
+
+with GL intercept 1.2 installed the default locations should be
+	xslfile = "gliIntercept_DHTML2.xsl"
+	xslfilesource = "C:\Program Files\GLIntercept_1_2_0\XSL"
+
+			<xmlformat>
+				<logxslfile value="xslfile"/>
+				<logxslbasedir value="xslfilesource"/>
+			</xmlformat>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugFunctionlogXmlFormat (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("xmlformat").Element());
+
+	loadDebugConfigData(handle,"functionlogxmlformat");
+}
+
+/* ----------------------------------------------------------------
+Specification of the functionlog:
+
+in logFrameKeys each item uses a string value, for example 
+	<item value="ctrl"/>
+	<item value="F"/>
+will enable log the frame using ctrl+F
+
+		<logperframe>
+			<logperframe value="bool"/>
+			<logoneframeonly value="bool"/>
+			<logframekeys>
+				<item value="key"/>
+				<item value="key"/>
+				...
+			</logframekeys>
+		</logperframe>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugLogperframe (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("logperframe").Element());
+
+	loadDebugConfigData(handle,"logperframe");
+}
+
+/* ----------------------------------------------------------------
+Specification of the functionlog:
+
+		<errorchecking>
+			<errorgetopenglchecks value="bool"/>
+			<errorthreadchecking value="bool"/>
+			<errorbreakonerror value="bool"/>
+			<errorlogonerror value="bool"/>
+			<errorextendedlogerror value="bool"/>
+			<errordebuggererrorlog value="bool"/>
+		</errorchecking>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugErrorchecking (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("errorchecking").Element());
+
+	loadDebugConfigData(handle,"errorchecking");
+
+}
+
+/* ----------------------------------------------------------------
+Specification of the imagelog:
+
+		<imagelog>
+			<imagerendercallstatelog value="bool">
+			<imagesavepng value="bool"/>
+			<imagesavetga value="bool"/>
+			<imagesavejpg value="bool"/>
+			<imageflipxaxis value="bool"/>
+			<imagecubemaptile value="bool"/>
+			<imagesave1d value="bool"/>
+			<imagesave2d value="bool"/>
+			<imagesave3d value="bool"/>
+			<imagesavecube value="bool"/>
+			<imagesavepbuffertex value="bool"/>
+			<imageicon>
+				... see loadDebugImagelogimageicon
+			</imageicon>
+		</imagelog>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugImagelog (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("imagelog").Element());
+
+	loadDebugConfigData(handle,"imagelog");
+
+
+	loadDebugImagelogimageicon(handle);
+}
+
+/* ----------------------------------------------------------------
+Specification of the imageicon:
+
+imagesavepng, imagesavetga and imagesavejpg can be used simultaneosly
+
+imageiconformat is tee format of the save icon images (TGA,PNG or JPG)
+only one format at a time
+
+			<imageicon>
+				<imagesaveicon value="bool"/>
+				<imageiconsize value="uint"/>
+				<imageiconformat value="png"/>
+			</imageicon>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugImagelogimageicon (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("imageicon").Element());
+
+	loadDebugConfigData(handle,"imagelogimageicon");
+}
+
+/* ----------------------------------------------------------------
+Specification of the shaderlog:
+
+		<shaderlog>
+			<enabled value="bool"/>
+			<shaderrendercallstatelog value="bool"/>
+			<shaderattachlogstate value="bool"/>
+			<shadervalidateprerender value="bool"/>
+			<shaderloguniformsprerender value="bool"/>
+		</shaderlog>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugShaderlog (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("shaderlog").Element());
+
+	loadDebugConfigData(handle,"shaderlog");
+}
+
+/* ----------------------------------------------------------------
+Specification of the displaylistlog:
+
+		<displaylistlog>
+			<enabled value="bool"/>
+		</displaylistlog>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugDisplaylistlog (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("displaylistlog").Element());
+
+	loadDebugConfigData(handle,"displaylistlog");
+}
+
+/* ----------------------------------------------------------------
+Specification of the framelog:
+
+According to the original gliConfig regarding framestencilcolors:
+When saving the stencil buffer, it can be useful to save the buffer with color codes.
+(ie stencil value 1 = red) This array supplies index color pairs for each stencil 
+value up to 255. The indices must be in order and the colors are in the format 
+AABBGGRR. If an index is missing, it will take the value of the index as the color.
+(ie. stencil index 128 = (255, 128,128,128) = greyscale values)
+
+		<framelog>
+			<enabled value="bool"/>
+			<frameimageformat value="string"/>
+			<framestencilcolors>
+				<item value="uint"/>
+				<item value="uint"/>
+				...
+			</frameStencilColors>
+			<frameprecolorsave value="bool"/>
+			<framepostcolorsave value="bool"/>
+			<framediffcolorsave value="bool"/>
+			<framepredepthsave value="bool"/>
+			<framepostdepthsave value="bool"/>
+			<framediffdepthsave value="bool"/>
+			<frameprestencilsave value="bool"/>
+			<framepoststencilsave value="bool"/>
+			<framediffstencilsave value="bool"/>
+			<frameAdditionalRenderCalls>
+				<item value="string"/>
+				<item value="string"/>
+				...
+			</frameAdditionalRenderCalls>
+			<frameicon>
+				<frameiconsave value="bool"/>
+				<frameiconsize value="uint"/>
+				<frameiconimageformat value="png"/>
+			</frameicon>
+			<framemovie>
+				<framemovieenabled value="bool"/>
+				<framemoviewidth value="uint"/>
+				<framemovieheight value="uint"/>
+				<framemovierate value="uint"/>
+				<frameMovieCodecs>
+					<item value="string"/>
+					<item value="string"/>
+					...
+				</frameMovieCodecs>
+			</framemovie>
+		</framelog>
+
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugFramelog (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("framelog").Element());
+
+	loadDebugConfigData(handle,"framelog");
+
+	
+	loadDebugFramelogFrameicon(handle);
+	loadDebugFramelogFramemovie(handle);
+}
+
+/* ----------------------------------------------------------------
+Specification of the frameicon:
+
+frameiconimageformat is tee format of the save icon images (TGA,PNG or JPG)
+only one format at a time
+
+			<frameicon>
+				<frameiconsave value="bool"/>
+				<frameiconsize value="uint"/>
+				<frameiconimageformat value="png"/>
+			</frameicon>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugFramelogFrameicon (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("frameicon").Element());
+
+	loadDebugConfigData(handle,"framelogframeicon");
+
+}
+
+
+/* ----------------------------------------------------------------
+Specification of the framemovie:
+
+			<framemovie>
+				<framemovieenabled value="bool"/>
+				<framemoviewidth value="uint"/>
+				<framemovieheight value="uint"/>
+				<framemovierate value="uint"/>
+				<frameMovieCodecs>
+					<item value="string"/>
+					<item value="string"/>
+					...
+				</frameMovieCodecs>
+			</framemovie>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("framemovie").Element());
+
+	loadDebugConfigData(handle,"framelogframemovie");
+
+}
+
+/* ----------------------------------------------------------------
+Specification of the timerlog:
+
+		<timerlog>
+			<enabled value="bool"/>
+			<timerlogcutoff value="uint"/>
+		</timerlog>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugTimerlog (TiXmlHandle &hRoot){
+	TiXmlHandle handle (hRoot.FirstChild ("timerlog").Element());
+
+	loadDebugConfigData(handle,"timerlog");
+
+}
+
+/* ----------------------------------------------------------------
+Specification of the plugins:
+
+Some plugins can fit extra parameters (for example extension override)
+the extra parameters should be placed as mentioned in the example.
+
+Pay in mind that most GLIntercept plugins require the plugin name to
+match a certain name, for example:
+
+<plugin name="OpenGLShaderEdit" dll="GLShaderEdit/GLShaderEdit.dll"/>
+
+You can usually see which names are required in the standard
+gliConfig.ini, for example the plugin mentioned above in the ini becomes:
+
+OpenGLShaderEdit = ("GLShaderEdit/GLShaderEdit.dll")
+
+if you give the plugin a different name it may not work at all.
+
+
+			<plugins>
+				<plugin name="name string" dll="dllpath string">
+					extraparameter1 = "extraparameter1 value";
+					extraparameter2 = "extraparameter2 value";
+					...
+				<plugin>
+				...
+			</plugins>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugPlugins (TiXmlHandle &hRoot)
+{
+#ifdef GLINTERCEPTDEBUG
+	TiXmlElement *pElem;
+	TiXmlHandle handle (hRoot.FirstChild("plugins").Element());
+	
+	string name;
+	string dllpath;
+	string data="";
+
+	pElem = handle.FirstChild().Element();
+	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+			pElem->QueryStringAttribute("name",&name);
+			pElem->QueryStringAttribute("dll",&dllpath);
+			if(pElem->GetText()){
+				data=pElem->GetText();
+			}
+			addPlugin(name.c_str(), dllpath.c_str(), data.c_str());
+		
+	}
+#endif
+}
+
+/* ----------------------------------------------------------------
+Helper function, reads sub attributes.
+				<configcategory>
+					<configattribute value="...">
+					...
+				</configcategory>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugConfigData (TiXmlHandle &handle, const char *configMapName)
+{
+#ifdef GLINTERCEPTDEBUG
+
+	TiXmlElement *pElem;
+	void *functionSetPointer;
+	pElem = handle.FirstChild().Element();
+	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		const char *functionName = pElem->Value();
+		functionSetPointer = getGLIFunction(functionName,configMapName);
+		switch (getGLIFunctionType(functionSetPointer))
+		{
+		case GLIEnums::FunctionType::BOOL:{
+				bool functionValue; 
+				pElem->QueryBoolAttribute("value",&functionValue);
+				useGLIFunction(functionSetPointer,&functionValue);
+				break;
+			}
+		case GLIEnums::FunctionType::INT:{
+				int functionValue; 
+				pElem->QueryIntAttribute("value",&functionValue);
+				useGLIFunction(functionSetPointer,&functionValue);
+				break;
+			}
+		case GLIEnums::FunctionType::UINT:{
+				unsigned int functionValue; 
+				pElem->QueryUnsignedAttribute("value",&functionValue);
+				useGLIFunction(functionSetPointer,&functionValue);
+				break;
+			}
+		case GLIEnums::FunctionType::STRING:{
+				string functionValue; 
+				pElem->QueryStringAttribute("value",&functionValue);
+				useGLIFunction(functionSetPointer,(void*)functionValue.c_str());
+				break;
+			}
+		case GLIEnums::FunctionType::UINTARRAY:
+		case GLIEnums::FunctionType::STRINGARRAY:
+			useGLIClearFunction(functionSetPointer);
+			loadDebugArrayData(handle,functionName,functionSetPointer);
+			break;
+		default:
+			break;
+		}
+	}
+#endif
+}
+
+/* ----------------------------------------------------------------
+Specification of the configdata:
+				<arrayconfigname>
+					<item value="...">
+					...
+				</arrayconfigname>
+----------------------------------------------------------------- */
+void
+ProjectLoader::loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer)
+{
+#ifdef GLINTERCEPTDEBUG
+	TiXmlElement *pElem;
+	TiXmlHandle handle (hRoot.FirstChild(functionName).Element());
+	unsigned int functionType = getGLIFunctionType(functionSetPointer);
+
+	pElem = handle.FirstChild().Element();
+	switch (functionType)
+	{
+	case GLIEnums::FunctionType::UINTARRAY:{
+		for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+				unsigned int functionValue; 
+				pElem->QueryUnsignedAttribute("value",&functionValue);
+				useGLIFunction(functionSetPointer,&functionValue);
+				break;
+			}
+		}
+	case GLIEnums::FunctionType::STRINGARRAY:{
+		for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+				string functionValue; 
+				pElem->QueryStringAttribute("value",&functionValue);
+				useGLIFunction(functionSetPointer,(void*)functionValue.c_str());
+				break;
+			}
+		}
+	default:
+		break;
+	}
+#endif
 }

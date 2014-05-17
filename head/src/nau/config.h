@@ -33,4 +33,6 @@
 
 //#define COMPATIBILITY_FLAG_OPENGL 
 
+#define GLINTERCEPTDEBUG
+
 #endif // NAU_CONFIG_H

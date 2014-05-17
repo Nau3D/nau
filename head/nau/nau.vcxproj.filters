@@ -496,6 +496,9 @@
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -976,6 +979,12 @@
       <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\patchLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="projectLoaderDebugLinker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
   </ItemGroup>

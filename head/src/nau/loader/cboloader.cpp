@@ -976,7 +976,9 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 	_readString(buffer,f);
 	aProgram->setShaderFile(IProgram::VERTEX_SHADER,buffer);
 	_readString(buffer,f);
+#if NAU_OPENGL_VERSION >= 320
 	aProgram->setShaderFile(IProgram::GEOMETRY_SHADER,buffer);
+#endif
 	_readString(buffer,f);
 	aProgram->setShaderFile(IProgram::FRAGMENT_SHADER,buffer);
 	aProgram->reload();
