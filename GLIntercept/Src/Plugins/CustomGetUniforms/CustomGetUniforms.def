@@ -1,0 +1,6 @@
+LIBRARY CustomGetUniforms.dll
+EXPORTS
+   GetFunctionLogPluginVersion
+   CreateFunctionLogPlugin
+   RegisterDLLEventHandler
+   UnRegisterDLLEventHandler

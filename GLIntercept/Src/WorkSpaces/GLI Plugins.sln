@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLExtOverride", "..\Plugins\GLExtOverride\GLExtOverride.vcproj", "{C8A8B5D1-A225-4959-8808-677F83A41618}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFramePing", "..\Plugins\GLFramePing\GLFramePing.vcproj", "{8482C756-3589-4D3A-B855-E532FAFD31CB}"
@@ -16,6 +16,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLCStrike", "..\Plugins\GLCStrike\GLCStrike.vcproj", "{F2D2F4FF-EE78-431D-AE67-7C0E8DC818EA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLDebugContext", "..\Plugins\GLDebugContext\GLDebugContext.vcproj", "{3F9A7CEB-3BF7-4B5C-9990-C5275CC0E390}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomGetUniforms", "..\Plugins\CustomGetUniforms\CustomGetUniforms.vcproj", "{75570765-AAE9-49E3-8036-E49720B1195A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,12 @@ Global
 		{3F9A7CEB-3BF7-4B5C-9990-C5275CC0E390}.Release|Win32.Build.0 = Release|Win32
 		{3F9A7CEB-3BF7-4B5C-9990-C5275CC0E390}.Release|x64.ActiveCfg = Release|x64
 		{3F9A7CEB-3BF7-4B5C-9990-C5275CC0E390}.Release|x64.Build.0 = Release|x64
+		{75570765-AAE9-49E3-8036-E49720B1195A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{75570765-AAE9-49E3-8036-E49720B1195A}.Debug|Win32.Build.0 = Debug|Win32
+		{75570765-AAE9-49E3-8036-E49720B1195A}.Debug|x64.ActiveCfg = Debug|Win32
+		{75570765-AAE9-49E3-8036-E49720B1195A}.Release|Win32.ActiveCfg = Release|Win32
+		{75570765-AAE9-49E3-8036-E49720B1195A}.Release|Win32.Build.0 = Release|Win32
+		{75570765-AAE9-49E3-8036-E49720B1195A}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
