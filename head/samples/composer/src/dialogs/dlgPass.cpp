@@ -552,7 +552,7 @@ void DlgPass::updateProperties(Pass *p) {
 	MaterialID mid;
 	wxString mName,propName;
 
-	if (iterMM->first == "*") {
+	if (mm.size() != 0 && iterMM->first == "*") {
 		mid = iterMM->second;
 		mName = wxString(mid.getLibName().c_str());
 		mName.append(wxT("::"));
