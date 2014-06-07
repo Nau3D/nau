@@ -16,6 +16,7 @@ using namespace std;
 #endif
 
   dlllibextern void gliSetLogEnabled(bool logEnabled);                                // Flag to indicate if logging is enabled
+  dlllibextern bool gliIsLogEnabled();
   dlllibextern void gliSetLogXMLFormat(bool logXMLFormat);                              // If true use XML to log, else use plain text.
   dlllibextern void gliSetLogFlush(bool logFlush);                                  // If true, the logger is flushed after each function name is written (text file only)
 
@@ -38,7 +39,9 @@ using namespace std;
   dlllibextern void gliClearLogFrameKeys();                      // The key codes used to enable per-frame logging
 
   dlllibextern void gliSetLogPath(const char *logPath);                                 // The path to write the log files (including trailing seperator)
+  dlllibextern const char *gliGetLogPath();
   dlllibextern void gliSetLogName(const char *logName);                                 // The name of the log to write out (without extension)
+  dlllibextern const char *gliGetLogName();
   dlllibextern void gliSetFunctionDataFileName(const char *functionDataFileName);                    // The name of the file/path to find the function config data
 
   dlllibextern void gliSetImageLogEnabled(bool imageLogEnabled);                           // Flag to indicate if the image log is enabled
@@ -113,5 +116,8 @@ using namespace std;
   dlllibextern void gliResetConfigure();
   dlllibextern void gliInitGliLog();
   dlllibextern void gliKillGliLog();
+
+  dlllibextern int gliGetEnumsCount();
+  dlllibextern const char *gliGetEnumsName(unsigned int index);
 #endif
 

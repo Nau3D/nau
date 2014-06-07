@@ -363,6 +363,7 @@ EXPORTS
    wglUseFontOutlinesW
 
    gliSetLogEnabled
+   gliIsLogEnabled
    gliSetLogXMLFormat
    gliSetLogFlush
    gliSetLogMaxFrameLoggingEnabled
@@ -380,7 +381,9 @@ EXPORTS
    gliAddLogFrameKeys
    gliClearLogFrameKeys
    gliSetLogPath
+   gliGetLogPath
    gliSetLogName
+   gliGetLogName
    gliSetFunctionDataFileName
    gliSetImageLogEnabled
    gliSetImageRenderCallStateLog
@@ -436,3 +439,5 @@ EXPORTS
    gliResetConfigure
    gliInitGliLog
    gliKillGliLog
+   gliGetEnumsCount
+   gliGetEnumsName

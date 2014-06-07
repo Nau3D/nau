@@ -141,9 +141,17 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "..\..\..\GLIntercept\Bin\MainLib\OpenGL32.dll" "..\..\build\samples"
+      <Command>
 copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>copy "..\..\..\GLIntercept\Bin\MainLib\OpenGL32.dll" "..\..\build\samples" 
+copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
     <ClCompile>
@@ -286,7 +294,11 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\dialogs\dlgDbgBuffers.cpp" />
+    <ClCompile Include="src\dialogs\dlgDbgGLILogRead.cpp" />
+    <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp" />
     <ClCompile Include="src\glcanvas.cpp" />
+    <ClCompile Include="src\glInfo.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\dialogs\dlgCameras.cpp" />
     <ClCompile Include="src\dialogs\dlgLights.cpp" />
@@ -301,10 +313,14 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\dialogs\dlgAtomics.h" />
+    <ClInclude Include="src\dialogs\dlgDbgBuffers.h" />
+    <ClInclude Include="src\dialogs\dlgDbgGLILogRead.h" />
+    <ClInclude Include="src\dialogs\dlgDbgPrograms.h" />
     <ClInclude Include="src\dialogs\dlgLights.h" />
     <ClInclude Include="src\dialogs\dlgLog.h" />
     <ClInclude Include="src\dialogs\dlgPass.h" />
     <ClInclude Include="src\glcanvas.h" />
+    <ClInclude Include="src\glInfo.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\dialogs\dlgCameras.h" />
     <CustomBuildStep Include="src\dialogs\dlgLights.h" />

@@ -93,6 +93,8 @@ public:
   //
   inline const EnumData * GetEnumData(uint enumNum) const;
 
+  inline const int GetEnumArraySize() const;
+
 
   //@
   //  Summary:
@@ -178,6 +180,13 @@ inline const EnumData * FunctionTable::GetEnumData(uint enumNum) const
 
   //Return the enum
   return &enumDataArray[enumNum];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+inline const int FunctionTable::GetEnumArraySize() const
+{
+  return enumDataArray.size();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

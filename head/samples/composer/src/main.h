@@ -14,6 +14,9 @@
 #include "dialogs/dlgShaders.h"
 #include "dialogs/dlgScenes.h"
 #include "dialogs/dlgPass.h"
+#include "dialogs/dlgDbgGLILogRead.h"
+#include "dialogs/dlgDbgPrograms.h"
+#include "dialogs/dlgDbgBuffers.h"
 
 #include "glcanvas.h"
 #include <nau.h>
@@ -49,7 +52,7 @@ public:
 
 private:
    GlCanvas *m_Canvas;
-	wxMenu *materialsMenu, *helpMenu;
+	wxMenu *materialsMenu, *helpMenu, *debugMenu;
 	bool m_Inited;
 
 	void updateDlgs();
@@ -84,6 +87,14 @@ private:
 	void OnKeyDown(wxKeyEvent & event);
 	void OnKeyUp(wxKeyEvent & event);
 	
+	//Debugger begin
+	void OnBreakResume(wxCommandEvent& event);
+	void OnDlgDbgGLILogRead(wxCommandEvent& event);
+	void OnDlgDbgProgram(wxCommandEvent& event);
+	void OnDlgDbgBuffer(wxCommandEvent& event);
+	//Debugger end
+
+
 	void startStandAlone (void);
 	void buildPhysics (void);
 

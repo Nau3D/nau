@@ -1,23 +1,23 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLExtOverride", "..\Plugins\GLExtOverride\GLExtOverride.vcproj", "{C8A8B5D1-A225-4959-8808-677F83A41618}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLExtOverride", "..\Plugins\GLExtOverride\GLExtOverride.vcxproj", "{C8A8B5D1-A225-4959-8808-677F83A41618}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFramePing", "..\Plugins\GLFramePing\GLFramePing.vcproj", "{8482C756-3589-4D3A-B855-E532FAFD31CB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFramePing", "..\Plugins\GLFramePing\GLFramePing.vcxproj", "{8482C756-3589-4D3A-B855-E532FAFD31CB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFreeCam", "..\Plugins\GLFreeCam\GLFreeCam.vcproj", "{3BE9ADEA-50D9-4669-8648-1E3F684BA936}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFreeCam", "..\Plugins\GLFreeCam\GLFreeCam.vcxproj", "{3BE9ADEA-50D9-4669-8648-1E3F684BA936}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFuncStats", "..\Plugins\GLFuncStats\GLFuncStats.vcproj", "{72DD497C-7FC6-4DA8-88DB-F2F2F49AF42C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFuncStats", "..\Plugins\GLFuncStats\GLFuncStats.vcxproj", "{72DD497C-7FC6-4DA8-88DB-F2F2F49AF42C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLShaderEdit", "..\Plugins\GLShaderEdit\GLShaderEdit.vcproj", "{AF5D241B-52FF-49DD-AC8C-5FF64D3BCACA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLShaderEdit", "..\Plugins\GLShaderEdit\GLShaderEdit.vcxproj", "{AF5D241B-52FF-49DD-AC8C-5FF64D3BCACA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestPlugin", "..\Plugins\TestPlugin\TestPlugin.vcproj", "{66C75CD9-E429-4BBE-B0D6-C1664ECDE40C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestPlugin", "..\Plugins\TestPlugin\TestPlugin.vcxproj", "{66C75CD9-E429-4BBE-B0D6-C1664ECDE40C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLCStrike", "..\Plugins\GLCStrike\GLCStrike.vcproj", "{F2D2F4FF-EE78-431D-AE67-7C0E8DC818EA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLCStrike", "..\Plugins\GLCStrike\GLCStrike.vcxproj", "{F2D2F4FF-EE78-431D-AE67-7C0E8DC818EA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLDebugContext", "..\Plugins\GLDebugContext\GLDebugContext.vcproj", "{3F9A7CEB-3BF7-4B5C-9990-C5275CC0E390}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLDebugContext", "..\Plugins\GLDebugContext\GLDebugContext.vcxproj", "{3F9A7CEB-3BF7-4B5C-9990-C5275CC0E390}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomGetUniforms", "..\Plugins\CustomGetUniforms\CustomGetUniforms.vcproj", "{75570765-AAE9-49E3-8036-E49720B1195A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomGetUniforms", "..\Plugins\CustomGetUniforms\CustomGetUniforms.vcxproj", "{75570765-AAE9-49E3-8036-E49720B1195A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

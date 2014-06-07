@@ -39,18 +39,28 @@ ExtensionFunction::~ExtensionFunction()
 {
 }
 
+//Plugins often add Overrides which should be removed if
+//the plugin is removed
 void ExtensionFunction::removeOverrides(){
-	int removedExtensionsCount = 0;
+    int removedExtensionsCount = 0;
 	for (int i=overrideIndexList.size()-1;i>=0; i--){
-		if (overrideMustDeleteList[i]){
-			removedExtensionsCount++;
-			functionTable->RemoveFunction(overrideIndexList[i]);
+	    //Uses the list containing the plugin added overrides;
+	    //these must be deleted
+        if (overrideMustDeleteList[i]){
+            removedExtensionsCount++;
+            //Removes override from function table
+            functionTable->RemoveFunction(overrideIndexList[i]);
+            //Removes the override from the real list
+            //reorganizes the list (inneficient) but
+            //it's fine since this function isn't used often
 			for (int j=overrideCurrIndexList[i]; j<currExtensionIndex-1; j++){
 				wrapperIndex[j]=wrapperIndex[j+1]-1;
 				extFunctions[j]=extFunctions[j+1];
 			}
 		}
 		else{
+            //Fixes the pointer for the overrided function
+            //if not deleted
 			const FunctionData *foundFunc = functionTable->GetFunctionData(overrideIndexList[i]);
             *foundFunc->internalFunctionDataPtr = (void**)overrideCurrIndexList[i];
 		}

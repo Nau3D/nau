@@ -67,10 +67,6 @@
 			<logname value="nau_geometry_debug_log"/>
 			<enabled value="true"/>
 		</functionlog>
-		<logperframe>
-			<logperframe value="false"/>
-			<logoneframeonly value="true"/>
-		</logperframe>
 		<errorchecking>
 			<errorgetopenglchecks value="true"/>
 			<errorthreadchecking value="false"/>
@@ -92,7 +88,7 @@
 			<enabled value="false"/>
 		</framelog>
 		<timerlog>
-			<enabled value="false"/>
+			<enabled value="true"/>
 		</timerlog>
 	</debug>
 </project>

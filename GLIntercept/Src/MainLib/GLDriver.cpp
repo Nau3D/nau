@@ -334,6 +334,8 @@ bool GLDriver::Init()
   
 #endif// GLI_BUILD_WINDOWS
 
+  setFunctionTableExport(functionTable);
+
 #ifdef GLI_BUILD_LINUX
 
   //Set the buffer swap call. Only one for GLX?
@@ -441,7 +443,7 @@ bool GLDriver::Reset(){
   //Create the error data log
   //errorDataLog =  new InterceptLog(functionTable); /////////////////NEEEEEEEEED???????????????????
   
-	printf("DEBUG: reloading plugins\n");
+  printf("DEBUG: reloading plugins\n");
   //Delete existing pluginManager
   ReloadPlugins();
 

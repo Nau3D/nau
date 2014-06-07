@@ -95,7 +95,7 @@ void initAttributeListMaps(){
 	attributeList.clear();
 	
 	attributeList.insert(pair<string,map<string,functionSet>>("functionlog",map<string,functionSet>()));
-	attributeList.insert(pair<string,map<string,functionSet>>("functionlogxmlFormat",map<string,functionSet>()));
+	//attributeList.insert(pair<string,map<string,functionSet>>("functionlogxmlFormat",map<string,functionSet>()));
 	attributeList.insert(pair<string,map<string,functionSet>>("logperframe",map<string,functionSet>()));
 	//attributeList.insert(pair<string,map<string,functionSet>>("inputfiles",map<string,functionSet>()));
 	attributeList.insert(pair<string,map<string,functionSet>>("errorchecking",map<string,functionSet>()));
@@ -115,14 +115,14 @@ void initGLInterceptFunctions(){
 		initAttributeListMaps();
 
 		addGLInterceptFunction((void*)&gliSetLogEnabled,NULL,GLIEnums::FunctionType::BOOL,"enabled","functionlog");
-		addGLInterceptFunction((void*)&gliSetLogXMLFormat,NULL,GLIEnums::FunctionType::BOOL,"logxmlformat","functionlog");
-		addGLInterceptFunction((void*)&gliSetLogFlush,NULL,GLIEnums::FunctionType::BOOL,"logflush","functionlog");
+		//addGLInterceptFunction((void*)&gliSetLogXMLFormat,NULL,GLIEnums::FunctionType::BOOL,"logxmlformat","functionlog");
+		//addGLInterceptFunction((void*)&gliSetLogFlush,NULL,GLIEnums::FunctionType::BOOL,"logflush","functionlog");
 		addGLInterceptFunction((void*)&gliSetLogMaxFrameLoggingEnabled,NULL,GLIEnums::FunctionType::BOOL,"logmaxframeloggingenabled","functionlog");
 		addGLInterceptFunction((void*)&gliSetLogPath,NULL,GLIEnums::FunctionType::STRING,"logpath","functionlog");
 		addGLInterceptFunction((void*)&gliSetLogName,NULL,GLIEnums::FunctionType::STRING,"logname","functionlog");
 		addGLInterceptFunction((void*)&gliSetLogMaxNumLogFrames,NULL,GLIEnums::FunctionType::UINT,"logmaxnumlogframes","functionlog");
-		addGLInterceptFunction((void*)&gliSetLogXSLFile,NULL,GLIEnums::FunctionType::STRING,"logxslfile","functionlogxmlFormat");
-		addGLInterceptFunction((void*)&gliSetLogXSLBaseDir,NULL,GLIEnums::FunctionType::STRING,"logxslbasedir","functionlogxmlFormat");
+		//addGLInterceptFunction((void*)&gliSetLogXSLFile,NULL,GLIEnums::FunctionType::STRING,"logxslfile","functionlogxmlFormat");
+		//addGLInterceptFunction((void*)&gliSetLogXSLBaseDir,NULL,GLIEnums::FunctionType::STRING,"logxslbasedir","functionlogxmlFormat");
 
 		addGLInterceptFunction((void*)&gliSetLogPerFrame,NULL,GLIEnums::FunctionType::BOOL,"logperframe","logperframe");
 		addGLInterceptFunction((void*)&gliSetLogOneFrameOnly,NULL,GLIEnums::FunctionType::BOOL,"logoneframeonly","logperframe");
@@ -171,7 +171,7 @@ void initGLInterceptFunctions(){
 		addGLInterceptFunction((void*)&gliSetFramePreStencilSave,NULL,GLIEnums::FunctionType::BOOL,"frameprestencilsave","framelog");
 		addGLInterceptFunction((void*)&gliSetFramePostStencilSave,NULL,GLIEnums::FunctionType::BOOL,"framepoststencilsave","framelog");
 		addGLInterceptFunction((void*)&gliSetFrameDiffStencilSave,NULL,GLIEnums::FunctionType::BOOL,"framediffstencilsave","framelog");
-		addGLInterceptFunction((void*)&gliAddFrameAdditionalRenderCalls,&gliClearFrameAdditionalRenderCalls,GLIEnums::FunctionType::STRINGARRAY,"frameAdditionalRenderCalls","framelog");
+		//addGLInterceptFunction((void*)&gliAddFrameAdditionalRenderCalls,&gliClearFrameAdditionalRenderCalls,GLIEnums::FunctionType::STRINGARRAY,"frameAdditionalRenderCalls","framelog");
 		addGLInterceptFunction((void*)&gliSetFrameIconSave,NULL,GLIEnums::FunctionType::BOOL,"frameiconsave","framelogframeicon");
 		addGLInterceptFunction((void*)&gliSetFrameIconSize,NULL,GLIEnums::FunctionType::UINT,"frameiconsize","framelogframeicon");
 		addGLInterceptFunction((void*)&gliSetFrameIconImageFormat,NULL,GLIEnums::FunctionType::STRING,"frameiconimageformat","framelogframeicon");
@@ -263,3 +263,16 @@ void clearPlugins(){
 void startGlilog(){
 	gliInitGliLog();
 }
+
+bool isDebugLogEnabled(){
+	return gliIsLogEnabled();
+}
+
+bool debugLogPath(){
+	return gliGetLogPath();
+}
+
+bool debugLogName(){
+	return gliGetLogName();
+}
+

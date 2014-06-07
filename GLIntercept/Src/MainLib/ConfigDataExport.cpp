@@ -8,6 +8,7 @@
 
 
 ConfigData *configDataExport = NULL;
+FunctionTable * functionTableExport = NULL;
 GLDriver *glDriver = NULL;
 
 void setConfigDataExport(ConfigData *configData, GLDriver *driver){
@@ -15,8 +16,15 @@ void setConfigDataExport(ConfigData *configData, GLDriver *driver){
 	glDriver = driver;
 }
 
+void setFunctionTableExport(FunctionTable * fTable){
+	functionTableExport = fTable;
+}
   void gliSetLogEnabled(bool logEnabled){
 	  configDataExport->logEnabled=logEnabled;
+  }
+
+  bool gliIsLogEnabled(){
+	  return configDataExport->logEnabled;
   }
 
   void gliSetLogXMLFormat(bool logXMLFormat){
@@ -93,8 +101,19 @@ void setConfigDataExport(ConfigData *configData, GLDriver *driver){
 	  configDataExport->logPath=logPath;
   }
 
+  const char *gliGetLogPath(){
+	  return configDataExport->logPath.c_str();
+  }
+
   void gliSetLogName(const char *logName){
 	  configDataExport->logName=logName;
+  }
+
+  const char *gliGetLogName(){
+	  if (configDataExport->logName.length()>0){
+		return configDataExport->logName.c_str();
+	  }
+	  return "gliInterceptLog";
   }
 
   void gliSetFunctionDataFileName(const char *functionDataFileName){
@@ -368,4 +387,12 @@ void setConfigDataExport(ConfigData *configData, GLDriver *driver){
 
   void gliKillGliLog(){
 	  gliLogKill();
+  }
+
+  int gliGetEnumsCount(){
+	  return functionTableExport->GetEnumArraySize();
+  }
+
+  const char *gliGetEnumsName(unsigned int index){
+	  return functionTableExport->GetEnumData(index)->GetName().c_str();
   }

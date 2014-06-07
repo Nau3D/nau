@@ -26,6 +26,7 @@ class ExtensionFunction;
 class InterceptPluginManager;
 
 void setConfigDataExport(ConfigData *configData, GLDriver *driver);
+void setFunctionTableExport(FunctionTable * fTable);
 
 //@
 //  Summary:

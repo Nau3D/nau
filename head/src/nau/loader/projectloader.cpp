@@ -3845,7 +3845,7 @@ errors.
 		</timerlog>
 		<plugins>
 			<plugin>
-				...
+				... see loadDebugPlugins
 			</plugin>
 			...
 		</plugins>
@@ -3892,14 +3892,14 @@ Specification of the functionlog:
 
 		<functionlog>
 			<enabled value="bool"/>
-			<logxmlformat value="bool"/>
-			<logflush value="bool"/>
+			<logxmlformat value="bool"/> (REMOVED)
+			<logflush value="bool"/> (REMOVED)
 			<logmaxframeloggingenabled value="bool"/>
 			<logmaxnumlogframes value="uint"/>
 			<logpath value="bool"/>
 			<logname value="bool"/>
 			<xmlformat>
-				... see loadDebugFunctionlogXmlFormat
+				... see loadDebugFunctionlogXmlFormat (REMOVED)
 			</xmlformat>
 		</functionlog>
 ----------------------------------------------------------------- */
@@ -3909,13 +3909,13 @@ ProjectLoader::loadDebugFunctionlog (TiXmlHandle &hRoot){
 
 	loadDebugConfigData(handle,"functionlog");
 
-	loadDebugFunctionlogXmlFormat(hRoot);
+	//loadDebugFunctionlogXmlFormat(hRoot);
 }
 
 
 
 /* ----------------------------------------------------------------
-Specification of the xmlformat:
+Specification of the xmlformat: (REMOVED)
 
 logxslfile requires an existing .xsl
 
@@ -3938,7 +3938,7 @@ ProjectLoader::loadDebugFunctionlogXmlFormat (TiXmlHandle &hRoot){
 }
 
 /* ----------------------------------------------------------------
-Specification of the functionlog:
+Specification of the logperframe:
 
 in logFrameKeys each item uses a string value, for example 
 	<item value="ctrl"/>
@@ -3963,7 +3963,7 @@ ProjectLoader::loadDebugLogperframe (TiXmlHandle &hRoot){
 }
 
 /* ----------------------------------------------------------------
-Specification of the functionlog:
+Specification of the errorchecking:
 
 		<errorchecking>
 			<errorgetopenglchecks value="bool"/>
@@ -3984,6 +3984,8 @@ ProjectLoader::loadDebugErrorchecking (TiXmlHandle &hRoot){
 
 /* ----------------------------------------------------------------
 Specification of the imagelog:
+
+imagesavepng, imagesavetga and imagesavejpg can be used simultaneosly
 
 		<imagelog>
 			<imagerendercallstatelog value="bool">
@@ -4014,8 +4016,6 @@ ProjectLoader::loadDebugImagelog (TiXmlHandle &hRoot){
 
 /* ----------------------------------------------------------------
 Specification of the imageicon:
-
-imagesavepng, imagesavetga and imagesavejpg can be used simultaneosly
 
 imageiconformat is tee format of the save icon images (TGA,PNG or JPG)
 only one format at a time
@@ -4092,7 +4092,7 @@ AABBGGRR. If an index is missing, it will take the value of the index as the col
 			<frameprestencilsave value="bool"/>
 			<framepoststencilsave value="bool"/>
 			<framediffstencilsave value="bool"/>
-			<frameAdditionalRenderCalls>
+			<frameAdditionalRenderCalls> (REMOVED, UNSAFE)
 				<item value="string"/>
 				<item value="string"/>
 				...

@@ -178,7 +178,6 @@ void FunctionParser::WriteFunctionData(const char *fileName) const
 }
 //*/
 
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 bool FunctionParser::Parse(const string & fName)
@@ -622,11 +621,11 @@ bool FunctionParser::ParseIncludeFile(const string & line)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//
+//##### check this code
 bool FunctionParser::ParseEnum(const string & line)
 {
   char buffer[1000+1];
-
+  
   //Make a copy of the line
   string enumLine = line;
 
@@ -678,7 +677,7 @@ bool FunctionParser::ParseEnum(const string & line)
     LOGERR(("FunctionParser::ParseEnum - No current enum?"));
     return false;
   }
-
+  
   //Loop and get a enum
   int enumValue = -1;
   while (sscanf(enumLine.c_str()," %1000s = 0x%x,",&buffer[0],&enumValue) == 2)
@@ -687,7 +686,8 @@ bool FunctionParser::ParseEnum(const string & line)
     EnumValue newValue;
     newValue.name  = buffer;
     newValue.value = enumValue;
-
+	
+	//ALL ENUMS PASS THROUGH HERE! #####
     //Add it
     currEnum->AddEnumValue(newValue);
 
