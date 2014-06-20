@@ -59,7 +59,7 @@
 			
 			<pass class="quad" name="pass2">
 				<viewport>LeftViewport</viewport>
-				<texture name="offscreenrender" fromLibrary="Test Multisampling" />
+				<!--texture name="offscreenrender" fromLibrary="Test Multisampling" /-->
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Test Multisampling" 
 											 toMaterial="quadpass2" />

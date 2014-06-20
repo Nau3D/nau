@@ -573,8 +573,8 @@ Camera::buildProjectionMatrix() {
 		projection.set (3, 2, -(m_FloatProps[FARP] + m_FloatProps[NEARP]) / (m_FloatProps[FARP] - m_FloatProps[NEARP]));
 	}
 
-	if (this->m_Renderable)
-		this->m_Renderable->resetCompilationFlags();
+	//if (this->m_Renderable)
+	//	this->m_Renderable->resetCompilationFlags();
 
 }
 	
@@ -649,8 +649,8 @@ Camera::buildViewMatrix (void)
 		vec4 p = m_Float4Props[POSITION];
 		m_Mat4Props[VIEW_MATRIX].translate(-p.x, -p.y, -p.z);
 	}
-	if (this->m_Renderable)
-		this->m_Renderable->resetCompilationFlags();
+	//if (this->m_Renderable)
+	//	this->m_Renderable->resetCompilationFlags();
 
 }
 

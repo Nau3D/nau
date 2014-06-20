@@ -1970,10 +1970,10 @@ MATERIAL LIBRAY RENDERTARGET DEFINITION
 
 	<rendertargets>
 		<rendertarget name = "test" />
-			<size width=2048 height=2048 samples=16 />
+			<size width=2048 height=2048 samples=16 layers = 2/>
 			<clear r=0.0 g=0.0 b=0.0 />
 			<colors>
-				<color name="offscreenrender" internalFormat="RGBA32F/>
+				<color name="offscreenrender" internalFormat="RGBA32F" />
 			</colors>
 			<depth name="shadowMap1"  internalFormat="DEPTH_COMPONENT24"  />
 				or
@@ -1983,6 +1983,8 @@ MATERIAL LIBRAY RENDERTARGET DEFINITION
 
 The names of both color and depth RTs will be available for other passes to use
 	as textures
+
+layers is optional, by default regular (non-array) textures are built.
 
 There can be multiple color, but only one depth.
 depth and depthStencil can't be both defined in the same render target 
@@ -1995,7 +1997,7 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 {
 	TiXmlElement *pElem;
 	RenderTarget *m_RT;
-	int rtWidth, rtHeight, rtSamples = 0; 
+	int rtWidth, rtHeight, rtSamples = 0, rtLayers = 0; 
 
 	pElem = hRoot.FirstChild ("rendertargets").FirstChild ("rendertarget").Element();
 	for ( ; 0 != pElem; pElem=pElem->NextSiblingElement()) {
@@ -2022,6 +2024,10 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 			
 			if (TIXML_SUCCESS == pElemSize->QueryIntAttribute ("samples", &rtSamples)) {
 				m_RT->setSampleCount(rtSamples);
+			}
+
+			if (TIXML_SUCCESS == pElemSize->QueryIntAttribute ("layers", &rtLayers)) {
+				m_RT->setLayerCount(rtLayers);
 			}
 		} 
 		else {
@@ -2104,6 +2110,11 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 
 				const char *pNameColor = pElemColor->Attribute ("name");
 				const char *internalFormat = pElemColor->Attribute("internalFormat");
+				int layers = 0;
+
+				if (pElemColor->QueryIntAttribute("layers", &layers))
+					if (layers < 2 && layers != 0)
+						NAU_THROW("Number of layers must be greater or equal to 2, in render target %s,in material lib: %s", pRTName, aLib->getName().c_str());	
 
 				if (0 == pNameColor) {
 					NAU_THROW("Color rendertarget has no name, in render target %s,in material lib: %s", pRTName, aLib->getName().c_str());							
@@ -2323,16 +2334,16 @@ ProjectLoader::loadEvents(TiXmlHandle handle)
 MATERIAL MAPS
 
 	MAP ALL TO ONE
-	<materialmaps>
+	<materialMaps>
 		<map fromMaterial="*" toLibrary="quadMaterials" toMaterial="flat-with-shadow" />
-	</materialmaps>
+	</materialMaps>
 
 	OR 
 
 	MAP INDIVIDUAL
-	<materialmaps>
+	<materialMaps>
 		<map fromMaterial="quad" toLibrary="quadMaterials" toMaterial="quadpass2" />
-	</materialmaps>
+	</materialMaps>
 
 The field toLibrary indicates a previously defined material library in the assets part.
 
@@ -2900,22 +2911,31 @@ TEXTURES
 			fileNegZ="../TextureCubeMaps/cubemaphouse/cm_back.jpg"	
 		/>
 		<texture name ="Bla"
-			width=512 height = 512 internalFormat="RGBA" />
+			width=512 height = 512 internalFormat="RGBA" layers = 2/>
 	</textures>
 
+Layers are an optional field. If specified a 2D texture array will be created.
 The paths may be relative to the material lib file, or absolute.
 -----------------------------------------------------------------------------*/
 void 
 ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
 {
 	TiXmlElement *pElem;
+	int layers = 0;
 	pElem = hRoot.FirstChild ("textures").FirstChild ("texture").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char* pTextureName = pElem->Attribute ("name");
 		const char* pFilename = pElem->Attribute ("filename");
 		const char *internalFormat = pElem->Attribute("internalFormat");
-		const char *type = pElem->Attribute("type");
-		const char *format = pElem->Attribute("format");
+
+		// layers
+		if (!pElem->QueryIntAttribute("layers", &layers))
+			layers = 0;
+		else if (layers < 2 && layers != 0)
+			NAU_THROW("Mat Lib &s - Texture %s - Layers must be equal or greater than 2", aLib->getName().c_str(), s_pFullName);
+			
+		//const char *type = pElem->Attribute("type");
+		//const char *format = pElem->Attribute("format");
 		int mipmap=0;
 		const char *pMipMap = pElem->Attribute("mipmap", &mipmap);
 
@@ -2951,7 +2971,7 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 			if (pElem->QueryIntAttribute("width", &width) || pElem->QueryIntAttribute("height", &height))
 				NAU_THROW("Texture %s dimensions are missing or invalid, in material lib: %s", pTextureName, aLib->getName().c_str());
 
-			RESOURCEMANAGER->createTexture (s_pFullName, internalFormat, width, height);
+			RESOURCEMANAGER->createTexture (s_pFullName, internalFormat, width, height, layers);
 		}
 
 		else {
