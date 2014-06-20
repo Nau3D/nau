@@ -861,8 +861,7 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 		TiXmlElement *p = pElem->FirstChildElement();
 		Attribute a; 	
 		void *value;
-
-		while (p) {
+				while (p) {
 			// skip previously processed elements
 			if (strcmp(p->Value(), "ORIGIN") && strcmp(p->Value(), "SIZE") && strcmp(p->Value(), "CLEAR_COLOR")) {
 				// trying to define an attribute that does not exist?		
