@@ -390,7 +390,7 @@ PassOptix::doPass (void)
 
 		void *m;
 		m = malloc(t->getPropi(Texture::ELEMENT_SIZE) * t->getPropi(Texture::WIDTH)*t->getPropi(Texture::HEIGHT) );
-		glGetTexImage(	GL_TEXTURE_2D, 0, t->getPrope(Texture::FORMAT), t->getPrope(Texture::TYPE), m);
+		//glGetTexImage(	GL_TEXTURE_2D, 0, t->getPrope(Texture::FORMAT), t->getPrope(Texture::TYPE), m);
  
 		glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -669,6 +669,37 @@ PassOptix::getOptixFormat(Texture *t) {
 
 	int nComp = t->getPropi(Texture::COMPONENT_COUNT);
 	int type = t->getPrope(Texture::TYPE);
+	//int type = t->getPrope(Texture::INTERNAL_FORMAT);
+
+	//switch(type) {
+	//
+	//	case GL_R8: return RT_FORMAT_UNSIGNED_BYTE;
+	//	case GL_R16: return RT_FORMAT_UNSIGNED_SHORT;
+	//	case GL_RG8: return RT_FORMAT_UNSIGNED_BYTE2;
+	//	case GL_RG16: return RT_FORMAT_UNSIGNED_SHORT2;
+	//	case GL_RGB8: return RT_FORMAT_UNSIGNED_BYTE3;
+	//	case GL_RGB16: return RT_FORMAT_UNSIGNED_SHORT3;
+	//	case GL_RGBA8: return RT_FORMAT_UNSIGNED_BYTE4;
+	//	case GL_RGBA16: return RT_FORMAT_UNSIGNED_SHORT4;
+	//	case GL_R32F: return RT_FORMAT_FLOAT;
+	//	//case GL_RG16F: return RT_FORMAT_FLOAT;
+	//	case GL_RG32F: return RT_FORMAT_FLOAT2;
+	//	
+	//	//case GL_RGBA16F)
+	//	case GL_RGBA32F: return RT_FORMAT_FLOAT4;
+	//	case GL_R32I: return RT_FORMAT_INT;
+	//	case GL_R32UI: return RT_FORMAT_UNSIGNED_INT;
+	//	case GL_RG16I: return RT_FORMAT_SHORT2;
+	//	case GL_RG16UI: return RT_FORMAT_UNSIGNED_SHORT2;
+	//	case GL_RG32I: return RT_FORMAT_INT2;
+	//	case GL_RG32UI: return RT_FORMAT_UNSIGNED_INT2;
+	//	case GL_RGBA8I: return RT_FORMAT_BYTE4;
+	//	case GL_RGBA8UI: return RT_FORMAT_UNSIGNED_BYTE4;
+	//	case GL_RGBA16I: return RT_FORMAT_SHORT4;
+	//	case GL_RGBA16UI: return RT_FORMAT_UNSIGNED_SHORT4;
+	//	case GL_RGBA32I: return RT_FORMAT_INT4;
+	//	case GL_RGBA32UI: return RT_FORMAT_UNSIGNED_INT4;
+	//}
 
 	if (type == GL_FLOAT) {
 		switch (nComp) {

@@ -5,9 +5,7 @@
 		<rendertarget name = "depth">
 			<size width="1024" height="1024" />
 			<depth name="shadowMap" noreadandwrite="true"  
-									internalFormat="DEPTH_COMPONENT32"
-									format="DEPTH_COMPONENT" 
-									type="FLOAT"  />
+									internalFormat="DEPTH_COMPONENT32F"  />
 		</rendertarget>
 	</rendertargets>
 	

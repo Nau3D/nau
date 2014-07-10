@@ -6,7 +6,7 @@
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
-			<depth name="shadowMapA"  internalFormat="DEPTH_COMPONENT32" />
+			<depth name="shadowMapA"  internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 	</rendertargets>
 

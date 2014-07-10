@@ -2,7 +2,7 @@
 <materiallib name="Image Load Store">
 
 	<textures>
-		<texture name="tex" width=512 height=512 internalFormat="RGBA8" />
+		<texture name="tex" width=512 height=512 internalFormat="RGBA" />
 		<texture name="Grade_01_02_03" filename="../../Texturas/AL01_Grade1.tif" mipmap="1" />
 	</textures>
 
