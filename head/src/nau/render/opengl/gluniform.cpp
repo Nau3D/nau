@@ -134,10 +134,13 @@ GlUniform::setType (int type)
 			m_Cardinality = 16;
 			break;
 		case NOT_USED:
+		case GL_UNSIGNED_INT_ATOMIC_COUNTER:
 			m_Cardinality = 0;
 			m_Type = NOT_USED;
 			break;
 		default:
+			m_Cardinality = 0;
+			m_Type = NOT_USED;
 			SLOG("%d - gluniform.cpp line 141 uniform type not supported in NAU", type);
 	}
 }

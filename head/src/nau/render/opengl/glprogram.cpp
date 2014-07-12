@@ -447,7 +447,6 @@ GlProgram::setUniforms() {
 	for(it = m_Uniforms.begin(); it != m_Uniforms.end(); it++) {
 		it->setType(GlUniform::NOT_USED);
 	}
-	int  k = glGetUniformLocation(m_P, "View");
 	// add new uniforms and reset types for previous uniforms
 	
 	for (i = 0; i < m_NumUniforms; i++) {
