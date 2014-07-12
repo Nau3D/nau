@@ -4,6 +4,15 @@
 
 using namespace nau::render;
 
+bool GLTextureCubeMap::Inited = GLTextureCubeMap::InitGL();
+
+bool
+GLTextureCubeMap::InitGL() {
+
+	Attribs.listAdd("DIMENSION", "TEXTURE_CUBE_MAP", GL_TEXTURE_CUBE_MAP);
+	return true;
+}
+
 int GLTextureCubeMap::faces[6] = {
 			GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
 			GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
@@ -20,9 +29,9 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 	TextureCubeMap (label,files, anInternalFormat, aFormat, aType, width)
 {
 
-	m_EnumProps[FORMAT] = Attribs.getListValueOp(FORMAT, aFormat);
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
-	m_EnumProps[TYPE] = Attribs.getListValueOp(TYPE, aType);
+	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 
 	glGenTextures (1, &(m_UIntProps[ID]));
 	glBindTexture (GL_TEXTURE_CUBE_MAP, m_UIntProps[ID]);

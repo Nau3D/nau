@@ -1,4 +1,4 @@
-
+#include <nau/slogger.h>
 #include <nau/render/opengl/glprogram.h>
 #include <nau/render/vertexdata.h>
 
@@ -408,6 +408,9 @@ GlProgram::setValueOfUniform (int i) {
 		case GL_SAMPLER_2D_MULTISAMPLE:
 		case GL_IMAGE_2D:
 		case GL_IMAGE_2D_MULTISAMPLE:
+		case GL_SAMPLER_2D_ARRAY:
+		case GL_SAMPLER_2D_ARRAY_SHADOW:
+
 			glUniform1i(uni.getLoc(),(int)uni.getValues()[0]);break;
 
 		case GL_INT_VEC2: case GL_BOOL_VEC2:
@@ -423,6 +426,8 @@ GlProgram::setValueOfUniform (int i) {
 			glUniformMatrix3fv(uni.getLoc(),1,false,uni.getValues());break;
 		case GL_FLOAT_MAT4:
 			glUniformMatrix4fv(uni.getLoc(),1,false,uni.getValues());break;
+		default:
+			SLOG("%d - glprogramm.cpp - uniform type not supported in NAU", uni.getType());
 	}
 }
 
@@ -442,7 +447,7 @@ GlProgram::setUniforms() {
 	for(it = m_Uniforms.begin(); it != m_Uniforms.end(); it++) {
 		it->setType(GlUniform::NOT_USED);
 	}
-
+	int  k = glGetUniformLocation(m_P, "View");
 	// add new uniforms and reset types for previous uniforms
 	
 	for (i = 0; i < m_NumUniforms; i++) {

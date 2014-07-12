@@ -37,6 +37,10 @@ namespace nau
 				std::string aFormat, std::string aType, int width, unsigned char** data, bool mipmap = true );
 			virtual int getNumberOfComponents(void);
 			virtual int getElementSize(){return 0;};
+
+			static bool InitGL();
+			static bool Inited;
+
 		private:
 
 			int getIndex(std::string StringArray[], int IntArray[], std::string aString);

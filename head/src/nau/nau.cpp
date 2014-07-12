@@ -218,10 +218,6 @@ Nau::readProjectFile (std::string file, int *width, int *height)
 		clear();
 		throw(s);
 	}
-		/* Situations like this should be replaced in a near future with a events patern*/
-	//std::vector<std::string> *materialNames = MATERIALLIBMANAGER->getMaterialNames (DEFAULTMATERIALLIBNAME);
-	//RENDERMANAGER->materialNamesFromLoadedScenes (*materialNames); 
-	//delete materialNames;	
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
 		

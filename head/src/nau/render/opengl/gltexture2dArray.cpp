@@ -24,9 +24,9 @@ GLTexture2DArray::GLTexture2DArray (std::string label, std::string anInternalFor
 	m_IntProps[LAYERS] = layers;
 
 	m_EnumProps[DIMENSION] = GL_TEXTURE_2D_ARRAY;
-	m_EnumProps[FORMAT] = GL_RGBA;
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
-	m_EnumProps[TYPE] = GL_FLOAT;
+	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 	m_IntProps[COMPONENT_COUNT] = getNumberOfComponents();
 	m_IntProps[ELEMENT_SIZE] = getElementSize();
 

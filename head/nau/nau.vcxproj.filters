@@ -499,6 +499,9 @@
     <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\buffer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -983,6 +986,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h">
       <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\buffer.h">
+      <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -32,6 +32,9 @@ namespace nau
 			//void enableObjectSpaceCoordGen (void);
 			//void generateObjectSpaceCoords (TextureCoord aCoord, float *plane);
 
+			static int GetCompatibleFormat(int dim, int anInternalFormat);
+			static int GetCompatibleType(int dim, int anInternalFormat);
+
 
 		protected:
 			static bool InitGL();
@@ -67,9 +70,6 @@ namespace nau
 				TexDataTypes(): bitDepth(0) {name[0]='\0';}
 			};
 			static std::map<unsigned int, TexDataTypes> TexDataType;
-
-			static int GetCompatibleFormat(int anInternalFormat);
-			static int GetCompatibleType(int anInternalFormat);
 
 			// returns the number of channels in the texture
 			virtual int getNumberOfComponents(void);
