@@ -24,9 +24,9 @@ GLTextureMS::GLTextureMS (std::string label, std::string anInternalFormat, int w
 	m_IntProps[SAMPLES] = samples;
 
 	m_EnumProps[DIMENSION] = GL_TEXTURE_2D_MULTISAMPLE;
-	m_EnumProps[FORMAT] = GL_RGBA;
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
-	m_EnumProps[TYPE] = GL_FLOAT;
+	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 	m_IntProps[COMPONENT_COUNT] = getNumberOfComponents();
 	m_IntProps[ELEMENT_SIZE] = getElementSize();
 

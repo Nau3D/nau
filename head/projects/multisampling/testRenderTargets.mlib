@@ -5,9 +5,9 @@
 		<rendertarget name="test">
 			<size width=1024 height=1024 samples=16/>
 			<colors>
-				<color name="offscreenrender" internalFormat="RGBA8" />
+				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
-			<depth name="depth" internalFormat="DEPTH_COMPONENT32" />
+			<depth name="depth" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 	</rendertargets>
 

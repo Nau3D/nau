@@ -32,16 +32,45 @@ namespace nau
 			//void enableObjectSpaceCoordGen (void);
 			//void generateObjectSpaceCoords (TextureCoord aCoord, float *plane);
 
+			static int GetCompatibleFormat(int dim, int anInternalFormat);
+			static int GetCompatibleType(int dim, int anInternalFormat);
+
+
 		protected:
 			static bool InitGL();
 			static bool Inited;
 
-//#if NAU_OPENGL_VERSION < 420 || NAU_OPTIX
-			// for empty textures, given an internal format, a format and type are required
-			// by GL
-			static int GetCompatibleFormat(int anInternalFormat);
-			static int GetCompatibleType(int aFormat);
-//#endif
+			struct TexIntFormats{
+				unsigned int format;
+				unsigned int type;				
+				char name[32];
+
+				TexIntFormats(char *n, int f, unsigned int t):
+					format(f), type(t)   {memcpy(name,n,32);}
+				TexIntFormats(): format(0), type(0) {name[0]='\0';}
+			};
+			static std::map<unsigned int, TexIntFormats> TexIntFormat;
+
+			struct TexFormats{
+				unsigned int numComp;				
+				char name[32];
+
+				TexFormats(char *n, unsigned int t):
+					numComp(t)   {memcpy(name,n,32);}
+				TexFormats(): numComp(0) {name[0]='\0';}
+			};
+			static std::map<unsigned int, TexFormats> TexFormat;
+
+			struct TexDataTypes{
+				unsigned int bitDepth;				
+				char name[32];
+
+				TexDataTypes(char *n, unsigned int t):
+					bitDepth(t)   {memcpy(name,n,32);}
+				TexDataTypes(): bitDepth(0) {name[0]='\0';}
+			};
+			static std::map<unsigned int, TexDataTypes> TexDataType;
+
 			// returns the number of channels in the texture
 			virtual int getNumberOfComponents(void);
 			virtual  int getElementSize();

@@ -4,30 +4,22 @@
 	<rendertargets>
 		<rendertarget name="shadowMap1">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap1" 
-									internalFormat="DEPTH_COMPONENT32"
-									  />
+			<depth name="shadowMap1" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap2">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap2"   
-									internalFormat="DEPTH_COMPONENT32"
-									  />
+			<depth name="shadowMap2" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap3">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap3"  
-									internalFormat="DEPTH_COMPONENT32"
-									  />
+			<depth name="shadowMap3" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap4">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap4" 
-									internalFormat="DEPTH_COMPONENT32"
-									  />
+			<depth name="shadowMap4" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 
 				
@@ -35,9 +27,7 @@
 			<size width="1024" height="1024" />
 			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
-				<color name="offscreenrender" format="RGBA" 
-												internalFormat="RGBA8" 
-												type="UNSIGNED_BYTE" />
+				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
 		</rendertarget>
 

@@ -2066,9 +2066,11 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 				NAU_THROW("Library %s: Render Target %s: Depth rendertarget %s has no internal format", aLib->getName().c_str(), pRTName, pNameDepth);
 			}
 
-			int intFormat = Texture::Attribs.getListValueOp(Texture::INTERNAL_FORMAT, internalFormat);
-			if (intFormat < 0) 
-				NAU_THROW("Library %s: Render Target %s: Depth rendertarget's internal format %s is invalid", aLib->getName().c_str(), pRTName, internalFormat);
+			if (!Texture::Attribs.isValid("INTERNAL_FORMAT", internalFormat)) //isValidInternalFormat(internalFormat))
+					NAU_THROW("Library %s: Render Target %s: Depth rendertarget's internal format %s is invalid", aLib->getName().c_str(), pRTName, internalFormat);
+			//int intFormat = Texture::Attribs.getListValueOp(Texture::INTERNAL_FORMAT, internalFormat);
+			//if (intFormat < 0) 
+			//	NAU_THROW("Library %s: Render Target %s: Depth rendertarget's internal format %s is invalid", aLib->getName().c_str(), pRTName, internalFormat);
 
 			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pNameDepth);
 			m_RT->addDepthTarget (s_pFullName, internalFormat);
@@ -2124,14 +2126,14 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 					NAU_THROW("Color rendertarget %s has no internal format, in render target %s, in material lib: %s", pNameColor, pRTName, aLib->getName().c_str());
 				}
 				if (!Texture::Attribs.isValid("INTERNAL_FORMAT", internalFormat)) //isValidInternalFormat(internalFormat))
-					NAU_THROW("Color rendertarget %s internal format is invalid, in render target %s, in material lib: %s", pNameColor, pRTName, aLib->getName().c_str());
+					NAU_THROW("Library %s: Render Target %s: Color rendertarget %s internal format %s is invalid", aLib->getName().c_str(), pRTName, pNameColor,internalFormat);
 
 				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pNameColor);
 					
 				m_RT->addColorTarget (s_pFullName, internalFormat);
 			}//End of rendertargets color
 		}
-		SLOG("Render Target : %s width:%d height:%d samples:%d", pRTName, rtWidth, rtHeight, rtSamples);
+		SLOG("Render Target : %s width:%d height:%d samples:%d layers:%d", pRTName, rtWidth, rtHeight, rtSamples, rtLayers);
 
 		if (!m_RT->checkStatus()) {
 			NAU_THROW("Render target is not OK, in render target %s,in material lib: %s", pRTName, aLib->getName().c_str());							
@@ -3311,12 +3313,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				aShader->loadShader(IProgram::FRAGMENT_SHADER, FileUtil::GetFullPath(path,pPSFile));
 				SLOG("Shader file %s - %s",pPSFile, aShader->getShaderInfoLog(IProgram::FRAGMENT_SHADER).c_str());
 			}
-#if NAU_OPENGL_VERSION >= 320
-			if (pGSFile) {
-				aShader->loadShader(IProgram::GEOMETRY_SHADER, FileUtil::GetFullPath(path,pGSFile));
-				SLOG("Shader file %s - %s",pGSFile, aShader->getShaderInfoLog(IProgram::GEOMETRY_SHADER).c_str());
-			}
-#elif NAU_OPENGL_VERSION >= 400			
+#if NAU_OPENGL_VERSION >= 400			
 			if (pTCFile) {
 				aShader->loadShader(IProgram::TESS_CONTROL_SHADER, FileUtil::GetFullPath(path,pTCFile));
 				SLOG("Shader file %s - %s",pTCFile, aShader->getShaderInfoLog(IProgram::TESS_CONTROL_SHADER).c_str());
@@ -3324,6 +3321,12 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			if (pTEFile) {
 				aShader->loadShader(IProgram::TESS_EVALUATION_SHADER, FileUtil::GetFullPath(path,pTEFile));
 				SLOG("Shader file %s - %s",pTEFile, aShader->getShaderInfoLog(IProgram::TESS_EVALUATION_SHADER).c_str());
+			}
+#endif
+#if NAU_OPENGL_VERSION >= 320
+			if (pGSFile) {
+				aShader->loadShader(IProgram::GEOMETRY_SHADER, FileUtil::GetFullPath(path,pGSFile));
+				SLOG("Shader file %s - %s",pGSFile, aShader->getShaderInfoLog(IProgram::GEOMETRY_SHADER).c_str());
 			}
 #endif
 			aShader->linkProgram();

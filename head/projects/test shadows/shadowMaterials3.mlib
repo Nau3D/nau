@@ -4,19 +4,14 @@
 	<rendertargets>
 		<rendertarget name = "depth">
 			<size width="1024" height="1024" />
-			<depth name="shadowMap" noreadandwrite="true"  
-									internalFormat="DEPTH_COMPONENT32"
-									format="DEPTH_COMPONENT" 
-									type="FLOAT"  />
+			<depth name="shadowMap" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 		
 		<rendertarget name="simple">
 			<size width="1024" height="1024" />
 			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
-				<color name="offscreenrender" format="RGBA" 
-												internalFormat="RGBA8" 
-												type="UNSIGNED_BYTE" />
+				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
 		</rendertarget>
 

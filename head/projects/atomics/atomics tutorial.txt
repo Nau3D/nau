@@ -1,0 +1,32 @@
+Atomics
+
+GLSL Spec
+4.1.7.3
+Atomics, samplers, images are opaque types, i.e. they are handlers for more complex objects. 
+	can't be assigned
+	can't be read directly
+	
+when aggregated in an array, atomic counters can only be indexed with a dynamically uniform integer expression (3.8.3)
+	
+4.4.6.1
+layouts and offsets
+layout(binding=1, offset=4) uniform atomic_uint bla;
+bindings are always required, offsets get post incremented, and can be ommited by default.
+	
+8.10
+atomic counter functions
+increment
+decrement
+get
+
+
+
+OpenGL
+Buffer creation
+	glGenBuffers(1,&m_AtomicCountersBuffer);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
+	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * MAX_COUNTERS, NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+	
+setting a binding point	
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 1, m_AtomicCountersBuffer);

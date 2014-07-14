@@ -155,9 +155,11 @@ BulletWorld::setDynamic (std::string name)
 void 
 BulletWorld::setVelocity (std::string name, nau::math::vec3 vel)
 {
-	//m_RigidBodies[name]->setLinearVelocity (btVector3 (vel.x, vel.y, vel.z));
-	if (m_RigidBodies[name]->getVelocityInLocalPoint (m_RigidBodies[name]->getCenterOfMassPosition()).length() < 10.0f) {
-		m_RigidBodies[name]->applyCentralImpulse (btVector3 (3*vel.x, 3*vel.y, 3*vel.z));//, m_RigidBodies[name]->getCenterOfMassPosition()); /**???**/
+	if (m_RigidBodies.count(name)) {
+		//m_RigidBodies[name]->setLinearVelocity (btVector3 (vel.x, vel.y, vel.z));
+		if (m_RigidBodies[name]->getVelocityInLocalPoint (m_RigidBodies[name]->getCenterOfMassPosition()).length() < 10.0f) {
+			m_RigidBodies[name]->applyCentralImpulse (btVector3 (3*vel.x, 3*vel.y, 3*vel.z));//, m_RigidBodies[name]->getCenterOfMassPosition()); /**???**/
+		}
 	}
 }
 

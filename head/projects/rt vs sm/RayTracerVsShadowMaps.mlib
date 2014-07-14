@@ -1,0 +1,278 @@
+<?xml version="1.0" ?>
+<materiallib name="RT vs SM">
+
+	<rendertargets>
+	
+		<rendertarget name ="deferred">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="color" internalFormat="RGBA" />
+				<color name="shadow" internalFormat="RGBA"  />
+				<color name="shadowContourProj" internalFormat="RGBA" />						
+				<color name="pos" internalFormat="RGBA32F" />
+			</colors>
+		</rendertarget>
+		
+		<rendertarget name ="deferredResult">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="color2" internalFormat="RGBA" />
+			</colors>
+		</rendertarget>
+		
+		<rendertarget name ="deferredResult2">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="compDR2" internalFormat="RGBA" />
+			</colors>
+		</rendertarget>
+		
+		
+		<rendertarget name ="intersectionResult">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="intersectionResult" internalFormat="RGBA32F" />
+			</colors>
+		</rendertarget>
+
+		<rendertarget name ="test">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA32F" />
+			</colors>
+		</rendertarget>
+		
+		<rendertarget name ="test_ubyte">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="offscreenrender_ubyte" internalFormat="R8" />
+			</colors>
+		</rendertarget>
+
+		<rendertarget name="depthAndVertices">
+			<size width="1024" height="1024" />
+			<depth name="shadowMapA" internalFormat="DEPTH_COMPONENT32F" />
+			<colors>
+				<color name="vertexA" internalFormat="RGBA32F" />
+									
+				<color name="vertexB" internalFormat="RGBA32F" />
+									
+				<color name="vertexC" internalFormat="RGBA32F" />
+			</colors>			
+		</rendertarget>
+
+		<rendertarget name = "depth">
+			<size width="1024" height="1024" />
+			<depth name="shadowMap" internalFormat="DEPTH_COMPONENT32F" />
+		</rendertarget>
+
+	</rendertargets>
+	
+	
+	<shaders>
+		<shader name="deferred" 		ps="shaders/deferredShadows.frag" 
+										vs="shaders/deferredShadows.vert" />
+												
+		<shader name="compareRTvsSM" 	ps="shaders/compareRTvsSM.frag" 
+										vs="shaders/quadShader.vert" />
+															
+		<shader name="computeContours" 	ps="shaders/contour.33.frag" 
+										vs="shaders/quadShader.vert" />
+
+		<shader name="testIntersection" ps ="shaders/testIntersection.frag" 
+										vs="shaders/testIntersection.vert" />					
+		<shader name="depthAndVertices" 
+										ps="shaders/depthAndVertices.frag" 
+										gs="shaders/depthAndVertices.geom" 
+										vs="shaders/depthAndVertices.vert" />
+		<shader name="depthOnly" 
+										ps="shaders/depthOnly.frag" 
+										vs="shaders/depthOnly.vert" />
+	</shaders>
+
+		
+	<textures>
+		<texture name="dataBuffer"  format="RGBA" 
+									internalFormat="RGBA32F" 
+									type="FLOAT" width=2 height=2 />
+	</textures>
+
+
+	<states>
+		<state name="frontCull">
+			<CULL_TYPE value ="FRONT"  />
+		</state>
+	</states>
+
+
+	<materials>
+
+		<material name="testIntersection">
+			<shader>
+				<name>testIntersection</name>
+				<values>
+					<valueof uniform="vertexA" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />		
+					<valueof uniform="vertexB" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="1" />		
+					<valueof uniform="vertexC" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="2" />		
+					<valueof uniform="positions" 		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="3" />
+					<valueof uniform="lightSpaceMat"	type="CAMERA" 
+														context="RTvsSM#getShadowMap-LightCam" 
+														component="TS05_PVM_MATRIX" />
+					<valueof uniform="lightDir" 	type="LIGHT" context="Sun"
+														component="DIRECTION" /> 
+														
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="vertexA" />
+				<texture UNIT="1" name="vertexB" />
+				<texture UNIT="2" name="vertexC" />
+				<texture UNIT="3" name="pos" />
+			</textures>	
+		</material>
+
+
+		<material name="deferred">
+			<shader>
+				<name>deferred</name>
+				<values>
+					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightColor"     	type="CURRENT" context="LIGHT" 
+														id=0 component="COLOR" />
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="V"          	type="CURRENT" context="MATRIX" 
+														component="VIEW" />
+					<valueof uniform="M"          	type="CURRENT" context="MATRIX" 
+														component="MODEL" />
+														
+					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
+														context="RTvsSM#getShadowMap-LightCam" 
+														component="TS05_PVM_MATRIX" />
+
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />					
+														
+					<valueof uniform="shadowMap" 		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="1" />					
+						 
+					<valueof uniform="contourProj" 		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="2" />														
+					<valueof uniform="shadowMapBF" 		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="3" />	
+
+						 
+				</values>
+			</shader>
+		</material>	
+		
+
+		<material name="compareRTvsSM">
+			<shader>
+				<name>compareRTvsSM</name>
+				<values>
+					<valueof uniform="rayTrace"			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />		
+					<valueof uniform="shadowMap" 		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="1" />
+					<valueof uniform="projShadowContour" type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="2" />
+					<valueof uniform="intersectionRes" type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="3" />
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="1" name="shadow" />
+				<texture UNIT="0" name="offscreenrender_ubyte" />
+				<texture UNIT="2" name="shadowContourProj" />
+				<texture UNIT="3" name="intersectionResult" />
+
+			</textures>	
+		</material>
+
+
+		<material name="computeContoursA">
+			<shader>
+				<name>computeContours</name>
+				<values>
+					<valueof uniform="textureUnit"		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />		
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="shadowMapA" />
+			</textures>	
+		</material>
+
+
+		<material name="computeContours">
+			<shader>
+				<name>computeContours</name>
+				<values>
+					<valueof uniform="textureUnit"		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />		
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="shadowMap" />
+			</textures>	
+		</material>
+		
+
+		<material  name="depthOnly" >
+			<color>
+				<ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+				<diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
+				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
+				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
+				<shininess value="0.0" />
+			</color>
+			<shader>
+				<name>depthOnly</name>
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+											component="PROJECTION_VIEW_MODEL" />
+				
+				</values>
+			</shader>
+			<state name="frontCull" />	
+		</material>
+		
+
+		<material  name="depthAndVertices" >
+			<shader>
+				<name>depthAndVertices</name>
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+											component="PROJECTION_VIEW_MODEL" />
+				
+				</values>
+			</shader>
+			<!--state name="frontCull" /-->	
+		</material>
+
+	</materials>
+		
+</materiallib>

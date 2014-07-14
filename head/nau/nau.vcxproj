@@ -208,6 +208,12 @@
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp" />
     <ClCompile Include="..\src\nau\material\textureSampler.cpp" />
     <ClCompile Include="..\src\nau\math\bvec4.cpp" />
+    <ClCompile Include="..\src\nau\render\buffer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\src\nau\render\imageTexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp" />
@@ -404,6 +410,12 @@
     <ClInclude Include="..\src\nau\loader\patchLoader.h" />
     <ClInclude Include="..\src\nau\material\textureSampler.h" />
     <ClInclude Include="..\src\nau\math\bvec4.h" />
+    <ClInclude Include="..\src\nau\render\buffer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\src\nau\render\imageTexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h" />
