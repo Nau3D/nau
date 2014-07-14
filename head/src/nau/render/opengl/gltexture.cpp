@@ -27,6 +27,7 @@ GLTexture::InitGL() {
 	TexDataType[GL_UNSIGNED_INT    ] = TexDataTypes("UNSIGNED_INT"   , 32);
 	TexDataType[GL_INT             ] = TexDataTypes("INT"            , 32);
 	TexDataType[GL_FLOAT           ] = TexDataTypes("FLOAT"          , 32);
+	TexDataType[GL_UNSIGNED_INT_8_8_8_8_REV       ] = TexDataTypes("UNSIGNED_INT_8_8_8_8_REV"       , 8);
 	TexDataType[GL_UNSIGNED_INT_24_8              ] = TexDataTypes("UNSIGNED_INT_24_8"              , 32);
 	TexDataType[GL_FLOAT_32_UNSIGNED_INT_24_8_REV ] = TexDataTypes("FLOAT_32_UNSIGNED_INT_24_8_REV" , 32);
 
@@ -111,11 +112,26 @@ GLTexture::GetCompatibleType(int dim, int internalFormat) {
 	GLint result;
 
 #if NAU_OPENGL_VERSION >= 400
-	glGetInternalformativ(dim, internalFormat, GL_TEXTURE_IMAGE_TYPE, 1, &result);
+	glGetInternalformativ(GL_TEXTURE_2D, internalFormat, GL_TEXTURE_IMAGE_TYPE, 1, &result);
 #else
 	result = TexIntFormat[internalFormat].type;
 #endif
 	return result;
+}
+
+
+int
+GLTexture::GetNumberOfComponents(unsigned int format) {
+
+	return(TexFormat[format].numComp);
+}
+
+
+int 
+GLTexture::GetElementSize(unsigned int format, unsigned int type) {
+
+	int nComp = GetNumberOfComponents(format);
+	return nComp * TexDataType[type].bitDepth;
 }
 
 

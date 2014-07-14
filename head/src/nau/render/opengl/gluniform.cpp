@@ -141,7 +141,7 @@ GlUniform::setType (int type)
 		default:
 			m_Cardinality = 0;
 			m_Type = NOT_USED;
-			SLOG("%d - gluniform.cpp line 141 uniform type not supported in NAU", type);
+			SLOG("%d - gluniform.cpp - uniform type not supported in NAU", type);
 	}
 }
 			
@@ -199,7 +199,7 @@ GlUniform::getProgramValueType() {
 		case GL_FLOAT_MAT4:
 			return("MAT4");
 	}
-	SLOG("%d - gluniform.cpp line 199 uniform type not supported in NAU", m_Type);
+	SLOG("%d - gluniform.cpp - uniform type not supported in NAU", m_Type);
 	return("FLOAT");
 }
 

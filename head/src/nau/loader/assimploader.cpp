@@ -34,7 +34,13 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		return;
 	}
 
-	sc = importer.ReadFile( aFilename, aiProcess_CalcTangentSpace|aiProcess_Triangulate);//aiProcessPreset_TargetRealtime_Quality);
+	unsigned int primitive;
+	if (params.find("USE_ADJACENCY")!= std::string::npos) 
+		primitive = IRenderer::TRIANGLES_ADJACENCY;
+	else 
+		primitive = IRenderer::TRIANGLES;
+
+	sc = importer.ReadFile( aFilename, aiProcessPreset_TargetRealtime_Quality);//aiProcess_CalcTangentSpace|aiProcess_Triangulate);//aiProcessPreset_TargetRealtime_Quality);
 
 	// If the import failed, report it
 	if( !sc)
@@ -43,10 +49,8 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		return;
 	}
 
-	unsigned int order;
-	if (params == "")
-		order = XYZ;
-	else if (params == "SWAP_YZ")
+	unsigned int order = XYZ;
+	if (params.find("SWAP_YZ") != std::string::npos)
 		order = XZ_Y;
 
 	std::map<unsigned int, std::string> meshNameMap;
@@ -61,7 +65,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 
 		Mesh *renderable =  (Mesh *)RESOURCEMANAGER->createRenderable("Mesh", mesh->mName.data, aFilename);
 		meshNameMap[n] = renderable->getName();
-		renderable->setDrawingPrimitive(nau::render::IRenderer::TRIANGLES);
+		renderable->setDrawingPrimitive(primitive);
 
 		std::vector<unsigned int> *indices = new std::vector<unsigned int>;
 
@@ -73,6 +77,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		}
 		MaterialGroup *aMaterialGroup = new MaterialGroup;
 		aMaterialGroup->setIndexList(indices);
+		aMaterialGroup->getIndexData().useAdjacency(true);
 		aMaterialGroup->setParent(renderable);
 
 		 aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];

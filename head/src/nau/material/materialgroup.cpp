@@ -77,6 +77,8 @@ MaterialGroup::getNumberOfPrimitives(void) {
 	unsigned int primitive = m_Parent->getDrawingPrimitive();
 	switch(primitive) {
 	
+		case nau::render::IRenderer::TRIANGLES_ADJACENCY: 
+			return (indexes / 6);
 		case nau::render::IRenderer::TRIANGLES: 
 			return (indexes / 3);
 		case nau::render::IRenderer::TRIANGLE_STRIP: 
@@ -105,38 +107,38 @@ MaterialGroup::getParent ()
 	return *(this->m_Parent);
 }
 
-// FIXME: This has to go away
-// see also: cworldfactory.cpp
-void 
-MaterialGroup::bakeMayaUVTextureProfile (float repeat_u, float repeat_v,
-				       float coverage_u, float coverage_v)
-{  
-  // Compute fudge factors
-  float FudgeU = repeat_u / coverage_u;
-  float FudgeV = repeat_v / coverage_v;
-
-  VertexData &aVertexData = m_Parent->getVertexData();
-
-  // Get parent Texcoords
-  std::vector<VertexData::Attr> &ParentTexCoordsList = aVertexData.getDataOf (VertexData::getAttribIndex("texCoord0"));
- 
-  std::vector<unsigned int>& IndexList = m_IndexData->getIndexData();
-
-  // Iterate index list and bake the UV fudge factors.
-  std::vector<unsigned int>::const_iterator index = IndexList.begin();
-  
-  std::set<int> UniqueIndices;
-
-  for (; index != IndexList.end (); index++){
-	UniqueIndices.insert (*index);
-  }
-
-  std::set<int>::const_iterator setIndex = UniqueIndices.begin();
-
-  for (; setIndex != UniqueIndices.end(); setIndex++) {
-    ParentTexCoordsList[*setIndex].x *= FudgeU;
-    ParentTexCoordsList[*setIndex].y *= FudgeV;
-
-	//LOG_ERROR ("UV(%f, %f)", ParentTexCoordsList[*setIndex].x, ParentTexCoordsList[*setIndex].y);
-  }
-}
+//// FIXME: This has to go away
+//// see also: cworldfactory.cpp
+//void 
+//MaterialGroup::bakeMayaUVTextureProfile (float repeat_u, float repeat_v,
+//				       float coverage_u, float coverage_v)
+//{  
+//  // Compute fudge factors
+//  float FudgeU = repeat_u / coverage_u;
+//  float FudgeV = repeat_v / coverage_v;
+//
+//  VertexData &aVertexData = m_Parent->getVertexData();
+//
+//  // Get parent Texcoords
+//  std::vector<VertexData::Attr> &ParentTexCoordsList = aVertexData.getDataOf (VertexData::getAttribIndex("texCoord0"));
+// 
+//  std::vector<unsigned int>& IndexList = m_IndexData->getIndexData();
+//
+//  // Iterate index list and bake the UV fudge factors.
+//  std::vector<unsigned int>::const_iterator index = IndexList.begin();
+//  
+//  std::set<int> UniqueIndices;
+//
+//  for (; index != IndexList.end (); index++){
+//	UniqueIndices.insert (*index);
+//  }
+//
+//  std::set<int>::const_iterator setIndex = UniqueIndices.begin();
+//
+//  for (; setIndex != UniqueIndices.end(); setIndex++) {
+//    ParentTexCoordsList[*setIndex].x *= FudgeU;
+//    ParentTexCoordsList[*setIndex].y *= FudgeV;
+//
+//	//LOG_ERROR ("UV(%f, %f)", ParentTexCoordsList[*setIndex].x, ParentTexCoordsList[*setIndex].y);
+//  }
+//}

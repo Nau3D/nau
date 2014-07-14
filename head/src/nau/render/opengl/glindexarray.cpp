@@ -55,9 +55,15 @@ GLIndexArray::compile (VertexData &v) /***MARK***/ //STATIC DRAW ONLY
 
 	v.bind();
 
-	if (0 != m_InternalIndexArray && m_IndexSize != 0) {
+	if (0 != m_InternalIndexArray && m_InternalIndexArray->size() != 0) {
 
-		std::vector<unsigned int>* pArray = m_InternalIndexArray;
+		std::vector<unsigned int>* pArray;
+		if (m_UseAdjacency) {
+			buildAdjacencyList();
+			pArray = &m_AdjIndexArray;
+		}
+		else
+			pArray = m_InternalIndexArray;
 
 		glGenBuffers (1, &m_GLBuffer);
 		glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
@@ -114,15 +120,29 @@ GLIndexArray::unbind (void)
 }
 
 
-std::vector<unsigned int>& 
-GLIndexArray::_getReallyIndexData (void)
-{
-	return (*m_InternalIndexArray);
-}
+//std::vector<unsigned int>& 
+//GLIndexArray::_getReallyIndexData (void)
+//{
+//	return (*m_InternalIndexArray);
+//}
 
 
 unsigned int 
 GLIndexArray::getBufferID() {
 
 	return m_GLBuffer;
+}
+
+
+void 
+GLIndexArray::useAdjacency(bool b) {
+
+	m_UseAdjacency = b;
+}
+
+
+bool
+GLIndexArray::getAdjacency() {
+
+	return (m_UseAdjacency);
 }

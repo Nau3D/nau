@@ -28,10 +28,19 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 									std::string aType, int width, unsigned char** data, bool mipmap) :
 	TextureCubeMap (label,files, anInternalFormat, aFormat, aType, width)
 {
+	m_IntProps[WIDTH] = width;
+	m_IntProps[HEIGHT] = width;
+	m_IntProps[DEPTH] = 1;
+	m_IntProps[SAMPLES] = 0;
+	m_IntProps[LEVELS] = 0;
 
+	m_EnumProps[DIMENSION] = GL_TEXTURE_CUBE_MAP;
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
 	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+
+	m_IntProps[COMPONENT_COUNT] = GLTexture::GetNumberOfComponents(m_EnumProps[FORMAT]);
+	m_IntProps[ELEMENT_SIZE] = GLTexture::GetElementSize(m_EnumProps[FORMAT], m_EnumProps[TYPE]);
 
 	glGenTextures (1, &(m_UIntProps[ID]));
 	glBindTexture (GL_TEXTURE_CUBE_MAP, m_UIntProps[ID]);

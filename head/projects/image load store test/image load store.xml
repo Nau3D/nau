@@ -40,7 +40,7 @@
 	
 	
 	<pipelines>
-		<pipeline name="fixedfunction" default="true">
+		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="pass1">
 				<scenes>
 					<scene>MainScene</scene>

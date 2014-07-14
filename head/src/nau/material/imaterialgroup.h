@@ -37,8 +37,8 @@ namespace nau
 		   
 			// FIXME: This has to go away
 			// see also: cworldfactory.cpp
-			virtual void bakeMayaUVTextureProfile (float repeat_u, float repeat_v,
-								 float coverage_u, float coverage_v) = 0;
+			//virtual void bakeMayaUVTextureProfile (float repeat_u, float repeat_v,
+			//					 float coverage_u, float coverage_v) = 0;
 		   
 			virtual ~IMaterialGroup () {}
 		};

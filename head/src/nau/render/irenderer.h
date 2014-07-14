@@ -97,9 +97,9 @@ namespace nau
 
 
 #if NAU_OPENGL_VERSION >= 400
-			const static int PRIMITIVE_TYPE_COUNT = 7;
+			const static int PRIMITIVE_TYPE_COUNT = 8;
 #else
-			const static int PRIMITIVE_TYPE_COUNT = 6;
+			const static int PRIMITIVE_TYPE_COUNT = 7;
 #endif
 
 			enum DrawPrimitive{
@@ -108,7 +108,8 @@ namespace nau
 				TRIANGLE_FAN,
 				LINES,
 				LINE_LOOP,
-				POINTS
+				POINTS,
+				TRIANGLES_ADJACENCY
 #if NAU_OPENGL_VERSION >= 400
 				, PATCH
 #endif

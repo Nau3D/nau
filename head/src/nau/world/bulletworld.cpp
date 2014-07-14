@@ -75,7 +75,7 @@ BulletWorld::build (void) /***MARK***/ //I'm assuming all objects inside scene a
 
 				if ((*matGroupsIter)->getIndexData().getIndexSize()) {
 				
-					std::vector<unsigned int> &indexes = (*matGroupsIter)->getIndexData()._getReallyIndexData();
+					std::vector<unsigned int> &indexes = (*matGroupsIter)->getIndexData().getIndexData();
 					btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray (
 							static_cast<int> (indexes.size() / 3), 
 							reinterpret_cast<int *>(&indexes[0]),

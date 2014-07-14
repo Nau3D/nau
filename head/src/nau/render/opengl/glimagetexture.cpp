@@ -26,7 +26,13 @@ GLImageTexture::GLImageTexture(std::string label, unsigned int texID, unsigned i
 	m_EnumProps[ACCESS] = access;
 	m_UIntProps[LEVEL] = level;
 	m_UIntProps[TEX_ID] = texID;
-	m_InternalFormat = RESOURCEMANAGER->getTextureByID(texID)->getPrope(Texture::INTERNAL_FORMAT);
+	nau::render::Texture* t = RESOURCEMANAGER->getTextureByID(texID);
+	assert(t != NULL);
+	m_Format = t->getPrope(Texture::FORMAT);
+	m_Type = t->getPrope(Texture::TYPE);
+	m_Dimension = t->getPrope(Texture::DIMENSION);
+	m_InternalFormat = t->getPrope(Texture::INTERNAL_FORMAT);
+	memset(m_Data, 0, sizeof(m_Data));
 	m_Label = label;
 	m_Unit = 0;
 }
@@ -41,7 +47,12 @@ void
 GLImageTexture::prepare(int aUnit) {
 
 	m_Unit = aUnit;
-	glBindImageTexture(aUnit, m_UIntProps[TEX_ID], m_UIntProps[LEVEL],false,0,m_EnumProps[ACCESS],m_InternalFormat);	
+#if NAU_OPENGL_VERSION >= 440
+	if (m_BoolProps[CLEAR]){
+		glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, m_Data);
+	}
+#endif
+	glBindImageTexture(aUnit, m_UIntProps[TEX_ID], m_UIntProps[LEVEL],false,0,m_EnumProps[ACCESS],m_InternalFormat);
 	RENDERER->addImageTexture(m_Unit, this);
 }
 

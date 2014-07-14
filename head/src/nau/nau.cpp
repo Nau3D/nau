@@ -552,7 +552,7 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 			}
 			case File::COLLADA:
 			{
-				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
 				//std::string uri (file.getURI());
 				//ColladaLoader::loadScene (RENDERMANAGER->getScene (sceneName), uri);
 				break;
@@ -572,8 +572,8 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 			}
 			case File::WAVEFRONTOBJ:
 			{
-				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
-				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
+				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
 				
 				break;
 			}

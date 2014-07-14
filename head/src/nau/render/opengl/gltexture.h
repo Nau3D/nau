@@ -34,6 +34,8 @@ namespace nau
 
 			static int GetCompatibleFormat(int dim, int anInternalFormat);
 			static int GetCompatibleType(int dim, int anInternalFormat);
+			static int GetNumberOfComponents(unsigned int format);
+			static int GetElementSize(unsigned int format, unsigned int type);
 
 
 		protected:
