@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<materiallib name="CubeMap">
+
+	<textures>
+		<cubeMap name="CMHouse" 
+			filePosX="TextureCubeMaps/cubemaphouse/cm_right.jpg"
+			fileNegX="TextureCubeMaps/cubemaphouse/cm_left.jpg"
+			filePosY="TextureCubeMaps/cubemaphouse/cm_top.jpg"
+			fileNegY="TextureCubeMaps/cubemaphouse/cm_bottom.jpg"
+			filePosZ="TextureCubeMaps/cubemaphouse/cm_front.jpg"
+			fileNegZ="TextureCubeMaps/cubemaphouse/cm_back.jpg"	
+		/>
+	</textures>
+
+	<shaders>
+		<shader name="perpixel-color-shadow" 
+					ps="shaders/cubemap.frag" 
+					vs="shaders/cubemap.vert" />
+	</shaders>
+	
+	<materials>
+		<material name="House">
+			<shader>
+				<name>perpixel-color-shadow</name>
+				<values>
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="M"     		 type="CURRENT" context="MATRIX" 
+														component="MODEL" />
+														
+									
+					<valueof uniform="VM"     		 type="CURRENT" context="MATRIX" 
+														component="VIEW_MODEL" />
+														
+									
+					<valueof uniform="texUnit"		type="CURRENT"
+												context="TEXTURE"
+												component="UNIT"
+												id=0 />
+														
+					<!--valueof uniform="camWorldPos"	type="CAMERA" 
+												context="MainCamera"	
+												component="POSITION" /-->
+
+					<valueof uniform="camWorldPos"	type="CURRENT" 
+												context="CAMERA"	
+												component="POSITION" />
+
+				</values>
+			</shader>	
+			<textures>
+				<texture UNIT="0" name="CMHouse" />
+			</textures>
+		</material>
+	</materials>
+</materiallib>
