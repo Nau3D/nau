@@ -27,7 +27,7 @@ GLTexture::InitGL() {
 	TexDataType[GL_UNSIGNED_INT    ] = TexDataTypes("UNSIGNED_INT"   , 32);
 	TexDataType[GL_INT             ] = TexDataTypes("INT"            , 32);
 	TexDataType[GL_FLOAT           ] = TexDataTypes("FLOAT"          , 32);
-	TexDataType[GL_UNSIGNED_INT_8_8_8_8_REV       ] = TexDataTypes("UNSIGNED_INT_8_8_8_8_REV"       , 8);
+	TexDataType[GL_UNSIGNED_INT_8_8_8_8_REV       ] = TexDataTypes("UNSIGNED_INT_8_8_8_8_REV"       , 32);
 	TexDataType[GL_UNSIGNED_INT_24_8              ] = TexDataTypes("UNSIGNED_INT_24_8"              , 32);
 	TexDataType[GL_FLOAT_32_UNSIGNED_INT_24_8_REV ] = TexDataTypes("FLOAT_32_UNSIGNED_INT_24_8_REV" , 32);
 
@@ -197,7 +197,8 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 	m_EnumProps[DIMENSION] = GL_TEXTURE_2D;
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
 	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
-	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+	m_EnumProps[TYPE] = Attribs.getListValueOp(TYPE, aType);
+	//aType;//GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 
 	m_IntProps[WIDTH] = width;
 	m_IntProps[HEIGHT] = height;
