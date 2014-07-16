@@ -89,7 +89,7 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.0\include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath)</IncludePath>
@@ -118,13 +118,14 @@
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>src;../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalOptions>  /ignore:4049 /ignore:4217 /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>opencl.lib;wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nau_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32sd.lib;tinyxmld_STL.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nau_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;tinyxmld_STL.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)composer_d.exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -146,7 +147,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src;../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;__SLANGER__;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -157,13 +158,14 @@
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>src;../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalOptions>  /ignore:4049 /ignore:4217 /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>optix.1.lib;wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nauOptix_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32sd.lib;tinyxmld_STL.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>optix.1.lib;wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nauOptix_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;tinyxmld_STL.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)composer_d.exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -251,7 +253,7 @@
     </ProjectReference>
     <Link>
       <AdditionalOptions> /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:LIBCMTD /ignore:4049 /ignore:4217 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>OpenCL.lib;libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;tinyxml_STL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;tinyxml_STL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)composer.exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

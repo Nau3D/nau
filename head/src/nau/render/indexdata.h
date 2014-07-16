@@ -28,6 +28,8 @@ namespace nau
 			void setIndexData (std::vector<unsigned int>* indexData);
 			unsigned int getIndexSize (void);
 
+			void buildAdjacencyList();
+
 			int add (IndexData &anIndexData);
 
 			virtual bool compile (VertexData &v) = 0;
@@ -35,15 +37,27 @@ namespace nau
 			virtual void bind (void) = 0;
 			virtual void unbind (void) = 0;
 			virtual bool isCompiled() = 0;
+			virtual void useAdjacency(bool adj) = 0;
+			virtual bool getAdjacency() = 0;
 
-			virtual std::vector<unsigned int>& _getReallyIndexData (void) = 0;
+			//virtual std::vector<unsigned int>& _getReallyIndexData (void) = 0;
 			virtual unsigned int getBufferID() = 0;
 
 		protected:
 			IndexData(void);
 			
 			std::vector<unsigned int>* m_InternalIndexArray;
-			unsigned int m_IndexSize;
+			std::vector<unsigned int> m_AdjIndexArray;
+			//unsigned int m_IndexSize;
+
+			bool m_UseAdjacency;
+
+			struct HalfEdge {
+				unsigned int vertex;
+				struct HalfEdge *next;
+				struct HalfEdge *twin;
+			};
+
 		};
 	};
 };

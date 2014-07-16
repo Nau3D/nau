@@ -36,6 +36,7 @@
 				<imageTexture UNIT=1 texture="tex" >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
+					<CLEAR value=true />
 				</imageTexture>
 			</imageTextures>
 		

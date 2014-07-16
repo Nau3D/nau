@@ -2822,7 +2822,6 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 
 		if (RENDERMANAGER->hasPipeline(pNamePip))
 			NAU_THROW("Pipeline %s is already defined in file %s", pNamePip, ProjectLoader::s_File.c_str());
-
 		Pipeline *aPipeline = RENDERMANAGER->getPipeline (pNamePip);
 		
 		// if no default pipeline is set, then the first pipeline will be the default

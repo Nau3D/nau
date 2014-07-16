@@ -32,6 +32,8 @@ namespace nau
 
 			typedef enum {LEVEL, TEX_ID, COUNT_UINTPROPERTY} UIntProperty;
 
+			typedef enum {CLEAR, COUNT_BOOLPROPERTY } BoolProperty;
+
 			typedef enum {COUNT_FLOAT4PROPERTY} Float4Property;
 			typedef enum {COUNT_FLOATPROPERTY} FloatProperty;
 
@@ -72,7 +74,9 @@ namespace nau
 			static bool Inited;
 
 			std::string m_Label;
-			unsigned int m_InternalFormat;
+			unsigned int m_Format, m_Type, m_Dimension, m_InternalFormat;
+
+			float m_Data[4];
 
 		};
 	};

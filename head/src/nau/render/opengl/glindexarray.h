@@ -26,8 +26,10 @@ namespace nau
 			virtual void bind (void);
 			virtual void unbind (void);
 			virtual bool isCompiled();
+			void useAdjacency(bool adj);
+			bool getAdjacency();
 
-			virtual std::vector<unsigned int>& _getReallyIndexData (void);
+			//virtual std::vector<unsigned int>& _getReallyIndexData (void);
 			virtual unsigned int getBufferID();
 			~GLIndexArray(void);
 

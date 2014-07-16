@@ -19,7 +19,8 @@ ImageTexture::Init() {
 	Attribs.add(Attribute(LEVEL, "LEVEL", Enums::DataType::UINT, false, new int(0)));
 	// ENUM
 	Attribs.add(Attribute(ACCESS, "ACCESS", Enums::DataType::ENUM, false));
-
+	// BOOL
+	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
 	return true;
 }
 
@@ -57,6 +58,7 @@ ImageTexture::initArrays() {
 
 	Attribs.initAttribInstanceUIntArray(m_UIntProps);
 	Attribs.initAttribInstanceEnumArray(m_EnumProps);
+	Attribs.initAttribInstanceBoolArray(m_BoolProps);
 }
 
 
@@ -81,6 +83,11 @@ ImageTexture::getProp(int prop, Enums::DataType type) {
 		assert(m_UIntProps.count(prop) > 0);
 		return(&(m_UIntProps[prop]));
 		break;
+	case Enums::BOOL:
+		assert(m_BoolProps.count(prop) > 0);
+		return(&(m_BoolProps[prop]));
+		break;
+
 		
 	}
 	return NULL;
@@ -106,6 +113,9 @@ ImageTexture::setProp(int prop, Enums::DataType type, void *value) {
 			break;
 		case Enums::ENUM:
 			m_EnumProps[prop] = *(int *)value;
+			break;
+		case Enums::BOOL:
+			m_BoolProps[prop] = *(bool *)value;
 			break;
 
 	}

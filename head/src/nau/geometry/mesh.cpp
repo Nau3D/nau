@@ -82,6 +82,9 @@ Mesh::setDrawingPrimitive(unsigned int aDrawingPrimitive)
 	m_RealDrawPrimitive = RENDERER->translateDrawingPrimitive(m_DrawPrimitive);
 	switch(m_DrawPrimitive) {
 	
+		case IRenderer::TRIANGLES_ADJACENCY:
+			m_VerticesPerPrimitive = 6;
+			break;
 		case IRenderer::TRIANGLES: 
 		case IRenderer::TRIANGLE_FAN:
 		case IRenderer::TRIANGLE_STRIP:
@@ -90,6 +93,7 @@ Mesh::setDrawingPrimitive(unsigned int aDrawingPrimitive)
 		case IRenderer::LINES:
 		case IRenderer::LINE_LOOP:
 			m_VerticesPerPrimitive = 2;
+			break;
 		case IRenderer::POINTS:
 			m_VerticesPerPrimitive = 1;
 			break;
@@ -121,6 +125,7 @@ Mesh::getVertexData (void)
 	}
 	return (*m_pVertexData);
 }
+
 
 std::vector<nau::material::IMaterialGroup*>&
 Mesh::getMaterialGroups (void)

@@ -38,9 +38,9 @@ namespace nau
 			// FIXME: This has to go away
 			// see also: cworldfactory.cpp
 			// ---CUT HERE---
-			virtual void bakeMayaUVTextureProfile (float repeat_u, float repeat_v,
+			/*virtual void bakeMayaUVTextureProfile (float repeat_u, float repeat_v,
 								 float coverage_u, float coverage_v);
-			// ---CUT HERE---
+			*/// ---CUT HERE---
 
 		protected:
 			//int m_MaterialId;
