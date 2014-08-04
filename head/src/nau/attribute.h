@@ -54,6 +54,12 @@ namespace nau {
 		}
 
 
+		std::string getName() {
+
+			return mName;
+		};
+
+
 		void setRange(void *min, void *max) { 
 				
 			mRangeDefined = true;
@@ -142,7 +148,8 @@ namespace nau {
 	class AttribSet {
 
 	public:
-		AttribSet(): mNextFreeID(1000) {mDummy.mName = "NO_ATTR"; };
+
+		AttribSet(): mNextFreeID(1000), mDummyS("") {mDummy.mName = "NO_ATTR"; };
 		~AttribSet() {};
 
 		int getNextFreeID() {

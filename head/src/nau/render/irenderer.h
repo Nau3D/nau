@@ -20,18 +20,30 @@
 #include <nau/material/colormaterial.h>
 #include <nau/enums.h>
 
+#include <nau/attribute.h>
+#include <nau/attributeValues.h>
+
 using namespace nau::material;
 
 namespace nau
 {
 	namespace render
 	{
-		class IRenderer
+		class IRenderer: public AttributeValues
 		{
-		public:
 
-			static const unsigned int MAX_COUNTERS = 32;
-			static const unsigned int TRIANGLE_COUNTER = MAX_COUNTERS;
+		protected:
+			static bool Init();
+			static bool Inited;
+
+		public:	
+
+			ENUM(MATRIX_TYPE, 0);
+			ENUM(MATRIX_MODE, 1);
+
+			static AttribSet Attribs;
+
+			typedef enum { TRIANGLE_COUNTER } Counters;
 
 			enum TRenderMode {
 				WIREFRAME_MODE = 0,
@@ -65,22 +77,20 @@ namespace nau
 
 			static const std::string &getPropMatrixTypeString(MatrixType aType);
 
-			static std::map<int, std::string> AtomicLabels;
-			static int AtomicLabelsCount;
-			static void addAtomic(int id, std::string name);
+			static int MaxTextureUnits;
+			static int MaxColorAttachments;
 
-
-			enum TextureUnit {
-				TEXTURE_UNIT0 = 0,
-				TEXTURE_UNIT1,
-				TEXTURE_UNIT2,
-				TEXTURE_UNIT3,
-				TEXTURE_UNIT4,
-				TEXTURE_UNIT5,
-				TEXTURE_UNIT6,
-				TEXTURE_UNIT7,
-				COUNT_TEXTUREUNIT
-			} ;
+			//enum TextureUnit {
+			//	TEXTURE_UNIT0 = 0,
+			//	TEXTURE_UNIT1,
+			//	TEXTURE_UNIT2,
+			//	TEXTURE_UNIT3,
+			//	TEXTURE_UNIT4,
+			//	TEXTURE_UNIT5,
+			//	TEXTURE_UNIT6,
+			//	TEXTURE_UNIT7,
+			//	COUNT_TEXTUREUNIT
+			//} ;
 
 			typedef enum {
 				CLIP_PLANE0,
@@ -102,18 +112,6 @@ namespace nau
 			const static int PRIMITIVE_TYPE_COUNT = 7;
 #endif
 
-			enum DrawPrimitive{
-				TRIANGLES=0,
-				TRIANGLE_STRIP,
-				TRIANGLE_FAN,
-				LINES,
-				LINE_LOOP,
-				POINTS,
-				TRIANGLES_ADJACENCY
-#if NAU_OPENGL_VERSION >= 400
-				, PATCH
-#endif
-			} ;
 
 			typedef enum {
 				COLOR_BUFFER = 0x01,
@@ -151,7 +149,34 @@ namespace nau
 
 			typedef enum {
 				RENDER_MODE
-			}Attribute;
+			}RendererAttributes;
+
+			void setPrope(EnumProperty prop, int value);
+			void setProp(int prop, Enums::DataType type, void *value);
+		// ATOMIC COUNTERS 
+
+		public:
+
+
+
+			/// Number of Atomic Counters and Max ID
+			unsigned int m_AtomicCount = 0, m_AtomicMaxID = 0;
+			/// name of atomic counters
+			std::map<int, std::string> m_AtomicLabels;
+
+			/// add an atomic counter
+			void addAtomic(unsigned int id, std::string name);
+			/// get atomic counter values
+			virtual unsigned int *getAtomicCounterValues() = 0;
+
+		protected:
+			// Array to store atomic counters
+			unsigned int *m_AtomicCounterValues = NULL;
+			bool m_AtomicBufferPrepared = false;
+
+		// 
+		public:
+			virtual int getNumberOfPrimitives(IMaterialGroup *m) = 0;
 
 			virtual float getDepthAtPoint(int x, int y) = 0;
 
@@ -183,7 +208,7 @@ namespace nau
 			virtual Camera *getCamera() = 0;
 			//virtual void loadIdentityAndSetCamera(nau::scene::Camera& aCamera) = 0;
 
-			virtual void saveAttrib(Attribute aAttrib) = 0;
+			virtual void saveAttrib(RendererAttributes aAttrib) = 0;
 			virtual void restoreAttrib() = 0;
 
 			/*Matrix Operations*/
@@ -200,8 +225,7 @@ namespace nau
 			virtual void applyTransform (const nau::math::ITransform &aTransform) = 0;
 			virtual void translate (nau::math::vec3 &aVec) = 0;
 			virtual void scale (nau::math::vec3 &aVec) = 0;
-
-			virtual float* getProjectionModelviewMatrix (void) = 0;
+			virtual void rotate(float angle, nau::math::vec3 &axis) = 0;
 
 			//virtual void unproject (nau::render::IRenderable &aRenderable, nau::scene::Camera& aCamera) = 0;
 
@@ -216,13 +240,7 @@ namespace nau
 
 			virtual void flush (void) = 0;
 
-			//virtual void enableStereo (void) = 0;
-			//virtual void disableStereo (void) = 0;
-			//virtual bool isStereo (void) = 0;
-
 			/* Lights */
-
-
 
 			virtual int getLightCount() = 0;
 			virtual Light *getLight(unsigned int i) = 0;
@@ -238,7 +256,7 @@ namespace nau
 
 			virtual void resetCounters (void) = 0;
 
-			virtual unsigned int getCounter (unsigned int c) = 0;
+			virtual unsigned int getCounter(Counters c) = 0;
 
 
 			// IMAGE TEXTURE
@@ -250,10 +268,10 @@ namespace nau
 #endif
 			/* Textures */
 
-			virtual void setActiveTextureUnit (TextureUnit aTexUnit) = 0;
-			virtual void addTexture(TextureUnit aTexUnit, Texture *t) = 0;
-			virtual void removeTexture(TextureUnit aTexUnit) = 0;
-			virtual int getPropi(TextureUnit aTexUnit, Texture::IntProperty prop) = 0;
+			virtual void setActiveTextureUnit (unsigned int aTexUnit) = 0;
+			virtual void addTexture(unsigned int aTexUnit, Texture *t) = 0;
+			virtual void removeTexture(unsigned int aTexUnit) = 0;
+			virtual int getPropi(unsigned int aTexUnit, Texture::IntProperty prop) = 0;
 			virtual int getTextureCount() = 0;
 
 #if NAU_CORE_OPENGL != 1
@@ -288,12 +306,10 @@ namespace nau
 			/* Material Operations */
 
 			//! Set all color properties
-			virtual void setMaterial(const nau::material::ColorMaterial &mat) = 0;
+			virtual void setMaterial( nau::material::ColorMaterial &mat) = 0;
 			virtual void setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) = 0;
-			virtual const float * getColor(ColorMaterial::ColorComponent aColor) = 0;
-			//virtual void setMaterial (Face aFace, MaterialComponent aMaterialComponent, float *values) = 0;
-			//
-			//virtual void setMaterial (Face aFace, MaterialComponent aMaterialComponent, float value) = 0;
+			virtual const vec4 &getColorProp4f(ColorMaterial::Float4Property) = 0;
+			virtual float getColorPropf(ColorMaterial::FloatProperty) = 0;
 
 			virtual void setState (IState *aState) = 0; 
 			virtual void setDefaultState() = 0;
@@ -312,7 +328,6 @@ namespace nau
 
 			virtual void enableFog (void) = 0; 
 			virtual void disableFog (void) = 0;
-
 #endif
 
 			//virtual void disableSurfaceShaders (void) = 0;

@@ -26,6 +26,7 @@
 
 #include <nau/render/opengl/glstate.h>
 
+
 using namespace nau::scene;
 
 namespace nau
@@ -39,6 +40,22 @@ namespace nau
 			GLRenderer();
 			~GLRenderer(void);
 
+#if (NAU_OPENGL_VERSION >= 400)
+		// ATOMIC COUNTERS
+		protected:
+			GLuint m_AtomicCountersBuffer;
+			void prepareAtomicCounterBuffer();
+			void resetAtomicCounters();
+			void readAtomicCounters();
+		public:
+			unsigned int *getAtomicCounterValues();
+#endif
+
+		protected:
+			static bool Init();
+			static bool Inited;
+
+		public:
 			static unsigned int GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT];
 
 			void setProp(IRenderer::BoolProps prop, bool value);
@@ -49,6 +66,7 @@ namespace nau
 			//@{
 			bool init();
 
+			virtual int getNumberOfPrimitives(IMaterialGroup *m) ;
 
 			// RENDER
 			void setRenderMode (TRenderMode mode);
@@ -65,10 +83,10 @@ namespace nau
 
 			// PRIMITIVE COUNTER
 			void resetCounters (void);
-			unsigned int getCounter (unsigned int c);
+			unsigned int getCounter(Counters c);
 
 			// RENDER ATTRIBS
-			void saveAttrib(Attribute aAttrib);
+			void saveAttrib(RendererAttributes aAttrib);
 			void restoreAttrib();
 			virtual void setCullFace (Face aFace);
 			void colorMask (bool r, bool g, bool b, bool a);
@@ -97,7 +115,6 @@ namespace nau
 			void pushMatrix (void);
 			void popMatrix (void);
 
-			float* getProjectionModelviewMatrix (void);
 
 			virtual float getDepthAtPoint(int x, int y);
 
@@ -109,11 +126,11 @@ namespace nau
 			ImageTexture* getImageTexture(unsigned int unit);
 #endif
 			// TEXTURING
-			void addTexture(TextureUnit aTexUnit, Texture *t);
-			void removeTexture(TextureUnit aTexUnit);
-			int getPropi(TextureUnit aTexUnit, Texture::IntProperty prop);
+			void addTexture(unsigned int aTexUnit, Texture *t);
+			void removeTexture(unsigned int aTexUnit);
+			int getPropi(unsigned int aTexUnit, Texture::IntProperty prop);
 			int getTextureCount();
-			void setActiveTextureUnit (TextureUnit aTexUnit);
+			void setActiveTextureUnit(unsigned int aTexUnit);
 
 #if NAU_CORE_OPENGL != 1
 			void enableTexturing (void);
@@ -132,9 +149,12 @@ namespace nau
 			virtual Light *getLight(unsigned int id);
 
 			// COLOR AND MATERIALS
-			virtual void setMaterial(const nau::material::ColorMaterial &mat);
+			const vec4 &getColorProp4f(nau::material::ColorMaterial::Float4Property prop);
+			float getColorPropf(nau::material::ColorMaterial::FloatProperty prop);
+
+			virtual void setMaterial( nau::material::ColorMaterial &mat);
 			virtual void setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess);
-			virtual const float * getColor(ColorMaterial::ColorComponent aColor);
+			//virtual const float * getColor(ColorMaterial::ColorComponent aColor);
 			virtual void setColor (float r, float g, float b, float a);
 			virtual void setColor (int r, int g, int b, int a);
 
@@ -198,7 +218,6 @@ namespace nau
 
 			std::vector<SimpleTransform> m_MatrixStack[IRenderer::COUNT_MATRIXMODE];
 
-			GLuint m_AtomicCountersBuffer;
 			int m_TriCounter;
 			unsigned int *userCounters;
 			void accumTriCounter(unsigned int drawPrimitive, unsigned int size);
@@ -215,7 +234,7 @@ namespace nau
 
 
 			GLenum translateFace (Face aFace);
-			GLenum translateMaterialComponent (ColorMaterial::ColorComponent aMaterialComponent);
+		//	GLenum translateMaterialComponent (ColorMaterial::ColorComponent aMaterialComponent);
 			unsigned int translateDrawingPrimitive(unsigned int aDrawPrimitive);
 
 			//bool m_FixedFunction;

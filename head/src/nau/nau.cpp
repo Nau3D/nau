@@ -95,27 +95,13 @@ Nau::init (bool context, std::string aConfigFile)
 	bool result;
 
 	if (true == context) {
-		glewExperimental = true;
-		GLenum error = glewInit();
-		if (GLEW_OK != error){
-			std::cout << "GLEW init error: " << glewGetErrorString(error) << std::endl;
-			return false;
-		}
-		
-//		ilInit();
+
 		m_pRenderManager = new RenderManager;
 		result = m_pRenderManager->init();
 		if (!result)
 			return(0);
 
 		m_pEventManager = new EventManager;
-
-
-
-//		Camera *aCamera = m_pRenderManager->getCamera ("default");
-//		Viewport* defaultViewport = createViewport ("defaultViewport", nau::math::vec4 (0.0f, 0.0f, 0.0f, 1.0f));
-//		aCamera->setViewport (defaultViewport);
-		
 	}	
 	
 	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
@@ -174,6 +160,30 @@ Nau::validateUserAttribContext(std::string context) {
 		return true;
 
 	return false;
+}
+
+
+bool 
+Nau::validateUserAttribName(std::string context, std::string name) {
+
+	AttribSet *attribs;
+
+	if  (context == "LIGHT")
+		attribs = &(Light::Attribs);
+	else if (context == "CAMERA")
+		attribs = &(Camera::Attribs);
+	else if (context == "VIEWPORT")
+		attribs = &(Viewport::Attribs);
+	else if (context == "TEXTURE")
+		attribs = &(Texture::Attribs);
+	else // invalide context
+		return false;
+
+	Attribute a = attribs->get(name);
+	if (a.getName() == "NO_ATTR")
+		return true;
+	else
+		return false;
 }
 
 

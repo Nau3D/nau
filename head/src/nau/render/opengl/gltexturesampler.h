@@ -26,8 +26,8 @@ namespace nau
 			virtual void setProp(Float4Property prop, float x, float y, float z, float w);
 			virtual void setProp(Float4Property prop, vec4& value);
 
-			virtual void prepare(int aUnit, int aDim);
-			static void restore(int aUnit, int aDim);
+			virtual void prepare(unsigned int aUnit, int aDim);
+			static void restore(unsigned int aUnit, int aDim);
 
 		protected:
 			static bool Inited;

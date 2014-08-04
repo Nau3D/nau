@@ -113,6 +113,10 @@ DepthMapPass::doPass (void)
 	Frustum frustum;
 	float cNear, cFar;
 
+	m_LightCamera->setProp(Camera::UP_VEC, 0,1,0,0);
+	vec4 l = RENDERMANAGER->getLight(m_Lights[0])->getPropf4(Light::DIRECTION);
+	m_LightCamera->setProp(Camera::VIEW_VEC,l.x,l.y,l.z,l.w);
+
 	Camera *aCamera = RENDERMANAGER->getCamera(m_CameraName);
 
 	cNear = aCamera->getPropf(Camera::NEARP);
@@ -124,9 +128,6 @@ DepthMapPass::doPass (void)
 		cFar = m_Paramf["To"];
 		
 	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
-	Light *l = RENDERMANAGER->getLight(m_Lights[0]);
-	vec4 v = m_LightCamera->getPropf4(Camera::VIEW_VEC);
-	l->setProp(Light::DIRECTION, v);
 
 	RENDERER->setCamera(m_LightCamera);
 	frustum.setFromMatrix (RENDERER->getMatrix(IRenderer::PROJECTION_VIEW_MODEL));

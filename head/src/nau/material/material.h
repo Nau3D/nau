@@ -41,7 +41,8 @@ namespace nau
 #if NAU_OPENGL_VERSION >=  420
 			std::map<int, ImageTexture*> m_ImageTexture;
 #endif
-			std::string m_Shader;
+//			std::string m_Shader;
+			nau::render::IProgram *m_Shader;
 			nau::render::IState *m_State;
 
 			// These are values specified in the material library
@@ -82,14 +83,15 @@ namespace nau
 			void attachTexture (int unit, std::string label);
 			void attachTexture(int unit, Texture *t);
 			Texture *getTexture(int unit);
-			TextureSampler* getTextureSampler(int unit);
+			TextureSampler* getTextureSampler(unsigned int unit);
 			void unsetTexture(int unit);
 			std::vector<std::string> *getTextureNames();
 			std::vector<int> *getTextureUnits();
 
 			void attachProgram (std::string shaderName);
 			void Material::cloneProgramFromMaterial(Material *mat);
-			std::string getProgram();
+			nau::render::IProgram *getProgram();
+			std::string getProgramName();
 			bool isInSpecML(std::string programValueName);
 			void addProgramValue (std::string name, nau::material::ProgramValue progVal);
 			void enableShader(bool value);

@@ -1118,30 +1118,30 @@ void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("DIFFUSE.Alpha"));
 
-	mm->getColor().setDiffuse(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setProp(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("AMBIENT.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("AMBIENT.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("AMBIENT.Alpha"));
 
-	mm->getColor().setAmbient(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setProp(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("SPECULAR.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("SPECULAR.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("SPECULAR.Alpha"));
 
-	mm->getColor().setSpecular(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setProp(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("EMISSION.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("EMISSION.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("EMISSION.Alpha"));
 
-	mm->getColor().setEmission(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setProp(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
-	mm->getColor().setShininess(pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
+	mm->getColor().setProp(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
 }
 
 
@@ -1153,27 +1153,27 @@ void DlgMaterials::updateColors(Material *mm) {
 
 	pgMaterial->ClearSelection();
 	
-	f = mm->getColor().getDiffuse();
+	f = &(mm->getColor().getProp4f(ColorMaterial::DIFFUSE).x);
 	pgMaterial->SetPropertyValue(wxT("DIFFUSE.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("DIFFUSE.Alpha"),f[3]);
 
-	f = mm->getColor().getAmbient();
+	f = &(mm->getColor().getProp4f(ColorMaterial::AMBIENT).x);
 	pgMaterial->SetPropertyValue(wxT("AMBIENT.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("AMBIENT.Alpha"),f[3]);
 
-	f = mm->getColor().getSpecular();
+	f = &(mm->getColor().getProp4f(ColorMaterial::SPECULAR).x);
 	pgMaterial->SetPropertyValue(wxT("SPECULAR.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("SPECULAR.Alpha"),f[3]);
 
-	f = mm->getColor().getEmission();
+	f = &(mm->getColor().getProp4f(ColorMaterial::EMISSION).x);
 	pgMaterial->SetPropertyValue(wxT("EMISSION.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("EMISSION.Alpha"),f[3]);
 
-	pgMaterial->SetPropertyValue(wxT("SHININESS"),mm->getColor().getShininess());
+	pgMaterial->SetPropertyValue(wxT("SHININESS"),mm->getColor().getPropf(ColorMaterial::SHININESS));
 }
 
 
@@ -1275,7 +1275,7 @@ void DlgMaterials::updateShader(Material *m){
 	// Clear Panel
 	pgShaderUniforms->ClearPage(0);
 
-	std::string progName = m->getProgram();
+	std::string progName = m->getProgramName();
 
 	if (progName == "") {
 
@@ -1338,7 +1338,7 @@ void DlgMaterials::updateShader(Material *m){
 
 void DlgMaterials::updateShaderAux(Material *m) {
 
-	if ("" != m->getProgram()) {
+	if (NULL != m->getProgram()) {
 		m_cbUseShader->SetValue(m->isShaderEnabled());
 		updateUniforms(m);
 	}
@@ -1729,12 +1729,12 @@ void DlgMaterials::updateUniforms(Material *m) {
 	m->clearUniformValues();
 	pgShaderUniforms->ClearPage(0);
 
-	if (m->getProgram() == "") {
+	if (m->getProgram() == NULL) {
 		pgShaderUniforms->Refresh();
 		return;
 	}
 
-	GlProgram *p = (GlProgram *)RESOURCEMANAGER->getProgram(m->getProgram());
+	GlProgram *p = (GlProgram *)m->getProgram();
 
 	std::map<std::string, nau::material::ProgramValue> progValues, uniformValues;
 	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;

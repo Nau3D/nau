@@ -6,6 +6,7 @@
 #include <nau/material/imaterialgroup.h>
 #include <nau/math/transformfactory.h>
 #include <nau/render/opengl/glvertexarray.h>
+#include <nau/render/opengl/glrendertarget.h>
 
 #include <nau/slogger.h>
 
@@ -13,10 +14,18 @@
 
 using namespace nau::math;
 using namespace nau::render;
+
 using namespace nau::geometry;
 using namespace nau::scene;
 using namespace nau::material;
 
+bool GLRenderer::Inited = GLRenderer::Init();
+
+bool
+GLRenderer::Init() {
+
+	return true;
+}
 
 unsigned int GLRenderer::GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT] = 
 	{GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_LINES, GL_LINE_LOOP, GL_POINTS, GL_TRIANGLES_ADJACENCY
@@ -47,22 +56,9 @@ GLRenderer::GLRenderer(void) :
 
 	m_CurrentMatrix = &(m_Matrices[m_MatrixMode]);
 
-	for (int i = 0 ; i < 8; i++)
-		m_Textures.push_back(0);
+	//for (int i = 0 ; i < 8; i++)
+	//	m_Textures.push_back(0);
 
-#if NAU_OPENGL_VERSION >=  420
-	for (int i = 0 ; i < 8; i++)
-		m_ImageTextures.push_back(0);
-#endif
-
-#if ((NAU_OPENGL_VERSION >= 400) && (NAU_USE_ATOMICS == 1))
-	//userCounters = (unsigned int *)malloc (sizeof(unsigned int) * 10);
-	glGenBuffers(1,&m_AtomicCountersBuffer);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * MAX_COUNTERS, NULL, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 1, m_AtomicCountersBuffer);
-#endif
 	glEnable(GL_MULTISAMPLE);
 }
 
@@ -76,26 +72,122 @@ GLRenderer::~GLRenderer(void)
 bool 
 GLRenderer::init() 
 {
+	glewExperimental = true;
 	GLenum error = glewInit();
 	if (GLEW_OK != error){
 		std::cout << "GLEW init error: " << glewGetErrorString(error) << std::endl;
 		return false;
 	}
 	else {
+		glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &MaxTextureUnits);
+		for (int i = 0; i < MaxTextureUnits; ++i) {
+			m_Textures.push_back(0);
+#if NAU_OPENGL_VERSION >=  420
+			m_ImageTextures.push_back(0);
+#endif
+		}
+		glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &MaxColorAttachments);
 		return true;
 	}
 }
 
 
-//void 
-//GLRenderer::setCore(bool flag) 
-//{
-//	nau::render::GLVertexArray::setCore(flag);
-//}
+int 
+GLRenderer::getNumberOfPrimitives(IMaterialGroup *m) {
+
+	unsigned int indices = m->getIndexData().getIndexSize();
+	unsigned int primitive = m->getParent().getRealDrawingPrimitive();
+
+	switch (primitive) {
+
+		case GL_TRIANGLES_ADJACENCY:
+			return (indices / 6);
+		case GL_TRIANGLES:
+			return (indices / 3);
+		case GL_TRIANGLE_STRIP:
+		case GL_TRIANGLE_FAN:
+			return (indices - 2);
+		case GL_LINES:
+			return (indices / 2);
+		case GL_LINE_LOOP:
+			return (indices - 1);
+		case GL_POINTS:
+			return indices; 
+#if NAU_OPENGL_VERSION >= 400			
+		case GL_PATCHES:
+			return indices / m->getParent().getnumberOfVerticesPerPatch();
+#endif
+		default:
+			assert(false && "invalid primitive type");
+			return (0);
+	}
+}
 
 
 
+// =============== ATOMIC COUNTERS ===================
+#if (NAU_OPENGL_VERSION >= 400)
 
+void 
+GLRenderer::prepareAtomicCounterBuffer() {
+
+	m_AtomicCounterValues = (unsigned int *)malloc(sizeof(unsigned int)*(m_AtomicMaxID+1));
+	glGenBuffers(1, &m_AtomicCountersBuffer);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
+	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * (m_AtomicMaxID + 1), NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 1, m_AtomicCountersBuffer);
+	m_AtomicBufferPrepared = true;
+
+}
+
+void 
+GLRenderer::resetAtomicCounters() {
+
+	if (!m_AtomicBufferPrepared)
+		prepareAtomicCounterBuffer();
+
+	unsigned int *userCounters;
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
+	userCounters = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * (m_AtomicMaxID + 1),
+		GL_MAP_WRITE_BIT |
+		GL_MAP_INVALIDATE_BUFFER_BIT |
+		GL_MAP_UNSYNCHRONIZED_BIT);
+
+	memset(userCounters, 0, sizeof(GLuint) * (m_AtomicMaxID+1));
+
+	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+}
+
+void
+GLRenderer::readAtomicCounters() {
+
+	unsigned int *userCounters;
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
+	userCounters = (GLuint *)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * (m_AtomicMaxID + 1),
+		GL_MAP_READ_BIT
+		);
+
+	memcpy(m_AtomicCounterValues, userCounters, sizeof(GLuint) * (m_AtomicMaxID + 1));
+
+	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+}
+
+#endif
+
+unsigned int *
+GLRenderer::getAtomicCounterValues() {
+
+#if (NAU_OPENGL_VERSION >= 400)
+
+	if (m_AtomicCount)
+		readAtomicCounters();
+#endif
+	return m_AtomicCounterValues;
+
+}
 // =============== RENDER ===================
 
 void
@@ -108,7 +200,7 @@ GLRenderer::drawGroup (IMaterialGroup* aMatGroup)
 
 #if NAU_OPENGL_VERSION >= 400
 	if (drawPrimitive == GL_PATCHES) {
-		int k = aRenderable.getnumberOfVerticesPerPrimitive();
+		int k = aRenderable.getnumberOfVerticesPerPatch();
 		glPatchParameteri(GL_PATCH_VERTICES, k);
 	}
 #endif
@@ -209,42 +301,19 @@ GLRenderer::resetCounters (void)
 {
 	m_TriCounter = 0;
 
-#if ((NAU_OPENGL_VERSION >= 400) && (NAU_USE_ATOMICS == 1))
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-	userCounters = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0 , sizeof(GLuint) * MAX_COUNTERS,
-											GL_MAP_WRITE_BIT |
-											GL_MAP_INVALIDATE_BUFFER_BIT |
-											GL_MAP_UNSYNCHRONIZED_BIT);
-
-	memset(userCounters, 0, sizeof(GLuint) * (MAX_COUNTERS));
-
-	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+#if (NAU_OPENGL_VERSION >= 400)
+	if (m_AtomicCount)
+		resetAtomicCounters();
 #endif
 }
 
 
 unsigned int 
-GLRenderer::getCounter (unsigned int c)
+GLRenderer::getCounter (Counters c)
 {
 	if (c == TRIANGLE_COUNTER)
 		return m_TriCounter;
-#if ((NAU_OPENGL_VERSION >= 400) && (NAU_USE_ATOMICS == 1))
-	else if (c < MAX_COUNTERS) {
-		GLuint res;
-		glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-		userCounters = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * c, sizeof(GLuint),
-												GL_MAP_READ_BIT 
-												);
 
-		res = userCounters[0];
-
-		glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-		glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-
-		return res;
-	}
-#endif
 	return 0;
 }
 
@@ -699,31 +768,31 @@ GLRenderer::getMatrix(IRenderer::MatrixType aMode)
 }
 
 
-float* 
-GLRenderer::getProjectionModelviewMatrix (void)
-{
-
-#if NAU_CORE_OPENGL == 0
-
-	float m[16], p[16];
-
-	glGetFloatv (GL_PROJECTION_MATRIX, p);
-	glGetFloatv (GL_MODELVIEW_MATRIX, m);
-
-	glPushMatrix();
-	glLoadMatrixf (p);
-	glMultMatrixf (m);
-	glGetFloatv (GL_MODELVIEW_MATRIX, m_ReturnMatrix);
-	glPopMatrix();
-
-#endif
-
-	return m_ReturnMatrix;
-}
+//float* 
+//GLRenderer::getProjectionModelviewMatrix (void)
+//{
+//
+//#if NAU_CORE_OPENGL == 0
+//
+//	float m[16], p[16];
+//
+//	glGetFloatv (GL_PROJECTION_MATRIX, p);
+//	glGetFloatv (GL_MODELVIEW_MATRIX, m);
+//
+//	glPushMatrix();
+//	glLoadMatrixf (p);
+//	glMultMatrixf (m);
+//	glGetFloatv (GL_MODELVIEW_MATRIX, m_ReturnMatrix);
+//	glPopMatrix();
+//
+//#endif
+//
+//	return m_ReturnMatrix;
+//}
 
 
 void
-GLRenderer::saveAttrib (IRenderer::Attribute aAttrib) 
+GLRenderer::saveAttrib(IRenderer::RendererAttributes aAttrib)
 {
 	switch(aAttrib) {
 		case IRenderer::RENDER_MODE: 
@@ -742,9 +811,14 @@ GLRenderer::restoreAttrib (void)
 
 
 void
-GLRenderer::setMaterial(const ColorMaterial &mat) 
+GLRenderer::setMaterial( ColorMaterial &mat) 
 {
 	m_Material.clone(mat);
+	//m_Material.setProp(ColorMaterial::SHININESS, mat.getPropf(ColorMaterial::SHININESS));//clone(mat);
+	//m_Material.setProp(ColorMaterial::DIFFUSE, mat.getProp4f(ColorMaterial::DIFFUSE));//clone(mat);
+	//m_Material.setProp(ColorMaterial::AMBIENT, mat.getProp4f(ColorMaterial::AMBIENT));//clone(mat);
+	//m_Material.setProp(ColorMaterial::EMISSION, mat.getProp4f(ColorMaterial::EMISSION));//clone(mat);
+	//m_Material.setProp(ColorMaterial::SPECULAR, mat.getProp4f(ColorMaterial::SPECULAR));//clone(mat);
 
 #if NAU_CORE_OPENGL == 0
 	glColor4fv(mat.getDiffuse());
@@ -760,11 +834,16 @@ GLRenderer::setMaterial(const ColorMaterial &mat)
 void
 GLRenderer::setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess)
 {
-	m_Material.setDiffuse(diffuse);
-	m_Material.setAmbient(ambient);
-	m_Material.setSpecular(specular);
-	m_Material.setEmission(emission);
-	m_Material.setShininess(shininess);
+	m_Material.setProp(ColorMaterial::SHININESS, shininess);
+	m_Material.setProp(ColorMaterial::DIFFUSE, diffuse);
+	m_Material.setProp(ColorMaterial::AMBIENT, ambient);
+	m_Material.setProp(ColorMaterial::EMISSION, emission);
+	m_Material.setProp(ColorMaterial::SPECULAR, specular);
+	//m_Material.setDiffuse(diffuse);
+	//m_Material.setAmbient(ambient);
+	//m_Material.setSpecular(specular);
+	//m_Material.setEmission(emission);
+	//m_Material.setShininess(shininess);
 
 #if NAU_CORE_OPENGL == 0
 	glColor4fv(diffuse);
@@ -777,29 +856,45 @@ GLRenderer::setMaterial(float *diffuse, float *ambient, float *emission, float *
 }
 
 
-const float *
-GLRenderer::getColor(ColorMaterial::ColorComponent aColor) 
-{
-	const float *f;
+const vec4 &
+GLRenderer::getColorProp4f(ColorMaterial::Float4Property prop) {
 
-	switch(aColor) {
-		case ColorMaterial::DIFFUSE: f = m_Material.getDiffuse(); break;
-		case ColorMaterial::AMBIENT: f = m_Material.getAmbient(); break;
-		case ColorMaterial::SPECULAR: f = m_Material.getSpecular(); break;
-		case ColorMaterial::EMISSION: f = m_Material.getEmission(); break;
-		case ColorMaterial::SHININESS: f = m_Material.getShininessPtr(); break;
-	}
-	
-	return f;
-	
+	return m_Material.getProp4f(prop);
 }
+
+
+float
+GLRenderer::getColorPropf(ColorMaterial::FloatProperty prop) {
+
+	return m_Material.getPropf(prop);
+}
+
+
+
+
+//const float *
+//GLRenderer::getColor(ColorMaterial::ColorComponent aColor) 
+//{
+//	const float *f;
+//
+//	switch(aColor) {
+//		case ColorMaterial::DIFFUSE: f = m_Material.getDiffuse(); break;
+//		case ColorMaterial::AMBIENT: f = m_Material.getAmbient(); break;
+//		case ColorMaterial::SPECULAR: f = m_Material.getSpecular(); break;
+//		case ColorMaterial::EMISSION: f = m_Material.getEmission(); break;
+//		case ColorMaterial::SHININESS: f = m_Material.getShininessPtr(); break;
+//	}
+//	
+//	return f;
+//	
+//}
 
 
 void 
 GLRenderer::setColor (float r, float g, float b, float a)
 {
 
-	m_Material.setDiffuse(r,g,b,a);
+	m_Material.setProp(ColorMaterial::DIFFUSE, r,g,b,a);
 
 #if NAU_CORE_OPENGL == 0
 	glColor4f (r, g, b, a);
@@ -812,7 +907,7 @@ GLRenderer::setColor (int r, int g, int b, int a)
 {
 	float m = 1.0f/255.0f;
 
-	m_Material.setDiffuse(r*m,g*m,b*m,a*m);
+	m_Material.setProp(ColorMaterial::DIFFUSE, r*m,g*m,b*m,a*m);
 
 #if NAU_CORE_OPENGL == 0
 	glColor4f (r*m, g*m, b*m, a*m);
@@ -1024,7 +1119,7 @@ GLRenderer::getImageTexture(unsigned int aTexUnit)
 
 
 void 
-GLRenderer::addTexture(TextureUnit aTexUnit, Texture *t)
+GLRenderer::addTexture(unsigned int aTexUnit, Texture *t)
 {
 	if ((unsigned int)aTexUnit < m_Textures.size())
 		m_Textures[aTexUnit] = t;
@@ -1032,7 +1127,7 @@ GLRenderer::addTexture(TextureUnit aTexUnit, Texture *t)
 
 
 void 
-GLRenderer::removeTexture(TextureUnit aTexUnit)
+GLRenderer::removeTexture(unsigned int aTexUnit)
 {
 	if ((unsigned int)aTexUnit < m_Textures.size())
 		m_Textures[aTexUnit] = 0;
@@ -1051,7 +1146,7 @@ GLRenderer::getTextureCount()
 
 
 int 
-GLRenderer::getPropi(TextureUnit aTexUnit, Texture::IntProperty prop) 
+GLRenderer::getPropi(unsigned int aTexUnit, Texture::IntProperty prop)
 {
 	if ((unsigned int)aTexUnit < m_Textures.size() && m_Textures[aTexUnit] != 0)
 		return (m_Textures[aTexUnit]->getPropi(prop));
@@ -1060,7 +1155,7 @@ GLRenderer::getPropi(TextureUnit aTexUnit, Texture::IntProperty prop)
 }
 
 void 
-GLRenderer::setActiveTextureUnit (TextureUnit aTexUnit)
+GLRenderer::setActiveTextureUnit(unsigned int aTexUnit)
 {
 	glActiveTexture (GL_TEXTURE0 + (int)aTexUnit);
 }
@@ -1237,32 +1332,32 @@ GLRenderer::translateDrawingPrimitive (unsigned int aDrawPrimitive)
 	
 }
 
-GLenum 
-GLRenderer::translateMaterialComponent (ColorMaterial::ColorComponent aMaterialComponent)
-{
-	switch (aMaterialComponent) {
-		case ColorMaterial::AMBIENT:
-			return GL_AMBIENT;
-			break;
-		case ColorMaterial::DIFFUSE:
-			return GL_DIFFUSE;
-			break;
-		case ColorMaterial::AMBIENT_AND_DIFFUSE:
-			return GL_AMBIENT_AND_DIFFUSE;
-			break;
-		case ColorMaterial::SPECULAR:
-			return GL_SPECULAR;
-			break;
-		case ColorMaterial::EMISSION:
-			return GL_EMISSION;
-			break;
-		case ColorMaterial::SHININESS:
-			return GL_SHININESS;
-			break;
-	    default:
-		  return GL_INVALID_ENUM; 
-	}
-}
+//GLenum 
+//GLRenderer::translateMaterialComponent (ColorMaterial::ColorComponent aMaterialComponent)
+//{
+//	switch (aMaterialComponent) {
+//		case ColorMaterial::AMBIENT:
+//			return GL_AMBIENT;
+//			break;
+//		case ColorMaterial::DIFFUSE:
+//			return GL_DIFFUSE;
+//			break;
+//		case ColorMaterial::AMBIENT_AND_DIFFUSE:
+//			return GL_AMBIENT_AND_DIFFUSE;
+//			break;
+//		case ColorMaterial::SPECULAR:
+//			return GL_SPECULAR;
+//			break;
+//		case ColorMaterial::EMISSION:
+//			return GL_EMISSION;
+//			break;
+//		case ColorMaterial::SHININESS:
+//			return GL_SHININESS;
+//			break;
+//	    default:
+//		  return GL_INVALID_ENUM; 
+//	}
+//}
 
 //void 
 //GLRenderer::activateDefaultLight (void)

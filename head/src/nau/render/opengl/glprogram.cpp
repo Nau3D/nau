@@ -1,6 +1,7 @@
 #include <nau/slogger.h>
 #include <nau/render/opengl/glprogram.h>
 #include <nau/render/vertexdata.h>
+#include <nau.h>
 
 #include <nau/system/textfile.h>
 #include <nau/config.h>
@@ -453,8 +454,6 @@ GlProgram::setUniforms() {
 
 		glGetActiveUniform (m_P, i, m_MaxLength, &len, &size, &type, name);
 		std::string n (name);
-
-
 		index = findUniform (n);
 		if (-1 != index) {
 			m_Uniforms[index].setType (type);
@@ -468,7 +467,11 @@ GlProgram::setUniforms() {
 			uni.setLoc (i);
 			m_Uniforms.push_back (uni);
 		}
-
+		if (type == GL_UNSIGNED_INT_ATOMIC_COUNTER) {
+			GLenum prop = GL_OFFSET; int len, params;
+			glGetProgramResourceiv(m_P, GL_UNIFORM, i, 1, &prop, sizeof(int), &len, &params);
+			RENDERER->addAtomic(params/4, name);
+		}
 		if (size > 1) {
 
 			for (int i = 0; i < size; i++) {
@@ -479,6 +482,7 @@ GlProgram::setUniforms() {
                 std::string Location = s.str();                                 
 
 				index = findUniform (Location);
+
 				
 				int loc;
 
@@ -518,12 +522,12 @@ GlProgram::setUniforms() {
 void 
 GlProgram::updateUniforms() {
 
-	glUseProgram (m_P);
+//	glUseProgram (m_P);
 	for (int i = 0; i < m_NumUniforms; i++) {
 		glGetUniformfv (m_P, m_Uniforms[i].getLoc(), m_Uniforms[i].getValues());
 	}
 
-	glUseProgram(0);
+//	glUseProgram(0);
 }
 
 const GlUniform& 

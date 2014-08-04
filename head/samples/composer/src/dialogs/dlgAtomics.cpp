@@ -54,13 +54,14 @@ DlgAtomics::~DlgAtomics()
 void
 DlgAtomics::updateDlg() {
 
+	IRenderer *renderer = RENDERER;
 
 	m_propertyGrid1->Clear();
 	m_propertyGrid1->AddPage(wxT("Atomics"));
 
 	std::map<int, std::string>::iterator iter;
-	iter = IRenderer::AtomicLabels.begin();
-	for (; iter != IRenderer::AtomicLabels.end(); ++iter) {
+	iter = renderer->m_AtomicLabels.begin();
+	for (; iter != renderer->m_AtomicLabels.end(); ++iter) {
 		m_propertyGrid1->Append(new wxFloatProperty( wxString(iter->second.c_str()), wxPG_LABEL ));
 
 	}
@@ -70,10 +71,12 @@ DlgAtomics::updateDlg() {
 void
 DlgAtomics::update() {
 
+	IRenderer *renderer = RENDERER;
+	unsigned int *ac = renderer->getAtomicCounterValues();
 	std::map<int, std::string>::iterator iter;
-	iter = IRenderer::AtomicLabels.begin();
-	for (; iter != IRenderer::AtomicLabels.end(); ++iter) {
+	iter = renderer->m_AtomicLabels.begin();
+	for (; iter != renderer->m_AtomicLabels.end(); ++iter) {
 	
-		m_propertyGrid1->SetPropertyValue(wxString(iter->second.c_str()),(int)(RENDERER->getCounter(iter->first)));
+		m_propertyGrid1->SetPropertyValue(wxString(iter->second.c_str()),(int)(ac[iter->first]));
 	}
 }

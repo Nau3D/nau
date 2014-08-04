@@ -117,7 +117,9 @@ Camera::Camera (const std::string &name) :
 
 	// Adding a Mesh with the frustum lines
 	Mesh *renderable =  (Mesh *)RESOURCEMANAGER->createRenderable("Mesh", m_Name, "Camera");
-	renderable->setDrawingPrimitive(nau::render::IRenderer::LINES);
+	//int drawPrimitive = IRenderer::Attribs.getID("LINES");
+	//renderable->setDrawingPrimitive(drawPrimitive/*nau::render::IRenderer::LINES*/);
+	renderable->setDrawingPrimitive(nau::render::IRenderable::LINES);
 	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(8);
 	VertexData &vertexData = renderable->getVertexData();
 	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);

@@ -6,6 +6,7 @@
 
 #include <nau/material/textureSampler.h>
 #include <nau/attribute.h>
+#include <nau/attributeValues.h>
 
 
 #include <nau/config.h>
@@ -29,13 +30,18 @@ namespace nau
 {
 	namespace render
 	{
-		class Texture
+		class Texture: public AttributeValues
 		{
 		public:
 
-			typedef enum { DIMENSION, FORMAT, TYPE, INTERNAL_FORMAT,
-				COUNT_ENUMPROPERTY} EnumProperty;
-
+			//typedef enum { DIMENSION, FORMAT, TYPE, INTERNAL_FORMAT,
+			//	COUNT_ENUMPROPERTY} EnumProperty;
+			ENUM(DIMENSION, 0);
+			ENUM(FORMAT, 1);
+			ENUM(TYPE, 2);
+			ENUM(INTERNAL_FORMAT, 3);
+			ENUM(COUNT_ENUMPROPERTY, 4);
+			
 			typedef enum { WIDTH, HEIGHT, DEPTH, LEVELS, SAMPLES, LAYERS, COMPONENT_COUNT,ELEMENT_SIZE,
 				COUNT_INTPROPERTY} IntProperty;
 
@@ -50,17 +56,19 @@ namespace nau
 			static AttribSet Attribs;
 
 			std::map<int,int> m_IntProps;
-			std::map<int,int> m_EnumProps;
+			//std::map<int,int> m_EnumProps;
 			std::map<int,unsigned int> m_UIntProps;
 			std::map<int,bool> m_BoolProps;
 			std::map<int, vec4> m_Float4Props;
 			std::map<int, float> m_FloatProps;
 
+			int addAtrib(std::string name, Enums::DataType dt, void *value);
+
 			// Note: no validation is performed!
 			void setProp(int prop, Enums::DataType type, void *value);
 
 			int getPropi(IntProperty prop);
-			int getPrope(EnumProperty prop);
+			//int getPrope(EnumProperty prop);
 			unsigned int getPropui(UIntProperty prop);
 			bool getPropb(BoolProperty prop);
 			void *getProp(int prop, Enums::DataType type);
@@ -92,8 +100,8 @@ namespace nau
 			virtual std::string& getLabel (void);
 			virtual void setLabel (std::string label);
 
-			virtual void prepare(int unit, nau::material::TextureSampler *ts) = 0;
-			virtual void restore(int unit) = 0;
+			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts) = 0;
+			virtual void restore(unsigned int unit) = 0;
 		
 			virtual ~Texture(void);
 

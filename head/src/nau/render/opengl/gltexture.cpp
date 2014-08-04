@@ -236,10 +236,9 @@ GLTexture::~GLTexture(void)
 
 
 void 
-GLTexture::prepare(int aUnit, TextureSampler *ts) {
+GLTexture::prepare(unsigned int aUnit, TextureSampler *ts) {
 
-	RENDERER->addTexture((IRenderer::TextureUnit)aUnit, this);
-	IRenderer::TextureUnit tu = (IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0 + aUnit);
+	RENDERER->addTexture(aUnit, this);
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(m_EnumProps[DIMENSION],m_UIntProps[ID]);
 
@@ -250,11 +249,9 @@ GLTexture::prepare(int aUnit, TextureSampler *ts) {
 
 
 void 
-GLTexture::restore(int aUnit) {
+GLTexture::restore(unsigned int aUnit) {
 
-	IRenderer::TextureUnit tu = (IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0 + aUnit);
-
-	RENDERER->removeTexture((IRenderer::TextureUnit)aUnit);
+	RENDERER->removeTexture(aUnit);
 
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(m_EnumProps[DIMENSION],0);

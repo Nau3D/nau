@@ -48,7 +48,7 @@ namespace nau {
 
 			static TextureSampler* create(nau::render::Texture *t);
 
-			virtual void prepare(int aUnit, int aDim) = 0;
+			virtual void prepare(unsigned int aUnit, int aDim) = 0;
 
 			TextureSampler() ;		
 		

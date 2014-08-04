@@ -67,6 +67,7 @@ namespace nau {
 
 		// Attributes
 		bool validateUserAttribContext(std::string s);
+		bool validateUserAttribName(std::string context, std::string name);
 		void addUserAttrib(std::string context, std::string name, std::string type);
 
 

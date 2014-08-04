@@ -35,11 +35,12 @@ RenderTarget::RenderTarget (std::string name, unsigned int width, unsigned int h
 	m_Width (width),
 	m_Height (height),
 	m_Samples(0),
-	m_Layers(0)
+	m_Layers(0),
+	m_TexId(0),
+	m_DepthTexture(NULL),
+	m_StencilTexture(NULL)
 
 {
-	for (int i = 0; i < MAXFBOs+1; i++)
-		m_TexId[i] = 0;
 }
 
 
@@ -112,7 +113,7 @@ RenderTarget::getNumberOfColorTargets()
 nau::render::Texture *
 RenderTarget::getTexture(unsigned int i) 
 {
-	if (i <= MAXFBOs) {
+	if (i <= m_TexId.size()) {
 		return m_TexId[i];
 	} 
 	else return 0;

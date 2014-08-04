@@ -24,7 +24,7 @@ namespace nau
 			std::string m_Name;
 			int m_NumberOfPrimitives;
 			std::vector<unsigned int> m_UnifiedIndex;
-			int m_VerticesPerPrimitive;
+			int m_VerticesPerPatch = 0;
 			void createUnifiedIndexVector();
 			void prepareIndexData(); 
 			void resetCompilationFlags();
@@ -57,12 +57,13 @@ namespace nau
 
 			virtual nau::render::VertexData& getVertexData (void);
 			virtual int getNumberOfVertices (void);
-			virtual int getNumberOfPrimitives(void);
-			void setNumberOfVerticesPerPrimitive(int i);
-			int getnumberOfVerticesPerPrimitive(void);
-			int getPrimitiveOffset(void);
+			void setNumberOfVerticesPerPatch(int i);
+			int getnumberOfVerticesPerPatch(void);
 
 			virtual std::string getType (void);
+
+			//int getPrimitiveOffset(void);
+			//virtual int getNumberOfPrimitives(void);
 		};
 	};
 };

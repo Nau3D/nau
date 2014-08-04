@@ -248,10 +248,13 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 			NAU_THROW("Attribute without a context in file %s", ProjectLoader::s_File.c_str()); 					
 
 		if (!NAU->validateUserAttribContext(pContext))
-			NAU_THROW("Attribute with an invalid context in file %s", ProjectLoader::s_File.c_str()); 					
+			NAU_THROW("Attribute with an invalid context %s, in file %s", pContext, ProjectLoader::s_File.c_str()); 					
 
 		if (0 == pName) 
-			NAU_THROW("Attribute without a name in file %s", ProjectLoader::s_File.c_str()); 					
+			NAU_THROW("Attribute without a name in file %s", ProjectLoader::s_File.c_str()); 
+
+		if (!NAU->validateUserAttribName(pContext, pName))
+			NAU_THROW("Attribute name %s is already in use in context, in file %s", pName, pContext, ProjectLoader::s_File.c_str()); 
 		
 		if (0 == pType) 
 			NAU_THROW("Attribute without a type in file %s", ProjectLoader::s_File.c_str()); 					
@@ -755,7 +758,7 @@ ProjectLoader::loadAtomicSemantics(TiXmlHandle handle)
 
 		SLOG("Atomic : %d %s", id, pName);
 
-		IRenderer::addAtomic(id,pName);
+		RENDERER->addAtomic(id,pName);
 	} 
 }
 
@@ -2574,7 +2577,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		if (names->size() == 0)
 			NAU_THROW("No materials match %s in map definition, in pass: %s", pMat, aPass->getName().c_str());
 
-		Material *dstMat;
+		Material *dstMat, *srcMat;
 
 		std::vector<std::string>::iterator iter;
 		for(iter = names->begin(); iter != names->end(); ++iter) {
@@ -2759,21 +2762,24 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 			if (!MATERIALLIBMANAGER->hasMaterial(pLib,pMat))
 				NAU_THROW("Material %s is not defined in lib %s, in pass: %s", pMat, pLib,aPass->getName().c_str());
 
+			srcMat = MATERIALLIBMANAGER->getMaterial(pLib,pMat);
 			std::vector<std::string>::iterator iter;
 			for(iter = names->begin(); iter != names->end(); ++iter) {
 
 				std::string name = *iter;
 				dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+				if (!pAmbient && !pDiffuse && !pSpecular && !pEmission && !pShininess)
+					dstMat->getColor().clone(srcMat->getColor());
 				if (pAmbient && !strcmp("true",pAmbient))
-					dstMat->getColor().setAmbient(MATERIALLIBMANAGER->getMaterial(pLib,pMat)->getColor().getAmbient());
+					dstMat->getColor().setProp(ColorMaterial::AMBIENT, srcMat->getColor().getProp4f(ColorMaterial::AMBIENT));
 				if (pDiffuse && !strcmp("true",pDiffuse))
-					dstMat->getColor().setDiffuse(MATERIALLIBMANAGER->getMaterial(pLib,pMat)->getColor().getDiffuse());
+					dstMat->getColor().setProp(ColorMaterial::DIFFUSE, srcMat->getColor().getProp4f(ColorMaterial::DIFFUSE));
 				if (pSpecular && !strcmp("true",pSpecular))
-					dstMat->getColor().setSpecular(MATERIALLIBMANAGER->getMaterial(pLib,pMat)->getColor().getSpecular());
+					dstMat->getColor().setProp(ColorMaterial::SPECULAR, srcMat->getColor().getProp4f(ColorMaterial::SPECULAR));
 				if (pEmission && !strcmp("true",pEmission))
-					dstMat->getColor().setEmission(MATERIALLIBMANAGER->getMaterial(pLib,pMat)->getColor().getEmission());
+					dstMat->getColor().setProp(ColorMaterial::EMISSION, srcMat->getColor().getProp4f(ColorMaterial::EMISSION));
 				if (pShininess && !strcmp("true",pShininess))
-					dstMat->getColor().setShininess(MATERIALLIBMANAGER->getMaterial(pLib,pMat)->getColor().getShininess());
+					dstMat->getColor().setProp(ColorMaterial::SHININESS, srcMat->getColor().getPropf(ColorMaterial::SHININESS));
 			}
 
 		}
@@ -3352,70 +3358,93 @@ MATERIALCOLOR
 void 
 ProjectLoader::loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
 {
-	TiXmlElement *pElemAux, *pElemAux2;
+	TiXmlElement *pElemAux;
 	pElemAux = handle.FirstChild ("color").Element();
-	if (0 != pElemAux) {
+	if (!pElemAux)
+		return;
 
-		float r, g, b, a;
+	std::map<std::string, Attribute> attribs = ColorMaterial::Attribs.getAttributes();
+	TiXmlElement *p = pElemAux->FirstChildElement();
+	Attribute a;
+	void *value;
+	while (p) {
+		// trying to define an attribute that does not exist		
+		if (attribs.count(p->Value()) == 0)
+			NAU_THROW("Library %s: Material %s: Color - %s is not an attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
+		// trying to set the value of a read only attribute
+		a = attribs[p->Value()];
+		if (a.mReadOnlyFlag)
+			NAU_THROW("Library %s: Material %s: Color - %s is a read-only attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 
-		pElemAux2 = pElemAux->FirstChildElement ("ambient");
-		if (pElemAux2) {
-			if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("r", &r) || 
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("g", &g) ||
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("b", &b) ||
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("a", &a)){
-
-				NAU_THROW("Color ambient definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
-			}
-			aMat->getColor().setAmbient (r, g, b, a);
-		}
-
-		pElemAux2 = pElemAux->FirstChildElement ("diffuse");
-		if (pElemAux2) {
-			if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("r", &r) || 
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("g", &g) ||
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("b", &b) ||
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("a", &a)){
-
-				NAU_THROW("Color diffuse definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
-			}
-			aMat->getColor().setDiffuse (r, g, b, a);
-		}
-
-		pElemAux2 = pElemAux->FirstChildElement ("specular");
-		if (pElemAux2) {
-			if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("r", &r) || 
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("g", &g) ||
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("b", &b) ||
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("a", &a)){
-
-				NAU_THROW("Color specular definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
-			}
-			aMat->getColor().setSpecular (r, g, b, a);
-		}
-	
-		pElemAux2 = pElemAux->FirstChildElement ("emission");
-		if (pElemAux2) {
-			if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("r", &r) || 
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("g", &g) ||
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("b", &b) ||
-				TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("a", &a)){
-
-				NAU_THROW("Color emission definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
-			}
-			aMat->getColor().setEmission (r, g, b, a);		
-		}
-
-		float value;
-		pElemAux2 = pElemAux->FirstChildElement ("shininess");
-		if (pElemAux2) {
-			if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("value", &value)){
-
-				NAU_THROW("Color shininess definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
-			}
-			aMat->getColor().setShininess (value);
-		}
+		value = readAttr("", p, a.mType, ImageTexture::Attribs);
+		aMat->getColor().setProp(a.mId, a.mType, value);
+		p = p->NextSiblingElement();
 	}
+
+
+
+	//if (0 != pElemAux) {
+
+	//	float r, g, b, a;
+
+	//	pElemAux2 = pElemAux->FirstChildElement ("ambient");
+	//	if (pElemAux2) {
+	//		if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("r", &r) || 
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("g", &g) ||
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("b", &b) ||
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("a", &a)){
+
+	//			NAU_THROW("Color ambient definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
+	//		}
+	//		aMat->getColor().setProp(ColorMaterial::AMBIENT, r, g, b, a);
+	//	}
+
+	//	pElemAux2 = pElemAux->FirstChildElement ("diffuse");
+	//	if (pElemAux2) {
+	//		if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("r", &r) || 
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("g", &g) ||
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("b", &b) ||
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("a", &a)){
+
+	//			NAU_THROW("Color diffuse definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
+	//		}
+	//		aMat->getColor().setProp(ColorMaterial::DIFFUSE, r, g, b, a);
+	//	}
+
+	//	pElemAux2 = pElemAux->FirstChildElement ("specular");
+	//	if (pElemAux2) {
+	//		if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("r", &r) || 
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("g", &g) ||
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("b", &b) ||
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("a", &a)){
+
+	//			NAU_THROW("Color specular definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
+	//		}
+	//		aMat->getColor().setProp(ColorMaterial::SPECULAR, r, g, b, a);
+	//	}
+	//
+	//	pElemAux2 = pElemAux->FirstChildElement ("emission");
+	//	if (pElemAux2) {
+	//		if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("r", &r) || 
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("g", &g) ||
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("b", &b) ||
+	//			TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("a", &a)){
+
+	//			NAU_THROW("Color emission definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
+	//		}
+	//		aMat->getColor().setProp(ColorMaterial::EMISSION, r, g, b, a);
+	//	}
+
+	//	float value;
+	//	pElemAux2 = pElemAux->FirstChildElement ("shininess");
+	//	if (pElemAux2) {
+	//		if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute ("value", &value)){
+
+	//			NAU_THROW("Color shininess definition error in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
+	//		}
+	//		aMat->getColor().setProp(ColorMaterial::SHININESS, value);
+	//	}
+	//}
 }
 
 /* -----------------------------------------------------------------------------
@@ -3535,8 +3564,6 @@ ProjectLoader::loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Mater
 			
 
 		aMat->attachTexture (unit, s_pFullName);
-
-		IRenderer::TextureUnit texUnit = (IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+unit);
 
 		// Reading Texture Sampler Attributes
 

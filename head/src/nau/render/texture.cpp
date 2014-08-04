@@ -186,6 +186,22 @@ Texture::initArrays() {
 }
 
 
+int 
+Texture::addAtrib(std::string name, Enums::DataType dt, void *value) {
+
+	int id= Attribs.getNextFreeID();
+	switch (dt) {
+
+		case Enums::ENUM:
+			int *k = (int *)value;
+			m_EnumProps[id] = *k;
+			break;
+	}
+
+	return id;
+
+}
+
 void *
 Texture::getProp(int prop, Enums::DataType type) {
 
@@ -236,12 +252,12 @@ Texture::getPropi(IntProperty prop)
 }
 
 
-int 
-Texture::getPrope(EnumProperty prop)
-{
-	assert(m_EnumProps.find(prop) != m_EnumProps.end());
-	return m_EnumProps[prop];
-}
+//int 
+//Texture::getPrope(EnumProperty prop)
+//{
+//	assert(m_EnumProps.find(prop) != m_EnumProps.end());
+//	return m_EnumProps[prop];
+//}
 
 
 unsigned int

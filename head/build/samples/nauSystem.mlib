@@ -74,21 +74,21 @@
 
 		<material name="__Light Grey">
 			<color>
-				<ambient r="0.8" g="0.8" b="0.8" a="1.0" />
-				<diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.8" g="0.8" b="0.8" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Quad">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 			<shader>
 				<name>quadShader</name>
@@ -101,81 +101,81 @@
 		
 		<material name="__Emission White">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="1.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Emission Red">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="0.0" b="0.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="0.0" b="0.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Emission Green">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="1.0" b="0.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="1.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="1.0" b="0.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="1.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Emission Blue">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="0.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="0.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Emission Cyan">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="1.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="1.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Emission Purple">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="0.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="0.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="0.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="0.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Emission Yellow">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="1.0" b="0.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="1.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="0.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="1.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Black">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
@@ -185,11 +185,11 @@
 		
 		<material name="__FontCourierNew10">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="0.0" />
-				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="1.0" b="1.0" a="0.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="0.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="1.0" b="1.0" a="0.0" />
+				<SHININESS value="0.0" />
 			</color>
 			<state name="__Transparent"/>
 			<textures>

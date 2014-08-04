@@ -67,11 +67,7 @@ ProgramValue::Validate(std::string type,std::string context,std::string componen
 	}
 	else if (type == "CURRENT" && context == "COLOR") {
 
-		int id;
-		nau::Enums::DataType dt;
-		ColorMaterial::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-		//return ColorMaterial::validateComponent(component);
+		return ColorMaterial::validateComponent(component);
 	}
 	else if (type == "CURRENT" && context == "TEXTURE") {
 
@@ -258,23 +254,15 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 
 		if (0 == context.compare("COLOR")) {
 
-			//ColorMaterial::ColorComponent attr;
-			int attr;
-			nau::Enums::DataType dt;
-			ColorMaterial::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
+			ColorMaterial::ColorComponent attr;
+			Enums::DataType dt;
+
+			ColorMaterial::getComponentTypeAndId(valueof, &dt, &attr);
 			m_ValueType = dt;
+			m_ValueOf = attr;
 			m_Cardinality = Enums::getCardinality(dt);
-			m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
-
-			//Enums::DataType dt;
-
-			//ColorMaterial::getComponentTypeAndId(valueof, &dt, &attr);
-			//m_ValueType = dt;
-			//m_ValueOf = attr;
-			//m_Cardinality = Enums::getCardinality(dt);
-			//m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-			//return;
+			m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
+			return;
 		}
 
 		else if (0 == context.compare("MATRIX")) {
@@ -911,15 +899,7 @@ ProgramValue::getValues (void)
 		   }
 		   else if ("COLOR" == m_Context) {
 					
-			   float f;
-				switch(m_ValueType) {
-					case Enums::VEC4:
-						return ((float *)&(RENDERER->getColorProp4f((ColorMaterial::Float4Property)m_ValueOf)));
-					case Enums::FLOAT:
-						f = RENDERER->getColorPropf((ColorMaterial::FloatProperty)m_ValueOf);
-						m_Value[0] = f;
-						return m_Value;
-				}
+			   return const_cast<float*>(RENDERER->getColor((ColorMaterial::ColorComponent)m_ValueOf));
 
 			   //switch (m_ValueOf) {
 				//	case DIFFUSE: (RENDERER->getColor(IRenderer::DIFFUSE));
@@ -939,7 +919,7 @@ ProgramValue::getValues (void)
 
 				switch(m_ValueType) {
 					case Enums::INT:
-						m_IntValue[0] = RENDERER->getPropi(m_Id,(Texture::IntProperty)m_ValueOf);
+						m_IntValue[0] = RENDERER->getPropi((IRenderer::TextureUnit)m_Id,(Texture::IntProperty)m_ValueOf);
 						return m_IntValue;
 
 					case Enums::SAMPLER:

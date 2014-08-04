@@ -10,7 +10,7 @@ using namespace nau::resource;
 Material::Material() : 
    m_Color (),
    m_Texmat (0),
-   m_Shader (""),
+   m_Shader (NULL),
    m_ProgramValues(),
    m_UniformValues(),
    m_Enabled (true),
@@ -169,7 +169,8 @@ Material::getTextureUnits() {
 void 
 Material::setUniformValues() {
 
-	nau::render::IProgram *shader = RESOURCEMANAGER->getProgram(m_Shader);
+	int *i;
+	float *f;
 
 	PROFILE("Set Uniforms");
 	std::map<std::string,ProgramValue>::iterator progValIter;
@@ -190,8 +191,9 @@ Material::setUniformValues() {
 			case Enums::BVEC4:
 			case Enums::SAMPLER:
 			case Enums::ENUM:
-			if (progValIter->second.getValues() != NULL)
-				shader->setValueOfUniform (progValIter->first, (int *)progValIter->second.getValues());
+				i = (int *)progValIter->second.getValues();
+				if (i != NULL)
+					m_Shader->setValueOfUniform (progValIter->first, i);
 			break;
 
 			case Enums::FLOAT:
@@ -201,8 +203,9 @@ Material::setUniformValues() {
 			case Enums::MAT2:
 			case Enums::MAT3:
 			case Enums::MAT4:
-			if (progValIter->second.getValues() != NULL)
-				shader->setValueOfUniform (progValIter->first, (float*)progValIter->second.getValues());
+				f = (float *)progValIter->second.getValues();
+				if (f != NULL)
+					m_Shader->setValueOfUniform (progValIter->first, f);
 			break;
 
 			default:
@@ -221,6 +224,13 @@ Material::prepareNoShaders ()
 	if (0 != m_Texmat) {
 		m_Texmat->prepare(m_State);
 	}
+#if NAU_OPENGL_VERSION >=  420
+	if (m_ImageTexture.size() != 0) {
+		std::map<int, ImageTexture*>::iterator it = m_ImageTexture.begin();
+		for ( ; it != m_ImageTexture.end(); ++it)
+			it->second->prepare(it->first);
+	}
+#endif
 }
 
 
@@ -251,17 +261,10 @@ Material::prepare ()
 #endif
 	{
 		PROFILE("Shaders");
-		if ("" != m_Shader && m_useShader) {
+		if (NULL != m_Shader && m_useShader) {
 
-			nau::render::IProgram *shader;
-			{
-				PROFILE("GetShader");
-				shader = RESOURCEMANAGER->getProgram(m_Shader);
-			}
-
-			shader->prepare();
-			RENDERER->setShader(shader);
-			
+			m_Shader->prepare();
+			RENDERER->setShader(m_Shader);
 			setUniformValues();
 		}
 		else
@@ -274,9 +277,9 @@ void
 Material::restore() {
 
    m_Color.restore();
-   if ("" != m_Shader && m_useShader) {
-      RESOURCEMANAGER->getProgram(m_Shader)->restore();
-   }
+   if (NULL != m_Shader && m_useShader) {
+	   m_Shader->restore();
+    }
    if (0 != m_Texmat) {
       m_Texmat->restore(m_State);
    }
@@ -388,7 +391,7 @@ Material::getTexture(int unit) {
 
 // unit must be in [0,7]
 TextureSampler*
-Material::getTextureSampler(int unit)
+Material::getTextureSampler(unsigned int unit)
 {
 	if (m_Texmat)
 		return m_Texmat->getTextureSampler(unit);
@@ -400,7 +403,7 @@ Material::getTextureSampler(int unit)
 void 
 Material::attachProgram (std::string shaderName)
 {
-	m_Shader = shaderName; 
+	m_Shader = RESOURCEMANAGER->getProgram(shaderName);
 	m_ProgramValues.clear();
 }
 
@@ -431,6 +434,17 @@ Material::cloneProgramFromMaterial(Material *mat) {
 
 
 std::string 
+Material::getProgramName() 
+{
+	if (m_Shader)
+		return m_Shader->getName();
+	else
+		return "";
+}
+
+
+
+nau::render::IProgram * 
 Material::getProgram() 
 {
 	return m_Shader;
@@ -514,7 +528,7 @@ Material::clear()
    m_Color.clear();
    if (m_Texmat != 0)
 		m_Texmat->clear();
-   m_Shader = ""; 
+   m_Shader = NULL; 
    m_ProgramValues.clear();
    m_Enabled = true;
    m_State->clear();

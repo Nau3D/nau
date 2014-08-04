@@ -1,0 +1,29 @@
+Renderer Program Values
+
+TEXTURE
+	// Renderer own values
+	<valueof uniform="texUnit"	type="RENDERER" context="TEXTURE" component="UNIT" id=0 />
+	<valueof uniform="texCount"	type="RENDERER" context="TEXTURE" component="COUNT"  />
+	// Fetch data from a bound texture - component can be any of the texture attributes
+	<valueof uniform="texWidth"	type="RENDERER" context="TEXTURE" component="WIDTH" id=0  />
+	
+LIGHT
+	// Renderer own values
+	<valueof uniform="lightCount"	type="RENDERER" context="LIGHT" component="COUNT"  />
+	// Fetch data from a bound light - component can be any of the light attributes
+	<valueof uniform="lightColor"	type="RENDERER" context="LIGHT" component="DIFFUSE" id=0  />
+MATRIX
+	// Fetch a matrix from the current renderer matrices
+	<valueof uniform="PVM" type="RENDERER" context="MATRIX" component="PROJECTION_VIEW_MODEL" />
+	
+PASS
+	// Fetch data from current pass - component can be any of the pass attributes
+	<valueof uniform="split" type="RENDERER" context="PASS" component="To" />
+	
+COLOR
+	// Fetch Color from current material
+	<valueof uniform="diffuse" type="RENDERER" context="COLOR" component="DIFFUSE" />
+
+UserData
+	// only floats for now but others may be added
+	<valueof uniform="myData" type="USER" context="FLOAT" value=5.3 />

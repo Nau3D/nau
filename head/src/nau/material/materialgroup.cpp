@@ -1,3 +1,5 @@
+
+#include <nau.h>
 #include <nau/material/materialgroup.h>
 #include <nau/render/vertexdata.h>
 #include <nau/render/irenderer.h>
@@ -73,25 +75,8 @@ MaterialGroup::setIndexList (std::vector<unsigned int>* indices) /***MARK***/
 unsigned int
 MaterialGroup::getNumberOfPrimitives(void) {
 
-	unsigned int indexes = m_IndexData->getIndexSize();
-	unsigned int primitive = m_Parent->getDrawingPrimitive();
-	switch(primitive) {
-	
-		case nau::render::IRenderer::TRIANGLES_ADJACENCY: 
-			return (indexes / 6);
-		case nau::render::IRenderer::TRIANGLES: 
-			return (indexes / 3);
-		case nau::render::IRenderer::TRIANGLE_STRIP: 
-		case nau::render::IRenderer::TRIANGLE_FAN:
-			return (indexes - 2);
-		case nau::render::IRenderer::LINES:
-			return (indexes / 2);
-		default: 
-			return (indexes / 3);
-	}
-
+	return RENDERER->getNumberOfPrimitives(this);
 }
-
 
 
 void 

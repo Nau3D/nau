@@ -542,6 +542,7 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 			m_Canvas->setCamera();
 			updateDlgs();
 #ifndef FINAL
+
 			float t =  aTimer.Time()/1000.0;
 			SLOG("Elapsed time: %f", t);
 #endif

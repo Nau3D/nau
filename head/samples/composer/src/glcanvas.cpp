@@ -507,14 +507,6 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 	//		m_pEngine->disableStereo();
 	//	}
 	//}
-#if (NAU_OPENGL_VERSIONOPENGL_VERSION >= 400)
-	if ('C' == event.GetKeyCode()) {
-	
-		for (unsigned int i = 0; i < IRenderer::MAX_COUNTERS; i++)
-			SLOG("%d", RENDERER->getCounter(i));
-	}
-
-#endif
 	event.Skip();
 }
 

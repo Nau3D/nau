@@ -98,11 +98,9 @@ GLTextureCubeMap::getNumberOfComponents(void) {
 
 
 void 
-GLTextureCubeMap::prepare(int aUnit, nau::material::TextureSampler *ts) {
+GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts) {
 
-	RENDERER->addTexture((IRenderer::TextureUnit)aUnit, this);
-	IRenderer::TextureUnit tu = (IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+aUnit);
-	//m_SamplerProps[UNIT] = aUnit;
+	RENDERER->addTexture(aUnit, this);
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,m_UIntProps[ID]);
 	glBindSampler(aUnit, ts->getPropui(TextureSampler::ID));
@@ -112,9 +110,8 @@ GLTextureCubeMap::prepare(int aUnit, nau::material::TextureSampler *ts) {
 
 
 void 
-GLTextureCubeMap::restore(int aUnit) 
+GLTextureCubeMap::restore(unsigned int aUnit) 
 {
-	IRenderer::TextureUnit tu = (IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+aUnit);
 
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,0);

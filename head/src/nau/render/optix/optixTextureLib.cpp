@@ -32,15 +32,15 @@ OptixTextureLib::addTextures(Material *m) {
 			s = t->getPropui(Texture::ID);
 		
 			m_TextureLib[s] = m_Context->createTextureSamplerFromGLImage(s, RT_TARGET_GL_TEXTURE_2D);
-			mode = m->getTextureSampler((IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+i))->getPrope(TextureSampler::WRAP_S);
+			mode = m->getTextureSampler(i)->getPrope(TextureSampler::WRAP_S);
 		//	mode = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i),IState::TEXTURE_WRAP_S);
 			m_TextureLib[s]->setWrapMode( 0, (RTwrapmode)translateWrapModeToOptix(mode) );
-			mode = m->getTextureSampler((IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+i))->getPrope(TextureSampler::WRAP_T);
+			mode = m->getTextureSampler(i)->getPrope(TextureSampler::WRAP_T);
 		//	mode = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i),IState::TEXTURE_WRAP_T);
 			m_TextureLib[s]->setWrapMode( 1, (RTwrapmode)translateWrapModeToOptix(mode) );
 			
-			mode = m->getTextureSampler((IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+i))->getPrope(TextureSampler::MAG_FILTER);
-			mode1 = m->getTextureSampler((IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+i))->getPrope(TextureSampler::MIN_FILTER);
+			mode = m->getTextureSampler(i)->getPrope(TextureSampler::MAG_FILTER);
+			mode1 = m->getTextureSampler(i)->getPrope(TextureSampler::MIN_FILTER);
 		//	mode = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i), IState::TEXTURE_MAG_FILTER);
 		//	mode1 = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i), IState::TEXTURE_MIN_FILTER);
 			m_TextureLib[s]->setFilteringModes( (RTfiltermode)translateFilterModeToOptix(mode1), 

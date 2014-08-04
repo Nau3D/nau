@@ -8,9 +8,6 @@
 // based on OpenGL version
 #define NAU_OPENGL_VERSION 440
 
-// use atomic counters
-#define NAU_USE_ATOMICS 1
-
 // use only core features (1 implies no fixed function)
 #define NAU_CORE_OPENGL 1
 
@@ -30,7 +27,5 @@
 #endif
 
 #define NAU_RENDER_FLAGS
-
-//#define COMPATIBILITY_FLAG_OPENGL 
 
 #endif // NAU_CONFIG_H

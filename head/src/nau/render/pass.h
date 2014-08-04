@@ -37,7 +37,7 @@ namespace nau
 			//	INT
 			//};
 
-			static const int MAXFBOs = 4;
+			//static const int MAXFBOs = 4;
 
 			void setProp(IRenderer::BoolProps prop, bool value);
 			bool getPropb(IRenderer::BoolProps prop);
@@ -59,7 +59,7 @@ namespace nau
 			nau::render::Viewport *m_pRestoreViewport;
 						
 			nau::render::RenderTarget *m_RenderTarget;
-			nau::render::Texture* m_TexId[MAXFBOs+1];	
+			//nau::render::Texture* m_TexId[MAXFBOs+1];	
 
 			std::map<std::string, float> m_Paramf;
 			std::map<std::string, int> m_Parami;

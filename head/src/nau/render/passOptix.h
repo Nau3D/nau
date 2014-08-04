@@ -80,9 +80,9 @@ namespace nau
 			optix::Context o_Context;
 			bool o_OptixIsPrepared;
 
-			optix::Buffer o_OutputBuffer[RenderTarget::MAXFBOs];
+			std::vector<optix::Buffer> o_OutputBuffer;
 			optix::GeometryGroup o_GeomGroup;
-			unsigned int o_OutputPBO[RenderTarget::MAXFBOs];
+			std::vector<unsigned int> o_OutputPBO;
 			optix::Material o_Material;
 			std::vector<optix::GeometryInstance> o_GeomInstances;
 			optix::Program o_GeometryIntersectionProgram, o_BoundingBoxProgram;

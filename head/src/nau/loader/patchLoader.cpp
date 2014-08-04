@@ -102,8 +102,8 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 		aMatGroup->setIndexList(indices);
 
 	aRenderable->addMaterialGroup(aMatGroup);
-	aRenderable->setDrawingPrimitive(IRenderer::PATCH);
-	aRenderable->setNumberOfVerticesPerPrimitive(verticesPerPatch);
+	aRenderable->setDrawingPrimitive(IRenderable::PATCH);
+	aRenderable->setNumberOfVerticesPerPatch(verticesPerPatch);
 
 	anObject->setRenderable(aRenderable);
 

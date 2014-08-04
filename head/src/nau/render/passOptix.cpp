@@ -23,8 +23,8 @@ using namespace nau::geometry;
 #define TEST 1	
 
 
-PassOptix::PassOptix (const std::string &passName) :
-	Pass(passName)
+PassOptix::PassOptix(const std::string &passName) : 
+	Pass(passName), o_OutputBuffer(0), o_OutputPBO(0)
 {
 	try {
 		o_EntryPoint = OptixRenderer::getNextAvailableEntryPoint();
@@ -209,7 +209,8 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 
 	unsigned int n =  rt->getNumberOfColorTargets();
 
-	glGenBuffers(n, o_OutputPBO);
+	o_OutputPBO.resize(n);
+	glGenBuffers(n, (unsigned int *)&o_OutputPBO[0]);
 	nau::render::Texture* texID;
 	
 	try {
@@ -223,15 +224,16 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 			glBufferData(GL_PIXEL_UNPACK_BUFFER, rt->getWidth()*rt->getHeight()*rt->getTexture(i)->getPropi(Texture::ELEMENT_SIZE), 0, GL_STREAM_READ);
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-			o_OutputBuffer[i] = o_Context->createBufferFromGLBO(RT_BUFFER_OUTPUT, o_OutputPBO[i]);
-			o_OutputBuffer[i]->setSize(rt->getWidth(), rt->getHeight());
+			optix::Buffer b = o_Context->createBufferFromGLBO(RT_BUFFER_OUTPUT, o_OutputPBO[i]);
+			b->setSize(rt->getWidth(), rt->getHeight());
 			// same here (types)
-			o_OutputBuffer[i]->setFormat(getOptixFormat(rt->getTexture(i)));
+			b->setFormat(getOptixFormat(rt->getTexture(i)));
 
 			// project loader must deal with named outputs
 			std::ostringstream bufferName;
 			bufferName << "output" << i;
-			o_Context[bufferName.str()]->setBuffer(o_OutputBuffer[i]);
+			o_Context[bufferName.str()]->setBuffer(b);
+			o_OutputBuffer.push_back(b);
 			//
 		}
 	}

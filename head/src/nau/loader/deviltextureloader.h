@@ -1,8 +1,11 @@
 #ifndef DEVILTEXTURELOADER_H
 #define DEVILTEXTURELOADER_H
 
+#include <string>
+
 #include <nau/loader/textureloader.h>
 #include <nau/material/teximage.h>
+
 
 using namespace nau::material;
 

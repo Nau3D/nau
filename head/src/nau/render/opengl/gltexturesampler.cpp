@@ -120,7 +120,7 @@ GLTextureSampler::update() {
 
 
 void 
-GLTextureSampler::prepare(int aUnit, int aDim) {
+GLTextureSampler::prepare(unsigned int aUnit, int aDim) {
 
 #if (NAU_OPENGL_VERSION > 320)
 	glBindSampler(aUnit, m_UIntProps[ID]);
@@ -142,7 +142,7 @@ GLTextureSampler::prepare(int aUnit, int aDim) {
 
 
 void 
-GLTextureSampler::restore(int aUnit, int aDim) {
+GLTextureSampler::restore(unsigned int aUnit, int aDim) {
 
 #if (NAU_OPENGL_VERSION > 320)
 	glBindSampler(aUnit, 0);

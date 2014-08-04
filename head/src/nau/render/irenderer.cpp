@@ -1,21 +1,80 @@
 #include <nau/render/irenderer.h>
 
+using namespace nau;
+
+int IRenderer::MaxTextureUnits;
+int IRenderer::MaxColorAttachments;
+
+AttribSet IRenderer::Attribs;
+bool IRenderer::Inited = Init();
+
+bool
+IRenderer::Init() {
+	// MOVE TO irenderable.h
+	//Attribs.add(Attribute(DRAW_PRIMITIVE, "DRAW_PRIMITIVE", Enums::DataType::ENUM, true));
+	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLES", TRIANGLES);
+	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLE_STRIP", TRIANGLE_STRIP);
+	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLE_FAN", TRIANGLE_FAN);
+	//Attribs.listAdd("DRAW_PRIMITIVE", "LINES", LINES);
+	//Attribs.listAdd("DRAW_PRIMITIVE", "LINE_LOOP", LINE_LOOP);
+	//Attribs.listAdd("DRAW_PRIMITIVE", "POINTS", POINTS);
+	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLES_ADJACENCY", TRIANGLES_ADJACENCY);
+	//Attribs.listAdd("DRAW_PRIMITIVE", "PATCHES", PATCH);
+	return true;
+}
+
+
+void 
+IRenderer::setPrope(EnumProperty prop, int value){
+	assert(Attribs.getName(prop, Enums::DataType::ENUM) != "" && "invalid option for an enum") ;
+	m_EnumProps[prop] = value;
+}
+
+
+void 
+IRenderer::setProp(int prop, Enums::DataType type, void *value) {
+
+	switch (type) {
+	case Enums::ENUM:
+		// prop must exist
+		assert(m_EnumProps.count(prop) && "invalid property");
+		// value must be in the list of valid enums
+		assert(Attribs.getName(prop, Enums::DataType::ENUM) != "" && "invalid value");
+		m_EnumProps[prop] = *(int *)value;
+		break;
+	default:
+		assert(false && "invalid enum type");
+	}
+}
+
+
+// ATOMIC COUNTERS
+
+
+void
+IRenderer::addAtomic(unsigned int id, std::string name) {
+
+	if (m_AtomicLabels.count(id) == 0) {
+		++m_AtomicCount;
+		m_AtomicBufferPrepared = false;
+		m_AtomicLabels[id] = name;
+		if (id > m_AtomicMaxID)
+			m_AtomicMaxID = id;
+	}
+}
+
+
+
+// -------------------
+
+
+
 const std::string IRenderer::MatrixTypeString[] = {"PROJECTION", "MODEL", 
 												"VIEW", "TEXTURE",
 												"VIEW_MODEL", "PROJECTION_VIEW_MODEL", 
 												"PROJECTION_VIEW", "TS05_PVM", "NORMAL"};
 
 
-std::map<int, std::string> IRenderer::AtomicLabels;
-int IRenderer::AtomicLabelsCount = 0;
-
-
-void 
-IRenderer::addAtomic(int id, std::string name) {
-
-	AtomicLabelsCount++;
-	AtomicLabels[id] = name;
-}
 
 
 void 

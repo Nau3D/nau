@@ -22,8 +22,8 @@ namespace nau
 
 			~GLTextureCubeMap(void);
 
-			virtual void prepare(int unit, nau::material::TextureSampler *ts);
-			virtual void restore(int unit);
+			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts);
+			virtual void restore(unsigned int unit);
 
 			//void enableCompareToTexture (void);
 			//void disableCompareToTexture (void);
