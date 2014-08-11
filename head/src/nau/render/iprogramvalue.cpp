@@ -92,7 +92,7 @@ IProgramValue::Validate(std::string type,std::string context,std::string compone
 		return true;
 	}
 
-	else if (type == "MATRIX" && context == "CURRENT") {
+	else if (type == "RENDERER" && context == "MATRIX") {
 
 		int id;
 		IRenderer::getPropId(component, &id);
@@ -232,7 +232,7 @@ IProgramValue::set(std::string name, std::string type,std::string context,std::s
 			ColorMaterial::ColorComponent attr;
 			Enums::DataType dt;
 
-			ColorMaterial::getComponentTypeAndId(valueof, &dt, &attr);
+			ColorMaterial::Attribs::getComponentTypeAndId(valueof, &dt, &attr);
 			m_ValueType = dt;
 			m_ValueOf = attr;
 			m_Cardinality = Enums::getCardinality(dt);

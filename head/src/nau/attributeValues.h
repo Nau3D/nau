@@ -11,10 +11,12 @@ namespace nau {
 	class AttributeValues {
 	public:
 		typedef  enum {} EnumProperty;
+		typedef enum {} Mat4Property;
+		typedef enum {} Mat3Property;
+
 		std::map<int,int> m_EnumProps;
 
 		int getPrope(EnumProperty prop) {
-
 			return m_EnumProps[prop];
 		}
 

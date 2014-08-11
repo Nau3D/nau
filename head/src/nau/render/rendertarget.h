@@ -11,26 +11,6 @@ namespace nau
 		class RenderTarget
 		{
 		public:
-			//static const int MAXFBOs = 8;
-
-			//enum ColorAttachment {
-			//	COLOR0,
-			//	COLOR1,
-			//	COLOR2,
-			//	COLOR3,
-			//	COLOR4,
-			//	COLOR5,
-			//	COLOR6,
-			//	COLOR7,
-			//	COLOR8,
-			//	COLOR9,
-			//	COLOR10,
-			//	COLOR11,
-			//	COLOR12,
-			//	COLOR13,
-			//	COLOR14,
-			//	COLOR15
-			//};
 
 		protected:
 			unsigned int m_Id; 

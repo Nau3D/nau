@@ -1292,9 +1292,9 @@ GLRenderer::translateFace (Face aFace)
 		case FRONT:
 			return GL_FRONT;
 			break;
-		case FRONT_AND_BACK:
-			return GL_FRONT_AND_BACK;
-			break;
+		//case FRONT_AND_BACK:
+		//	return GL_FRONT_AND_BACK;
+		//	break;
 		case BACK:
 			return GL_BACK;
 			break;

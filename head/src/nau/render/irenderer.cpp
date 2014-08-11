@@ -10,6 +10,16 @@ bool IRenderer::Inited = Init();
 
 bool
 IRenderer::Init() {
+	//Attribs.add(Attribute(MATRIX, "MATRIX", Enums::DataType::ENUM, true, new mat4()));
+	//Attribs.listAdd("MATRIX", "PROJECTION", PROJECTION);
+	//Attribs.listAdd("MATRIX", "MODEL", MODEL);
+	//Attribs.listAdd("MATRIX", "VIEW", VIEW);
+	//Attribs.listAdd("MATRIX", "TEXTURE", TEXTURE);
+	//Attribs.listAdd("MATRIX", "VIEW_MODEL", VIEW_MODEL);
+	//Attribs.listAdd("MATRIX", "PROJECTION_VIEW_MODEL", PROJECTION_VIEW_MODEL);
+	//Attribs.listAdd("MATRIX", "PROJECTION_VIEW", PROJECTION_VIEW);
+	//Attribs.listAdd("MATRIX", "TS05_PVM", TS05_PVM);
+	//Attribs.listAdd("MATRIX", "NORMAL", NORMAL);
 	// MOVE TO irenderable.h
 	//Attribs.add(Attribute(DRAW_PRIMITIVE, "DRAW_PRIMITIVE", Enums::DataType::ENUM, true));
 	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLES", TRIANGLES);

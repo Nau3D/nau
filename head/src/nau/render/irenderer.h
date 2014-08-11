@@ -38,19 +38,18 @@ namespace nau
 
 		public:	
 
-			ENUM(MATRIX_TYPE, 0);
-			ENUM(MATRIX_MODE, 1);
+			ENUM(MATRIX, 0);
 
 			static AttribSet Attribs;
 
 			typedef enum { TRIANGLE_COUNTER } Counters;
 
-			enum TRenderMode {
+			typedef enum  {
 				WIREFRAME_MODE = 0,
 				POINT_MODE,
 				SOLID_MODE,
 				MATERIAL_MODE
-			};
+			} TRenderMode;
 
 			typedef enum {
 				PROJECTION_MATRIX,
@@ -80,17 +79,6 @@ namespace nau
 			static int MaxTextureUnits;
 			static int MaxColorAttachments;
 
-			//enum TextureUnit {
-			//	TEXTURE_UNIT0 = 0,
-			//	TEXTURE_UNIT1,
-			//	TEXTURE_UNIT2,
-			//	TEXTURE_UNIT3,
-			//	TEXTURE_UNIT4,
-			//	TEXTURE_UNIT5,
-			//	TEXTURE_UNIT6,
-			//	TEXTURE_UNIT7,
-			//	COUNT_TEXTUREUNIT
-			//} ;
 
 			typedef enum {
 				CLIP_PLANE0,
@@ -102,7 +90,7 @@ namespace nau
 			typedef enum {
 				FRONT,
 				BACK,
-				FRONT_AND_BACK
+				//FRONT_AND_BACK
 			} Face;
 
 
@@ -117,7 +105,7 @@ namespace nau
 				COLOR_BUFFER = 0x01,
 				DEPTH_BUFFER = 0x02,
 				STENCIL_BUFFER = 0x04
-			} Buffer;
+			} FrameBuffer;
 
 			typedef enum {
 				COLOR_CLEAR, 
@@ -156,8 +144,6 @@ namespace nau
 		// ATOMIC COUNTERS 
 
 		public:
-
-
 
 			/// Number of Atomic Counters and Max ID
 			unsigned int m_AtomicCount = 0, m_AtomicMaxID = 0;
