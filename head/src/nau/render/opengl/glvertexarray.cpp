@@ -23,11 +23,8 @@ GLVertexArray::GLVertexArray(void):
 		m_AttributesLocations[i] = VertexData::NOLOC;
 	}
 
-#if NAU_CORE_OPENGL == 0
-	m_OpenGLOwnAttribs = VertexData::getAttribIndex("texCoord7")+1;
-#else
 	m_OpenGLOwnAttribs = 0;
-#endif
+
 
 
 }

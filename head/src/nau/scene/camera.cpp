@@ -362,6 +362,9 @@ Camera::getProp(int prop, Enums::DataType type) {
 		assert(m_IntProps.count(prop) > 0);
 		return(&(m_IntProps[prop]));
 		break;
+	case Enums::MAT4:
+		assert(m_Mat4Props.count(prop) > 0);
+		return((void *)m_Mat4Props[prop].getMat44().getMatrix());
 	}
 	return NULL;
 }

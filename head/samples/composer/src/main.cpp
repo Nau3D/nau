@@ -287,11 +287,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 			WGL_CONTEXT_MAJOR_VERSION_ARB, major,
             WGL_CONTEXT_MINOR_VERSION_ARB, minor, 
             WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
-#if (NAU_CORE_OPENGL == 1)
             WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-#else
-            WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
-#endif 
+ 
 			0};
 
 	m_Canvas = new GlCanvas (this , -1, attribList, contextAttribList);

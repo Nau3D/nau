@@ -69,28 +69,6 @@ GlState::Init() {
 	Attribs.listAdd("BLEND_EQUATION", "MIN", GL_MIN);
 	Attribs.listAdd("BLEND_EQUATION", "MAX", GL_MAX);
 
-	// NON CORE SETTINGS
-#if NAU_CORE_OPENGL == 0
-	Attribs.setDefault("ALPHA_FUNC", new int(GL_ALWAYS));
-	Attribs.listAdd("ALPHA_FUNC", "LESS", GL_LESS);
-	Attribs.listAdd("ALPHA_FUNC", "NEVER", GL_NEVER);
-	Attribs.listAdd("ALPHA_FUNC", "ALWAYS", GL_ALWAYS);
-	Attribs.listAdd("ALPHA_FUNC", "LEQUAL", GL_LEQUAL);
-	Attribs.listAdd("ALPHA_FUNC", "EQUAL", GL_EQUAL);
-	Attribs.listAdd("ALPHA_FUNC", "GEQUAL", GL_GEQUAL);
-	Attribs.listAdd("ALPHA_FUNC", "GREATER", GL_GREATER);
-	Attribs.listAdd("ALPHA_FUNC", "NOT_EQUAL", GL_NOTEQUAL);
-
-	Attribs.setDefault("FOG_MODE", new int(GL_EXP));
-	Attribs.listAdd("FOG_MODE", "LINEAR", GL_LINEAR);
-	Attribs.listAdd("FOG_MODE", "EXP", GL_EXP);
-	Attribs.listAdd("FOG_MODE", "EXP2", GL_EXP2);
-
-	Attribs.setDefault("FOG_COORD_SRC", new int(GL_FRAGMENT_DEPTH));
-	Attribs.listAdd("FOG_COORD_SRC", "FOG_COORD", GL_FOG_COORD);
-	Attribs.listAdd("FOG_COORD_SRC", "FRAGMENT_DEPTH", GL_FRAGMENT_DEPTH);
-#endif
-
 	return true;
 }
 
@@ -131,20 +109,6 @@ GlState::set() {
 	for ( ; iterBool != m_EnableProps.end(); ++iterBool) {
 	
 		switch(iterBool->first) {
-#if NAU_CORE_OPENGL == 0
-			case FOG:	
-						if (iterBool->second)
-							glEnable(GL_FOG);
-						else
-							glDisable(GL_FOG);
-					break;
-			case ALPHA_TEST: 
-						if (iterBool->second)
-							glEnable(GL_ALPHA_TEST);
-						else
-							glDisable(GL_ALPHA_TEST);
-					break;
-#endif
 			case BLEND: 
 						if (iterBool->second)
 							glEnable(GL_BLEND);
@@ -171,41 +135,12 @@ GlState::set() {
 		}
 	}
 
-#if NAU_CORE_OPENGL  == 0
-	std::map< int, float>::iterator iterFloat;
-	iterFloat = m_FloatProps.begin();
-	for ( ; iterFloat != m_FloatProps.end(); ++iterFloat) {
-	
-		switch(iterFloat->first) {
-		case FOG_START: 
-				glFogf(GL_FOG_START, iterFloat->second);
-				break;
-			case FOG_END: 
-				glFogf(GL_FOG_END, iterFloat->second);
-				break;
-			case FOG_DENSITY: 
-				glFogf(GL_FOG_DENSITY, iterFloat->second);
-				break;
-
-			case ALPHA_VALUE: 
-				// it is the responsability of someone else to ensure that
-				//both fields are defined
-				glAlphaFunc(translate((Func)m_EnumProps[ALPHA_FUNC]),iterFloat->second);
-				break;
-		}
-	}
-#endif		
 
 	std::map< int, vec4>::iterator iterVec4;
 	iterVec4 = m_Float4Props.begin();
 	for ( ; iterVec4 != m_Float4Props.end(); ++iterVec4) {
 	
 		switch(iterVec4->first) {
-#if NAU_CORE_OPENGL  == 0
-			case FOG_COLOR: 
-				glFogfv(GL_FOG_COLOR, toFloatPtr(iterVec4->second));
-				break;
-#endif	
 			case BLEND_COLOR: 
 				glBlendColor(iterVec4->second.x,
 					 iterVec4->second.y,
@@ -233,14 +168,6 @@ GlState::set() {
 	for ( ; iterInt != m_EnumProps.end(); ++iterInt) {
 	
 		switch(iterInt->first) {
-#if NAU_CORE_OPENGL  == 0
-			case FOG_MODE: 
-				glFogi(GL_FOG_MODE, iterInt->second));
-				break;
-			case FOG_COORD_SRC: 
-				glFogi(GL_FOG_COORD_SRC,iterInt->second));
-				break;
-#endif
 			case DEPTH_FUNC: 
 				glDepthFunc(iterInt->second);
 				break;

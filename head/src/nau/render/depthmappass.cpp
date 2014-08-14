@@ -152,23 +152,16 @@ DepthMapPass::doPass (void)
 		}
 	}
 
-	RENDERER->setCullFace( IRenderer::FRONT);
+//	RENDERER->setCullFace( IRenderer::FRONT);
 //	RENDERER->enableDepthTest();
 
-#if NAU_CORE_OPENGL == 0
-	RENDERER->deactivateLighting();
-	RENDERER->disableTexturing();
-#endif
 	RENDERER->setProp(IRenderer::DEPTH_CLAMPING, true);
 
 	RENDERMANAGER->processQueue();
 
 	RENDERER->setProp(IRenderer::DEPTH_CLAMPING, false);
 
-#if NAU_CORE_OPENGL == 0
-	RENDERER->enableTexturing();
-#endif
-	RENDERER->setCullFace (IRenderer::BACK);
+//	RENDERER->setCullFace (IRenderer::BACK);
 	//RENDERER->disableDepthTest();
 }
 

@@ -92,12 +92,6 @@ IProgramValue::Validate(std::string type,std::string context,std::string compone
 		return true;
 	}
 
-	else if (type == "RENDERER" && context == "MATRIX") {
-
-		int id;
-		IRenderer::getPropId(component, &id);
-		return (id != -1);
-	}
 #if NAU_OPENGL_VERSION >=  420
 
 	else if (type == "IMAGE_TEXTURE") {
@@ -110,6 +104,12 @@ IProgramValue::Validate(std::string type,std::string context,std::string compone
 		}
 	}
 #endif
+	else if (type == "RENDERER" && context == "MATRIX") {
+
+		int id;
+		IRenderer::MatrixAttribs.getPropTypeAndId(component, &dt, &id);
+		return (id != -1);
+	}
 	else
 		return false;
 }

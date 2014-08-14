@@ -505,6 +505,9 @@
     <ClCompile Include="..\src\nau\render\iprogramvalue.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -995,6 +998,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\attributeValues.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h">
+      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

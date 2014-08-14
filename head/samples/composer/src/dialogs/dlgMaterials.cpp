@@ -1740,7 +1740,7 @@ void DlgMaterials::updateUniforms(Material *m) {
 	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;
 	progValues = m->getProgramValues();
 
-	GlUniform u;
+	GLUniform u;
 	std::string s;
 	int uni = p->getNumberOfUniforms();
 	p->updateUniforms();
@@ -1750,8 +1750,8 @@ void DlgMaterials::updateUniforms(Material *m) {
 		u = p->getUniform(i);
 		// add uniform (material class will take care of special cases)
 		//s = "DATA(" + u.getName() + "," + u.getProgramValueType() + ")";
-		m->addProgramValue(u.getName(),ProgramValue(u.getName(),"DATA",u.getProgramValueType(),"",0,false));
-		m->setValueOfUniform(u.getName(),u.getValues());
+		m->addProgramValue(u.getName(),ProgramValue(u.getName(),"DATA",u.getStringSimpleType(),"",0,false));
+		m->setValueOfUniform(u.getName(),(float *)u.getValues());
 	}
 
 	for (int i = 0 ; i < 8 ; i++)

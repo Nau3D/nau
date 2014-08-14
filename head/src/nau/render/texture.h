@@ -42,10 +42,10 @@ namespace nau
 			ENUM(INTERNAL_FORMAT, 3);
 			ENUM(COUNT_ENUMPROPERTY, 4);
 			
-			typedef enum { WIDTH, HEIGHT, DEPTH, LEVELS, SAMPLES, LAYERS, COMPONENT_COUNT,ELEMENT_SIZE,
+			typedef enum { ID, WIDTH, HEIGHT, DEPTH, LEVELS, SAMPLES, LAYERS, COMPONENT_COUNT,ELEMENT_SIZE,
 				COUNT_INTPROPERTY} IntProperty;
 
-			typedef enum { ID, COUNT_UINTPROPERTY} UIntProperty;
+			typedef enum { COUNT_UINTPROPERTY} UIntProperty;
 
 			typedef enum { MIPMAP, COUNT_BOOLPROPERTY } BoolProperty;
 
@@ -57,7 +57,7 @@ namespace nau
 
 			std::map<int,int> m_IntProps;
 			//std::map<int,int> m_EnumProps;
-			std::map<int,unsigned int> m_UIntProps;
+			//std::map<int,unsigned int> m_UIntProps;
 			std::map<int,bool> m_BoolProps;
 			std::map<int, vec4> m_Float4Props;
 			std::map<int, float> m_FloatProps;
@@ -69,7 +69,7 @@ namespace nau
 
 			int getPropi(IntProperty prop);
 			//int getPrope(EnumProperty prop);
-			unsigned int getPropui(UIntProperty prop);
+			//unsigned int getPropui(UIntProperty prop);
 			bool getPropb(BoolProperty prop);
 			void *getProp(int prop, Enums::DataType type);
 

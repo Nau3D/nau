@@ -31,8 +31,8 @@ GLTextureMS::GLTextureMS (std::string label, std::string anInternalFormat, int w
 	m_IntProps[ELEMENT_SIZE] = getElementSize();
 
 
-	glGenTextures (1, &(m_UIntProps[ID]));
-	glBindTexture (m_EnumProps[DIMENSION], m_UIntProps[ID]);
+	glGenTextures (1, (GLuint *)&(m_IntProps[ID]));
+	glBindTexture (m_EnumProps[DIMENSION], m_IntProps[ID]);
 
 	glTexImage2DMultisample(m_EnumProps[DIMENSION], samples, m_EnumProps[INTERNAL_FORMAT] , m_IntProps[WIDTH], m_IntProps[HEIGHT], true);
 
@@ -45,6 +45,6 @@ GLTextureMS::GLTextureMS (std::string label, std::string anInternalFormat, int w
 
 GLTextureMS::~GLTextureMS(void)
 {
-	glDeleteTextures (1, &(m_UIntProps[ID]));
+	glDeleteTextures(1, (GLuint *)&(m_IntProps[ID]));
 }
 

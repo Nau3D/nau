@@ -29,10 +29,10 @@ TextureSampler::getPrope(EnumProperty prop) {
 }
 
 
-unsigned int 
-TextureSampler::getPropui(UIntProperty prop) {
+int 
+TextureSampler::getPropi(IntProperty prop) {
 
-	return m_UIntProps[prop];
+	return m_IntProps[prop];
 }
 
 

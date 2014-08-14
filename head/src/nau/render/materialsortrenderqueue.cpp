@@ -148,15 +148,15 @@ MaterialSortRenderQueue::processQueue (void)
 				for (; matGroupsIter != (*materialMapIter).second->end(); ++matGroupsIter) {
 					bool b = (*matGroupsIter).second->isIdentity();
 					if (!b) {
-						renderer->pushMatrix();
-						renderer->applyTransform (*(*matGroupsIter).second);
+						renderer->pushMatrix(IRenderer::MODEL_MATRIX);
+						renderer->applyTransform(IRenderer::MODEL_MATRIX, *(*matGroupsIter).second);
 					}
 					{	PROFILE("Draw");
 						aMat->setUniformValues();
 						renderer->drawGroup ((*matGroupsIter).first);
 					}
 					if (!b)
-						renderer->popMatrix();
+						renderer->popMatrix(IRenderer::MODEL_MATRIX);
 				}
 			}
 			aMat->restore();

@@ -346,7 +346,7 @@ PassOptix::doPass (void)
 
 	for (unsigned int i = 0; i < m_RenderTarget->getNumberOfColorTargets(); ++i) {
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, o_OutputPBO[i]);
-		glBindTexture(GL_TEXTURE_2D, m_RenderTarget->getTexture(i)->getPropui(Texture::ID));
+		glBindTexture(GL_TEXTURE_2D, m_RenderTarget->getTexture(i)->getPropi(Texture::ID));
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 
 						m_RenderTarget->getWidth(), m_RenderTarget->getHeight(),
@@ -469,7 +469,7 @@ PassOptix::optixInit() {
 	iter = o_InputBuffers.begin();
 	for ( ; iter != o_InputBuffers.end(); ++iter) {
 		try {
-			unsigned int id = RESOURCEMANAGER->getTexture(iter->second)->getPropui(Texture::ID);
+			unsigned int id = RESOURCEMANAGER->getTexture(iter->second)->getPropi(Texture::ID);
 			if (RESOURCEMANAGER->getTexture(iter->second)->getPrope(Texture::DIMENSION) == GL_TEXTURE_2D) {
 				optix::TextureSampler rtWorldSpaceTexture = o_Context->createTextureSamplerFromGLImage(id, RT_TARGET_GL_TEXTURE_2D);
 				rtWorldSpaceTexture->setWrapMode(0, RT_WRAP_CLAMP_TO_EDGE);
@@ -494,7 +494,7 @@ PassOptix::optixInit() {
 
 		texID = RESOURCEMANAGER->getTexture(iter2->second.texName);
 //		int format = texID->getPrope(Texture::FORMAT);
-		int tex = texID->getPropui(Texture::ID);
+		int tex = texID->getPropi(Texture::ID);
 
 		unsigned int pbo;
 		glGenBuffers(1, &pbo);

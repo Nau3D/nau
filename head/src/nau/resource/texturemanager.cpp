@@ -188,7 +188,7 @@ TextureManager::getTexture(int id) {
 
 	for (unsigned int i = 0; i < siz; i++) {
 		tex = m_Lib[i];
-		if (id == tex->getPropui(Texture::ID)) {
+		if (id == tex->getPropi(Texture::ID)) {
 			return(tex);
 		}
 	}

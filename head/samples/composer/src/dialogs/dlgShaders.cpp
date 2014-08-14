@@ -327,7 +327,7 @@ DlgShaders::updateShaderAux() {
 	std::map<std::string, nau::material::ProgramValue> progValues;
 	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;
 
-	GlUniform u;
+	GLUniform u;
 	std::string s;
 	pg->GetPage(0);
 	updateProgramProperties(p);
@@ -343,7 +343,7 @@ DlgShaders::updateShaderAux() {
 		p->updateUniforms();
 		for (int i = 0; i < uni; i++) {
 			u = p->getUniform(i);
-			addUniform(wxString(u.getName().c_str()),wxString(u.getProgramValueType().c_str()));
+			addUniform(wxString(u.getName().c_str()),wxString(u.getStringSimpleType().c_str()));
 		}
 	}
 	pg->Refresh();

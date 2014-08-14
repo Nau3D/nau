@@ -42,8 +42,8 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 	m_IntProps[COMPONENT_COUNT] = GLTexture::GetNumberOfComponents(m_EnumProps[FORMAT]);
 	m_IntProps[ELEMENT_SIZE] = GLTexture::GetElementSize(m_EnumProps[FORMAT], m_EnumProps[TYPE]);
 
-	glGenTextures (1, &(m_UIntProps[ID]));
-	glBindTexture (GL_TEXTURE_CUBE_MAP, m_UIntProps[ID]);
+	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
+	glBindTexture (GL_TEXTURE_CUBE_MAP, m_IntProps[ID]);
 
 	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -60,18 +60,13 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 	if (mipmap)
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
-#if NAU_CORE_OPENGL == 0
-	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-	glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-#endif
 	glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
 }
 
 
 GLTextureCubeMap::~GLTextureCubeMap(void)
 {
-	glDeleteTextures (1, &(m_UIntProps[ID]));
+	glDeleteTextures(1, (GLuint *)&(m_IntProps[ID]));
 }
 
 
@@ -102,8 +97,8 @@ GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts)
 
 	RENDERER->addTexture(aUnit, this);
 	glActiveTexture (GL_TEXTURE0+aUnit);
-	glBindTexture(GL_TEXTURE_CUBE_MAP,m_UIntProps[ID]);
-	glBindSampler(aUnit, ts->getPropui(TextureSampler::ID));
+	glBindTexture(GL_TEXTURE_CUBE_MAP,m_IntProps[ID]);
+	glBindSampler(aUnit, ts->getPropi(TextureSampler::ID));
 
 	ts->prepare(aUnit, GL_TEXTURE_CUBE_MAP);
 }
@@ -118,17 +113,6 @@ GLTextureCubeMap::restore(unsigned int aUnit)
 
 #if NAU_OPENGL_VERSION > 320
 	glBindSampler(aUnit, 0);
-#endif
-#if NAU_CORE_OPENGL == 0
-	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-
-	glDisable(GL_TEXTURE_GEN_S);
-    glDisable(GL_TEXTURE_GEN_T);
-    glDisable(GL_TEXTURE_GEN_R);
-
-	glDisable(GL_TEXTURE_CUBE_MAP);
 #endif
 }
 

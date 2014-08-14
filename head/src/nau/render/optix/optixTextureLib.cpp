@@ -27,9 +27,9 @@ OptixTextureLib::addTextures(Material *m) {
 	
 		t = m->getTexture(i);
 
-		if (t != NULL && !m_TextureLib.count(t->getPropui(Texture::ID))) {
+		if (t != NULL && !m_TextureLib.count(t->getPropi(Texture::ID))) {
 	
-			s = t->getPropui(Texture::ID);
+			s = t->getPropi(Texture::ID);
 		
 			m_TextureLib[s] = m_Context->createTextureSamplerFromGLImage(s, RT_TARGET_GL_TEXTURE_2D);
 			mode = m->getTextureSampler(i)->getPrope(TextureSampler::WRAP_S);
@@ -121,9 +121,9 @@ OptixTextureLib::applyTextures(optix::GeometryInstance gi, nau::material::Materi
 	
 		t = mat->getTexture(i);
 
-		if (t != NULL && m_TextureLib.count(t->getPropui(Texture::ID))) {
+		if (t != NULL && m_TextureLib.count(t->getPropi(Texture::ID))) {
 			s = "texi";s[3] = i+48;
-			gi[s]->setTextureSampler(m_TextureLib[t->getPropui(Texture::ID)]);
+			gi[s]->setTextureSampler(m_TextureLib[t->getPropi(Texture::ID)]);
 		}
 	  }
 	}

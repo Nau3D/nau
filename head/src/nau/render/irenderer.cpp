@@ -1,25 +1,27 @@
 #include <nau/render/irenderer.h>
+#include <nau/math/mat3.h>
 
 using namespace nau;
+using namespace nau::math;
 
 int IRenderer::MaxTextureUnits;
 int IRenderer::MaxColorAttachments;
 
-AttribSet IRenderer::Attribs;
+AttribSet IRenderer::MatrixAttribs;
 bool IRenderer::Inited = Init();
 
 bool
 IRenderer::Init() {
-	//Attribs.add(Attribute(MATRIX, "MATRIX", Enums::DataType::ENUM, true, new mat4()));
-	//Attribs.listAdd("MATRIX", "PROJECTION", PROJECTION);
-	//Attribs.listAdd("MATRIX", "MODEL", MODEL);
-	//Attribs.listAdd("MATRIX", "VIEW", VIEW);
-	//Attribs.listAdd("MATRIX", "TEXTURE", TEXTURE);
-	//Attribs.listAdd("MATRIX", "VIEW_MODEL", VIEW_MODEL);
-	//Attribs.listAdd("MATRIX", "PROJECTION_VIEW_MODEL", PROJECTION_VIEW_MODEL);
-	//Attribs.listAdd("MATRIX", "PROJECTION_VIEW", PROJECTION_VIEW);
-	//Attribs.listAdd("MATRIX", "TS05_PVM", TS05_PVM);
-	//Attribs.listAdd("MATRIX", "NORMAL", NORMAL);
+	MatrixAttribs.add(Attribute(PROJECTION,	"PROJECTION", Enums::DataType::MAT4, true, new mat4()));
+	MatrixAttribs.add(Attribute(MODEL, "MODEL", Enums::DataType::MAT4, true, new mat4()));
+	MatrixAttribs.add(Attribute(VIEW, "VIEW", Enums::DataType::MAT4, true, new mat4()));
+	MatrixAttribs.add(Attribute(TEXTURE, "TEXTURE", Enums::DataType::MAT4, true, new mat4()));
+	MatrixAttribs.add(Attribute(VIEW_MODEL, "VIEW_MODEL", Enums::DataType::MAT4, true, new mat4()));
+	MatrixAttribs.add(Attribute(PROJECTION_VIEW_MODEL, "PROJECTION_VIEW_MODEL", Enums::DataType::MAT4, true, new mat4()));
+	MatrixAttribs.add(Attribute(PROJECTION_VIEW, "PROJECTION_VIEW", Enums::DataType::MAT4, true, new mat4()));
+	MatrixAttribs.add(Attribute(TS05_PVM, "TS05_PVM", Enums::DataType::MAT4, true, new mat4()));
+	MatrixAttribs.add(Attribute(NORMAL, "NORMAL", Enums::DataType::MAT3, true, new mat3()));
+
 	// MOVE TO irenderable.h
 	//Attribs.add(Attribute(DRAW_PRIMITIVE, "DRAW_PRIMITIVE", Enums::DataType::ENUM, true));
 	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLES", TRIANGLES);
@@ -36,7 +38,7 @@ IRenderer::Init() {
 
 void 
 IRenderer::setPrope(EnumProperty prop, int value){
-	assert(Attribs.getName(prop, Enums::DataType::ENUM) != "" && "invalid option for an enum") ;
+	assert(MatrixAttribs.getName(prop, Enums::DataType::ENUM) != "" && "invalid option for an enum") ;
 	m_EnumProps[prop] = value;
 }
 
@@ -49,7 +51,7 @@ IRenderer::setProp(int prop, Enums::DataType type, void *value) {
 		// prop must exist
 		assert(m_EnumProps.count(prop) && "invalid property");
 		// value must be in the list of valid enums
-		assert(Attribs.getName(prop, Enums::DataType::ENUM) != "" && "invalid value");
+		assert(MatrixAttribs.getName(prop, Enums::DataType::ENUM) != "" && "invalid value");
 		m_EnumProps[prop] = *(int *)value;
 		break;
 	default:

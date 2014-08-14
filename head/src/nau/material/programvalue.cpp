@@ -467,248 +467,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 	}
 
 
-	//if (0 == valueof.compare ("ID")) {
-	//	m_ValueOf = ID;
-	//	m_ValueType = Enums::INT;
-	//	m_Cardinality = 1;
-	//	m_IntValue = (int *)malloc(sizeof(int));
-	//	assert(false);
-	//} 
-	//else if (0 == valueof.compare ("UNIT")) {
-	//	m_ValueOf = UNIT;
-	//	m_ValueType = Enums::SAMPLER;
-	//	m_Cardinality = 1;
-	//	m_IntValue = (int *)malloc(sizeof(int));
-	//	assert(false);
-	//} 
-	//else if (0 == valueof.compare("COUNT")) {
-	//	m_ValueOf = COUNT;
-	//	m_ValueType = Enums::INT;
-	//	m_Cardinality = 1;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	//	assert(false);
-	//}
 
-	//else if (0 == valueof.compare ("POSITION")) {
-	//	m_ValueOf = POSITION;
-	//	m_ValueType = Enums::VEC3;
-	//	m_Cardinality = 3;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("DIRECTION")) {
-	//	m_ValueOf = DIRECTION;
-	//	m_ValueType = Enums::VEC4;
-	//	m_Cardinality = 4;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("VIEW")) {
-	//	m_ValueOf = VIEW;
-	//	m_ValueType = Enums::VEC3;
-	//	m_Cardinality = 3;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("UP")) {
-	//	m_ValueOf = UP;
-	//	m_ValueType = Enums::VEC3;
-	//	m_Cardinality = 3;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("DIFFUSE")) {
-	//	m_ValueOf = DIFFUSE;
-	//	m_ValueType = Enums::VEC4;
-	//	m_Cardinality = 4;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("AMBIENT")) {
-	//	m_ValueOf = AMBIENT;
-	//	m_ValueType = Enums::VEC4;
-	//	m_Cardinality = 4;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("SPECULAR")) {
-	//	m_ValueOf = SPECULAR;
-	//	m_ValueType = Enums::VEC4;
-	//	m_Cardinality = 4;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("EMISSION")) {
-	//	m_ValueOf = EMISSION;
-	//	m_ValueType = Enums::VEC4;
-	//	m_Cardinality = 4;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("SHININESS")) {
-	//	m_ValueOf = SHININESS;
-	//	m_ValueType = Enums::FLOAT;
-	//	m_Cardinality = 1;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("NORMAL_MATRIX")) {
-	//	m_ValueOf = NORMALMATRIX;
-	//	m_ValueType = Enums::MAT3;
-	//	m_Cardinality = 9;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("PROJECTION_VIEW_MATRIX")) {
-	//	m_ValueOf = PROJECTIONVIEWMATRIX;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("VIEW_MATRIX")) {
-	//	m_ValueOf = VIEWMATRIX;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("MODEL_MATRIX")) {
-	//	m_ValueOf = MODELMATRIX;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("PROJECTION_MATRIX")) {
-	//	m_ValueOf = PROJECTIONMATRIX;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("VIEW_MODEL_MATRIX")) {
-	//	m_ValueOf = VIEWMODELMATRIX;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("PROJECTION_VIEW_MODEL_MATRIX")) {
-	//	m_ValueOf = PROJECTIONVIEWMODELMATRIX;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("TEXTURE_MATRIX")) {
-	//	m_ValueOf = TEXTUREMATRIX;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//} 
-	//else if (0 == valueof.compare ("TS05_MVPMATRIX")) {
-	//	m_ValueOf = TS05_MVPMATRIX;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//}
-	//else if (0 == valueof.compare ("MAT4")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::MAT4;
-	//	m_Cardinality = 16;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	////  m_Value = textutil::ParseFloats (m_Context);
-	//} 
-	//else if (0 == valueof.compare ("MAT3")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::MAT3;
-	//	m_Cardinality = 9;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	////  m_Value = textutil::ParseFloats (m_Context);
-	//} 
-	//else if (0 == valueof.compare ("MAT2")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::MAT2;
-	//	m_Cardinality = 4;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	////  m_Value = textutil::ParseFloats (m_Context);
-	//} 
-	//else if (0 == valueof.compare ("FLOAT")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::FLOAT;
-	//	m_Cardinality = 1;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	//	m_Value[0] = textutil::ParseFloat (m_Context);
-	//}
-	//else if (0 == valueof.compare ("VEC2")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::VEC2;
-	//	m_Cardinality = 2;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	////  m_Value = textutil::ParseFloats (m_Context);
-	//}
-	//else if (0 == valueof.compare ("VEC3")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::VEC3;
-	//	m_Cardinality = 3;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	////  m_Value = textutil::ParseFloats (m_Context);
-	//}
-	//else if (0 == valueof.compare ("VEC4")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::VEC4;
-	//	m_Cardinality = 4;
-	//	m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-	////  m_Value = textutil::ParseFloats (m_Context);
-	//}
-	//else if (0 == valueof.compare ("SAMPLER")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::SAMPLER;
-	//	m_Cardinality = 1;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	//	m_IntValue[0] = textutil::ParseInt (m_Context);
-	//}
-	//else if (0 == valueof.compare ("INT")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::INT;
-	//	m_Cardinality = 1;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	//	m_IntValue[0] = textutil::ParseInt (m_Context);
-	//}
-	//else if (0 == valueof.compare ("BOOL")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::BOOL;
-	//	m_Cardinality = 1;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	//	m_IntValue[0] = textutil::ParseInt (m_Context);
-	//}
-	//else if (0 == valueof.compare ("INT_VEC2")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::IVEC2;
-	//	m_Cardinality = 2;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	////  m_IntValue = textutil::ParseInts (m_Context);
-	//}
-	//else if (0 == valueof.compare ("BOOL_VEC2")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::BVEC2;
-	//	m_Cardinality = 2;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	////  m_IntValue = textutil::ParseInts (m_Context);
-	//}
-	//else if (0 == valueof.compare ("INT_VEC3")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::IVEC3;
-	//	m_Cardinality = 3;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	////  m_IntValue = textutil::ParseInts (m_Context);
-	//}
-	//else if (0 == valueof.compare ("BOOL_VEC3")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::BVEC3;
-	//	m_Cardinality = 3;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	////  m_IntValue = textutil::ParseInts (m_Context);
-	//}
-	//else if (0 == valueof.compare ("INT_VEC4")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::IVEC4;
-	//	m_Cardinality = 4;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	////  m_IntValue = textutil::ParseInts (m_Context);
-	//}
-	//else if (0 == valueof.compare ("BOOL_VEC4")) {
-	//	m_ValueOf = USERDATA;
-	//	m_ValueType = Enums::BVEC4;
-	//	m_Cardinality = 4;
-	//	m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-	////  m_IntValue = textutil::ParseInts (m_Context);
-	//}
 
 }
 
@@ -796,51 +555,16 @@ ProgramValue::getCardinality (void)
 void*
 ProgramValue::getValues (void)
 {
-   static SimpleTransform returnTransform; //What an ugly, ugly thing to do...
-
    switch (m_Type) {
 
 	   case CAMERA: {
 		  Camera *cam = RENDERMANAGER->getCamera (m_Context);
-				
-		  switch(m_ValueType) {
-				case Enums::VEC4:
-					return(float *)(&(cam->getPropf4((Camera::Float4Property)m_ValueOf))); 
-
-				case Enums::FLOAT:
-					m_Value[0] = cam->getPropf((Camera::FloatProperty)m_ValueOf);
-					return m_Value;
-
-				case Enums::MAT4:
-					return (float *)(&(cam->getPropm4((Camera::Mat4Property)m_ValueOf)));
-					 
-				default: return 0; 
-		   
-		   }
-
+		  return cam->getProp(m_ValueOf, m_ValueType);
 	   }
 		break;
 	   case LIGHT: {
 			Light *light = RENDERMANAGER->getLight (m_Context);
-			   switch(m_ValueType) {
-					case Enums::VEC4:
-						return(float *)(&(light->getPropf4((Light::Float4Property)m_ValueOf))); 
-	
-					case Enums::FLOAT:
-						m_Value[0] = light->getPropf((Light::FloatProperty)m_ValueOf);
-						return m_Value;
-
-					case Enums::ENUM:
-						m_IntValue[0] = light->getPrope((Light::EnumProperty)m_ValueOf);
-						return m_IntValue;
-
-					case Enums::BOOL:
-						m_IntValue[0] = light->getPropb((Light::BoolProperty)m_ValueOf);
-						return m_IntValue;
-
-					default: return 0; 
-			   
-			   }
+			return light->getProp(m_ValueOf, m_ValueType);
 	   }
 		break;
 	   case TEXTURE: {
@@ -897,17 +621,6 @@ ProgramValue::getValues (void)
 		   if ("MATRIX" == m_Context) {
 
 			   return const_cast<float*>(RENDERER->getMatrix((IRenderer::MatrixType)m_ValueOf));
-
-					//case NORMALMATRIX: return const_cast<float*>(RENDERER->getNormalMatrix());				
-					//case VIEWMATRIX: return const_cast<float*>(RENDERER->getMatrix(IRenderer::VIEW));
-					//case MODELMATRIX: return const_cast<float*>(RENDERER->getMatrix(IRenderer::MODEL));
-					//case PROJECTIONMATRIX: return const_cast<float*>(RENDERER->getMatrix(IRenderer::PROJECTION));
-					//case TEXTUREMATRIX: return const_cast<float*>(RENDERER->getMatrix(IRenderer::TEXTURE));
-					//case VIEWMODELMATRIX: return const_cast<float*>(RENDERER->getMatrix(IRenderer::VIEWMODEL));
-					//case PROJECTIONVIEWMODELMATRIX: return const_cast<float*>(RENDERER->getMatrix(IRenderer::PROJECTIONVIEWMODEL));
-					//case Camera::TS05_PVM_MATRIX: return const_cast<float*>(RENDERER->getMatrix(IRenderer::TS05_PVM));
-				//	default: return 0;
-				//}
 		   }
 		   else if ("COLOR" == m_Context) {
 					
@@ -972,47 +685,12 @@ ProgramValue::getValues (void)
 					m_IntValue[0] = RENDERER->getLightCount();
 					return m_IntValue;
 				}
-			   if (RENDERER->getLightCount() == 0)
-				   return 0;
-
-			   switch(m_ValueType) {
-					case Enums::VEC4:
-						return((float *)&(RENDERER->getLight(m_Id)->getPropf4((Light::Float4Property)m_ValueOf)));//	getLightfvComponent(m_Id, (Light::Float4Property)m_ValueOf)); 
-	
-					case Enums::FLOAT:
-						m_Value[0] = RENDERER->getLight(m_Id)->getPropf((Light::FloatProperty)m_ValueOf);
-						return m_Value;
-
-					case Enums::ENUM:
-						m_IntValue[0] = RENDERER->getLight(m_Id)->getPrope((Light::EnumProperty)m_ValueOf);
-						return m_IntValue;
-
-					case Enums::BOOL:
-						m_IntValue[0] = RENDERER->getLight(m_Id)->getPropb((Light::BoolProperty)m_ValueOf);
-						return m_IntValue;
-
-					default: return 0; 
-			   
-			   }
+			   return RENDERER->getLight(m_Id)->getProp(m_ValueOf, m_ValueType);
 		   }
 		   else if ("CAMERA" == m_Context) {
 
-			  Camera *cam = RENDERER->getCamera ();
-				
-			  switch(m_ValueType) {
-					case Enums::VEC4:
-						return(float *)(&(cam->getPropf4((Camera::Float4Property)m_ValueOf))); 
-
-					case Enums::FLOAT:
-						m_Value[0] = cam->getPropf((Camera::FloatProperty)m_ValueOf);
-						return m_Value;
-
-					case Enums::MAT4:
-						return (float *)(&(cam->getPropm4((Camera::Mat4Property)m_ValueOf)));
-					 
-					default: return 0; 
-		   
-			   }
+			  Camera *cam = RENDERER->getCamera();				
+			  return cam->getProp(m_ValueOf, m_ValueType);
 		   }
 		   else if ("PASS" == m_Context) {
 		   

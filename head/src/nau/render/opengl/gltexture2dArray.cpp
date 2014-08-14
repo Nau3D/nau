@@ -31,8 +31,8 @@ GLTexture2DArray::GLTexture2DArray (std::string label, std::string anInternalFor
 	m_IntProps[ELEMENT_SIZE] = getElementSize();
 
 
-	glGenTextures (1, &(m_UIntProps[ID]));
-	glBindTexture (m_EnumProps[DIMENSION], m_UIntProps[ID]);
+	glGenTextures (1, (GLuint *)&(m_IntProps[ID]));
+	glBindTexture (m_EnumProps[DIMENSION], m_IntProps[ID]);
 
 	glTexStorage3D(m_EnumProps[DIMENSION], 1, m_EnumProps[INTERNAL_FORMAT] , m_IntProps[WIDTH], m_IntProps[HEIGHT], layers);
 
@@ -45,6 +45,6 @@ GLTexture2DArray::GLTexture2DArray (std::string label, std::string anInternalFor
 
 GLTexture2DArray::~GLTexture2DArray(void)
 {
-	glDeleteTextures (1, &(m_UIntProps[ID]));
+	glDeleteTextures(1, (GLuint *)&(m_IntProps[ID]));
 }
 

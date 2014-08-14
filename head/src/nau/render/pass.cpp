@@ -213,7 +213,7 @@ Pass::prepareBuffers() {
 		clear |= IRenderer::STENCIL_BUFFER;
 	}
 
-	RENDERER->clear (clear);
+	RENDERER->clearFrameBuffer(clear);
 
 	if (m_BoolProp[IRenderer::DEPTH_ENABLE]) {
 		RENDERER->setProp(IRenderer::DEPTH_ENABLE,true);
@@ -242,9 +242,7 @@ Pass::prepare (void)
 	}
 
 	setupCamera();
-
 	prepareBuffers();
-
 	setupLights();
 }
 
@@ -278,19 +276,9 @@ Pass::doPass (void)
 	std::vector<nau::scene::SceneObject*> sceneObjects;
 
 	const float *a = RENDERER->getMatrix(IRenderer::PROJECTION_VIEW_MODEL);
-	//const float *b = RENDERER->getProjectionModelviewMatrix();
 	camFrustum.setFromMatrix (a);
 	aCam = RENDERMANAGER->getCamera (m_CameraName);
 	RENDERMANAGER->clearQueue();
-
-	//RENDERER->setProp(IRenderer::DEPTH_ENABLE, true);
-
-#if (NAU_CORE_OPENGL == 0)
-	RENDERER->enableTexturing();
-	if (m_Lights.size()) {
-		RENDERER->activateLighting();
-	}
-#endif
 
 	scenesIter = m_SceneVector.begin();
 
@@ -309,10 +297,6 @@ Pass::doPass (void)
 	}
 	RENDERMANAGER->processQueue();	
 
-#if (NAU_CORE_OPENGL == 0)
-	RENDERER->disableTexturing();
-	RENDERER->deactivateLighting();
-#endif
 }
 
 
@@ -532,15 +516,7 @@ Pass::setupLights (void)
 
 		Light *l = RENDERMANAGER->getLight (*lightsIter);
 
-#if NAU_CORE_OPENGL == 0
-		if (l->getPropb(Light::ENABLED)) {
-			RENDERER->activateLighting();
-		}
-#endif
 		RENDERER->addLight (*l);
-#if NAU_CORE_OPENGL == 0
-		RENDERER->positionLight (*l);
-#endif
 	}
 }
 

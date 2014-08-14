@@ -51,6 +51,7 @@ namespace nau
 			unsigned int *getAtomicCounterValues();
 #endif
 
+
 		protected:
 			static bool Init();
 			static bool Inited;
@@ -71,7 +72,7 @@ namespace nau
 			// RENDER
 			void setRenderMode (TRenderMode mode);
 			void drawGroup (nau::material::IMaterialGroup* aMatGroup);
-			void clear (unsigned int b);
+			void clearFrameBuffer(unsigned int b);
 
 			void setDepthClearValue(float v);
 			void setDepthFunc(int f);
@@ -103,17 +104,16 @@ namespace nau
 			void setViewport(nau::render::Viewport *vp);	
 
 			// MATRICES
-			void setMatrixMode (MatrixMode mode);
-			void loadIdentity (void);
-			const float *getMatrix(MatrixType mode);
+			void loadIdentity(MatrixMode mode);
+			const float *getMatrix(MatrixType aType);
 
-			void translate (nau::math::vec3 &aVec);
-			void scale (nau::math::vec3 &aVec);
-			void rotate(float angle, nau::math::vec3 &axis);
-			void applyTransform (const nau::math::ITransform &aTransform);
+			void pushMatrix(MatrixMode mode);
+			void popMatrix(MatrixMode mode);
 
-			void pushMatrix (void);
-			void popMatrix (void);
+			void applyTransform(MatrixMode mode, const nau::math::ITransform &aTransform) ;
+			void translate(MatrixMode mode, nau::math::vec3 &aVec) ;
+			void scale(MatrixMode mode, nau::math::vec3 &aVec) ;
+			void rotate(MatrixMode mode, float angle, nau::math::vec3 &axis) ;
 
 
 			virtual float getDepthAtPoint(int x, int y);
@@ -132,12 +132,6 @@ namespace nau
 			int getTextureCount();
 			void setActiveTextureUnit(unsigned int aTexUnit);
 
-#if NAU_CORE_OPENGL != 1
-			void enableTexturing (void);
-			void disableTexturing (void);
-			void enableTextureCoordsGen (void);
-			void disableTextureCoordsGen (void);
-#endif
 			// STATE
 			void setState (IState *aState);
 			void setDefaultState();
@@ -160,39 +154,13 @@ namespace nau
 
 
 			//CLIP PLANES
-			void activateUserClipPlane (ClipPlane aClipPlane);
-			void setUserClipPlane (ClipPlane aClipPlane, double *plane);
-			void deactivateUserClipPlane (ClipPlane aClipPlane);
+			void activateUserClipPlane(unsigned int  aClipPlane);
+			void setUserClipPlane(unsigned int  aClipPlane, double *plane);
+			void deactivateUserClipPlane(unsigned int  aClipPlane);
 
 			nau::math::vec3 readpixel (int x, int y);
 
 			void flush (void);
-
-#if NAU_CORE_OPENGL == 0
-			// FOG
-			virtual void enableFog (void); 
-			virtual void disableFog (void);
-
-			//LIGHTING
-			virtual void activateLighting (void);
-			virtual void deactivateLighting (void);
-			virtual void positionLight (nau::scene::Light& aLight);
-#endif
-			//void setDepthMask(bool b);
-			//void enableDepthTest (void);
-			//void disableDepthTest (void);
-			//void enableDepthClamping (void);
-			//void disableDepthClamping (void);
-			//virtual void setCore(bool flag);
-			//static void getPropTypeAndId(std::string &s, MatrixType *dt , int *id);
-			//virtual void setFixedFunction (bool fixed);
-			// STEREO
-			//void enableStereo (void);
-			//void disableStereo (void);
-			//bool isStereo (void);
-
-			// MISC
-			//void renderBoundingVolume (const nau::geometry::IBoundingVolume* aBoundingVolume);
 
 		private:
 
@@ -209,7 +177,6 @@ namespace nau
 			std::vector<ImageTexture *> m_ImageTextures;
 #endif
 			std::vector<SimpleTransform> m_Matrices;
-			IRenderer::MatrixMode m_MatrixMode;
 			ITransform *m_CurrentMatrix;
 
 			// pre alocated memory to return composed matrices
@@ -234,19 +201,8 @@ namespace nau
 
 
 			GLenum translateFace (Face aFace);
-		//	GLenum translateMaterialComponent (ColorMaterial::ColorComponent aMaterialComponent);
 			unsigned int translateDrawingPrimitive(unsigned int aDrawPrimitive);
 
-			//bool m_FixedFunction;
-			//bool m_Stereo;
-			//void doRender (nau::scene::ISceneObject *aRenderable, unsigned int buffers, int priority);
-			//std::multimap<int, nau::render::IRenderable*> m_RenderQueue;
-			//void setDepthCompare();
-			//std::map<int, std::map<Material*, std::vector<std::pair<nau::materials::IMaterialGroup*, nau::math::ITransform*>>*>* > m_RenderQueue;
-			//void drawElements (unsigned int size, std::vector<unsigned int>& indices, unsigned int aDrawingPrimitive = TRIANGLES);
-			//virtual void setMaterialProvider (nau::scene::IScene *aScene); /***MARK***/ //!!!!!!!
-			//virtual void activateDefaultLight (void);
-			//virtual void deactivateDefaultLight (void);
 		};
 	};
 };

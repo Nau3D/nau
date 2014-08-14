@@ -223,6 +223,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp" />
@@ -339,7 +340,10 @@
     <ClCompile Include="..\src\nau\render\opengl\glteximage.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltextureCubeMap.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\gluniform.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\gluniform.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glvertexarray.cpp" />
     <ClCompile Include="..\src\nau\resource\resourcemanager.cpp" />
     <ClCompile Include="..\src\nau\resource\texturemanager.cpp" />
@@ -431,6 +435,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h" />
@@ -552,7 +557,10 @@
     <ClInclude Include="..\src\nau\render\opengl\glteximage.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltextureCubeMap.h" />
-    <ClInclude Include="..\src\nau\render\opengl\gluniform.h" />
+    <ClInclude Include="..\src\nau\render\opengl\gluniform.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glvertexarray.h" />
     <ClInclude Include="..\src\nau\resource\resourcemanager.h" />
     <ClInclude Include="..\src\nau\resource\texturemanager.h" />

@@ -223,7 +223,7 @@ GLRenderTarget::attachColorTexture (Texture* aTexture, unsigned int colorAttachm
 	  if (-1 == (int) m_RenderTargets[colorAttachment]) {
 			m_RenderTargets[m_Color] = GL_COLOR_ATTACHMENT0 + colorAttachment;
 		}
-		glFramebufferTexture  (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment, aTexture->getPropui(Texture::ID), 0);
+		glFramebufferTexture  (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment, aTexture->getPropi(Texture::ID), 0);
 }
 
 
@@ -239,7 +239,7 @@ GLRenderTarget::dettachColorTexture (unsigned int colorAttachment)
 void 
 GLRenderTarget::attachDepthStencilTexture (Texture* aTexture, GLuint type)
 {
-	glFramebufferTexture (GL_FRAMEBUFFER, type, aTexture->getPropui(Texture::ID), 0);
+	glFramebufferTexture (GL_FRAMEBUFFER, type, aTexture->getPropi(Texture::ID), 0);
 }
 
 

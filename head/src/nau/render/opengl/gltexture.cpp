@@ -171,8 +171,8 @@ GLTexture::GLTexture(std::string label, std::string anInternalFormat, int width,
 	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 
-	glGenTextures (1, &(m_UIntProps[ID]));
-	glBindTexture (m_EnumProps[DIMENSION], m_UIntProps[ID]);
+	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
+	glBindTexture (m_EnumProps[DIMENSION], m_IntProps[ID]);
 
 	m_BoolProps[MIPMAP] = false;
 
@@ -208,8 +208,8 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 	m_IntProps[COMPONENT_COUNT] = getNumberOfComponents();
 	m_IntProps[ELEMENT_SIZE] = getElementSize();
 
-	glGenTextures (1, &(m_UIntProps[ID]));
-	glBindTexture (m_EnumProps[DIMENSION], m_UIntProps[ID]);
+	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
+	glBindTexture (m_EnumProps[DIMENSION], m_IntProps[ID]);
 
 	glTexImage2D(m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
  		m_EnumProps[FORMAT], m_EnumProps[TYPE], data);
@@ -231,7 +231,7 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 
 GLTexture::~GLTexture(void)
 {
-	glDeleteTextures (1, &( m_UIntProps[ID]));
+	glDeleteTextures(1, (GLuint *)&(m_IntProps[ID]));
 }
 
 
@@ -240,7 +240,7 @@ GLTexture::prepare(unsigned int aUnit, TextureSampler *ts) {
 
 	RENDERER->addTexture(aUnit, this);
 	glActiveTexture (GL_TEXTURE0+aUnit);
-	glBindTexture(m_EnumProps[DIMENSION],m_UIntProps[ID]);
+	glBindTexture(m_EnumProps[DIMENSION],m_IntProps[ID]);
 
 	ts->prepare(aUnit, m_EnumProps[DIMENSION]);
 
@@ -259,85 +259,4 @@ GLTexture::restore(unsigned int aUnit) {
 	GLTextureSampler::restore(aUnit, m_EnumProps[DIMENSION]);
 }
 
-
-//GLTexture::GLTexture(std::string label) : Texture (label)
-//{
-//	m_BoolProps[MIPMAP] = false;
-//}
-
-
-
-//void 
-//GLTexture::setData(std::string anInternalFormat, std::string aFormat, std::string aType, 
-//				   int width, int height, unsigned char * data) 
-//{
-//
-//	m_EnumProps[DIMENSION] = GL_TEXTURE_2D;
-//	m_EnumProps[FORMAT] = Attribs.getListValueOp(FORMAT, aFormat);
-//	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
-//	m_EnumProps[TYPE] = Attribs.getListValueOp(TYPE, aType);
-//
-//	m_IntProps[WIDTH] = width;
-//	m_IntProps[HEIGHT] = height;
-//	m_IntProps[DEPTH] = 1;
-//	m_IntProps[COMPONENT_COUNT] = getNumberOfComponents();
-//	m_IntProps[ELEMENT_SIZE] = getElementSize();
-//
-//	glGenTextures (1, &(m_UIntProps[ID]));
-//	glBindTexture (m_EnumProps[DIMENSION],m_UIntProps[ID]);
-//	glTexImage2D (m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], 
-//						width, height, 0, m_EnumProps[FORMAT], m_EnumProps[TYPE], data);
-//
-//
-//	glBindTexture (m_EnumProps[DIMENSION], 0);
-//
-//	m_BoolProps[MIPMAP] = false;
-//}
-
-
-
-
-//int 
-//GLTexture::getIndex(std::string StringArray[], int IntArray[], std::string aString)
-//{
-//	int i;
-//	for (i = 0; (IntArray[i] != GL_INVALID_ENUM) && (StringArray[i].compare(aString)); i++) ;
-////		i++;
-//	return IntArray[i];
-//}
-
-
-/*
-void 
-GLTexture::enableCompareToTexture (void)
-{
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	//glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
-}
-
-void 
-GLTexture::disableCompareToTexture (void)
-{
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_NONE);
-}
-*/
-
-
-
-
-
-//void 
-//GLTexture::enableObjectSpaceCoordGen (void)
-//{
-//	glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-//	glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-//}
-//
-//void 
-//GLTexture::generateObjectSpaceCoords (TextureCoord aCoord, float *plane)
-//{
-//	glTexGenfv (translateCoord (aCoord), GL_OBJECT_PLANE, plane);
-//}
 

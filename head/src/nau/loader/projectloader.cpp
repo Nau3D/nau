@@ -3490,7 +3490,7 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 			NAU_THROW("Library %s: Material %s: Texture %s in image texture is not defined", aLib->getName().c_str(),  aMat->getName().c_str(), pTextureName);
 		
 		Texture *t = RESOURCEMANAGER->getTexture(s_pFullName);
-		int texID = t->getPropui(Texture::ID);
+		int texID = t->getPropi(Texture::ID);
 
 		aMat->attachImageTexture(t->getLabel(), unit, texID);
 		// Reading Image Texture Attributes

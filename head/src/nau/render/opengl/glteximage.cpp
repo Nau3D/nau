@@ -60,7 +60,7 @@ GLTexImage::~GLTexImage(void)
 void
 GLTexImage::update(void) {
 	
-	glBindTexture(m_Texture->getPrope(Texture::DIMENSION),m_Texture->getPropui(Texture::ID));
+	glBindTexture(m_Texture->getPrope(Texture::DIMENSION),m_Texture->getPropi(Texture::ID));
 	glGetTexImage(m_Texture->getPrope(Texture::DIMENSION),0,m_Texture->getPrope(Texture::FORMAT),m_Texture->getPrope(Texture::TYPE),m_Data);
 }
 

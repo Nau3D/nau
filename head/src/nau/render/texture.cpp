@@ -16,9 +16,8 @@ using namespace nau;
 bool
 Texture::Init() {
 
-	// UINT
-	Attribs.add(Attribute(ID, "ID", Enums::DataType::UINT, true, new int(-1)));
 	// INT
+	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(-1)));
 	Attribs.add(Attribute(WIDTH, "WIDTH", Enums::DataType::INT, true, new int (1)));
 	Attribs.add(Attribute(HEIGHT, "HEIGHT", Enums::DataType::INT, true, new int (1)));
 	Attribs.add(Attribute(DEPTH, "DEPTH", Enums::DataType::INT, true, new int(1)));
@@ -182,7 +181,7 @@ Texture::initArrays() {
 
 	Attribs.initAttribInstanceEnumArray(m_EnumProps);
 	Attribs.initAttribInstanceIntArray(m_IntProps);
-	Attribs.initAttribInstanceUIntArray(m_UIntProps);
+//	Attribs.initAttribInstanceUIntArray(m_UIntProps);
 }
 
 
@@ -260,12 +259,12 @@ Texture::getPropi(IntProperty prop)
 //}
 
 
-unsigned int
-Texture::getPropui(UIntProperty prop) 
-{
-	assert(m_UIntProps.find(prop) != m_UIntProps.end());
-	return(m_UIntProps[prop]);
-}
+//unsigned int
+//Texture::getPropui(UIntProperty prop) 
+//{
+//	assert(m_UIntProps.find(prop) != m_UIntProps.end());
+//	return(m_UIntProps[prop]);
+//}
 
 
 bool 

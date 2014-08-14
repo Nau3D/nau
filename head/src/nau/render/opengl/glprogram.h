@@ -7,7 +7,7 @@
 #include <GL/glew.h>
 
 #include <nau/render/iprogram.h>
-#include <nau/render/opengl/gluniform.h>
+#include <nau/render/opengl/glprogramValue.h>
 
 
 
@@ -34,7 +34,7 @@ namespace nau
 
 			std::string m_Name;
 			
-			std::vector<GlUniform> m_Uniforms; //list of uniforms
+			std::vector<GLUniform> m_Uniforms; //list of uniforms
 			
 			bool m_PLinked;
 			bool m_ShowGlobalUniforms;
@@ -82,8 +82,8 @@ namespace nau
 			virtual int getNumberOfUniforms (void);
 			virtual int getNumberOfUserUniforms (void);
 
-			virtual const GlUniform& getUniform (int i);
-			virtual const GlUniform& getUniform (const std::string &name);
+			virtual const GLUniform& getUniform (int i);
+			virtual const GLUniform& getUniform (const std::string &name);
 			void updateUniforms ();
 			int findUniform (const std::string &name);
 
