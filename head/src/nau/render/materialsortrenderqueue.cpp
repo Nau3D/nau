@@ -150,9 +150,9 @@ MaterialSortRenderQueue::processQueue (void)
 					if (!b) {
 						renderer->pushMatrix(IRenderer::MODEL_MATRIX);
 						renderer->applyTransform(IRenderer::MODEL_MATRIX, *(*matGroupsIter).second);
+						aMat->setUniformValues();
 					}
 					{	PROFILE("Draw");
-						aMat->setUniformValues();
 						renderer->drawGroup ((*matGroupsIter).first);
 					}
 					if (!b)

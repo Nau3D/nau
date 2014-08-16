@@ -27,27 +27,21 @@ ProgramValue::getSemanticTypeString(SEMANTIC_TYPE s)
 bool
 ProgramValue::Validate(std::string type,std::string context,std::string component)
 {
-	if (type == "CAMERA") {
-
 		int id;
 		nau::Enums::DataType dt;
+
+	if (type == "CAMERA") {
+
 		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 	}
 	else if (type == "LIGHT") {
 
-		int id;
-		nau::Enums::DataType dt;
 		Light::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 	}
 	else if (type == "TEXTURE") {
 
-		//if (component == "UNIT")
-		//	return 0;
-
-		int id;
-		nau::Enums::DataType dt;
 		Texture::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 	}
@@ -61,25 +55,19 @@ ProgramValue::Validate(std::string type,std::string context,std::string componen
 
 	else if (type == "CURRENT" && context == "MATRIX") {
 
-		int id;
 		IRenderer::getPropId(component, &id);
 		return (id != -1);
 	}
 	else if (type == "CURRENT" && context == "COLOR") {
 
-		int id;
-		nau::Enums::DataType dt;
 		ColorMaterial::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
-		//return ColorMaterial::validateComponent(component);
 	}
 	else if (type == "CURRENT" && context == "TEXTURE") {
 
 		if (component == "COUNT" || component == "UNIT")
 			return true;
 
-		int id;
-		nau::Enums::DataType dt;
 		Texture::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 
@@ -91,8 +79,6 @@ ProgramValue::Validate(std::string type,std::string context,std::string componen
 		if (component == "UNIT")
 			return true;
 
-		int id;
-		nau::Enums::DataType dt;
 		ImageTexture::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 
@@ -102,15 +88,12 @@ ProgramValue::Validate(std::string type,std::string context,std::string componen
 
 		if (component == "COUNT")
 			return true;
-		int id;
-		nau::Enums::DataType dt;
+
 		Light::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 	}
 	else if (type == "CURRENT" && context == "CAMERA") {
 
-		int id;
-		nau::Enums::DataType dt;
 		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 	}
@@ -124,13 +107,16 @@ ProgramValue::Validate(std::string type,std::string context,std::string componen
 }
 
 
-ProgramValue::ProgramValue () {m_Value = 0; m_IntValue = 0; m_InSpecML = false;};
+ProgramValue::ProgramValue () {
+}
 
 
 ProgramValue::ProgramValue (std::string name, std::string type,std::string context,std::string valueof, int id, bool inSpecML) : m_Cardinality (0)
 {
-	m_Value = NULL;
-	m_IntValue = NULL;
+	int attr;
+	nau::Enums::DataType dt;
+	m_Values = NULL;
+//	m_IntValue = NULL;
 	m_InSpecML = inSpecML;
 
 	m_Name = name;
@@ -141,84 +127,80 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 
 		m_Type = CAMERA;
 
-		int attr;
-		nau::Enums::DataType dt;
 		Camera::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 		m_ValueOf = attr;
 		m_ValueType = dt;
 		m_Cardinality = Enums::getCardinality(dt);
-
-		switch(dt) {
-			case Enums::INT:
-			case Enums::SAMPLER:
-			case Enums::ENUM:
-			case Enums::BOOL:
-			case Enums::IVEC2:
-			case Enums::IVEC3:
-			case Enums::IVEC4:
-			case Enums::BVEC2:
-			case Enums::BVEC3:
-			case Enums::BVEC4:
-				m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-			default:
-				m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
-		}
+		m_Values = (void *)malloc(Enums::getSize(dt));
+		//switch(dt) {
+		//	case Enums::INT:
+		//	case Enums::SAMPLER:
+		//	case Enums::ENUM:
+		//	case Enums::BOOL:
+		//	case Enums::IVEC2:
+		//	case Enums::IVEC3:
+		//	case Enums::IVEC4:
+		//	case Enums::BVEC2:
+		//	case Enums::BVEC3:
+		//	case Enums::BVEC4:
+		//		m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
+		//	default:
+		//		m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+		//}
 		return;
 	} 
 	else if (0 == type.compare ("LIGHT")) {
 
 		m_Type = LIGHT;
 
-		int attr;
-		nau::Enums::DataType dt;
 		Light::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 		m_ValueOf = attr;
 		m_ValueType = dt;
 		m_Cardinality = Enums::getCardinality(dt);
+		m_Values = (void *)malloc(Enums::getSize(dt));
 
-		switch(dt) {
-			case Enums::INT:
-			case Enums::SAMPLER:
-			case Enums::ENUM:
-			case Enums::BOOL:
-			case Enums::IVEC2:
-			case Enums::IVEC3:
-			case Enums::IVEC4:
-			case Enums::BVEC2:
-			case Enums::BVEC3:
-			case Enums::BVEC4:
-				m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-			default:
-				m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
-		}
+		//switch(dt) {
+		//	case Enums::INT:
+		//	case Enums::SAMPLER:
+		//	case Enums::ENUM:
+		//	case Enums::BOOL:
+		//	case Enums::IVEC2:
+		//	case Enums::IVEC3:
+		//	case Enums::IVEC4:
+		//	case Enums::BVEC2:
+		//	case Enums::BVEC3:
+		//	case Enums::BVEC4:
+		//		m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
+		//	default:
+		//		m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+		//}
 		return;
 	} 
 	else if (0 == type.compare ("TEXTURE")) {
 
 		m_Type = TEXTURE;
 
-		int attr;
-		nau::Enums::DataType dt;
 		Texture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 		m_ValueOf = attr;
 		m_ValueType = dt;
 		m_Cardinality = Enums::getCardinality(dt);
+		m_Values = (void *)malloc(Enums::getSize(dt));
 
-		switch(dt) {
-			case Enums::INT:
-			case Enums::SAMPLER:
-			case Enums::ENUM:
-			case Enums::BOOL:
-			case Enums::IVEC2:
-			case Enums::IVEC3:
-			case Enums::IVEC4:
-			case Enums::BVEC2:
-			case Enums::BVEC3:
-			case Enums::BVEC4:
-				m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-			default:
-				m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
-		}
+		//switch(dt) {
+		//	case Enums::INT:
+		//	case Enums::SAMPLER:
+		//	case Enums::ENUM:
+		//	case Enums::BOOL:
+		//	case Enums::IVEC2:
+		//	case Enums::IVEC3:
+		//	case Enums::IVEC4:
+		//	case Enums::BVEC2:
+		//	case Enums::BVEC3:
+		//	case Enums::BVEC4:
+		//		m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
+		//	default:
+		//		m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+		//}
 		return;
 	}
 	else if (0 == type.compare ("DATA")) {
@@ -228,23 +210,23 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 		m_ValueType = nau::Enums::getType(context);
 		m_Cardinality = nau::Enums::getCardinality(m_ValueType);
 
-		m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
-		switch(m_ValueType) {
-			case Enums::INT:
-			case Enums::SAMPLER:
-			case Enums::ENUM:
-			case Enums::BOOL:
-			case Enums::IVEC2:
-			case Enums::IVEC3:
-			case Enums::IVEC4:
-			case Enums::BVEC2:
-			case Enums::BVEC3:
-			case Enums::BVEC4:
-				m_IntValue = textutil::ParseInts(valueof, m_Cardinality);
-				break;
-			default:
-				m_Value = textutil::ParseFloats(valueof, m_Cardinality);
-		}
+		m_Values = textutil::ParseFloats(valueof, m_Cardinality);
+		//switch(m_ValueType) {
+		//	case Enums::INT:
+		//	case Enums::SAMPLER:
+		//	case Enums::ENUM:
+		//	case Enums::BOOL:
+		//	case Enums::IVEC2:
+		//	case Enums::IVEC3:
+		//	case Enums::IVEC4:
+		//	case Enums::BVEC2:
+		//	case Enums::BVEC3:
+		//	case Enums::BVEC4:
+		//		m_IntValue = textutil::ParseInts(valueof, m_Cardinality);
+		//		break;
+		//	default:
+		//		m_Value = textutil::ParseFloats(valueof, m_Cardinality);
+		//}
 	}
 	else if (0 == type.compare("PASS")) {
 	
@@ -259,13 +241,12 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 		if (0 == context.compare("COLOR")) {
 
 			//ColorMaterial::ColorComponent attr;
-			int attr;
-			nau::Enums::DataType dt;
 			ColorMaterial::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
 			m_Cardinality = Enums::getCardinality(dt);
-			m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+			m_Values = (void *)malloc(Enums::getSize(dt));
+//			m_Value = (float *)malloc(sizeof(float) * m_Cardinality);
 
 			//Enums::DataType dt;
 
@@ -279,20 +260,23 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 
 		else if (0 == context.compare("MATRIX")) {
 
-			int attr;
-			IRenderer::getPropId(valueof, &attr);
+			IRenderer::MatrixAttribs.getPropTypeAndId(valueof, &dt, &attr);
+			//IRenderer::getPropId(valueof, &attr);
 			m_ValueOf = attr;
+			m_ValueType = dt;
+			m_Cardinality = Enums::getCardinality(dt);
+			m_Values = (void *)malloc(Enums::getSize(dt));
 
-			if (m_ValueOf == IRenderer::NORMAL ) {
-				m_ValueType = nau::Enums::MAT3;
-				m_Cardinality = Enums::getCardinality(Enums::MAT3);
-			}
-			else {
-				m_ValueType = nau::Enums::MAT4;
-				m_Cardinality = Enums::getCardinality(Enums::MAT4);
-			}
+			//if (m_ValueOf == IRenderer::NORMAL ) {
+			//	m_ValueType = nau::Enums::MAT3;
+			//	m_Cardinality = Enums::getCardinality(Enums::MAT3);
+			//}
+			//else {
+			//	m_ValueType = nau::Enums::MAT4;
+			//	m_Cardinality = Enums::getCardinality(Enums::MAT4);
+			//}
 
-			m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+			//m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
 			return;
 		}
 
@@ -303,60 +287,56 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 				m_ValueOf = COUNT;
 				m_ValueType = Enums::INT;
 				m_Cardinality = 1;
-				m_IntValue = (int *)malloc(sizeof(int));
+				m_Values = (void *)malloc(Enums::getSize(m_ValueType));
+				//m_IntValue = (int *)malloc(sizeof(int));
 				return;
 			}
-			int attr;
-			nau::Enums::DataType dt;
 			Light::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
 			m_Cardinality = Enums::getCardinality(dt);
-
-			switch(dt) {
-				case Enums::INT:
-				case Enums::SAMPLER:
-				case Enums::BOOL:
-				case Enums::ENUM:
-				case Enums::IVEC2:
-				case Enums::IVEC3:
-				case Enums::IVEC4:
-				case Enums::BVEC2:
-				case Enums::BVEC3:
-				case Enums::BVEC4:
-					m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-				default:
-					m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
-			}
+			m_Values = (void *)malloc(Enums::getSize(dt));
+			//switch(dt) {
+			//	case Enums::INT:
+			//	case Enums::SAMPLER:
+			//	case Enums::BOOL:
+			//	case Enums::ENUM:
+			//	case Enums::IVEC2:
+			//	case Enums::IVEC3:
+			//	case Enums::IVEC4:
+			//	case Enums::BVEC2:
+			//	case Enums::BVEC3:
+			//	case Enums::BVEC4:
+			//		m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
+			//	default:
+			//		m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+			//}
 			return;
 		} 
 
-
 		else if (0 == context.compare("CAMERA")) {
 
-
-			int attr;
-			nau::Enums::DataType dt;
 			Camera::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
 			m_Cardinality = Enums::getCardinality(dt);
+			m_Values = (void *)malloc(Enums::getSize(dt));
 
-			switch(dt) {
-				case Enums::INT:
-				case Enums::SAMPLER:
-				case Enums::ENUM:
-				case Enums::BOOL:
-				case Enums::IVEC2:
-				case Enums::IVEC3:
-				case Enums::IVEC4:
-				case Enums::BVEC2:
-				case Enums::BVEC3:
-				case Enums::BVEC4:
-					m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-				default:
-					m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
-			}
+			//switch(dt) {
+			//	case Enums::INT:
+			//	case Enums::SAMPLER:
+			//	case Enums::ENUM:
+			//	case Enums::BOOL:
+			//	case Enums::IVEC2:
+			//	case Enums::IVEC3:
+			//	case Enums::IVEC4:
+			//	case Enums::BVEC2:
+			//	case Enums::BVEC3:
+			//	case Enums::BVEC4:
+			//		m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
+			//	default:
+			//		m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+			//}
 			return;
 		}
 
@@ -367,40 +347,42 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 				m_ValueOf = COUNT;
 				m_ValueType = Enums::INT;
 				m_Cardinality = 1;
-				m_IntValue = (int *)malloc(sizeof(int));
+				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
+//				m_IntValue = (int *)malloc(sizeof(int));
 				return;
 			}
 			else if (0 == valueof.compare("UNIT")) {
 
 				m_ValueOf = UNIT;
-				m_ValueType = Enums::DataType::SAMPLER;
+				m_ValueType = Enums::SAMPLER;
 				m_Cardinality = 1;
-				m_IntValue = (int *)malloc(sizeof(int));
-				m_IntValue[0] = m_Id;
+				m_Values = (void *)malloc(Enums::getSize(Enums::SAMPLER));
+				memcpy(m_Values, &m_Id, Enums::getSize(Enums::SAMPLER));
+				// m_IntValue = (int *)malloc(sizeof(int));
+				//m_IntValue[0] = m_Id;
 				return;
 			}
-			int attr;
-			nau::Enums::DataType dt;
 			Texture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
 			m_Cardinality = Enums::getCardinality(dt);
+			m_Values = (void *)malloc(Enums::getSize(dt));
 
-			switch(dt) {
-				case Enums::INT:
-				case Enums::SAMPLER:
-				case Enums::BOOL:
-				case Enums::ENUM:
-				case Enums::IVEC2:
-				case Enums::IVEC3:
-				case Enums::IVEC4:
-				case Enums::BVEC2:
-				case Enums::BVEC3:
-				case Enums::BVEC4:
-					m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-				default:
-					m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
-			}
+			//switch(dt) {
+			//	case Enums::INT:
+			//	case Enums::SAMPLER:
+			//	case Enums::BOOL:
+			//	case Enums::ENUM:
+			//	case Enums::IVEC2:
+			//	case Enums::IVEC3:
+			//	case Enums::IVEC4:
+			//	case Enums::BVEC2:
+			//	case Enums::BVEC3:
+			//	case Enums::BVEC4:
+			//		m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
+			//	default:
+			//		m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+			//}
 			return;
 		} 
 #if NAU_OPENGL_VERSION >=  420
@@ -411,40 +393,42 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 				m_ValueOf = COUNT;
 				m_ValueType = Enums::INT;
 				m_Cardinality = 1;
-				m_IntValue = (int *)malloc(sizeof(int));
+				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
+//				m_IntValue = (int *)malloc(sizeof(int));
 				return;
 			}
 			else if (0 == valueof.compare("UNIT")) {
 
 				m_ValueOf = UNIT;
-				m_ValueType = Enums::DataType::SAMPLER;
+				m_ValueType = Enums::SAMPLER;
 				m_Cardinality = 1;
-				m_IntValue = (int *)malloc(sizeof(int));
-				m_IntValue[0] = m_Id;
+				m_Values = (void *)malloc(Enums::getSize(Enums::SAMPLER));
+				memcpy(m_Values, &m_Id, Enums::getSize(Enums::SAMPLER));
+				//m_IntValue = (int *)malloc(sizeof(int));
+				//m_IntValue[0] = m_Id;
 				return;
 			}
-			int attr;
-			nau::Enums::DataType dt;
 			ImageTexture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
 			m_Cardinality = Enums::getCardinality(dt);
+			m_Values = (void *)malloc(Enums::getSize(dt));
 
-			switch(dt) {
-				case Enums::INT:
-				case Enums::SAMPLER:
-				case Enums::BOOL:
-				case Enums::ENUM:
-				case Enums::IVEC2:
-				case Enums::IVEC3:
-				case Enums::IVEC4:
-				case Enums::BVEC2:
-				case Enums::BVEC3:
-				case Enums::BVEC4:
-					m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
-				default:
-					m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
-			}
+			//switch(dt) {
+			//	case Enums::INT:
+			//	case Enums::SAMPLER:
+			//	case Enums::BOOL:
+			//	case Enums::ENUM:
+			//	case Enums::IVEC2:
+			//	case Enums::IVEC3:
+			//	case Enums::IVEC4:
+			//	case Enums::BVEC2:
+			//	case Enums::BVEC3:
+			//	case Enums::BVEC4:
+			//		m_IntValue = (int *)malloc(sizeof(int) * m_Cardinality);
+			//	default:
+			//		m_Value = (float *)malloc(sizeof(float) * m_Cardinality); 
+			//}
 			return;
 		} 
 #endif
@@ -494,15 +478,8 @@ ProgramValue::clone(ProgramValue &pv)
 	m_Context = pv.m_Context;
 	m_Cardinality = pv.m_Cardinality;
 	m_InSpecML = pv.m_InSpecML;
-
-	if (pv.m_Value) {
-		for (int i = 0 ; i < m_Cardinality; i++)
-			m_Value[i] = pv.m_Value[i];
-	}
-	if (pv.m_IntValue) {
-		for (int i = 0 ; i < m_Cardinality; i++)
-			m_IntValue[i] = pv.m_IntValue[i];
-	}
+	m_Values = (void *)malloc(Enums::getSize(m_ValueType));
+	memcpy(m_Values, pv.m_Values, Enums::getSize(m_ValueType));
 }
 
 
@@ -559,133 +536,94 @@ ProgramValue::getValues (void)
 
 	   case CAMERA: {
 		  Camera *cam = RENDERMANAGER->getCamera (m_Context);
-		  return cam->getProp(m_ValueOf, m_ValueType);
+		  m_Values = cam->getProp(m_ValueOf, m_ValueType);
+		  return m_Values;
 	   }
 		break;
 	   case LIGHT: {
 			Light *light = RENDERMANAGER->getLight (m_Context);
-			return light->getProp(m_ValueOf, m_ValueType);
+			m_Values = light->getProp(m_ValueOf, m_ValueType);
+			return m_Values;
 	   }
 		break;
 	   case TEXTURE: {
 			Texture *t = RESOURCEMANAGER->getTexture (m_Context);
-
-			switch(m_ValueType) {
-					case Enums::INT:
-						m_IntValue[0] = t->getPropi((Texture::IntProperty)m_ValueOf);
-						return m_IntValue;
-
-					case Enums::SAMPLER:
-//						m_IntValue[0] = t->getProps((Texture::SamplerProperty)m_ValueOf);
-						return 0;//m_IntValue;
-			}
+			m_Values = t->getProp(m_ValueOf, m_ValueType);
+			return m_Values;
 		}
 		break;
 	   case DATA: {
-		   switch (m_ValueType) {
-				case Enums::FLOAT:
-				case Enums::VEC2:
-				case Enums::VEC3:
-				case Enums::VEC4:
-				case Enums::MAT2:
-				case Enums::MAT3:
-				case Enums::MAT4:
-					return m_Value;
-				case Enums::SAMPLER:
-				case Enums::INT:
-				case Enums::ENUM:
-				case Enums::BOOL:
-				case Enums::IVEC2:
-				case Enums::BVEC2:
-				case Enums::IVEC3:
-				case Enums::BVEC3:
-				case Enums::IVEC4:
-				case Enums::BVEC4:
-					return m_IntValue;
-				default:
-					return 0;
-		   }
+		   return m_Values;
 		}
-	   case PASS: {
-				  
-		
+	   case PASS: {		
 		   int pType = RENDERMANAGER->getPassParamType(m_Context, m_Param);
 		   switch (pType) {
 		   
 				case Enums::FLOAT:
-					return RENDERMANAGER->getPassParamf(m_Context, m_Param);
+					m_ValueType = Enums::FLOAT;
+					m_Cardinality = Enums::getCardinality(m_ValueType);
+					m_Values = malloc(Enums::getSize(Enums::FLOAT));
+					memcpy(m_Values, RENDERMANAGER->getPassParamf(m_Context, m_Param), Enums::getSize(Enums::FLOAT));
+					return m_Values;
 		   }
 
 		}
 	   case CURRENT: {
 		   if ("MATRIX" == m_Context) {
-
-			   return const_cast<float*>(RENDERER->getMatrix((IRenderer::MatrixType)m_ValueOf));
+			   m_Values = (void *)RENDERER->getMatrix((IRenderer::MatrixType)m_ValueOf);
+			   return m_Values;
 		   }
-		   else if ("COLOR" == m_Context) {
-					
-			   float f;
-				switch(m_ValueType) {
-					case Enums::VEC4:
-						return ((float *)&(RENDERER->getColorProp4f((ColorMaterial::Float4Property)m_ValueOf)));
-					case Enums::FLOAT:
-						f = RENDERER->getColorPropf((ColorMaterial::FloatProperty)m_ValueOf);
-						m_Value[0] = f;
-						return m_Value;
-				}
-
-			   //switch (m_ValueOf) {
-				//	case DIFFUSE: (RENDERER->getColor(IRenderer::DIFFUSE));
-				//	case AMBIENT: return const_cast<float*>(RENDERER->getColor(IRenderer::AMBIENT));
-				//	case SPECULAR: return const_cast<float*>(RENDERER->getColor(IRenderer::SPECULAR));
-				//	case EMISSION: return const_cast<float*>(RENDERER->getColor(IRenderer::EMISSION));
-				//	case SHININESS: return const_cast<float*>( RENDERER->getColor(IRenderer::SHININESS));
-				//	default: return 0;
-			 //  } 
+		   else if ("COLOR" == m_Context) {	
+			   m_Values = RENDERER->getColorProp(m_ValueOf, m_ValueType);
+			   return m_Values;
 		   }
 		   else if ("TEXTURE" == m_Context) {
 
 			   if (m_ValueOf == COUNT) {
-					m_IntValue[0] = RENDERER->getTextureCount();
-					return m_IntValue;
+				   int m = RENDERER->getTextureCount();
+					memcpy(m_Values,&(m), sizeof(int));
 				}
+			   else if (m_ValueOf == UNIT) {
 
-				switch(m_ValueType) {
-					case Enums::INT:
-						m_IntValue[0] = RENDERER->getPropi(m_Id,(Texture::IntProperty)m_ValueOf);
-						return m_IntValue;
+				   memcpy(m_Values, &m_Id, sizeof(int));
+			   }
+			   else if (m_Id < RENDERER->getTextureCount()) {
+				   Texture *t = RENDERER->getTexture(m_Id);
+				   m_Values = t->getProp(m_ValueOf, m_ValueType);
+			   }
+			   return m_Values;
 
-					case Enums::SAMPLER:
-						return m_IntValue;//&m_Id;
-
-						//m_IntValue[0] = RENDERER->getProps((IRenderer::TextureUnit)m_Id, (Texture::SamplerProperty)m_ValueOf);
-						//return m_IntValue;
-				}
 		   }
 #if NAU_OPENGL_VERSION >=  420
 		   else if ("IMAGE_TEXTURE" == m_Context) {
 
 			   if (m_ValueOf == COUNT) {
-					m_IntValue[0] = RENDERER->getImageTextureCount();
-					return m_IntValue;
+				   int m = RENDERER->getImageTextureCount();
+				   memcpy(m_Values, &m, sizeof(int));
 				}
-				switch(m_ValueType) {
+			   else if (m_ValueOf == UNIT) {
 
-					case Enums::SAMPLER:
-						return m_IntValue;//&m_Id;
-
-						//m_IntValue[0] = RENDERER->getProps((IRenderer::TextureUnit)m_Id, (Texture::SamplerProperty)m_ValueOf);
-						//return m_IntValue;
-				}
+				   memcpy(m_Values, &m_Id, sizeof(int));
+			   }
+			   else if (m_Id < RENDERER->getImageTextureCount()) {
+				   ImageTexture *t = RENDERER->getImageTexture(m_Id);
+				   m_Values = t->getProp(m_ValueOf, m_ValueType);
+			   }
+			   return m_Values;
 		   }
 #endif
 		   else if ("LIGHT" == m_Context) {
 
 			   if (m_ValueOf == COUNT) {
-					m_IntValue[0] = RENDERER->getLightCount();
-					return m_IntValue;
+				   int m = RENDERER->getLightCount();
+				   memcpy(m_Values, &m, sizeof(int));
+				   return m_Values;
 				}
-			   return RENDERER->getLight(m_Id)->getProp(m_ValueOf, m_ValueType);
+			   else if (m_Id < RENDERER->getLightCount()) {
+				   Light *l = RENDERER->getLight(m_Id);
+				   m_Values = l->getProp(m_ValueOf, m_ValueType);
+			   }
+			   return m_Values;
 		   }
 		   else if ("CAMERA" == m_Context) {
 
@@ -698,8 +636,10 @@ ProgramValue::getValues (void)
 			   switch(type) {
 				case Enums::FLOAT:
 					m_ValueType = Enums::FLOAT;
-					m_Value = RENDERMANAGER->getCurrentPassParamf(m_Param);
-					return m_Value;
+					m_Cardinality = Enums::getCardinality(m_ValueType);
+					m_Values = malloc(Enums::getSize(Enums::FLOAT));
+					memcpy(m_Values, RENDERMANAGER->getCurrentPassParamf(m_Param), Enums::getSize(Enums::FLOAT));
+					return m_Values;
 			   }	
 		   }
 		   else return 0;
@@ -770,40 +710,65 @@ ProgramValue::setValueType(nau::Enums::DataType s) {
 	m_ValueType = s;
 }
 
-void 
-ProgramValue::setValueOfUniform (int *values) { 
 
-	for (int i = 0 ; i < m_Cardinality; i++) {
-		m_IntValue[i] = (int)values[i];	
-	}
+void
+ProgramValue::setValueOfUniform(void *values) {
+
+	memcpy(m_Values, values, Enums::getSize(m_ValueType));
+	//for (int i = 0; i < m_Cardinality; i++) {
+	//	m_IntValue[i] = (int)values[i];
+	//}
 }
 
-// this version is more generic than the previous one
-// this is on purpose!
-void 
-ProgramValue::setValueOfUniform (float *values) { 
 
-	switch (m_ValueType) {
-		case Enums::INT:
-		case Enums::IVEC2:
-		case Enums::IVEC3:
-		case Enums::IVEC4:
-		case Enums::BOOL:
-		case Enums::BVEC2:
-		case Enums::BVEC3:
-		case Enums::BVEC4:
-		case Enums::SAMPLER:
-		case Enums::ENUM:
-			for (int i = 0 ; i < m_Cardinality; i++) {
-				m_IntValue[i] = (int)values[i];	
-			}
-			break;
-		default:
-			for (int i = 0 ; i < m_Cardinality; i++) {
-				m_Value[i] = values[i];	
-			}
-	}
+void
+ProgramValue::setLoc(int l) {
 
+	m_Loc = l;
 }
+
+
+int
+ProgramValue::getLoc() {
+
+	return m_Loc;
+}
+
+
+//void 
+//ProgramValue::setValueOfUniform (int *values) { 
+//
+//	for (int i = 0 ; i < m_Cardinality; i++) {
+//		m_IntValue[i] = (int)values[i];	
+//	}
+//}
+//
+//// this version is more generic than the previous one
+//// this is on purpose!
+//void 
+//ProgramValue::setValueOfUniform (float *values) { 
+//
+//	switch (m_ValueType) {
+//		case Enums::INT:
+//		case Enums::IVEC2:
+//		case Enums::IVEC3:
+//		case Enums::IVEC4:
+//		case Enums::BOOL:
+//		case Enums::BVEC2:
+//		case Enums::BVEC3:
+//		case Enums::BVEC4:
+//		case Enums::SAMPLER:
+//		case Enums::ENUM:
+//			for (int i = 0 ; i < m_Cardinality; i++) {
+//				m_IntValue[i] = (int)values[i];	
+//			}
+//			break;
+//		default:
+//			for (int i = 0 ; i < m_Cardinality; i++) {
+//				m_Value[i] = values[i];	
+//			}
+//	}
+//
+//}
 
 

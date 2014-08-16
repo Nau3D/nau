@@ -204,6 +204,7 @@ namespace nau
 			virtual void setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) = 0;
 			virtual const vec4 &getColorProp4f(ColorMaterial::Float4Property) = 0;
 			virtual float getColorPropf(ColorMaterial::FloatProperty) = 0;
+			virtual float *getColorProp(int prop, Enums::DataType dt) = 0;
 
 			// state
 			virtual void setState(IState *aState) = 0;
@@ -228,6 +229,7 @@ namespace nau
 			virtual void removeTexture(unsigned int aTexUnit) = 0;
 			virtual int getPropi(unsigned int aTexUnit, Texture::IntProperty prop) = 0;
 			virtual int getTextureCount() = 0;
+			virtual Texture *getTexture(int unit) = 0;
 			
 		
 		// FRAMEBUFFER OPS

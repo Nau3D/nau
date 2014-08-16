@@ -96,12 +96,13 @@ namespace nau
 			void addProgramValue (std::string name, nau::material::ProgramValue progVal);
 			void enableShader(bool value);
 			bool isShaderEnabled();
-			void clearUniformValues(); 
+			void clearProgramValues(); 
+			void checkProgramValuesAndUniforms();
 
 			std::map<std::string, nau::material::ProgramValue>& getProgramValues();
 			std::map<std::string, nau::material::ProgramValue>& getUniformValues();
 			ProgramValue *getProgramValue(std::string name);
-			void setValueOfUniform(std::string name, float *values);
+			void setValueOfUniform(std::string name, void *values);
 			std::vector<std::string> *getValidProgramValueNames();
 			std::vector<std::string> *getUniformNames();
 

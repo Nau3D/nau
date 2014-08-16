@@ -121,19 +121,22 @@ int Enums::getCardinality(DataType p)
 		case IVEC2:
 		case BVEC2:
 		case VEC2:
+		case UIVEC2:
 		case DVEC2:
 			card = 2;
 			break;
 		case IVEC3:
 		case BVEC3:
 		case VEC3:
+		case UIVEC3:
 		case DVEC3:
 			card = 3;
 			break;
 		case IVEC4:
 		case BVEC4:
 		case VEC4:
-		case DVEC4: 
+		case UIVEC4:
+		case DVEC4:
 		case MAT2:
 		case DMAT2:
 			card = 4;
@@ -170,17 +173,34 @@ int Enums::getCardinality(DataType p)
 
 
 bool
-Enums::isCompatible(DataType p1, DataType p2) 
+Enums::isCompatible(DataType nau, DataType shader) 
 {
-	if (p1 == p2)
+	if (nau == shader)
 		return true;
 
-	if ((p1 == ENUM && p2 == INT) || (p1 == INT && p2 == ENUM))
+	if (nau == VEC4 && (shader == VEC4 || shader == VEC3 || shader == VEC2))
+		return true;
+	if (nau == VEC3 && (shader == VEC3 || shader == VEC2))
+		return true;
+	
+	if (nau == IVEC4 && (shader == IVEC4 || shader == IVEC3 || shader == IVEC2))
+		return true;
+	if (nau == IVEC3 && (shader == IVEC3 || shader == IVEC2))
 		return true;
 
-	if ((p1 == ENUM && p2 == UINT) || (p1 == UINT && p2 == ENUM))
+	if (nau == BVEC4 && (shader == BVEC4 || shader == BVEC3 || shader == BVEC2))
 		return true;
-	if (p1 == INT && p2 == UINT)
+	if (nau == BVEC3 && (shader == BVEC3 || shader == BVEC2))
+		return true;
+
+	if (nau == UIVEC4 && (shader == UIVEC4 || shader == UIVEC3 || shader == UIVEC2))
+		return true;
+	if (nau == UIVEC3 && (shader == UIVEC3 || shader == UIVEC2))
+		return true;
+
+	if (nau == DVEC4 && (shader == DVEC4 || shader == DVEC3 || shader == DVEC2))
+		return true;
+	if (nau == DVEC3 && (shader == DVEC3 || shader == DVEC2))
 		return true;
 
 	return false;

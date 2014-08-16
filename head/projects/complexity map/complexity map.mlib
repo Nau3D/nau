@@ -28,11 +28,11 @@
 		
 		<material name="fivePerCentDraw">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.05" g="0.05" b="0.05" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.05" g="0.05" b="0.05" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 			<state name="CountPixelDraw" />
 		</material>

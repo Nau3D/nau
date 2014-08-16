@@ -131,6 +131,7 @@ namespace nau
 			int getPropi(unsigned int aTexUnit, Texture::IntProperty prop);
 			int getTextureCount();
 			void setActiveTextureUnit(unsigned int aTexUnit);
+			Texture *getTexture(int unit);
 
 			// STATE
 			void setState (IState *aState);
@@ -145,7 +146,7 @@ namespace nau
 			// COLOR AND MATERIALS
 			const vec4 &getColorProp4f(nau::material::ColorMaterial::Float4Property prop);
 			float getColorPropf(nau::material::ColorMaterial::FloatProperty prop);
-
+			float *getColorProp(int prop, Enums::DataType dt);
 			virtual void setMaterial( nau::material::ColorMaterial &mat);
 			virtual void setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess);
 			//virtual const float * getColor(ColorMaterial::ColorComponent aColor);
@@ -182,6 +183,8 @@ namespace nau
 			// pre alocated memory to return composed matrices
 			mat4 m_pReturnMatrix;
 			mat3 m_pReturnMat3;
+			float m_fDummy;
+			vec4 m_vDummy;
 
 			std::vector<SimpleTransform> m_MatrixStack[IRenderer::COUNT_MATRIXMODE];
 

@@ -667,13 +667,6 @@ GLRenderer::restoreAttrib (void)
 }
 
 
-void
-GLRenderer::setMaterial( ColorMaterial &mat) 
-{
-	m_Material.clone(mat);
-}
-
-
 // ================= MATERIAL ===================
 
 void
@@ -684,6 +677,13 @@ GLRenderer::setMaterial(float *diffuse, float *ambient, float *emission, float *
 	m_Material.setProp(ColorMaterial::AMBIENT, ambient);
 	m_Material.setProp(ColorMaterial::EMISSION, emission);
 	m_Material.setProp(ColorMaterial::SPECULAR, specular);
+}
+
+
+void
+GLRenderer::setMaterial( ColorMaterial &mat) 
+{
+	m_Material.clone(mat);
 }
 
 
@@ -700,6 +700,20 @@ GLRenderer::getColorPropf(ColorMaterial::FloatProperty prop) {
 	return m_Material.getPropf(prop);
 }
 
+float *
+GLRenderer::getColorProp(int prop, Enums::DataType dt) {
+
+	switch (dt) {
+
+		case Enums::VEC4:
+			m_vDummy = m_Material.getProp4f((ColorMaterial::Float4Property)prop);
+			return &m_vDummy.x;
+		case Enums::FLOAT:
+			m_fDummy = m_Material.getPropf((ColorMaterial::FloatProperty)prop);
+			return &m_fDummy;
+	}
+	return NULL;
+}
 
 void 
 GLRenderer::setColor (float r, float g, float b, float a) {
@@ -717,12 +731,6 @@ GLRenderer::setColor (int r, int g, int b, int a) {
 }
 
 
-void
-GLRenderer::setState (IState *aState) {
-
-	m_glCurrState.setDiff (&m_glDefaultState, aState);
-}
-
 
 
 
@@ -733,6 +741,13 @@ GLRenderer::setDefaultState() {
 	m_glCurrState.setDefault();
 	m_glDefaultState.setDefault();
 	m_glCurrState.set();
+}
+
+
+void
+GLRenderer::setState (IState *aState) {
+
+	m_glCurrState.setDiff (&m_glDefaultState, aState);
 }
 
 
@@ -857,6 +872,16 @@ GLRenderer::getTextureCount() {
 			count++;
 
 	return count;
+}
+
+
+Texture *
+GLRenderer::getTexture(int unit){
+
+	if ((unsigned int)unit < m_Textures.size())
+		return m_Textures[unit];
+	else
+		return NULL;
 }
 
 

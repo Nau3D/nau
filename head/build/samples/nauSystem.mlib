@@ -10,6 +10,10 @@
 									vs="shaders/quadShader.vert" />
 		<shader name="dirLightDifAmbPix" 	ps="shaders/dirlightdiffambpix.frag" 
 											vs="shaders/dirlightdiffambpix.vert" />
+		<shader name="emission" 	ps="shaders/emission.frag" 
+									vs="shaders/emission.vert" />
+		<shader name="font" 		ps="shaders/font.frag" 
+									vs="shaders/font.vert" />
 	</shaders>
 	
 	<states>
@@ -20,6 +24,7 @@
 		<state name ="__Transparent">
 			<DEPTH_TEST value="0" />
 			<ORDER value="1" />
+			<BLEND value="true" />
 			<BLEND_SRC value="SRC_ALPHA" />
 			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
 		</state>
@@ -107,6 +112,16 @@
 				<EMISSION r="1.0" g="1.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Red">
@@ -117,6 +132,16 @@
 				<EMISSION r="1.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Green">
@@ -127,6 +152,16 @@
 				<EMISSION r="0.0" g="1.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Blue">
@@ -137,6 +172,16 @@
 				<EMISSION r="0.0" g="0.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />		
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Cyan">
@@ -147,6 +192,16 @@
 				<EMISSION r="0.0" g="1.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Purple">
@@ -157,6 +212,16 @@
 				<EMISSION r="1.0" g="0.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Yellow">
@@ -167,6 +232,16 @@
 				<EMISSION r="1.0" g="1.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Black">
@@ -188,9 +263,22 @@
 				<AMBIENT r="0.0" g="0.0" b="0.0" a="0.0" />
 				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
 				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
-				<EMISSION r="1.0" g="1.0" b="1.0" a="0.0" />
+				<EMISSION r="1.0" g="1.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>font</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+															
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+
+					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />
+				</values>
+			</shader>
 			<state name="__Transparent"/>
 			<textures>
 				<texture UNIT="0" name="__FontCourierNew10" >

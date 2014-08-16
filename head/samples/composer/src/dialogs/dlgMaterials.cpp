@@ -1431,7 +1431,10 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 	const long mat3MatrixCompInd[] = {IRenderer::NORMAL};
 
 	pid = pgShaderUniforms->Append(new wxPGProperty(wxString((u.getName().c_str())),wxPG_LABEL));
-	pgShaderUniforms->LimitPropertyEditing(pid);
+	if (u.getLoc() == -1)
+		pgShaderUniforms->DisableProperty(pid);
+	else
+		pgShaderUniforms->LimitPropertyEditing(pid);
 	pid2 = pgShaderUniforms->AppendIn(pid,new wxStringProperty(wxT("Type"),wxPG_LABEL,wxString(Enums::DataTypeToString[u.getValueType()].c_str())));
 	pgShaderUniforms->DisableProperty(pid2);
 
@@ -1726,7 +1729,7 @@ void DlgMaterials::OnProcessUseShader(wxCommandEvent& event){
 
 void DlgMaterials::updateUniforms(Material *m) {
 
-	m->clearUniformValues();
+	m->checkProgramValuesAndUniforms();
 	pgShaderUniforms->ClearPage(0);
 
 	if (m->getProgram() == NULL) {
@@ -1734,58 +1737,82 @@ void DlgMaterials::updateUniforms(Material *m) {
 		return;
 	}
 
-	GlProgram *p = (GlProgram *)m->getProgram();
-
-	std::map<std::string, nau::material::ProgramValue> progValues, uniformValues;
+	std::map<std::string, nau::material::ProgramValue> progValues;
 	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;
 	progValues = m->getProgramValues();
-
-	GLUniform u;
-	std::string s;
-	int uni = p->getNumberOfUniforms();
-	p->updateUniforms();
-	m->clearUniformValues();
-	for (int i = 0; i < uni; i++) {
-		// get uniform from program
-		u = p->getUniform(i);
-		// add uniform (material class will take care of special cases)
-		//s = "DATA(" + u.getName() + "," + u.getProgramValueType() + ")";
-		m->addProgramValue(u.getName(),ProgramValue(u.getName(),"DATA",u.getStringSimpleType(),"",0,false));
-		m->setValueOfUniform(u.getName(),(float *)u.getValues());
-	}
-
-	for (int i = 0 ; i < 8 ; i++)
-		samplerUnits[i] = 0;
-
-	std::vector<std::string> *validProgValueNames = m->getValidProgramValueNames();
-	std::vector<std::string>::iterator validNamesIter;
-	//progValues = m->getProgramValues();
-	validNamesIter = validProgValueNames->begin();
 	ProgramValue pv;
-	for ( ; validNamesIter != validProgValueNames->end(); validNamesIter++) {
-		pv = *m->getProgramValue(*validNamesIter);
-		if (p->findUniform(*validNamesIter) != -1) {
-	//	if (uniformValues.count(progValuesIter->first) == 0) {
-	//		addUniform((*progValuesIter).second,m_cbShowGlobalU->GetValue());
-			addUniform(pv,false);
-			if (pv.getValueType() == Enums::SAMPLER && pv.getContext()=="TEXTURE") {
-				int *ip = (int *)pv.getValues();
-				samplerUnits[ip[0]]++;
-			}
-	//	}
-		}
-	}
-	uniformValues = m->getUniformValues();
-	progValuesIter = uniformValues.begin();
-	for ( ; progValuesIter != uniformValues.end(); progValuesIter++) {
+	progValuesIter = progValues.begin();
+	for (; progValuesIter != progValues.end(); ++progValuesIter) {
 		pv = (*progValuesIter).second;
 		addUniform(pv,false);
 
 	}
 	pgShaderUniforms->Refresh();
 }
-		
 
+
+//void DlgMaterials::updateUniforms(Material *m) {
+//
+//	m->clearUniformValues();
+//	pgShaderUniforms->ClearPage(0);
+//
+//	if (m->getProgram() == NULL) {
+//		pgShaderUniforms->Refresh();
+//		return;
+//	}
+//
+//	GlProgram *p = (GlProgram *)m->getProgram();
+//
+//	std::map<std::string, nau::material::ProgramValue> progValues, uniformValues;
+//	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;
+//	progValues = m->getProgramValues();
+//
+//	GLUniform u;
+//	std::string s;
+//	int uni = p->getNumberOfUniforms();
+//	p->updateUniforms();
+//	m->clearUniformValues();
+//	for (int i = 0; i < uni; i++) {
+//		// get uniform from program
+//		u = p->getUniform(i);
+//		// add uniform (material class will take care of special cases)
+//		//s = "DATA(" + u.getName() + "," + u.getProgramValueType() + ")";
+//		m->addProgramValue(u.getName(), ProgramValue(u.getName(), "DATA", u.getStringSimpleType(), "", 0, false));
+//		m->setValueOfUniform(u.getName(), (float *)u.getValues());
+//	}
+//
+//	for (int i = 0; i < 8; i++)
+//		samplerUnits[i] = 0;
+//
+//	std::vector<std::string> *validProgValueNames = m->getValidProgramValueNames();
+//	std::vector<std::string>::iterator validNamesIter;
+//	//progValues = m->getProgramValues();
+//	validNamesIter = validProgValueNames->begin();
+//	ProgramValue pv;
+//	for (; validNamesIter != validProgValueNames->end(); validNamesIter++) {
+//		pv = *m->getProgramValue(*validNamesIter);
+//		if (p->findUniform(*validNamesIter) != -1) {
+//			//	if (uniformValues.count(progValuesIter->first) == 0) {
+//			//		addUniform((*progValuesIter).second,m_cbShowGlobalU->GetValue());
+//			addUniform(pv, false);
+//			if (pv.getValueType() == Enums::SAMPLER && pv.getContext() == "TEXTURE") {
+//				int *ip = (int *)pv.getValues();
+//				samplerUnits[ip[0]]++;
+//			}
+//			//	}
+//		}
+//	}
+//	uniformValues = m->getUniformValues();
+//	progValuesIter = uniformValues.begin();
+//	for (; progValuesIter != uniformValues.end(); progValuesIter++) {
+//		pv = (*progValuesIter).second;
+//		addUniform(pv, false);
+//
+//	}
+//	pgShaderUniforms->Refresh();
+//}
+
+// this has no effect since m_Values is updated when getting the uniform value
 void 
 DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
 
@@ -1795,8 +1822,6 @@ DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
 	std::string prop = std::string(name.substr(dotLocation+1,name.size()-dotLocation-1).mb_str());
 
 	Material *m = getModelMaterial();
-
-	ProgramValue *p = m->getProgramValue(topProp);
 
 	if ("Type" == prop) {
 
@@ -1812,10 +1837,10 @@ DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
 	}
 	else if ("ivalue" == prop) {
 		int i = e.GetPropertyValue().GetInteger();
-		p->setValueOfUniform(&i);
+		m->setValueOfUniform(topProp, &i);
 	}
 	else if ("fvalue" == prop) {
 		float f = e.GetPropertyValue().GetDouble();
-		p->setValueOfUniform(&f);
+		m->setValueOfUniform(topProp, &f);
 	}
 }

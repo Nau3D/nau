@@ -274,9 +274,6 @@
     <ClCompile Include="..\src\nau\render\opengl\gltextureCubeMap.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gluniform.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glvertexarray.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
@@ -502,11 +499,11 @@
     <ClCompile Include="..\src\nau\render\buffer.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\iprogramvalue.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp">
       <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\iprogramvalue.cpp">
+      <Filter>Source Files\render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -733,9 +730,6 @@
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\gltextureCubeMap.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gluniform.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glvertexarray.h">
@@ -990,9 +984,6 @@
     <ClInclude Include="..\src\nau\render\buffer.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\iprogramvalue.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\attribute.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -1001,6 +992,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h">
       <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iprogramvalue.h">
+      <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

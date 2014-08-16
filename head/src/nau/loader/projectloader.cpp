@@ -870,11 +870,11 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 			if (strcmp(p->Value(), "ORIGIN") && strcmp(p->Value(), "SIZE") && strcmp(p->Value(), "CLEAR_COLOR")) {
 				// trying to define an attribute that does not exist?		
 				if (attribs.count(p->Value()) == 0)
-					NAU_THROW("File %s: Element %s: %s is not an attribute, in file %s", ProjectLoader::s_File.c_str(), pName, p->Value());
+					NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 				// trying to set the value of a read only attribute?
 				a = attribs[p->Value()];
 				if (a.mReadOnlyFlag)
-					NAU_THROW("File %s: Element %s: %s is a read-only attribute, in file %s", ProjectLoader::s_File.c_str(), pName, p->Value());
+					NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 
 				value = readAttr(pName, p, a.mType, Light::Attribs);
 				v->setProp(a.mId, a.mType, value);
@@ -3620,6 +3620,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 
 		
 		aMat->attachProgram (s_pFullName);
+		aMat->clearProgramValues();
 
 		pElemAux2 = hShader.FirstChild ("values").FirstChild ("valueof").Element();
 		for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
@@ -3681,6 +3682,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 			
 		}
 	}
+	aMat->checkProgramValuesAndUniforms();
 }
 
 /* -----------------------------------------------------------------------------

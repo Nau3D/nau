@@ -38,12 +38,14 @@ namespace nau {
 			nau::Enums::DataType m_ValueType;
 			std::string m_Context, m_Name;
 			std::string m_Param;
-			float* m_Value;
-			int *m_IntValue;
-			int m_Cardinality;
-			int m_Id;
+			void *m_Values = NULL;
+		//	float* m_Value;
+		//	int *m_IntValue;
+			int m_Cardinality = 0;
+			int m_Id = -1;
+			int m_Loc = -1;
 			bool m_InSpecML; // true for values specified in the material library, false for other uniforms
-
+			float m_fDummy;
 		public:
 
 			static bool Validate(std::string type,std::string context,std::string component);
@@ -73,9 +75,13 @@ namespace nau {
 			void setSemanticValueOf(int s);
 			void setValueType(nau::Enums::DataType s);
 				
-			void setValueOfUniform(int *values);
-			void setValueOfUniform (float *values);
+			void setValueOfUniform(void *values);
+			//void setValueOfUniform(int *values);
+			//void setValueOfUniform (float *values);
 			void* getValues ();
+
+			void setLoc(int l);
+			int getLoc();
 
 		};
 	};

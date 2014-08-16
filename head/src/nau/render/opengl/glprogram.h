@@ -54,38 +54,40 @@ namespace nau
 			virtual const std::string &getShaderFile(ShaderType type);
 			virtual bool setShaderFile(ShaderType type, const std::string &name);
 
+
 			virtual bool getPropertyb(int query);
 			virtual int getPropertyi(int query);
 			
 			bool prepare (void);
 			bool restore (void);
 
-			bool setValueOfUniform (const std::string &name, float *values);
-			bool setValueOfUniform (const std::string &name, int *values); 
+			bool setValueOfUniform (const std::string &name, void *values);
+			bool setValueOfUniform(int loc, void *values);
 
-			// FIXME: This should be private. It's here
-			// until we can find a nice way to bind vertex attributes
 			int getAttributeLocation (const std::string &name);
+			int getUniformLocation(std::string uniformName);
 
 			std::string getShaderInfoLog(ShaderType type);
 			char *getProgramInfoLog(); 
 			int programValidate();
 	
-			virtual bool compileShader (IProgram::ShaderType);
-			virtual bool linkProgram (void);
-			virtual void useProgram (void);
+			bool compileShader (IProgram::ShaderType);
+			bool linkProgram (void);
+			void useProgram (void);
 
-			virtual bool isCompiled(ShaderType type);
-			virtual bool areCompiled();
-			virtual bool isLinked();
+			bool isCompiled(ShaderType type);
+			bool areCompiled();
+			bool isLinked();
 
-			virtual int getNumberOfUniforms (void);
-			virtual int getNumberOfUserUniforms (void);
+			int getNumberOfUniforms (void);
+			int getNumberOfUserUniforms (void);
 
-			virtual const GLUniform& getUniform (int i);
-			virtual const GLUniform& getUniform (const std::string &name);
+			const IUniform &getIUniform(int i);
+			const GLUniform  &getUniform (int i);
+			const GLUniform& getUniform (const std::string &name);
 			void updateUniforms ();
 			int findUniform (const std::string &name);
+			int findUniformByLocation(int loc);
 
 		private:
 

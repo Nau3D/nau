@@ -124,7 +124,7 @@ GlProgram::getShaderFile(ShaderType type)
 
 
 bool 
-GlProgram::setValueOfUniform (const std::string &name, float *values)
+GlProgram::setValueOfUniform (const std::string &name, void *values)
 {
 	int i;
 
@@ -140,26 +140,29 @@ GlProgram::setValueOfUniform (const std::string &name, float *values)
 }
 
 
-bool 
-GlProgram::setValueOfUniform (const std::string &name, int *values)
-{
-	int i;
+bool
+GlProgram::setValueOfUniform(int loc, void *values) {
 
-	i = findUniform (name);
- 	
+	int i = findUniformByLocation(loc);
 	if (-1 == i) {
 		return false;
 	}
-	m_Uniforms[i].setValues (values);
+	m_Uniforms[i].setValues(values);
 	setValueOfUniform(i);
-
 	return true;
 }
 
+int
+GlProgram::getUniformLocation(std::string name) {
 
+	int i = findUniform(name);
+	if (-1 == i)
+		return -1;
+	else
+		return m_Uniforms[i].getLoc();
 
+}
 
-// INSTANCE METHODS
 
 bool
 GlProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename)
@@ -307,6 +310,7 @@ GlProgram::getNumberOfUniforms()
 	}
 }
 
+
 int
 GlProgram::getAttributeLocation (const std::string &name)
 {
@@ -371,6 +375,33 @@ GlProgram::findUniform (const std::string &name)
 }
 
 
+int
+GlProgram::findUniformByLocation(int loc)
+{
+	GLUniform uni;
+	int i = 0;
+	bool found(false);
+
+	std::vector<GLUniform>::iterator it;
+	for (it = m_Uniforms.begin(); it != m_Uniforms.end() && !found; it++) {
+		//uni = *it;
+		if ((*it).getLoc() == loc) {
+			found = true;
+		}
+		else {
+			i++;
+		}
+	}
+
+	if (true == found) {
+		return (i);
+	}
+	else {
+		return (-1);
+	}
+}
+
+
 const GLUniform& 
 GlProgram::getUniform(const std::string &name) {
 
@@ -382,6 +413,12 @@ GlProgram::getUniform(const std::string &name) {
 }
 
 
+const IUniform&
+GlProgram::getIUniform(int i) {
+
+	assert(i < m_Uniforms.size());
+	return (m_Uniforms[i]);
+}
 
 
 void 
