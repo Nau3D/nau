@@ -49,6 +49,16 @@ Enums::getType(std::string s)
 }
 
 
+void *
+Enums::getDefaultValue(DataType p){
+
+	int s = getSize(p);
+	void *m = malloc(s);
+	memset(m, 0, s);
+	return m;
+}
+
+
 int
 Enums::getSize(DataType p) 
 {

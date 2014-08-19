@@ -690,7 +690,7 @@ GLRenderer::setMaterial( ColorMaterial &mat)
 const vec4 &
 GLRenderer::getColorProp4f(ColorMaterial::Float4Property prop) {
 
-	return m_Material.getProp4f(prop);
+	return m_Material.getPropf4(prop);
 }
 
 
@@ -706,7 +706,7 @@ GLRenderer::getColorProp(int prop, Enums::DataType dt) {
 	switch (dt) {
 
 		case Enums::VEC4:
-			m_vDummy = m_Material.getProp4f((ColorMaterial::Float4Property)prop);
+			m_vDummy = m_Material.getPropf4((ColorMaterial::Float4Property)prop);
 			return &m_vDummy.x;
 		case Enums::FLOAT:
 			m_fDummy = m_Material.getPropf((ColorMaterial::FloatProperty)prop);

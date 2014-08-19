@@ -1153,22 +1153,22 @@ void DlgMaterials::updateColors(Material *mm) {
 
 	pgMaterial->ClearSelection();
 	
-	f = &(mm->getColor().getProp4f(ColorMaterial::DIFFUSE).x);
+	f = &(mm->getColor().getPropf4(ColorMaterial::DIFFUSE).x);
 	pgMaterial->SetPropertyValue(wxT("DIFFUSE.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("DIFFUSE.Alpha"),f[3]);
 
-	f = &(mm->getColor().getProp4f(ColorMaterial::AMBIENT).x);
+	f = &(mm->getColor().getPropf4(ColorMaterial::AMBIENT).x);
 	pgMaterial->SetPropertyValue(wxT("AMBIENT.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("AMBIENT.Alpha"),f[3]);
 
-	f = &(mm->getColor().getProp4f(ColorMaterial::SPECULAR).x);
+	f = &(mm->getColor().getPropf4(ColorMaterial::SPECULAR).x);
 	pgMaterial->SetPropertyValue(wxT("SPECULAR.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("SPECULAR.Alpha"),f[3]);
 
-	f = &(mm->getColor().getProp4f(ColorMaterial::EMISSION).x);
+	f = &(mm->getColor().getPropf4(ColorMaterial::EMISSION).x);
 	pgMaterial->SetPropertyValue(wxT("EMISSION.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("EMISSION.Alpha"),f[3]);

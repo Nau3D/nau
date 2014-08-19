@@ -34,7 +34,8 @@ namespace nau {
 		static Enums::DataType getType(std::string s);
 		static bool isValidType(std::string s);
 		static int getSize(DataType p);
-		/// returns true if p1 is compatible with p2 (note that p2 may be incompatible  with p1)z
+		static void* getDefaultValue(DataType p);
+		/// returns true if p1 is compatible with p2 
 		static bool isCompatible(DataType p1, DataType p2);
 
 		static const std::string DataTypeToString[COUNT_DATATYPE];

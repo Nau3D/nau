@@ -151,7 +151,7 @@ Texture::Texture(std::string label, std::string aDimension, std::string anIntern
 	,bitmap(0)
 #endif
 {
-	initArrays();
+	initArrays(Attribs);
 }
 
 
@@ -161,7 +161,7 @@ Texture::Texture(std::string label, std::string aDimension, std::string anIntern
 	,bitmap(0)
 #endif
 {
-	initArrays();
+	initArrays(Attribs);
 }
 
 
@@ -176,13 +176,13 @@ Texture::~Texture(){
 }
 
 
-void
-Texture::initArrays() {
-
-	Attribs.initAttribInstanceEnumArray(m_EnumProps);
-	Attribs.initAttribInstanceIntArray(m_IntProps);
-//	Attribs.initAttribInstanceUIntArray(m_UIntProps);
-}
+//void
+//Texture::initArrays() {
+//
+//	Attribs.initAttribInstanceEnumArray(m_EnumProps);
+//	Attribs.initAttribInstanceIntArray(m_IntProps);
+////	Attribs.initAttribInstanceUIntArray(m_UIntProps);
+//}
 
 
 int 
@@ -201,27 +201,27 @@ Texture::addAtrib(std::string name, Enums::DataType dt, void *value) {
 
 }
 
-void *
-Texture::getProp(int prop, Enums::DataType type) {
-
-	switch (type) {
-
-	case Enums::FLOAT:
-		assert(m_FloatProps.count(prop) > 0);
-		return(&(m_FloatProps[prop]));
-		break;
-	case Enums::VEC4:
-		assert(m_Float4Props.count(prop) > 0);
-		return(&(m_Float4Props[prop]));
-		break;
-	case Enums::INT:
-		assert(m_IntProps.count(prop) > 0);
-		return(&(m_IntProps[prop]));
-		break;
-		
-	}
-	return NULL;
-}
+//void *
+//Texture::getProp(int prop, Enums::DataType type) {
+//
+//	switch (type) {
+//
+//	case Enums::FLOAT:
+//		assert(m_FloatProps.count(prop) > 0);
+//		return(&(m_FloatProps[prop]));
+//		break;
+//	case Enums::VEC4:
+//		assert(m_Float4Props.count(prop) > 0);
+//		return(&(m_Float4Props[prop]));
+//		break;
+//	case Enums::INT:
+//		assert(m_IntProps.count(prop) > 0);
+//		return(&(m_IntProps[prop]));
+//		break;
+//		
+//	}
+//	return NULL;
+//}
 
 
 void 
@@ -230,25 +230,27 @@ Texture::setProp(int prop, Enums::DataType type, void *value) {
 	switch (type) {
 
 		case Enums::FLOAT:
+			assert(m_FloatProps.count(prop) != 0);
 			m_FloatProps[prop] = *(float *)value;
 			break;
 		case Enums::VEC4:
+			assert(m_Float4Props.count(prop) != 0);
 			m_Float4Props[prop].set((vec4 *)value);
 			break;
 		case Enums::INT:
-			if (prop >= COUNT_INTPROPERTY)
-				m_IntProps[prop] = *(int *)value;
+			assert(m_IntProps.count(prop) != 0);
+			m_IntProps[prop] = *(int *)value;
 			break;
 	}
 }		
 
 
-int 
-Texture::getPropi(IntProperty prop)
-{
-	assert(m_IntProps.find(prop) != m_IntProps.end());
-	return m_IntProps[prop];
-}
+//int 
+//Texture::getPropi(IntProperty prop)
+//{
+//	assert(m_IntProps.find(prop) != m_IntProps.end());
+//	return m_IntProps[prop];
+//}
 
 
 //int 
@@ -267,12 +269,12 @@ Texture::getPropi(IntProperty prop)
 //}
 
 
-bool 
-Texture::getPropb(BoolProperty prop)
-{
-	assert(m_BoolProps.find(prop) != m_BoolProps.end());
-	return m_BoolProps[prop];
-}
+//bool 
+//Texture::getPropb(BoolProperty prop)
+//{
+//	assert(m_BoolProps.find(prop) != m_BoolProps.end());
+//	return m_BoolProps[prop];
+//}
 
 
 #ifdef __SLANGER__

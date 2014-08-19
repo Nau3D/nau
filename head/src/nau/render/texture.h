@@ -36,44 +36,55 @@ namespace nau
 
 			//typedef enum { DIMENSION, FORMAT, TYPE, INTERNAL_FORMAT,
 			//	COUNT_ENUMPROPERTY} EnumProperty;
-			ENUM(DIMENSION, 0);
-			ENUM(FORMAT, 1);
-			ENUM(TYPE, 2);
-			ENUM(INTERNAL_FORMAT, 3);
-			ENUM(COUNT_ENUMPROPERTY, 4);
+			ENUM_PROP(DIMENSION, 0);
+			ENUM_PROP(FORMAT, 1);
+			ENUM_PROP(TYPE, 2);
+			ENUM_PROP(INTERNAL_FORMAT, 3);
+			ENUM_PROP(COUNT_ENUMPROPERTY, 4);
 			
-			typedef enum { ID, WIDTH, HEIGHT, DEPTH, LEVELS, SAMPLES, LAYERS, COMPONENT_COUNT,ELEMENT_SIZE,
-				COUNT_INTPROPERTY} IntProperty;
+			INT_PROP(ID, 0);
+			INT_PROP(WIDTH, 1);
+			INT_PROP(HEIGHT, 2);
+			INT_PROP(DEPTH, 3);
+			INT_PROP(LEVELS, 4);
+			INT_PROP(SAMPLES, 5);
+			INT_PROP(LAYERS, 6);
+			INT_PROP(COMPONENT_COUNT, 7);
+			INT_PROP(ELEMENT_SIZE, 8);
+			//typedef enum { ID, WIDTH, HEIGHT, DEPTH, LEVELS, SAMPLES, LAYERS, COMPONENT_COUNT,ELEMENT_SIZE,
+			//	COUNT_INTPROPERTY} IntProperty;
 
-			typedef enum { COUNT_UINTPROPERTY} UIntProperty;
+			//typedef enum { COUNT_UINTPROPERTY} UIntProperty;
 
-			typedef enum { MIPMAP, COUNT_BOOLPROPERTY } BoolProperty;
+			BOOL_PROP(MIPMAP, 0);
+			FLOAT_PROP(DUMMY, 0);
+			//typedef enum { MIPMAP, COUNT_BOOLPROPERTY } BoolProperty;
 
-			typedef enum {COUNT_FLOAT4PROPERTY} Float4Property;
-			typedef enum {COUNT_FLOATPROPERTY} FloatProperty;
+			//typedef enum {COUNT_FLOAT4PROPERTY} Float4Property;
+			//typedef enum {COUNT_FLOATPROPERTY} FloatProperty;
 
 
 			static AttribSet Attribs;
 
-			std::map<int,int> m_IntProps;
+			//std::map<int,int> m_IntProps;
 			//std::map<int,int> m_EnumProps;
 			//std::map<int,unsigned int> m_UIntProps;
-			std::map<int,bool> m_BoolProps;
-			std::map<int, vec4> m_Float4Props;
-			std::map<int, float> m_FloatProps;
+			//std::map<int,bool> m_BoolProps;
+			//std::map<int, vec4> m_Float4Props;
+			//std::map<int, float> m_FloatProps;
 
 			int addAtrib(std::string name, Enums::DataType dt, void *value);
 
 			// Note: no validation is performed!
 			void setProp(int prop, Enums::DataType type, void *value);
+			//void *getProp(int prop, Enums::DataType type);
 
-			int getPropi(IntProperty prop);
+			//int getPropi(IntProperty prop);
 			//int getPrope(EnumProperty prop);
 			//unsigned int getPropui(UIntProperty prop);
-			bool getPropb(BoolProperty prop);
-			void *getProp(int prop, Enums::DataType type);
+			//bool getPropb(BoolProperty prop);
 
-			void initArrays();
+			//void initArrays();
 
 			static Texture* Create (std::string file, std::string label, bool mipmap=true);
 			//static Texture* Create (std::string label);
@@ -105,9 +116,6 @@ namespace nau
 		
 			virtual ~Texture(void);
 
-			//virtual void setData(std::string internalFormat, std::string aFormat, 
-			//std::string aType, int width, int height, unsigned char * data = NULL) = 0;
-
 		protected:
 			// For textures with data, ex. loaded images
 			Texture(std::string label, std::string aDimension, std::string internalFormat, 
@@ -126,8 +134,6 @@ namespace nau
 #ifdef __SLANGER__
 			wxBitmap *bitmap;
 #endif
-			/// empty texture to be filled latter with setData
-			//Texture (std::string label);
 		};
 	};
 };

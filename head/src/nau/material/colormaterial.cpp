@@ -26,19 +26,19 @@ AttribSet ColorMaterial::Attribs;
 bool ColorMaterial::Inited = Init();
 
 
-void
-ColorMaterial::initArrays() {
-
-	Attribs.initAttribInstanceVec4Array(m_Float4Props);
-	Attribs.initAttribInstanceFloatArray(m_FloatProps);
-
-}
+//void
+//ColorMaterial::initArrays() {
+//
+//	Attribs.initAttribInstanceVec4Array(m_Float4Props);
+//	Attribs.initAttribInstanceFloatArray(m_FloatProps);
+//
+//}
 
 
 ColorMaterial::ColorMaterial() {
 
- 	initArrays();
-	assert(m_Float4Props.size()==4);}
+	initArrays(Attribs);
+}
 
 
 ColorMaterial::~ColorMaterial() {
@@ -47,15 +47,10 @@ ColorMaterial::~ColorMaterial() {
 }
 
 
-
 void 
 ColorMaterial::prepare () {
 		
-	assert(m_Float4Props.size()==4);
-
 	RENDERER->setMaterial(*this);
-	assert(m_Float4Props.size()==4);
-
 }
 
 
@@ -95,10 +90,10 @@ ColorMaterial::clone( ColorMaterial &mat)
 {
 	assert(m_Float4Props.size()==4);
 	setProp(SHININESS, mat.getPropf(SHININESS));
-	setProp(DIFFUSE, mat.getProp4f(DIFFUSE));
-	setProp(AMBIENT, mat.getProp4f(AMBIENT));
-	setProp(SPECULAR, mat.getProp4f(SPECULAR));
-	setProp(EMISSION, mat.getProp4f(EMISSION));
+	setProp(DIFFUSE, mat.getPropf4(DIFFUSE));
+	setProp(AMBIENT, mat.getPropf4(AMBIENT));
+	setProp(SPECULAR, mat.getPropf4(SPECULAR));
+	setProp(EMISSION, mat.getPropf4(EMISSION));
 	assert(m_Float4Props.size()==4);
 }
 
@@ -150,19 +145,19 @@ ColorMaterial::setProp(Float4Property prop, const vec4& values){
 }
 
 
-float 
-ColorMaterial::getPropf(FloatProperty aProp)   {
-	
-	float f = m_FloatProps[aProp];
-	return f;
-}
+//float 
+//ColorMaterial::getPropf(FloatProperty aProp)   {
+//	
+//	float f = m_FloatProps[aProp];
+//	return f;
+//}
 
 
-const vec4&
-ColorMaterial::getProp4f(Float4Property aProp)   {
-
-	assert(m_Float4Props.size()==4);
-	return this->m_Float4Props[aProp];
-}
+//const vec4&
+//ColorMaterial::getProp4f(Float4Property aProp)   {
+//
+//	assert(m_Float4Props.size()==4);
+//	return this->m_Float4Props[aProp];
+//}
 
 

@@ -827,13 +827,13 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 	LOG_INFO ("[Writing] Material's name: %s", aMaterial->getName().c_str()); 
 
 	// write color
-	vec4 v = aMaterial->getColor().getProp4f(ColorMaterial::AMBIENT);
+	vec4 v = aMaterial->getColor().getPropf4(ColorMaterial::AMBIENT);
 	f.write ((char *)&v.x, sizeof (float) * 4);
-	v = aMaterial->getColor().getProp4f(ColorMaterial::SPECULAR);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::SPECULAR);
 	f.write ((char *)&v.x, sizeof (float) * 4);
-	v = aMaterial->getColor().getProp4f(ColorMaterial::DIFFUSE);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::DIFFUSE);
 	f.write ((char *)&v.x, sizeof (float) * 4);
-	v = aMaterial->getColor().getProp4f(ColorMaterial::EMISSION);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::EMISSION);
 	f.write ((char *)&v.x, sizeof (float) * 4);
 
 	float value = aMaterial->getColor().getPropf(ColorMaterial::SHININESS);

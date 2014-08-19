@@ -416,7 +416,7 @@ GlProgram::getUniform(const std::string &name) {
 const IUniform&
 GlProgram::getIUniform(int i) {
 
-	assert(i < m_Uniforms.size());
+	assert((unsigned int) i < m_Uniforms.size());
 	return (m_Uniforms[i]);
 }
 

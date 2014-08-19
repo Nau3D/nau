@@ -326,17 +326,11 @@ Camera::setProp(int prop, Enums::DataType type, void *value) {
 	switch (type) {
 
 		case Enums::FLOAT:
-			if (prop < COUNT_FLOATPROPERTY)
-				setProp((FloatProperty)prop, *(float *)value);
-			else
-				m_FloatProps[prop] = *(float *)value;
+			setProp((FloatProperty)prop, *(float *)value);
 			break;
 		case Enums::VEC4:
 			v = (vec4 *)value;
-			if (prop < COUNT_FLOAT4PROPERTY)
-				setProp((Float4Property)prop, v->x, v->y, v->z, v->w);
-			else
-				m_Float4Props[prop].set((vec4 *)value);
+			setProp((Float4Property)prop, v->x, v->y, v->z, v->w);
 			break;
 		case Enums::INT:
 			m_IntProps[prop] = *(int *)value;
@@ -370,18 +364,18 @@ Camera::getProp(int prop, Enums::DataType type) {
 }
 
 
-const vec4&
-Camera::getPropf4(Float4Property prop) 
-{
-	return m_Float4Props[prop];
-}
-
-
-float 
-Camera::getPropf(FloatProperty prop)
-{
-	return m_FloatProps[prop];
-}
+//const vec4&
+//Camera::getPropf4(Float4Property prop) 
+//{
+//	return m_Float4Props[prop];
+//}
+//
+//
+//float 
+//Camera::getPropf(FloatProperty prop)
+//{
+//	return m_FloatProps[prop];
+//}
 
 
 const mat4&
@@ -391,11 +385,11 @@ Camera::getPropm4(Mat4Property prop)
 }
 
 
-int
-Camera::getPrope(EnumProperty prop) 
-{
-	return m_EnumProps[prop];
-}
+//int
+//Camera::getPrope(EnumProperty prop) 
+//{
+//	return m_EnumProps[prop];
+//}
 
 
 
@@ -909,383 +903,3 @@ Camera::setPositionOffset (float value)
 }
 
 
-// ================ OLD CODE ==========================
-
-
-/*
-void
-CPerspCamera::move(float direction)
-{
-	vec3 look(m_LookAtPoint);
-
-	look -= m_Position;
-	look.normalize ();
-
-	m_Position.x += look.x * direction;
-	m_Position.y += look.y * direction;
-	m_Position.z += look.z * direction;
-
-	m_LookAtPoint.x += look.x * direction;
-	m_LookAtPoint.y += look.y * direction;
-	m_LookAtPoint.z += look.z * direction;
-
-}
-
-void
-CPerspCamera::upAndDown(float direction)
-{
-	m_Position.y = direction;
-	m_LookAtPoint.y = direction;
-}
-
-void 
-CPerspCamera::strafe(float direction)
-{
-	vec3 look(m_LookAtPoint);
-
-	look -= m_Position;
-	look.normalize ();
-
-	vec3 cross;
-	cross = look.cross(m_UpVector);
-
-	m_Position.x += cross.x * direction;
-	m_Position.z += cross.z * direction;
-
-	m_LookAtPoint.x += cross.x * direction;
-	m_LookAtPoint.z += cross.z * direction;
-}
-
-void 
-CPerspCamera::rotate(float angle, float x, float y, float z)
-{
-	vec3 look(m_LookAtPoint);
-
-	float cosAngle = (float)cos(DegToRad (angle));
-	float sinAngle = (float)sin(DegToRad (angle));
-
-	look -= m_Position;
-	look.normalize();
-
-	vec3 tmp;
-
-	tmp.x = (cosAngle + (1 - cosAngle) * x) * look.x;
-	tmp.x += ((1 - cosAngle) * x * y - z * sinAngle) * look.y;
-	tmp.x += ((1 - cosAngle) * x * z + y * sinAngle) * look.z;
-
-	tmp.y = ((1 - cosAngle) * x * y + z * sinAngle) * look.x;
-	tmp.y += (cosAngle + (1 - cosAngle) * y) * look.y;
-	tmp.y += ((1 - cosAngle) * y * z - x * sinAngle) * look.z;
-
-	tmp.z = ((1 - cosAngle) * x * z - y * sinAngle) * look.x;
-	tmp.z += ((1 - cosAngle) * y * z + x * sinAngle) * look.y;
-	tmp.z += (cosAngle + (1 - cosAngle) * z) * look.z;
-
-	m_LookAtPoint.x = m_Position.x + tmp.x;
-	m_LookAtPoint.y = m_Position.y + tmp.y;
-	m_LookAtPoint.z = m_Position.z + tmp.z;
-}
-
-void 
-CPerspCamera::rotate(float angle, vec3 &axis)
-{
-	rotate(angle, axis.x, axis.y, axis.z);
-}
-*/
-
-//void 
-//Camera::activate (void)
-//{
-//	m_Active = true;
-//}
-//
-//void 
-//Camera::deactivate (void)
-//{
-//	m_Active = false;
-//}
-//
-//bool 
-//Camera::isActive (void)
-//{
-//	return m_Active;
-//}
-
-//vec3& 
-//Camera::getUpVector ()
-//{
-//	result = vec3(m_Float4Props[NORMALIZED_UP_VEC].x, m_Float4Props[NORMALIZED_UP_VEC].y, m_Float4Props[NORMALIZED_UP_VEC].z);
-//	return result;
-//}
-//
-//vec3& 
-//Camera::getViewVector ()
-//{
-//	result = vec3(m_Float4Props[NORMALIZED_VIEW_VEC].x, m_Float4Props[NORMALIZED_VIEW_VEC].y, m_Float4Props[NORMALIZED_VIEW_VEC].z);
-//	return result;
-//}
-//
-//vec3& 
-//Camera::getPosition ()
-//{
-//	result = vec3(m_Float4Props[POSITION].x, m_Float4Props[POSITION].y, m_Float4Props[POSITION].z);
-//	return result;
-//}
-//
-//
-//vec3&
-//Camera::getRightVector()
-//{
-//	result = vec3(m_Float4Props[NORMALIZED_RIGHT_VEC].x, m_Float4Props[NORMALIZED_RIGHT_VEC].y, m_Float4Props[NORMALIZED_RIGHT_VEC].z);
-//	return result;
-//}
-
-
-
-
-//void 
-//Camera::setLookAtPoint (float x, float y, float z)
-//{
-//	m_LookAtPoint.x = x;
-//	m_LookAtPoint.y = y;
-//	m_LookAtPoint.z = z;
-//}
-
-//void 
-//Camera::setLookAtPoint (const vec3& v)
-//{
-//	setLookAtPoint (v.x, v.y, v.z);
-//}
-
-//void 
-//Camera::setPosition (float x, float y, float z)
-//{
-//	setProp((Float4Property)POSITION, x, y, z, 1.0f);
-//	//m_Position.x = x;
-//	//m_Position.y = y;
-//	//m_Position.z = z;
-//}
-//
-//void 
-//Camera::setPosition (const vec3& v)
-//{
-//	setPosition (v.x, v.y, v.z);
-//}
-//
-//void 
-//Camera::setUpVector (float x, float y, float z)
-//{
-//	setProp((Float4Property)UP_VEC, x, y, z, 0.0f);
-//}
-//
-//void 
-//Camera::setUpVector (const vec3& v)
-//{
-//	setProp((Float4Property)UP_VEC, v.x, v.y, v.z, 0.0f);
-//}
-//
-
-//void 
-//Camera::setViewVector (float x, float y, float z)
-//{
-//	m_Spherical.set(x,y,z);
-//	//OR
-//	//vec3 aux(x,y,z);
-//	//aux.normalize();
-//	//m_ElevationAngle = asin(aux.y);
-//	//if (aux.z >= 0)
-//	//	m_ZXAngle = asin(aux.x / sqrt(aux.x*aux.x + aux.z*aux.z));
-//	//else
-//	//	m_ZXAngle = (float)M_PI - asin(aux.x / sqrt(aux.x*aux.x + aux.z*aux.z));
-//	// END OR
-//	setVectorsFromSpherical();
-//	buildViewMatrix();
-//}
-
-
-//void 
-//Camera::setViewVector (const vec3& v)
-//{
-//	setViewVector (v.x, v.y, v.z);
-//}
-
-//void
-//Camera::setFarPlane (float afar)
-//{
-//	m_Far = afar;
-//	if (false == m_IsOrtho) {
-//		setPerspective (m_FOV, m_Near, m_Far);
-//	} else {
-//		setOrtho (m_Left, m_Right, m_Bottom, m_Top, m_Near, m_Far);
-//	}
-//}
-//
-//
-//void
-//Camera::setNearPlane (float anear)
-//{
-//	m_Near = anear;
-//	if (false == m_IsOrtho) {
-//		setPerspective (m_FOV, m_Near, m_Far);
-//	} else {
-//		setOrtho (m_Left, m_Right, m_Bottom, m_Top, m_Near, m_Far);
-//	}
-//}
-//nau::math::vec3&
-//Camera::getLookAtPoint()
-//{
-//	return m_LookAtPoint;
-//}
-
-//void
-//Camera::setLookAtPoint(float x, float y, float z) 
-//{
-//	vec3 aux;
-//
-//	m_LookAtPoint.set(x,y,z);
-//	aux.set(-m_Position.x, -m_Position.y, -m_Position.z);
-//	aux += m_LookAtPoint;
-//	setViewVector(aux.x,aux.y,aux.z);
-//}
-
-//void 
-//Camera::setLookAtPoint(const vec3 &v) 
-//{
-//	setLookAtPoint(v.x, v.y, v.z);
-//}
-//std::string&
-//Camera::getName (void)
-//{
-//	return m_Name;
-//}
-
-
-//void 
-//Camera::getPropTypeAndId(std::string &s, nau::Enums::DataType *dt , int *id) 
-//{
-//
-//	Attribute a = Attribs.get(s);
-//	*id = a.mId;
-//
-//	if (a.mId != -1) {
-//
-//		*dt = a.mType;
-//	}
-//
-//	return;
-	//// value returned in case of an invalid string
-	//*id = -1;
-
-	//for (int i = 0; i < COUNT_MAT4PROPERTY; i++) {
-
-	//	if (s == Mat4String[i]) {
-	//	
-	//		*id = i;
-	//		*dt = Enums::MAT4;
-	//		return;
-	//	}
-	//}
-
-	//for (int i = 0; i < COUNT_FLOATPROPERTY; i++) {
-
-	//	if (s == FloatString[i]) {
-	//	
-	//		*id = i;
-	//		*dt = Enums::FLOAT;
-	//		return;
-	//	}
-	//}
-
-	//for (int i = 0; i < COUNT_FLOAT4PROPERTY; i++) {
-
-	//	if (s == Float4String[i]) {
-	//	
-	//		*id = i;
-	//		*dt = Enums::VEC4;
-	//		return;
-	//	}
-	//}
-//}
-
-//const std::string &
-//Camera::getPropfString(Camera::FloatProperty prop) 
-//{
-//	return FloatString[prop];
-//}
-//
-//			
-//const std::string &
-//Camera::getPropfvString(Camera::Float4Property prop)
-//{
-//	return Float4String[prop];
-//}
-//
-//			
-//const std::string & 
-//Camera::getPropm4String(Camera::Mat4Property prop)
-//{
-//	return Mat4String[prop];
-//}
-
-
-//void 
-//Camera::setLookAt(bool flag)
-//{
-//	m_LookAt = flag;
-//}
-//
-//bool 
-//Camera::getLookAt()
-//{
-//	return m_LookAt;
-//}
-
-
-//void
-//Camera::setZXAngle(float angle)
-//{
-//	m_Spherical.setAlpha(angle);
-//	setVectorsFromSpherical();
-//}
-//
-//void
-//Camera::setElevationAngle(float angle)
-//{
-//	m_Spherical.setBeta(angle);
-//	setVectorsFromSpherical();
-//}
-
-
-//float
-//Camera::getZXAngle()
-//{
-//	return m_Spherical.alpha();//m_ZXAngle;
-//}
-//
-//
-//float 
-//Camera::getElevationAngle()
-//{
-//	return m_Spherical.beta();//m_ElevationAngle;
-//}
-
-//void
-//Camera::setProjectionType(CameraType ct) {
-//
-//	if (ct == ORTHO)
-//		m_IsOrtho = true;
-//	else
-//		m_IsOrtho = false;
-//
-//	buildProjectionMatrix();
-//	buildProjectionViewMatrix();
-//	buildTS05PVMMatrix();
-//}
-
-//unsigned int Camera::getProjectionType() {
-//
-//	if (m_IsOrtho)
-//		return(ORTHO);
-//	else
-//		return(PERSPECTIVE);
-//}

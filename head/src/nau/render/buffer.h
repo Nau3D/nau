@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include <nau/attribute.h>
+#include <nau/attributeValues.h>
 
 #include <nau/config.h>
 
@@ -15,41 +16,22 @@ namespace nau
 {
 	namespace render
 	{
-		class Buffer
+		class Buffer : public AttributeValues
 		{
 		public:
 
-			typedef enum { 
-				COUNT_ENUMPROPERTY} EnumProperty;
+			INT_PROP(ID,0);
+			INT_PROP(BINDING_POINT, 1);
 
-			typedef enum { 
-				COUNT_INTPROPERTY} IntProperty;
-
-			typedef enum { ID, SIZE, COUNT_UINTPROPERTY} UIntProperty;
-
-			typedef enum {COUNT_FLOAT4PROPERTY} Float4Property;
-			typedef enum {COUNT_FLOATPROPERTY} FloatProperty;
-
+			UINT(SIZE, 0);
 
 			static AttribSet Attribs;
 
-			std::map<int,int> m_IntProps;
-			std::map<int,int> m_EnumProps;
-			std::map<int,unsigned int> m_UIntProps;
-			std::map<int,bool> m_BoolProps;
-			std::map<int, vec4> m_Float4Props;
-			std::map<int, float> m_FloatProps;
 
 			// Note: no validation is performed!
 			void setProp(int prop, Enums::DataType type, void *value);
 
-			int getPropi(IntProperty prop);
-			int getPrope(EnumProperty prop);
-			unsigned int getPropui(UIntProperty prop);
-			bool getPropb(BoolProperty prop);
 			void *getProp(int prop, Enums::DataType type);
-
-			void initArrays();
 
 			static Buffer* Create (std::string label, int size);
 
