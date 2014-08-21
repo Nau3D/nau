@@ -496,13 +496,16 @@
     <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\buffer.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\iprogramvalue.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\ibuffer.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
   </ItemGroup>
@@ -981,9 +984,6 @@
     <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\buffer.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\attribute.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -994,6 +994,12 @@
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\iprogramvalue.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glbuffer.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\ibuffer.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>

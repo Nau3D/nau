@@ -7,7 +7,9 @@
 #include <nau/render/rendertarget.h>
 #include <nau/render/texture.h>
 #include <nau/material/material.h>
-
+#if NAU_OPENGL_VERSION >= 430
+#include <nau/render/ibuffer.h>
+#endif
 namespace nau 
 {
 	namespace resource
@@ -22,7 +24,9 @@ namespace nau
 			std::map<std::string, nau::render::IRenderable*> m_Meshes;
 			std::map<std::string, nau::render::IProgram*> m_Programs;
 			std::map<std::string, nau::render::IState*> m_States;
-
+#if NAU_OPENGL_VERSION >= 430
+			std::map<std::string, nau::render::IBuffer*> m_Buffers;
+#endif
 			static int renderableCount;
 
 		public:
@@ -56,7 +60,7 @@ namespace nau
 				int width, int height,
 				int samples);
 
-			// TEXIMAGE
+			/***TexImage***/
 			nau::material::TexImage* createTexImage(nau::render::Texture *t);
 			nau::material::TexImage* getTexImage(std::string aTextureName);
 
@@ -80,21 +84,18 @@ namespace nau
 			nau::render::IState* getState (std::string stateName);
 			void addState (nau::render::IState* aState);
 
-			/***SHADERS***/
+			/***Shaders***/
 			bool hasProgram (std::string programName);
 			nau::render::IProgram* getProgram (std::string programName);
 			unsigned int getNumPrograms();
 			std::vector<std::string> *getProgramNames();
 
-			/***Materials***/
-//			nau::material::Material* addMaterial (nau::material::Material* aMaterial);
-			//void deleteTexImage(std::string aTextureName);
-			//nau::render::Texture* newEmptyTexture(std::string &name);
-			//nau::render::Texture* createTexture (std::string label, 
-			//	std::string internalFormat, 
-			//	std::string aFormat, 
-			//	std::string aType, int width, int height);
-			//ISceneObject* addSceneObject (void);
+#if NAU_OPENGL_VERSION >= 430
+			/***Buffers***/
+			nau::render::IBuffer* getBuffer(std::string name);
+			nau::render::IBuffer* createBuffer(std::string name, int size);
+			bool hasBuffer(std::string name);
+#endif
 		};
 	};
 };

@@ -65,10 +65,12 @@ namespace nau
 			static void loadMatLibTextures(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 			static void loadMatLibStates(TiXmlHandle hPass, MaterialLib *aLib);
 			static void loadMatLibShaders(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
+			static void loadMatLibBuffers(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 
 			static void loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
+			static void loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 

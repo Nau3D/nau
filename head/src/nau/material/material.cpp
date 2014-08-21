@@ -237,6 +237,13 @@ Material::prepareNoShaders ()
 			it->second->prepare(it->first);
 	}
 #endif
+#if NAU_OPENGL_VERSION >=  430
+	for (auto b : m_Buffers) {
+
+		b.second.second->bind();
+		b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
+	}
+#endif
 }
 
 
@@ -276,6 +283,18 @@ Material::prepare () {
 		else
 			RENDERER->setShader(NULL);
 	}
+#if NAU_OPENGL_VERSION >=  430
+	{
+		PROFILE("Buffers");
+
+		for (auto b : m_Buffers) {
+
+			b.second.second->bind();
+			b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
+		}
+
+	}
+#endif
 }
 
 
@@ -328,7 +347,41 @@ Material::getImageTexture(unsigned int unit) {
 	else
 		return NULL;
 }
-#endif
+
+#endif // NAU_OPENGL_VERSION >=  420
+
+#if NAU_OPENGL_VERSION >= 430
+
+void 
+Material::attachBuffer(IBuffer *b) {
+
+	int id = b->getPropi(IBuffer::ID);
+	int bp = b->getPropi(IBuffer::BINDING_POINT);
+	m_Buffers[id] = std::make_pair(bp, b);
+}
+
+
+IBuffer *
+Material::getBuffer(int id) {
+
+	if (m_Buffers.count(id))
+		return m_Buffers[id].second;
+	else
+		return NULL;
+}
+
+
+int
+Material::getBufferBindingPoint(int id) {
+
+	if (m_Buffers.count(id))
+		return m_Buffers[id].first;
+	else
+		return -1;
+}
+
+#endif // NAU_OPENGL_VERSION >= 430
+
 
 bool
 Material::createTexture (int unit, std::string fn)

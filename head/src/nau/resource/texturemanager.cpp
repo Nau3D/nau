@@ -306,33 +306,4 @@ TextureManager::getTexImage(std::string aTextureName)
 }
 
 
-//Texture*
-//TextureManager::newEmptyTexture(std::string name) {
-//
-//	Texture *tex = Texture::Create(name);
-//	m_Lib.push_back(tex);
-//	return(tex);
-//}
-
-
-//Texture*
-//TextureManager::createTexture (std::string label, 
-//							   std::string internalFormat, 
-//							   std::string aFormat, 
-//							   std::string aType, int width, int height)
-//{
-//	Texture *tex;
-//
-//	if (true == hasTexture (label)) {
-//		tex = getTexture (label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
-//		tex->setData(internalFormat,aFormat,aType,width,height);
-//		return(tex);
-//	}
-//
-//	tex = Texture::create (label, internalFormat, aFormat, aType, width, height);
-//	m_Lib.push_back(tex);
-//
-//	return(tex);
-//}
-
 

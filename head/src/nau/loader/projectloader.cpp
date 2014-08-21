@@ -2904,7 +2904,48 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 	}
 }
 
-// ARF_ SEMANTICS CHECK::: I'M HERE
+
+/* -----------------------------------------------------------------------------
+BUFFERS
+
+<buffers>
+	<buffer name="bla" size=123 />
+</buffers>
+
+All fields are required. Size is in bytes
+-----------------------------------------------------------------------------*/
+void
+ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
+{
+	TiXmlElement *pElem;
+	int layers = 0;
+	pElem = hRoot.FirstChild("buffers").FirstChild("buffer").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		const char* pName = pElem->Attribute("name");
+
+		if (0 == pName) {
+			NAU_THROW("Mat Lib %s: Buffer has no name", aLib->getName().c_str());
+		}
+		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pName);
+
+		SLOG("Buffer : %s", s_pFullName);
+
+		if (RESOURCEMANAGER->hasBuffer(s_pFullName)) {
+			NAU_THROW("Mat Lib %s: Buffer %s is already defined", aLib->getName().c_str(), s_pFullName);
+		}
+		int size;
+		if (pElem->QueryIntAttribute("size", &size)) {
+			NAU_THROW("Mat Lib %s: Buffer %s: has no size", aLib->getName().c_str(), pName);
+		}
+
+		if (size < 0) {
+			NAU_THROW("Mat Lib %s: Buffer %s : size must be greater than zero", aLib->getName().c_str(), pName);
+		}
+
+		RESOURCEMANAGER->createBuffer(s_pFullName, size);
+	}
+}
+
 /* -----------------------------------------------------------------------------
 TEXTURES
 
@@ -3036,12 +3077,12 @@ STATES
 
 	<states>
 		<state name="Grades">
-			<alphatest func="GREATER" ref="0.25" />			
-			<cull enable=1 face=FRONT|BACK \>
-			<depth test=1 write=1 func=LESS />
-			<blend src="ONE" dst="ONE" />
-			<order value=0 />
-		</state>
+			<ORDER value="2" />
+			<BLEND value=true />
+			<BLEND_SRC value="SRC_ALPHA" />
+			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
+			<CULL_FACE value="0" />
+			</state>
 	</states>
 
 func: NEVER, ALWAYS, LESS, LEQUAL, EQUAL, GEQUAL, GREATER, NOT_EQUAL
@@ -3073,113 +3114,6 @@ ProjectLoader::loadState(TiXmlElement *pElemAux, MaterialLib *aLib, Material *aM
 		//aMat->getTextureSampler(unit)->setProp(a.mId, a.mType, value);
 		p = p->NextSiblingElement();
 	}
-
-
-
-
-//	TiXmlElement *pElemAux2;
-//
-//	TiXmlHandle hState (pElemAux);
-//	pElemAux2 = pElemAux->FirstChildElement ("blend");
-//
-//	if (pElemAux2) {
-//
-//		char src[100],dst[100];
-//
-//		if (TIXML_SUCCESS != pElemAux2->QueryValueAttribute("src", &src) || 
-//			TIXML_SUCCESS != pElemAux2->QueryValueAttribute ("dst", &dst)){
-//			NAU_THROW("Blend definition error in library %s", aLib->getName().c_str()); 
-//		}
-//		s->setProp(IState::BLEND,true);
-//
-//		/// WARNING: MUST CONVERT STRINGS TO ENUMVALUES ///
-//		if (!IState::Attribs.isValid("BLEND_SRC", src) || !IState::Attribs.isValid("BLEND_DST", dst))
-//			NAU_THROW("Invalid Blend src and/or destination in library %s", aLib->getName().c_str()); 
-//
-//		int enumSrc = IState::Attribs.getListValueOp(IState::BLEND_SRC, src);//translateStringToBlendFuncEnum(src);
-//		int enumDst = IState::Attribs.getListValueOp(IState::BLEND_DST, dst);//IState::translateStringToBlendFuncEnum(dst);
-//		s->setProp( IState::BLEND_SRC, enumSrc);
-//		s->setProp( IState::BLEND_DST, enumDst);
-//	}
-//
-//	pElemAux2 = pElemAux->FirstChildElement ("alphatest");
-//
-//	if (pElemAux2) {
-//
-//		float fvalue;
-//
-//		if (TIXML_SUCCESS != pElemAux2->QueryFloatAttribute("ref", &fvalue)){
-//			NAU_THROW("AlphaTest definition error in library %s", aLib->getName().c_str());
-//		}
-//		s->setProp( IState::ALPHA_TEST,true);
-//		s->setProp( IState::ALPHA_VALUE, fvalue);
-//
-//		const char* pStateAlphaFunc = pElemAux2->Attribute ("func");
-//		if (pStateAlphaFunc)
-//			s->setProp(IState::ALPHA_FUNC, IState::Attribs.getListValueOp(IState::ALPHA_FUNC, pStateAlphaFunc));//IState::translateStringToFuncEnum(pStateAlphaFunc));
-//	}
-//
-//	pElemAux2 = pElemAux->FirstChildElement ("cull");
-//	if (pElemAux2) {
-//
-//		int value;
-//		char face[16];
-//		int success[2];
-//		success[0] = !pElemAux2->QueryIntAttribute("enable", &value);
-//		success[1] = !pElemAux2->QueryValueAttribute("face", &face);
-//		if (!success[0] && !success[1]){
-//			NAU_THROW("CullFace definition error in state %s, library %s", s->getName().c_str(),aLib->getName().c_str());
-//		}
-//		if (success[0])
-//			s->setProp(IState::CULL_FACE, value!=0);
-//
-//		if (success[1] ) {
-////			if (!strcmp(face,"FRONT"))
-//			s->setProp(IState::CULL_TYPE,IState::Attribs.getListValueOp(IState::CULL_FACE,face));
-////			else
-////				s->setProp(IState::CULL_TYPE, IState::BACK_FACE);
-//		}
-//	}
-//
-//	pElemAux2 = pElemAux->FirstChildElement ("order");
-//
-//	if (pElemAux2) {
-//
-//		int value;
-//		if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute("value", &value)){
-//			NAU_THROW("Order definition error in library %s", aLib->getName().c_str());// + " in material: " + aMat->getName());
-//		}
-//		s->setProp( IState::ORDER, value);
-//	}
-//
-//	pElemAux2 = pElemAux->FirstChildElement("depth");
-//	if (pElemAux2) {
-//	
-//		int value;
-//		const char *pTest = pElemAux2->Attribute("test");
-//		if (pTest) {
-//			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute("test", &value)){
-//			NAU_THROW("Depth test definition error in library %s", aLib->getName().c_str());// + " in material: " + aMat->getName());
-//			}
-//			s->setProp( IState::DEPTH_TEST, value!=0);
-//		}
-//
-//		const char *pWrite = pElemAux2->Attribute("write");
-//		if (pWrite) {
-//			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute("write", &value)){
-//			NAU_THROW("Depth write definition error in library %s", aLib->getName().c_str());// + " in material: " + aMat->getName());
-//			}
-//			s->setProp( IState::DEPTH_MASK, value!=0);
-//		}
-//		const char *pFunc = pElemAux2->Attribute("func");
-//		if (pFunc) {
-//			if (IState::Attribs.isValid("DEPTH_FUNC", pFunc)) 
-//				s->setProp(IState::DEPTH_FUNC, IState::Attribs.getListValueOp(IState::DEPTH_FUNC, pFunc));
-//			else 
-//				NAU_THROW("Depth func definition error in library %s", aLib->getName().c_str());// + " in material: " + aMat->getName());
-//		}
-//		
-//	}
 }
 
 
@@ -3283,7 +3217,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				if (!FileUtil::exists(GSFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", pGSFile, aLib->getName().c_str());
 #else
-				NAU_THROW("Geometry Shader is only supported if OpenGL version >= 320");
+				NAU_THROW("Mat Lib %s: Shader %s: Geometry Shader shader is not allowed with OpenGL < 3.2",aLib->getName().c_str(), pProgramName);
 #endif
 			}
 			if (pPSFile) {
@@ -3297,7 +3231,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				if (!FileUtil::exists(TEFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", TEFileName.c_str(), aLib->getName().c_str());
 #else
-				NAU_THROW("Tessellation Evaluator Shader is only supported if OpenGL version >= 400");
+				NAU_THROW("Mat Lib %s: Shader %s: Tesselation shaders are not allowed with OpenGL < 4.0",aLib->getName().c_str(), pProgramName);
 #endif
 			}
 			if (pTCFile) {
@@ -3306,7 +3240,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				if (!FileUtil::exists(TCFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", TCFileName.c_str(), aLib->getName().c_str());
 #else
-				NAU_THROW("Tessellation Control Shader is only supported if OpenGL version >= 400");
+				NAU_THROW("Mat Lib %s: Shader %s: Tesselation shaders are not allowed with OpenGL < 4.0",aLib->getName().c_str(), pProgramName);
 #endif
 			}
 
@@ -3513,9 +3447,76 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 			p = p->NextSiblingElement();
 		}
 	}
+#else
+	NAU_THROW("Library %s: Material %s: Image Texture Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), NAU_OPENGL_VERSION);
+
 #endif
 }
 
+/* -----------------------------------------------------------------------------
+MATERIAL BUFFERS
+
+<buffers>
+	<buffer name="bla" />
+		<TYPE="SHADER_STORAGE" />
+		<BINDING_POINT value="1">
+	</buffer>
+</buffers>
+
+All fields are optional. By default the type is SHADER_STORAGE, and binding point is 0
+
+The name can refer to a buffer in another lib, in which case the syntax is lib_name::buffer_name
+
+-----------------------------------------------------------------------------*/
+
+void
+ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
+{
+#if NAU_OPENGL_VERSION >=  430
+	TiXmlElement *pElemAux;
+	pElemAux = handle.FirstChild("buffers").FirstChild("buffer").Element();
+	for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
+
+		const char *pName = pElemAux->Attribute("name");
+		if (0 == pName) {
+			NAU_THROW("Library %s: Material %s: Buffer has no name", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+		if (!strchr(pName, ':'))
+			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pName);
+		else
+			sprintf(s_pFullName, "%s", pName);
+		if (!RESOURCEMANAGER->hasBuffer(s_pFullName))
+			NAU_THROW("Library %s: Material %s: Buffer %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pName);
+
+		IBuffer *b = RESOURCEMANAGER->getBuffer(s_pFullName);
+		int buffID = b->getPropi(IBuffer::ID);
+
+		// Reading Buffer Attributes
+
+		std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+		TiXmlElement *p = pElemAux->FirstChildElement();
+		Attribute a;
+		void *value;
+		while (p) {
+			// trying to define an attribute that does not exist		
+			if (attribs.count(p->Value()) == 0)
+				NAU_THROW("Library %s: Material %s: Buffer - %s is not an attribute", aLib->getName().c_str(), aMat->getName().c_str(), p->Value());
+			// trying to set the value of a read only attribute
+			a = attribs[p->Value()];
+			if (a.mReadOnlyFlag)
+				NAU_THROW("Library %s: Material %s: Buffer - %s is a read-only attribute", aLib->getName().c_str(), aMat->getName().c_str(), p->Value());
+
+			value = readAttr("", p, a.mType, IBuffer::Attribs);
+			b->setProp(a.mId, a.mType, value);
+			p = p->NextSiblingElement();
+		}
+		aMat->attachBuffer(b);
+	}
+#else
+	NAU_THROW("Library %s: Material %s: Buffers Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), NAU_OPENGL_VERSION);
+
+#endif
+}
 
 /* -----------------------------------------------------------------------------
 MATERIALTEXTURE
@@ -3814,7 +3815,7 @@ ProjectLoader::loadMatLib (std::string file)
 	loadMatLibTextures(hRoot, aLib,path);
 	loadMatLibStates(hRoot, aLib);
 	loadMatLibShaders(hRoot, aLib, path);
-
+	loadMatLibBuffers(hRoot, aLib, path);
 	pElem = hRoot.FirstChild ("materials").FirstChild ("material").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
@@ -3839,7 +3840,7 @@ ProjectLoader::loadMatLib (std::string file)
 		loadMaterialShader(handle,aLib,mat);
 		loadMaterialState(handle,aLib,mat);
 		loadMaterialImageTextures(handle,aLib,mat);
-
+		loadMaterialBuffers(handle, aLib, mat);
 		//aLib->addMaterial (mat);
 	}
 }
