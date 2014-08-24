@@ -151,6 +151,7 @@ MaterialSortRenderQueue::processQueue (void)
 						renderer->pushMatrix(IRenderer::MODEL_MATRIX);
 						renderer->applyTransform(IRenderer::MODEL_MATRIX, *(*matGroupsIter).second);
 						aMat->setUniformValues();
+				
 					}
 					{	PROFILE("Draw");
 						renderer->drawGroup ((*matGroupsIter).first);

@@ -223,7 +223,6 @@ GLRenderer::drawGroup (IMaterialGroup* aMatGroup)
 
 		if (size != 0) {
 		
-
 			glDrawElements(drawPrimitive, size, GL_UNSIGNED_INT, 0);
 		}
 		else {

@@ -456,7 +456,8 @@ PassOptix::optixInit() {
 
 		objsIter = objs.begin();
 		for ( ; objsIter != objs.end(); ++objsIter) {
-			o_GeomLib.addSceneObject((*objsIter)->getId(), m_MaterialMap);
+			o_GeomLib.addSceneObject(*objsIter, m_MaterialMap);
+//			o_GeomLib.addSceneObject((*objsIter)->getId(), m_MaterialMap);
 		}
 	}
 	o_GeomLib.buildGeometryGroup();

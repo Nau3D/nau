@@ -43,25 +43,25 @@ namespace nau
 
 			virtual void prepareTriangleIDs(unsigned int sceneObjectID) = 0;
 			virtual void unitize(float min, float max) = 0;
-			virtual void createUnifiedIndexVector() = 0;
-
-			virtual nau::render::VertexData& getVertexData (void) = 0;
-			virtual std::vector<nau::material::IMaterialGroup*>& 
-												getMaterialGroups (void) = 0;
 
 			virtual void getMaterialNames(std::set<std::string> *nameList) = 0;
-			virtual void addMaterialGroup (nau::material::IMaterialGroup*) = 0;
+			virtual void addMaterialGroup (nau::material::IMaterialGroup*, int offset=0) = 0;
 			virtual void addMaterialGroup (nau::material::IMaterialGroup* materialGroup, 
 				nau::render::IRenderable *aRenderable) = 0; 
-			virtual int getNumberOfVertices (void) = 0;
+			virtual std::vector<nau::material::IMaterialGroup*>& getMaterialGroups(void) = 0;
+
+			virtual nau::render::VertexData& getVertexData (void) = 0;
+			virtual nau::render::IndexData& getIndexData(void) = 0;
+
+			virtual void merge(nau::render::IRenderable *aRenderable) = 0;
+			virtual int getNumberOfVertices(void) = 0;
 			virtual void setNumberOfVerticesPerPatch(int i) = 0;
 			virtual int getnumberOfVerticesPerPatch(void) = 0;
+
 			virtual std::string getType (void) = 0;
 			virtual void resetCompilationFlags() = 0;
 
 			virtual ~IRenderable(void) {};
-
-			//virtual int getNumberOfPrimitives(void) = 0;
 		};
 	};
 };

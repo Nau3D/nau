@@ -140,7 +140,7 @@ SceneObject::burnTransform (void)
 	}
 
 	//Reset transform to the identity
-	mat4 &thisMatrixShouldNotExist = const_cast<mat4 &> (transformationMatrix); /***MARK***/
+	mat4 &thisMatrixShouldNotExist = const_cast<mat4 &> (transformationMatrix); 
 	m_ResultTransform->setIdentity();
 	m_Transform->setIdentity();
 	m_GlobalTransform->setIdentity();

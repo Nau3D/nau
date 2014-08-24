@@ -54,6 +54,7 @@ GLIndexArray::compile (VertexData &v) /***MARK***/ //STATIC DRAW ONLY
 	glBindVertexArray(m_VAO);
 
 	v.bind();
+	glBindVertexArray(0);
 
 	if (0 != m_InternalIndexArray && m_InternalIndexArray->size() != 0) {
 
@@ -70,7 +71,7 @@ GLIndexArray::compile (VertexData &v) /***MARK***/ //STATIC DRAW ONLY
 		glBufferData (GL_ELEMENT_ARRAY_BUFFER, pArray->size() * sizeof (unsigned int), &(*pArray)[0], GL_STATIC_DRAW);
 	}
 
-	glBindVertexArray(0);
+//	glBindVertexArray(0);
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);	
 	v.unbind();
 
@@ -101,7 +102,7 @@ GLIndexArray::bind (void)
 		if (m_VAO)
 			glBindVertexArray(m_VAO);
 		//else if (0 != m_GLBuffer) {
-		//	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
+			glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
 		//}
 	} 
 }

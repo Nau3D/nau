@@ -2,7 +2,7 @@
 <project name="Interpolator Test">
 	<assets>
 		<scenes>
-			<scene name="Sphere" class="OctreeByMat">
+			<scene name="Sphere" class="OctreeUnified">
 				<geometry name = "Sphere1" type = "Sphere" slices=10 stacks=10 
 												transX=-2.5 transY=0 transZ=0 
 												scale=2 material="crateBox"/>

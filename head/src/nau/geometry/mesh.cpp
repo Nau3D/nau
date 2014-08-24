@@ -1,3 +1,6 @@
+
+
+
 #include <nau/geometry/mesh.h>
 #include <nau/material/imaterialgroup.h>
 #include <nau/material/materialgroup.h>
@@ -34,9 +37,13 @@ Mesh::Mesh(void) :
 
 Mesh::~Mesh(void)
 {
-	if (0 != m_pVertexData) {
+	if (0 != m_pVertexData) 
 		delete m_pVertexData;
-	}
+
+	if (0 != m_IndexData)
+		delete m_IndexData;
+
+
 	std::vector<nau::material::IMaterialGroup*>::iterator matIter;
 
 	matIter = m_vMaterialGroups.begin();
@@ -109,6 +116,15 @@ Mesh::getVertexData (void)
 }
 
 
+nau::render::IndexData&
+Mesh::getIndexData()
+{
+	createUnifiedIndexVector();
+	m_IndexData->setIndexData(&m_UnifiedIndex);
+	return *m_IndexData;
+}
+
+
 std::vector<nau::material::IMaterialGroup*>&
 Mesh::getMaterialGroups (void)
 {
@@ -146,35 +162,10 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 		unsigned int size = m_pVertexData->getDataOf(VertexData::getAttribIndex("position")).size();
 		std::vector<VertexData::Attr>* idsArray = new std::vector<VertexData::Attr>(size);
 
-		// right now only works for meshes with non-repeating vertices, such as OBJ
-		if (m_DrawPrimitive == IRenderable::TRIANGLES || m_DrawPrimitive == IRenderable::LINES) {
-
-			int primitiveOffset = 3;//getPrimitiveOffset();
-			for (unsigned int i = 0; i < size; i++) {
-				idsArray->at(i).x = sceneObjectID;
-				idsArray->at(i).y = i / primitiveOffset;
-			}
-		}
-
-		// this has to be tested: need a model with several strips 
-		if (m_DrawPrimitive == IRenderable::TRIANGLE_FAN || m_DrawPrimitive == IRenderable::TRIANGLE_STRIP) {
-		
-			unsigned int size;
-			std::vector<nau::material::IMaterialGroup*>::iterator iter;
-			iter = m_vMaterialGroups.begin();
-			unsigned int baseID = 2;
-			unsigned int triID = 0;
-			for ( ; iter != m_vMaterialGroups.end(); ++iter) {
-			
-				size = (*iter)->getNumberOfPrimitives();
-				for (unsigned int j = baseID; j < baseID + size; j++) {
-	
-					idsArray->at(j).x = sceneObjectID;
-					idsArray->at(j).y = triID;
-					triID++;
-				}
-				baseID += size + 2;
-			}		
+		int primitiveOffset = 3;//getPrimitiveOffset();
+		for (unsigned int i = 0; i < size; i++) {
+			idsArray->at(i).x = sceneObjectID;
+			idsArray->at(i).y = i / primitiveOffset;
 		}
 		m_pVertexData->setAttributeDataFor(VertexData::getAttribIndex("triangleID"), idsArray);		
 	}
@@ -266,7 +257,7 @@ Mesh::createUnifiedIndexVector()
 
 
 void 
-Mesh::addMaterialGroup (IMaterialGroup* materialGroup)
+Mesh::addMaterialGroup (IMaterialGroup* materialGroup, int offset)
 {
 	/*
 	- search material in vector

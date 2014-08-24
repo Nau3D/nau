@@ -446,6 +446,7 @@
     <ClCompile Include="..\src\nau\scene\octreeByMat.cpp" />
     <ClCompile Include="..\src\nau\scene\octreeByMatnode.cpp" />
     <ClCompile Include="..\src\nau\scene\octreeByMatscene.cpp" />
+    <ClCompile Include="..\src\nau\scene\octreeunified.cpp" />
     <ClCompile Include="..\src\nau\slogger.cpp" />
     <ClCompile Include="..\src\nau\geometry\axis.cpp" />
     <ClCompile Include="..\src\nau\geometry\bbox.cpp" />
@@ -672,6 +673,7 @@
     <ClInclude Include="..\src\nau\scene\octreeByMat.h" />
     <ClInclude Include="..\src\nau\scene\octreeByMatnode.h" />
     <ClInclude Include="..\src\nau\scene\octreeByMatscene.h" />
+    <ClInclude Include="..\src\nau\scene\octreeunified.h" />
     <ClInclude Include="..\src\nau\slogger.h" />
     <ClInclude Include="..\src\nau\geometry\axis.h" />
     <ClInclude Include="..\src\nau\geometry\bbox.h" />

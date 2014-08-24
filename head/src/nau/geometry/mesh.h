@@ -1,14 +1,20 @@
+/*
+
+This IRenderable contains only the attribute vectors. The index vectors are stored in the material groups.
+
+*/
+
 #ifndef MESH_H
 #define MESH_H
+
+#include <set>
+#include <string>
 
 #include <nau/render/irenderer.h>
 #include <nau/render/irenderable.h>
 #include <nau/material/imaterialgroup.h>
-
 #include <nau/resource/resourcemanager.h>
 
-
-#include <string>
 
 namespace nau
 {
@@ -18,6 +24,7 @@ namespace nau
 		{
 		protected:
 			nau::render::VertexData* m_pVertexData;
+			nau::render::IndexData* m_IndexData;
 			std::vector<nau::material::IMaterialGroup*> m_vMaterialGroups;
 			unsigned int m_DrawPrimitive;
 			unsigned int m_RealDrawPrimitive;
@@ -27,43 +34,41 @@ namespace nau
 			int m_VerticesPerPatch = 0;
 			void createUnifiedIndexVector();
 			void prepareIndexData(); 
-			void resetCompilationFlags();
 			Mesh(void);
 
 		public:
 			friend class nau::resource::ResourceManager;
 
 			static Mesh *createUnregisteredMesh();
-			virtual ~Mesh (void);
+			~Mesh (void);
 
-			virtual void setName (std::string name);
-			virtual std::string& getName (void);
+			void setName (std::string name);
+			std::string& getName (void);
 
 			unsigned int getDrawingPrimitive(); 
 			unsigned int getRealDrawingPrimitive();
 			void setDrawingPrimitive(unsigned int aDrawingPrimitive);
 
 			void prepareTriangleIDs(unsigned int sceneObjectID);
-
 			void unitize(float min, float max);
 
-			void addMaterialGroup (nau::material::IMaterialGroup*);
+			void getMaterialNames(std::set<std::string> *nameList);
+			void addMaterialGroup (nau::material::IMaterialGroup*, int offset = 0);
 			void addMaterialGroup (nau::material::IMaterialGroup* materialGroup, 
 				nau::render::IRenderable *aRenderable); 
 			std::vector<nau::material::IMaterialGroup*>& getMaterialGroups (void);
-			virtual void getMaterialNames(std::set<std::string> *nameList);
 
-			void merge (nau::render::IRenderable *aRenderable);
+			nau::render::VertexData& getVertexData (void);
+			nau::render::IndexData& getIndexData(void);
 
-			virtual nau::render::VertexData& getVertexData (void);
-			virtual int getNumberOfVertices (void);
+			int getNumberOfVertices (void);
 			void setNumberOfVerticesPerPatch(int i);
 			int getnumberOfVerticesPerPatch(void);
 
-			virtual std::string getType (void);
+			std::string getType (void);
+			void resetCompilationFlags();
 
-			//int getPrimitiveOffset(void);
-			//virtual int getNumberOfPrimitives(void);
+			void merge (nau::render::IRenderable *aRenderable);
 		};
 	};
 };
