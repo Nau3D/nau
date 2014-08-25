@@ -26,6 +26,7 @@ Mesh::createUnregisteredMesh()
 
 Mesh::Mesh(void) :
 	m_pVertexData (0),
+	m_IndexData(0),
 	m_vMaterialGroups (),
 	m_DrawPrimitive(nau::render::IRenderable::TRIANGLES),
 	m_Name (""),

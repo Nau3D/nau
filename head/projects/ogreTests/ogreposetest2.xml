@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<project name="teste ogre pose" width=512 height =512>
+	<assets>
+		<scenes>
+			<scene name="Box" type="ScenePoses">
+				<file>..\..\models\ogremodels\Box01.mesh.xml</file>
+			</scene>
+		</scenes>
+		
+		<sensors>
+			<sensor name="tsensor" class="TimeSensor">
+				<enabled value="1" />
+				<secondsToStart value="0" />
+				<cycleInterval value="10" />
+				<loop value="1" />
+			</sensor>
+		</sensors>
+		
+		<routes>
+			<route name="BoxAnimRoute" sender="tsensor" receiver="Box"
+				eventOut="TIMESENSOR_FRACTION_CHANGED" eventIn="ANIMATE" >
+			</route>
+		</routes>
+		
+		<viewports>
+			<viewport name="MainViewport" fixed="false">
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.4" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" type="perspective">
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="1.0" FAR="1000.0" />
+				<POSITION x="-384" y="0" z="482.0" />
+				<VIEW x="0.58" y="0.22" z="-0.78" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-1.0" z="-0.25" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+	</assets>
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene>Box</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>				
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

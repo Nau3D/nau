@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<project name="teste ogre pose" width=512 height=512>
+	<assets>
+		<scenes>
+			<scene name="Facial" type="ScenePoses">
+				<file>..\..\models\ogremodels\facial.mesh.xml</file>
+			</scene>
+		</scenes>
+		
+		<sensors>
+			<sensor name="tsensor" class="TimeSensor">
+				<enabled value="0" />
+				<secondsToStart value="0" />
+				<cycleInterval value="10" />
+				<loop value="1" />
+			</sensor>
+			
+			<sensor name="psensor" class="ProximitySensor" >
+				<enabled value = "1" />
+				<size x = "180" y = "180" z = "180" />
+			</sensor>
+		</sensors>
+		
+		<routes>
+			<route name="cam2prox" sender="MainCamera" receiver="psensor"
+				eventOut="CAMERA_POSITION" eventIn="PROXIMITY" />
+
+				<route name="prox2timeEnter" sender="psensor" receiver="tsensor"
+				eventOut="ENTER_TIME" eventIn="ACTIVATE" />
+
+			<route name="prox2timeExit" sender="psensor" receiver="tsensor"
+				eventOut="EXIT_TIME" eventIn="DEACTIVATE" />
+				
+			<route name="facialAnimRoute" sender="tsensor" receiver="Facial"
+				eventOut="TIMESENSOR_FRACTION_CHANGED" eventIn="ANIMATE" />
+		</routes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.4" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" type="perspective">
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="1.0" FAR="1000.0" />
+				<POSITION x="0.0" y="0.0" z="100.0" />
+				<VIEW x="0.0" y="0.0" z="-1.0" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-1.0" z="-0.25" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+	</assets>
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene>Facial</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>				
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

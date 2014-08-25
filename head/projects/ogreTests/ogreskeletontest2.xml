@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<project name="teste ogre pose" width=512 height=512>
+	<assets>
+		<scenes>
+			<scene name="Ninja" type="SceneSkeleton">
+				<file>..\..\models\ogremodels\ninja.mesh.xml</file>
+			</scene>
+		</scenes>
+		
+		<sensors>
+			<sensor name="tsensor" class="TimeSensor">
+				<enabled value="1" />
+				<secondsToStart value="0" />
+				<cicleInterval value="10" />
+				<loop value="1" />
+			</sensor>
+		</sensors>
+		
+		<routes>
+			<route name="BoxAnimRoute" sender="tsensor" receiver="Ninja"
+				eventIn="TIMESENSOR_FRACTION_CHANGED" eventOut="ANIMATE" >
+			</route>
+		</routes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.4" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="1.0" FAR="1000.0" />
+				<POSITION x="-92" y="89" z="-178.0" />
+				<VIEW x="0.5" y="0.00" z="0.86" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-1.0" z="-0.25" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+	</assets>
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene>Ninja</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>				
+				<lights>
+					<light>Sun</light>
+				</lights>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

@@ -16,7 +16,7 @@ namespace nau
 			GLuint m_GLBuffers[VertexData::MaxAttribs+1];
 			GLuint m_AttributesLocations[VertexData::MaxAttribs];
 			bool m_IsCompiled;
-			static unsigned int m_OpenGLOwnAttribs;
+			//static unsigned int m_OpenGLOwnAttribs;
 
 		public:
 			GLVertexArray(void);
@@ -54,7 +54,7 @@ namespace nau
 			//						  int location);
 
 		private:
-			void setGLArray (unsigned int type, float* pointer);
+			//void setGLArray (unsigned int type, float* pointer);
 			GLenum translate (unsigned int type);
 			//void setGLArray (VertexDataType type, float* pointer);
 			//GLenum translate (VertexDataType type);

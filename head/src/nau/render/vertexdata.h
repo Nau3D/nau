@@ -58,15 +58,15 @@ namespace nau
 			//	INDEX_ARRAY
 			//} VertexDataType;
 
-			typedef enum {
-				DRAW_VERTICES = 0x01,
-				DRAW_NORMALS = 0x02,
-				DRAW_COLORS = 0x04,
-				DRAW_SECONDARY_COLORS = 0x08,
-				DRAW_EDGES = 0x10,
-				DRAW_FOG = 0x20,
-				DRAW_TEXTURE_COORDS = 0x40
-			} DrawArrays;
+			//typedef enum {
+			//	DRAW_VERTICES = 0x01,
+			//	DRAW_NORMALS = 0x02,
+			//	DRAW_COLORS = 0x04,
+			//	DRAW_SECONDARY_COLORS = 0x08,
+			//	DRAW_EDGES = 0x10,
+			//	DRAW_FOG = 0x20,
+			//	DRAW_TEXTURE_COORDS = 0x40
+			//} DrawArrays;
 			
 		public:
 			virtual ~VertexData(void);
