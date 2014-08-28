@@ -33,6 +33,12 @@
     <ClCompile Include="..\..\Common\InputUtils.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
+    <ClCompile Include="GUConfigData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GetUniforms.h">
@@ -53,9 +59,18 @@
     <ClInclude Include="..\..\MainLib\InterceptPluginInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GUConfigData.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUInput.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="CustomGetUniforms.def">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\..\..\Bin\Plugins\CustomGetUniforms\config.ini">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

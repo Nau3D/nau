@@ -3,6 +3,8 @@
 
 #include "../../MainLib/InterceptPluginInterface.h"
 #include "UniformData.h"
+#include "GUConfigData.h"
+#include "GUInput.h"
 #include <map>
 
 using namespace std;
@@ -169,8 +171,14 @@ protected:
   UniformData *selected_uniform;
   GLchar * string_holder;
   GLenum * enum_holder;
+  GUConfigData configData;           //Configuration data
+  GUInput inputSys;
+  
+  bool enableKeyState;
 private:
 	void SelectUniform(unsigned int program,unsigned int location);
+	void PrintProgramUniforms(map<int, UniformData *> &program);
+	void PrintUniforms(unsigned int program, unsigned int uniform);
 };
 
 #endif // __CUSTOM_GET_UNIFORMS_H_

@@ -37,10 +37,17 @@ USING_ERRORLOG
 //CUSTOM UNIFORM FETCHING Plugin Fetching glProgramUniformMatrix3x4fv
 //CUSTOM UNIFORM FETCHING Plugin Fetching glProgramUniformMatrix4x3fv
 
+extern string dllPath;
+
+static int customgetuniforms_framecounter = 0;
+
 GetUniforms::GetUniforms(InterceptPluginCallbacks *callBacks):
 selected_uniform(0),
+enableKeyState(false),
+inputSys(callBacks->GetInputUtils()),
 gliCallBacks(callBacks)
 {
+  //DEPRECATED
   LOGERR(("CUSTOM UNIFORM FETCHING Plugin has been successfully created"));
   gliCallBacks->RegisterGLFunction("glGetActiveUniform");
 
@@ -84,6 +91,23 @@ gliCallBacks(callBacks)
 	  gliCallBacks->RegisterGLFunction(programUniform.c_str());
       //LOGERR(("CUSTOM UNIFORM FETCHING Plugin Fetching %s",programUniform.c_str()));
   }
+  //gliCallBacks->RegisterGLFunction("glProgramUniform*");
+
+    //Parse the config file
+  ConfigParser fileParser;
+  if(fileParser.Parse(dllPath + "config.ini"))
+  {
+    configData.ReadConfigData(&fileParser);
+    fileParser.LogUnusedTokens(); 
+  }
+
+  //Parse the config string
+  ConfigParser stringParser;
+  if(stringParser.ParseString(gliCallBacks->GetConfigString()))
+  {
+    configData.ReadConfigData(&stringParser);
+    stringParser.LogUnusedTokens(); 
+  }
 
 }
 
@@ -100,8 +124,6 @@ void GetUniforms::GLFunctionPre (uint updateID, const char *funcName, uint funcI
 {
 	char buffer[1024] = {0};
 	const char *charptr;
-	void *values;
-	unsigned int arraysize = 0;
 
 	void *pointer;
 
@@ -110,7 +132,6 @@ void GetUniforms::GLFunctionPre (uint updateID, const char *funcName, uint funcI
 	GLsizei bufSize = -1;
 	GLsizei *length;
 	GLint *size;
-	GLint sizei;
 
     FunctionArgs accessArgs(args);
 	if (strcmp("glGetActiveUniform",funcName) == 0){
@@ -122,124 +143,18 @@ void GetUniforms::GLFunctionPre (uint updateID, const char *funcName, uint funcI
 		accessArgs.Get(pointer); size = (GLint *) pointer;
 		accessArgs.Get(pointer); enum_holder = (GLenum *) pointer;
 		accessArgs.Get(pointer); string_holder = (GLchar *) pointer;
-
+		
 		SelectUniform(program, location);
 
 	}
 	else{
 		charptr = strstr(funcName,"glProgramUniform");
 		if (charptr){
-		    accessArgs.Get(program);
-		    accessArgs.Get(location);
-		    SelectUniform(program, location);
-
-			charptr += 16; //glProgramUniform type, for example 1f
-			switch(charptr[0]){
-				case '1':
-					arraysize = 1;
-					break;
-				case '2':
-					arraysize = 2;
-					break;
-				case '3':
-					arraysize = 3;
-					break;
-				case '4':
-					arraysize = 4;
-					break;
-			}
-
-			//only if it's not matrix which start as glProgramUniformMatrices
-			if (arraysize){
-
-			    // types: "f","i","ui","fv","iv","uiv"
-				switch(charptr[1]){
-					case 'f':
-						values = malloc(sizeof(float) * arraysize);
-						if (charptr[2]){ //fv
-		                    accessArgs.Get(sizei);
-		                    accessArgs.Get(pointer);
-							memcpy(values,pointer,sizeof(float) * arraysize);
-						}
-						else{ //f
-							GLfloat value;
-							for(unsigned int i=0; i<arraysize; i++){
-								float *tmp = (float *) values;
-								accessArgs.Get(value);
-								tmp[i] = value;
-							}
-						}
-						break;
-					case 'i':
-						values = malloc(sizeof(int) * arraysize);
-						if (charptr[2]){ //iv
-		                    accessArgs.Get(sizei);
-		                    accessArgs.Get(pointer);
-							memcpy(values,pointer,sizeof(int) * arraysize);
-						}
-						else{ //i
-							GLint value;
-							for(unsigned int i=0; i<arraysize; i++){
-								int *tmp = (int *) values;
-								accessArgs.Get(value);
-								tmp[i] = value;
-							}
-						}
-						break;
-					case 'u':
-						values = malloc(sizeof(unsigned int) * arraysize);
-						if (charptr[3]){ //uiv
-		                    accessArgs.Get(sizei);
-		                    accessArgs.Get(pointer);
-							memcpy(values,pointer,sizeof(unsigned int) * arraysize);
-						}
-						else{ //ui
-							GLuint value;
-							for(unsigned int i=0; i<arraysize; i++){
-								unsigned int *tmp = (unsigned int *) values;
-								accessArgs.Get(value);
-								tmp[i] = value;
-							}
-						}
-						break;
-				}
-				selected_uniform->Update(values);
-
-			}
-			else{
-				charptr += 8;
-				unsigned int rows, columns;
-				switch(charptr[0]){
-					case '2':
-						rows = 2;
-						break;
-					case '3':
-						rows = 3;
-						break;
-					case '4':
-						rows = 4;
-						break;
-				}
-				if (charptr[1] == 'x'){
-					switch(charptr[2]){
-						case '2':
-							columns = 2;
-							break;
-						case '3':
-							columns = 3;
-							break;
-						case '4':
-							columns = 4;
-							break;
-					}
-				}
-				arraysize = rows * columns;
-				values = malloc(sizeof(float) * arraysize);
-				accessArgs.Get(sizei);
-				accessArgs.Get(pointer);
-				memcpy(values,pointer,sizeof(float) * arraysize);
-				selected_uniform->Update(values);
-			}
+			accessArgs.Get(program);
+			accessArgs.Get(location);
+			SelectUniform(program, location);
+			charptr+=16;
+			selected_uniform->Update(charptr, accessArgs);
 		}
 	}
 
@@ -250,14 +165,15 @@ void GetUniforms::GLFunctionPre (uint updateID, const char *funcName, uint funcI
 //
 void GetUniforms::GLFunctionPost(uint updateID, const char *funcName, uint funcIndex, const FunctionRetValue & retVal)
 {
+	//DEPRECATED
 	if (strcmp("glGetActiveUniform",funcName) == 0){
 		selected_uniform->SetType(enum_holder[0]);
 		selected_uniform->SetName((char *)string_holder);
-		//LOGERR(("%s", selected_uniform->InfoString())); //name does not exist before executing the function
+		//LOGERR(("GLFunctionPostI: %s", selected_uniform->InfoString())); //name does not exist before executing the function
 	}
-	else if (strstr(funcName,"glProgramUniform")){
-		LOGERR(("%s", selected_uniform->ValueString()));
-	}
+	//else if (strstr(funcName,"glProgramUniform")){
+	//	LOGERR(("GLFunctionPostV function %s: %s", funcName, selected_uniform->ValueString()));
+	//}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -286,7 +202,25 @@ void GetUniforms::GLFrameEndPre(const char *funcName, uint funcIndex, const Func
 void GetUniforms::GLFrameEndPost(const char *funcName, uint funcIndex, const FunctionRetValue & retVal)
 {
   
+  //Check if the enable key state has changed
+	if(inputSys.IsAllKeyDown(configData.captureKeys) != enableKeyState)
+	{
+	//Change the enabled key state
+	enableKeyState = !enableKeyState;
 
+	//If the keys were pressed, enable/disable the free camera mode
+		if(enableKeyState)
+		{
+			//Print uniforms data
+			LOGERR(("--- CustomGetUniforms uniform data on frame: %i", customgetuniforms_framecounter));
+			for (int i = 0; i < uniforms.size(); i++){
+				PrintProgramUniforms(uniforms[i]);
+			}
+			LOGERR(("--- CustomGetUniforms uniform data end"));
+		}
+	}
+	
+	customgetuniforms_framecounter++;
 }
 
 
@@ -329,7 +263,7 @@ void GetUniforms::OnGLError(const char *funcName, uint funcIndex)
 //
 void GetUniforms::Destroy()
 {
-  LOGERR(("LOG Plugin Destroyed"));
+  LOGERR(("CustomGetUniforms Plugin Destroyed"));
   
   //Don't do this:
   //gliCallBacks->DestroyPlugin();
@@ -345,5 +279,15 @@ void GetUniforms::SelectUniform(unsigned int program,unsigned int location){
 	}
 	else{
 		selected_uniform = uniforms[program][location];
+	}
+}
+
+void GetUniforms::PrintProgramUniforms(map<int, UniformData *> &program){
+	std::map<int,std::vector<int>> loclist;
+
+	for (int i = 0; i < program.size(); i++){
+		if (configData.printUnfound ||  program[i]->IsValueSet()){
+			LOGERR(("%s", program[i]->UniformString()));
+		}
 	}
 }

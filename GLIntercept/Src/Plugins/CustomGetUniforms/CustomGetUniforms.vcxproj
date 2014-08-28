@@ -47,11 +47,16 @@
     <OutDir>.\..\..\Intermediate\Plugins\CustomGetUniforms\Debug\</OutDir>
     <IntDir>.\..\..\Intermediate\Plugins\CustomGetUniforms\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <LibraryWPath>$(WindowsSDK_MetadataPath)</LibraryWPath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);C:\toolkits\libs</LibraryPath>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);C:\toolkits\includes</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\..\..\Intermediate\Plugins\CustomGetUniforms\Release\</OutDir>
     <IntDir>.\..\..\Intermediate\Plugins\CustomGetUniforms\Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <LibraryWPath>$(WindowsSDK_MetadataPath)</LibraryWPath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);./libs</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -65,7 +70,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\..\..\Intermediate\Plugins\CustomGetUniforms\Debug/CustomGetUniforms.dll</OutputFile>
       <ModuleDefinitionFile>.\CustomGetUniforms.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -107,12 +112,16 @@
   <ItemGroup>
     <ClCompile Include="CustomGetUniforms.cpp" />
     <ClCompile Include="GetUniforms.cpp" />
+    <ClCompile Include="GUConfigData.cpp" />
+    <ClCompile Include="GUInput.cpp" />
     <ClCompile Include="UniformData.cpp" />
     <ClCompile Include="..\..\Common\ConfigParser.cpp" />
     <ClCompile Include="..\..\Common\InputUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GetUniforms.h" />
+    <ClInclude Include="GUConfigData.h" />
+    <ClInclude Include="GUInput.h" />
     <ClInclude Include="UniformData.h" />
     <ClInclude Include="..\..\Common\ConfigParser.h" />
     <ClInclude Include="..\..\Common\InputUtils.h" />
@@ -120,6 +129,7 @@
     <ClInclude Include="..\..\MainLib\InterceptPluginInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\Bin\Plugins\CustomGetUniforms\config.ini" />
     <None Include="CustomGetUniforms.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

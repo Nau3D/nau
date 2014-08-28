@@ -1,4 +1,10 @@
 #include <string>
+#include "../../MainLib/InterceptPluginInterface.h"
+#define CINT 0
+#define CUINT 1
+#define CFLOAT 2
+#define CBOOL 3
+#define OTHER -1
 
 using namespace std;
 
@@ -12,14 +18,19 @@ public:
 	~UniformData();
 
 	void Update(void* d);
+	void Update(const char *charptr, FunctionArgs &accessArgs);
 
 	void SetType(unsigned int t);
+	void SetTypeManual(unsigned int t, unsigned int c, unsigned int r);
 
 	void SetName(string new_name);
 	void SetName(char *new_name);
 
+	bool IsValueSet();
+
 	char *InfoString();
 	char *ValueString();
+	char *UniformString();
 	
 protected:
 	int program;

@@ -37,6 +37,7 @@ protected:
 	DlgDbgGLILogRead& operator= (const DlgDbgGLILogRead&);
 	static DlgDbgGLILogRead *m_Inst;
 
+	void loadLogFile(wxTreeItemId &rootnode,std::string logfile, int frameNumber);
 	
 	wxTreeCtrl *m_log;
 	wxButton *m_bClear, *m_bProfiler, *m_bSave;

@@ -2,6 +2,7 @@
 #include <nau.h>
 #include <nau/debug/profile.h>
 #include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+#include <dirent.h>
 
 BEGIN_EVENT_TABLE(DlgDbgGLILogRead, wxDialog)
 
@@ -87,55 +88,81 @@ void DlgDbgGLILogRead::clear() {
 	isLogClear=true;
 }
 
+void DlgDbgGLILogRead::loadLogFile(wxTreeItemId &rootnode,string logfile, int frameNumber){
+	wxTreeItemId frame;
+	ifstream filestream(logfile);
+	string line;
+	bool isNewFrame = true;
+
+	if (filestream){
+	
+		getline(filestream,line);
+		getline(filestream,line);
+		getline(filestream,line);
+		getline(filestream,line);
+		getline(filestream,line);
+		
+		while (std::getline(filestream, line))
+		{
+			if (isNewFrame){
+				frame = m_log->AppendItem(rootnode, "frame "+to_string(frameNumber));
+				frameNumber++;
+				isNewFrame=false;
+			}
+			m_log->AppendItem(frame,line);
+			if(strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
+				isNewFrame=true;
+			}
+		}
+
+	}
+	filestream.close();
+}
 
 void DlgDbgGLILogRead::loadLog() {
 	wxTreeItemId rootnode;
-	wxTreeItemId frame;
 	string logname = gliGetLogName();
-	string logfile = gliGetLogPath()+logname+".txt";
-	ifstream filestream(logfile);
-	string line;
-	int frameNumber = 0;
-	bool isNewFrame = true;
+	string logfile;
 	rootnode = m_log->AddRoot(logname);
-	
-		//DEBUG
-		//std::vector<std::string> enums;
-		//int count = gliGetEnumsCount();
-		//
-		//for (int i=0;i<count;i++){
-		//		m_log->AppendItem(rootnode,gliGetEnumsName(i));
-
-		//}
 
 	if (isLogClear){
-		if (filestream){
-	
-			getline(filestream,line);
-			getline(filestream,line);
-			getline(filestream,line);
-			getline(filestream,line);
-			getline(filestream,line);
-		
-			while (std::getline(filestream, line))
-			{
-				if (isNewFrame){
-					frame = m_log->AppendItem(rootnode, "frame "+to_string(frameNumber));
-					frameNumber++;
-					isNewFrame=false;
-				}
-				m_log->AppendItem(frame,line);
-				if(strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
-					isNewFrame=true;
-				}
-			}
+		if (false){
+			// Corresponding logfile
+			logfile = gliGetLogPath()+logname+".txt";
 
+			//Reads logfile
+			loadLogFile(rootnode, logfile, 0);
+
+			//If no logfile was found then leave a message
+			if (m_log->GetChildrenCount(rootnode, false) == 0){
+				m_log->AppendItem(rootnode, "logfile not found");
+			}
 		}
 		else{
-			frame = m_log->AppendItem(rootnode, "logfile not found");
-		}
-		filestream.close();
+			//Directory searching algorithm source:
+			//dirent.h
+			DIR *dir;
+			struct dirent *ent;
+			if ((dir = opendir (gliGetLogPath())) != NULL) {
+				// Read all files and directories in the directory
+				while ((ent = readdir (dir)) != NULL) {
+					// Filters directories starting with Frame_* only
+					if (ent->d_type == S_IFDIR && strstr(ent->d_name, "Frame_")){
+						// Corresponding logfile
+						logfile = gliGetLogPath()+string(ent->d_name)+"/"+logname+".txt";
 
+						//Reads logfile
+						loadLogFile(rootnode, logfile, atoi(ent->d_name+6));
+					}
+				}
+				closedir (dir);
+			}
+
+			//If no logfile was found then leave a message
+			if (m_log->GetChildrenCount(rootnode, false) == 0){
+				m_log->AppendItem(rootnode, "no related logfiles were found");
+			}
+		}
 		m_log->Expand(rootnode);
 		isLogClear=false;
 	}
