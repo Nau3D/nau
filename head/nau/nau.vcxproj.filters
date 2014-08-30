@@ -511,6 +511,9 @@
     <ClCompile Include="..\src\nau\scene\octreeunified.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\passoptixprime.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1007,6 +1010,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\scene\octreeunified.h">
       <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passoptixprime.h">
+      <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

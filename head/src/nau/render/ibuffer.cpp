@@ -15,6 +15,7 @@ IBuffer::Init() {
 
 	// BOOL
 	Attribs.add(Attribute(BIND, "BIND", Enums::DataType::BOOL, true, new bool(false)));
+	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
 	// UINT
 	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::UINT, true, new unsigned int(0)));
 	// INT

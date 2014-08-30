@@ -40,7 +40,7 @@ GLIndexArray::getIndexData (void)
 }
 
 bool 
-GLIndexArray::compile (VertexData &v) /***MARK***/ //STATIC DRAW ONLY
+GLIndexArray::compile (VertexData &v) 
 {
 	if (m_IsCompiled)
 		return false;
@@ -77,6 +77,9 @@ GLIndexArray::compile (VertexData &v) /***MARK***/ //STATIC DRAW ONLY
 
 	return true;
 }
+
+
+
 
 
 void 

@@ -32,6 +32,7 @@ namespace nau
 			ENUM_PROP(TYPE, 0);
 
 			BOOL_PROP(BIND, 0);
+			BOOL_PROP(CLEAR, 1);
 
 			static AttribSet Attribs;
 
@@ -45,6 +46,10 @@ namespace nau
 
 			virtual void bind() = 0;
 			virtual void unbind() = 0;
+
+			virtual void clear() = 0;
+
+			virtual IBuffer * clone() = 0;
 		
 			~IBuffer(void) {};
 

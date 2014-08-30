@@ -1,7 +1,3 @@
-#include <nau/config.h>
-
-#ifdef NAU_OPTIX
-
 #ifndef PASSOPTIX_H
 #define PASSOPTIX_H
 
@@ -102,7 +98,7 @@ namespace nau
 };
 #endif // PassOptix Class
 
-#endif // NAU_OPTIX
+
 
 
 

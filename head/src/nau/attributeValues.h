@@ -40,6 +40,20 @@ namespace nau {
 		std::map<int, mat3> m_Mat3Props;
 		std::map<int, mat4> m_Mat4Props;
 
+
+		void copy(AttributeValues *to) {
+
+			to->m_EnumProps =   m_EnumProps;
+			to->m_IntProps =    m_IntProps;
+			to->m_UIntProps =   m_UIntProps;
+			to->m_BoolProps =   m_BoolProps;
+			to->m_Bool4Props =  m_Bool4Props;
+			to->m_FloatProps =  m_FloatProps;
+			to->m_Float4Props = m_Float4Props;
+			to->m_Mat3Props =   m_Mat3Props;
+			to->m_Mat4Props =   m_Mat4Props;
+		}
+
 		int getPrope(EnumProperty prop) {
 			return m_EnumProps[prop];
 		}

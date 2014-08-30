@@ -26,7 +26,7 @@ GLBuffer::GLBuffer(std::string label, int size) {
 
 	glGenBuffers(1, (GLuint *)&m_IntProps[ID]);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_IntProps[ID]);
-	glBufferStorage(GL_SHADER_STORAGE_BUFFER, m_UIntProps[SIZE], NULL, GL_MAP_READ_BIT);
+	glBufferStorage(GL_SHADER_STORAGE_BUFFER, m_UIntProps[SIZE], NULL, GL_DYNAMIC_STORAGE_BIT);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
@@ -34,6 +34,16 @@ GLBuffer::GLBuffer(std::string label, int size) {
 GLBuffer::~GLBuffer() {
 
 	glDeleteBuffers(1, (GLuint*)&m_IntProps[ID]);
+}
+
+
+IBuffer *
+GLBuffer::clone() {
+
+	GLBuffer *b = new GLBuffer();
+	b->m_Label = this->m_Label;
+	AttributeValues::copy(b);
+	return (IBuffer *)b;
 }
 
 
@@ -53,6 +63,15 @@ GLBuffer::unbind() {
 }
 
 
+void 
+GLBuffer::clear() {
+	unsigned char c = 0;
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_IntProps[ID]);
+	glClearBufferData(GL_SHADER_STORAGE_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+}
+
+
 void
 GLBuffer::setProp(int prop, Enums::DataType type, void *value) {
 
@@ -65,15 +84,23 @@ GLBuffer::setProp(int prop, Enums::DataType type, void *value) {
 			m_Float4Props[prop].set((vec4 *)value);
 			break;
 		case Enums::INT:
+			if (prop == BINDING_POINT) {
+				int i = *(int *)value;
+				if (i == -1)
+					glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], 0);
+				else
+					glBindBufferBase(m_EnumProps[TYPE], i, m_IntProps[ID]);
+			}
 			m_IntProps[prop] = *(int *)value;
-			if (prop == BINDING_POINT)
-				glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], m_IntProps[ID]);
 			break;
 		case Enums::UINT:
 			m_UIntProps[prop] = *(unsigned int *)value;
 			break;
 		case Enums::ENUM:
 			m_EnumProps[prop] = *(int *)value;
+			break;
+		case Enums::BOOL:
+			m_BoolProps[prop] = *(bool *)value;
 			break;
 	}
 }

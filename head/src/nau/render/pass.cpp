@@ -145,8 +145,6 @@ Pass::getViewport()
 
 Pass::~Pass()
 {
-	m_pViewport = NULL;
-	/***MARK***/ //Delete resources ?
 }
 
 

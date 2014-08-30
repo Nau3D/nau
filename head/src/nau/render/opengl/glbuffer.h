@@ -31,6 +31,8 @@ namespace nau
 			void bind();
 			void unbind();
 			void setProp(int prop, Enums::DataType type, void *value);
+			void clear();
+			IBuffer * clone();
 
 		protected:
 			static bool Init();

@@ -250,6 +250,22 @@ Material::prepareNoShaders ()
 void 
 Material::prepare () {
 
+#if NAU_OPENGL_VERSION >=  430
+	{
+		PROFILE("Buffers");
+
+		for (auto b : m_Buffers) {
+
+			if (b.second.second->getPropb(IBuffer::CLEAR)) {
+
+				b.second.second->clear();
+			}
+			b.second.second->bind();
+			b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
+		}
+
+	}
+#endif
 	{
 		PROFILE("State");
 		RENDERER->setState (m_State);
@@ -289,6 +305,10 @@ Material::prepare () {
 
 		for (auto b : m_Buffers) {
 
+			if (b.second.second->getPropb(IBuffer::CLEAR)) {
+
+				b.second.second->clear();
+			}
 			b.second.second->bind();
 			b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
 		}

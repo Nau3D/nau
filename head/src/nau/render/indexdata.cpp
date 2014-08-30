@@ -53,6 +53,24 @@ IndexData::getIndexData (void)
 	return (*m_InternalIndexArray);
 }
 
+#ifdef NAU_OPTIX_PRIME
+std::vector<int>*
+IndexData::getIndexDataAsInt(void) {
+
+	std::vector < int >* v = new std::vector < int >;
+
+	if (NULL == m_InternalIndexArray)
+		v->resize(0);
+	else {
+		v->resize(m_InternalIndexArray->size());
+		for (unsigned int i = 0; i < m_InternalIndexArray->size(); ++i) {
+
+			v->at(i) = (int)m_InternalIndexArray->at(i);
+		}
+	}
+	return v;
+}
+#endif
 
 unsigned int
 IndexData::getIndexSize (void) 

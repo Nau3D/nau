@@ -120,7 +120,12 @@ Mesh::getVertexData (void)
 nau::render::IndexData&
 Mesh::getIndexData()
 {
-	createUnifiedIndexVector();
+	if (m_UnifiedIndex.size() == 0)
+		createUnifiedIndexVector();
+
+	if (!m_IndexData)
+		m_IndexData = IndexData::create();
+
 	m_IndexData->setIndexData(&m_UnifiedIndex);
 	return *m_IndexData;
 }

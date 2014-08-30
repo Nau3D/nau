@@ -58,10 +58,10 @@ RenderManager::clear() {
 
 	m_pRenderQueue->clearQueue();
 
-	while (!m_SceneObjects.empty()){
-		delete ((*m_SceneObjects.begin()));
-		m_SceneObjects.erase(m_SceneObjects.begin());
-	}
+	//while (!m_SceneObjects.empty()){
+	//	delete ((m_SceneObjects.begin()));
+	//	m_SceneObjects.erase(m_SceneObjects.begin());
+	//}
 
 
 }

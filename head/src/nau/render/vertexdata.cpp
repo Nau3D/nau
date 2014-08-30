@@ -60,8 +60,6 @@ VertexData::create (void)
 	return new GLVertexArray;
 #elif NAU_DIRECTX
 	return new DXVertexArray;
-#else
-	return new VertexData;
 #endif
 }
 

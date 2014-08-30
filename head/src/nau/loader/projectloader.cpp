@@ -5,10 +5,13 @@
 #include <nau/material/programvalue.h>
 #include <nau/render/pipeline.h>
 #include <nau/render/passfactory.h>
-
+#ifdef NAU_OPTIX_PRIME
+#include <nau/render/passoptixprime.h>
+#endif
 #ifdef NAU_OPTIX
 #include <nau/render/passOptix.h>
 #endif
+
 #include <nau/render/passCompute.h>
 
 #include <nau/system/textutil.h>
@@ -1923,6 +1926,94 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 }
 
 #endif
+
+/* ----------------------------------------------------------------------------
+
+OPTIX PRIME SETTINGS
+
+
+<pass name="Optix Prime" class="optix prime">
+	<scene name="Main">
+	<rays buffer="primeShadows::rays" queryType = "CLOSEST"/>
+	<hits buffer ="primeShadows::hits" />
+</pass>
+-------------------------------------------------------------------------------*/
+#ifdef NAU_OPTIX_PRIME
+
+void
+ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
+
+	TiXmlElement *pElem;
+	PassOptixPrime *p = (PassOptixPrime *)aPass;
+
+	pElem = hPass.FirstChildElement("scene").Element();
+	if (pElem != NULL) {
+		const char *pSceneName = pElem->Attribute("name");
+
+		if (pSceneName != NULL) {
+
+			if (!RENDERMANAGER->hasScene(pSceneName)) {
+				NAU_THROW("Pass %s: Scene %s is not defined", aPass->getName().c_str(), pSceneName);
+			}
+			else
+				p->addScene(pSceneName);
+		}
+	}
+	else {
+		NAU_THROW("Pass %s: Scene is not defined", aPass->getName().c_str());
+	}
+
+	pElem = hPass.FirstChildElement("rays").Element();
+	if (pElem != NULL) {
+		const char *pBufferName = pElem->Attribute("buffer");
+		const char *pQueryType = pElem->Attribute("queryType");
+
+		if (pBufferName != NULL) {
+
+			if (!RESOURCEMANAGER->hasBuffer(pBufferName)) {
+				NAU_THROW("Pass %s: Ray buffer %s is not defined", aPass->getName().c_str(), pBufferName);
+			}
+			else
+				p->addRayBuffer(RESOURCEMANAGER->getBuffer(pBufferName));
+		}
+		else {
+			NAU_THROW("Pass %s: Ray buffer has no name", aPass->getName().c_str());
+		}
+		if (pQueryType != NULL) {
+			p->setQueryType(pQueryType);
+		}
+		else {
+			NAU_THROW("Pass %s: Ray buffer %s: Query Type not defined", aPass->getName().c_str(), pBufferName);
+		}
+	}
+	else {
+		NAU_THROW("Pass %s: Ray buffer is not defined", aPass->getName().c_str());
+	}
+
+	pElem = hPass.FirstChildElement("hits").Element();
+	if (pElem != NULL) {
+		const char *pBufferName = pElem->Attribute("buffer");
+
+		if (pBufferName != NULL) {
+
+			if (!RESOURCEMANAGER->hasBuffer(pBufferName)) {
+				NAU_THROW("Pass %s: Hit Buffer %s is not defined", aPass->getName().c_str(), pBufferName);
+			}
+			else
+				p->addHitBuffer(RESOURCEMANAGER->getBuffer(pBufferName));
+		}
+		else {
+			NAU_THROW("Pass %s: Hit buffer has no name", aPass->getName().c_str(), pBufferName);
+		}
+	}
+	else {
+		NAU_THROW("Pass %s: Hit buffer is not defined", aPass->getName().c_str());
+	}
+
+
+}
+
+#endif
 /* ----------------------------------------------------------------------------
 
 	COMPUTE SETTINGS
@@ -2547,6 +2638,12 @@ MAPS - Allow the setting of individual settings of loaded materials
 					<filtering min="LINEAR" mag="LINEAR" />
 				</texture>
 			</textures>
+			<buffers>
+				<buffer name="rays" fromLibrary="PrimeShadows">
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>
 
 		</map>
 	</injectionMaps>
@@ -2683,63 +2780,56 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 					}
 				}
 
-				//TiXmlElement *pElemAux2;
-				//const char *mode = NULL;
-				//const char *func = NULL;
-				//const char *min = NULL, *mag = NULL;
-				//pElemAux2 = pElemAux->FirstChildElement ("depthCompare");
-				//if (pElemAux2) {
-				//	mode = pElemAux2->Attribute("mode");
-				//	if (0 == mode){
-				//		NAU_THROW("Depth Compare definition error in library %s in pass %s", pLib,  aPass->getName().c_str());
-				//	}
-
-				//	func = pElemAux2->Attribute("func");
-				//	if (0 == func){
-				//		NAU_THROW("Depth Compare  definition error in library %s in pass %s", pLib,  aPass->getName().c_str());
-				//	}
-				//}
-
-				//pElemAux2 = pElemAux->FirstChildElement ("filtering");
-				//if (pElemAux2) {
-				//	min = pElemAux2->Attribute("min");
-				//	if (0 == min){
-				//		NAU_THROW("Filtering definition error in library %s in pass %s", pLib,  aPass->getName().c_str());
-				//	}
-
-				//	mag = pElemAux2->Attribute("mag");
-				//	if (0 == mag){
-				//		NAU_THROW("Filtering  definition error in library %s in pass %s", pLib,  aPass->getName().c_str());
-				//	}
-				//}
-
-				//IRenderer::TextureUnit texUnit = (IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+unit);
-				//std::vector<std::string>::iterator iter;
-				//for(iter = names->begin(); iter != names->end(); ++iter) {
-
-				//	std::string name = *iter;
-				//	dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
-				//	dstMat->attachTexture(unit, RESOURCEMANAGER->getTexture(s_pFullName));
-				//	if (mode) 
-				//		dstMat->getTextureSampler(unit)->setProp(TextureSampler::COMPARE_MODE, TextureSampler::Attribs.getListValueOp(TextureSampler::COMPARE_MODE,mode));
-				//	if (func)
-				//		dstMat->getTextureSampler(unit)->setProp(TextureSampler::COMPARE_FUNC, TextureSampler::Attribs.getListValueOp(TextureSampler::COMPARE_FUNC,mode));
-				//	
-				//	if (min)
-				//		dstMat->getTextureSampler(unit)->setProp(TextureSampler::MIN_FILTER, TextureSampler::Attribs.getListValueOp(TextureSampler::MIN_FILTER,mode));
-				//	if (mag)
-				//		dstMat->getTextureSampler(unit)->setProp(TextureSampler::MAG_FILTER, TextureSampler::Attribs.getListValueOp(TextureSampler::MAG_FILTER,mode));
-				//	//if (mode) 
-				//	//	dstMat->getState()->setTexProp( texUnit, IState::TEXTURE_COMPARE_MODE, IState::translateStringToTexCompareModeEnum(mode));
-				//	//if (func)
-				//	//	dstMat->getState()->setTexProp( texUnit, IState::TEXTURE_COMPARE_FUNC, IState::translateStringToTexCompareFuncEnum(func));
-				//	//
-				//	//if (min)
-				//	//	dstMat->getState()->setTexProp( texUnit, IState::TEXTURE_MIN_FILTER, IState::translateStringToTexMinModeEnum(min));
-				//	//if (mag)
-				//	//	dstMat->getState()->setTexProp( texUnit, IState::TEXTURE_MAG_FILTER, IState::translateStringToTexMagModeEnum(mag));
-				//}
 		
+			}
+		}
+
+		pElemNode = pElem->FirstChild("buffers");
+		if (pElemNode) {
+			pElemAux = pElemNode->FirstChildElement("buffer");
+			for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement()) {
+
+				const char *pName = pElemAux->Attribute("name");
+				const char *pLib = pElemAux->Attribute("fromLibrary");
+
+
+				if (0 == pName || 0 == pLib) {
+					NAU_THROW("Buffer map error in pass: %s", aPass->getName().c_str());
+				}
+
+				sprintf(s_pFullName, "%s::%s", pLib, pName);
+				if (!RESOURCEMANAGER->hasBuffer(s_pFullName))
+					NAU_THROW("Buffer %s is not defined in lib %s, in pass: %s", pName, pLib, aPass->getName().c_str());
+
+				std::vector<std::string>::iterator iter;
+				for (iter = names->begin(); iter != names->end(); ++iter) {
+
+					std::string name = *iter;
+					dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+					IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
+					IBuffer *b = buffer->clone();
+
+					std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+					TiXmlElement *p = pElemAux->FirstChildElement();
+					Attribute a;
+					void *value;
+					while (p) {
+						// trying to define an attribute that does not exist		
+						if (attribs.count(p->Value()) == 0)
+							NAU_THROW("Pass %s: Buffer %s: %s is not an attribute", aPass->getName().c_str(), s_pFullName, p->Value());
+						// trying to set the value of a read only attribute
+						a = attribs[p->Value()];
+						if (a.mReadOnlyFlag)
+							NAU_THROW("Pass %s: Buffer %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), s_pFullName, p->Value());
+
+						value = readAttr(s_pFullName, p, a.mType, IBuffer::Attribs);
+						b->setProp(a.mId, a.mType, value);
+						p = p->NextSiblingElement();
+					}
+					dstMat->attachBuffer(b);
+				}
+
+
 			}
 		}
 
@@ -2865,7 +2955,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 			}
 			passMapper[pName] = aPass;
 					
-			if (0 != strcmp (pClass, "quad") && 0 != strcmp(pClass,"profiler")) {
+			if (0 != strcmp(pClass, "optixPrime") && 0 != strcmp(pClass, "quad") && 0 != strcmp(pClass, "profiler")) {
 
 				loadPassScenes(hPass,aPass);
 				loadPassCamera(hPass,aPass);			
@@ -2879,6 +2969,11 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 			if (0 == strcmp("compute", pClass))
 				loadPassComputeSettings(hPass, aPass);
 			
+#ifdef NAU_OPTIX_PRIME
+			if (0 == strcmp("optixPrime", pClass))
+				loadPassOptixPrimeSettings(hPass, aPass);
+#endif
+
 			loadPassParams(hPass, aPass);
 			loadPassViewport(hPass, aPass);
 			loadPassClearDepthAndColor(hPass, aPass);
@@ -3488,9 +3583,8 @@ ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Materi
 		if (!RESOURCEMANAGER->hasBuffer(s_pFullName))
 			NAU_THROW("Library %s: Material %s: Buffer %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pName);
 
-		IBuffer *b = RESOURCEMANAGER->getBuffer(s_pFullName);
-		int buffID = b->getPropi(IBuffer::ID);
-
+		IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
+		IBuffer *b = buffer->clone();
 		// Reading Buffer Attributes
 
 		std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
