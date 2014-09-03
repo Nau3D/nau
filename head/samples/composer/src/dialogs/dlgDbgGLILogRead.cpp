@@ -123,12 +123,13 @@ void DlgDbgGLILogRead::loadLog() {
 	wxTreeItemId rootnode;
 	string logname = gliGetLogName();
 	string logfile;
-	rootnode = m_log->AddRoot(logname);
+	
 
 	if (isLogClear){
-		if (false){
+		if (!gliIsLogPerFrame()){
 			// Corresponding logfile
 			logfile = gliGetLogPath()+logname+".txt";
+			rootnode = m_log->AddRoot(logfile);
 
 			//Reads logfile
 			loadLogFile(rootnode, logfile, 0);
@@ -139,6 +140,7 @@ void DlgDbgGLILogRead::loadLog() {
 			}
 		}
 		else{
+			rootnode = m_log->AddRoot(gliGetLogPath()+string("Frame_*\\")+logname+".txt");
 			//Directory searching algorithm source:
 			//dirent.h
 			DIR *dir;

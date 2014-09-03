@@ -68,7 +68,7 @@
 			<enabled value="true"/>
 		</functionlog>
 		<logperframe>
-			<logperframe value="false"/>
+			<logperframe value="true"/>
 			<logoneframeonly value="true"/>
 		</logperframe>
 		<errorchecking>

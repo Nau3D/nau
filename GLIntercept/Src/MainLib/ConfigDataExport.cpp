@@ -83,6 +83,10 @@ void setFunctionTableExport(FunctionTable * fTable){
 	  configDataExport->logPerFrame=logPerFrame;
   }
 
+  bool gliIsLogPerFrame(){
+	  return configDataExport->logPerFrame;
+  }
+
   void gliSetLogOneFrameOnly(bool logOneFrameOnly){
 	  configDataExport->logOneFrameOnly=logOneFrameOnly;
   }
@@ -210,7 +214,7 @@ void setFunctionTableExport(FunctionTable * fTable){
   }
 
 
-
+  
   void gliSetFrameLogEnabled(bool frameLogEnabled){
 	  configDataExport->frameLogEnabled=frameLogEnabled;
   }

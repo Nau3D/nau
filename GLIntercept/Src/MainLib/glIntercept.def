@@ -377,6 +377,7 @@ EXPORTS
    gliSetErrorExtendedLogError
    gliSetErrorDebuggerErrorLog
    gliSetLogPerFrame
+   gliIsLogPerFrame
    gliSetLogOneFrameOnly
    gliAddLogFrameKeys
    gliClearLogFrameKeys

@@ -34,6 +34,7 @@ using namespace std;
   dlllibextern void gliSetErrorDebuggerErrorLog(bool errorDebuggerErrorLog);                     // Flag to indicate if the error log is mirrored to the debugger
 
   dlllibextern void gliSetLogPerFrame(bool logPerFrame);                               // Flag to indicate if we log per-frame or by the entire application
+  dlllibextern bool gliIsLogPerFrame();
   dlllibextern void gliSetLogOneFrameOnly(bool logOneFrameOnly);                           // Flag to indicate if per-frame logging will only get one frame at a time
   dlllibextern void gliAddLogFrameKeys(const char *logFrameKeys);                      // The key codes used to enable per-frame logging
   dlllibextern void gliClearLogFrameKeys();                      // The key codes used to enable per-frame logging
