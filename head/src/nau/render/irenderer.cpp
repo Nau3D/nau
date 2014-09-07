@@ -22,6 +22,8 @@ IRenderer::Init() {
 	MatrixAttribs.add(Attribute(TS05_PVM, "TS05_PVM", Enums::DataType::MAT4, true, new mat4()));
 	MatrixAttribs.add(Attribute(NORMAL, "NORMAL", Enums::DataType::MAT3, true, new mat3()));
 
+
+
 	// MOVE TO irenderable.h
 	//Attribs.add(Attribute(DRAW_PRIMITIVE, "DRAW_PRIMITIVE", Enums::DataType::ENUM, true));
 	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLES", TRIANGLES);
@@ -113,48 +115,48 @@ IRenderer::getPropMatrixTypeString(MatrixType mode)
 }
 
 
-int 
-IRenderer::translateStringToStencilOp(std::string s) {
-
-	if (s == "KEEP")
-		return(KEEP);
-	if (s == "ZERO")
-		return(ZERO);
-	if (s == "REPLACE")
-		return(REPLACE);
-	if (s == "INCR")
-		return(INCR);
-	if (s == "INCR_WRAP")
-		return(INCR_WRAP);
-	if (s == "DECR")
-		return(DECR);
-	if (s == "DECR_WRAP")
-		return(DECR_WRAP);
-	if (s == "INVERT")
-		return(INVERT);
-
-	return(-1);
-}
-
-int 
-IRenderer::translateStringToStencilFunc(std::string s) {
-
-	if (s == "NEVER")
-		return(NEVER);
-	if (s == "ALWAYS")
-		return(ALWAYS);
-	if (s == "LESS")
-		return(LESS);
-	if (s == "LEQUAL")
-		return(LEQUAL);
-	if (s == "GEQUAL")
-		return(GEQUAL);
-	if (s == "GREATER")
-		return(GREATER);
-	if (s == "EQUAL")
-		return(EQUAL);
-	if (s == "NOT_EQUAL")
-		return(NOT_EQUAL);
-
-	return(-1);
-}
+//int 
+//IRenderer::translateStringToStencilOp(std::string s) {
+//
+//	if (s == "KEEP")
+//		return(KEEP);
+//	if (s == "ZERO")
+//		return(ZERO);
+//	if (s == "REPLACE")
+//		return(REPLACE);
+//	if (s == "INCR")
+//		return(INCR);
+//	if (s == "INCR_WRAP")
+//		return(INCR_WRAP);
+//	if (s == "DECR")
+//		return(DECR);
+//	if (s == "DECR_WRAP")
+//		return(DECR_WRAP);
+//	if (s == "INVERT")
+//		return(INVERT);
+//
+//	return(-1);
+//}
+//
+//int 
+//IRenderer::translateStringToStencilFunc(std::string s) {
+//
+//	if (s == "NEVER")
+//		return(NEVER);
+//	if (s == "ALWAYS")
+//		return(ALWAYS);
+//	if (s == "LESS")
+//		return(LESS);
+//	if (s == "LEQUAL")
+//		return(LEQUAL);
+//	if (s == "GEQUAL")
+//		return(GEQUAL);
+//	if (s == "GREATER")
+//		return(GREATER);
+//	if (s == "EQUAL")
+//		return(EQUAL);
+//	if (s == "NOT_EQUAL")
+//		return(NOT_EQUAL);
+//
+//	return(-1);
+//}

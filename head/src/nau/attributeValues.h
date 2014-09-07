@@ -12,6 +12,7 @@
 #define INT_PROP(A,B) static const IntProperty A = (IntProperty)B 
 #define UINT_PROP(A,B) static const UIntProperty A = (UIntProperty)B 
 #define BOOL_PROP(A,B) static const BoolProperty A = (BoolProperty)B 
+#define BOOL4_PROP(A,B) static const Bool4Property A = (Bool4Property)B 
 #define FLOAT_PROP(A,B) static const FloatProperty A = (FloatProperty)B 
 #define FLOAT4_PROP(A,B) static const Float4Property A = (Float4Property)B 
 #define MAT4_PROP(A,B) static const Mat4Property A = (Mat4Property)B 
@@ -135,6 +136,54 @@ namespace nau {
 			assert(false && "Missibng Data Type in class attributeValues");
 			return NULL;
 		}
+
+
+
+		void setProp(int prop, Enums::DataType type, void *value) {
+
+			switch (type) {
+
+			case Enums::ENUM:
+				assert(m_EnumProps.count(prop) > 0);
+				m_EnumProps[prop] = *(int *)value;
+				break;
+			case Enums::INT:
+				assert(m_IntProps.count(prop) > 0);
+				m_IntProps[prop] = *(int *)value;
+				break;
+			case Enums::UINT:
+				assert(m_UIntProps.count(prop) > 0);
+				m_UIntProps[prop] = *(unsigned int *)value;
+				break;
+			case Enums::BOOL:
+				assert(m_BoolProps.count(prop) > 0);
+				m_BoolProps[prop] = *(bool *)value;
+				break;
+			case Enums::BVEC4:
+				assert(m_Bool4Props.count(prop) > 0);
+				m_Bool4Props[prop] = *(bvec4 *)value;
+				break;
+			case Enums::FLOAT:
+				assert(m_FloatProps.count(prop) > 0);
+				m_FloatProps[prop] = *(float *)value;
+				break;
+			case Enums::VEC4:
+				assert(m_Float4Props.count(prop) > 0);
+				m_Float4Props[prop] = *(vec4 *)value;
+				break;
+			case Enums::MAT4:
+				assert(m_Mat4Props.count(prop) > 0);
+				m_Mat4Props[prop] = *(mat4 *)value;
+				break;
+			case Enums::MAT3:
+				assert(m_Mat3Props.count(prop) > 0);
+				m_Mat3Props[prop] = *(mat3 *)value;
+				break;
+			default:
+				assert(false && "Missibng Data Type in class attributeValues");
+			}	
+		}
+
 
 		void initArrays(AttribSet Attribs) {
 			Attribs.initAttribInstanceEnumArray(m_EnumProps);

@@ -1,17 +1,99 @@
+#include <sstream>
+
 #include <nau/render/pass.h>
 #include <nau/geometry/axis.h>
-
-#include <sstream>
-#include <algorithm>
-
-#include <nau.h>
 #include <nau/geometry/frustum.h>
 #include <nau/debug/profile.h>
+#include <nau.h>
 
 using namespace nau::material;
 using namespace nau::scene;
 using namespace nau::render;
 using namespace nau::geometry;
+
+
+
+AttribSet Pass::Attribs;
+bool Pass::Inited = Init();
+
+bool
+Pass::Init() {
+
+	// BOOL
+	Attribs.add(Attribute(COLOR_CLEAR, "COLOR_CLEAR", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(COLOR_ENABLE, "COLOR_ENABLE", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(DEPTH_CLEAR, "DEPTH_CLEAR", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(DEPTH_ENABLE, "DEPTH_ENABLE", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(DEPTH_MASK, "DEPTH_MASK", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(DEPTH_CLAMPING, "DEPTH_CLAMPING", Enums::DataType::BOOL, false, new bool(false)));
+	Attribs.add(Attribute(STENCIL_CLEAR, "STENCIL_CLEAR", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(STENCIL_ENABLE, "STENCIL_ENABLE", Enums::DataType::BOOL, false, new bool(false)));
+
+	// ENUM
+	Attribs.add(Attribute(STENCIL_FUNC, "STENCIL_FUNC", Enums::DataType::ENUM, false, new int(ALWAYS)));
+	Attribs.listAdd("STENCIL_FUNC", "LESS", LESS);
+	Attribs.listAdd("STENCIL_FUNC", "NEVER", NEVER);
+	Attribs.listAdd("STENCIL_FUNC", "ALWAYS", ALWAYS);
+	Attribs.listAdd("STENCIL_FUNC", "LEQUAL", LEQUAL);
+	Attribs.listAdd("STENCIL_FUNC", "EQUAL", EQUAL);
+	Attribs.listAdd("STENCIL_FUNC", "GEQUAL", GEQUAL);
+	Attribs.listAdd("STENCIL_FUNC", "GREATER", GREATER);
+	Attribs.listAdd("STENCIL_FUNC", "NOT_EQUAL", NOT_EQUAL);
+
+	Attribs.add(Attribute(STENCIL_FAIL, "STENCIL_FAIL", Enums::DataType::ENUM, false, new int(KEEP)));
+	Attribs.listAdd("STENCIL_FAIL", "KEEP", KEEP);
+	Attribs.listAdd("STENCIL_FAIL", "ZERO", ZERO);
+	Attribs.listAdd("STENCIL_FAIL", "REPLACE", REPLACE);
+	Attribs.listAdd("STENCIL_FAIL", "INCR", INCR);
+	Attribs.listAdd("STENCIL_FAIL", "INCR_WRAP", INCR_WRAP);
+	Attribs.listAdd("STENCIL_FAIL", "DECR", DECR);
+	Attribs.listAdd("STENCIL_FAIL", "DECR_WRAP", DECR_WRAP);
+	Attribs.listAdd("STENCIL_FAIL", "INVERT", INVERT);
+
+	Attribs.add(Attribute(STENCIL_DEPTH_FAIL, "STENCIL_DEPTH_FAIL", Enums::DataType::ENUM, false, new int(KEEP)));
+	Attribs.listAdd("STENCIL_DEPTH_FAIL", "KEEP", KEEP);
+	Attribs.listAdd("STENCIL_DEPTH_FAIL", "ZERO", ZERO);
+	Attribs.listAdd("STENCIL_DEPTH_FAIL", "REPLACE", REPLACE);
+	Attribs.listAdd("STENCIL_DEPTH_FAIL", "INCR", INCR);
+	Attribs.listAdd("STENCIL_DEPTH_FAIL", "INCR_WRAP", INCR_WRAP);
+	Attribs.listAdd("STENCIL_DEPTH_FAIL", "DECR", DECR);
+	Attribs.listAdd("STENCIL_DEPTH_FAIL", "DECR_WRAP", DECR_WRAP);
+	Attribs.listAdd("STENCIL_DEPTH_FAIL", "INVERT", INVERT);
+
+	Attribs.add(Attribute(STENCIL_DEPTH_PASS, "STENCIL_DEPTH_PASS", Enums::DataType::ENUM, false, new int(KEEP)));
+	Attribs.listAdd("STENCIL_DEPTH_PASS", "KEEP", KEEP);
+	Attribs.listAdd("STENCIL_DEPTH_PASS", "ZERO", ZERO);
+	Attribs.listAdd("STENCIL_DEPTH_PASS", "REPLACE", REPLACE);
+	Attribs.listAdd("STENCIL_DEPTH_PASS", "INCR", INCR);
+	Attribs.listAdd("STENCIL_DEPTH_PASS", "INCR_WRAP", INCR_WRAP);
+	Attribs.listAdd("STENCIL_DEPTH_PASS", "DECR", DECR);
+	Attribs.listAdd("STENCIL_DEPTH_PASS", "DECR_WRAP", DECR_WRAP);
+	Attribs.listAdd("STENCIL_DEPTH_PASS", "INVERT", INVERT);
+
+	Attribs.add(Attribute(DEPTH_FUNC, "DEPTH_FUNC", Enums::DataType::ENUM, false, new int(LESS)));
+	Attribs.listAdd("DEPTH_FUNC", "LESS", LESS);
+	Attribs.listAdd("DEPTH_FUNC", "NEVER", NEVER);
+	Attribs.listAdd("DEPTH_FUNC", "ALWAYS", ALWAYS);
+	Attribs.listAdd("DEPTH_FUNC", "LEQUAL", LEQUAL);
+	Attribs.listAdd("DEPTH_FUNC", "EQUAL", EQUAL);
+	Attribs.listAdd("DEPTH_FUNC", "GEQUAL", GEQUAL);
+	Attribs.listAdd("DEPTH_FUNC", "GREATER", GREATER);
+	Attribs.listAdd("DEPTH_FUNC", "NOT_EQUAL", NOT_EQUAL);
+
+	// VEC4
+	Attribs.add(Attribute(COLOR_CLEAR_VALUE, "COLOR_CLEAR_VALUE", Enums::DataType::VEC4, false, new vec4()));
+
+	// FLOAT
+	Attribs.add(Attribute(DEPTH_CLEAR_VALUE, "DEPTH_CLEAR_VALUE", Enums::DataType::FLOAT, false, new float(1.0f)));
+	Attribs.add(Attribute(STENCIL_CLEAR_VALUE, "STENCIL_CLEAR_VALUE", Enums::DataType::FLOAT, false, new float(0.0f)));
+
+	//INT
+	Attribs.add(Attribute(STENCIL_OP_REF, "STENCIL_OP_REF", Enums::DataType::INT, false, new int(0)));
+
+	//UINT
+	Attribs.add(Attribute(STENCIL_OP_MASK, "STENCIL_OP_MASK", Enums::DataType::UINT, false, new unsigned int(255)));
+	return true;
+}
 
 
 Pass::Pass (const std::string &passName) :
@@ -22,12 +104,14 @@ Pass::Pass (const std::string &passName) :
 	m_MaterialMap(),
 	m_pViewport (0),
 	m_pRestoreViewport (0),
-	m_RemapMode (REMAP_DISABLED),
-	m_Paramf(),
-	m_Parami(),
-	m_ParamType(),
-	m_BoolProp(IRenderer::COUNT_BOOL_PROPS)
+	m_RemapMode (REMAP_DISABLED)
+	//m_Paramf(),
+	//m_Parami(),
+	//m_ParamType(),
+	//m_BoolProp(IRenderer::COUNT_BOOL_PROPS)
 {
+	initArrays(Attribs);
+
 	initVars();
 	EVENTMANAGER->addListener("SCENE_CHANGED",this);
 }
@@ -48,78 +132,78 @@ Pass::getClassName() {
 }
 
 
-const std::map<std::string, float> &
-Pass::getParamsf() 
-{
-	return m_Paramf;
-}
-
-
-void 
-Pass::setParam(const std::string &name, const float value) 
-{
-//	if (m_ParamType.count(name) && m_ParamType[name] == Pass::FLOAT)
-		m_Paramf[name] = value;
-		m_ParamType[name] = Enums::FLOAT;
-}
-
-
-void
-Pass::setParam(const std::string &name, const  int value) 
-{
-//	if (m_ParamType.count(name) && m_ParamType[name] == Pass::STRING)
-		m_Parami[name] = value;
-		m_ParamType[name] = Enums::INT;
-}
-
-
+//const std::map<std::string, float> &
+//Pass::getParamsf() 
+//{
+//	return m_Paramf;
+//}
+//
+//
+//void 
+//Pass::setParam(const std::string &name, const float value) 
+//{
+////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::FLOAT)
+//		m_Paramf[name] = value;
+//		m_ParamType[name] = Enums::FLOAT;
+//}
+//
+//
 //void
-//Pass::setParam(const std::string &name, const  std::string &value) 
+//Pass::setParam(const std::string &name, const  int value) 
 //{
 ////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::STRING)
-//		m_Params[name] = value;
+//		m_Parami[name] = value;
+//		m_ParamType[name] = Enums::INT;
 //}
-
-
-float *
-Pass::getParamf(const std::string &name)
-{
-	if (m_Paramf.count(name))
-		return (&m_Paramf[name]);
-	else
-		return NULL;
-
-}
-
-
-int *
-Pass::getParami(const std::string &name)
-{
-	if (m_Parami.count(name))
-		return (&m_Parami[name]);
-	else
-		return NULL;
-
-}
-
-//std::string &
-//Pass::getParams(const std::string &name)
+//
+//
+////void
+////Pass::setParam(const std::string &name, const  std::string &value) 
+////{
+//////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::STRING)
+////		m_Params[name] = value;
+////}
+//
+//
+//float *
+//Pass::getParamf(const std::string &name)
 //{
 //	if (m_Paramf.count(name))
-//		return(m_Params[name]);
+//		return (&m_Paramf[name]);
 //	else
-//		return p_Empty;
+//		return NULL;
+//
 //}
-
-
-int 
-Pass::getParamType(const std::string &name) {
-
-	if (m_ParamType.count(name))
-		return m_ParamType[name];
-	else
-		return -1;
-}
+//
+//
+//int *
+//Pass::getParami(const std::string &name)
+//{
+//	if (m_Parami.count(name))
+//		return (&m_Parami[name]);
+//	else
+//		return NULL;
+//
+//}
+//
+////std::string &
+////Pass::getParams(const std::string &name)
+////{
+////	if (m_Paramf.count(name))
+////		return(m_Params[name]);
+////	else
+////		return p_Empty;
+////}
+//
+//
+//int 
+//Pass::getParamType(const std::string &name) {
+//
+//	if (m_ParamType.count(name))
+//		return m_ParamType[name];
+//	else
+//		return -1;
+//}
 
 
 std::string &
@@ -151,28 +235,28 @@ Pass::~Pass()
 void 
 Pass::initVars() {
 
-	m_BoolProp[IRenderer::COLOR_CLEAR] = true;
-	m_BoolProp[IRenderer::COLOR_ENABLE] = true;
+	//m_BoolProp[IRenderer::COLOR_CLEAR] = true;
+	//m_BoolProp[IRenderer::COLOR_ENABLE] = true;
 
-	m_BoolProp[IRenderer::DEPTH_CLEAR] = true;
-	m_BoolProp[IRenderer::DEPTH_ENABLE] = true;
-	m_BoolProp[IRenderer::DEPTH_MASK] = true;
+	//m_BoolProp[IRenderer::DEPTH_CLEAR] = true;
+	//m_BoolProp[IRenderer::DEPTH_ENABLE] = true;
+	//m_BoolProp[IRenderer::DEPTH_MASK] = true;
 
-	m_BoolProp[IRenderer::STENCIL_ENABLE] = false;
-	m_BoolProp[IRenderer::STENCIL_CLEAR] = true;
+	//m_BoolProp[IRenderer::STENCIL_ENABLE] = false;
+	//m_BoolProp[IRenderer::STENCIL_CLEAR] = true;
 
-	m_RenderTarget = 0;
+	m_RenderTarget = NULL;
 
-	m_ColorClearValue = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	m_DepthClearValue = 1.0f;
-	m_DepthFunc = *(int *)(IState::Attribs.getDefault(IState::DEPTH_FUNC, Enums::DataType::ENUM));//::LESS;
-	m_StencilClearValue = 0.0f;
+	//m_ColorClearValue = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	//m_DepthClearValue = 1.0f;
+	//m_DepthFunc = *(int *)(IState::Attribs.getDefault(IState::DEPTH_FUNC, Enums::DataType::ENUM));
+	//m_StencilClearValue = 0.0f;
 
 	//for (int i = 0; i < MAXFBOs + 1; i++)
 	//	m_TexId[i] = 0 ;
 
-	m_Color = 0; // how many color render targets
-	m_Depth = 0; // render depth?
+	//m_Color = 0; // how many color render targets
+	//m_Depth = 0; // render depth?
 
 	m_RTSizeWidth = 512; // size of render targets
 	m_RTSizeHeight = 512;
@@ -197,38 +281,39 @@ Pass::setRTSize (int width, int height)
 void
 Pass::prepareBuffers() {
 
-	int clear = 0;
+	RENDERER->prepareBuffers(this);
+	//int clear = 0;
 
-	if (m_BoolProp[IRenderer::DEPTH_CLEAR]) {
-		clear = IRenderer::DEPTH_BUFFER;
-		RENDERER->setDepthClearValue(m_DepthClearValue);
-	}
-	if (m_BoolProp[IRenderer::COLOR_CLEAR]) {
-		clear |= IRenderer::COLOR_BUFFER;
-	}
-	if (m_BoolProp[IRenderer::STENCIL_CLEAR]) {
-		RENDERER->setStencilClearValue(m_StencilClearValue);
-		clear |= IRenderer::STENCIL_BUFFER;
-	}
+	//if (m_BoolProp[DEPTH_CLEAR]) {
+	//	clear = IRenderer::DEPTH_BUFFER;
+	//	RENDERER->setDepthClearValue(m_DepthClearValue);
+	//}
+	//if (m_BoolProp[COLOR_CLEAR]) {
+	//	clear |= IRenderer::COLOR_BUFFER;
+	//}
+	//if (m_BoolProp[STENCIL_CLEAR]) {
+	//	RENDERER->setStencilClearValue(m_StencilClearValue);
+	//	clear |= IRenderer::STENCIL_BUFFER;
+	//}
 
-	RENDERER->clearFrameBuffer(clear);
+	//RENDERER->clearFrameBuffer(clear);
 
-	if (m_BoolProp[IRenderer::DEPTH_ENABLE]) {
-		RENDERER->setProp(IRenderer::DEPTH_ENABLE,true);
-		RENDERER->setProp(IRenderer::DEPTH_MASK, m_BoolProp[IRenderer::DEPTH_MASK]);
-		RENDERER->setDepthFunc(m_DepthFunc);
-	}
-	else
-		RENDERER->setProp(IRenderer::DEPTH_ENABLE,false);
+	//if (m_BoolProp[DEPTH_ENABLE]) {
+	//	RENDERER->setPassProp(DEPTH_ENABLE,true);
+	//	RENDERER->setProp(DEPTH_MASK, m_BoolProp[DEPTH_MASK]);
+	//	RENDERER->setDepthFunc(m_DepthFunc);
+	//}
+	//else
+	//	RENDERER->setProp(DEPTH_ENABLE,false);
 
-	if (m_BoolProp[IRenderer::STENCIL_ENABLE]) {
-		RENDERER->setProp(IRenderer::STENCIL_ENABLE, true);
-		RENDERER->setStencilFunc(m_StencilFunc, m_StencilOpRef, m_StencilOpMask);
-		RENDERER->setStencilOp(m_Stencilsfail, m_Stencildfail, m_Stencildpass);
-	}
-	else {
-		RENDERER->setProp(IRenderer::STENCIL_ENABLE, false);
-	}
+	//if (m_BoolProp[STENCIL_ENABLE]) {
+	//	RENDERER->setProp(STENCIL_ENABLE, true);
+	//	RENDERER->setStencilFunc(m_StencilFunc, m_StencilOpRef, m_StencilOpMask);
+	//	RENDERER->setStencilOp(m_Stencilsfail, m_Stencildfail, m_Stencildpass);
+	//}
+	//else {
+	//	RENDERER->setProp(IRenderer::STENCIL_ENABLE, false);
+	//}
 }
 
 
@@ -535,37 +620,41 @@ Pass::setCamera (const std::string &cameraName)
 
 
 void 
-Pass::setProp(IRenderer::BoolProps prop, bool value) {
+Pass::setPropb(BoolProperty prop, bool value) {
 
-	m_BoolProp[prop] = value;
+	m_BoolProps[prop] = value;
 }
 
 
-bool
-Pass::getPropb(IRenderer::BoolProps prop) {
-
-	return m_BoolProp[prop];
-}
+//bool
+//Pass::getPropb(IRenderer::BoolProps prop) {
+//
+//	return m_BoolProp[prop];
+//}
 
 
 
 void 
-Pass::setStencilFunc(IRenderer::StencilFunc f, int ref, unsigned int mask) {
+Pass::setStencilFunc(StencilFunc f, int ref, unsigned int mask) {
 
-	m_StencilFunc = f;
-	m_StencilOpRef = ref;
-	m_StencilOpMask = mask;
+	m_EnumProps[STENCIL_FUNC] = f;
+	m_IntProps[STENCIL_OP_REF] = ref;
+	m_UIntProps[STENCIL_OP_MASK] = mask;
+	//m_StencilFunc = f;
+	//m_StencilOpRef = ref;
+	//m_StencilOpMask = mask;
 }
 
 
 void 
-Pass::setStencilOp(	IRenderer::StencilOp sfail, 
-							IRenderer::StencilOp dfail, 
-							IRenderer::StencilOp dpass) {
+Pass::setStencilOp(	StencilOp sfail, StencilOp dfail, StencilOp dpass) {
 
-	m_Stencilsfail = sfail;
-	m_Stencildfail = dfail;
-	m_Stencildpass = dpass;
+	m_EnumProps[STENCIL_FAIL] = sfail;
+	m_EnumProps[STENCIL_DEPTH_FAIL] = dfail;
+	m_EnumProps[STENCIL_DEPTH_PASS] = dpass;
+	//m_Stencilsfail = sfail;
+	//m_Stencildfail = dfail;
+	//m_Stencildpass = dpass;
 }
 
 
@@ -600,14 +689,16 @@ Pass::setStencilOp(	IRenderer::StencilOp sfail,
 void 
 Pass::setDepthClearValue(float v) {
 
-	m_DepthClearValue = v;
+	m_FloatProps[DEPTH_CLEAR_VALUE] = v;
+	//m_DepthClearValue = v;
 }
 
 
 void 
 Pass::setDepthFunc(int f) {
 
-	m_DepthFunc = f;
+	m_EnumProps[DEPTH_FUNC] = f;
+	//m_DepthFunc = f;
 }
 
 
@@ -626,11 +717,11 @@ Pass::setDepthFunc(int f) {
 //}
 
 
-void
-Pass::setStencilMaskValue (int value)
-{
-	m_StencilMaskValue = value;
-}
+//void
+//Pass::setStencilMaskValue (int value)
+//{
+//	m_StencilMaskValue = value;
+//}
 
 
 //bool
@@ -643,7 +734,8 @@ Pass::setStencilMaskValue (int value)
 void 
 Pass::setStencilClearValue(float v) {
 
-	m_StencilClearValue = v;
+	m_FloatProps[STENCIL_CLEAR_VALUE] = v;
+	//m_StencilClearValue = v;
 }
 
 

@@ -7,10 +7,10 @@ using namespace nau::render;
 GLTexImage::GLTexImage (Texture *t) :
 	TexImage (t)
 {
-	int type = t->getPrope(Texture::TYPE);
+	int m_DataType = t->getPrope(Texture::TYPE);
 	int len = m_Width * m_Height * m_NumComponents; 
 
-	switch (type) {
+	switch (m_DataType) {
 		case GL_FLOAT: 
 			m_Data = (float *)malloc(sizeof(float) * len);
 			update();
@@ -55,18 +55,22 @@ GLTexImage::~GLTexImage(void)
 
 
 
-
-
 void
 GLTexImage::update(void) {
 	
+	int texType = m_Texture->getPrope(Texture::DIMENSION);
 	glBindTexture(m_Texture->getPrope(Texture::DIMENSION),m_Texture->getPropi(Texture::ID));
-	glGetTexImage(m_Texture->getPrope(Texture::DIMENSION),0,m_Texture->getPrope(Texture::FORMAT),m_Texture->getPrope(Texture::TYPE),m_Data);
+	if (texType == GL_TEXTURE_CUBE_MAP)
+		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+	glGetTexImage(texType,0,m_Texture->getPrope(Texture::FORMAT),m_DataType,m_Data);
 }
+
+
 
 void *
 GLTexImage::getData() 
 {
 	return m_Data;
 }
+
 

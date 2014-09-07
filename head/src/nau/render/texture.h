@@ -130,7 +130,7 @@ namespace nau
 			static bool Inited;
 
 			std::string m_Label;
-
+			unsigned char *m_Bitmap = NULL;
 #ifdef __SLANGER__
 			wxBitmap *bitmap;
 #endif

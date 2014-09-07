@@ -21,6 +21,19 @@ using namespace nau::math;
 using namespace nau::render;
 using namespace nau::scene;
 
+
+bool DepthMapPass::Inited = Init();
+
+bool
+DepthMapPass::Init() {
+	//// FLOAT
+	//Attribs.add(Attribute(FROM, "FROM", Enums::DataType::FLOAT, false, new float(-1)));
+	//Attribs.add(Attribute(TO, "TO", Enums::DataType::FLOAT, false, new float(-1)));
+
+	return true;
+}
+
+
 DepthMapPass::DepthMapPass (const std::string &passName) :
 	Pass (passName)
 {
@@ -122,10 +135,17 @@ DepthMapPass::doPass (void)
 	cNear = aCamera->getPropf(Camera::NEARP);
 	cFar = aCamera->getPropf(Camera::FARP);
 
-	if (m_Paramf.count("From"))
-		cNear = m_Paramf["From"];
-	if (m_Paramf.count("To"))
-		cFar = m_Paramf["To"];
+	int idFrom = Attribs.getID("FROM");
+	int idTo = Attribs.getID("TO");
+	if (idFrom != -1)
+		cNear = m_FloatProps[idFrom];
+	if (idTo != -1)
+		cFar = m_FloatProps[idTo];
+
+	//if (m_Paramf.count("From"))
+	//	cNear = m_Paramf["From"];
+	//if (m_Paramf.count("To"))
+	//	cFar = m_Paramf["To"];
 		
 	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
 
@@ -155,11 +175,11 @@ DepthMapPass::doPass (void)
 //	RENDERER->setCullFace( IRenderer::FRONT);
 //	RENDERER->enableDepthTest();
 
-	RENDERER->setProp(IRenderer::DEPTH_CLAMPING, true);
+	RENDERER->setDepthClamping(true);
 
 	RENDERMANAGER->processQueue();
 
-	RENDERER->setProp(IRenderer::DEPTH_CLAMPING, false);
+	RENDERER->setDepthClamping(false);
 
 //	RENDERER->setCullFace (IRenderer::BACK);
 	//RENDERER->disableDepthTest();

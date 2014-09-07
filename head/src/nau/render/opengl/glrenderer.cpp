@@ -324,96 +324,158 @@ GLRenderer::clearFrameBuffer(unsigned int b)
 
 	glClear (c);
 
-	// scissor is enable when setting the viewport
+	// scissor is enabled when setting the viewport
 	glDisable(GL_SCISSOR_TEST);
 }
 
 
+void 
+GLRenderer::setDepthClamping(bool b) {
+
+	if (b)
+		glEnable(GL_DEPTH_CLAMP);
+	else
+		glDisable(GL_DEPTH_CLAMP);
+}
+
 
 void 
-GLRenderer::setProp(IRenderer::BoolProps aprop, bool value) {
+GLRenderer::prepareBuffers(Pass *p) {
 
-	switch(aprop) {
+	int clear = 0;
 
-		case IRenderer::DEPTH_CLAMPING:
-			if (value)
-				glEnable(GL_DEPTH_CLAMP);
-			else
-				glDisable(GL_DEPTH_CLAMP);
-			break;
-		case IRenderer::COLOR_ENABLE:
-			break;
-		case IRenderer::DEPTH_CLEAR:
-			break;
-		case IRenderer::DEPTH_ENABLE:
-			if (value)
-				glEnable(GL_DEPTH_TEST);
-			else
-				glDisable(GL_DEPTH_TEST);
-			m_glDefaultState.setProp(IState::DEPTH_TEST, value);
-			m_glCurrState.setProp(IState::DEPTH_TEST, value);
-			break;
-		case IRenderer::DEPTH_MASK:
-			glDepthMask(value);
-			m_glDefaultState.setProp(IState::DEPTH_MASK, value);
-			m_glCurrState.setProp(IState::DEPTH_MASK, value);
-			break;
-		case IRenderer::STENCIL_CLEAR:
-			break;
-		case IRenderer::STENCIL_ENABLE:
-			if (value)
-				glEnable(GL_STENCIL_TEST);
-			else
-				glDisable(GL_STENCIL_TEST);
-			break;
+	bool value = p->getPropb(Pass::DEPTH_ENABLE);
+	if (value) {
+		glEnable(GL_DEPTH_TEST);
+		bool dm = p->getPropb(Pass::DEPTH_MASK);
+		glDepthMask(dm);
+		m_glDefaultState.setProp(IState::DEPTH_MASK, dm);
+		m_glCurrState.setProp(IState::DEPTH_MASK, dm);
+		int df = translateStencilDepthFunc(p->getPrope(Pass::DEPTH_FUNC));
+		glDepthFunc(df);
+		m_glDefaultState.setProp(IState::DEPTH_FUNC, df);
+		m_glCurrState.setProp(IState::DEPTH_FUNC, df);
 	}
+	else
+		glDisable(GL_DEPTH_TEST);
+	m_glDefaultState.setProp(IState::DEPTH_TEST, value);
+	m_glCurrState.setProp(IState::DEPTH_TEST, value);
+
+	value = p->getPropb(Pass::STENCIL_ENABLE);
+
+	if (value) {
+		glEnable(GL_STENCIL_TEST);
+	}
+	else
+		glDisable(GL_STENCIL_TEST);
+	glStencilFunc(translateStencilDepthFunc(p->getPrope(Pass::STENCIL_FUNC)), 
+		p->getPropi(Pass::STENCIL_OP_REF), 
+		p->getPropui(Pass::STENCIL_OP_MASK));
+	glStencilOp(translateStencilOp(p->getPrope(Pass::STENCIL_FAIL)), 
+		translateStencilOp(p->getPrope(Pass::STENCIL_DEPTH_FAIL)), 
+		translateStencilOp(p->getPrope(Pass::STENCIL_DEPTH_PASS)));
+
+	if (p->getPropb(Pass::DEPTH_CLEAR)) {
+		clear = IRenderer::DEPTH_BUFFER;
+		glClearDepth(p->getPropf(Pass::DEPTH_CLEAR_VALUE));
+	}
+	if (p->getPropb(Pass::COLOR_CLEAR)) {
+		clear |= IRenderer::COLOR_BUFFER;
+	}
+	if (p->getPropb(Pass::STENCIL_CLEAR)) {
+		glClearStencil(p->getPropf(Pass::STENCIL_CLEAR_VALUE));
+		clear |= IRenderer::STENCIL_BUFFER;
+	}
+
+	clearFrameBuffer(clear);
+
+
 }
 
+//void 
+//GLRenderer::setPassProp(Pass::BoolProps aprop, bool value) {
+//
+//	switch(aprop) {
+//
+//		case IRenderer::DEPTH_CLAMPING:
+//			if (value)
+//				glEnable(GL_DEPTH_CLAMP);
+//			else
+//				glDisable(GL_DEPTH_CLAMP);
+//			break;
+//		case IRenderer::COLOR_ENABLE:
+//			break;
+//		case IRenderer::DEPTH_CLEAR:
+//			break;
+//		case IRenderer::DEPTH_ENABLE:
+//			if (value)
+//				glEnable(GL_DEPTH_TEST);
+//			else
+//				glDisable(GL_DEPTH_TEST);
+//			m_glDefaultState.setProp(IState::DEPTH_TEST, value);
+//			m_glCurrState.setProp(IState::DEPTH_TEST, value);
+//			break;
+//		case IRenderer::DEPTH_MASK:
+//			glDepthMask(value);
+//			m_glDefaultState.setProp(IState::DEPTH_MASK, value);
+//			m_glCurrState.setProp(IState::DEPTH_MASK, value);
+//			break;
+//		case IRenderer::STENCIL_CLEAR:
+//			break;
+//		case IRenderer::STENCIL_ENABLE:
+//			if (value)
+//				glEnable(GL_STENCIL_TEST);
+//			else
+//				glDisable(GL_STENCIL_TEST);
+//			break;
+//	}
+//}
 
-void 
-GLRenderer::setDepthFunc(int f) {
 
-	glDepthFunc(f);
-	m_glDefaultState.setProp(IState::DEPTH_FUNC, f);
-	m_glCurrState.setProp(IState::DEPTH_FUNC, f);
-}
-
-
-void 
-GLRenderer::setStencilFunc(StencilFunc f, int ref, unsigned int mask) {
-
-	glStencilFunc(translate(f), ref, mask);
-}
+//void 
+//GLRenderer::setDepthFunc(int f) {
+//
+//	glDepthFunc(f);
+//	m_glDefaultState.setProp(IState::DEPTH_FUNC, f);
+//	m_glCurrState.setProp(IState::DEPTH_FUNC, f);
+//}
+//
+//
+//void 
+//GLRenderer::setStencilFunc(StencilFunc f, int ref, unsigned int mask) {
+//
+//	glStencilFunc(translate(f), ref, mask);
+//}
 
 
 unsigned int 
-GLRenderer::translate(StencilFunc aFunc) {
+GLRenderer::translateStencilDepthFunc(int anOp) {
 
 	unsigned int res;
 
-	switch(aFunc){
-	case IRenderer::NEVER:
+	switch (anOp){
+	case Pass::NEVER:
 		res = GL_NEVER;
 		break;
-	case IRenderer::ALWAYS:
+	case Pass::ALWAYS:
 		res = GL_ALWAYS;
 		break;
-	case IRenderer::LESS:
+	case Pass::LESS:
 		res = GL_LESS;
 		break;
-	case IRenderer::LEQUAL:
+	case Pass::LEQUAL:
 		res = GL_LEQUAL;
 		break;
-	case IRenderer::EQUAL:
+	case Pass::EQUAL:
 		res = GL_EQUAL;
 		break;
-	case IRenderer::GEQUAL:
+	case Pass::GEQUAL:
 		res = GL_GEQUAL;
 		break;
-	case IRenderer::GREATER:
+	case Pass::GREATER:
 		res = GL_GREATER;
 		break;
-	case IRenderer::NOT_EQUAL:
+	case Pass::NOT_EQUAL:
 		res = GL_NOTEQUAL;
 		break;
 	}
@@ -422,32 +484,32 @@ GLRenderer::translate(StencilFunc aFunc) {
 }
 
 
-void 
-GLRenderer::setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass) {
-
-	glStencilOp(translate(sfail), translate(dfail), translate(dpass));
-}
+//void 
+//GLRenderer::setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass) {
+//
+//	glStencilOp(translate(sfail), translate(dfail), translate(dpass));
+//}
 
 
 unsigned int 
-GLRenderer::translate(StencilOp s) {
+GLRenderer::translateStencilOp(int aFunc) {
 
-	switch( s) {
-		case IRenderer::KEEP:
+	switch (aFunc) {
+		case Pass::KEEP:
 			return(GL_KEEP);
-		case IRenderer::ZERO:
+		case Pass::ZERO:
 			return (GL_ZERO);
-		case IRenderer::REPLACE:
+		case Pass::REPLACE:
 			return (GL_REPLACE);
-		case IRenderer::INCR:
+		case Pass::INCR:
 			return(GL_INCR);
-		case IRenderer::INCR_WRAP:
+		case Pass::INCR_WRAP:
 			return(GL_INCR_WRAP);
-		case IRenderer::DECR:
+		case Pass::DECR:
 			return(GL_DECR);
-		case IRenderer::DECR_WRAP:
+		case Pass::DECR_WRAP:
 			return(GL_DECR_WRAP);
-		case IRenderer::INVERT:
+		case Pass::INVERT:
 			return(GL_INVERT);
 		default:
 			return(GL_KEEP);
@@ -456,25 +518,25 @@ GLRenderer::translate(StencilOp s) {
 
 
 
-void 
-GLRenderer::setDepthClearValue(float v) {
-
-	glClearDepth(v);
-}
-
-
-void 
-GLRenderer::setStencilClearValue(int v) {
-
-	glClearStencil(v);
-}
-
-
-void 
-GLRenderer::setStencilMaskValue(int i) {
-
-	glStencilMask(i);
-}
+//void 
+//GLRenderer::setDepthClearValue(float v) {
+//
+//	glClearDepth(v);
+//}
+//
+//
+//void 
+//GLRenderer::setStencilClearValue(int v) {
+//
+//	glClearStencil(v);
+//}
+//
+//
+//void 
+//GLRenderer::setStencilMaskValue(int i) {
+//
+//	glStencilMask(i);
+//}
 
 
 void 
@@ -504,16 +566,24 @@ GLRenderer::setRenderMode (TRenderMode mode)
 }
 
 
-void 
-GLRenderer::setViewport(int width, int height) {
 
-	glViewport (0,0,width,height);
+Viewport *
+GLRenderer::getViewport() {
+
+	return m_Viewport;
 }
+
+//void 
+//GLRenderer::setViewport(int width, int height) {
+//
+//	glViewport (0,0,width,height);
+//}
 
 
 void 
 GLRenderer::setViewport(nau::render::Viewport *aViewport) {
 
+	m_Viewport = aViewport;
 	const vec2& vpOrigin = aViewport->getPropf2(Viewport::ORIGIN);
 	const vec2& vpSize = aViewport->getPropf2(Viewport::SIZE);
 	const vec4& vpColor = aViewport->getPropf4(Viewport::CLEAR_COLOR);
@@ -740,6 +810,13 @@ GLRenderer::setDefaultState() {
 	m_glCurrState.setDefault();
 	m_glDefaultState.setDefault();
 	m_glCurrState.set();
+}
+
+
+IState *
+GLRenderer::getState() {
+
+	return &m_glCurrState;
 }
 
 

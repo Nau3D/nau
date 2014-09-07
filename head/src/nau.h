@@ -68,8 +68,7 @@ namespace nau {
 		// Attributes
 		bool validateUserAttribContext(std::string s);
 		bool validateUserAttribName(std::string context, std::string name);
-		void addUserAttrib(std::string context, std::string name, std::string type);
-
+		AttribSet *getAttribs(std::string context);
 
 
 		void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt);

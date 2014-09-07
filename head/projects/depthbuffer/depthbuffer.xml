@@ -2,7 +2,7 @@
 <project name="depth buffer" width=800 height=400>
 	<assets>
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" type="OctreeByMat">
 				<folder>../../models/pl3dsecxiv</folder>
 			</scene>
 		</scenes>

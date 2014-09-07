@@ -44,7 +44,7 @@ ProfilerPass::ProfilerPass (const std::string &name) :
 
 	m_MaterialMap[m_pFont.getMaterialName()] = MaterialID(DEFAULTMATERIALLIBNAME,m_pFont.getMaterialName());
 
-	m_BoolProp[IRenderer::COLOR_CLEAR] = false;
+	m_BoolProps[Pass::COLOR_CLEAR] = false;
 }
 
 

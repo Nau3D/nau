@@ -59,7 +59,8 @@ Nau::create (void) {
 nau::Nau*
 Nau::getInstance (void) {
 	if (0 == gInstance) {
-		throw (NauInstanciationError ("No instance of Nau exists"));
+		create();
+		//throw (NauInstanciationError ("No instance of Nau exists"));
 	}
 
 	return gInstance;
@@ -151,24 +152,27 @@ Nau::getName()
 	return(m_Name);
 }
 
+//
+//		USER ATTRIBUTES
+//
 
 bool 
 Nau::validateUserAttribContext(std::string context) {
 
 	if (context == "LIGHT" || context == "CAMERA" || context == "VIEWPORT"
-		|| context == "TEXTURE")
+		|| context == "TEXTURE" || context == "STATE" || context == "VIEWPORT" || context == "PASS")
 		return true;
 
 	return false;
 }
 
 
-bool 
-Nau::validateUserAttribName(std::string context, std::string name) {
+AttribSet *
+Nau::getAttribs(std::string context) {
 
-	AttribSet *attribs;
+	AttribSet *attribs = NULL;
 
-	if  (context == "LIGHT")
+	if (context == "LIGHT")
 		attribs = &(Light::Attribs);
 	else if (context == "CAMERA")
 		attribs = &(Camera::Attribs);
@@ -176,7 +180,24 @@ Nau::validateUserAttribName(std::string context, std::string name) {
 		attribs = &(Viewport::Attribs);
 	else if (context == "TEXTURE")
 		attribs = &(Texture::Attribs);
-	else // invalide context
+	else if (context == "STATE")
+		attribs = &(IState::Attribs);
+	else if (context == "VIEWPORT")
+		attribs = &(Viewport::Attribs);
+	else if (context == "PASS")
+		attribs = &(Pass::Attribs);
+
+	return attribs;
+}
+
+
+bool 
+Nau::validateUserAttribName(std::string context, std::string name) {
+
+	AttribSet *attribs = getAttribs(context);
+
+ // invalid context
+	if (attribs == NULL)
 		return false;
 
 	Attribute a = attribs->get(name);
@@ -187,23 +208,9 @@ Nau::validateUserAttribName(std::string context, std::string name) {
 }
 
 
-void 
-Nau::addUserAttrib(std::string context, std::string name, std::string type) {
-
-	AttribSet *attribs;
-	int id;
-	if  (context == "LIGHT")
-		attribs = &(Light::Attribs);
-	else if (context == "CAMERA")
-		attribs = &(Camera::Attribs);
-	else if (context == "VIEWPORT")
-		attribs = &(Viewport::Attribs);
-	else if (context == "TEXTURE")
-		attribs = &(Texture::Attribs);
-
-	id = attribs->getNextFreeID();
-	attribs->add(Attribute(id, name, Enums::getType(type)));
-}
+//
+//		EVENTS
+//
 
 
 void
@@ -371,8 +378,8 @@ void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize) {
 	aPass->setCamera ("MainCamera");
 
 	aPass->setViewport (v);
-	aPass->setProp(IRenderer::COLOR_CLEAR, true);
-	aPass->setProp(IRenderer::DEPTH_CLEAR, true);
+	aPass->setPropb(Pass::COLOR_CLEAR, true);
+	aPass->setPropb(Pass::DEPTH_CLEAR, true);
 	aPass->addLight ("MainDirectionalLight");
 
 	aPass->addScene(sceneName);

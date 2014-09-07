@@ -75,7 +75,9 @@ ProjectLoader::toLower(std::string strToConvert) {
 void *
 ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type, AttribSet attribs) {
 
-	switch(type) {
+	std::string s;
+
+	switch (type) {
 	
 		case Enums::FLOAT:
 			if (TIXML_SUCCESS != p->QueryFloatAttribute("value", &s_Dummy_float))
@@ -123,7 +125,6 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 			return &s_Dummy_bool;
 			break;
 		case Enums::ENUM:
-			std::string s;
 			if (TIXML_SUCCESS != p->QueryStringAttribute("value", &s))
 				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			if (!attribs.isValid(p->Value(), s))
@@ -131,6 +132,8 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 			s_Dummy_int = attribs.getListValueOp(attribs.getID(p->Value()), s); 
 			return &s_Dummy_int;
 			break;
+		default:
+			assert(false && "Missing attribute type in function ProjectLoader::readAttr");
 	}
 	return NULL;
 }
@@ -221,17 +224,17 @@ ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, 
 /* ----------------------------------------------------------------
 Specification of User Attributes:
 
-		<attributes>
-			<attribute context="Light" name="Testing" type="FLOAT" default=0.0 rangeMax =1.0 rangeMin=-1.0/>
-			...
-		</attributes>
+<attributes>
+	<attribute context="LIGHT" name="DIR" type="VEC4" x="-1.0" y="-1.0" z="-1.0" w = "0" />
+	<attribute context="CAMERA" name="DIST" type="FLOAT" value="10" />
+	<attribute context="STATE" name="FOG_MIN_DIST" type="FLOAT" value = 0.0 />
+	<attribute context="STATE" name="FOG_MAX_DIST" type="FLOAT" value = 100.0 />
+</attributes>
 
 Notes:
-Context can be: "Light", "Camera"
+Context see nau.cpp (getAttribs)
 name is the name of the attribute
-type must be float for now
-default is optional and it defaults to 0.0
-rangeMin and rangeMax are also optional
+type see readAttr()
 
 ----------------------------------------------------------------- */
 
@@ -248,38 +251,30 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 		const char *pType = pElem->Attribute ("type");
 			
 		if (0 == pContext)
-			NAU_THROW("Attribute without a context in file %s", ProjectLoader::s_File.c_str()); 					
+			NAU_THROW("File %s: Attribute without a context", ProjectLoader::s_File.c_str()); 					
 
 		if (!NAU->validateUserAttribContext(pContext))
-			NAU_THROW("Attribute with an invalid context %s, in file %s", pContext, ProjectLoader::s_File.c_str()); 					
+			NAU_THROW("File %s: Attribute with an invalid context %s", ProjectLoader::s_File.c_str(), pContext); 					
 
 		if (0 == pName) 
-			NAU_THROW("Attribute without a name in file %s", ProjectLoader::s_File.c_str()); 
+			NAU_THROW("File %s: Attribute without a name", ProjectLoader::s_File.c_str()); 
 
 		if (!NAU->validateUserAttribName(pContext, pName))
-			NAU_THROW("Attribute name %s is already in use in context, in file %s", pName, pContext, ProjectLoader::s_File.c_str()); 
+			NAU_THROW("File %s: Attribute name %s is already in use in context %s", ProjectLoader::s_File.c_str(), pName, pContext);
 		
 		if (0 == pType) 
-			NAU_THROW("Attribute without a type in file %s", ProjectLoader::s_File.c_str()); 					
+			NAU_THROW("File %s: Attribute without a type", ProjectLoader::s_File.c_str()); 					
 
 		if (!Attribute::isValidUserAttrType(pType))
-			NAU_THROW("Attribute with na invalid type in file %s", ProjectLoader::s_File.c_str()); 					
+			NAU_THROW("File %s: Attribute with na invalid type", ProjectLoader::s_File.c_str()); 					
 
-		float def = 0.0f, rangeMax, rangeMin;
-
-		pElem->QueryFloatAttribute("default", &def);
-
-		if (TIXML_SUCCESS == pElem->QueryFloatAttribute("rangeMax", &rangeMax) ||
-			TIXML_SUCCESS == pElem->QueryFloatAttribute("rangeMin", &rangeMin)) {
-
-//				set value with range: note default must be within range
-		}
-		else {
-			NAU->addUserAttrib(pContext, pName, pType);
-		}
-
+		AttribSet *attribs = NAU->getAttribs(pContext);
+		Enums::DataType dt = Enums::getType(pType);
+		void *v = readAttr(pName, pElem, dt, *attribs);
+		Attribute a = Attribute(attribs->getNextFreeID(), pName, dt, false, v);
+		attribs->add(a);	
 		std::string s;
-		SLOG("Scene : %s", pName);
+		SLOG("User Attribute : %s::%s", pContext, pName);
 				
 	}
 }
@@ -301,223 +296,12 @@ Specification of the scenes:
 scenes can have multiple "scene" defined
 each scene can have files and folders OR a single file containing a scene.
 the path may be relative to the project file or absolute
+type see sceneFactory
 
 param is passed to the loader
 	3DS loader: SWAP_YZ to indicate that ZY axis should be swaped 
 	( by default they are swapped)
 ----------------------------------------------------------------- */
-
-
-//void 
-//ProjectLoader::loadScenes(TiXmlHandle handle) 
-//{
-//	TiXmlElement *pElem, *pElemAux;
-//	std::string loader_params;
-//
-//	pElem = handle.FirstChild ("scenes").FirstChild ("scene").Element();
-//	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-//
-//		const char *pName = pElem->Attribute ("name");
-//		if (0 == pName) {
-//			NAU_THROW("File %s: scene has no name", ProjectLoader::s_File.c_str()); 					
-//		}
-//
-//		SLOG("Scene : %s", pName);
-//			
-//		pElemAux = pElem->FirstChildElement("translation");
-//		if (pElemAux != NULL) {
-//		}
-//		const char *pType = pElem->Attribute ("type");
-//		const char *pFilename = pElem->Attribute("filename");
-//		const char *pParam = pElem->Attribute("param");
-//		if (pParam == NULL)
-//			s = "";
-//		else
-//			s = pParam;
-//
-//		IScene *is;
-//		if (0 == pType) 
-//			is = RENDERMANAGER->createScene (pName);
-//		else {
-//			is = RENDERMANAGER->createScene(pName, pType);
-//			if (is == NULL)
-//				NAU_THROW("Invalid type for scene %s in file %s", pName, ProjectLoader::s_File.c_str()); 	
-//		}
-//		
-//
-//		const char *pTransX = pElem->Attribute("transX");
-//		const char *pTransY = pElem->Attribute("transY");
-//		const char *pTransZ = pElem->Attribute("transZ");
-//
-//		const char *pScaleX = pElem->Attribute("scaleX");
-//		const char *pScaleY = pElem->Attribute("scaleY");
-//		const char *pScaleZ = pElem->Attribute("scaleZ");
-//		const char *pScale = pElem->Attribute("scale");
-//
-//		ITransform *tis = TransformFactory::create("SimpleTransform");
-//
-//		if (pTransX && pTransY && pTransZ) {
-//			tis->translate(nau::system::textutil::ParseFloat(pTransX),
-//				nau::system::textutil::ParseFloat(pTransY),
-//				nau::system::textutil::ParseFloat(pTransZ));
-//
-//		}
-//		if (pScaleX && pScaleY && pScaleZ) {
-//			tis->scale(nau::system::textutil::ParseFloat(pScaleX),
-//				nau::system::textutil::ParseFloat(pScaleY),
-//				nau::system::textutil::ParseFloat(pScaleZ));
-//		}	
-//		if (pScale) {
-//			float scale = nau::system::textutil::ParseFloat(pScale);
-//			tis->scale(scale);
-//		}
-//
-//		is->setTransform(tis);
-//
-//		// the filename should point to a scene
-//		if (0 != pFilename) {
-//
-//			if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFilename)))
-//				NAU_THROW("Scene file %s does not exist", pFilename); 			
-//
-//			try {
-//				nau::Nau::getInstance()->loadAsset (FileUtil::GetFullPath(ProjectLoader::s_Path, pFilename), pName, s);
-//			}
-//			catch(std::string &s) {
-//				throw(s);
-//			}
-//		}
-//		else {
-//			handle = TiXmlHandle (pElem);
-//			TiXmlElement* pElementAux;
-//
-//			pElementAux = handle.FirstChild("geometry").Element();
-//			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
-//				const char *pName = pElementAux->Attribute("name");
-//				const char *pPrimType = pElementAux->Attribute ("type");
-//				const char *pMaterial = pElementAux->Attribute("material");
-//
-//				pTransX = pElementAux->Attribute("transX");
-//				pTransY = pElementAux->Attribute("transY");
-//				pTransZ = pElementAux->Attribute("transZ");
-//
-//				pScaleX = pElementAux->Attribute("scaleX");
-//				pScaleY = pElementAux->Attribute("scaleY");
-//				pScaleZ = pElementAux->Attribute("scaleZ");
-//				pScale = pElementAux->Attribute("scale");
-//
-//				if (pPrimType == NULL)
-//					NAU_THROW("Scene %s has no type", pName); 			
-//
-//				GeometricObject *go = (GeometricObject *)nau::scene::SceneObjectFactory::create("Geometry");
-//				
-//				if (go == NULL)
-//					NAU_THROW("Scene %s has invalid type type", pName); 
-//				if (pName)
-//					go->setName(pName);
-//
-//				Primitive *p = (Primitive *)RESOURCEMANAGER->createRenderable(pPrimType, pName);
-//				std::string n = p->getParamfName(0);
-//				unsigned int i = 0;
-//				while (Primitive::NoParam != n) {
-//
-//					float value;
-//					if (TIXML_SUCCESS == pElementAux->QueryFloatAttribute (n.c_str(), &value)) 
-//						p->setParam(i,value);
-//					++i;
-//					n = p->getParamfName(i);
-//				}
-//				if (i)
-//					p->build();
-//								
-//				ITransform *t = TransformFactory::create("SimpleTransform");
-//
-//				if (pTransX && pTransY && pTransZ) {
-//					t->translate(nau::system::textutil::ParseFloat(pTransX),
-//						nau::system::textutil::ParseFloat(pTransY),
-//						nau::system::textutil::ParseFloat(pTransZ));
-//
-//				}
-//				if (pScaleX && pScaleY && pScaleZ) {
-//					t->scale(nau::system::textutil::ParseFloat(pScaleX),
-//						nau::system::textutil::ParseFloat(pScaleY),
-//						nau::system::textutil::ParseFloat(pScaleZ));
-//				}	
-//				if (pScale) {
-//					float scale = nau::system::textutil::ParseFloat(pScale);
-//					t->scale(scale);
-//				}
-//				go->setTransform(t);
-//				go->setRenderable(p);
-//
-//				if (pMaterial) {
-//					if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME,pMaterial)) {
-//						Material *mat = MATERIALLIBMANAGER->createMaterial(pMaterial);
-//						//Material *mat = new Material();
-//						//mat->setName(pMaterial);
-//						//MATERIALLIBMANAGER->addMaterial(DEFAULTMATERIALLIBNAME, mat);
-//					}
-//					go->setMaterial(pMaterial);
-//				}
-//				is ->add(go);
-//
-//			}
-//
-//
-//			pElementAux = handle.FirstChild ("file").Element();
-//			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
-//				const char * pFileName = pElementAux->GetText();
-//
-//				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName)))
-//					NAU_THROW("Scene file %s does not exist", pFileName); 			
-//
-//				nau::Nau::getInstance()->loadAsset (FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName), pName, s);
-//			}
-//
-//			pElementAux = handle.FirstChild ("folder").Element();
-//			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
-//				
-//				DIR *dir;
-//
-//				struct dirent *ent;
-//
-//				const char * pDirName = pElementAux->GetText();
-//
-//				dir = opendir (FileUtil::GetFullPath(ProjectLoader::s_Path, pDirName).c_str());
-//
-//				if (!dir)
-//					NAU_THROW("Scene folder %s does not exist", pDirName); 			
-//
-//
-//				if (0 != dir) {
-//
-//					int count = 0;
-//					while ((ent = readdir (dir)) != 0) {
-//						char file [1024];
-//
-//#ifdef NAU_PLATFORM_WIN32
-//						sprintf (file, "%s\\%s", (char *)FileUtil::GetFullPath(ProjectLoader::s_Path, pDirName).c_str(), ent->d_name);
-//#else
-//						sprintf (file, "%s/%s", pDirName, ent->d_name);						
-//#endif
-//						try {
-//							nau::Nau::getInstance()->loadAsset (file, pName,s);
-//						}
-//						catch(std::string &s) {
-//							closedir(dir);
-//							throw(s);
-//						}
-//						++count;
-//					}
-//					if (count < 3 )
-//						NAU_THROW("Scene folder %s is empty", pDirName); 			
-//
-//				closedir (dir);
-//				}
-//			}
-//		}
-//	}
-//}
 
 
 void 
@@ -663,9 +447,6 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (pMaterial) {
 					if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME,pMaterial)) {
 						Material *mat = MATERIALLIBMANAGER->createMaterial(pMaterial);
-						//Material *mat = new Material();
-						//mat->setName(pMaterial);
-						//MATERIALLIBMANAGER->addMaterial(DEFAULTMATERIALLIBNAME, mat);
 					}
 					go->setMaterial(pMaterial);
 				}
@@ -697,7 +478,6 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 				if (!dir)
 					NAU_THROW("Scene folder %s does not exist", pDirName); 			
-
 
 				if (0 != dir) {
 
@@ -1002,12 +782,13 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 			// skip previously processed elements
 			if (strcmp(p->Value(), "projection") && strcmp(p->Value(), "viewport")) {
 				// trying to define an attribute that does not exist?		
-				if (attribs.count(p->Value()) == 0)
-					NAU_THROW("File %s: Element %s: %s is not an attribute, in file %s", ProjectLoader::s_File.c_str(), pName, p->Value());
+				if (attribs.count(p->Value()) == 0) {
+					NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+				}
 				// trying to set the value of a read only attribute?
 				a = attribs[p->Value()];
 				if (a.mReadOnlyFlag)
-					NAU_THROW("File %s: Element %s: %s is a read-only attribute, in file %s", ProjectLoader::s_File.c_str(), pName, p->Value());
+					NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 
 				value = readAttr(pName, p, a.mType, Light::Attribs);
 				aNewCam->setProp(a.mId, a.mType, value);
@@ -1255,6 +1036,7 @@ void
 ProjectLoader::loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass)
 {
 	TiXmlElement *pElem;
+	bool *b = new bool();
 
 	// Clear Color and Depth
 	pElem = hPass.FirstChild ("depth").Element();
@@ -1264,30 +1046,33 @@ ProjectLoader::loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass)
 		const char *pEnable = pElem->Attribute ("test");
 		if (pEnable != NULL) {
 			if (!strcmp(pEnable, "false"))
-				aPass->setProp(IRenderer::DEPTH_ENABLE, false);
+				*b = false;
 			else
-				aPass->setProp(IRenderer::DEPTH_ENABLE, true);
+				*b = true;
+			aPass->setProp(Pass::DEPTH_ENABLE, Enums::BOOL, b);
 		}
 		const char *pClear = pElem->Attribute ("clear");
 		if (pClear != NULL) {
 			if (!strcmp(pClear, "false"))
-				aPass->setProp(IRenderer::DEPTH_CLEAR, false);
+				*b = false;
 			else
-				aPass->setProp(IRenderer::DEPTH_CLEAR, true);
+				*b = true;
+			aPass->setProp(Pass::DEPTH_CLEAR, Enums::BOOL, b);
 		}
 		const char *pWrite = pElem->Attribute ("write");
 		if (pWrite != NULL) {
 			if (!strcmp(pWrite, "false"))
-				aPass->setProp(IRenderer::DEPTH_MASK, false);
+				*b = false;
 			else
-				aPass->setProp(IRenderer::DEPTH_MASK, true);
+				*b = true;
+			aPass->setProp(Pass::DEPTH_MASK, Enums::BOOL, b);
 		}
 		if (TIXML_SUCCESS == pElem->QueryFloatAttribute ("clearValue",&vf))
 			aPass->setDepthClearValue(vf);
 
 		const char *pFunc = pElem->Attribute("func");
 		if (pFunc) {
-			int enumFunc = IState::Attribs.getListValueOp(IState::DEPTH_FUNC, pFunc);//IState::translateStringToFuncEnum(pFunc);
+			int enumFunc = Pass::Attribs.getListValueOp(Pass::DEPTH_FUNC, pFunc);//IState::translateStringToFuncEnum(pFunc);
 			if (enumFunc != -1)
 				aPass->setDepthFunc(enumFunc);
 		}
@@ -1296,35 +1081,37 @@ ProjectLoader::loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("stencil").Element();
 	if (0 != pElem) {
-		float vf;int vi;
+		float vf;
 		const char *pEnable = pElem->Attribute ("test");
 		if (pEnable != NULL) {
 			if (!strcmp(pEnable, "false"))
-				aPass->setProp(IRenderer::STENCIL_ENABLE, false);
+				*b = false;
 			else
-				aPass->setProp(IRenderer::STENCIL_ENABLE, true);
+				*b = true;
+			aPass->setProp(Pass::STENCIL_ENABLE, Enums::BOOL, b);
 		}
 		const char *pClear = pElem->Attribute ("clear");
 		if (pClear != NULL) {
 			if (!strcmp(pClear, "false"))
-				aPass->setProp(IRenderer::STENCIL_CLEAR, false);
+				*b = false;
 			else
-				aPass->setProp(IRenderer::STENCIL_CLEAR, true);
+				*b = true;
+			aPass->setProp(Pass::STENCIL_CLEAR, Enums::BOOL, b);
 		}
 		if (TIXML_SUCCESS == pElem->QueryFloatAttribute ("clearValue",&vf))
 			aPass->setStencilClearValue(vf);
-		if (TIXML_SUCCESS == pElem->QueryIntAttribute ("maskValue",&vi))
-			aPass->setStencilMaskValue(vf);
+		//if (TIXML_SUCCESS == pElem->QueryIntAttribute ("maskValue",&vi))
+		//	aPass->setStencilMaskValue(vf);
 
 		TiXmlElement *pElemAux = pElem->FirstChildElement("stencilFunc");
 		int ref, mask;
 		if (pElemAux != NULL) {
 			const char *pFunc = pElemAux->Attribute("func");
-			if ((pFunc != NULL) && (IRenderer::translateStringToStencilFunc(pFunc) != -1) &&
+			if ((pFunc != NULL) && (Pass::Attribs.isValid("STENCIL_FUNC", pFunc) /*IRenderer::translateStringToStencilFunc(pFunc) != -1*/) &&
 				(TIXML_SUCCESS == pElemAux->QueryIntAttribute ("ref",&ref)) &&
 				(TIXML_SUCCESS == pElemAux->QueryIntAttribute ("mask",&mask)) && (mask >= 0))
 
-					aPass->setStencilFunc((IRenderer::StencilFunc)IRenderer::translateStringToStencilFunc(pFunc), 
+					aPass->setStencilFunc((Pass::StencilFunc)Pass::Attribs.getListValueOp(Pass::STENCIL_FUNC, pFunc)/* (IRenderer::StencilFunc)IRenderer::translateStringToStencilFunc(pFunc)*/, 
 											ref, (unsigned int)mask);
 		}
 		pElemAux = pElem->FirstChildElement("stencilOp");
@@ -1334,14 +1121,21 @@ ProjectLoader::loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass)
 			const char *pDFail = pElemAux->Attribute("dfail");
 			const char *pDPass = pElemAux->Attribute("dpass");
 			if (pSFail != NULL && pDFail != NULL && pDPass != NULL && 
-				IRenderer::translateStringToStencilOp(pSFail) != -1 &&
-				IRenderer::translateStringToStencilOp(pDFail) != -1 &&
-				IRenderer::translateStringToStencilOp(pDPass) != -1 )
+				Pass::Attribs.isValid("STENCIL_FAIL", pSFail) &&
+				Pass::Attribs.isValid("STENCIL_DEPTH_FAIL", pDFail) &&
+				Pass::Attribs.isValid("STENCIL_DEPTH_PASS", pDPass))
+				//IRenderer::translateStringToStencilOp(pSFail) != -1 &&
+				//IRenderer::translateStringToStencilOp(pDFail) != -1 &&
+				//IRenderer::translateStringToStencilOp(pDPass) != -1 )
 
 					aPass->setStencilOp(
-							(IRenderer::StencilOp)IRenderer::translateStringToStencilOp(pSFail),
-							(IRenderer::StencilOp)IRenderer::translateStringToStencilOp(pDFail),
-							(IRenderer::StencilOp)IRenderer::translateStringToStencilOp(pDPass));
+						(Pass::StencilOp)Pass::Attribs.getListValueOp(Pass::STENCIL_FAIL, pSFail),
+						(Pass::StencilOp)Pass::Attribs.getListValueOp(Pass::STENCIL_DEPTH_FAIL, pDFail),
+						(Pass::StencilOp)Pass::Attribs.getListValueOp(Pass::STENCIL_DEPTH_PASS, pDPass));
+				//aPass->setStencilOp(
+				//	(IRenderer::StencilOp)IRenderer::translateStringToStencilOp(pSFail),
+				//	(IRenderer::StencilOp)IRenderer::translateStringToStencilOp(pDFail),
+				//	(IRenderer::StencilOp)IRenderer::translateStringToStencilOp(pDPass));
 
 		}
 	}
@@ -1351,9 +1145,10 @@ ProjectLoader::loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass)
 		const char *pEnable = pElem->Attribute ("clear");
 		if (pEnable != NULL) {
 			if (!strcmp(pEnable, "false"))
-				aPass->setProp(IRenderer::COLOR_CLEAR, false);
+				*b = false;
 			else
-				aPass->setProp(IRenderer::COLOR_CLEAR, true);
+				*b = true;
+			aPass->setProp(Pass::COLOR_CLEAR, Enums::BOOL, b);
 		}
 	}
 }
@@ -1435,43 +1230,64 @@ ProjectLoader::loadPassTexture(TiXmlHandle hPass, Pass *aPass)
 /* -----------------------------------------------------------------------------
 PARAMS
 
-	<params>
-		<param name = "SplitIndex" int="2" />
+	<userParams>
+		<paramname1  value = 2 />
 	</params>
 
 Some passes may take other parameters which can be specified in here.
 The available types so far are int and float.
 -----------------------------------------------------------------------------*/
 
-// CHECK IF EXISTS (HAVE TO CHECK PARAMS)
-
 void 
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
-	TiXmlElement *pElem;
-	int vi;
-	float vf;
-	std::string s;
+	void *value;
 
-	pElem = hPass.FirstChild("params").FirstChild("param").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	std::map<std::string, Attribute> attribs = Pass::Attribs.getAttributes();
+	TiXmlElement *p = hPass.FirstChild("userAttributes").FirstChild().Element();
+	Attribute a;
+	while (p) {
+		// trying to define an attribute that does not exist		
+		if (attribs.count(p->Value()) == 0)
+			NAU_THROW("Pass %s: %s is not an attribute, in file %s", aPass->getName().c_str() , p->Value(), ProjectLoader::s_File.c_str());
+		// trying to set the value of a read only attribute
+		a = attribs[p->Value()];
+		if (a.mReadOnlyFlag)
+			NAU_THROW("Pass %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), p->Value(), ProjectLoader::s_File.c_str());
 
-		const char *pName = pElem->Attribute ("name");
-		
-		if (!pName)
-			NAU_THROW("Param without name in pass: %s", aPass->getName().c_str());
-
-		const char *pValue = pElem->Attribute ("string");
-		if (TIXML_SUCCESS == pElem->QueryIntAttribute ("int",&vi))
-			aPass->setParam(pName,vi);
-		else if (TIXML_SUCCESS == pElem->QueryFloatAttribute ("float",&vf))
-			aPass->setParam(pName,vf);
-		//else if (pValue != NULL)
-		//		aPass->setParam(pName,pValue);
-		else {
-			NAU_THROW("Param %s without value in pass: %s", pName, aPass->getName().c_str());
-		}
+		value = readAttr(aPass->getName(), p, a.mType, Light::Attribs);
+		aPass->setProp(a.mId, a.mType, value);
+		p = p->NextSiblingElement();
 	}
+
+
+
+
+
+
+	//int vi;
+	//float vf;
+	//std::string s;
+
+	//pElem = hPass.FirstChild("params").FirstChild("param").Element();
+	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+	//	const char *pName = pElem->Attribute ("name");
+	//	
+	//	if (!pName)
+	//		NAU_THROW("Param without name in pass: %s", aPass->getName().c_str());
+
+	//	const char *pValue = pElem->Attribute ("string");
+	//	if (TIXML_SUCCESS == pElem->QueryIntAttribute ("int",&vi))
+	//		aPass->setParam(pName,vi);
+	//	else if (TIXML_SUCCESS == pElem->QueryFloatAttribute ("float",&vf))
+	//		aPass->setParam(pName,vf);
+	//	//else if (pValue != NULL)
+	//	//		aPass->setParam(pName,pValue);
+	//	else {
+	//		NAU_THROW("Param %s without value in pass: %s", pName, aPass->getName().c_str());
+	//	}
+	//}
 }
 
 /* -----------------------------------------------------------------------------

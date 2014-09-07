@@ -6,6 +6,7 @@
 #include <nau/render/opengl/gltexture2dArray.h>
 #endif
 #include <nau/loader/textureloader.h>
+#include <nau.h>
 
 
 using namespace nau::render;
@@ -133,7 +134,6 @@ Texture::Create (std::string file, std::string label, bool mipmap)
 	
 		t->bitmap = new wxBitmap(wxImage(96,96,loader->getData(),true).Mirror(false));
 	#endif
-
 		loader->freeImage();
 		delete loader;
 		return t;
@@ -148,7 +148,7 @@ Texture::Create (std::string file, std::string label, bool mipmap)
 Texture::Texture(std::string label, std::string aDimension, std::string anInternalFormat, 
 				 std::string aFormat, std::string aType, int width, int height) : m_Label (label)
 #ifdef __SLANGER__
-	,bitmap(0)
+				 , bitmap(0), m_Bitmap(0)
 #endif
 {
 	initArrays(Attribs);
@@ -158,7 +158,7 @@ Texture::Texture(std::string label, std::string aDimension, std::string anIntern
 Texture::Texture(std::string label, std::string aDimension, std::string anInternalFormat, 
 				 int width, int height) : m_Label (label)
 #ifdef __SLANGER__
-	,bitmap(0)
+				 , bitmap(0), m_Bitmap(0)
 #endif
 {
 	initArrays(Attribs);
@@ -171,7 +171,8 @@ Texture::~Texture(){
 
 	if (bitmap)
 		delete bitmap;	
-
+	if (m_Bitmap)
+		free (m_Bitmap);
 #endif
 }
 
@@ -281,6 +282,7 @@ Texture::setProp(int prop, Enums::DataType type, void *value) {
 
 wxBitmap *
 Texture::getBitmap(void) {
+
 	return bitmap;	
 }
 #endif

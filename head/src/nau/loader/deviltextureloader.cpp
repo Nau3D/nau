@@ -109,20 +109,8 @@ DevILTextureLoader::save(TexImage *ti, std::string filename) {
 			case 3: ilFormat = IL_RGB; break;
 			case 4: ilFormat = IL_RGBA; break;
 		}
-		if (type == "FLOAT")
-			ilType = IL_FLOAT;
-		else if (type == "UNSIGNED_BYTE")
-			ilType = IL_UNSIGNED_BYTE;
-		else if (type == "UNSIGNED_SHORT")
-			ilType = IL_UNSIGNED_SHORT;
-		else if (type == "UNSIGNED_INT")
-			ilType = IL_UNSIGNED_INT;
-		else if (type == "SHORT")
-			ilType = IL_SHORT;
-		else if (type == "BYTE")
-			ilType = IL_BYTE;
-		else if (type == "INT")
-			ilType = IL_INT;
+
+		ilType = convertType(type);
 
 		if (!DevILTextureLoader::inited) {
 			ilInit();
@@ -139,4 +127,28 @@ DevILTextureLoader::save(TexImage *ti, std::string filename) {
 
 		ilSave(IL_PNG, (ILstring)filename.c_str());
 	}
+}
+
+
+ILuint 
+DevILTextureLoader::convertType(std::string type) {
+
+	ILuint ilType = IL_TYPE_UNKNOWN;
+
+	if (type == "FLOAT")
+		ilType = IL_FLOAT;
+	else if (type == "UNSIGNED_BYTE")
+		ilType = IL_UNSIGNED_BYTE;
+	else if (type == "UNSIGNED_SHORT")
+		ilType = IL_UNSIGNED_SHORT;
+	else if (type == "UNSIGNED_INT")
+		ilType = IL_UNSIGNED_INT;
+	else if (type == "SHORT")
+		ilType = IL_SHORT;
+	else if (type == "BYTE")
+		ilType = IL_BYTE;
+	else if (type == "INT")
+		ilType = IL_INT;
+
+	return ilType;
 }

@@ -20,15 +20,18 @@
 #include <nau/material/colormaterial.h>
 #include <nau/enums.h>
 
+
 #include <nau/attribute.h>
 #include <nau/attributeValues.h>
 
 using namespace nau::material;
+using namespace nau::render;
 
 namespace nau
 {
 	namespace render
 	{
+		class Pass;
 		class IRenderer: public AttributeValues
 		{
 
@@ -40,6 +43,11 @@ namespace nau
 
 			static AttribSet MatrixAttribs;
 
+			ENUM_PROP(STENCIL_FUNC, 0);
+			ENUM_PROP(STENCIL_FAIL, 1);
+			ENUM_PROP(STENCIL_DEPTH_FAIL, 2);
+			ENUM_PROP(STENCIL_DEPTH_PASS, 3);
+			ENUM_PROP(DEPTH_FUNC, 4);
 
 
 			typedef enum {
@@ -83,25 +91,24 @@ namespace nau
 				STENCIL_BUFFER = 0x04
 			} FrameBuffer;
 
-			typedef enum {
-				COLOR_CLEAR, 
-				COLOR_ENABLE, 
-				DEPTH_CLEAR, 
-				DEPTH_ENABLE, 
-				DEPTH_MASK, 
-				DEPTH_CLAMPING,
-				STENCIL_CLEAR, 
-				STENCIL_ENABLE,
+			//typedef enum {
+			//	COLOR_CLEAR, 
+			//	COLOR_ENABLE, 
+			//	DEPTH_CLEAR, 
+			//	DEPTH_ENABLE, 
+			//	DEPTH_MASK, 
+			//	DEPTH_CLAMPING,
+			//	STENCIL_CLEAR, 
+			//	STENCIL_ENABLE,
 
-				COUNT_BOOL_PROPS} BoolProps;
+			//	COUNT_BOOL_PROPS} BoolProps;
 
-			virtual void setProp(IRenderer::BoolProps prop, bool value) = 0;
-
-
+			//virtual void setPassProp(Pass::BoolProperty prop, bool value) = 0;
 
 
 			void setPrope(EnumProperty prop, int value);
 			void setProp(int prop, Enums::DataType type, void *value);
+			
 
 
 		// ATOMIC COUNTERS 
@@ -143,12 +150,14 @@ namespace nau
 
 		public:
 			/// sets viewport (origin is 0,0)
-			virtual void setViewport(int width, int height) = 0;
+			//virtual void setViewport(int width, int height) = 0;
 			/// sets viewport
 			virtual void setViewport(nau::render::Viewport *aViewport) = 0;
+			/// returns currrent viewport
+			virtual Viewport *getViewport() = 0;
 			/// set the camera
 			virtual void setCamera(nau::scene::Camera *aCamera) = 0;
-			/// return the actual camera
+			/// returns current camera
 			virtual Camera *getCamera() = 0;
 
 
@@ -209,6 +218,7 @@ namespace nau
 			// state
 			virtual void setState(IState *aState) = 0;
 			virtual void setDefaultState() = 0;
+			virtual IState *getState() = 0;
 
 			/// shaders
 			virtual void setShader(IProgram *aShader) = 0;
@@ -236,34 +246,39 @@ namespace nau
 
 		public:
 
-			typedef enum {
-				KEEP,
-				ZERO,
-				REPLACE,
-				INCR,
-				INCR_WRAP,
-				DECR,
-				DECR_WRAP,
-				INVERT
-			} StencilOp;
+			//typedef enum {
+			//	KEEP,
+			//	ZERO,
+			//	REPLACE,
+			//	INCR,
+			//	INCR_WRAP,
+			//	DECR,
+			//	DECR_WRAP,
+			//	INVERT
+			//} StencilOp;
 
-			typedef enum {
-				LESS, NEVER, ALWAYS, LEQUAL,
-				EQUAL, GEQUAL, GREATER, NOT_EQUAL
-			} StencilFunc;
+			//typedef enum {
+			//	LESS, NEVER, ALWAYS, LEQUAL,
+			//	EQUAL, GEQUAL, GREATER, NOT_EQUAL
+			//} StencilFunc;
 
 			virtual void clearFrameBuffer (unsigned int b) = 0;
+			virtual void prepareBuffers(Pass *p) = 0;
 
-			virtual void setDepthClearValue(float v) = 0;
-			virtual void setDepthFunc(int f) = 0;
+			virtual unsigned int translateStencilDepthFunc(int aFunc) = 0;
+			virtual unsigned int translateStencilOp(int aFunc) = 0;
 
-			virtual void setStencilClearValue(int v) = 0;
-			virtual void setStencilMaskValue(int i) = 0;
-			virtual void setStencilFunc(StencilFunc f, int ref, unsigned int mask) = 0;
-			virtual void setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass) = 0;
+			virtual void setDepthClamping(bool b) = 0;
+			//virtual void setDepthClearValue(float v) = 0;
+			//virtual void setDepthFunc(int f) = 0;
 
-			static int translateStringToStencilOp(std::string s);
-			static int translateStringToStencilFunc(std::string s);
+			//virtual void setStencilClearValue(int v) = 0;
+			//virtual void setStencilMaskValue(int i) = 0;
+			//virtual void setStencilFunc(StencilFunc f, int ref, unsigned int mask) = 0;
+			//virtual void setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass) = 0;
+
+			//static int translateStringToStencilOp(std::string s);
+			//static int translateStringToStencilFunc(std::string s);
 
 			virtual void colorMask(bool r, bool g, bool b, bool a) = 0;
 

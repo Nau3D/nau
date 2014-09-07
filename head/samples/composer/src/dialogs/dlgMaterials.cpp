@@ -741,7 +741,7 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	
 			gridTextures->SetReadOnly(i,j,true);
 			if (texture != NULL)
-				imagesGrid[i*4+j] = new ImageGridCellRenderer(texture->getBitmap());
+				imagesGrid[i * 4 + j] = new ImageGridCellRenderer(texture->getBitmap());
 			else
 				imagesGrid[i*4+j] = new ImageGridCellRenderer(new wxBitmap(96,96));
 			gridTextures->SetCellRenderer(i, j, imagesGrid[i*4+j]);
@@ -1008,7 +1008,7 @@ void DlgMaterials::updateTextures(Material *mm, int index) {
 		for(int j = 0 ; j < 4 ; j++) {
 			texture = mm->getTexture(i*4+j);
 			if (texture != NULL)
-				imagesGrid[i*4+j]->setBitmap(texture->getBitmap());
+				imagesGrid[i * 4 + j]->setBitmap(texture->getBitmap());
 			else
 				imagesGrid[i*4+j]->setBitmap(new wxBitmap(96,96));
 		}

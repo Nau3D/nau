@@ -32,11 +32,14 @@ namespace nau
 			std::string getType (void);
 			void freeImage (void);
 
-			virtual void save(TexImage *ti, std::string filename);
+			void save(TexImage *ti, std::string filename);
+
 
 		private:
 			ILuint m_IlId;
 			static bool inited;	
+
+			ILuint convertType(std::string texType);
 		};
 	};
 };

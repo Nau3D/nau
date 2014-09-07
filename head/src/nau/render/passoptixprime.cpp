@@ -319,7 +319,7 @@ PassOptixPrime::initOptixPrime() {
 	int vbo = renderable->getVertexData().getBufferID(0);
 	int numVert = renderable->getVertexData().getNumberOfVertices();
 	std::vector<vec4> vertex = renderable->getVertexData().getDataOf(0);
-	GLuint vv;
+	//GLuint vv;
 	//glGenBuffers(1, &vv);
 	//glBindBuffer(GL_ARRAY_BUFFER, vv);
 	//glBufferData(GL_ARRAY_BUFFER, vertex.size() * sizeof(float) * 4, &(vertex[0].x), GL_STATIC_DRAW);

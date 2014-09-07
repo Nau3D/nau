@@ -53,7 +53,7 @@ namespace nau {
 
 		static bool isValidUserAttrType(std::string s) {
 
-			if (s == "FLOAT" || s == "INT" )
+			if (s == "FLOAT" || s == "INT" || s == "VEC4")
 				return true;
 			else
 				return false;

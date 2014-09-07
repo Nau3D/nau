@@ -14,7 +14,11 @@ namespace nau
 			//virtual void setupCamera (void);
 			nau::scene::Camera *m_LightCamera;
 
+			static bool Init();
+			static bool Inited;
+
 		public:
+
 			DepthMapPass(const std::string &name);
 			~DepthMapPass(void);
 

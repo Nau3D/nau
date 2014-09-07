@@ -18,6 +18,7 @@
 #include <nau/math/itransform.h>
 #include <nau/config.h>
 #include <nau/render/imageTexture.h>
+#include <nau/render/pass.h>
 
 
 #define LOGGING_ON
@@ -28,6 +29,7 @@
 
 
 using namespace nau::scene;
+using namespace nau::render;
 
 namespace nau
 {
@@ -59,9 +61,8 @@ namespace nau
 		public:
 			static unsigned int GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT];
 
-			void setProp(IRenderer::BoolProps prop, bool value);
-			bool getPropb(IRenderer::BoolProps prop);
-
+			//void setPassPropb(Pass::BoolProps prop, bool value);
+			//bool getPassPropb(Pass::BoolProps prop);
 
 			//! \name Methods
 			//@{
@@ -73,14 +74,15 @@ namespace nau
 			void setRenderMode (TRenderMode mode);
 			void drawGroup (nau::material::IMaterialGroup* aMatGroup);
 			void clearFrameBuffer(unsigned int b);
+			void prepareBuffers(Pass *p);
+			void setDepthClamping(bool b);
 
-			void setDepthClearValue(float v);
-			void setDepthFunc(int f);
-
-			void setStencilClearValue(int v);
-			void setStencilMaskValue(int i);
-			void setStencilFunc(StencilFunc f, int ref, unsigned int mask);
-			void setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass);
+			//void setDepthClearValue(float v);
+			//void setDepthFunc(int f);
+			//void setStencilClearValue(int v);
+			//void setStencilMaskValue(int i);
+			//void setStencilFunc(StencilFunc f, int ref, unsigned int mask);
+			//void setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass);
 
 			// PRIMITIVE COUNTER
 			void resetCounters (void);
@@ -100,8 +102,9 @@ namespace nau
 			void setCamera (nau::scene::Camera *aCamera);
 			Camera *getCamera();
 			nau::geometry::Frustum& getFrustum (void);
-			void setViewport(int width, int height);
+			//void setViewport(int width, int height);
 			void setViewport(nau::render::Viewport *vp);	
+			Viewport *getViewport();
 
 			// MATRICES
 			void loadIdentity(MatrixMode mode);
@@ -136,6 +139,7 @@ namespace nau
 			// STATE
 			void setState (IState *aState);
 			void setDefaultState();
+			IState *getState();
 
 			// LIGHTING
 			virtual bool addLight (nau::scene::Light& aLight);
@@ -163,10 +167,13 @@ namespace nau
 
 			void flush (void);
 
+			unsigned int translateStencilDepthFunc(int aFunc);
+			unsigned int translateStencilOp(int aFunc);
+
 		private:
 
-			unsigned int translate(StencilFunc aFunc);
-			unsigned int translate(StencilOp aFunc);
+
+			Viewport *m_Viewport;
 
 			std::vector<Light *> m_Lights;
 			Camera *m_Camera;
