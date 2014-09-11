@@ -6,6 +6,7 @@
 =============================================================================*/
 #include "ExtensionFunctionWrapper.h"
 #include "GLDriver.h"
+#include "GLWindows.h"
 #include "FunctionParamStore.h"
 
 #include <stdarg.h>
@@ -16,10 +17,17 @@ extern GLDriver glDriver;
 USING_ERRORLOG
 
 // Pre-definition of manual override functions
+
 GLfloat GLAPIENTRY glGetPathLengthNV(GLuint path,GLsizei startSegment, GLsizei numSegments);
 GLuint64 GLAPIENTRY glGetTextureHandleNV(GLuint texture);
 GLuint64 GLAPIENTRY glGetTextureSamplerHandleNV(GLuint texture, GLuint sampler);
 GLuint64 GLAPIENTRY glGetImageHandleNV(GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum format);
+
+GLuint64 GLAPIENTRY glGetTextureHandleARB(GLuint texture);
+GLuint64 GLAPIENTRY glGetTextureSamplerHandleARB(GLuint texture, GLuint sampler);
+GLuint64 GLAPIENTRY glGetImageHandleARB(GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum format);
+
+HGLRC WGLAPIENTRY wglCreateContextAttribsARB(HDC hDC, HGLRC hShareContext, const int *attribList);
 
 // Enum of manual extension wrapped functions
 enum ExtensionWrapperFunctions
@@ -31,6 +39,12 @@ enum ExtensionWrapperFunctions
   EWF_GL_GET_TEXTURE_HANDLE_NV,
   EWF_GL_GET_TEXTURE_SAMPLER_HANDLE_NV,
   EWF_GL_GET_IMAGE_HANDLE_NV,
+
+  EWF_GL_GET_TEXTURE_HANDLE_ARB,
+  EWF_GL_GET_TEXTURE_SAMPLER_HANDLE_ARB,
+  EWF_GL_GET_IMAGE_HANDLE_ARB,
+
+  EWF_WGL_CREATECONTEXTATTRIBS_ARB,
 
   EWF_MAX
 };
@@ -44,6 +58,12 @@ struct GLExtensions
   GLuint64 (GLAPIENTRY *glGetTextureHandleNV) (GLuint texture);
   GLuint64 (GLAPIENTRY *glGetTextureSamplerHandleNV) (GLuint texture, GLuint sampler);
   GLuint64 (GLAPIENTRY *glGetImageHandleNV) (GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum format);
+
+  GLuint64 (GLAPIENTRY *glGetTextureHandleARB) (GLuint texture);
+  GLuint64 (GLAPIENTRY *glGetTextureSamplerHandleARB) (GLuint texture, GLuint sampler);
+  GLuint64 (GLAPIENTRY *glGetImageHandleARB) (GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum format);
+
+  HGLRC (WGLAPIENTRY *wglCreateContextAttribsARB) (HDC hDC, HGLRC hShareContext, const int *attribList);
 };
 GLExtensions GLEXT = 
 {
@@ -51,6 +71,12 @@ GLExtensions GLEXT =
 
   NULL,
   NULL,
+  NULL,
+
+  NULL,
+  NULL,
+  NULL,
+
   NULL,
 };
 
@@ -81,6 +107,12 @@ static ManualExtension s_manualExtensions[EWF_MAX] =
   ManualExtension("glGetTextureHandleNV",        (void*)glGetTextureHandleNV,        (void**)&GLEXT.glGetTextureHandleNV),
   ManualExtension("glGetTextureSamplerHandleNV", (void*)glGetTextureSamplerHandleNV, (void**)&GLEXT.glGetTextureSamplerHandleNV),
   ManualExtension("glGetImageHandleNV",          (void*)glGetImageHandleNV,          (void**)&GLEXT.glGetImageHandleNV),
+
+  ManualExtension("glGetTextureHandleARB",        (void*)glGetTextureHandleARB,        (void**)&GLEXT.glGetTextureHandleARB),
+  ManualExtension("glGetTextureSamplerHandleARB", (void*)glGetTextureSamplerHandleARB, (void**)&GLEXT.glGetTextureSamplerHandleARB),
+  ManualExtension("glGetImageHandleARB",          (void*)glGetImageHandleARB,          (void**)&GLEXT.glGetImageHandleARB),
+
+  ManualExtension("wglCreateContextAttribsARB",   (void*)wglCreateContextAttribsARB,   (void**)&GLEXT.wglCreateContextAttribsARB),
 };
 
 
@@ -176,6 +208,105 @@ GLuint64 GLAPIENTRY glGetImageHandleNV(GLuint texture, GLint level, GLboolean la
 
   return retValue;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//
+GLuint64 GLAPIENTRY glGetTextureHandleARB(GLuint texture)
+{
+  uint funcIndex = s_manualExtensions[EWF_GL_GET_TEXTURE_HANDLE_ARB].m_index;
+
+#ifdef OS_ARCH_x86
+  glDriver.LogFunctionPre (funcIndex,FunctionArgs((char*)&texture));
+#elif defined(OS_ARCH_x64)
+  FunctionParamStore localParamStore = FunctionParamStore(texture);
+  glDriver.LogFunctionPre (funcIndex, FunctionArgs((char *)&localParamStore.m_paramStore[0]));
+#else
+  #error Unknown platform
+#endif
+
+  // Call the real method
+  GLuint64 retValue = GLEXT.glGetTextureHandleARB(texture);
+
+  glDriver.LogFunctionPost(funcIndex,FunctionRetValue(retValue));
+
+  return retValue;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+GLuint64 GLAPIENTRY glGetTextureSamplerHandleARB(GLuint texture, GLuint sampler)
+{
+  uint funcIndex = s_manualExtensions[EWF_GL_GET_TEXTURE_SAMPLER_HANDLE_ARB].m_index;
+
+#ifdef OS_ARCH_x86
+  glDriver.LogFunctionPre (funcIndex,FunctionArgs((char*)&texture));
+#elif defined(OS_ARCH_x64)
+  FunctionParamStore localParamStore = FunctionParamStore(texture, sampler);
+  glDriver.LogFunctionPre (funcIndex, FunctionArgs((char *)&localParamStore.m_paramStore[0]));
+#else
+  #error Unknown platform
+#endif
+
+  // Call the real method
+  GLuint64 retValue = GLEXT.glGetTextureSamplerHandleARB(texture, sampler);
+
+  glDriver.LogFunctionPost(funcIndex,FunctionRetValue(retValue));
+
+  return retValue;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+GLuint64 GLAPIENTRY glGetImageHandleARB(GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum format)
+{
+  uint funcIndex = s_manualExtensions[EWF_GL_GET_IMAGE_HANDLE_ARB].m_index;
+
+#ifdef OS_ARCH_x86
+  glDriver.LogFunctionPre (funcIndex,FunctionArgs((char*)&texture));
+#elif defined(OS_ARCH_x64)
+  FunctionParamStore localParamStore = FunctionParamStore(texture, level, layered, layer, format);
+  glDriver.LogFunctionPre (funcIndex, FunctionArgs((char *)&localParamStore.m_paramStore[0]));
+#else
+  #error Unknown platform
+#endif
+
+  // Call the real method
+  GLuint64 retValue = GLEXT.glGetImageHandleARB(texture, level, layered, layer, format);
+
+  glDriver.LogFunctionPost(funcIndex,FunctionRetValue(retValue));
+
+  return retValue;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+HGLRC WGLAPIENTRY wglCreateContextAttribsARB(HDC hDC, HGLRC hShareContext, const int *attribList)
+{
+  uint funcIndex = s_manualExtensions[EWF_WGL_CREATECONTEXTATTRIBS_ARB].m_index;
+
+#ifdef OS_ARCH_x86
+  glDriver.LogFunctionPre (funcIndex,FunctionArgs((char*)&hDC));
+#elif defined(OS_ARCH_x64)
+  FunctionParamStore localParamStore = FunctionParamStore(hDC, hShareContext, attribList);
+  glDriver.LogFunctionPre (funcIndex, FunctionArgs((char *)&localParamStore.m_paramStore[0]));
+#else
+  #error Unknown platform
+#endif
+
+  // Call the real method
+  HGLRC retValue = GLEXT.wglCreateContextAttribsARB(hDC, hShareContext, attribList);
+
+  glDriver.LogFunctionPost(funcIndex,FunctionRetValue(retValue));
+
+  //Create our driver context
+  if(retValue != NULL && glDriver.GetFunctionCallDepth() == 0)
+  {
+    glDriver.CreateOpenGLContext(retValue);
+  }
+
+  return retValue;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //

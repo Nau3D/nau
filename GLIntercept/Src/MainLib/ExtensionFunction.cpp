@@ -187,6 +187,21 @@ bool ExtensionFunction::AddOverrideFunction(const string & funcName, void * over
     return true;
   }
 
+  // Attempt a manual wrap
+  if(manualFuncWrap.AddFunctionWrap(funcName, origFuncPtr) != NULL)
+  {
+    funcIndex = functionTable->FindFunction(funcName);
+    if(funcIndex < 0)
+    {
+      return false;
+    }
+
+    //Assign the override
+    const FunctionData *foundFunc = functionTable->GetFunctionData(funcIndex);
+    *foundFunc->internalFunctionDataPtr = overrideFunctionPtr;
+    return true;
+  }
+
   //If this is a new function, generate a wrapper around the override
 
   //Check if we can add another extension function

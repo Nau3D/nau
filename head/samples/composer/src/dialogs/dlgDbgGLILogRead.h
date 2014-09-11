@@ -25,7 +25,7 @@
 #include <wx/treectrl.h>
 #include <string>
 #include <nau/event/ilistener.h>
-
+#include <fstream> 
 
 class DlgDbgGLILogRead : public wxDialog, nau::event_::IListener
 {
@@ -37,12 +37,18 @@ protected:
 	DlgDbgGLILogRead& operator= (const DlgDbgGLILogRead&);
 	static DlgDbgGLILogRead *m_Inst;
 
-	void loadLogFile(wxTreeItemId &rootnode,std::string logfile, int frameNumber);
+	void loadNewLogFile(std::string logfile, int fNumber);
+	void continueReadLogFile();
+	void finishReadLogFile();
 	
 	wxTreeCtrl *m_log;
 	wxButton *m_bClear, *m_bProfiler, *m_bSave;
+	wxTreeItemId rootnode;
 	std::string name;
 	bool isLogClear;
+	bool isNewFrame;
+	int frameNumber;
+	std::ifstream filestream;
 
 
 

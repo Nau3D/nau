@@ -45,18 +45,30 @@ public:
   //  Summary:
   //    Inits the driver with the passed dll name.
   //  
+  //  Returns:
+  //    True is returned on success, false if otherwise. (Cannot use this class
+  //    if Init fails)
+  //
   bool Init();
   
   //@
   //  Summary:
   //    Updates the driver with the configuration.
   //  
+  //  Returns:
+  //    True is returned on success, false if otherwise. (Cannot use this class
+  //    if Init fails)
+  //
   bool ReConfigure();
   
   //@
   //  Summary:
   //    Updates the driver with the default configuration.
   //  
+  //  Returns:
+  //    True is returned on success, false if otherwise. (Cannot use this class
+  //    if Init fails)
+  //
   bool Reset();
   
   

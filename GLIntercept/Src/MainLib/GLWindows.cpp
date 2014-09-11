@@ -67,7 +67,7 @@ HGLRC WGLAPIENTRY wglCreateContext (HDC a)
   POST_FUNCTION_RET(wglCreateContext,retValue)
 
   //Create our driver context
-  if(retValue != NULL)
+  if(retValue != NULL && glDriver.GetFunctionCallDepth() == 0)
   {
     glDriver.CreateOpenGLContext(retValue);
   }
@@ -87,7 +87,7 @@ HGLRC WGLAPIENTRY wglCreateLayerContext (HDC a, int b)
   POST_FUNCTION_RET(wglCreateLayerContext,retValue)
 
   //Create our driver context
-  if(retValue != NULL)
+  if(retValue != NULL && glDriver.GetFunctionCallDepth() == 0)
   {
     glDriver.CreateOpenGLContext(retValue);
   }

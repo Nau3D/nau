@@ -88,11 +88,16 @@ void DlgDbgGLILogRead::clear() {
 	isLogClear=true;
 }
 
-void DlgDbgGLILogRead::loadLogFile(wxTreeItemId &rootnode,string logfile, int frameNumber){
+void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber){
 	wxTreeItemId frame;
-	ifstream filestream(logfile);
 	string line;
-	bool isNewFrame = true;
+	isNewFrame = true;
+	filestream.clear();
+	filestream.open(logfile);
+	
+	if (fNumber >= 0){
+		frameNumber=fNumber;
+	}
 
 	if (filestream){
 	
@@ -102,7 +107,7 @@ void DlgDbgGLILogRead::loadLogFile(wxTreeItemId &rootnode,string logfile, int fr
 		getline(filestream,line);
 		getline(filestream,line);
 		
-		while (std::getline(filestream, line))
+		while (getline(filestream, line))
 		{
 			if (isNewFrame){
 				frame = m_log->AppendItem(rootnode, "frame "+to_string(frameNumber));
@@ -116,11 +121,38 @@ void DlgDbgGLILogRead::loadLogFile(wxTreeItemId &rootnode,string logfile, int fr
 		}
 
 	}
+	//if (gliIsLogPerFrame()){
+		filestream.close();
+	//}
+}
+
+void DlgDbgGLILogRead::continueReadLogFile(){
+	wxTreeItemId frame;
+	string line;
+
+	if (filestream){
+		
+		while (getline(filestream, line))
+		{
+			if (isNewFrame){
+				frame = m_log->AppendItem(rootnode, "frame "+to_string(frameNumber));
+				frameNumber++;
+				isNewFrame=false;
+			}
+			m_log->AppendItem(frame,line);
+			if(strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
+				isNewFrame=true;
+			}
+		}
+	}
+
+}
+
+void DlgDbgGLILogRead::finishReadLogFile(){
 	filestream.close();
 }
 
 void DlgDbgGLILogRead::loadLog() {
-	wxTreeItemId rootnode;
 	string logname = gliGetLogName();
 	string logfile;
 	
@@ -132,7 +164,7 @@ void DlgDbgGLILogRead::loadLog() {
 			rootnode = m_log->AddRoot(logfile);
 
 			//Reads logfile
-			loadLogFile(rootnode, logfile, 0);
+			loadNewLogFile(logfile, 0);
 
 			//If no logfile was found then leave a message
 			if (m_log->GetChildrenCount(rootnode, false) == 0){
@@ -154,7 +186,7 @@ void DlgDbgGLILogRead::loadLog() {
 						logfile = gliGetLogPath()+string(ent->d_name)+"/"+logname+".txt";
 
 						//Reads logfile
-						loadLogFile(rootnode, logfile, atoi(ent->d_name+6));
+						loadNewLogFile(logfile, atoi(ent->d_name+6));
 					}
 				}
 				closedir (dir);
@@ -168,5 +200,10 @@ void DlgDbgGLILogRead::loadLog() {
 		m_log->Expand(rootnode);
 		isLogClear=false;
 	}
+	//else{
+	//	if (!gliIsLogPerFrame()){
+	//		continueReadLogFile();
+	//	}
+	//}
 
 }

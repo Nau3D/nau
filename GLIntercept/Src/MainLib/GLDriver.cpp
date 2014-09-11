@@ -279,6 +279,7 @@ bool GLDriver::Init()
   functionTable->SetFunctionFlag("glBegin",FDF_RENDER_FUNC);
   functionTable->SetFunctionFlag("glDrawPixels",FDF_RENDER_FUNC);
   functionTable->SetFunctionFlag("glDrawArrays",FDF_RENDER_FUNC);
+  functionTable->SetFunctionFlag("glDrawArraysEXT",FDF_RENDER_FUNC);
   functionTable->SetFunctionFlag("glDrawElements",FDF_RENDER_FUNC);
   functionTable->SetFunctionFlag("glDrawRangeElements",FDF_RENDER_FUNC);
   functionTable->SetFunctionFlag("glDrawRangeElementsEXT",FDF_RENDER_FUNC);
@@ -309,6 +310,18 @@ bool GLDriver::Init()
   functionTable->SetFunctionFlag("glDrawElementsInstancedBaseVertexBaseInstance",FDF_RENDER_FUNC); 
   functionTable->SetFunctionFlag("glDrawTransformFeedbackInstanced",FDF_RENDER_FUNC); 
   functionTable->SetFunctionFlag("glDrawTransformFeedbackStreamInstanced",FDF_RENDER_FUNC); 
+
+  functionTable->SetFunctionFlag("glMultiDrawArraysIndirect",FDF_RENDER_FUNC); 
+  functionTable->SetFunctionFlag("glMultiDrawElementsIndirect",FDF_RENDER_FUNC);
+
+  functionTable->SetFunctionFlag("glMultiDrawArraysIndirectCountARB",FDF_RENDER_FUNC);
+  functionTable->SetFunctionFlag("glMultiDrawElementsIndirectCountARB",FDF_RENDER_FUNC);
+
+  functionTable->SetFunctionFlag("glDrawArraysInstancedNV",FDF_RENDER_FUNC);
+  functionTable->SetFunctionFlag("glDrawElementsInstancedNV",FDF_RENDER_FUNC);
+  functionTable->SetFunctionFlag("glDrawTransformFeedbackNV",FDF_RENDER_FUNC);
+  functionTable->SetFunctionFlag("glMultiDrawArraysIndirectBindlessNV",FDF_RENDER_FUNC);
+  functionTable->SetFunctionFlag("glMultiDrawElementsIndirectBindlessNV",FDF_RENDER_FUNC);
 
   functionTable->SetFunctionFlag("glMultiDrawArraysIndirectAMD",FDF_RENDER_FUNC); 
   functionTable->SetFunctionFlag("glMultiDrawElementsIndirectAMD",FDF_RENDER_FUNC); 
@@ -907,13 +920,13 @@ bool GLDriver::InitFunctionLog()
       if(FileUtils::CopyFile(configData.logXSLBaseDir + configData.logXSLFile ,currLogDir + configData.logXSLFile, true))
       {
         //Remove any properties on the newly copied file
-        FileUtils::SetFileProperties(currLogDir + configData.logXSLFile,FileUtils::FP_NORMAL);
+        FileUtils::SetFileProperties(currLogDir + configData.logXSLFile,FileUtils::GLIFP_NORMAL);
 
 #ifdef GLI_BUILD_WINDOWS
 
         //Copy the "viewer" .hta file to allow IE users to view the logs without error messages
         FileUtils::CopyFile(configData.logXSLBaseDir + "IEViewLog.hta", currLogDir + "IEViewLog.hta", true);
-        FileUtils::SetFileProperties(currLogDir + "IEViewLog.hta", FileUtils::FP_NORMAL);
+        FileUtils::SetFileProperties(currLogDir + "IEViewLog.hta", FileUtils::GLIFP_NORMAL);
 
 #endif //GLI_BUILD_WINDOWS
 

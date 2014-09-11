@@ -67,6 +67,10 @@
 			<logname value="nau_geometry_debug_log"/>
 			<enabled value="true"/>
 		</functionlog>
+		<logperframe>
+			<logperframe value="false"/>
+			<logoneframeonly value="true"/>
+		</logperframe>
 		<errorchecking>
 			<errorgetopenglchecks value="true"/>
 			<errorthreadchecking value="false"/>
@@ -76,7 +80,13 @@
 			<errordebuggererrorlog value="true"/>
 		</errorchecking>
 		<imagelog>
-			<enabled value="false"/>
+			<enabled value="true"/>
+			<imagesavepng value="true"/>
+			<imagesavetga value="false"/>
+			<imagesavejpg value="false"/>
+			<imageicon>
+				<imagesaveicon value="false"/>
+			</imageicon>
 		</imagelog>
 		<shaderlog>
 			<enabled value="false"/>
@@ -88,7 +98,7 @@
 			<enabled value="false"/>
 		</framelog>
 		<timerlog>
-			<enabled value="true"/>
+			<enabled value="false"/>
 		</timerlog>
 	</debug>
 </project>

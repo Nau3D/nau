@@ -92,9 +92,10 @@ int idMenuMaterialsAll = wxNewId();
 
 int idMenuReload = wxNewId();
 
+#ifdef GLINTERCEPTDEBUG
 int idMenuDbgBreak = wxNewId();
 //int idMenuDbgGLILogRead = wxNewId();
-
+#endif
 // dialogs //
 
 int idMenu_DLG_OGL = wxNewId();
@@ -108,9 +109,11 @@ int idMenu_DLG_SCENES = wxNewId();
 int idMenu_DLG_PASS = wxNewId();
 int idMenu_DLG_ATOMICS = wxNewId();
 
+#ifdef GLINTERCEPTDEBUG
 int idMenu_DLG_DBGGLILOGREAD = wxNewId();
 int idMenu_DLG_DBGPROGRAM = wxNewId();
 int idMenu_DLG_DBGBUFFER = wxNewId();
+#endif
 
 
 
@@ -149,11 +152,12 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_SCENES, FrmMainFrame::OnDlgScenes)
   EVT_MENU(idMenu_DLG_PASS, FrmMainFrame::OnDlgPass)
   
+#ifdef GLINTERCEPTDEBUG
   EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
   EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
   EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
-  
+#endif
 
  END_EVENT_TABLE()
 
@@ -245,7 +249,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	helpMenu->Enable(idMenu_DLG_SHADERS,false);
 	helpMenu->Enable(idMenu_DLG_PASS,false);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, false);
-
+	
+#ifdef GLINTERCEPTDEBUG
 	debugMenu = new wxMenu(_T(""));
 	debugMenu->Append(idMenuDbgBreak, _("Pause"),_("Pauses or resumes rendering"));
     debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
@@ -256,6 +261,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
 	debugMenu->Enable(idMenu_DLG_DBGBUFFER,false);
     mbar->Append(debugMenu, _("&Debug"));
+#endif
 
     SetMenuBar(mbar);
 
@@ -573,6 +579,10 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 #ifndef FINAL
 			float t =  aTimer.Time()/1000.0;
 			SLOG("Elapsed time: %f", t);
+#endif
+
+#ifdef GLINTERCEPTDEBUG
+			DlgDbgGLILogRead::Instance()->clear();
 #endif
 
 		} catch (nau::ProjectLoaderError &e) {
@@ -935,7 +945,7 @@ FrmMainFrame::OnDlgDbgBuffer(wxCommandEvent& event){
 
 	//p = pip->createPass ("quad");
 	//p->setClearColor (true);
-	//p->setClearDepth (true);
+	//p->setClearDepth (true);name << "(" << program << ", " << location << ")
 	//p->setMaterialLib ("model");
 
 	//nau::material::Material *mat = new nau::material::Material;

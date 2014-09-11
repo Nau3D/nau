@@ -56,6 +56,8 @@ enum ParameterType
   PT_GLSL_program,    // unsigned int
   PT_GLSL_shader,     // unsigned int
 
+  PT_Fixed,           // int
+
   PT_Max_Params,  //The maximum number of parameter types
 };
 

@@ -48,6 +48,7 @@ LookupData ParamLookupArray[PT_Max_Params] =
   LookupData("GLGLSL_program",PT_uint),
   LookupData("GLGLSL_shader",PT_uint),
 
+  LookupData("GLfixed",PT_int),
 };
 
 

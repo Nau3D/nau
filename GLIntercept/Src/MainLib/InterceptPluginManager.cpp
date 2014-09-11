@@ -61,25 +61,22 @@ bool InterceptPluginManager::LoadPlugins(const ConfigData &configData)
     string pluginDLLName       = configData.pluginBasePath + configData.pluginDataArray[i].pluginDLLName;
     const string &pluginName   = configData.pluginDataArray[i].pluginName;
     const string &configString = configData.pluginDataArray[i].pluginConfigData;
-	printf("Loading %s plugin\n", pluginName);
+
     //Load the dll
     InterceptPluginDLLInstance * dllInstance = InterceptPluginDLLInstance::CreateDLLInstance(this,pluginDLLName.c_str());
     if(dllInstance)
     {
-      printf("  %s Dll Instance created\n",dllInstance->GetDLLFileName());
       //Create a new plugin instance
       InterceptPluginInstance *newPlugin = new InterceptPluginInstance(this, driver, dllInstance);
 
       //Add the plugin to the array (In case the plugin does things in its constructor)
       AddPluginInstance(newPlugin);
-	  printf("  Plugin added\n");
 
       //Attempt to load
       if(!newPlugin->Init(pluginName.c_str(),configString))
       {
         //Remove and delete the attempted plugin
         RemovePluginInstance(newPlugin);
-	    printf("  Error, removing plugin\n");
       }
     }
   }
@@ -252,11 +249,9 @@ void InterceptPluginManager::OnGLError(const char *funcName, uint funcIndex)
 //
 void InterceptPluginManager::OnGLContextCreate(HGLRC rcHandle)
 {
-	printf("DEBUG: Adding context to %d plugins\n",pluginArray.size());
   //Loop for all registered plugins
   for(uint i=0; i<pluginArray.size(); i++)
   {
-	  printf("DEBUG: Adding context to plugin %d\n",i);
     pluginArray[i].pluginInstance->GetInterface()->OnGLContextCreate(rcHandle);
   }
 }
