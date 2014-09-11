@@ -215,7 +215,7 @@ void ErrorLog::LogDebuggerMessageArgs(const char *message,va_list args)
   buf[numChar+2] = '\0';
 
   //Output the debug string
-  OutputDebugString(buf);
+  OutputDebugString((LPCWSTR)buf);
 
 #endif //GLI_BUILD_WINDOWS
 

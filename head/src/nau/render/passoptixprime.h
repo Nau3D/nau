@@ -1,3 +1,7 @@
+#include <nau/config.h>
+
+#if NAU_OPENGL_VERSION >= 420
+
 #ifndef PASSOPTIXPRIME_H
 #define PASSOPTIXPRIME_H
 
@@ -48,7 +52,7 @@ namespace nau
 #endif
 
 
-
+#endif
 
 
 	

@@ -64,6 +64,7 @@ IRenderer::setProp(int prop, Enums::DataType type, void *value) {
 
 // ATOMIC COUNTERS
 
+#if NAU_OPENGL_VERSION >= 400
 
 void
 IRenderer::addAtomic(unsigned int id, std::string name) {
@@ -77,7 +78,7 @@ IRenderer::addAtomic(unsigned int id, std::string name) {
 	}
 }
 
-
+#endif
 
 // -------------------
 

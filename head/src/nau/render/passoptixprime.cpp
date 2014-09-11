@@ -1,3 +1,7 @@
+#include <nau/config.h>
+
+#if NAU_OPENGL_VERSION >= 420
+
 #include <sstream>
 
 #include <GL/glew.h>
@@ -449,3 +453,5 @@ PassOptixPrime::addRayBuffer(IBuffer *b) {
 
 	m_Rays = b;
 }
+
+#endif

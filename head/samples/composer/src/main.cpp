@@ -818,6 +818,7 @@ FrmMainFrame::OnKeyUp(wxKeyEvent & event)
 void 
 FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 {
+#ifdef GLINTERCEPTDEBUG
 	m_Canvas->BreakResume();
 	if (m_Canvas->IsPaused()){
 		DlgDbgGLILogRead::Instance()->clear();
@@ -843,6 +844,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 
 	}
+#endif
 }
 
 

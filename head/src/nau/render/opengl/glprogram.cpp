@@ -468,11 +468,13 @@ GlProgram::setUniforms() {
 				uni.setLoc (loc);
 				m_Uniforms.push_back (uni);
 			}
+#if NAU_OPENGL_VERSION >= 400 
 			if (type == GL_UNSIGNED_INT_ATOMIC_COUNTER) {
 				GLenum prop = GL_OFFSET; int len, params;
 				glGetProgramResourceiv(m_P, GL_UNIFORM, i, 1, &prop, sizeof(int), &len, &params);
 				RENDERER->addAtomic(params/4, name);
 			}
+#endif
 			if (size > 1) {
 
 				for (int i = 0; i < size; i++) {

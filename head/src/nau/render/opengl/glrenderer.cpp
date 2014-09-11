@@ -174,19 +174,19 @@ GLRenderer::readAtomicCounters() {
 	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 }
 
-#endif
 
 unsigned int *
 GLRenderer::getAtomicCounterValues() {
 
-#if (NAU_OPENGL_VERSION >= 400)
 
 	if (m_AtomicCount)
 		readAtomicCounters();
-#endif
 	return m_AtomicCounterValues;
 
 }
+
+#endif
+
 // =============== RENDER ===================
 
 void

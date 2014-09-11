@@ -87,10 +87,12 @@ ResourceManager::clear() {
 		m_Programs.erase(m_Programs.begin());
 	}
 
+#if NAU_OPENGL_VERSION >= 420
 	while (!m_Buffers.empty()){
 		delete((*m_Buffers.begin()).second);
 		m_Buffers.erase(m_Buffers.begin());
 	}
+#endif
 }
 //-------------------------------------	
 

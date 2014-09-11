@@ -159,7 +159,6 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
-<<<<<<< HEAD
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(LibraryPath)</LibraryPath>
@@ -171,13 +170,6 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">$(LibraryPath)</LibraryPath>
-=======
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath);C:\toolkits\includes;C:\toolkits\libs\mswud;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.0\include</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);C:\toolkits\libs;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.0\lib\Win32</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(LibraryPath)</LibraryPath>
->>>>>>> origin/debug_wrapper
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">composer_d</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">composer_d</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">composer_d</TargetName>
@@ -214,7 +206,7 @@
       <AdditionalOptions>  /ignore:4049 /ignore:4217 /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nau_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;tinyxmlSTLd.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)composer_d.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\GLIntercept\Src\Intermediate\GLI\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>msvcrtd.lib;msvcprtd.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -385,7 +377,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     </ProjectReference>
     <Link>
       <AdditionalOptions> /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:LIBCMTD /ignore:4049 /ignore:4217 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nau.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32s.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL32.lib;libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nau.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32s.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)composer.exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -403,6 +395,10 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

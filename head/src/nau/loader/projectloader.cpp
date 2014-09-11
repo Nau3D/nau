@@ -527,6 +527,8 @@ Specification of the atomic semantics:
 Each atomic must have an id and a name.
 ----------------------------------------------------------------- */
 
+#if NAU_OPENGL_VERSION >= 400
+
 void
 ProjectLoader::loadAtomicSemantics(TiXmlHandle handle) 
 {
@@ -552,7 +554,7 @@ ProjectLoader::loadAtomicSemantics(TiXmlHandle handle)
 	} 
 }
 
-
+#endif
 /* ----------------------------------------------------------------
 Specification of the viewport:
 
@@ -911,8 +913,9 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 	loadCameras(handle);
 	loadLights(handle);	
 	loadEvents(handle);
+#if NAU_OPENGL_VERSION >= 400
 	loadAtomicSemantics(handle);
-	
+#endif
 	pElem = handle.FirstChild ("materialLibs").FirstChild ("mlib").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char *pFilename = pElem->Attribute ("filename");
@@ -1761,11 +1764,12 @@ OPTIX PRIME SETTINGS
 	<hits buffer ="primeShadows::hits" />
 </pass>
 -------------------------------------------------------------------------------*/
-#ifdef NAU_OPTIX_PRIME
+#ifdef NAU_OPTIX_PRIME 
 
 void
 ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 
+#if NAU_OPENGL_VERSION >= 420
 	TiXmlElement *pElem;
 	PassOptixPrime *p = (PassOptixPrime *)aPass;
 
@@ -1833,8 +1837,9 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 		NAU_THROW("Pass %s: Hit buffer is not defined", aPass->getName().c_str());
 	}
 
-
+#endif
 }
+
 
 #endif
 /* ----------------------------------------------------------------------------
@@ -2606,7 +2611,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		
 			}
 		}
-
+#if NAU_OPENGL_VERSION >= 420
 		pElemNode = pElem->FirstChild("buffers");
 		if (pElemNode) {
 			pElemAux = pElemNode->FirstChildElement("buffer");
@@ -2656,7 +2661,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 			}
 		}
 
-
+#endif
 		pElemAux = pElem->FirstChildElement("color");
 		if (pElemAux) {
 
@@ -2832,9 +2837,12 @@ BUFFERS
 
 All fields are required. Size is in bytes
 -----------------------------------------------------------------------------*/
+
+
 void
 ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
 {
+#if NAU_OPENGL_VERSION >= 420
 	TiXmlElement *pElem;
 	int layers = 0;
 	pElem = hRoot.FirstChild("buffers").FirstChild("buffer").Element();
@@ -2862,7 +2870,10 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 
 		RESOURCEMANAGER->createBuffer(s_pFullName, size);
 	}
+#endif
 }
+
+
 
 /* -----------------------------------------------------------------------------
 TEXTURES
@@ -3228,7 +3239,7 @@ ProjectLoader::loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material
 		if (a.mReadOnlyFlag)
 			NAU_THROW("Library %s: Material %s: Color - %s is a read-only attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 
-		value = readAttr("", p, a.mType, ImageTexture::Attribs);
+		value = readAttr("", p, a.mType, ColorMaterial::Attribs);
 		aMat->getColor().setProp(a.mId, a.mType, value);
 		p = p->NextSiblingElement();
 	}

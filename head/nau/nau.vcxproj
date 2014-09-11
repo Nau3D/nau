@@ -153,7 +153,6 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(LibraryPath)</LibraryPath>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">nau</TargetName>
-<<<<<<< HEAD
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">nau</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nauOptix</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">nauOptix</TargetName>
@@ -165,13 +164,6 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">$(LibraryPath)</LibraryPath>
-=======
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nau_with_optix</TargetName>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath);C:\toolkits\libs\mswud;C:\toolkits\includes</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\toolkits\libs\;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
->>>>>>> origin/debug_wrapper
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(ExecutablePath)</ExecutablePath>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
@@ -190,7 +182,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../src;C:/Program Files/NVIDIA Corporation/OptiX SDK 2.6.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories);C:\toolkits\includes</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -206,7 +198,7 @@
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <PostBuildEvent>
-      <Command>copy $(OutDir)nau_d.lib c:\toolkits\libs</Command>
+      <Command>copy $(OutDir)nau_d.lib d:\toolkits\libs</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -703,7 +695,6 @@
     <ClInclude Include="..\src\nau\geometry\mesh.h" />
     <ClInclude Include="..\src\nau\geometry\meshbones.h" />
     <ClInclude Include="..\src\nau\geometry\meshposeanim.h" />
-    <ClInclude Include="projectLoaderDebugLinker.h" />
     <CustomBuildStep Include="..\src\nau\geometry\meshposekeyframe.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

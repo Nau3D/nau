@@ -493,7 +493,6 @@
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
@@ -514,10 +513,9 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\render\passoptixprime.cpp">
       <Filter>Source Files\render</Filter>
-=======
+    </ClCompile>
     <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp">
       <Filter>Source Files\loader</Filter>
->>>>>>> origin/debug_wrapper
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -992,7 +990,6 @@
     <ClInclude Include="..\src\nau\loader\patchLoader.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
@@ -1019,13 +1016,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passoptixprime.h">
       <Filter>Source Files\render</Filter>
-=======
-    <ClInclude Include="projectLoaderDebugLinker.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h">
       <Filter>Source Files\loader</Filter>
->>>>>>> origin/debug_wrapper
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

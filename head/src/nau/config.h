@@ -6,7 +6,7 @@
 
 // enable and disable functionalities 
 // based on OpenGL version
-#define NAU_OPENGL_VERSION 410
+#define NAU_OPENGL_VERSION 330
 
 // use only core features (1 implies no fixed function)
 //#define NAU_CORE_OPENGL 1
@@ -28,6 +28,6 @@
 
 #define NAU_RENDER_FLAGS
 
-#define GLINTERCEPTDEBUG
+//#define GLINTERCEPTDEBUG
 
 #endif // NAU_CONFIG_H

@@ -53,6 +53,7 @@ DlgAtomics::~DlgAtomics()
 
 void
 DlgAtomics::updateDlg() {
+#if NAU_OPENGL_VERSION >= 400
 
 	IRenderer *renderer = RENDERER;
 
@@ -65,12 +66,13 @@ DlgAtomics::updateDlg() {
 		m_propertyGrid1->Append(new wxFloatProperty( wxString(iter->second.c_str()), wxPG_LABEL ));
 
 	}
+#endif
 }
 
 
 void
 DlgAtomics::update() {
-
+#if NAU_OPENGL_VERSION >= 400
 	IRenderer *renderer = RENDERER;
 	unsigned int *ac = renderer->getAtomicCounterValues();
 	std::map<int, std::string>::iterator iter;
@@ -79,4 +81,5 @@ DlgAtomics::update() {
 	
 		m_propertyGrid1->SetPropertyValue(wxString(iter->second.c_str()),(int)(ac[iter->first]));
 	}
+#endif
 }

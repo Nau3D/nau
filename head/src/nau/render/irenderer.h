@@ -113,6 +113,7 @@ namespace nau
 
 		// ATOMIC COUNTERS 
 
+#if NAU_OPENGL_VERSION >= 400
 		public:
 			/// Number of Atomic Counters and
 			unsigned int m_AtomicCount = 0;
@@ -131,7 +132,7 @@ namespace nau
 			unsigned int *m_AtomicCounterValues = NULL;
 			/// flag indicating if Atomic Buffer is created
 			bool m_AtomicBufferPrepared = false;
-
+#endif
 
 		// LIGHTS
 

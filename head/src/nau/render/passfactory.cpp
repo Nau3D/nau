@@ -50,8 +50,10 @@ PassFactory::create (const std::string &type, const std::string &name)
 		return new PassOptix(name);
 #endif
 #ifdef NAU_OPTIX_PRIME
+#if NAU_OPENGL_VERSION >= 420
 	if ("optixPrime" == type)
 		return new PassOptixPrime(name);
+#endif
 #endif
 // DAVE
 	//if ("raytracer" ==  type) {
