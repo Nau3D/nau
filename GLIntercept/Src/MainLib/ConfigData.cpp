@@ -99,13 +99,14 @@ timerLogCutOff(1),
 pluginBasePath("")
 {
 
+
 #ifdef GLI_BUILD_WINDOWS
 
   //Construct the path to the OpenGL filename
   char DefaultGLLibName[MAX_PATH];
 
   //Get the default library name
-  GetSystemDirectory((LPWSTR)DefaultGLLibName, MAX_PATH);
+  GetSystemDirectoryA(DefaultGLLibName, MAX_PATH);
 
   //Assign the name
   openGLFileName = string(DefaultGLLibName) + FileUtils::dirSeparator + string("opengl32.dll");

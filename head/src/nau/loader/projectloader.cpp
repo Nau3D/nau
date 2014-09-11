@@ -3330,10 +3330,10 @@ The name can refer to a texture in another lib, in which case the syntax is lib_
 void 
 ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
 {
-#if NAU_OPENGL_VERSION >=  420
 	TiXmlElement *pElemAux;
 	pElemAux = handle.FirstChild ("imageTextures").FirstChild ("imageTexture").Element();
 	for ( ; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
+#if NAU_OPENGL_VERSION >= 420
 		//const char *pTextureName = pElemAux->GetText();
 
 		int unit;
@@ -3375,11 +3375,11 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 			aMat->getImageTexture(unit)->setProp(a.mId, a.mType, value);
 			p = p->NextSiblingElement();
 		}
-	}
 #else
-	NAU_THROW("Library %s: Material %s: Image Texture Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), NAU_OPENGL_VERSION);
-
+		NAU_THROW("Library %s: Material %s: Buffers Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), NAU_OPENGL_VERSION);
 #endif
+
+	}
 }
 
 /* -----------------------------------------------------------------------------
@@ -3401,11 +3401,11 @@ The name can refer to a buffer in another lib, in which case the syntax is lib_n
 void
 ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
 {
-#if NAU_OPENGL_VERSION >=  430
+
 	TiXmlElement *pElemAux;
 	pElemAux = handle.FirstChild("buffers").FirstChild("buffer").Element();
 	for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
-
+#if NAU_OPENGL_VERSION >=  430
 		const char *pName = pElemAux->Attribute("name");
 		if (0 == pName) {
 			NAU_THROW("Library %s: Material %s: Buffer has no name", aLib->getName().c_str(), aMat->getName().c_str());
@@ -3439,11 +3439,12 @@ ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Materi
 			p = p->NextSiblingElement();
 		}
 		aMat->attachBuffer(b);
-	}
 #else
-	NAU_THROW("Library %s: Material %s: Buffers Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), NAU_OPENGL_VERSION);
+		NAU_THROW("Library %s: Material %s: Buffers Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), NAU_OPENGL_VERSION);
 
-#endif
+#endif	
+	
+	}
 }
 
 /* -----------------------------------------------------------------------------
@@ -3767,8 +3768,9 @@ ProjectLoader::loadMatLib (std::string file)
 		loadMaterialTextures(handle,aLib,mat);
 		loadMaterialShader(handle,aLib,mat);
 		loadMaterialState(handle,aLib,mat);
-		loadMaterialImageTextures(handle,aLib,mat);
+		loadMaterialImageTextures(handle, aLib, mat);
 		loadMaterialBuffers(handle, aLib, mat);
+
 		//aLib->addMaterial (mat);
 	}
 

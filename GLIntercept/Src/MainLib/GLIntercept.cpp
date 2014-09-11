@@ -118,7 +118,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
                      /*|_CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF*/);
       //Get the module's file name
       static char dllName[1024];
-      GetModuleFileName((HMODULE)hModule,(LPWSTR)dllName,1023);
+      GetModuleFileNameA((HMODULE)hModule,dllName,1023);
  
       //Get the path
       dllPath = dllName;

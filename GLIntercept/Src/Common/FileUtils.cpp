@@ -45,7 +45,7 @@ bool FileUtils::CopyFile(const string &srcFile,const string &dstFile, bool overw
   }
 
   //Copy the file
-  if (::CopyFile((LPCWSTR)srcFile.c_str(), (LPCWSTR)dstFile.c_str(), failIfExists) == 0)
+  if (::CopyFileA(srcFile.c_str(), dstFile.c_str(), failIfExists) == 0)
   {
     return false;
   }
@@ -85,7 +85,7 @@ bool FileUtils::SetFileProperties(const string &fileName,uint fileProperties)
   }
 
   //Set the attributes
-  if (SetFileAttributes((LPCWSTR)fileName.c_str(), osFileAttributes) == 0)
+  if (SetFileAttributesA(fileName.c_str(), osFileAttributes) == 0)
   {
     return false;
   }

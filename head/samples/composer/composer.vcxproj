@@ -229,8 +229,8 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
       </Command>
     </CustomBuildStep>
     <PreBuildEvent>
-      <Command>copy "..\..\..\GLIntercept\Bin\MainLib\OpenGL32.dll" "..\..\build\samples" 
-copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
