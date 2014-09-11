@@ -92,6 +92,10 @@ int idMenuMaterialsAll = wxNewId();
 
 int idMenuReload = wxNewId();
 
+#ifdef GLINTERCEPTDEBUG
+int idMenuDbgBreak = wxNewId();
+//int idMenuDbgGLILogRead = wxNewId();
+#endif
 // dialogs //
 
 int idMenu_DLG_OGL = wxNewId();
@@ -104,6 +108,12 @@ int idMenu_DLG_LOG = wxNewId();
 int idMenu_DLG_SCENES = wxNewId();
 int idMenu_DLG_PASS = wxNewId();
 int idMenu_DLG_ATOMICS = wxNewId();
+
+#ifdef GLINTERCEPTDEBUG
+int idMenu_DLG_DBGGLILOGREAD = wxNewId();
+int idMenu_DLG_DBGPROGRAM = wxNewId();
+int idMenu_DLG_DBGBUFFER = wxNewId();
+#endif
 
 
 
@@ -141,6 +151,13 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_LOG, FrmMainFrame::OnDlgLog)
   EVT_MENU(idMenu_DLG_SCENES, FrmMainFrame::OnDlgScenes)
   EVT_MENU(idMenu_DLG_PASS, FrmMainFrame::OnDlgPass)
+  
+#ifdef GLINTERCEPTDEBUG
+  EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
+  EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
+  EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
+  EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
+#endif
 
  END_EVENT_TABLE()
 
@@ -232,8 +249,22 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	helpMenu->Enable(idMenu_DLG_SHADERS,false);
 	helpMenu->Enable(idMenu_DLG_PASS,false);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, false);
+	
+#ifdef GLINTERCEPTDEBUG
+	debugMenu = new wxMenu(_T(""));
+	debugMenu->Append(idMenuDbgBreak, _("Pause"),_("Pauses or resumes rendering"));
+    debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
+    debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"),_("Views Program information"));
+    debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"),_("Views Buffer information"));
 
-   SetMenuBar(mbar);
+	debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
+	debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
+	debugMenu->Enable(idMenu_DLG_DBGBUFFER,false);
+    mbar->Append(debugMenu, _("&Debug"));
+#endif
+
+    SetMenuBar(mbar);
+
 #endif // wxUSE_MENUS
 
 #if wxUSE_STATUSBAR
@@ -323,6 +354,10 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgScenes::SetParent(this);
 	DlgPass::SetParent(this);
 	DlgAtomics::SetParent(this);
+	DlgDbgGLILogRead::SetParent(this);
+	DlgDbgPrograms::SetParent(this);
+	DlgDbgBuffers::SetParent(this);
+	
 
 #ifdef FINAL
 	startStandAlone();
@@ -542,6 +577,10 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 
 			float t =  aTimer.Time()/1000.0;
 			SLOG("Elapsed time: %f", t);
+#endif
+
+#ifdef GLINTERCEPTDEBUG
+			DlgDbgGLILogRead::Instance()->clear();
 #endif
 
 		} catch (nau::ProjectLoaderError &e) {
@@ -775,6 +814,70 @@ FrmMainFrame::OnKeyUp(wxKeyEvent & event)
 {
 	event.Skip();
 }
+
+void 
+FrmMainFrame::OnBreakResume(wxCommandEvent& event)
+{
+	m_Canvas->BreakResume();
+	if (m_Canvas->IsPaused()){
+		DlgDbgGLILogRead::Instance()->clear();
+		DlgDbgGLILogRead::Instance()->loadLog();
+	
+		DlgDbgPrograms::Instance()->clear();
+		DlgDbgPrograms::Instance()->loadShaderInfo();
+	
+		DlgDbgBuffers::Instance()->clear();
+		DlgDbgBuffers::Instance()->loadBufferInfo();
+
+		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,true);
+		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,true);
+		debugMenu->Enable(idMenu_DLG_DBGBUFFER,true);
+
+		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
+	}
+	else{
+		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
+		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
+		debugMenu->Enable(idMenu_DLG_DBGBUFFER,false);
+
+		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
+
+	}
+}
+
+
+void
+FrmMainFrame::OnDlgDbgGLILogRead(wxCommandEvent& event){
+	DlgDbgGLILogRead::Instance()->Show(TRUE);
+}
+
+
+
+void
+FrmMainFrame::OnDlgDbgProgram(wxCommandEvent& event){
+	DlgDbgPrograms::Instance()->Show(TRUE);
+}
+
+
+
+void
+FrmMainFrame::OnDlgDbgBuffer(wxCommandEvent& event){
+	DlgDbgBuffers::Instance()->Show(TRUE);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 ---------------------------------------------- CUT HERE (OLD CODE) ----------------------------------------------------------
 */
@@ -840,7 +943,7 @@ FrmMainFrame::OnKeyUp(wxKeyEvent & event)
 
 	//p = pip->createPass ("quad");
 	//p->setClearColor (true);
-	//p->setClearDepth (true);
+	//p->setClearDepth (true);name << "(" << program << ", " << location << ")
 	//p->setMaterialLib ("model");
 
 	//nau::material::Material *mat = new nau::material::Material;

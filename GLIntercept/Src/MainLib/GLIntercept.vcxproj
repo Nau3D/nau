@@ -1,0 +1,902 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DotLib|Win32">
+      <Configuration>DotLib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DotLib|x64">
+      <Configuration>DotLib</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticLibrary|Win32">
+      <Configuration>StaticLibrary</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticLibrary|x64">
+      <Configuration>StaticLibrary</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B66644D9-D3C1-414D-8C59-58973E92A954}</ProjectGuid>
+    <RootNamespace>GLIntercept</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='StaticLibrary|Win32'">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='StaticLibrary|x64'">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\..\Intermediate\GLI\Debug\</OutDir>
+    <IntDir>.\..\Intermediate\GLI\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\..\Intermediate\GLI\$(Configuration)$(Platform)\</OutDir>
+    <IntDir>.\..\Intermediate\GLI\$(Configuration)$(Platform)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\..\Intermediate\GLI\Release\</OutDir>
+    <IntDir>.\..\Intermediate\GLI\Release\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">
+    <OutDir>.\..\Intermediate\GLI\Release\</OutDir>
+    <IntDir>.\..\Intermediate\GLI\Release\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\..\Intermediate\GLI\$(Configuration)$(Platform)\</OutDir>
+    <IntDir>.\..\Intermediate\GLI\$(Configuration)$(Platform)\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">
+    <OutDir>.\..\Intermediate\GLI\$(Configuration)$(Platform)\</OutDir>
+    <IntDir>.\..\Intermediate\GLI\$(Configuration)$(Platform)\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\..\Intermediate\GLI\Debug/GLIntercept.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\3rdParty\Corona-1.0.2-Static\src;..\..\Include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLI_BUILD_WINDOWS;_CRTDBG_MAP_ALLOC;WIN32;_DEBUG;_WINDOWS;_USRDLL;GLINTERCEPT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\..\Intermediate\GLI\Debug/GLIntercept.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\Intermediate\GLI\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\..\Intermediate\GLI\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\Intermediate\GLI\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>imagehlp.lib;Corona_static_debug_vc8.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\Bin\MainLib\OpenGL32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>.\glIntercept.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\..\Intermediate\GLI\Debug/OpenGL32.pdb</ProgramDatabaseFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <ImportLibrary>.\..\Intermediate\GLI\Debug/OpenGL32.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\..\Intermediate\GLI\Debug/GLIntercept.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PreBuildEvent>
+      <Command>cd $(ProjectDir)
+python generate_64b_asm_stubs.py
+</Command>
+    </PreBuildEvent>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>X64</TargetEnvironment>
+      <TypeLibraryName>.\..\Intermediate\GLI\Debug/GLIntercept.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\3rdParty\Corona-1.0.2-Static\src;..\..\Include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLI_BUILD_WINDOWS;_CRTDBG_MAP_ALLOC;WIN32;_DEBUG;_WINDOWS;_USRDLL;GLINTERCEPT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>imagehlp.lib;Corona_static_debug_vc8_x64.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\Bin\MainLib$(Platform)\OpenGL32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>.\glInterceptx64.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\..\Intermediate\GLI\Release/GLIntercept.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\3rdParty\Corona-1.0.2-Static\src;..\..\Include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLI_BUILD_WINDOWS;WIN32;NDEBUG;_WINDOWS;_USRDLL;GLINTERCEPT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\..\Intermediate\GLI\Release/GLIntercept.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\Intermediate\GLI\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\Intermediate\GLI\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\Intermediate\GLI\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>imagehlp.lib;Corona_static_vc8.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\Bin\MainLib\OpenGL32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>.\glIntercept.def</ModuleDefinitionFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <ImportLibrary>.\..\Intermediate\GLI\Release/OpenGL32.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\..\Intermediate\GLI\Release/GLIntercept.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\..\Intermediate\GLI\Release/GLIntercept.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\3rdParty\Corona-1.0.2-Static\src;..\..\Include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLI_BUILD_WINDOWS;WIN32;NDEBUG;_WINDOWS;_USRDLL;GLINTERCEPT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\..\Intermediate\GLI\Release/GLIntercept.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\Intermediate\GLI\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\..\Intermediate\GLI\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\Intermediate\GLI\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>imagehlp.lib;Corona_static_vc8.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\Bin\MainLib\OpenGL32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>.\glIntercept.def</ModuleDefinitionFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>.\..\Intermediate\GLI\Release/OpenGL32.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\..\Intermediate\GLI\Release/GLIntercept.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEvent>
+      <Command>cd $(ProjectDir)
+python generate_64b_asm_stubs.py
+</Command>
+    </PreBuildEvent>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>X64</TargetEnvironment>
+      <TypeLibraryName>.\..\Intermediate\GLI\Release/GLIntercept.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\3rdParty\Corona-1.0.2-Static\src;..\..\Include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLI_BUILD_WINDOWS;WIN32;NDEBUG;_WINDOWS;_USRDLL;GLINTERCEPT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>imagehlp.lib;Corona_static_vc8_x64.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\Bin\MainLib$(Platform)\OpenGL32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>.\glInterceptx64.def</ModuleDefinitionFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">
+    <PreBuildEvent>
+      <Command>cd $(ProjectDir)
+python generate_64b_asm_stubs.py
+</Command>
+    </PreBuildEvent>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>X64</TargetEnvironment>
+      <TypeLibraryName>.\..\Intermediate\GLI\Release/GLIntercept.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\3rdParty\Corona-1.0.2-Static\src;..\..\Include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLI_BUILD_WINDOWS;WIN32;NDEBUG;_WINDOWS;_USRDLL;GLINTERCEPT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>imagehlp.lib;Corona_static_vc8_x64.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\Bin\MainLib$(Platform)\OpenGL32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>.\glInterceptx64.def</ModuleDefinitionFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ConfigData.cpp" />
+    <ClCompile Include="ConfigDataExport.cpp" />
+    <ClCompile Include="GLContext.cpp" />
+    <ClCompile Include="GLDriver.cpp" />
+    <ClCompile Include="GLIntercept.cpp" />
+    <ClCompile Include="GLCore1_1.cpp" />
+    <ClCompile Include="GLCore1_2.cpp" />
+    <ClCompile Include="GLWindows.cpp" />
+    <ClCompile Include="GLStubs.cpp" />
+    <ClCompile Include="GLStubsWGL.cpp" />
+    <ClCompile Include="FunctionData.cpp" />
+    <ClCompile Include="FunctionTable.cpp" />
+    <ClCompile Include="ParameterData.cpp" />
+    <ClCompile Include="EnumData.cpp" />
+    <ClCompile Include="BuiltInFunction.cpp" />
+    <ClCompile Include="ExtensionFunction.cpp" />
+    <ClCompile Include="ExtensionFunctionStubs.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ExtensionFunctionWrapper.cpp" />
+    <ClCompile Include="InterceptLog.cpp" />
+    <ClCompile Include="InterceptLogText.cpp" />
+    <ClCompile Include="InterceptLogXML.cpp" />
+    <ClCompile Include="InterceptData.cpp" />
+    <ClCompile Include="ImageManager.cpp" />
+    <ClCompile Include="ImageSaveManager.cpp" />
+    <ClCompile Include="InterceptImage.cpp" />
+    <ClCompile Include="InterceptShader.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="ShaderSaveManager.cpp" />
+    <ClCompile Include="InterceptFrame.cpp" />
+    <ClCompile Include="DisplayListManager.cpp" />
+    <ClCompile Include="DisplayListSaveManager.cpp" />
+    <ClCompile Include="InterceptDisplayList.cpp" />
+    <ClCompile Include="InterceptShaderGLSL.cpp" />
+    <ClCompile Include="ShaderGLSLManager.cpp" />
+    <ClCompile Include="ShaderGLSLSaveManager.cpp" />
+    <ClCompile Include="InterceptPluginDLLInstance.cpp" />
+    <ClCompile Include="InterceptPluginInstance.cpp" />
+    <ClCompile Include="InterceptPluginManager.cpp" />
+    <ClCompile Include="DLLLoader.cpp" />
+    <ClCompile Include="FunctionParser.cpp" />
+    <ClCompile Include="..\Common\ConfigParser.cpp" />
+    <ClCompile Include="..\Common\ErrorLog.cpp" />
+    <ClCompile Include="..\Common\FileUtils.cpp" />
+    <ClCompile Include="..\Common\InputUtils.cpp" />
+    <ClCompile Include="..\Common\MiscUtils.cpp" />
+    <ClCompile Include="MovieMaker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConfigData.h" />
+    <ClInclude Include="ConfigDataExport.h" />
+    <ClInclude Include="GLContext.h" />
+    <ClInclude Include="GLDriver.h" />
+    <ClInclude Include="GLIntercept.h" />
+    <ClInclude Include="GLCore1_1.h" />
+    <ClInclude Include="GLCore1_2.h" />
+    <ClInclude Include="GLFunctions.h" />
+    <ClInclude Include="GLWindows.h" />
+    <ClInclude Include="GLStubs.h" />
+    <ClInclude Include="GLStubsWGL.h" />
+    <ClInclude Include="FunctionArgs.h" />
+    <ClInclude Include="FunctionData.h" />
+    <ClInclude Include="FunctionParamStore.h" />
+    <ClInclude Include="FunctionRetValue.h" />
+    <ClInclude Include="FunctionTable.h" />
+    <ClInclude Include="ParameterData.h" />
+    <ClInclude Include="EnumData.h" />
+    <ClInclude Include="BuiltInFunction.h" />
+    <ClInclude Include="ExtensionFunction.h" />
+    <ClInclude Include="ExtensionFunctionWrapper.h" />
+    <ClInclude Include="InterceptLog.h" />
+    <ClInclude Include="InterceptLogText.h" />
+    <ClInclude Include="InterceptLogXML.h" />
+    <ClInclude Include="InterceptData.h" />
+    <ClInclude Include="InterceptDataManager.h" />
+    <ClInclude Include="ImageManager.h" />
+    <ClInclude Include="ImageSaveManager.h" />
+    <ClInclude Include="InterceptImage.h" />
+    <ClInclude Include="InterceptShader.h" />
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="ShaderSaveManager.h" />
+    <ClInclude Include="InterceptFrame.h" />
+    <ClInclude Include="DisplayListManager.h" />
+    <ClInclude Include="DisplayListSaveManager.h" />
+    <ClInclude Include="InterceptDisplayList.h" />
+    <ClInclude Include="InterceptShaderGLSL.h" />
+    <ClInclude Include="ShaderGLSLManager.h" />
+    <ClInclude Include="ShaderGLSLSaveManager.h" />
+    <ClInclude Include="InterceptPluginDLLInstance.h" />
+    <ClInclude Include="InterceptPluginInstance.h" />
+    <ClInclude Include="InterceptPluginInterface.h" />
+    <ClInclude Include="InterceptPluginManager.h" />
+    <ClInclude Include="GLDefines.h" />
+    <ClInclude Include="GLInterceptConfig.h" />
+    <ClInclude Include="DLLLoader.h" />
+    <ClInclude Include="FunctionParser.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\gliIncludes.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore1_1_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore1_2_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore1_3_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore1_4_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore1_5_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore2_0_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore2_1_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore3_0_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore3_1_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore3_2_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore3_3_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore4_0_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore4_1_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore4_2_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\GLCore\GLCore4_3_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_3DFX_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_3DL_stereo_control_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_AMD_gpu_association_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_buffer_region_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_create_context_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_create_context_profile_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_extensions_string_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_framebuffer_srgb_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_make_current_read_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_pbuffer_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_pixel_format_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_pixel_format_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ARB_render_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_ATI_pixel_format_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_EXT_depth_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_EXT_display_color_table_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_EXT_pixel_format_packed_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_EXT_swap_control_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_I3D_digital_video_control_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_I3D_gamma_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_I3D_genlock_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_I3D_image_buffer_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_I3D_swap_frame_lock_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_I3D_swap_frame_usage_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_copy_image_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_dx_interop_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_float_buffer_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_gpu_affinity_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_multisample_coverage_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_present_video_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_render_depth_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_render_texture_rectangle_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_swap_group_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_video_capture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_NV_video_output_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGL_OML_sync_control_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\WGL\WGLCore_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_cl_event_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_color_buffer_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_debug_output_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_draw_buffers_blend_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_draw_buffers_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_draw_instanced_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_geometry_shader4_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_instanced_arrays_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_matrix_palette_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_multitexture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_occlusion_query_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_point_parameters_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_robustness_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_sample_shading_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_shader_objects_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_shading_language_include_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_shadow_ambient_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_texture_buffer_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_texture_compression_bptc_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_texture_compression_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_texture_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_texture_storage_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_transpose_matrix_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_vertex_blend_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_vertex_buffer_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_vertex_fragment_program_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_vertex_fragment_shader_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ARB\ARB_window_pos_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_draw_buffers_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_envmap_bumpmap_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_fragment_shader_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_meminfo_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_pn_triangles_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_separate_stencil_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_text_fragment_shader_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_texture_compression_3dc_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_texture_env_combine3_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_vertex_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\ATI\ATI_vertex_streams_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_bindless_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_conditional_render_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_copy_depth_to_color_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_copy_image_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_depth_buffer_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_evaluators_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_explicit_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_fence_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_float_buffer_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_fog_distance_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_fragment_program2_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_framebuffer_multisample_coverage_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_geometry_program4_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_gpu_program4_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_gpu_program5_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_gpu_shader5_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_half_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_light_max_exponent_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_multisample_coverage_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_multisample_filter_hint_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_occlusion_query_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_parameter_buffer_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_path_rendering_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_pixel_data_range_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_point_sprite_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_present_video_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_primitive_restart_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_register_combiners_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_shader_buffer_load_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_shader_buffer_store_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_tessellation_program5_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_texgen_emboss_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_texture_barrier_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_texture_env_combine4_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_texture_expand_normal_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_texture_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_texture_shader_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_transform_feedback2_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_transform_feedback_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_vdpau_interop_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_vertex_array_range_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_vertex_attrib_integer_64bit_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_vertex_buffer_unified_memory_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_vertex_fragment_program_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\NV\NV_video_capture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\3DFX_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\3DFX_tbuffer_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\3DFX_texture_compression_fxt1_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_blend_minmax_factor_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_debug_output_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_depth_clamp_separate_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_draw_buffers_blend_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_multi_draw_indirect_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_name_gen_delete_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_performance_monitor_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_pinned_memory_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_query_buffer_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_sample_positions_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_sparse_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_stencil_operation_extended_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\AMD_vertex_shader_tessellator_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_aux_depth_stencil_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_client_storage_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_element_array_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_fence_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_float_pixels_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_flush_buffer_range_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_object_purgeable_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_rgb_422_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_row_bytes_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_specular_vector_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_texture_range_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_transform_hint_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_vertex_array_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_vertex_array_range_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_vertex_program_evaluators_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\APPLE_ycbcr_422_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_422_pixels_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_abgr_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_bindable_uniform_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_blend_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_clip_volume_hint_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_cmyka_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_color_subtable_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_compiled_vertex_array_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_convolution_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_coordinate_frame_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_copy_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_cull_vertex_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_depth_bounds_test_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_direct_state_access_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_draw_buffers2_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_draw_instanced_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_draw_range_elements_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_fog_coord_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_frame_buffer_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_framebuffer_blit_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_framebuffer_multisample_blit_scaled_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_framebuffer_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_framebuffer_sRGB_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_geometry_shader4_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_gpu_program_parameters_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_gpu_shader4_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_histogram_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_index_array_formats_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_index_func_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_index_material_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_legacy_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_light_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_multi_draw_arrays_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_packed_float_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_paletted_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_pixel_transform_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_point_parameters_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_polygon_offset_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_provoking_vertex_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_secondary_color_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_separate_shader_objects_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_shader_image_load_store_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_shared_texture_palette_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_stencil_clear_tag_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_stencil_two_side_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_subtexture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture3D_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_array_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_buffer_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_compression_latc_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_compression_s3tc_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_filter_anisotropic_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_integer_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_mirror_clamp_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_perturb_normal_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_snorm_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_srgb_decode_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_texture_sRGB_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_timer_query_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_transform_feedback_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_vertex_array_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_vertex_attrib_64bit_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_vertex_shader_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_vertex_weighting_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\EXT_x11_sync_object_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\GREMEDY_frame_terminator_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\GREMEDY_string_marker_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\HP_convolution_border_modes_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\HP_image_transform_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\HP_occlusion_test_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\HP_texture_lighting_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\IBM_cull_vertex_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\IBM_multimode_draw_arrays_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\IBM_rasterpos_clip_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\IBM_static_data_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\IBM_vertex_array_lists_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\INGR_blend_func_separate_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\INGR_color_clamp_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\INGR_interlace_read_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\INTEL_parallel_arrays_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\KHR_texture_compression_astc_ldr_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\MESA_pack_invert_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\MESA_resize_buffers_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\MESA_window_pos_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\MESA_ycbcr_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\MESAX_texture_stack_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\OML_interlace_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\OML_resample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\OML_subsample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\PGI_misc_hints_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\PGI_vertex_hints_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\REND_screen_coordinates_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\S3_s3tc_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGI_color_table_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGI_depth_pass_instrument_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGI_texture_color_table_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_detail_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_fog_function_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_multisample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_pixel_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_point_line_texgen_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_point_parameters_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_sharpen_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_texture4d_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_texture_color_mask_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_texture_filter4_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIS_texture_select_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_async_histogram_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_async_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_async_pixel_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_blend_alpha_minmax_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_calligraphic_fragment_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_clipmap_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_convolution_accuracy_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_flush_raster_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_fog_offset_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_fog_scale_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_fragment_lighting_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_framezoom_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_igloo_interface_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_impact_pixel_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_instruments_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_interlace_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_ir_instrument1_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_list_priority_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_pixel_texture_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_pixel_tiles_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_polynomial_ffd_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_reference_plane_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_resample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_scalebias_hint_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_shadow_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_sprite_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_subsample_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_tag_sample_buffer_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_texture_add_env_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_texture_coordinate_clamp_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_texture_lod_bias_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_texture_multi_buffer_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_texture_range_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_texture_scale_bias_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_vertex_preclip_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_ycrcb_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SGIX_ycrcba_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SUN_convolution_border_modes_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SUN_global_alpha_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SUN_mesh_array_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SUN_slice_accum_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SUN_triangle_list_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SUN_vertex_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\SUNX_constant_data_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\WIN_phong_shading_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\Misc\WIN_specular_fog_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\XGL\XGL_EXT_import_context_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\XGL\XGL_EXT_texture_from_pixmap_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\XGL\XGL_SGI_swap_control_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\XGL\XGL_SGI_video_sync_Include.h" />
+    <ClInclude Include="..\..\Bin\GLFunctions\XGL\XGLCore_Include.h" />
+    <ClInclude Include="CommonErrorLog.h" />
+    <ClInclude Include="..\Common\OSDefines.h" />
+    <ClInclude Include="..\Common\ConfigParser.h" />
+    <ClInclude Include="..\Common\ErrorLog.h" />
+    <ClInclude Include="..\Common\FileUtils.h" />
+    <ClInclude Include="..\Common\InputUtils.h" />
+    <ClInclude Include="..\Common\MiscUtils.h" />
+    <ClInclude Include="MovieMaker.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ExtensionFunctionStubs_64.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling ...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ml64.exe /c  /Fo"$(IntDir)%(Filename).obj" %(Filename).asm
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">Assembling ...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ml64.exe /c  /Fo"$(IntDir)%(Filename).obj" %(Filename).asm
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">ml64.exe /c  /Fo"$(IntDir)%(Filename).obj" %(Filename).asm
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <None Include="glIntercept.def" />
+    <None Include="..\..\Bin\MainLib\gliConfig.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\Bin\XSL\gliIntercept_Basic.xsl" />
+    <Xml Include="..\..\Bin\XSL\gliIntercept_DHTML2.xsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Docs\readme.txt" />
+    <Text Include="..\..\Docs\readme_src.txt" />
+    <Text Include="..\..\Docs\version_info.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\3rdParty\Corona-1.0.2-Static\vc8\corona\CoronaStatic.vcxproj">
+      <Project>{2f87e8f3-b5a3-4550-8b8b-ba1b867f393c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

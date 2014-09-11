@@ -159,6 +159,7 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
+<<<<<<< HEAD
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(LibraryPath)</LibraryPath>
@@ -170,6 +171,13 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">$(LibraryPath)</LibraryPath>
+=======
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath);C:\toolkits\includes;C:\toolkits\libs\mswud;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.0\include</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);C:\toolkits\libs;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.0\lib\Win32</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(LibraryPath)</LibraryPath>
+>>>>>>> origin/debug_wrapper
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">composer_d</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">composer_d</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">composer_d</TargetName>
@@ -206,7 +214,7 @@
       <AdditionalOptions>  /ignore:4049 /ignore:4217 /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nau_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;tinyxmlSTLd.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)composer_d.exe</OutputFile>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\GLIntercept\Src\Intermediate\GLI\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>msvcrtd.lib;msvcprtd.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -220,6 +228,18 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>
+copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>copy "..\..\..\GLIntercept\Bin\MainLib\OpenGL32.dll" "..\..\build\samples" 
+copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -534,7 +554,11 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\dialogs\dlgDbgBuffers.cpp" />
+    <ClCompile Include="src\dialogs\dlgDbgGLILogRead.cpp" />
+    <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp" />
     <ClCompile Include="src\glcanvas.cpp" />
+    <ClCompile Include="src\glInfo.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\dialogs\dlgCameras.cpp" />
     <ClCompile Include="src\dialogs\dlgLights.cpp" />
@@ -549,10 +573,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\dialogs\dlgAtomics.h" />
+    <ClInclude Include="src\dialogs\dlgDbgBuffers.h" />
+    <ClInclude Include="src\dialogs\dlgDbgGLILogRead.h" />
+    <ClInclude Include="src\dialogs\dlgDbgPrograms.h" />
     <ClInclude Include="src\dialogs\dlgLights.h" />
     <ClInclude Include="src\dialogs\dlgLog.h" />
     <ClInclude Include="src\dialogs\dlgPass.h" />
     <ClInclude Include="src\glcanvas.h" />
+    <ClInclude Include="src\glInfo.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\dialogs\dlgCameras.h" />
     <CustomBuildStep Include="src\dialogs\dlgLights.h" />

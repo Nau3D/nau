@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6fb0aca2-0596-4c52-95ef-45c1f0f238f9}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Common">
+      <UniqueIdentifier>{26bae339-f47e-4f27-b32e-e27c546da8ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ShaderEditASM">
+      <UniqueIdentifier>{d6ddc9f0-ca13-4d9c-8b0e-0e73c372534c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ShaderEditGLSL">
+      <UniqueIdentifier>{eb34baeb-0bc0-4eb8-a6b1-b483a6976b7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ShaderDebugGLSL">
+      <UniqueIdentifier>{c1390b60-1983-41ca-8ef0-9f9aab7bea69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ShaderDebugGLSL\PreProcessor">
+      <UniqueIdentifier>{a14f122c-b68d-414d-b520-ddae35e4f573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{52b98620-76ca-4ed1-a8b2-50a1f39c220c}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GLFrameBufferCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLRenderCallCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLShaderEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SEContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SEInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderEditManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UniqueShaderID.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\ConfigParser.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\InputUtils.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\MiscUtils.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\NetworkUtils.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderEditASM.cpp">
+      <Filter>Source Files\ShaderEditASM</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManagerASM.cpp">
+      <Filter>Source Files\ShaderEditASM</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderEditGLSL.cpp">
+      <Filter>Source Files\ShaderEditGLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManagerGLSL.cpp">
+      <Filter>Source Files\ShaderEditGLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="SubstituteShaderGLSL.cpp">
+      <Filter>Source Files\ShaderEditGLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderDebugGLSL.cpp">
+      <Filter>Source Files\ShaderDebugGLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderParserGLSL.cpp">
+      <Filter>Source Files\ShaderDebugGLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderUtilsGLSL.cpp">
+      <Filter>Source Files\ShaderDebugGLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="PreProcessor\atom.c">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="PreProcessor\cpp.c">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="PreProcessor\cppstruct.c">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="PreProcessor\memory.c">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="PreProcessor\scanner.c">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="PreProcessor\symbols.c">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="PreProcessor\tokens.c">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GLFrameBufferCache.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLRenderCallCache.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SEContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SEInterface.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SEInterfaceCommands.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderEditManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UniqueShaderID.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\AutoReferenceCount.h">
+      <Filter>Source Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\ConfigParser.h">
+      <Filter>Source Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\InputUtils.h">
+      <Filter>Source Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\MiscUtils.h">
+      <Filter>Source Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\NetworkUtils.h">
+      <Filter>Source Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\ReferenceCount.h">
+      <Filter>Source Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderEditASM.h">
+      <Filter>Source Files\ShaderEditASM</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManagerASM.h">
+      <Filter>Source Files\ShaderEditASM</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderEditGLSL.h">
+      <Filter>Source Files\ShaderEditGLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManagerGLSL.h">
+      <Filter>Source Files\ShaderEditGLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="SubstituteShaderGLSL.h">
+      <Filter>Source Files\ShaderEditGLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="UniformBugManager.h">
+      <Filter>Source Files\ShaderEditGLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderDebugGLSL.h">
+      <Filter>Source Files\ShaderDebugGLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParserGLSL.h">
+      <Filter>Source Files\ShaderDebugGLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderUtilsGLSL.h">
+      <Filter>Source Files\ShaderDebugGLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\atom.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\compile.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\cpp.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\memory.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\parser.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\preprocess.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\scanner.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\slglobals.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\symbols.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="PreProcessor\tokens.h">
+      <Filter>Source Files\ShaderDebugGLSL\PreProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonErrorLog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MainLib\InterceptPluginInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Bin\Plugins\GLShaderEdit\config.ini">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="GLShaderEdit.def">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
