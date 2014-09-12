@@ -160,7 +160,7 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">D:\OptixSDK\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">D:\OptixSDK\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.0\include\;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">$(LibraryPath)</LibraryPath>
@@ -840,7 +840,7 @@
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">nvcc -ptx -I "D:\NVIDIA\OptiX SDK 2.5.0\include" D:/nau/head/src/optix/common.cu</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">nvcc -ptx -I "D:\NVIDIA\OptiX SDK 2.5.0\include" D:/nau/head/src/optix/common.cu</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:/nau/head/src/optix/common.cu
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc" -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:\nau\head\src\optix\common.cu
 copy common.ptx ..\build\samples\optix</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin" D:/nau/head/src/optix/common.cu
 copy common.ptx ..\build\samples\optix</Command>
@@ -850,7 +850,8 @@ copy common.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">common.ptx</Outputs>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --use_fast_math --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:/nau/head/src/optix/common.cu</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc" -ptx --use_fast_math  --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:\nau\head\src\optix\common.cu
+copy common.ptx ..\build\samples\optix</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">nvcc -ptx --use_fast_math --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin" D:/nau/head/src/optix/common.cu</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">common.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">common.ptx</Outputs>
