@@ -75,7 +75,7 @@ bool MovieMaker::Init(const char *newFileName, uint newWidth, uint newHeight, ui
   aviSysOpen = true;
 
   //Open the file
-  HRESULT result = AVIFileOpenA(&pfile,              // Returned file pointer
+  HRESULT result = AVIFileOpen(&pfile,              // Returned file pointer
 								newFileName,         // File name
                                OF_WRITE | OF_CREATE,// Mode to open file with
                                NULL);               // Use handler determined

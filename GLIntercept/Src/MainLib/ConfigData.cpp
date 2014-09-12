@@ -106,7 +106,7 @@ pluginBasePath("")
   char DefaultGLLibName[MAX_PATH];
 
   //Get the default library name
-  GetSystemDirectoryA(DefaultGLLibName, MAX_PATH);
+  GetSystemDirectory(DefaultGLLibName, MAX_PATH);
 
   //Assign the name
   openGLFileName = string(DefaultGLLibName) + FileUtils::dirSeparator + string("opengl32.dll");
