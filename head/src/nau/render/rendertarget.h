@@ -39,6 +39,7 @@ namespace nau
 			unsigned int m_Depth;
 			unsigned int m_Stencil;
 			unsigned int m_Samples;
+			unsigned int m_Layers;
 			unsigned int m_Width;
 			unsigned int m_Height;
 			std::string m_Name;
@@ -66,6 +67,7 @@ namespace nau
 
 			void setClearValues(float r, float g, float b, float a);
 			void setSampleCount(int samples);
+			void setLayerCount(int layers);
 			const nau::math::vec4 & getClearValues(); 
 			virtual unsigned int getNumberOfColorTargets();
 			virtual int getId (void);

@@ -124,9 +124,9 @@ ResourceManager::createTexture (std::string label,
 nau::render::Texture*
 ResourceManager::createTexture (std::string label, 
 				std::string internalFormat, 
-				int width, int height)
+				int width, int height, int layers)
 {
-	return (m_pTextureManager->createTexture (label, internalFormat, width, height));
+	return (m_pTextureManager->createTexture (label, internalFormat, width, height, layers));
 }
 
 

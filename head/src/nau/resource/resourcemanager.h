@@ -49,7 +49,7 @@ namespace nau
 
 			nau::render::Texture* createTexture (std::string label, 
 				std::string internalFormat, 
-				int width, int height);
+				int width, int height, int layers = 0);
 
 			nau::render::Texture* createTextureMS (std::string label, 
 				std::string internalFormat, 

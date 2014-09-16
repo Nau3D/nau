@@ -211,6 +211,7 @@
     <ClCompile Include="..\src\nau\math\bvec4.cpp" />
     <ClCompile Include="..\src\nau\render\imageTexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp" />
     <ClCompile Include="..\src\nau\render\optix\optixBufferLib.cpp">
@@ -407,6 +408,7 @@
     <ClInclude Include="..\src\nau\math\bvec4.h" />
     <ClInclude Include="..\src\nau\render\imageTexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h" />
     <ClInclude Include="..\src\nau\render\optix\optixBufferLib.h">
@@ -595,7 +597,7 @@
     <CustomBuild Include="..\src\optix\common.cu">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">nvcc -ptx -I "D:\NVIDIA\OptiX SDK 2.5.0\include" D:/nau/head/src/optix/common.cu</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32  -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau2/head/src/optix/common.cu
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32  -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau/head/src/optix/common.cu
 copy common.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common.cu.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">common.ptx</Outputs>
@@ -609,7 +611,7 @@ copy common.ptx ..\build\samples\optix</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nvcc -ptx --machine 32 -I "D:\NVIDIA\OptiX SDK 2.5.1\include" D:/nau/head/src/optix/deferredShadows.cu
 copy deferredShadows.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">deferredShadows.ptx</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau2/head/src/optix/deferredShadows.cu
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau/head/src/optix/deferredShadows.cu
 copy deferredShadows.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">deferredShadows.ptx</Outputs>
     </CustomBuild>
@@ -619,7 +621,7 @@ copy deferredShadows.ptx ..\build\samples\optix</Command>
 copy rtvssm.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">rtvssm.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">rtvssm.ptx</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau2/head/src/optix/rtvssm.cu
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32 -I "C:\Program Files\NVIDIA Corporation\OptiX SDK 3.0.1\include" D:/nau/head/src/optix/rtvssm.cu
 copy rtvssm.ptx ..\build\samples\optix</Command>
     </CustomBuild>
     <None Include="ReadMe.txt" />

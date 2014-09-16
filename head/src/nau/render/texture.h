@@ -36,7 +36,7 @@ namespace nau
 			typedef enum { DIMENSION, FORMAT, TYPE, INTERNAL_FORMAT,
 				COUNT_ENUMPROPERTY} EnumProperty;
 
-			typedef enum { WIDTH, HEIGHT, DEPTH, LEVELS, SAMPLES, COMPONENT_COUNT,ELEMENT_SIZE,
+			typedef enum { WIDTH, HEIGHT, DEPTH, LEVELS, SAMPLES, LAYERS, COMPONENT_COUNT,ELEMENT_SIZE,
 				COUNT_INTPROPERTY} IntProperty;
 
 			typedef enum { ID, COUNT_UINTPROPERTY} UIntProperty;
@@ -75,7 +75,7 @@ namespace nau
 				unsigned char* data );
 
 			static Texture* Create(std::string label, std::string internalFormat,
-				int width, int height);
+				int width, int height, int layers = 0);
 
 			static Texture* CreateMS(std::string label, std::string internalFormat,
 				int width, int height, 
@@ -108,7 +108,7 @@ namespace nau
 			Texture(std::string label, std::string aDimension, std::string internalFormat, 
 				int width, int height);
 			/// For inheritance reasons only
-			Texture() {};
+			Texture() {bitmap=NULL;};
 
 			static bool Init();
 			static bool Inited;

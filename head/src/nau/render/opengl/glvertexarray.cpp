@@ -290,7 +290,7 @@ GLVertexArray::unbind (void)
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glActiveTexture (GL_TEXTURE0);
-	glClientActiveTexture (GL_TEXTURE0);
+//	glClientActiveTexture (GL_TEXTURE0);
 }
 
 void

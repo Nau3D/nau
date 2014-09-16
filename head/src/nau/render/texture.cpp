@@ -3,6 +3,7 @@
 #ifdef NAU_OPENGL
 #include <nau/render/opengl/gltexture.h>
 #include <nau/render/opengl/gltextureMS.h>
+#include <nau/render/opengl/gltexture2dArray.h>
 #endif
 #include <nau/loader/textureloader.h>
 
@@ -23,6 +24,7 @@ Texture::Init() {
 	Attribs.add(Attribute(DEPTH, "DEPTH", Enums::DataType::INT, true, new int(1)));
 	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::INT, true, new int(0)));
 	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::INT, true, new int(0)));
+	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::INT, true, new int(0)));
 	Attribs.add(Attribute(COMPONENT_COUNT, "COMPONENT_COUNT", Enums::DataType::INT, true, new int(0)));
 	Attribs.add(Attribute(ELEMENT_SIZE, "ELEMENT_SIZE", Enums::DataType::INT, true, new int(0)));
 	// BOOL
@@ -79,7 +81,7 @@ Texture::Create (std::string label, std::string internalFormat,
 }
 
 
-// For multisample textures
+// For empty multisample textures
 Texture*
 Texture::CreateMS (std::string label, std::string internalFormat,
 				int width, int height, 
@@ -96,10 +98,13 @@ Texture::CreateMS (std::string label, std::string internalFormat,
 // For empty textures
 Texture*
 Texture::Create (std::string label, std::string internalFormat,
-				int width, int height)
+				int width, int height, int layers)
 {
 #ifdef NAU_OPENGL
-	return new GLTexture (label, internalFormat, width, height);
+	if (layers == 0)
+		return new GLTexture (label, internalFormat, width, height);
+	else
+		return new GLTexture2DArray(label, internalFormat, width, height, layers);
 #elif NAU_DIRECTX
 	//Meter função para DirectX
 #endif
