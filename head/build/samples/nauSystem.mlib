@@ -10,6 +10,10 @@
 									vs="shaders/quadShader.vert" />
 		<shader name="dirLightDifAmbPix" 	ps="shaders/dirlightdiffambpix.frag" 
 											vs="shaders/dirlightdiffambpix.vert" />
+		<shader name="emission" 	ps="shaders/emission.frag" 
+									vs="shaders/emission.vert" />
+		<shader name="font" 		ps="shaders/font.frag" 
+									vs="shaders/font.vert" />
 	</shaders>
 	
 	<states>
@@ -20,6 +24,7 @@
 		<state name ="__Transparent">
 			<DEPTH_TEST value="0" />
 			<ORDER value="1" />
+			<BLEND value="true" />
 			<BLEND_SRC value="SRC_ALPHA" />
 			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
 		</state>
@@ -74,21 +79,21 @@
 
 		<material name="__Light Grey">
 			<color>
-				<ambient r="0.8" g="0.8" b="0.8" a="1.0" />
-				<diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.8" g="0.8" b="0.8" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
 		<material name="__Quad">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 			<shader>
 				<name>quadShader</name>
@@ -101,81 +106,151 @@
 		
 		<material name="__Emission White">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="1.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Red">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="0.0" b="0.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="0.0" b="0.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Green">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="1.0" b="0.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="1.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="1.0" b="0.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="1.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Blue">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="0.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="0.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />		
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Cyan">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="1.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="1.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Purple">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="0.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="0.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="0.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="0.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Emission Yellow">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="1.0" b="0.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="1.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="0.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="1.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>emission</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__Black">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 		</material>
 		
@@ -185,12 +260,25 @@
 		
 		<material name="__FontCourierNew10">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="0.0" />
-				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="1.0" b="1.0" a="0.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="0.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
+			<shader>
+				<name>font</name>
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+															
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+
+					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />
+				</values>
+			</shader>
 			<state name="__Transparent"/>
 			<textures>
 				<texture UNIT="0" name="__FontCourierNew10" >

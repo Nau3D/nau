@@ -202,7 +202,7 @@ OctreeByMatNode::_unifyLocalMeshes() {
 
 			while(  iter != aux->m_pLocalMeshes.end() ) {
 		
-				if (iter->second->getRenderable().getNumberOfPrimitives() < 8000) {
+				if (iter->second->getRenderable().getNumberOfVertices()/3 < 8000) {
 
 					if (!m_pLocalMeshes.count(iter->first))
 						m_pLocalMeshes[iter->first] = SceneObjectFactory::create("SimpleObject");
@@ -246,14 +246,15 @@ OctreeByMatNode::_split() {
 		pMaterialGroup = r->getMaterialGroups()[0];
 
 		// if needs to be splitted
-		if (r->getNumberOfPrimitives() > MAXPRIMITIVES) {
+		if (r->getNumberOfVertices()/3 > MAXPRIMITIVES) {
 			VertexData &vVertexData = r->getVertexData();
 			IndexData &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
 			std::vector<unsigned int> &vIndexData = VertexDataMaterialGroup.getIndexData();
 			std::vector<unsigned int>::iterator indexIter;
 			indexIter = vIndexData.begin();
 			std::vector<VertexData::Attr> vVertices = vVertexData.getDataOf(vertexArrayPos);
-			offSet = ((Mesh *)r)->getPrimitiveOffset();
+			// Octree are only implemented for triangles
+			offSet = 3;// ((Mesh *)r)->getPrimitiveOffset();
 			// for every primitive, split into temporary arrays
 			for (unsigned int i = 0; i < vIndexData.size(); i += offSet) {
 				// carefull: three vertices are only for triangles, not lines

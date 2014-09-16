@@ -249,8 +249,9 @@ void DlgTextureLib::setTextureProps(int index){
 		
 	wxString s = wxString(texture->getLabel().c_str());
 	pgTextureProps->SetPropertyValue(wxT("Name"),s);
-		wxBitmap *bm = texture->getBitmap();
-		pgTextureProps->SetPropertyImage(wxT("Name"), *bm);
+	wxBitmap *bm = texture->getBitmap();
+	//unsigned char *bm = texture->getBitmap();
+	pgTextureProps->SetPropertyImage(wxT("Name"), *bm);
 
 	int v = texture->getPrope(Texture::INTERNAL_FORMAT);
 	pgTextureProps->SetPropertyValue(wxT("Internal Format"),v);

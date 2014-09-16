@@ -31,7 +31,7 @@ BoundingBox::BoundingBox(void):
 #ifdef NAU_RENDER_FLAGS
 	if (Geometry == NULL) {
 		Geometry = new BBox();
-		Geometry->setDrawingPrimitive(IRenderer::LINE_LOOP);
+		Geometry->setDrawingPrimitive(IRenderable::LINE_LOOP);
 	}
 #endif
 }

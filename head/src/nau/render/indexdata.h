@@ -25,8 +25,15 @@ namespace nau
 
 			void offsetIndices (int amount);
 			virtual std::vector<unsigned int>& getIndexData (void);
+#ifdef NAU_OPTIX_PRIME
+			/// required for optixPrime: returns indices as ints
+			virtual std::vector<int>* getIndexDataAsInt(void);
+#endif
 			void setIndexData (std::vector<unsigned int>* indexData);
+			/// returns the number of indices
 			unsigned int getIndexSize (void);
+
+			void buildAdjacencyList();
 
 			int add (IndexData &anIndexData);
 
@@ -35,15 +42,27 @@ namespace nau
 			virtual void bind (void) = 0;
 			virtual void unbind (void) = 0;
 			virtual bool isCompiled() = 0;
+			virtual void useAdjacency(bool adj) = 0;
+			virtual bool getAdjacency() = 0;
 
-			virtual std::vector<unsigned int>& _getReallyIndexData (void) = 0;
+			//virtual std::vector<unsigned int>& _getReallyIndexData (void) = 0;
 			virtual unsigned int getBufferID() = 0;
 
 		protected:
 			IndexData(void);
 			
 			std::vector<unsigned int>* m_InternalIndexArray;
-			unsigned int m_IndexSize;
+			std::vector<unsigned int> m_AdjIndexArray;
+			//unsigned int m_IndexSize;
+
+			bool m_UseAdjacency;
+
+			struct HalfEdge {
+				unsigned int vertex;
+				struct HalfEdge *next;
+				struct HalfEdge *twin;
+			};
+
 		};
 	};
 };

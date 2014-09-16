@@ -35,6 +35,8 @@ namespace nau
 			//unsigned int m_Color; // number of color render targets
 
 		public:
+			void init();
+
 			virtual void bind (void);			
 			virtual void unbind (void);
 
@@ -47,22 +49,23 @@ namespace nau
 			~GLRenderTarget(void);
 
 		protected:
-			virtual bool attachDepthStencilTexture (Texture* aTexture, GLuint type);
-			virtual bool dettachDepthStencilTexture (GLuint type);
-			virtual bool attachColorTexture (nau::render::Texture* aTexture, ColorAttachment colorAttachment); 
-			virtual bool dettachColorTexture (ColorAttachment colorAttachment);
+			void attachDepthStencilTexture (Texture* aTexture, GLuint type);
+			void dettachDepthStencilTexture(GLuint type);
+			void attachColorTexture(nau::render::Texture* aTexture, unsigned int colorAttachment);
+			void dettachColorTexture(unsigned int  colorAttachment);
 
 			void setDrawBuffers (void);
 
 			GLuint m_DepthBuffer;
-			GLenum m_RenderTargets[RenderTarget::RENDERTARGETS];
-			int m_RTCount;
+			std::vector<int> m_RenderTargets;
+			//int m_RTCount;
 			bool m_NoDrawAndRead;
 
 			GLRenderTarget (std::string name, unsigned int width, unsigned int height);
 			GLRenderTarget (std::string name);
 
 			void _rebuild();
+			bool m_Init = false;
 		};
 	};
 };

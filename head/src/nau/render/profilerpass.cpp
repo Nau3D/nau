@@ -44,7 +44,7 @@ ProfilerPass::ProfilerPass (const std::string &name) :
 
 	m_MaterialMap[m_pFont.getMaterialName()] = MaterialID(DEFAULTMATERIALLIBNAME,m_pFont.getMaterialName());
 
-	m_BoolProp[IRenderer::COLOR_CLEAR] = false;
+	m_BoolProps[Pass::COLOR_CLEAR] = false;
 }
 
 
@@ -66,13 +66,11 @@ ProfilerPass::prepare (void)
 		m_RenderTarget->bind();
 	}
 
-	RENDERER->setMatrixMode (IRenderer::PROJECTION_MATRIX);
-	RENDERER->pushMatrix();
-	RENDERER->loadIdentity();
+	RENDERER->pushMatrix(IRenderer::PROJECTION_MATRIX);
+	RENDERER->loadIdentity(IRenderer::PROJECTION_MATRIX);
 
-	RENDERER->setMatrixMode (IRenderer::VIEW_MATRIX);
-	RENDERER->pushMatrix();
-	RENDERER->loadIdentity();
+	RENDERER->pushMatrix(IRenderer::VIEW_MATRIX);
+	RENDERER->loadIdentity(IRenderer::VIEW_MATRIX);
 
 
 
@@ -88,15 +86,10 @@ ProfilerPass::prepare (void)
 	}
 	RENDERER->setCamera(m_pCam);
 	
-	RENDERER->setMatrixMode(nau::render::IRenderer::MODEL_MATRIX);
-	RENDERER->loadIdentity();
-	RENDERER->pushMatrix();
-	RENDERER->translate(vec3(15,15,0));
+	RENDERER->loadIdentity(IRenderer::MODEL_MATRIX);
+	RENDERER->pushMatrix(IRenderer::MODEL_MATRIX);
+	RENDERER->translate(IRenderer::MODEL_MATRIX, vec3(15, 15, 0));
 
-#if (NAU_CORE_OPENGL == 0)
-	RENDERER->activateLighting();
-	RENDERER->enableTexturing();
-#endif
 }
 
 
@@ -107,18 +100,9 @@ ProfilerPass::restore (void)
 		m_RenderTarget->unbind();
 	}
 
-	RENDERER->setMatrixMode (IRenderer::PROJECTION_MATRIX);
-	RENDERER->popMatrix();
-
-	RENDERER->setMatrixMode (IRenderer::VIEW_MATRIX);
-	RENDERER->popMatrix();
-
-	RENDERER->setMatrixMode (IRenderer::MODEL_MATRIX);
-	RENDERER->popMatrix();
-
-#if (NAU_CORE_OPENGL == 0)
-	RENDERER->disableTexturing();
-#endif
+	RENDERER->popMatrix(IRenderer::PROJECTION_MATRIX);
+	RENDERER->popMatrix(IRenderer::VIEW_MATRIX);
+	RENDERER->popMatrix(IRenderer::MODEL_MATRIX);
 }
 
 

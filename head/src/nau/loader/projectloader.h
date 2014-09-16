@@ -88,6 +88,9 @@ namespace nau
 #ifdef NAU_OPTIX
 			static void loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass);
 #endif
+#ifdef NAU_OPTIX_PRIME
+			static void loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass);
+#endif
 			static void loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass);
 			//static void loadPassShaderMaps(TiXmlHandle hPass, Pass *aPass);
 			//static void loadPassStateMaps(TiXmlHandle hPass, Pass *aPass);
@@ -96,10 +99,12 @@ namespace nau
 			static void loadMatLibTextures(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 			static void loadMatLibStates(TiXmlHandle hPass, MaterialLib *aLib);
 			static void loadMatLibShaders(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
+			static void loadMatLibBuffers(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 
 			static void loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
+			static void loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 

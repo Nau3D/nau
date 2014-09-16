@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<materiallib name="atomics">
+
+	
+	<shaders>
+		<shader name="dirLightDifAmbPixAtomic" 
+								ps="dirlightdiffambpix.frag" 
+								vs="dirlightdiffambpix.vert" />
+	</shaders>
+		
+	<materials>
+		<material name="atomic">
+			<shader>
+				<name>dirLightDifAmbPixAtomic</name>
+				<values>
+					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightColor"     	type="CURRENT" context="LIGHT" 
+														id=0 component="COLOR" />
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="CURRENT" context="COLOR" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="CURRENT" context="MATRIX" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="V"          		type="CURRENT" context="MATRIX" 
+														component="VIEW" />
+
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />														
+				</values>
+			</shader>
+		</material>		
+
+
+	</materials>
+</materiallib>

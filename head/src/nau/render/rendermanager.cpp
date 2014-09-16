@@ -58,11 +58,10 @@ RenderManager::clear() {
 
 	m_pRenderQueue->clearQueue();
 
-//	m_SceneObjects.clear();
-	while (!m_SceneObjects.empty()){
-		delete ((*m_SceneObjects.begin()));
-		m_SceneObjects.erase(m_SceneObjects.begin());
-	}
+	//while (!m_SceneObjects.empty()){
+	//	delete (*m_SceneObjects.begin());
+	//	m_SceneObjects.erase(m_SceneObjects.begin());
+	//}
 
 
 }
@@ -138,6 +137,24 @@ Pass *RenderManager::getPass(const std::string &pipeline, const std::string &pas
 
 	return m_Pipelines[pipeline]->getPass(pass);
 }
+
+
+Pass *RenderManager::getPass(const std::string &pass)
+{
+	// Pipeline and pass must exist
+	assert(m_ActivePipeline->hasPass(pass));
+
+	return m_ActivePipeline->getPass(pass);
+}
+
+
+Pass *
+RenderManager::getCurrentPass()
+{
+	assert(m_ActivePipeline != NULL);
+	return m_ActivePipeline->getCurrentPass();
+}
+
 
 Camera*
 RenderManager::getCurrentCamera() {
@@ -239,32 +256,36 @@ RenderManager::renderActivePipeline ()
 }
 
 
-float *
-RenderManager::getCurrentPassParamf(std::string name) {
+void *
+RenderManager::getCurrentPassAttribute(std::string name, Enums::DataType dt) {
 
-	return(m_ActivePipeline->getCurrentPass()->getParamf(name));
+	int id = Pass::Attribs.getID(name);
+	return m_ActivePipeline->getCurrentPass()->getProp(id, dt);
 }
 
 
-int
-RenderManager::getCurrentPassParamType(std::string name) {
+Enums::DataType
+RenderManager::getPassAttributeType(std::string name) {
 
-	return(m_ActivePipeline->getCurrentPass()->getParamType(name));
+	Attribute a = Pass::Attribs.get(name);
+	Enums::DataType dt = a.getType();
+	return dt;
 }
 
 
-float *
-RenderManager::getPassParamf(std::string passName, std::string paramName) {
+//float *
+//RenderManager::getPassParamf(std::string passName, std::string paramName) {
+//
+//	return(m_ActivePipeline->getPass(passName)->getParamf(paramName));
+//}
+void *
+RenderManager::getPassAttribute(std::string passName, std::string name, Enums::DataType dt) {
 
-	return(m_ActivePipeline->getPass(passName)->getParamf(paramName));
+	int id = Pass::Attribs.getID(name);
+	return m_ActivePipeline->getPass(passName)->getProp(id, dt);
 }
 
 
-int
-RenderManager::getPassParamType(std::string passName, std::string paramName) {
-
-	return(m_ActivePipeline->getPass(passName)->getParamType(paramName));
-}
 
 
 int

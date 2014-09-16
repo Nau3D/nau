@@ -153,6 +153,7 @@ void DlgDbgGLILogRead::finishReadLogFile(){
 }
 
 void DlgDbgGLILogRead::loadLog() {
+#ifdef GLINTERCEPTDEBUG
 	string logname = gliGetLogName();
 	string logfile;
 	
@@ -205,5 +206,5 @@ void DlgDbgGLILogRead::loadLog() {
 	//		continueReadLogFile();
 	//	}
 	//}
-
+#endif
 }

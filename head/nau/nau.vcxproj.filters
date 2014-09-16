@@ -274,9 +274,6 @@
     <ClCompile Include="..\src\nau\render\opengl\gltextureCubeMap.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gluniform.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glvertexarray.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
@@ -496,13 +493,29 @@
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp">
-      <Filter>Source Files\loader</Filter>
-=======
     <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp">
       <Filter>Source Files\render\opengl</Filter>
->>>>>>> origin/master
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\iprogramvalue.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\ibuffer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeunified.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passoptixprime.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp">
+      <Filter>Source Files\loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -729,9 +742,6 @@
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\gltextureCubeMap.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gluniform.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glvertexarray.h">
@@ -965,12 +975,6 @@
     <ClInclude Include="..\src\nau\bimap.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\attribute.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\attributeValues.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\math\bvec4.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
@@ -986,16 +990,35 @@
     <ClInclude Include="..\src\nau\loader\patchLoader.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="projectLoaderDebugLinker.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\attribute.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\attributeValues.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iprogramvalue.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glbuffer.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\ibuffer.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeunified.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passoptixprime.h">
+      <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h">
       <Filter>Source Files\loader</Filter>
-=======
-    <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h">
-      <Filter>Source Files\render\opengl</Filter>
->>>>>>> origin/master
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1022,13 +1045,13 @@
     </CustomBuildStep>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\src\optix\common.cu">
-      <Filter>OPTIX</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\src\optix\deferredShadows.cu">
       <Filter>OPTIX</Filter>
     </CustomBuild>
     <CustomBuild Include="..\src\optix\rtvssm.cu">
+      <Filter>OPTIX</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\optix\common.cu">
       <Filter>OPTIX</Filter>
     </CustomBuild>
   </ItemGroup>

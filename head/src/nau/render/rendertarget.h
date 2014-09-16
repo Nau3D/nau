@@ -11,27 +11,6 @@ namespace nau
 		class RenderTarget
 		{
 		public:
-			static const int RENDERTARGETS = 16;
-			static const int MAXFBOs = 8;
-
-			enum ColorAttachment {
-				COLOR0,
-				COLOR1,
-				COLOR2,
-				COLOR3,
-				COLOR4,
-				COLOR5,
-				COLOR6,
-				COLOR7,
-				COLOR8,
-				COLOR9,
-				COLOR10,
-				COLOR11,
-				COLOR12,
-				COLOR13,
-				COLOR14,
-				COLOR15
-			};
 
 		protected:
 			unsigned int m_Id; 
@@ -43,13 +22,16 @@ namespace nau
 			unsigned int m_Width;
 			unsigned int m_Height;
 			std::string m_Name;
-			nau::render::Texture* m_TexId[MAXFBOs+2];
+			std::vector<nau::render::Texture*> m_TexId;
+			Texture *m_DepthTexture;
+			Texture *m_StencilTexture;
 
 			// clear values per channel
 			nau::math::vec4 m_ClearValues;
 
 
 		public:
+
 			static RenderTarget* Create (std::string name, unsigned int width, unsigned int height);
 			static RenderTarget* Create (std::string name);
 

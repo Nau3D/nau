@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<materiallib name="Simple">
+
+	<textures>
+		<texture name="Crate" filename="../../models/Texturas/crate.jpg" />		
+	</textures>
+	<shaders>
+		<shader name="simple" ps="shaders/simple.frag" vs="shaders/simple.vert" />
+	</shaders>
+	
+	<materials>
+		<material name="simpleTextured">
+			<shader>
+				<name>simple</name>
+				<values>
+					<valueof uniform="fogMin" 	type="CURRENT" context="STATE" 
+														component="FOG_MIN_DIST" /> 
+					
+					<valueof uniform="fogMax" 	type="CURRENT" context="STATE" 
+														component="FOG_MAX_DIST" /> 
+					
+					<valueof uniform="fogColor" 	type="CURRENT" context="VIEWPORT" 
+														component="CLEAR_COLOR" /> 
+														
+					<valueof uniform="lightDir" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIR" /> 
+																
+					<valueof uniform="dist" 	type="CURRENT" context="CAMERA" 
+														component="DIST" /> 
+
+					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          	type="CURRENT" context="MATRIX" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="V"          	type="CURRENT" context="MATRIX" 
+														component="VIEW" />
+														
+					<valueof uniform="NormalMat"   	type="CURRENT" context="MATRIX" 
+														component="NORMAL" />
+														
+					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE"
+														id=1 component="UNIT" />
+														
+				</values>
+			</shader>
+			<textures>
+				<texture name="Crate" UNIT="1" />
+			</textures>
+			<state>
+				<!-- Both attributes are user attributes -->
+				<FOG_MIN_DIST value = 1.0 />
+				<FOG_MAX_DIST value = 10.0 />
+			</state>
+		</material>
+	</materials>
+</materiallib>

@@ -1,0 +1,17 @@
+newmtl red
+	Kd 1 0.23996 0.2448
+
+newmtl green
+	Kd 0.26292 1 0.06672
+
+newmtl blue
+	Kd 0.27412 0.27444 1
+	
+newmtl purple
+	Kd 1 0.23996 1
+	
+newmtl yellow
+	Kd 0 1 1
+	
+newmtl brown
+	Kd 1 1 0

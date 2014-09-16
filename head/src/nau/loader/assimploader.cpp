@@ -34,7 +34,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		return;
 	}
 
-	sc = importer.ReadFile( aFilename, aiProcess_CalcTangentSpace|aiProcess_Triangulate);//aiProcessPreset_TargetRealtime_Quality);
+	sc = importer.ReadFile( aFilename, aiProcessPreset_TargetRealtime_Quality);//aiProcess_CalcTangentSpace|aiProcess_Triangulate);//aiProcessPreset_TargetRealtime_Quality);
 
 	// If the import failed, report it
 	if( !sc)
@@ -43,11 +43,15 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		return;
 	}
 
-	unsigned int order;
-	if (params == "")
-		order = XYZ;
-	else if (params == "SWAP_YZ")
+	unsigned int order = XYZ;
+	if (params.find("SWAP_YZ") != std::string::npos)
 		order = XZ_Y;
+
+	unsigned int primitive;
+	if (params.find("USE_ADJACENCY") != std::string::npos) 
+		primitive = IRenderable::TRIANGLES_ADJACENCY;
+	else 
+		primitive = IRenderable::TRIANGLES;
 
 	std::map<unsigned int, std::string> meshNameMap;
 
@@ -61,7 +65,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 
 		Mesh *renderable =  (Mesh *)RESOURCEMANAGER->createRenderable("Mesh", mesh->mName.data, aFilename);
 		meshNameMap[n] = renderable->getName();
-		renderable->setDrawingPrimitive(nau::render::IRenderer::TRIANGLES);
+		renderable->setDrawingPrimitive(primitive);
 
 		std::vector<unsigned int> *indices = new std::vector<unsigned int>;
 
@@ -73,6 +77,8 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		}
 		MaterialGroup *aMaterialGroup = new MaterialGroup;
 		aMaterialGroup->setIndexList(indices);
+		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
+			aMaterialGroup->getIndexData().useAdjacency(true);
 		aMaterialGroup->setParent(renderable);
 
 		 aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
@@ -112,8 +118,6 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 
 		if (!MATERIALLIBMANAGER->hasMaterial (DEFAULTMATERIALLIBNAME, name.data)) {
 
-			//Material *m = new Material();
-			//m->setName(name.data);
 			Material *m = MATERIALLIBMANAGER->createMaterial(name.data);
 			aiString texPath;	
 			if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
@@ -122,32 +126,32 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		
 			float c[4];
 			aiColor4D color;
+			ColorMaterial *cm = &(m->getColor());
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &color)) {
 				color4_to_float4(&color, c);
-				m->getColor().setColorComponent(nau::material::ColorMaterial::DIFFUSE, c);
+				cm->setProp(ColorMaterial::DIFFUSE,c);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &color)) {
 				color4_to_float4(&color, c);
-				m->getColor().setColorComponent(nau::material::ColorMaterial::AMBIENT, c);
+				m->getColor().setProp(ColorMaterial::AMBIENT,c);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &color)) {
 				color4_to_float4(&color, c);
-				m->getColor().setColorComponent(nau::material::ColorMaterial::SPECULAR, c);
+				m->getColor().setProp(ColorMaterial::SPECULAR,c);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &color)) {
 				color4_to_float4(&color, c);
-				m->getColor().setColorComponent(nau::material::ColorMaterial::EMISSION, c);
+				m->getColor().setProp(ColorMaterial::EMISSION,c);
 			}
 			float shininess = 0.0;
 			unsigned int max;
 			if (AI_SUCCESS == aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max))
-				m->getColor().setColorComponent(nau::material::ColorMaterial::SHININESS, c);
+				m->getColor().setProp(ColorMaterial::SHININESS,shininess);
 
-			//MATERIALLIBMANAGER->addMaterial(DEFAULTMATERIALLIBNAME, m);
 
 		}
 	}

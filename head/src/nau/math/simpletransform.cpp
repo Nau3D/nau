@@ -296,25 +296,5 @@ SimpleTransform::getTranslation ()
 	return m_Translation;
 }
    
-//float 
-//SimpleTransform::getRotationAngle ()
-//{
-//   //TODO: Implement Method
-//	return 0.0f;
-//}
-//   
-//const vec3 & 
-//SimpleTransform::getRotationAxis ()
-//{
-//   //TODO: Implement Method
-//	return *(new vec3());
-//} 
-   
-//float 
-//SimpleTransform::getScale ()
-//{
-//   //TODO: Implement Method
-//	return 0.0f;
-//}
-//
+
 

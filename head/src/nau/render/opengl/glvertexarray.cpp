@@ -7,7 +7,7 @@ using namespace nau::math;
 
 //  STATIC METHODS
 
-unsigned int GLVertexArray::m_OpenGLOwnAttribs = VertexData::getAttribIndex("texCoord7")+1;
+//unsigned int GLVertexArray::m_OpenGLOwnAttribs = 0;// VertexData::getAttribIndex("texCoord7") + 1;
 
 
 
@@ -23,11 +23,8 @@ GLVertexArray::GLVertexArray(void):
 		m_AttributesLocations[i] = VertexData::NOLOC;
 	}
 
-#if NAU_CORE_OPENGL == 0
-	m_OpenGLOwnAttribs = VertexData::getAttribIndex("texCoord7")+1;
-#else
-	m_OpenGLOwnAttribs = 0;
-#endif
+//	m_OpenGLOwnAttribs = 0;
+
 
 
 }
@@ -206,17 +203,17 @@ GLVertexArray::bind (void)
 	unsigned int i;
 
 	if (true == m_IsCompiled) {
-		for (i = 0; i < m_OpenGLOwnAttribs; ++i) {
+		//for (i = 0; i < m_OpenGLOwnAttribs; ++i) {
 
-			if (0 != m_GLBuffers[i] ) {
+		//	if (0 != m_GLBuffers[i] ) {
 
-				glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
-				setGLArray (i, 0);
-				glEnableClientState (translate (i));
-			}
-		}
+		//		glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
+		//		setGLArray (i, 0);
+		//		glEnableClientState (translate (i));
+		//	}
+		//}
 
-		for (i = m_OpenGLOwnAttribs; i < VertexData::MaxAttribs; ++i) {
+		for (i = 0; i < VertexData::MaxAttribs; ++i) {
 			if (0 != m_GLBuffers[i]){
 				int loc = RENDERER->getAttribLocation(VertexData::Syntax[i]);
 				if (loc != -1) {
@@ -226,28 +223,29 @@ GLVertexArray::bind (void)
 				}
 			}
 		}
-	} else {
-		for (i = 0; i < m_OpenGLOwnAttribs; ++i){
-			if (0 != m_InternalArrays[i]){
-				glEnableClientState (translate (i));
-				//std::vector<vec3>& vec = (*m_InternalArrays[i]);
-				setGLArray (i, (float*) (&(*m_InternalArrays[i])[0]));
-			}
-		}
-		for (i = m_OpenGLOwnAttribs; i < VertexData::MaxAttribs; ++i) {
-			if (0 != m_InternalArrays[i]){
-//				if (VertexData::NOLOC != m_AttributesLocations[i]) {
-				int loc = RENDERER->getAttribLocation(VertexData::Syntax[i]);
-				if (loc != -1) {
-//					glEnableVertexAttribArray (m_AttributesLocations[i]);
-					glEnableVertexAttribArray(loc);
-//					glVertexAttribPointer (m_AttributesLocations[i], 4, GL_FLOAT, 0, 0, (float*) (&(*m_InternalArrays[i])[0]));
-					glVertexAttribPointer (loc, 4, GL_FLOAT, 0, 0, (float*) (&(*m_InternalArrays[i])[0]));
-				}
-			}
-		}
-
-	}
+	} 
+//	else {
+//		for (i = 0; i < m_OpenGLOwnAttribs; ++i){
+//			if (0 != m_InternalArrays[i]){
+//				glEnableClientState (translate (i));
+//				//std::vector<vec3>& vec = (*m_InternalArrays[i]);
+//				setGLArray (i, (float*) (&(*m_InternalArrays[i])[0]));
+//			}
+//		}
+//		for (i = m_OpenGLOwnAttribs; i < VertexData::MaxAttribs; ++i) {
+//			if (0 != m_InternalArrays[i]){
+////				if (VertexData::NOLOC != m_AttributesLocations[i]) {
+//				int loc = RENDERER->getAttribLocation(VertexData::Syntax[i]);
+//				if (loc != -1) {
+////					glEnableVertexAttribArray (m_AttributesLocations[i]);
+//					glEnableVertexAttribArray(loc);
+////					glVertexAttribPointer (m_AttributesLocations[i], 4, GL_FLOAT, 0, 0, (float*) (&(*m_InternalArrays[i])[0]));
+//					glVertexAttribPointer (loc, 4, GL_FLOAT, 0, 0, (float*) (&(*m_InternalArrays[i])[0]));
+//				}
+//			}
+//		}
+//
+//	}
 	/* Custom attributes */
 
 	/***MARK***/ // Only vec3 
@@ -261,31 +259,31 @@ GLVertexArray::unbind (void)
 
 	if (true == m_IsCompiled) {
 
-		for (i = 0; i < m_OpenGLOwnAttribs; i++) {
-			if (0 != m_GLBuffers[i]) {
-				glDisableClientState (translate (i));
-			}
-		}
+		//for (i = 0; i < m_OpenGLOwnAttribs; i++) {
+		//	if (0 != m_GLBuffers[i]) {
+		//		glDisableClientState (translate (i));
+		//	}
+		//}
 
-		for (i = m_OpenGLOwnAttribs; i < VertexData::MaxAttribs; i++) {
+		for (i = 0; i < VertexData::MaxAttribs; i++) {
 			if (0 != m_GLBuffers[i]) {
 				glDisableVertexAttribArray (m_AttributesLocations[i]);
 			}
 		}
 	} 
-	else {
-		for (i = 0; i < m_OpenGLOwnAttribs; i++) {
-			if (0 != m_InternalArrays[i]) {
-				glDisableClientState (translate (i));
-			}
-		}
+	//else {
+	//	for (i = 0; i < m_OpenGLOwnAttribs; i++) {
+	//		if (0 != m_InternalArrays[i]) {
+	//			glDisableClientState (translate (i));
+	//		}
+	//	}
 
-		for (i = m_OpenGLOwnAttribs; i < VertexData::MaxAttribs; i++) {
-			if (0 != m_InternalArrays[i]) {
-				glDisableVertexAttribArray (m_AttributesLocations[i]);
-			}
-		}	
-	}
+	//	for (i = m_OpenGLOwnAttribs; i < VertexData::MaxAttribs; i++) {
+	//		if (0 != m_InternalArrays[i]) {
+	//			glDisableVertexAttribArray (m_AttributesLocations[i]);
+	//		}
+	//	}	
+	//}
 	glBindBuffer (GL_ARRAY_BUFFER, 0);
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -293,68 +291,68 @@ GLVertexArray::unbind (void)
 //	glClientActiveTexture (GL_TEXTURE0);
 }
 
-void
-GLVertexArray::setGLArray (unsigned int type, float* pointer)
-{
-	std::string s = VertexData::Syntax[type];
-
-	if (s.compare("position") == 0)
-			glVertexPointer (4, GL_FLOAT, 0, pointer);
-	else if (s.compare("normal") == 0) 
-			glNormalPointer (GL_FLOAT, sizeof(float)*4, pointer);
-	else if (s.compare("color") == 0) 
-			glColorPointer (4, GL_FLOAT, 0, pointer);
-	else if (s.compare("secondaryColor") == 0 )
-			glSecondaryColorPointer (3, GL_FLOAT, sizeof(float)*4, pointer);
-	else if (s.compare("edge") == 0 )
-			glEdgeFlagPointer (sizeof(float)*4, pointer);
-	else if (s.compare("fogCoord") == 0) 
-			glFogCoordPointer (GL_FLOAT, sizeof(float)*4, pointer);
-	else if (s.compare("texCoord0") == 0) {
-			glActiveTexture (GL_TEXTURE0);
-			glClientActiveTexture (GL_TEXTURE0);
-			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
-		}
-	else if (s.compare("texCoord1") == 0) {
-			glActiveTexture (GL_TEXTURE1);
-			glClientActiveTexture (GL_TEXTURE1);
-			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
-		}
-	else if (s.compare("texCoord2") == 0) {
-			glActiveTexture (GL_TEXTURE2);
-			glClientActiveTexture (GL_TEXTURE2);
-			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
-		}
-	else if (s.compare("texCoord3") == 0) {
-			glActiveTexture (GL_TEXTURE3);
-			glClientActiveTexture (GL_TEXTURE3);
-			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
-		}
-	else if (s.compare("texCoord4") == 0) {
-			glActiveTexture (GL_TEXTURE4);
-			glClientActiveTexture (GL_TEXTURE4);
-			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
-		}
-	else if (s.compare("texCoord5") == 0) {
-			glActiveTexture (GL_TEXTURE5);
-			glClientActiveTexture (GL_TEXTURE5);
-			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
-		}
-	else if (s.compare("texCoord6") == 0) {
-			glActiveTexture (GL_TEXTURE6);
-			glClientActiveTexture (GL_TEXTURE6);
-			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
-		}
-	else if (s.compare("texCoord7") == 0) {
-			glActiveTexture (GL_TEXTURE7);
-			glClientActiveTexture (GL_TEXTURE7);
-			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
-	
-		}
-	else {
-		assert("Error Translating Vertex Type");
-	}
-}
+//void
+//GLVertexArray::setGLArray (unsigned int type, float* pointer)
+//{
+//	std::string s = VertexData::Syntax[type];
+//
+//	if (s.compare("position") == 0)
+//			glVertexPointer (4, GL_FLOAT, 0, pointer);
+//	else if (s.compare("normal") == 0) 
+//			glNormalPointer (GL_FLOAT, sizeof(float)*4, pointer);
+//	else if (s.compare("color") == 0) 
+//			glColorPointer (4, GL_FLOAT, 0, pointer);
+//	else if (s.compare("secondaryColor") == 0 )
+//			glSecondaryColorPointer (3, GL_FLOAT, sizeof(float)*4, pointer);
+//	else if (s.compare("edge") == 0 )
+//			glEdgeFlagPointer (sizeof(float)*4, pointer);
+//	else if (s.compare("fogCoord") == 0) 
+//			glFogCoordPointer (GL_FLOAT, sizeof(float)*4, pointer);
+//	else if (s.compare("texCoord0") == 0) {
+//			glActiveTexture (GL_TEXTURE0);
+//			glClientActiveTexture (GL_TEXTURE0);
+//			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
+//		}
+//	else if (s.compare("texCoord1") == 0) {
+//			glActiveTexture (GL_TEXTURE1);
+//			glClientActiveTexture (GL_TEXTURE1);
+//			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
+//		}
+//	else if (s.compare("texCoord2") == 0) {
+//			glActiveTexture (GL_TEXTURE2);
+//			glClientActiveTexture (GL_TEXTURE2);
+//			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
+//		}
+//	else if (s.compare("texCoord3") == 0) {
+//			glActiveTexture (GL_TEXTURE3);
+//			glClientActiveTexture (GL_TEXTURE3);
+//			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
+//		}
+//	else if (s.compare("texCoord4") == 0) {
+//			glActiveTexture (GL_TEXTURE4);
+//			glClientActiveTexture (GL_TEXTURE4);
+//			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
+//		}
+//	else if (s.compare("texCoord5") == 0) {
+//			glActiveTexture (GL_TEXTURE5);
+//			glClientActiveTexture (GL_TEXTURE5);
+//			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
+//		}
+//	else if (s.compare("texCoord6") == 0) {
+//			glActiveTexture (GL_TEXTURE6);
+//			glClientActiveTexture (GL_TEXTURE6);
+//			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
+//		}
+//	else if (s.compare("texCoord7") == 0) {
+//			glActiveTexture (GL_TEXTURE7);
+//			glClientActiveTexture (GL_TEXTURE7);
+//			glTexCoordPointer (4, GL_FLOAT, 0, pointer);
+//	
+//		}
+//	else {
+//		assert("Error Translating Vertex Type");
+//	}
+//}
 
 GLenum
 GLVertexArray::translate (unsigned int type)

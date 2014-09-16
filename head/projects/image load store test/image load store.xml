@@ -19,7 +19,6 @@
 		</viewports>
 		<cameras>
 			<camera name="MainCamera">
-				<viewport name="Left" />
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=100.0 />
 				<POSITION x=0 y=-0.5 z=7.5 />
 				<VIEW x=0.0 y=0.0 z=-1.0 />
@@ -41,12 +40,13 @@
 	
 	
 	<pipelines>
-		<pipeline name="fixedfunction" default="true">
+		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="pass1">
 				<scenes>
 					<scene>MainScene</scene>
 				</scenes>
 				<camera>MainCamera</camera>
+				<viewport>Left</viewport>
 				<lights>
 					<light>Sun</light>
 				</lights>

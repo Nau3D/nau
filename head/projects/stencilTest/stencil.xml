@@ -76,8 +76,8 @@
 					<scene>Ground</scene>
 				</scenes>
 				<color clear=false />
-				<depth clear=false write=false/>
-				<stencil clear=true clearValue=0 test=true mask=255>
+				<depth clear=false write=false />
+				<stencil clear=true clearValue=0 test=true >
 					<stencilFunc  func=NEVER ref=1 mask=255 />
 					<stencilOp sfail=REPLACE dfail=REPLACE dpass=REPLACE/>
 				</stencil>
@@ -97,7 +97,7 @@
 				</scenes>
 				<color clear=false />
 				<depth clear=false />
-				<stencil clear=false test=true mask=255>
+				<stencil clear=false test=true >
 					<stencilFunc  func=EQUAL ref=1 mask=255 />
 					<stencilOp sfail=KEEP dfail=KEEP dpass=KEEP/>
 				</stencil>

@@ -286,12 +286,13 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 	m_pLocalMesh = (Mesh *)aRenderable;//dynamic_cast<Mesh*>(aRenderable);
 	m_Renderable = aRenderable;
 
-	if (m_pLocalMesh->getNumberOfPrimitives() > MAXPRIMITIVES) {
+	if (m_pLocalMesh->getNumberOfVertices()/3 > MAXPRIMITIVES) {
 	
 		VertexData &vVertexData = aRenderable->getVertexData();
 		Mesh *tempMesh[9] = { 0 };
 
-		offSet = m_pLocalMesh->getPrimitiveOffset();
+		//Octree are only implemented for triangles
+		offSet = 3; // m_pLocalMesh->getPrimitiveOffset();
 
 		//For each material group
 		std::vector<IMaterialGroup*> &vMaterialGroups =

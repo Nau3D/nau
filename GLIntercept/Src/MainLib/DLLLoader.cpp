@@ -38,7 +38,7 @@ DLLLoader::~DLLLoader()
 bool DLLLoader::Init(const char *libName)
 {
   //Open the library
-  handle = (void *)LoadLibrary(libName);
+	handle = (void *)LoadLibrary(libName);
 
   //Abort on failure
   if(!handle)
@@ -75,7 +75,7 @@ string DLLLoader::GetFullDLLFileName() const
   buffer[1024] = '\0'; 
 
   //Get the string
-  if(GetModuleFileName((HMODULE)handle,buffer,1024) == 0)
+  if (GetModuleFileName((HMODULE)handle, buffer, 1024) == 0)
   {
     return "";
   }
@@ -94,7 +94,7 @@ bool DLLLoader::IsDLLNameMatch(const char *libName) const
   }
 
   //Compare if the resulting handles are equal
-  if(handle == GetModuleHandle(libName))
+  if (handle == GetModuleHandle(libName))
   {
     return true;
   }

@@ -2,12 +2,12 @@
 <project name="Render Target Test" width=800 height=400>
 	<assets>
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" type="OctreeByMat">
 				<!--file>..\ntg-bench\bench.obj</file-->
 				<file>../../models/Mercado/mercado_e_arvores.cbo</file>
 				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
 				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
-				<!--file>..\3dsmodels\jeep1.3ds</file-->
+				<!--file>..\3dsmodels\sjeep1.3ds</file-->
 			</scene>
 		</scenes>
 		<viewports>

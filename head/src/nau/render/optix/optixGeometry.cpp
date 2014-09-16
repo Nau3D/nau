@@ -59,9 +59,11 @@ OptixGeometry::setBufferLib(OptixBufferLib *obl) {
 #include <nau/slogger.h>
 
 void
-OptixGeometry::addSceneObject(int id, std::map<std::string, nau::material::MaterialID> & materialMap) {
+OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::material::MaterialID> & materialMap) {
+//OptixGeometry::addSceneObject(int id, std::map<std::string, nau::material::MaterialID> & materialMap) {
 
-	IRenderable &r = RENDERMANAGER->getSceneObject(id)->getRenderable();
+//	IRenderable &r = RENDERMANAGER->getSceneObject(id)->getRenderable();
+	IRenderable &r = s->getRenderable();
 	VertexData &v = r.getVertexData();
 	unsigned int size = v.getDataOf(0).size();;
 
@@ -73,7 +75,6 @@ OptixGeometry::addSceneObject(int id, std::map<std::string, nau::material::Mater
 				geom->setPrimitiveCount(mg[g]->getNumberOfPrimitives());
 				geom->setBoundingBoxProgram(m_BoundingBox);
 				geom->setIntersectionProgram(m_GeomIntersect);
-				//SLOG("p = %d", mg[g]->getNumberOfPrimitives());
 				geom["vertex_buffer"]->setBuffer(m_BufferLib->getBuffer(v.getBufferID(0),size));
 				for (unsigned int b = 1; b < VertexData::MaxAttribs; ++b) {
 					if (m_VertexAttributes[b] && v.getBufferID(b))
@@ -85,7 +86,6 @@ OptixGeometry::addSceneObject(int id, std::map<std::string, nau::material::Mater
 				m_GeomInstances.push_back(m_Context->createGeometryInstance());
 				m_GeomInstances[m_GeomInstances.size()-1]->setMaterialCount(1);
 				m_MaterialLib->applyMaterial(m_GeomInstances[m_GeomInstances.size()-1], materialMap[mg[g]->getMaterialName()]);
-			//	m_GeomInstances[m_GeomInstances.size()-1]->setMaterial(0, m_MaterialLib.getMaterial(materialMap[mg[g]->getMaterialName()]));
 				m_GeomInstances[m_GeomInstances.size()-1]->setGeometry(geom);
 				
 			}

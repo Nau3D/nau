@@ -6,13 +6,10 @@
 
 // enable and disable functionalities 
 // based on OpenGL version
-#define NAU_OPENGL_VERSION 430
-
-// use atomic counters
-#define NAU_USE_ATOMICS 1
+#define NAU_OPENGL_VERSION 330
 
 // use only core features (1 implies no fixed function)
-#define NAU_CORE_OPENGL 1
+//#define NAU_CORE_OPENGL 1
 
 #define NAU_PLATFORM_WIN32 1
 
@@ -30,8 +27,6 @@
 #endif
 
 #define NAU_RENDER_FLAGS
-
-//#define COMPATIBILITY_FLAG_OPENGL 
 
 #define GLINTERCEPTDEBUG
 

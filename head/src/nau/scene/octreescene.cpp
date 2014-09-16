@@ -16,11 +16,7 @@ using namespace nau::material;
 OctreeScene::OctreeScene(void) : IScenePartitioned(),
 	m_vReturnVector(),
 	m_SceneObjects(),
-	//m_vCameras(),
-	//m_vLights(),
 	m_pGeometry (0),
-	//m_pObjects (0),
-	//m_Visible (true),
 	m_BoundingBox()
 {
 	m_Transform = TransformFactory::create("SimpleTransform");
@@ -35,14 +31,7 @@ OctreeScene::~OctreeScene(void)
 
 	m_SceneObjects.clear();
 	m_vReturnVector.clear();
-
-/*	std::vector<SceneObject*>::iterator iter; 
-	iter = m_SceneObjects.begin();
-    for( ; iter != m_SceneObjects.end(); ++iter)
-    {
-		m_SceneObjects.erase(iter);
-    }
-*/}
+}
 
 
 void
@@ -333,31 +322,4 @@ void OctreeScene::unitize() {
 	}
 
 }
-
-//void 
-//OctreeScene::show (void)
-//{
-//	m_Visible = true;
-//}
-//	
-//
-//void 
-//OctreeScene::hide (void)
-//{
-//	m_Visible = false;
-//}
-//	
-//
-//bool 
-//OctreeScene::isVisible (void)
-//{
-//	return m_Visible;
-//}
-
-//void 
-//OctreeScene::translate(float x, float y, float z) 
-//{
-//	m_Transform->translate(x,y,z);
-//	updateSceneObjectTransforms();
-//}
 

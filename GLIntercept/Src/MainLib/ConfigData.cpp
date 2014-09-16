@@ -99,6 +99,7 @@ timerLogCutOff(1),
 pluginBasePath("")
 {
 
+
 #ifdef GLI_BUILD_WINDOWS
 
   //Construct the path to the OpenGL filename

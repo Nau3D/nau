@@ -2,7 +2,7 @@
 <materiallib name="Compute">
 
 	<textures>
-		<texture name="tex" width=512 height=512 internalFormat="RGBA8" />
+		<texture name="tex" width=512 height=512 internalFormat="RGBA" />
 		<texture name="source" filename="../../models/Texturas/CuboEstrada.tif" mipmap="1" />
 	</textures>
 

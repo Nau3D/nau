@@ -18,37 +18,70 @@
 #include <nau/event/eventManager.h>
 #include <nau/event/ilistener.h>
 #include <nau/event/eventString.h>
+#include <nau/attributeValues.h>
+#include <nau/attribute.h>
 
 namespace nau
 {
 	namespace render
 	{
-
-		class Pass : public IListener {
+		class Pass : public IListener, public AttributeValues {
 
 		public:
 
-			//enum TYPES{
-			//	NOT_DEFINED = -1,
-			//	FLOAT,
-			//	STRING
-			//};
-			//	FLOAT_ARRAY,
-			//	INT
-			//};
+			BOOL_PROP(COLOR_CLEAR, 0);
+			BOOL_PROP(COLOR_ENABLE, 1);
+			BOOL_PROP(DEPTH_CLEAR, 2);
+			BOOL_PROP(DEPTH_ENABLE, 3);
+			BOOL_PROP(DEPTH_MASK, 4);
+			BOOL_PROP(DEPTH_CLAMPING, 5);
+			BOOL_PROP(STENCIL_CLEAR, 6);
+			BOOL_PROP(STENCIL_ENABLE, 7);
 
-			static const int MAXFBOs = 4;
+			FLOAT_PROP(DEPTH_CLEAR_VALUE, 0);
+			FLOAT_PROP(STENCIL_CLEAR_VALUE, 1);
 
-			void setProp(IRenderer::BoolProps prop, bool value);
-			bool getPropb(IRenderer::BoolProps prop);
+			FLOAT4_PROP(COLOR_CLEAR_VALUE, 0);
 
-		private:
+			INT_PROP(STENCIL_OP_REF, 0);
+
+			UINT_PROP(STENCIL_OP_MASK, 0);
+
+			ENUM_PROP(STENCIL_FUNC, 0);
+			ENUM_PROP(STENCIL_FAIL, 1);
+			ENUM_PROP(STENCIL_DEPTH_FAIL, 2);
+			ENUM_PROP(STENCIL_DEPTH_PASS, 3);
+			ENUM_PROP(DEPTH_FUNC, 4);
+
+			static AttribSet Attribs;
+
+			void setPropb(BoolProperty prop, bool value);
+			//bool getPropb(IRenderer::BoolProps prop);
+
+			typedef enum {
+				KEEP,
+				ZERO,
+				REPLACE,
+				INCR,
+				INCR_WRAP,
+				DECR,
+				DECR_WRAP,
+				INVERT
+			} StencilOp;
+
+			typedef enum {
+				LESS, NEVER, ALWAYS, LEQUAL,
+				EQUAL, GEQUAL, GREATER, NOT_EQUAL
+			} StencilFunc;
+
+		protected:
 			std::string p_Empty;
 			void initVars();
 
-		protected:
+			static bool Init();
+			static bool Inited;
 
-			std::vector<bool> m_BoolProp;
+			//std::vector<bool> m_BoolProp;
 
 			std::string m_ClassName;
 			std::string m_Name;
@@ -59,29 +92,29 @@ namespace nau
 			nau::render::Viewport *m_pRestoreViewport;
 						
 			nau::render::RenderTarget *m_RenderTarget;
-			nau::render::Texture* m_TexId[MAXFBOs+1];	
+			//nau::render::Texture* m_TexId[MAXFBOs+1];	
 
-			std::map<std::string, float> m_Paramf;
-			std::map<std::string, int> m_Parami;
-			std::map<std::string, Enums::DataType> m_ParamType;
+			//std::map<std::string, float> m_Paramf;
+			//std::map<std::string, int> m_Parami;
+			//std::map<std::string, Enums::DataType> m_ParamType;
 
-			vec4 m_ColorClearValue;
+			//vec4 m_ColorClearValue;
 
-			float m_DepthClearValue;
-			int m_DepthFunc;
+			//float m_DepthClearValue;
+			//int m_DepthFunc;
 
-			int m_StencilClearValue;
-			int m_StencilMaskValue;
-			IRenderer::StencilOp m_Stencilsfail, m_Stencildfail, m_Stencildpass;
-			IRenderer::StencilFunc m_StencilFunc;
-			int m_StencilOpRef;
-			unsigned int m_StencilOpMask;
+			//int m_StencilClearValue;
+			//int m_StencilMaskValue;
+			//StencilOp m_Stencilsfail, m_Stencildfail, m_Stencildpass;
+			//StencilFunc m_StencilFunc;
+			//int m_StencilOpRef;
+			//unsigned int m_StencilOpMask;
 
 			int m_RTSizeWidth; // size of render targets
 			int m_RTSizeHeight;
 
-			int m_Depth; 
-			int m_Color; // number of render targets
+			//int m_Depth; 
+			//int m_Color; // number of render targets
 
 			bool m_UseRT;
 
@@ -109,13 +142,13 @@ namespace nau
 
 			const std::string &getClassName();
 
-			virtual const std::map<std::string, float> &getParamsf();
-			virtual void setParam(const std::string &name, const float value);
-			virtual void setParam(const std::string &name, const int value);
+			//virtual const std::map<std::string, float> &getParamsf();
+			//virtual void setParam(const std::string &name, const float value);
+			//virtual void setParam(const std::string &name, const int value);
 		
-			virtual float *getParamf(const std::string &name);
-			virtual int *getParami(const std::string &name);
-			virtual int getParamType(const std::string &name);
+			//virtual float *getParamf(const std::string &name);
+			//virtual int *getParami(const std::string &name);
+			//virtual int getParamType(const std::string &name);
 
 			std::string &getName (void);
 
@@ -141,11 +174,11 @@ namespace nau
 			void setDepthFunc(int f);
 
 			void setStencilClearValue(float value);
-			void setStencilMaskValue(int i);
-			void setStencilFunc(IRenderer::StencilFunc f, int ref, unsigned int mask);
-			void setStencilOp(	IRenderer::StencilOp sfail, 
-							IRenderer::StencilOp dfail, 
-							IRenderer::StencilOp dpass);
+			//void setStencilMaskValue(int i);
+			void setStencilFunc(Pass::StencilFunc f, int ref, unsigned int mask);
+			void setStencilOp(	Pass::StencilOp sfail, 
+							Pass::StencilOp dfail, 
+							Pass::StencilOp dpass);
 
 
 
@@ -189,46 +222,6 @@ namespace nau
 		/***MARK***/ //Maybe this should be moved to the BoundingBox class
 			nau::geometry::BoundingBox getBoundingBox (std::vector<nau::scene::SceneObject*> &sceneObjects);
 
-			//void remapAllFromPriority(int pPriority, 
-			//					const std::string &pToLibrary, 
-			//					const std::string &pToMaterial);
-			//virtual std::string &getParams(const std::string &name);			
-			//virtual int getParami(std::string name) {return (0);};
-			//virtual float *getParamfv(std::string name) {return (NULL);};
-			//virtual std::vector<std::string> &getParamNames() {return(m_ParamNames);};
-			//virtual std::vector<TYPES> &getParamTypes(){return m_ParamTypes; };
-			//Pass(std::string path,std::string fname);
-			//virtual void setParam(const std::string &name, const std::string &value);
-			//virtual void setParam(std::string name, int value) {};
-			//virtual void setParamv(std::string name, int count, float *values) {};
-			//void setDoColorClear (bool value);
-			//bool getDoColorClear (void);
-			//void setDoDepthClear (bool value);
-			//void setDepthMask(bool b);
-			//bool getDoDepthClear (void);
-			//void setDoStencilClear (bool value);
-			//bool getDoStencilClear (void);
-			//void removeLights (void);
-			//void setup();
-			//void _rebuild();
-			//void render (std::vector<nau::scene::ISceneObject*> &sceneObjects);
-			//void setRTMode (nau::render::Texture::TextureFormat rtMode);
-
-			//void addColorTarget (std::string name, std::string internalFormat, std::string format, std::string type);
-			//void addDepthTarget (std::string name, std::string internalFormat, std::string format, 
-			//	std::string type, bool noReadAndWrite = false);
-
-			//void setFBOs (int numFBOs);
-			//void setInputs (int input, std::string label); 
-			//nau::render::Texture::TextureFormat m_RTMode;
-			//CameraType getCameraType (void);
-			//void setCameraType (CameraType aType);
-			//enum CameraType {
-			//	SCENE,
-			//	LIGHT,
-			//	CUSTOM
-			//};
-			//CameraType m_CameraType;
 
 		};
 	};

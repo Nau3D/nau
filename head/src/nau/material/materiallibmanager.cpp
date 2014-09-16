@@ -92,16 +92,13 @@ MaterialLibManager::createMaterial(std::string material) {
 
 	Material *mat;
 
-#if NAU_CORE_OPENGL == 1
 	Material *m;
 	m = getMaterial(DEFAULTMATERIALLIBNAME, "dirLightDifAmbPix");
 	if (m->getName() == "dirLightDifAmbPix")
 		mat = m->clone();
 	else 
 		mat = new Material();
-#else
-	mat = new Material();
-#endif
+
 	mat->setName(material);
 	addMaterial(DEFAULTMATERIALLIBNAME, mat);
 	return mat;
@@ -113,16 +110,12 @@ MaterialLibManager::createMaterial(std::string library, std::string material) {
 
 	Material *mat;
 
-#if NAU_CORE_OPENGL == 1
 	Material *m;
 	m = getMaterial(DEFAULTMATERIALLIBNAME, "dirLightDifAmbPix");
 	if (m->getName() == "dirLightDifAmbPix")
 		mat = m->clone();
 	else 
 		mat = new Material();
-#else
-	mat = new Material();
-#endif
 	mat->setName(material);
 	addMaterial(library, mat);
 	return mat;

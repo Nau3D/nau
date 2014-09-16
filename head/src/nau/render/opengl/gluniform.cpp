@@ -1,3 +1,4 @@
+#include <nau/slogger.h>
 #include <nau/render/opengl/gluniform.h>
 #include <GL/glew.h>
 
@@ -105,6 +106,8 @@ GlUniform::setType (int type)
 		case GL_SAMPLER_2D_MULTISAMPLE:
 		case GL_IMAGE_2D:
 		case GL_IMAGE_2D_MULTISAMPLE:
+		case GL_SAMPLER_2D_ARRAY:
+		case GL_SAMPLER_2D_ARRAY_SHADOW:
 
 			m_Cardinality = 1;
 			break;
@@ -130,9 +133,15 @@ GlUniform::setType (int type)
 		case GL_FLOAT_MAT4:
 			m_Cardinality = 16;
 			break;
+		case NOT_USED:
+		case GL_UNSIGNED_INT_ATOMIC_COUNTER:
+			m_Cardinality = 0;
+			m_Type = NOT_USED;
+			break;
 		default:
 			m_Cardinality = 0;
 			m_Type = NOT_USED;
+			SLOG("%d - gluniform.cpp - uniform type not supported in NAU", type);
 	}
 }
 			
@@ -158,6 +167,8 @@ GlUniform::getProgramValueType() {
 		case GL_SAMPLER_2D_MULTISAMPLE:
 		case GL_IMAGE_2D:
 		case GL_IMAGE_2D_MULTISAMPLE:
+		case GL_SAMPLER_2D_ARRAY:
+		case GL_SAMPLER_2D_ARRAY_SHADOW:
 			return("SAMPLER");
 		case GL_INT:
 			return("INT");
@@ -188,6 +199,7 @@ GlUniform::getProgramValueType() {
 		case GL_FLOAT_MAT4:
 			return("MAT4");
 	}
+	SLOG("%d - gluniform.cpp - uniform type not supported in NAU", m_Type);
 	return("FLOAT");
 }
 

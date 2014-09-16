@@ -59,7 +59,8 @@ Nau::create (void) {
 nau::Nau*
 Nau::getInstance (void) {
 	if (0 == gInstance) {
-		throw (NauInstanciationError ("No instance of Nau exists"));
+		create();
+		//throw (NauInstanciationError ("No instance of Nau exists"));
 	}
 
 	return gInstance;
@@ -95,27 +96,13 @@ Nau::init (bool context, std::string aConfigFile)
 	bool result;
 
 	if (true == context) {
-		glewExperimental = true;
-		GLenum error = glewInit();
-		if (GLEW_OK != error){
-			std::cout << "GLEW init error: " << glewGetErrorString(error) << std::endl;
-			return false;
-		}
-		
-//		ilInit();
+
 		m_pRenderManager = new RenderManager;
 		result = m_pRenderManager->init();
 		if (!result)
 			return(0);
 
 		m_pEventManager = new EventManager;
-
-
-
-//		Camera *aCamera = m_pRenderManager->getCamera ("default");
-//		Viewport* defaultViewport = createViewport ("defaultViewport", nau::math::vec4 (0.0f, 0.0f, 0.0f, 1.0f));
-//		aCamera->setViewport (defaultViewport);
-		
 	}	
 	
 	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
@@ -165,24 +152,27 @@ Nau::getName()
 	return(m_Name);
 }
 
+//
+//		USER ATTRIBUTES
+//
 
 bool 
 Nau::validateUserAttribContext(std::string context) {
 
 	if (context == "LIGHT" || context == "CAMERA" || context == "VIEWPORT"
-		|| context == "TEXTURE")
+		|| context == "TEXTURE" || context == "STATE" || context == "VIEWPORT" || context == "PASS")
 		return true;
 
 	return false;
 }
 
 
-void 
-Nau::addUserAttrib(std::string context, std::string name, std::string type) {
+AttribSet *
+Nau::getAttribs(std::string context) {
 
-	AttribSet *attribs;
-	int id;
-	if  (context == "LIGHT")
+	AttribSet *attribs = NULL;
+
+	if (context == "LIGHT")
 		attribs = &(Light::Attribs);
 	else if (context == "CAMERA")
 		attribs = &(Camera::Attribs);
@@ -190,10 +180,37 @@ Nau::addUserAttrib(std::string context, std::string name, std::string type) {
 		attribs = &(Viewport::Attribs);
 	else if (context == "TEXTURE")
 		attribs = &(Texture::Attribs);
+	else if (context == "STATE")
+		attribs = &(IState::Attribs);
+	else if (context == "VIEWPORT")
+		attribs = &(Viewport::Attribs);
+	else if (context == "PASS")
+		attribs = &(Pass::Attribs);
 
-	id = attribs->getNextFreeID();
-	attribs->add(Attribute(id, name, Enums::getType(type)));
+	return attribs;
 }
+
+
+bool 
+Nau::validateUserAttribName(std::string context, std::string name) {
+
+	AttribSet *attribs = getAttribs(context);
+
+ // invalid context
+	if (attribs == NULL)
+		return false;
+
+	Attribute a = attribs->get(name);
+	if (a.getName() == "NO_ATTR")
+		return true;
+	else
+		return false;
+}
+
+
+//
+//		EVENTS
+//
 
 
 void
@@ -218,10 +235,6 @@ Nau::readProjectFile (std::string file, int *width, int *height)
 		clear();
 		throw(s);
 	}
-		/* Situations like this should be replaced in a near future with a events patern*/
-	//std::vector<std::string> *materialNames = MATERIALLIBMANAGER->getMaterialNames (DEFAULTMATERIALLIBNAME);
-	//RENDERMANAGER->materialNamesFromLoadedScenes (*materialNames); 
-	//delete materialNames;	
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
 		
@@ -365,8 +378,8 @@ void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize) {
 	aPass->setCamera ("MainCamera");
 
 	aPass->setViewport (v);
-	aPass->setProp(IRenderer::COLOR_CLEAR, true);
-	aPass->setProp(IRenderer::DEPTH_CLEAR, true);
+	aPass->setPropb(Pass::COLOR_CLEAR, true);
+	aPass->setPropb(Pass::DEPTH_CLEAR, true);
 	aPass->addLight ("MainDirectionalLight");
 
 	aPass->addScene(sceneName);
@@ -556,7 +569,7 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 			}
 			case File::COLLADA:
 			{
-				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
 				//std::string uri (file.getURI());
 				//ColladaLoader::loadScene (RENDERMANAGER->getScene (sceneName), uri);
 				break;
@@ -576,8 +589,8 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 			}
 			case File::WAVEFRONTOBJ:
 			{
-				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
-				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
+				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
 				
 				break;
 			}

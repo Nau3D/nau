@@ -104,7 +104,7 @@ TextureMat::restore(IState *state)
 			//m_Textures[i]->unbind();
 		}
 	}
-	RENDERER->setActiveTextureUnit (IRenderer::TEXTURE_UNIT0);
+	RENDERER->setActiveTextureUnit (0);
 }
 
 

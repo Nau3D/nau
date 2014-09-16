@@ -29,7 +29,7 @@ namespace nau
 				UNSIGNED_SHORT,
 				UNISGNED_BYTE} dataTypes;
 
-			dataTypes m_DataType;
+			Enums::DataType  m_DataType;
 			unsigned int m_NumComponents;
 			unsigned int m_Height, m_Width, m_Depth;
 			TexImage(Texture *t);
@@ -38,8 +38,10 @@ namespace nau
 		public:
 
 			static TexImage *create(Texture *t);
+			/// reloads the image from the texture
 			virtual void update(void) = 0;
 			virtual const std::string &getTextureName();
+			/// returns the image data
 			virtual void *getData() = 0;
 			virtual int getNumComponents();
 			std::string getType();

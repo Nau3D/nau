@@ -1,77 +1,57 @@
 #ifndef COLORMATERIAL_H
 #define COLORMATERIAL_H
 
-#include <fstream>
-#include <iostream>
-
 #include <nau/enums.h>
+#include <nau/attribute.h>
+#include <nau/attributeValues.h>
 
 namespace nau
 {
 	namespace material
 	{
-
-		class ColorMaterial {
-
-		private:
-			float m_Ambient[4];
-			float m_Specular[4];
-			float m_Emission[4];
-			float m_Diffuse[4];
-			float m_Shininess;
-
+		class ColorMaterial: public AttributeValues {
 
 		public:
+			FLOAT4_PROP(AMBIENT, 0);
+			FLOAT4_PROP(DIFFUSE, 1);
+			FLOAT4_PROP(SPECULAR, 2);
+			FLOAT4_PROP(EMISSION, 3);
+			
+			FLOAT_PROP(SHININESS, 0);
 
-			typedef enum {
-				AMBIENT,
-				SPECULAR,
-				EMISSION,
-				DIFFUSE,
-				AMBIENT_AND_DIFFUSE,
-				SHININESS,
-				COUNT_COLORCOMPONENTS
-			} ColorComponent;
+			static AttribSet Attribs;
 
-			static const std::string ColorString[COUNT_COLORCOMPONENTS];
-			static void getComponentTypeAndId(std::string s, nau::Enums::DataType *dt, ColorComponent *c);
-			static bool validateComponent(std::string s);
+			//typedef enum {AMBIENT, DIFFUSE, SPECULAR, EMISSION, COUNT_FLOAT4PROPERTY} Float4Property;
+			//typedef enum {SHININESS, COUNT_FLOATPROPERTY} FloatProperty;
+
+
+			// Note: no validation is performed!
+			void setProp(int prop, Enums::DataType type, void *value);
+
+			//float  getPropf(const FloatProperty prop) ;
+			//const vec4 &getProp4f(Float4Property prop) ;
+
+			void setProp(Float4Property prop, float r, float g, float b, float a);
+			void setProp(Float4Property prop, float *v);
+			void setProp(Float4Property prop, const vec4& color);
+			void setProp(FloatProperty prop, float f);
+			//void initArrays();
 
 			ColorMaterial();
 			~ColorMaterial();
-
-			void setColorComponent(ColorComponent c, float r, float g = 0, float b = 0, float a = 0);
-			void setColorComponent(ColorComponent c, float *f);
-			float *getColorCompoment(ColorComponent c);
-
-			void setAmbient (const float *values);
-			void setAmbient (float r, float g, float b, float a);
-			const float* getAmbient (void) const;
-
-			void setSpecular (const float *values);
-			void setSpecular (float r, float g, float b, float a);
-			const float* getSpecular (void) const;
-
-			void setEmission (const float *values);
-			void setEmission (float r, float g, float b, float a);
-			const float* getEmission (void) const;
-
-			void setDiffuse (const float *values);
-			void setDiffuse (float r, float g, float b, float a);
-			const float* getDiffuse (void) const;
-
-			void setShininess (float shininess);
-			const float getShininess () const;
-			float *getShininessPtr();
 
 			void prepare ();
 			void restore();
 			void clear();
 
-			void clone(const ColorMaterial &mat);
+			void clone( ColorMaterial &mat);
 
-			//void save(std::ofstream &f);
-			//void load(std::ifstream &f);
+		protected:
+			static bool Init();
+			static bool Inited;
+
+			//std::map<int, vec4> m_Float4Props;
+			//std::map<int, float> m_FloatProps;
 
 		};
 	};

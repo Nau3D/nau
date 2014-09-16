@@ -297,7 +297,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 		WX_GL_DEPTH_SIZE, 24,
 		WX_GL_STENCIL_SIZE, 8, 
 		WX_GL_SAMPLE_BUFFERS,1,
-		WX_GL_SAMPLES,16,
+		WX_GL_SAMPLES,4,
 		0};
 
 
@@ -318,11 +318,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 			WGL_CONTEXT_MAJOR_VERSION_ARB, major,
             WGL_CONTEXT_MINOR_VERSION_ARB, minor, 
             WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
-#if (NAU_CORE_OPENGL == 1)
             WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-#else
-            WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
-#endif 
+ 
 			0};
 
 	m_Canvas = new GlCanvas (this , -1, attribList, contextAttribList);
@@ -577,6 +574,7 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 			m_Canvas->setCamera();
 			updateDlgs();
 #ifndef FINAL
+
 			float t =  aTimer.Time()/1000.0;
 			SLOG("Elapsed time: %f", t);
 #endif
@@ -820,6 +818,7 @@ FrmMainFrame::OnKeyUp(wxKeyEvent & event)
 void 
 FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 {
+#ifdef GLINTERCEPTDEBUG
 	m_Canvas->BreakResume();
 	if (m_Canvas->IsPaused()){
 		DlgDbgGLILogRead::Instance()->clear();
@@ -845,6 +844,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 
 	}
+#endif
 }
 
 

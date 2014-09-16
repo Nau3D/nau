@@ -40,7 +40,7 @@ GLIndexArray::getIndexData (void)
 }
 
 bool 
-GLIndexArray::compile (VertexData &v) /***MARK***/ //STATIC DRAW ONLY
+GLIndexArray::compile (VertexData &v) 
 {
 	if (m_IsCompiled)
 		return false;
@@ -54,22 +54,32 @@ GLIndexArray::compile (VertexData &v) /***MARK***/ //STATIC DRAW ONLY
 	glBindVertexArray(m_VAO);
 
 	v.bind();
+	glBindVertexArray(0);
 
-	if (0 != m_InternalIndexArray && m_IndexSize != 0) {
+	if (0 != m_InternalIndexArray && m_InternalIndexArray->size() != 0) {
 
-		std::vector<unsigned int>* pArray = m_InternalIndexArray;
+		std::vector<unsigned int>* pArray;
+		if (m_UseAdjacency) {
+			buildAdjacencyList();
+			pArray = &m_AdjIndexArray;
+		}
+		else
+			pArray = m_InternalIndexArray;
 
 		glGenBuffers (1, &m_GLBuffer);
 		glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
 		glBufferData (GL_ELEMENT_ARRAY_BUFFER, pArray->size() * sizeof (unsigned int), &(*pArray)[0], GL_STATIC_DRAW);
 	}
 
-	glBindVertexArray(0);
+//	glBindVertexArray(0);
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);	
 	v.unbind();
 
 	return true;
 }
+
+
+
 
 
 void 
@@ -95,7 +105,7 @@ GLIndexArray::bind (void)
 		if (m_VAO)
 			glBindVertexArray(m_VAO);
 		//else if (0 != m_GLBuffer) {
-		//	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
+			glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
 		//}
 	} 
 }
@@ -114,15 +124,29 @@ GLIndexArray::unbind (void)
 }
 
 
-std::vector<unsigned int>& 
-GLIndexArray::_getReallyIndexData (void)
-{
-	return (*m_InternalIndexArray);
-}
+//std::vector<unsigned int>& 
+//GLIndexArray::_getReallyIndexData (void)
+//{
+//	return (*m_InternalIndexArray);
+//}
 
 
 unsigned int 
 GLIndexArray::getBufferID() {
 
 	return m_GLBuffer;
+}
+
+
+void 
+GLIndexArray::useAdjacency(bool b) {
+
+	m_UseAdjacency = b;
+}
+
+
+bool
+GLIndexArray::getAdjacency() {
+
+	return (m_UseAdjacency);
 }

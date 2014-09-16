@@ -2,7 +2,7 @@
 <materiallib name="Image Load Store">
 
 	<textures>
-		<texture name="tex" width=512 height=512 internalFormat="RGBA8" />
+		<texture name="tex" width=512 height=512 internalFormat="RGBA" />
 		<texture name="Grade_01_02_03" filename="../../Texturas/AL01_Grade1.tif" mipmap="1" />
 	</textures>
 
@@ -26,7 +26,10 @@
 					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
 														component="NORMAL" />
 														
-					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="lightDir"		type="CURRENT" context="LIGHT"
+														id=0 component="DIRECTION" />
+
+					<valueof uniform="imageUnit"		type="CURRENT" context="TEXTURE"
 														id=1 component="UNIT" />
 														
 				</values>
@@ -36,6 +39,7 @@
 				<imageTexture UNIT=1 texture="tex" >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
+					<CLEAR value=true />
 				</imageTexture>
 			</imageTextures>
 		

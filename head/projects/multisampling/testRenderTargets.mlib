@@ -5,9 +5,9 @@
 		<rendertarget name="test">
 			<size width=1024 height=1024 samples=16/>
 			<colors>
-				<color name="offscreenrender" internalFormat="RGBA8" />
+				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
-			<depth name="depth" internalFormat="DEPTH_COMPONENT32" />
+			<depth name="depth" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 	</rendertargets>
 
@@ -19,11 +19,11 @@
 	<materials>
 		<material name="quadpass2">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 			<shader>
 				<name>resolveMS</name>

@@ -4,6 +4,15 @@
 
 using namespace nau::render;
 
+bool GLTextureCubeMap::Inited = GLTextureCubeMap::InitGL();
+
+bool
+GLTextureCubeMap::InitGL() {
+
+	Attribs.listAdd("DIMENSION", "TEXTURE_CUBE_MAP", GL_TEXTURE_CUBE_MAP);
+	return true;
+}
+
 int GLTextureCubeMap::faces[6] = {
 			GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
 			GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
@@ -19,13 +28,22 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 									std::string aType, int width, unsigned char** data, bool mipmap) :
 	TextureCubeMap (label,files, anInternalFormat, aFormat, aType, width)
 {
+	m_IntProps[WIDTH] = width;
+	m_IntProps[HEIGHT] = width;
+	m_IntProps[DEPTH] = 1;
+	m_IntProps[SAMPLES] = 0;
+	m_IntProps[LEVELS] = 0;
 
-	m_EnumProps[FORMAT] = Attribs.getListValueOp(FORMAT, aFormat);
+	m_EnumProps[DIMENSION] = GL_TEXTURE_CUBE_MAP;
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
-	m_EnumProps[TYPE] = Attribs.getListValueOp(TYPE, aType);
+	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 
-	glGenTextures (1, &(m_UIntProps[ID]));
-	glBindTexture (GL_TEXTURE_CUBE_MAP, m_UIntProps[ID]);
+	m_IntProps[COMPONENT_COUNT] = GLTexture::GetNumberOfComponents(m_EnumProps[FORMAT]);
+	m_IntProps[ELEMENT_SIZE] = GLTexture::GetElementSize(m_EnumProps[FORMAT], m_EnumProps[TYPE]);
+
+	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
+	glBindTexture (GL_TEXTURE_CUBE_MAP, m_IntProps[ID]);
 
 	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -42,18 +60,13 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 	if (mipmap)
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
-#if NAU_CORE_OPENGL == 0
-	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-	glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-#endif
 	glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
 }
 
 
 GLTextureCubeMap::~GLTextureCubeMap(void)
 {
-	glDeleteTextures (1, &(m_UIntProps[ID]));
+	glDeleteTextures(1, (GLuint *)&(m_IntProps[ID]));
 }
 
 
@@ -80,40 +93,26 @@ GLTextureCubeMap::getNumberOfComponents(void) {
 
 
 void 
-GLTextureCubeMap::prepare(int aUnit, nau::material::TextureSampler *ts) {
+GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts) {
 
-	RENDERER->addTexture((IRenderer::TextureUnit)aUnit, this);
-	IRenderer::TextureUnit tu = (IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+aUnit);
-	//m_SamplerProps[UNIT] = aUnit;
+	RENDERER->addTexture(aUnit, this);
 	glActiveTexture (GL_TEXTURE0+aUnit);
-	glBindTexture(GL_TEXTURE_CUBE_MAP,m_UIntProps[ID]);
-	glBindSampler(aUnit, ts->getPropui(TextureSampler::ID));
+	glBindTexture(GL_TEXTURE_CUBE_MAP,m_IntProps[ID]);
+	glBindSampler(aUnit, ts->getPropi(TextureSampler::ID));
 
 	ts->prepare(aUnit, GL_TEXTURE_CUBE_MAP);
 }
 
 
 void 
-GLTextureCubeMap::restore(int aUnit) 
+GLTextureCubeMap::restore(unsigned int aUnit) 
 {
-	IRenderer::TextureUnit tu = (IRenderer::TextureUnit)(IRenderer::TEXTURE_UNIT0+aUnit);
 
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,0);
 
 #if NAU_OPENGL_VERSION > 320
 	glBindSampler(aUnit, 0);
-#endif
-#if NAU_CORE_OPENGL == 0
-	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-
-	glDisable(GL_TEXTURE_GEN_S);
-    glDisable(GL_TEXTURE_GEN_T);
-    glDisable(GL_TEXTURE_GEN_R);
-
-	glDisable(GL_TEXTURE_CUBE_MAP);
 #endif
 }
 

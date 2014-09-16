@@ -2,7 +2,7 @@
 <project name="complexity map" width=900 height=300>
 	<assets>
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" type="OctreeByMat">
 				<folder>../../models/pl3dsecxiv</folder>
 				<!--folder>..\..\ntg-bin-terrain</folder-->
 			</scene>

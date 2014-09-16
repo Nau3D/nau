@@ -2,7 +2,7 @@
 <project name="Tessellation" width="512" height="512">
 	<assets>
 		<scenes>
-			<scene name="Teapot" >
+			<scene name="Teapot" type="OctreeByMat">
 				<!--file>..\..\models\gumbo.patch</file-->
 				<file>..\..\models\teapot.patch</file>
 			</scene>

@@ -1,7 +1,7 @@
 #ifndef IRENDERABLE_H
 #define IRENDERABLE_H
 
-//#include <nau/render/irenderer.h>
+#include <nau/config.h>
 #include <nau/material/imaterialgroup.h>
 #include <nau/render/vertexdata.h>
 #include <nau/math/vec3.h>
@@ -22,7 +22,20 @@ namespace nau
 		{
 		public:
 
-			virtual void setName (std::string name) = 0;
+			typedef enum {
+				TRIANGLES = 0,
+				TRIANGLE_STRIP,
+				TRIANGLE_FAN,
+				LINES,
+				LINE_LOOP,
+				POINTS,
+				TRIANGLES_ADJACENCY
+#if NAU_OPENGL_VERSION >= 400
+				, PATCH
+#endif
+			} DrawPrimitive;
+
+			virtual void setName(std::string name) = 0;
 			virtual std::string& getName () = 0;
 			virtual unsigned int getDrawingPrimitive() = 0; 
 			virtual unsigned int getRealDrawingPrimitive() = 0;
@@ -30,20 +43,21 @@ namespace nau
 
 			virtual void prepareTriangleIDs(unsigned int sceneObjectID) = 0;
 			virtual void unitize(float min, float max) = 0;
-			virtual void createUnifiedIndexVector() = 0;
-
-			virtual nau::render::VertexData& getVertexData (void) = 0;
-			virtual std::vector<nau::material::IMaterialGroup*>& 
-												getMaterialGroups (void) = 0;
 
 			virtual void getMaterialNames(std::set<std::string> *nameList) = 0;
-			virtual void addMaterialGroup (nau::material::IMaterialGroup*) = 0;
+			virtual void addMaterialGroup (nau::material::IMaterialGroup*, int offset=0) = 0;
 			virtual void addMaterialGroup (nau::material::IMaterialGroup* materialGroup, 
 				nau::render::IRenderable *aRenderable) = 0; 
-			virtual int getNumberOfVertices (void) = 0;
-			virtual int getNumberOfPrimitives(void) = 0;
-			virtual void setNumberOfVerticesPerPrimitive(int i) = 0;
-			virtual int getnumberOfVerticesPerPrimitive(void) = 0;
+			virtual std::vector<nau::material::IMaterialGroup*>& getMaterialGroups(void) = 0;
+
+			virtual nau::render::VertexData& getVertexData (void) = 0;
+			virtual nau::render::IndexData& getIndexData(void) = 0;
+
+			virtual void merge(nau::render::IRenderable *aRenderable) = 0;
+			virtual int getNumberOfVertices(void) = 0;
+			virtual void setNumberOfVerticesPerPatch(int i) = 0;
+			virtual int getnumberOfVerticesPerPatch(void) = 0;
+
 			virtual std::string getType (void) = 0;
 			virtual void resetCompilationFlags() = 0;
 

@@ -71,11 +71,14 @@ namespace nau
 			bool hasPass(const std::string &pipeline, const std::string &pass);
 			//! Returns the named pass. Returns NULL if the pass does not exist
 			Pass *getPass(const std::string &pipeline, const std::string &pass);
-			
-			float *getCurrentPassParamf(std::string paramName);
-			int getCurrentPassParamType(std::string paramName);
-			float *getPassParamf(std::string passName, std::string paramName);
-			int getPassParamType(std::string passName, std::string paramName);
+			//! Returns the named pass of the current pipeline. Returns NULL if the pass does not exist
+			Pass *getPass(const std::string &passName);
+			//! Returns the current pass. NULL if there is none
+			Pass *getCurrentPass();
+
+			void *getCurrentPassAttribute(std::string paramName, Enums::DataType dt);
+			void *getPassAttribute(std::string passName, std::string paramName, Enums::DataType dt);
+			Enums::DataType getPassAttributeType(std::string paramName);
 
 			//! Returns the name of the last pass' camera from the active pipeline
 			const std::string &getDefaultCameraName();
@@ -86,11 +89,6 @@ namespace nau
 			//! Currently does nothing. Returns -1
 			int pick (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera);
 		
-			////! NOP
-			//void enableStereo (void);
-			////! NOP
-			//void disableStereo (void);
-
 			// TRIANGLE IDS
 			void prepareTriangleIDs(bool ids);
 			void getVertexData(unsigned int sceneObjID, 
@@ -139,7 +137,7 @@ namespace nau
 
 			// SCENES
 			bool hasScene (const std::string &sceneName);
-			nau::scene::IScene* createScene (const std::string &sceneName, const std::string &sceneType = "OctreeByMat");
+			nau::scene::IScene* createScene (const std::string &sceneName, const std::string &sceneType = "OctreeUnified");
 			//! Return the named scene. If it does not exist it creates one
 			nau::scene::IScene* getScene (const std::string &sceneName);
 			//! Returns all the scene names, but the SceneAux type

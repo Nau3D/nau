@@ -9,6 +9,8 @@
 #include "enums.h"
 #include "nau/math/vec4.h"
 #include "nau/math/bvec4.h"
+#include "nau/math/mat3.h"
+#include "nau/math/mat4.h"
 
 using namespace nau::math;
 
@@ -33,6 +35,10 @@ namespace nau {
 				mDefault = malloc(s);
 				memcpy(mDefault, defaultV, s);
 			}
+			else {
+				mDefault = Enums::getDefaultValue(mType);
+				
+			}
 		};
 
 
@@ -54,14 +60,32 @@ namespace nau {
 		}
 
 
+		std::string getName() {
+
+			return mName;
+		};
+
+
 		void setRange(void *min, void *max) { 
 				
 			mRangeDefined = true;
-			mMin = (void *)malloc(sizeof(float));
-			memcpy(mMin, min, sizeof(float));
-			mMax = (void *)malloc(sizeof(float));
-			memcpy(mMax, max, sizeof(float));
+			mMin = (void *)malloc(Enums::getSize(mType));
+			memcpy(mMin, min, Enums::getSize(mType));
+			mMax = (void *)malloc(Enums::getSize(mType));
+			memcpy(mMax, max, Enums::getSize(mType));
 		};
+
+
+		Enums::DataType getType() {
+
+			return mType;
+		}
+
+
+		int getId() {
+
+			return mId;
+		}
 
 
 		void listAdd(std::string name, int id) {
@@ -74,20 +98,13 @@ namespace nau {
 		 
 		bool isValid(std::string value) {
 		
-			if (mListDefined) {
-				
+			if (mListDefined) {				
 				std::vector<std::string>::iterator it = mListString.begin();
-
 				for ( ; it != mListString.end(); ++it) {
-
 					if (*it == value)
 						return true;
 				}
 				return false;
-			}
-			else if (mRangeDefined) {
-			
-				
 			}
 			return false;
 		};
@@ -99,8 +116,7 @@ namespace nau {
 
 		int getListValue(std::string &s) {
 		
-			for(unsigned int i = 0 ; i < mListString.size(); ++i) {
-			
+			for(unsigned int i = 0 ; i < mListString.size(); ++i) {	
 				if (mListString[i] == s)
 					return mListValues[i];
 			}
@@ -110,8 +126,7 @@ namespace nau {
 
 		std::string getListString(int v) {
 		
-			for(unsigned int i = 0 ; i < mListValues.size(); ++i) {
-			
+			for(unsigned int i = 0 ; i < mListValues.size(); ++i) {		
 				if (mListValues[i] == v)
 					return mListString[i];
 			}
@@ -142,7 +157,8 @@ namespace nau {
 	class AttribSet {
 
 	public:
-		AttribSet(): mNextFreeID(1000) {mDummy.mName = "NO_ATTR"; };
+
+		AttribSet(): mNextFreeID(1000), mDummyS("") {mDummy.mName = "NO_ATTR"; };
 		~AttribSet() {};
 
 		int getNextFreeID() {
@@ -156,7 +172,21 @@ namespace nau {
 			if (a.mId != -1) {
 				mAttributes[a.mName] = a;
 			}
+			Enums::DataType dt = a.getType();
+			if (mDataTypeCounter.count(dt))
+				++mDataTypeCounter[dt];
+			else
+				mDataTypeCounter[dt] = 1;
 		};
+
+
+		int getDataTypeCount(Enums::DataType dt ) {
+
+			if (mDataTypeCounter.count(dt))
+				return mDataTypeCounter[dt];
+			else
+				return 0;
+		}
 
 		
 		const Attribute &get(std::string name) {
@@ -245,6 +275,8 @@ namespace nau {
 		}
 
 
+
+
 		std::string getListStringOp(int id, int prop) {
 		
 			std::map<std::string, Attribute>::iterator it;
@@ -329,9 +361,9 @@ namespace nau {
 			for ( ; it != mAttributes.end(); ++it) {
 				if (it->second.mType == Enums::DataType::INT) {
 
-					if (it->second.mDefault == NULL) 
-						m[it->second.mId] = 0;
-					else
+					//if (it->second.mDefault == NULL) 
+					//	m[it->second.mId] = 0;
+					//else
 						m[it->second.mId] = *(int *)(it->second.mDefault);
 				}
 			}
@@ -345,9 +377,9 @@ namespace nau {
 			for ( ; it != mAttributes.end(); ++it) {
 				if (it->second.mType == Enums::DataType::ENUM) {
 
-					if (it->second.mDefault == NULL) 
-						m[it->second.mId] = 0;
-					else
+					//if (it->second.mDefault == NULL) 
+					//	m[it->second.mId] = 0;
+					//else
 						m[it->second.mId] = *(int *)(it->second.mDefault);
 				}
 			}
@@ -361,9 +393,9 @@ namespace nau {
 			for ( ; it != mAttributes.end(); ++it) {
 				if (it->second.mType == Enums::DataType::UINT) {
 
-					if (it->second.mDefault == NULL) 
-						m[it->second.mId] = 0;
-					else
+					//if (it->second.mDefault == NULL) 
+					//	m[it->second.mId] = 0;
+					//else
 						m[it->second.mId] = *(unsigned int *)(it->second.mDefault);
 				}
 			}
@@ -377,9 +409,9 @@ namespace nau {
 			for ( ; it != mAttributes.end(); ++it) {
 				if (it->second.mType == Enums::DataType::FLOAT) {
 
-					if (it->second.mDefault == NULL) 
-						m[it->second.mId] = 0;
-					else
+					//if (it->second.mDefault == NULL) 
+					//	m[it->second.mId] = 0;
+					//else
 						m[it->second.mId] = *(float *)(it->second.mDefault);
 				}
 			}
@@ -393,25 +425,48 @@ namespace nau {
 			for ( ; it != mAttributes.end(); ++it) {
 				if (it->second.mType == Enums::DataType::VEC4) {
 
-					if (it->second.mDefault == NULL) 
-						m[it->second.mId] = vec4();
-					else
+					//if (it->second.mDefault == NULL) 
+					//	m[it->second.mId] = vec4();
+					//else
 						m[it->second.mId] = *(vec4 *)(it->second.mDefault);
 				}
 			}
 		}
 
 
-		void initAttribInstanceBvec4Array(std::map<int,bvec4> &m) {
+		void initAttribInstanceMat4Array(std::map<int, mat4> &m) {
+
+			std::map<std::string, Attribute>::iterator it;
+			it = mAttributes.begin();
+			for (; it != mAttributes.end(); ++it) {
+				if (it->second.mType == Enums::DataType::MAT4) {
+					m[it->second.mId] = *(mat4 *)(it->second.mDefault);
+				}
+			}
+		}
+
+		void initAttribInstanceMat3Array(std::map<int, mat3> &m) {
+
+			std::map<std::string, Attribute>::iterator it;
+			it = mAttributes.begin();
+			for (; it != mAttributes.end(); ++it) {
+				if (it->second.mType == Enums::DataType::MAT3) {
+					m[it->second.mId] = *(mat3 *)(it->second.mDefault);
+				}
+			}
+		}
+
+
+		void initAttribInstanceBvec4Array(std::map<int, bvec4> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
 			it = mAttributes.begin();
 			for ( ; it != mAttributes.end(); ++it) {
 				if (it->second.mType == Enums::DataType::BVEC4) {
 
-					if (it->second.mDefault == NULL) 
-						m[it->second.mId] = bvec4();
-					else
+					//if (it->second.mDefault == NULL) 
+					//	m[it->second.mId] = bvec4();
+					//else
 						m[it->second.mId] = *(bvec4 *)(it->second.mDefault);
 				}
 			}
@@ -425,9 +480,9 @@ namespace nau {
 			for ( ; it != mAttributes.end(); ++it) {
 				if (it->second.mType == Enums::DataType::BOOL) {
 
-					if (it->second.mDefault == NULL) 
-						m[it->second.mId] = 0;
-					else
+					//if (it->second.mDefault == NULL) 
+					//	m[it->second.mId] = 0;
+					//else
 						m[it->second.mId] = *(bool *)(it->second.mDefault);
 				}
 			}
@@ -441,6 +496,7 @@ namespace nau {
 		std::vector<std::string> mDummyVS;
 		std::vector<int> mDummyVI;
 		int mNextFreeID;
+		std::map<int, int> mDataTypeCounter;
 	};
 
 

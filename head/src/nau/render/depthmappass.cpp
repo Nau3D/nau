@@ -21,6 +21,19 @@ using namespace nau::math;
 using namespace nau::render;
 using namespace nau::scene;
 
+
+bool DepthMapPass::Inited = Init();
+
+bool
+DepthMapPass::Init() {
+	//// FLOAT
+	//Attribs.add(Attribute(FROM, "FROM", Enums::DataType::FLOAT, false, new float(-1)));
+	//Attribs.add(Attribute(TO, "TO", Enums::DataType::FLOAT, false, new float(-1)));
+
+	return true;
+}
+
+
 DepthMapPass::DepthMapPass (const std::string &passName) :
 	Pass (passName)
 {
@@ -113,20 +126,28 @@ DepthMapPass::doPass (void)
 	Frustum frustum;
 	float cNear, cFar;
 
+	m_LightCamera->setProp(Camera::UP_VEC, 0,1,0,0);
+	vec4 l = RENDERMANAGER->getLight(m_Lights[0])->getPropf4(Light::DIRECTION);
+	m_LightCamera->setProp(Camera::VIEW_VEC,l.x,l.y,l.z,l.w);
+
 	Camera *aCamera = RENDERMANAGER->getCamera(m_CameraName);
 
 	cNear = aCamera->getPropf(Camera::NEARP);
 	cFar = aCamera->getPropf(Camera::FARP);
 
-	if (m_Paramf.count("From"))
-		cNear = m_Paramf["From"];
-	if (m_Paramf.count("To"))
-		cFar = m_Paramf["To"];
+	int idFrom = Attribs.getID("FROM");
+	int idTo = Attribs.getID("TO");
+	if (idFrom != -1)
+		cNear = m_FloatProps[idFrom];
+	if (idTo != -1)
+		cFar = m_FloatProps[idTo];
+
+	//if (m_Paramf.count("From"))
+	//	cNear = m_Paramf["From"];
+	//if (m_Paramf.count("To"))
+	//	cFar = m_Paramf["To"];
 		
 	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
-	Light *l = RENDERMANAGER->getLight(m_Lights[0]);
-	vec4 v = m_LightCamera->getPropf4(Camera::VIEW_VEC);
-	l->setProp(Light::DIRECTION, v);
 
 	RENDERER->setCamera(m_LightCamera);
 	frustum.setFromMatrix (RENDERER->getMatrix(IRenderer::PROJECTION_VIEW_MODEL));
@@ -151,23 +172,16 @@ DepthMapPass::doPass (void)
 		}
 	}
 
-	RENDERER->setCullFace( IRenderer::FRONT);
+//	RENDERER->setCullFace( IRenderer::FRONT);
 //	RENDERER->enableDepthTest();
 
-#if NAU_CORE_OPENGL == 0
-	RENDERER->deactivateLighting();
-	RENDERER->disableTexturing();
-#endif
-	RENDERER->setProp(IRenderer::DEPTH_CLAMPING, true);
+	RENDERER->setDepthClamping(true);
 
 	RENDERMANAGER->processQueue();
 
-	RENDERER->setProp(IRenderer::DEPTH_CLAMPING, false);
+	RENDERER->setDepthClamping(false);
 
-#if NAU_CORE_OPENGL == 0
-	RENDERER->enableTexturing();
-#endif
-	RENDERER->setCullFace (IRenderer::BACK);
+//	RENDERER->setCullFace (IRenderer::BACK);
 	//RENDERER->disableDepthTest();
 }
 

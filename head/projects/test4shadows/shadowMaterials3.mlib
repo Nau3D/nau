@@ -4,30 +4,22 @@
 	<rendertargets>
 		<rendertarget name="shadowMap1">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap1" 
-									internalFormat="DEPTH_COMPONENT32"
-									  />
+			<depth name="shadowMap1" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap2">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap2"   
-									internalFormat="DEPTH_COMPONENT32"
-									  />
+			<depth name="shadowMap2" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap3">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap3"  
-									internalFormat="DEPTH_COMPONENT32"
-									  />
+			<depth name="shadowMap3" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 		
 		<rendertarget name="shadowMap4">
 			<size width="2048" height="2048" />
-			<depth name="shadowMap4" 
-									internalFormat="DEPTH_COMPONENT32"
-									  />
+			<depth name="shadowMap4" internalFormat="DEPTH_COMPONENT32F" />
 		</rendertarget>
 
 				
@@ -35,9 +27,7 @@
 			<size width="1024" height="1024" />
 			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
-				<color name="offscreenrender" format="RGBA" 
-												internalFormat="RGBA8" 
-												type="UNSIGNED_BYTE" />
+				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
 		</rendertarget>
 
@@ -60,11 +50,11 @@
 
 		<material name="flat-with-shadow-4-depths">
 			<color>
-				<ambient r="0.3" g="0.3" b="0.3" a="1.0" />
-				<diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 			<shader>
 				<name>perpixel-color-shadow-4-depths</name>
@@ -101,10 +91,10 @@
 														context="shadow#pass4-LightCam" 
 														component="TS05_PVM_MATRIX" />
 														
-					<valueof uniform="split1" type="PASS" context="shadow#pass1" component="To" />
-					<valueof uniform="split2" type="PASS" context="shadow#pass2" component="To" />
-					<valueof uniform="split3" type="PASS" context="shadow#pass3" component="To" />
-					<valueof uniform="split4" type="PASS" context="shadow#pass4" component="To" />
+					<valueof uniform="split1" type="PASS" context="shadow#pass1" component="TO" />
+					<valueof uniform="split2" type="PASS" context="shadow#pass2" component="TO" />
+					<valueof uniform="split3" type="PASS" context="shadow#pass3" component="TO" />
+					<valueof uniform="split4" type="PASS" context="shadow#pass4" component="TO" />
 					<!--valueof uniform="split" type="PASS" context="shadow#pass1" component="To" />
 					<valueof uniform="split[1]" type="PASS" context="shadow#pass2" component="To" />
 					<valueof uniform="split[2]" type="PASS" context="shadow#pass3" component="To" />

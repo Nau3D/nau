@@ -1,8 +1,13 @@
 <?xml version="1.0" ?>
 <project name="teste1-shadows" width=750 height=1000 >
 	<assets>
+		<attributes>
+			<attribute context="PASS" name="FROM" type="FLOAT" value = -1 />
+			<attribute context="PASS" name="TO" type="FLOAT" value = -1 />
+		</attributes>
+
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" type="OctreeByMat">
 				<folder>..\..\models\pl3dsecxiv</folder>
 			</scene>
 		</scenes>
@@ -68,9 +73,9 @@
 				<scenes>
 					<scene>MainScene</scene>
 				</scenes>
-				<params>
-					<param name = "To" float="5" />
-				</params>
+				<userAttributes>
+					<TO value="5" />
+				</userAttributes>
 				<camera>MainCamera</camera>
 				<lights>
 					<light>Sun</light>
@@ -85,10 +90,10 @@
 				<scenes>
 					<scene>MainScene</scene>
 				</scenes>
-				<params>
-					<param name = "From" float="5" />
-					<param name = "To" float="15" />
-				</params>
+				<userAttributes>
+					<FROM value="5" />
+					<TO value="15" />
+				</userAttributes>
 				<camera>MainCamera</camera>
 				<lights>
 					<light>Sun</light>
@@ -103,10 +108,10 @@
 				<scenes>
 					<scene>MainScene</scene>
 				</scenes>
-				<params>
-					<param name = "From" float="15" />
-					<param name = "To" float="50" />
-				</params>
+				<userAttributes>
+					<FROM value="15" />
+					<TO value="50" />
+				</userAttributes>
 				<camera>MainCamera</camera>
 				<lights>
 					<light>Sun</light>
@@ -121,10 +126,10 @@
 				<scenes>
 					<scene>MainScene</scene>
 				</scenes>
-				<params>
-					<param name = "From" float="50" />
-					<param name = "To" float="150" />
-				</params>
+				<userAttributes>
+					<FROM value="50" />
+					<TO value="150" />
+				</userAttributes>
 				<camera>MainCamera</camera>
 				<lights>
 					<light>Sun</light>

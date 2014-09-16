@@ -16,7 +16,7 @@ namespace nau
 		{
 		public:
 			static TextureLoader* create (void);
-		public:
+
 			virtual int loadImage (std::string file) = 0;
 			virtual unsigned char* getData (void) = 0;
 			virtual int getWidth (void) = 0;
@@ -27,8 +27,9 @@ namespace nau
 
 			virtual void save(TexImage *ti, std::string filename) = 0;
 
-		public:
 			virtual ~TextureLoader(void) {};
+
+			static const int BITMAP_SIZE = 96;
 		};
 	};
 };
