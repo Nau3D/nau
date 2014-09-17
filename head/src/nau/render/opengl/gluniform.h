@@ -1,10 +1,8 @@
-#ifndef CUNIFORM_H
-#define CUNIFORM_H
+#ifndef UNIFORM_H
+#define UNIFORM_H
 
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
+
 
 
 

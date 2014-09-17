@@ -23,8 +23,8 @@ using namespace nau::geometry;
 #define TEST 1	
 
 
-PassOptix::PassOptix (const std::string &passName) :
-	Pass(passName)
+PassOptix::PassOptix(const std::string &passName) : 
+	Pass(passName), o_OutputBuffer(0), o_OutputPBO(0)
 {
 	try {
 		o_EntryPoint = OptixRenderer::getNextAvailableEntryPoint();
@@ -209,7 +209,8 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 
 	unsigned int n =  rt->getNumberOfColorTargets();
 
-	glGenBuffers(n, o_OutputPBO);
+	o_OutputPBO.resize(n);
+	glGenBuffers(n, (unsigned int *)&o_OutputPBO[0]);
 	nau::render::Texture* texID;
 	
 	try {
@@ -223,15 +224,16 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 			glBufferData(GL_PIXEL_UNPACK_BUFFER, rt->getWidth()*rt->getHeight()*rt->getTexture(i)->getPropi(Texture::ELEMENT_SIZE), 0, GL_STREAM_READ);
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-			o_OutputBuffer[i] = o_Context->createBufferFromGLBO(RT_BUFFER_OUTPUT, o_OutputPBO[i]);
-			o_OutputBuffer[i]->setSize(rt->getWidth(), rt->getHeight());
+			optix::Buffer b = o_Context->createBufferFromGLBO(RT_BUFFER_OUTPUT, o_OutputPBO[i]);
+			b->setSize(rt->getWidth(), rt->getHeight());
 			// same here (types)
-			o_OutputBuffer[i]->setFormat(getOptixFormat(rt->getTexture(i)));
+			b->setFormat(getOptixFormat(rt->getTexture(i)));
 
 			// project loader must deal with named outputs
 			std::ostringstream bufferName;
 			bufferName << "output" << i;
-			o_Context[bufferName.str()]->setBuffer(o_OutputBuffer[i]);
+			o_Context[bufferName.str()]->setBuffer(b);
+			o_OutputBuffer.push_back(b);
 			//
 		}
 	}
@@ -344,7 +346,7 @@ PassOptix::doPass (void)
 
 	for (unsigned int i = 0; i < m_RenderTarget->getNumberOfColorTargets(); ++i) {
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, o_OutputPBO[i]);
-		glBindTexture(GL_TEXTURE_2D, m_RenderTarget->getTexture(i)->getPropui(Texture::ID));
+		glBindTexture(GL_TEXTURE_2D, m_RenderTarget->getTexture(i)->getPropi(Texture::ID));
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 
 						m_RenderTarget->getWidth(), m_RenderTarget->getHeight(),
@@ -454,7 +456,8 @@ PassOptix::optixInit() {
 
 		objsIter = objs.begin();
 		for ( ; objsIter != objs.end(); ++objsIter) {
-			o_GeomLib.addSceneObject((*objsIter)->getId(), m_MaterialMap);
+			o_GeomLib.addSceneObject(*objsIter, m_MaterialMap);
+//			o_GeomLib.addSceneObject((*objsIter)->getId(), m_MaterialMap);
 		}
 	}
 	o_GeomLib.buildGeometryGroup();
@@ -467,7 +470,7 @@ PassOptix::optixInit() {
 	iter = o_InputBuffers.begin();
 	for ( ; iter != o_InputBuffers.end(); ++iter) {
 		try {
-			unsigned int id = RESOURCEMANAGER->getTexture(iter->second)->getPropui(Texture::ID);
+			unsigned int id = RESOURCEMANAGER->getTexture(iter->second)->getPropi(Texture::ID);
 			if (RESOURCEMANAGER->getTexture(iter->second)->getPrope(Texture::DIMENSION) == GL_TEXTURE_2D) {
 				optix::TextureSampler rtWorldSpaceTexture = o_Context->createTextureSamplerFromGLImage(id, RT_TARGET_GL_TEXTURE_2D);
 				rtWorldSpaceTexture->setWrapMode(0, RT_WRAP_CLAMP_TO_EDGE);
@@ -492,7 +495,7 @@ PassOptix::optixInit() {
 
 		texID = RESOURCEMANAGER->getTexture(iter2->second.texName);
 //		int format = texID->getPrope(Texture::FORMAT);
-		int tex = texID->getPropui(Texture::ID);
+		int tex = texID->getPropi(Texture::ID);
 
 		unsigned int pbo;
 		glGenBuffers(1, &pbo);

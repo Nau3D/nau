@@ -10,7 +10,7 @@ using namespace nau::resource;
 Material::Material() : 
    m_Color (),
    m_Texmat (0),
-   m_Shader (""),
+   m_Shader (NULL),
    m_ProgramValues(),
    m_UniformValues(),
    m_Enabled (true),
@@ -156,6 +156,7 @@ Material::getTextureNames() {
 		return NULL;
 }
 
+
 std::vector<int> *
 Material::getTextureUnits() {
 
@@ -169,8 +170,6 @@ Material::getTextureUnits() {
 void 
 Material::setUniformValues() {
 
-	nau::render::IProgram *shader = RESOURCEMANAGER->getProgram(m_Shader);
-
 	PROFILE("Set Uniforms");
 	std::map<std::string,ProgramValue>::iterator progValIter;
 
@@ -178,39 +177,49 @@ Material::setUniformValues() {
 
 	for (; progValIter != m_ProgramValues.end(); ++progValIter) {
 			
-		switch (progValIter->second.getValueType()) {
-							
-			case Enums::INT:
-			case Enums::IVEC2:
-			case Enums::IVEC3:
-			case Enums::IVEC4:
-			case Enums::BOOL:
-			case Enums::BVEC2:
-			case Enums::BVEC3:
-			case Enums::BVEC4:
-			case Enums::SAMPLER:
-			case Enums::ENUM:
-			if (progValIter->second.getValues() != NULL)
-				shader->setValueOfUniform (progValIter->first, (int *)progValIter->second.getValues());
-			break;
-
-			case Enums::FLOAT:
-			case Enums::VEC2:
-			case Enums::VEC3:
-			case Enums::VEC4:
-			case Enums::MAT2:
-			case Enums::MAT3:
-			case Enums::MAT4:
-			if (progValIter->second.getValues() != NULL)
-				shader->setValueOfUniform (progValIter->first, (float*)progValIter->second.getValues());
-			break;
-
-			default:
-			continue;
-		}
+		void *v = progValIter->second.getValues();
+		m_Shader->setValueOfUniform(progValIter->first, v);
 	}
 }
 
+
+void 
+Material::checkProgramValuesAndUniforms() {
+
+	int loc;
+	IUniform iu;
+	std::string s;
+	// get the location of the ProgramValue in the shader
+	// loc == -1 means that ProgramValue is not an active uniform
+	std::map<std::string, ProgramValue>::iterator progValIter;
+
+	progValIter = m_ProgramValues.begin();
+	for (; progValIter != m_ProgramValues.end(); ++progValIter) {
+		loc = m_Shader->getUniformLocation(progValIter->first);
+		progValIter->second.setLoc(loc);
+		if (loc == -1)
+			SLOG("Material %s: material uniform %s is not active in shader %s", m_Name.c_str(), progValIter->first.c_str(), m_Shader->getName().c_str());
+	}
+
+	int k = m_Shader->getNumberOfUniforms();
+	for (int i = 0; i < k; ++i) {
+		
+		iu = m_Shader->getIUniform(i);
+		s = iu.getName();
+		if (m_ProgramValues.count(s) == 0) {
+			SLOG("Material %s: shader uniform %s from shader %s is not defined", m_Name.c_str(), s.c_str(), m_Shader->getName().c_str());
+		}
+		else if (! Enums::isCompatible(m_ProgramValues[s].getValueType(), iu.getSimpleType())) {
+	
+			SLOG("Material %s: uniform %s types are not compatiple (%s, %s)", m_Name.c_str(), s.c_str(), iu.getStringSimpleType().c_str(), Enums::DataTypeToString[m_ProgramValues[s].getValueType()].c_str());
+
+		}
+
+
+	}
+
+	
+}
 
 
 void 
@@ -221,12 +230,42 @@ Material::prepareNoShaders ()
 	if (0 != m_Texmat) {
 		m_Texmat->prepare(m_State);
 	}
+#if NAU_OPENGL_VERSION >=  420
+	if (m_ImageTexture.size() != 0) {
+		std::map<int, ImageTexture*>::iterator it = m_ImageTexture.begin();
+		for ( ; it != m_ImageTexture.end(); ++it)
+			it->second->prepare(it->first);
+	}
+#endif
+#if NAU_OPENGL_VERSION >=  430
+	for (auto b : m_Buffers) {
+
+		b.second.second->bind();
+		b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
+	}
+#endif
 }
 
 
 void 
-Material::prepare ()
-{
+Material::prepare () {
+
+#if NAU_OPENGL_VERSION >=  430
+	{
+		PROFILE("Buffers");
+
+		for (auto b : m_Buffers) {
+
+			if (b.second.second->getPropb(IBuffer::CLEAR)) {
+
+				b.second.second->clear();
+			}
+			b.second.second->bind();
+			b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
+		}
+
+	}
+#endif
 	{
 		PROFILE("State");
 		RENDERER->setState (m_State);
@@ -251,22 +290,31 @@ Material::prepare ()
 #endif
 	{
 		PROFILE("Shaders");
-		if ("" != m_Shader && m_useShader) {
+		if (NULL != m_Shader && m_useShader) {
 
-			nau::render::IProgram *shader;
-			{
-				PROFILE("GetShader");
-				shader = RESOURCEMANAGER->getProgram(m_Shader);
-			}
-
-			shader->prepare();
-			RENDERER->setShader(shader);
-			
+			m_Shader->prepare();
+			RENDERER->setShader(m_Shader);
 			setUniformValues();
 		}
 		else
 			RENDERER->setShader(NULL);
 	}
+#if NAU_OPENGL_VERSION >=  430
+	{
+		PROFILE("Buffers");
+
+		for (auto b : m_Buffers) {
+
+			if (b.second.second->getPropb(IBuffer::CLEAR)) {
+
+				b.second.second->clear();
+			}
+			b.second.second->bind();
+			b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
+		}
+
+	}
+#endif
 }
 
 
@@ -274,9 +322,9 @@ void
 Material::restore() {
 
    m_Color.restore();
-   if ("" != m_Shader && m_useShader) {
-      RESOURCEMANAGER->getProgram(m_Shader)->restore();
-   }
+   if (NULL != m_Shader && m_useShader) {
+	   m_Shader->restore();
+    }
    if (0 != m_Texmat) {
       m_Texmat->restore(m_State);
    }
@@ -319,7 +367,41 @@ Material::getImageTexture(unsigned int unit) {
 	else
 		return NULL;
 }
-#endif
+
+#endif // NAU_OPENGL_VERSION >=  420
+
+#if NAU_OPENGL_VERSION >= 430
+
+void 
+Material::attachBuffer(IBuffer *b) {
+
+	int id = b->getPropi(IBuffer::ID);
+	int bp = b->getPropi(IBuffer::BINDING_POINT);
+	m_Buffers[id] = std::make_pair(bp, b);
+}
+
+
+IBuffer *
+Material::getBuffer(int id) {
+
+	if (m_Buffers.count(id))
+		return m_Buffers[id].second;
+	else
+		return NULL;
+}
+
+
+int
+Material::getBufferBindingPoint(int id) {
+
+	if (m_Buffers.count(id))
+		return m_Buffers[id].first;
+	else
+		return -1;
+}
+
+#endif // NAU_OPENGL_VERSION >= 430
+
 
 bool
 Material::createTexture (int unit, std::string fn)
@@ -388,7 +470,7 @@ Material::getTexture(int unit) {
 
 // unit must be in [0,7]
 TextureSampler*
-Material::getTextureSampler(int unit)
+Material::getTextureSampler(unsigned int unit)
 {
 	if (m_Texmat)
 		return m_Texmat->getTextureSampler(unit);
@@ -400,8 +482,8 @@ Material::getTextureSampler(int unit)
 void 
 Material::attachProgram (std::string shaderName)
 {
-	m_Shader = shaderName; 
-	m_ProgramValues.clear();
+	m_Shader = RESOURCEMANAGER->getProgram(shaderName);
+	//m_ProgramValues.clear();
 }
 
 
@@ -431,34 +513,45 @@ Material::cloneProgramFromMaterial(Material *mat) {
 
 
 std::string 
+Material::getProgramName() 
+{
+	if (m_Shader)
+		return m_Shader->getName();
+	else
+		return "";
+}
+
+
+
+nau::render::IProgram * 
 Material::getProgram() 
 {
 	return m_Shader;
 }
 
 			
-bool 
-Material::isInSpecML(std::string name) 
-{
-	if (m_ProgramValues.count(name) == 0)
-		return false;
-	else 
-		return m_ProgramValues[name].isInSpecML();
-}
+//bool 
+//Material::isInSpecML(std::string name) 
+//{
+//	if (m_ProgramValues.count(name) == 0)
+//		return false;
+//	else 
+//		return m_ProgramValues[name].isInSpecML();
+//}
 
 			
 void 
-Material::setValueOfUniform(std::string name, float *values) {
+Material::setValueOfUniform(std::string name, void *values) {
 
-	if (m_UniformValues.count(name))
-		m_UniformValues[name].setValueOfUniform(values);
+	if (m_ProgramValues.count(name))
+		m_ProgramValues[name].setValueOfUniform(values);
 }
 
 
 void
-Material::clearUniformValues() 
+Material::clearProgramValues() 
 {
-	m_UniformValues.clear();
+	m_ProgramValues.clear();
 }
 
 
@@ -514,7 +607,7 @@ Material::clear()
    m_Color.clear();
    if (m_Texmat != 0)
 		m_Texmat->clear();
-   m_Shader = ""; 
+   m_Shader = NULL; 
    m_ProgramValues.clear();
    m_Enabled = true;
    m_State->clear();
@@ -543,145 +636,4 @@ Material::isEnabled (void)
    return m_Enabled;
 }
 
-
-//void 
-//Material::stateSetProp(IState::StatePropInt prop, int value) {
-//
-//	m_State->setProp(prop,value);
-//}
-//
-//void 
-//Material::stateSetProp(IState::StatePropFloat prop, float value) {
-//
-//	m_State->setProp(prop,value);
-//}
-//
-//
-//void 
-//Material::stateSetProp(IState::StatePropFloat4 prop, float r, float g, float b, float a) {
-//
-//	m_State->setProp(prop,r,g,b,a);
-//}
-//			
-//
-//void 
-//Material::stateSetProp(IState::StatePropFloat4 prop, const vec4& color) {
-//
-//	m_State->setProp(prop,color);
-//}
-//			
-//
-//void 
-//Material::stateSetProp(IState::StatePropBool4 prop, bool r, bool g, bool b, bool a) {
-//
-//	m_State->setProp(prop,r,g,b,a);
-//}
-//
-//			
-//void 
-//Material::stateSetProp(IState::StatePropEnum prop, int value) {
-//
-//	m_State->setProp(prop,value);
-//}
-
-			
-//int 
-//Material::stateGetPropi(IState::StatePropInt prop) {
-//
-//	return(m_State->getPropi(prop));
-//}
-//			
-//
-//float 
-//Material::stateGetPropf(IState::StatePropFloat prop) {
-//
-//	return(m_State->getPropf(prop));
-//}
-//			
-//
-//const vec4& 
-//Material::stateGetProp4f(IState::StatePropFloat4 prop) {
-//
-//	return(m_State->getProp4f(prop));
-//}
-//			
-//
-//bool* 
-//Material::stateGetProp4b(IState::StatePropBool4 prop) {
-//
-//	return(m_State->getProp4b(prop));
-//}
-//
-
-
-
-/*bool 
-Material::getTransparent (void)
-{
-   //FIXME: There's a type mismatch betweeen the interface and the 
-   // internal representation for this property
-   return (1 == m_Transparent); 
-}
-
-void 
-Material::setTransparent (bool value)
-{
-   m_Transparent = value;
-}
-*/
-
-//void 
-//Material::setTexProp(IState::TextureUnit i, IState::TextureEnumProp prop, int value) {
-//
-//	m_State->setTexProp(i,prop,value);
-//}
-//
-//void 
-//Material::setTexProp(IState::TextureUnit i, IState::TextureFloat4Prop prop, float x, float y, float z, float w) {
-//
-//	m_State->setTexProp(i,prop,x,y,z,w);
-//}
-//
-//void 
-//Material::setTexProp(IState::TextureUnit i, IState::TextureFloat4Prop prop, vec4& value) {
-//
-//	m_State->setTexProp(i,prop,value);
-//}
-//
-//int 
-//Material::getTexProp(IState::TextureUnit i, IState::TextureEnumProp prop) {
-//
-//	return(m_State->getTexProp(i,prop));
-//}
-//
-//vec4* 
-//Material::getTexProp(IState::TextureUnit i, IState::TextureFloat4Prop prop) {
-//
-//	return(m_State->getTexProp(i,prop));
-//}
-
-/*void 
-Material::setId (int id)
-{
-   this->m_Id = id;
-}
-
-int 
-Material::getId ()
-{
-   return m_Id;
-}*/
-
-//void 
-//Material::stateEnable(IState::StateSetting aProp, bool value) {
-//
-//	m_State->enable(aProp,value);
-//}
-//
-//
-//bool 
-//Material::stateGetSetting(IState::StateSetting ss) {
-//	
-//	return(m_State->getSetting(ss));
-//}
 

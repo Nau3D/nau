@@ -2,7 +2,7 @@
 <project name="Multiple Cameras and Viewports"  width="1024" height="512">
 	<assets>
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" type="OctreeUnified">
 				<file>..\..\models\ntg-bench\bench.obj</file>
 				<!--folder>..\..\ntg-bin-5</folder-->
 			</scene>

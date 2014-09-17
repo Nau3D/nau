@@ -2,7 +2,7 @@
 <project name="teste1" width=900 height=300>
 	<assets>
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" type="OctreeByMat">
 				<!--file>..\3dsmodels\cow.obj</file-->
 				<!--file>..\ntg-bench\bench.obj</file-->
 				<file>..\..\models\LargoCamoes\largoCamoes.cbo</file>--

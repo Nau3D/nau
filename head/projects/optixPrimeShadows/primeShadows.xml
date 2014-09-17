@@ -1,0 +1,105 @@
+<?xml version="1.0" ?>
+<project name="OptixPrimeShadows" width="1536" height="512">
+	<assets>
+	
+		<scenes>
+			<!--scene name="bench" type="OctreeUnified" 
+				   filename="../../models/ntg-bench/bench.obj" /--> 
+			<scene name="bench" type="OctreeUnified" 
+				   filename="../../models/ntg-bin-pl3d-secxxi/pl3dsecXXI-octreeUnified.cbo" />
+			<!--scene name="bench" type="OctreeUnified" 
+				   filename="../../models/cow.obj" /--> 
+		</scenes>
+		
+		<viewports>
+			<viewport name="LeftViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=0.33 ratio=1 />
+			</viewport>
+			<viewport name="MiddleViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+				<ORIGIN x=0.33 y=0.0 />
+				<SIZE width=0.33 ratio=1 />
+			</viewport>
+			<viewport name="RightViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+				<ORIGIN x=0.66 y=0.0 />
+				<SIZE width=0.34 ratio=1 />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
+				<POSITION x="-0.2" y="0.05" z="10" />
+				<VIEW x="0.0" y="0.0" z="-1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<mlib filename = "primeShadows.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene>bench</scene>
+				</scenes>
+				<!--viewport>LeftViewport</viewport-->
+				<camera>MainCamera</camera>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<rendertarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<pass class="quad" name="fillRayBuffer" >
+				<rendertarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="bench" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>		
+			<pass name="showColor" class="quad" >
+				<viewport>MiddleViewport</viewport>
+				<texture name="color" fromLibrary="PrimeShadows" />
+			</pass>
+			<pass name="showBuffer" class="quad" >
+				<viewport>LeftViewport</viewport>
+				<materialMaps>
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="showBuffer" />
+				</materialMaps>				
+			</pass>
+			<pass name="showFinal" class="quad" >
+				<viewport>RightViewport</viewport>
+				<materialMaps>
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="compose" />
+				</materialMaps>				
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

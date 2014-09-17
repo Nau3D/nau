@@ -20,33 +20,35 @@
 #include <nau/material/colormaterial.h>
 #include <nau/enums.h>
 
+
+#include <nau/attribute.h>
+#include <nau/attributeValues.h>
+
 using namespace nau::material;
+using namespace nau::render;
 
 namespace nau
 {
 	namespace render
 	{
-		class IRenderer
+		class Pass;
+		class IRenderer: public AttributeValues
 		{
-		public:
 
-			static const unsigned int MAX_COUNTERS = 32;
-			static const unsigned int TRIANGLE_COUNTER = MAX_COUNTERS;
+		protected:
+			static bool Init();
+			static bool Inited;
 
-			enum TRenderMode {
-				WIREFRAME_MODE = 0,
-				POINT_MODE,
-				SOLID_MODE,
-				MATERIAL_MODE
-			};
+		public:	
 
-			typedef enum {
-				PROJECTION_MATRIX,
-				MODEL_MATRIX,
-				VIEW_MATRIX,
-				TEXTURE_MATRIX,
-				COUNT_MATRIXMODE
-			} MatrixMode;
+			static AttribSet MatrixAttribs;
+
+			ENUM_PROP(STENCIL_FUNC, 0);
+			ENUM_PROP(STENCIL_FAIL, 1);
+			ENUM_PROP(STENCIL_DEPTH_FAIL, 2);
+			ENUM_PROP(STENCIL_DEPTH_PASS, 3);
+			ENUM_PROP(DEPTH_FUNC, 4);
+
 
 			typedef enum {
 				PROJECTION,
@@ -65,34 +67,14 @@ namespace nau
 
 			static const std::string &getPropMatrixTypeString(MatrixType aType);
 
-			static std::map<int, std::string> AtomicLabels;
-			static int AtomicLabelsCount;
-			static void addAtomic(int id, std::string name);
+			static int MaxTextureUnits;
+			static int MaxColorAttachments;
 
-
-			enum TextureUnit {
-				TEXTURE_UNIT0 = 0,
-				TEXTURE_UNIT1,
-				TEXTURE_UNIT2,
-				TEXTURE_UNIT3,
-				TEXTURE_UNIT4,
-				TEXTURE_UNIT5,
-				TEXTURE_UNIT6,
-				TEXTURE_UNIT7,
-				COUNT_TEXTUREUNIT
-			} ;
-
-			typedef enum {
-				CLIP_PLANE0,
-				CLIP_PLANE1,
-				CLIP_PLANE2,
-				CLIP_PLANE3
-			} ClipPlane;
 
 			typedef enum {
 				FRONT,
 				BACK,
-				FRONT_AND_BACK
+				//FRONT_AND_BACK
 			} Face;
 
 
@@ -102,56 +84,231 @@ namespace nau
 			const static int PRIMITIVE_TYPE_COUNT = 7;
 #endif
 
-			enum DrawPrimitive{
-				TRIANGLES=0,
-				TRIANGLE_STRIP,
-				TRIANGLE_FAN,
-				LINES,
-				LINE_LOOP,
-				POINTS,
-				TRIANGLES_ADJACENCY
-#if NAU_OPENGL_VERSION >= 400
-				, PATCH
-#endif
-			} ;
 
 			typedef enum {
 				COLOR_BUFFER = 0x01,
 				DEPTH_BUFFER = 0x02,
 				STENCIL_BUFFER = 0x04
-			} Buffer;
+			} FrameBuffer;
 
+			//typedef enum {
+			//	COLOR_CLEAR, 
+			//	COLOR_ENABLE, 
+			//	DEPTH_CLEAR, 
+			//	DEPTH_ENABLE, 
+			//	DEPTH_MASK, 
+			//	DEPTH_CLAMPING,
+			//	STENCIL_CLEAR, 
+			//	STENCIL_ENABLE,
+
+			//	COUNT_BOOL_PROPS} BoolProps;
+
+			//virtual void setPassProp(Pass::BoolProperty prop, bool value) = 0;
+
+
+			void setPrope(EnumProperty prop, int value);
+			void setProp(int prop, Enums::DataType type, void *value);
+			
+
+
+		// ATOMIC COUNTERS 
+
+#if NAU_OPENGL_VERSION >= 400
+		public:
+			/// Number of Atomic Counters and
+			unsigned int m_AtomicCount = 0;
+			///  Max Atomic Counter ID	
+			unsigned int m_AtomicMaxID = 0;
+			/// name of atomic counters
+			std::map<int, std::string> m_AtomicLabels;
+
+			/// add an atomic counter
+			void addAtomic(unsigned int id, std::string name);
+			/// get atomic counter values
+			virtual unsigned int *getAtomicCounterValues() = 0;
+
+		protected:
+			/// Array to store atomic counters
+			unsigned int *m_AtomicCounterValues = NULL;
+			/// flag indicating if Atomic Buffer is created
+			bool m_AtomicBufferPrepared = false;
+#endif
+
+		// LIGHTS
+
+		public:
+			/// returns the number of active lights
+			virtual int getLightCount() = 0;
+			/// returns light index i
+			virtual Light *getLight(unsigned int i) = 0;
+			/// adds a light at the next free index
+			virtual bool addLight(nau::scene::Light& aLight) = 0;
+			/// removes all lights
+			virtual void removeLights() = 0;
+
+
+		// CAMERAS
+
+		public:
+			/// sets viewport (origin is 0,0)
+			//virtual void setViewport(int width, int height) = 0;
+			/// sets viewport
+			virtual void setViewport(nau::render::Viewport *aViewport) = 0;
+			/// returns currrent viewport
+			virtual Viewport *getViewport() = 0;
+			/// set the camera
+			virtual void setCamera(nau::scene::Camera *aCamera) = 0;
+			/// returns current camera
+			virtual Camera *getCamera() = 0;
+
+
+		// COUNTERS
+
+		public:
 			typedef enum {
-				COLOR_CLEAR, 
-				COLOR_ENABLE, 
-				DEPTH_CLEAR, 
-				DEPTH_ENABLE, 
-				DEPTH_MASK, 
-				DEPTH_CLAMPING,
-				STENCIL_CLEAR, 
-				STENCIL_ENABLE,
+				TRIANGLE_COUNTER
+			} Counters;
 
-				COUNT_BOOL_PROPS} BoolProps;
+			/// resets all counters
+			virtual void resetCounters(void) = 0;
+			/// returns counter value
+			virtual unsigned int getCounter(Counters c) = 0;
 
-			virtual void setProp(IRenderer::BoolProps prop, bool value) = 0;
 
+		// MATRICES
+
+		public:
 			typedef enum {
-				KEEP, 
-				ZERO, 
-				REPLACE, 
-				INCR, 
-				INCR_WRAP, 
-				DECR, 
-				DECR_WRAP, 
-				INVERT} StencilOp;
+				PROJECTION_MATRIX,
+				MODEL_MATRIX,
+				VIEW_MATRIX,
+				TEXTURE_MATRIX,
+				COUNT_MATRIXMODE
+			} MatrixMode;
 
-			typedef enum {LESS, NEVER,ALWAYS,LEQUAL,
-				EQUAL, GEQUAL, GREATER, NOT_EQUAL} StencilFunc;
+			/// loads the identity matrix into matrix "mode"
+			virtual void loadIdentity(MatrixMode mode) = 0;
+			/// returns a float array with matrix values
+			virtual const float *getMatrix(MatrixType aType) = 0;
+			/// pushes matrix into matrix stack
+			virtual void pushMatrix(MatrixMode mode) = 0;
+			/// pops matrix into matrix stack
+			virtual void popMatrix(MatrixMode mode) = 0;
+			/// compose Current = Current * aTransform
+			virtual void applyTransform(MatrixMode mode, const nau::math::ITransform &aTransform) = 0;
+			/// compose Current = Current * translate(vec)
+			virtual void translate(MatrixMode mode, nau::math::vec3 &aVec) = 0;
+			/// compose Current = Current * scale(vec)
+			virtual void scale(MatrixMode mode, nau::math::vec3 &aVec) = 0;
+			/// compose Current = Current * rotate(angle,axis)
+			virtual void rotate(MatrixMode mode, float angle, nau::math::vec3 &axis) = 0;
 
 
+		// MATERIAL (color, state, shaders and textures)
+
+		public:
+			// color
+			virtual void setColor(float r, float g, float b, float a) = 0;
+			virtual void setColor(int r, int g, int b, int a) = 0;
+			virtual void setMaterial(nau::material::ColorMaterial &mat) = 0;
+			virtual void setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) = 0;
+			virtual const vec4 &getColorProp4f(ColorMaterial::Float4Property) = 0;
+			virtual float getColorPropf(ColorMaterial::FloatProperty) = 0;
+			virtual float *getColorProp(int prop, Enums::DataType dt) = 0;
+
+			// state
+			virtual void setState(IState *aState) = 0;
+			virtual void setDefaultState() = 0;
+			virtual IState *getState() = 0;
+
+			/// shaders
+			virtual void setShader(IProgram *aShader) = 0;
+			/// returns the attribute location of a uniform var
+			virtual int getAttribLocation(std::string name) = 0;
+
+			// image textures
+#if NAU_OPENGL_VERSION >=  420
+			virtual void addImageTexture(unsigned int aTexUnit, ImageTexture *t) = 0;
+			virtual void removeImageTexture(unsigned int aTexUnit) = 0;
+			virtual int getImageTextureCount() = 0;
+			virtual ImageTexture* getImageTexture(unsigned int unit) = 0;
+#endif
+
+			// textures 
+			virtual void setActiveTextureUnit(unsigned int aTexUnit) = 0;
+			virtual void addTexture(unsigned int aTexUnit, Texture *t) = 0;
+			virtual void removeTexture(unsigned int aTexUnit) = 0;
+			virtual int getPropi(unsigned int aTexUnit, Texture::IntProperty prop) = 0;
+			virtual int getTextureCount() = 0;
+			virtual Texture *getTexture(int unit) = 0;
+			
+		
+		// FRAMEBUFFER OPS
+
+		public:
+
+			//typedef enum {
+			//	KEEP,
+			//	ZERO,
+			//	REPLACE,
+			//	INCR,
+			//	INCR_WRAP,
+			//	DECR,
+			//	DECR_WRAP,
+			//	INVERT
+			//} StencilOp;
+
+			//typedef enum {
+			//	LESS, NEVER, ALWAYS, LEQUAL,
+			//	EQUAL, GEQUAL, GREATER, NOT_EQUAL
+			//} StencilFunc;
+
+			virtual void clearFrameBuffer (unsigned int b) = 0;
+			virtual void prepareBuffers(Pass *p) = 0;
+
+			virtual unsigned int translateStencilDepthFunc(int aFunc) = 0;
+			virtual unsigned int translateStencilOp(int aFunc) = 0;
+
+			virtual void setDepthClamping(bool b) = 0;
+			//virtual void setDepthClearValue(float v) = 0;
+			//virtual void setDepthFunc(int f) = 0;
+
+			//virtual void setStencilClearValue(int v) = 0;
+			//virtual void setStencilMaskValue(int i) = 0;
+			//virtual void setStencilFunc(StencilFunc f, int ref, unsigned int mask) = 0;
+			//virtual void setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass) = 0;
+
+			//static int translateStringToStencilOp(std::string s);
+			//static int translateStringToStencilFunc(std::string s);
+
+			virtual void colorMask(bool r, bool g, bool b, bool a) = 0;
+
+
+		// RENDER
+
+		public:
 			typedef enum {
 				RENDER_MODE
-			}Attribute;
+			}RendererAttributes;
+
+			typedef enum  {
+				WIREFRAME_MODE = 0,
+				POINT_MODE,
+				SOLID_MODE,
+				MATERIAL_MODE
+			} TRenderMode;
+
+
+			virtual void setRenderMode(TRenderMode mode) = 0;
+			virtual void drawGroup(nau::material::IMaterialGroup* aMaterialGroup) = 0;
+			virtual void setCullFace(Face aFace) = 0;
+
+			virtual void saveAttrib(RendererAttributes aAttrib) = 0;
+			virtual void restoreAttrib() = 0;
+
+		public:
+			/// returns the number of primitives foa  material group
+			virtual int getNumberOfPrimitives(IMaterialGroup *m) = 0;
 
 			virtual float getDepthAtPoint(int x, int y) = 0;
 
@@ -160,178 +317,54 @@ namespace nau
 			//virtual void setCore(bool flag) {};
 
 			virtual bool init() = 0;
-			virtual void drawGroup (nau::material::IMaterialGroup* aMaterialGroup) = 0;
 			virtual unsigned int translateDrawingPrimitive(unsigned int aDrawPrimitive) = 0;
 
-			virtual void clear (unsigned int b) = 0;
-			virtual void setDepthClearValue(float v) = 0;
-			virtual void setDepthFunc(int f) = 0;
-			//virtual void setDepthMask(bool b) = 0;
-			virtual void setStencilClearValue(int v) = 0;
-			virtual void setStencilMaskValue(int i) = 0;
-			virtual void setStencilFunc(StencilFunc f, int ref, unsigned int mask) = 0;
-			virtual void setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass) = 0;
-			static int translateStringToStencilOp(std::string s);
-			static int translateStringToStencilFunc(std::string s);
-			virtual void setRenderMode (TRenderMode mode) = 0;
 
 
-			virtual void setViewport(int width, int height) = 0;
-			virtual void setViewport(nau::render::Viewport *aViewport) = 0;
-			
-			virtual void setCamera (nau::scene::Camera *aCamera) = 0;
-			virtual Camera *getCamera() = 0;
 			//virtual void loadIdentityAndSetCamera(nau::scene::Camera& aCamera) = 0;
 
-			virtual void saveAttrib(Attribute aAttrib) = 0;
-			virtual void restoreAttrib() = 0;
 
 			/*Matrix Operations*/
 
-			virtual void loadIdentity (void) = 0;
-			virtual void setMatrixMode (MatrixMode mode) = 0;
-			virtual const float *getMatrix(MatrixType aType) = 0;
-			//virtual const float *getMatrix(MatrixDerived mode) = 0;
-			//virtual const float *getNormalMatrix() = 0;
-
-			virtual void pushMatrix (void) = 0;
-			virtual void popMatrix (void) = 0;
-
-			virtual void applyTransform (const nau::math::ITransform &aTransform) = 0;
-			virtual void translate (nau::math::vec3 &aVec) = 0;
-			virtual void scale (nau::math::vec3 &aVec) = 0;
-
-			virtual float* getProjectionModelviewMatrix (void) = 0;
 
 			//virtual void unproject (nau::render::IRenderable &aRenderable, nau::scene::Camera& aCamera) = 0;
 
-			virtual void setCullFace (Face aFace) = 0;
 
-			virtual void setColor (float r, float g, float b, float a) = 0;
-
-			virtual void setColor (int r, int g, int b, int a) = 0;
 
 			//virtual void setFixedFunction (bool fixed) = 0;
 
 
 			virtual void flush (void) = 0;
 
-			//virtual void enableStereo (void) = 0;
-			//virtual void disableStereo (void) = 0;
-			//virtual bool isStereo (void) = 0;
-
-			/* Lights */
-
-
-
-			virtual int getLightCount() = 0;
-			virtual Light *getLight(unsigned int i) = 0;
-
-			virtual bool addLight (nau::scene::Light& aLight) = 0;
-
-			virtual void removeLights () = 0;
 
 
 			/* Debug Operations */
 			
 			//virtual void renderBoundingVolume (const nau::geometry::IBoundingVolume* aBoundingVolume) = 0;
 
-			virtual void resetCounters (void) = 0;
-
-			virtual unsigned int getCounter (unsigned int c) = 0;
 
 
-			// IMAGE TEXTURE
-#if NAU_OPENGL_VERSION >=  420
-			virtual void addImageTexture(unsigned int aTexUnit, ImageTexture *t) = 0;
-			virtual void removeImageTexture(unsigned int aTexUnit) = 0;
-			virtual int getImageTextureCount() = 0;
-			virtual ImageTexture* getImageTexture(unsigned int unit) = 0;
-#endif
-			/* Textures */
 
-			virtual void setActiveTextureUnit (TextureUnit aTexUnit) = 0;
-			virtual void addTexture(TextureUnit aTexUnit, Texture *t) = 0;
-			virtual void removeTexture(TextureUnit aTexUnit) = 0;
-			virtual int getPropi(TextureUnit aTexUnit, Texture::IntProperty prop) = 0;
-			virtual int getTextureCount() = 0;
 
-#if NAU_CORE_OPENGL != 1
-			virtual void enableTexturing (void) = 0; /***MARK***/ //Texture's dimension not specified
-			virtual void disableTexturing (void) = 0;
-			virtual void enableTextureCoordsGen (void) = 0;
-			virtual void disableTextureCoordsGen (void) = 0;
-#endif
-
-			/* Framebuffer Operations */
-
-			//virtual void enableDepthClamping (void) = 0;
-			//virtual void disableDepthClamping (void) = 0;
-
-			//virtual void enableDepthTest (void) = 0;
-			//virtual void disableDepthTest (void) = 0;
 			
-			virtual void colorMask (bool r, bool g, bool b, bool a) = 0;
 
 			virtual nau::math::vec3 readpixel (int x, int y) = 0;
 	
 			/* Frustum Operation */ 
 			
-			virtual void activateUserClipPlane (ClipPlane aClipPlane) = 0;
-
-			virtual void setUserClipPlane (ClipPlane aClipPlane, double *plane) = 0;
-
-			virtual void deactivateUserClipPlane (ClipPlane aClipPlane) = 0;
+			virtual void activateUserClipPlane (unsigned int aClipPlane) = 0;
+			virtual void setUserClipPlane(unsigned int aClipPlane, double *plane) = 0;
+			virtual void deactivateUserClipPlane(unsigned int  aClipPlane) = 0;
 
 			/* Picking Operations */
 
 			/* Material Operations */
 
 			//! Set all color properties
-			virtual void setMaterial(const nau::material::ColorMaterial &mat) = 0;
-			virtual void setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) = 0;
-			virtual const float * getColor(ColorMaterial::ColorComponent aColor) = 0;
-			//virtual void setMaterial (Face aFace, MaterialComponent aMaterialComponent, float *values) = 0;
-			//
-			//virtual void setMaterial (Face aFace, MaterialComponent aMaterialComponent, float value) = 0;
-
-			virtual void setState (IState *aState) = 0; 
-			virtual void setDefaultState() = 0;
 			
 			virtual ~IRenderer() {}
 
 			/*  Shaders */
-			virtual void setShader (IProgram *aShader) = 0; 
-			virtual int getAttribLocation(std::string name) = 0;
-
-
-#if NAU_CORE_OPENGL == 0
-			virtual void activateLighting (void) = 0;
-			virtual void deactivateLighting (void) = 0;
-			virtual void positionLight (nau::scene::Light& aLight) = 0;
-
-			virtual void enableFog (void) = 0; 
-			virtual void disableFog (void) = 0;
-
-#endif
-
-			//virtual void disableSurfaceShaders (void) = 0;
-			//virtual void enableSurfaceShaders (void) = 0;
-
-			/* Draw Operations */
-
-			//virtual void sort (nau::render::IRenderable &aRenderable) = 0;
-			//virtual void startRender (void) = 0;
-			//virtual void finishRender (void) = 0;
-			//virtual void renderObject (nau::render::IRenderable &aRenderable, unsigned int buffers = 0) = 0;
-			//virtual void renderObject (nau::scene::ISceneObject &aSceneObject, unsigned int buffers = 0) = 0;
-			//virtual void renderMaterialGroup (nau::material::IMaterialGroup* aMaterialGroup) = 0;
-			//virtual void finish (void) = 0;
-			//virtual void drawElements (unsigned int size, std::vector<unsigned int>& indices) = 0;
-			//virtual void setMaterialProvider (nau::scene::IScene *aScene) = 0; /***MARK***/ //!!!!!!!
-			//virtual void activateDefaultLight (void) = 0;
-			//virtual void deactivateDefaultLight (void) = 0;
-
 
 		};
 	};

@@ -86,7 +86,19 @@ ResourceManager::clear() {
 		delete((*m_Programs.begin()).second);
 		m_Programs.erase(m_Programs.begin());
 	}
+
+#if NAU_OPENGL_VERSION >= 420
+	while (!m_Buffers.empty()){
+		delete((*m_Buffers.begin()).second);
+		m_Buffers.erase(m_Buffers.begin());
+	}
+#endif
 }
+//-------------------------------------	
+
+//			TEXIMAGES
+
+//-------------------------------------
 
 
 nau::material::TexImage* 
@@ -102,6 +114,11 @@ ResourceManager::getTexImage(std::string aTextureName)
 	return m_pTextureManager->getTexImage(aTextureName);
 }
 
+//-------------------------------------	
+
+//			TEXTURES
+
+//-------------------------------------
 
 bool
 ResourceManager::hasTexture(std::string name)
@@ -191,6 +208,11 @@ ResourceManager::getNumTextures() {
 	return(m_pTextureManager->m_Lib.size());
 }
 
+//-------------------------------------	
+
+//			RENDER TARGETS
+
+//-------------------------------------
 
 nau::render::RenderTarget* 
 ResourceManager::createRenderTarget (std::string name, int width, int height)
@@ -358,7 +380,11 @@ ResourceManager::removeRenderable(std::string name) {
 }
 
 
-/// STATES
+//-------------------------------------	
+
+//			STATES
+
+//-------------------------------------
 
 bool 
 ResourceManager::hasState (std::string stateName)
@@ -376,7 +402,7 @@ ResourceManager::getState (std::string stateName)
 	if (m_States.count (stateName) > 0) {
 		return m_States[stateName];
 	}
-	return 0;
+	return NULL;
 }
 
 
@@ -397,7 +423,11 @@ ResourceManager::hasProgram (std::string programName)
 }
 
 
-/// PROGRAMS
+//-------------------------------------	
+
+//			SHADERS
+
+//-------------------------------------
 
 IProgram* 
 ResourceManager::getProgram (std::string programName)
@@ -429,25 +459,41 @@ ResourceManager::getProgramNames(){
 }
 
 
+//-------------------------------------	
 
-//nau::render::Texture* 
-//ResourceManager::createTexture (std::string label,  
-//								std::string internalFormat, 
-//								std::string aFormat, 
-//								std::string aType, int width, int height)
-//{
-//	return (m_pTextureManager->createTexture (label, internalFormat, aFormat, aType, width, height));
-//}
+//			BUFFERS
 
-//nau::render::Texture* 
-//ResourceManager::newEmptyTexture(std::string &name) 
-//{
-//	return (m_pTextureManager->newEmptyTexture (name));
-//
-//}
+//-------------------------------------
 
-//void 
-//ResourceManager::deleteTexImage(std::string aTextureName)
-//{
-//	m_pTextureManager->deleteTexImage(aTextureName);
-//}
+#if NAU_OPENGL_VERSION >= 430
+
+nau::render::IBuffer* 
+ResourceManager::getBuffer(std::string name) {
+
+	if (m_Buffers.count(name) != 0)
+		return m_Buffers[name];
+	else
+		return NULL;
+}
+
+
+nau::render::IBuffer*
+ResourceManager::createBuffer(std::string name, int size) {
+
+	IBuffer *b = IBuffer::Create(name, size);
+	m_Buffers[name] = b;
+	return b;
+}
+
+
+bool 
+ResourceManager::hasBuffer(std::string name) {
+
+	if (m_Buffers.count(name) != 0)
+		return true;
+	else
+		return false;
+
+}
+
+#endif

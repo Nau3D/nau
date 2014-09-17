@@ -10,6 +10,7 @@
 
 #include <nau/render/optix/optixMaterialLib.h>
 #include <nau/render/optix/optixBufferLib.h>
+#include <nau/scene/sceneobject.h>
 
 namespace nau {
   namespace render {
@@ -27,7 +28,8 @@ namespace nau {
 
 		void addVertexAttribute(unsigned int attr);
 
-		void addSceneObject(int id, std::map<std::string, nau::material::MaterialID> & materialMap);
+//		void addSceneObject(int id, std::map<std::string, nau::material::MaterialID> & materialMap);
+		void addSceneObject(nau::scene::SceneObject *s, std::map<std::string, nau::material::MaterialID> & materialMap);
 
 		void buildGeometryGroup();
 		optix::GeometryGroup &getGeometryGroup();

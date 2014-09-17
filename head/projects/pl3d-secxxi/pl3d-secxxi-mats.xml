@@ -11,8 +11,8 @@
 				   filename="..\ntg-bin-pl3d-secxxi\ponteLimaSecXX_with_octreeVI.cbo" /-->
 			<scene name="Arvores" type="OctreeByMat" 
 				   filename="..\..\models\ntg-bin-pl3d-secxxi\arvores.cbo" />
-			<scene name="Main" type="OctreeByMat" 
-				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3dsecXXI-octreeByMat-testUnify4000.cbo" />
+			<scene name="Main" type="OctreeUnified" 
+				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3dsecXXI-octreeUnified.cbo" />
 		</scenes>
 		<viewports>
 			<viewport name="MainViewport">

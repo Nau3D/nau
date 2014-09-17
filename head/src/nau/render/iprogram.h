@@ -2,6 +2,8 @@
 #define IPROGRAM_H
 
 #include <nau/config.h>
+#include <nau/enums.h>
+#include <nau/render/iprogramvalue.h>
 
 #include <string>
 
@@ -64,15 +66,16 @@ namespace nau
 			virtual char *getProgramInfoLog() = 0; 
 			virtual int programValidate() = 0;
 
-			virtual bool setValueOfUniform (const std::string &name, float *values) = 0; //Use polymorphism on this
-			virtual bool setValueOfUniform (const std::string &name, int *values) = 0;
+
+			virtual bool setValueOfUniform (const std::string &name, void *values) = 0; 
+			//virtual bool setValueOfUniform(int loc, void *values) = 0;
+			//virtual bool setValueOfUniform (const std::string &name, int *values) = 0;
 
 			virtual int getNumberOfUniforms (void) = 0;
 			virtual int getNumberOfUserUniforms (void) = 0;
 
-			// FIXME: probably doesn't belong on the
-			// interface. It's neede to bind vertex attributes for GLSL programs
 			virtual int getAttributeLocation (const std::string &name) = 0;
+			virtual int getUniformLocation(std::string uniformName) = 0;
 
 			virtual const std::string &getShaderFile(ShaderType type) = 0;
 			virtual bool setShaderFile(ShaderType type, const std::string &name) = 0;
@@ -94,6 +97,8 @@ namespace nau
 
 			virtual bool getPropertyb(int query) = 0;
 			virtual int getPropertyi(int query) = 0;
+
+			virtual const IUniform &getIUniform(int i) = 0;
 
 		};
 	};

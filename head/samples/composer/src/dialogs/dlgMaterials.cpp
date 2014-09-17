@@ -741,7 +741,7 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	
 			gridTextures->SetReadOnly(i,j,true);
 			if (texture != NULL)
-				imagesGrid[i*4+j] = new ImageGridCellRenderer(texture->getBitmap());
+				imagesGrid[i * 4 + j] = new ImageGridCellRenderer(texture->getBitmap());
 			else
 				imagesGrid[i*4+j] = new ImageGridCellRenderer(new wxBitmap(96,96));
 			gridTextures->SetCellRenderer(i, j, imagesGrid[i*4+j]);
@@ -1008,7 +1008,7 @@ void DlgMaterials::updateTextures(Material *mm, int index) {
 		for(int j = 0 ; j < 4 ; j++) {
 			texture = mm->getTexture(i*4+j);
 			if (texture != NULL)
-				imagesGrid[i*4+j]->setBitmap(texture->getBitmap());
+				imagesGrid[i * 4 + j]->setBitmap(texture->getBitmap());
 			else
 				imagesGrid[i*4+j]->setBitmap(new wxBitmap(96,96));
 		}
@@ -1118,30 +1118,30 @@ void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("DIFFUSE.Alpha"));
 
-	mm->getColor().setDiffuse(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setProp(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("AMBIENT.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("AMBIENT.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("AMBIENT.Alpha"));
 
-	mm->getColor().setAmbient(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setProp(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("SPECULAR.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("SPECULAR.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("SPECULAR.Alpha"));
 
-	mm->getColor().setSpecular(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setProp(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("EMISSION.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("EMISSION.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("EMISSION.Alpha"));
 
-	mm->getColor().setEmission(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setProp(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
-	mm->getColor().setShininess(pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
+	mm->getColor().setProp(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
 }
 
 
@@ -1153,27 +1153,27 @@ void DlgMaterials::updateColors(Material *mm) {
 
 	pgMaterial->ClearSelection();
 	
-	f = mm->getColor().getDiffuse();
+	f = &(mm->getColor().getPropf4(ColorMaterial::DIFFUSE).x);
 	pgMaterial->SetPropertyValue(wxT("DIFFUSE.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("DIFFUSE.Alpha"),f[3]);
 
-	f = mm->getColor().getAmbient();
+	f = &(mm->getColor().getPropf4(ColorMaterial::AMBIENT).x);
 	pgMaterial->SetPropertyValue(wxT("AMBIENT.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("AMBIENT.Alpha"),f[3]);
 
-	f = mm->getColor().getSpecular();
+	f = &(mm->getColor().getPropf4(ColorMaterial::SPECULAR).x);
 	pgMaterial->SetPropertyValue(wxT("SPECULAR.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("SPECULAR.Alpha"),f[3]);
 
-	f = mm->getColor().getEmission();
+	f = &(mm->getColor().getPropf4(ColorMaterial::EMISSION).x);
 	pgMaterial->SetPropertyValue(wxT("EMISSION.RGB"),
 					wxColour(255*f[0],255*f[1],255*f[2]));
 	pgMaterial->SetPropertyValue(wxT("EMISSION.Alpha"),f[3]);
 
-	pgMaterial->SetPropertyValue(wxT("SHININESS"),mm->getColor().getShininess());
+	pgMaterial->SetPropertyValue(wxT("SHININESS"),mm->getColor().getPropf(ColorMaterial::SHININESS));
 }
 
 
@@ -1275,7 +1275,7 @@ void DlgMaterials::updateShader(Material *m){
 	// Clear Panel
 	pgShaderUniforms->ClearPage(0);
 
-	std::string progName = m->getProgram();
+	std::string progName = m->getProgramName();
 
 	if (progName == "") {
 
@@ -1338,7 +1338,7 @@ void DlgMaterials::updateShader(Material *m){
 
 void DlgMaterials::updateShaderAux(Material *m) {
 
-	if ("" != m->getProgram()) {
+	if (NULL != m->getProgram()) {
 		m_cbUseShader->SetValue(m->isShaderEnabled());
 		updateUniforms(m);
 	}
@@ -1431,7 +1431,10 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 	const long mat3MatrixCompInd[] = {IRenderer::NORMAL};
 
 	pid = pgShaderUniforms->Append(new wxPGProperty(wxString((u.getName().c_str())),wxPG_LABEL));
-	pgShaderUniforms->LimitPropertyEditing(pid);
+	if (u.getLoc() == -1)
+		pgShaderUniforms->DisableProperty(pid);
+	else
+		pgShaderUniforms->LimitPropertyEditing(pid);
 	pid2 = pgShaderUniforms->AppendIn(pid,new wxStringProperty(wxT("Type"),wxPG_LABEL,wxString(Enums::DataTypeToString[u.getValueType()].c_str())));
 	pgShaderUniforms->DisableProperty(pid2);
 
@@ -1726,66 +1729,90 @@ void DlgMaterials::OnProcessUseShader(wxCommandEvent& event){
 
 void DlgMaterials::updateUniforms(Material *m) {
 
-	m->clearUniformValues();
+	m->checkProgramValuesAndUniforms();
 	pgShaderUniforms->ClearPage(0);
 
-	if (m->getProgram() == "") {
+	if (m->getProgram() == NULL) {
 		pgShaderUniforms->Refresh();
 		return;
 	}
 
-	GlProgram *p = (GlProgram *)RESOURCEMANAGER->getProgram(m->getProgram());
-
-	std::map<std::string, nau::material::ProgramValue> progValues, uniformValues;
+	std::map<std::string, nau::material::ProgramValue> progValues;
 	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;
 	progValues = m->getProgramValues();
-
-	GlUniform u;
-	std::string s;
-	int uni = p->getNumberOfUniforms();
-	p->updateUniforms();
-	m->clearUniformValues();
-	for (int i = 0; i < uni; i++) {
-		// get uniform from program
-		u = p->getUniform(i);
-		// add uniform (material class will take care of special cases)
-		//s = "DATA(" + u.getName() + "," + u.getProgramValueType() + ")";
-		m->addProgramValue(u.getName(),ProgramValue(u.getName(),"DATA",u.getProgramValueType(),"",0,false));
-		m->setValueOfUniform(u.getName(),u.getValues());
-	}
-
-	for (int i = 0 ; i < 8 ; i++)
-		samplerUnits[i] = 0;
-
-	std::vector<std::string> *validProgValueNames = m->getValidProgramValueNames();
-	std::vector<std::string>::iterator validNamesIter;
-	//progValues = m->getProgramValues();
-	validNamesIter = validProgValueNames->begin();
 	ProgramValue pv;
-	for ( ; validNamesIter != validProgValueNames->end(); validNamesIter++) {
-		pv = *m->getProgramValue(*validNamesIter);
-		if (p->findUniform(*validNamesIter) != -1) {
-	//	if (uniformValues.count(progValuesIter->first) == 0) {
-	//		addUniform((*progValuesIter).second,m_cbShowGlobalU->GetValue());
-			addUniform(pv,false);
-			if (pv.getValueType() == Enums::SAMPLER && pv.getContext()=="TEXTURE") {
-				int *ip = (int *)pv.getValues();
-				samplerUnits[ip[0]]++;
-			}
-	//	}
-		}
-	}
-	uniformValues = m->getUniformValues();
-	progValuesIter = uniformValues.begin();
-	for ( ; progValuesIter != uniformValues.end(); progValuesIter++) {
+	progValuesIter = progValues.begin();
+	for (; progValuesIter != progValues.end(); ++progValuesIter) {
 		pv = (*progValuesIter).second;
 		addUniform(pv,false);
 
 	}
 	pgShaderUniforms->Refresh();
 }
-		
 
+
+//void DlgMaterials::updateUniforms(Material *m) {
+//
+//	m->clearUniformValues();
+//	pgShaderUniforms->ClearPage(0);
+//
+//	if (m->getProgram() == NULL) {
+//		pgShaderUniforms->Refresh();
+//		return;
+//	}
+//
+//	GlProgram *p = (GlProgram *)m->getProgram();
+//
+//	std::map<std::string, nau::material::ProgramValue> progValues, uniformValues;
+//	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;
+//	progValues = m->getProgramValues();
+//
+//	GLUniform u;
+//	std::string s;
+//	int uni = p->getNumberOfUniforms();
+//	p->updateUniforms();
+//	m->clearUniformValues();
+//	for (int i = 0; i < uni; i++) {
+//		// get uniform from program
+//		u = p->getUniform(i);
+//		// add uniform (material class will take care of special cases)
+//		//s = "DATA(" + u.getName() + "," + u.getProgramValueType() + ")";
+//		m->addProgramValue(u.getName(), ProgramValue(u.getName(), "DATA", u.getStringSimpleType(), "", 0, false));
+//		m->setValueOfUniform(u.getName(), (float *)u.getValues());
+//	}
+//
+//	for (int i = 0; i < 8; i++)
+//		samplerUnits[i] = 0;
+//
+//	std::vector<std::string> *validProgValueNames = m->getValidProgramValueNames();
+//	std::vector<std::string>::iterator validNamesIter;
+//	//progValues = m->getProgramValues();
+//	validNamesIter = validProgValueNames->begin();
+//	ProgramValue pv;
+//	for (; validNamesIter != validProgValueNames->end(); validNamesIter++) {
+//		pv = *m->getProgramValue(*validNamesIter);
+//		if (p->findUniform(*validNamesIter) != -1) {
+//			//	if (uniformValues.count(progValuesIter->first) == 0) {
+//			//		addUniform((*progValuesIter).second,m_cbShowGlobalU->GetValue());
+//			addUniform(pv, false);
+//			if (pv.getValueType() == Enums::SAMPLER && pv.getContext() == "TEXTURE") {
+//				int *ip = (int *)pv.getValues();
+//				samplerUnits[ip[0]]++;
+//			}
+//			//	}
+//		}
+//	}
+//	uniformValues = m->getUniformValues();
+//	progValuesIter = uniformValues.begin();
+//	for (; progValuesIter != uniformValues.end(); progValuesIter++) {
+//		pv = (*progValuesIter).second;
+//		addUniform(pv, false);
+//
+//	}
+//	pgShaderUniforms->Refresh();
+//}
+
+// this has no effect since m_Values is updated when getting the uniform value
 void 
 DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
 
@@ -1795,8 +1822,6 @@ DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
 	std::string prop = std::string(name.substr(dotLocation+1,name.size()-dotLocation-1).mb_str());
 
 	Material *m = getModelMaterial();
-
-	ProgramValue *p = m->getProgramValue(topProp);
 
 	if ("Type" == prop) {
 
@@ -1812,10 +1837,10 @@ DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
 	}
 	else if ("ivalue" == prop) {
 		int i = e.GetPropertyValue().GetInteger();
-		p->setValueOfUniform(&i);
+		m->setValueOfUniform(topProp, &i);
 	}
 	else if ("fvalue" == prop) {
 		float f = e.GetPropertyValue().GetDouble();
-		p->setValueOfUniform(&f);
+		m->setValueOfUniform(topProp, &f);
 	}
 }

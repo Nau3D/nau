@@ -1,6 +1,7 @@
 #include <nau/slogger.h>
 #include <nau/render/opengl/glprogram.h>
 #include <nau/render/vertexdata.h>
+#include <nau.h>
 
 #include <nau/system/textfile.h>
 #include <nau/config.h>
@@ -123,7 +124,7 @@ GlProgram::getShaderFile(ShaderType type)
 
 
 bool 
-GlProgram::setValueOfUniform (const std::string &name, float *values)
+GlProgram::setValueOfUniform (const std::string &name, void *values)
 {
 	int i;
 
@@ -139,26 +140,29 @@ GlProgram::setValueOfUniform (const std::string &name, float *values)
 }
 
 
-bool 
-GlProgram::setValueOfUniform (const std::string &name, int *values)
-{
-	int i;
+bool
+GlProgram::setValueOfUniform(int loc, void *values) {
 
-	i = findUniform (name);
- 	
+	int i = findUniformByLocation(loc);
 	if (-1 == i) {
 		return false;
 	}
-	m_Uniforms[i].setValues (values);
+	m_Uniforms[i].setValues(values);
 	setValueOfUniform(i);
-
 	return true;
 }
 
+int
+GlProgram::getUniformLocation(std::string name) {
 
+	int i = findUniform(name);
+	if (-1 == i)
+		return -1;
+	else
+		return m_Uniforms[i].getLoc();
 
+}
 
-// INSTANCE METHODS
 
 bool
 GlProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename)
@@ -306,6 +310,7 @@ GlProgram::getNumberOfUniforms()
 	}
 }
 
+
 int
 GlProgram::getAttributeLocation (const std::string &name)
 {
@@ -348,11 +353,11 @@ GlProgram::restore (void)
 int 
 GlProgram::findUniform (const std::string &name)
 {
-	GlUniform uni;
+	GLUniform uni;
 	int i = 0;
 	bool found (false);
 
-	std::vector<GlUniform>::iterator it;
+	std::vector<GLUniform>::iterator it;
 	for (it = m_Uniforms.begin(); it != m_Uniforms.end() && !found; it++) {
 		//uni = *it;
 		if ((*it).getName() == name) {
@@ -370,7 +375,34 @@ GlProgram::findUniform (const std::string &name)
 }
 
 
-const GlUniform& 
+int
+GlProgram::findUniformByLocation(int loc)
+{
+	GLUniform uni;
+	int i = 0;
+	bool found(false);
+
+	std::vector<GLUniform>::iterator it;
+	for (it = m_Uniforms.begin(); it != m_Uniforms.end() && !found; it++) {
+		//uni = *it;
+		if ((*it).getLoc() == loc) {
+			found = true;
+		}
+		else {
+			i++;
+		}
+	}
+
+	if (true == found) {
+		return (i);
+	}
+	else {
+		return (-1);
+	}
+}
+
+
+const GLUniform& 
 GlProgram::getUniform(const std::string &name) {
 
 	int i = findUniform (name);
@@ -381,54 +413,20 @@ GlProgram::getUniform(const std::string &name) {
 }
 
 
+const IUniform&
+GlProgram::getIUniform(int i) {
+
+	assert((unsigned int) i < m_Uniforms.size());
+	return (m_Uniforms[i]);
+}
 
 
 void 
 GlProgram::setValueOfUniform (int i) {
 
-	GlUniform uni;
+	GLUniform uni;
 	uni = m_Uniforms[i];
-
-	switch(uni.getType()) {
-		case GL_FLOAT:
-			glUniform1f (uni.getLoc(),uni.getValues()[0]);break;
-		case GL_FLOAT_VEC2:
-			glUniform2fv (uni.getLoc(),1,uni.getValues());break;
-		case GL_FLOAT_VEC3:
-			glUniform3fv (uni.getLoc(),1,uni.getValues());break;
-		case GL_FLOAT_VEC4:
-			glUniform4fv (uni.getLoc(),1,uni.getValues());break;
-		case GL_INT:
-		case GL_BOOL:
-		case GL_SAMPLER_2D:
-		case GL_SAMPLER_2D_SHADOW:
-		case GL_SAMPLER_1D:
-		case GL_SAMPLER_3D:
-		case GL_SAMPLER_CUBE:
-		case GL_SAMPLER_2D_MULTISAMPLE:
-		case GL_IMAGE_2D:
-		case GL_IMAGE_2D_MULTISAMPLE:
-		case GL_SAMPLER_2D_ARRAY:
-		case GL_SAMPLER_2D_ARRAY_SHADOW:
-
-			glUniform1i(uni.getLoc(),(int)uni.getValues()[0]);break;
-
-		case GL_INT_VEC2: case GL_BOOL_VEC2:
-			glUniform2i(uni.getLoc(),(int)uni.getValues()[0],(int)uni.getValues()[1]);break;
-		case GL_INT_VEC3:case GL_BOOL_VEC3:
-			glUniform3i(uni.getLoc(),(int)uni.getValues()[0],(int)uni.getValues()[1],(int)uni.getValues()[2]);break;
-		case GL_INT_VEC4:case GL_BOOL_VEC4:
-			glUniform4i(uni.getLoc(),(int)uni.getValues()[0],(int)uni.getValues()[1],(int)uni.getValues()[2],(int)uni.getValues()[3]);break;
-
-		case GL_FLOAT_MAT2:
-			glUniformMatrix2fv(uni.getLoc(),1,false,uni.getValues());break;
-		case GL_FLOAT_MAT3:
-			glUniformMatrix3fv(uni.getLoc(),1,false,uni.getValues());break;
-		case GL_FLOAT_MAT4:
-			glUniformMatrix4fv(uni.getLoc(),1,false,uni.getValues());break;
-		default:
-			SLOG("%d - glprogramm.cpp - uniform type not supported in NAU", uni.getType());
-	}
+	uni.setValueInProgram();
 }
 
 
@@ -440,61 +438,67 @@ GlProgram::setUniforms() {
 	
 	unsigned int type;
 	char *name = new char [m_MaxLength + 1]; 
-	GlUniform uni;
+	GLUniform uni;
 
 	// set all types = NOT_USED
-	std::vector<GlUniform>::iterator it;
+	std::vector<GLUniform>::iterator it;
 	for(it = m_Uniforms.begin(); it != m_Uniforms.end(); it++) {
-		it->setType(GlUniform::NOT_USED);
+		it->setGLType(GLUniform::NOT_USED, 0);
 	}
 	// add new uniforms and reset types for previous uniforms
 	
 	for (i = 0; i < m_NumUniforms; i++) {
 
 		glGetActiveUniform (m_P, i, m_MaxLength, &len, &size, &type, name);
-		std::string n (name);
+		int loc = glGetUniformLocation(m_P, name);
+		if (loc != -1) {
 
 
-		index = findUniform (n);
-		if (-1 != index) {
-			m_Uniforms[index].setType (type);
-			m_Uniforms[index].setLoc (i);
-		}
-		else {
-			uni.reset();
-            std::string ProgName (name); 
-			uni.setName (ProgName);
-			uni.setType (type);
-			uni.setLoc (i);
-			m_Uniforms.push_back (uni);
-		}
+			std::string n(name);
+			index = findUniform (n);
+			if (-1 != index) {
+				m_Uniforms[index].setGLType(type,size);
+				m_Uniforms[index].setLoc (loc);
+			}
+			else {
+				uni.reset();
+				std::string ProgName (name); 
+				uni.setName (ProgName);
+				uni.setGLType(type,size);
+				uni.setLoc (loc);
+				m_Uniforms.push_back (uni);
+			}
+#if NAU_OPENGL_VERSION >= 400 
+			if (type == GL_UNSIGNED_INT_ATOMIC_COUNTER) {
+				GLenum prop = GL_OFFSET; int len, params;
+				glGetProgramResourceiv(m_P, GL_UNIFORM, i, 1, &prop, sizeof(int), &len, &params);
+				RENDERER->addAtomic(params/4, name);
+			}
+#endif
+			if (size > 1) {
 
-		if (size > 1) {
+				for (int i = 0; i < size; i++) {
+					std::stringstream s;
+					s << n.c_str() << "[" << i << "]";
+					std::string Location = s.str();
+					index = findUniform(Location);
 
-			for (int i = 0; i < size; i++) {
-				std::stringstream s;
-
-				s << n.c_str() << "[" << i << "]";
-                                				
-                std::string Location = s.str();                                 
-
-				index = findUniform (Location);
-				
-				int loc;
-
-				loc = glGetUniformLocation(m_P, s.str().c_str());
-
-				if (-1 != index) {
-					m_Uniforms[index].setType (type);
-					m_Uniforms[index].setLoc (loc);
-				}
-				else {
-					uni.reset();
-                    std::string ProgName (s.str());
-                    uni.setName (ProgName);
-					uni.setType (type);
-					uni.setLoc (loc);
-					m_Uniforms.push_back (uni);
+					int loc;
+					loc = glGetUniformLocation(m_P, s.str().c_str());
+					if (loc != -1) {
+						if (-1 != index) {
+							m_Uniforms[index].setGLType(type, 1);
+							m_Uniforms[index].setLoc(loc);
+						}
+						else {
+							uni.reset();
+							std::string ProgName(s.str());
+							uni.setName(ProgName);
+							uni.setGLType(type, 1);
+							uni.setLoc(loc);
+							m_Uniforms.push_back(uni);
+						}
+					}
 				}
 			}
 		}
@@ -503,7 +507,7 @@ GlProgram::setUniforms() {
 
 	// delete all uniforms where type is NOT_USED
 	for(it = m_Uniforms.begin(), i = 0; it != m_Uniforms.end(); i++ ) {
-		if (it->getType() == GlUniform::NOT_USED) {
+		if (it->getGLType() == GLUniform::NOT_USED) {
 			it = m_Uniforms.erase(it);
 		} else {
 			++it;
@@ -518,15 +522,15 @@ GlProgram::setUniforms() {
 void 
 GlProgram::updateUniforms() {
 
-	glUseProgram (m_P);
+//	glUseProgram (m_P);
 	for (int i = 0; i < m_NumUniforms; i++) {
-		glGetUniformfv (m_P, m_Uniforms[i].getLoc(), m_Uniforms[i].getValues());
+		glGetUniformfv (m_P, m_Uniforms[i].getLoc(), (float *)m_Uniforms[i].getValues());
 	}
 
-	glUseProgram(0);
+//	glUseProgram(0);
 }
 
-const GlUniform& 
+const GLUniform& 
 GlProgram::getUniform (int i) {
 
 	if (i < m_NumUniforms) {
@@ -620,26 +624,3 @@ GlProgram::getPropertyi(int query) {
 }
 
 
-//GlProgram::GlProgram (const std::string &vf, const std::string &gf, const std::string &ff) :
-//	m_File(SHADER_COUNT,""),
-//	m_Source(SHADER_COUNT,""),
-//	m_ID(SHADER_COUNT,0),
-//	m_Compiled(SHADER_COUNT,false),
-//	m_NumUniforms (0),
-//	m_MaxLength (0),
-//	m_PLinked(false),
-//	m_ShowGlobalUniforms (false),
-//	m_Name("default")
-//{
-//	init();
-//
-//	bool allCompiled = true;
-//	for (unsigned int i = 0; i < SHADER_COUNT; ++i) {
-//		if (true == setShaderFile((IProgram::ShaderType)i,m_File[i])) {
-//			m_Compiled[i] = compileShader((IProgram::ShaderType)i);
-//			allCompiled = allCompiled && m_Compiled[i];
-//		}
-//	}
-//	if (allCompiled) 
-//		m_PLinked = linkProgram();
-//}

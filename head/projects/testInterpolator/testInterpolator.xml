@@ -1,0 +1,106 @@
+<?xml version="1.0" ?>
+<project name="Interpolator Test">
+	<assets>
+		<scenes>
+			<scene name="Sphere" class="OctreeUnified">
+				<geometry name = "Sphere1" type = "Sphere" slices=10 stacks=10 
+												transX=-2.5 transY=0 transZ=0 
+												scale=2 material="crateBox"/>
+			</scene>
+			<scene name = "Box"	>		
+				<geometry name = "box2" type = "Box" transX= 2.5 transY = 0 transZ=0 
+													 scaleX= 2 scaleY = 4 scaleZ =2 
+													 material="crateBox" />
+				<geometry name = "axis" type = "Axis" scale = 5 />
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" type="perspective">
+				<viewport name="MainViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="0" y="0.0" z="10" />
+				<VIEW x="0.0" y="-0.0" z="-1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+		
+		<sensors>
+			<sensor name="tsensor" class="TimeSensor">
+				<enabled value="1" />
+				<secondsToStart value="0" />
+				<cycleInterval value="10" />
+				<loop value="1" />
+			</sensor>
+		</sensors>
+		<interpolators>
+			<interpolator name="spherePos" class="PositionInterpolator">
+				<keyFrames>
+					<keyFrame key=0.0/>
+					<keyFrame key=0.5 y=2.0/>
+					<keyFrame key=1.0/>
+				</keyFrames>
+			</interpolator>
+			<interpolator name="Rotation" class="PositionInterpolator">
+				<keyFrames>
+					<keyFrame key=0.0 w=0   x=1.0/>
+					<keyFrame key=0.5 w=180 x=1.0/>
+					<keyFrame key=1.0 w=360 x=1.0/>
+				</keyFrames>
+			</interpolator>aaa
+		</interpolators>
+		
+		<routes>
+			<route name="timer2interpol" sender="tsensor" receiver="spherePos" 
+					eventOut="TIMESENSOR_FRACTION_CHANGED"
+					eventIn="SET_INTERPOLATOR_FRACTION" />
+			<route name="interpol2scene" sender="spherePos" receiver="Sphere"
+					eventOut="INTERPOLATOR_POSITION"
+					eventIn="SET_POSITION" />
+					
+			<route name="timer2interpolRot" sender="tsensor" receiver="Rotation" 
+					eventOut="TIMESENSOR_FRACTION_CHANGED"
+					eventIn="SET_INTERPOLATOR_FRACTION" />					
+			<route name="interpol2sceneRot" sender="Rotation" receiver="Box"
+					eventOut="INTERPOLATOR_POSITION"
+				eventIn="SET_ROTATION" />
+		</routes>
+		
+		<materialLibs>
+			<mlib filename = "geometry.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1" axis="5">
+				<scenes>
+					<scene>Sphere</scene>
+					<scene>Box</scene>
+				</scenes>
+				<camera>MainCamera</camera>
+				<lights>
+					<light>Sun</light>
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
+				</materialMaps>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

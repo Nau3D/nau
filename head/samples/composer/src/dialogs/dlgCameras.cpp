@@ -180,9 +180,12 @@ void DlgCameras::setupPanel(wxSizer *siz, wxWindow *parent) {
     pg->AppendIn( topId, new wxFloatProperty( wxT("Bottom"), wxPG_LABEL ) );
     pg->AppendIn( topId, new wxFloatProperty( wxT("Top"), wxPG_LABEL ) );
 
-	for (int i = 0; i < Camera::COUNT_MAT4PROPERTY; i++)
-		addMatrix(pg, (Camera::Mat4Property)i);
+	std::map<std::string, Attribute> camAttrs = Camera::Attribs.getAttributes();
 
+	for (auto c : camAttrs) {
+		if (c.second.getType() == Enums::MAT4)
+			addMatrix(pg, (Camera::Mat4Property)c.second.getId());
+	}
 	update();
 
 	pg->SetSplitterLeft(true);
@@ -318,8 +321,16 @@ void DlgCameras::update() {
 	pg->SetPropertyValue(wxT("Orthogonal Proj:.Top"),cam->getPropf(Camera::TOP));
 	pg->SetPropertyValue(wxT("Orthogonal Proj:.Bottom"),cam->getPropf(Camera::BOTTOM));
 
-	for (int i = 0; i < Camera::COUNT_MAT4PROPERTY; i++)
-		updateMatrix(cam, (Camera::Mat4Property)i);
+	std::map<std::string, Attribute> camAttrs = Camera::Attribs.getAttributes();
+
+	for (auto c : camAttrs) {
+		if (c.second.getType() == Enums::MAT4)
+			updateMatrix(cam, (Camera::Mat4Property)c.second.getId());
+	}
+	//for (int i = 0; i < Camera::COUNT_MAT4PROPERTY; i++)
+	//	updateMatrix(cam, (Camera::Mat4Property)i);
+
+
 }
 
 
@@ -451,8 +462,13 @@ void DlgCameras::OnPropsChange( wxPropertyGridEvent& e) {
 		cam->setProp(Camera::BOTTOM, e.GetPropertyValue().GetDouble());
 	}
 
-	for (int i = 0; i < Camera::COUNT_MAT4PROPERTY; i++)
-		updateMatrix(cam, (Camera::Mat4Property)i);
+	std::map<std::string, Attribute> camAttrs = Camera::Attribs.getAttributes();
+	for (auto c : camAttrs) {
+		if (c.second.getType() == Enums::MAT4)
+			updateMatrix(cam, (Camera::Mat4Property)c.second.getId());
+	}
+	//for (int i = 0; i < Camera::COUNT_MAT4PROPERTY; i++)
+	//	updateMatrix(cam, (Camera::Mat4Property)i);
 
 	notifyUpdate(PROPS_CHANGED,m_active,topProp);
 }

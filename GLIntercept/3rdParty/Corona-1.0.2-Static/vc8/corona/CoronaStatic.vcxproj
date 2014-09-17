@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DotLib|Win32">
+      <Configuration>DotLib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DotLib|x64">
+      <Configuration>DotLib</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticLibrary|Win32">
+      <Configuration>StaticLibrary</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticLibrary|x64">
+      <Configuration>StaticLibrary</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2F87E8F3-B5A3-4550-8B8B-BA1B867F393C}</ProjectGuid>
+    <RootNamespace>CoronaStatic</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='StaticLibrary|Win32'">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='StaticLibrary|x64'">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\StaticDebug\</OutDir>
+    <IntDir>.\StaticDebug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\StaticRelease\</OutDir>
+    <IntDir>.\StaticRelease\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">
+    <OutDir>.\StaticRelease\</OutDir>
+    <IntDir>.\StaticRelease\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\Static$(Configuration)$(Platform)\</OutDir>
+    <IntDir>.\Static$(Configuration)$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\Static$(Configuration)$(Platform)\</OutDir>
+    <IntDir>.\Static$(Configuration)$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">
+    <OutDir>.\Static$(Configuration)$(Platform)\</OutDir>
+    <IntDir>.\Static$(Configuration)$(Platform)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../src/libungif-4.1.0;../../src/jpeg-6b;../../src/libpng-1.2.1;../../src/zlib-1.1.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;_USRDLL;GLI_CHANGES</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\StaticDebug/CoronaStatic.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\StaticDebug/</AssemblerListingLocation>
+      <ObjectFileName>.\StaticDebug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\StaticDebug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <UndefinePreprocessorDefinitions>UNICODE;_UNICODE</UndefinePreprocessorDefinitions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\..\..\..\Lib\Corona_static_debug_vc8.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\StaticDebug/CoronaStatic.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../src/libungif-4.1.0;../../src/jpeg-6b;../../src/libpng-1.2.1;../../src/zlib-1.1.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;_USRDLL;GLI_CHANGES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\StaticRelease/CoronaStatic.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\StaticRelease/</AssemblerListingLocation>
+      <ObjectFileName>.\StaticRelease/</ObjectFileName>
+      <ProgramDataBaseFileName>.\StaticRelease/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\..\..\..\Lib\Corona_static_vc8.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\StaticRelease/CoronaStatic.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../src/libungif-4.1.0;../../src/jpeg-6b;../../src/libpng-1.2.1;../../src/zlib-1.1.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;_USRDLL;GLI_CHANGES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\StaticRelease/CoronaStatic.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\StaticRelease/</AssemblerListingLocation>
+      <ObjectFileName>.\StaticRelease/</ObjectFileName>
+      <ProgramDataBaseFileName>.\StaticRelease/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\..\..\..\Lib\Corona_static_vc8.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\StaticRelease/CoronaStatic.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../src/libungif-4.1.0;../../src/jpeg-6b;../../src/libpng-1.2.1;../../src/zlib-1.1.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;_USRDLL;GLI_CHANGES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4267; 4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\..\..\..\Lib\Corona_static_debug_vc8_$(Platform).lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../src/libungif-4.1.0;../../src/jpeg-6b;../../src/libpng-1.2.1;../../src/zlib-1.1.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;_USRDLL;GLI_CHANGES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableSpecificWarnings>4267; 4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\..\..\..\Lib\Corona_static_vc8_$(Platform).lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../src/libungif-4.1.0;../../src/jpeg-6b;../../src/libpng-1.2.1;../../src/zlib-1.1.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;_USRDLL;GLI_CHANGES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableSpecificWarnings>4267; 4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\..\..\..\Lib\Corona_static_vc8_$(Platform).lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Convert.cpp" />
+    <ClCompile Include="..\..\src\Corona.cpp" />
+    <ClCompile Include="..\..\src\Debug.cpp" />
+    <ClCompile Include="..\..\src\DefaultFileSystem.cpp" />
+    <ClCompile Include="..\..\src\MemoryFile.cpp" />
+    <ClCompile Include="..\..\src\OpenBMP.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OpenGIF.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OpenJPEG.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OpenPCX.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OpenPNG.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OpenTGA.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SaveJPEG.cpp" />
+    <ClCompile Include="..\..\src\SavePNG.cpp" />
+    <ClCompile Include="..\..\src\SaveTGA.cpp" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\adler32.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\compress.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\crc32.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\deflate.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\gzio.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\infblock.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\infcodes.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\inffast.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\inflate.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\inftrees.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\infutil.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\trees.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\uncompr.c" />
+    <ClCompile Include="..\..\src\zlib-1.1.4\zutil.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\png.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngerror.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pnggccrd.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngget.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngmem.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngpread.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngread.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngrio.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngrtran.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngrutil.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngset.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngtest.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngtrans.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngvcrd.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngwio.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngwrite.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngwtran.c" />
+    <ClCompile Include="..\..\src\libpng-1.2.1\pngwutil.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcapimin.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcapistd.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jccoefct.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jccolor.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcdctmgr.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jchuff.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcinit.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcmainct.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcmarker.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcmaster.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcomapi.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcparam.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcphuff.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcprepct.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jcsample.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jctrans.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdapimin.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdapistd.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdatadst.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdatasrc.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdcoefct.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdcolor.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jddctmgr.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdhuff.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdinput.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdmainct.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdmarker.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdmaster.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdmerge.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdphuff.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdpostct.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdsample.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jdtrans.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jerror.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jfdctflt.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jfdctfst.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jfdctint.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jidctflt.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jidctfst.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jidctint.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jidctred.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jmemmgr.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jmemnobs.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jquant1.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jquant2.c" />
+    <ClCompile Include="..\..\src\jpeg-6b\jutils.c" />
+    <ClCompile Include="..\..\src\libungif-4.1.0\dgif_lib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\libungif-4.1.0\gif_err.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\libungif-4.1.0\gifalloc.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\corona.h" />
+    <ClInclude Include="..\..\src\Debug.h" />
+    <ClInclude Include="..\..\src\MemoryFile.h" />
+    <ClInclude Include="..\..\src\Open.h" />
+    <ClInclude Include="..\..\src\Save.h" />
+    <ClInclude Include="..\..\src\SimpleImage.h" />
+    <ClInclude Include="..\..\src\Types.h" />
+    <ClInclude Include="..\..\src\Utility.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\deflate.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\infblock.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\infcodes.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\inffast.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\inffixed.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\inftrees.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\infutil.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\trees.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\zconf.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\zlib.h" />
+    <ClInclude Include="..\..\src\zlib-1.1.4\zutil.h" />
+    <ClInclude Include="..\..\src\libpng-1.2.1\png.h" />
+    <ClInclude Include="..\..\src\libpng-1.2.1\pngasmrd.h" />
+    <ClInclude Include="..\..\src\libpng-1.2.1\pngconf.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jchuff.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jconfig.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jdct.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jdhuff.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jerror.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jinclude.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jmemsys.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jmorecfg.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jpegint.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jpeglib.h" />
+    <ClInclude Include="..\..\src\jpeg-6b\jversion.h" />
+    <CustomBuild Include="..\..\src\libungif-4.1.0\gif_lib_private.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">true</ExcludedFromBuild>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -20,12 +20,12 @@
 #include <fstream>
 #include <map>
 
-#ifdef NAU_OPENGL
-#include <nau/render/opengl/glstate.h>
-#elif NAU_DIRECTX
-#include <nau/render/dx/dxstate.h>
-#endif
-
+//#ifdef NAU_OPENGL
+//#include <nau/render/opengl/glstate.h>
+//#elif NAU_DIRECTX
+//#include <nau/render/dx/dxstate.h>
+//#endif
+#include <nau/render/istate.h>
 
 using namespace nau::loader;
 using namespace nau::scene;
@@ -827,12 +827,16 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 	LOG_INFO ("[Writing] Material's name: %s", aMaterial->getName().c_str()); 
 
 	// write color
-	f.write (reinterpret_cast<char*> (const_cast<float*>(aMaterial->getColor().getAmbient())), sizeof (float) * 4);
-	f.write (reinterpret_cast<char*> (const_cast<float*>(aMaterial->getColor().getSpecular())), sizeof (float) * 4);
-	f.write (reinterpret_cast<char*> (const_cast<float*>(aMaterial->getColor().getDiffuse())), sizeof (float) * 4);
-	f.write (reinterpret_cast<char*> (const_cast<float*>(aMaterial->getColor().getEmission())), sizeof (float) * 4);
+	vec4 v = aMaterial->getColor().getPropf4(ColorMaterial::AMBIENT);
+	f.write ((char *)&v.x, sizeof (float) * 4);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::SPECULAR);
+	f.write ((char *)&v.x, sizeof (float) * 4);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::DIFFUSE);
+	f.write ((char *)&v.x, sizeof (float) * 4);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::EMISSION);
+	f.write ((char *)&v.x, sizeof (float) * 4);
 
-	float value = aMaterial->getColor().getShininess();
+	float value = aMaterial->getColor().getPropf(ColorMaterial::SHININESS);
 	f.write (reinterpret_cast<char*> (&value), sizeof (float));
 
 	// write textures
@@ -848,7 +852,7 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 	// write shader
 
 	// shader filenames
-	IProgram *aProgram = RESOURCEMANAGER->getProgram(aMaterial->getProgram());
+	IProgram *aProgram = aMaterial->getProgram();
 	_writeString("",f);
 	_writeString("",f);
 	_writeString("",f);
@@ -864,17 +868,19 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 
 
 	// write state
-#ifdef NAU_OPENGL
-	GlState *s = (GlState *)aMaterial->getState();
-#elif NAU_DIRECTX
-	DXState *s = (DXState *)aMaterial->getState();
-#endif
+//#ifdef NAU_OPENGL
+//	GlState *s = (GlState *)aMaterial->getState();
+//#elif NAU_DIRECTX
+//	DXState *s = (DXState *)aMaterial->getState();
+//#endif
+	IState *s = aMaterial->getState();
+
 	_writeString(s->getName(),f);
 
 
 	IState::VarType vt;
 	int ivalue;
-	vec4 v;
+
 	float fvalue, fvalues[4];
 	bool bvalue, bvalues[4];
 	bvec4 bvec;
@@ -946,19 +952,19 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 	float value;
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setAmbient (values);
+	aMaterial->getColor().setProp(ColorMaterial::AMBIENT, values);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setSpecular (values);
+	aMaterial->getColor().setProp(ColorMaterial::SPECULAR, values);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setDiffuse (values);
+	aMaterial->getColor().setProp(ColorMaterial::DIFFUSE, values);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setEmission (values);
+	aMaterial->getColor().setProp(ColorMaterial::EMISSION, values);
 
 	f.read (reinterpret_cast<char*> (&value), sizeof (float));
-	aMaterial->getColor().setShininess (value);
+	aMaterial->getColor().setProp(ColorMaterial::SHININESS, value);
 
 
 	// Textures
@@ -992,11 +998,13 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 
 
 	// State
-#ifdef NAU_OPENGL
-	GlState *s = (GlState *)aMaterial->getState();
-#elif NAU_DIRECTX
-	DXState *s = (DXState *)aMaterial->getState();
-#endif
+//#ifdef NAU_OPENGL
+//	GlState *s = (GlState *)aMaterial->getState();
+//#elif NAU_DIRECTX
+//	DXState *s = (DXState *)aMaterial->getState();
+//#endif
+
+	IState *s = aMaterial->getState();
 	_readString(buffer,f);
 	s->setName(buffer);
 

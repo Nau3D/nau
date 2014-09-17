@@ -13,9 +13,14 @@
 #include <nau/render/profilerpass.h>
 #include <nau/render/passCompute.h>
 
+#ifdef NAU_OPTIX_PRIME 
+#include <nau/render/passoptixprime.h>
+#endif
 #ifdef NAU_OPTIX
 #include <nau/render/passOptix.h>
 #endif
+
+
 // DAVE
 //#include <nau/render/raytracerpass.h>
 //#include <nau/render/shadowmapraytracerpass.h>
@@ -43,6 +48,12 @@ PassFactory::create (const std::string &type, const std::string &name)
 #ifdef NAU_OPTIX
 	if ("optix" == type)
 		return new PassOptix(name);
+#endif
+#ifdef NAU_OPTIX_PRIME
+#if NAU_OPENGL_VERSION >= 420
+	if ("optixPrime" == type)
+		return new PassOptixPrime(name);
+#endif
 #endif
 // DAVE
 	//if ("raytracer" ==  type) {
@@ -77,7 +88,10 @@ PassFactory::isClass(const std::string &name)
 #ifdef NAU_OPTIX		
 		&& ("optix" != name)
 #endif
-// DAVE		
+#ifdef NAU_OPTIX_PRIME		
+		&& ("optixPrime" != name)
+#endif
+		// DAVE		
 		 //&& ("raytracer" != name) && ("shadowmapraytracer" != name)
 // END DAVE
 		)

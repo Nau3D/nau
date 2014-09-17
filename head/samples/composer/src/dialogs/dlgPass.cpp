@@ -488,8 +488,8 @@ void DlgPass::updateProperties(Pass *p) {
 	m_pg->SetPropertyValue(wxT("Use Render Target"),p->isRenderTargetEnabled());
 
 	// COLOR & DEPTH
-	m_pg->SetPropertyValue(wxT("Clear Color"), p->getPropb(IRenderer::COLOR_CLEAR));
-	m_pg->SetPropertyValue(wxT("Clear Depth"), p->getPropb(IRenderer::DEPTH_CLEAR));
+	m_pg->SetPropertyValue(wxT("Clear Color"), p->getPropb(Pass::COLOR_CLEAR));
+	m_pg->SetPropertyValue(wxT("Clear Depth"), p->getPropb(Pass::DEPTH_CLEAR));
 
 	// SCENES
 	std::vector<std::string> *names = RENDERMANAGER->getAllSceneNames();
@@ -525,20 +525,20 @@ void DlgPass::updateProperties(Pass *p) {
 	delete names;
 
 
-	if (m_pg->GetPropertyByName(wxT("Parameters")))
-		m_pg->DeleteProperty(wxT("Parameters"));
-	
-	std::map<std::string, float> params = p->getParamsf();
+	//if (m_pg->GetPropertyByName(wxT("Parameters")))
+	//	m_pg->DeleteProperty(wxT("Parameters"));
+	//
+	//std::map<std::string, float> params = p->getParamsf();
 
-	wxPGProperty* pgprop;
-	pgprop = m_pg->Append(new wxPGProperty(wxT("Parameters"), wxPG_LABEL));
+	//wxPGProperty* pgprop;
+	//pgprop = m_pg->Append(new wxPGProperty(wxT("Parameters"), wxPG_LABEL));
 
-	std::map<std::string, float>::iterator pIter = params.begin();
+	//std::map<std::string, float>::iterator pIter = params.begin();
 
-	for( ; pIter != params.end() ; ++pIter) {
+	//for( ; pIter != params.end() ; ++pIter) {
 
-		m_pg->AppendIn(pgprop, new wxFloatProperty(wxString(pIter->first.c_str()), wxPG_LABEL, pIter->second));
-	}
+	//	m_pg->AppendIn(pgprop, new wxFloatProperty(wxString(pIter->first.c_str()), wxPG_LABEL, pIter->second));
+	//}
 
 	if (m_pg->GetPropertyByName(wxT("Material Maps")))
 		m_pg->DeleteProperty(wxT("Material Maps"));
@@ -826,9 +826,9 @@ DlgPass::OnProcessPGChange( wxPropertyGridEvent& e)
 		}
 	}
 	else if (name == wxT("Clear Color")) 
-		p->setProp(IRenderer::COLOR_CLEAR , (0 != e.GetPropertyValue().GetBool()));
+		p->setPropb(Pass::COLOR_CLEAR, (0 != e.GetPropertyValue().GetBool()));
 	else if (name == wxT("Clear Depth"))
-		p->setProp(IRenderer::DEPTH_CLEAR , (0 != e.GetPropertyValue().GetBool()));
+		p->setPropb(Pass::DEPTH_CLEAR, (0 != e.GetPropertyValue().GetBool()));
 	
 	else if (name.substr(0,6) == wxT("Lights")) {
 
@@ -871,13 +871,14 @@ DlgPass::OnProcessPGChange( wxPropertyGridEvent& e)
 		else
 			p->remapMaterial(std::string(subname.c_str()),lib,mat);
 	}
-	else if (name.substr(0,10) == wxT("Parameters")) {
+	//else if (name.substr(0,10) == wxT("Parameters")) {
 
-		subname = name.substr(11, std::string::npos);
-		p->setParam(std::string(subname.mb_str()), (float)(e.GetPropertyValue().GetDouble()));
-	
-	} 
+	//	subname = name.substr(11, std::string::npos);
+	//	p->setParam(std::string(subname.mb_str()), (float)(e.GetPropertyValue().GetDouble()));
+	//
+	//} 
 }
+
 	
 void 
 DlgPass::updateMats(Pass *p)

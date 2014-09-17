@@ -1,0 +1,584 @@
+<mesh>
+    <submeshes>
+        <submesh material="green_OgreMax" usesharedvertices="false" use32bitindexes="false" operationtype="triangle_list">
+            <faces count="6">
+                <face v1="0" v2="1" v3="2" />
+                <face v1="3" v2="4" v3="5" />
+                <face v1="6" v2="7" v3="8" />
+                <face v1="9" v2="10" v3="11" />
+                <face v1="12" v2="13" v3="14" />
+                <face v1="15" v2="16" v3="17" />
+            </faces>
+            <geometry vertexcount="18">
+                <vertexbuffer positions="true">
+                    <vertex>
+                        <position x="-9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                </vertexbuffer>
+                <vertexbuffer normals="true">
+                    <vertex>
+                        <normal x="0" y="-1" z="4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-1" z="4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-1" z="4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-1" z="4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-1" z="4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-1" z="4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                </vertexbuffer>
+                <vertexbuffer texture_coord_dimensions_0="2" tangents="true" texture_coords="1">
+                    <vertex>
+                        <texcoord u="1" v="1" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="0" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="0" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="1" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="1" />
+                        <tangent x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="0" y="-4.37114e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="0" y="-5.77984e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="0" />
+                        <tangent x="0" y="-5.77984e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="0" y="-5.77984e-008" z="-1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="1" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="0" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="-1" y="0" z="0" />
+                    </vertex>
+                </vertexbuffer>
+            </geometry>
+        </submesh>
+        <submesh material="red_OgreMax" usesharedvertices="false" use32bitindexes="false" operationtype="triangle_list">
+            <faces count="6">
+                <face v1="0" v2="1" v3="2" />
+                <face v1="3" v2="4" v3="5" />
+                <face v1="6" v2="7" v3="8" />
+                <face v1="9" v2="10" v3="11" />
+                <face v1="12" v2="13" v3="14" />
+                <face v1="15" v2="16" v3="17" />
+            </faces>
+            <geometry vertexcount="18">
+                <vertexbuffer positions="true">
+                    <vertex>
+                        <position x="-9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="7.21238e-007" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="10" z="16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="10" z="-16.5" />
+                    </vertex>
+                    <vertex>
+                        <position x="-9.5" y="-7.21238e-007" z="-16.5" />
+                    </vertex>
+                </vertexbuffer>
+                <vertexbuffer normals="true">
+                    <vertex>
+                        <normal x="0" y="1" z="-4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="1" z="-4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="1" z="-4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="1" z="-4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="1" z="-4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="1" z="-4.37114e-008" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <normal x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="-1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <normal x="-1" y="0" z="0" />
+                    </vertex>
+                </vertexbuffer>
+                <vertexbuffer texture_coord_dimensions_0="2" tangents="true" texture_coords="1">
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="1" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="0" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="1" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="0" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="1" y="0" z="0" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="1" />
+                        <tangent x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="0" y="4.37114e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="1" v="0" />
+                        <tangent x="0" y="5.77984e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="0" />
+                        <tangent x="0" y="5.77984e-008" z="1" />
+                    </vertex>
+                    <vertex>
+                        <texcoord u="0" v="1" />
+                        <tangent x="0" y="5.77984e-008" z="1" />
+                    </vertex>
+                </vertexbuffer>
+            </geometry>
+        </submesh>
+    </submeshes>
+    <submeshnames>
+        <submeshname name="submesh1" index="1" />
+        <submeshname name="submesh0" index="0" />
+    </submeshnames>
+    <poses>
+        <pose target="submesh" index="0" name="Box02">
+            <poseoffset index="0" x="-109.529" y="-96.7199" z="40.2163" />
+            <poseoffset index="1" x="-109.529" y="-96.7199" z="-40.2163" />
+            <poseoffset index="2" x="109.529" y="157.297" z="-40.2163" />
+            <poseoffset index="3" x="109.529" y="157.297" z="-40.2163" />
+            <poseoffset index="4" x="109.529" y="157.297" z="40.2163" />
+            <poseoffset index="5" x="-109.529" y="-96.7199" z="40.2163" />
+            <poseoffset index="6" x="109.529" y="157.297" z="40.2163" />
+            <poseoffset index="7" x="109.529" y="157.297" z="-40.2163" />
+            <poseoffset index="8" x="112.479" y="380.737" z="-40.2163" />
+            <poseoffset index="9" x="112.479" y="380.737" z="-40.2163" />
+            <poseoffset index="10" x="112.479" y="380.737" z="40.2163" />
+            <poseoffset index="11" x="109.529" y="157.297" z="40.2163" />
+            <poseoffset index="12" x="109.529" y="157.297" z="-40.2163" />
+            <poseoffset index="13" x="-109.529" y="-96.7199" z="-40.2163" />
+            <poseoffset index="14" x="-112.479" y="126.72" z="-40.2163" />
+            <poseoffset index="15" x="-112.479" y="126.72" z="-40.2163" />
+            <poseoffset index="16" x="112.479" y="380.737" z="-40.2163" />
+            <poseoffset index="17" x="109.529" y="157.297" z="-40.2163" />
+        </pose>
+        <pose target="submesh" index="1" name="Box02">
+            <poseoffset index="0" x="-112.479" y="126.72" z="40.2163" />
+            <poseoffset index="1" x="112.479" y="380.737" z="40.2163" />
+            <poseoffset index="2" x="112.479" y="380.737" z="-40.2163" />
+            <poseoffset index="3" x="112.479" y="380.737" z="-40.2163" />
+            <poseoffset index="4" x="-112.479" y="126.72" z="-40.2163" />
+            <poseoffset index="5" x="-112.479" y="126.72" z="40.2163" />
+            <poseoffset index="6" x="-109.529" y="-96.7199" z="40.2163" />
+            <poseoffset index="7" x="109.529" y="157.297" z="40.2163" />
+            <poseoffset index="8" x="112.479" y="380.737" z="40.2163" />
+            <poseoffset index="9" x="112.479" y="380.737" z="40.2163" />
+            <poseoffset index="10" x="-112.479" y="126.72" z="40.2163" />
+            <poseoffset index="11" x="-109.529" y="-96.7199" z="40.2163" />
+            <poseoffset index="12" x="-109.529" y="-96.7199" z="-40.2163" />
+            <poseoffset index="13" x="-109.529" y="-96.7199" z="40.2163" />
+            <poseoffset index="14" x="-112.479" y="126.72" z="40.2163" />
+            <poseoffset index="15" x="-112.479" y="126.72" z="40.2163" />
+            <poseoffset index="16" x="-112.479" y="126.72" z="-40.2163" />
+            <poseoffset index="17" x="-109.529" y="-96.7199" z="-40.2163" />
+        </pose>
+        <pose target="submesh" index="0" name="Box03">
+            <poseoffset index="0" x="-75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="1" x="-75.4363" y="-109.617" z="-89.1722" />
+            <poseoffset index="2" x="75.4363" y="-109.617" z="-89.1722" />
+            <poseoffset index="3" x="75.4363" y="-109.617" z="-89.1722" />
+            <poseoffset index="4" x="75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="5" x="-75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="6" x="75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="7" x="75.4363" y="-109.617" z="-89.1722" />
+            <poseoffset index="8" x="198.793" y="114.594" z="-244.93" />
+            <poseoffset index="9" x="198.793" y="114.594" z="-244.93" />
+            <poseoffset index="10" x="198.793" y="114.594" z="244.93" />
+            <poseoffset index="11" x="75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="12" x="75.4363" y="-109.617" z="-89.1722" />
+            <poseoffset index="13" x="-75.4363" y="-109.617" z="-89.1722" />
+            <poseoffset index="14" x="-198.793" y="114.594" z="-244.93" />
+            <poseoffset index="15" x="-198.793" y="114.594" z="-244.93" />
+            <poseoffset index="16" x="198.793" y="114.594" z="-244.93" />
+            <poseoffset index="17" x="75.4363" y="-109.617" z="-89.1722" />
+        </pose>
+        <pose target="submesh" index="1" name="Box03">
+            <poseoffset index="0" x="-198.793" y="114.594" z="244.93" />
+            <poseoffset index="1" x="198.793" y="114.594" z="244.93" />
+            <poseoffset index="2" x="198.793" y="114.594" z="-244.93" />
+            <poseoffset index="3" x="198.793" y="114.594" z="-244.93" />
+            <poseoffset index="4" x="-198.793" y="114.594" z="-244.93" />
+            <poseoffset index="5" x="-198.793" y="114.594" z="244.93" />
+            <poseoffset index="6" x="-75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="7" x="75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="8" x="198.793" y="114.594" z="244.93" />
+            <poseoffset index="9" x="198.793" y="114.594" z="244.93" />
+            <poseoffset index="10" x="-198.793" y="114.594" z="244.93" />
+            <poseoffset index="11" x="-75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="12" x="-75.4363" y="-109.617" z="-89.1722" />
+            <poseoffset index="13" x="-75.4363" y="-109.617" z="89.1722" />
+            <poseoffset index="14" x="-198.793" y="114.594" z="244.93" />
+            <poseoffset index="15" x="-198.793" y="114.594" z="244.93" />
+            <poseoffset index="16" x="-198.793" y="114.594" z="-244.93" />
+            <poseoffset index="17" x="-75.4363" y="-109.617" z="-89.1722" />
+        </pose>
+    </poses>
+    <animations>
+        <animation name="Box01" length="2.26646">
+            <tracks>
+                <track target="submesh" index="0" type="pose">
+                    <keyframes>
+                        <keyframe time="0">
+                            <poseref poseindex="1" influence="1" />
+                        </keyframe>
+                        <keyframe time="0.226667">
+                            <poseref poseindex="0" influence="0.0296583" />
+                            <poseref poseindex="1" influence="0.970342" />
+                        </keyframe>
+                        <keyframe time="0.453333">
+                            <poseref poseindex="0" influence="0.109884" />
+                            <poseref poseindex="1" influence="0.890116" />
+                        </keyframe>
+                        <keyframe time="0.68">
+                            <poseref poseindex="0" influence="0.227552" />
+                            <poseref poseindex="1" influence="0.772448" />
+                        </keyframe>
+                        <keyframe time="0.906667">
+                            <poseref poseindex="0" influence="0.369539" />
+                            <poseref poseindex="1" influence="0.630461" />
+                        </keyframe>
+                        <keyframe time="1.13312">
+                            <poseref poseindex="0" influence="0.52272" />
+                            <poseref poseindex="1" influence="0.47728" />
+                        </keyframe>
+                        <keyframe time="1.36">
+                            <poseref poseindex="0" influence="0.673971" />
+                            <poseref poseindex="1" influence="0.326029" />
+                        </keyframe>
+                        <keyframe time="1.58667">
+                            <poseref poseindex="0" influence="0.810168" />
+                            <poseref poseindex="1" influence="0.189832" />
+                        </keyframe>
+                        <keyframe time="1.81333">
+                            <poseref poseindex="0" influence="0.918186" />
+                            <poseref poseindex="1" influence="0.0818136" />
+                        </keyframe>
+                        <keyframe time="2.03979">
+                            <poseref poseindex="0" influence="0.984902" />
+                            <poseref poseindex="1" influence="0.0150984" />
+                        </keyframe>
+                        <keyframe time="2.26646">
+                            <poseref poseindex="0" influence="1" />
+                        </keyframe>
+                    </keyframes>
+                </track>
+                <track target="submesh" index="1" type="pose">
+                    <keyframes>
+                        <keyframe time="0">
+                            <poseref poseindex="1" influence="1" />
+                        </keyframe>
+                        <keyframe time="0.226667">
+                            <poseref poseindex="0" influence="0.0296583" />
+                            <poseref poseindex="1" influence="0.970342" />
+                        </keyframe>
+                        <keyframe time="0.453333">
+                            <poseref poseindex="0" influence="0.109884" />
+                            <poseref poseindex="1" influence="0.890116" />
+                        </keyframe>
+                        <keyframe time="0.68">
+                            <poseref poseindex="0" influence="0.227552" />
+                            <poseref poseindex="1" influence="0.772448" />
+                        </keyframe>
+                        <keyframe time="0.906667">
+                            <poseref poseindex="0" influence="0.369539" />
+                            <poseref poseindex="1" influence="0.630461" />
+                        </keyframe>
+                        <keyframe time="1.13312">
+                            <poseref poseindex="0" influence="0.52272" />
+                            <poseref poseindex="1" influence="0.47728" />
+                        </keyframe>
+                        <keyframe time="1.36">
+                            <poseref poseindex="0" influence="0.673971" />
+                            <poseref poseindex="1" influence="0.326029" />
+                        </keyframe>
+                        <keyframe time="1.58667">
+                            <poseref poseindex="0" influence="0.810168" />
+                            <poseref poseindex="1" influence="0.189832" />
+                        </keyframe>
+                        <keyframe time="1.81333">
+                            <poseref poseindex="0" influence="0.918186" />
+                            <poseref poseindex="1" influence="0.0818136" />
+                        </keyframe>
+                        <keyframe time="2.03979">
+                            <poseref poseindex="0" influence="0.984902" />
+                            <poseref poseindex="1" influence="0.0150984" />
+                        </keyframe>
+                        <keyframe time="2.26646">
+                            <poseref poseindex="0" influence="1" />
+                        </keyframe>
+                    </keyframes>
+                </track>
+            </tracks>
+        </animation>
+    </animations>
+</mesh>

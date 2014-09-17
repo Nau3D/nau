@@ -21,11 +21,11 @@ namespace nau
 			GLIndexArray(void);
 
 			std::vector<unsigned int>& getIndexData (void);
-			virtual bool compile (VertexData &v);
-			virtual void resetCompilationFlag();
-			virtual void bind (void);
-			virtual void unbind (void);
-			virtual bool isCompiled();
+			bool compile (VertexData &v);
+			void resetCompilationFlag();
+			void bind (void);
+			void unbind (void);
+			bool isCompiled();
 			void useAdjacency(bool adj);
 			bool getAdjacency();
 

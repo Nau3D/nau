@@ -49,8 +49,8 @@ namespace nau
 			virtual std::string &getFile (TextureCubeMapFaces i);
 			virtual void setFile (std::string file, TextureCubeMapFaces i);
 
-			virtual void prepare(int unit, nau::material::TextureSampler *ts) = 0;
-			virtual void restore(int unit) = 0;
+			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts) = 0;
+			virtual void restore(unsigned int unit) = 0;
 
 			//virtual void enableCompareToTexture (void) = 0;
 			//virtual void disableCompareToTexture (void) = 0;

@@ -18,9 +18,8 @@ namespace nau
 
 		public:
 
-			virtual void update(void);
-			virtual void *getData();
-
+			void update(void);
+			void *getData();
 
 		protected:
 			GLTexImage (Texture *t);

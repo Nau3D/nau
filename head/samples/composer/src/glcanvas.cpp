@@ -28,6 +28,8 @@ using namespace nau::geometry;
 #define VELOCITY 50.0f
 #define NON_DYNAMIC_VELOCITY 0.05f  // 2 meters per second
 
+bool isPaused = false;
+
 GlCanvas::GlCanvas (wxWindow *parent,
                      const wxWindowID id,
 					 const int * 	attribList,
@@ -96,11 +98,12 @@ GlCanvas::_setCamera() {
 }
 
 
-
 void 
 GlCanvas::OnPaint (wxPaintEvent &event)
 {
-   wxPaintDC dc (this);
+   
+   
+	wxPaintDC dc (this);
 
 //#ifndef __WXMOTIF__
 //   if (!GetContext()){
@@ -108,10 +111,11 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 //   }
 //#endif
 
-   SetCurrent (*p_GLC);
-
-   Render ();
-   event.Skip ();
+   //SetCurrent (*p_GLC);
+	if(!isPaused){
+		Render();
+	}
+	event.Skip ();
 }
 
 void 
@@ -193,7 +197,9 @@ GlCanvas::Render ()
 void
 GlCanvas::OnIdle (wxIdleEvent& event)
 {
-	this->Render();
+    if(!isPaused){
+		this->Render();
+    }
 	event.RequestMore();
 	DlgAtomics::Instance()->update();
 }
@@ -507,14 +513,6 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 	//		m_pEngine->disableStereo();
 	//	}
 	//}
-#if (NAU_OPENGL_VERSIONOPENGL_VERSION >= 400)
-	if ('C' == event.GetKeyCode()) {
-	
-		for (unsigned int i = 0; i < IRenderer::MAX_COUNTERS; i++)
-			SLOG("%d", RENDERER->getCounter(i));
-	}
-
-#endif
 	event.Skip();
 }
 
@@ -689,7 +687,18 @@ GlCanvas::OnLeftUp (wxMouseEvent &event) {
 	//}
 }
 
+void
+GlCanvas::BreakResume ()
+{
+   
+   isPaused=!isPaused;
+}
 
+bool
+GlCanvas::IsPaused ()
+{
+	return isPaused;
+}
 
 //bool
 //GlCanvas::changeWaterState (bool state)

@@ -6,6 +6,7 @@
 #include <nau/render/opengl/gltexture2dArray.h>
 #endif
 #include <nau/loader/textureloader.h>
+#include <nau.h>
 
 
 using namespace nau::render;
@@ -16,9 +17,8 @@ using namespace nau;
 bool
 Texture::Init() {
 
-	// UINT
-	Attribs.add(Attribute(ID, "ID", Enums::DataType::UINT, true, new int(-1)));
 	// INT
+	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(-1)));
 	Attribs.add(Attribute(WIDTH, "WIDTH", Enums::DataType::INT, true, new int (1)));
 	Attribs.add(Attribute(HEIGHT, "HEIGHT", Enums::DataType::INT, true, new int (1)));
 	Attribs.add(Attribute(DEPTH, "DEPTH", Enums::DataType::INT, true, new int(1)));
@@ -134,7 +134,6 @@ Texture::Create (std::string file, std::string label, bool mipmap)
 	
 		t->bitmap = new wxBitmap(wxImage(96,96,loader->getData(),true).Mirror(false));
 	#endif
-
 		loader->freeImage();
 		delete loader;
 		return t;
@@ -149,20 +148,20 @@ Texture::Create (std::string file, std::string label, bool mipmap)
 Texture::Texture(std::string label, std::string aDimension, std::string anInternalFormat, 
 				 std::string aFormat, std::string aType, int width, int height) : m_Label (label)
 #ifdef __SLANGER__
-	,bitmap(0)
+				 , bitmap(0), m_Bitmap(0)
 #endif
 {
-	initArrays();
+	initArrays(Attribs);
 }
 
 
 Texture::Texture(std::string label, std::string aDimension, std::string anInternalFormat, 
 				 int width, int height) : m_Label (label)
 #ifdef __SLANGER__
-	,bitmap(0)
+				 , bitmap(0), m_Bitmap(0)
 #endif
 {
-	initArrays();
+	initArrays(Attribs);
 }
 
 
@@ -172,41 +171,58 @@ Texture::~Texture(){
 
 	if (bitmap)
 		delete bitmap;	
-
+	if (m_Bitmap)
+		free (m_Bitmap);
 #endif
 }
 
 
-void
-Texture::initArrays() {
+//void
+//Texture::initArrays() {
+//
+//	Attribs.initAttribInstanceEnumArray(m_EnumProps);
+//	Attribs.initAttribInstanceIntArray(m_IntProps);
+////	Attribs.initAttribInstanceUIntArray(m_UIntProps);
+//}
 
-	Attribs.initAttribInstanceEnumArray(m_EnumProps);
-	Attribs.initAttribInstanceIntArray(m_IntProps);
-	Attribs.initAttribInstanceUIntArray(m_UIntProps);
-}
 
+int 
+Texture::addAtrib(std::string name, Enums::DataType dt, void *value) {
 
-void *
-Texture::getProp(int prop, Enums::DataType type) {
+	int id= Attribs.getNextFreeID();
+	switch (dt) {
 
-	switch (type) {
-
-	case Enums::FLOAT:
-		assert(m_FloatProps.count(prop) > 0);
-		return(&(m_FloatProps[prop]));
-		break;
-	case Enums::VEC4:
-		assert(m_Float4Props.count(prop) > 0);
-		return(&(m_Float4Props[prop]));
-		break;
-	case Enums::INT:
-		assert(m_IntProps.count(prop) > 0);
-		return(&(m_IntProps[prop]));
-		break;
-		
+		case Enums::ENUM:
+			int *k = (int *)value;
+			m_EnumProps[id] = *k;
+			break;
 	}
-	return NULL;
+
+	return id;
+
 }
+
+//void *
+//Texture::getProp(int prop, Enums::DataType type) {
+//
+//	switch (type) {
+//
+//	case Enums::FLOAT:
+//		assert(m_FloatProps.count(prop) > 0);
+//		return(&(m_FloatProps[prop]));
+//		break;
+//	case Enums::VEC4:
+//		assert(m_Float4Props.count(prop) > 0);
+//		return(&(m_Float4Props[prop]));
+//		break;
+//	case Enums::INT:
+//		assert(m_IntProps.count(prop) > 0);
+//		return(&(m_IntProps[prop]));
+//		break;
+//		
+//	}
+//	return NULL;
+//}
 
 
 void 
@@ -215,55 +231,58 @@ Texture::setProp(int prop, Enums::DataType type, void *value) {
 	switch (type) {
 
 		case Enums::FLOAT:
+			assert(m_FloatProps.count(prop) != 0);
 			m_FloatProps[prop] = *(float *)value;
 			break;
 		case Enums::VEC4:
+			assert(m_Float4Props.count(prop) != 0);
 			m_Float4Props[prop].set((vec4 *)value);
 			break;
 		case Enums::INT:
-			if (prop >= COUNT_INTPROPERTY)
-				m_IntProps[prop] = *(int *)value;
+			assert(m_IntProps.count(prop) != 0);
+			m_IntProps[prop] = *(int *)value;
 			break;
 	}
 }		
 
 
-int 
-Texture::getPropi(IntProperty prop)
-{
-	assert(m_IntProps.find(prop) != m_IntProps.end());
-	return m_IntProps[prop];
-}
+//int 
+//Texture::getPropi(IntProperty prop)
+//{
+//	assert(m_IntProps.find(prop) != m_IntProps.end());
+//	return m_IntProps[prop];
+//}
 
 
-int 
-Texture::getPrope(EnumProperty prop)
-{
-	assert(m_EnumProps.find(prop) != m_EnumProps.end());
-	return m_EnumProps[prop];
-}
+//int 
+//Texture::getPrope(EnumProperty prop)
+//{
+//	assert(m_EnumProps.find(prop) != m_EnumProps.end());
+//	return m_EnumProps[prop];
+//}
 
 
-unsigned int
-Texture::getPropui(UIntProperty prop) 
-{
-	assert(m_UIntProps.find(prop) != m_UIntProps.end());
-	return(m_UIntProps[prop]);
-}
+//unsigned int
+//Texture::getPropui(UIntProperty prop) 
+//{
+//	assert(m_UIntProps.find(prop) != m_UIntProps.end());
+//	return(m_UIntProps[prop]);
+//}
 
 
-bool 
-Texture::getPropb(BoolProperty prop)
-{
-	assert(m_BoolProps.find(prop) != m_BoolProps.end());
-	return m_BoolProps[prop];
-}
+//bool 
+//Texture::getPropb(BoolProperty prop)
+//{
+//	assert(m_BoolProps.find(prop) != m_BoolProps.end());
+//	return m_BoolProps[prop];
+//}
 
 
 #ifdef __SLANGER__
 
 wxBitmap *
 Texture::getBitmap(void) {
+
 	return bitmap;	
 }
 #endif

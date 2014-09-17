@@ -1,5 +1,6 @@
 #include <nau/scene/scenefactory.h>
 #include <nau/scene/octreescene.h>
+#include <nau/scene/octreeunified.h>
 #include <nau/scene/octreeByMatscene.h>
 #include <nau/scene/scene.h>
 #include <nau/scene/sceneposes.h>
@@ -17,10 +18,13 @@ SceneFactory::create(std::string scene)
 {
 	IScene *pScene = 0;
 
-	if ("OctreeByMat" == scene)
+	if ("OctreeUnified" == scene) {
+		pScene = new OctreeUnified;
+	}
+	else if ("OctreeByMat" == scene) {
 		pScene = new OctreeByMatScene;
-
-	if ("Octree" == scene) {
+	}
+	else if ("Octree" == scene) {
 		pScene = new OctreeScene;
 	}
 	else if ("Scene" == scene) {

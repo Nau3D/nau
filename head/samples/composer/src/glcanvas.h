@@ -28,6 +28,7 @@ public:
                const wxString &name = _("GlCanvas"));
 
    void OnPaint(wxPaintEvent & event);
+   void BreakResume ();
    void OnSize(wxSizeEvent & event);
    void OnEraseBackground(wxEraseEvent & event);
    void OnEnterWindow(wxMouseEvent & event);
@@ -38,6 +39,7 @@ public:
 	void OnLeftDown (wxMouseEvent& event);
 	void OnLeftUp (wxMouseEvent& event);
 
+	bool IsPaused ();
 
    void Render(void);
   // void InitGL(void);

@@ -11,6 +11,7 @@
 	<states>
 		<state name="Transparent">
 			<ORDER value="2" />
+			<BLEND value=true />
 			<BLEND_SRC value="SRC_ALPHA" />
 			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
 		</state>	
@@ -27,22 +28,22 @@
 	
 		<material name="Vidro">
 			<color>
-				<ambient r="0.3" g="0.3" b="0.3" a="1.0" />
-				<diffuse r="0.43155" g="0.584887" b="0.685" a="0.41322" />
-				<specular r="0.5" g="0.5" b="0.5" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.3" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" a="1.0" />
+				<DIFFUSE r="0.43155" g="0.584887" b="0.685" a="0.41322" />
+				<SPECULAR r="0.5" g="0.5" b="0.5" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.3" />
 			</color>
 			<state name="Transparent" />
 		</material>
 		
 		<material name="Sky">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.0" g="0.0" b="0.0" a="0.75" />
-				<specular r="0.0" g="0.0" b="0.0" a="1.0" />
-				<emission r="1.0" g="1.0" b="1.0" a="1.0" />
-				<shininess value="0.0" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.0" g="0.0" b="0.0" a="0.75" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SHININESS value="0.0" />
 			</color>
 			<textures>
 				<texture UNIT="0" name="Sky" />
@@ -51,11 +52,11 @@
 		
 		<material name="Aqua">
 			<color>
-				<ambient r="0.3" g="0.3" b="0.3" a="1.0" />
-				<diffuse r="0.9" g="0.9" b="0.9" a="0.75" />
-				<specular r="0.5" g="0.5" b="0.5" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.3" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" a="1.0" />
+				<DIFFUSE r="0.9" g="0.9" b="0.9" a="0.75" />
+				<SPECULAR r="0.5" g="0.5" b="0.5" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.3" />
 			</color>
 			<state name="Transparent" />
 			<textures>
@@ -65,11 +66,11 @@
 		
 		<material name="Grades">
 			<color>
-				<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-				<diffuse r="0.36364" g="0.36364" b="0.36364" a="1.0" />
-				<specular r="0.5" g="0.5" b="0.5" a="1.0" />
-				<emission r="0.0" g="0.0" b="0.0" a="1.0" />
-				<shininess value="0.3" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.36364" g="0.36364" b="0.36364" a="1.0" />
+				<SPECULAR r="0.5" g="0.5" b="0.5" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.3" />
 			</color>
 			<state name="Grades" />
 			<textures>

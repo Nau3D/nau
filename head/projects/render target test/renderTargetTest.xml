@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<file>..\..\models\al.obj</file>
+				<file>..\..\models\cube.obj</file>
 			</scene>
 		</scenes>
 		<viewports>
@@ -41,6 +41,7 @@
 					<scene>MainScene</scene>
 				</scenes>
 				<camera>MainCamera</camera>
+				<viewport>MainViewport</viewport>
 				<rendertarget name="test" fromLibrary="Test Render Targets" />
 				<lights>
 					<light>Sun</light>

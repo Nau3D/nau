@@ -54,8 +54,42 @@ namespace nau
 			static void loadPassTexture(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass);
+
+			//Debug Loading
+			static void loadDebug (TiXmlHandle &hRoot);
+			static void loadDebugConfigData (TiXmlHandle &handle, const char *configMapName);
+			static void loadDebugFunctionlog (TiXmlHandle &hRoot);
+			static void loadDebugFunctionlogXmlFormat (TiXmlHandle &hRoot);
+			static void loadDebugLogperframe (TiXmlHandle &hRoot);
+			static void loadDebugErrorchecking (TiXmlHandle &hRoot);
+			static void loadDebugImagelog (TiXmlHandle &hRoot);
+			static void loadDebugImagelogimageicon (TiXmlHandle &hRoot);
+			static void loadDebugShaderlog (TiXmlHandle &hRoot);
+			static void loadDebugDisplaylistlog (TiXmlHandle &hRoot);
+			static void loadDebugFramelog (TiXmlHandle &hRoot);
+			static void loadDebugFramelogFrameicon (TiXmlHandle &hRoot);
+			static void loadDebugFramelogFramemovie (TiXmlHandle &hRoot);
+			static void loadDebugTimerlog (TiXmlHandle &hRoot);
+			
+			
+
+
+
+
+
+
+
+
+
+
+
+			static void loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer);
+			static void loadDebugPlugins (TiXmlHandle &hRoot);
 #ifdef NAU_OPTIX
 			static void loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass);
+#endif
+#ifdef NAU_OPTIX_PRIME
+			static void loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass);
 #endif
 			static void loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass);
 			//static void loadPassShaderMaps(TiXmlHandle hPass, Pass *aPass);
@@ -65,10 +99,12 @@ namespace nau
 			static void loadMatLibTextures(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 			static void loadMatLibStates(TiXmlHandle hPass, MaterialLib *aLib);
 			static void loadMatLibShaders(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
+			static void loadMatLibBuffers(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 
 			static void loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
+			static void loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 

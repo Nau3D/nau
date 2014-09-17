@@ -3,7 +3,7 @@
 	<assets>
 	
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" type="OctreeByMat">
 				<!--file>..\ntg-bench\bench.obj</file-->
 				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
 				<!--file>..\3dsmodels\largoCamoes8000.cbo</file-->

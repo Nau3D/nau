@@ -23,9 +23,9 @@ namespace nau
 			~GLTexture(void);
 
 			// prepare the unit texture for rendering
-			virtual void prepare(int unit, TextureSampler *ts);
+			virtual void prepare(unsigned int unit, TextureSampler *ts);
 			/// restore the sampler state
-			virtual void restore(int unit);
+			virtual void restore(unsigned int unit);
 
 			//void enableCompareToTexture (void);
 			//void disableCompareToTexture (void);
