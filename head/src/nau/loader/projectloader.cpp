@@ -3847,6 +3847,8 @@ ProjectLoader::loadDebug (TiXmlHandle &hRoot)
 			startGlilog();
 		}
 
+		activateGLI();
+
 		//TiXmlElement *pElem;
 		loadDebugFunctionlog(handle);
 		loadDebugLogperframe(handle);

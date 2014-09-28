@@ -20,6 +20,9 @@
 #include <nau/clogger.h>
 #include <nau/slogger.h>
 
+#ifdef GLINTERCEPTDEBUG
+#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+#endif
               
 using namespace nau::math;
 
@@ -94,6 +97,7 @@ int idMenuReload = wxNewId();
 
 #ifdef GLINTERCEPTDEBUG
 int idMenuDbgBreak = wxNewId();
+int idMenuDbgStep = wxNewId();
 //int idMenuDbgGLILogRead = wxNewId();
 #endif
 // dialogs //
@@ -154,11 +158,12 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   
 #ifdef GLINTERCEPTDEBUG
   EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
+  EVT_MENU(idMenuDbgStep, FrmMainFrame::OnNextFrame)
   EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
   EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
 #endif
-
+  
  END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(GlCanvas, wxGLCanvas)
@@ -252,11 +257,13 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	
 #ifdef GLINTERCEPTDEBUG
 	debugMenu = new wxMenu(_T(""));
-	debugMenu->Append(idMenuDbgBreak, _("Pause"),_("Pauses or resumes rendering"));
+	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
+	debugMenu->Append(idMenuDbgStep, _("Next Frame"), _("Renders next frame"));
     debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
     debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"),_("Views Program information"));
     debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"),_("Views Buffer information"));
 
+	debugMenu->Enable(idMenuDbgStep, false);
 	debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
 	debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
 	debugMenu->Enable(idMenu_DLG_DBGBUFFER,false);
@@ -581,6 +588,9 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 
 #ifdef GLINTERCEPTDEBUG
 			DlgDbgGLILogRead::Instance()->clear();
+			DlgDbgPrograms::Instance()->clear();
+			//DlgDbgPrograms::Instance()->startRecording();
+
 #endif
 
 		} catch (nau::ProjectLoaderError &e) {
@@ -821,29 +831,55 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 #ifdef GLINTERCEPTDEBUG
 	m_Canvas->BreakResume();
 	if (m_Canvas->IsPaused()){
-		DlgDbgGLILogRead::Instance()->clear();
-		DlgDbgGLILogRead::Instance()->loadLog();
-	
-		DlgDbgPrograms::Instance()->clear();
-		DlgDbgPrograms::Instance()->loadShaderInfo();
-	
-		DlgDbgBuffers::Instance()->clear();
-		DlgDbgBuffers::Instance()->loadBufferInfo();
+		
+		FreezeGLI();
+		LoadDebugData();
+
 
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,true);
-		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,true);
-		debugMenu->Enable(idMenu_DLG_DBGBUFFER,true);
+		debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);
+		debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+		debugMenu->Enable(idMenuDbgStep, true);
 
 		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
 	}
 	else{
+		gliSetIsGLIActive(true);
+
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
-		debugMenu->Enable(idMenu_DLG_DBGBUFFER,false);
+		debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
+		debugMenu->Enable(idMenuDbgStep, false);
 
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 
 	}
+#endif
+}
+
+void
+FrmMainFrame::OnNextFrame(wxCommandEvent& event)
+{
+	if (m_Canvas->IsPaused()){
+		gliSetIsGLIActive(true);
+		m_Canvas->SingleStep();
+	}
+}
+
+void
+FrmMainFrame::FreezeGLI(){
+#ifdef GLINTERCEPTDEBUG
+	gliSetIsGLIActive(false);
+#endif
+}
+
+void
+FrmMainFrame::LoadDebugData(){
+#ifdef GLINTERCEPTDEBUG
+	DlgDbgGLILogRead::Instance()->loadLog();
+
+	DlgDbgBuffers::Instance()->clear();
+	DlgDbgBuffers::Instance()->loadBufferInfo();
 #endif
 }
 

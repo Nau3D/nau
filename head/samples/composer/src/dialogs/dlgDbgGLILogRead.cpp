@@ -88,7 +88,7 @@ void DlgDbgGLILogRead::clear() {
 	isLogClear=true;
 }
 
-void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber){
+void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg){
 	wxTreeItemId frame;
 	string line;
 	isNewFrame = true;
@@ -98,15 +98,20 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber){
 	if (fNumber >= 0){
 		frameNumber=fNumber;
 	}
-
 	if (filestream){
-	
-		getline(filestream,line);
-		getline(filestream,line);
-		getline(filestream,line);
-		getline(filestream,line);
-		getline(filestream,line);
-		
+
+		if (tellg){
+			filestream.seekg(streamlnnum);
+			getline(filestream, line);
+		}
+		else{
+			getline(filestream, line);
+			getline(filestream, line);
+			getline(filestream, line);
+			getline(filestream, line);
+			getline(filestream, line);
+		}
+
 		while (getline(filestream, line))
 		{
 			if (isNewFrame){
@@ -117,6 +122,9 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber){
 			m_log->AppendItem(frame,line);
 			if(strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
 				isNewFrame=true;
+			}
+			if (filestream.tellg() >= 0){
+				streamlnnum = filestream.tellg();
 			}
 		}
 
@@ -124,28 +132,6 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber){
 	//if (gliIsLogPerFrame()){
 		filestream.close();
 	//}
-}
-
-void DlgDbgGLILogRead::continueReadLogFile(){
-	wxTreeItemId frame;
-	string line;
-
-	if (filestream){
-		
-		while (getline(filestream, line))
-		{
-			if (isNewFrame){
-				frame = m_log->AppendItem(rootnode, "frame "+to_string(frameNumber));
-				frameNumber++;
-				isNewFrame=false;
-			}
-			m_log->AppendItem(frame,line);
-			if(strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
-				isNewFrame=true;
-			}
-		}
-	}
-
 }
 
 void DlgDbgGLILogRead::finishReadLogFile(){
@@ -201,10 +187,11 @@ void DlgDbgGLILogRead::loadLog() {
 		m_log->Expand(rootnode);
 		isLogClear=false;
 	}
-	//else{
-	//	if (!gliIsLogPerFrame()){
-	//		continueReadLogFile();
-	//	}
-	//}
+	else{
+		if (!gliIsLogPerFrame()){
+			logfile = gliGetLogPath() + logname + ".txt";
+			loadNewLogFile(logfile, frameNumber, true);
+		}
+	}
 #endif
 }

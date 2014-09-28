@@ -60,7 +60,9 @@ DlgDbgPrograms::DlgDbgPrograms(): wxDialog(DlgDbgPrograms::m_Parent, -1, wxT("Na
 	this->Layout();
 	this->Centre(wxBOTH);
 
-	isLogClear=true;
+	isLogClear = true;
+	isRecording = true;
+	frameNumber = 0;
 }
 
 
@@ -97,24 +99,29 @@ void DlgDbgPrograms::clear() {
 }
 
 void DlgDbgPrograms::loadShaderInfo() {
-	wxTreeItemId rootnode;
-    std::vector<unsigned int> programs = getProgramNames();
-	
-	if (isLogClear){
-		rootnode = m_log->AddRoot("Programs>");//infostream.str()
-		for (int i = 0; i < programs.size(); i++){
-			 loadProgramInfo(rootnode, programs[i]);
+	if (isRecording){
+		wxTreeItemId framenode;
+		std::vector<unsigned int> programs = getProgramNames();
+
+		if (isLogClear){
+			rootnode = m_log->AddRoot("Shader Uniforms>");//infostream.str()
+			isLogClear = false;
+			m_log->Expand(rootnode);
 		}
-		isLogClear=false;
+
+		framenode = m_log->AppendItem(rootnode, "Frame " + to_string(frameNumber) + ">");
+		frameNumber++;
+		for (int i = 0; i < programs.size(); i++){
+			loadProgramInfo(framenode, programs[i]);
+		}
 	}
-	m_log->Expand(rootnode);
 }
 
 void DlgDbgPrograms::loadProgramInfo(wxTreeItemId basenode, unsigned int program){
     wxTreeItemId programnode;
 	programnode = m_log->AppendItem(basenode,"Program " + to_string(program) + ">");
-
-	loadStandardProgramInfo(programnode, program);
+	
+	//loadStandardProgramInfo(programnode, program);
 	loadProgramAttributesInfo(programnode, program);
 	loadProgramUniformsInfo(programnode, program);
 
@@ -295,4 +302,9 @@ void DlgDbgPrograms::OnSaveInfoAux(fstream &s, wxTreeItemId parent, int nodeleve
 		OnSaveInfoAux(s, currentChild, nodelevel+1);
 		currentChild = m_log->GetNextChild(parent, cookie);
 	}
+}
+
+void DlgDbgPrograms::startRecording(){
+	isRecording = true;
+	frameNumber = 0;
 }

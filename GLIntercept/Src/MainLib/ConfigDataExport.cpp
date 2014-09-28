@@ -19,6 +19,10 @@ void setConfigDataExport(ConfigData *configData, GLDriver *driver){
 void setFunctionTableExport(FunctionTable * fTable){
 	functionTableExport = fTable;
 }
+void gliSetIsGLIActive(bool isGLIActive){
+	configDataExport->isGLIActive = isGLIActive;
+}
+
   void gliSetLogEnabled(bool logEnabled){
 	  configDataExport->logEnabled=logEnabled;
   }

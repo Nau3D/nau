@@ -182,7 +182,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src;C:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;C:\toolkits\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -198,7 +198,7 @@
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <PostBuildEvent>
-      <Command>copy $(OutDir)nau_d.lib d:\toolkits\libs</Command>
+      <Command>copy $(OutDir)nau_d.lib c:\toolkits\libs</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

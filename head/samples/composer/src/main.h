@@ -92,6 +92,10 @@ private:
 	void OnDlgDbgGLILogRead(wxCommandEvent& event);
 	void OnDlgDbgProgram(wxCommandEvent& event);
 	void OnDlgDbgBuffer(wxCommandEvent& event);
+	void OnNextFrame(wxCommandEvent& event);
+
+	void FreezeGLI();
+	void LoadDebugData();
 	//Debugger end
 
 

@@ -362,6 +362,7 @@ EXPORTS
    wglUseFontOutlinesA
    wglUseFontOutlinesW
 
+   gliSetIsGLIActive
    gliSetLogEnabled
    gliIsLogEnabled
    gliSetLogXMLFormat

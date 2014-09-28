@@ -23,6 +23,8 @@ public:
 
 };
 
+void activateGLI();
+
 void initGLInterceptFunctions();
 
 void useGLIFunction(void *functionSetPointer, void *value);

@@ -37,8 +37,7 @@ protected:
 	DlgDbgGLILogRead& operator= (const DlgDbgGLILogRead&);
 	static DlgDbgGLILogRead *m_Inst;
 
-	void loadNewLogFile(std::string logfile, int fNumber);
-	void continueReadLogFile();
+	void loadNewLogFile(std::string logfile, int fNumber, bool tellg = false);
 	void finishReadLogFile();
 	
 	wxTreeCtrl *m_log;
@@ -49,6 +48,7 @@ protected:
 	bool isNewFrame;
 	int frameNumber;
 	std::ifstream filestream;
+	int streamlnnum;
 
 
 

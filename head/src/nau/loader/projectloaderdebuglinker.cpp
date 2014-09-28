@@ -83,6 +83,10 @@ map<string,map<string,functionSet>> attributeList;
 //  LogEnabled    
 //  LogCutoff    
 
+void activateGLI(){
+	gliSetIsGLIActive(true);
+}
+
 void addGLInterceptFunction(void *function,void (*functionClear)(),unsigned int type,const char* name,const char* mapName){
 	functionSet temp={function,functionClear,type};
 	map<string,functionSet> *mapPointer = &(attributeList.find(mapName)->second);

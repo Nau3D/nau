@@ -19,6 +19,10 @@
 #include <nau/slogger.h>
 
 
+#ifdef GLINTERCEPTDEBUG
+#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+#endif
+
 
 using namespace std;
 using namespace nau::math;
@@ -112,8 +116,25 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 //#endif
 
    //SetCurrent (*p_GLC);
-	if(!isPaused){
+	if(!isPaused || step){
 		Render();
+
+		DlgDbgPrograms::Instance()->loadShaderInfo();
+		if (step){
+
+#ifdef GLINTERCEPTDEBUG
+			gliSetIsGLIActive(false);
+			if (gliIsLogPerFrame()){
+				DlgDbgGLILogRead::Instance()->clear();
+			}
+
+			DlgDbgGLILogRead::Instance()->loadLog();
+
+			DlgDbgBuffers::Instance()->clear();
+			DlgDbgBuffers::Instance()->loadBufferInfo();
+#endif
+			step = false;
+		}
 	}
 	event.Skip ();
 }
@@ -695,10 +716,18 @@ GlCanvas::BreakResume ()
 }
 
 bool
-GlCanvas::IsPaused ()
+GlCanvas::IsPaused()
 {
 	return isPaused;
 }
+
+void
+GlCanvas::SingleStep()
+{
+	step = true;
+}
+
+
 
 //bool
 //GlCanvas::changeWaterState (bool state)

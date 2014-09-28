@@ -19,6 +19,7 @@ USING_ERRORLOG
 ///////////////////////////////////////////////////////////////////////////////
 //
 ConfigData::ConfigData():
+isGLIActive(false),
 logEnabled(false),
 logXMLFormat(false),
 logFlush(false),
