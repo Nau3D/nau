@@ -3,7 +3,7 @@
 
 // added for directory loading
 #ifdef NAU_PLATFORM_WIN32
-#include <nau/system/dirent.h>
+#include <dirent.h>
 #else
 #include <dirent.h>
 #include <sys/types.h>
@@ -238,7 +238,7 @@ Nau::readProjectFile (std::string file, int *width, int *height)
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
 		
-	m_pWorld->setScene(RENDERMANAGER->getScene("Terrain"));
+	//m_pWorld->setScene(RENDERMANAGER->getScene("Terrain"));
 
 	if (m_UseTriangleIDs)
 		RENDERMANAGER->prepareTriangleIDs(true);

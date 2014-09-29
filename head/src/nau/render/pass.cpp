@@ -132,80 +132,6 @@ Pass::getClassName() {
 }
 
 
-//const std::map<std::string, float> &
-//Pass::getParamsf() 
-//{
-//	return m_Paramf;
-//}
-//
-//
-//void 
-//Pass::setParam(const std::string &name, const float value) 
-//{
-////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::FLOAT)
-//		m_Paramf[name] = value;
-//		m_ParamType[name] = Enums::FLOAT;
-//}
-//
-//
-//void
-//Pass::setParam(const std::string &name, const  int value) 
-//{
-////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::STRING)
-//		m_Parami[name] = value;
-//		m_ParamType[name] = Enums::INT;
-//}
-//
-//
-////void
-////Pass::setParam(const std::string &name, const  std::string &value) 
-////{
-//////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::STRING)
-////		m_Params[name] = value;
-////}
-//
-//
-//float *
-//Pass::getParamf(const std::string &name)
-//{
-//	if (m_Paramf.count(name))
-//		return (&m_Paramf[name]);
-//	else
-//		return NULL;
-//
-//}
-//
-//
-//int *
-//Pass::getParami(const std::string &name)
-//{
-//	if (m_Parami.count(name))
-//		return (&m_Parami[name]);
-//	else
-//		return NULL;
-//
-//}
-//
-////std::string &
-////Pass::getParams(const std::string &name)
-////{
-////	if (m_Paramf.count(name))
-////		return(m_Params[name]);
-////	else
-////		return p_Empty;
-////}
-//
-//
-//int 
-//Pass::getParamType(const std::string &name) {
-//
-//	if (m_ParamType.count(name))
-//		return m_ParamType[name];
-//	else
-//		return -1;
-//}
-
-
 std::string &
 Pass::getName (void)
 {
@@ -235,28 +161,8 @@ Pass::~Pass()
 void 
 Pass::initVars() {
 
-	//m_BoolProp[IRenderer::COLOR_CLEAR] = true;
-	//m_BoolProp[IRenderer::COLOR_ENABLE] = true;
-
-	//m_BoolProp[IRenderer::DEPTH_CLEAR] = true;
-	//m_BoolProp[IRenderer::DEPTH_ENABLE] = true;
-	//m_BoolProp[IRenderer::DEPTH_MASK] = true;
-
-	//m_BoolProp[IRenderer::STENCIL_ENABLE] = false;
-	//m_BoolProp[IRenderer::STENCIL_CLEAR] = true;
 
 	m_RenderTarget = NULL;
-
-	//m_ColorClearValue = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	//m_DepthClearValue = 1.0f;
-	//m_DepthFunc = *(int *)(IState::Attribs.getDefault(IState::DEPTH_FUNC, Enums::DataType::ENUM));
-	//m_StencilClearValue = 0.0f;
-
-	//for (int i = 0; i < MAXFBOs + 1; i++)
-	//	m_TexId[i] = 0 ;
-
-	//m_Color = 0; // how many color render targets
-	//m_Depth = 0; // render depth?
 
 	m_RTSizeWidth = 512; // size of render targets
 	m_RTSizeHeight = 512;

@@ -78,12 +78,12 @@ private:
     void OnProcess (wxCommandEvent& event);
 	void OnRenderMode(wxCommandEvent& event);
 	void OnSetRenderFlags(wxCommandEvent& event);
-	void OnSetProfileMaterial(wxCommandEvent& event);
+	//void OnSetProfileMaterial(wxCommandEvent& event);
 	void OnOctreeBuild (wxCommandEvent& event);
 	void OnOctreeCompile (wxCommandEvent& event);
 	void OnOctreeWrite (wxCommandEvent& event);
-	void OnPhysicsBuild (wxCommandEvent &event);
-	void OnPhysicsMode (wxCommandEvent &event);
+	//void OnPhysicsBuild (wxCommandEvent &event);
+	//void OnPhysicsMode (wxCommandEvent &event);
 	void OnKeyDown(wxKeyEvent & event);
 	void OnKeyUp(wxKeyEvent & event);
 	

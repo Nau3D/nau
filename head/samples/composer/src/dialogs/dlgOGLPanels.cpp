@@ -40,7 +40,7 @@ void DlgOGLPanels::setPanel(wxSizer *siz, wxWindow *parent){
 				wxDefaultPosition, wxDefaultSize,
 				// These and other similar styles are automatically
 				// passed to the embedded wxPropertyGrid.
-				wxPG_BOLD_MODIFIED|
+				wxPG_BOLD_MODIFIED | wxPG_SPLITTER_AUTO_CENTER |
 				// Plus defaults.
 				wxPGMAN_DEFAULT_STYLE
            );
@@ -139,6 +139,8 @@ void DlgOGLPanels::setPanel(wxSizer *siz, wxWindow *parent){
 	const long depthFuncInd[] =  {GL_ALWAYS, GL_NEVER, GL_LESS, GL_LEQUAL,
 				GL_EQUAL, GL_GEQUAL, GL_GREATER, GL_NOTEQUAL,NULL};
 	pg->Append( new wxEnumProperty(wxT("FUNC"),wxPG_LABEL,depthFunc,depthFuncInd,m_glState->getPrope(IState::DEPTH_FUNC)));
+
+	pg->SetSplitterLeft(true);
 
 	sizerf->Add(pg,1,wxEXPAND);
 	siz->Add(sizerf,1,wxGROW|wxEXPAND|wxALL,5);

@@ -180,7 +180,7 @@ namespace nau {
 				m_Mat3Props[prop] = *(mat3 *)value;
 				break;
 			default:
-				assert(false && "Missibng Data Type in class attributeValues");
+				assert(false && "Missing Data Type in class attributeValues or Invalid prop");
 			}	
 		}
 

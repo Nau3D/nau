@@ -31,7 +31,7 @@
 #include <nau/config.h>
 
 #ifdef NAU_PLATFORM_WIN32
-#include <nau/system/dirent.h>
+#include <dirent.h>
 #else
 #include <dirent.h>
 #include <sys/types.h>
@@ -1945,10 +1945,12 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pRTName);
 			m_RT = RESOURCEMANAGER->createRenderTarget (s_pFullName, rtWidth, rtHeight);	
 			
+			rtSamples = 0;
 			if (TIXML_SUCCESS == pElemSize->QueryIntAttribute ("samples", &rtSamples)) {
 				m_RT->setSampleCount(rtSamples);
 			}
 
+			rtLayers = 0;
 			if (TIXML_SUCCESS == pElemSize->QueryIntAttribute ("layers", &rtLayers)) {
 				m_RT->setLayerCount(rtLayers);
 			}

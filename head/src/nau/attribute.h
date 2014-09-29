@@ -23,6 +23,11 @@ namespace nau {
 	public:
 		friend class AttribSet;
 
+		typedef enum {
+			NONE,
+			NORMALIZED,
+			COLOUR
+		} Semantics;
 
 		Attribute(): mId(-1), mDefault(NULL), mRangeDefined(false), mListDefined(false) {};
 

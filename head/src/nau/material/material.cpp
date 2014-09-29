@@ -14,7 +14,7 @@ Material::Material() :
    m_ProgramValues(),
    m_UniformValues(),
    m_Enabled (true),
-   m_Name ("Default"),
+   m_Name ("__Default"),
    m_useShader(true)
 {
 	m_State = IState::create(); 

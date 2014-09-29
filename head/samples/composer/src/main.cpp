@@ -68,7 +68,7 @@ int idMenuProcess = wxNewId();
 int idMenuOctreeBuild = wxNewId();
 int idMenuOctreeCompile = wxNewId();
 int idMenuOctreeWrite = wxNewId();
-int idMenuPhysicsBuild = wxNewId();
+//int idMenuPhysicsBuild = wxNewId();
 int idMenuQuit = wxNewId();
 int idMenuAbout = wxNewId();
 
@@ -80,14 +80,14 @@ int idMenuMaterial = wxNewId();
 int idMenuRenderFlagBoundingBox = wxNewId();
 int idMenuRenderFlagProfile = wxNewId();
 
-int idMenuProfMatWhite = wxNewId();
-int idMenuProfMatRed = wxNewId();
-int idMenuProfMatGreen = wxNewId();
-int idMenuProfMatBlue = wxNewId();
-int idMenuProfMatBlack = wxNewId();
-
-int idMenuPhysicsOn = wxNewId();
-int idMenuPhysicsOff = wxNewId();
+//int idMenuProfMatWhite = wxNewId();
+//int idMenuProfMatRed = wxNewId();
+//int idMenuProfMatGreen = wxNewId();
+//int idMenuProfMatBlue = wxNewId();
+//int idMenuProfMatBlack = wxNewId();
+//
+//int idMenuPhysicsOn = wxNewId();
+//int idMenuPhysicsOff = wxNewId();
 int idMenuMaterialsAll = wxNewId();
 
 int idMenuReload = wxNewId();
@@ -129,15 +129,15 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenuQuit, FrmMainFrame::OnQuit)
   EVT_MENU(idMenuAbout, FrmMainFrame::OnAbout)
   EVT_MENU_RANGE(idMenuWireframe, idMenuMaterial, FrmMainFrame::OnRenderMode)
-  EVT_MENU(idMenuPhysicsBuild, FrmMainFrame::OnPhysicsBuild)
-  EVT_MENU_RANGE(idMenuPhysicsOn, idMenuPhysicsOff, FrmMainFrame::OnPhysicsMode)
+  //EVT_MENU(idMenuPhysicsBuild, FrmMainFrame::OnPhysicsBuild)
+  //EVT_MENU_RANGE(idMenuPhysicsOn, idMenuPhysicsOff, FrmMainFrame::OnPhysicsMode)
   EVT_MENU(idMenuRenderFlagBoundingBox, FrmMainFrame::OnSetRenderFlags)
-  EVT_MENU(idMenuRenderFlagProfile, FrmMainFrame::OnSetRenderFlags)
-  EVT_MENU(idMenuProfMatWhite, FrmMainFrame::OnSetProfileMaterial)
-  EVT_MENU(idMenuProfMatRed, FrmMainFrame::OnSetProfileMaterial)
-  EVT_MENU(idMenuProfMatGreen, FrmMainFrame::OnSetProfileMaterial)
-  EVT_MENU(idMenuProfMatBlue, FrmMainFrame::OnSetProfileMaterial)
-  EVT_MENU(idMenuProfMatBlack, FrmMainFrame::OnSetProfileMaterial)
+  //EVT_MENU(idMenuRenderFlagProfile, FrmMainFrame::OnSetRenderFlags)
+  //EVT_MENU(idMenuProfMatWhite, FrmMainFrame::OnSetProfileMaterial)
+  //EVT_MENU(idMenuProfMatRed, FrmMainFrame::OnSetProfileMaterial)
+  //EVT_MENU(idMenuProfMatGreen, FrmMainFrame::OnSetProfileMaterial)
+  //EVT_MENU(idMenuProfMatBlue, FrmMainFrame::OnSetProfileMaterial)
+  //EVT_MENU(idMenuProfMatBlack, FrmMainFrame::OnSetProfileMaterial)
   EVT_KEY_DOWN(FrmMainFrame::OnKeyDown)
   //EVT_IDLE(FrmMainFrame::OnIdle)
 
@@ -213,21 +213,21 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	renderMenu->AppendSeparator ();
 	renderMenu->AppendCheckItem(idMenuRenderFlagBoundingBox, _("Show &Bounding Boxes"));
 	renderMenu->AppendSeparator();
-	renderMenu->AppendCheckItem(idMenuRenderFlagProfile, _("Show &Profiler"));
-	renderMenu->AppendRadioItem( idMenuProfMatWhite, _("White"));
-	renderMenu->AppendRadioItem( idMenuProfMatRed, _("Red"));
-	renderMenu->AppendRadioItem( idMenuProfMatGreen, _("Green"));
-	renderMenu->AppendRadioItem( idMenuProfMatBlue, _("Blue"));
-	renderMenu->AppendRadioItem( idMenuProfMatBlack, _("Black"));
+	//renderMenu->AppendCheckItem(idMenuRenderFlagProfile, _("Show &Profiler"));
+	//renderMenu->AppendRadioItem( idMenuProfMatWhite, _("White"));
+	//renderMenu->AppendRadioItem( idMenuProfMatRed, _("Red"));
+	//renderMenu->AppendRadioItem( idMenuProfMatGreen, _("Green"));
+	//renderMenu->AppendRadioItem( idMenuProfMatBlue, _("Blue"));
+	//renderMenu->AppendRadioItem( idMenuProfMatBlack, _("Black"));
 
 	mbar->Append (renderMenu, _("&Render"));
 
-	wxMenu* physicsMenu = new wxMenu(_T(""));
-	physicsMenu->Append (idMenuPhysicsBuild, _("&Build physics"), _("Builds physics"));
-	physicsMenu->AppendRadioItem (idMenuPhysicsOn, _("Physics On"), _("Physics On"));
-	physicsMenu->AppendRadioItem (idMenuPhysicsOff, _("Physics Off"), _("Physics Off"));
-	physicsMenu->Check (idMenuPhysicsOff, true);
-	mbar->Append (physicsMenu, _("Physics"));
+	//wxMenu* physicsMenu = new wxMenu(_T(""));
+	//physicsMenu->Append (idMenuPhysicsBuild, _("&Build physics"), _("Builds physics"));
+	//physicsMenu->AppendRadioItem (idMenuPhysicsOn, _("Physics On"), _("Physics On"));
+	//physicsMenu->AppendRadioItem (idMenuPhysicsOff, _("Physics Off"), _("Physics Off"));
+	//physicsMenu->Check (idMenuPhysicsOff, true);
+	//mbar->Append (physicsMenu, _("Physics"));
 
 	helpMenu = new wxMenu(_T(""));
     helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
@@ -249,7 +249,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	helpMenu->Enable(idMenu_DLG_SHADERS,false);
 	helpMenu->Enable(idMenu_DLG_PASS,false);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, false);
-	
+	helpMenu->Enable(idMenu_DLG_SCENES, false);
+
 #ifdef GLINTERCEPTDEBUG
 	debugMenu = new wxMenu(_T(""));
 	debugMenu->Append(idMenuDbgBreak, _("Pause"),_("Pauses or resumes rendering"));
@@ -294,7 +295,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	int attribList[] = {
 		WX_GL_RGBA,
 		WX_GL_DOUBLEBUFFER,
-		WX_GL_DEPTH_SIZE, 24,
+		WX_GL_DEPTH_SIZE, 32,
 		WX_GL_STENCIL_SIZE, 8, 
 		WX_GL_SAMPLE_BUFFERS,1,
 		WX_GL_SAMPLES,4,
@@ -459,6 +460,7 @@ FrmMainFrame::updateDlgs()
 	helpMenu->Enable(idMenu_DLG_SHADERS,true);
 	helpMenu->Enable(idMenu_DLG_PASS,true);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, true);
+	helpMenu->Enable(idMenu_DLG_SCENES, true);
 }
 
 
@@ -656,25 +658,25 @@ FrmMainFrame::OnRenderMode(wxCommandEvent& event)
 }
 
 	
-void
-FrmMainFrame::OnSetProfileMaterial(wxCommandEvent& event)
-{
-	if (event.GetId() == idMenuProfMatWhite){
-		//NAU->setProfileMaterial ("__Emission White");
-	}
-	if (event.GetId() == idMenuProfMatRed) {
-		//NAU->setProfileMaterial ("__Emission Red");
-	}
-	if (event.GetId() == idMenuProfMatGreen){
-		//NAU->setProfileMaterial ("__Emission Green");
-	}
-	if (event.GetId() == idMenuProfMatBlue){
-		//NAU->setProfileMaterial ("__Emission Blue");
-	}
-	if (event.GetId() == idMenuProfMatBlack){
-		//NAU->setProfileMaterial ("Black");
-	}
-}
+//void
+//FrmMainFrame::OnSetProfileMaterial(wxCommandEvent& event)
+//{
+//	if (event.GetId() == idMenuProfMatWhite){
+//		//NAU->setProfileMaterial ("__Emission White");
+//	}
+//	if (event.GetId() == idMenuProfMatRed) {
+//		//NAU->setProfileMaterial ("__Emission Red");
+//	}
+//	if (event.GetId() == idMenuProfMatGreen){
+//		//NAU->setProfileMaterial ("__Emission Green");
+//	}
+//	if (event.GetId() == idMenuProfMatBlue){
+//		//NAU->setProfileMaterial ("__Emission Blue");
+//	}
+//	if (event.GetId() == idMenuProfMatBlack){
+//		//NAU->setProfileMaterial ("Black");
+//	}
+//}
 
 
 void 
@@ -725,28 +727,28 @@ FrmMainFrame::OnOctreeWrite (wxCommandEvent& event)
 }
 
 
-void
-FrmMainFrame::OnPhysicsBuild (wxCommandEvent &event)
-{
-	buildPhysics();
-}
+//void
+//FrmMainFrame::OnPhysicsBuild (wxCommandEvent &event)
+//{
+//	buildPhysics();
+//}
 
 
-void
-FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
-{
-	nau::scene::Camera *cam = NAU->getActiveCamera ();
-
-	if (idMenuPhysicsOn == event.GetId()) {
-		m_pRoot->enablePhysics();		
-		cam->setDynamic(true);
-	}
-	
-	if (idMenuPhysicsOff == event.GetId()) {
-		m_pRoot->disablePhysics();	
-		cam->setDynamic(false);
-	}
-}
+//void
+//FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
+//{
+//	nau::scene::Camera *cam = NAU->getActiveCamera ();
+//
+//	if (idMenuPhysicsOn == event.GetId()) {
+//		m_pRoot->enablePhysics();		
+//		cam->setDynamic(true);
+//	}
+//	
+//	if (idMenuPhysicsOff == event.GetId()) {
+//		m_pRoot->disablePhysics();	
+//		cam->setDynamic(false);
+//	}
+//}
 
 
 void

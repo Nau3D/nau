@@ -18,7 +18,7 @@
 
 
 #ifdef NAU_PLATFORM_WIN32
-#include <nau/system/dirent.h>
+#include <dirent.h>
 #else
 #include <dirent.h>
 #include <sys/types.h>
