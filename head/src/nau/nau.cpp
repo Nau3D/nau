@@ -160,7 +160,7 @@ bool
 Nau::validateUserAttribContext(std::string context) {
 
 	if (context == "LIGHT" || context == "CAMERA" || context == "VIEWPORT"
-		|| context == "TEXTURE" || context == "STATE" || context == "VIEWPORT" || context == "PASS")
+		|| context == "TEXTURE" || context == "STATE"  || context == "PASS")
 		return true;
 
 	return false;
@@ -182,8 +182,6 @@ Nau::getAttribs(std::string context) {
 		attribs = &(Texture::Attribs);
 	else if (context == "STATE")
 		attribs = &(IState::Attribs);
-	else if (context == "VIEWPORT")
-		attribs = &(Viewport::Attribs);
 	else if (context == "PASS")
 		attribs = &(Pass::Attribs);
 

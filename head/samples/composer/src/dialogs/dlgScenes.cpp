@@ -172,6 +172,11 @@ void DlgScenes::updateList() {
 	std::vector<std::string> *names = RENDERMANAGER->getSceneNames();
 	int num = names->size();
 
+	if (num == 0) {
+		m_Active = "";
+		return;
+	}
+
 	list->Clear();
 
 	for(int i = 0; i < num; i++)  {
@@ -186,6 +191,9 @@ void DlgScenes::updateList() {
 
 void DlgScenes::update() 
 {
+	if (m_Active == "")
+		return;
+
 	IScene *scene = RENDERMANAGER->getScene(m_Active);
 
 	/* Is scene a partitioned scene? */

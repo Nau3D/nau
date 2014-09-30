@@ -40,6 +40,12 @@
 			<shader>
 				<name>showBuffer</name>
 			</shader>
+			<buffers>	
+				<buffer name="test" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
 		</material>		
 	</materials>
 		

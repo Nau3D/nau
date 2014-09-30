@@ -110,6 +110,7 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 	event.Skip ();
 }
 
+
 void 
 GlCanvas::OnSize (wxSizeEvent &event)
 {
@@ -150,7 +151,6 @@ GlCanvas::OnEnterWindow (wxMouseEvent &event)
 void 
 GlCanvas::Render ()
 {
-
 	PROFILE ("Main cicle");
 
 	if (0 != m_pEngine) {

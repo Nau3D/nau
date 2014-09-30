@@ -6,8 +6,6 @@ struct hit {
 	float u,v;
 };
 
-
-
 layout(std430, binding = 2) buffer hitsBuffer {
 	hit hits[];
 //	vec4 hits[];

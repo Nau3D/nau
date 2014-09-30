@@ -31,7 +31,7 @@ void main(void) {
 	float occ = 0.0;
 	vec4 pos = texture(positions, texPos.xy);
 	float depthV = texture(depth, texPos.xy);
-	vec3 normal =  texture(normals,texPos.xy).xyz * 2.0 -1.0;
+	vec3 normal =  texture(normals,texPos.xy).xyz;// * 2.0 -1.0;
 	float hasGeometry = texture(normals,texPos.xy).w;
 	vec3 u = cross(normal, vec3(0,1,0));
 	if (dot(u,normal) < 1.e-3f)
@@ -60,12 +60,12 @@ void main(void) {
 		
 	}
 	occMap = vec4(occ/9.0);
-	// if (hasGeometry	== 0)
-		// occMap = vec4(0);
-	// else if (occ == 0)
-		// occMap = vec4(0.25);
-	// else
-		// occMap = vec4(0.75);
+	if (hasGeometry	== 0)
+		occMap = vec4(0);
+	else if (occ == 0)
+		occMap = vec4(0.25);
+	else
+		occMap = vec4(occ/9.0);
 		
 	//occMap = vec4(	sampleProjDepth);
 }

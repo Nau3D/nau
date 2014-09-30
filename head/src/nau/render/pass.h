@@ -70,6 +70,11 @@ namespace nau
 			} StencilOp;
 
 			typedef enum {
+				RUN_ALWAYS,
+
+			} RunMode;
+
+			typedef enum {
 				LESS, NEVER, ALWAYS, LEQUAL,
 				EQUAL, GEQUAL, GREATER, NOT_EQUAL
 			} StencilFunc;
