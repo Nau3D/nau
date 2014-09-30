@@ -78,6 +78,18 @@ IRenderer::addAtomic(unsigned int id, std::string name) {
 	}
 }
 
+
+int
+IRenderer::getAtomicID(std::string name) {
+
+	for (auto atom: m_AtomicLabels) {
+
+		if (atom.second == name)
+			return (atom.first);
+	}
+	return -1;
+}
+
 #endif
 
 // -------------------

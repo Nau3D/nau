@@ -31,10 +31,12 @@ namespace nau
 
 			void setMaterialName(const std::string &lName,const std::string &mName);
 			void setDimension(int dimX, int dimY, int dimZ);
+			void setAtomics(int atomicX, int atomicY, int atomicZ);
 
 		protected:
 			Material *m_Mat;
 			int m_DimX, m_DimY, m_DimZ;
+			int m_AtomicX, m_AtomicY, m_AtomicZ;
 
 		};
 	};
