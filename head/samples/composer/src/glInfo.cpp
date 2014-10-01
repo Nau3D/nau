@@ -1261,7 +1261,7 @@ getAttributesData(unsigned int program, std::vector<std::pair<std::string, std::
 	}
 }
 
-//Returns the number of subnodes per buffer, (5 means that each 6 items belong to the same buffer);
+//Returns the number of subnodes per buffer, (5 means that each 6 items belong to the same buffer); NOT WORKING!
 int getCurrentBufferInfoData(std::vector<std::string> bufferInfoData) {
 
 	int info;

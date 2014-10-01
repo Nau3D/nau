@@ -78,7 +78,8 @@ Nau::Nau() :
 	m_RenderFlags(COUNT_RENDER_FLAGS),
 	m_UseTangents(false),
 	m_UseTriangleIDs(false),
-	m_CoreProfile(false)
+	m_CoreProfile(false),
+	isFrameBegin(true)
 {
 	// create a default black viewport
 //	createViewport("default");
@@ -414,7 +415,7 @@ Nau::reload (void)
 
 
 void
-Nau::step (void)
+Nau::step(void)
 {
 	IRenderer *renderer = RENDERER;
 	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
@@ -423,8 +424,12 @@ Nau::step (void)
 	}
 	double deltaT = m_CurrentTime - m_LastFrameTime;
 	m_LastFrameTime = m_CurrentTime;
+	unsigned char pipeEventFlag;
 
-	m_pEventManager->notifyEvent("FRAME_BEGIN","Nau", "", NULL);
+	if (isFrameBegin){
+		m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+		isFrameBegin = false;
+	}
 
 	renderer->resetCounters();
 
@@ -443,6 +448,7 @@ Nau::step (void)
 	//	}
 	//}
 
+	//### Será que deve ser por pass?
 	if (true == m_Physics) {
 		m_pWorld->update();	
 		m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
@@ -450,7 +456,7 @@ Nau::step (void)
 
 	//renderer->setDefaultState();
 
-	m_pRenderManager->renderActivePipeline();
+	pipeEventFlag = m_pRenderManager->renderActivePipeline();
 
 #ifdef NAU_RENDER_FLAGS
 //#ifdef PROFILE
@@ -481,8 +487,13 @@ Nau::step (void)
 //	}
 //#endif // PROFILE
 #endif // NAU_RENDER_FLAGS
-
- 	m_pEventManager->notifyEvent("FRAME_END","Nau", "", NULL);
+	switch (pipeEventFlag){
+	case PIPE_PASS_STARTEND:
+	case PIPE_PASS_END:
+		m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
+		isFrameBegin = true;
+		break;
+	}
 }
 
 

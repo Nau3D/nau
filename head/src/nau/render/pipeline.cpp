@@ -20,7 +20,8 @@ Pipeline::Pipeline (std::string pipelineName) :
 	m_Active (true),
 	m_Passes(0),
 	m_DefaultCamera(""),
-	m_CurrentPass(0)
+	m_CurrentPass(0),
+	m_NextPass(0)
 {
 
 }
@@ -177,35 +178,66 @@ Pipeline::getCurrentCamera()
 }
 
 
-void
+unsigned char
 Pipeline::execute ()
 {
 	//For each pass....
 
 	try {
-		PROFILE ("Pipeline execute");
+		PROFILE("Pipeline execute");
 
-		std::deque<Pass*>::iterator passIter;
-		passIter = m_Passes.begin();
+		//std::deque<Pass*>::iterator passIter;
+		//passIter = m_Passes.begin();
 
-		for ( ; passIter != m_Passes.end(); passIter++) {
-		
-			PROFILE ((*passIter)->getName().c_str());
-			m_CurrentPass = *passIter;
-			RENDERER->setDefaultState();			
-			(*passIter)->prepare();
-		
-			if (true == (*passIter)->renderTest()) {	
+		//for ( ; passIter != m_Passes.end(); passIter++) {
 
-				(*passIter)->doPass();
+		//PROFILE ((*passIter)->getName().c_str());
+		//m_CurrentPass = *passIter;
+		//RENDERER->setDefaultState();			
+		//(*passIter)->prepare();
+
+		//if (true == (*passIter)->renderTest()) {	
+
+		//	(*passIter)->doPass();
+		//}
+		//(*passIter)->restore();
+		//}
+		{
+			PROFILE(m_Passes[m_NextPass]->getName().c_str());
+			m_CurrentPass = m_Passes[m_NextPass];
+			RENDERER->setDefaultState();
+			m_Passes[m_NextPass]->prepare();
+
+			if (true == m_Passes[m_NextPass]->renderTest()) {
+
+				m_Passes[m_NextPass]->doPass();
 			}
-			(*passIter)->restore();
+			m_Passes[m_NextPass]->restore();
 		}
+
 		m_CurrentPass = NULL;
+
+		m_NextPass++;
+
+		if (m_NextPass == 1){
+			if (m_NextPass >= m_Passes.size()){
+				m_NextPass = 0;
+				return PIPE_PASS_STARTEND;
+			}
+			else{
+				return PIPE_PASS_START;
+			}
+		} 
+		else if (m_NextPass >= m_Passes.size()){
+			m_NextPass = 0;
+			return PIPE_PASS_END;
+		}
 	}
 	catch(Exception &e) {
 		SLOG(e.getException().c_str());
 	}
+
+	return PIPE_PASS_MIDDLE;
 }
 
 

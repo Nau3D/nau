@@ -172,6 +172,8 @@ namespace nau {
 
 		int loadedScenes;
 
+		bool isFrameBegin;
+
 	};
 };
 

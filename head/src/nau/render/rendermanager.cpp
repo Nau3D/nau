@@ -245,14 +245,15 @@ RenderManager::getVertexData(unsigned int sceneObjID, unsigned int triID) {
 
 }
 
-void
+unsigned char
 RenderManager::renderActivePipeline () 
 {
 	// There must be an active pipeline
 	// assert(m_ActivePipeline);
 
 	if (m_ActivePipeline)
-		m_ActivePipeline->execute ();
+		return m_ActivePipeline->execute ();
+	return 0;
 }
 
 

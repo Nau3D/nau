@@ -45,7 +45,7 @@ namespace nau
 			//! Returns the actual renderer
 			IRenderer* getRenderer (void);
 			//! Renders the active pipeline
-			void renderActivePipeline ();
+			unsigned char renderActivePipeline();
 
 			// OCTREE STUFF
 			//! Creates an octree for every OctreeScene
