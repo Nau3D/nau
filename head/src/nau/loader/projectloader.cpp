@@ -964,6 +964,30 @@ ProjectLoader::loadPassCamera(TiXmlHandle hPass, Pass *aPass)
 	}
 }
 
+
+/* -----------------------------------------------------------------------------
+MODE
+
+<mode>RUN_ALWAYS</mode>
+
+Specifies the run mode. Valid values are defined in class Pass (file pass.h)
+-----------------------------------------------------------------------------*/
+
+void
+ProjectLoader::loadPassMode(TiXmlHandle hPass, Pass *aPass)
+{
+	TiXmlElement *pElem;
+
+	pElem = hPass.FirstChild("mode").Element();
+	if (pElem != 0) {
+		bool valid = Pass::Attribs.isValid("RUN_MODE", pElem->GetText());
+		if (!valid) {
+			NAU_THROW("Pass: %s - Invalid mode: %s", aPass->getName().c_str(), pElem->GetText());
+		}
+
+		aPass->setMode((Pass::RunMode)Pass::Attribs.getListValueOp(Pass::RUN_MODE, pElem->GetText()));
+	}
+}
 /* -----------------------------------------------------------------------------
 LIGHTS
 
@@ -2832,11 +2856,13 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 
 			}
 			passMapper[pName] = aPass;
-					
+				
+			loadPassMode(hPass, aPass);	
+
 			if (0 != strcmp(pClass, "optixPrime") && 0 != strcmp(pClass, "quad") && 0 != strcmp(pClass, "profiler")) {
 
 				loadPassScenes(hPass,aPass);
-				loadPassCamera(hPass,aPass);			
+				loadPassCamera(hPass,aPass);	
 			}
 			else
 				loadPassTexture(hPass,aPass);

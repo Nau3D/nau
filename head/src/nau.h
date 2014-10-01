@@ -83,6 +83,8 @@ namespace nau {
 		nau::world::IWorld& getWorld (void);
 
 		void step (void);
+		void resetFrameCount();
+		unsigned long int getFrameCount();
 
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);
@@ -131,6 +133,7 @@ namespace nau {
 		Nau();
 
 		std::string m_Name;
+		unsigned long int m_FrameCount;
 
 		/*
 		 * Rendering Flags

@@ -283,6 +283,7 @@ Nau::readDirectory (std::string dirName)
 void
 Nau::clear() {
 
+	resetFrameCount();
 	setActiveCameraName("");
 	SceneObject::ResetCounter();
 	MATERIALLIBMANAGER->clear();
@@ -402,14 +403,6 @@ Nau::reload (void)
 	return true;
 }
 
-//void 
-//nau::Nau::setProfileMaterial(std::string aMaterial) {
-//
-//	m_ProfileMaterial = MATERIALLIBMANAGER->getDefaultMaterial(aMaterial);
-//	if (m_ProfileMaterial == 0)
-//		m_ProfileMaterial = MATERIALLIBMANAGER->getDefaultMaterial("__Emission White");
-//}
-
 
 void
 Nau::step (void)
@@ -450,37 +443,29 @@ Nau::step (void)
 
 	m_pRenderManager->renderActivePipeline();
 
-#ifdef NAU_RENDER_FLAGS
-//#ifdef PROFILE
-//	if (getRenderFlag(Nau::PROFILE_RENDER_FLAG))
-//	{
-//		PROFILE ("Profile rendering");
-//
-//		renderer->setViewport(m_WindowWidth, m_WindowHeight);
-//
-//		renderer->saveAttrib(IRenderer::RENDER_MODE);
-//		renderer->setRenderMode(IRenderer::MATERIAL_MODE);
-//		
-//		m_ProfileMaterial->prepare();
-//		renderer->disableDepthTest();
-//		//RENDERER->enableTexturing();
-//		setOrthographicProjection (static_cast<int>(m_WindowWidth), 
-//										static_cast<int>(m_WindowHeight));
-//
-//		Profile::dumpLevelsOGL();
-//
-// 		char s[128];
-// 		sprintf (s, "Primitives: %d", RENDERER->getTriCount());
-// 		renderBitmapString (30,400, Profile::font,s);
-//		
-//		resetPerspectiveProjection();
-//		renderer->enableDepthTest();
-//		renderer->restoreAttrib();
-//	}
-//#endif // PROFILE
-#endif // NAU_RENDER_FLAGS
-
  	m_pEventManager->notifyEvent("FRAME_END","Nau", "", NULL);
+
+	if (m_FrameCount == ULONG_MAX)
+		// 2 avoid issues with run_once and skip_first
+		// and allows a future implementation of odd and even frames for
+		// ping-pong rendering
+		m_FrameCount = 2;
+	else
+		++m_FrameCount;
+}
+
+
+void 
+Nau::resetFrameCount() {
+
+	m_FrameCount = 0;
+}
+
+
+unsigned long
+Nau::getFrameCount() {
+
+	return m_FrameCount;
 }
 
 

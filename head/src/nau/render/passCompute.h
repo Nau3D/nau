@@ -26,7 +26,6 @@ namespace nau
 
 			void prepare();
 			void restore();
-			bool renderTest();
 			void doPass();
 
 			void setMaterialName(const std::string &lName,const std::string &mName);

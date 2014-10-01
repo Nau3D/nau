@@ -38,7 +38,7 @@ DepthMapPass::DepthMapPass (const std::string &passName) :
 	Pass (passName)
 {
 	m_ClassName = "depthmap";
-	m_pViewport = new Viewport;
+	m_Viewport = new Viewport;
 	std::string camName = passName + "-LightCam";
 	m_LightCamera = RENDERMANAGER->getCamera(camName);
 }
@@ -55,8 +55,8 @@ DepthMapPass::addLight(const std::string &lightName)
 
 	Light *light = RENDERMANAGER->getLight (m_Lights[0]);
 
-	m_pViewport->setProp(Viewport::SIZE, vec2(m_RenderTarget->getWidth(), m_RenderTarget->getHeight()));
-	m_LightCamera->setViewport (m_pViewport);
+	m_Viewport->setProp(Viewport::SIZE, vec2(m_RenderTarget->getWidth(), m_RenderTarget->getHeight()));
+	m_LightCamera->setViewport (m_Viewport);
 	
 
 	// common properties to both direction and point lights

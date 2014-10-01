@@ -37,8 +37,8 @@ QuadPass::prepare (void)
 	RENDERER->loadIdentity(IRenderer::MODEL_MATRIX);
 
 
-	if (m_pViewport != NULL)
-		RENDERER->setViewport(m_pViewport);
+	if (m_Viewport != NULL)
+		RENDERER->setViewport(m_Viewport);
 
 	prepareBuffers();
 }

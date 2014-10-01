@@ -61,13 +61,6 @@ PassCompute::restore (void)
 }
 
 
-bool 
-PassCompute::renderTest (void)
-{
-	return true;
-}
-
-
 void
 PassCompute::doPass (void)
 {	

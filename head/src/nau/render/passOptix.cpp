@@ -194,16 +194,16 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 	glGetError();
 	if (rt == NULL) {
 		if (m_RenderTarget != NULL) 
-			delete m_pViewport;
+			delete m_Viewport;
 		m_UseRT = true;
 	}
 	else {
 		if (m_RenderTarget == NULL){
-			m_pViewport = new Viewport();
+			m_Viewport = new Viewport();
 			m_UseRT = true;
 		}
 		setRTSize(rt->getWidth(), rt->getHeight());
-		m_pViewport->setProp(Viewport::CLEAR_COLOR, rt->getClearValues());
+		m_Viewport->setProp(Viewport::CLEAR_COLOR, rt->getClearValues());
 	}
 	m_RenderTarget = rt;
 
@@ -319,13 +319,6 @@ PassOptix::restore (void)
 }
 
 
-bool 
-PassOptix::renderTest (void)
-{
-	return true;
-}
-
-
 void
 PassOptix::doPass (void)
 {
@@ -401,9 +394,9 @@ PassOptix::setupCamera (void)
 		return; 
 	}
 
-	if (0 != m_pViewport) {
-		m_pRestoreViewport = aCam->getViewport();
-		aCam->setViewport (m_pViewport);
+	if (0 != m_Viewport) {
+		m_RestoreViewport = aCam->getViewport();
+		aCam->setViewport (m_Viewport);
 	}
 	
 	RENDERER->setCamera (aCam);
