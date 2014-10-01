@@ -588,8 +588,6 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 
 #ifdef GLINTERCEPTDEBUG
 			DlgDbgGLILogRead::Instance()->clear();
-			DlgDbgPrograms::Instance()->clear();
-			//DlgDbgPrograms::Instance()->startRecording();
 
 #endif
 
@@ -877,6 +875,9 @@ void
 FrmMainFrame::LoadDebugData(){
 #ifdef GLINTERCEPTDEBUG
 	DlgDbgGLILogRead::Instance()->loadLog();
+
+	DlgDbgPrograms::Instance()->clear();
+	DlgDbgPrograms::Instance()->loadShaderInfo();
 
 	DlgDbgBuffers::Instance()->clear();
 	DlgDbgBuffers::Instance()->loadBufferInfo();

@@ -52,6 +52,8 @@ GlCanvas::GlCanvas (wxWindow *parent,
 	m_Timer.Start();
 	p_GLC = new wxGLContext(this);
 	SetCurrent(*p_GLC);
+
+	step = false;
 }
 
 GlCanvas::GlCanvas (wxWindow *parent,
@@ -68,6 +70,8 @@ GlCanvas::GlCanvas (wxWindow *parent,
   p_GLC = new wxGLContext(this);
   
   SetCurrent(*p_GLC);
+
+  step = false;
 }
 
 
@@ -119,7 +123,6 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 	if(!isPaused || step){
 		Render();
 
-		DlgDbgPrograms::Instance()->loadShaderInfo();
 		if (step){
 
 #ifdef GLINTERCEPTDEBUG
@@ -129,6 +132,9 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 			}
 
 			DlgDbgGLILogRead::Instance()->loadLog();
+
+			DlgDbgPrograms::Instance()->clear();
+			DlgDbgPrograms::Instance()->loadShaderInfo();
 
 			DlgDbgBuffers::Instance()->clear();
 			DlgDbgBuffers::Instance()->loadBufferInfo();

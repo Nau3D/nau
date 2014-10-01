@@ -61,8 +61,8 @@ DlgDbgPrograms::DlgDbgPrograms(): wxDialog(DlgDbgPrograms::m_Parent, -1, wxT("Na
 	this->Centre(wxBOTH);
 
 	isLogClear = true;
-	isRecording = true;
-	frameNumber = 0;
+	//isRecording = true;
+	//frameNumber = 0;
 }
 
 
@@ -99,8 +99,8 @@ void DlgDbgPrograms::clear() {
 }
 
 void DlgDbgPrograms::loadShaderInfo() {
-	if (isRecording){
-		wxTreeItemId framenode;
+	//if (isRecording){
+		//wxTreeItemId framenode;
 		std::vector<unsigned int> programs = getProgramNames();
 
 		if (isLogClear){
@@ -109,12 +109,12 @@ void DlgDbgPrograms::loadShaderInfo() {
 			m_log->Expand(rootnode);
 		}
 
-		framenode = m_log->AppendItem(rootnode, "Frame " + to_string(frameNumber) + ">");
-		frameNumber++;
+		//framenode = m_log->AppendItem(rootnode, "Frame " + to_string(frameNumber) + ">");
+		//frameNumber++;
 		for (int i = 0; i < programs.size(); i++){
-			loadProgramInfo(framenode, programs[i]);
+			loadProgramInfo(rootnode, programs[i]);
 		}
-	}
+	//}
 }
 
 void DlgDbgPrograms::loadProgramInfo(wxTreeItemId basenode, unsigned int program){
@@ -304,7 +304,7 @@ void DlgDbgPrograms::OnSaveInfoAux(fstream &s, wxTreeItemId parent, int nodeleve
 	}
 }
 
-void DlgDbgPrograms::startRecording(){
-	isRecording = true;
-	frameNumber = 0;
-}
+//void DlgDbgPrograms::startRecording(){
+//	isRecording = true;
+//	frameNumber = 0;
+//}
