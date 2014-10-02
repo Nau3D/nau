@@ -292,7 +292,7 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 	}
 
 	if ('B' == event.GetKeyCode()) {
-		m_pEngine->sendKeyToEngine (event.GetKeyCode());
+		m_pEngine->resetFrameCount();
 	}
 
 	if ('P' == event.GetKeyCode()) {
