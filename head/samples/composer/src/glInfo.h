@@ -25,6 +25,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <utility>
 
 #include <GL/glew.h>
 
@@ -55,4 +56,8 @@ void getUniformValued(double *f, int rows, int columns, std::vector<std::string>
 void getProgramInfoData(unsigned int program, std::vector<std::pair<std::string, char>> &shadersInfo, std::vector<std::string> &stdInfo,  std::vector<std::string> &geomInfo,  std::vector<std::string> &tessInfo);
 void getAttributesData(unsigned int program, std::vector<std::pair<std::string, std::pair<int,std::string>>> &attributeList);
 
-int getCurrentBufferInfoData(std::vector<std::string> bufferInfoData);
+int getCurrentBufferInfoData(std::vector<std::string> &bufferInfoData);
+void getCurrentVAOInfoData(std::vector<std::pair<
+		std::pair<std::string, std::string>,
+		std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>>
+	>> &vaoInfoData);

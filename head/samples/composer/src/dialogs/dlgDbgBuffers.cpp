@@ -97,20 +97,33 @@ void DlgDbgBuffers::clear() {
 }
 
 void DlgDbgBuffers::loadBufferInfo() {
-	wxTreeItemId rootnode, buffernode;
-    std::vector<string> bufferdata;
-	int items = getCurrentBufferInfoData(bufferdata);
+	wxTreeItemId rootnode, appendnode, buffersnode, buffernode, vaoNode;
 	
 	if (isLogClear){
+		std::vector<std::pair<std::pair<std::string, std::string>, std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>>>> vaoInfoData;
+		getCurrentVAOInfoData(vaoInfoData);
+
 		rootnode = m_log->AddRoot("Buffers>");
-		for (int i = 0; i < bufferdata.size(); i+=1+items){
-			buffernode = m_log->AppendItem(rootnode,bufferdata[i]);
-			for (int j = 0; j < items; j++){
-				m_log->AppendItem(buffernode,bufferdata[i+j]);
+
+		appendnode = m_log->AppendItem(rootnode, "VAO>");
+		for (std::pair<std::pair<std::string, std::string>, std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>>> vaoInfo : vaoInfoData){
+			vaoNode = m_log->AppendItem(appendnode, vaoInfo.first.first);
+			m_log->AppendItem(vaoNode, vaoInfo.first.second);
+			buffersnode = m_log->AppendItem(vaoNode, "Buffers>");
+			for (std::pair<std::vector<std::string>, std::vector<std::string>> attributes : vaoInfo.second){
+				buffernode = m_log->AppendItem(buffersnode, attributes.first[0]);
+				for (int i = 1; i < attributes.first.size(); i++){
+					m_log->AppendItem(buffernode, attributes.first[i]);
+				}
+				buffernode = m_log->AppendItem(buffernode, "Values>");
+				for (int i = 0; i < attributes.second.size(); i++){
+					m_log->AppendItem(buffernode, attributes.second[i]);
+				}
 			}
 		}
 		isLogClear=false;
 	}
+
 	m_log->Expand(rootnode);
 }
 

@@ -1261,34 +1261,211 @@ getAttributesData(unsigned int program, std::vector<std::pair<std::string, std::
 	}
 }
 
-//Returns the number of subnodes per buffer, (5 means that each 6 items belong to the same buffer); NOT WORKING!
-int getCurrentBufferInfoData(std::vector<std::string> bufferInfoData) {
+void
+getVAOInfo(unsigned int buffer, int &elemarray, std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>> &attributes) {
 
-	int info;
+	int count, info, prevBuffer, prevVAO, boundbuffer, datatype, length, size;
+	void *ptr;
 
-	// iterate for all buffer types
-	std::map<int, int>::iterator iter = spBufferBound.begin();
-	for ( ; iter != spBufferBound.end(); ++iter) {
-		// get current binding for a type of buffer
-		glGetIntegerv(iter->first, &info);
-		// if a buffer is bound get its info
+
+	// is it a VAO?
+	if (!glIsVertexArray(buffer)) {
+		return;
+	}
+
+	glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &prevVAO);
+	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prevBuffer);
+	
+	// bind requested VAO
+	// should be able to get previously bounded VAO...
+	glBindVertexArray(buffer);
+
+	// get element array buffer name
+	glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &info);
+	if (info)
+		elemarray = info;
+
+
+	// get info for each attrib mapped buffer
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &count);
+	for (int i = 0; i < count; ++i) {
+
+		glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &info);
 		if (info) {
-			bufferInfoData.push_back("Buffer: " + std::to_string(info) + ">");
-			bufferInfoData.push_back("Type: " + spBufferBinding[iter->first]);
+			std::vector<std::string> bufferattribute;
+			std::vector<std::string> buffervalues;
+			std::string stringbuilder = "";
 
-			glGetBufferParameteriv(iter->second, GL_BUFFER_ACCESS, &info);
-			bufferInfoData.push_back("Access: " + spBufferAccess[info]);
 
-			glGetBufferParameteriv(iter->second, GL_BUFFER_MAPPED, &info);
-			bufferInfoData.push_back("Mapped: " + std::to_string(info));
 
-			glGetBufferParameteriv(iter->second, GL_BUFFER_SIZE, &info);
-			bufferInfoData.push_back("Size: " + std::to_string(info));
+			glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &info);
+			bufferattribute.push_back("Buffer: " + std::to_string(info) + ">");
+			boundbuffer = info;
 
-			glGetBufferParameteriv(iter->second, GL_BUFFER_USAGE, &info);
-			bufferInfoData.push_back("Usage: " + spBufferUsage[info]);
+			glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prevBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, info);
+			glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &info);
+			glBindBuffer(GL_ARRAY_BUFFER, prevBuffer);
+			bufferattribute.push_back("Size: " + std::to_string(info));
+			size = info;
+
+			glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_SIZE, &info);
+			bufferattribute.push_back("Components: " + std::to_string(info));
+
+			glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_TYPE, &info);
+			bufferattribute.push_back("Type: " + spDataF[info]);
+			datatype = info;
+
+			glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &info);
+			bufferattribute.push_back("Stride: " + std::to_string(info));
+
+			glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, &info);
+			bufferattribute.push_back("Normalized: " + std::to_string(info));
+
+			glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &info);
+			bufferattribute.push_back("Divisor: " + std::to_string(info));
+
+			glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_INTEGER, &info);
+			bufferattribute.push_back("Integer: " + std::to_string(info));
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, boundbuffer);
+
+			ptr = glMapBufferRange(GL_ARRAY_BUFFER, 0, size, GL_MAP_READ_BIT);
+			switch (datatype){
+			case GL_UNSIGNED_BYTE:{
+					unsigned char *data = (unsigned char*)ptr;
+					length = size / sizeof(unsigned char);
+					for (int i = 0; i < length; i++){
+						buffervalues.push_back(std::to_string(data[i]));
+					}
+					break;
+				}
+			case GL_BYTE:{
+					char *data = (char*)ptr;
+					length = size / sizeof(char);
+					for (int i = 0; i < length; i++){
+						buffervalues.push_back(std::to_string(data[i]));
+					}
+					break;
+				}
+			case GL_UNSIGNED_SHORT:{
+					unsigned short *data = (unsigned short*)ptr;
+					length = size / sizeof(unsigned short);
+					for (int i = 0; i < length; i++){
+						buffervalues.push_back(std::to_string(data[i]));
+					}
+					break;
+				}
+			case GL_SHORT:{
+					short *data = (short*)ptr;
+					length = size / sizeof(short);
+					for (int i = 0; i < length; i++){
+						buffervalues.push_back(std::to_string(data[i]));
+					}
+					break;
+				}
+			case GL_UNSIGNED_INT:{
+					unsigned int *data = (unsigned int*)ptr;
+					length = size / sizeof(unsigned int);
+					for (int i = 0; i < length; i++){
+						buffervalues.push_back(std::to_string(data[i]));
+					}
+					break;
+				}
+			case GL_INT:{
+					int *data = (int*)ptr;
+					length = size / sizeof(int);
+					for (int i = 0; i < length; i++){
+						buffervalues.push_back(std::to_string(data[i]));
+					}
+					break;
+				}
+			case GL_HALF_FLOAT:{
+					buffervalues.push_back("Not implemented for half float");
+					break;
+				}
+			case GL_FLOAT:{
+					float *data = (float*)ptr;
+					length = size / sizeof(float);
+					for (int i = 0; i < length; i++){
+						buffervalues.push_back(std::to_string(data[i]));
+					}
+					break;
+				}
+			}
+
+			glUnmapBuffer(GL_ARRAY_BUFFER);
+
+			attributes.push_back(std::make_pair(bufferattribute, buffervalues));
+
 		}
 	}
 
-	return 5;
+	glBindVertexArray(prevVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, prevBuffer);
+}
+
+//Returns the number of subnodes per buffer, (5 means that each 6 items belong to the same buffer); NOT WORKING!
+int getCurrentBufferInfoData(std::vector<std::string> &bufferInfoData) {
+
+	int info;
+	std::vector<unsigned int> vaos = getVAONames();
+
+	// iterate for all buffer types
+	//std::map<int, int>::iterator iter = spBufferBound.begin();
+	//for ( ; iter != spBufferBound.end(); ++iter) {
+	//	// get current binding for a type of buffer
+	//	glGetIntegerv(iter->first, &info);
+	//	// if a buffer is bound get its info
+	//	if (info) {
+	//		bufferInfoData.push_back("Buffer: " + std::to_string(info) + ">");
+	//		bufferInfoData.push_back("Type: " + spBufferBinding[iter->first]);
+
+	//		glGetBufferParameteriv(iter->second, GL_BUFFER_ACCESS, &info);
+	//		bufferInfoData.push_back("Access: " + spBufferAccess[info]);
+
+	//		glGetBufferParameteriv(iter->second, GL_BUFFER_MAPPED, &info);
+	//		bufferInfoData.push_back("Mapped: " + std::to_string(info));
+
+	//		glGetBufferParameteriv(iter->second, GL_BUFFER_SIZE, &info);
+	//		bufferInfoData.push_back("Size: " + std::to_string(info));
+
+	//		glGetBufferParameteriv(iter->second, GL_BUFFER_USAGE, &info);
+	//		bufferInfoData.push_back("Usage: " + spBufferUsage[info]);
+	//	}
+	//}
+	GLint isEnabled = GL_TRUE;
+	for (GLint iAttrib = 1; isEnabled; ++iAttrib) {
+		isEnabled = glIsBuffer(iAttrib);
+		if (isEnabled) {
+
+			bufferInfoData.push_back("Buffer: " + std::to_string(iAttrib) + ">");
+		}
+	}
+
+	return 0;
+}
+
+//Returns the number of subnodes per buffer, (5 means that each 6 items belong to the same buffer); NOT WORKING!
+void getCurrentVAOInfoData(std::vector<std::pair<std::pair<std::string, std::string>, std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>>>> &vaoInfoData) {
+
+	int elemarray;
+
+
+	std::vector<unsigned int> vaos = getVAONames();
+	for (unsigned int vao : vaos) {
+		std::pair<std::pair<std::string, std::string>, std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>>> vaoData;
+		std::pair<std::string, std::string> vaoName;
+		std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>> attributes;
+		getVAOInfo(vao, elemarray, attributes);
+
+		vaoName = std::make_pair("VAO: " + std::to_string(vao) + ">", "Element Array: " + std::to_string(elemarray));
+
+		vaoData = std::make_pair(vaoName, attributes);
+
+		vaoInfoData.push_back(vaoData);
+
+
+	}
 }
