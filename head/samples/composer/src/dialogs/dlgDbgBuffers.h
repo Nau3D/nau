@@ -22,8 +22,15 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 #include <wx/string.h>
-#include <wx/treectrl.h>
+//#include <wx/treectrl.h>
+#include <wx/notebook.h>
+#include <wx/combobox.h>
+#include <wx/grid.h>
+#include <wx/propgrid/propgrid.h>
+#include <wx/propgrid/advprops.h>
+#include <wx/propgrid/manager.h>
 #include <string>
+#include <vector>
 #include <iostream>
 #include <sstream>
 #include <nau/event/ilistener.h>
@@ -31,17 +38,29 @@
 
 class DlgDbgBuffers : public wxDialog, nau::event_::IListener
 {
+private:
 
+	enum DataTypes {
+		DLG_BYTE, DLG_UNSIGNED_BYTE, DLG_INT, DLG_UNSIGNED_INT, DLG_SHORT, DLG_UNSIGNED_SHORT, DLG_FLOAT, DLG_DOUBLE
+	};
 
+	void loadBufferInfoGrid();
+
+	void OnBufferSettingsChange(wxPropertyGridEvent& e);
+	void updateBufferData(wxPGProperty *bufferProperty, int currentTypeCount = -1);
+	DataTypes getBufferDataType(wxPGProperty *typeProperty, int index);
+	int getBufferDataTypeSize(DataTypes type);
+	void updateBufferDataValues(wxPGProperty *valuesProperty, std::vector<void*> &pointers, std::vector<DataTypes> types);
+	std::string getStringFromPointer(DataTypes type, void* ptr);
 protected:
 	DlgDbgBuffers();
 	DlgDbgBuffers(const DlgDbgBuffers&);
 	DlgDbgBuffers& operator= (const DlgDbgBuffers&);
 	static DlgDbgBuffers *m_Inst;
 
+	wxPropertyGridManager *pgBuffers;
+	wxPropertyGridManager *pgVAOs;
 	
-	wxTreeCtrl *m_log;
-	wxButton *m_bClear, *m_bProfiler, *m_bSave;
 	std::string name;
 	bool isLogClear;
 
@@ -56,9 +75,10 @@ public:
 	void append(std::string s);
 	void clear();
 	void loadBufferInfo();
-	void OnSaveInfo(wxCommandEvent& event);
-	void OnSaveInfoAux(std::fstream &s, wxTreeItemId parent, int nodelevel);
-	enum { DLG_BTN_SAVELOG};
+	enum { 
+		DLG_MI_PGBUFFERS,
+		DLG_MI_PGVAOS
+	};
 
 
     DECLARE_EVENT_TABLE();

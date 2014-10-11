@@ -38,6 +38,7 @@ bool isExtensionSupported(std::string extName);
 std::vector<unsigned int> &getProgramNames();
 
 //Additional Custom Functions
+std::string getDatatypeString(int datatype);
 
 //untested because nau does not have blocks
 void getBlockNames(unsigned int program, std::vector<std::string> &namelist);
@@ -56,8 +57,10 @@ void getUniformValued(double *f, int rows, int columns, std::vector<std::string>
 void getProgramInfoData(unsigned int program, std::vector<std::pair<std::string, char>> &shadersInfo, std::vector<std::string> &stdInfo,  std::vector<std::string> &geomInfo,  std::vector<std::string> &tessInfo);
 void getAttributesData(unsigned int program, std::vector<std::pair<std::string, std::pair<int,std::string>>> &attributeList);
 
-int getCurrentBufferInfoData(std::vector<std::string> &bufferInfoData);
-void getCurrentVAOInfoData(std::vector<std::pair<
-		std::pair<std::string, std::string>,
-		std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>>
-	>> &vaoInfoData);
+void getCurrentVAOInfoData(std::vector<std::pair<std::pair<int, int>, std::vector<int>>> &vaoInfoData);
+
+std::vector<int> getCurrentBufferNames();
+bool getBufferInfo(int buffer, std::pair<std::vector<int>, std::vector<std::string>> &bufferInfo);
+
+int getOpenBufferMapPointers(int buffer, int size, std::vector<int> sizes, std::vector<void*> &pointers);
+void getCloseBufferMapPointers(int prevBuffer);

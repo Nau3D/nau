@@ -41,7 +41,7 @@ protected:
 
 	
 	wxTreeCtrl *m_log;
-	wxButton *m_bClear, *m_bProfiler, *m_bSave;
+	wxButton *m_bSave;
 	std::string name;
 	bool isLogClear;
 	wxTreeItemId rootnode;
