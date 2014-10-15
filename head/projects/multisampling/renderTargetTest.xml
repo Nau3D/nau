@@ -2,9 +2,7 @@
 <project name="Multisampling Test" width = 1024 height = 512>
 	<assets>
 		<scenes>
-			<scene name="MainScene">
-				<folder>models</folder>
-			</scene>
+			<scene name="MainScene" filename="../../models/bench.obj" />
 		</scenes>
 		
 		<viewports>

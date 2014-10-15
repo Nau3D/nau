@@ -30,6 +30,8 @@
 				<values>
 					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />		
+					<valueof uniform="camM" 		type="CAMERA" context="MainCamera" 
+														component="PROJECTION_VIEW_MODEL"  />	
 				</values>
 			</shader>
 			<textures>
