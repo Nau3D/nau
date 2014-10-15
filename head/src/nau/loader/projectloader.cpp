@@ -31,7 +31,7 @@
 #include <nau/config.h>
 
 #ifdef NAU_PLATFORM_WIN32
-#include <nau/system/dirent.h>
+#include <dirent.h>
 #else
 #include <dirent.h>
 #include <sys/types.h>
@@ -963,6 +963,30 @@ ProjectLoader::loadPassCamera(TiXmlHandle hPass, Pass *aPass)
 	}
 }
 
+
+/* -----------------------------------------------------------------------------
+MODE
+
+<mode>RUN_ALWAYS</mode>
+
+Specifies the run mode. Valid values are defined in class Pass (file pass.h)
+-----------------------------------------------------------------------------*/
+
+void
+ProjectLoader::loadPassMode(TiXmlHandle hPass, Pass *aPass)
+{
+	TiXmlElement *pElem;
+
+	pElem = hPass.FirstChild("mode").Element();
+	if (pElem != 0) {
+		bool valid = Pass::Attribs.isValid("RUN_MODE", pElem->GetText());
+		if (!valid) {
+			NAU_THROW("Pass: %s - Invalid mode: %s", aPass->getName().c_str(), pElem->GetText());
+		}
+
+		aPass->setMode((Pass::RunMode)Pass::Attribs.getListValueOp(Pass::RUN_MODE, pElem->GetText()));
+	}
+}
 /* -----------------------------------------------------------------------------
 LIGHTS
 
@@ -1846,9 +1870,13 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 	COMPUTE SETTINGS
 
 			<pass class="compute" name="test">
-				<material mat="computeShader" lib="myLib" WdimX=256, WdimY=256, WdimZ=0/>
-				<!-- may have params, camera, viewport, lights -->
-			</pass>	
+				<material name="computeShader" fromLibrary="myLib" dimX=256, dimY=256, dimZ=0/>
+				<!-- or -->
+				<material name="computeShader" fromLibrary="myLib" atomicX="at1", atomicY="at2", atomicZ="at3"/>
+			</pass>
+
+	The strings in the atomics are atomic labels that must be previously defined
+	dims and atmics can be mixed, but for each dimension there must be only one
 -------------------------------------------------------------------------------*/
 
 
@@ -1861,8 +1889,12 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 
 	pElem = hPass.FirstChildElement("material").Element();
 	if (pElem != NULL) {
-		const char *pMatName = pElem->Attribute ("mat");
-		const char *pLibName = pElem->Attribute ("lib");
+		const char *pMatName = pElem->Attribute ("name");
+		const char *pLibName = pElem->Attribute ("fromLibrary");
+		const char *pAtX = pElem->Attribute("atomicX");
+		const char *pAtY = pElem->Attribute("atomicY");
+		const char *pAtZ = pElem->Attribute("atomicZ");
+
 		if (pMatName != NULL && pLibName != NULL) {
 			if (!MATERIALLIBMANAGER->hasMaterial(pLibName,pMatName))
 				NAU_THROW("Pass %s: Material %s::%s is not defined", aPass->getName().c_str(), pLibName, pMatName);
@@ -1871,16 +1903,56 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("Pass %s: Material not defined", aPass->getName().c_str());
 
 		int dimX, dimY, dimZ;
-		if (TIXML_SUCCESS != pElem->QueryIntAttribute("dimX", &dimX)) 
-			NAU_THROW("Pass %s: dimX is not defined", aPass->getName().c_str());
+		int atX = -1, atY = -1, atZ = -1;
+		
+		// Read value or atomic id for dimX
+		int res = pElem->QueryIntAttribute("dimX", &dimX);
+		if (TIXML_SUCCESS != res && pAtX == NULL) {
+			NAU_THROW("Pass %s: dimX or atomicX are not defined", aPass->getName().c_str());
+		}
+		else if (TIXML_SUCCESS == res && pAtX != NULL) {
+			NAU_THROW("Pass %s: dimX and atomicX are both defined", aPass->getName().c_str());
+		}
 
-		if (TIXML_SUCCESS != pElem->QueryIntAttribute("dimY", &dimY))
+		if (pAtX != NULL) {
+			atX = RENDERER->getAtomicID(pAtX);
+			if (atX == -1) {
+				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+			}
+		}
+
+		// Read value or atomic id for dimY
+		res = pElem->QueryIntAttribute("dimY", &dimY);
+		if (TIXML_SUCCESS == res && pAtY != NULL) {
+			NAU_THROW("Pass %s: dimY and atomicY are both defined", aPass->getName().c_str());
+		}
+
+		if (TIXML_SUCCESS != res)
 			dimY = 1;
-		if (TIXML_SUCCESS != pElem->QueryIntAttribute("dimZ", &dimZ))
+		if (pAtY != NULL) {
+			atY = RENDERER->getAtomicID(pAtX);
+			if (atY == -1) {
+				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+			}
+		}
+		// Read value or atomic id for dimZ
+		res = pElem->QueryIntAttribute("dimZ", &dimZ);
+		if (TIXML_SUCCESS == res && pAtZ != NULL) {
+			NAU_THROW("Pass %s: dimZ and atomicZ are both defined", aPass->getName().c_str());
+		}
+
+		if (TIXML_SUCCESS != res)
 			dimZ = 1;
+		if (pAtZ != NULL) {
+			atZ = RENDERER->getAtomicID(pAtX);
+			if (atZ == -1) {
+				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+			}
+		}
 
 		p->setMaterialName (pLibName, pMatName);
 		p->setDimension( dimX, dimY, dimZ);	
+		p->setAtomics(atX, atY, atZ);
 	}
 	else
 		NAU_THROW("Pass %s: Missing material", aPass->getName().c_str());
@@ -1944,10 +2016,12 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pRTName);
 			m_RT = RESOURCEMANAGER->createRenderTarget (s_pFullName, rtWidth, rtHeight);	
 			
+			rtSamples = 0;
 			if (TIXML_SUCCESS == pElemSize->QueryIntAttribute ("samples", &rtSamples)) {
 				m_RT->setSampleCount(rtSamples);
 			}
 
+			rtLayers = 0;
 			if (TIXML_SUCCESS == pElemSize->QueryIntAttribute ("layers", &rtLayers)) {
 				m_RT->setLayerCount(rtLayers);
 			}
@@ -2781,11 +2855,13 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 
 			}
 			passMapper[pName] = aPass;
-					
+				
+			loadPassMode(hPass, aPass);	
+
 			if (0 != strcmp(pClass, "optixPrime") && 0 != strcmp(pClass, "quad") && 0 != strcmp(pClass, "profiler")) {
 
 				loadPassScenes(hPass,aPass);
-				loadPassCamera(hPass,aPass);			
+				loadPassCamera(hPass,aPass);	
 			}
 			else
 				loadPassTexture(hPass,aPass);

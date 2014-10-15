@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<materiallib name="Ambient Occlusion">
+	<rendertargets>
+		<rendertarget name = "info">
+			<size width="1024" height="1024" />
+			<depth name="depthMap" internalFormat="DEPTH_COMPONENT32F"/>
+			<colors>
+				<color name="normalMap" internalFormat="RGBA32F" />
+				<color name="posMap"  internalFormat="RGBA32F" />
+			</colors>
+		</rendertarget>
+		<rendertarget name = "shadows">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="occMap"  internalFormat="RGBA32F" />
+			</colors>
+		</rendertarget>
+	</rendertargets>
+	<shaders>
+		<shader name="gatherInfo" 
+							ps="shaders/gatherInfo.frag" 
+							vs="shaders/gatherInfo.vert" />
+		<shader name="ambOcc"
+							ps="shaders/ambOcc.frag"
+							vs="shaders/ambOcc.vert" />
+	</shaders>
+	<materials>
+		<material name="gatherInfo">
+			<shader>
+				<name>gatherInfo</name>
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+											component="PROJECTION_VIEW_MODEL" />										
+					<valueof uniform="VM"  type="CURRENT" context="MATRIX" 
+											component="VIEW_MODEL" />										
+					<valueof uniform="Normal"  type="CURRENT" context="MATRIX" 
+											component="NORMAL" />										
+				</values>
+			</shader>
+		</material>
+		<material name="ambOcc">
+			<shader>
+				<name>ambOcc</name>
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+											component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="VM"  type="CURRENT" context="MATRIX" 
+											component="VIEW_MODEL" />
+					<valueof uniform="M"  type="CURRENT" context="MATRIX" 
+											component="MODEL" />
+											
+					<valueof uniform="CamV" type="CAMERA" context="MainCamera"
+											component="VIEW_MATRIX" />
+					<valueof uniform="CamP" type="CAMERA" context="MainCamera"
+											component="PROJECTION_MATRIX" />
+					<valueof uniform="depth" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />		
+					<valueof uniform="normals" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="1" />		
+					<valueof uniform="positions"		type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="2" />											
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="depthMap" >
+					<MAG_FILTER value= "NEAREST" />
+					<MIN_FILTER value= "NEAREST" />
+				</texture>
+				<texture UNIT="1" name="normalMap" >
+					<MAG_FILTER value= "NEAREST" />
+					<MIN_FILTER value= "NEAREST" />
+				</texture>
+				<texture UNIT="2" name="posMap" >
+					<MAG_FILTER value= "NEAREST" />
+					<MIN_FILTER value= "NEAREST" />
+				</texture>
+			</textures>
+		</material>
+	</materials>
+</materiallib>

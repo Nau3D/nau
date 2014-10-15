@@ -116,7 +116,7 @@ DlgTextureLib::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 				wxDefaultPosition, wxDefaultSize,
 				// These and other similar styles are automatically
 				// passed to the embedded wxPropertyGrid.
-				wxPG_BOLD_MODIFIED|//wxPG_SPLITTER_AUTO_CENTER|
+				wxPG_BOLD_MODIFIED|wxPG_SPLITTER_AUTO_CENTER|
 				// Plus defaults.
 				wxPGMAN_DEFAULT_STYLE
            );
@@ -157,6 +157,7 @@ DlgTextureLib::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	pgTextureProps->Append(new wxStringProperty(wxT("Dimensions(WxHxD)"),wxPG_LABEL,texDim));
  	pgTextureProps->DisableProperty(wxT("Dimensions(WxHxD)"));
 
+	pgTextureProps->SetSplitterLeft(true);
 	updateTextures(0);
 
 	siz->Add(gridTextures,0,wxALL|wxGROW|wxHORIZONTAL|wxALIGN_CENTER_HORIZONTAL,5);

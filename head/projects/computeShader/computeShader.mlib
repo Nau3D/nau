@@ -14,13 +14,11 @@
 		<material name ="computeShader">
 			<shader>
 				<name>compute</name>
-				<values>
-														
+				<values>									
 					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
 														id=1 component="UNIT" />
 					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE"
-														id=1 component="UNIT" />
-														
+														id=1 component="UNIT" />								
 				</values>
 			</shader>
 			<textures>

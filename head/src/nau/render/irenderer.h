@@ -124,6 +124,8 @@ namespace nau
 
 			/// add an atomic counter
 			void addAtomic(unsigned int id, std::string name);
+			/// returns the atomic id, or -1 if the name is not defined
+			int getAtomicID(std::string);
 			/// get atomic counter values
 			virtual unsigned int *getAtomicCounterValues() = 0;
 

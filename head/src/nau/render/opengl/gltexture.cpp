@@ -174,7 +174,7 @@ GLTexture::GLTexture(std::string label, std::string anInternalFormat, int width,
 	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
 	glBindTexture (m_EnumProps[DIMENSION], m_IntProps[ID]);
 
-	m_BoolProps[MIPMAP] = false;
+	//m_BoolProps[MIPMAP] = false;
 
 #if NAU_OPENGL_VERSION < 420 //|| NAU_OPTIX
 	glTexImage2D(m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
@@ -216,12 +216,12 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 
 	if (data != NULL) {
 		m_BoolProps[MIPMAP] = mipmap;
-#ifndef NAU_OPTIX
+//#ifndef NAU_OPTIX
 		if (mipmap)
 			glGenerateMipmap(GL_TEXTURE_2D);
-#else
-		m_BoolProps[MIPMAP] = false;
-#endif
+//#else
+//		m_BoolProps[MIPMAP] = false;
+//#endif
 	}
 	else
 		m_BoolProps[MIPMAP] = false;

@@ -807,9 +807,6 @@
     <ClInclude Include="..\src\nau\scene\sceneskeleton.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\system\dirent.h">
-      <Filter>Source Files\system</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\system\file.h">
       <Filter>Source Files\system</Filter>
     </ClInclude>

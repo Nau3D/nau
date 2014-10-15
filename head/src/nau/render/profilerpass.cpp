@@ -32,11 +32,11 @@ ProfilerPass::ProfilerPass (const std::string &name) :
 	m_pSO = SceneObjectFactory::create("SimpleObject");
 	m_pSO->setRenderable(RESOURCEMANAGER->createRenderable("Mesh", "__ProfilerResult", "Profiler"));
 
-	m_pViewport = NAU->createViewport("__Profiler", vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	m_Viewport = NAU->createViewport("__Profiler", vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	//m_pViewport = new nau::render::Viewport();
-	m_pCam->setViewport(m_pViewport);
-	m_pViewport->setProp(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowWidth()));
-	m_pViewport->setProp(Viewport::ORIGIN, vec2(0,0));
+	m_pCam->setViewport(m_Viewport);
+	m_Viewport->setProp(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowWidth()));
+	m_Viewport->setProp(Viewport::ORIGIN, vec2(0,0));
 	m_pCam->setProp(Camera::PROJECTION_TYPE, Camera::ORTHO);
 	m_pCam->setOrtho(0.0f ,NAU->getWindowWidth() , NAU->getWindowWidth(), 0.0f, -1.0f, 1.0f);
 
@@ -78,11 +78,11 @@ ProfilerPass::prepare (void)
 
 	prepareBuffers();
 
-	m_pViewport->setProp(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowHeight()));
+	m_Viewport->setProp(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowHeight()));
 	m_pCam->setOrtho(0.0f ,NAU->getWindowWidth() , NAU->getWindowHeight(), 0.0f, -1.0f, 1.0f);
 
-	if (m_pViewport != NULL) {
-		RENDERER->setViewport(m_pViewport);
+	if (m_Viewport != NULL) {
+		RENDERER->setViewport(m_Viewport);
 	}
 	RENDERER->setCamera(m_pCam);
 	

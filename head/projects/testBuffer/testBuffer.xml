@@ -18,7 +18,7 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Buffer" toMaterial="fillBuffer" />
 				</materialMaps>
-				<renderTarget name="test" fromLibrary="Buffer" /> 
+				<rendertarget name="test" fromLibrary="Buffer" /> 
 			</pass>
 			<pass class="quad" name="pass2" >
 				<viewport>Main</viewport>

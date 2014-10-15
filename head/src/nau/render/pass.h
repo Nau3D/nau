@@ -1,25 +1,42 @@
+/*
+Class Pass
+
+A pass is the building block of a pipeline.
+Passes may have geometry (scenes), cameras, lights, viewports
+and other elements. 
+
+This class implements the basic pass from which all pass variations 
+should inherit.
+
+
+https://github.com/Nau3D
+
+*/
+
 #ifndef PASS_H
 #define PASS_H
 
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
+#include <nau/attribute.h>
+#include <nau/attributeValues.h>
+#include <nau/event/eventManager.h>
+#include <nau/event/eventString.h>
+#include <nau/event/ilistener.h>
 #include <nau/geometry/boundingbox.h>
 #include <nau/geometry/quad.h>
 #include <nau/material/materialid.h>
-#include <nau/scene/camera.h>
-#include <nau/scene/iscene.h>
-#include <nau/scene/sceneobject.h>
 #include <nau/render/rendertarget.h>
 #include <nau/render/texture.h>
+#include <nau/scene/camera.h>
 #include <nau/scene/geometryobject.h>
+#include <nau/scene/iscene.h>
+#include <nau/scene/sceneobject.h>
 
-#include <nau/event/eventManager.h>
-#include <nau/event/ilistener.h>
-#include <nau/event/eventString.h>
-#include <nau/attributeValues.h>
-#include <nau/attribute.h>
+
+
 
 namespace nau
 {
@@ -28,6 +45,8 @@ namespace nau
 		class Pass : public IListener, public AttributeValues {
 
 		public:
+
+			// Pass properties
 
 			BOOL_PROP(COLOR_CLEAR, 0);
 			BOOL_PROP(COLOR_ENABLE, 1);
@@ -52,11 +71,8 @@ namespace nau
 			ENUM_PROP(STENCIL_DEPTH_FAIL, 2);
 			ENUM_PROP(STENCIL_DEPTH_PASS, 3);
 			ENUM_PROP(DEPTH_FUNC, 4);
+			ENUM_PROP(RUN_MODE, 5);
 
-			static AttribSet Attribs;
-
-			void setPropb(BoolProperty prop, bool value);
-			//bool getPropb(IRenderer::BoolProps prop);
 
 			typedef enum {
 				KEEP,
@@ -70,129 +86,67 @@ namespace nau
 			} StencilOp;
 
 			typedef enum {
+				DONT_RUN,
+				RUN_ALWAYS,
+				SKIP_FIRST_FRAME,
+				RUN_ONCE,
+			} RunMode;
+
+			typedef enum {
 				LESS, NEVER, ALWAYS, LEQUAL,
 				EQUAL, GEQUAL, GREATER, NOT_EQUAL
 			} StencilFunc;
 
-		protected:
-			std::string p_Empty;
-			void initVars();
+			static AttribSet Attribs;
 
-			static bool Init();
-			static bool Inited;
+			void setPropui(UIntProperty prop, unsigned int value);
+			void setPropb(BoolProperty prop, bool value);
 
-			//std::vector<bool> m_BoolProp;
 
-			std::string m_ClassName;
-			std::string m_Name;
-			std::string m_CameraName;
-			std::vector<std::string> m_SceneVector;
-			std::map<std::string, nau::material::MaterialID> m_MaterialMap;
-			nau::render::Viewport *m_pViewport;
-			nau::render::Viewport *m_pRestoreViewport;
-						
-			nau::render::RenderTarget *m_RenderTarget;
-			//nau::render::Texture* m_TexId[MAXFBOs+1];	
 
-			//std::map<std::string, float> m_Paramf;
-			//std::map<std::string, int> m_Parami;
-			//std::map<std::string, Enums::DataType> m_ParamType;
-
-			//vec4 m_ColorClearValue;
-
-			//float m_DepthClearValue;
-			//int m_DepthFunc;
-
-			//int m_StencilClearValue;
-			//int m_StencilMaskValue;
-			//StencilOp m_Stencilsfail, m_Stencildfail, m_Stencildpass;
-			//StencilFunc m_StencilFunc;
-			//int m_StencilOpRef;
-			//unsigned int m_StencilOpMask;
-
-			int m_RTSizeWidth; // size of render targets
-			int m_RTSizeHeight;
-
-			//int m_Depth; 
-			//int m_Color; // number of render targets
-
-			bool m_UseRT;
-
-			typedef enum {REMAP_DISABLED, REMAP_TO_ONE, REMAP_TO_LIBRARY} RemapMode;
-			
-			RemapMode m_RemapMode;
-
-			std::vector<std::string> m_Lights;
-
-			//std::map<std::string, std::string> m_Params;
-			//nau::render::Texture* m_Inputs[8];
-			//nau::render::RenderTarget* m_DepthBuffer;
-			//bool m_DoColorClear;
-			//bool m_DoDepthClear;
-			//bool m_DepthMask;
-			//bool m_DoStencilClear;
-			//std::vector<std::string> m_ParamNames;
-			//std::vector<TYPES> m_ParamTypes;
-
-		public:
 			Pass (const std::string &passName);
 			virtual ~Pass();
 
 			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
 
 			const std::string &getClassName();
-
-			//virtual const std::map<std::string, float> &getParamsf();
-			//virtual void setParam(const std::string &name, const float value);
-			//virtual void setParam(const std::string &name, const int value);
-		
-			//virtual float *getParamf(const std::string &name);
-			//virtual int *getParami(const std::string &name);
-			//virtual int getParamType(const std::string &name);
-
 			std::string &getName (void);
 
+			//
+			// RENDER TEST
+			//
+			void setMode(RunMode value);
+			// checks the run mode and the frame number
+			bool renderTest (void);
 
+			// 
+			// These are the three functions that are commonly 
+			// redefined in subclasses
 
-			virtual void addScene (const std::string &sceneName);
-			bool hasScene(const std::string &name);
-			void removeScene(const std::string &name);
+			// executes preparation code PRIOR to renderTest
+			virtual void prepare (void);
+			// executes only if render test is true
+			virtual void doPass (void);
+			// executes after doPass, regardless of render test
+			virtual void restore (void);
 
-			void updateMaterialMaps(const std::string &sceneName);
-
-			const std::vector<std::string>& getScenesNames (void);
-
-			virtual void setCamera (const std::string &cameraName);
-			const std::string& getCameraName (void);
-
+			//
+			// VIEWPORTS
+			//
 			void setViewport (nau::render::Viewport *aViewport);
 			nau::render::Viewport *getViewport();
-			
-			void setColorClearValue(float r, float g, float b, float  a);
 
-			void setDepthClearValue(float value);
-			void setDepthFunc(int f);
-
-			void setStencilClearValue(float value);
-			//void setStencilMaskValue(int i);
-			void setStencilFunc(Pass::StencilFunc f, int ref, unsigned int mask);
-			void setStencilOp(	Pass::StencilOp sfail, 
-							Pass::StencilOp dfail, 
-							Pass::StencilOp dpass);
-
-
-
-			virtual void prepare (void);
-			virtual void restore (void);
-			virtual bool renderTest (void);
-			virtual void doPass (void);
-
-			/*Lights*/
+			//
+			// LIGHTS
+			//
 			virtual void addLight (const std::string &name);
 			bool hasLight(const std::string &name);
 			void removeLight(const std::string &name);
-				
-			/*Materials*/
+
+			//
+			// MATERIAL MAPS
+			//
+			void updateMaterialMaps(const std::string &sceneName);
 			const std::map<std::string, nau::material::MaterialID> &getMaterialMap();
 			void remapMaterial (const std::string &originMaterialName, 
 								const std::string &materialLib, 
@@ -203,25 +157,89 @@ namespace nau
 
 			void materialNamesFromLoadedScenes (std::vector<std::string> &materials);
 
-			/*Rendertargets*/
+			//
+			// RENDER TARGETS
+			//
 			nau::render::RenderTarget* getRenderTarget (void);
 			virtual void setRenderTarget (nau::render::RenderTarget* rt);
 			void enableRenderTarget(bool b);
 			bool isRenderTargetEnabled();
-
 			bool hasRenderTarget();
+
+			//
+			// CAMERAS
+			//
+			virtual void setCamera (const std::string &cameraName);
+			const std::string& getCameraName (void);
+
+			//
+			// STENCIL
+			//
+			void setStencilClearValue(float value);
+			void setStencilFunc(Pass::StencilFunc f, int ref, unsigned int mask);
+			void setStencilOp(	Pass::StencilOp sfail, 
+							Pass::StencilOp dfail, 
+							Pass::StencilOp dpass);
+
+			//
+			// DEPTH AND COLOR
+			//
+			void setDepthClearValue(float value);
+			void setDepthFunc(int f);
+			//void setColorClearValue(float r, float g, float b, float  a);
+
+			//
+			// SCENES
+			//
+			virtual void addScene (const std::string &sceneName);
+			bool hasScene(const std::string &name);
+			void removeScene(const std::string &name);
+			const std::vector<std::string>& getScenesNames (void);
+
 		
 		protected:
+			// CAMERAS
 			virtual void setupCamera (void);
 			void restoreCamera (void);
+			// LIGHTS
 			void setupLights (void);
-
+			// called in prepare()
 			void prepareBuffers();
 
 			void setRTSize (int width, int height);
-		/***MARK***/ //Maybe this should be moved to the BoundingBox class
-			nau::geometry::BoundingBox getBoundingBox (std::vector<nau::scene::SceneObject*> &sceneObjects);
 
+			// init class variables
+			void initVars();
+
+			// Init the attribute set
+			static bool Init();
+			static bool Inited;
+
+			// pass class name, see passFactory.cpp for possible values
+			std::string m_ClassName;
+			// pass name
+			std::string m_Name;
+			std::string m_CameraName;
+			std::vector<std::string> m_Lights;
+			std::vector<std::string> m_SceneVector;
+			nau::render::Viewport *m_Viewport;
+			// used to temporarily store the camera viewport when the pass has an explicit viewport
+			nau::render::Viewport *m_RestoreViewport;
+			nau::render::RenderTarget *m_RenderTarget;
+			// size of render targets
+			int m_RTSizeWidth;
+			int m_RTSizeHeight;
+
+			bool m_UseRT;
+
+			std::map<std::string, nau::material::MaterialID> m_MaterialMap;
+			typedef enum {
+				REMAP_DISABLED,
+				REMAP_TO_ONE,
+				REMAP_TO_LIBRARY
+			} RemapMode;
+
+			RemapMode m_RemapMode;
 
 		};
 	};

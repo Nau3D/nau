@@ -790,7 +790,6 @@
     <ClInclude Include="..\src\nau\scene\sceneposeobject.h" />
     <ClInclude Include="..\src\nau\scene\sceneposes.h" />
     <ClInclude Include="..\src\nau\scene\sceneskeleton.h" />
-    <ClInclude Include="..\src\nau\system\dirent.h" />
     <ClInclude Include="..\src\nau\system\file.h" />
     <ClInclude Include="..\src\nau\system\fileutil.h" />
     <ClInclude Include="..\src\nau\system\textfile.h" />

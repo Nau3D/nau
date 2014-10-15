@@ -7,7 +7,7 @@
 #include <nau/geometry/iboundingvolume.h>
 
 #ifdef NAU_PLATFORM_WIN32
-#include <nau/system/dirent.h>
+#include <dirent.h>
 #else
 #include <dirent.h>
 #include <sys/types.h>
@@ -172,6 +172,11 @@ void DlgScenes::updateList() {
 	std::vector<std::string> *names = RENDERMANAGER->getSceneNames();
 	int num = names->size();
 
+	if (num == 0) {
+		m_Active = "";
+		return;
+	}
+
 	list->Clear();
 
 	for(int i = 0; i < num; i++)  {
@@ -186,6 +191,9 @@ void DlgScenes::updateList() {
 
 void DlgScenes::update() 
 {
+	if (m_Active == "")
+		return;
+
 	IScene *scene = RENDERMANAGER->getScene(m_Active);
 
 	/* Is scene a partitioned scene? */

@@ -28,7 +28,7 @@ Texture::Init() {
 	Attribs.add(Attribute(COMPONENT_COUNT, "COMPONENT_COUNT", Enums::DataType::INT, true, new int(0)));
 	Attribs.add(Attribute(ELEMENT_SIZE, "ELEMENT_SIZE", Enums::DataType::INT, true, new int(0)));
 	// BOOL
-	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, true, new bool(false)));
+	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, true, new bool(true)));
 	// ENUM
 	Attribs.add(Attribute(DIMENSION, "DIMENSION", Enums::DataType::ENUM, true));
 	Attribs.add(Attribute(FORMAT, "FORMAT", Enums::DataType::ENUM, true));

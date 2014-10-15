@@ -101,22 +101,15 @@ GlCanvas::_setCamera() {
 void 
 GlCanvas::OnPaint (wxPaintEvent &event)
 {
-   
-   
-	wxPaintDC dc (this);
+	PROFILE("Composer");
+	wxPaintDC dc(this);
 
-//#ifndef __WXMOTIF__
-//   if (!GetContext()){
-//      return;
-//   }
-//#endif
-
-   //SetCurrent (*p_GLC);
 	if(!isPaused){
 		Render();
 	}
 	event.Skip ();
 }
+
 
 void 
 GlCanvas::OnSize (wxSizeEvent &event)
@@ -158,7 +151,6 @@ GlCanvas::OnEnterWindow (wxMouseEvent &event)
 void 
 GlCanvas::Render ()
 {
-
 	PROFILE ("Main cicle");
 
 	if (0 != m_pEngine) {
@@ -170,7 +162,7 @@ GlCanvas::Render ()
 	SwapBuffers();
 	}
 	Profile::CollectQueryResults();
-	
+
 	//  FPS Counter
 	m_CounterFps++;
 
@@ -180,16 +172,16 @@ GlCanvas::Render ()
 		char fps[256];
 
 		vec4 v;
-		if (m_pCamera) 
+		if (m_pCamera)
 			v = m_pCamera->getPropf4(Camera::VIEW_VEC);
-		
-		sprintf (fps, "FPS: %d - Triangles: %d",m_CounterFps, RENDERER->getCounter(nau::render::IRenderer::TRIANGLE_COUNTER));
-		wxTopLevelWindow *tlw = (wxTopLevelWindow *)(this->GetParent());
-		
-		tlw->SetTitle (wxString::FromAscii(fps));
 
-		m_CounterFps = 0;	
-		
+		sprintf(fps, "FPS: %d - Triangles: %d", m_CounterFps, RENDERER->getCounter(nau::render::IRenderer::TRIANGLE_COUNTER));
+		wxTopLevelWindow *tlw = (wxTopLevelWindow *)(this->GetParent());
+
+		tlw->SetTitle(wxString::FromAscii(fps));
+
+		m_CounterFps = 0;
+
 	}
 }
 
@@ -197,6 +189,8 @@ GlCanvas::Render ()
 void
 GlCanvas::OnIdle (wxIdleEvent& event)
 {
+	PROFILE("Composer");
+
     if(!isPaused){
 		this->Render();
     }
@@ -298,7 +292,7 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 	}
 
 	if ('B' == event.GetKeyCode()) {
-		m_pEngine->sendKeyToEngine (event.GetKeyCode());
+		m_pEngine->resetFrameCount();
 	}
 
 	if ('P' == event.GetKeyCode()) {

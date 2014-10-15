@@ -1097,6 +1097,7 @@ void DlgMaterials::setupColorPanel(wxSizer *siz, wxWindow *parent) {
 	pgMaterial->Expand(pid);
 
 	pgMaterial->Append(new wxFloatProperty(wxT("SHININESS"),wxPG_LABEL,0));
+	pgMaterial->SetSplitterLeft(true);
 
 	siz->Add(pgMaterial,1,wxEXPAND);
 
