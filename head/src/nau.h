@@ -82,7 +82,7 @@ namespace nau {
 
 		nau::world::IWorld& getWorld (void);
 
-		void step (void);
+		void step (int count = 0);
 
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);

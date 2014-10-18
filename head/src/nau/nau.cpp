@@ -415,7 +415,7 @@ Nau::reload (void)
 
 
 void
-Nau::step(void)
+Nau::step(int count)
 {
 	IRenderer *renderer = RENDERER;
 	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
@@ -426,73 +426,81 @@ Nau::step(void)
 	m_LastFrameTime = m_CurrentTime;
 	unsigned char pipeEventFlag;
 
-	if (isFrameBegin){
-		m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
-		isFrameBegin = false;
-	}
-
 	renderer->resetCounters();
 
-	//if (m_Animations.size() > 0) {
-	//	std::map<std::string, nau::animation::IAnimation*>::iterator animIter;
-	//	
-	//	animIter = m_Animations.begin();
+	for (int i = 0; i < count || count <= 0; i++){
 
-	//	for (; animIter != m_Animations.end(); animIter++) {
-	//		if (false == (*animIter).second->isFinished()) {
-	//			(*animIter).second->step (static_cast<float> (deltaT));
-	//		} else {
-	//			delete ((*animIter).second);
-	//			m_Animations.erase (animIter);
-	//		}
-	//	}
-	//}
+		if (isFrameBegin){
+			m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+			isFrameBegin = false;
+		}
 
-	//### Será que deve ser por pass?
-	if (true == m_Physics) {
-		m_pWorld->update();	
-		m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
-	}
 
-	//renderer->setDefaultState();
+		//if (m_Animations.size() > 0) {
+		//	std::map<std::string, nau::animation::IAnimation*>::iterator animIter;
+		//	
+		//	animIter = m_Animations.begin();
 
-	pipeEventFlag = m_pRenderManager->renderActivePipeline();
+		//	for (; animIter != m_Animations.end(); animIter++) {
+		//		if (false == (*animIter).second->isFinished()) {
+		//			(*animIter).second->step (static_cast<float> (deltaT));
+		//		} else {
+		//			delete ((*animIter).second);
+		//			m_Animations.erase (animIter);
+		//		}
+		//	}
+		//}
+
+		//### Será que deve ser por pass?
+		if (true == m_Physics) {
+			m_pWorld->update();
+			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+		}
+
+		//renderer->setDefaultState();
+
+		pipeEventFlag = m_pRenderManager->renderActivePipeline();
 
 #ifdef NAU_RENDER_FLAGS
-//#ifdef PROFILE
-//	if (getRenderFlag(Nau::PROFILE_RENDER_FLAG))
-//	{
-//		PROFILE ("Profile rendering");
-//
-//		renderer->setViewport(m_WindowWidth, m_WindowHeight);
-//
-//		renderer->saveAttrib(IRenderer::RENDER_MODE);
-//		renderer->setRenderMode(IRenderer::MATERIAL_MODE);
-//		
-//		m_ProfileMaterial->prepare();
-//		renderer->disableDepthTest();
-//		//RENDERER->enableTexturing();
-//		setOrthographicProjection (static_cast<int>(m_WindowWidth), 
-//										static_cast<int>(m_WindowHeight));
-//
-//		Profile::dumpLevelsOGL();
-//
-// 		char s[128];
-// 		sprintf (s, "Primitives: %d", RENDERER->getTriCount());
-// 		renderBitmapString (30,400, Profile::font,s);
-//		
-//		resetPerspectiveProjection();
-//		renderer->enableDepthTest();
-//		renderer->restoreAttrib();
-//	}
-//#endif // PROFILE
+		//#ifdef PROFILE
+		//	if (getRenderFlag(Nau::PROFILE_RENDER_FLAG))
+		//	{
+		//		PROFILE ("Profile rendering");
+		//
+		//		renderer->setViewport(m_WindowWidth, m_WindowHeight);
+		//
+		//		renderer->saveAttrib(IRenderer::RENDER_MODE);
+		//		renderer->setRenderMode(IRenderer::MATERIAL_MODE);
+		//		
+		//		m_ProfileMaterial->prepare();
+		//		renderer->disableDepthTest();
+		//		//RENDERER->enableTexturing();
+		//		setOrthographicProjection (static_cast<int>(m_WindowWidth), 
+		//										static_cast<int>(m_WindowHeight));
+		//
+		//		Profile::dumpLevelsOGL();
+		//
+		// 		char s[128];
+		// 		sprintf (s, "Primitives: %d", RENDERER->getTriCount());
+		// 		renderBitmapString (30,400, Profile::font,s);
+		//		
+		//		resetPerspectiveProjection();
+		//		renderer->enableDepthTest();
+		//		renderer->restoreAttrib();
+		//	}
+		//#endif // PROFILE
 #endif // NAU_RENDER_FLAGS
-	switch (pipeEventFlag){
-	case PIPE_PASS_STARTEND:
-	case PIPE_PASS_END:
-		m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
-		isFrameBegin = true;
-		break;
+		switch (pipeEventFlag){
+		case PIPE_PASS_STARTEND:
+		case PIPE_PASS_END:
+			m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
+			isFrameBegin = true;
+			break;
+		}
+
+		if (count <= 0){
+			break;
+		}
 	}
 }
 

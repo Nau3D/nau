@@ -27,8 +27,11 @@ Types getType(GLenum type);
 int getRows(GLenum type);
 int getColumns(GLenum type);
 int getUniformByteSize(int size, int uniType, int arrayStride, int matStride);
+void mapCurrentBufferNames();
 
-std::map<int, std::pair<std::vector<int>, std::vector<std::string>>> buffermapping;
+std::map<int, NauGlBufferInfo> buffermapping;
+
+
 
 // local variables
 std::map<int, std::string> spInternalF;
@@ -1269,115 +1272,128 @@ getAttributesData(unsigned int program, std::vector<std::pair<std::string, std::
 
 void
 getBufferValues(std::vector<std::string> &outVector, int size, int datatype){
-	int length;
-	void *ptr;
-	ptr = glMapBufferRange(GL_ARRAY_BUFFER, 0, size, GL_MAP_READ_BIT);
-	switch (datatype){
-	case GL_UNSIGNED_BYTE:{
-			unsigned char *data = (unsigned char*)ptr;
-			length = size / sizeof(unsigned char);
-			for (int i = 0; i < length; i++){
-				outVector.push_back(std::to_string(data[i]));
-			}
-			break;
-		}
-	case GL_BYTE:{
-			char *data = (char*)ptr;
-			length = size / sizeof(char);
-			for (int i = 0; i < length; i++){
-				outVector.push_back(std::to_string(data[i]));
-			}
-			break;
-		}
-	case GL_UNSIGNED_SHORT:{
-			unsigned short *data = (unsigned short*)ptr;
-			length = size / sizeof(unsigned short);
-			for (int i = 0; i < length; i++){
-				outVector.push_back(std::to_string(data[i]));
-			}
-			break;
-		}
-	case GL_SHORT:{
-			short *data = (short*)ptr;
-			length = size / sizeof(short);
-			for (int i = 0; i < length; i++){
-				outVector.push_back(std::to_string(data[i]));
-			}
-			break;
-		}
-	case GL_UNSIGNED_INT:{
-			unsigned int *data = (unsigned int*)ptr;
-			length = size / sizeof(unsigned int);
-			for (int i = 0; i < length; i++){
-				outVector.push_back(std::to_string(data[i]));
-			}
-			break;
-		}
-	case GL_INT:{
-			int *data = (int*)ptr;
-			length = size / sizeof(int);
-			for (int i = 0; i < length; i++){
-				outVector.push_back(std::to_string(data[i]));
-			}
-			break;
-		}
-	case GL_HALF_FLOAT:{
-		outVector.push_back("Not implemented for half float");
-			break;
-		}
-	case GL_FLOAT:{
-			float *data = (float*)ptr;
-			length = size / sizeof(float);
-			for (int i = 0; i < length; i++){
-				outVector.push_back(std::to_string(data[i]));
-			}
-			break;
-		}
-	}
+	//int length;
+	//void *ptr;
+	//ptr = glMapBufferRange(GL_ARRAY_BUFFER, 0, size, GL_MAP_READ_BIT);
+	//switch (datatype){
+	//case GL_UNSIGNED_BYTE:{
+	//		unsigned char *data = (unsigned char*)ptr;
+	//		length = size / sizeof(unsigned char);
+	//		for (int i = 0; i < length; i++){
+	//			outVector.push_back(std::to_string(data[i]));
+	//		}
+	//		break;
+	//	}
+	//case GL_BYTE:{
+	//		char *data = (char*)ptr;
+	//		length = size / sizeof(char);
+	//		for (int i = 0; i < length; i++){
+	//			outVector.push_back(std::to_string(data[i]));
+	//		}
+	//		break;
+	//	}
+	//case GL_UNSIGNED_SHORT:{
+	//		unsigned short *data = (unsigned short*)ptr;
+	//		length = size / sizeof(unsigned short);
+	//		for (int i = 0; i < length; i++){
+	//			outVector.push_back(std::to_string(data[i]));
+	//		}
+	//		break;
+	//	}
+	//case GL_SHORT:{
+	//		short *data = (short*)ptr;
+	//		length = size / sizeof(short);
+	//		for (int i = 0; i < length; i++){
+	//			outVector.push_back(std::to_string(data[i]));
+	//		}
+	//		break;
+	//	}
+	//case GL_UNSIGNED_INT:{
+	//		unsigned int *data = (unsigned int*)ptr;
+	//		length = size / sizeof(unsigned int);
+	//		for (int i = 0; i < length; i++){
+	//			outVector.push_back(std::to_string(data[i]));
+	//		}
+	//		break;
+	//	}
+	//case GL_INT:{
+	//		int *data = (int*)ptr;
+	//		length = size / sizeof(int);
+	//		for (int i = 0; i < length; i++){
+	//			outVector.push_back(std::to_string(data[i]));
+	//		}
+	//		break;
+	//	}
+	//case GL_HALF_FLOAT:{
+	//	outVector.push_back("Not implemented for half float");
+	//		break;
+	//	}
+	//case GL_FLOAT:{
+	//		float *data = (float*)ptr;
+	//		length = size / sizeof(float);
+	//		for (int i = 0; i < length; i++){
+	//			outVector.push_back(std::to_string(data[i]));
+	//		}
+	//		break;
+	//	}
+	//}
 
-	glUnmapBuffer(GL_ARRAY_BUFFER);
+	//glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
 
-void
-getBufferInfo(std::vector<int> &bufferattribute, std::vector<std::string> &buffervalues, int buffer, int i){
+NauGlBufferInfo
+getBufferInfo(int buffer, int i){
 	int info, prevBuffer, datatype, size;
+	int components;
+	int stride;
+	int normalized;
+	int divisor;
+	int integer;
+
 	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prevBuffer);
 
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &info);
 	//bufferattribute.push_back("Size: " + std::to_string(info));
-	bufferattribute.push_back(info);
+	//bufferattribute.push_back(info);
 	size = info;
 
 	glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_SIZE, &info);
 	//bufferattribute.push_back("Components: " + std::to_string(info));
-	bufferattribute.push_back(info);
+	//bufferattribute.push_back(info);
+	components = info;
 
 	glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_TYPE, &info);
 	//bufferattribute.push_back("Type: " + spDataF[info]);
-	bufferattribute.push_back(info);
+	//bufferattribute.push_back(info);
 	datatype = info;
 
 	glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &info);
 	//bufferattribute.push_back("Stride: " + std::to_string(info));
-	bufferattribute.push_back(info);
+	//bufferattribute.push_back(info);
+	stride = info;
 
 	glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, &info);
 	//bufferattribute.push_back("Normalized: " + std::to_string(info));
-	bufferattribute.push_back(info);
+	//bufferattribute.push_back(info);
+	normalized = info;
 
 	glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &info);
 	//bufferattribute.push_back("Divisor: " + std::to_string(info));
-	bufferattribute.push_back(info);
+	//bufferattribute.push_back(info);
+	divisor = info;
 
 	glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_INTEGER, &info);
 	//bufferattribute.push_back("Integer: " + std::to_string(info));
-	bufferattribute.push_back(info);
+	//bufferattribute.push_back(info);
+	integer = info;
 
-	getBufferValues(buffervalues, size, datatype);
+	//getBufferValues(buffervalues, size, datatype);
 
 	glBindBuffer(GL_ARRAY_BUFFER, prevBuffer);
+
+	return NauGlBufferInfo(buffer, size, components, datatype, stride, normalized, divisor, integer);
 }
 
 void
@@ -1409,16 +1425,12 @@ getVAOInfo(unsigned int buffer, int &elemarray, std::vector<int> &attributes) {
 
 		glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &info);
 		if (info) {
-			std::vector<int> bufferattribute;
-			std::vector<std::string> buffervalues;
-			std::pair<std::vector<int>, std::vector<std::string>> bufferInfo;
+			NauGlBufferInfo bufferInfo;
 
 
 			glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &info);
 
-			getBufferInfo(bufferattribute, buffervalues, info, i);
-
-			bufferInfo = std::make_pair(bufferattribute, buffervalues);
+			bufferInfo = getBufferInfo(info, i);
 
 			attributes.push_back(info);
 
@@ -1448,8 +1460,8 @@ void getCurrentVAOInfoData(std::vector<std::pair<std::pair<int, int>, std::vecto
 
 		vaoInfoData.push_back(vaoData);
 
-
 	}
+	mapCurrentBufferNames();
 }
 
 //Returns the number of subnodes per buffer, (5 means that each 6 items belong to the same buffer); NOT WORKING!
@@ -1471,49 +1483,75 @@ std::vector<int> getCurrentBufferNames() {
 	return bufferList;
 }
 
+
+
+
+//Returns the number of subnodes per buffer, (5 means that each 6 items belong to the same buffer); NOT WORKING!
+void mapCurrentBufferNames() {
+	int prevBuffer, info;
+
+	GLint isEnabled;
+
+	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prevBuffer);
+
+	for (GLint iAttrib = 1; iAttrib < 65536; ++iAttrib) {
+		isEnabled = glIsBuffer(iAttrib);
+		if (isEnabled) {
+			if (buffermapping.find(iAttrib) == buffermapping.end()){
+				glBindBuffer(GL_ARRAY_BUFFER, iAttrib);
+
+				glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &info);
+
+
+
+				buffermapping[iAttrib] = NauGlBufferInfo(iAttrib, info);
+			}
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, prevBuffer);
+}
+
 //Fetch info from map:
-//std::map<int, std::pair<std::vector<std::string>, std::vector<std::string>>> buffermapping;
-bool getBufferInfo(int buffer, std::pair<std::vector<int>, std::vector<std::string>> &bufferInfo){
+//std::map<int, NauGlBufferInfo> buffermapping;
+bool getBufferInfoFromMap(int buffer, NauGlBufferInfo &bufferInfo){
 	if (buffermapping.find(buffer) != buffermapping.end()){
 		bufferInfo = buffermapping[buffer];
 		return true;
 	}
-	else{
-		std::vector<int> size;
-		std::vector<std::string> empty;
-		int prevBuffer,info;
-
-		glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prevBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-		glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &info);
-		size.push_back(info);
-
-
-		glBindBuffer(GL_ARRAY_BUFFER, prevBuffer);
-		bufferInfo = std::make_pair(size, empty);
-	}
 	return false;
+}
+
+//Fetch this map
+//std::map<int, NauGlBufferInfo> buffermapping;
+std::map<int, NauGlBufferInfo> *getBufferInfoMap(){
+	return &buffermapping;
 }
 
 
 
 
 int
-getOpenBufferMapPointers(int buffer, int size, std::vector<int> sizes, std::vector<void*> &pointers){
+openBufferMapPointers(int buffer, int offsetNumber, int sizePerOffset, int size, std::vector<int> sizes, std::vector<void*> &pointers){
 	int length;
 	void *ptr;
-	int prevBuffer, sizecount = 0;
+	int remainingSize = (offsetNumber * sizePerOffset), getSize; 
+	int prevBuffer, sizecount = 0, limit = size - remainingSize;
 	char *bytePointer;
 	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prevBuffer);
 
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
-	ptr = glMapBufferRange(GL_ARRAY_BUFFER, 0, size, GL_MAP_READ_BIT);
+	getSize = sizePerOffset;
+	if (limit < getSize){
+		getSize = limit;
+	}
+
+	ptr = glMapBufferRange(GL_ARRAY_BUFFER, remainingSize, getSize, GL_MAP_READ_BIT);
 	bytePointer = (char*)ptr;
 	for (int s : sizes){
 		sizecount += s;
-		if (sizecount > size){
+		if (sizecount > limit){
 			break;
 		}
 		pointers.push_back((void*)bytePointer);
@@ -1524,7 +1562,7 @@ getOpenBufferMapPointers(int buffer, int size, std::vector<int> sizes, std::vect
 }
 
 void
-getCloseBufferMapPointers(int prevBuffer){
+closeBufferMapPointers(int prevBuffer){
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	glBindBuffer(GL_ARRAY_BUFFER, prevBuffer);
 }

@@ -53,10 +53,11 @@ private:
 	std::map<std::string, unsigned int> functionIndexList;
 
 	unsigned int nextFunctionIndex;
-	unsigned int frameCount;
+	unsigned int frameStatNumber;
 	unsigned int numGLFunctionCalls;
 
 	void CleanStatsHeaders();
+	void ZeroStatsHeaders();
 	void CountFunction(std::string funcName);
 	void PrintFunctionCount();
 
@@ -72,6 +73,7 @@ protected:
 	wxTreeCtrl *m_log;
 	wxButton *m_bClear, *m_bProfiler, *m_bSave;
 	wxTreeItemId rootnode, lognode, statsnode, statsnamenode, statscountnode;
+	wxTreeItemId frame;
 	std::string name;
 	bool isLogClear;
 	bool isNewFrame;

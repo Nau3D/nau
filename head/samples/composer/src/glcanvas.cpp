@@ -53,7 +53,7 @@ GlCanvas::GlCanvas (wxWindow *parent,
 	p_GLC = new wxGLContext(this);
 	SetCurrent(*p_GLC);
 
-	step = false;
+	step = 0;
 }
 
 GlCanvas::GlCanvas (wxWindow *parent,
@@ -71,7 +71,7 @@ GlCanvas::GlCanvas (wxWindow *parent,
   
   SetCurrent(*p_GLC);
 
-  step = false;
+  step = 0;
 }
 
 
@@ -120,10 +120,10 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 //#endif
 
    //SetCurrent (*p_GLC);
-	if(!isPaused || step){
+	if(!isPaused || step != 0){
 		Render();
 
-		if (step){
+		if (step != 0){
 
 #ifdef GLINTERCEPTDEBUG
 			gliSetIsGLIActive(false);
@@ -138,8 +138,10 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 
 			DlgDbgBuffers::Instance()->clear();
 			DlgDbgBuffers::Instance()->loadBufferInfo();
+
+			DlgDbgStep::Instance()->updateDlg();
 #endif
-			step = false;
+			step = 0;
 		}
 	}
 	event.Skip ();
@@ -189,7 +191,7 @@ GlCanvas::Render ()
 	PROFILE ("Main cicle");
 
 	if (0 != m_pEngine) {
-		m_pEngine->step();
+		m_pEngine->step(step);
 	}
 
 	{
@@ -728,9 +730,9 @@ GlCanvas::IsPaused()
 }
 
 void
-GlCanvas::SingleStep()
+GlCanvas::MultiStep(int stepSize)
 {
-	step = true;
+	step = stepSize;
 }
 
 

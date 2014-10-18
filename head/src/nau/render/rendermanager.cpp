@@ -81,14 +81,23 @@ RenderManager::hasPipeline (const std::string &pipelineName)
 }
 
 Pipeline*
-RenderManager::getPipeline (const std::string &pipelineName)
+RenderManager::getPipeline(const std::string &pipelineName)
 {
-	if (m_Pipelines.find (pipelineName) == m_Pipelines.end()) {
-		m_Pipelines[pipelineName] = new Pipeline (pipelineName);
+	if (m_Pipelines.find(pipelineName) == m_Pipelines.end()) {
+		m_Pipelines[pipelineName] = new Pipeline(pipelineName);
 		if (m_Pipelines.size() == 1)
 			m_ActivePipeline = m_Pipelines[pipelineName];
 	}
 	return m_Pipelines[pipelineName];
+}
+
+std::string
+RenderManager::getActivePipelineName()
+{ 
+	if (m_ActivePipeline){
+		return m_ActivePipeline->GetName();
+	}
+	return "";
 }
 
 void

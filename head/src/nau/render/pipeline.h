@@ -45,6 +45,8 @@ namespace nau
 		public:
 			Pipeline (std::string pipelineName = "Default");
 			
+			std::string GetName();
+
 			const std::string &getLastPassCameraName(); 
 			int getNumberOfPasses();
 			std::vector<std::string> *getPassNames();

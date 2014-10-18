@@ -117,6 +117,7 @@ int idMenu_DLG_ATOMICS = wxNewId();
 int idMenu_DLG_DBGGLILOGREAD = wxNewId();
 int idMenu_DLG_DBGPROGRAM = wxNewId();
 int idMenu_DLG_DBGBUFFER = wxNewId();
+int idMenu_DLG_DBGSTEP = wxNewId();
 #endif
 
 
@@ -162,6 +163,8 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
   EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
+  EVT_MENU(idMenu_DLG_DBGSTEP, FrmMainFrame::OnDlgDbgStep)
+  
 #endif
   
  END_EVENT_TABLE()
@@ -258,15 +261,17 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 #ifdef GLINTERCEPTDEBUG
 	debugMenu = new wxMenu(_T(""));
 	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
-	debugMenu->Append(idMenuDbgStep, _("Next Frame"), _("Renders next frame"));
+	debugMenu->Append(idMenuDbgStep, _("Next Pass"), _("Renders next pass"));
+	debugMenu->Append(idMenu_DLG_DBGSTEP, _("Advanced Pass Controller"), _("Aditional Pass control options"));
     debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
-    debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"),_("Views Program information"));
-    debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"),_("Views Buffer information"));
-
+	debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"), _("Views Program information"));
+	debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"), _("Views Buffer information"));
+	
 	debugMenu->Enable(idMenuDbgStep, false);
 	debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
-	debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
-	debugMenu->Enable(idMenu_DLG_DBGBUFFER,false);
+	debugMenu->Enable(idMenu_DLG_DBGPROGRAM, false);
+	debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
+	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
     mbar->Append(debugMenu, _("&Debug"));
 #endif
 
@@ -364,6 +369,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgDbgGLILogRead::SetParent(this);
 	DlgDbgPrograms::SetParent(this);
 	DlgDbgBuffers::SetParent(this);
+	DlgDbgStep::SetParent(this);
+	DlgDbgStep::SetCanvas(m_Canvas);
 	
 
 #ifdef FINAL
@@ -466,6 +473,9 @@ FrmMainFrame::updateDlgs()
 	helpMenu->Enable(idMenu_DLG_SHADERS,true);
 	helpMenu->Enable(idMenu_DLG_PASS,true);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, true);
+
+
+
 }
 
 
@@ -837,6 +847,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,true);
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);
 		debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+		debugMenu->Enable(idMenu_DLG_DBGSTEP, true);
 		debugMenu->Enable(idMenuDbgStep, true);
 
 		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
@@ -848,6 +859,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
 		debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
 		debugMenu->Enable(idMenuDbgStep, false);
+		debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 
@@ -860,7 +872,7 @@ FrmMainFrame::OnNextFrame(wxCommandEvent& event)
 {
 	if (m_Canvas->IsPaused()){
 		gliSetIsGLIActive(true);
-		m_Canvas->SingleStep();
+		m_Canvas->MultiStep();
 	}
 }
 
@@ -881,6 +893,8 @@ FrmMainFrame::LoadDebugData(){
 
 	DlgDbgBuffers::Instance()->clear();
 	DlgDbgBuffers::Instance()->loadBufferInfo();
+
+	DlgDbgStep::Instance()->updateDlg();
 #endif
 }
 
@@ -902,6 +916,12 @@ FrmMainFrame::OnDlgDbgProgram(wxCommandEvent& event){
 void
 FrmMainFrame::OnDlgDbgBuffer(wxCommandEvent& event){
 	DlgDbgBuffers::Instance()->Show(TRUE);
+}
+
+
+void
+FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event){
+	DlgDbgStep::Instance()->Show(TRUE);
 }
 
 

@@ -28,6 +28,7 @@
 #include <utility>
 
 #include <GL/glew.h>
+#include "NauGlBufferInfo.h"
 
 
 
@@ -60,7 +61,8 @@ void getAttributesData(unsigned int program, std::vector<std::pair<std::string, 
 void getCurrentVAOInfoData(std::vector<std::pair<std::pair<int, int>, std::vector<int>>> &vaoInfoData);
 
 std::vector<int> getCurrentBufferNames();
-bool getBufferInfo(int buffer, std::pair<std::vector<int>, std::vector<std::string>> &bufferInfo);
+bool getBufferInfoFromMap(int buffer, NauGlBufferInfo &bufferInfo);
+std::map<int, NauGlBufferInfo> *getBufferInfoMap();
 
-int getOpenBufferMapPointers(int buffer, int size, std::vector<int> sizes, std::vector<void*> &pointers);
-void getCloseBufferMapPointers(int prevBuffer);
+int openBufferMapPointers(int buffer, int offsetNumber, int sizePerOffset, int size, std::vector<int> sizes, std::vector<void*> &pointers);
+void closeBufferMapPointers(int prevBuffer);

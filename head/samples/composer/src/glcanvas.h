@@ -40,7 +40,7 @@ public:
 	void OnLeftUp (wxMouseEvent& event);
 
 	bool IsPaused ();
-	void SingleStep();
+	void MultiStep(int stepSize = -1);
 
    void Render(void);
   // void InitGL(void);
@@ -89,7 +89,7 @@ private:
 	nau::math::vec4 m_OldCamView;
 	//nau::animation::IAnimation *m_RiverAnimation;
 
-	bool step;
+	int step;
 
 };
 

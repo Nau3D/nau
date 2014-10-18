@@ -73,7 +73,6 @@ DlgDbgGLILogRead::DlgDbgGLILogRead(): wxDialog(DlgDbgGLILogRead::m_Parent, -1, w
 	isLogClear=true;
 	nextFunctionIndex = 0;
 	numGLFunctionCalls = 0;
-	frameCount = 0;
 }
 
 
@@ -109,13 +108,11 @@ void DlgDbgGLILogRead::clear() {
 	isLogClear = true;
 	nextFunctionIndex = 0;
 	numGLFunctionCalls = 0;
-	frameCount = 0;
 	functionDataArray.clear();
 	functionIndexList.clear();
 }
 
 void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, bool appendCount){
-	wxTreeItemId frame;
 	string line;
 	isNewFrame = true;
 	filestream.clear();
@@ -129,6 +126,9 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, b
 		if (tellg){
 			filestream.seekg(streamlnnum);
 			getline(filestream, line);
+			if (strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
+				isNewFrame = true;
+			}
 		}
 		else{
 			getline(filestream, line);
@@ -141,9 +141,11 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, b
 		while (getline(filestream, line))
 		{
 			if (isNewFrame){
+				frameStatNumber = frameNumber;
 				frame = m_log->AppendItem(lognode, "frame " + to_string(frameNumber));
 				frameNumber++;
-				isNewFrame=false;
+				isNewFrame = false;
+				ZeroStatsHeaders();
 			}
 			m_log->AppendItem(frame,line);
 			if (appendCount){
@@ -179,7 +181,6 @@ void DlgDbgGLILogRead::loadLog() {
 			logfile = gliGetLogPath()+logname+".txt";
 			rootnode = m_log->AddRoot(logfile);
 			statsnode = m_log->AppendItem(rootnode, "Statistics Log>");
-			CleanStatsHeaders();
 			lognode = m_log->AppendItem(rootnode, "Frame Log>");
 
 			//Reads logfile
@@ -189,14 +190,11 @@ void DlgDbgGLILogRead::loadLog() {
 			if (m_log->GetChildrenCount(rootnode, false) == 0){
 				m_log->AppendItem(rootnode, "logfile not found");
 			}
-
-			frameCount = frameNumber;
 			
 		}
 		else{
 			rootnode = m_log->AddRoot(gliGetLogPath() + string("Frame_*\\") + logname + ".txt");
-			statsnode = m_log->AppendItem(rootnode, "Statistics Log>");
-			CleanStatsHeaders();
+			statsnode = m_log->AppendItem(rootnode, "Last frame Statistics Log>");
 			lognode = m_log->AppendItem(rootnode, "Frame Log>");
 			//Directory searching algorithm source:
 			//dirent.h
@@ -212,8 +210,6 @@ void DlgDbgGLILogRead::loadLog() {
 
 						//Reads logfile
 						loadNewLogFile(logfile, atoi(ent->d_name + 6), false, true);
-
-						frameCount++;
 					}
 				}
 				closedir (dir);
@@ -232,10 +228,6 @@ void DlgDbgGLILogRead::loadLog() {
 		if (!gliIsLogPerFrame()){
 			logfile = gliGetLogPath() + logname + ".txt";
 			loadNewLogFile(logfile, frameNumber, true, true);
-
-			CleanStatsHeaders();
-
-			frameCount = frameNumber;
 		}
 		else{
 			clear();
@@ -255,8 +247,6 @@ void DlgDbgGLILogRead::loadLog() {
 
 						//Reads logfile
 						loadNewLogFile(logfile, atoi(ent->d_name + 6), false, true);
-
-						frameCount++;
 					}
 				}
 				closedir(dir);
@@ -297,6 +287,12 @@ void DlgDbgGLILogRead::CleanStatsHeaders(){
 	statscountnode = m_log->AppendItem(statsnode, "Ordered by Count>");
 }
 
+void DlgDbgGLILogRead::ZeroStatsHeaders(){
+	functionDataArray.clear();
+	numGLFunctionCalls = 0;
+}
+
+
 void DlgDbgGLILogRead::CountFunction(std::string funcName)
 {
 	unsigned int funcIndex;
@@ -332,10 +328,11 @@ void DlgDbgGLILogRead::CountFunction(std::string funcName)
 
 void DlgDbgGLILogRead::PrintFunctionCount()
 {
+	CleanStatsHeaders();
 	std::vector<FunctionCallData> functionDataArrayClone = functionDataArray;
 	//Dump the total call count and average per frame (excluding first frame of xxx calls)
 	m_log->AppendItem(statsnode, "Total GL Calls: " + std::to_string(numGLFunctionCalls));
-	m_log->AppendItem(statsnode, "Stats according to: " + std::to_string(frameCount) + " frames");
+	m_log->AppendItem(statsnode, "Frame Number: " + std::to_string(frameStatNumber));
 	
 	//Sort the array based on function call count
 	sort(functionDataArrayClone.begin(), functionDataArrayClone.end(), FunctionCallData::SortByCount);
@@ -362,5 +359,5 @@ void DlgDbgGLILogRead::PrintFunctionCount()
 		{
 			m_log->AppendItem(statsnamenode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
 		}
-		}
+	}
 }

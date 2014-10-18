@@ -26,6 +26,11 @@ Pipeline::Pipeline (std::string pipelineName) :
 
 }
 
+std::string 
+Pipeline::GetName(){
+	return m_Name;
+}
+
 
 const std::string &
 Pipeline::getLastPassCameraName() 
@@ -215,28 +220,31 @@ Pipeline::execute ()
 			m_Passes[m_NextPass]->restore();
 		}
 
-		m_CurrentPass = NULL;
-
 		m_NextPass++;
 
 		if (m_NextPass == 1){
 			if (m_NextPass >= m_Passes.size()){
 				m_NextPass = 0;
+				m_CurrentPass = m_Passes[m_NextPass];
 				return PIPE_PASS_STARTEND;
 			}
 			else{
+				m_CurrentPass = m_Passes[m_NextPass];
 				return PIPE_PASS_START;
 			}
 		} 
 		else if (m_NextPass >= m_Passes.size()){
 			m_NextPass = 0;
+			m_CurrentPass = m_Passes[m_NextPass];
 			return PIPE_PASS_END;
 		}
+
 	}
 	catch(Exception &e) {
 		SLOG(e.getException().c_str());
 	}
 
+	m_CurrentPass = m_Passes[m_NextPass];
 	return PIPE_PASS_MIDDLE;
 }
 

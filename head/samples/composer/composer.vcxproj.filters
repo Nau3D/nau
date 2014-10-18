@@ -46,6 +46,10 @@
     <ClCompile Include="src\dialogs\dlgDbgBuffers.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="src\dialogs\dlgDbgStep.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NauGlBufferInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glcanvas.h" />
@@ -93,6 +97,10 @@
     <ClInclude Include="src\dialogs\dlgDbgBuffers.h">
       <Filter>dialogs</Filter>
     </ClInclude>
+    <ClInclude Include="src\dialogs\dlgDbgStep.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NauGlBufferInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="dialogs">
