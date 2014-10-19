@@ -114,6 +114,7 @@ int idMenu_DLG_PASS = wxNewId();
 int idMenu_DLG_ATOMICS = wxNewId();
 
 #ifdef GLINTERCEPTDEBUG
+int idMenu_DLG_STATEXML = wxNewId();
 int idMenu_DLG_DBGGLILOGREAD = wxNewId();
 int idMenu_DLG_DBGPROGRAM = wxNewId();
 int idMenu_DLG_DBGBUFFER = wxNewId();
@@ -160,6 +161,7 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
 #ifdef GLINTERCEPTDEBUG
   EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
   EVT_MENU(idMenuDbgStep, FrmMainFrame::OnNextFrame)
+  EVT_MENU(idMenu_DLG_STATEXML, FrmMainFrame::OnDlgStateXML)
   EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
   EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
@@ -262,6 +264,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	debugMenu = new wxMenu(_T(""));
 	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
 	debugMenu->Append(idMenuDbgStep, _("Next Pass"), _("Renders next pass"));
+	debugMenu->Append(idMenu_DLG_STATEXML, _("State"), _("Shows OpenGL state variables"));
 	debugMenu->Append(idMenu_DLG_DBGSTEP, _("Advanced Pass Controller"), _("Aditional Pass control options"));
     debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
 	debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"), _("Views Program information"));
@@ -382,6 +385,9 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
 FrmMainFrame::~FrmMainFrame()
 {
+#ifdef GLINTERCEPTDEBUG
+	gliSetIsGLIActive(true);
+#endif
 }
 
 
@@ -467,6 +473,10 @@ FrmMainFrame::updateDlgs()
 	DlgLights::Instance()->updateDlg();
 	DlgScenes::Instance()->updateDlg();
 	DlgPass::Instance()->updateDlg();
+
+	//Update state dialog
+	DlgStateXML::Instance()->updateDlg();
+
 	helpMenu->Enable(idMenu_DLG_TEXTURES,true);
 	helpMenu->Enable(idMenu_DLG_CAMERAS,true);
 	helpMenu->Enable(idMenu_DLG_LIGHTS,true);
@@ -865,6 +875,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 
 	}
 #endif
+
 }
 
 void
@@ -898,6 +909,12 @@ FrmMainFrame::LoadDebugData(){
 #endif
 }
 
+
+
+void
+FrmMainFrame::OnDlgStateXML(wxCommandEvent& event){
+	DlgStateXML::Instance()->Show(TRUE);
+}
 
 void
 FrmMainFrame::OnDlgDbgGLILogRead(wxCommandEvent& event){

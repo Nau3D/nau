@@ -50,6 +50,9 @@
       <Filter>dialogs</Filter>
     </ClCompile>
     <ClCompile Include="src\NauGlBufferInfo.cpp" />
+    <ClCompile Include="src\dialogs\dlgStateXML.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glcanvas.h" />
@@ -101,6 +104,9 @@
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\NauGlBufferInfo.h" />
+    <ClInclude Include="src\dialogs\dlgStateXML.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="dialogs">

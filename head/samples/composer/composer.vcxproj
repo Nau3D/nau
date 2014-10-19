@@ -554,6 +554,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     <ClCompile Include="src\dialogs\dlgDbgGLILogRead.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgStep.cpp" />
+    <ClCompile Include="src\dialogs\dlgStateXML.cpp" />
     <ClCompile Include="src\NauGlBufferInfo.cpp" />
     <ClCompile Include="src\glcanvas.cpp" />
     <ClCompile Include="src\glInfo.cpp" />
@@ -578,6 +579,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     <ClInclude Include="src\dialogs\dlgLights.h" />
     <ClInclude Include="src\dialogs\dlgLog.h" />
     <ClInclude Include="src\dialogs\dlgPass.h" />
+    <ClInclude Include="src\dialogs\dlgStateXML.h" />
     <ClInclude Include="src\NauGlBufferInfo.h" />
     <ClInclude Include="src\glcanvas.h" />
     <ClInclude Include="src\glInfo.h" />

@@ -28,6 +28,7 @@
 #include "nau/slogger.h"
 
 #include <nau/debug/profile.h>
+#include <nau/debug/state.h>
 //#include <nau/debug/fonts.h>
 
 using namespace nau;
@@ -143,6 +144,9 @@ Nau::init (bool context, std::string aConfigFile)
 
 	m_DefaultState = IState::create();
 	m_Viewport = createViewport("defaultFixedVP");
+
+	//Init state reader's function list
+	State::init();
 
 	return true;
 }
@@ -751,6 +755,20 @@ int
 Nau::picking (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera)
 {
 	return -1;//	RenderManager->pick (x, y, objects, aCamera);
+}
+
+//StateList functions:
+void 
+Nau::loadStateXMLFile(std::string file){
+	State::loadStateXMLFile(file);
+}
+std::vector<std::string> 
+Nau::getStateEnumNames(){
+	return State::getStateEnumNames();
+}
+std::string 
+Nau::getState(std::string enumName){
+	return State::getState(enumName);
 }
 
 //void 

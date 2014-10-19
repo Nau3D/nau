@@ -353,6 +353,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\nau\clogger.cpp" />
+    <ClCompile Include="..\src\nau\debug\state.cpp" />
     <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp" />
     <ClCompile Include="..\src\nau\nau.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -595,6 +596,7 @@
     <ClInclude Include="..\src\nau\clogger.h" />
     <ClInclude Include="..\src\nau\config.h" />
     <ClInclude Include="..\src\nau.h" />
+    <ClInclude Include="..\src\nau\debug\state.h" />
     <ClInclude Include="..\src\nau\enums.h" />
     <ClInclude Include="..\src\nau\errors.h" />
     <ClInclude Include="..\src\nau\geometry\distancemap.h">
