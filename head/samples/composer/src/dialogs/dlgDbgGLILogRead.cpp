@@ -73,6 +73,7 @@ DlgDbgGLILogRead::DlgDbgGLILogRead(): wxDialog(DlgDbgGLILogRead::m_Parent, -1, w
 	isLogClear=true;
 	nextFunctionIndex = 0;
 	numGLFunctionCalls = 0;
+	statsnode = NULL;
 }
 
 
@@ -106,6 +107,7 @@ void DlgDbgGLILogRead::clear() {
 
 	m_log->DeleteAllItems();
 	isLogClear = true;
+	statsnode = NULL;
 	nextFunctionIndex = 0;
 	numGLFunctionCalls = 0;
 	functionDataArray.clear();
@@ -141,6 +143,7 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, b
 		while (getline(filestream, line))
 		{
 			if (isNewFrame){
+				PrintFunctionCount();
 				frameStatNumber = frameNumber;
 				frame = m_log->AppendItem(lognode, "Frame " + to_string(frameNumber));
 				statsnode = m_log->AppendItem(frame, "Statistics Log>");
@@ -183,7 +186,6 @@ void DlgDbgGLILogRead::loadLog() {
 			// Corresponding logfile
 			logfile = gliGetLogPath()+logname+".txt";
 			rootnode = m_log->AddRoot(logfile);
-			statsnode = m_log->AppendItem(rootnode, "Statistics Log>");
 			lognode = m_log->AppendItem(rootnode, "Frame Log>");
 
 			//Reads logfile
@@ -329,37 +331,39 @@ void DlgDbgGLILogRead::CountFunction(std::string funcName)
 
 
 void DlgDbgGLILogRead::PrintFunctionCount()
-{
-	CleanStatsHeaders();
-	std::vector<FunctionCallData> functionDataArrayClone = functionDataArray;
-	//Dump the total call count and average per frame (excluding first frame of xxx calls)
-	m_log->AppendItem(statsnode, "Total GL Calls: " + std::to_string(numGLFunctionCalls));
-	//m_log->AppendItem(statsnode, "Frame Number: " + std::to_string(frameStatNumber));
-	
-	//Sort the array based on function call count
-	sort(functionDataArrayClone.begin(), functionDataArrayClone.end(), FunctionCallData::SortByCount);
+{ 
+	if (statsnode){
+		CleanStatsHeaders();
+		std::vector<FunctionCallData> functionDataArrayClone = functionDataArray;
+		//Dump the total call count and average per frame (excluding first frame of xxx calls)
+		m_log->AppendItem(statsnode, "Total GL Calls: " + std::to_string(numGLFunctionCalls));
+		//m_log->AppendItem(statsnode, "Frame Number: " + std::to_string(frameStatNumber));
+
+		//Sort the array based on function call count
+		sort(functionDataArrayClone.begin(), functionDataArrayClone.end(), FunctionCallData::SortByCount);
 
 
-	//Loop and dump the function data 
-	for (unsigned int i = 0; i < functionDataArrayClone.size(); i++)
-	{
-		//Only dump functions that have been called
-		if (functionDataArrayClone[i].funcCallCount > 0)
+		//Loop and dump the function data 
+		for (unsigned int i = 0; i < functionDataArrayClone.size(); i++)
 		{
-			m_log->AppendItem(statscountnode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
+			//Only dump functions that have been called
+			if (functionDataArrayClone[i].funcCallCount > 0)
+			{
+				m_log->AppendItem(statscountnode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
+			}
 		}
-	}
 
-	//Sort the array based on function name
-	sort(functionDataArrayClone.begin(), functionDataArrayClone.end(), FunctionCallData::SortByName);
+		//Sort the array based on function name
+		sort(functionDataArrayClone.begin(), functionDataArrayClone.end(), FunctionCallData::SortByName);
 
-	//Loop and dump the function data 
-	for (unsigned int i = 0; i < functionDataArrayClone.size(); i++)
-	{
-		//Only dump functions that have been called
-		if (functionDataArrayClone[i].funcCallCount > 0)
+		//Loop and dump the function data 
+		for (unsigned int i = 0; i < functionDataArrayClone.size(); i++)
 		{
-			m_log->AppendItem(statsnamenode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
+			//Only dump functions that have been called
+			if (functionDataArrayClone[i].funcCallCount > 0)
+			{
+				m_log->AppendItem(statsnamenode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
+			}
 		}
 	}
 }
