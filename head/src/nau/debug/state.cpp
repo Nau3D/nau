@@ -72,18 +72,19 @@ std::string State::getState(std::string enumName){
 	if (stateVariablesMap.find(enumName) != stateVariablesMap.end()){
 		StateVariable enumVariable = stateVariablesMap[enumName];
 		if (functionMap.find(enumVariable.functionName) != functionMap.end()){
+			FunctionType type = functionMap[enumVariable.functionName];
 			if (enumVariable.length == 1){ //single value
-				return getStateSingle(enumVariable.enumValue, functionMap[enumVariable.functionName]);
+				return getStateValue(enumVariable.enumValue, type);
 			}
 			else{
-				return getStateMultiple(enumVariable.enumValue, functionMap[enumVariable.functionName], enumVariable.length);
+				return getStateValue(enumVariable.enumValue, type, enumVariable.length);
 			}
 		}
 	}
 	return "";
 }
 
-std::string State::getStateSingle(int enumValue, FunctionType type){
+std::string State::getStateValue(int enumValue, FunctionType type){
 	switch (type){
 	case GL_GLGETBOOLEANV:{
 		GLboolean value;
@@ -119,12 +120,11 @@ std::string State::getStateSingle(int enumValue, FunctionType type){
 	return "";
 }
 
-std::string State::getStateMultiple(int enumValue, FunctionType type, int length){
-	std::vector<std::string> values;
+std::string State::getStateValue(int enumValue, FunctionType type, int length){
 	std::string finalString = "[";
 	switch (type){
 	case GL_GLGETBOOLEANV:{
-		GLboolean value[65335];
+		GLboolean value[256];
 		glGetBooleanv(enumValue, value);
 		for (int i = 0; i < length; i++){
 			if (i != 0){
@@ -137,9 +137,10 @@ std::string State::getStateMultiple(int enumValue, FunctionType type, int length
 				finalString += "GL_FALSE";
 			}
 		}
+		break;
 	}
 	case GL_GLGETDOUBLEV:{
-		GLdouble value[65335];
+		GLdouble value[256];
 		glGetDoublev(enumValue, value);
 		for (int i = 0; i < length; i++){
 			if (i != 0){
@@ -147,9 +148,10 @@ std::string State::getStateMultiple(int enumValue, FunctionType type, int length
 			}
 			finalString += std::to_string(value[i]);
 		}
+		break;
 	}
 	case GL_GLGETFLOATV:{
-		GLfloat value[65335];
+		GLfloat value[256];
 		glGetFloatv(enumValue, value);
 		for (int i = 0; i < length; i++){
 			if (i != 0){
@@ -157,9 +159,10 @@ std::string State::getStateMultiple(int enumValue, FunctionType type, int length
 			}
 			finalString += std::to_string(value[i]);
 		}
+		break;
 	}
 	case GL_GLGETINTEGERV:{
-		GLint value[65335];
+		GLint value[256];
 		glGetIntegerv(enumValue, value);
 		for (int i = 0; i < length; i++){
 			if (i != 0){
@@ -167,9 +170,10 @@ std::string State::getStateMultiple(int enumValue, FunctionType type, int length
 			}
 			finalString += std::to_string(value[i]);
 		}
+		break;
 	}
 	case GL_GLGETINTEGER64V:{
-		GLint64 value[65335];
+		GLint64 value[256];
 		glGetInteger64v(enumValue, value);
 		for (int i = 0; i < length; i++){
 			if (i != 0){
@@ -177,6 +181,7 @@ std::string State::getStateMultiple(int enumValue, FunctionType type, int length
 			}
 			finalString += std::to_string(value[i]);
 		}
+		break;
 	}
 	}
 	finalString += "]";

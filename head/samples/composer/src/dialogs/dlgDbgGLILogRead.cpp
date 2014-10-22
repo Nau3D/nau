@@ -142,7 +142,9 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, b
 		{
 			if (isNewFrame){
 				frameStatNumber = frameNumber;
-				frame = m_log->AppendItem(lognode, "frame " + to_string(frameNumber));
+				frame = m_log->AppendItem(lognode, "Frame " + to_string(frameNumber));
+				statsnode = m_log->AppendItem(frame, "Statistics Log>");
+				frame = m_log->AppendItem(frame, "Call Log>");
 				frameNumber++;
 				isNewFrame = false;
 				ZeroStatsHeaders();
@@ -151,7 +153,8 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, b
 			if (appendCount){
 				CountFunction(split(line, '(')[0]);
 			}
-			if(strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
+			if (strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
+				m_log->Expand(frame);
 				isNewFrame=true;
 			}
 			if (filestream.tellg() >= 0){
@@ -194,7 +197,6 @@ void DlgDbgGLILogRead::loadLog() {
 		}
 		else{
 			rootnode = m_log->AddRoot(gliGetLogPath() + string("Frame_*\\") + logname + ".txt");
-			statsnode = m_log->AppendItem(rootnode, "Last frame Statistics Log>");
 			lognode = m_log->AppendItem(rootnode, "Frame Log>");
 			//Directory searching algorithm source:
 			//dirent.h
@@ -332,7 +334,7 @@ void DlgDbgGLILogRead::PrintFunctionCount()
 	std::vector<FunctionCallData> functionDataArrayClone = functionDataArray;
 	//Dump the total call count and average per frame (excluding first frame of xxx calls)
 	m_log->AppendItem(statsnode, "Total GL Calls: " + std::to_string(numGLFunctionCalls));
-	m_log->AppendItem(statsnode, "Frame Number: " + std::to_string(frameStatNumber));
+	//m_log->AppendItem(statsnode, "Frame Number: " + std::to_string(frameStatNumber));
 	
 	//Sort the array based on function call count
 	sort(functionDataArrayClone.begin(), functionDataArrayClone.end(), FunctionCallData::SortByCount);

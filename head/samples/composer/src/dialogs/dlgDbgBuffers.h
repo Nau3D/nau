@@ -51,7 +51,9 @@ private:
 
 
 	void OnBufferSelection(wxPropertyGridEvent& e);
+	void OnBufferChanged(wxPropertyGridEvent& e);
 	void loadBufferSettings();
+	void loadBufferSettingsPGUpdate(wxPGProperty *settings, int buffer);
 
 
 	void OnBufferValuesLengthChange(wxSpinEvent& e);

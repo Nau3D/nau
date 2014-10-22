@@ -8,6 +8,7 @@ BEGIN_EVENT_TABLE(DlgDbgBuffers, wxDialog)
 	//EVT_GRID_CELL_CHANGED(DlgDbgBuffers::OnGridCellChange)
 
 	EVT_PG_SELECTED(DLG_MI_PGBUFFERS, DlgDbgBuffers::OnBufferSelection)
+	EVT_PG_CHANGED(DLG_MI_PGBUFFERS, DlgDbgBuffers::OnBufferChanged)
 	EVT_SPINCTRL(DLG_MI_GRIDBUFFERINFOLENGTH, DlgDbgBuffers::OnBufferValuesLengthChange)
 	EVT_SPINCTRL(DLG_MI_GRIDBUFFERINFOLINES, DlgDbgBuffers::OnBufferValuesLinesChange)
 	EVT_SPINCTRL(DLG_MI_GRIDBUFFERINFOPAGE, DlgDbgBuffers::OnBufferValuesPageChange)
@@ -292,12 +293,14 @@ void DlgDbgBuffers::loadBufferInfoGrid(){
 
 	for (iter = bufferInfoMap->begin(); iter != bufferInfoMap->end(); iter++){
 		NauGlBufferInfo bufferInfo = iter->second;
-		wxPGProperty *pid, *appended;
+		wxPGProperty *pid, *appended, *userpg;
+		bool newSettings = false;
 
 		pid = pgBuffers->Append(new wxPGProperty(wxT("Buffer " + std::to_string(bufferInfo.index)), wxPG_LABEL));
 		pid->SetAttribute(wxT("buffer"), wxVariant(bufferInfo.index));
 		if (bufferSettingsList.find(bufferInfo.index) == bufferSettingsList.end()){
 			bufferSettingsList[bufferInfo.index] = BufferSettings();
+			newSettings = true;
 		}
 		if (bufferInfo.isVAOBuffer()){
 			std::string valueHeader;
@@ -317,9 +320,11 @@ void DlgDbgBuffers::loadBufferInfoGrid(){
 			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Integer"), wxPG_LABEL, bufferInfo.integer));
 			appended->Enable(false);
 
-			bufferSettingsList[bufferInfo.index].types.clear();
-			bufferSettingsList[bufferInfo.index].types.push_back(getDLGDataType(bufferInfo.type));
-
+			if (newSettings){
+				bufferSettingsList[bufferInfo.index].types.clear();
+				bufferSettingsList[bufferInfo.index].types.push_back(getDLGDataType(bufferInfo.type));
+				bufferSettingsList[bufferInfo.index].length = bufferInfo.components;
+			}
 			//appended = pgBuffers->AppendIn(pid, new wxPGProperty(wxT("Values"), wxPG_LABEL));
 			//values->Enable(false);
 			//valueline = 0;
@@ -342,8 +347,39 @@ void DlgDbgBuffers::loadBufferInfoGrid(){
 		else{
 			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Size (Bytes)"), wxPG_LABEL, bufferInfo.size));
 			appended->Enable(false);
-
 		}
+
+
+		int pagesize, linesize = 0;
+		int length = bufferSettingsList[bufferInfo.index].length;
+		int lines = bufferSettingsList[bufferInfo.index].lines;
+
+		userpg = pgBuffers->AppendIn(pid, new wxPGProperty(wxT("User Settings"), wxPG_LABEL));
+
+		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Length"), wxPG_LABEL, length));
+		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Lines per Page"), wxPG_LABEL, lines));
+
+		//Setting Types Values
+		if (bufferInfo.isVAOBuffer()){
+			linesize = getBufferDataTypeSize(bufferSettingsList[bufferInfo.index].types[0]) * length;
+		}
+		else{
+			for (int t = 0; t < length; t++){
+				linesize += getBufferDataTypeSize(bufferSettingsList[bufferInfo.index].types[t]);
+			}
+		}
+
+		pagesize = linesize * lines;
+
+		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Line Size (bytes)"), wxPG_LABEL, linesize));
+		appended->Enable(false);
+		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Lines"), wxPG_LABEL, (bufferInfo.size / linesize) + 1));
+		appended->Enable(false);
+		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Page Size (bytes)"), wxPG_LABEL, pagesize));
+		appended->Enable(false);
+		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Pages"), wxPG_LABEL, (bufferInfo.size / pagesize) + 1));
+		appended->Enable(false);
+
 	}
 	pgBuffers->CollapseAll();
 }
@@ -636,7 +672,11 @@ void DlgDbgBuffers::OnBufferValuesLengthChange(wxSpinEvent& e){
 		int newValue = spinBufferLength->GetValue();
 		if (bufferSettingsList[currentBufferIndex].length != newValue){
 			bufferSettingsList[currentBufferIndex].length = newValue;
+			wxPGProperty *settings = pgBuffers->GetCurrentPage()->GetRoot()->
+				GetPropertyByName("Buffer " + std::to_string(currentBufferIndex))->GetPropertyByName("User Settings");
+			settings->GetPropertyByName("Length")->SetValue(newValue);
 			OnBufferSettingsChange();
+			loadBufferSettingsPGUpdate(settings, currentBufferIndex);
 		}
 	}
 }
@@ -645,7 +685,11 @@ void DlgDbgBuffers::OnBufferValuesLinesChange(wxSpinEvent& e){
 		int newValue = spinBufferLines->GetValue();
 		if (bufferSettingsList[currentBufferIndex].lines != newValue){
 			bufferSettingsList[currentBufferIndex].lines = newValue;
+			wxPGProperty *settings = pgBuffers->GetCurrentPage()->GetRoot()->
+				GetPropertyByName("Buffer " + std::to_string(currentBufferIndex))->GetPropertyByName("User Settings");
+			settings->GetPropertyByName("Lines per Page")->SetValue(newValue);
 			OnBufferSettingsChange();
+			loadBufferSettingsPGUpdate(settings, currentBufferIndex);
 		}
 	}
 }
@@ -664,6 +708,10 @@ void DlgDbgBuffers::OnGridCellChange(wxGridEvent& event){
 			if (bufferSettingsList[currentBufferIndex].types[event.GetCol()] != type){
 				bufferSettingsList[currentBufferIndex].types[event.GetCol()] = type;
 				OnBufferSettingsChange();
+				wxPGProperty *settings = pgBuffers->GetCurrentPage()->GetRoot()->
+					GetPropertyByName("Buffer " + std::to_string(currentBufferIndex))->GetPropertyByName("User Settings");
+				settings->GetPropertyByName("Lines per Page");
+				loadBufferSettingsPGUpdate(settings, currentBufferIndex);
 			}
 		}
 	}
@@ -752,24 +800,93 @@ void DlgDbgBuffers::OnSavePropertyGridAux(std::fstream &s, wxPropertyGridPage *p
 	wxPGProperty *bufferPG, *levelAux;
 	wxPropertyGridIterator iterator = page->GetIterator();
 	int level;
+	bool write;
 	while (!iterator.AtEnd()){
 		bufferPG = iterator.GetProperty();
+		write = true;
 		level = 0;
 		levelAux = bufferPG;
 		while (levelAux->GetParent() != levelAux->GetMainParent()){
+			if (levelAux->GetBaseName().Matches("User Settings")){
+				write = false;
+				break;
+			}
 			levelAux = levelAux->GetParent();
 			level++;
 		}
-
-		if (level == 0){
-			s << bufferPG->GetBaseName().ToStdString() << "\n";
-		}
-		else{
-			for (int i = 0; i < level; i++){
-				s << "\t";
+		
+		if (write){
+			if (level == 0){
+				s << bufferPG->GetBaseName().ToStdString() << "\n";
 			}
-			s << bufferPG->GetBaseName().ToStdString() << ":\t" << bufferPG->GetValue().GetString().ToStdString() << "\n";
+			else{
+				for (int i = 0; i < level; i++){
+					s << "\t";
+				}
+				s << bufferPG->GetBaseName().ToStdString() << ":\t" << bufferPG->GetValue().GetString().ToStdString() << "\n";
+			}
 		}
 		iterator.Next();
 	}
+}
+
+//Valid only for
+//appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Length"), wxPG_LABEL, length));
+//appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Lines per Page"), wxPG_LABEL, lines));
+void DlgDbgBuffers::OnBufferChanged(wxPropertyGridEvent& e){
+	wxPGProperty *p = e.GetProperty();
+
+	if (p->GetBaseName().Matches("Length")){
+		long buffer = p->GetParent()->GetParent()->GetAttribute(wxT("buffer")).GetLong();
+		int newValue = p->GetValue().GetLong();
+
+		if (bufferSettingsList[buffer].length != newValue){
+			bufferSettingsList[buffer].length = newValue;
+			if (buffer == currentBufferIndex){
+				spinBufferLength->SetValue(bufferSettingsList[buffer].length);
+			}
+			loadBufferSettingsPGUpdate(p->GetParent(), buffer);
+			OnBufferSettingsChange();
+		}
+
+	}
+	if (p->GetBaseName().Matches("Lines per Page")){
+		long buffer = p->GetParent()->GetParent()->GetAttribute(wxT("buffer")).GetLong();
+		int newValue = p->GetValue().GetLong();
+
+		if (bufferSettingsList[buffer].lines != newValue){
+			bufferSettingsList[buffer].lines = newValue;
+			if (buffer == currentBufferIndex){
+				spinBufferLines->SetValue(bufferSettingsList[buffer].lines);
+			}
+			loadBufferSettingsPGUpdate(p->GetParent(), buffer);
+			OnBufferSettingsChange();
+		}
+
+	}
+}
+void DlgDbgBuffers::loadBufferSettingsPGUpdate(wxPGProperty *settings, int buffer){
+	NauGlBufferInfo bufferInfo;
+	int pagesize, linesize = 0;
+	int length = bufferSettingsList[buffer].length;
+	int lines = bufferSettingsList[buffer].lines;
+
+	getBufferInfoFromMap(buffer, bufferInfo);
+
+	//Setting Types Values
+	if (bufferInfo.isVAOBuffer()){
+		linesize = getBufferDataTypeSize(bufferSettingsList[buffer].types[0]) * length;
+	}
+	else{
+		for (int t = 0; t < length; t++){
+			linesize += getBufferDataTypeSize(bufferSettingsList[buffer].types[t]);
+		}
+	}
+
+	pagesize = linesize * lines;
+
+	settings->GetPropertyByName("Line Size (bytes)")->SetValue(linesize);
+	settings->GetPropertyByName("Lines")->SetValue((bufferInfo.size / linesize) + 1);
+	settings->GetPropertyByName("Page Size (bytes)")->SetValue(pagesize);
+	settings->GetPropertyByName("Pages")->SetValue((bufferInfo.size / pagesize) + 1);
 }

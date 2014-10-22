@@ -141,6 +141,8 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 
 			DlgDbgStep::Instance()->updateDlg();
 #endif
+
+			DlgStateXML::Instance()->updateDlg();
 			step = 0;
 		}
 	}

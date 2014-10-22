@@ -44,8 +44,8 @@ class State{
 	static void loadEnums(TiXmlHandle &hRoot, std::string functionName);
 
 
-	static std::string getStateSingle(int enumValue, FunctionType type);
-	static std::string getStateMultiple(int enumValue, FunctionType type, int length);
+	static std::string getStateValue(int enumValue, FunctionType type);
+	static std::string getStateValue(int enumValue, FunctionType type, int length);
 public:
 	static void init();
 	static void loadStateXMLFile(std::string file);
