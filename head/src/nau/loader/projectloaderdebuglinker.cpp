@@ -280,3 +280,7 @@ bool debugLogName(){
 	return gliGetLogName();
 }
 
+
+void addMessageToGLILog(const char * message){
+	return gliInsertLogMessage(message);
+}

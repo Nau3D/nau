@@ -443,3 +443,5 @@ EXPORTS
    gliKillGliLog
    gliGetEnumsCount
    gliGetEnumsName
+
+   gliInsertLogMessage

@@ -3868,7 +3868,7 @@ ProjectLoader::loadDebug (TiXmlHandle &hRoot)
 Specification of the functionlog:
 
 		<functionlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<logxmlformat value="bool"/> (REMOVED)
 			<logflush value="bool"/> (REMOVED)
 			<logmaxframeloggingenabled value="bool"/>
@@ -3883,6 +3883,14 @@ Specification of the functionlog:
 void
 ProjectLoader::loadDebugFunctionlog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("functionlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "functionlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"functionlog");
 
@@ -4014,7 +4022,7 @@ ProjectLoader::loadDebugImagelogimageicon (TiXmlHandle &hRoot){
 Specification of the shaderlog:
 
 		<shaderlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<shaderrendercallstatelog value="bool"/>
 			<shaderattachlogstate value="bool"/>
 			<shadervalidateprerender value="bool"/>
@@ -4023,7 +4031,15 @@ Specification of the shaderlog:
 ----------------------------------------------------------------- */
 void
 ProjectLoader::loadDebugShaderlog (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("shaderlog").Element());
+	TiXmlHandle handle(hRoot.FirstChild("shaderlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "shaderlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"shaderlog");
 }
@@ -4032,12 +4048,20 @@ ProjectLoader::loadDebugShaderlog (TiXmlHandle &hRoot){
 Specification of the displaylistlog:
 
 		<displaylistlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 		</displaylistlog>
 ----------------------------------------------------------------- */
 void
 ProjectLoader::loadDebugDisplaylistlog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("displaylistlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "displaylistlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"displaylistlog");
 }
@@ -4053,7 +4077,7 @@ AABBGGRR. If an index is missing, it will take the value of the index as the col
 (ie. stencil index 128 = (255, 128,128,128) = greyscale values)
 
 		<framelog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<frameimageformat value="string"/>
 			<framestencilcolors>
 				<item value="uint"/>
@@ -4097,6 +4121,14 @@ void
 ProjectLoader::loadDebugFramelog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("framelog").Element());
 
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "framelog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
+
 	loadDebugConfigData(handle,"framelog");
 
 	
@@ -4129,7 +4161,7 @@ ProjectLoader::loadDebugFramelogFrameicon (TiXmlHandle &hRoot){
 Specification of the framemovie:
 
 			<framemovie>
-				<framemovieenabled value="bool"/>
+				<framemovieenabled value="bool"/> (Automatic)
 				<framemoviewidth value="uint"/>
 				<framemovieheight value="uint"/>
 				<framemovierate value="uint"/>
@@ -4144,6 +4176,14 @@ void
 ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("framemovie").Element());
 
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("framemovieenabled", "framelogframemovie");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
+
 	loadDebugConfigData(handle,"framelogframemovie");
 
 }
@@ -4152,13 +4192,21 @@ ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
 Specification of the timerlog:
 
 		<timerlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<timerlogcutoff value="uint"/>
 		</timerlog>
 ----------------------------------------------------------------- */
 void
 ProjectLoader::loadDebugTimerlog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("timerlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "timerlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"timerlog");
 

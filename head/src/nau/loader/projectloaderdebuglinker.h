@@ -37,3 +37,5 @@ void startGLIConfiguration();
 void addPlugin(const char *pluginName, const char *pluginDLLName, const char *pluginConfigData);
 void clearPlugins();
 void startGlilog();
+
+void addMessageToGLILog(const char * message);

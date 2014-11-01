@@ -122,5 +122,8 @@ using namespace std;
 
   dlllibextern int gliGetEnumsCount();
   dlllibextern const char *gliGetEnumsName(unsigned int index);
+
+
+  dlllibextern void gliInsertLogMessage(const char *message);
 #endif
 

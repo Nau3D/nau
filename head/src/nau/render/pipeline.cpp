@@ -251,7 +251,9 @@ Pipeline::execute ()
 
 Pass *
 Pipeline::getCurrentPass() {
-
+	if (!m_CurrentPass && m_Passes.size() > 0){
+		m_CurrentPass = m_Passes[m_NextPass];
+	}
 	return m_CurrentPass;
 }
 

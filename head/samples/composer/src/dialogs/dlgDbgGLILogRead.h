@@ -73,7 +73,7 @@ protected:
 	wxTreeCtrl *m_log;
 	wxButton *m_bClear, *m_bProfiler, *m_bSave;
 	wxTreeItemId rootnode, lognode, statsnode, statsnamenode, statscountnode;
-	wxTreeItemId frame;
+	wxTreeItemId frame, pass;
 	std::string name;
 	bool isLogClear;
 	bool isNewFrame;

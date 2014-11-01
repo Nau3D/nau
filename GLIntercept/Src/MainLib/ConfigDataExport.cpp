@@ -404,3 +404,8 @@ void gliSetIsGLIActive(bool isGLIActive){
   const char *gliGetEnumsName(unsigned int index){
 	  return functionTableExport->GetEnumData(index)->GetName().c_str();
   }
+
+
+  void gliInsertLogMessage(const char *message){
+	  glDriver->AddLoggerString(message);
+  }

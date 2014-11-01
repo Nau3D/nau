@@ -116,7 +116,7 @@ void DlgDbgGLILogRead::clear() {
 
 void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, bool appendCount){
 	string line;
-	isNewFrame = true;
+	isNewFrame = false;
 	filestream.clear();
 	filestream.open(logfile);
 	
@@ -128,8 +128,20 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, b
 		if (tellg){
 			filestream.seekg(streamlnnum);
 			getline(filestream, line);
-			if (strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
-				isNewFrame = true;
+			if (strcmp(line.substr(0, 4).c_str(), "#NAU") == 0){
+				if (strcmp(line.substr(5, 5).c_str(), "FRAME") == 0){
+					if (strcmp(line.substr(11, 5).c_str(), "START") == 0){
+						PrintFunctionCount();
+						ZeroStatsHeaders();
+						frameStatNumber = frameNumber;
+						frame = m_log->AppendItem(lognode, "Frame " + to_string(frameNumber));
+						statsnode = m_log->AppendItem(frame, "Statistics Log>");
+						frame = m_log->AppendItem(frame, "Call Log>");
+						pass = frame;
+						frameNumber++;
+						isNewFrame = false;
+					}
+				}
 			}
 		}
 		else{
@@ -138,27 +150,56 @@ void DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, b
 			getline(filestream, line);
 			getline(filestream, line);
 			getline(filestream, line);
+			isNewFrame = true;
 		}
 
 		while (getline(filestream, line))
 		{
-			if (isNewFrame){
-				PrintFunctionCount();
-				frameStatNumber = frameNumber;
-				frame = m_log->AppendItem(lognode, "Frame " + to_string(frameNumber));
-				statsnode = m_log->AppendItem(frame, "Statistics Log>");
-				frame = m_log->AppendItem(frame, "Call Log>");
-				frameNumber++;
-				isNewFrame = false;
-				ZeroStatsHeaders();
+			if (strcmp(line.substr(0, 4).c_str(), "#NAU") == 0){
+				if (strcmp(line.substr(5, 5).c_str(), "FRAME") == 0){
+					if (strcmp(line.substr(11, 5).c_str(), "START") == 0){
+						if (frame){
+							m_log->Expand(frame);
+						}
+						PrintFunctionCount();
+						ZeroStatsHeaders();
+						frameStatNumber = frameNumber;
+						frame = m_log->AppendItem(lognode, "Frame " + to_string(frameNumber));
+						statsnode = m_log->AppendItem(frame, "Statistics Log>");
+						frame = m_log->AppendItem(frame, "Call Log>");
+						pass = frame;
+						frameNumber++;
+						isNewFrame = false;
+					}
+				}
+				else if (strcmp(line.substr(5, 4).c_str(), "PASS") == 0){
+					if (strcmp(line.substr(10, 5).c_str(), "START") == 0){
+						pass = m_log->AppendItem(frame, "NAUPASS(" + line.substr(16, line.length() - 17) + ")");
+					}
+					else if (strcmp(line.substr(10, 3).c_str(), "END") == 0){
+						pass = frame;
+					}
+				}
 			}
-			m_log->AppendItem(frame,line);
-			if (appendCount){
-				CountFunction(split(line, '(')[0]);
-			}
-			if (strcmp(line.substr(0, strlen("wglSwapBuffers")).c_str(), "wglSwapBuffers") == 0){
-				m_log->Expand(frame);
-				isNewFrame=true;
+			else{
+				if (isNewFrame){
+					if (frame){
+						m_log->Expand(frame);
+					}
+					PrintFunctionCount();
+					ZeroStatsHeaders();
+					frameStatNumber = frameNumber;
+					frame = m_log->AppendItem(lognode, "Frame " + to_string(frameNumber));
+					statsnode = m_log->AppendItem(frame, "Statistics Log>");
+					frame = m_log->AppendItem(frame, "Call Log>");
+					pass = frame;
+					frameNumber++;
+					isNewFrame = false;
+				}
+				m_log->AppendItem(pass, line);
+				if (appendCount){
+					CountFunction(split(line, '(')[0]);
+				}
 			}
 			if (filestream.tellg() >= 0){
 				streamlnnum = filestream.tellg();

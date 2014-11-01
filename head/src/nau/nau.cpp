@@ -31,6 +31,11 @@
 #include <nau/debug/state.h>
 //#include <nau/debug/fonts.h>
 
+
+#ifdef GLINTERCEPTDEBUG
+#include <nau/loader/projectloaderdebuglinker.h>
+#endif //GLINTERCEPTDEBUG
+
 using namespace nau;
 using namespace nau::system;
 using namespace nau::loader;
@@ -96,7 +101,6 @@ bool
 Nau::init (bool context, std::string aConfigFile)
 {
 	bool result;
-
 	if (true == context) {
 
 		m_pRenderManager = new RenderManager;
@@ -235,6 +239,7 @@ Nau::readProjectFile (std::string file, int *width, int *height)
 
 	try {
 		ProjectLoader::load (file, width, height, &m_UseTangents, &m_UseTriangleIDs);
+		isFrameBegin = true;
 	}
 	catch (std::string s) {
 		clear();
@@ -436,6 +441,9 @@ Nau::step(int count)
 
 		if (isFrameBegin){
 			m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+#ifdef GLINTERCEPTDEBUG
+			addMessageToGLILog("\n#NAU(FRAME,START)");
+#endif //GLINTERCEPTDEBUG
 			isFrameBegin = false;
 		}
 
@@ -463,7 +471,21 @@ Nau::step(int count)
 
 		//renderer->setDefaultState();
 
+#ifdef GLINTERCEPTDEBUG
+		Pass *renderPass = NULL;
+		if (m_pRenderManager->getNumPipelines() > 0){
+			renderPass = m_pRenderManager->getCurrentPass();
+		}
+		if (renderPass){
+			addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
+		}
+#endif //GLINTERCEPTDEBUG
 		pipeEventFlag = m_pRenderManager->renderActivePipeline();
+#ifdef GLINTERCEPTDEBUG
+		if (renderPass){
+			addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+		}
+#endif //GLINTERCEPTDEBUG
 
 #ifdef NAU_RENDER_FLAGS
 		//#ifdef PROFILE
@@ -498,6 +520,9 @@ Nau::step(int count)
 		case PIPE_PASS_STARTEND:
 		case PIPE_PASS_END:
 			m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
+#ifdef GLINTERCEPTDEBUG
+			addMessageToGLILog("\n#NAU(FRAME,END)");
+#endif //GLINTERCEPTDEBUG
 			isFrameBegin = true;
 			break;
 		}
