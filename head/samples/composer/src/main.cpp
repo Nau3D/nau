@@ -298,7 +298,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 		WX_GL_DEPTH_SIZE, 32,
 		WX_GL_STENCIL_SIZE, 8, 
 		WX_GL_SAMPLE_BUFFERS,1,
-		WX_GL_SAMPLES,4,
+		WX_GL_SAMPLES,1,
 		0};
 
 

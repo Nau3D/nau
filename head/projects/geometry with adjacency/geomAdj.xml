@@ -3,7 +3,8 @@
 	<assets>
 		<scenes>
 			<scene name="Al"  param="USE_ADJACENCY" type="OctreeByMat">
-				<file>..\..\models\al.obj</file>
+				<!--file>..\..\models\cubewithplane3.obj</file-->
+				<file>..\..\models\sponza\crytek\sponza.obj</file>
 			</scene>
 		</scenes>
 		

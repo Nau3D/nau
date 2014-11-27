@@ -147,7 +147,7 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 Project Specification
 
 <?xml version="1.0" ?>
-<project name="teste1-shadows">
+<project name="teste1-shadows" width=512 height=512>
 	<assets>
 		...
 	</assets>
@@ -306,8 +306,9 @@ the path may be relative to the project file or absolute
 type see sceneFactory
 
 param is passed to the loader
-	3DS loader: SWAP_YZ to indicate that ZY axis should be swaped 
-	( by default they are swapped)
+	SWAP_YZ to indicate that ZY axis should be swaped 
+	USE_ADJACENCY to create an index list with adjacency information
+
 ----------------------------------------------------------------- */
 
 
@@ -879,6 +880,9 @@ ProjectLoader::loadLights(TiXmlHandle handle)
 Specification of the assets:
 
 	<assets>
+		<attributes>
+			...
+		</attributes>
 		<scenes>
 			...
 		</scenes>
@@ -891,6 +895,9 @@ Specification of the assets:
 		<lights>
 			...
 		</lights>
+		<atomics>
+			...
+		</atomics>
 		<materiallibs>
 			<mlib filename="..\mlibs\vision.mlib"/>
 			<mlib filename="..\mlibs\quadMaterials.mlib"/>
@@ -1876,8 +1883,8 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 				<material name="computeShader" fromLibrary="myLib" atomicX="at1", atomicY="at2", atomicZ="at3"/>
 			</pass>
 
-	The strings in the atomics are atomic labels that must be previously defined
-	dims and atmics can be mixed, but for each dimension there must be only one
+	The strings in the atomics(X,Y,Z) are atomic labels that must be previously defined
+	Dims and atomics can be mixed, but for each dimension there must be only one
 -------------------------------------------------------------------------------*/
 
 
