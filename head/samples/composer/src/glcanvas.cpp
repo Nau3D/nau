@@ -19,6 +19,10 @@
 #include <nau/slogger.h>
 
 
+#ifdef GLINTERCEPTDEBUG
+#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+#endif
+
 
 using namespace std;
 using namespace nau::math;
@@ -48,6 +52,8 @@ GlCanvas::GlCanvas (wxWindow *parent,
 	m_Timer.Start();
 	p_GLC = new wxGLContext(this);
 	SetCurrent(*p_GLC);
+
+	step = 0;
 }
 
 GlCanvas::GlCanvas (wxWindow *parent,
@@ -64,6 +70,8 @@ GlCanvas::GlCanvas (wxWindow *parent,
   p_GLC = new wxGLContext(this);
   
   SetCurrent(*p_GLC);
+
+  step = 0;
 }
 
 
@@ -104,8 +112,36 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 	PROFILE("Composer");
 	wxPaintDC dc(this);
 
+<<<<<<< HEAD
 	if(!isPaused){
+=======
+   //SetCurrent (*p_GLC);
+	if(!isPaused || step != 0){
+>>>>>>> origin/debug_wrapper
 		Render();
+
+		if (step != 0){
+
+#ifdef GLINTERCEPTDEBUG
+			gliSetIsGLIActive(false);
+			if (gliIsLogPerFrame()){
+				DlgDbgGLILogRead::Instance()->clear();
+			}
+
+			DlgDbgGLILogRead::Instance()->loadLog();
+
+			DlgDbgPrograms::Instance()->clear();
+			DlgDbgPrograms::Instance()->loadShaderInfo();
+
+			DlgDbgBuffers::Instance()->clear();
+			DlgDbgBuffers::Instance()->loadBufferInfo();
+
+			DlgDbgStep::Instance()->updateDlg();
+#endif
+
+			DlgStateXML::Instance()->updateDlg();
+			step = 0;
+		}
 	}
 	event.Skip ();
 }
@@ -154,7 +190,7 @@ GlCanvas::Render ()
 	PROFILE ("Main cicle");
 
 	if (0 != m_pEngine) {
-		m_pEngine->step();
+		m_pEngine->step(step);
 	}
 
 	{
@@ -689,10 +725,18 @@ GlCanvas::BreakResume ()
 }
 
 bool
-GlCanvas::IsPaused ()
+GlCanvas::IsPaused()
 {
 	return isPaused;
 }
+
+void
+GlCanvas::MultiStep(int stepSize)
+{
+	step = stepSize;
+}
+
+
 
 //bool
 //GlCanvas::changeWaterState (bool state)

@@ -15,6 +15,8 @@ using namespace std;
 #define dlllibextern extern __declspec(dllimport)
 #endif
 
+  dlllibextern void gliSetIsGLIActive(bool isGLIActive);
+
   dlllibextern void gliSetLogEnabled(bool logEnabled);                                // Flag to indicate if logging is enabled
   dlllibextern bool gliIsLogEnabled();
   dlllibextern void gliSetLogXMLFormat(bool logXMLFormat);                              // If true use XML to log, else use plain text.
@@ -120,5 +122,8 @@ using namespace std;
 
   dlllibextern int gliGetEnumsCount();
   dlllibextern const char *gliGetEnumsName(unsigned int index);
+
+
+  dlllibextern void gliInsertLogMessage(const char *message);
 #endif
 

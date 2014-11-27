@@ -13,6 +13,11 @@
 #include <nau/render/pass.h>
 #include <nau/render/istate.h>
 
+#define PIPE_PASS_MIDDLE 0
+#define PIPE_PASS_START 1
+#define PIPE_PASS_STARTEND 2
+#define PIPE_PASS_END 3
+
 namespace nau
 {
 	namespace render
@@ -34,10 +39,14 @@ namespace nau
 
 			bool m_Active;
 
+			int m_NextPass;
+
 
 		public:
 			Pipeline (std::string pipelineName = "Default");
 			
+			std::string GetName();
+
 			const std::string &getLastPassCameraName(); 
 			int getNumberOfPasses();
 			std::vector<std::string> *getPassNames();
@@ -68,7 +77,7 @@ namespace nau
 
 			Pass *getCurrentPass();
 
-			void execute (/*nau::scene::Camera* aCamera, nau::scene::IScene *aScene*/);
+			unsigned char execute (/*nau::scene::Camera* aCamera, nau::scene::IScene *aScene*/);
 		
 			bool isActive (void);
 

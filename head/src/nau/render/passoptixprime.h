@@ -28,6 +28,10 @@ namespace nau
 
 			virtual void prepare (void);
 			virtual void restore (void);
+<<<<<<< HEAD
+=======
+			virtual bool renderTest (void);
+>>>>>>> origin/debug_wrapper
 			virtual void doPass (void);
 
 			bool setQueryType(std::string);

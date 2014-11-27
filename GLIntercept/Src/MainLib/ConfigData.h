@@ -39,6 +39,8 @@ public:
   //  
   void ReadConfigData();
 
+  bool isGLIActive;                                // Flag to indicate if logging is enabled
+
   bool logEnabled;                                // Flag to indicate if logging is enabled
   bool logXMLFormat;                              // If true use XML to log, else use plain text.
   bool logFlush;                                  // If true, the logger is flushed after each function name is written (text file only)

@@ -594,6 +594,9 @@ bool GLDriver::AddOverrideFunction(const string & funcName, void * overrideFunct
 //
 bool GLDriver::LogFunctionPre(uint index, const FunctionArgs & args)
 {
+  if (!configData.isGLIActive){
+  	return false;
+  }
   //Check the function table
   if(!functionTable)
   {
@@ -685,6 +688,9 @@ bool GLDriver::LogFunctionPre(uint index, const FunctionArgs & args)
 //
 bool GLDriver::LogFunctionPost(uint index, const FunctionRetValue & returnVal)
 {
+  if (!configData.isGLIActive){
+    return false;
+  }
   //Return now if not init (or there was no pre call)
   if(!isInit || functionCallDepth == 0)
   {

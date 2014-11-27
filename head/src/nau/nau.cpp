@@ -28,7 +28,13 @@
 #include "nau/slogger.h"
 
 #include <nau/debug/profile.h>
+#include <nau/debug/state.h>
 //#include <nau/debug/fonts.h>
+
+
+#ifdef GLINTERCEPTDEBUG
+#include <nau/loader/projectloaderdebuglinker.h>
+#endif //GLINTERCEPTDEBUG
 
 using namespace nau;
 using namespace nau::system;
@@ -78,7 +84,8 @@ Nau::Nau() :
 	m_RenderFlags(COUNT_RENDER_FLAGS),
 	m_UseTangents(false),
 	m_UseTriangleIDs(false),
-	m_CoreProfile(false)
+	m_CoreProfile(false),
+	isFrameBegin(true)
 {
 	// create a default black viewport
 //	createViewport("default");
@@ -94,7 +101,6 @@ bool
 Nau::init (bool context, std::string aConfigFile)
 {
 	bool result;
-
 	if (true == context) {
 
 		m_pRenderManager = new RenderManager;
@@ -143,6 +149,9 @@ Nau::init (bool context, std::string aConfigFile)
 	m_DefaultState = IState::create();
 	m_Viewport = createViewport("defaultFixedVP");
 
+	//Init state reader's function list
+	State::init();
+
 	return true;
 }
 
@@ -160,7 +169,11 @@ bool
 Nau::validateUserAttribContext(std::string context) {
 
 	if (context == "LIGHT" || context == "CAMERA" || context == "VIEWPORT"
+<<<<<<< HEAD
 		|| context == "TEXTURE" || context == "STATE"  || context == "PASS")
+=======
+		|| context == "TEXTURE" || context == "STATE" || context == "VIEWPORT" || context == "PASS")
+>>>>>>> origin/debug_wrapper
 		return true;
 
 	return false;
@@ -182,6 +195,7 @@ Nau::getAttribs(std::string context) {
 		attribs = &(Texture::Attribs);
 	else if (context == "STATE")
 		attribs = &(IState::Attribs);
+<<<<<<< HEAD
 	else if (context == "PASS")
 		attribs = &(Pass::Attribs);
 
@@ -206,6 +220,34 @@ Nau::validateUserAttribName(std::string context, std::string name) {
 }
 
 
+=======
+	else if (context == "VIEWPORT")
+		attribs = &(Viewport::Attribs);
+	else if (context == "PASS")
+		attribs = &(Pass::Attribs);
+
+	return attribs;
+}
+
+
+bool 
+Nau::validateUserAttribName(std::string context, std::string name) {
+
+	AttribSet *attribs = getAttribs(context);
+
+ // invalid context
+	if (attribs == NULL)
+		return false;
+
+	Attribute a = attribs->get(name);
+	if (a.getName() == "NO_ATTR")
+		return true;
+	else
+		return false;
+}
+
+
+>>>>>>> origin/debug_wrapper
 //
 //		EVENTS
 //
@@ -228,6 +270,7 @@ Nau::readProjectFile (std::string file, int *width, int *height)
 
 	try {
 		ProjectLoader::load (file, width, height, &m_UseTangents, &m_UseTriangleIDs);
+		isFrameBegin = true;
 	}
 	catch (std::string s) {
 		clear();
@@ -405,7 +448,7 @@ Nau::reload (void)
 
 
 void
-Nau::step (void)
+Nau::step(int count)
 {
 	IRenderer *renderer = RENDERER;
 	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
@@ -414,35 +457,61 @@ Nau::step (void)
 	}
 	double deltaT = m_CurrentTime - m_LastFrameTime;
 	m_LastFrameTime = m_CurrentTime;
-
-	m_pEventManager->notifyEvent("FRAME_BEGIN","Nau", "", NULL);
+	unsigned char pipeEventFlag;
 
 	renderer->resetCounters();
 
-	//if (m_Animations.size() > 0) {
-	//	std::map<std::string, nau::animation::IAnimation*>::iterator animIter;
-	//	
-	//	animIter = m_Animations.begin();
+	for (int i = 0; i < count || count <= 0; i++){
 
-	//	for (; animIter != m_Animations.end(); animIter++) {
-	//		if (false == (*animIter).second->isFinished()) {
-	//			(*animIter).second->step (static_cast<float> (deltaT));
-	//		} else {
-	//			delete ((*animIter).second);
-	//			m_Animations.erase (animIter);
-	//		}
-	//	}
-	//}
+		if (isFrameBegin){
+			m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+#ifdef GLINTERCEPTDEBUG
+			addMessageToGLILog("\n#NAU(FRAME,START)");
+#endif //GLINTERCEPTDEBUG
+			isFrameBegin = false;
+		}
 
-	if (true == m_Physics) {
-		m_pWorld->update();	
-		m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
-	}
 
-	//renderer->setDefaultState();
+		//if (m_Animations.size() > 0) {
+		//	std::map<std::string, nau::animation::IAnimation*>::iterator animIter;
+		//	
+		//	animIter = m_Animations.begin();
 
-	m_pRenderManager->renderActivePipeline();
+		//	for (; animIter != m_Animations.end(); animIter++) {
+		//		if (false == (*animIter).second->isFinished()) {
+		//			(*animIter).second->step (static_cast<float> (deltaT));
+		//		} else {
+		//			delete ((*animIter).second);
+		//			m_Animations.erase (animIter);
+		//		}
+		//	}
+		//}
 
+		//### Será que deve ser por pass?
+		if (true == m_Physics) {
+			m_pWorld->update();
+			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+		}
+
+		//renderer->setDefaultState();
+
+#ifdef GLINTERCEPTDEBUG
+		Pass *renderPass = NULL;
+		if (m_pRenderManager->getNumPipelines() > 0){
+			renderPass = m_pRenderManager->getCurrentPass();
+		}
+		if (renderPass){
+			addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
+		}
+#endif //GLINTERCEPTDEBUG
+		pipeEventFlag = m_pRenderManager->renderActivePipeline();
+#ifdef GLINTERCEPTDEBUG
+		if (renderPass){
+			addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+		}
+#endif //GLINTERCEPTDEBUG
+
+<<<<<<< HEAD
  	m_pEventManager->notifyEvent("FRAME_END","Nau", "", NULL);
 
 	if (m_FrameCount == ULONG_MAX)
@@ -466,6 +535,52 @@ unsigned long
 Nau::getFrameCount() {
 
 	return m_FrameCount;
+=======
+#ifdef NAU_RENDER_FLAGS
+		//#ifdef PROFILE
+		//	if (getRenderFlag(Nau::PROFILE_RENDER_FLAG))
+		//	{
+		//		PROFILE ("Profile rendering");
+		//
+		//		renderer->setViewport(m_WindowWidth, m_WindowHeight);
+		//
+		//		renderer->saveAttrib(IRenderer::RENDER_MODE);
+		//		renderer->setRenderMode(IRenderer::MATERIAL_MODE);
+		//		
+		//		m_ProfileMaterial->prepare();
+		//		renderer->disableDepthTest();
+		//		//RENDERER->enableTexturing();
+		//		setOrthographicProjection (static_cast<int>(m_WindowWidth), 
+		//										static_cast<int>(m_WindowHeight));
+		//
+		//		Profile::dumpLevelsOGL();
+		//
+		// 		char s[128];
+		// 		sprintf (s, "Primitives: %d", RENDERER->getTriCount());
+		// 		renderBitmapString (30,400, Profile::font,s);
+		//		
+		//		resetPerspectiveProjection();
+		//		renderer->enableDepthTest();
+		//		renderer->restoreAttrib();
+		//	}
+		//#endif // PROFILE
+#endif // NAU_RENDER_FLAGS
+		switch (pipeEventFlag){
+		case PIPE_PASS_STARTEND:
+		case PIPE_PASS_END:
+			m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
+#ifdef GLINTERCEPTDEBUG
+			addMessageToGLILog("\n#NAU(FRAME,END)");
+#endif //GLINTERCEPTDEBUG
+			isFrameBegin = true;
+			break;
+		}
+
+		if (count <= 0){
+			break;
+		}
+	}
+>>>>>>> origin/debug_wrapper
 }
 
 
@@ -715,6 +830,20 @@ int
 Nau::picking (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera)
 {
 	return -1;//	RenderManager->pick (x, y, objects, aCamera);
+}
+
+//StateList functions:
+void 
+Nau::loadStateXMLFile(std::string file){
+	State::loadStateXMLFile(file);
+}
+std::vector<std::string> 
+Nau::getStateEnumNames(){
+	return State::getStateEnumNames();
+}
+std::string 
+Nau::getState(std::string enumName){
+	return State::getState(enumName);
 }
 
 //void 

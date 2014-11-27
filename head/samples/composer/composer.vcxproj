@@ -158,7 +158,11 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(IncludePath)</IncludePath>
+<<<<<<< HEAD
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
+=======
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\toolkits\libs;$(LibraryPath)</LibraryPath>
+>>>>>>> origin/debug_wrapper
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(LibraryPath)</LibraryPath>
@@ -166,7 +170,11 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">$(IncludePath)</IncludePath>
+<<<<<<< HEAD
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath)</LibraryPath>
+=======
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\toolkits\libs;$(LibraryPath)</LibraryPath>
+>>>>>>> origin/debug_wrapper
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">$(LibraryPath)</LibraryPath>
@@ -184,7 +192,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>src;../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+=======
+      <AdditionalIncludeDirectories>src;../../src;C:\toolkits\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+>>>>>>> origin/debug_wrapper
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_STL;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;__SLANGER__;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -354,7 +366,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>src;../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;../../src;C:\toolkits\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;WINDOWS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;__SLANGER__;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -553,6 +565,9 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     <ClCompile Include="src\dialogs\dlgDbgBuffers.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgGLILogRead.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp" />
+    <ClCompile Include="src\dialogs\dlgDbgStep.cpp" />
+    <ClCompile Include="src\dialogs\dlgStateXML.cpp" />
+    <ClCompile Include="src\NauGlBufferInfo.cpp" />
     <ClCompile Include="src\glcanvas.cpp" />
     <ClCompile Include="src\glInfo.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -572,9 +587,12 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     <ClInclude Include="src\dialogs\dlgDbgBuffers.h" />
     <ClInclude Include="src\dialogs\dlgDbgGLILogRead.h" />
     <ClInclude Include="src\dialogs\dlgDbgPrograms.h" />
+    <ClInclude Include="src\dialogs\dlgDbgStep.h" />
     <ClInclude Include="src\dialogs\dlgLights.h" />
     <ClInclude Include="src\dialogs\dlgLog.h" />
     <ClInclude Include="src\dialogs\dlgPass.h" />
+    <ClInclude Include="src\dialogs\dlgStateXML.h" />
+    <ClInclude Include="src\NauGlBufferInfo.h" />
     <ClInclude Include="src\glcanvas.h" />
     <ClInclude Include="src\glInfo.h" />
     <ClInclude Include="src\main.h" />

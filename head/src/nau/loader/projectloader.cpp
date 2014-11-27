@@ -309,9 +309,12 @@ param is passed to the loader
 	SWAP_YZ to indicate that ZY axis should be swaped 
 	USE_ADJACENCY to create an index list with adjacency information
 
+<<<<<<< HEAD
 ----------------------------------------------------------------- */
 
 
+=======
+>>>>>>> origin/debug_wrapper
 void 
 ProjectLoader::loadScenes(TiXmlHandle handle) 
 {
@@ -2696,6 +2699,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		if (pElemNode) {
 			pElemAux = pElemNode->FirstChildElement("buffer");
 			for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement()) {
+<<<<<<< HEAD
 
 				const char *pName = pElemAux->Attribute("name");
 				const char *pLib = pElemAux->Attribute("fromLibrary");
@@ -2741,6 +2745,53 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 			}
 		}
 
+=======
+
+				const char *pName = pElemAux->Attribute("name");
+				const char *pLib = pElemAux->Attribute("fromLibrary");
+
+
+				if (0 == pName || 0 == pLib) {
+					NAU_THROW("Buffer map error in pass: %s", aPass->getName().c_str());
+				}
+
+				sprintf(s_pFullName, "%s::%s", pLib, pName);
+				if (!RESOURCEMANAGER->hasBuffer(s_pFullName))
+					NAU_THROW("Buffer %s is not defined in lib %s, in pass: %s", pName, pLib, aPass->getName().c_str());
+
+				std::vector<std::string>::iterator iter;
+				for (iter = names->begin(); iter != names->end(); ++iter) {
+
+					std::string name = *iter;
+					dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+					IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
+					IBuffer *b = buffer->clone();
+
+					std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+					TiXmlElement *p = pElemAux->FirstChildElement();
+					Attribute a;
+					void *value;
+					while (p) {
+						// trying to define an attribute that does not exist		
+						if (attribs.count(p->Value()) == 0)
+							NAU_THROW("Pass %s: Buffer %s: %s is not an attribute", aPass->getName().c_str(), s_pFullName, p->Value());
+						// trying to set the value of a read only attribute
+						a = attribs[p->Value()];
+						if (a.mReadOnlyFlag)
+							NAU_THROW("Pass %s: Buffer %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), s_pFullName, p->Value());
+
+						value = readAttr(s_pFullName, p, a.mType, IBuffer::Attribs);
+						b->setProp(a.mId, a.mType, value);
+						p = p->NextSiblingElement();
+					}
+					dstMat->attachBuffer(b);
+				}
+
+
+			}
+		}
+
+>>>>>>> origin/debug_wrapper
 #endif
 		pElemAux = pElem->FirstChildElement("color");
 		if (pElemAux) {
@@ -2862,9 +2913,13 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 
 			}
 			passMapper[pName] = aPass;
+<<<<<<< HEAD
 				
 			loadPassMode(hPass, aPass);	
 
+=======
+					
+>>>>>>> origin/debug_wrapper
 			if (0 != strcmp(pClass, "optixPrime") && 0 != strcmp(pClass, "quad") && 0 != strcmp(pClass, "profiler")) {
 
 				loadPassScenes(hPass,aPass);
@@ -3929,6 +3984,8 @@ ProjectLoader::loadDebug (TiXmlHandle &hRoot)
 			startGlilog();
 		}
 
+		activateGLI();
+
 		//TiXmlElement *pElem;
 		loadDebugFunctionlog(handle);
 		loadDebugLogperframe(handle);
@@ -3948,7 +4005,7 @@ ProjectLoader::loadDebug (TiXmlHandle &hRoot)
 Specification of the functionlog:
 
 		<functionlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<logxmlformat value="bool"/> (REMOVED)
 			<logflush value="bool"/> (REMOVED)
 			<logmaxframeloggingenabled value="bool"/>
@@ -3963,6 +4020,14 @@ Specification of the functionlog:
 void
 ProjectLoader::loadDebugFunctionlog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("functionlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "functionlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"functionlog");
 
@@ -4094,7 +4159,7 @@ ProjectLoader::loadDebugImagelogimageicon (TiXmlHandle &hRoot){
 Specification of the shaderlog:
 
 		<shaderlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<shaderrendercallstatelog value="bool"/>
 			<shaderattachlogstate value="bool"/>
 			<shadervalidateprerender value="bool"/>
@@ -4103,7 +4168,15 @@ Specification of the shaderlog:
 ----------------------------------------------------------------- */
 void
 ProjectLoader::loadDebugShaderlog (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("shaderlog").Element());
+	TiXmlHandle handle(hRoot.FirstChild("shaderlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "shaderlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"shaderlog");
 }
@@ -4112,12 +4185,20 @@ ProjectLoader::loadDebugShaderlog (TiXmlHandle &hRoot){
 Specification of the displaylistlog:
 
 		<displaylistlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 		</displaylistlog>
 ----------------------------------------------------------------- */
 void
 ProjectLoader::loadDebugDisplaylistlog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("displaylistlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "displaylistlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"displaylistlog");
 }
@@ -4133,7 +4214,7 @@ AABBGGRR. If an index is missing, it will take the value of the index as the col
 (ie. stencil index 128 = (255, 128,128,128) = greyscale values)
 
 		<framelog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<frameimageformat value="string"/>
 			<framestencilcolors>
 				<item value="uint"/>
@@ -4177,6 +4258,14 @@ void
 ProjectLoader::loadDebugFramelog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("framelog").Element());
 
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "framelog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
+
 	loadDebugConfigData(handle,"framelog");
 
 	
@@ -4209,7 +4298,7 @@ ProjectLoader::loadDebugFramelogFrameicon (TiXmlHandle &hRoot){
 Specification of the framemovie:
 
 			<framemovie>
-				<framemovieenabled value="bool"/>
+				<framemovieenabled value="bool"/> (Automatic)
 				<framemoviewidth value="uint"/>
 				<framemovieheight value="uint"/>
 				<framemovierate value="uint"/>
@@ -4224,6 +4313,14 @@ void
 ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("framemovie").Element());
 
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("framemovieenabled", "framelogframemovie");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
+
 	loadDebugConfigData(handle,"framelogframemovie");
 
 }
@@ -4232,13 +4329,21 @@ ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
 Specification of the timerlog:
 
 		<timerlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<timerlogcutoff value="uint"/>
 		</timerlog>
 ----------------------------------------------------------------- */
 void
 ProjectLoader::loadDebugTimerlog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("timerlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "timerlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"timerlog");
 

@@ -82,9 +82,13 @@ namespace nau {
 
 		nau::world::IWorld& getWorld (void);
 
+<<<<<<< HEAD
 		void step (void);
 		void resetFrameCount();
 		unsigned long int getFrameCount();
+=======
+		void step (int count = 0);
+>>>>>>> origin/debug_wrapper
 
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);
@@ -128,7 +132,11 @@ namespace nau {
 
 		~Nau (void);
 		void clear();
-	
+
+		//State
+		void loadStateXMLFile(std::string file);
+		std::vector<std::string> getStateEnumNames();
+		std::string getState(std::string enumName);
 	private:
 		Nau();
 
@@ -174,6 +182,9 @@ namespace nau {
 		void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize);
 
 		int loadedScenes;
+
+		bool isFrameBegin;
+
 
 	};
 };

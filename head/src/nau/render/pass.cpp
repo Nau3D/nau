@@ -14,7 +14,11 @@ using namespace nau::geometry;
 
 
 AttribSet Pass::Attribs;
+<<<<<<< HEAD
 bool Pass::Inited = Pass::Init();
+=======
+bool Pass::Inited = Init();
+>>>>>>> origin/debug_wrapper
 
 bool
 Pass::Init() {
@@ -30,12 +34,15 @@ Pass::Init() {
 	Attribs.add(Attribute(STENCIL_ENABLE, "STENCIL_ENABLE", Enums::DataType::BOOL, false, new bool(false)));
 
 	// ENUM
+<<<<<<< HEAD
 	Attribs.add(Attribute(RUN_MODE, "RUN_MODE", Enums::DataType::ENUM, true, new int(RUN_ALWAYS)));
 	Attribs.listAdd("RUN_MODE", "DONT_RUN", DONT_RUN);
 	Attribs.listAdd("RUN_MODE", "RUN_ALWAYS", RUN_ALWAYS);
 	Attribs.listAdd("RUN_MODE", "SKIP_FIRST_FRAME", SKIP_FIRST_FRAME);
 	Attribs.listAdd("RUN_MODE", "RUN_ONCE", RUN_ONCE);
 
+=======
+>>>>>>> origin/debug_wrapper
 	Attribs.add(Attribute(STENCIL_FUNC, "STENCIL_FUNC", Enums::DataType::ENUM, false, new int(ALWAYS)));
 	Attribs.listAdd("STENCIL_FUNC", "LESS", LESS);
 	Attribs.listAdd("STENCIL_FUNC", "NEVER", NEVER);
@@ -108,9 +115,19 @@ Pass::Pass (const std::string &passName) :
 	m_CameraName ("default"),
 	m_SceneVector(),
 	m_MaterialMap(),
+<<<<<<< HEAD
 	m_Viewport (0),
 	m_RestoreViewport (0),
 	m_RemapMode (REMAP_DISABLED)
+=======
+	m_pViewport (0),
+	m_pRestoreViewport (0),
+	m_RemapMode (REMAP_DISABLED)
+	//m_Paramf(),
+	//m_Parami(),
+	//m_ParamType(),
+	//m_BoolProp(IRenderer::COUNT_BOOL_PROPS)
+>>>>>>> origin/debug_wrapper
 {
 	initArrays(Attribs);
 
@@ -139,6 +156,83 @@ Pass::getClassName() {
 }
 
 
+<<<<<<< HEAD
+=======
+//const std::map<std::string, float> &
+//Pass::getParamsf() 
+//{
+//	return m_Paramf;
+//}
+//
+//
+//void 
+//Pass::setParam(const std::string &name, const float value) 
+//{
+////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::FLOAT)
+//		m_Paramf[name] = value;
+//		m_ParamType[name] = Enums::FLOAT;
+//}
+//
+//
+//void
+//Pass::setParam(const std::string &name, const  int value) 
+//{
+////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::STRING)
+//		m_Parami[name] = value;
+//		m_ParamType[name] = Enums::INT;
+//}
+//
+//
+////void
+////Pass::setParam(const std::string &name, const  std::string &value) 
+////{
+//////	if (m_ParamType.count(name) && m_ParamType[name] == Pass::STRING)
+////		m_Params[name] = value;
+////}
+//
+//
+//float *
+//Pass::getParamf(const std::string &name)
+//{
+//	if (m_Paramf.count(name))
+//		return (&m_Paramf[name]);
+//	else
+//		return NULL;
+//
+//}
+//
+//
+//int *
+//Pass::getParami(const std::string &name)
+//{
+//	if (m_Parami.count(name))
+//		return (&m_Parami[name]);
+//	else
+//		return NULL;
+//
+//}
+//
+////std::string &
+////Pass::getParams(const std::string &name)
+////{
+////	if (m_Paramf.count(name))
+////		return(m_Params[name]);
+////	else
+////		return p_Empty;
+////}
+//
+//
+//int 
+//Pass::getParamType(const std::string &name) {
+//
+//	if (m_ParamType.count(name))
+//		return m_ParamType[name];
+//	else
+//		return -1;
+//}
+
+
+>>>>>>> origin/debug_wrapper
 std::string &
 Pass::getName (void)
 {
@@ -146,11 +240,57 @@ Pass::getName (void)
 }
 
 
+<<<<<<< HEAD
+=======
+void 
+Pass::setViewport (nau::render::Viewport *aViewport)
+{
+	m_pViewport = aViewport;
+}
+
+
+nau::render::Viewport *
+Pass::getViewport()
+{
+	return (m_pViewport);
+}
+
+
+Pass::~Pass()
+{
+}
+
+>>>>>>> origin/debug_wrapper
 
 void 
 Pass::initVars() {
 
+<<<<<<< HEAD
 	m_RenderTarget = NULL;
+=======
+	//m_BoolProp[IRenderer::COLOR_CLEAR] = true;
+	//m_BoolProp[IRenderer::COLOR_ENABLE] = true;
+
+	//m_BoolProp[IRenderer::DEPTH_CLEAR] = true;
+	//m_BoolProp[IRenderer::DEPTH_ENABLE] = true;
+	//m_BoolProp[IRenderer::DEPTH_MASK] = true;
+
+	//m_BoolProp[IRenderer::STENCIL_ENABLE] = false;
+	//m_BoolProp[IRenderer::STENCIL_CLEAR] = true;
+
+	m_RenderTarget = NULL;
+
+	//m_ColorClearValue = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	//m_DepthClearValue = 1.0f;
+	//m_DepthFunc = *(int *)(IState::Attribs.getDefault(IState::DEPTH_FUNC, Enums::DataType::ENUM));
+	//m_StencilClearValue = 0.0f;
+
+	//for (int i = 0; i < MAXFBOs + 1; i++)
+	//	m_TexId[i] = 0 ;
+
+	//m_Color = 0; // how many color render targets
+	//m_Depth = 0; // render depth?
+>>>>>>> origin/debug_wrapper
 
 	m_RTSizeWidth = 512; // size of render targets
 	m_RTSizeHeight = 512;
@@ -167,6 +307,7 @@ Pass::initVars() {
 void
 Pass::setMode(RunMode value) {
 
+<<<<<<< HEAD
 	m_EnumProps[RUN_MODE] = value;
 }
 
@@ -191,6 +332,41 @@ Pass::renderTest(void) {
 		else
 			return true;
 	}
+=======
+	RENDERER->prepareBuffers(this);
+	//int clear = 0;
+
+	//if (m_BoolProp[DEPTH_CLEAR]) {
+	//	clear = IRenderer::DEPTH_BUFFER;
+	//	RENDERER->setDepthClearValue(m_DepthClearValue);
+	//}
+	//if (m_BoolProp[COLOR_CLEAR]) {
+	//	clear |= IRenderer::COLOR_BUFFER;
+	//}
+	//if (m_BoolProp[STENCIL_CLEAR]) {
+	//	RENDERER->setStencilClearValue(m_StencilClearValue);
+	//	clear |= IRenderer::STENCIL_BUFFER;
+	//}
+
+	//RENDERER->clearFrameBuffer(clear);
+
+	//if (m_BoolProp[DEPTH_ENABLE]) {
+	//	RENDERER->setPassProp(DEPTH_ENABLE,true);
+	//	RENDERER->setProp(DEPTH_MASK, m_BoolProp[DEPTH_MASK]);
+	//	RENDERER->setDepthFunc(m_DepthFunc);
+	//}
+	//else
+	//	RENDERER->setProp(DEPTH_ENABLE,false);
+
+	//if (m_BoolProp[STENCIL_ENABLE]) {
+	//	RENDERER->setProp(STENCIL_ENABLE, true);
+	//	RENDERER->setStencilFunc(m_StencilFunc, m_StencilOpRef, m_StencilOpMask);
+	//	RENDERER->setStencilOp(m_Stencilsfail, m_Stencildfail, m_Stencildpass);
+	//}
+	//else {
+	//	RENDERER->setProp(IRenderer::STENCIL_ENABLE, false);
+	//}
+>>>>>>> origin/debug_wrapper
 }
 
 
@@ -198,11 +374,17 @@ Pass::renderTest(void) {
 //		PREPARE, DO, RESTORE
 // --------------------------------------------------
 
+<<<<<<< HEAD
 
 void
 Pass::prepareBuffers() {
 
 	RENDERER->prepareBuffers(this);
+=======
+	setupCamera();
+	prepareBuffers();
+	setupLights();
+>>>>>>> origin/debug_wrapper
 }
 
 
@@ -548,8 +730,29 @@ Pass::restoreCamera (void) {
 		return; 
 	}
 	
+<<<<<<< HEAD
 	if (0 != m_Viewport ) {
 		aCam->setViewport (m_RestoreViewport);
+=======
+	if (0 != m_pViewport ) {
+		aCam->setViewport (m_pRestoreViewport);
+	}
+}
+
+
+void
+Pass::setupLights (void)
+{
+	std::vector<std::string>::iterator lightsIter;
+
+	lightsIter = m_Lights.begin();
+
+	for (; lightsIter != m_Lights.end(); ++lightsIter) {
+
+		Light *l = RENDERMANAGER->getLight (*lightsIter);
+
+		RENDERER->addLight (*l);
+>>>>>>> origin/debug_wrapper
 	}
 }
 
@@ -569,6 +772,7 @@ Pass::setCamera (const std::string &cameraName) {
 
 
 
+<<<<<<< HEAD
 // --------------------------------------------------
 //		SET PROPS
 // --------------------------------------------------
@@ -577,15 +781,28 @@ Pass::setCamera (const std::string &cameraName) {
 void
 Pass::setPropb(BoolProperty prop, bool value) {
 
+=======
+void 
+Pass::setPropb(BoolProperty prop, bool value) {
+
+>>>>>>> origin/debug_wrapper
 	m_BoolProps[prop] = value;
 }
 
 
+<<<<<<< HEAD
 void
 Pass::setPropui(UIntProperty prop, unsigned int value) {
 
 	m_UIntProps[prop] = value;
 }
+=======
+//bool
+//Pass::getPropb(IRenderer::BoolProps prop) {
+//
+//	return m_BoolProp[prop];
+//}
+>>>>>>> origin/debug_wrapper
 
 
 // --------------------------------------------------
@@ -599,6 +816,12 @@ Pass::setStencilFunc(StencilFunc f, int ref, unsigned int mask) {
 	m_EnumProps[STENCIL_FUNC] = f;
 	m_IntProps[STENCIL_OP_REF] = ref;
 	m_UIntProps[STENCIL_OP_MASK] = mask;
+<<<<<<< HEAD
+=======
+	//m_StencilFunc = f;
+	//m_StencilOpRef = ref;
+	//m_StencilOpMask = mask;
+>>>>>>> origin/debug_wrapper
 }
 
 
@@ -608,6 +831,12 @@ Pass::setStencilOp(	StencilOp sfail, StencilOp dfail, StencilOp dpass) {
 	m_EnumProps[STENCIL_FAIL] = sfail;
 	m_EnumProps[STENCIL_DEPTH_FAIL] = dfail;
 	m_EnumProps[STENCIL_DEPTH_PASS] = dpass;
+<<<<<<< HEAD
+=======
+	//m_Stencilsfail = sfail;
+	//m_Stencildfail = dfail;
+	//m_Stencildpass = dpass;
+>>>>>>> origin/debug_wrapper
 }
 
 
@@ -626,6 +855,10 @@ void
 Pass::setDepthClearValue(float v) {
 
 	m_FloatProps[DEPTH_CLEAR_VALUE] = v;
+<<<<<<< HEAD
+=======
+	//m_DepthClearValue = v;
+>>>>>>> origin/debug_wrapper
 }
 
 
@@ -633,7 +866,34 @@ void
 Pass::setDepthFunc(int f) {
 
 	m_EnumProps[DEPTH_FUNC] = f;
+<<<<<<< HEAD
 }
+=======
+	//m_DepthFunc = f;
+}
+
+
+
+//void 
+//Pass::setDepthMask(bool b) {
+//
+//	m_DepthMask = b;
+//}
+
+
+//void
+//Pass::setDoStencilClear (bool value)
+//{
+//	m_DoStencilClear = value;
+//}
+
+
+//void
+//Pass::setStencilMaskValue (int value)
+//{
+//	m_StencilMaskValue = value;
+//}
+>>>>>>> origin/debug_wrapper
 
 
 
@@ -641,6 +901,15 @@ Pass::setDepthFunc(int f) {
 //		SCENES
 // --------------------------------------------------
 
+<<<<<<< HEAD
+=======
+void 
+Pass::setStencilClearValue(float v) {
+
+	m_FloatProps[STENCIL_CLEAR_VALUE] = v;
+	//m_StencilClearValue = v;
+}
+>>>>>>> origin/debug_wrapper
 
 
 void 
