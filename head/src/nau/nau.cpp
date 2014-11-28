@@ -524,7 +524,6 @@ Nau::sendKeyToEngine (char keyCode)
 		getDepthAtCenter();
 		break;
 	}
-
 	//RenderManager->sendKeyToEngine (keyCode);
 }
 
