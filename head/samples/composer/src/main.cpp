@@ -313,11 +313,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 		WX_GL_DEPTH_SIZE, 32,
 		WX_GL_STENCIL_SIZE, 8, 
 		WX_GL_SAMPLE_BUFFERS,1,
-<<<<<<< HEAD
 		WX_GL_SAMPLES,1,
-=======
-		WX_GL_SAMPLES,4,
->>>>>>> origin/debug_wrapper
 		0};
 
 
@@ -488,13 +484,7 @@ FrmMainFrame::updateDlgs()
 	helpMenu->Enable(idMenu_DLG_SHADERS,true);
 	helpMenu->Enable(idMenu_DLG_PASS,true);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, true);
-<<<<<<< HEAD
 	helpMenu->Enable(idMenu_DLG_SCENES, true);
-=======
-
-
-
->>>>>>> origin/debug_wrapper
 }
 
 
@@ -884,8 +874,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 
 	}
 #endif
-<<<<<<< HEAD
-=======
+
 
 }
 
@@ -918,7 +907,7 @@ FrmMainFrame::LoadDebugData(){
 
 	DlgDbgStep::Instance()->updateDlg();
 #endif
->>>>>>> origin/debug_wrapper
+
 }
 
 

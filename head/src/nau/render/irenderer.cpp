@@ -68,7 +68,7 @@ IRenderer::setProp(int prop, Enums::DataType type, void *value) {
 
 void
 IRenderer::addAtomic(unsigned int id, std::string name) {
-<<<<<<< HEAD
+
 
 	if (m_AtomicLabels.count(id) == 0) {
 		++m_AtomicCount;
@@ -89,16 +89,7 @@ IRenderer::getAtomicID(std::string name) {
 			return (atom.first);
 	}
 	return -1;
-=======
 
-	if (m_AtomicLabels.count(id) == 0) {
-		++m_AtomicCount;
-		m_AtomicBufferPrepared = false;
-		m_AtomicLabels[id] = name;
-		if (id > m_AtomicMaxID)
-			m_AtomicMaxID = id;
-	}
->>>>>>> origin/debug_wrapper
 }
 
 #endif

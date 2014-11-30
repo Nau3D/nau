@@ -297,15 +297,6 @@ PassOptixPrime::restore(void) {
 }
 
 
-<<<<<<< HEAD
-=======
-bool 
-PassOptixPrime::renderTest(void) {
-
-	return true;
-}
-
->>>>>>> origin/debug_wrapper
 
 void
 PassOptixPrime::doPass(void) {

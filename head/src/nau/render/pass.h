@@ -37,14 +37,6 @@ https://github.com/Nau3D
 
 
 
-<<<<<<< HEAD
-=======
-#include <nau/event/eventManager.h>
-#include <nau/event/ilistener.h>
-#include <nau/event/eventString.h>
-#include <nau/attributeValues.h>
-#include <nau/attribute.h>
->>>>>>> origin/debug_wrapper
 
 namespace nau
 {
@@ -54,7 +46,6 @@ namespace nau
 
 		public:
 
-<<<<<<< HEAD
 			// Pass properties
 
 			BOOL_PROP(COLOR_CLEAR, 0);
@@ -107,96 +98,6 @@ namespace nau
 			} StencilFunc;
 
 			static AttribSet Attribs;
-=======
-			BOOL_PROP(COLOR_CLEAR, 0);
-			BOOL_PROP(COLOR_ENABLE, 1);
-			BOOL_PROP(DEPTH_CLEAR, 2);
-			BOOL_PROP(DEPTH_ENABLE, 3);
-			BOOL_PROP(DEPTH_MASK, 4);
-			BOOL_PROP(DEPTH_CLAMPING, 5);
-			BOOL_PROP(STENCIL_CLEAR, 6);
-			BOOL_PROP(STENCIL_ENABLE, 7);
-
-			FLOAT_PROP(DEPTH_CLEAR_VALUE, 0);
-			FLOAT_PROP(STENCIL_CLEAR_VALUE, 1);
-
-			FLOAT4_PROP(COLOR_CLEAR_VALUE, 0);
-
-			INT_PROP(STENCIL_OP_REF, 0);
-
-			UINT_PROP(STENCIL_OP_MASK, 0);
-
-			ENUM_PROP(STENCIL_FUNC, 0);
-			ENUM_PROP(STENCIL_FAIL, 1);
-			ENUM_PROP(STENCIL_DEPTH_FAIL, 2);
-			ENUM_PROP(STENCIL_DEPTH_PASS, 3);
-			ENUM_PROP(DEPTH_FUNC, 4);
-
-			static AttribSet Attribs;
-
-			void setPropb(BoolProperty prop, bool value);
-			//bool getPropb(IRenderer::BoolProps prop);
-
-			typedef enum {
-				KEEP,
-				ZERO,
-				REPLACE,
-				INCR,
-				INCR_WRAP,
-				DECR,
-				DECR_WRAP,
-				INVERT
-			} StencilOp;
-
-			typedef enum {
-				LESS, NEVER, ALWAYS, LEQUAL,
-				EQUAL, GEQUAL, GREATER, NOT_EQUAL
-			} StencilFunc;
-
-		protected:
-			std::string p_Empty;
-			void initVars();
-
-			static bool Init();
-			static bool Inited;
-
-			//std::vector<bool> m_BoolProp;
-
-			std::string m_ClassName;
-			std::string m_Name;
-			std::string m_CameraName;
-			std::vector<std::string> m_SceneVector;
-			std::map<std::string, nau::material::MaterialID> m_MaterialMap;
-			nau::render::Viewport *m_pViewport;
-			nau::render::Viewport *m_pRestoreViewport;
-						
-			nau::render::RenderTarget *m_RenderTarget;
-			//nau::render::Texture* m_TexId[MAXFBOs+1];	
-
-			//std::map<std::string, float> m_Paramf;
-			//std::map<std::string, int> m_Parami;
-			//std::map<std::string, Enums::DataType> m_ParamType;
-
-			//vec4 m_ColorClearValue;
-
-			//float m_DepthClearValue;
-			//int m_DepthFunc;
-
-			//int m_StencilClearValue;
-			//int m_StencilMaskValue;
-			//StencilOp m_Stencilsfail, m_Stencildfail, m_Stencildpass;
-			//StencilFunc m_StencilFunc;
-			//int m_StencilOpRef;
-			//unsigned int m_StencilOpMask;
-
-			int m_RTSizeWidth; // size of render targets
-			int m_RTSizeHeight;
-
-			//int m_Depth; 
-			//int m_Color; // number of render targets
-
-			bool m_UseRT;
->>>>>>> origin/debug_wrapper
 
 			void setPropui(UIntProperty prop, unsigned int value);
 			void setPropb(BoolProperty prop, bool value);
@@ -209,18 +110,6 @@ namespace nau
 			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
 
 			const std::string &getClassName();
-<<<<<<< HEAD
-=======
-
-			//virtual const std::map<std::string, float> &getParamsf();
-			//virtual void setParam(const std::string &name, const float value);
-			//virtual void setParam(const std::string &name, const int value);
-		
-			//virtual float *getParamf(const std::string &name);
-			//virtual int *getParami(const std::string &name);
-			//virtual int getParamType(const std::string &name);
-
->>>>>>> origin/debug_wrapper
 			std::string &getName (void);
 
 			//
@@ -247,30 +136,9 @@ namespace nau
 			void setViewport (nau::render::Viewport *aViewport);
 			nau::render::Viewport *getViewport();
 
-<<<<<<< HEAD
 			//
 			// LIGHTS
 			//
-=======
-			void setDepthClearValue(float value);
-			void setDepthFunc(int f);
-
-			void setStencilClearValue(float value);
-			//void setStencilMaskValue(int i);
-			void setStencilFunc(Pass::StencilFunc f, int ref, unsigned int mask);
-			void setStencilOp(	Pass::StencilOp sfail, 
-							Pass::StencilOp dfail, 
-							Pass::StencilOp dpass);
-
-
-
-			virtual void prepare (void);
-			virtual void restore (void);
-			virtual bool renderTest (void);
-			virtual void doPass (void);
-
-			/*Lights*/
->>>>>>> origin/debug_wrapper
 			virtual void addLight (const std::string &name);
 			bool hasLight(const std::string &name);
 			void removeLight(const std::string &name);
@@ -339,7 +207,6 @@ namespace nau
 			void prepareBuffers();
 
 			void setRTSize (int width, int height);
-<<<<<<< HEAD
 
 			// init class variables
 			void initVars();
@@ -373,11 +240,6 @@ namespace nau
 			} RemapMode;
 
 			RemapMode m_RemapMode;
-=======
-		/***MARK***/ //Maybe this should be moved to the BoundingBox class
-			nau::geometry::BoundingBox getBoundingBox (std::vector<nau::scene::SceneObject*> &sceneObjects);
-
->>>>>>> origin/debug_wrapper
 
 		};
 	};

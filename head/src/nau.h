@@ -82,13 +82,9 @@ namespace nau {
 
 		nau::world::IWorld& getWorld (void);
 
-<<<<<<< HEAD
-		void step (void);
+		void step (int count = 0);
 		void resetFrameCount();
 		unsigned long int getFrameCount();
-=======
-		void step (int count = 0);
->>>>>>> origin/debug_wrapper
 
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);

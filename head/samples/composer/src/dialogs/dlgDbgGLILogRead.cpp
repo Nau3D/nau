@@ -269,14 +269,7 @@ void DlgDbgGLILogRead::loadLog() {
 		m_log->Expand(lognode);
 		isLogClear=false;
 	}
-<<<<<<< HEAD
-	//else{
-	//	if (!gliIsLogPerFrame()){
-	//		continueReadLogFile();
-	//	}
-	//}
-#endif
-=======
+
 	else{
 		if (!gliIsLogPerFrame()){
 			logfile = gliGetLogPath() + logname + ".txt";
@@ -322,7 +315,7 @@ void DlgDbgGLILogRead::loadLog() {
 DlgDbgGLILogRead::FunctionCallData::FunctionCallData() :
 funcCallCount(0)
 {
->>>>>>> origin/debug_wrapper
+
 }
 
  bool DlgDbgGLILogRead::FunctionCallData::SortByName(const FunctionCallData &a, const FunctionCallData &b)

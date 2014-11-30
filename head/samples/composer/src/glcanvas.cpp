@@ -112,12 +112,10 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 	PROFILE("Composer");
 	wxPaintDC dc(this);
 
-<<<<<<< HEAD
-	if(!isPaused){
-=======
+
    //SetCurrent (*p_GLC);
 	if(!isPaused || step != 0){
->>>>>>> origin/debug_wrapper
+
 		Render();
 
 		if (step != 0){

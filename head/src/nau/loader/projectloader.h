@@ -66,7 +66,6 @@ namespace nau
 			static void loadDebugImagelog (TiXmlHandle &hRoot);
 			static void loadDebugImagelogimageicon (TiXmlHandle &hRoot);
 			static void loadDebugShaderlog (TiXmlHandle &hRoot);
-			static void loadDebugDisplaylistlog (TiXmlHandle &hRoot);
 			static void loadDebugFramelog (TiXmlHandle &hRoot);
 			static void loadDebugFramelogFrameicon (TiXmlHandle &hRoot);
 			static void loadDebugFramelogFramemovie (TiXmlHandle &hRoot);

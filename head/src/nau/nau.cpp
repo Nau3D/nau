@@ -169,11 +169,8 @@ bool
 Nau::validateUserAttribContext(std::string context) {
 
 	if (context == "LIGHT" || context == "CAMERA" || context == "VIEWPORT"
-<<<<<<< HEAD
+
 		|| context == "TEXTURE" || context == "STATE"  || context == "PASS")
-=======
-		|| context == "TEXTURE" || context == "STATE" || context == "VIEWPORT" || context == "PASS")
->>>>>>> origin/debug_wrapper
 		return true;
 
 	return false;
@@ -195,7 +192,7 @@ Nau::getAttribs(std::string context) {
 		attribs = &(Texture::Attribs);
 	else if (context == "STATE")
 		attribs = &(IState::Attribs);
-<<<<<<< HEAD
+
 	else if (context == "PASS")
 		attribs = &(Pass::Attribs);
 
@@ -220,34 +217,6 @@ Nau::validateUserAttribName(std::string context, std::string name) {
 }
 
 
-=======
-	else if (context == "VIEWPORT")
-		attribs = &(Viewport::Attribs);
-	else if (context == "PASS")
-		attribs = &(Pass::Attribs);
-
-	return attribs;
-}
-
-
-bool 
-Nau::validateUserAttribName(std::string context, std::string name) {
-
-	AttribSet *attribs = getAttribs(context);
-
- // invalid context
-	if (attribs == NULL)
-		return false;
-
-	Attribute a = attribs->get(name);
-	if (a.getName() == "NO_ATTR")
-		return true;
-	else
-		return false;
-}
-
-
->>>>>>> origin/debug_wrapper
 //
 //		EVENTS
 //
@@ -511,16 +480,32 @@ Nau::step(int count)
 		}
 #endif //GLINTERCEPTDEBUG
 
-<<<<<<< HEAD
- 	m_pEventManager->notifyEvent("FRAME_END","Nau", "", NULL);
+//<<<<<<< HEAD
+ //	m_pEventManager->notifyEvent("FRAME_END","Nau", "", NULL);
 
-	if (m_FrameCount == ULONG_MAX)
-		// 2 avoid issues with run_once and skip_first
-		// and allows a future implementation of odd and even frames for
-		// ping-pong rendering
-		m_FrameCount = 2;
-	else
-		++m_FrameCount;
+		switch (pipeEventFlag){
+			case PIPE_PASS_STARTEND:
+			case PIPE_PASS_END:
+				m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
+				if (m_FrameCount == ULONG_MAX)
+					// 2 avoid issues with run_once and skip_first
+					// and allows a future implementation of odd and even frames for
+					// ping-pong rendering
+					m_FrameCount = 2;
+				else
+					++m_FrameCount;
+#ifdef GLINTERCEPTDEBUG
+				addMessageToGLILog("\n#NAU(FRAME,END)");
+#endif //GLINTERCEPTDEBUG
+				isFrameBegin = true;
+				break;
+		}
+
+		if (count <= 0){
+			break;
+		}
+	}
+
 }
 
 
@@ -535,52 +520,7 @@ unsigned long
 Nau::getFrameCount() {
 
 	return m_FrameCount;
-=======
-#ifdef NAU_RENDER_FLAGS
-		//#ifdef PROFILE
-		//	if (getRenderFlag(Nau::PROFILE_RENDER_FLAG))
-		//	{
-		//		PROFILE ("Profile rendering");
-		//
-		//		renderer->setViewport(m_WindowWidth, m_WindowHeight);
-		//
-		//		renderer->saveAttrib(IRenderer::RENDER_MODE);
-		//		renderer->setRenderMode(IRenderer::MATERIAL_MODE);
-		//		
-		//		m_ProfileMaterial->prepare();
-		//		renderer->disableDepthTest();
-		//		//RENDERER->enableTexturing();
-		//		setOrthographicProjection (static_cast<int>(m_WindowWidth), 
-		//										static_cast<int>(m_WindowHeight));
-		//
-		//		Profile::dumpLevelsOGL();
-		//
-		// 		char s[128];
-		// 		sprintf (s, "Primitives: %d", RENDERER->getTriCount());
-		// 		renderBitmapString (30,400, Profile::font,s);
-		//		
-		//		resetPerspectiveProjection();
-		//		renderer->enableDepthTest();
-		//		renderer->restoreAttrib();
-		//	}
-		//#endif // PROFILE
-#endif // NAU_RENDER_FLAGS
-		switch (pipeEventFlag){
-		case PIPE_PASS_STARTEND:
-		case PIPE_PASS_END:
-			m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
-#ifdef GLINTERCEPTDEBUG
-			addMessageToGLILog("\n#NAU(FRAME,END)");
-#endif //GLINTERCEPTDEBUG
-			isFrameBegin = true;
-			break;
-		}
 
-		if (count <= 0){
-			break;
-		}
-	}
->>>>>>> origin/debug_wrapper
 }
 
 
