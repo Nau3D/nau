@@ -32,7 +32,7 @@ namespace nau {
 		Attribute(): mId(-1), mDefault(NULL), mRangeDefined(false), mListDefined(false) {};
 
 		Attribute(int id, std::string name, Enums::DataType type, bool readOnlyFlag = false, void *defaultV = NULL ): 
-				mId(id),mName(name), mType(type),mReadOnlyFlag(readOnlyFlag), mDefault(NULL),
+			mId(id), mName(name), mType(type), mReadOnlyFlag(readOnlyFlag), mDefault(NULL), mMin(NULL), mMax(NULL),
 				mListDefined(false), mRangeDefined(false)  {
 		
 			if (defaultV) {
@@ -48,11 +48,25 @@ namespace nau {
 
 
 		~Attribute() {
-
-			if (mRangeDefined) {
-				free (mMin);
-				free (mMax);
-			}
+			// can't free this memory because it may be in use in other attribute
+			//bool isBasic = Enums::isBasicType(mType);
+			//if (mRangeDefined) {
+			//	if (mMin != NULL)
+			//		if (isBasic)
+			//			free(mMin);
+			//		else
+			//			delete mMin;
+			//	if (mMax != NULL)
+			//		if (isBasic)
+			//			free(mMax);
+			//		else
+			//			delete mMax;
+			//}
+			//if (mDefault != NULL)
+			//	if (isBasic)
+			//		free(mDefault);
+			//	else
+			//		delete mDefault;
 		};
 
 
@@ -73,11 +87,24 @@ namespace nau {
 
 		void setRange(void *min, void *max) { 
 				
+			if (min == NULL && max == NULL)
+				return;
+			
 			mRangeDefined = true;
-			mMin = (void *)malloc(Enums::getSize(mType));
-			memcpy(mMin, min, Enums::getSize(mType));
-			mMax = (void *)malloc(Enums::getSize(mType));
-			memcpy(mMax, max, Enums::getSize(mType));
+
+			if (min != NULL) {
+				mMin = (void *)malloc(Enums::getSize(mType));
+				memcpy(mMin, min, Enums::getSize(mType));
+			}
+			else
+				mMin = NULL;
+
+			if (max != NULL) {
+				mMax = (void *)malloc(Enums::getSize(mType));
+				memcpy(mMax, max, Enums::getSize(mType));
+			}
+			else
+				mMax = NULL;
 		};
 
 

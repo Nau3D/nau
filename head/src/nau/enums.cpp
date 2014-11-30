@@ -215,3 +215,15 @@ Enums::isCompatible(DataType nau, DataType shader)
 
 	return false;
 }
+
+
+bool
+Enums::isBasicType(DataType t) {
+
+	if (t == INT || t == UINT || t == BOOL || t == FLOAT || t == DOUBLE
+		|| t == SAMPLER || t == ENUM)
+		return true;
+	else
+		return false;
+
+}

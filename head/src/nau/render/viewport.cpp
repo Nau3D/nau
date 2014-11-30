@@ -20,7 +20,10 @@ Viewport::Init() {
 	Attribs.add(Attribute(FULL, "FULL", Enums::DataType::BOOL, false, new bool(false)));
 
 	// FLOAT
-	Attribs.add(Attribute(RATIO, "RATIO", Enums::DataType::FLOAT, false, new float(0.0f)));
+	Attribute r = Attribute(RATIO, "RATIO", Enums::DataType::FLOAT, false, new float(0.0f));
+	float *min = new float(0.0f);
+	r.setRange(&min, NULL);
+	Attribs.add(r);
 	return true;
 }
 
@@ -144,10 +147,14 @@ Viewport::setProp(FloatProperty prop, float value) {
 
 	m_FloatProps[prop] = value;
 
-	// if ratio is bigger than zero
-	if (value > 0.0f) {
-		setProp(SIZE, m_Float2Props[SET_SIZE]);
-		setProp(ORIGIN, m_Float2Props[SET_ORIGIN]);
+	switch (prop) {
+		case RATIO:
+			// if ratio is bigger than zero
+			if (value > 0.0f) {
+				setProp(SIZE, m_Float2Props[SET_SIZE]);
+				setProp(ORIGIN, m_Float2Props[SET_ORIGIN]);
+			}
+			break;
 	}
 }
 

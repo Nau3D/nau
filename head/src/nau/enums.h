@@ -37,6 +37,7 @@ namespace nau {
 		static void* getDefaultValue(DataType p);
 		/// returns true if p1 is compatible with p2 
 		static bool isCompatible(DataType p1, DataType p2);
+		static bool isBasicType(DataType t);
 
 		static const std::string DataTypeToString[COUNT_DATATYPE];
 

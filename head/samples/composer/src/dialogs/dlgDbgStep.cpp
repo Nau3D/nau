@@ -189,20 +189,31 @@ void DlgDbgStep::append(std::string s) {
 
 
 void DlgDbgStep::OnNextPass(wxCommandEvent& event){
+
+#ifdef GLINTERCEPTDEBUG 
 	if (m_Canvas->IsPaused()){
 		gliSetIsGLIActive(true);
 		m_Canvas->MultiStep();
 	}
+#endif
 }
+
+
 void DlgDbgStep::OnNextFrame(wxCommandEvent& event){
+
+#ifdef GLINTERCEPTDEBUG 
 	if (m_Canvas->IsPaused() && passes){
 		int end = passes->size();
 		int stepsize = end - currentPassIndex;
 		gliSetIsGLIActive(true);
 		m_Canvas->MultiStep(stepsize);
 	}
+#endif
 }
+
+
 void DlgDbgStep::OnToPass(wxCommandEvent& event){
+#ifdef GLINTERCEPTDEBUG 
 	if (m_Canvas->IsPaused() && passes){
 		int end = passes->size();
 		int item = m_list->GetSelection();
@@ -218,4 +229,5 @@ void DlgDbgStep::OnToPass(wxCommandEvent& event){
 			m_Canvas->MultiStep(stepsize);
 		}
 	}
+#endif
 }

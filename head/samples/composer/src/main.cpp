@@ -881,10 +881,12 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 void
 FrmMainFrame::OnNextFrame(wxCommandEvent& event)
 {
+#ifdef GLINTERCEPTDEBUG
 	if (m_Canvas->IsPaused()){
 		gliSetIsGLIActive(true);
 		m_Canvas->MultiStep();
 	}
+#endif
 }
 
 void
