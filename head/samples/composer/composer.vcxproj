@@ -473,7 +473,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
       <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)composer.exe</OutputFile>
-      <AdditionalLibraryDirectories>D:\Nau\GLIntercept\Src\Intermediate\GLI\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>msvcprt.lib</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
