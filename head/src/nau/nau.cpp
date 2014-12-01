@@ -416,9 +416,9 @@ Nau::reload (void)
 }
 
 
-void
-Nau::step(int count)
-{
+
+void Nau::step() {
+
 	IRenderer *renderer = RENDERER;
 	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
 	if (NO_TIME == m_LastFrameTime) {
@@ -426,87 +426,218 @@ Nau::step(int count)
 	}
 	double deltaT = m_CurrentTime - m_LastFrameTime;
 	m_LastFrameTime = m_CurrentTime;
-	unsigned char pipeEventFlag;
+
+	m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+
+#ifdef GLINTERCEPTDEBUG
+	addMessageToGLILog("\n#NAU(FRAME,START)");
+#endif //GLINTERCEPTDEBUG
 
 	renderer->resetCounters();
 
-	for (int i = 0; i < count || count <= 0; i++){
+	if (true == m_Physics) {
+		m_pWorld->update();
+		m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+	}
 
-		if (isFrameBegin){
-			m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+	m_pRenderManager->renderActivePipeline();
+
+	m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
+
 #ifdef GLINTERCEPTDEBUG
-			addMessageToGLILog("\n#NAU(FRAME,START)");
+	addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+#endif //GLINTERCEPTDEBUG	
+
+	if (m_FrameCount == ULONG_MAX)
+		// 2 avoid issues with run_once and skip_first
+		// and allows a future implementation of odd and even frames for
+		// ping-pong rendering
+		m_FrameCount = 2;
+	else
+		++m_FrameCount;
+
+}
+
+
+void Nau::stepPass() {
+
+	IRenderer *renderer = RENDERER;
+	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
+	if (NO_TIME == m_LastFrameTime) {
+		m_LastFrameTime = m_CurrentTime;
+	}
+	double deltaT = m_CurrentTime - m_LastFrameTime;
+	m_LastFrameTime = m_CurrentTime;
+
+	Pipeline *p;
+	p = RENDERMANAGER->getActivePipeline();
+	int lastPass;
+	int currentPass;
+	lastPass = p->getNumberOfPasses()-1;
+	currentPass = p->getPassCounter();
+
+	// if it is the first pass
+	if (currentPass == 0) {
+
+		m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+
+#ifdef GLINTERCEPTDEBUG
+		addMessageToGLILog("\n#NAU(FRAME,START)");
 #endif //GLINTERCEPTDEBUG
-			isFrameBegin = false;
-		}
 
+		renderer->resetCounters();
 
-		//if (m_Animations.size() > 0) {
-		//	std::map<std::string, nau::animation::IAnimation*>::iterator animIter;
-		//	
-		//	animIter = m_Animations.begin();
-
-		//	for (; animIter != m_Animations.end(); animIter++) {
-		//		if (false == (*animIter).second->isFinished()) {
-		//			(*animIter).second->step (static_cast<float> (deltaT));
-		//		} else {
-		//			delete ((*animIter).second);
-		//			m_Animations.erase (animIter);
-		//		}
-		//	}
-		//}
-
-		//### Será que deve ser por pass?
 		if (true == m_Physics) {
 			m_pWorld->update();
 			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
 		}
 
-		//renderer->setDefaultState();
-
-#ifdef GLINTERCEPTDEBUG
-		Pass *renderPass = NULL;
-		if (m_pRenderManager->getNumPipelines() > 0){
-			renderPass = m_pRenderManager->getCurrentPass();
-		}
-		if (renderPass){
-			addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
-		}
-#endif //GLINTERCEPTDEBUG
-		pipeEventFlag = m_pRenderManager->renderActivePipeline();
-#ifdef GLINTERCEPTDEBUG
-		if (renderPass){
-			addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
-		}
-#endif //GLINTERCEPTDEBUG
-
-//<<<<<<< HEAD
- //	m_pEventManager->notifyEvent("FRAME_END","Nau", "", NULL);
-
-		switch (pipeEventFlag){
-			case PIPE_PASS_STARTEND:
-			case PIPE_PASS_END:
-				m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
-				if (m_FrameCount == ULONG_MAX)
-					// 2 avoid issues with run_once and skip_first
-					// and allows a future implementation of odd and even frames for
-					// ping-pong rendering
-					m_FrameCount = 2;
-				else
-					++m_FrameCount;
-#ifdef GLINTERCEPTDEBUG
-				addMessageToGLILog("\n#NAU(FRAME,END)");
-#endif //GLINTERCEPTDEBUG
-				isFrameBegin = true;
-				break;
-		}
-
-		if (count <= 0){
-			break;
-		}
 	}
 
+#ifdef GLINTERCEPTDEBUG
+	addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
+#endif //GLINTERCEPTDEBUG
+
+	p->executeNextPass();
+
+#ifdef GLINTERCEPTDEBUG
+	addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+#endif //GLINTERCEPTDEBUG
+
+	if (currentPass == lastPass) {
+
+		m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
+#ifdef GLINTERCEPTDEBUG
+		addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+#endif //GLINTERCEPTDEBUG	
+	
+	}
+
+	if (m_FrameCount == ULONG_MAX)
+		// 2 avoid issues with run_once and skip_first
+		// and allows a future implementation of odd and even frames for
+		// ping-pong rendering
+		m_FrameCount = 2;
+	else
+		++m_FrameCount;
 }
+
+
+void 
+Nau::stepCompleteFrame() {
+
+	Pipeline *p;
+	p = RENDERMANAGER->getActivePipeline();
+	int totalPasses;
+	int currentPass;
+	totalPasses = p->getNumberOfPasses();
+	currentPass = p->getPassCounter();
+
+	for (int i = currentPass; i < totalPasses; ++i)
+		stepPass();
+}
+
+
+void Nau::stepPasses(int n) {
+
+	for (int i = 0; i < n; ++i)
+		stepPass();
+}
+
+
+//
+//
+//void
+//Nau::step(int count)
+//{
+//	IRenderer *renderer = RENDERER;
+//	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
+//	if (NO_TIME == m_LastFrameTime) {
+//		m_LastFrameTime = m_CurrentTime;
+//	}
+//	double deltaT = m_CurrentTime - m_LastFrameTime;
+//	m_LastFrameTime = m_CurrentTime;
+//	unsigned char pipeEventFlag;
+//
+//	renderer->resetCounters();
+//
+//	for (int i = 0; i < count || count <= 0; i++){
+//
+//		if (isFrameBegin){
+//			m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+//#ifdef GLINTERCEPTDEBUG
+//			addMessageToGLILog("\n#NAU(FRAME,START)");
+//#endif //GLINTERCEPTDEBUG
+//			isFrameBegin = false;
+//		}
+//
+//
+//		//if (m_Animations.size() > 0) {
+//		//	std::map<std::string, nau::animation::IAnimation*>::iterator animIter;
+//		//	
+//		//	animIter = m_Animations.begin();
+//
+//		//	for (; animIter != m_Animations.end(); animIter++) {
+//		//		if (false == (*animIter).second->isFinished()) {
+//		//			(*animIter).second->step (static_cast<float> (deltaT));
+//		//		} else {
+//		//			delete ((*animIter).second);
+//		//			m_Animations.erase (animIter);
+//		//		}
+//		//	}
+//		//}
+//
+//		//### Será que deve ser por pass?
+//		if (true == m_Physics) {
+//			m_pWorld->update();
+//			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+//		}
+//
+//		//renderer->setDefaultState();
+//
+//		Pass *renderPass = NULL;
+//		if (m_pRenderManager->getNumPipelines() > 0){
+//			renderPass = m_pRenderManager->getCurrentPass();
+//		}
+//#ifdef GLINTERCEPTDEBUG
+//		if (renderPass){
+//			addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
+//		}
+//#endif //GLINTERCEPTDEBUG
+//		pipeEventFlag = m_pRenderManager->renderActivePipeline();
+//#ifdef GLINTERCEPTDEBUG
+//		if (renderPass){
+//			addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+//		}
+//#endif //GLINTERCEPTDEBUG
+//
+////<<<<<<< HEAD
+// //	m_pEventManager->notifyEvent("FRAME_END","Nau", "", NULL);
+//
+//		switch (pipeEventFlag){
+//			case PIPE_PASS_STARTEND:
+//			case PIPE_PASS_END:
+//				m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
+//				if (m_FrameCount == ULONG_MAX)
+//					// 2 avoid issues with run_once and skip_first
+//					// and allows a future implementation of odd and even frames for
+//					// ping-pong rendering
+//					m_FrameCount = 2;
+//				else
+//					++m_FrameCount;
+//#ifdef GLINTERCEPTDEBUG
+//				addMessageToGLILog("\n#NAU(FRAME,END)");
+//#endif //GLINTERCEPTDEBUG
+//				isFrameBegin = true;
+//				break;
+//		}
+//
+//		if (count <= 0){
+//			break;
+//		}
+//	}
+//
+//}
 
 
 void 

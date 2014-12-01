@@ -77,7 +77,11 @@ namespace nau
 
 			Pass *getCurrentPass();
 
-			unsigned char execute (/*nau::scene::Camera* aCamera, nau::scene::IScene *aScene*/);
+			void execute();
+			void executeNextPass();
+
+			int getPassCounter();
+			unsigned char executePass(unsigned int pass); (/*nau::scene::Camera* aCamera, nau::scene::IScene *aScene*/);
 		
 			bool isActive (void);
 

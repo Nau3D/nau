@@ -149,6 +149,7 @@ DlgDbgStep::updateDlg()
 		}
 
 	}
+	m_list->Refresh();
 }
 
 
@@ -190,44 +191,45 @@ void DlgDbgStep::append(std::string s) {
 
 void DlgDbgStep::OnNextPass(wxCommandEvent& event){
 
-#ifdef GLINTERCEPTDEBUG 
 	if (m_Canvas->IsPaused()){
+#ifdef GLINTERCEPTDEBUG 
 		gliSetIsGLIActive(true);
-		m_Canvas->MultiStep();
-	}
 #endif
+		m_Canvas->StepPass();
+#ifdef GLINTERCEPTDEBUG 
+		gliSetIsGLIActive(false);
+#endif
+		updateDlg();
+	}
 }
 
 
 void DlgDbgStep::OnNextFrame(wxCommandEvent& event){
 
+	if (m_Canvas->IsPaused()){
 #ifdef GLINTERCEPTDEBUG 
-	if (m_Canvas->IsPaused() && passes){
-		int end = passes->size();
-		int stepsize = end - currentPassIndex;
 		gliSetIsGLIActive(true);
-		m_Canvas->MultiStep(stepsize);
-	}
 #endif
+		m_Canvas->StepToEndOfFrame();
+#ifdef GLINTERCEPTDEBUG 
+		gliSetIsGLIActive(false);
+#endif
+		updateDlg();
+	}
 }
 
 
 void DlgDbgStep::OnToPass(wxCommandEvent& event){
+
+
+	if (m_Canvas->IsPaused()){
 #ifdef GLINTERCEPTDEBUG 
-	if (m_Canvas->IsPaused() && passes){
-		int end = passes->size();
-		int item = m_list->GetSelection();
-		int stepsize;
-		if (item < currentPassIndex){
-			stepsize = (end - currentPassIndex) + item + 1;
-		}
-		else{
-			stepsize = item - currentPassIndex + 1;
-		}
-		if (item != wxNOT_FOUND){
-			gliSetIsGLIActive(true);
-			m_Canvas->MultiStep(stepsize);
-		}
-	}
+		gliSetIsGLIActive(true);
 #endif
+		m_Canvas->StepUntilSamePassNextFrame();
+#ifdef GLINTERCEPTDEBUG 
+		gliSetIsGLIActive(false);
+#endif
+		updateDlg();
+	}
 }

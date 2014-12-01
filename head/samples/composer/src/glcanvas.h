@@ -27,11 +27,14 @@ public:
                long style = 0,
                const wxString &name = _("GlCanvas"));
 
-   void OnPaint(wxPaintEvent & event);
-   void BreakResume ();
-   void OnSize(wxSizeEvent & event);
-   void OnEraseBackground(wxEraseEvent & event);
-   void OnEnterWindow(wxMouseEvent & event);
+	void OnPaint(wxPaintEvent & event);
+	void BreakResume ();
+	void StepPass();
+	void StepToEndOfFrame();
+	void StepUntilSamePassNextFrame();
+	void OnSize(wxSizeEvent & event);
+	void OnEraseBackground(wxEraseEvent & event);
+	void OnEnterWindow(wxMouseEvent & event);
 	void OnKeyDown(wxKeyEvent & event);
 	void OnKeyUp(wxKeyEvent & event);
 	void OnIdle (wxIdleEvent& event);

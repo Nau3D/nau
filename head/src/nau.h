@@ -82,7 +82,18 @@ namespace nau {
 
 		nau::world::IWorld& getWorld (void);
 
-		void step (int count = 0);
+		// Executes the whole pipeline
+		void step ();
+		// Executes the next pass
+		// only to be used when in paused mode
+		void stepPass();
+		// Executes the pipeline from the current pass to the end
+		// only to be used when in paused mode
+		void stepCompleteFrame();
+		// executes n passes from the pipeline. It may loop.
+		// only to be used when in paused mode
+		void stepPasses(int n);
+
 		void resetFrameCount();
 		unsigned long int getFrameCount();
 

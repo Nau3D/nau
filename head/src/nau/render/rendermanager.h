@@ -46,6 +46,7 @@ namespace nau
 			IRenderer* getRenderer (void);
 			//! Renders the active pipeline
 			unsigned char renderActivePipeline();
+			void renderActivePipelineNextPass();
 
 			// OCTREE STUFF
 			//! Creates an octree for every OctreeScene
@@ -59,6 +60,9 @@ namespace nau
 			bool hasPipeline (const std::string &pipelineName);
 			//! Returns a pointer to the named pipeline
 			Pipeline* getPipeline (const std::string &pipelineName);
+			//! Returns a pointer to the active pipeline
+			Pipeline* getActivePipeline();
+
 			//! Returns the active pipeline name
 			std::string getActivePipelineName();
 			//! Sets the named pipeline as the active pipeline for rendering purposes

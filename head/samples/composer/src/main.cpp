@@ -95,9 +95,9 @@ int idMenuMaterialsAll = wxNewId();
 
 int idMenuReload = wxNewId();
 
-#ifdef GLINTERCEPTDEBUG
 int idMenuDbgBreak = wxNewId();
 int idMenuDbgStep = wxNewId();
+#ifdef GLINTERCEPTDEBUG
 //int idMenuDbgGLILogRead = wxNewId();
 #endif
 // dialogs //
@@ -113,13 +113,13 @@ int idMenu_DLG_SCENES = wxNewId();
 int idMenu_DLG_PASS = wxNewId();
 int idMenu_DLG_ATOMICS = wxNewId();
 
-#ifdef GLINTERCEPTDEBUG
 int idMenu_DLG_STATEXML = wxNewId();
+#ifdef GLINTERCEPTDEBUG
 int idMenu_DLG_DBGGLILOGREAD = wxNewId();
+#endif
 int idMenu_DLG_DBGPROGRAM = wxNewId();
 int idMenu_DLG_DBGBUFFER = wxNewId();
 int idMenu_DLG_DBGSTEP = wxNewId();
-#endif
 
 
 
@@ -159,15 +159,15 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_PASS, FrmMainFrame::OnDlgPass)
   
 #ifdef GLINTERCEPTDEBUG
+  EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
+#endif
   EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
   EVT_MENU(idMenuDbgStep, FrmMainFrame::OnNextFrame)
   EVT_MENU(idMenu_DLG_STATEXML, FrmMainFrame::OnDlgStateXML)
-  EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
   EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
   EVT_MENU(idMenu_DLG_DBGSTEP, FrmMainFrame::OnDlgDbgStep)
   
-#endif
   
  END_EVENT_TABLE()
 
@@ -261,23 +261,24 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	helpMenu->Enable(idMenu_DLG_ATOMICS, false);
 	helpMenu->Enable(idMenu_DLG_SCENES, false);
 
-#ifdef GLINTERCEPTDEBUG
 	debugMenu = new wxMenu(_T(""));
 	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
 	debugMenu->Append(idMenuDbgStep, _("Next Pass"), _("Renders next pass"));
 	debugMenu->Append(idMenu_DLG_STATEXML, _("State"), _("Shows OpenGL state variables"));
 	debugMenu->Append(idMenu_DLG_DBGSTEP, _("Advanced Pass Controller"), _("Aditional Pass control options"));
-    debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
 	debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"), _("Views Program information"));
 	debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"), _("Views Buffer information"));
 	
 	debugMenu->Enable(idMenuDbgStep, false);
-	debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
 	debugMenu->Enable(idMenu_DLG_DBGPROGRAM, false);
 	debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
 	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
-    mbar->Append(debugMenu, _("&Debug"));
+
+#ifdef GLINTERCEPTDEBUG
+    debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
+	debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
 #endif
+    mbar->Append(debugMenu, _("&Debug"));
 
     SetMenuBar(mbar);
 
@@ -845,15 +846,18 @@ FrmMainFrame::OnKeyUp(wxKeyEvent & event)
 void 
 FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 {
-#ifdef GLINTERCEPTDEBUG
 	m_Canvas->BreakResume();
 	if (m_Canvas->IsPaused()){
 		
+#ifdef GLINTERCEPTDEBUG
 		FreezeGLI();
+#endif
 		LoadDebugData();
 
 
+#ifdef GLINTERCEPTDEBUG		
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,true);
+#endif
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);
 		debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 		debugMenu->Enable(idMenu_DLG_DBGSTEP, true);
@@ -862,9 +866,12 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
 	}
 	else{
-		gliSetIsGLIActive(true);
 
+#ifdef GLINTERCEPTDEBUG		
+		gliSetIsGLIActive(true);
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
+#endif
+
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
 		debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
 		debugMenu->Enable(idMenuDbgStep, false);
@@ -873,7 +880,6 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 
 	}
-#endif
 
 
 }
@@ -881,12 +887,13 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 void
 FrmMainFrame::OnNextFrame(wxCommandEvent& event)
 {
-#ifdef GLINTERCEPTDEBUG
 	if (m_Canvas->IsPaused()){
+#ifdef GLINTERCEPTDEBUG
 		gliSetIsGLIActive(true);
+#endif
 		m_Canvas->MultiStep();
 	}
-#endif
+
 }
 
 void
@@ -900,7 +907,7 @@ void
 FrmMainFrame::LoadDebugData(){
 #ifdef GLINTERCEPTDEBUG
 	DlgDbgGLILogRead::Instance()->loadLog();
-
+#endif
 	DlgDbgPrograms::Instance()->clear();
 	DlgDbgPrograms::Instance()->loadShaderInfo();
 
@@ -908,7 +915,7 @@ FrmMainFrame::LoadDebugData(){
 	DlgDbgBuffers::Instance()->loadBufferInfo();
 
 	DlgDbgStep::Instance()->updateDlg();
-#endif
+
 
 }
 

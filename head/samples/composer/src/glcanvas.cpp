@@ -114,7 +114,7 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 
 
    //SetCurrent (*p_GLC);
-	if(!isPaused || step != 0){
+	if(!isPaused){
 
 		Render();
 
@@ -188,7 +188,7 @@ GlCanvas::Render ()
 	PROFILE ("Main cicle");
 
 	if (0 != m_pEngine) {
-		m_pEngine->step(step);
+		m_pEngine->step();
 	}
 
 	{
@@ -225,11 +225,11 @@ GlCanvas::OnIdle (wxIdleEvent& event)
 {
 	PROFILE("Composer");
 
-    if(!isPaused){
+	if (!isPaused){
 		this->Render();
-    }
+		DlgAtomics::Instance()->update();
+   }
 	event.RequestMore();
-	DlgAtomics::Instance()->update();
 }
 
 /*void 
@@ -718,9 +718,45 @@ GlCanvas::OnLeftUp (wxMouseEvent &event) {
 void
 GlCanvas::BreakResume ()
 {
-   
-   isPaused=!isPaused;
+	if (isPaused)
+		m_pEngine->stepCompleteFrame();
+
+	isPaused=!isPaused;
 }
+
+
+void 
+GlCanvas::StepPass() {
+
+	if (isPaused) {
+		m_pEngine->stepPass();
+
+		if (RENDERMANAGER->getActivePipeline()->getPassCounter() == 0)
+			SwapBuffers();
+	}
+}
+
+void 
+GlCanvas::StepToEndOfFrame() {
+
+	if (isPaused) {
+		m_pEngine->stepCompleteFrame();
+		SwapBuffers();
+	}
+}
+
+void
+GlCanvas::StepUntilSamePassNextFrame() {
+
+	if (isPaused) {
+		int n = RENDERMANAGER->getActivePipeline()->getPassCounter();
+		m_pEngine->stepCompleteFrame();
+		SwapBuffers();
+		m_pEngine->stepPasses(n);
+
+	}
+}
+
 
 bool
 GlCanvas::IsPaused()

@@ -91,6 +91,16 @@ RenderManager::getPipeline(const std::string &pipelineName)
 	return m_Pipelines[pipelineName];
 }
 
+
+Pipeline*
+RenderManager::getActivePipeline()
+{
+	if (m_ActivePipeline){
+		return m_ActivePipeline;
+	}
+	return NULL;
+}
+
 std::string
 RenderManager::getActivePipelineName()
 { 
@@ -254,6 +264,15 @@ RenderManager::getVertexData(unsigned int sceneObjID, unsigned int triID) {
 
 }
 
+
+void
+RenderManager::renderActivePipelineNextPass() {
+
+	if (m_ActivePipeline)
+		m_ActivePipeline->executeNextPass();
+}
+
+
 unsigned char
 RenderManager::renderActivePipeline () 
 {
@@ -261,7 +280,7 @@ RenderManager::renderActivePipeline ()
 	// assert(m_ActivePipeline);
 
 	if (m_ActivePipeline)
-		return m_ActivePipeline->execute ();
+		m_ActivePipeline->execute ();
 	return 0;
 }
 

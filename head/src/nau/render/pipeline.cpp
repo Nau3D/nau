@@ -183,8 +183,71 @@ Pipeline::getCurrentCamera()
 }
 
 
+int 
+Pipeline::getPassCounter() {
+
+	return m_NextPass;
+}
+
+void
+Pipeline::execute() {
+
+	//For each pass....
+
+	try {
+		PROFILE("Pipeline execute");
+
+		std::deque<Pass*>::iterator passIter;
+		passIter = m_Passes.begin();
+
+		for ( ; passIter != m_Passes.end(); passIter++) {
+#ifdef GLINTERCEPTDEBUG
+		addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
+#endif //GLINTERCEPTDEBUG
+
+		PROFILE ((*passIter)->getName().c_str());
+		m_CurrentPass = *passIter;
+		RENDERER->setDefaultState();			
+		(*passIter)->prepare();
+
+		if (true == (*passIter)->renderTest()) {	
+
+			(*passIter)->doPass();
+		}
+		(*passIter)->restore();
+		}
+#ifdef GLINTERCEPTDEBUG
+		addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+#endif //GLINTERCEPTDEBUG
+	}
+	catch (Exception &e) {
+		SLOG(e.getException().c_str());
+	}
+}
+
+
+void 
+Pipeline::executeNextPass() {
+
+	try {
+		Pass *p = m_Passes[m_NextPass];
+		p->prepare();
+		if (true == p->renderTest())
+			p->doPass();
+		p->restore();
+
+		m_NextPass++;
+		if (m_NextPass == m_Passes.size())
+			m_NextPass = 0;
+	}
+	catch (Exception &e) {
+		SLOG(e.getException().c_str());
+	}
+}
+
+
 unsigned char
-Pipeline::execute ()
+Pipeline::executePass (unsigned int p)
 {
 	//For each pass....
 
@@ -251,7 +314,7 @@ Pipeline::execute ()
 
 Pass *
 Pipeline::getCurrentPass() {
-	if (!m_CurrentPass && m_Passes.size() > 0){
+	if (m_Passes.size() > m_NextPass){
 		m_CurrentPass = m_Passes[m_NextPass];
 	}
 	return m_CurrentPass;
