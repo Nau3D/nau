@@ -26,7 +26,7 @@ GLBuffer::GLBuffer(std::string label, int size) {
 
 	glGenBuffers(1, (GLuint *)&m_IntProps[ID]);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_IntProps[ID]);
-	glBufferStorage(GL_SHADER_STORAGE_BUFFER, m_UIntProps[SIZE], NULL, GL_DYNAMIC_STORAGE_BIT);
+	glBufferStorage(GL_SHADER_STORAGE_BUFFER, m_UIntProps[SIZE], NULL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 

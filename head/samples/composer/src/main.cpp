@@ -371,7 +371,9 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgScenes::SetParent(this);
 	DlgPass::SetParent(this);
 	DlgAtomics::SetParent(this);
+#ifdef GLINTERCEPTDEBUG
 	DlgDbgGLILogRead::SetParent(this);
+#endif
 	DlgDbgPrograms::SetParent(this);
 	DlgDbgBuffers::SetParent(this);
 	DlgDbgStep::SetParent(this);
@@ -662,7 +664,7 @@ void FrmMainFrame::OnQuit(wxCommandEvent& event)
 void FrmMainFrame::OnAbout(wxCommandEvent& event)
 {
     wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to Composer"));
+    wxMessageBox(_("Welcome to Composer - Nau3D's GUI\nhttps://github.com/Nau3D"), _("About Composer"));
 }
 
 
@@ -926,9 +928,12 @@ FrmMainFrame::OnDlgStateXML(wxCommandEvent& event){
 	DlgStateXML::Instance()->Show(TRUE);
 }
 
+
 void
 FrmMainFrame::OnDlgDbgGLILogRead(wxCommandEvent& event){
+#ifdef GLINTERCEPTDEBUG
 	DlgDbgGLILogRead::Instance()->Show(TRUE);
+#endif
 }
 
 
