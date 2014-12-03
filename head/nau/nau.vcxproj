@@ -355,6 +355,7 @@
     <ClCompile Include="..\src\nau\clogger.cpp" />
     <ClCompile Include="..\src\nau\debug\state.cpp" />
     <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp" />
+    <ClCompile Include="..\src\nau\material\imaterialbuffer.cpp" />
     <ClCompile Include="..\src\nau\nau.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -385,6 +386,7 @@
     <ClCompile Include="..\src\nau\render\iprogramvalue.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp" />
@@ -614,6 +616,7 @@
     <ClInclude Include="..\src\nau\loader\fontxmlloader.h" />
     <ClInclude Include="..\src\nau\loader\patchLoader.h" />
     <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h" />
+    <ClInclude Include="..\src\nau\material\imaterialbuffer.h" />
     <ClInclude Include="..\src\nau\material\textureSampler.h" />
     <ClInclude Include="..\src\nau\math\bvec4.h" />
     <ClInclude Include="..\src\nau\render\ibuffer.h" />
@@ -621,6 +624,7 @@
     <ClInclude Include="..\src\nau\render\iprogramvalue.h" />
     <ClInclude Include="..\src\nau\render\opengl\glbuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h" />

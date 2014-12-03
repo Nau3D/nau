@@ -434,6 +434,7 @@ void Nau::step() {
 #endif //GLINTERCEPTDEBUG
 
 	renderer->resetCounters();
+	RESOURCEMANAGER->clearBuffers();
 
 	if (true == m_Physics) {
 		m_pWorld->update();

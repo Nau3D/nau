@@ -1,9 +1,9 @@
 #version 420 
 
-layout(binding=1) uniform atomic_uint at0;
-layout(binding=1, offset=4) uniform atomic_uint at1;
-layout(binding=1, offset=8) uniform atomic_uint at2;
-layout(binding=1, offset=12) uniform atomic_uint at3;
+layout(binding=2) uniform atomic_uint at0;
+layout(binding=2, offset=4) uniform atomic_uint at1;
+layout(binding=2, offset=8) uniform atomic_uint at2;
+layout(binding=2, offset=12) uniform atomic_uint at3;
 uniform vec4 lightDirection, lightColor;
 uniform vec4 diffuse, ambient, emission;
 uniform float shininess;

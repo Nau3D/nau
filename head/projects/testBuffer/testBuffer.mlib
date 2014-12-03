@@ -19,7 +19,9 @@
 	</shaders>
 
 	<buffers>
-		<buffer name="test" size=4194304 />
+		<buffer name="test" >
+			<SIZE value=4194304 />
+		</buffer>
 	</buffers>	
 	
 	<materials>

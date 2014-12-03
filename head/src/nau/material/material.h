@@ -11,7 +11,7 @@
 #include <nau/render/imageTexture.h>
 #include <nau/material/programvalue.h>
 #include <nau/material/texturemat.h>
-#include <nau/render/ibuffer.h>
+#include <nau/material/imaterialbuffer.h>
 
 #include <nau/render/iprogram.h>
 #include <nau/render/istate.h> 
@@ -42,10 +42,10 @@ namespace nau
 #if NAU_OPENGL_VERSION >=  420
 			std::map<int, ImageTexture*> m_ImageTexture;
 #endif
-#if NAU_OPENGL_VERSION >= 430
+
 			// ID -> (binding point, *buffer)
-			std::map<int, std::pair<int, IBuffer *>> m_Buffers;
-#endif
+			std::map<int, IMaterialBuffer *> m_Buffers;
+
 //			std::string m_Shader;
 			nau::render::IProgram *m_Shader;
 			nau::render::IState *m_State;
@@ -84,11 +84,9 @@ namespace nau
 			ImageTexture *getImageTexture(unsigned int unit);
 #endif
 
-#if NAU_OPENGL_VERSION >= 430
-			void attachBuffer(IBuffer *b);
-			IBuffer *getBuffer(int id);
-			int getBufferBindingPoint(int id);
-#endif
+			void attachBuffer(IMaterialBuffer *b);
+			//IBuffer *getBuffer(int id);
+			//int getBufferBindingPoint(int id);
 
 			nau::material::TextureMat* getTextures (void);
 			bool createTexture (int unit, std::string fn);

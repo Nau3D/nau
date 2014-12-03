@@ -25,14 +25,19 @@ namespace nau
 		public:
 
 			INT_PROP(ID,0);
-			INT_PROP(BINDING_POINT, 1);
+//			INT_PROP(BINDING_POINT, 1);
 
 			UINT_PROP(SIZE, 0);
 
-			ENUM_PROP(TYPE, 0);
+//			ENUM_PROP(TYPE, 0);
 
-			BOOL_PROP(BIND, 0);
-			BOOL_PROP(CLEAR, 1);
+//			BOOL_PROP(BOUND, 0);
+			BOOL_PROP(CLEAR, 0);
+
+			typedef enum {
+				NEVER,
+				BY_FRAME
+			} ClearValues;
 
 			static AttribSet Attribs;
 
@@ -40,12 +45,12 @@ namespace nau
 			// Note: no validation is performed!
 			virtual void setProp(int prop, Enums::DataType type, void *value)  = 0;
 
-			static IBuffer* Create(std::string label, int size);
+			static IBuffer* Create(std::string label);
 
 			std::string& getLabel (void);
 
-			virtual void bind() = 0;
-			virtual void unbind() = 0;
+			//virtual void bind() = 0;
+			//virtual void unbind() = 0;
 
 			virtual void clear() = 0;
 
@@ -56,6 +61,7 @@ namespace nau
 		protected:
 
 			IBuffer() {};
+
 			static bool Init();
 			static bool Inited;
 

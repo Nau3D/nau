@@ -373,9 +373,9 @@ PassOptixPrime::initOptixPrime() {
 
 	// Create Rays Buffer
 	int rayBufferID = m_Rays->getPropi(IBuffer::ID);
-	m_Rays->unbind();
+	//m_Rays->unbind();
 	int bp = -1;
-	m_Rays->setProp(IBuffer::BINDING_POINT, Enums::INT, &bp);
+	//m_Rays->setProp(IBuffer::BINDING_POINT, Enums::INT, &bp);
 	int rayBufferRayCount = m_Rays->getPropui(IBuffer::SIZE) / (8 * sizeof(float));
 
 	void * devPtrBuff;
@@ -395,7 +395,7 @@ PassOptixPrime::initOptixPrime() {
 	
 	// Create Hits Buffer
 	int hitBufferID = m_Hits->getPropi(IBuffer::ID);
-	m_Hits->unbind();
+	//m_Hits->unbind();
 	void * devPtrBuffH;
 	k = cudaGraphicsGLRegisterBuffer(&cglBuffH, hitBufferID, cudaGraphicsRegisterFlagsWriteDiscard);
 //	k = cudaGraphicsGLRegisterBuffer(&cglBuffH, hitBufferID, cudaGraphicsRegisterFlagsReadOnly);

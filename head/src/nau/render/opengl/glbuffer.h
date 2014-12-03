@@ -1,6 +1,6 @@
 #include <nau/config.h>
 
-#if NAU_OPENGL_VERSION >= 430
+
 
 #ifndef GLBUFFER_H
 #define GLBUFFER_H
@@ -25,14 +25,15 @@ namespace nau
 		{
 		public:
 
-			GLBuffer(std::string label, int size);
+			GLBuffer(std::string label);
 			~GLBuffer(void) ;
 
-			void bind();
-			void unbind();
+			//void bind();
+			//void unbind();
 			void setProp(int prop, Enums::DataType type, void *value);
 			void clear();
 			IBuffer * clone();
+			void *readBuffer(unsigned int offset, unsigned int bytes);
 
 		protected:
 			static bool Init();
@@ -44,6 +45,6 @@ namespace nau
 	};
 };
 
-#endif // NAU_OPENGL_VERSION
+
 
 #endif // GLBUFFER_H

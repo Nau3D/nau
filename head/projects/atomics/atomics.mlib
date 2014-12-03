@@ -7,6 +7,12 @@
 								ps="dirlightdiffambpix.frag" 
 								vs="dirlightdiffambpix.vert" />
 	</shaders>
+	
+	<buffers>
+		<buffer name="test">
+			<SIZE value=16 />
+		</buffer>
+	</buffers>	
 		
 	<materials>
 		<material name="atomic">
@@ -50,7 +56,7 @@
 														component="COUNT" />
 														
 					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
-														component="UNIT" id="0" />														
+														component="UNIT" id="0" />				
 				</values>
 			</shader>
 		</material>		

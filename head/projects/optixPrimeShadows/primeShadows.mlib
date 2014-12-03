@@ -22,8 +22,12 @@
 	</rendertargets>
 
 	<buffers>
-		<buffer name="hits" size=16777216 />
-		<buffer name="rays" size=33554432 />
+		<buffer name="hits" >
+			<SIZE value=16777216 />
+		</buffer>	
+		<buffer name="rays" >
+			<SIZE value=33554432 />
+		</buffer>	
 		<!--buffer name="hits" size=4194304 />
 		<buffer name="rays" size=8388608 /-->
 	</buffers>	

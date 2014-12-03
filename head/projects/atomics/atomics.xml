@@ -12,7 +12,7 @@
 			</viewport>
 		</viewports>
 		<cameras>
-			<camera name="Camera1" type="perspective">
+			<camera name="Camera1" >
 				<viewport name="MainViewport" />
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
 				<POSITION x="-23.277" y="18.541" z="30.143" />
@@ -21,7 +21,7 @@
 			</camera>
 		</cameras>
 		<lights>
-			<light name="Sun" type="directional">
+			<light name="Sun">
 				<POSITION x="-150.0" y="150.0" z="0.0" />
 				<DIRECTION x="0.744" y="-0.408" z="0.527" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
@@ -52,6 +52,13 @@
 				<injectionMaps>
 					<map toMaterial="*">
 						<shader fromMaterial ="atomic" fromLibrary="atomics" />
+						<buffers>	
+							<buffer name="test"  fromLibrary="atomics">
+								<TYPE value="ATOMIC_COUNTER" />
+								<BINDING_POINT value="2" />
+							</buffer>
+						</buffers>	
+						
 					</map>
 				</injectionMaps>
 			</pass>

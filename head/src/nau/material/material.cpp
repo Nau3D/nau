@@ -240,8 +240,7 @@ Material::prepareNoShaders ()
 #if NAU_OPENGL_VERSION >=  430
 	for (auto b : m_Buffers) {
 
-		b.second.second->bind();
-		b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
+		b.second->bind();
 	}
 #endif
 }
@@ -250,22 +249,17 @@ Material::prepareNoShaders ()
 void 
 Material::prepare () {
 
-#if NAU_OPENGL_VERSION >=  430
+
 	{
 		PROFILE("Buffers");
 
 		for (auto b : m_Buffers) {
 
-			if (b.second.second->getPropb(IBuffer::CLEAR)) {
-
-				b.second.second->clear();
-			}
-			b.second.second->bind();
-			b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
+			b.second->bind();
 		}
 
 	}
-#endif
+
 	{
 		PROFILE("State");
 		RENDERER->setState (m_State);
@@ -299,22 +293,7 @@ Material::prepare () {
 		else
 			RENDERER->setShader(NULL);
 	}
-#if NAU_OPENGL_VERSION >=  430
-	{
-		PROFILE("Buffers");
 
-		for (auto b : m_Buffers) {
-
-			if (b.second.second->getPropb(IBuffer::CLEAR)) {
-
-				b.second.second->clear();
-			}
-			b.second.second->bind();
-			b.second.second->setProp(IBuffer::BINDING_POINT, Enums::INT, (void *)&(b.second.first));
-		}
-
-	}
-#endif
 }
 
 
@@ -328,6 +307,12 @@ Material::restore() {
    if (0 != m_Texmat) {
       m_Texmat->restore(m_State);
    }
+
+   for (auto b : m_Buffers) {
+
+	   b.second->unbind();
+   }
+
 }
 
 
@@ -338,6 +323,10 @@ Material::restoreNoShaders() {
    m_Color.restore();
    if (0 != m_Texmat) {
       m_Texmat->restore(m_State);
+   }
+   for (auto b : m_Buffers) {
+
+	   b.second->unbind();
    }
 }
 
@@ -370,37 +359,35 @@ Material::getImageTexture(unsigned int unit) {
 
 #endif // NAU_OPENGL_VERSION >=  420
 
-#if NAU_OPENGL_VERSION >= 430
+
 
 void 
-Material::attachBuffer(IBuffer *b) {
+Material::attachBuffer(IMaterialBuffer *b) {
 
-	int id = b->getPropi(IBuffer::ID);
-	int bp = b->getPropi(IBuffer::BINDING_POINT);
-	m_Buffers[id] = std::make_pair(bp, b);
+	int bp = *(int *)(b->getProp(IMaterialBuffer::BINDING_POINT, Enums::INT));
+	m_Buffers[bp] = b;
 }
 
 
-IBuffer *
-Material::getBuffer(int id) {
+//IBuffer *
+//Material::getBuffer(int id) {
+//
+//	if (m_Buffers.count(id))
+//		return m_Buffers[id].second;
+//	else
+//		return NULL;
+//}
+//
+//
+//int
+//Material::getBufferBindingPoint(int id) {
+//
+//	if (m_Buffers.count(id))
+//		return m_Buffers[id].first;
+//	else
+//		return -1;
+//}
 
-	if (m_Buffers.count(id))
-		return m_Buffers[id].second;
-	else
-		return NULL;
-}
-
-
-int
-Material::getBufferBindingPoint(int id) {
-
-	if (m_Buffers.count(id))
-		return m_Buffers[id].first;
-	else
-		return -1;
-}
-
-#endif // NAU_OPENGL_VERSION >= 430
 
 
 bool

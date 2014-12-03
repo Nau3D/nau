@@ -520,6 +520,12 @@
     <ClCompile Include="..\src\nau\debug\state.cpp">
       <Filter>Source Files\debug</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\material\imaterialbuffer.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1022,6 +1028,12 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\debug\state.h">
       <Filter>Source Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\imaterialbuffer.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h">
+      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

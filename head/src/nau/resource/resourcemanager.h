@@ -90,12 +90,12 @@ namespace nau
 			unsigned int getNumPrograms();
 			std::vector<std::string> *getProgramNames();
 
-#if NAU_OPENGL_VERSION >= 430
+
 			/***Buffers***/
 			nau::render::IBuffer* getBuffer(std::string name);
-			nau::render::IBuffer* createBuffer(std::string name, int size);
+			nau::render::IBuffer* createBuffer(std::string name);
 			bool hasBuffer(std::string name);
-#endif
+			void clearBuffers();
 		};
 	};
 };

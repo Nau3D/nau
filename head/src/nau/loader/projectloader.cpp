@@ -25,7 +25,7 @@
 #include <nau/scene/geometryobject.h>
 #include <nau/geometry/primitive.h>
 #include <nau/math/transformfactory.h>
-
+#include <nau/render/ibuffer.h>
 #include <nau/slogger.h>
 
 #include <nau/config.h>
@@ -2693,7 +2693,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		
 			}
 		}
-#if NAU_OPENGL_VERSION >= 420
+
 		pElemNode = pElem->FirstChild("buffers");
 		if (pElemNode) {
 			pElemAux = pElemNode->FirstChildElement("buffer");
@@ -2717,9 +2717,10 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 					std::string name = *iter;
 					dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
 					IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
-					IBuffer *b = buffer->clone();
+					IMaterialBuffer *imb = IMaterialBuffer::Create(buffer);
+					//IBuffer *b = buffer->clone();
 
-					std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+					std::map<std::string, Attribute> attribs = IMaterialBuffer::Attribs.getAttributes();
 					TiXmlElement *p = pElemAux->FirstChildElement();
 					Attribute a;
 					void *value;
@@ -2730,13 +2731,13 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 						// trying to set the value of a read only attribute
 						a = attribs[p->Value()];
 						if (a.mReadOnlyFlag)
-							NAU_THROW("Pass %s: Buffer %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), s_pFullName, p->Value());
+							NAU_THROW("Pass %s: MaterialBuffer %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), s_pFullName, p->Value());
 
-						value = readAttr(s_pFullName, p, a.mType, IBuffer::Attribs);
-						b->setProp(a.mId, a.mType, value);
+						value = readAttr(s_pFullName, p, a.mType, IMaterialBuffer::Attribs);
+						imb->setProp(a.mId, a.mType, value);
 						p = p->NextSiblingElement();
 					}
-					dstMat->attachBuffer(b);
+					dstMat->attachBuffer(imb);
 				}
 
 
@@ -2744,7 +2745,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		}
 
 
-#endif
+
 		pElemAux = pElem->FirstChildElement("color");
 		if (pElemAux) {
 
@@ -2929,7 +2930,7 @@ All fields are required. Size is in bytes
 void
 ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
 {
-#if NAU_OPENGL_VERSION >= 420
+
 	TiXmlElement *pElem;
 	int layers = 0;
 	pElem = hRoot.FirstChild("buffers").FirstChild("buffer").Element();
@@ -2946,18 +2947,37 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		if (RESOURCEMANAGER->hasBuffer(s_pFullName)) {
 			NAU_THROW("Mat Lib %s: Buffer %s is already defined", aLib->getName().c_str(), s_pFullName);
 		}
-		int size;
-		if (pElem->QueryIntAttribute("size", &size)) {
-			NAU_THROW("Mat Lib %s: Buffer %s: has no size", aLib->getName().c_str(), pName);
+		//int size;
+		//if (pElem->QueryIntAttribute("size", &size)) {
+		//	NAU_THROW("Mat Lib %s: Buffer %s: has no size", aLib->getName().c_str(), pName);
+		//}
+
+		//if (size < 0) {
+		//	NAU_THROW("Mat Lib %s: Buffer %s : size must be greater than zero", aLib->getName().c_str(), pName);
+		//}
+
+		IBuffer *b = RESOURCEMANAGER->createBuffer(s_pFullName);
+		// Reading buffer attributes
+		std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+		TiXmlElement *p = pElem->FirstChildElement();
+		Attribute a;
+		void *value;
+		while (p) {
+			// trying to define an attribute that does not exist?		
+			if (attribs.count(p->Value()) == 0)
+				NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+			// trying to set the value of a read only attribute?
+			a = attribs[p->Value()];
+			if (a.mReadOnlyFlag)
+				NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+
+			value = readAttr(pName, p, a.mType, Light::Attribs);
+			b->setProp(a.mId, a.mType, value);
+			p = p->NextSiblingElement();
 		}
 
-		if (size < 0) {
-			NAU_THROW("Mat Lib %s: Buffer %s : size must be greater than zero", aLib->getName().c_str(), pName);
-		}
 
-		RESOURCEMANAGER->createBuffer(s_pFullName, size);
 	}
-#endif
 }
 
 
@@ -3505,10 +3525,11 @@ ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Materi
 			NAU_THROW("Library %s: Material %s: Buffer %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pName);
 
 		IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
-		IBuffer *b = buffer->clone();
+		IMaterialBuffer *imb = IMaterialBuffer::Create(buffer);
+		//IBuffer *b = buffer->clone();
 		// Reading Buffer Attributes
 
-		std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+		std::map<std::string, Attribute> attribs = IMaterialBuffer::Attribs.getAttributes();
 		TiXmlElement *p = pElemAux->FirstChildElement();
 		Attribute a;
 		void *value;
@@ -3521,11 +3542,11 @@ ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Materi
 			if (a.mReadOnlyFlag)
 				NAU_THROW("Library %s: Material %s: Buffer - %s is a read-only attribute", aLib->getName().c_str(), aMat->getName().c_str(), p->Value());
 
-			value = readAttr("", p, a.mType, IBuffer::Attribs);
-			b->setProp(a.mId, a.mType, value);
+			value = readAttr("", p, a.mType, IMaterialBuffer::Attribs);
+			imb->setProp(a.mId, a.mType, value);
 			p = p->NextSiblingElement();
 		}
-		aMat->attachBuffer(b);
+		aMat->attachBuffer(imb);
 #else
 		NAU_THROW("Library %s: Material %s: Buffers Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), NAU_OPENGL_VERSION);
 

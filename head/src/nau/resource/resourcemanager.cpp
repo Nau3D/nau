@@ -465,7 +465,12 @@ ResourceManager::getProgramNames(){
 
 //-------------------------------------
 
-#if NAU_OPENGL_VERSION >= 430
+
+void
+ResourceManager::clearBuffers() {
+
+
+}
 
 nau::render::IBuffer* 
 ResourceManager::getBuffer(std::string name) {
@@ -478,9 +483,9 @@ ResourceManager::getBuffer(std::string name) {
 
 
 nau::render::IBuffer*
-ResourceManager::createBuffer(std::string name, int size) {
+ResourceManager::createBuffer(std::string name) {
 
-	IBuffer *b = IBuffer::Create(name, size);
+	IBuffer *b = IBuffer::Create(name);
 	m_Buffers[name] = b;
 	return b;
 }
@@ -493,7 +498,5 @@ ResourceManager::hasBuffer(std::string name) {
 		return true;
 	else
 		return false;
-
 }
 
-#endif
