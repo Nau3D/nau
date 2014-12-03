@@ -253,7 +253,7 @@ void DlgDbgBuffers::clear(bool fullclear) {
 		bufferSettingsList.clear();
 	}
 }
-
+// Update Dialog
 void DlgDbgBuffers::loadBufferInfo() {
 	if (isLogClear){
 		std::vector<std::pair<std::pair<int, int>, std::vector<int>>> vaoInfoData;
@@ -477,6 +477,7 @@ void DlgDbgBuffers::OnBufferSettingsChange(){
 		updateBufferData();
 	} 
 }
+
 
 void DlgDbgBuffers::updateBufferData(){
 	int pagesize = 0, prevBuffer;

@@ -377,6 +377,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgDbgPrograms::SetParent(this);
 	DlgDbgBuffers::SetParent(this);
 	DlgDbgStep::SetParent(this);
+	DlgStateXML::SetParent(this);
 	DlgDbgStep::SetCanvas(m_Canvas);
 	
 
