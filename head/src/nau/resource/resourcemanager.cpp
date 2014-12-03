@@ -469,7 +469,11 @@ ResourceManager::getProgramNames(){
 void
 ResourceManager::clearBuffers() {
 
+	for (auto b : m_Buffers) {
 
+		if (b.second->getPrope(IBuffer::CLEAR) == IBuffer::BY_FRAME)
+			b.second->clear();
+	}
 }
 
 nau::render::IBuffer* 

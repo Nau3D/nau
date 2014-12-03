@@ -2971,7 +2971,7 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			if (a.mReadOnlyFlag)
 				NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 
-			value = readAttr(pName, p, a.mType, Light::Attribs);
+			value = readAttr(pName, p, a.mType, IBuffer::Attribs);
 			b->setProp(a.mId, a.mType, value);
 			p = p->NextSiblingElement();
 		}

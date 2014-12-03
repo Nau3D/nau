@@ -246,70 +246,70 @@ Pipeline::executeNextPass() {
 }
 
 
-unsigned char
-Pipeline::executePass (unsigned int p)
-{
-	//For each pass....
-
-	try {
-		PROFILE("Pipeline execute");
-
-		//std::deque<Pass*>::iterator passIter;
-		//passIter = m_Passes.begin();
-
-		//for ( ; passIter != m_Passes.end(); passIter++) {
-
-		//PROFILE ((*passIter)->getName().c_str());
-		//m_CurrentPass = *passIter;
-		//RENDERER->setDefaultState();			
-		//(*passIter)->prepare();
-
-		//if (true == (*passIter)->renderTest()) {	
-
-		//	(*passIter)->doPass();
-		//}
-		//(*passIter)->restore();
-		//}
-		{
-			PROFILE(m_Passes[m_NextPass]->getName().c_str());
-			m_CurrentPass = m_Passes[m_NextPass];
-			RENDERER->setDefaultState();
-			m_Passes[m_NextPass]->prepare();
-
-			if (true == m_Passes[m_NextPass]->renderTest()) {
-
-				m_Passes[m_NextPass]->doPass();
-			}
-			m_Passes[m_NextPass]->restore();
-		}
-
-		m_NextPass++;
-
-		if (m_NextPass == 1){
-			if (m_NextPass >= m_Passes.size()){
-				m_NextPass = 0;
-				m_CurrentPass = m_Passes[m_NextPass];
-				return PIPE_PASS_STARTEND;
-			}
-			else{
-				m_CurrentPass = m_Passes[m_NextPass];
-				return PIPE_PASS_START;
-			}
-		} 
-		else if (m_NextPass >= m_Passes.size()){
-			m_NextPass = 0;
-			m_CurrentPass = m_Passes[m_NextPass];
-			return PIPE_PASS_END;
-		}
-
-	}
-	catch(Exception &e) {
-		SLOG(e.getException().c_str());
-	}
-
-	m_CurrentPass = m_Passes[m_NextPass];
-	return PIPE_PASS_MIDDLE;
-}
+//unsigned char
+//Pipeline::executePass (unsigned int p)
+//{
+//	//For each pass....
+//
+//	try {
+//		PROFILE("Pipeline execute");
+//
+//		//std::deque<Pass*>::iterator passIter;
+//		//passIter = m_Passes.begin();
+//
+//		//for ( ; passIter != m_Passes.end(); passIter++) {
+//
+//		//PROFILE ((*passIter)->getName().c_str());
+//		//m_CurrentPass = *passIter;
+//		//RENDERER->setDefaultState();			
+//		//(*passIter)->prepare();
+//
+//		//if (true == (*passIter)->renderTest()) {	
+//
+//		//	(*passIter)->doPass();
+//		//}
+//		//(*passIter)->restore();
+//		//}
+//		{
+//			PROFILE(m_Passes[m_NextPass]->getName().c_str());
+//			m_CurrentPass = m_Passes[m_NextPass];
+//			RENDERER->setDefaultState();
+//			m_Passes[m_NextPass]->prepare();
+//
+//			if (true == m_Passes[m_NextPass]->renderTest()) {
+//
+//				m_Passes[m_NextPass]->doPass();
+//			}
+//			m_Passes[m_NextPass]->restore();
+//		}
+//
+//		m_NextPass++;
+//
+//		if (m_NextPass == 1){
+//			if (m_NextPass >= m_Passes.size()){
+//				m_NextPass = 0;
+//				m_CurrentPass = m_Passes[m_NextPass];
+//				return PIPE_PASS_STARTEND;
+//			}
+//			else{
+//				m_CurrentPass = m_Passes[m_NextPass];
+//				return PIPE_PASS_START;
+//			}
+//		} 
+//		else if (m_NextPass >= m_Passes.size()){
+//			m_NextPass = 0;
+//			m_CurrentPass = m_Passes[m_NextPass];
+//			return PIPE_PASS_END;
+//		}
+//
+//	}
+//	catch(Exception &e) {
+//		SLOG(e.getException().c_str());
+//	}
+//
+//	m_CurrentPass = m_Passes[m_NextPass];
+//	return PIPE_PASS_MIDDLE;
+//}
 
 
 Pass *

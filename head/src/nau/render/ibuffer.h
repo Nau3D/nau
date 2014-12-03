@@ -32,12 +32,12 @@ namespace nau
 //			ENUM_PROP(TYPE, 0);
 
 //			BOOL_PROP(BOUND, 0);
-			BOOL_PROP(CLEAR, 0);
+			ENUM_PROP(CLEAR, 0);
 
 			typedef enum {
 				NEVER,
 				BY_FRAME
-			} ClearValues;
+			} ClearValues; 
 
 			static AttribSet Attribs;
 
@@ -57,10 +57,10 @@ namespace nau
 			virtual IBuffer * clone() = 0;
 		
 			~IBuffer(void) {};
-
+		
 		protected:
 
-			IBuffer() {};
+			IBuffer() { initArrays(Attribs); };
 
 			static bool Init();
 			static bool Inited;
