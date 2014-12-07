@@ -354,49 +354,49 @@ GLVertexArray::unbind (void)
 //	}
 //}
 
-GLenum
-GLVertexArray::translate (unsigned int type)
-{
-	std::string s = VertexData::Syntax[type];
-
-	if (s.compare("position") == 0)
-	{
-		return GL_VERTEX_ARRAY;
-	}
-	else if (s.compare("normal") == 0)
-	{
-		return GL_NORMAL_ARRAY;
-	}
-	else if (s.compare("color") == 0)
-	{
-		return GL_COLOR_ARRAY;
-	}
-	else if (s.compare("secondaryColor") == 0)
-	{
-		return GL_SECONDARY_COLOR_ARRAY;
-	}
-	else if (s.compare("index") == 0)
-	{
-		return GL_INDEX_ARRAY;
-	}
-	else if (s.compare("edge") == 0)
-	{
-		return GL_EDGE_FLAG_ARRAY;
-	}
-	else if (s.compare("fogCoord") == 0)
-	{
-		return GL_FOG_COORD_ARRAY;
-	}
-	else if (s.compare(0, 8, "texCoord") == 0)
-	{
-		return GL_TEXTURE_COORD_ARRAY;
-	}
-	else {
-		assert("Error Translating Vertex Type");
-		return 0;
-	}
-
-}
+//GLenum
+//GLVertexArray::translate (unsigned int type)
+//{
+//	std::string s = VertexData::Syntax[type];
+//
+//	if (s.compare("position") == 0)
+//	{
+//		return GL_VERTEX_ARRAY;
+//	}
+//	else if (s.compare("normal") == 0)
+//	{
+//		return GL_NORMAL_ARRAY;
+//	}
+//	else if (s.compare("color") == 0)
+//	{
+//		return GL_COLOR_ARRAY;
+//	}
+//	else if (s.compare("secondaryColor") == 0)
+//	{
+//		return GL_SECONDARY_COLOR_ARRAY;
+//	}
+//	else if (s.compare("index") == 0)
+//	{
+//		return GL_INDEX_ARRAY;
+//	}
+//	else if (s.compare("edge") == 0)
+//	{
+//		return GL_EDGE_FLAG_ARRAY;
+//	}
+//	else if (s.compare("fogCoord") == 0)
+//	{
+//		return GL_FOG_COORD_ARRAY;
+//	}
+//	else if (s.compare(0, 8, "texCoord") == 0)
+//	{
+//		return GL_TEXTURE_COORD_ARRAY;
+//	}
+//	else {
+//		assert("Error Translating Vertex Type");
+//		return 0;
+//	}
+//
+//}
 
 
 //void 

@@ -55,7 +55,7 @@ namespace nau
 
 		private:
 			//void setGLArray (unsigned int type, float* pointer);
-			GLenum translate (unsigned int type);
+			//GLenum translate (unsigned int type);
 			//void setGLArray (VertexDataType type, float* pointer);
 			//GLenum translate (VertexDataType type);
 		};

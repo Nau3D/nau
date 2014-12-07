@@ -95,6 +95,8 @@
 														component="UNIT" id="1" />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
 														component="DIRECTION" /> 
+					<valueof uniform="V"				type="CAMERA" context="MainCamera" 
+														component="VIEW_MATRIX" />								
 				</values>
 			</shader>
 			<textures>

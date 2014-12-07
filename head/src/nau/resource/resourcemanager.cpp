@@ -71,7 +71,6 @@ ResourceManager::clear() {
 		delete((*m_States.begin()).second);
 		m_States.erase(m_States.begin());
 	}
-
 	while (!m_Meshes.empty()){
 		delete((*m_Meshes.begin()).second);
 		m_Meshes.erase(m_Meshes.begin());
@@ -86,13 +85,10 @@ ResourceManager::clear() {
 		delete((*m_Programs.begin()).second);
 		m_Programs.erase(m_Programs.begin());
 	}
-
-#if NAU_OPENGL_VERSION >= 420
 	while (!m_Buffers.empty()){
 		delete((*m_Buffers.begin()).second);
 		m_Buffers.erase(m_Buffers.begin());
 	}
-#endif
 }
 //-------------------------------------	
 
