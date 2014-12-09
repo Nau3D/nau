@@ -342,7 +342,10 @@ PassOptixPrime::initOptixPrime() {
 	IndexData *ind = &(renderable->getIndexData());
 	std::vector<int> *v = ind->getIndexDataAsInt();
 	GLuint index;
-	glGenBuffers(1, &index);
+	IBuffer *b;
+	b = RESOURCEMANAGER->createBuffer(m_Name);
+	index = b->getPropi(IBuffer::ID);
+	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, v->size() * sizeof(int), &(*v)[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

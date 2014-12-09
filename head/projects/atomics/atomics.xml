@@ -29,9 +29,9 @@
 		</lights>
 		
 		<atomics>
-			<atomic id=0 semantics="Red Pixels" />
-			<atomic id=1 semantics="Green Pixels" />
-			<atomic id=2 semantics="Blue Pixels" />
+			<atomic buffer="atomics::test" offset=0 semantics="Red Pixels" />
+			<atomic buffer="atomics::test" offset=4 semantics="Green Pixels" />
+			<atomic buffer="atomics::test" offset=8 semantics="Blue Pixels" />
 		</atomics>	
 		
 		<materialLibs>
@@ -56,6 +56,7 @@
 							<buffer name="test"  fromLibrary="atomics">
 								<TYPE value="ATOMIC_COUNTER" />
 								<BINDING_POINT value="2" />
+								<!--CLEAR value="true" /-->
 							</buffer>
 						</buffers>	
 						

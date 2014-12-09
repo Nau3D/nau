@@ -28,18 +28,23 @@ namespace nau
 			GLBuffer(std::string label);
 			~GLBuffer(void) ;
 
-			//void bind();
-			//void unbind();
+			void bind(unsigned int target);
+			void unbind();
 			void setProp(int prop, Enums::DataType type, void *value);
+			void setData(unsigned int size, void *data);
+			void getData(unsigned int offset, unsigned int size, void *data);
+#if NAU_OPENGL_VERSION >= 430
 			void clear();
+#endif
 			IBuffer * clone();
-			void *readBuffer(unsigned int offset, unsigned int bytes);
 
 		protected:
 			static bool Init();
 			static bool Inited;
 
 			GLBuffer() {};
+
+			int m_LastBound;
 
 		};
 	};

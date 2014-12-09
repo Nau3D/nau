@@ -39,17 +39,17 @@ PassCompute::prepare (void)
 
 	m_Mat->prepare();
 
-	if (m_AtomicX >= 0 || m_AtomicY >= 0 || m_AtomicZ >= 0) {
+	//if (m_AtomicX >= 0 || m_AtomicY >= 0 || m_AtomicZ >= 0) {
 
-		values = RENDERER->getAtomicCounterValues();
+	//	values = RENDERER->getAtomicCounterValues();
 
-		if (m_AtomicX >= 0)
-			m_DimX = values[m_AtomicX];
-		if (m_AtomicY >= 0)
-			m_DimY = values[m_AtomicY];
-		if (m_AtomicZ >= 0)
-			m_DimZ = values[m_AtomicZ];
-	}
+	//	if (m_AtomicX >= 0)
+	//		m_DimX = values[m_AtomicX];
+	//	if (m_AtomicY >= 0)
+	//		m_DimY = values[m_AtomicY];
+	//	if (m_AtomicZ >= 0)
+	//		m_DimZ = values[m_AtomicZ];
+	//}
 		 
 }
 

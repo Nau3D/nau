@@ -37,6 +37,8 @@ namespace nau
 			virtual void setIndexList(std::vector<unsigned int>* indices) = 0;
 
 			virtual ~IMaterialGroup() {}
+
+			virtual std::string getName() = 0;
 		};
 	};
 };

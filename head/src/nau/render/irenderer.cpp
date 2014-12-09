@@ -67,30 +67,30 @@ IRenderer::setProp(int prop, Enums::DataType type, void *value) {
 #if NAU_OPENGL_VERSION >= 400
 
 void
-IRenderer::addAtomic(unsigned int id, std::string name) {
+IRenderer::addAtomic(std::string buffer, unsigned int id, std::string name) {
 
-
-	if (m_AtomicLabels.count(id) == 0) {
+	std::pair<std::string, unsigned int> p = std::pair<std::string, unsigned int>(buffer, id);
+	if (m_AtomicLabels.count(p) == 0) {
 		++m_AtomicCount;
 		m_AtomicBufferPrepared = false;
-		m_AtomicLabels[id] = name;
-		if (id > m_AtomicMaxID)
-			m_AtomicMaxID = id;
+		m_AtomicLabels[p] = name;
+		//if (id > m_AtomicMaxID)
+		//	m_AtomicMaxID = id;
 	}
 }
 
 
-int
-IRenderer::getAtomicID(std::string name) {
-
-	for (auto atom: m_AtomicLabels) {
-
-		if (atom.second == name)
-			return (atom.first);
-	}
-	return -1;
-
-}
+//int
+//IRenderer::getAtomicID(std::string name) {
+//
+//	for (auto atom: m_AtomicLabels) {
+//
+//		if (atom.second == name)
+//			return (atom.first);
+//	}
+//	return -1;
+//
+//}
 
 #endif
 

@@ -5,6 +5,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 using namespace nau::math;
 
@@ -21,54 +22,14 @@ namespace nau
 			static  const std::string Syntax[]; 
 			static unsigned int getAttribIndex(std::string);
 
+			// A vertex attribute is a vec4
 			typedef nau::math::vec4 Attr ;
 			static std::vector<Attr> NoData;
-//			static std::vector<unsigned int> NoIndexData;
 		
 			static unsigned int const NOLOC = 0;
 
-			static VertexData* create (void);
+			static VertexData* create (std::string name);
 
-		public:
-			//static const int ArraysCount = 23;
-			//static const int AttributesCount = 8;
-			//typedef enum {
-			//	VERTEX_ARRAY = 0,
-			//	NORMAL_ARRAY,
-			//	COLOR_ARRAY,
-			//	SECONDARY_COLOR_ARRAY,
-			//	EDGE_ARRAY,
-			//	FOG_ARRAY,
-			//	TEXTURE_COORD_ARRAY0,
-			//	TEXTURE_COORD_ARRAY1,
-			//	TEXTURE_COORD_ARRAY2,
-			//	TEXTURE_COORD_ARRAY3,
-			//	TEXTURE_COORD_ARRAY4,
-			//	TEXTURE_COORD_ARRAY5,
-			//	TEXTURE_COORD_ARRAY6,
-			//	TEXTURE_COORD_ARRAY7,
-			//	CUSTOM_ATTRIBUTE_ARRAY0, // tangent
-			//	CUSTOM_ATTRIBUTE_ARRAY1, // triangleID
-			//	CUSTOM_ATTRIBUTE_ARRAY2,
-			//	CUSTOM_ATTRIBUTE_ARRAY3,
-			//	CUSTOM_ATTRIBUTE_ARRAY4,
-			//	CUSTOM_ATTRIBUTE_ARRAY5,
-			//	CUSTOM_ATTRIBUTE_ARRAY6,
-			//	CUSTOM_ATTRIBUTE_ARRAY7,
-			//	INDEX_ARRAY
-			//} VertexDataType;
-
-			//typedef enum {
-			//	DRAW_VERTICES = 0x01,
-			//	DRAW_NORMALS = 0x02,
-			//	DRAW_COLORS = 0x04,
-			//	DRAW_SECONDARY_COLORS = 0x08,
-			//	DRAW_EDGES = 0x10,
-			//	DRAW_FOG = 0x20,
-			//	DRAW_TEXTURE_COORDS = 0x40
-			//} DrawArrays;
-			
-		public:
 			virtual ~VertexData(void);
 
 			int getNumberOfVertices();
@@ -116,6 +77,7 @@ namespace nau
 			VertexData(void);
 			
 			std::vector<Attr>* m_InternalArrays[MaxAttribs];
+			std::string m_Name;
 //			std::vector<unsigned int>* m_InternalIndexArray;
 
 //			unsigned int m_IndexSize;

@@ -111,7 +111,7 @@ nau::render::VertexData&
 Mesh::getVertexData (void)
 {
 	if (0 == m_pVertexData) {
-		m_pVertexData = VertexData::create();
+		m_pVertexData = VertexData::create(m_Name);
 	}
 	return (*m_pVertexData);
 }
@@ -124,7 +124,7 @@ Mesh::getIndexData()
 		createUnifiedIndexVector();
 
 	if (!m_IndexData)
-		m_IndexData = IndexData::create();
+		m_IndexData = IndexData::create(m_Name);
 
 	m_IndexData->setIndexData(&m_UnifiedIndex);
 	return *m_IndexData;
@@ -285,10 +285,10 @@ Mesh::addMaterialGroup (IMaterialGroup* materialGroup, int offset)
 		}
 	}
 	if (m_vMaterialGroups.end() == matGroupIter) {
-		MaterialGroup *newMat = new MaterialGroup();
+		MaterialGroup *newMat = new MaterialGroup(this, materialGroup->getMaterialName());
 
-		newMat->setMaterialName (materialGroup->getMaterialName());
-		newMat->setParent (this);	
+		//newMat->setMaterialName (materialGroup->getMaterialName());
+		//newMat->setParent (this);	
 		newMat->getIndexData().add (materialGroup->getIndexData());
 		m_vMaterialGroups.push_back (newMat);		
 	}
@@ -303,7 +303,7 @@ Mesh::addMaterialGroup (IMaterialGroup* materialGroup, IRenderable *aRenderable)
 	 */
 	VertexData &renderableVertexData = aRenderable->getVertexData();
 
-	VertexData *newData = VertexData::create(); 
+	VertexData *newData = VertexData::create("dummy"); 
 
 	std::vector<VertexData::Attr> *list[VertexData::MaxAttribs], poolList[VertexData::MaxAttribs];
 

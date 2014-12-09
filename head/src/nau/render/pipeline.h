@@ -39,7 +39,7 @@ namespace nau
 
 			bool m_Active;
 
-			int m_NextPass;
+			unsigned int m_NextPass;
 
 
 		public:

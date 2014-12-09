@@ -53,7 +53,6 @@
 		<shader name="fillRayBuffer" 	
 							ps="shaders/fillRayBuffer.frag" 
 							vs="shaders/fillRayBuffer.vert" />						
-							
 	</shaders>
 	
 	<materials>

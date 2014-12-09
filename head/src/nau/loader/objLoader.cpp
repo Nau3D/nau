@@ -2515,14 +2515,12 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		#endif
 
 		// Then import MaterialGroups
-		MaterialGroup *aMatGroup = new MaterialGroup;
 
 		#ifdef OBJLOADER_DEBUG
 			fprintf(out,"Setting Parent\n");
 			fflush(out);
 		#endif
 
-		aMatGroup->setParent (aRenderable);
 
 		#ifdef OBJLOADER_DEBUG
 			fprintf(out,"Finished setting Parent\n");
@@ -2533,16 +2531,17 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		#endif
 
 		// SANITY CHECK - ARE THERE ANY ACTUAL MATERIALS DEFINED?
+			
+		std::string s;
 		if (obj->nummaterials==0)
-		{
 			// NONE! Use default
-			aMatGroup->setMaterialName("Default3DSMat");
-		}
+			s = "Default3DSMat";
 		else
-		{
 			// Set material group name
-			aMatGroup->setMaterialName(obj->materials[currG->material].name);
-		}
+			s = obj->materials[currG->material].name;
+
+		MaterialGroup *aMatGroup = new MaterialGroup(aRenderable, s);
+		//aMatGroup->setParent (aRenderable);
 		// Set up the index array
 
 		#ifdef OBJLOADER_DEBUG

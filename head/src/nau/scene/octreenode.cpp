@@ -333,9 +333,9 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 					}
 
 					if (0 == tempMaterialGroup[index]) {
-						tempMaterialGroup[index] = new MaterialGroup;
+						tempMaterialGroup[index] = new MaterialGroup(NULL, pMaterialGroup->getMaterialName());
 
-						tempMaterialGroup[index]->setMaterialName (pMaterialGroup->getMaterialName());
+						//tempMaterialGroup[index]->setMaterialName (pMaterialGroup->getMaterialName());
 						//tempMaterialGroup[index]->setMaterialId (pMaterialGroup->getMaterialId());
 					}
 

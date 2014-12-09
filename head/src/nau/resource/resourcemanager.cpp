@@ -461,7 +461,7 @@ ResourceManager::getProgramNames(){
 
 //-------------------------------------
 
-
+#if NAU_OPENGL_VERSION >= 430
 void
 ResourceManager::clearBuffers() {
 
@@ -471,6 +471,7 @@ ResourceManager::clearBuffers() {
 			b.second->clear();
 	}
 }
+#endif
 
 nau::render::IBuffer* 
 ResourceManager::getBuffer(std::string name) {

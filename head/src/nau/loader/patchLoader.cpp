@@ -95,9 +95,9 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	VertexData *vData = &(aRenderable->getVertexData());
 	vData->setDataFor(VertexData::getAttribIndex("position"), vertices);
 
-	MaterialGroup *aMatGroup = new MaterialGroup;
-	aMatGroup->setParent(aRenderable);
-	aMatGroup->setMaterialName("dirLightDifAmbPix");
+	MaterialGroup *aMatGroup = new MaterialGroup(aRenderable, "dirLightDifAmbPix");
+	//aMatGroup->setParent(aRenderable);
+	//aMatGroup->setMaterialName("dirLightDifAmbPix");
 	if (hasIndices[0] == 'y')
 		aMatGroup->setIndexList(indices);
 

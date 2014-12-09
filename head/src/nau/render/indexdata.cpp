@@ -13,16 +13,19 @@ std::vector<unsigned int> IndexData::NoIndexData;
 
 
 
-IndexData* 
-IndexData::create (void)
+IndexData*
+IndexData::create(std::string name)
 {
+	IndexData *i;
+
 #ifdef NAU_OPENGL
-	return new GLIndexArray;
+	i = new GLIndexArray;
 #elif NAU_DIRECTX
-	return new DXIndexArray;
-#else
-	return 0;
+	i =  new DXIndexArray;
 #endif
+
+	i->m_Name = name;
+	return i;
 }
 
 

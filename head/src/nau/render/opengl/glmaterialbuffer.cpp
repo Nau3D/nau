@@ -15,6 +15,7 @@ GLMaterialBuffer::Init() {
 	Attribs.listAdd("TYPE", "SHADER_STORAGE", GL_SHADER_STORAGE_BUFFER);
 #endif	
 	Attribs.listAdd("TYPE", "ARRAY", GL_ARRAY_BUFFER);
+	Attribs.listAdd("TYPE", "ELEMENT", GL_ELEMENT_ARRAY_BUFFER);
 	return true;
 }
 
@@ -34,8 +35,13 @@ void
 GLMaterialBuffer::bind() {
 
 	int id = m_Buffer->getPropi(IBuffer::ID);
-	glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], id);
+	if (m_BoolProps[CLEAR] == true) {
+		m_Buffer->clear();
+	}
 	glBindBuffer(m_EnumProps[TYPE], id);
+	glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], id);
+
+
 }
 
 

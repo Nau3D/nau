@@ -23,7 +23,7 @@ namespace nau
 		class MaterialGroup : public IMaterialGroup
 		{
 		public:
-			MaterialGroup();
+			MaterialGroup(IRenderable *parent, std::string materialName);
 			~MaterialGroup();
 
 			const std::string& getMaterialName ();
@@ -40,12 +40,15 @@ namespace nau
 
 			void setIndexList(std::vector<unsigned int>* indices);
 
+			std::string getName();
+
 		protected:
 			nau::render::IRenderable* m_Parent;
 			std::string m_MaterialName;
 			nau::render::IndexData *m_IndexData;
+			std::string m_Name;
 
-
+			MaterialGroup();
 		};
 
 	};

@@ -1,6 +1,5 @@
 #include <nau/config.h>
 
-#if NAU_OPENGL_VERSION >= 420
 
 #ifndef IBUFFER_H
 #define IBUFFER_H
@@ -33,6 +32,7 @@ namespace nau
 
 //			BOOL_PROP(BOUND, 0);
 			ENUM_PROP(CLEAR, 0);
+			ENUM_PROP(TYPE, 1);
 
 			typedef enum {
 				NEVER,
@@ -49,27 +49,36 @@ namespace nau
 
 			std::string& getLabel (void);
 
-			//virtual void bind() = 0;
-			//virtual void unbind() = 0;
+			virtual void setData(unsigned int size, void *data) = 0;
+			virtual void getData(unsigned int offset, unsigned int size, void *data) = 0;
 
+			virtual void bind(unsigned int type) = 0;
+			virtual void unbind() =0;
+#if NAU_OPENGL_VERSION >= 430
 			virtual void clear() = 0;
+#endif 
 
 			virtual IBuffer * clone() = 0;
+
+			// Only useful for GUIs
+			void setStructure(std::string &s);
+			std::string &getStructure();
 		
 			~IBuffer(void) {};
 		
 		protected:
 
-			IBuffer() { initArrays(Attribs); };
+			IBuffer(): m_Label(""), m_Structure("") { initArrays(Attribs); };
 
 			static bool Init();
 			static bool Inited;
 
 			std::string m_Label;
+			std::string m_Structure;
 		};
 	};
 };
 
-#endif // NAU_OPENGL_VERSION
+
 
 #endif // IBUFFER_H

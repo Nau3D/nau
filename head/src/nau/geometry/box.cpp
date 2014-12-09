@@ -156,7 +156,7 @@ Box::Box(void) : Primitive(),
 	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup();
+	MaterialGroup *aMaterialGroup = new MaterialGroup(this, "Light Grey");
 	
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(36);
 	//FRONT
@@ -214,8 +214,8 @@ Box::Box(void) : Primitive(),
 	indices->at (35)= Box::FACE_BOTTOM + Box::TOP_RIGHT;
 
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("Light Grey");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("Light Grey");
 
 	addMaterialGroup (aMaterialGroup);
 }

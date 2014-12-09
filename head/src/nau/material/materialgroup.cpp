@@ -22,16 +22,26 @@ MaterialGroup::MaterialGroup() :
 }
 
 
+MaterialGroup::MaterialGroup(IRenderable *parent, std::string materialName) :
+//	m_MaterialId (0),
+m_Parent(parent),
+m_MaterialName(materialName),
+m_IndexData(0)
+{
+	//ctor
+}
+
+
 MaterialGroup::~MaterialGroup()
 {
 	delete m_IndexData;
 }
 
 
-const std::string& 
-MaterialGroup::getMaterialName ()
+void
+MaterialGroup::setParent(IRenderable* parent)
 {
-	return m_MaterialName;
+	this->m_Parent = parent;
 }
 
 
@@ -42,11 +52,26 @@ MaterialGroup::setMaterialName (std::string name)
 }
 
 
+std::string 
+MaterialGroup::getName() {
+
+	m_Name = m_Parent->getName() + ":" + m_MaterialName;
+	return m_Name;
+}
+
+
+const std::string&
+MaterialGroup::getMaterialName ()
+{
+	return m_MaterialName;
+}
+
+
 IndexData&
 MaterialGroup::getIndexData (void)
 {
 	if (0 == m_IndexData) {
-		m_IndexData = IndexData::create();
+		m_IndexData = IndexData::create(getName());
 	}
 	return (*m_IndexData);
 }
@@ -73,7 +98,7 @@ void
 MaterialGroup::setIndexList (std::vector<unsigned int>* indices) 
 {
 	if (0 == m_IndexData) {
-		m_IndexData = IndexData::create();
+		m_IndexData = IndexData::create(getName());
 	}
 	m_IndexData->setIndexData (indices);
 }
@@ -85,12 +110,6 @@ MaterialGroup::getNumberOfPrimitives(void) {
 	return RENDERER->getNumberOfPrimitives(this);
 }
 
-
-void 
-MaterialGroup::setParent (IRenderable* parent)
-{
-	this->m_Parent = parent;
-}
 
 
 IRenderable& 

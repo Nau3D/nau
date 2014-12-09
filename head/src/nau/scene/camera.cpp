@@ -124,7 +124,7 @@ Camera::Camera (const std::string &name) :
 	VertexData &vertexData = renderable->getVertexData();
 	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup;
+	MaterialGroup *aMaterialGroup = new MaterialGroup(renderable, "__Black");
 	
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(16);
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_LEFT_FAR;
@@ -138,15 +138,15 @@ Camera::Camera (const std::string &name) :
 	indices->at (14) = Camera::BOTTOM_LEFT_FAR;		indices->at (15) = Camera::TOP_LEFT_FAR;
 
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (renderable);
-	aMaterialGroup->setMaterialName("__Black");
+	//aMaterialGroup->setParent (renderable);
+	//aMaterialGroup->setMaterialName("__Black");
 //	aMaterialGroup->setMaterialName("__Emission White");
 
 	renderable->addMaterialGroup (aMaterialGroup);
 	m_Transform = & m_Mat4Props[VIEW_INVERSE_MATRIX];
 	setRenderable (renderable);
 
-	aMaterialGroup = new MaterialGroup;
+	aMaterialGroup = new MaterialGroup(renderable, "__Black");
 	indices = new std::vector<unsigned int>(8);
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_RIGHT_NEAR;
 	indices->at (2) = Camera::TOP_RIGHT_NEAR;		indices->at (3) = Camera::BOTTOM_RIGHT_NEAR;
@@ -154,8 +154,8 @@ Camera::Camera (const std::string &name) :
 	indices->at (6) = Camera::BOTTOM_LEFT_NEAR;		indices->at (7) = Camera::TOP_LEFT_NEAR;
 
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (renderable);
-	aMaterialGroup->setMaterialName("__Black");
+	//aMaterialGroup->setParent (renderable);
+	//aMaterialGroup->setMaterialName("__Black");
 //	aMaterialGroup->setMaterialName("__Emission Red");
 
 	renderable->addMaterialGroup (aMaterialGroup);

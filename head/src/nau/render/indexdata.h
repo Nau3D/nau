@@ -19,7 +19,7 @@ namespace nau
 
 			static std::vector<unsigned int> NoIndexData;
 		
-			static IndexData* create (void);
+			static IndexData* create (std::string);
 
 			virtual ~IndexData(void);
 
@@ -56,7 +56,7 @@ namespace nau
 			//unsigned int m_IndexSize;
 
 			bool m_UseAdjacency;
-
+			std::string m_Name;
 			struct HalfEdge {
 				unsigned int vertex;
 				struct HalfEdge *next;

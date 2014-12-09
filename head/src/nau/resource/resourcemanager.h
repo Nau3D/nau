@@ -95,7 +95,9 @@ namespace nau
 			nau::render::IBuffer* getBuffer(std::string name);
 			nau::render::IBuffer* createBuffer(std::string name);
 			bool hasBuffer(std::string name);
+#if NAU_OPENGL_VERSION >= 430
 			void clearBuffers();
+#endif
 		};
 	};
 };

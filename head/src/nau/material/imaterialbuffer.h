@@ -22,8 +22,9 @@ namespace nau
 		{
 		public:
 
-			INT_PROP(BINDING_POINT, 1);
+			INT_PROP(BINDING_POINT, 0);
 			ENUM_PROP(TYPE, 0);
+			BOOL_PROP(CLEAR, 0);
 
 			static AttribSet Attribs;
 

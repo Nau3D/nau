@@ -188,9 +188,7 @@ MeshPose::setPose(std::map<unsigned int , float > *influences)
 				vertexData[i].add(v2);
 		}
 	}
-
 	resetCompilationFlags();
-
 }
 
 std::string 

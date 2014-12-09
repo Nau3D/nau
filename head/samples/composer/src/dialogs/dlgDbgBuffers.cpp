@@ -226,6 +226,7 @@ DlgDbgBuffers::getName ()
 DlgDbgBuffers::BufferSettings::BufferSettings() :
 length(4),
 lines(16),
+currentPage(0),
 types({ DLG_FLOAT, DLG_FLOAT, DLG_FLOAT, DLG_FLOAT })
 {
 }
@@ -253,6 +254,7 @@ void DlgDbgBuffers::clear(bool fullclear) {
 		bufferSettingsList.clear();
 	}
 }
+
 // Update Dialog
 void DlgDbgBuffers::loadBufferInfo() {
 	if (isLogClear){
@@ -324,6 +326,7 @@ void DlgDbgBuffers::loadBufferInfoGrid(){
 				bufferSettingsList[bufferInfo.index].types.clear();
 				bufferSettingsList[bufferInfo.index].types.push_back(getDLGDataType(bufferInfo.type));
 				bufferSettingsList[bufferInfo.index].length = bufferInfo.components;
+				bufferSettingsList[bufferInfo.index].currentPage = 0;
 			}
 			//appended = pgBuffers->AppendIn(pid, new wxPGProperty(wxT("Values"), wxPG_LABEL));
 			//values->Enable(false);
@@ -388,7 +391,7 @@ void DlgDbgBuffers::OnBufferSettingsChange(){
 	if (currentBufferIndex > 0){
 		int pagesize = 0;
 		NauGlBufferInfo bufferInfo;
-		const wxString dataType[] = { wxString("BYTE"), wxString("UNSIGNED_BYTE"), wxString("INT"), wxString("UNSIGNED_INT"), wxString("SHORT"), wxString("UNSIGNED_SHORT"), wxString("FLOAT"), wxString("DOUBLE")};
+		const wxString dataType[] = { wxString("BYTE"), wxString("UBYTE"), wxString("INT"), wxString("UINT"), wxString("SHORT"), wxString("USHORT"), wxString("FLOAT"), wxString("DOUBLE")};
 		//const long dataTypeInd[] = { DLG_BYTE, DLG_UNSIGNED_BYTE, DLG_INT, DLG_UNSIGNED_INT, DLG_SHORT, DLG_UNSIGNED_SHORT, DLG_FLOAT, DLG_DOUBLE };
 
 		getBufferInfoFromMap(currentBufferIndex, bufferInfo);
@@ -472,7 +475,7 @@ void DlgDbgBuffers::OnBufferSettingsChange(){
 		else{
 			spinBufferPage->SetRange(1, bufferInfo.size / pagesize);
 		}
-		spinBufferPage->SetValue(1);
+		spinBufferPage->SetValue(bufferSettingsList[currentBufferIndex].currentPage+1);
 
 		updateBufferData();
 	} 
@@ -490,6 +493,7 @@ void DlgDbgBuffers::updateBufferData(){
 	std::vector<void*> pointers;
 
 	page = spinBufferPage->GetValue() - 1;
+	page = bufferSettingsList[currentBufferIndex].currentPage;
 	realSize = bufferInfo.size;
 
 	for (int t = 0; t < length; t++){
@@ -523,14 +527,18 @@ void DlgDbgBuffers::updateBufferData(){
 void DlgDbgBuffers::updateBufferDataValues(std::vector<void*> &pointers){
 	int length = bufferSettingsList[currentBufferIndex].length;
 	int lines = bufferSettingsList[currentBufferIndex].lines;
+	int page = bufferSettingsList[currentBufferIndex].currentPage;
 	int pointerIndex;
 	NauGlBufferInfo bufferInfo;
 	std::string value;
 
 	getBufferInfoFromMap(currentBufferIndex, bufferInfo);
+	char rowLabel[32];
+	for (int row = 0; row < lines; ++row){
 
-	for (int row = 0; row < lines; row++){
-		for (int col = 0; col < length; col++){
+		sprintf(rowLabel, "%d", row + page*lines);
+		gridBufferValues->SetRowLabelValue(row+1, wxString(rowLabel));
+		for (int col = 0; col < length; ++col){
 			pointerIndex = (length * row) + col;
 			if (pointerIndex < pointers.size()){
 				if (bufferInfo.isVAOBuffer()){
@@ -578,11 +586,11 @@ DlgDbgBuffers::DataTypes DlgDbgBuffers::getDLGDataType(int type){
 
 DlgDbgBuffers::DataTypes DlgDbgBuffers::getDLGDataType(std::string type){
 	map<std::string, DataTypes> m = { 
-			{ "UNSIGNED_BYTE", DLG_UNSIGNED_BYTE },
+			{ "UBYTE", DLG_UNSIGNED_BYTE },
 			{ "BYTE", DLG_BYTE },
-			{ "UNSIGNED_SHORT", DLG_UNSIGNED_SHORT },
+			{ "USHORT", DLG_UNSIGNED_SHORT },
 			{ "SHORT", DLG_SHORT },
-			{ "UNSIGNED_INT", DLG_UNSIGNED_INT },
+			{ "UINT", DLG_UNSIGNED_INT },
 			{ "INT", DLG_INT },
 			{ "FLOAT", DLG_FLOAT },
 			{ "DOUBLE", DLG_DOUBLE } };
@@ -662,7 +670,7 @@ void DlgDbgBuffers::loadBufferSettings(){
 	if (currentBufferIndex >= 0){
 		spinBufferLength->SetValue(bufferSettingsList[currentBufferIndex].length);
 		spinBufferLines->SetValue(bufferSettingsList[currentBufferIndex].lines);
-		spinBufferPage->SetValue(1);
+		spinBufferPage->SetValue(bufferSettingsList[currentBufferIndex].currentPage+1);
 		OnBufferSettingsChange();
 	}
 }
@@ -696,6 +704,8 @@ void DlgDbgBuffers::OnBufferValuesLinesChange(wxSpinEvent& e){
 }
 void DlgDbgBuffers::OnBufferValuesPageChange(wxSpinEvent& e){
 	if (currentBufferIndex >= 0){
+		int newValue = spinBufferPage->GetValue();
+		bufferSettingsList[currentBufferIndex].currentPage = newValue-1;
 		updateBufferData();
 	}
 }

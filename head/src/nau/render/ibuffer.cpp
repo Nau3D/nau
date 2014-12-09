@@ -1,7 +1,5 @@
 #include <nau/render/ibuffer.h>
 
-#if NAU_OPENGL_VERSION >= 430
-
 #ifdef NAU_OPENGL
 #include <nau/render/opengl/glbuffer.h>
 #endif
@@ -22,12 +20,10 @@ IBuffer::Init() {
 	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(-1)));
 	//Attribs.add(Attribute(BINDING_POINT, "BINDING_POINT", Enums::DataType::INT, false, new int(0)));
 	// ENUM
-	//Attribs.add(Attribute(TYPE, "TYPE", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::ENUM, false, new int(NEVER)));
 	Attribs.setDefault("CLEAR", new int(NEVER));
 	Attribs.listAdd("CLEAR", "NEVER", NEVER);
 	Attribs.listAdd("CLEAR", "BY_FRAME", BY_FRAME);
-
 
 	return true;
 }
@@ -54,6 +50,17 @@ IBuffer::getLabel() {
 	return m_Label;
 }
 
-#endif
-	
+
+void
+IBuffer::setStructure(std::string &s) {
+
+	m_Structure = s;
+}
+
+
+std::string &
+IBuffer::getStructure() {
+
+	return m_Structure;
+}
 

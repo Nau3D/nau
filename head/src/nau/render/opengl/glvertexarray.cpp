@@ -47,7 +47,6 @@ GLVertexArray::~GLVertexArray(void)
 }
 
 
-
 unsigned int 
 GLVertexArray::getBufferID(unsigned int vertexAttrib)
 {
@@ -56,8 +55,6 @@ GLVertexArray::getBufferID(unsigned int vertexAttrib)
 	else
 		return m_GLBuffers[vertexAttrib];
 }
-
-
 
 
 void 
@@ -70,6 +67,7 @@ GLVertexArray::setAttributeDataFor (unsigned int type, std::vector<VertexData::A
 		}
 	}
 }
+
 
 void 
 GLVertexArray::setAttributeLocationFor (unsigned int type, int location)
@@ -116,6 +114,7 @@ GLVertexArray::prepareTriangleIDs(unsigned int sceneObjID,
 	}
 
 }
+
 
 void
 GLVertexArray::appendVertex(unsigned int index) 
@@ -167,7 +166,9 @@ GLVertexArray::compile (void) /***MARK***/ //STATIC DRAW ONLY
 		if (0 != m_InternalArrays[i]){
 			std::vector<VertexData::Attr>* pArray = m_InternalArrays[i];
 
-			glGenBuffers (1, &m_GLBuffers[i]);
+			std::string s = m_Name + VertexData::Syntax[i];
+			m_GLBuffers[i] = RESOURCEMANAGER->createBuffer(s)->getPropi(IBuffer::ID);
+			//glGenBuffers (1, &m_GLBuffers[i]);
 			glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
 			glBufferData (GL_ARRAY_BUFFER, pArray->size() * 4 * sizeof (float), (float*) &(*pArray)[0], GL_STATIC_DRAW);
 			glBindBuffer (GL_ARRAY_BUFFER, 0);

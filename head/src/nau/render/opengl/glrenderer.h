@@ -45,12 +45,15 @@ namespace nau
 #if (NAU_OPENGL_VERSION >= 400)
 		// ATOMIC COUNTERS
 		protected:
-			GLuint m_AtomicCountersBuffer;
-			void prepareAtomicCounterBuffer();
-			void resetAtomicCounters();
-			void readAtomicCounters();
+			//GLuint m_AtomicCountersBuffer;
+			//void prepareAtomicCounterBuffer();
+			//void resetAtomicCounters();
+			//void readAtomicCounters();
+			/// Array to store atomic counters
+			std::vector<unsigned int> m_AtomicCounterValues;
+
 		public:
-			unsigned int *getAtomicCounterValues();
+			std::vector<unsigned int> &getAtomicCounterValues();
 #endif
 
 

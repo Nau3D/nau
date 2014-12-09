@@ -1,5 +1,6 @@
 #include <nau/render/opengl/glrenderer.h>
 
+#include <nau.h>
 #include <nau/debug/profile.h>
 
 #include <nau/material/material.h> 
@@ -7,6 +8,7 @@
 #include <nau/math/transformfactory.h>
 #include <nau/render/opengl/glvertexarray.h>
 #include <nau/render/opengl/glrendertarget.h>
+
 
 #include <nau/slogger.h>
 
@@ -127,60 +129,80 @@ GLRenderer::getNumberOfPrimitives(IMaterialGroup *m) {
 // =============== ATOMIC COUNTERS ===================
 #if (NAU_OPENGL_VERSION >= 400)
 
-void 
-GLRenderer::prepareAtomicCounterBuffer() {
+//void 
+//GLRenderer::prepareAtomicCounterBuffer() {
+//
+//	m_AtomicCounterValues = (unsigned int *)malloc(sizeof(unsigned int)*(m_AtomicMaxID+1));
+//	//IBuffer *b = RESOURCEMANAGER->createBuffer()
+//	glGenBuffers(1, &m_AtomicCountersBuffer);
+//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
+//	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * (m_AtomicMaxID + 1), NULL, GL_DYNAMIC_DRAW);
+//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+//	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 1, m_AtomicCountersBuffer);
+//	m_AtomicBufferPrepared = true;
+//
+//}
 
-	m_AtomicCounterValues = (unsigned int *)malloc(sizeof(unsigned int)*(m_AtomicMaxID+1));
-	glGenBuffers(1, &m_AtomicCountersBuffer);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * (m_AtomicMaxID + 1), NULL, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 1, m_AtomicCountersBuffer);
-	m_AtomicBufferPrepared = true;
+//void 
+//GLRenderer::resetAtomicCounters() {
+//
+//	if (!m_AtomicBufferPrepared)
+//		prepareAtomicCounterBuffer();
+//
+//	unsigned int *userCounters;
+//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
+//	userCounters = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * (m_AtomicMaxID + 1),
+//		GL_MAP_WRITE_BIT |
+//		GL_MAP_INVALIDATE_BUFFER_BIT |
+//		GL_MAP_UNSYNCHRONIZED_BIT);
+//
+//	memset(userCounters, 0, sizeof(GLuint) * (m_AtomicMaxID+1));
+//
+//	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+//}
 
-}
-
-void 
-GLRenderer::resetAtomicCounters() {
-
-	if (!m_AtomicBufferPrepared)
-		prepareAtomicCounterBuffer();
-
-	unsigned int *userCounters;
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-	userCounters = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * (m_AtomicMaxID + 1),
-		GL_MAP_WRITE_BIT |
-		GL_MAP_INVALIDATE_BUFFER_BIT |
-		GL_MAP_UNSYNCHRONIZED_BIT);
-
-	memset(userCounters, 0, sizeof(GLuint) * (m_AtomicMaxID+1));
-
-	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-}
-
-void
-GLRenderer::readAtomicCounters() {
-
-	unsigned int *userCounters;
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-	userCounters = (GLuint *)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * (m_AtomicMaxID + 1),
-		GL_MAP_READ_BIT
-		);
-
-	memcpy(m_AtomicCounterValues, userCounters, sizeof(GLuint) * (m_AtomicMaxID + 1));
-
-	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-}
+//void
+//GLRenderer::readAtomicCounters() {
+//
+//	unsigned int *userCounters;
+//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
+//	userCounters = (GLuint *)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * (m_AtomicMaxID + 1),
+//		GL_MAP_READ_BIT
+//		);
+//
+//	memcpy(m_AtomicCounterValues, userCounters, sizeof(GLuint) * (m_AtomicMaxID + 1));
+//
+//	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+//}
 
 
-unsigned int *
+std::vector<unsigned int> &
 GLRenderer::getAtomicCounterValues() {
 
+	std::string buffer;
+	unsigned int offset;
+	unsigned int value;
+	int i = 0;
 
-	if (m_AtomicCount)
-		readAtomicCounters();
+	m_AtomicCounterValues.resize(m_AtomicLabels.size());
+
+	if (m_AtomicCount) {
+	
+		for (auto at : m_AtomicLabels) {
+			buffer = at.first.first;
+			offset = at.first.second;
+			IBuffer *b = RESOURCEMANAGER->getBuffer(buffer);
+			if (NULL != b) {
+				b->getData(offset, sizeof(unsigned int), &value);
+				m_AtomicCounterValues[i++] = value;
+			}
+			else
+				m_AtomicCounterValues[i++] = 0;
+		}
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 	return m_AtomicCounterValues;
 
 }
@@ -267,10 +289,10 @@ GLRenderer::resetCounters (void)
 {
 	m_TriCounter = 0;
 
-#if (NAU_OPENGL_VERSION >= 400)
-	if (m_AtomicCount)
-		resetAtomicCounters();
-#endif
+//#if (NAU_OPENGL_VERSION >= 400)
+//	if (m_AtomicCount)
+//		resetAtomicCounters();
+//#endif
 }
 
 

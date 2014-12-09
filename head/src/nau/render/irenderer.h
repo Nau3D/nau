@@ -118,22 +118,20 @@ namespace nau
 			/// Number of Atomic Counters and
 			unsigned int m_AtomicCount = 0;
 			///  Max Atomic Counter ID	
-			unsigned int m_AtomicMaxID = 0;
+			// unsigned int m_AtomicMaxID = 0;
 			/// name of atomic counters
-			std::map<int, std::string> m_AtomicLabels;
+			std::map<std::pair<std::string,int>, std::string> m_AtomicLabels;
 
 			/// add an atomic counter
-			void addAtomic(unsigned int id, std::string name);
+			void addAtomic(std::string buffer, unsigned int id, std::string name);
 
 			/// returns the atomic id, or -1 if the name is not defined
-			int getAtomicID(std::string);
+			//int getAtomicID(std::string);
 
 			/// get atomic counter values
-			virtual unsigned int *getAtomicCounterValues() = 0;
+			virtual std::vector<unsigned int> &getAtomicCounterValues() = 0;
 
 		protected:
-			/// Array to store atomic counters
-			unsigned int *m_AtomicCounterValues = NULL;
 			/// flag indicating if Atomic Buffer is created
 			bool m_AtomicBufferPrepared = false;
 #endif

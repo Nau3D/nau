@@ -77,6 +77,8 @@ private:
 
 		unsigned int length; //Number of elements per line
 		unsigned int lines;  //Number of lines per page
+		unsigned int currentPage;
+		std::string bufferName;
 		std::vector<DataTypes> types; // Only for non VAOs
 	};
 

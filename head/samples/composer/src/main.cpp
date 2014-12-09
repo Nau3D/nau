@@ -271,7 +271,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	
 	debugMenu->Enable(idMenuDbgStep, false);
 	debugMenu->Enable(idMenu_DLG_DBGPROGRAM, false);
-	debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
+	debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 
 #ifdef GLINTERCEPTDEBUG
@@ -478,6 +478,9 @@ FrmMainFrame::updateDlgs()
 	DlgLights::Instance()->updateDlg();
 	DlgScenes::Instance()->updateDlg();
 	DlgPass::Instance()->updateDlg();
+//	DlgDbgBuffers::Instance()->clear();
+//	DlgDbgBuffers::Instance()->loadBufferInfo();
+
 
 	//Update state dialog
 	DlgStateXML::Instance()->updateDlg();
@@ -489,6 +492,7 @@ FrmMainFrame::updateDlgs()
 	helpMenu->Enable(idMenu_DLG_PASS,true);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, true);
 	helpMenu->Enable(idMenu_DLG_SCENES, true);
+	debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 }
 
 
@@ -611,7 +615,6 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 
 #ifdef GLINTERCEPTDEBUG
 			DlgDbgGLILogRead::Instance()->clear();
-
 #endif
 
 		} catch (nau::ProjectLoaderError &e) {
@@ -862,7 +865,8 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,true);
 #endif
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);
-		debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+		
+		//debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 		debugMenu->Enable(idMenu_DLG_DBGSTEP, true);
 		debugMenu->Enable(idMenuDbgStep, true);
 
@@ -876,7 +880,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 #endif
 
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
-		debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
+		//debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
 		debugMenu->Enable(idMenuDbgStep, false);
 		debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 

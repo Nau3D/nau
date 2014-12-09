@@ -274,7 +274,7 @@ OctreeByMatNode::_split() {
 				}
 
 				if (0 == tempMaterialGroup[index]) {
-					tempMaterialGroup[index] = new MaterialGroup;
+					tempMaterialGroup[index] = new MaterialGroup(NULL, pMaterialGroup->getMaterialName());
 					tempMaterialGroup[index]->setMaterialName (pMaterialGroup->getMaterialName());
 				}
 

@@ -540,20 +540,24 @@ ProjectLoader::loadAtomicSemantics(TiXmlHandle handle)
 	pElem = handle.FirstChild ("atomics").FirstChild ("atomic").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char *pName = pElem->Attribute ("semantics");
-		int id;
-		int failure = pElem->QueryIntAttribute("id", &id);
+		int offset;
+		const char *pBuffer = pElem->Attribute("buffer");
 
+		if (0 == pBuffer) {
+			NAU_THROW("Atomic has no buffer name, in file %s", ProjectLoader::s_File.c_str());
+		}
+
+		int failure = pElem->QueryIntAttribute("offset", &offset);
 		if (failure) {
-			NAU_THROW("Atomic has no id, in file %s", ProjectLoader::s_File.c_str());
+			NAU_THROW("Atomic has no offset, in file %s", ProjectLoader::s_File.c_str());
 		}
 
 		if (0 == pName) {
-			NAU_THROW("Atomic %d has no semantics, in file %s", id, ProjectLoader::s_File.c_str());
+			NAU_THROW("Atomic from buffer %s with offset %d has no semantics, in file %s", pBuffer, offset, ProjectLoader::s_File.c_str());
 		}
 
-		SLOG("Atomic : %d %s", id, pName);
-
-		RENDERER->addAtomic(id,pName);
+		SLOG("Atomic : %s %d %s", pBuffer, offset, pName);
+		RENDERER->addAtomic(pBuffer, offset, pName);
 	} 
 }
 
@@ -1923,12 +1927,12 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("Pass %s: dimX and atomicX are both defined", aPass->getName().c_str());
 		}
 		// Por aqui guarda com a versão
-		if (pAtX != NULL) {
-			atX = RENDERER->getAtomicID(pAtX);
-			if (atX == -1) {
-				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
-			}
-		}
+		//if (pAtX != NULL) {
+		//	atX = RENDERER->getAtomicID(pAtX);
+		//	if (atX == -1) {
+		//		NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+		//	}
+		//}
 
 		// Read value or atomic id for dimY
 		res = pElem->QueryIntAttribute("dimY", &dimY);
@@ -1938,12 +1942,12 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 
 		if (TIXML_SUCCESS != res)
 			dimY = 1;
-		if (pAtY != NULL) {
-			atY = RENDERER->getAtomicID(pAtX);
-			if (atY == -1) {
-				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
-			}
-		}
+		//if (pAtY != NULL) {
+		//	atY = RENDERER->getAtomicID(pAtX);
+		//	if (atY == -1) {
+		//		NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+		//	}
+		//}
 		// Read value or atomic id for dimZ
 		res = pElem->QueryIntAttribute("dimZ", &dimZ);
 		if (TIXML_SUCCESS == res && pAtZ != NULL) {
@@ -1952,12 +1956,12 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 
 		if (TIXML_SUCCESS != res)
 			dimZ = 1;
-		if (pAtZ != NULL) {
-			atZ = RENDERER->getAtomicID(pAtX);
-			if (atZ == -1) {
-				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
-			}
-		}
+		//if (pAtZ != NULL) {
+		//	atZ = RENDERER->getAtomicID(pAtX);
+		//	if (atZ == -1) {
+		//		NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+		//	}
+		//}
 
 		p->setMaterialName (pLibName, pMatName);
 		p->setDimension( dimX, dimY, dimZ);	

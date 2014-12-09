@@ -351,12 +351,13 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 			f.read (reinterpret_cast<char *> (&nMatGroups), sizeof (nMatGroups));
 			for (unsigned int i = 0; i < nMatGroups; i++) {
 
-				MaterialGroup *aMatGroup = new MaterialGroup;
-				aMatGroup->setParent (aRenderable);
-
 				_readString (buffer, f);
 				//SLOG ("[Reading] Material Groups name: [%s]", buffer);
-				aMatGroup->setMaterialName (buffer);				
+
+				MaterialGroup *aMatGroup = new MaterialGroup(aRenderable, buffer);
+				//aMatGroup->setMaterialName (buffer);				
+				//aMatGroup->setParent (aRenderable);
+
 
 				IndexData &indexData = aMatGroup->getIndexData();
 				_readIndexData (indexData, f);
@@ -421,14 +422,14 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	_readVertexData (vertexData, f);
 
 	//SLOG ("[Reading] Renderable type: [%s]", buffer);
-
-
-	MaterialGroup *aMatGroup = new MaterialGroup;
-	aMatGroup->setParent (aRenderable);
-
 	_readString (buffer, f);
 		//SLOG ("[Reading] Material Groups name: [%s]", buffer);
-	aMatGroup->setMaterialName (buffer);				
+
+
+	MaterialGroup *aMatGroup = new MaterialGroup(aRenderable, buffer);
+	//aMatGroup->setParent (aRenderable);
+	//aMatGroup->setMaterialName (buffer);				
+
 
 	IndexData &indexData = aMatGroup->getIndexData();
 	_readIndexData (indexData, f);
