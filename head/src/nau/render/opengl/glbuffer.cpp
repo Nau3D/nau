@@ -77,15 +77,22 @@ GLBuffer::setData(unsigned int size, void *data) {
 }
 
 
-void
+int
 GLBuffer::getData(unsigned int offset, unsigned int size, void *data) {
 
-	if (offset > m_UIntProps[SIZE] || offset + size > m_UIntProps[SIZE])
-		return;
+	int actualSize = size;
+
+	if (offset > m_UIntProps[SIZE])
+		return 0;
+	
+	if (offset + size > m_UIntProps[SIZE])
+		actualSize = m_UIntProps[SIZE] - offset;
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
-	glGetBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+	glGetBufferSubData(GL_ARRAY_BUFFER, offset, actualSize, data);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return actualSize;
 }
 
 
@@ -126,3 +133,13 @@ GLBuffer::setProp(int prop, Enums::DataType type, void *value) {
 }
 
 
+void 
+GLBuffer::refreshBufferParameters() {
+
+	int value;
+	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+	glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &value);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	m_UIntProps[SIZE] = (unsigned int)value;
+}

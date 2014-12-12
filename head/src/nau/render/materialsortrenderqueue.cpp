@@ -14,7 +14,7 @@ using namespace nau::material;
 using namespace nau::math;
 using namespace nau;
 
-typedef std::pair<IMaterialGroup*, ITransform*> pair_MatGroup_Transform;
+typedef std::pair<MaterialGroup*, ITransform*> pair_MatGroup_Transform;
 
 MaterialSortRenderQueue::MaterialSortRenderQueue(void)
 {
@@ -61,12 +61,12 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 
 	IRenderable &aRenderable = aObject->getRenderable();
 
-	std::vector<IMaterialGroup*> vMaterialGroups = aRenderable.getMaterialGroups();
-	std::vector<IMaterialGroup*>::iterator groupIter;
+	std::vector<MaterialGroup*> vMaterialGroups = aRenderable.getMaterialGroups();
+	std::vector<MaterialGroup*>::iterator groupIter;
 	groupIter = vMaterialGroups.begin();
 
 	for ( ; groupIter != vMaterialGroups.end(); groupIter++ ) {
-		IMaterialGroup *aGroup = (*groupIter);
+		MaterialGroup *aGroup = (*groupIter);
 		IndexData &indexData = aGroup->getIndexData();
 		{
 			PROFILE ("Get material");
@@ -97,7 +97,7 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 		groupIter = nau::geometry::BoundingBox::getGeometry()->getMaterialGroups().begin();
 
 		for ( ; groupIter != nau::geometry::BoundingBox::getGeometry()->getMaterialGroups().end(); groupIter++ ) {
-			IMaterialGroup *aGroup = (*groupIter);;
+			MaterialGroup *aGroup = (*groupIter);;
 			Material *aMaterial = MATERIALLIBMANAGER->getMaterial(DEFAULTMATERIALLIBNAME, aGroup->getMaterialName());
 			ITransform *trans = ((nau::geometry::BoundingBox *)(aObject->getBoundingVolume()))->getTransform();
 			if (0 == m_RenderQueue.count (0)){

@@ -4,7 +4,7 @@
 #include <nau/render/irenderqueue.h>
 
 #include <nau/material/material.h>
-#include <nau/material/imaterialgroup.h>
+#include <nau/material/materialgroup.h>
 #include <nau/material/materialid.h>
 #include <nau/math/itransform.h>
 
@@ -29,7 +29,7 @@ namespace nau
 		private:
 			std::map<int, 
 					std::map<nau::material::Material*, 
-							std::vector<std::pair<nau::material::IMaterialGroup*, 
+							std::vector<std::pair<nau::material::MaterialGroup*, 
 												  nau::math::ITransform*> >* >* > m_RenderQueue;
 		};
 	};

@@ -11,7 +11,7 @@
 #include <nau/math/mat4.h>
 #include <nau/math/transformfactory.h>
 #include <nau/render/irenderable.h>
-#include <nau/material/imaterialgroup.h>
+#include <nau/material/materialgroup.h>
 #include <nau/material/materialgroup.h>
 #include <nau/slogger.h>
 #include <nau/system/fileutil.h>
@@ -471,9 +471,9 @@ CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	_writeVertexData (aVertexData, f);
 
 	/* Material groups */
-	std::vector<nau::material::IMaterialGroup*>& materialGroups = aRenderablePtr->getMaterialGroups();
+	std::vector<nau::material::MaterialGroup*>& materialGroups = aRenderablePtr->getMaterialGroups();
 
-	IMaterialGroup *aMaterialGroup = materialGroups[0];
+	MaterialGroup *aMaterialGroup = materialGroups[0];
 				
 	_writeString (aMaterialGroup->getMaterialName(), f);
 
@@ -658,14 +658,14 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 		IRenderable &aRenderable = (*objIter)->getRenderable();
 		
 		// Material groups 
-		std::vector<nau::material::IMaterialGroup*>& materialGroups = aRenderable.getMaterialGroups();
-		std::vector<nau::material::IMaterialGroup*>::iterator mgIter;
+		std::vector<nau::material::MaterialGroup*>& materialGroups = aRenderable.getMaterialGroups();
+		std::vector<nau::material::MaterialGroup*>::iterator mgIter;
 
 		// collect material names in a set
 		mgIter = materialGroups.begin();
 
 		for ( ; mgIter != materialGroups.end(); mgIter++) {
-			IMaterialGroup *aMaterialGroup = (*mgIter);
+			MaterialGroup *aMaterialGroup = (*mgIter);
 			
 			std::string matName = aMaterialGroup->getMaterialName();
 
@@ -786,8 +786,8 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 			_writeVertexData (aVertexData, f);
 
 			/* Material groups */
-			std::vector<nau::material::IMaterialGroup*>& materialGroups = aRenderable.getMaterialGroups();
-			std::vector<nau::material::IMaterialGroup*>::iterator mgIter;
+			std::vector<nau::material::MaterialGroup*>& materialGroups = aRenderable.getMaterialGroups();
+			std::vector<nau::material::MaterialGroup*>::iterator mgIter;
 
 			size = materialGroups.size();
 
@@ -796,7 +796,7 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 			mgIter = materialGroups.begin();
 
 			for ( ; mgIter != materialGroups.end(); mgIter++) {
-				IMaterialGroup *aMaterialGroup = (*mgIter);
+				MaterialGroup *aMaterialGroup = (*mgIter);
 				
 				/*Write material's name */
 

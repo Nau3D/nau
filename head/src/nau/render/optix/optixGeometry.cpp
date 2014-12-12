@@ -67,7 +67,7 @@ OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::materia
 	VertexData &v = r.getVertexData();
 	unsigned int size = v.getDataOf(0).size();;
 
-	std::vector<IMaterialGroup *> mg = r.getMaterialGroups();
+	std::vector<MaterialGroup *> mg = r.getMaterialGroups();
 	for (unsigned int g = 0; g < mg.size(); ++g) {
 		if (mg[g]->getNumberOfPrimitives() > 0) {
 			try {

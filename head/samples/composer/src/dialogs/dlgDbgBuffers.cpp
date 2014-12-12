@@ -1,50 +1,80 @@
 #include "dlgDbgBuffers.h"
-#include "../glInfo.h"
+
+
+//#include "../glInfo.h"
 #include <nau.h>
+#include <nau/system/fileutil.h>
 #include <nau/debug/profile.h>
 
-BEGIN_EVENT_TABLE(DlgDbgBuffers, wxDialog)
-	EVT_GRID_CELL_CHANGING(DlgDbgBuffers::OnGridCellChange)
-	//EVT_GRID_CELL_CHANGED(DlgDbgBuffers::OnGridCellChange)
+#include <GL/glew.h>
 
-	EVT_PG_SELECTED(DLG_MI_PGBUFFERS, DlgDbgBuffers::OnBufferSelection)
-	EVT_PG_CHANGED(DLG_MI_PGBUFFERS, DlgDbgBuffers::OnBufferChanged)
+BEGIN_EVENT_TABLE(DlgDbgBuffers, wxDialog)
+	EVT_GRID_CELL_CHANGED(DlgDbgBuffers::OnGridCellChange)
 	EVT_SPINCTRL(DLG_MI_GRIDBUFFERINFOLENGTH, DlgDbgBuffers::OnBufferValuesLengthChange)
 	EVT_SPINCTRL(DLG_MI_GRIDBUFFERINFOLINES, DlgDbgBuffers::OnBufferValuesLinesChange)
+	EVT_PG_SELECTED(DLG_MI_PGBUFFERS, DlgDbgBuffers::OnBufferSelection)
 	EVT_SPINCTRL(DLG_MI_GRIDBUFFERINFOPAGE, DlgDbgBuffers::OnBufferValuesPageChange)
 
-	EVT_BUTTON(DLG_MI_SAVEBUFFER, OnSaveBufferInfo)
-	EVT_BUTTON(DLG_MI_SAVEVALUEPAGE, OnSavePageInfo)
-	EVT_BUTTON(DLG_MI_SAVEVAO, OnSaveVaoInfo)
+	EVT_BUTTON(DLG_MI_REFRESH, OnRefreshBufferInfo)
+	EVT_BUTTON(DLG_MI_REFRESH_BUFFER_DATA, OnRefreshBufferData)
+
+	//	EVT_PG_CHANGED(DLG_MI_PGBUFFERS, DlgDbgBuffers::OnBufferChanged)
+//
+//	EVT_BUTTON(DLG_MI_SAVEBUFFER, OnSaveBufferInfo)
+//	EVT_BUTTON(DLG_MI_SAVEVALUEPAGE, OnSavePageInfo)
+//	EVT_BUTTON(DLG_MI_SAVEVAO, OnSaveVaoInfo)
 END_EVENT_TABLE()
 
 
-wxWindow *DlgDbgBuffers::m_Parent = NULL;
-DlgDbgBuffers *DlgDbgBuffers::m_Inst = NULL;
-std::map<int, DlgDbgBuffers::BufferSettings> DlgDbgBuffers::bufferSettingsList;
+wxWindow *DlgDbgBuffers::Parent = NULL;
+DlgDbgBuffers *DlgDbgBuffers::Inst = NULL;
  
+
+static const std::map<Enums::DataType, std::string> aux = {
+	{ Enums::BYTE, std::string("BYTE") },
+	{ Enums::UBYTE,  std::string("UBYTE") },
+	{ Enums::SHORT,  std::string("SHORT") },
+	{ Enums::USHORT, std::string("USHORT") },
+	{ Enums::INT,    std::string("INT") },
+	{ Enums::UINT,   std::string("UINT") },
+	{ Enums::FLOAT,  std::string("FLOAT") },
+	{ Enums::DOUBLE, std::string("DOUBLE") } };
+std::map<Enums::DataType, std::string> DlgDbgBuffers::DataType = aux;
 
 
 void 
 DlgDbgBuffers::SetParent(wxWindow *p) {
 
-	m_Parent = p;
+	Parent = p;
 }
+
 
 DlgDbgBuffers* 
 DlgDbgBuffers::Instance () {
 
-	if (m_Inst == NULL)
-		m_Inst = new DlgDbgBuffers();
+	if (Inst == NULL)
+		Inst = new DlgDbgBuffers();
 
-	return m_Inst;
+	return Inst;
 }
  
 
-DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::m_Parent, -1, wxT("Nau - Buffers Information"),wxDefaultPosition,
+DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::Parent, -1, wxT("Buffer Info"),wxDefaultPosition,
 						   wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE)
 {
-	currentBufferIndex = -1;
+	currentBuffer = NO_BUFFER;
+	m_UseShortNames = true;
+
+	std::vector<wxString> vs;
+	for (auto s : DataType) {
+
+		vs.push_back(s.second);
+	}
+	for (int i = 0; i < MAX_COLUMNS; ++i) {
+
+		gridBufferValuesHeaders.push_back(new wxGridCellChoiceEditor(8, (wxString *)&vs[0], false));
+	}
+	
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize);
 
 	wxBoxSizer *bSizer1;
@@ -103,11 +133,11 @@ DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::m_Parent, -1, wxT("Nau -
 
 	//Top side of grid
 
-	wxStaticText *lblt1 = new wxStaticText(buffersRightPanel, -1, wxT("Length: "));
+	wxStaticText *lblt1 = new wxStaticText(buffersRightPanel, -1, wxT("Columns: "));
 	buffersGridInformationTop->Add(lblt1, 0, wxGROW | wxALL, 5);
 
 	spinBufferLength = new wxSpinCtrl(buffersRightPanel, DLG_MI_GRIDBUFFERINFOLENGTH, wxEmptyString, wxDefaultPosition, wxSize(64, -1));
-	spinBufferLength->SetRange(1, 4096);
+	spinBufferLength->SetRange(1, MAX_COLUMNS);
 	
 	spinBufferLength->SetValue(1);
 
@@ -118,10 +148,19 @@ DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::m_Parent, -1, wxT("Nau -
 	buffersGridInformationTop->Add(lblt2, 0, wxGROW | wxALL, 5);
 
 	spinBufferLines = new wxSpinCtrl(buffersRightPanel, DLG_MI_GRIDBUFFERINFOLINES, wxEmptyString, wxDefaultPosition, wxSize(64, -1));
-	spinBufferLines->SetRange(1, 1024);
+	spinBufferLines->SetRange(1, MAX_ROWS);
 	spinBufferLines->SetValue(1);
 
 	buffersGridInformationTop->Add(spinBufferLines, 0, wxALIGN_CENTER | wxALL, 5);
+
+	wxStaticText *lblb = new wxStaticText(buffersRightPanel, -1, wxT("Page: "));
+	buffersGridInformationTop->Add(lblb, 0, wxGROW | wxALL, 5);
+
+	spinBufferPage = new wxSpinCtrl(buffersRightPanel, DLG_MI_GRIDBUFFERINFOPAGE, wxEmptyString, wxDefaultPosition, wxSize(128, -1));
+	spinBufferPage->SetRange(1, 1);
+	spinBufferPage->SetValue(1);
+
+	buffersGridInformationTop->Add(spinBufferPage, 0, wxALIGN_CENTER | wxALL, 5);
 
 	buffersGridInformation->Add(buffersGridInformationTop, 0, wxALIGN_CENTER | wxALL, 5);
 
@@ -132,27 +171,24 @@ DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::m_Parent, -1, wxT("Nau -
 	gridBufferValues->SetDefaultRowSize(25);
 	gridBufferValues->SetRowLabelSize(40);
 	gridBufferValues->SetColLabelSize(0);
-	gridBufferValues->CreateGrid(1, 0);
+	gridBufferValues->CreateGrid(1, MAX_COLUMNS);
 	gridBufferValues->SetRowLabelValue(0, wxString("Type"));
 	gridBufferValues->DisableDragColMove();
 	gridBufferValues->EnableDragCell(false);
 	gridBufferValues->DisableCellEditControl();
+	for (int col = 0; col < MAX_COLUMNS; ++col) {
+
+		gridBufferValues->SetCellEditor(0, col, gridBufferValuesHeaders[col]);
+		gridBufferValues->SetCellValue(0, col, wxT("FLOAT"));
+		gridBufferValues->HideCol(col);
+	}
+
 
 	buffersGridInformation->Add(gridBufferValues, 1, wxEXPAND);
 
 	//Bottom side of grid
 
 
-	wxStaticText *lblb = new wxStaticText(buffersRightPanel, -1, wxT("Page: "));
-	buffersGridInformationBottom->Add(lblb, 0, wxGROW | wxALL, 5);
-
-	spinBufferPage = new wxSpinCtrl(buffersRightPanel, DLG_MI_GRIDBUFFERINFOPAGE);
-	spinBufferPage->SetRange(1, 1);
-	spinBufferPage->SetValue(1);
-
-	buffersGridInformationBottom->Add(spinBufferPage, 1, wxGROW | wxALL);
-
-	buffersGridInformation->Add(buffersGridInformationBottom, 0, wxALIGN_CENTER | wxALL, 5);
 
 	/* VAOs */
 	wxPanel *pVAOs = new wxPanel(notebook, -1);
@@ -160,7 +196,7 @@ DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::m_Parent, -1, wxT("Nau -
 
 	wxSizer *vaos = new wxBoxSizer(wxVERTICAL);
 
-	//	setupShaders();
+	//	setupBuffers();
 
 	pVAOs->SetAutoLayout(TRUE);
 	pVAOs->SetSizer(vaos);
@@ -185,15 +221,14 @@ DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::m_Parent, -1, wxT("Nau -
 	wxBoxSizer *bSizer2;
 	bSizer2 = new wxBoxSizer(wxHORIZONTAL);
 
-	m_bSavebuffers = new wxButton(this, DLG_MI_SAVEBUFFER, wxT("Save Buffers"));
-	bSizer2->Add(m_bSavebuffers, 0, wxALIGN_CENTER | wxALL, 5);
+	m_bRefresh = new wxButton(this, DLG_MI_REFRESH, wxT("Refresh Buffers"));
+	bSizer2->Add(m_bRefresh, 0, wxALIGN_CENTER | wxALL, 5);
 
-	m_bSavepage = new wxButton(this, DLG_MI_SAVEVALUEPAGE, wxT("Save Value Page"));
-	m_bSavepage->Disable();
-	bSizer2->Add(m_bSavepage, 0, wxALIGN_CENTER | wxALL, 5);
+	m_bRefreshBufferData = new wxButton(this, DLG_MI_REFRESH_BUFFER_DATA, wxT("Refresh Buffer Data"));
+	bSizer2->Add(m_bRefreshBufferData, 0, wxALIGN_CENTER | wxALL, 5);
 
-	m_bSavevaos = new wxButton(this, DLG_MI_SAVEVAO, wxT("Save VAOs"));
-	bSizer2->Add(m_bSavevaos, 0, wxALIGN_CENTER | wxALL, 5);
+//	m_bSavevaos = new wxButton(this, DLG_MI_SAVEVAO, wxT("Save VAOs"));
+//	bSizer2->Add(m_bSavevaos, 0, wxALIGN_CENTER | wxALL, 5);
 
 	bSizer1->Add(bSizer2, 0, wxALIGN_CENTER | wxALL, 5);
 
@@ -209,10 +244,416 @@ DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::m_Parent, -1, wxT("Nau -
 
 
 void
-DlgDbgBuffers::updateDlg() 
-{
+DlgDbgBuffers::updateDlg(bool shortNames) {
+
+	clear();
+
+	m_UseShortNames = shortNames;
+	setVAOList();
+	setBufferList();
+	setBufferData();
+}
+
+
+// ((VAO index, (Element index, Element name)) , vector(Array index, Array Name))
+//std::vector<std::pair<std::pair<int, std::pair<int, std::string>>, std::vector<std::pair<int, std::string>>>> VAOList;
+
+
+void
+DlgDbgBuffers::setVAOList(void) {
+
+	VAOInfoList list;
+	// ((VAO index, (Element index, Element name)) , vector(Array index, Array Name))
+	VAOInfo vao;
+	int id, count, enabled;
+	std::string label;
+
+	pgVAOs->ClearPage(0);
+
+	// ugly but practical :-)
+	for (int i = 0; i < 65536; ++i) {
+
+		if (glIsVertexArray(i)) {
+
+			vao.first.first = i;
+			glBindVertexArray(i);
+
+			// get element array buffer name
+			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &id);
+			if (id) {
+
+				vao.first.second.first = id;
+				label = RESOURCEMANAGER->getBufferByID(id)->getLabel();
+				if (m_UseShortNames)
+					name = FileUtil::GetName(label);
+				else
+					name = label;
+				vao.first.second.second = name;
+			}
+			else {
+				vao.first.second.first = 0;
+			}
+
+			vao.second.clear();
+			// get info for each attrib mapped buffer
+			glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &count);
+			for (int k = 0; k < count; ++k) {
+
+				glGetVertexAttribiv(k, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &enabled);
+				if (enabled) {
+					glGetVertexAttribiv(k, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &id);
+					label = RESOURCEMANAGER->getBufferByID(id)->getLabel();
+					if (m_UseShortNames)
+						name = FileUtil::GetName(label);
+					else
+						name = label;
+
+					vao.second.push_back(std::pair<int, std::string>(id, name));
+				}
+			}
+			list.push_back(vao);
+		}
+	}
+
+	for (auto info : list) {
+
+		wxPGProperty *pid;
+		wxPGProperty *element, *buffers;
+
+		pid = pgVAOs->Append(new wxPGProperty(wxT("VAO " + std::to_string(info.first.first)), wxPG_LABEL));
+
+		// Add index buffer
+		if (info.first.second.first != 0) {
+
+			element = pgVAOs->AppendIn(pid, new wxPGProperty(wxT("Index Array"), wxPG_LABEL));
+			pgVAOs->AppendIn(element,
+				new wxStringProperty(wxT("ID " + std::to_string(info.first.second.first)),
+				wxPG_LABEL,
+				wxT(" " + info.first.second.second)));
+		}
+
+		// Add Vertex Attributes
+		buffers = pgVAOs->AppendIn(pid, new wxPGProperty(wxT("Attribute Arrays"), wxPG_LABEL));
+		for (auto buf : info.second) {
+
+			pgVAOs->AppendIn(buffers,
+				new wxStringProperty(wxT("ID " + std::to_string(buf.first)),
+				wxPG_LABEL,
+				wxT(" " + buf.second)));
+
+		}
+	}
+	pgVAOs->CollapseAll();
+}
+
+
+void DlgDbgBuffers::setBufferList(){
+
+	std::vector<std::string> names;
+	IBuffer *b;
+	wxPGProperty *pid, *appended;
+
+	std::string indexName, shortName, fullName;
+
+	pgBuffers->ClearPage(0);
+	bufferSettingsList.clear();
+	currentBuffer = NO_BUFFER;
+
+	RESOURCEMANAGER->getBufferNames(names);
+
+	for (auto name : names) {
+
+		fullName = name;
+		shortName = FileUtil::GetName(name);
+		if (m_UseShortNames)
+			indexName = shortName;
+		else
+			indexName = fullName;
+
+		b = RESOURCEMANAGER->getBuffer(name);
+		b->refreshBufferParameters();
+		std::vector<Enums::DataType> structure = b->getStructure();
+
+		bufferSettingsList[indexName] = BufferSettings();
+		if (structure.size() == 0)
+			bufferSettingsList[indexName].types.push_back(Enums::FLOAT);
+		else
+			bufferSettingsList[indexName].types = b->getStructure();
+		bufferSettingsList[indexName].lines = 16;
+		bufferSettingsList[indexName].currentPage = 0;
+		bufferSettingsList[indexName].ID = b->getPropi(IBuffer::ID);
+		bufferSettingsList[indexName].size = b->getPropui(IBuffer::SIZE);
+		bufferSettingsList[indexName].bufferPtr = b;
+		bufferSettingsList[indexName].fullName = fullName;
+		bufferSettingsList[indexName].shortName = shortName;
+
+		int s = 0;
+		for (auto t : bufferSettingsList[indexName].types) {
+			s += Enums::getSize(t);
+		}
+		bufferSettingsList[indexName].lineSize = s;
+
+
+		int totalPages = 1 + bufferSettingsList[indexName].size / (s * bufferSettingsList[indexName].lines);
+		int totalLines = 1 + bufferSettingsList[indexName].size / s;
+
+		pid = pgBuffers->Append(new wxStringProperty(wxT("" + indexName), wxPG_LABEL,"<composed>"));
+		appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("ID"), wxPG_LABEL, bufferSettingsList[indexName].ID));
+		appended->Enable(false);
+		appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Size (bytes)"), wxPG_LABEL, bufferSettingsList[indexName].size));
+		appended->Enable(false);
+		appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Total pages"), wxPG_LABEL, totalPages));
+		appended->Enable(false);
+		appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Total lines"), wxPG_LABEL, totalLines));
+		appended->Enable(false);
+		appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Components"), wxPG_LABEL, bufferSettingsList[indexName].types.size()));
+		appended->Enable(false);
+	}
+
+	if (bufferSettingsList.size() > 0)
+		currentBuffer = m_UseShortNames ? FileUtil::GetName(names[0]):indexName;
+
+	pgBuffers->CollapseAll();
+}
+
+
+void
+DlgDbgBuffers::setBufferData(){
+
+	gridBufferValues->ClearGrid();
+
+	if (currentBuffer == NO_BUFFER) {
+		return;
+	}
+
+
+	int lines = bufferSettingsList[currentBuffer].lines;
+	int page = bufferSettingsList[currentBuffer].currentPage;
+	int lineSize = bufferSettingsList[currentBuffer].lineSize;
+	int columns = bufferSettingsList[currentBuffer].types.size();
+
+	void *bufferValues;
+	int pageSize = lineSize * lines;
+	int pageOffset = page * pageSize;
+	bufferValues = malloc(pageSize);
+
+	IBuffer *b = bufferSettingsList[currentBuffer].bufferPtr;
+	int dataRead = b->getData(pageOffset, pageSize, bufferValues);
+
+	setSpinners(lines, columns, page, lineSize, bufferSettingsList[currentBuffer].size);
+
+
+	int pointerIndex;
+	std::string value;
+
+	char rowLabel[32];
+
+	int k = gridBufferValues->GetNumberRows();
+	if (k < lines+1)
+		gridBufferValues->AppendRows(lines+1-k);
+	if (k > lines + 1)
+		gridBufferValues->DeleteRows(lines + 1, k - lines - 1);
+	k = gridBufferValues->GetNumberCols();
+	if ( k < columns)
+		gridBufferValues->AppendCols(columns-k);
+
+	pointerIndex = 0;
+
+	for (int col = 0; col < columns; ++col) {
+
+		Enums::DataType t = bufferSettingsList[currentBuffer].types[col];
+		std::string s = DataType[t];
+		gridBufferValues->SetCellValue(0, col, wxT(""+s));
+		gridBufferValues->ShowCol(col);
+	}
+	for (int col = columns; col < MAX_COLUMNS; ++col) {
+	
+		gridBufferValues->HideCol(col);
+	}
+
+	for (int row = 0; row < lines; ++row){
+
+		sprintf(rowLabel, "%d", row + page*lines);
+		gridBufferValues->SetRowLabelValue(row + 1, wxString(rowLabel));
+
+		
+
+		for (int col = 0; col < columns; ++col){
+			if (pointerIndex < dataRead){
+				void *ptr = (char *)bufferValues + pointerIndex;
+				value = getStringFromPointer(bufferSettingsList[currentBuffer].types[col], ptr);
+			}
+			else{
+				value = "";
+			}
+			gridBufferValues->SetCellValue(row + 1, col, value);
+			pointerIndex += Enums::getSize(bufferSettingsList[currentBuffer].types[col]);
+		}
+	}
+}
+
+
+void 
+DlgDbgBuffers::setSpinners(int lines, int columns, int page, int lineSize, int size) {
+
+	spinBufferLines->SetValue(lines);
+	spinBufferLength->SetValue(columns);
+	spinBufferPage->SetValue(page + 1);
+
+	int totalLines = size / lineSize;
+	if (size % lineSize != 0)
+		totalLines++;
+	int totalPages = totalLines / lines;
+	if (totalLines % lines != 0)
+		totalPages++;
+
+	spinBufferLines->SetRange(1, totalLines);
+	spinBufferPage->SetRange(1, totalPages);
+
+	if (page > 0) {
+		spinBufferLines->Disable();
+		spinBufferLength->Disable();
+	}
+	else {
+		spinBufferLines->Enable();
+		spinBufferLength->Enable();
+	}
+
 
 }
+
+
+void
+DlgDbgBuffers::setBufferProperties() {
+
+	int lineSize = bufferSettingsList[currentBuffer].lineSize;
+	int totalLines = (int)ceilf(bufferSettingsList[currentBuffer].size * 1.0 / lineSize);
+	int totalPages = (int)ceilf(totalLines * 1.0 / bufferSettingsList[currentBuffer].lines);
+	int components = bufferSettingsList[currentBuffer].types.size();
+
+
+	wxPGProperty *pid = pgBuffers->GetProperty(wxT(""+currentBuffer));
+
+	wxPGProperty *child = pid->GetPropertyByName(wxT("Total lines"));
+	child->SetValue(totalLines);
+	child = pid->GetPropertyByName(wxT("Total pages"));
+	child->SetValue(totalPages);
+	child = pid->GetPropertyByName(wxT("Components"));
+	child->SetValue(components);
+	pgBuffers->Refresh();
+}
+
+
+
+void 
+DlgDbgBuffers::OnRefreshBufferData(wxCommandEvent& event) {
+
+
+	setBufferData();
+}
+
+
+void
+DlgDbgBuffers::OnRefreshBufferInfo(wxCommandEvent& event) {
+
+
+	updateDlg();
+}
+
+
+void 
+DlgDbgBuffers::OnGridCellChange(wxGridEvent& event){
+
+	if (currentBuffer == NO_BUFFER)
+		return;
+
+	if (event.GetRow() == 0){
+		wxString typeString = gridBufferValues->GetCellValue(event.GetRow(), event.GetCol());
+		//wxString typeString = event.GetString();
+		Enums::DataType t = Enums::getType(typeString.ToStdString());
+		if (bufferSettingsList[currentBuffer].types[event.GetCol()] != t) {
+			bufferSettingsList[currentBuffer].types[event.GetCol()] = t;
+			setBufferData();
+			gridBufferValues->Refresh();
+		}
+	}
+}
+
+
+void DlgDbgBuffers::OnBufferValuesLengthChange(wxSpinEvent& e){
+
+	if (currentBuffer == NO_BUFFER)
+		return;
+
+	int newValue = spinBufferLength->GetValue();
+	int prev = bufferSettingsList[currentBuffer].types.size();
+	if (prev != newValue) {
+		Enums::DataType lastColumn = bufferSettingsList[currentBuffer].types[prev - 1];
+
+		// if smaller
+		while (prev > newValue) {
+			bufferSettingsList[currentBuffer].types.pop_back();
+			--prev;
+		}
+		// if greater
+		while (prev < newValue) {
+			bufferSettingsList[currentBuffer].types.push_back(lastColumn);
+			++prev;
+		}
+
+		int ls = 0;
+		for (unsigned int i = 0; i < bufferSettingsList[currentBuffer].types.size(); ++i)
+			ls += Enums::getSize(bufferSettingsList[currentBuffer].types[i]);
+
+		bufferSettingsList[currentBuffer].lineSize = ls;
+		
+		setBufferProperties();
+		setBufferData();
+	}
+}
+
+
+void 
+DlgDbgBuffers::OnBufferValuesLinesChange(wxSpinEvent& e){
+
+	if (currentBuffer == NO_BUFFER)
+		return;
+
+	int newValue = spinBufferLines->GetValue();
+	
+	bufferSettingsList[currentBuffer].lines = newValue;
+	setBufferProperties();
+	setBufferData();
+}
+
+
+void
+DlgDbgBuffers::OnBufferValuesPageChange(wxSpinEvent& e){
+
+	if (currentBuffer == NO_BUFFER)
+		return;
+
+	int newValue = spinBufferPage->GetValue();
+
+	bufferSettingsList[currentBuffer].currentPage = newValue-1;
+	setBufferData();
+}
+
+
+void 
+DlgDbgBuffers::OnBufferSelection(wxPropertyGridEvent& e){
+
+	const wxPGProperty *p = e.GetProperty();
+	if (p == NULL)
+		return;
+	const wxPGProperty *q = p->GetParent();
+	if (q->GetLabel() == "<Root>")
+		currentBuffer = p->GetLabel();
+	else
+		currentBuffer = q->GetLabel();
+	setBufferData();
+}
+
 
 
 std::string &
@@ -224,10 +665,12 @@ DlgDbgBuffers::getName ()
 
 
 DlgDbgBuffers::BufferSettings::BufferSettings() :
-length(4),
 lines(16),
 currentPage(0),
-types({ DLG_FLOAT, DLG_FLOAT, DLG_FLOAT, DLG_FLOAT })
+ID(0),
+size(0),
+types({}),
+lineSize(0)
 {
 }
 
@@ -237,412 +680,174 @@ DlgDbgBuffers::eventReceived(const std::string &sender, const std::string &event
 }
 
 
-void DlgDbgBuffers::append(std::string s) {
 
-}
-
-
-void DlgDbgBuffers::clear(bool fullclear) {
-
-	isLogClear = true;
+void DlgDbgBuffers::clear() {
 
 	pgBuffers->ClearPage(0);
-
 	pgVAOs->ClearPage(0);
-
-	if (fullclear){
-		bufferSettingsList.clear();
-	}
-}
-
-// Update Dialog
-void DlgDbgBuffers::loadBufferInfo() {
-	if (isLogClear){
-		std::vector<std::pair<std::pair<int, int>, std::vector<int>>> vaoInfoData;
-
-		getCurrentVAOInfoData(vaoInfoData);
-
-		for (std::pair<std::pair<int, int>, std::vector<int>> vaoInfo : vaoInfoData){
-			wxPGProperty *pid;
-			wxPGProperty *appended, *buffers;
-
-			pid = pgVAOs->Append(new wxPGProperty(wxT("VAO " + std::to_string(vaoInfo.first.first)), wxPG_LABEL));
-
-			appended = pgVAOs->AppendIn(pid, new wxIntProperty(wxT("Element Array"), wxPG_LABEL,
-				vaoInfo.first.second));
-			appended->Enable(false);
-
-			buffers = pgVAOs->AppendIn(pid, new wxPGProperty(wxT("Buffers"), wxPG_LABEL));
-			//pid->Enable(false);
-			for (int bufferName : vaoInfo.second){
-				appended = pgVAOs->AppendIn(buffers, new wxIntProperty(wxT("Buffer"), wxPG_LABEL,
-					bufferName));
-				appended->Enable(false);
-			}
-			pgVAOs->Expand(pid);
-		}
-		loadBufferInfoGrid();
-	}
+	currentBuffer = NO_BUFFER;
+	gridBufferValues->ClearGrid();
 }
 
 
 
 
-void DlgDbgBuffers::loadBufferInfoGrid(){
-	std::map<int, NauGlBufferInfo> *bufferInfoMap = getBufferInfoMap();
-	std::map<int, NauGlBufferInfo>::iterator iter;
+//
+//void DlgDbgBuffers::OnBufferSettingsChange(){
+//	
+//	if (currentBuffer == NO_BUFFER)
+//		return;
+//
+//	//NauGlBufferInfo bufferInfo;
+//	//const long dataTypeInd[] = { DLG_BYTE, DLG_UNSIGNED_BYTE, DLG_INT, DLG_UNSIGNED_INT, DLG_SHORT, DLG_UNSIGNED_SHORT, DLG_FLOAT, DLG_DOUBLE };
+//
+//	//getBufferInfoFromMap(currentBufferIndex, bufferInfo);
+//
+//	int length = bufferSettingsList[currentBuffer].length;
+//	int lines = bufferSettingsList[currentBuffer].lines;
+//
+//	m_bSavepage->Enable();
+//
+//	while (gridBufferValuesHeaders.size() < length){
+//		gridBufferValuesHeaders.push_back(new wxGridCellChoiceEditor(8, dataType, false));
+//	}
+//
+//	//Setting Rows
+//	if (gridBufferValues->GetNumberRows() > (lines + 1)){
+//		gridBufferValues->DeleteRows(1, gridBufferValues->GetNumberRows() - (lines + 1));
+//	}
+//	else for (int append = gridBufferValues->GetNumberRows(); append < lines + 1; append++){
+//		gridBufferValues->AppendRows();
+//		gridBufferValues->SetRowLabelValue(append, wxString(std::to_string(append)));
+//		for (int col = 1; col < gridBufferValues->GetNumberCols(); col++){
+//			gridBufferValues->SetReadOnly(append, col);
+//		}
+//	}
+//
+//	//Setting Columns
+//	if (gridBufferValues->GetNumberCols() > length){
+//		//!!! WX ERROR UNSUPPORTED!!!
+//		//while (gridBufferValues->GetNumberCols() > length){
+//		//	gridBufferValues->DeleteCols();
+//		//}
+//		for (int col = length; col < gridBufferValues->GetNumberCols(); col++){
+//			gridBufferValues->SetReadOnly(0, col);
+//			for (int row = 0; row < gridBufferValues->GetNumberRows(); row++){
+//				gridBufferValues->SetCellValue(row, col, wxString(""));
+//			}
+//		}
+//	}
+//	else for (int append = gridBufferValues->GetNumberCols(); append < length; append++){
+//		gridBufferValues->AppendCols();
+//		gridBufferValues->SetCellEditor(0, append, gridBufferValuesHeaders[append]);
+//		for (int row = 1; row < gridBufferValues->GetNumberRows(); row++){
+//			gridBufferValues->SetReadOnly(row, append);
+//		}
+//	}
+//
+//
+//
+//	//Setting Types
+///*		if (bufferInfo.isVAOBuffer()){
+//		for (int col = 0; col < length; col++){
+//			gridBufferValues->SetReadOnly(0, col);
+//			gridBufferValues->SetCellValue(0, col, dataType[bufferSettingsList[currentBufferIndex].types[0]]);
+//		}
+//	}
+//	else
+//*/		{
+//		while (bufferSettingsList[currentBuffer].types.size() < length){
+//			bufferSettingsList[currentBuffer].types.push_back(DLG_FLOAT);
+//		}
+//		for (int col = 0; col < length; col++){
+//			gridBufferValues->SetReadOnly(0, col, false);
+//			gridBufferValues->SetCellValue(0, col, dataType[bufferSettingsList[currentBuffer].types[col]]);
+//		}
+//	}
+//
+//
+//	//Setting Types Values
+///*		if (bufferInfo.isVAOBuffer()){
+//		pagesize = getBufferDataTypeSize(bufferSettingsList[currentBufferIndex].types[0]) * length * lines;
+//	}
+//	else{
+//		for (int t = 0; t < length; t++){
+//			pagesize += getBufferDataTypeSize(bufferSettingsList[currentBuffer].types[t]);
+//		}
+//		pagesize *= lines;
+//	}*/
+//
+//	int pageSize = bufferSettingsList[currentBuffer].lineSize * bufferSettingsList[currentBuffer].lines;
+//	IBuffer *b = bufferSettingsList[currentBuffer].bufferPtr;
+//	b->refreshBufferParameters();
+//	int bufferSize = b->getPropui(IBuffer::SIZE);
+//	if (bufferSize % pageSize>0){
+//		spinBufferPage->SetRange(1, (bufferSize / pageSize) + 1);
+//	}
+//	else{
+//		spinBufferPage->SetRange(1, bufferSize / pageSize);
+//	}
+//	spinBufferPage->SetValue(bufferSettingsList[currentBuffer].currentPage+1);
+//
+//	updateBufferData();
+//}
+//
+//
+//
+//DlgDbgBuffers::DataTypes DlgDbgBuffers::getBufferDataType(wxPGProperty *typeProperty, int index){
+//	wxVariant type = typeProperty->GetPropertyByName("Type " + std::to_string(index))->GetValue();
+//	return static_cast<DataTypes>(type.GetLong());
+//}
+//
+//DlgDbgBuffers::DataTypes DlgDbgBuffers::getDLGDataType(int type){
+//	switch (type){
+//	case GL_UNSIGNED_BYTE:
+//		return DLG_UNSIGNED_BYTE;
+//	case GL_BYTE:
+//		return DLG_BYTE;
+//	case GL_UNSIGNED_SHORT:
+//		return DLG_UNSIGNED_SHORT;
+//	case GL_SHORT:
+//		return DLG_SHORT;
+//	case GL_UNSIGNED_INT:
+//		return DLG_UNSIGNED_INT;
+//	case GL_INT:
+//		return DLG_INT;
+//	//case GL_HALF_FLOAT:
+//	//	return DLG_HALF_FLOAT;
+//	case GL_FLOAT:
+//		return DLG_FLOAT;
+//	}
+//	return DLG_DOUBLE;
+//}
 
 
-	for (iter = bufferInfoMap->begin(); iter != bufferInfoMap->end(); iter++){
-		NauGlBufferInfo bufferInfo = iter->second;
-		wxPGProperty *pid, *appended, *userpg;
-		bool newSettings = false;
-
-		pid = pgBuffers->Append(new wxPGProperty(wxT("Buffer " + std::to_string(bufferInfo.index)), wxPG_LABEL));
-		pid->SetAttribute(wxT("buffer"), wxVariant(bufferInfo.index));
-		if (bufferSettingsList.find(bufferInfo.index) == bufferSettingsList.end()){
-			bufferSettingsList[bufferInfo.index] = BufferSettings();
-			newSettings = true;
-		}
-		if (bufferInfo.isVAOBuffer()){
-			std::string valueHeader;
-			pid->Enable(false);
-			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Size (Bytes)"), wxPG_LABEL, bufferInfo.size));
-			appended->Enable(false);
-			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Components"), wxPG_LABEL, bufferInfo.components));
-			appended->Enable(false);
-			appended = pgBuffers->AppendIn(pid, new wxStringProperty(wxT("Type"), wxPG_LABEL, getDatatypeString(bufferInfo.type)));
-			appended->Enable(false);
-			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Stride"), wxPG_LABEL, bufferInfo.stride));
-			appended->Enable(false);
-			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Normalized"), wxPG_LABEL, bufferInfo.normalized));
-			appended->Enable(false);
-			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Divisor"), wxPG_LABEL, bufferInfo.divisor));
-			appended->Enable(false);
-			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Integer"), wxPG_LABEL, bufferInfo.integer));
-			appended->Enable(false);
-
-			if (newSettings){
-				bufferSettingsList[bufferInfo.index].types.clear();
-				bufferSettingsList[bufferInfo.index].types.push_back(getDLGDataType(bufferInfo.type));
-				bufferSettingsList[bufferInfo.index].length = bufferInfo.components;
-				bufferSettingsList[bufferInfo.index].currentPage = 0;
-			}
-			//appended = pgBuffers->AppendIn(pid, new wxPGProperty(wxT("Values"), wxPG_LABEL));
-			//values->Enable(false);
-			//valueline = 0;
-			//for (int valueNum = 0; valueNum < bufferInfo.second.size(); valueNum++){
-			//	if (valueNum % 4 == 0){
-			//		if (valueNum + 3 < bufferInfo.second.size()){
-			//			valueHeader = "[" + std::to_string(valueNum + 1) + " <-> " + std::to_string(valueNum + 4) + "]";
-			//		}
-			//		else{
-			//			valueHeader = "[" + std::to_string(valueNum + 1) + " <-> " + std::to_string(bufferInfo.second.size()) + "]";
-			//		}
-			//		valueline = pgBuffers->AppendIn(values, new wxStringProperty(valueHeader, wxPG_LABEL, wxT("<composed>")));
-			//		valueline->Enable(false);
-			//	}
-			//	appended = pgBuffers->AppendIn(valueline, new wxStringProperty(wxT("[" + std::to_string(valueNum + 1) + "]"), wxPG_LABEL, bufferInfo.second[valueNum]));
-			//	appended->Enable(false);
-			//}
-			//pid->Enable(false);
-		}
-		else{
-			appended = pgBuffers->AppendIn(pid, new wxIntProperty(wxT("Size (Bytes)"), wxPG_LABEL, bufferInfo.size));
-			appended->Enable(false);
-		}
-
-
-		int pagesize, linesize = 0;
-		int length = bufferSettingsList[bufferInfo.index].length;
-		int lines = bufferSettingsList[bufferInfo.index].lines;
-
-		userpg = pgBuffers->AppendIn(pid, new wxPGProperty(wxT("User Settings"), wxPG_LABEL));
-
-		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Length"), wxPG_LABEL, length));
-		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Lines per Page"), wxPG_LABEL, lines));
-
-		//Setting Types Values
-		if (bufferInfo.isVAOBuffer()){
-			linesize = getBufferDataTypeSize(bufferSettingsList[bufferInfo.index].types[0]) * length;
-		}
-		else{
-			for (int t = 0; t < length; t++){
-				linesize += getBufferDataTypeSize(bufferSettingsList[bufferInfo.index].types[t]);
-			}
-		}
-
-		pagesize = linesize * lines;
-
-		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Line Size (bytes)"), wxPG_LABEL, linesize));
-		appended->Enable(false);
-		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Lines"), wxPG_LABEL, (bufferInfo.size / linesize) + 1));
-		appended->Enable(false);
-		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Page Size (bytes)"), wxPG_LABEL, pagesize));
-		appended->Enable(false);
-		appended = pgBuffers->AppendIn(userpg, new wxIntProperty(wxT("Pages"), wxPG_LABEL, (bufferInfo.size / pagesize) + 1));
-		appended->Enable(false);
-
-	}
-	pgBuffers->CollapseAll();
-}
-
-void DlgDbgBuffers::OnBufferSettingsChange(){
-	if (currentBufferIndex > 0){
-		int pagesize = 0;
-		NauGlBufferInfo bufferInfo;
-		const wxString dataType[] = { wxString("BYTE"), wxString("UBYTE"), wxString("INT"), wxString("UINT"), wxString("SHORT"), wxString("USHORT"), wxString("FLOAT"), wxString("DOUBLE")};
-		//const long dataTypeInd[] = { DLG_BYTE, DLG_UNSIGNED_BYTE, DLG_INT, DLG_UNSIGNED_INT, DLG_SHORT, DLG_UNSIGNED_SHORT, DLG_FLOAT, DLG_DOUBLE };
-
-		getBufferInfoFromMap(currentBufferIndex, bufferInfo);
-
-		int length = bufferSettingsList[currentBufferIndex].length;
-		int lines = bufferSettingsList[currentBufferIndex].lines;
-
-		m_bSavepage->Enable();
-
-		while (gridBufferValuesHeaders.size() < length){
-			gridBufferValuesHeaders.push_back(new wxGridCellChoiceEditor(8, dataType, false));
-		}
-
-		//Setting Rows
-		if (gridBufferValues->GetNumberRows() > (lines + 1)){
-			gridBufferValues->DeleteRows(1, gridBufferValues->GetNumberRows() - (lines + 1));
-		}
-		else for (int append = gridBufferValues->GetNumberRows(); append < lines + 1; append++){
-			gridBufferValues->AppendRows();
-			gridBufferValues->SetRowLabelValue(append, wxString(std::to_string(append)));
-			for (int col = 1; col < gridBufferValues->GetNumberCols(); col++){
-				gridBufferValues->SetReadOnly(append, col);
-			}
-		}
-
-		//Setting Columns
-		if (gridBufferValues->GetNumberCols() > length){
-			//!!! WX ERROR UNSUPPORTED!!!
-			//while (gridBufferValues->GetNumberCols() > length){
-			//	gridBufferValues->DeleteCols();
-			//}
-			for (int col = length; col < gridBufferValues->GetNumberCols(); col++){
-				gridBufferValues->SetReadOnly(0, col);
-				for (int row = 0; row < gridBufferValues->GetNumberRows(); row++){
-					gridBufferValues->SetCellValue(row, col, wxString(""));
-				}
-			}
-		}
-		else for (int append = gridBufferValues->GetNumberCols(); append < length; append++){
-			gridBufferValues->AppendCols();
-			gridBufferValues->SetCellEditor(0, append, gridBufferValuesHeaders[append]);
-			for (int row = 1; row < gridBufferValues->GetNumberRows(); row++){
-				gridBufferValues->SetReadOnly(row, append);
-			}
-		}
-
-
-
-		//Setting Types
-		if (bufferInfo.isVAOBuffer()){
-			for (int col = 0; col < length; col++){
-				gridBufferValues->SetReadOnly(0, col);
-				gridBufferValues->SetCellValue(0, col, dataType[bufferSettingsList[currentBufferIndex].types[0]]);
-			}
-		}
-		else{
-			while (bufferSettingsList[currentBufferIndex].types.size() < length){
-				bufferSettingsList[currentBufferIndex].types.push_back(DLG_FLOAT);
-			}
-			for (int col = 0; col < length; col++){
-				gridBufferValues->SetReadOnly(0, col, false);
-				gridBufferValues->SetCellValue(0, col, dataType[bufferSettingsList[currentBufferIndex].types[col]]);
-			}
-		}
-
-
-		//Setting Types Values
-		if (bufferInfo.isVAOBuffer()){
-			pagesize = getBufferDataTypeSize(bufferSettingsList[currentBufferIndex].types[0]) * length * lines;
-		}
-		else{
-			for (int t = 0; t < length; t++){
-				pagesize += getBufferDataTypeSize(bufferSettingsList[currentBufferIndex].types[t]);
-			}
-			pagesize *= lines;
-		}
-
-		if (bufferInfo.size % pagesize>0){
-			spinBufferPage->SetRange(1, (bufferInfo.size / pagesize) + 1);
-		}
-		else{
-			spinBufferPage->SetRange(1, bufferInfo.size / pagesize);
-		}
-		spinBufferPage->SetValue(bufferSettingsList[currentBufferIndex].currentPage+1);
-
-		updateBufferData();
-	} 
-}
-
-
-void DlgDbgBuffers::updateBufferData(){
-	int pagesize = 0, prevBuffer;
-	int realSize, page, size;
-	int length = bufferSettingsList[currentBufferIndex].length;
-	int lines = bufferSettingsList[currentBufferIndex].lines;
-	NauGlBufferInfo bufferInfo;		
-	getBufferInfoFromMap(currentBufferIndex, bufferInfo);
-	std::vector<int> sizes;
-	std::vector<void*> pointers;
-
-	page = spinBufferPage->GetValue() - 1;
-	page = bufferSettingsList[currentBufferIndex].currentPage;
-	realSize = bufferInfo.size;
-
-	for (int t = 0; t < length; t++){
-		if (bufferInfo.isVAOBuffer()){
-			size = getBufferDataTypeSize(bufferSettingsList[currentBufferIndex].types[0]);
-		}
-		else{
-			size = getBufferDataTypeSize(bufferSettingsList[currentBufferIndex].types[t]);
-		}
-		pagesize += size;
-		sizes.push_back(size);
-	}
-	pagesize *= lines;
-
-	for (int i = 1; i < lines; i++){
-		for (int t = 0; t < length; t++){
-			sizes.push_back(sizes[t]);
-		}
-	}
-
-
-	prevBuffer = openBufferMapPointers(currentBufferIndex, page, pagesize, realSize, sizes, pointers);
-	updateBufferDataValues(pointers);
-	//if (realSize < totalsize){
-	//	pgBuffers->AppendIn(valuesProperty, new wxStringProperty(wxT("ERROR!"), wxPG_LABEL, wxT("User size exceeds buffer size!")))->Enable(false);
-	//}
-
-	closeBufferMapPointers(prevBuffer);
-}
-
-void DlgDbgBuffers::updateBufferDataValues(std::vector<void*> &pointers){
-	int length = bufferSettingsList[currentBufferIndex].length;
-	int lines = bufferSettingsList[currentBufferIndex].lines;
-	int page = bufferSettingsList[currentBufferIndex].currentPage;
-	int pointerIndex;
-	NauGlBufferInfo bufferInfo;
-	std::string value;
-
-	getBufferInfoFromMap(currentBufferIndex, bufferInfo);
-	char rowLabel[32];
-	for (int row = 0; row < lines; ++row){
-
-		sprintf(rowLabel, "%d", row + page*lines);
-		gridBufferValues->SetRowLabelValue(row+1, wxString(rowLabel));
-		for (int col = 0; col < length; ++col){
-			pointerIndex = (length * row) + col;
-			if (pointerIndex < pointers.size()){
-				if (bufferInfo.isVAOBuffer()){
-					value = getStringFromPointer(bufferSettingsList[currentBufferIndex].types[0], pointers[pointerIndex]);
-				}
-				else{
-					value = getStringFromPointer(bufferSettingsList[currentBufferIndex].types[col], pointers[pointerIndex]);
-				}
-			}
-			else{
-				value = "";
-			}
-			gridBufferValues->SetCellValue(row + 1, col, value);
-		}
-	}
-
-}
-
-DlgDbgBuffers::DataTypes DlgDbgBuffers::getBufferDataType(wxPGProperty *typeProperty, int index){
-	wxVariant type = typeProperty->GetPropertyByName("Type " + std::to_string(index))->GetValue();
-	return static_cast<DataTypes>(type.GetLong());
-}
-
-DlgDbgBuffers::DataTypes DlgDbgBuffers::getDLGDataType(int type){
-	switch (type){
-	case GL_UNSIGNED_BYTE:
-		return DLG_UNSIGNED_BYTE;
-	case GL_BYTE:
-		return DLG_BYTE;
-	case GL_UNSIGNED_SHORT:
-		return DLG_UNSIGNED_SHORT;
-	case GL_SHORT:
-		return DLG_SHORT;
-	case GL_UNSIGNED_INT:
-		return DLG_UNSIGNED_INT;
-	case GL_INT:
-		return DLG_INT;
-	//case GL_HALF_FLOAT:
-	//	return DLG_HALF_FLOAT;
-	case GL_FLOAT:
-		return DLG_FLOAT;
-	}
-	return DLG_DOUBLE;
-}
-
-DlgDbgBuffers::DataTypes DlgDbgBuffers::getDLGDataType(std::string type){
-	map<std::string, DataTypes> m = { 
-			{ "UBYTE", DLG_UNSIGNED_BYTE },
-			{ "BYTE", DLG_BYTE },
-			{ "USHORT", DLG_UNSIGNED_SHORT },
-			{ "SHORT", DLG_SHORT },
-			{ "UINT", DLG_UNSIGNED_INT },
-			{ "INT", DLG_INT },
-			{ "FLOAT", DLG_FLOAT },
-			{ "DOUBLE", DLG_DOUBLE } };
-	return m[type];
-}
-
-int DlgDbgBuffers::getBufferDataTypeSize(DataTypes type){
-	switch (type){
-	case DLG_BYTE:
-	case DLG_UNSIGNED_BYTE:
-		return sizeof(char);
-	case DLG_INT:
-	case DLG_UNSIGNED_INT:
-		return sizeof(int);
-	case DLG_SHORT:
-	case DLG_UNSIGNED_SHORT:
-		return sizeof(short);
-	case DLG_FLOAT:
-		return sizeof(float);
-	case DLG_DOUBLE:
-		return sizeof(double);
-	}
-	return 0;
-}
-
-
-
-std::string DlgDbgBuffers::getStringFromPointer(DataTypes type, void* ptr){
+std::string 
+DlgDbgBuffers::getStringFromPointer(Enums::DataType type, void* ptr){
 	int intconverter;
 	unsigned int uintconverter;
 	//try{
 		switch (type){
-		case DLG_BYTE:
-			intconverter = *((char*)ptr);
-			return std::to_string(intconverter);
-		case DLG_UNSIGNED_BYTE:
-			uintconverter = *((unsigned char*)ptr);
-			return std::to_string(uintconverter);
-		case DLG_INT:
-			intconverter = *((int*)ptr);
-			return std::to_string(intconverter);
-		case DLG_UNSIGNED_INT:
-			uintconverter = *((unsigned int*)ptr);
-			return std::to_string(uintconverter);
-		case DLG_SHORT:
-			return std::to_string(*((short*)ptr));
-		case DLG_UNSIGNED_SHORT:
-			return std::to_string(*((unsigned short*)ptr));
-		case DLG_FLOAT:
-			return std::to_string(*((float*)ptr));
-		case DLG_DOUBLE:
-			return std::to_string(*((double*)ptr));
+			case Enums::BYTE:
+				intconverter = *((char*)ptr);
+				return std::to_string(intconverter);
+			case Enums::UBYTE:
+				uintconverter = *((unsigned char*)ptr);
+				return std::to_string(uintconverter);
+			case Enums::INT :
+				intconverter = *((int*)ptr);
+				return std::to_string(intconverter);
+			case Enums::UINT:
+				uintconverter = *((unsigned int*)ptr);
+				return std::to_string(uintconverter);
+			case Enums::SHORT:
+				return std::to_string(*((short*)ptr));
+			case Enums::USHORT:
+				return std::to_string(*((unsigned short*)ptr));
+			case Enums::FLOAT:
+				return std::to_string(*((float*)ptr));
+			case Enums::DOUBLE:
+				return std::to_string(*((double*)ptr));
 		}
 	//}
 	//catch(){
@@ -651,7 +856,7 @@ std::string DlgDbgBuffers::getStringFromPointer(DataTypes type, void* ptr){
 	return "unknown";
 }
 
-
+/*
 void DlgDbgBuffers::OnBufferSelection(wxPropertyGridEvent& e){
 	wxPGProperty *bufferProperty = e.GetProperty();
 
@@ -901,3 +1106,5 @@ void DlgDbgBuffers::loadBufferSettingsPGUpdate(wxPGProperty *settings, int buffe
 	settings->GetPropertyByName("Page Size (bytes)")->SetValue(pagesize);
 	settings->GetPropertyByName("Pages")->SetValue((bufferInfo.size / pagesize) + 1);
 }
+
+*/

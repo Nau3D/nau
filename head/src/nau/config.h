@@ -21,12 +21,12 @@
 
 #define __SLANGER__ 1
 
-#if _MSC_VER >= 1400
-#ifndef _CRT_SECURE_NO_DEPRECATE
-    #define _CRT_SECURE_NO_DEPRECATE
-    #define _CRT_NONSTDC_NO_DEPRECATE
-#endif
-#endif
+//#if _MSC_VER >= 1400
+//#ifndef _CRT_SECURE_NO_DEPRECATE
+//    #define _CRT_SECURE_NO_DEPRECATE
+//    #define _CRT_NONSTDC_NO_DEPRECATE
+//#endif
+//#endif
 
 #define NAU_RENDER_FLAGS
 

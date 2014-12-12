@@ -7,6 +7,9 @@
 #pragma interface
 #endif
 
+#include <nau/event/ilistener.h>
+#include <nau/render/ibuffer.h>
+#include <nau/enums.h>
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
@@ -24,6 +27,7 @@
 #include <wx/string.h>
 //#include <wx/treectrl.h>
 #include <wx/notebook.h>
+#include <wx/string.h>
 #include <wx/spinctrl.h>
 #include <wx/combobox.h>
 #include <wx/splitter.h>
@@ -31,65 +35,92 @@
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
 #include <wx/propgrid/manager.h>
+
 #include <string>
 #include <vector>
 #include <map>
 #include <iostream>
 #include <sstream>
-#include <nau/event/ilistener.h>
+
 
 
 class DlgDbgBuffers : public wxDialog, nau::event_::IListener
 {
-private:
+protected:
+	const int MAX_COLUMNS = 32;
+	const int MAX_ROWS = 1024;
+	const std::string NO_BUFFER = "__No Buffer";
 
-	enum DataTypes {
-		DLG_BYTE, DLG_UNSIGNED_BYTE, DLG_INT, DLG_UNSIGNED_INT, DLG_SHORT, DLG_UNSIGNED_SHORT, DLG_FLOAT, DLG_DOUBLE
+	enum {
+		DLG_MI_PGBUFFERS,
+		DLG_MI_PGVAOS,
+		DLG_MI_GRIDBUFFERINFO,
+		DLG_MI_GRIDBUFFERINFOLENGTH,
+		DLG_MI_GRIDBUFFERINFOLINES,
+		DLG_MI_GRIDBUFFERINFOPAGE,
+		DLG_MI_REFRESH,
+		DLG_MI_REFRESH_BUFFER_DATA,
+		DLG_MI_SAVEVALUEPAGE,
+		DLG_MI_SAVEVAO
 	};
 
-	void loadBufferInfoGrid();
+	typedef 	// ((VAO index, (Element index, Element name)) , vector(Array index, Array Name))
+		std::pair<std::pair<int, std::pair<int, std::string>>, std::vector<std::pair<int, std::string>>> VAOInfo;
+	typedef std::vector<VAOInfo> VAOInfoList;
 
+	bool m_UseShortNames = true;
 
-	void OnBufferSelection(wxPropertyGridEvent& e);
-	void OnBufferChanged(wxPropertyGridEvent& e);
-	void loadBufferSettings();
-	void loadBufferSettingsPGUpdate(wxPGProperty *settings, int buffer);
+	void setVAOList();
+	void setBufferList();
+	void setBufferData();
+	void setSpinners(int lines, int columns, int page, int lineSize, int size);
+	void setBufferProperties();
 
-
+	void OnGridCellChange(wxGridEvent& e);
 	void OnBufferValuesLengthChange(wxSpinEvent& e);
 	void OnBufferValuesLinesChange(wxSpinEvent& e);
 	void OnBufferValuesPageChange(wxSpinEvent& e);
+	void OnBufferSelection(wxPropertyGridEvent& e);
 
-	void OnBufferSettingsChange();
-	void updateBufferData();
-	DataTypes getBufferDataType(wxPGProperty *typeProperty, int index);
-	DataTypes getDLGDataType(int type);
-	DataTypes getDLGDataType(std::string type);
-	int getBufferDataTypeSize(DataTypes type);
-	void updateBufferDataValues(std::vector<void*> &pointers);
-	std::string getStringFromPointer(DataTypes type, void* ptr);
+	void OnRefreshBufferInfo(wxCommandEvent& event);
 
-	void OnGridCellChange(wxGridEvent& event);
+	void OnRefreshBufferData(wxCommandEvent& event);
+	
+	
+	//void OnRefresh(std::fstream &s, wxPropertyGridPage *page);
+	//void OnSaveVaoInfo(wxCommandEvent& event);
+
+	std::string getStringFromPointer(Enums::DataType type, void* ptr);
+
+
+	void clear();
 
 	struct BufferSettings
 	{
 		BufferSettings();
 
-		unsigned int length; //Number of elements per line
 		unsigned int lines;  //Number of lines per page
 		unsigned int currentPage;
-		std::string bufferName;
-		std::vector<DataTypes> types; // Only for non VAOs
+		int ID;
+		int size;
+		std::vector<Enums::DataType> types;
+		int lineSize;
+		nau::render::IBuffer *bufferPtr;
+		std::string shortName;
+		std::string fullName;
 	};
 
 
-	static std::map<int, BufferSettings> bufferSettingsList;
-	int currentBufferIndex;
-protected:
+	std::map<std::string, BufferSettings> bufferSettingsList;
+	std::string currentBuffer;
+
+
+	static std::map<Enums::DataType, std::string> DataType;
+
 	DlgDbgBuffers();
 	DlgDbgBuffers(const DlgDbgBuffers&);
 	DlgDbgBuffers& operator= (const DlgDbgBuffers&);
-	static DlgDbgBuffers *m_Inst;
+	static DlgDbgBuffers *Inst;
 
 	wxPropertyGridManager *pgBuffers;
 	wxPropertyGridManager *pgVAOs;
@@ -99,6 +130,8 @@ protected:
 	wxSpinCtrl *spinBufferLength, *spinBufferLines;
 	wxSpinCtrl *spinBufferPage;
 
+	wxButton *m_bRefresh;
+	wxButton *m_bRefreshBufferData;
 	wxButton *m_bSavevaos;
 	wxButton *m_bSavebuffers;
 	wxButton *m_bSavepage;
@@ -106,33 +139,16 @@ protected:
 	std::string name;
 	bool isLogClear;
 
+
+
 public:
-	static wxWindow *m_Parent; 
+	static wxWindow *Parent; 
 
 	static DlgDbgBuffers* Instance () ;
 	static void SetParent(wxWindow *parent);
 	virtual std::string &getName ();
 	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
-	void updateDlg();
-	void append(std::string s);
-	void clear(bool fullclear = false);
-	void loadBufferInfo();
-	enum { 
-		DLG_MI_PGBUFFERS,
-		DLG_MI_PGVAOS,
-		DLG_MI_GRIDBUFFERINFO,
-		DLG_MI_GRIDBUFFERINFOLENGTH,
-		DLG_MI_GRIDBUFFERINFOLINES,
-		DLG_MI_GRIDBUFFERINFOPAGE,
-		DLG_MI_SAVEBUFFER,
-		DLG_MI_SAVEVALUEPAGE,
-		DLG_MI_SAVEVAO
-	};
-
-	void OnSaveBufferInfo(wxCommandEvent& event);
-	void OnSavePageInfo(wxCommandEvent& event);
-	void OnSavePropertyGridAux(std::fstream &s, wxPropertyGridPage *page);
-	void OnSaveVaoInfo(wxCommandEvent& event);
+	void updateDlg(bool shortNames = true);
 
     DECLARE_EVENT_TABLE();
 

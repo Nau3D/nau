@@ -10,6 +10,11 @@
 #if NAU_OPENGL_VERSION >= 430
 #include <nau/render/ibuffer.h>
 #endif
+
+#include <vector>
+#include <string>
+#include <map>
+
 namespace nau 
 {
 	namespace resource
@@ -95,6 +100,8 @@ namespace nau
 			nau::render::IBuffer* getBuffer(std::string name);
 			nau::render::IBuffer* createBuffer(std::string name);
 			bool hasBuffer(std::string name);
+			nau::render::IBuffer* getBufferByID(int id);
+			void getBufferNames(std::vector<std::string> &names);
 #if NAU_OPENGL_VERSION >= 430
 			void clearBuffers();
 #endif

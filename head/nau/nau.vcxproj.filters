@@ -612,9 +612,6 @@
     <ClInclude Include="..\src\nau\material\colormaterial.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\material\imaterialgroup.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\material\material.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>

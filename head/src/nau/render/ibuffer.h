@@ -4,11 +4,11 @@
 #ifndef IBUFFER_H
 #define IBUFFER_H
 
-#include <string>
-#include <math.h>
-
 #include <nau/attribute.h>
 #include <nau/attributeValues.h>
+
+#include <string>
+#include <math.h>
 
 
 
@@ -50,7 +50,8 @@ namespace nau
 			std::string& getLabel (void);
 
 			virtual void setData(unsigned int size, void *data) = 0;
-			virtual void getData(unsigned int offset, unsigned int size, void *data) = 0;
+			// returns the number of bytes read
+			virtual int getData(unsigned int offset, unsigned int size, void *data) = 0;
 
 			virtual void bind(unsigned int type) = 0;
 			virtual void unbind() =0;
@@ -61,20 +62,22 @@ namespace nau
 			virtual IBuffer * clone() = 0;
 
 			// Only useful for GUIs
-			void setStructure(std::string &s);
-			std::string &getStructure();
+			void setStructure(std::vector<Enums::DataType>);
+			std::vector<Enums::DataType> &getStructure();
+
+			virtual void refreshBufferParameters() = 0;
 		
 			~IBuffer(void) {};
 		
 		protected:
 
-			IBuffer(): m_Label(""), m_Structure("") { initArrays(Attribs); };
+			IBuffer(): m_Label("") { initArrays(Attribs); };
 
 			static bool Init();
 			static bool Inited;
 
 			std::string m_Label;
-			std::string m_Structure;
+			std::vector<Enums::DataType> m_Structure;
 		};
 	};
 };

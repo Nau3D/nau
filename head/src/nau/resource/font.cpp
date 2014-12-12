@@ -166,7 +166,7 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence)
 
 	MaterialGroup* auxMG;
 
-	std::vector<IMaterialGroup *> aMatG = renderable.getMaterialGroups();
+	std::vector<MaterialGroup *> aMatG = renderable.getMaterialGroups();
 	if (aMatG.size()) {
 		auxMG = (MaterialGroup *)aMatG[0];
 		auxMG->setIndexList (indices);

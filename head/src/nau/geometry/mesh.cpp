@@ -2,7 +2,6 @@
 
 
 #include <nau/geometry/mesh.h>
-#include <nau/material/imaterialgroup.h>
 #include <nau/material/materialgroup.h>
 #include <nau/render/irenderable.h>
 #include <nau/render/vertexdata.h>
@@ -45,7 +44,7 @@ Mesh::~Mesh(void)
 		delete m_IndexData;
 
 
-	std::vector<nau::material::IMaterialGroup*>::iterator matIter;
+	std::vector<nau::material::MaterialGroup*>::iterator matIter;
 
 	matIter = m_vMaterialGroups.begin();
 	
@@ -131,7 +130,7 @@ Mesh::getIndexData()
 }
 
 
-std::vector<nau::material::IMaterialGroup*>&
+std::vector<nau::material::MaterialGroup*>&
 Mesh::getMaterialGroups (void)
 {
 	return (m_vMaterialGroups);
@@ -143,7 +142,7 @@ Mesh::getMaterialNames(std::set<std::string> *nameList) {
 
 	assert(nameList != 0);
 
-	std::vector<nau::material::IMaterialGroup*>::iterator iter;
+	std::vector<nau::material::MaterialGroup*>::iterator iter;
 
 	iter = m_vMaterialGroups.begin();
 
@@ -222,7 +221,7 @@ Mesh::prepareIndexData()
 	}
 
 	// Copy back from UnifiedIndex to MaterialGroups.index
-	std::vector<nau::material::IMaterialGroup*>::iterator iter;
+	std::vector<nau::material::MaterialGroup*>::iterator iter;
 
 	iter = m_vMaterialGroups.begin();
 	unsigned int base = 0;
@@ -251,7 +250,7 @@ Mesh::createUnifiedIndexVector()
 {
 	m_UnifiedIndex.clear();
 
-	std::vector<nau::material::IMaterialGroup*>::iterator iter;
+	std::vector<nau::material::MaterialGroup*>::iterator iter;
 
 	iter = m_vMaterialGroups.begin();
 	for ( ; iter != m_vMaterialGroups.end(); iter ++) {
@@ -263,19 +262,19 @@ Mesh::createUnifiedIndexVector()
 
 
 void 
-Mesh::addMaterialGroup (IMaterialGroup* materialGroup, int offset)
+Mesh::addMaterialGroup (MaterialGroup* materialGroup, int offset)
 {
 	/*
 	- search material in vector
 	- if it doesn't exist push back
 	- if exists merge them
 	*/
-	std::vector<IMaterialGroup*>::iterator matGroupIter;
+	std::vector<MaterialGroup*>::iterator matGroupIter;
 
 	matGroupIter = m_vMaterialGroups.begin();
 
 	for ( ; matGroupIter != m_vMaterialGroups.end(); matGroupIter++ ) {
-		IMaterialGroup* aMaterialGroup = (*matGroupIter);
+		MaterialGroup* aMaterialGroup = (*matGroupIter);
 
 		if (aMaterialGroup->getMaterialName() == materialGroup->getMaterialName()){
 			IndexData &indexVertexData = aMaterialGroup->getIndexData();
@@ -296,7 +295,7 @@ Mesh::addMaterialGroup (IMaterialGroup* materialGroup, int offset)
 
 
 void 
-Mesh::addMaterialGroup (IMaterialGroup* materialGroup, IRenderable *aRenderable)
+Mesh::addMaterialGroup (MaterialGroup* materialGroup, IRenderable *aRenderable)
 {
 	/* In this case it is necessary to copy the vertices from the 
 	 * IRenderable into the local buffer and reindex the materialgroup
@@ -354,13 +353,13 @@ Mesh::merge (nau::render::IRenderable *aRenderable)
 
 	int ofs = getVertexData().add (vVertexData);
 
-	std::vector<IMaterialGroup*> &materialGroups = aRenderable->getMaterialGroups();
-	std::vector<IMaterialGroup*>::iterator materialIter;
+	std::vector<MaterialGroup*> &materialGroups = aRenderable->getMaterialGroups();
+	std::vector<MaterialGroup*>::iterator materialIter;
 
 	materialIter = materialGroups.begin();
 
 	for ( ; materialIter != materialGroups.end(); materialIter++) {
-		IMaterialGroup *aMaterialGroup = (*materialIter);
+		MaterialGroup *aMaterialGroup = (*materialIter);
 		IndexData &indexData = aMaterialGroup->getIndexData();
 		indexData.offsetIndices (ofs);
 

@@ -1,6 +1,6 @@
 #include <nau/scene/octreescene.h>
 #include <nau/render/rendermanager.h>
-#include <nau/material/imaterialgroup.h>
+#include <nau/material/materialgroup.h>
 
 #include <nau/debug/profile.h>
 #include <nau.h>
@@ -157,9 +157,9 @@ OctreeScene::compile (void)
 	objIter = m_SceneObjects.begin();
 	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
 		(*objIter)->getRenderable().getVertexData().compile();
-		std::vector<IMaterialGroup*> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
+		std::vector<MaterialGroup*> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
 
-		std::vector<IMaterialGroup*>::iterator matGroupsIter = matGroups.begin();
+		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 		for ( ; matGroupsIter != matGroups.end(); ++matGroupsIter){
 			(*matGroupsIter)->getIndexData().compile((*objIter)->getRenderable().getVertexData());
 		}

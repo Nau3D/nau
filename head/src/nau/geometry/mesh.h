@@ -12,7 +12,7 @@ This IRenderable contains only the attribute vectors. The index vectors are stor
 
 #include <nau/render/irenderer.h>
 #include <nau/render/irenderable.h>
-#include <nau/material/imaterialgroup.h>
+#include <nau/material/materialgroup.h>
 #include <nau/resource/resourcemanager.h>
 
 
@@ -25,7 +25,7 @@ namespace nau
 		protected:
 			nau::render::VertexData* m_pVertexData;
 			nau::render::IndexData* m_IndexData;
-			std::vector<nau::material::IMaterialGroup*> m_vMaterialGroups;
+			std::vector<nau::material::MaterialGroup*> m_vMaterialGroups;
 			unsigned int m_DrawPrimitive;
 			unsigned int m_RealDrawPrimitive;
 			std::string m_Name;
@@ -53,10 +53,10 @@ namespace nau
 			void unitize(float min, float max);
 
 			void getMaterialNames(std::set<std::string> *nameList);
-			void addMaterialGroup (nau::material::IMaterialGroup*, int offset = 0);
-			void addMaterialGroup (nau::material::IMaterialGroup* materialGroup, 
+			void addMaterialGroup (nau::material::MaterialGroup*, int offset = 0);
+			void addMaterialGroup (nau::material::MaterialGroup* materialGroup, 
 				nau::render::IRenderable *aRenderable); 
-			std::vector<nau::material::IMaterialGroup*>& getMaterialGroups (void);
+			std::vector<nau::material::MaterialGroup*>& getMaterialGroups (void);
 
 			nau::render::VertexData& getVertexData (void);
 			nau::render::IndexData& getIndexData(void);

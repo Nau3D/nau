@@ -1,17 +1,12 @@
-/*
-
-This imaterialgroup subclass contains an index vector
-
-*/
-
 #ifndef MATERIALGROUP_H
 #define MATERIALGROUP_H
 
-#include <string>
-
 #include <nau/render/irenderable.h>
 #include <nau/render/indexdata.h>
-#include <nau/material/imaterialgroup.h>
+
+#include <string>
+
+//#include <nau/material/imaterialgroup.h>
 
 
 
@@ -20,10 +15,10 @@ namespace nau
 	namespace material
 	{
 
-		class MaterialGroup : public IMaterialGroup
+		class MaterialGroup //: public IMaterialGroup
 		{
 		public:
-			MaterialGroup(IRenderable *parent, std::string materialName);
+			MaterialGroup(nau::render::IRenderable *parent, std::string materialName);
 			~MaterialGroup();
 
 			const std::string& getMaterialName ();

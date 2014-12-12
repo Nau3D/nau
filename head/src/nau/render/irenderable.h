@@ -2,20 +2,27 @@
 #define IRENDERABLE_H
 
 #include <nau/config.h>
-#include <nau/material/imaterialgroup.h>
 #include <nau/render/vertexdata.h>
+#include <nau/render/indexdata.h>
 #include <nau/math/vec3.h>
+
+#include <nau/event/ilistener.h>
 
 #include <vector>
 #include <set>
 
-#include <nau/event/ilistener.h>
+
 
 using namespace nau::event_;
 
 
+
 namespace nau
 {
+	namespace material {
+
+		class MaterialGroup;
+	}
 	namespace render 
 	{
 		class IRenderable: public IListener 
@@ -45,10 +52,10 @@ namespace nau
 			virtual void unitize(float min, float max) = 0;
 
 			virtual void getMaterialNames(std::set<std::string> *nameList) = 0;
-			virtual void addMaterialGroup (nau::material::IMaterialGroup*, int offset=0) = 0;
-			virtual void addMaterialGroup (nau::material::IMaterialGroup* materialGroup, 
+			virtual void addMaterialGroup (nau::material::MaterialGroup*, int offset=0) = 0;
+			virtual void addMaterialGroup (nau::material::MaterialGroup* materialGroup, 
 				nau::render::IRenderable *aRenderable) = 0; 
-			virtual std::vector<nau::material::IMaterialGroup*>& getMaterialGroups(void) = 0;
+			virtual std::vector<nau::material::MaterialGroup*>& getMaterialGroups(void) = 0;
 
 			virtual nau::render::VertexData& getVertexData (void) = 0;
 			virtual nau::render::IndexData& getIndexData(void) = 0;

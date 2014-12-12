@@ -501,3 +501,25 @@ ResourceManager::hasBuffer(std::string name) {
 		return false;
 }
 
+
+nau::render::IBuffer* 
+ResourceManager::getBufferByID(int id) {
+
+	for (auto b : m_Buffers) {
+
+		if (b.second->getPropi(IBuffer::ID) == id)
+
+			return b.second;
+	}
+	return NULL;
+}
+
+
+void 
+ResourceManager::getBufferNames(std::vector<std::string> &names) {
+
+	names.clear();
+	for (auto b : m_Buffers) {
+		names.push_back(b.second->getLabel());
+	}
+}

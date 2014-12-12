@@ -4,7 +4,7 @@
 #include <nau/debug/profile.h>
 
 #include <nau/material/material.h> 
-#include <nau/material/imaterialgroup.h>
+#include <nau/material/materialgroup.h>
 #include <nau/math/transformfactory.h>
 #include <nau/render/opengl/glvertexarray.h>
 #include <nau/render/opengl/glrendertarget.h>
@@ -94,7 +94,7 @@ GLRenderer::init()
 
 
 int 
-GLRenderer::getNumberOfPrimitives(IMaterialGroup *m) {
+GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
 
 	unsigned int indices = m->getIndexData().getIndexSize();
 	unsigned int primitive = m->getParent().getRealDrawingPrimitive();
@@ -212,7 +212,7 @@ GLRenderer::getAtomicCounterValues() {
 // =============== RENDER ===================
 
 void
-GLRenderer::drawGroup (IMaterialGroup* aMatGroup)
+GLRenderer::drawGroup (MaterialGroup* aMatGroup)
 {
 	IRenderable& aRenderable = aMatGroup->getParent();
 	IndexData &indexData = aMatGroup->getIndexData();

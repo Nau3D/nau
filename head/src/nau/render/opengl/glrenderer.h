@@ -71,11 +71,11 @@ namespace nau
 			//@{
 			bool init();
 
-			virtual int getNumberOfPrimitives(IMaterialGroup *m) ;
+			virtual int getNumberOfPrimitives(MaterialGroup *m) ;
 
 			// RENDER
 			void setRenderMode (TRenderMode mode);
-			void drawGroup (nau::material::IMaterialGroup* aMatGroup);
+			void drawGroup (nau::material::MaterialGroup* aMatGroup);
 			void clearFrameBuffer(unsigned int b);
 			void prepareBuffers(Pass *p);
 			void setDepthClamping(bool b);

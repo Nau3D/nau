@@ -4,7 +4,6 @@
 #include <nau/slogger.h>
 #undef LOGGING_ON
 #include <nau/render/vertexdata.h>
-#include <nau/material/imaterialgroup.h>
 #include <nau/material/materialgroup.h>
 #include <nau/math/simpletransform.h>
 #include <nau.h>
@@ -295,16 +294,16 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 		offSet = 3; // m_pLocalMesh->getPrimitiveOffset();
 
 		//For each material group
-		std::vector<IMaterialGroup*> &vMaterialGroups =
+		std::vector<MaterialGroup*> &vMaterialGroups =
 			aRenderable->getMaterialGroups();
-		std::vector<IMaterialGroup*>::iterator matIter;
+		std::vector<MaterialGroup*>::iterator matIter;
 
 		matIter = vMaterialGroups.begin();
 
 		for ( ; matIter != vMaterialGroups.end(); matIter++) {
 			MaterialGroup *tempMaterialGroup[9] = { 0 };
 
-			IMaterialGroup *pMaterialGroup = (*matIter);
+			MaterialGroup *pMaterialGroup = (*matIter);
 
 			IndexData &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
 			std::vector<unsigned int> &vIndexData = VertexDataMaterialGroup.getIndexData();
@@ -552,9 +551,9 @@ OctreeNode::_compile (void)
 {
 	if (0 != m_pLocalMesh) {
 		m_pLocalMesh->getVertexData().compile();
-		std::vector<IMaterialGroup*> &matGroups = m_pLocalMesh->getMaterialGroups();
+		std::vector<MaterialGroup*> &matGroups = m_pLocalMesh->getMaterialGroups();
 
-		std::vector<IMaterialGroup*>::iterator matGroupsIter = matGroups.begin();
+		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 
 		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
 			(*matGroupsIter)->getIndexData().compile(m_pLocalMesh->getVertexData());

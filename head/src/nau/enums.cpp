@@ -16,7 +16,9 @@ const std::string Enums::DataTypeToString[] = {
 						"DMAT2", "DMAT3", "DMAT4",
 						"DMAT2x3", "DMAT2x4", "DMAT3x2", "DMAT3x4", "DMAT4x2", "DMAT4x3",
 						
-						"SAMPLER", "ENUM"};
+						"SAMPLER", "ENUM",
+
+						"BYTE", "UBYTE", "SHORT", "USHORT"};
 
 
 
@@ -63,7 +65,13 @@ int
 Enums::getSize(DataType p) 
 {
 	switch (p) {
-	
+
+		case BYTE:
+		case UBYTE:
+			return sizeof(char);
+		case SHORT:
+		case USHORT:
+			return sizeof(short);
 		case INT:
 		case IVEC2:
 		case IVEC3: 
@@ -119,6 +127,10 @@ int Enums::getCardinality(DataType p)
 	int card = 1;
 
 	switch (p) {
+		case BYTE:
+		case UBYTE:
+		case SHORT:
+		case USHORT:
 		case INT:
 		case UINT:
 		case SAMPLER:
@@ -221,7 +233,7 @@ bool
 Enums::isBasicType(DataType t) {
 
 	if (t == INT || t == UINT || t == BOOL || t == FLOAT || t == DOUBLE
-		|| t == SAMPLER || t == ENUM)
+		|| t == SAMPLER || t == ENUM || t == BYTE || t == UBYTE || t == SHORT || t == USHORT)
 		return true;
 	else
 		return false;

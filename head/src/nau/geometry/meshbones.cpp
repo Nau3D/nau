@@ -1,11 +1,10 @@
 #include <nau/geometry/meshbones.h>
-#include <nau/material/imaterialgroup.h>
+
 #include <nau/material/materialgroup.h>
 #include <nau/render/irenderable.h>
 #include <nau/render/vertexdata.h>
 #include <nau/math/vec3.h>
 
-//#include <algorithm>
 
 using namespace nau::geometry;
 using namespace nau::render;

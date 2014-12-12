@@ -52,13 +52,13 @@ IBuffer::getLabel() {
 
 
 void
-IBuffer::setStructure(std::string &s) {
+IBuffer::setStructure(std::vector<Enums::DataType> s) {
 
 	m_Structure = s;
 }
 
 
-std::string &
+std::vector<Enums::DataType> &
 IBuffer::getStructure() {
 
 	return m_Structure;

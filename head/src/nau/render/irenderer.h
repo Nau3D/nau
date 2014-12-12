@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include <nau/material/imaterialgroup.h>
+#include <nau/material/materialgroup.h>
 #include <nau/material/material.h>
 #include <nau/material/colormaterial.h>
 
@@ -302,7 +302,7 @@ namespace nau
 
 
 			virtual void setRenderMode(TRenderMode mode) = 0;
-			virtual void drawGroup(nau::material::IMaterialGroup* aMaterialGroup) = 0;
+			virtual void drawGroup(nau::material::MaterialGroup* aMaterialGroup) = 0;
 			virtual void setCullFace(Face aFace) = 0;
 
 			virtual void saveAttrib(RendererAttributes aAttrib) = 0;
@@ -310,7 +310,7 @@ namespace nau
 
 		public:
 			/// returns the number of primitives foa  material group
-			virtual int getNumberOfPrimitives(IMaterialGroup *m) = 0;
+			virtual int getNumberOfPrimitives(MaterialGroup *m) = 0;
 
 			virtual float getDepthAtPoint(int x, int y) = 0;
 

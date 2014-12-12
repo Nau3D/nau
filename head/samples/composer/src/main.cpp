@@ -478,8 +478,8 @@ FrmMainFrame::updateDlgs()
 	DlgLights::Instance()->updateDlg();
 	DlgScenes::Instance()->updateDlg();
 	DlgPass::Instance()->updateDlg();
-//	DlgDbgBuffers::Instance()->clear();
-//	DlgDbgBuffers::Instance()->loadBufferInfo();
+	//DlgDbgBuffers::Instance()->clear();
+	DlgDbgBuffers::Instance()->updateDlg();
 
 
 	//Update state dialog
@@ -918,9 +918,6 @@ FrmMainFrame::LoadDebugData(){
 	DlgDbgPrograms::Instance()->clear();
 	DlgDbgPrograms::Instance()->loadShaderInfo();
 
-	DlgDbgBuffers::Instance()->clear();
-	DlgDbgBuffers::Instance()->loadBufferInfo();
-
 	DlgDbgStep::Instance()->updateDlg();
 
 
@@ -952,6 +949,7 @@ FrmMainFrame::OnDlgDbgProgram(wxCommandEvent& event){
 
 void
 FrmMainFrame::OnDlgDbgBuffer(wxCommandEvent& event){
+	DlgDbgBuffers::Instance()->updateDlg();
 	DlgDbgBuffers::Instance()->Show(TRUE);
 }
 

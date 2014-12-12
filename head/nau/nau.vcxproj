@@ -313,7 +313,7 @@
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;NAU_OPTIX;NAU_OPTIX_PRIME;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;NAU_OPTIX;NAU_OPTIX_PRIME;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -725,7 +725,6 @@
     <ClInclude Include="..\src\nau\loader\projectloader.h" />
     <ClInclude Include="..\src\nau\loader\textureloader.h" />
     <ClInclude Include="..\src\nau\material\colormaterial.h" />
-    <ClInclude Include="..\src\nau\material\imaterialgroup.h" />
     <ClInclude Include="..\src\nau\material\material.h" />
     <ClInclude Include="..\src\nau\material\materialgroup.h" />
     <ClInclude Include="..\src\nau\material\materialid.h" />

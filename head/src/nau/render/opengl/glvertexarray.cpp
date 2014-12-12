@@ -167,7 +167,9 @@ GLVertexArray::compile (void) /***MARK***/ //STATIC DRAW ONLY
 			std::vector<VertexData::Attr>* pArray = m_InternalArrays[i];
 
 			std::string s = m_Name + VertexData::Syntax[i];
-			m_GLBuffers[i] = RESOURCEMANAGER->createBuffer(s)->getPropi(IBuffer::ID);
+			IBuffer *b = RESOURCEMANAGER->createBuffer(s);
+			b->setStructure(std::vector<Enums::DataType>{Enums::FLOAT, Enums::FLOAT, Enums::FLOAT, Enums::FLOAT});
+			m_GLBuffers[i] = b->getPropi(IBuffer::ID);
 			//glGenBuffers (1, &m_GLBuffers[i]);
 			glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
 			glBufferData (GL_ARRAY_BUFFER, pArray->size() * 4 * sizeof (float), (float*) &(*pArray)[0], GL_STATIC_DRAW);

@@ -2,9 +2,8 @@
 #define MESHBONES_H
 
 #include <nau/geometry/mesh.h>
-#include <nau/render/irenderer.h>
-#include <nau/render/irenderable.h>
-#include <nau/material/imaterialgroup.h>
+
+
 
 
 #include <string>

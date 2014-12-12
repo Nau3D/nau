@@ -1,6 +1,6 @@
+#include <nau/material/materialgroup.h>
 
 #include <nau.h>
-#include <nau/material/materialgroup.h>
 #include <nau/render/vertexdata.h>
 #include <nau/render/irenderer.h>
 #include <nau/math/vec3.h>

@@ -38,7 +38,7 @@ FileUtil::GetName(const std::string &fn) {
 	size_t found = fn.find_last_of("/\\");
 
 	if (found == fn.npos) 
-		return(fn.substr(0,fn.size()-1)); // clone string
+		return(fn.substr(0,fn.size())); // clone string
 	else
 		return(fn.substr(found+1));
 }
