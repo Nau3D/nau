@@ -29,6 +29,7 @@
 #ifdef WIN32
 #define PATH_SEPARATOR "\\"
 #define PATH_SEPARATOR_C '\\'
+#define strdup _strdup
 #else
 #define PATH_SEPARATOR "/"
 #define PATH_SEPARATOR_C '/'

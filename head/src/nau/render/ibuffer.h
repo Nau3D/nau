@@ -28,11 +28,8 @@ namespace nau
 
 			UINT_PROP(SIZE, 0);
 
-//			ENUM_PROP(TYPE, 0);
-
-//			BOOL_PROP(BOUND, 0);
 			ENUM_PROP(CLEAR, 0);
-			ENUM_PROP(TYPE, 1);
+		//	ENUM_PROP(TYPE, 1);
 
 			typedef enum {
 				NEVER,
@@ -50,6 +47,7 @@ namespace nau
 			std::string& getLabel (void);
 
 			virtual void setData(unsigned int size, void *data) = 0;
+			virtual void setSubData(unsigned int offset, unsigned int size, void*data) = 0;
 			// returns the number of bytes read
 			virtual int getData(unsigned int offset, unsigned int size, void *data) = 0;
 

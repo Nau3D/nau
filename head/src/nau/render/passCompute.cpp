@@ -13,8 +13,10 @@ using namespace nau::render;
 using namespace nau::geometry;
 
 
-PassCompute::PassCompute (const std::string &passName) : Pass(passName),
-m_DimX(1), m_DimY(1), m_DimZ(1), m_Mat(0), m_AtomicX(-1), m_AtomicY(-1), m_AtomicZ(-1)
+PassCompute::PassCompute(const std::string &passName) : Pass(passName),
+m_Mat(0), m_DimX(1), m_DimY(1), m_DimZ(1),
+m_BufferX(0), m_BufferY(0), m_BufferZ(0),
+m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0)
 {
 	m_ClassName = "compute";
 }
@@ -35,22 +37,17 @@ PassCompute::~PassCompute()
 void
 PassCompute::prepare (void)
 {
-	unsigned int * values;
-
 	m_Mat->prepare();
 
-	//if (m_AtomicX >= 0 || m_AtomicY >= 0 || m_AtomicZ >= 0) {
-
-	//	values = RENDERER->getAtomicCounterValues();
-
-	//	if (m_AtomicX >= 0)
-	//		m_DimX = values[m_AtomicX];
-	//	if (m_AtomicY >= 0)
-	//		m_DimY = values[m_AtomicY];
-	//	if (m_AtomicZ >= 0)
-	//		m_DimZ = values[m_AtomicZ];
-	//}
-		 
+	if (m_BufferX) {
+		m_BufferX->getData(m_OffsetX, 4, &m_DimX);
+	}
+	if (m_BufferY) {
+		m_BufferY->getData(m_OffsetY, 4, &m_DimY);
+	}
+	if (m_BufferZ) {
+		m_BufferZ->getData(m_OffsetZ, 4, &m_DimZ);
+	}
 }
 
 
@@ -86,9 +83,15 @@ PassCompute::setDimension(int dimX, int dimY, int dimZ)
 
 
 void
-PassCompute::setAtomics(int atomicX, int atomicY, int atomicZ)
+PassCompute::setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX,
+								IBuffer  *buffNameY, unsigned int offY, 
+								IBuffer  *buffNameZ, unsigned int offZ )
 {
-	m_AtomicX = atomicX;
-	m_AtomicY = atomicY;
-	m_AtomicZ = atomicZ;
+	m_BufferX = buffNameX;
+	m_BufferY = buffNameY;
+	m_BufferZ = buffNameZ;
+
+	m_OffsetX = offX;
+	m_OffsetY = offY;
+	m_OffsetZ = offZ;
 }

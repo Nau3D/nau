@@ -120,6 +120,9 @@
 														
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -140,6 +143,9 @@
 														
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -160,6 +166,9 @@
 														
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -179,7 +188,9 @@
 														component="EMISSION" />
 														
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
-														component="PROJECTION_VIEW_MODEL" />		
+														component="PROJECTION_VIEW_MODEL" />						
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -200,6 +211,9 @@
 														
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -220,6 +234,9 @@
 														
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -240,6 +257,9 @@
 														
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
+														component="COUNT" />
 				</values>
 			</shader>
 		</material>

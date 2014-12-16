@@ -33,9 +33,11 @@ namespace nau
 			void setParent (nau::render::IRenderable* parent);
 			nau::render::IRenderable& getParent ();
 
+			void updateIndexDataName();
+
 			void setIndexList(std::vector<unsigned int>* indices);
 
-			std::string getName();
+			std::string &getName();
 
 		protected:
 			nau::render::IRenderable* m_Parent;

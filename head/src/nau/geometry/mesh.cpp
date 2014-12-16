@@ -24,7 +24,7 @@ Mesh::createUnregisteredMesh()
 
 
 Mesh::Mesh(void) :
-	m_pVertexData (0),
+	m_VertexData (0),
 	m_IndexData(0),
 	m_vMaterialGroups (),
 	m_DrawPrimitive(nau::render::IRenderable::TRIANGLES),
@@ -37,8 +37,8 @@ Mesh::Mesh(void) :
 
 Mesh::~Mesh(void)
 {
-	if (0 != m_pVertexData) 
-		delete m_pVertexData;
+	if (0 != m_VertexData) 
+		delete m_VertexData;
 
 	if (0 != m_IndexData)
 		delete m_IndexData;
@@ -59,6 +59,11 @@ void
 Mesh::setName (std::string name)
 {
 	m_Name = name;
+	if (m_VertexData)
+		m_VertexData->setName(name);
+
+	for (auto m : m_vMaterialGroups)
+		m->updateIndexDataName();
 }
 
 
@@ -109,10 +114,10 @@ Mesh::getnumberOfVerticesPerPatch()
 nau::render::VertexData& 
 Mesh::getVertexData (void)
 {
-	if (0 == m_pVertexData) {
-		m_pVertexData = VertexData::create(m_Name);
+	if (0 == m_VertexData) {
+		m_VertexData = VertexData::create(m_Name);
 	}
-	return (*m_pVertexData);
+	return (*m_VertexData);
 }
 
 
@@ -164,7 +169,7 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 		prepareIndexData();
 		createUnifiedIndexVector();
 
-		unsigned int size = m_pVertexData->getDataOf(VertexData::getAttribIndex("position")).size();
+		unsigned int size = m_VertexData->getDataOf(VertexData::getAttribIndex("position")).size();
 		std::vector<VertexData::Attr>* idsArray = new std::vector<VertexData::Attr>(size);
 
 		int primitiveOffset = 3;//getPrimitiveOffset();
@@ -172,7 +177,7 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 			idsArray->at(i).x = sceneObjectID;
 			idsArray->at(i).y = i / primitiveOffset;
 		}
-		m_pVertexData->setAttributeDataFor(VertexData::getAttribIndex("triangleID"), idsArray);		
+		m_VertexData->setAttributeDataFor(VertexData::getAttribIndex("triangleID"), idsArray);		
 	}
 }
 
@@ -180,7 +185,7 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 void 
 Mesh::prepareIndexData() 
 {
-	unsigned int size = m_pVertexData->getDataOf(VertexData::getAttribIndex("position")).size();
+	unsigned int size = m_VertexData->getDataOf(VertexData::getAttribIndex("position")).size();
 	std::vector<int> idsArray = std::vector<int>(size, -1.0f);
 	std::vector<int> outlaws;
 
@@ -214,7 +219,7 @@ Mesh::prepareIndexData()
 			m_UnifiedIndex[ i * 3 + 2] = aux0;
 		}
 		else {
-			m_pVertexData->appendVertex(index2);
+			m_VertexData->appendVertex(index2);
 			m_UnifiedIndex[i * 3 + 2] = size;
 			size++;
 		}
@@ -378,14 +383,14 @@ Mesh::getType (void)
 void 
 Mesh::unitize(float min, float max) {
 
-	m_pVertexData->unitize(min,max);
+	m_VertexData->unitize(min,max);
 }
 
 
 void
 Mesh::resetCompilationFlags() {
 
-	m_pVertexData->resetCompilationFlag();
+	m_VertexData->resetCompilationFlag();
 
 	for (unsigned int i = 0; i < m_vMaterialGroups.size(); ++i) {
 

@@ -23,7 +23,7 @@ namespace nau
 		class Mesh : public nau::render::IRenderable
 		{
 		protected:
-			nau::render::VertexData* m_pVertexData;
+			nau::render::VertexData* m_VertexData;
 			nau::render::IndexData* m_IndexData;
 			std::vector<nau::material::MaterialGroup*> m_vMaterialGroups;
 			unsigned int m_DrawPrimitive;

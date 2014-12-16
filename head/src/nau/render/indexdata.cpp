@@ -46,6 +46,12 @@ IndexData::~IndexData(void)
 }
 
 
+void 
+IndexData::setName(std::string name) {
+
+	m_Name = name;
+}
+
 std::vector<unsigned int>&
 IndexData::getIndexData (void)
 {

@@ -23,6 +23,8 @@ namespace nau
 
 			virtual ~IndexData(void);
 
+			void setName(std::string name);
+
 			void offsetIndices (int amount);
 			virtual std::vector<unsigned int>& getIndexData (void);
 #ifdef NAU_OPTIX_PRIME
@@ -50,13 +52,14 @@ namespace nau
 
 		protected:
 			IndexData(void);
+			std::string m_Name;
 			
 			std::vector<unsigned int>* m_InternalIndexArray;
 			std::vector<unsigned int> m_AdjIndexArray;
 			//unsigned int m_IndexSize;
 
 			bool m_UseAdjacency;
-			std::string m_Name;
+
 			struct HalfEdge {
 				unsigned int vertex;
 				struct HalfEdge *next;

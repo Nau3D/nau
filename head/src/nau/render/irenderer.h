@@ -123,7 +123,7 @@ namespace nau
 			std::map<std::pair<std::string,int>, std::string> m_AtomicLabels;
 
 			/// add an atomic counter
-			void addAtomic(std::string buffer, unsigned int id, std::string name);
+			void addAtomic(std::string buffer, unsigned int offset, std::string name);
 
 			/// returns the atomic id, or -1 if the name is not defined
 			//int getAtomicID(std::string);

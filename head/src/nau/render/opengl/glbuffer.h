@@ -29,6 +29,7 @@ namespace nau
 			void unbind();
 			void setProp(int prop, Enums::DataType type, void *value);
 			void setData(unsigned int size, void *data);
+			void setSubData(unsigned int offset, unsigned int size, void*data);
 			int getData(unsigned int offset, unsigned int size, void *data);
 #if NAU_OPENGL_VERSION >= 430
 			void clear();

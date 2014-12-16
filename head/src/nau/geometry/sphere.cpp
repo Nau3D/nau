@@ -52,7 +52,7 @@ Sphere::build() {
 	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup(this, "__Light Grey");
+	MaterialGroup *aMaterialGroup = new MaterialGroup(this, "Light Grey");
 	
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>((slices)*(stacks)*2*3);
 

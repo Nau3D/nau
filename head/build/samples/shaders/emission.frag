@@ -1,7 +1,7 @@
 #version 330
 
 uniform vec4 emission;
-uniform int texCount;
+uniform int texCount = 0;
 uniform sampler2D texUnit;
 
 in vec2 TexCoord;

@@ -17,6 +17,7 @@ BEGIN_EVENT_TABLE(DlgDbgBuffers, wxDialog)
 
 	EVT_BUTTON(DLG_MI_REFRESH, OnRefreshBufferInfo)
 	EVT_BUTTON(DLG_MI_REFRESH_BUFFER_DATA, OnRefreshBufferData)
+	EVT_BUTTON(DLG_MI_UPDATE_BUFFER, OnUpdateBuffer)
 
 	//	EVT_PG_CHANGED(DLG_MI_PGBUFFERS, DlgDbgBuffers::OnBufferChanged)
 //
@@ -227,7 +228,10 @@ DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::Parent, -1, wxT("Buffer 
 	m_bRefreshBufferData = new wxButton(this, DLG_MI_REFRESH_BUFFER_DATA, wxT("Refresh Buffer Data"));
 	bSizer2->Add(m_bRefreshBufferData, 0, wxALIGN_CENTER | wxALL, 5);
 
-//	m_bSavevaos = new wxButton(this, DLG_MI_SAVEVAO, wxT("Save VAOs"));
+	m_bUpdateBuffer = new wxButton(this, DLG_MI_UPDATE_BUFFER, wxT("Update Buffer"));
+	bSizer2->Add(m_bUpdateBuffer, 0, wxALIGN_CENTER | wxALL, 5);
+
+	//	m_bSavevaos = new wxButton(this, DLG_MI_SAVEVAO, wxT("Save VAOs"));
 //	bSizer2->Add(m_bSavevaos, 0, wxALIGN_CENTER | wxALL, 5);
 
 	bSizer1->Add(bSizer2, 0, wxALIGN_CENTER | wxALL, 5);
@@ -302,13 +306,16 @@ DlgDbgBuffers::setVAOList(void) {
 				glGetVertexAttribiv(k, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &enabled);
 				if (enabled) {
 					glGetVertexAttribiv(k, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &id);
-					label = RESOURCEMANAGER->getBufferByID(id)->getLabel();
-					if (m_UseShortNames)
-						name = FileUtil::GetName(label);
-					else
-						name = label;
+					IBuffer *b = RESOURCEMANAGER->getBufferByID(id);
+					if (b) {
+						label = b->getLabel();
+						if (m_UseShortNames)
+							name = FileUtil::GetName(label);
+						else
+							name = label;
 
-					vao.second.push_back(std::pair<int, std::string>(id, name));
+						vao.second.push_back(std::pair<int, std::string>(id, name));
+					}
 				}
 			}
 			list.push_back(vao);
@@ -541,6 +548,92 @@ DlgDbgBuffers::setBufferProperties() {
 	child = pid->GetPropertyByName(wxT("Components"));
 	child->SetValue(components);
 	pgBuffers->Refresh();
+}
+
+
+void
+DlgDbgBuffers::OnUpdateBuffer(wxCommandEvent& event) {
+
+	int elemSize;
+	std::string elem;
+	int lines = bufferSettingsList[currentBuffer].lines;
+	int columns = bufferSettingsList[currentBuffer].types.size();
+	int size = bufferSettingsList[currentBuffer].size;
+	int lineSize = bufferSettingsList[currentBuffer].lineSize;
+	int page = bufferSettingsList[currentBuffer].currentPage;
+
+	void *buffer = malloc(lineSize * lines);
+	char *bufferPtr = (char *)buffer;
+	int offSet = page * lineSize * lines;
+	int dataRead = 0;
+
+	for (int row = 1; row <= lines; ++row){
+
+		for (int col = 0; col < columns; ++col){
+
+			if (offSet + dataRead < size){
+				elem = gridBufferValues->GetCellValue(row, col);
+				insertIntoBuffer(elem, bufferSettingsList[currentBuffer].types[col], bufferPtr);
+				elemSize = Enums::getSize(bufferSettingsList[currentBuffer].types[col]);
+				dataRead += elemSize;
+				bufferPtr += elemSize;
+			}
+		}
+	}
+	bufferSettingsList[currentBuffer].bufferPtr->setSubData(offSet, dataRead, buffer);
+}
+
+
+void 
+DlgDbgBuffers::insertIntoBuffer(std::string elem, Enums::DataType type, void *ptr) {
+
+	int size;
+	unsigned int valueui;
+	int valuei;
+	char valueb;
+	byte valueub;
+	short values;
+	unsigned short valueus;
+
+	float valuef;
+	double valued;
+
+	size = Enums::getSize(type);
+	switch (type) {
+
+		case Enums::UBYTE:
+			valueub = (byte)strtoul(elem.c_str(), NULL, 0);
+			memcpy(ptr, &valueub, size);
+			break;
+		case Enums::BYTE:
+			valueb = (char)strtoul(elem.c_str(), NULL, 0);
+			memcpy(ptr, &valueb, size);
+			break;
+		case Enums::USHORT:
+			valueus = (unsigned short)strtoul(elem.c_str(), NULL, 0);
+			memcpy(ptr, &valueus, size);
+			break;
+		case Enums::SHORT:
+			values = (short)strtoul(elem.c_str(), NULL, 0);
+			memcpy(ptr, &values, size);
+			break;
+		case Enums::UINT:
+			valueui = strtoul(elem.c_str(), NULL, 0);
+			memcpy(ptr, &valueui, size);
+			break;
+		case Enums::INT:
+			valuei = (int)strtoul(elem.c_str(), NULL, 0);
+			memcpy(ptr, &valuei, size);
+			break;
+		case Enums::FLOAT:
+			valuef = strtof(elem.c_str(), NULL);
+			memcpy(ptr, &valuef, size);
+			break;
+		case Enums::DOUBLE:
+			valued = strtod(elem.c_str(), NULL);
+			memcpy(ptr, &valued, size);
+			break;
+	}
 }
 
 

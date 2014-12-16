@@ -15,7 +15,7 @@ Axis::Axis(void) : Primitive()
 {
 	setDrawingPrimitive(nau::render::IRenderable::LINES);
 	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(6);
-	std::vector<VertexData::Attr> *normals = new std::vector<vec4>(6);
+	//std::vector<VertexData::Attr> *normals = new std::vector<vec4>(6);
 
 	// FRONT
 	vertices->at (0).set	(-1.0f,  0.0f,  0.0f);
@@ -28,7 +28,7 @@ Axis::Axis(void) : Primitive()
 	VertexData &vertexData = getVertexData();
 
 	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
-	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
+	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 	MaterialGroup *aMaterialGroup = new MaterialGroup(this, "__Emission Red");
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(2);

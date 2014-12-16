@@ -80,6 +80,12 @@ VertexData::~VertexData(void)
 }
 
 
+void
+VertexData::setName(std::string &name) {
+
+	m_Name = name;
+}
+
 int 
 VertexData::getNumberOfVertices() 
 {

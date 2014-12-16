@@ -49,10 +49,11 @@ void
 MaterialGroup::setMaterialName (std::string name)
 {
 	this->m_MaterialName = name;
+	m_IndexData->setName(getName());
 }
 
 
-std::string 
+std::string &
 MaterialGroup::getName() {
 
 	m_Name = m_Parent->getName() + ":" + m_MaterialName;
@@ -118,3 +119,9 @@ MaterialGroup::getParent ()
 	return *(this->m_Parent);
 }
 
+
+void 
+MaterialGroup::updateIndexDataName() {
+
+	m_IndexData->setName(getName());
+}

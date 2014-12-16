@@ -523,7 +523,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 Specification of the atomic semantics:
 
 		<atomics>
-			<atomic id=0 semantics="Red Pixels"/>
+			<atomic buffer = "name" offset=0 semantics="Red Pixels"/>
 			...
 		</atomics>
 
@@ -1885,11 +1885,11 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 			<pass class="compute" name="test">
 				<material name="computeShader" fromLibrary="myLib" dimX=256, dimY=256, dimZ=0/>
 				<!-- or -->
-				<material name="computeShader" fromLibrary="myLib" atomicX="at1", atomicY="at2", atomicZ="at3"/>
+				<material name="computeShader" fromLibrary="myLib" bufferX="tt::aa", offsetX=4 bufferY="tt::aa", offsetY=0/>
 			</pass>
 
-	The strings in the atomics(X,Y,Z) are atomic labels that must be previously defined
-	Dims and atomics can be mixed, but for each dimension there must be only one
+	The strings in the buffer(X,Y,Z) are buffer labels that must be previously defined
+	Dims and buffers can be mixed, but for each dimension there must be only one
 -------------------------------------------------------------------------------*/
 
 
@@ -1904,9 +1904,10 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 	if (pElem != NULL) {
 		const char *pMatName = pElem->Attribute ("name");
 		const char *pLibName = pElem->Attribute ("fromLibrary");
-		const char *pAtX = pElem->Attribute("atomicX");
-		const char *pAtY = pElem->Attribute("atomicY");
-		const char *pAtZ = pElem->Attribute("atomicZ");
+		const char *pAtX = pElem->Attribute("bufferX");
+		const char *pAtY = pElem->Attribute("bufferY");
+		const char *pAtZ = pElem->Attribute("bufferZ");
+
 
 		if (pMatName != NULL && pLibName != NULL) {
 			if (!MATERIALLIBMANAGER->hasMaterial(pLibName,pMatName))
@@ -1916,56 +1917,70 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("Pass %s: Material not defined", aPass->getName().c_str());
 
 		int dimX, dimY, dimZ;
-		int atX = -1, atY = -1, atZ = -1;
+		IBuffer * bX = NULL, *bY = NULL, *bZ = NULL;
+		unsigned int offX = 0, offY = 0, offZ = 0;
 		
-		// Read value or atomic id for dimX
+		// Read value or buffer id for dimX
 		int res = pElem->QueryIntAttribute("dimX", &dimX);
 		if (TIXML_SUCCESS != res && pAtX == NULL) {
-			NAU_THROW("Pass %s: dimX or atomicX are not defined", aPass->getName().c_str());
+			NAU_THROW("Pass %s: dimX or bufferX are not defined", aPass->getName().c_str());
 		}
 		else if (TIXML_SUCCESS == res && pAtX != NULL) {
-			NAU_THROW("Pass %s: dimX and atomicX are both defined", aPass->getName().c_str());
+			NAU_THROW("Pass %s: dimX and bufferX are both defined", aPass->getName().c_str());
 		}
-		// Por aqui guarda com a versão
-		//if (pAtX != NULL) {
-		//	atX = RENDERER->getAtomicID(pAtX);
-		//	if (atX == -1) {
-		//		NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
-		//	}
-		//}
+		// 
+		if (pAtX != NULL) {
+			bX = RESOURCEMANAGER->getBuffer(pAtX);
+			if (!bX) {
+				NAU_THROW("Pass %s: buffer %s is not defined", aPass->getName().c_str(), pAtX);
+			}
+			else {
+				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("offsetX", &offX))
+					NAU_THROW("Pass %s: No offset defined for buffer %s", aPass->getName().c_str(), pAtX);
+			}
+		}
 
-		// Read value or atomic id for dimY
+		// Read value or buffer id for dimY
 		res = pElem->QueryIntAttribute("dimY", &dimY);
 		if (TIXML_SUCCESS == res && pAtY != NULL) {
-			NAU_THROW("Pass %s: dimY and atomicY are both defined", aPass->getName().c_str());
+			NAU_THROW("Pass %s: dimY and bufferY are both defined", aPass->getName().c_str());
 		}
 
 		if (TIXML_SUCCESS != res)
 			dimY = 1;
-		//if (pAtY != NULL) {
-		//	atY = RENDERER->getAtomicID(pAtX);
-		//	if (atY == -1) {
-		//		NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
-		//	}
-		//}
-		// Read value or atomic id for dimZ
+		if (pAtY != NULL) {
+			bY = RESOURCEMANAGER->getBuffer(pAtY);
+			if (!bY) {
+				NAU_THROW("Pass %s: buffer %s is not defined", aPass->getName().c_str(), pAtY);
+			}
+			else {
+				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("offsetY", &offY))
+					NAU_THROW("Pass %s: No offset defined for buffer %s", aPass->getName().c_str(), pAtY);
+			}
+		}
+		// Read value or buffer id for dimZ
 		res = pElem->QueryIntAttribute("dimZ", &dimZ);
 		if (TIXML_SUCCESS == res && pAtZ != NULL) {
-			NAU_THROW("Pass %s: dimZ and atomicZ are both defined", aPass->getName().c_str());
+			NAU_THROW("Pass %s: dimZ and bufferZ are both defined", aPass->getName().c_str());
 		}
 
 		if (TIXML_SUCCESS != res)
 			dimZ = 1;
-		//if (pAtZ != NULL) {
-		//	atZ = RENDERER->getAtomicID(pAtX);
-		//	if (atZ == -1) {
-		//		NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
-		//	}
-		//}
+		if (pAtZ != NULL) {
+			bZ = RESOURCEMANAGER->getBuffer(pAtZ);
+			if (!bZ) {
+				NAU_THROW("Pass %s: buffer %s is not defined", aPass->getName().c_str(), pAtZ);
+			}
+			else {
+				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("offsetZ", &offZ))
+					NAU_THROW("Pass %s: No offset defined for buffer %s", aPass->getName().c_str(), pAtZ);
+			}
+		}
+
 
 		p->setMaterialName (pLibName, pMatName);
 		p->setDimension( dimX, dimY, dimZ);	
-		p->setAtomics(atX, atY, atZ);
+		p->setDimFromBuffer(bX, offX, bY, offY, bZ, offZ);
 	}
 	else
 		NAU_THROW("Pass %s: Missing material", aPass->getName().c_str());

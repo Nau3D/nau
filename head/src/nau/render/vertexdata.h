@@ -32,6 +32,8 @@ namespace nau
 
 			virtual ~VertexData(void);
 
+			void setName(std::string &name);
+
 			int getNumberOfVertices();
 
 			//std::vector<Attr>& getDataOf (VertexDataType type);

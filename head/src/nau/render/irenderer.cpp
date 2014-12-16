@@ -67,9 +67,9 @@ IRenderer::setProp(int prop, Enums::DataType type, void *value) {
 #if NAU_OPENGL_VERSION >= 400
 
 void
-IRenderer::addAtomic(std::string buffer, unsigned int id, std::string name) {
+IRenderer::addAtomic(std::string buffer, unsigned int offset, std::string name) {
 
-	std::pair<std::string, unsigned int> p = std::pair<std::string, unsigned int>(buffer, id);
+	std::pair<std::string, unsigned int> p = std::pair<std::string, unsigned int>(buffer, offset);
 	if (m_AtomicLabels.count(p) == 0) {
 		++m_AtomicCount;
 		m_AtomicBufferPrepared = false;
