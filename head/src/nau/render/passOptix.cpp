@@ -203,7 +203,7 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 			m_UseRT = true;
 		}
 		setRTSize(rt->getWidth(), rt->getHeight());
-		m_Viewport->setProp(Viewport::CLEAR_COLOR, rt->getClearValues());
+		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getClearValues());
 	}
 	m_RenderTarget = rt;
 

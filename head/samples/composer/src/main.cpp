@@ -162,7 +162,6 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
 #endif
   EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
-  EVT_MENU(idMenuDbgStep, FrmMainFrame::OnNextFrame)
   EVT_MENU(idMenu_DLG_STATEXML, FrmMainFrame::OnDlgStateXML)
   EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
@@ -379,7 +378,10 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgDbgStep::SetParent(this);
 	DlgStateXML::SetParent(this);
 	DlgDbgStep::SetCanvas(m_Canvas);
-	
+
+#ifdef GLINTERCEPTDEBUG
+	gliSetIsGLIActive(true);
+#endif
 
 #ifdef FINAL
 	startStandAlone();
@@ -891,17 +893,17 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 
 }
 
-void
-FrmMainFrame::OnNextFrame(wxCommandEvent& event)
-{
-	if (m_Canvas->IsPaused()){
-#ifdef GLINTERCEPTDEBUG
-		gliSetIsGLIActive(true);
-#endif
-		m_Canvas->MultiStep();
-	}
-
-}
+//void
+//FrmMainFrame::OnNextFrame(wxCommandEvent& event)
+//{
+//	if (m_Canvas->IsPaused()){
+//#ifdef GLINTERCEPTDEBUG
+//		gliSetIsGLIActive(true);
+//#endif
+//		m_Canvas->MultiStep();
+//	}
+//
+//}
 
 void
 FrmMainFrame::FreezeGLI(){

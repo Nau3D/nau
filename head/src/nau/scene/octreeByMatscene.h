@@ -25,9 +25,6 @@ namespace nau {
 			std::vector<SceneObject*> m_vReturnVector;
 			std::vector<SceneObject*> m_SceneObjects;
 
-
-			//bool m_Visible;
-
 			nau::geometry::BoundingBox m_BoundingBox;
 
 		protected:

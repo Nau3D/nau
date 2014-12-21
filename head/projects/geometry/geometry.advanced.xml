@@ -3,7 +3,7 @@
 	<assets>
 	
 		<scenes>
-			<scene name="CubeLand" scaleY = 0.5 scaleX=1.0 scaleZ=1.0>
+			<scene name="CubeLand" scaleY = 0.5 scaleX=1.0 scaleZ=1.0 type="OctreeByMat">
 				<geometry name = "box1" type = "Sphere" slices=10 stacks=10 
 												transX=-2.5 transY=0 transZ=0 
 												scale=2 material="crateBox"/>
@@ -48,12 +48,12 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1" axis="5">
 				<scenes>
-					<scene>CubeLand</scene>
+					<scene name="CubeLand" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>MainViewport</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
@@ -62,7 +62,7 @@
 			
 		</pipeline>
 	</pipelines>
-	<debug glilog="false">
+	<debug >
 		<functionlog>
 			<logname value="nau_geometry_debug_log"/>
 			<enabled value="true"/>

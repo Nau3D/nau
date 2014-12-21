@@ -11,12 +11,12 @@
 		<viewports>
 			<viewport name="LeftViewport">
 				<ORIGIN x = 0 y =0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 			</viewport>
 			<viewport name="RightViewport">
 				<ORIGIN x = 0.5 y =0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 			</viewport>
 		</viewports>
@@ -58,24 +58,24 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1" >
 				<scenes>
-					<scene>CubeLand</scene>
-					<scene>Perspective</scene>
+					<scene name="CubeLand" />
+					<scene name="Perspective" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>LeftViewport</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			<pass class="default" name="pass2" >
 				<scenes>
-					<scene>CubeLand</scene>
-					<scene>Orthographics</scene>
+					<scene name="CubeLand" />
+					<scene name="Orthographics" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>RightViewport</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			

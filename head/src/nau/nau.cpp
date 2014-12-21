@@ -373,7 +373,7 @@ void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize) {
 
 	if (unitize) {
 		aNewCam->setPerspective (60.0f, 0.01f, 100.0f);
-		aNewCam->setProp(Camera::POSITION, 0.0f, 0.0f, 5.0f, 1.0f);
+		aNewCam->setPropf4(Camera::POSITION, 0.0f, 0.0f, 5.0f, 1.0f);
 	}
 	else
 		aNewCam->setPerspective (60.0f, 1.0f, 10000.0f);
@@ -445,9 +445,9 @@ void Nau::step() {
 
 	m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
 
-#ifdef GLINTERCEPTDEBUG
-	addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
-#endif //GLINTERCEPTDEBUG	
+//#ifdef GLINTERCEPTDEBUG
+//	addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+//#endif //GLINTERCEPTDEBUG	
 
 	if (m_FrameCount == ULONG_MAX)
 		// 2 avoid issues with run_once and skip_first
@@ -496,21 +496,22 @@ void Nau::stepPass() {
 	}
 
 #ifdef GLINTERCEPTDEBUG
-	addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
+	std::string s = RENDERMANAGER->getCurrentPass()->getName();
+	addMessageToGLILog(("\n#NAU(PASS,START," + s + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
 	p->executeNextPass();
 
 #ifdef GLINTERCEPTDEBUG
-	addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+	addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
 	if (currentPass == lastPass) {
 
 		m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
-#ifdef GLINTERCEPTDEBUG
-		addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
-#endif //GLINTERCEPTDEBUG	
+//#ifdef GLINTERCEPTDEBUG
+//		addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
+//#endif //GLINTERCEPTDEBUG	
 	
 	}
 
@@ -793,7 +794,7 @@ Nau::writeAssets (std::string fileType, std::string aFilename, std::string scene
 void
 Nau::setWindowSize (float width, float height)
 {
-	m_Viewport->setProp(Viewport::SIZE, vec2(width,height));
+	m_Viewport->setPropf2(Viewport::SIZE, vec2(width,height));
 	m_WindowWidth = width;
 	m_WindowHeight = height;
 }
@@ -813,15 +814,16 @@ Nau::getWindowWidth()
 
 
 Viewport*
-Nau::createViewport (const std::string &name, const nau::math::vec4 &bgColor) 
+Nau::createViewport (const std::string &name, nau::math::vec4 &bgColor) 
 {
 	Viewport* v = new Viewport;
 
 	v->setName(name);
-	v->setProp (Viewport::ORIGIN, vec2(0.0f,0.0f));
-	v->setProp (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
+	v->setPropf2 (Viewport::ORIGIN, vec2(0.0f,0.0f));
+	v->setPropf2 (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
 
-	v->setProp(Viewport::CLEAR_COLOR, bgColor);
+	v->setPropf4(Viewport::CLEAR_COLOR, bgColor);
+	v->setPropb(Viewport::FULL, true);
 
 	m_vViewports[name] = v;
 
@@ -834,8 +836,9 @@ Nau::createViewport (const std::string &name)
 	Viewport* v = new Viewport;
 
 	v->setName(name);
-	v->setProp (Viewport::ORIGIN, vec2(0.0f,0.0f));
-	v->setProp (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
+	v->setPropf2 (Viewport::ORIGIN, vec2(0.0f,0.0f));
+	v->setPropf2 (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
+	v->setPropb(Viewport::FULL, true);
 
 	m_vViewports[name] = v;
 

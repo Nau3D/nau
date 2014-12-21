@@ -216,14 +216,14 @@ Camera::updateProjection ()
 }
 
 
-void Camera::setProp(Mat4Property prop, mat4 &mat) 
+void Camera::setPropm4(Mat4Property prop, mat4 &mat) 
 {
 	m_Mat4Props[prop].setMat44(mat);
 }
 
 
 void 
-Camera::setProp(FloatProperty prop, float f) 
+Camera::setPropf(FloatProperty prop, float f) 
 {
 	m_FloatProps[prop] = f;
 	vec3 v;
@@ -243,7 +243,7 @@ Camera::setProp(FloatProperty prop, float f)
 
 
 void
-Camera::setProp(Float4Property prop, float x, float y, float z, float w)
+Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 {
 	vec4 v;
 	vec2 v2;
@@ -309,7 +309,7 @@ Camera::setProp(Float4Property prop, float x, float y, float z, float w)
 
 
 void 
-Camera::setProp(EnumProperty prop, int value) 
+Camera::setPrope(EnumProperty prop, int value) 
 {
 	m_EnumProps[prop] = value;
 
@@ -326,11 +326,11 @@ Camera::setProp(int prop, Enums::DataType type, void *value) {
 	switch (type) {
 
 		case Enums::FLOAT:
-			setProp((FloatProperty)prop, *(float *)value);
+			setPropf((FloatProperty)prop, *(float *)value);
 			break;
 		case Enums::VEC4:
 			v = (vec4 *)value;
-			setProp((Float4Property)prop, v->x, v->y, v->z, v->w);
+			setPropf4((Float4Property)prop, v->x, v->y, v->z, v->w);
 			break;
 		case Enums::INT:
 			m_IntProps[prop] = *(int *)value;
@@ -803,7 +803,7 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType, n
 	if (eventType == "DYNAMIC_CAMERA") {
 
 		vec3 p = m_Transform->getTranslation();
-		setProp(POSITION,p.x,p.y,p.z,1.0f);
+		setPropf4(POSITION,p.x,p.y,p.z,1.0f);
 		buildViewMatrix();
 
 		result.set(p.x,p.y,p.z); 
@@ -834,46 +834,46 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType, n
 
 			vView *= vel;
 			vPos -=  vView;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 
 		else if(f->getDirection()=="FORWARD") {
 
 			vView *= vel;
 			vPos += vView;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 				
 		else if(f->getDirection()=="LEFT") {
 			
 			vRight *= vel;
 			vPos -= vRight;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 
 		else if(f->getDirection()=="RIGHT") {
 			
 			vRight *= vel;
 			vPos += vRight;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 		else if (f->getDirection() == "UP") {
 		
 			vUp *= vel;
 			vPos += vUp;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 		else if (f->getDirection() == "DOWN") {
 
 			vUp *= vel;
 			vPos -= vUp;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 
 		if (m_LookAt) {
 
 			vec4 v = m_Float4Props[LOOK_AT_POINT];
-			setProp((Float4Property)LOOK_AT_POINT, v.x, v.y, v.z, 1.0f);
+			setPropf4((Float4Property)LOOK_AT_POINT, v.x, v.y, v.z, 1.0f);
 		}
 
 		result.set(m_Float4Props[POSITION].x, m_Float4Props[POSITION].y, m_Float4Props[POSITION].z); 

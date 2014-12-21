@@ -117,6 +117,7 @@ namespace nau
 			static std::string toLower(std::string);
 
 			static vec4 s_Dummy_vec4;
+			static vec2 s_Dummy_vec2;
 			static bvec4 s_Dummy_bvec4;
 			static float s_Dummy_float;
 			static int s_Dummy_int;

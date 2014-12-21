@@ -18,7 +18,7 @@ const std::string Enums::DataTypeToString[] = {
 						
 						"SAMPLER", "ENUM",
 
-						"BYTE", "UBYTE", "SHORT", "USHORT"};
+						"BYTE", "UBYTE", "SHORT", "USHORT", "STRING"};
 
 
 
@@ -189,6 +189,8 @@ int Enums::getCardinality(DataType p)
 		case DMAT4x3:
 			card = 12;
 			break;
+		default:
+			return 1;
 	}
 	return card;
 };

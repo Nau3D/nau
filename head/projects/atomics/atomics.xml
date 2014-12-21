@@ -42,12 +42,12 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>Camera1</camera>
+				<camera name="Camera1" />
 				<viewport>MainViewport</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<injectionMaps>
 					<map toMaterial="*">

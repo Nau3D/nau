@@ -1,3 +1,5 @@
+#ifdef NAU_OPTIX 
+
 #include <nau/config.h>
 
 #if NAU_OPENGL_VERSION >= 420
@@ -450,5 +452,7 @@ PassOptixPrime::addRayBuffer(IBuffer *b) {
 
 	m_Rays = b;
 }
+
+#endif
 
 #endif

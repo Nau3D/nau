@@ -41,11 +41,11 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>Al</scene>
+					<scene name="Al" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Geometry With Adjacency" toMaterial="showContours" />

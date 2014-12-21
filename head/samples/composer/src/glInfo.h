@@ -28,7 +28,7 @@
 #include <utility>
 
 #include <GL/glew.h>
-#include "NauGlBufferInfo.h"
+//#include "NauGlBufferInfo.h"
 
 
 
@@ -58,11 +58,11 @@ void getUniformValued(double *f, int rows, int columns, std::vector<std::string>
 void getProgramInfoData(unsigned int program, std::vector<std::pair<std::string, char>> &shadersInfo, std::vector<std::string> &stdInfo,  std::vector<std::string> &geomInfo,  std::vector<std::string> &tessInfo);
 void getAttributesData(unsigned int program, std::vector<std::pair<std::string, std::pair<int,std::string>>> &attributeList);
 
-void getCurrentVAOInfoData(std::vector<std::pair<std::pair<int, int>, std::vector<int>>> &vaoInfoData);
+//void getCurrentVAOInfoData(std::vector<std::pair<std::pair<int, int>, std::vector<int>>> &vaoInfoData);
 
-std::vector<int> getCurrentBufferNames();
-bool getBufferInfoFromMap(int buffer, NauGlBufferInfo &bufferInfo);
-std::map<int, NauGlBufferInfo> *getBufferInfoMap();
+//std::vector<int> getCurrentBufferNames();
+//bool getBufferInfoFromMap(int buffer, NauGlBufferInfo &bufferInfo);
+//std::map<int, NauGlBufferInfo> *getBufferInfoMap();
 
-int openBufferMapPointers(int buffer, int offsetNumber, int sizePerOffset, int size, std::vector<int> sizes, std::vector<void*> &pointers);
-void closeBufferMapPointers(int prevBuffer);
+//int openBufferMapPointers(int buffer, int offsetNumber, int sizePerOffset, int size, std::vector<int> sizes, std::vector<void*> &pointers);
+//void closeBufferMapPointers(int prevBuffer);

@@ -1,14 +1,9 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <string>
-#include <math.h>
-
 #include <nau/material/textureSampler.h>
 #include <nau/attribute.h>
 #include <nau/attributeValues.h>
-
-
 #include <nau/config.h>
 
 #ifdef __SLANGER__
@@ -16,6 +11,10 @@
 #include <wx/image.h>
 #include <IL/ilu.h>
 #endif
+
+#include <string>
+#include <math.h>
+
 
 using namespace nau;
 

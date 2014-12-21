@@ -103,7 +103,7 @@ namespace nau {
 		void setWindowSize (float width, float height);
 		float getWindowHeight();
 		float getWindowWidth();
-		nau::render::Viewport* createViewport (const std::string &name, const nau::math::vec4 &bgColor);
+		nau::render::Viewport* createViewport (const std::string &name, nau::math::vec4 &bgColor);
 		nau::render::Viewport* createViewport (const std::string &name);
 		nau::render::Viewport* getViewport (const std::string &name);
 		nau::render::Viewport* getDefaultViewport ();

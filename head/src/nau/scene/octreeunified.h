@@ -15,8 +15,6 @@ namespace nau {
 			std::vector<SceneObject*> m_vReturnVector;
 			SceneObject *m_SceneObject;
 
-			//bool m_Visible;
-
 			nau::geometry::BoundingBox m_BoundingBox;
 
 		protected:
@@ -31,7 +29,6 @@ namespace nau {
 			virtual void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 
 			virtual void build(void);
-
 			virtual void compile(void);
 
 			virtual nau::geometry::IBoundingVolume& getBoundingVolume(void);
@@ -44,8 +41,8 @@ namespace nau {
 				(nau::geometry::Frustum &aFrustum,
 				Camera &aCamera,
 				bool conservative = false);
-			virtual std::vector<SceneObject*>& getAllObjects();
 
+			virtual std::vector<SceneObject*>& getAllObjects();
 			virtual nau::scene::SceneObject* getSceneObject(std::string name);
 			virtual nau::scene::SceneObject* getSceneObject(int index);
 
@@ -54,7 +51,6 @@ namespace nau {
 			virtual nau::math::ITransform *getTransform();
 			virtual void setTransform(nau::math::ITransform *t);
 			virtual void transform(nau::math::ITransform *t);
-
 
 			virtual std::string getType(void);
 

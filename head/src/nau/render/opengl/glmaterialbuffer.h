@@ -17,7 +17,7 @@ namespace nau {
 			void bind(void);
 			void unbind(void);
 
-			void setProp(int prop, Enums::DataType type, void *value);
+			//void setProp(int prop, Enums::DataType type, void *value);
 
 		protected:
 			static bool Init(void);

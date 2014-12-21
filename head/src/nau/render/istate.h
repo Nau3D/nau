@@ -15,7 +15,7 @@ namespace nau
 {
 	namespace render
 	{
-		class IState {
+		class IState{
 
 		public:
 

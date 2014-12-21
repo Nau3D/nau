@@ -64,9 +64,9 @@
 		<pipeline name="ao" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<rendertarget name="info" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Ambient Occlusion" toMaterial="gatherInfo" />
@@ -81,12 +81,12 @@
 			</pass>
 			<pass class="default" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>SmallViewport1</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			<!-- <pass class="quad" name="pass3">

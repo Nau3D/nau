@@ -59,6 +59,7 @@ std::string ProjectLoader::s_Dummy;
 char ProjectLoader::s_pFullName[256] = "";
 
 vec4 ProjectLoader::s_Dummy_vec4;
+vec2 ProjectLoader::s_Dummy_vec2;
 bvec4 ProjectLoader::s_Dummy_bvec4;
 float ProjectLoader::s_Dummy_float;
 int ProjectLoader::s_Dummy_int;
@@ -99,6 +100,15 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 			}
 			else
 				NAU_THROW("File %s: Element %s: Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
+			break;
+		case Enums::VEC2:
+			if ((TIXML_SUCCESS == p->QueryFloatAttribute("x", &(s_Dummy_vec2.x)) || TIXML_SUCCESS == p->QueryFloatAttribute("width", &(s_Dummy_vec2.x)))
+				&& ((TIXML_SUCCESS == p->QueryFloatAttribute("y", &(s_Dummy_vec2.y)) || TIXML_SUCCESS == p->QueryFloatAttribute("height", &(s_Dummy_vec2.y))))) {
+
+				return &s_Dummy_vec2;
+			}
+			else
+				NAU_THROW("File %s: Element %s: Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			break;
 
 		case Enums::BVEC4:
@@ -569,7 +579,7 @@ Specification of the viewport:
 			<viewport name="MainViewport">
 				<CLEAR_COLOR r = 0.0 g = 0.0 b = 0.3 />
 				<ORIGIN x = 0.66 y = 0 />
-				<SIZE width= 0.33 ratio = 1.0 />
+				<SIZE width= 0.33 height = 1.0 />
 			</viewport>
 			...
 		</viewports>
@@ -581,6 +591,7 @@ Specification of the viewport:
 				<CLEAR_COLOR r = 0.0 g = 0.0 b = 0.3 />
 				<ORIGIN x = 0.66 y = 0 />
 				<SIZE width=0.33 height = 1.0 />
+				<RATIO value=0.5 />
 			</viewport>
 			...
 		</viewports>
@@ -592,7 +603,7 @@ it is assumed to be relative.
 
 geometry is specified with ORIGIN and SIZE
 
-ratio can be used instead of height, in which case height = width*ratio
+ratio can be used instead of height, in which case height = absolute_width*ratio
 ----------------------------------------------------------------- */
 
 void
@@ -610,53 +621,53 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 		}
 
 		SLOG("Viewport : %s", pName);
+		v = nau::Nau::getInstance()->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		//TiXmlElement *pElemAux = 0;
+		//pElemAux = pElem->FirstChildElement ("CLEAR_COLOR");
 
-		TiXmlElement *pElemAux = 0;
-		pElemAux = pElem->FirstChildElement ("CLEAR_COLOR");
+		//if (0 == pElemAux) {
+		//	// no color is specified
+		//	v = nau::Nau::getInstance()->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));				
+		//}
+		//else {
+		//	vec4 *v4;
+		//	//// clear color for viewport
+		//	v4 = (vec4 *)readAttr(pName, pElemAux, Enums::VEC4, Viewport::Attribs);
+		//	v = nau::Nau::getInstance()->createViewport (pName, vec4 (v4->x, v4->y, v4->z, 1.0f));
+		//}
 
-		if (0 == pElemAux) {
-			// no color is specified
-			v = nau::Nau::getInstance()->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));				
-		}
-		else {
-			vec4 *v4;
-			//// clear color for viewport
-			v4 = (vec4 *)readAttr(pName, pElemAux, Enums::VEC4, Viewport::Attribs);
-			v = nau::Nau::getInstance()->createViewport (pName, vec4 (v4->x, v4->y, v4->z, 1.0f));
-		}
+		//pElemAux = pElem->FirstChildElement("SIZE");
+		//if (!pElemAux) {
+		//	v->setPropb(Viewport::FULL, true);
+		//}
+		//else {
+		//	float width,height,ratio;
+		//	if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("width", &width) ||
+		//		(TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("height", &height) &&
+		//		TIXML_SUCCESS != pElemAux->QueryFloatAttribute("ratio", &ratio))){
 
-		pElemAux = pElem->FirstChildElement("SIZE");
-		if (!pElemAux) {
-			v->setProp(Viewport::FULL, true);
-		}
-		else {
-			float width,height,ratio;
-			if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("width", &width) ||
-				(TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("height", &height) &&
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute("ratio", &ratio))){
+		//		NAU_THROW("File %s: Element %s: SIZE definition error", ProjectLoader::s_File.c_str(), pName);					
+		//	}
+		//	
+		//	if (TIXML_SUCCESS == pElemAux->QueryFloatAttribute("ratio", &ratio))
+		//		v->setPropf(Viewport::RATIO, ratio);
 
-				NAU_THROW("File %s: Element %s: SIZE definition error", ProjectLoader::s_File.c_str(), pName);					
-			}
-			
-			if (TIXML_SUCCESS == pElemAux->QueryFloatAttribute("ratio", &ratio))
-				v->setProp(Viewport::RATIO, ratio);
+		//	v->setPropf2(Viewport::SIZE, vec2(width, height));
+		//}
 
-			v->setProp(Viewport::SIZE, vec2(width, height));
-		}
+		//pElemAux = pElem->FirstChildElement("ORIGIN");
+		//if (pElemAux)
+		//{
+		//	float x,y;
+		//	if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("x", &x) ||
+		//		TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("y", &y)){
 
-		pElemAux = pElem->FirstChildElement("ORIGIN");
-		if (pElemAux)
-		{
-			float x,y;
-			if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("x", &x) ||
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("y", &y)){
-
-				NAU_THROW("File %s: Element %s: ORIGIN definition error", ProjectLoader::s_File.c_str(), pName);					
-			}		
-			v->setProp(Viewport::ORIGIN, vec2(x, y));
-		}
-		else
-			v->setProp(Viewport::ORIGIN, vec2(0.0f, 0.0f));
+		//		NAU_THROW("File %s: Element %s: ORIGIN definition error", ProjectLoader::s_File.c_str(), pName);					
+		//	}		
+		//	v->setPropf2(Viewport::ORIGIN, vec2(x, y));
+		//}
+		//else
+		//	v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
 
 		// Reading remaining viewport attributes
 		std::map<std::string, Attribute> attribs = Viewport::Attribs.getAttributes();
@@ -665,18 +676,18 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 		void *value;
 				while (p) {
 			// skip previously processed elements
-			if (strcmp(p->Value(), "ORIGIN") && strcmp(p->Value(), "SIZE") && strcmp(p->Value(), "CLEAR_COLOR")) {
+			//if (strcmp(p->Value(), "ORIGIN") && strcmp(p->Value(), "SIZE") && strcmp(p->Value(), "CLEAR_COLOR")) {
 				// trying to define an attribute that does not exist?		
 				if (attribs.count(p->Value()) == 0)
 					NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 				// trying to set the value of a read only attribute?
 				a = attribs[p->Value()];
-				if (a.mReadOnlyFlag)
+				if (a.m_ReadOnlyFlag)
 					NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 
-				value = readAttr(pName, p, a.mType, Light::Attribs);
-				v->setProp(a.mId, a.mType, value);
-			}
+				value = readAttr(pName, p, a.m_Type, Light::Attribs);
+				v->setProp(a.m_Id, a.m_Type, value);
+			//}
 			p = p->NextSiblingElement();
 		}
 
@@ -802,11 +813,11 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 				}
 				// trying to set the value of a read only attribute?
 				a = attribs[p->Value()];
-				if (a.mReadOnlyFlag)
+				if (a.m_ReadOnlyFlag)
 					NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 
-				value = readAttr(pName, p, a.mType, Light::Attribs);
-				aNewCam->setProp(a.mId, a.mType, value);
+				value = readAttr(pName, p, a.m_Type, Light::Attribs);
+				aNewCam->setProp(a.m_Id, a.m_Type, value);
 			}
 			p = p->NextSiblingElement();
 		}
@@ -869,11 +880,11 @@ ProjectLoader::loadLights(TiXmlHandle handle)
 				NAU_THROW("Light %s: %s is not an attribute, in file %s", pName, p->Value(),ProjectLoader::s_File.c_str());
 			// trying to set the value of a read only attribute
 			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
+			if (a.m_ReadOnlyFlag)
 				NAU_THROW("Light %s: %s is a read-only attribute, in file %s", pName, p->Value(),ProjectLoader::s_File.c_str());
 
-			value = readAttr(pName, p, a.mType, Light::Attribs);
-			l->setProp(a.mId, a.mType, value);
+			value = readAttr(pName, p, a.m_Type, Light::Attribs);
+			l->setProp(a.m_Id, a.m_Type, value);
 			p = p->NextSiblingElement();
 		}
 
@@ -954,7 +965,7 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 /* -----------------------------------------------------------------------------
 CAMERAS
 
-	<camera>testCamera</camera>
+	<camera name="MainCamera">
 
 Specifies a previously defined camera (in the assets part of the file)
 -----------------------------------------------------------------------------*/
@@ -969,10 +980,13 @@ ProjectLoader::loadPassCamera(TiXmlHandle hPass, Pass *aPass)
 		NAU_THROW("No camera element found in pass: %s", aPass->getName().c_str());
 	}
 	else if (pElem != 0) {
-		if (!RENDERMANAGER->hasCamera(pElem->GetText()))
-			NAU_THROW("Camera %s is not defined, in pass: %s", pElem->GetText(), aPass->getName().c_str());
+		const char *pCam = pElem->Attribute("name");
+		if (pCam) {
+			if (!RENDERMANAGER->hasCamera(pCam))
+				NAU_THROW("Pass %s - Camera %s is not defined, in pass: %s", aPass->getName().c_str(), pCam, aPass->getName().c_str());
 
-		aPass->setCamera (pElem->GetText());
+			aPass->setCamera(pCam);
+		}
 	}
 }
 
@@ -1004,7 +1018,8 @@ ProjectLoader::loadPassMode(TiXmlHandle hPass, Pass *aPass)
 LIGHTS
 
 	<lights>
-		<light>Sun</light>
+		<light name="Sun" />
+		...
 	</lights>
 
 Specifies a previously defined light (in the assets part of the file)
@@ -1017,13 +1032,13 @@ ProjectLoader::loadPassLights(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("lights").FirstChild ("light").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-		const char *pName = pElem->GetText();
+		const char *pName = pElem->Attribute("name");
 
 		if (0 == pName) {
-			NAU_THROW("Light has no name in pass: %s", aPass->getName().c_str());
+			NAU_THROW("Pass: %s - Light has no name in pass", aPass->getName().c_str());
 		}
 		if (!RENDERMANAGER->hasLight(pName))
-			NAU_THROW("Light %s is not defined, in pass: %s", pName, aPass->getName().c_str());
+			NAU_THROW("Pass: %s - Light %s is not defined", aPass->getName().c_str(), pName);
 
 		aPass->addLight (pName);
 	}//End of lights
@@ -1035,7 +1050,7 @@ ProjectLoader::loadPassLights(TiXmlHandle hPass, Pass *aPass)
 SCENES
 
 	<scenes>
-		<scene>MainScene</scene>
+		<scene name="MainScene" />
 		...
 	</scenes>
 
@@ -1055,10 +1070,16 @@ ProjectLoader::loadPassScenes(TiXmlHandle hPass, Pass *aPass)
 	}
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		if (!RENDERMANAGER->hasScene(pElem->GetText()))
-				NAU_THROW("Scene %s is not defined, in pass: %s", pElem->GetText(),aPass->getName().c_str());
+		const char *pName = pElem->Attribute("name");
 
-		aPass->addScene (pElem->GetText());
+		if (pName && !RENDERMANAGER->hasScene(pName)) {
+			NAU_THROW("Pass: %s - Scene %s is not defined", aPass->getName().c_str(), pName);
+		}
+		else if (!pName) {
+			NAU_THROW("Pass: %s - Scene has no name attribute", aPass->getName().c_str());
+		}
+
+		aPass->addScene (pName);
 	} //End of scenes
 }
 
@@ -1298,11 +1319,11 @@ ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 			NAU_THROW("Pass %s: %s is not an attribute, in file %s", aPass->getName().c_str() , p->Value(), ProjectLoader::s_File.c_str());
 		// trying to set the value of a read only attribute
 		a = attribs[p->Value()];
-		if (a.mReadOnlyFlag)
+		if (a.m_ReadOnlyFlag)
 			NAU_THROW("Pass %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), p->Value(), ProjectLoader::s_File.c_str());
 
-		value = readAttr(aPass->getName(), p, a.mType, Light::Attribs);
-		aPass->setProp(a.mId, a.mType, value);
+		value = readAttr(aPass->getName(), p, a.m_Type, Light::Attribs);
+		aPass->setProp(a.m_Id, a.m_Type, value);
 		p = p->NextSiblingElement();
 	}
 
@@ -2700,11 +2721,11 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 							NAU_THROW("Pass %s: Texture %s: %s is not an attribute", aPass->getName().c_str(),  s_pFullName, p->Value());
 						// trying to set the value of a read only attribute
 						a = attribs[p->Value()];
-						if (a.mReadOnlyFlag)
+						if (a.m_ReadOnlyFlag)
 							NAU_THROW("Pass %s: Texture %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(),  s_pFullName, p->Value());
 
-						value = readAttr(s_pFullName, p, a.mType, TextureSampler::Attribs);
-						dstMat->getTextureSampler(unit)->setProp(a.mId, a.mType, value);
+						value = readAttr(s_pFullName, p, a.m_Type, TextureSampler::Attribs);
+						dstMat->getTextureSampler(unit)->setProp(a.m_Id, a.m_Type, value);
 						p = p->NextSiblingElement();
 					}
 				}
@@ -2749,11 +2770,11 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 							NAU_THROW("Pass %s: Buffer %s: %s is not an attribute", aPass->getName().c_str(), s_pFullName, p->Value());
 						// trying to set the value of a read only attribute
 						a = attribs[p->Value()];
-						if (a.mReadOnlyFlag)
+						if (a.m_ReadOnlyFlag)
 							NAU_THROW("Pass %s: MaterialBuffer %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), s_pFullName, p->Value());
 
-						value = readAttr(s_pFullName, p, a.mType, IMaterialBuffer::Attribs);
-						imb->setProp(a.mId, a.mType, value);
+						value = readAttr(s_pFullName, p, a.m_Type, IMaterialBuffer::Attribs);
+						imb->setProp(a.m_Id, a.m_Type, value);
 						p = p->NextSiblingElement();
 					}
 					dstMat->attachBuffer(imb);
@@ -2987,11 +3008,11 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 			// trying to set the value of a read only attribute?
 			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
+			if (a.m_ReadOnlyFlag)
 				NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
 
-			value = readAttr(pName, p, a.mType, IBuffer::Attribs);
-			b->setProp(a.mId, a.mType, value);
+			value = readAttr(pName, p, a.m_Type, IBuffer::Attribs);
+			b->setProp(a.m_Id, a.m_Type, value);
 			p = p->NextSiblingElement();
 		}
 
@@ -3161,11 +3182,11 @@ ProjectLoader::loadState(TiXmlElement *pElemAux, MaterialLib *aLib, Material *aM
 			NAU_THROW("Library %s: State %s: %s is not an attribute", aLib->getName().c_str(), s->getName().c_str(), p->Value());
 		// trying to set the value of a read only attribute
 		a = attribs[p->Value()];
-		if (a.mReadOnlyFlag)
+		if (a.m_ReadOnlyFlag)
 			NAU_THROW("Library %s: State %s: %s is a read-only attribute, in file %s", aLib->getName().c_str(),  s->getName().c_str(), p->Value());
 
-		value = readAttr(s->getName(), p, a.mType, IState::Attribs);
-		s->setProp(a.mId, a.mType, value);
+		value = readAttr(s->getName(), p, a.m_Type, IState::Attribs);
+		s->setProp(a.m_Id, a.m_Type, value);
 		//aMat->getTextureSampler(unit)->setProp(a.mId, a.mType, value);
 		p = p->NextSiblingElement();
 	}
@@ -3362,11 +3383,11 @@ ProjectLoader::loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material
 			NAU_THROW("Library %s: Material %s: Color - %s is not an attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 		// trying to set the value of a read only attribute
 		a = attribs[p->Value()];
-		if (a.mReadOnlyFlag)
+		if (a.m_ReadOnlyFlag)
 			NAU_THROW("Library %s: Material %s: Color - %s is a read-only attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 
-		value = readAttr("", p, a.mType, ColorMaterial::Attribs);
-		aMat->getColor().setProp(a.mId, a.mType, value);
+		value = readAttr("", p, a.m_Type, ColorMaterial::Attribs);
+		aMat->getColor().setProp(a.m_Id, a.m_Type, value);
 		p = p->NextSiblingElement();
 	}
 
@@ -3494,11 +3515,11 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 				NAU_THROW("Library %s: Material %s: ImageTexture - %s is not an attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 			// trying to set the value of a read only attribute
 			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
+			if (a.m_ReadOnlyFlag)
 				NAU_THROW("Library %s: Material %s: ImageTexture - %s is a read-only attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 
-			value = readAttr("", p, a.mType, ImageTexture::Attribs);
-			aMat->getImageTexture(unit)->setProp(a.mId, a.mType, value);
+			value = readAttr("", p, a.m_Type, ImageTexture::Attribs);
+			aMat->getImageTexture(unit)->setProp(a.m_Id, a.m_Type, value);
 			p = p->NextSiblingElement();
 		}
 #else
@@ -3558,11 +3579,11 @@ ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Materi
 				NAU_THROW("Library %s: Material %s: Buffer - %s is not an attribute", aLib->getName().c_str(), aMat->getName().c_str(), p->Value());
 			// trying to set the value of a read only attribute
 			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
+			if (a.m_ReadOnlyFlag)
 				NAU_THROW("Library %s: Material %s: Buffer - %s is a read-only attribute", aLib->getName().c_str(), aMat->getName().c_str(), p->Value());
 
-			value = readAttr("", p, a.mType, IMaterialBuffer::Attribs);
-			imb->setProp(a.mId, a.mType, value);
+			value = readAttr("", p, a.m_Type, IMaterialBuffer::Attribs);
+			imb->setProp(a.m_Id, a.m_Type, value);
 			p = p->NextSiblingElement();
 		}
 		aMat->attachBuffer(imb);
@@ -3634,11 +3655,11 @@ ProjectLoader::loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Mater
 				NAU_THROW("Library %s: Material %s: Texture %s: %s is not an attribute", aLib->getName().c_str(),  aMat->getName().c_str(), pTextureName, p->Value());
 			// trying to set the value of a read only attribute
 			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
+			if (a.m_ReadOnlyFlag)
 				NAU_THROW("Library %s: Material %s: Texture %s: %s is a read-only attribute, in file %s", aLib->getName().c_str(),  aMat->getName().c_str(), pTextureName, p->Value());
 
-			value = readAttr(pTextureName, p, a.mType, TextureSampler::Attribs);
-			aMat->getTextureSampler(unit)->setProp(a.mId, a.mType, value);
+			value = readAttr(pTextureName, p, a.m_Type, TextureSampler::Attribs);
+			aMat->getTextureSampler(unit)->setProp(a.m_Id, a.m_Type, value);
 			p = p->NextSiblingElement();
 		}
 	}

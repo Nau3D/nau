@@ -30,7 +30,7 @@ DlgStateXML::Instance () {
 }
  
 
-DlgStateXML::DlgStateXML(): wxDialog(DlgStateXML::m_Parent, -1, wxT("Nau - Program Information"),wxDefaultPosition,
+DlgStateXML::DlgStateXML(): wxDialog(DlgStateXML::m_Parent, -1, wxT("Nau - State Information"),wxDefaultPosition,
 						   wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE)
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize);

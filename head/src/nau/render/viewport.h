@@ -4,48 +4,35 @@
 #include <nau/math/vec2.h>
 #include <nau/math/vec4.h>
 #include <nau/attribute.h>
-
+#include <nau/attributeValues.h>
 #include <nau/event/ilistener.h>
 #include <nau/event/eventVec3.h>
 
-#include <map>
 #include <string>
 
 using namespace nau::event_;
 using namespace nau::math;
+using namespace nau;
 
 namespace nau
 {
 	namespace render
 	{
-		class Viewport: public IListener
+		class Viewport: public AttributeValues, public IListener
 		{
-		protected:
-			//vec2 m_Origin;
-			//vec2 m_Size;
-			//vec2 m_RelSize;
-			//vec2 m_RelOrigin;
-			//vec4 m_BackgroundColor;
-			//bool m_Fixed;
-			//float m_Ratio;
-			std::string m_Name;
-
-			std::map<int, bool> m_BoolProps;
-			std::map<int, vec2> m_Float2Props;
-			std::map<int, vec4> m_Float4Props;
-			std::map<int, float> m_FloatProps;
-			std::map<int, int> m_IntProps;
-
-			static bool Inited;
-			static bool Init();
-
 		public:
 
-			typedef enum {ORIGIN, SIZE, SET_ORIGIN, SET_SIZE, COUNT_FLOAT2PROPERTY} Float2Property;
-			typedef enum {CLEAR_COLOR, COUNT_FLOAT4PROPERTY} Float4Property;
-			typedef enum {FULL, COUNT_BOOLPROPERTY} BoolProperty;
-			typedef enum {RATIO, COUNT_FLOATPROPERTY} FloatProperty;
-			typedef enum {COUNT_INTPROPERTY} IntProperty;
+			FLOAT2_PROP(ORIGIN, 0);
+			FLOAT2_PROP(SIZE, 1);
+			FLOAT2_PROP(ABSOLUT_ORIGIN, 2);
+			FLOAT2_PROP(ABSOLUT_SIZE, 3);
+
+			BOOL_PROP(FULL, 0);
+
+			FLOAT_PROP(RATIO, 0);
+
+			FLOAT4_PROP(CLEAR_COLOR, 0);
+
 			static AttribSet Attribs;
 
 			Viewport(void);
@@ -56,38 +43,20 @@ namespace nau
 			std::string &getName();
 			void setName(std::string);
 
-			void setProp(Float4Property prop, const vec4 &value);
-			void setProp(Float2Property prop, const vec2 &value);
-			void setProp(BoolProperty prop, bool value);
-			void setProp(FloatProperty prop, float values);
+			void setPropf4(Float4Property prop,vec4 &value);
+			void setPropf2(Float2Property prop, vec2 &value);
+			void setPropb(BoolProperty prop, bool value);
+			void setPropf(FloatProperty prop, float values);
 			// Note: no validation is performed!
-			void setProp(int prop, Enums::DataType type, void *value);
+			//void setProp(int prop, Enums::DataType type, void *value);
 
-			const vec2 &getPropf2(Float2Property prop);
-			const vec4 &getPropf4(Float4Property prop);
-			bool getPropb(BoolProperty prop);
 			float getPropf(FloatProperty prop);
-			void *getProp(int prop, Enums::DataType type);
 
+		protected:
+			std::string m_Name;
 
-
-
-//			const vec2& getOrigin (void);
-//			void setOrigin (float x, float y);
-//			const vec2& getSize (void);
-//			void setSize (float width, float height);
-
-			//const vec4& getBackgroundColor (void);
-			//void setBackgroundColor (const vec4& aColor);
-
-			//float getRatio();
-			//void setRatio(float m);
-
-			//bool isFixed (void);
-			//void setFixed (bool value);
-
-			//bool isRelative(void);
-
+			static bool Inited;
+			static bool Init();
 		};
 	};
 };

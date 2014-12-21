@@ -85,11 +85,11 @@
 		
 			<pass class="depthmap" name="getShadowMap">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<rendertarget name="depthAndVertices" fromLibrary="RT vs SM" />
 				<materialMaps>
@@ -99,11 +99,11 @@
 			
 			<pass class="depthmap" name="getShadowMapBF">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<rendertarget name="depth" fromLibrary="RT vs SM" />
 				<materialMaps>
@@ -120,12 +120,12 @@
 			
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<rendertarget name="deferred" fromLibrary="RT vs SM" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<injectionMaps>
 					<map toMaterial="*">
@@ -158,15 +158,15 @@
 
 			<pass class="optix" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
 				
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				
 				<rendertarget name="test_ubyte" fromLibrary="RT vs SM" />
 				
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				
 				<materialMaps>

@@ -1,15 +1,13 @@
 #ifndef MATERIALBUFFER_H
 #define MATERIALBUFFER_H
 
-#include <string>
-#include <math.h>
-
 #include <nau/attribute.h>
 #include <nau/attributeValues.h>
-
 #include <nau/render/ibuffer.h>
 
 
+#include <string>
+#include <math.h>
 
 using namespace nau;
 

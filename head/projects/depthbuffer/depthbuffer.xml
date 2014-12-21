@@ -9,12 +9,12 @@
 		<viewports>
 			<viewport name="SmallViewport1" >
 				<ORIGIN x=0.0 y=0.0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
 			</viewport>
 			<viewport name="SmallViewport2" >
 				<ORIGIN x=0.5 y=0.0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
 			</viewport>
 		</viewports>
@@ -46,9 +46,9 @@
 		
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<rendertarget name="depth" fromLibrary="Depth Buffer"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Depth Buffer" toMaterial="depthOnlyNoCull" />
@@ -62,12 +62,12 @@
 			
 			<pass class="default" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>SmallViewport2</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			

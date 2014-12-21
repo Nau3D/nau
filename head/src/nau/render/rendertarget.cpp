@@ -68,7 +68,7 @@ RenderTarget::setLayerCount(int layers)
 }
 
 
-const nau::math::vec4 &
+nau::math::vec4 &
 RenderTarget::getClearValues() 
 {
 	return m_ClearValues;

@@ -35,9 +35,9 @@ ProfilerPass::ProfilerPass (const std::string &name) :
 	m_Viewport = NAU->createViewport("__Profiler", vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	//m_pViewport = new nau::render::Viewport();
 	m_pCam->setViewport(m_Viewport);
-	m_Viewport->setProp(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowWidth()));
-	m_Viewport->setProp(Viewport::ORIGIN, vec2(0,0));
-	m_pCam->setProp(Camera::PROJECTION_TYPE, Camera::ORTHO);
+	m_Viewport->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowWidth()));
+	m_Viewport->setPropf2(Viewport::ORIGIN, vec2(0,0));
+	m_pCam->setPrope(Camera::PROJECTION_TYPE, Camera::ORTHO);
 	m_pCam->setOrtho(0.0f ,NAU->getWindowWidth() , NAU->getWindowWidth(), 0.0f, -1.0f, 1.0f);
 
 	m_pFont = FontManager::getFont("CourierNew10");
@@ -78,7 +78,7 @@ ProfilerPass::prepare (void)
 
 	prepareBuffers();
 
-	m_Viewport->setProp(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowHeight()));
+	m_Viewport->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowHeight()));
 	m_pCam->setOrtho(0.0f ,NAU->getWindowWidth() , NAU->getWindowHeight(), 0.0f, -1.0f, 1.0f);
 
 	if (m_Viewport != NULL) {

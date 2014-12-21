@@ -39,11 +39,11 @@
 			<pass class="default" name="teapotRendering" >
 				<viewport>MainViewport</viewport>
 				<scenes>
-					<scene>Main</scene>
+					<scene name="Main" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			

@@ -1,5 +1,6 @@
 #include <nau/render/pipeline.h>
 
+#include <nau/config.h>
 #include <nau.h>
 #include <nau/render/rendermanager.h>
 
@@ -9,7 +10,11 @@
 #include <nau/slogger.h>
 
 #include <nau/debug/profile.h>
-//#include "filenames.h"
+
+
+#ifdef GLINTERCEPTDEBUG
+#include <nau/loader/projectloaderdebuglinker.h>
+#endif //GLINTERCEPTDEBUG
 
 using namespace nau::geometry;
 using namespace nau::render;
@@ -197,28 +202,25 @@ Pipeline::execute() {
 	try {
 		PROFILE("Pipeline execute");
 
-		std::deque<Pass*>::iterator passIter;
-		passIter = m_Passes.begin();
-
-		for ( ; passIter != m_Passes.end(); passIter++) {
+		for ( auto pass:m_Passes) {
 #ifdef GLINTERCEPTDEBUG
-		addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
+			addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
-		PROFILE ((*passIter)->getName().c_str());
-		m_CurrentPass = *passIter;
-		RENDERER->setDefaultState();			
-		(*passIter)->prepare();
+			PROFILE (pass->getName());
+			m_CurrentPass = pass;
+			RENDERER->setDefaultState();			
+			pass->prepare();
 
-		if (true == (*passIter)->renderTest()) {	
+			if (true == pass->renderTest()) {	
 
-			(*passIter)->doPass();
-		}
-		(*passIter)->restore();
-		}
+				pass->doPass();
+			}
+			pass->restore();
 #ifdef GLINTERCEPTDEBUG
-		addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
+			addMessageToGLILog(("\n#NAU(PASS,END," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
+		}
 	}
 	catch (Exception &e) {
 		SLOG(e.getException().c_str());

@@ -28,7 +28,7 @@ namespace nau {
 						SAMPLER,
 						ENUM,
 
-						BYTE, UBYTE, SHORT, USHORT,
+						BYTE, UBYTE, SHORT, USHORT, STRING,
 						COUNT_DATATYPE
 		};
 

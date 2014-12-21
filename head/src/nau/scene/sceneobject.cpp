@@ -116,10 +116,10 @@ SceneObject::getTransform ()
 
 
 void 
-SceneObject::burnTransform (void)
+SceneObject::burnTransform(void)
 {
 	const mat4 &transformationMatrix = m_ResultTransform->getMat44();
-	
+
 	ITransform *aux = m_ResultTransform->clone();
 	aux->invert();
 	aux->transpose();
@@ -127,16 +127,21 @@ SceneObject::burnTransform (void)
 
 	VertexData &vertexData = m_Renderable->getVertexData();
 
-	std::vector<VertexData::Attr> &vertices = vertexData.getDataOf (VertexData::getAttribIndex("position"));
-	std::vector<VertexData::Attr> &normals = vertexData.getDataOf (VertexData::getAttribIndex("normal"));
+	std::vector<VertexData::Attr> &vertices = vertexData.getDataOf(VertexData::getAttribIndex("position"));
+	std::vector<VertexData::Attr> &normals = vertexData.getDataOf(VertexData::getAttribIndex("normal"));
 	std::vector<VertexData::Attr>::iterator verticesIter, normalIter;
 
+
+	if (normals.size() > 0) {
+		normalIter = normals.begin();
+		for (; normalIter != normals.end(); ++normalIter) {
+			normalMatrix.transform3(*normalIter);
+			normalIter->normalize();
+		}
+	}
 	verticesIter = vertices.begin();
-	normalIter = normals.begin();
-	for ( ; verticesIter != vertices.end (); verticesIter++ , normalIter++){
-			transformationMatrix.transform((*verticesIter));
-			normalMatrix.transform3((*normalIter));
-			(*normalIter).normalize();
+	for (; verticesIter != vertices.end(); ++verticesIter) {
+		transformationMatrix.transform(*verticesIter);
 	}
 
 	//Reset transform to the identity

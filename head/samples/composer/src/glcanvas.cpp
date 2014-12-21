@@ -131,8 +131,8 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 			DlgDbgPrograms::Instance()->clear();
 			DlgDbgPrograms::Instance()->loadShaderInfo();
 
-			DlgDbgBuffers::Instance()->clear();
-			DlgDbgBuffers::Instance()->loadBufferInfo();
+			//DlgDbgBuffers::Instance()->clear();
+			//DlgDbgBuffers::Instance()->loadBufferInfo();
 
 			DlgDbgStep::Instance()->updateDlg();
 #endif

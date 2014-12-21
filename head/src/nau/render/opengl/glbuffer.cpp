@@ -20,7 +20,9 @@ GLBuffer::GLBuffer(std::string label): m_LastBound(GL_ARRAY_BUFFER) {
 	m_Label = label;
 	glGenBuffers(1, (GLuint *)&m_IntProps[ID]);
 #if NAU_OPENGL_VERSION >= 430
+	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 	glObjectLabel(GL_BUFFER, m_IntProps[ID], m_Label.size(), m_Label.c_str());
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 #endif
 }
 

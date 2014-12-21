@@ -68,7 +68,7 @@ namespace nau
 			//	VIEW_MATRIX, PROJECTION_MATRIX, VIEW_INVERSE_MATRIX,
 			//	PROJECTION_VIEW_MATRIX, TS05_PVM_MATRIX, COUNT_MAT4PROPERTY } Mat4Property;
 
-			typedef enum { COUNT_INTPROPERTY} IntProperty;
+			//typedef enum { COUNT_INTPROPERTY} IntProperty;
 
 			ENUM_PROP(PROJECTION_TYPE, 0);
 			//typedef enum { PROJECTION_TYPE, COUNT_ENUMPROPERTY} EnumProperty;
@@ -80,9 +80,9 @@ namespace nau
 			virtual ~Camera (void);
 
 
-			void setProp(Float4Property prop, float r, float g, float b, float a);
-			void setProp(FloatProperty prop, float value);
-			void setProp(EnumProperty prop, int value);
+			void setPropf4(Float4Property prop, float r, float g, float b, float a);
+			void setPropf(FloatProperty prop, float value);
+			void setPrope(EnumProperty prop, int value);
 			// Note: no validation is performed!
 			void setProp(int prop, Enums::DataType type, void *value);
 
@@ -151,6 +151,7 @@ namespace nau
 
 			nau::event_::EventVec3 m_Event;
 			nau::render::Viewport *m_pViewport;
+			void setPropm4(Mat4Property prop, mat4 &mat);
 
 			vec3 result;
 			// LookAt settings
@@ -169,7 +170,6 @@ namespace nau
 
 			void updateProjection();
 
-			void setProp(Mat4Property prop, mat4 &mat);
 			// Matrices
 			void buildViewMatrix (void);
 			void buildViewMatrixInverse(void);

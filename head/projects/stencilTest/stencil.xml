@@ -59,12 +59,12 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="Real Scene" axis="5">
 				<scenes>
-					<scene>CubeLand</scene>
+					<scene name="CubeLand" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>MainViewport</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="crateBox" toLibrary="Stencil" toMaterial="simpleTextured" />
@@ -73,7 +73,7 @@
 
 			<pass class="default" name="Set Ground On Stencil" >
 				<scenes>
-					<scene>Ground</scene>
+					<scene name="Ground" />
 				</scenes>
 				<color clear=false />
 				<depth clear=false write=false />
@@ -81,10 +81,10 @@
 					<stencilFunc  func=NEVER ref=1 mask=255 />
 					<stencilOp sfail=REPLACE dfail=REPLACE dpass=REPLACE/>
 				</stencil>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>MainViewport</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="ground" toLibrary="Stencil" toMaterial="simpleTextured2" />
@@ -93,7 +93,7 @@
 
 		<pass class="default" name="Draw Reflection" >
 				<scenes>
-					<scene>CubeLandReflected</scene>
+					<scene name="CubeLandReflected" />
 				</scenes>
 				<color clear=false />
 				<depth clear=false />
@@ -101,10 +101,10 @@
 					<stencilFunc  func=EQUAL ref=1 mask=255 />
 					<stencilOp sfail=KEEP dfail=KEEP dpass=KEEP/>
 				</stencil>
-			<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>MainViewport</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="crateBox" toLibrary="Stencil" toMaterial="simpleTextured3" />
@@ -113,14 +113,14 @@
 			
 		<pass class="default" name="Draw Ground">
 				<scenes>
-					<scene>Ground</scene>
+					<scene name="Ground" />
 				</scenes>
 				<color clear=false />
 				<depth clear=false />
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<viewport>MainViewport</viewport>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="ground" toLibrary="Stencil" toMaterial="simpleTexturedBlend" />

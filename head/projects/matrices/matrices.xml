@@ -68,33 +68,33 @@
 		
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>CubeLand</scene>
+					<scene name="CubeLand" />
 				</scenes>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<camera>UserCamera</camera>
+				<camera name="UserCamera" />
 			</pass>
 			
 			<pass class="default" name="pass2">
 				<scenes>
-					<scene>CubeLand</scene>
-					<scene>UserCamera</scene>
+					<scene name="CubeLand" />
+					<scene name="UserCamera" />
 				</scenes>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<camera>GodCamera</camera>
+				<camera name="GodCamera" />
 			</pass>
 			
 			<pass class="default" name="pass3">
 				<scenes>
-					<scene>CubeLand</scene>
-					<scene>UserCamera</scene>
+					<scene name="CubeLand" />
+					<scene name="UserCamera" />
 				</scenes>
-				<camera>ClipSpaceCamera</camera>
+				<camera name="ClipSpaceCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<injectionMaps>
 					<map toMaterial="*">

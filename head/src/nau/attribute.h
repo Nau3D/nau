@@ -1,16 +1,19 @@
 #ifndef ATTRIBUTE_H
 #define ATTRIBUTE_H
 
+
+
+#include <nau/enums.h>
+#include <nau/math/vec4.h>
+#include <nau/math/vec2.h>
+#include <nau/math/bvec4.h>
+#include <nau/math/mat3.h>
+#include <nau/math/mat4.h>
+
 #include <map>
 #include <string>
 #include <vector>
 #include <assert.h>
-
-#include "enums.h"
-#include "nau/math/vec4.h"
-#include "nau/math/bvec4.h"
-#include "nau/math/mat3.h"
-#include "nau/math/mat4.h"
 
 using namespace nau::math;
 
@@ -29,19 +32,19 @@ namespace nau {
 			COLOUR
 		} Semantics;
 
-		Attribute(): mId(-1), mDefault(NULL), mRangeDefined(false), mListDefined(false) {};
+		Attribute(): m_Id(-1), m_Default(NULL), m_RangeDefined(false), m_ListDefined(false) {};
 
 		Attribute(int id, std::string name, Enums::DataType type, bool readOnlyFlag = false, void *defaultV = NULL ): 
-			mId(id), mName(name), mType(type), mReadOnlyFlag(readOnlyFlag), mDefault(NULL), mMin(NULL), mMax(NULL),
-				mListDefined(false), mRangeDefined(false)  {
+			m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), m_Default(NULL), m_Min(NULL), m_Max(NULL),
+				m_ListDefined(false), m_RangeDefined(false)  {
 		
 			if (defaultV) {
-				int s = Enums::getSize(mType);
-				mDefault = malloc(s);
-				memcpy(mDefault, defaultV, s);
+				int s = Enums::getSize(m_Type);
+				m_Default = malloc(s);
+				memcpy(m_Default, defaultV, s);
 			}
 			else {
-				mDefault = Enums::getDefaultValue(mType);
+				m_Default = Enums::getDefaultValue(m_Type);
 				
 			}
 		};
@@ -49,24 +52,24 @@ namespace nau {
 
 		~Attribute() {
 			// can't free this memory because it may be in use in other attribute
-			//bool isBasic = Enums::isBasicType(mType);
-			//if (mRangeDefined) {
-			//	if (mMin != NULL)
+			//bool isBasic = Enums::isBasicType(m_Type);
+			//if (m_RangeDefined) {
+			//	if (m_Min != NULL)
 			//		if (isBasic)
-			//			free(mMin);
+			//			free(m_Min);
 			//		else
-			//			delete mMin;
-			//	if (mMax != NULL)
+			//			delete m_Min;
+			//	if (m_Max != NULL)
 			//		if (isBasic)
-			//			free(mMax);
+			//			free(m_Max);
 			//		else
-			//			delete mMax;
+			//			delete m_Max;
 			//}
-			//if (mDefault != NULL)
+			//if (m_Default != NULL)
 			//	if (isBasic)
-			//		free(mDefault);
+			//		free(m_Default);
 			//	else
-			//		delete mDefault;
+			//		delete m_Default;
 		};
 
 
@@ -81,48 +84,50 @@ namespace nau {
 
 		std::string getName() {
 
-			return mName;
+			return m_Name;
 		};
 
 
 		void setRange(void *min, void *max) { 
 				
+			assert(m_Type != Enums::STRING);
+
 			if (min == NULL && max == NULL)
 				return;
 			
-			mRangeDefined = true;
+			m_RangeDefined = true;
 
 			if (min != NULL) {
-				mMin = (void *)malloc(Enums::getSize(mType));
-				memcpy(mMin, min, Enums::getSize(mType));
+				m_Min = (void *)malloc(Enums::getSize(m_Type));
+				memcpy(m_Min, min, Enums::getSize(m_Type));
 			}
 			else
-				mMin = NULL;
+				m_Min = NULL;
 
 			if (max != NULL) {
-				mMax = (void *)malloc(Enums::getSize(mType));
-				memcpy(mMax, max, Enums::getSize(mType));
+				m_Max = (void *)malloc(Enums::getSize(m_Type));
+				memcpy(m_Max, max, Enums::getSize(m_Type));
 			}
 			else
-				mMax = NULL;
+				m_Max = NULL;
 		};
 
 
 		Enums::DataType getType() {
 
-			return mType;
+			return m_Type;
 		}
 
 
 		int getId() {
 
-			return mId;
+			return m_Id;
 		}
 
 
 		void listAdd(std::string name, int id) {
 		
-			mListDefined = true;
+			m_ListDefined = true;
 			mListValues.push_back(id);
 			mListString.push_back(name);
 		};
@@ -130,7 +135,7 @@ namespace nau {
 		 
 		bool isValid(std::string value) {
 		
-			if (mListDefined) {				
+			if (m_ListDefined) {				
 				std::vector<std::string>::iterator it = mListString.begin();
 				for ( ; it != mListString.end(); ++it) {
 					if (*it == value)
@@ -142,9 +147,18 @@ namespace nau {
 		};
 
 
-		bool getRangeDefined() { return mRangeDefined; };
-		bool getListDefined() { return mListDefined; };
+		bool getRangeDefined() { return m_RangeDefined; };
+		bool getListDefined() { return m_ListDefined; };
 
+		void *getMax() {
+		
+			return m_Max;
+		}
+
+		void *getMin() {
+
+			return m_Min;
+		}
 
 		int getListValue(std::string &s) {
 		
@@ -162,21 +176,32 @@ namespace nau {
 				if (mListValues[i] == v)
 					return mListString[i];
 			}
-			return mDummyS;
+			return m_DummyS;
 		};
 
 
-		int mId;
-		std::string mName;
-		Enums::DataType mType;
-		bool mReadOnlyFlag;
-		void *mDefault;
-		bool mListDefined;
-		bool mRangeDefined;
-		void *mMin, *mMax;
+		bool isValid(int v) {
+
+			for (unsigned int i = 0; i < mListValues.size(); ++i) {
+				if (mListValues[i] == v)
+					return true;
+			}
+			return false;
+
+		}
+
+
+		int m_Id;
+		std::string m_Name;
+		Enums::DataType m_Type;
+		bool m_ReadOnlyFlag;
+		void *m_Default;
+		bool m_ListDefined;
+		bool m_RangeDefined;
+		void *m_Min, *m_Max;
 		std::vector<int> mListValues;
 		std::vector<std::string> mListString;
-		std::string mDummyS;
+		std::string m_DummyS;
 	};
 
 
@@ -190,26 +215,26 @@ namespace nau {
 
 	public:
 
-		AttribSet(): mNextFreeID(1000), mDummyS("") {mDummy.mName = "NO_ATTR"; };
+		AttribSet(): m_NextFreeID(1000), m_DummyS("") {m_Dummy.m_Name = "NO_ATTR"; };
 		~AttribSet() {};
 
 		int getNextFreeID() {
 		
-			return mNextFreeID++;
+			return m_NextFreeID++;
 		}
 
 
 		void add(Attribute a) {
 			
-			if (a.mId != -1) {
-				mAttributes[a.mName] = a;
+			if (a.m_Id != -1) {
+				m_Attributes[a.m_Name] = a;
 			}
 			Enums::DataType dt = a.getType();
 			if (mDataTypeCounter.count(dt))
 				++mDataTypeCounter[dt];
 			else
 				mDataTypeCounter[dt] = 1;
-		};
+		}
 
 
 		int getDataTypeCount(Enums::DataType dt ) {
@@ -223,80 +248,95 @@ namespace nau {
 		
 		const Attribute &get(std::string name) {
 
-			if (mAttributes.find(name) != mAttributes.end()) 
+			if (m_Attributes.find(name) != m_Attributes.end()) 
 
-				return(mAttributes[name]);
+				return(m_Attributes[name]);
 			else
-				return mDummy;
+				return m_Dummy;
 
-		};
+		}
+
+		const Attribute &get(int id, Enums::DataType dt) {
+
+			std::map<std::string, Attribute>::iterator it;
+			it = m_Attributes.begin();
+			for (; it != m_Attributes.end(); ++it) {
+
+				if (it->second.m_Id == id && it->second.m_Type == dt)
+					return (it->second);
+			}
+			return m_Dummy;
+		}
 
 
 		int getID(std::string name) {
 
-			if (mAttributes.find(name) != mAttributes.end()) 
+			if (m_Attributes.find(name) != m_Attributes.end()) 
 
-				return(mAttributes[name].mId);
+				return(m_Attributes[name].m_Id);
 			else
 				return -1;
 
-		};
+		}
 
 
 		const std::map<std::string, Attribute> &getAttributes() {
 
-			return (mAttributes);
+			return (m_Attributes);
 		}
 
 
 		const std::string &getName(int id, Enums::DataType dt) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
 
-				if (it->second.mId == id && it->second.mType == dt)
+				if (it->second.m_Id == id && it->second.m_Type == dt)
 					return (it->first);
 			}
-			return mDummyS;
+			return m_DummyS;
 		}
 
 
 		void getPropTypeAndId(std::string &s, nau::Enums::DataType *dt , int *id) {
 			
 			Attribute a = get(s);
-			*id = a.mId;
+			*id = a.m_Id;
 
-			if (a.mId != -1) {
+			if (a.m_Id != -1) {
 
-				*dt = a.mType;
+				*dt = a.m_Type;
 			}
 		}
+
+
+		
 
 
 		const std::vector<std::string> &getListString(int id) {
 		
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
 
-				if (it->second.mId == id && it->second.mType == Enums::DataType::ENUM)
+				if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
 					return (it->second.mListString);
 			}
-			return mDummyVS;
+			return m_DummyVS;
 		}
 
 
 		const std::vector<int> &getListValues(int id) {
 		
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
 
-				if (it->second.mId == id && it->second.mType == Enums::DataType::ENUM)
+				if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
 					return (it->second.mListValues);
 			}
-			return mDummyVI;
+			return m_DummyVI;
 		}
 
 
@@ -312,13 +352,13 @@ namespace nau {
 		std::string getListStringOp(int id, int prop) {
 		
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
 
-				if (it->second.mId == id && it->second.mType == Enums::DataType::ENUM)
+				if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
 					return (it->second.getListString(prop));
 			}
-			return mDummyS;
+			return m_DummyS;
 		}
 
 
@@ -332,24 +372,24 @@ namespace nau {
 		int getListValueOp(int id, std::string prop) {
 		
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
 
-				if (it->second.mId == id && it->second.mType == Enums::DataType::ENUM)
+				if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
 					return (it->second.getListValue(prop));
 			}
 			return -1;
 		}
 
 
-		void listAdd(std::string attrName, std::string elemS, int elemId) {
+		void listAdd(std::string attrName, std::string elemS, int elem_Id) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
 
 				if (it->first == attrName) {
-					it->second.listAdd(elemS, elemId);
+					it->second.listAdd(elemS, elem_Id);
 					return;
 				}
 			}
@@ -365,54 +405,87 @@ namespace nau {
 
 		void setDefault(std::string attr, void *value) {
 		
-			if (mAttributes.find(attr) != mAttributes.end()) {
-				int s = Enums::getSize(mAttributes[attr].mType);
-				mAttributes[attr].mDefault = malloc(s);
-				memcpy(mAttributes[attr].mDefault, value, s);
-			}
-		}
-
-
-		void *getDefault(int id, Enums::DataType type) {
-
-			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
-
-				if (it->second.mId == id && it->second.mType == type)
-					return (it->second.mDefault);
-			}
-			return NULL;
-		}
-
-
-		void initAttribInstanceIntArray(std::map<int,int> &m) {
-
-			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::INT) {
-
-					//if (it->second.mDefault == NULL) 
-					//	m[it->second.mId] = 0;
-					//else
-						m[it->second.mId] = *(int *)(it->second.mDefault);
+			if (m_Attributes.find(attr) != m_Attributes.end()) {
+				assert(m_Attributes[attr].m_Type != Enums::STRING);
+				if (m_Attributes[attr].m_Type != Enums::STRING) {
+					int s = Enums::getSize(m_Attributes[attr].m_Type);
+					m_Attributes[attr].m_Default = malloc(s);
+					memcpy(m_Attributes[attr].m_Default, value, s);
 				}
 			}
 		}
 
 
+		//void setDefaultString(std::string attr, std::string value) {
+
+		//	if (m_Attributes.find(attr) != m_Attributes.end()) {
+		//		assert(m_Attributes[attr].m_Type == Enums::STRING);
+		//		if (m_Attributes[attr].m_Type == Enums::STRING) {
+		//			m_Attributes[attr].m_Default = malloc(value.size());
+		//			memcpy(m_Attributes[attr].m_Default, &value, value.size());
+		//		}
+		//	}
+		//}
+
+
+		void *getDefault(int id, Enums::DataType type) {
+
+			std::map<std::string, Attribute>::iterator it;
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
+
+				if (it->second.m_Id == id && it->second.m_Type == type)
+					return (it->second.m_Default);
+			}
+			return NULL;
+		}
+
+
+		//const std::string &getDefaultString(int id) {
+
+		//	std::map<std::string, Attribute>::iterator it;
+		//	it = m_Attributes.begin();
+		//	for (; it != m_Attributes.end(); ++it) {
+
+		//		if (it->second.m_Id == id && it->second.m_Type == Enums::STRING)
+		//			return *(static_cast<std::string*>(it->second.m_Default));
+		//	}
+		//	return m_DummyS;
+		//}
+
+
+		void initAttribInstanceStringArray(std::map<int, std::string> &m) {
+
+			//std::map<std::string, Attribute>::iterator it;
+			//it = m_Attributes.begin();
+			//for ( ; it != m_Attributes.end(); ++it) {
+			//	if (it->second.m_Type == Enums::DataType::INT) {
+
+			//			m[it->second.m_Id] = *(std::string *)(it->second.m_Default);
+			//	}
+			//}
+		}
+
+		void initAttribInstanceIntArray(std::map<int, int> &m) {
+
+			std::map<std::string, Attribute>::iterator it;
+			it = m_Attributes.begin();
+			for (; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::INT) {
+
+					m[it->second.m_Id] = *(int *)(it->second.m_Default);
+				}
+			}
+		}
+
 		void initAttribInstanceEnumArray(std::map<int,int> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::ENUM) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::ENUM) {
 
-					//if (it->second.mDefault == NULL) 
-					//	m[it->second.mId] = 0;
-					//else
-						m[it->second.mId] = *(int *)(it->second.mDefault);
+						m[it->second.m_Id] = *(int *)(it->second.m_Default);
 				}
 			}
 		}
@@ -421,14 +494,11 @@ namespace nau {
 		void initAttribInstanceUIntArray(std::map<int,unsigned int> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::UINT) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::UINT) {
 
-					//if (it->second.mDefault == NULL) 
-					//	m[it->second.mId] = 0;
-					//else
-						m[it->second.mId] = *(unsigned int *)(it->second.mDefault);
+						m[it->second.m_Id] = *(unsigned int *)(it->second.m_Default);
 				}
 			}
 		}
@@ -437,14 +507,11 @@ namespace nau {
 		void initAttribInstanceFloatArray(std::map<int,float> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::FLOAT) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::FLOAT) {
 
-					//if (it->second.mDefault == NULL) 
-					//	m[it->second.mId] = 0;
-					//else
-						m[it->second.mId] = *(float *)(it->second.mDefault);
+						m[it->second.m_Id] = *(float *)(it->second.m_Default);
 				}
 			}
 		}
@@ -453,26 +520,34 @@ namespace nau {
 		void initAttribInstanceVec4Array(std::map<int,vec4> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::VEC4) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::VEC4) {
 
-					//if (it->second.mDefault == NULL) 
-					//	m[it->second.mId] = vec4();
-					//else
-						m[it->second.mId] = *(vec4 *)(it->second.mDefault);
+						m[it->second.m_Id] = *(vec4 *)(it->second.m_Default);
 				}
 			}
 		}
 
+		void initAttribInstanceVec2Array(std::map<int, vec2> &m) {
+
+			std::map<std::string, Attribute>::iterator it;
+			it = m_Attributes.begin();
+			for (; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::VEC2) {
+
+					m[it->second.m_Id] = *(vec2 *)(it->second.m_Default);
+				}
+			}
+		}
 
 		void initAttribInstanceMat4Array(std::map<int, mat4> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for (; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::MAT4) {
-					m[it->second.mId] = *(mat4 *)(it->second.mDefault);
+			it = m_Attributes.begin();
+			for (; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::MAT4) {
+					m[it->second.m_Id] = *(mat4 *)(it->second.m_Default);
 				}
 			}
 		}
@@ -480,10 +555,10 @@ namespace nau {
 		void initAttribInstanceMat3Array(std::map<int, mat3> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for (; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::MAT3) {
-					m[it->second.mId] = *(mat3 *)(it->second.mDefault);
+			it = m_Attributes.begin();
+			for (; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::MAT3) {
+					m[it->second.m_Id] = *(mat3 *)(it->second.m_Default);
 				}
 			}
 		}
@@ -492,14 +567,11 @@ namespace nau {
 		void initAttribInstanceBvec4Array(std::map<int, bvec4> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::BVEC4) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::BVEC4) {
 
-					//if (it->second.mDefault == NULL) 
-					//	m[it->second.mId] = bvec4();
-					//else
-						m[it->second.mId] = *(bvec4 *)(it->second.mDefault);
+						m[it->second.m_Id] = *(bvec4 *)(it->second.m_Default);
 				}
 			}
 		}
@@ -508,26 +580,23 @@ namespace nau {
 		void initAttribInstanceBoolArray(std::map<int,bool> &m) {
 
 			std::map<std::string, Attribute>::iterator it;
-			it = mAttributes.begin();
-			for ( ; it != mAttributes.end(); ++it) {
-				if (it->second.mType == Enums::DataType::BOOL) {
+			it = m_Attributes.begin();
+			for ( ; it != m_Attributes.end(); ++it) {
+				if (it->second.m_Type == Enums::DataType::BOOL) {
 
-					//if (it->second.mDefault == NULL) 
-					//	m[it->second.mId] = 0;
-					//else
-						m[it->second.mId] = *(bool *)(it->second.mDefault);
+						m[it->second.m_Id] = *(bool *)(it->second.m_Default);
 				}
 			}
 		}
 
 
 	protected:
-		std::map<std::string, Attribute> mAttributes;
-		Attribute mDummy;
-		std::string mDummyS;
-		std::vector<std::string> mDummyVS;
-		std::vector<int> mDummyVI;
-		int mNextFreeID;
+		std::map<std::string, Attribute> m_Attributes;
+		Attribute m_Dummy;
+		std::string m_DummyS;
+		std::vector<std::string> m_DummyVS;
+		std::vector<int> m_DummyVI;
+		int m_NextFreeID;
 		std::map<int, int> mDataTypeCounter;
 	};
 

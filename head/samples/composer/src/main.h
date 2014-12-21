@@ -96,7 +96,7 @@ private:
 	void OnDlgDbgBuffer(wxCommandEvent& event);
 	void OnDlgDbgStep(wxCommandEvent& event);
 	void OnDlgStateXML(wxCommandEvent& event);
-	void OnNextFrame(wxCommandEvent& event);
+	//void OnNextFrame(wxCommandEvent& event);
 
 	void FreezeGLI();
 	void LoadDebugData();

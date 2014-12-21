@@ -89,12 +89,12 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1" axis="5">
 				<scenes>
-					<scene>Sphere</scene>
-					<scene>Box</scene>
+					<scene name="Sphere" />
+					<scene name="Box" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />

@@ -23,7 +23,7 @@ namespace nau
 	namespace scene
 	{
 
-		//class COctreeNode;
+
 		class OctreeByMat {
 
 			friend class nau::loader::CBOLoader;

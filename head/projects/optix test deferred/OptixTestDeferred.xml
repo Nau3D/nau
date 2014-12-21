@@ -59,12 +59,12 @@
 		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<rendertarget name="deferred" fromLibrary="Deferred Render Targets" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<injectionMaps>
 					<map toMaterial="*">
@@ -76,12 +76,12 @@
 
 			<pass class="optix" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<rendertarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="nau_material_lib" toMaterial="__Black" />

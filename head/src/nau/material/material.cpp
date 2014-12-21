@@ -227,10 +227,13 @@ void
 Material::prepareNoShaders ()
 {
 	RENDERER->setState (m_State);
+
 	m_Color.prepare();
+
 	if (0 != m_Texmat) {
 		m_Texmat->prepare(m_State);
 	}
+
 #if NAU_OPENGL_VERSION >=  420
 	if (m_ImageTexture.size() != 0) {
 		std::map<int, ImageTexture*>::iterator it = m_ImageTexture.begin();
@@ -238,12 +241,10 @@ Material::prepareNoShaders ()
 			it->second->prepare(it->first);
 	}
 #endif
-#if NAU_OPENGL_VERSION >=  430
-	for (auto b : m_Buffers) {
 
+	for (auto b : m_Buffers) {
 		b.second->bind();
 	}
-#endif
 }
 
 
@@ -253,14 +254,10 @@ Material::prepare () {
 
 	{
 		PROFILE("Buffers");
-
 		for (auto b : m_Buffers) {
-
 			b.second->bind();
 		}
-
 	}
-
 	{
 		PROFILE("State");
 		RENDERER->setState (m_State);
@@ -274,6 +271,7 @@ Material::prepare () {
 			m_Texmat->prepare(m_State);
 		}
 	}
+
 #if NAU_OPENGL_VERSION >=  420
 	{
 		if (m_ImageTexture.size() != 0) {
@@ -365,7 +363,7 @@ Material::getImageTexture(unsigned int unit) {
 void 
 Material::attachBuffer(IMaterialBuffer *b) {
 
-	int bp = *(int *)(b->getProp(IMaterialBuffer::BINDING_POINT, Enums::INT));
+	int bp = *(int *)(b->getPropi(IMaterialBuffer::BINDING_POINT));
 	m_Buffers[bp] = b;
 }
 

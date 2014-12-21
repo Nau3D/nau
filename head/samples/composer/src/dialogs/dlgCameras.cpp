@@ -365,15 +365,15 @@ void DlgCameras::OnPropsChange( wxPropertyGridEvent& e) {
 		nau::math::vec4 v1 = cam->getPropf4(Camera::POSITION);
 		if      (prop == "X") {
 			v2.set(e.GetPropertyValue().GetDouble(),v1.y,v1.z);
-			cam->setProp(Camera::POSITION, v2.x, v2.y, v2.z, 1.0f);
+			cam->setPropf4(Camera::POSITION, v2.x, v2.y, v2.z, 1.0f);
 		}
 		else if (prop == "Y") {
 			v2.set(v1.x,e.GetPropertyValue().GetDouble(),v1.z);
-			cam->setProp(Camera::POSITION, v2.x, v2.y, v2.z, 1.0f);
+			cam->setPropf4(Camera::POSITION, v2.x, v2.y, v2.z, 1.0f);
 		}
 		else if (prop == "Z") {
 			v2.set(v1.x,v1.y,e.GetPropertyValue().GetDouble());
-			cam->setProp(Camera::POSITION, v2.x, v2.y, v2.z, 1.0f);
+			cam->setPropf4(Camera::POSITION, v2.x, v2.y, v2.z, 1.0f);
 		}
 	}
 	else if (topProp == "Direction") {
@@ -381,12 +381,12 @@ void DlgCameras::OnPropsChange( wxPropertyGridEvent& e) {
 		if (prop == "Elevation Angle") {
 		
 			float rad = nau::math::DegToRad(e.GetPropertyValue().GetDouble());
-			cam->setProp(Camera::ELEVATION_ANGLE, rad);
+			cam->setPropf(Camera::ELEVATION_ANGLE, rad);
 		}
 		else if (prop == "ZX Angle") {
 		
 			float rad = nau::math::DegToRad(e.GetPropertyValue().GetDouble());
-			cam->setProp(Camera::ZX_ANGLE, rad);
+			cam->setPropf(Camera::ZX_ANGLE, rad);
 		}
 		vec4 vv = cam->getPropf4(Camera::VIEW_VEC);
 		pg->SetPropertyValue(wxT("Direction.View.X"),vv.x);
@@ -432,34 +432,34 @@ void DlgCameras::OnPropsChange( wxPropertyGridEvent& e) {
 		if (op == DLG_MI_PERSPECTIVE) {	
 			pg->DisableProperty(wxT("Orthogonal Proj:"));
 			pg->EnableProperty(wxT("Perspective Proj:"));
-			cam->setProp(Camera::PROJECTION_TYPE, Camera::PERSPECTIVE);
+			cam->setPrope(Camera::PROJECTION_TYPE, Camera::PERSPECTIVE);
 		}
 		else {
 			pg->DisableProperty(wxT("Perspective Proj:"));
 			pg->EnableProperty(wxT("Orthogonal Proj:"));
-			cam->setProp(Camera::PROJECTION_TYPE, Camera::ORTHO);
+			cam->setPrope(Camera::PROJECTION_TYPE, Camera::ORTHO);
 		}
 	}
 	else if (prop == "Near") {
-		cam->setProp(Camera::NEARP,e.GetPropertyValue().GetDouble());
+		cam->setPropf(Camera::NEARP,e.GetPropertyValue().GetDouble());
 	}
 	else if (prop == "Far") {
-		cam->setProp(Camera::FARP, e.GetPropertyValue().GetDouble());
+		cam->setPropf(Camera::FARP, e.GetPropertyValue().GetDouble());
 	}
 	else if (prop == "Y FOV") {
-		cam->setProp(Camera::FOV, e.GetPropertyValue().GetDouble());
+		cam->setPropf(Camera::FOV, e.GetPropertyValue().GetDouble());
 	}
 	else if (prop == "Left") {
-		cam->setProp(Camera::LEFT, e.GetPropertyValue().GetDouble());
+		cam->setPropf(Camera::LEFT, e.GetPropertyValue().GetDouble());
 	}
 	else if (prop == "Right") {
-		cam->setProp(Camera::RIGHT, e.GetPropertyValue().GetDouble());
+		cam->setPropf(Camera::RIGHT, e.GetPropertyValue().GetDouble());
 	}
 	else if (prop == "Top") {
-		cam->setProp(Camera::TOP, e.GetPropertyValue().GetDouble());
+		cam->setPropf(Camera::TOP, e.GetPropertyValue().GetDouble());
 	}
 	else if (prop == "Bottom") {
-		cam->setProp(Camera::BOTTOM, e.GetPropertyValue().GetDouble());
+		cam->setPropf(Camera::BOTTOM, e.GetPropertyValue().GetDouble());
 	}
 
 	std::map<std::string, Attribute> camAttrs = Camera::Attribs.getAttributes();
