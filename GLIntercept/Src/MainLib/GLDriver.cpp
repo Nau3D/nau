@@ -397,6 +397,7 @@ bool GLDriver::ReConfigure()
   //Set if the any logging is enabled
   loggingEnabled = !configData.logPerFrame;
 
+
   //If we are not-perframe logging, create the initial logger here
   if(loggingEnabled && configData.logEnabled)
   {

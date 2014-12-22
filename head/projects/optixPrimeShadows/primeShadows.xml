@@ -15,17 +15,17 @@
 			<viewport name="LeftViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 				<ORIGIN x=0.0 y=0.0 />
-				<SIZE width=0.33 ratio=1 />
+				<SIZE width=0.33 height=1 />
 			</viewport>
 			<viewport name="MiddleViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 				<ORIGIN x=0.33 y=0.0 />
-				<SIZE width=0.33 ratio=1 />
+				<SIZE width=0.33 height=1 />
 			</viewport>
 			<viewport name="RightViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 				<ORIGIN x=0.66 y=0.0 />
-				<SIZE width=0.34 ratio=1 />
+				<SIZE width=0.34 height=1 />
 			</viewport>
 		</viewports>
 		

@@ -8,12 +8,12 @@
 		<viewports>
 			<viewport name="RightViewport">
 				<ORIGIN x=0.5 y=0.0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="LeftViewport">
 				<ORIGIN x=0.0 y=0.0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
 			</viewport>
 		</viewports>

@@ -11,17 +11,17 @@
 				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport1" >
-				<SIZE width=0.33 ratio=1 />
+				<SIZE width=0.33 height=1 />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport2" >
 				<ORIGIN x = 0.33 y =0 />
-				<SIZE width=0.34 ratio=1 />
+				<SIZE width=0.34 height=1 />
 				<CLEAR_COLOR  r=0.0 g=0.0 b=0.0 />
 			</viewport>
 			<viewport name="SmallViewport3" >
 				<ORIGIN x = 0.67 y =0 />
-				<SIZE  width=".33"  ratio=1/>
+				<SIZE  width=".33"  height=1/>
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 		</viewports>
