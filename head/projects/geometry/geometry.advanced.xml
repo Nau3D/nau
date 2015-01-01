@@ -40,7 +40,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename = "geometry.mlib"/>
+			<materialLib filename = "geometry.mlib"/>
 		</materialLibs> 
 	</assets>
 	

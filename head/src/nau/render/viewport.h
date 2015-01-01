@@ -43,10 +43,10 @@ namespace nau
 			std::string &getName();
 			void setName(std::string);
 
-			void setPropf4(Float4Property prop,vec4 &value);
-			void setPropf2(Float2Property prop, vec2 &value);
 			void setPropb(BoolProperty prop, bool value);
 			void setPropf(FloatProperty prop, float values);
+			void setPropf2(Float2Property prop, vec2 &value);
+			//void setPropf4(Float4Property prop,vec4 &value);
 			// Note: no validation is performed!
 			//void setProp(int prop, Enums::DataType type, void *value);
 

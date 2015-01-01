@@ -40,7 +40,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="optixTest.mlib"/>
+			<materialLib filename="optixTest.mlib"/>
 		</materialLibs>
 	</assets>
 	<pipelines>

@@ -37,7 +37,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename = "PL3D_Materials.mlib"/>
+			<materialLib filename = "PL3D_Materials.mlib"/>
 		</materialLibs> 
 	</assets>
 	<pipelines>

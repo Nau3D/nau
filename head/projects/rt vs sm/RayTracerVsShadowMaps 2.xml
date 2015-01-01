@@ -61,21 +61,21 @@
 		</lights>
 		
 		<atomics>
-			<atomic id=0 semantics="Diff SM to RT" />
-			<atomic id=1 semantics="Shadow Pixels wrong in SM" />
-			<atomic id=2 semantics="Light Pixels wrong in SM" />
-			<atomic id=3 semantics="Pixels not facing the light" />
-			<atomic id=4 semantics="Pixels in SM contours" />
-			<atomic id=5 semantics="SM Contours facing the light" />
-			<atomic id=6 semantics="Pixels that intersect tri stored in SM" />
-			<atomic id=7 semantics="Intersecting pixels in light - corrections" />
-			<atomic id=8 semantics="Intersecting pixels in shadow - confirmations" />
-			<atomic id=9 semantics="Intersecting in contour facing the light" />
-			<atomic id=10 semantics="Wrong pixels outside contours" />
+			<atomic buffer="RT vs SM::test" offset=0 semantics="Diff SM to RT" />
+			<atomic buffer="RT vs SM::test" offset=4 semantics="Shadow Pixels wrong in SM" />
+			<atomic buffer="RT vs SM::test" offset=8 semantics="Light Pixels wrong in SM" />
+			<atomic buffer="RT vs SM::test" offset=12 semantics="Pixels not facing the light" />
+			<atomic buffer="RT vs SM::test" offset=16 semantics="Pixels in SM contours" />
+			<atomic buffer="RT vs SM::test" offset=20 semantics="SM Contours facing the light" />
+			<atomic buffer="RT vs SM::test" offset=24 semantics="Pixels that intersect tri stored in SM" />
+			<atomic buffer="RT vs SM::test" offset=28 semantics="Intersecting pixels in light - corrections" />
+			<atomic buffer="RT vs SM::test" offset=32 semantics="Intersecting pixels in shadow - confirmations" />
+			<atomic buffer="RT vs SM::test" offset=36 semantics="Intersecting in contour facing the light" />
+			<atomic buffer="RT vs SM::test" offset=40 semantics="Wrong pixels outside contours" />
 		</atomics>	
 			
 		<materialLibs>
-			<mlib filename="RayTracerVsShadowMaps.mlib"/>
+			<materialLib filename="RayTracerVsShadowMaps.mlib"/>
 		</materialLibs>
 		
 	</assets>

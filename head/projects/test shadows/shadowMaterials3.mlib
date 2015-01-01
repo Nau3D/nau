@@ -1,21 +1,21 @@
 <?xml version="1.0" ?>
-<materiallib name="Shadow Materials">
+<materialLib name="Shadow Materials">
 
-	<rendertargets>
-		<rendertarget name = "depth">
+	<renderTargets>
+		<renderTarget name = "depth">
 			<size width="1024" height="1024" />
 			<depth name="shadowMap" internalFormat="DEPTH_COMPONENT32F" />
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name="simple">
+		<renderTarget name="simple">
 			<size width="1024" height="1024" />
 			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 
-	</rendertargets>
+	</renderTargets>
 	
 	<shaders>
 		<shader name="perpixel-color-shadow" 
@@ -109,4 +109,4 @@
 		</material>
 		
 	</materials>
-</materiallib>
+</materialLib>

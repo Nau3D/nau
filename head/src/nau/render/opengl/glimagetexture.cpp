@@ -21,8 +21,8 @@ GLImageTexture::InitGL() {
 };
 
 
-GLImageTexture::GLImageTexture(std::string label, unsigned int texID, unsigned int level, unsigned int access)
-{
+GLImageTexture::GLImageTexture(std::string label, unsigned int texID, unsigned int level, unsigned int access) : ImageTexture() {
+
 	m_EnumProps[ACCESS] = access;
 	m_UIntProps[LEVEL] = level;
 	m_UIntProps[TEX_ID] = texID;
@@ -38,8 +38,8 @@ GLImageTexture::GLImageTexture(std::string label, unsigned int texID, unsigned i
 }
 
 
-GLImageTexture::~GLImageTexture(void)
-{
+GLImageTexture::~GLImageTexture(void) {
+
 }
 
 
@@ -48,7 +48,7 @@ GLImageTexture::prepare(int aUnit) {
 
 	m_Unit = aUnit;
 #if NAU_OPENGL_VERSION >= 440
-	if (m_BoolProps[CLEAR]){
+	if (m_BoolProps[CLEAR]) {
 		glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, m_Data);
 	}
 #endif

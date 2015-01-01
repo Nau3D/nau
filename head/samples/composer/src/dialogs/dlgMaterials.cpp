@@ -1359,8 +1359,8 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 	const wxChar* boolLightComp[] = {wxT("ENABLED"), NULL};
 	const long boolLightCompInd[] = {Light::ENABLED};
 
-	const wxChar* enumLightComp[] = {wxT("TYPE"), NULL};
-	const long enumLightCompInd[] = {Light::TYPE};
+	//const wxChar* enumLightComp[] = {wxT("TYPE"), NULL};
+	//const long enumLightCompInd[] = {Light::TYPE};
 
 	int edit = strncmp("gl_",u.getName().c_str(),3);
 	if ((!showGlobal) && (edit == 0))
@@ -1516,9 +1516,9 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,boolLightComp,boolLightCompInd,u.getSemanticValueOf()));
 				break;
 
-			case Enums::ENUM:
-				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,enumLightComp,enumLightCompInd,u.getSemanticValueOf()));
-				break;
+			//case Enums::ENUM:
+			//	pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,enumLightComp,enumLightCompInd,u.getSemanticValueOf()));
+			//	break;
 		}
 	}
 	else if (ProgramValue::TEXTURE == u.getSemanticType() || (ProgramValue::CURRENT == u.getSemanticType() && "TEXTURE" == u.getContext())) {

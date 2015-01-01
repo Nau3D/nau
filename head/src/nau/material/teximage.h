@@ -29,7 +29,7 @@ namespace nau
 				UNSIGNED_SHORT,
 				UNISGNED_BYTE} dataTypes;
 
-			Enums::DataType  m_DataType;
+			int  m_DataType;
 			unsigned int m_NumComponents;
 			unsigned int m_Height, m_Width, m_Depth;
 			TexImage(Texture *t);

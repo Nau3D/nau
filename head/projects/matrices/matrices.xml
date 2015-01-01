@@ -59,7 +59,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="matricesDemoMaterials.mlib"/>
+			<materialLib filename="matricesDemoMaterials.mlib"/>
 		</materialLibs>
 	</assets>
 	

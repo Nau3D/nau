@@ -29,7 +29,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="testRenderTargets.mlib"/>
+			<materialLib filename="testRenderTargets.mlib"/>
 		</materialLibs>
 	</assets>
 	

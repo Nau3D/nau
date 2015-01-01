@@ -46,8 +46,8 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="optixTest.mlib"/>
-			<mlib filename="DeferredRenderTargets.mlib"/>
+			<materialLib filename="optixTest.mlib"/>
+			<materialLib filename="DeferredRenderTargets.mlib"/>
 		</materialLibs>
 	</assets>
 

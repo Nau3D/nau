@@ -48,7 +48,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename = "primeShadows.mlib"/>
+			<materialLib filename = "primeShadows.mlib"/>
 		</materialLibs> 
 	</assets>
 	

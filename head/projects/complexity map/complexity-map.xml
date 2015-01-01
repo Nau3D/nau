@@ -46,7 +46,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="complexity map.mlib"/>
+			<materialLib filename="complexity map.mlib"/>
 		</materialLibs>
 	</assets>
 	

@@ -389,8 +389,6 @@
     <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp" />
     <ClCompile Include="..\src\nau\render\optix\optixBufferLib.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -627,8 +625,6 @@
     <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h" />
-    <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h" />
-    <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h" />
     <ClInclude Include="..\src\nau\render\optix\optixBufferLib.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

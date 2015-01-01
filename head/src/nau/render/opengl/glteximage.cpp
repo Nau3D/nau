@@ -7,7 +7,7 @@ using namespace nau::render;
 GLTexImage::GLTexImage (Texture *t) :
 	TexImage (t)
 {
-	int m_DataType = t->getPrope(Texture::TYPE);
+	m_DataType = t->getPrope(Texture::TYPE);
 	int len = m_Width * m_Height * m_NumComponents; 
 
 	switch (m_DataType) {
@@ -24,6 +24,7 @@ GLTexImage::GLTexImage (Texture *t) :
 			update();
 			break;
 		case GL_UNSIGNED_BYTE:
+		case GL_UNSIGNED_INT_8_8_8_8_REV:
 			m_Data = ( unsigned char *)malloc(sizeof( unsigned char) * len);
 			update();
 			break;

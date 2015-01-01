@@ -56,7 +56,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="ambientOcc.mlib"/>
+			<materialLib filename="ambientOcc.mlib"/>
 		</materialLibs>
 	</assets>
 	

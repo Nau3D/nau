@@ -34,7 +34,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="imageLoadStore.mlib"/>
+			<materialLib filename="imageLoadStore.mlib"/>
 		</materialLibs>
 	</assets>
 	

@@ -30,8 +30,7 @@ ResourceManager::ResourceManager (std::string path) :
 }
 
 
-ResourceManager::~ResourceManager(void)
-{
+ResourceManager::~ResourceManager(void) {
 
 	/***DESTROY ALL ALOCATED RESOURCES***/
 
@@ -98,15 +97,15 @@ ResourceManager::clear() {
 
 
 nau::material::TexImage* 
-ResourceManager::createTexImage(nau::render::Texture *t)
-{
+ResourceManager::createTexImage(nau::render::Texture *t) {
+
 	return m_pTextureManager->createTexImage(t);
 }
 
 
 nau::material::TexImage* 
-ResourceManager::getTexImage(std::string aTextureName) 
-{
+ResourceManager::getTexImage(std::string aTextureName) {
+
 	return m_pTextureManager->getTexImage(aTextureName);
 }
 
@@ -117,73 +116,79 @@ ResourceManager::getTexImage(std::string aTextureName)
 //-------------------------------------
 
 bool
-ResourceManager::hasTexture(std::string name)
-{
+ResourceManager::hasTexture(std::string name) {
+
 	return m_pTextureManager->hasTexture(name);
 }
 
 
-nau::render::Texture*
-ResourceManager::createTexture (std::string label, 
-				std::string internalFormat, 
-				std::string aFormat, 
-				std::string aType, int width, int height,
-				unsigned char* data)
-{
-	return (m_pTextureManager->createTexture (label, internalFormat, aFormat, aType, width, height, data));
+//nau::render::Texture*
+//ResourceManager::createTexture (std::string label, 
+//				std::string internalFormat, 
+//				std::string aFormat, 
+//				std::string aType, int width, int height,
+//				unsigned char* data)
+//{
+//	return (m_pTextureManager->createTexture (label, internalFormat, aFormat, aType, width, height, data));
+//}
+
+nau::render::Texture * 
+ResourceManager::createTexture(std::string label) {
+
+	return (m_pTextureManager->createTexture(label));
 }
 
 
 nau::render::Texture*
 ResourceManager::createTexture (std::string label, 
 				std::string internalFormat, 
-				int width, int height, int layers)
+				int width, int height, int depth, int layers, int levels, int samples)
 {
-	return (m_pTextureManager->createTexture (label, internalFormat, width, height, layers));
+	return (m_pTextureManager->createTexture (label, internalFormat, width, height, depth, layers, levels, samples));
 }
 
 
-nau::render::Texture*
-ResourceManager::createTextureMS (std::string label, 
-				std::string internalFormat, 
-				int width, int height,
-				int samples)
-{
-	return (m_pTextureManager->createTextureMS (label, internalFormat, width, height, samples));
-}
+//nau::render::Texture*
+//ResourceManager::createTextureMS (std::string label, 
+//				std::string internalFormat, 
+//				int width, int height,
+//				int samples)
+//{
+//	return (m_pTextureManager->createTextureMS (label, internalFormat, width, height, samples));
+//}
 
 
 nau::render::Texture* 
-ResourceManager::addTexture (std::string fn, std::string label, bool mipmap)
-{
+ResourceManager::addTexture (std::string fn, std::string label, bool mipmap) {
+
 	return (m_pTextureManager->addTexture (fn, label, mipmap));
 }
 
 
 nau::render::Texture* 
-ResourceManager::addTexture (std::vector<std::string> fn, std::string label, bool mipmap)
-{
+ResourceManager::addTexture (std::vector<std::string> fn, std::string label, bool mipmap) {
+
 	return (m_pTextureManager->addTexture (fn, label, mipmap));
 }
 
 
 void 
-ResourceManager::removeTexture (std::string name)
-{
+ResourceManager::removeTexture (std::string name) {
+
 	m_pTextureManager->removeTexture (name);
 }
 
 
 Texture*
-ResourceManager::getTexture (std::string name)
-{
+ResourceManager::getTexture (std::string name) {
+
 	return (m_pTextureManager->getTexture (name));
 }
 
 
 Texture*
-ResourceManager::getTextureByID (unsigned int id)
-{
+ResourceManager::getTextureByID (unsigned int id) {
+
 	return (m_pTextureManager->getTexture (id));
 }
 
@@ -211,8 +216,8 @@ ResourceManager::getNumTextures() {
 //-------------------------------------
 
 nau::render::RenderTarget* 
-ResourceManager::createRenderTarget (std::string name, int width, int height)
-{
+ResourceManager::createRenderTarget (std::string name, int width, int height) {
+
 	if (m_RenderTargets.count (name) > 0) {
 		return 0;
 	}
@@ -222,9 +227,9 @@ ResourceManager::createRenderTarget (std::string name, int width, int height)
 
 
 void 
-ResourceManager::removeRenderTarget (std::string name)
-{
-	if (m_RenderTargets.count (name) > 0){
+ResourceManager::removeRenderTarget (std::string name) {
+
+	if (m_RenderTargets.count (name) > 0) {
 		delete m_RenderTargets[name];
 	}
 }
@@ -248,8 +253,7 @@ ResourceManager::getRenderTarget(const std::string &name) {
 
 
 std::vector<std::string>* 
-ResourceManager::getRenderTargetNames() 
-{
+ResourceManager::getRenderTargetNames() {
 
   std::map<std::string, nau::render::RenderTarget*>::iterator iter;
   std::vector<std::string> *names = new std::vector<std::string>;
@@ -271,8 +275,8 @@ ResourceManager::getRenderTargetNames()
 using namespace nau::geometry;
 
 nau::render::IRenderable* 
-ResourceManager::createRenderable(std::string type, std::string name, std::string filename)
-{
+ResourceManager::createRenderable(std::string type, std::string name, std::string filename) {
+
 	IRenderable *r = NULL;
 
 	if ("" == name) {
@@ -316,8 +320,8 @@ ResourceManager::createRenderable(std::string type, std::string name, std::strin
 
 
 bool 
-ResourceManager::hasRenderable (std::string meshName, std::string filename)
-{
+ResourceManager::hasRenderable (std::string meshName, std::string filename) {
+
 	std::string key (filename);
 
 	if("" != key)
@@ -333,8 +337,8 @@ ResourceManager::hasRenderable (std::string meshName, std::string filename)
 
 
 nau::render::IRenderable* 
-ResourceManager::getRenderable (std::string meshName, std::string filename)
-{
+ResourceManager::getRenderable (std::string meshName, std::string filename) {	
+	
 	std::string key (filename);
 
 	if (key != "")
@@ -350,8 +354,8 @@ ResourceManager::getRenderable (std::string meshName, std::string filename)
 
 
 nau::render::IRenderable* 
-ResourceManager::addRenderable (nau::render::IRenderable* aMesh, std::string filename)
-{
+ResourceManager::addRenderable (nau::render::IRenderable* aMesh, std::string filename) {
+
 	std::string key (filename);
 	std::string meshName = aMesh->getName();
 
@@ -383,8 +387,8 @@ ResourceManager::removeRenderable(std::string name) {
 //-------------------------------------
 
 bool 
-ResourceManager::hasState (std::string stateName)
-{
+ResourceManager::hasState (std::string stateName) {
+
 	if (m_States.count (stateName) > 0) {
 		return true;
 	}
@@ -393,8 +397,8 @@ ResourceManager::hasState (std::string stateName)
 
 
 nau::render::IState* 
-ResourceManager::getState (std::string stateName)
-{
+ResourceManager::getState (std::string stateName) {
+
 	if (m_States.count (stateName) > 0) {
 		return m_States[stateName];
 	}
@@ -403,15 +407,15 @@ ResourceManager::getState (std::string stateName)
 
 
 void 
-ResourceManager::addState (nau::render::IState* aState)
-{
+ResourceManager::addState (nau::render::IState* aState) {
+
 	m_States[aState->getName()] = aState;
 }
 
 
 bool 
-ResourceManager::hasProgram (std::string programName)
-{
+ResourceManager::hasProgram (std::string programName) {
+
 	if (m_Programs.count (programName) > 0){
 		return true;
 	}
@@ -426,8 +430,8 @@ ResourceManager::hasProgram (std::string programName)
 //-------------------------------------
 
 IProgram* 
-ResourceManager::getProgram (std::string programName)
-{
+ResourceManager::getProgram (std::string programName) {
+
 	if (false == hasProgram (programName)) {
 		m_Programs[programName] = IProgram::create();
 		m_Programs[programName]->setName(programName);
@@ -444,7 +448,7 @@ ResourceManager::getNumPrograms() {
 
 
 std::vector<std::string> * 
-ResourceManager::getProgramNames(){
+ResourceManager::getProgramNames() {
 
 	std::vector<std::string> *names = new std::vector<std::string>; 
 
@@ -472,6 +476,7 @@ ResourceManager::clearBuffers() {
 	}
 }
 #endif
+
 
 nau::render::IBuffer* 
 ResourceManager::getBuffer(std::string name) {

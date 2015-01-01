@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
-<materiallib name="Matrices Demo Materials">
+<materialLib name="Matrices Demo Materials">
 
-	<rendertargets>		
-		<rendertarget name="color">
+	<renderTargets>		
+		<renderTarget name="color">
 			<size width="512" height="512" />
 			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
 				<color name="color1" 	internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 
 
 	<shaders>
@@ -63,4 +63,4 @@
 		
 
 	</materials>
-</materiallib>
+</materialLib>

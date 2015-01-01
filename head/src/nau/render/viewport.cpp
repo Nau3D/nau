@@ -60,64 +60,6 @@ Viewport::getName()
 }
 
 
-//void *
-//Viewport::getProp(int prop, Enums::DataType type) {
-//
-//	switch (type) {
-//
-//	case Enums::FLOAT:
-//		assert(m_FloatProps.count(prop) > 0);
-//		return(&(m_FloatProps[prop]));
-//		break;
-//	case Enums::VEC4:
-//		assert(m_Float4Props.count(prop) > 0);
-//		return(&(m_Float4Props[prop]));
-//		break;
-//	case Enums::INT:
-//		assert(m_IntProps.count(prop) > 0);
-//		return(&(m_IntProps[prop]));
-//		break;
-//		
-//	}
-//	return NULL;
-//}
-
-
-//void 
-//Viewport::setProp(int prop, Enums::DataType type, void *value) {
-//	AttributeValues::setProp(prop, type, value);
-//
-//	switch (type) {
-//
-//		case Enums::FLOAT:
-//			assert(m_FloatProps.count(prop) > 0);
-//			setProp((FloatProperty)prop, *(float *)value);
-//			break;
-//		case Enums::VEC4:
-//			assert(m_Float4Props.count(prop) > 0);
-//			setProp((Float4Property)prop, *(vec4 *)value);
-//			break;
-//		case Enums::INT:
-//			m_IntProps[prop] = *(int *)value;
-//			break;
-//	}
-//}
-
-
-void
-Viewport::setPropf4(Float4Property prop, vec4& values) {
-
-	m_Float4Props[prop] = values;
-}
-//
-//
-//const vec4 &
-//Viewport::getPropf4(Float4Property prop) {
-//
-//	return m_Float4Props[prop];
-//}
-
-
 void
 Viewport::setPropb(BoolProperty prop, bool value) {
 
@@ -127,34 +69,29 @@ Viewport::setPropb(BoolProperty prop, bool value) {
 		if (value == true) {
 			m_Float2Props[SIZE] = vec2(NAU->getWindowWidth(), NAU->getWindowWidth());
 			m_Float2Props[ABSOLUT_SIZE] = vec2(NAU->getWindowWidth(), NAU->getWindowWidth());
-			m_Float2Props[ORIGIN] = vec2(0,0);
-			m_Float2Props[ABSOLUT_ORIGIN] = vec2(0,0);
+			m_Float2Props[ORIGIN] = vec2(0, 0);
+			m_Float2Props[ABSOLUT_ORIGIN] = vec2(0, 0);
 			m_FloatProps[RATIO] = 0;
 		}
 	}
 }
 
 
-//bool
-//Viewport::getPropb(BoolProperty prop) {
-//
-//	return m_BoolProps[prop];
-//}
-
-
 void
 Viewport::setPropf(FloatProperty prop, float value) {
 
-	m_FloatProps[prop] = value;
 
 	switch (prop) {
-		case RATIO:
-			// if ratio is bigger than zero
-			if (value > 0.0f) {
-				setPropf2(SIZE, m_Float2Props[SIZE]);
-				setPropf2(ORIGIN, m_Float2Props[ORIGIN]);
-			}
-			break;
+	case RATIO:
+		// if ratio is bigger than zero
+		if (value > 0.0f) {
+			m_FloatProps[prop] = value;
+			setPropf2(SIZE, m_Float2Props[SIZE]);
+			setPropf2(ORIGIN, m_Float2Props[ORIGIN]);
+		}
+		break;
+	default:
+		m_FloatProps[prop] = value;
 	}
 }
 
@@ -169,8 +106,6 @@ Viewport::getPropf(FloatProperty prop) {
 	}
 	return 0;
 }
-
-
 
 
 void
@@ -229,13 +164,6 @@ Viewport::setPropf2(Float2Property prop, vec2& values){
 }
 
 
-//const vec2 &
-//Viewport::getPropf2(Float2Property prop) {
-//
-//	return m_Float2Props[prop];
-//}
-
-
 void
 Viewport::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) {
 
@@ -269,6 +197,79 @@ Viewport::eventReceived(const std::string &sender, const std::string &eventType,
 	EVENTMANAGER->notifyEvent("VIEWPORT_CHANGED", m_Name, "", NULL); 
 }
 
+
+
+
+//void *
+//Viewport::getProp(int prop, Enums::DataType type) {
+//
+//	switch (type) {
+//
+//	case Enums::FLOAT:
+//		assert(m_FloatProps.count(prop) > 0);
+//		return(&(m_FloatProps[prop]));
+//		break;
+//	case Enums::VEC4:
+//		assert(m_Float4Props.count(prop) > 0);
+//		return(&(m_Float4Props[prop]));
+//		break;
+//	case Enums::INT:
+//		assert(m_IntProps.count(prop) > 0);
+//		return(&(m_IntProps[prop]));
+//		break;
+//		
+//	}
+//	return NULL;
+//}
+
+
+//void 
+//Viewport::setProp(int prop, Enums::DataType type, void *value) {
+//	AttributeValues::setProp(prop, type, value);
+//
+//	switch (type) {
+//
+//		case Enums::FLOAT:
+//			assert(m_FloatProps.count(prop) > 0);
+//			setProp((FloatProperty)prop, *(float *)value);
+//			break;
+//		case Enums::VEC4:
+//			assert(m_Float4Props.count(prop) > 0);
+//			setProp((Float4Property)prop, *(vec4 *)value);
+//			break;
+//		case Enums::INT:
+//			m_IntProps[prop] = *(int *)value;
+//			break;
+//	}
+//}
+
+
+//void
+//Viewport::setPropf4(Float4Property prop, vec4& values) {
+//
+//	m_Float4Props[prop] = values;
+//}
+//
+//
+//const vec4 &
+//Viewport::getPropf4(Float4Property prop) {
+//
+//	return m_Float4Props[prop];
+//}
+
+
+
+
+//bool
+//Viewport::getPropb(BoolProperty prop) {
+//
+//	return m_BoolProps[prop];
+//}
+//const vec2 &
+//Viewport::getPropf2(Float2Property prop) {
+//
+//	return m_Float2Props[prop];
+//}
 
 //float 
 //Viewport::getRatio()

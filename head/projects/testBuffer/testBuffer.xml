@@ -8,7 +8,7 @@
 		</viewports>
 	
 		<materialLibs>
-			<mlib filename="testBuffer.mlib"/>
+			<materialLib filename="testBuffer.mlib"/>
 		</materialLibs>
 	</assets>
 	

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<materiallib name="Geometry With Adjacency">
+<materialLib name="Geometry With Adjacency">
 
 
 	<shaders>
@@ -23,4 +23,4 @@
 			</shader>
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

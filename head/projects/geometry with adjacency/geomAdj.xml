@@ -33,7 +33,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="geomAdj.mlib"/>
+			<materialLib filename="geomAdj.mlib"/>
 		</materialLibs>
 	</assets>
 	

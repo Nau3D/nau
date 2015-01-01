@@ -1,8 +1,12 @@
 <?xml version="1.0" ?>
-<materiallib name="Compute">
+<materialLib name="Compute">
 
 	<textures>
-		<texture name="tex" width=512 height=512 internalFormat="RGBA" />
+		<texture name="tex">
+			<WIDTH value=512 />
+			<HEIGHT value=512 />
+			<INTERNAL_FORMAT value="RGBA" />
+		</texture>	
 		<texture name="source" filename="../../models/Texturas/CuboEstrada.tif" mipmap="1" />
 	</textures>
 
@@ -35,4 +39,4 @@
 	
 	</materials>
 
-</materiallib>
+</materialLib>

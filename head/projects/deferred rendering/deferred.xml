@@ -47,7 +47,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="deferred.mlib"/>
+			<materialLib filename="deferred.mlib"/>
 		</materialLibs>
 	</assets>
 	

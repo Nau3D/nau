@@ -8,7 +8,7 @@
 		</viewports>
 	
 		<materialLibs>
-			<mlib filename="computeShader.mlib"/>
+			<materialLib filename="computeShader.mlib"/>
 		</materialLibs>
 	</assets>
 	

@@ -446,16 +446,6 @@ ProgramValue::getValues (void)
 		   Pass *p = RENDERMANAGER->getPass(m_Context);
 		   m_Values = p->getProp(m_ValueOf, m_ValueType);
 		   return m_Values;
-		   // int pType = RENDERMANAGER->getPassParamType(m_Context, m_Param);
-		  // switch (pType) {
-		  // 
-				//case Enums::FLOAT:
-				//	m_ValueType = Enums::FLOAT;
-				//	m_Cardinality = Enums::getCardinality(m_ValueType);
-				//	m_Values = malloc(Enums::getSize(Enums::FLOAT));
-				//	memcpy(m_Values, RENDERMANAGER->getPassParamf(m_Context, m_Param), Enums::getSize(Enums::FLOAT));
-				//	return m_Values;
-		  // }
 
 		}
 	   case CURRENT: {

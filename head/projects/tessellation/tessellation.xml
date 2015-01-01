@@ -33,7 +33,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="tessellation.mlib"/>
+			<materialLib filename="tessellation.mlib"/>
 		</materialLibs>
 		
 	</assets>

@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
-<materiallib name="Depth Buffer">
+<materialLib name="Depth Buffer">
 
-	<rendertargets>
-		<rendertarget name = "depth">
+	<renderTargets>
+		<renderTarget name = "depth">
 			<size width="1024" height="1024" />
 			<depth name="shadowMap" noreadandwrite="true"  
 									internalFormat="DEPTH_COMPONENT32F"  />
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 	
 	<shaders>
 		<shader name="depthOnly" 
@@ -34,4 +34,4 @@
 		</material>
 		
 	</materials>
-</materiallib>
+</materialLib>

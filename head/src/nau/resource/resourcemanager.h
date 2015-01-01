@@ -50,20 +50,23 @@ namespace nau
 			nau::render::Texture* addTexture (std::vector<std::string> fn, std::string label, bool mipmap = 1);
 			void removeTexture (std::string name);
 			
-			nau::render::Texture* createTexture (std::string label, 
-				std::string internalFormat, 
-				std::string aFormat, 
-				std::string aType, int width, int height,
-				unsigned char* data = NULL);
+			//nau::render::Texture* createTexture (std::string label, 
+			//	std::string internalFormat, 
+			//	std::string aFormat, 
+			//	std::string aType, int width, int height,
+			//	unsigned char* data = NULL);
 
 			nau::render::Texture* createTexture (std::string label, 
 				std::string internalFormat, 
-				int width, int height, int layers = 0);
+				int width, int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
 
-			nau::render::Texture* createTextureMS (std::string label, 
-				std::string internalFormat, 
-				int width, int height,
-				int samples);
+			//nau::render::Texture* createTextureMS (std::string label, 
+			//	std::string internalFormat, 
+			//	int width, int height,
+			//	int samples);
+
+			/// create texture with default attributes, texture requires building prior to usage
+			nau::render::Texture * createTexture(std::string label);
 
 			/***TexImage***/
 			nau::material::TexImage* createTexImage(nau::render::Texture *t);

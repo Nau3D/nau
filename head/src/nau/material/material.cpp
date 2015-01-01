@@ -363,7 +363,7 @@ Material::getImageTexture(unsigned int unit) {
 void 
 Material::attachBuffer(IMaterialBuffer *b) {
 
-	int bp = *(int *)(b->getPropi(IMaterialBuffer::BINDING_POINT));
+	int bp = b->getPropi(IMaterialBuffer::BINDING_POINT);
 	m_Buffers[bp] = b;
 }
 

@@ -50,7 +50,7 @@ TextureCubeMap::Create (std::vector<std::string> files, std::string label, bool 
 TextureCubeMap::TextureCubeMap(std::string label, std::vector<std::string> files, 
 							   std::string internalFormat, std::string aFormat, 
 							   std::string aType, int width) :
-	Texture(label,"TEXTURE_CUBE_MAP", internalFormat, aFormat, aType,width,width),
+	Texture(label), //"TEXTURE_CUBE_MAP", internalFormat, aFormat, aType,width,width),
 	m_Files(6)
 {
 	for (int i = 0; i < 6; i++) 

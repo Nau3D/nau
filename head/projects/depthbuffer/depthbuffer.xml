@@ -37,7 +37,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="depthbuffer.mlib"/>
+			<materialLib filename="depthbuffer.mlib"/>
 		</materialLibs>
 	</assets>
 	

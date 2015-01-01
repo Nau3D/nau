@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
-<materiallib name="Deferred Rendering">
+<materialLib name="Deferred Rendering">
 	
-	<rendertargets>
-		<rendertarget name ="gbuffer">
+	<renderTargets>
+		<renderTarget name ="gbuffer">
 			<size width="512" height="512" />
 			<colors>
 				<color name="normals" internalFormat="RGBA" />
 				<color name="colors"  internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 	
 	<shaders>
 		<shader name="fillGBuffers" 	ps="shaders/fillGBuffers.frag" 
@@ -85,4 +85,4 @@
 		</material>		
 	</materials>
 
-</materiallib>
+</materialLib>

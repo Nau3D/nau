@@ -192,7 +192,6 @@ Nau::getAttribs(std::string context) {
 		attribs = &(Texture::Attribs);
 	else if (context == "STATE")
 		attribs = &(IState::Attribs);
-
 	else if (context == "PASS")
 		attribs = &(Pass::Attribs);
 
@@ -380,9 +379,9 @@ void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize) {
 
 	// creates a directional light by default
 	Light *l = RENDERMANAGER->getLight ("MainDirectionalLight");
-	l->setProp(Light::DIRECTION,1.0f,-1.0f,-1.0f, 0.0f);
-	l->setProp(Light::COLOR, 0.9f,0.9f,0.9f,1.0f);
-	l->setProp(Light::AMBIENT,0.5f,0.5f,0.5f,1.0f );
+	l->setPropf4(Light::DIRECTION,1.0f,-1.0f,-1.0f, 0.0f);
+	l->setPropf4(Light::COLOR, 0.9f,0.9f,0.9f,1.0f);
+	l->setPropf4(Light::AMBIENT,0.5f,0.5f,0.5f,1.0f );
 
 	Pipeline *aPipeline = RENDERMANAGER->getPipeline ("MainPipeline");
 	Pass *aPass = aPipeline->createPass("MainPass");

@@ -32,7 +32,9 @@ namespace nau
 			static void loadAssets (TiXmlHandle &hRoot, std::vector<std::string> &matLib);
 			static void loadPipelines (TiXmlHandle &hRoots);
 
-			static void *readAttr(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet attribs);
+			static void readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem);
+			static void *readAttr(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet &attribs);
+			static bool isExcluded(std::string , std::vector<std::string> &excluded);
 			// Asset Loading
 			static void loadUserAttrs(TiXmlHandle handle);
 			static void loadScenes(TiXmlHandle handle);
@@ -70,19 +72,6 @@ namespace nau
 			static void loadDebugFramelogFrameicon (TiXmlHandle &hRoot);
 			static void loadDebugFramelogFramemovie (TiXmlHandle &hRoot);
 			static void loadDebugTimerlog (TiXmlHandle &hRoot);
-			
-			
-
-
-
-
-
-
-
-
-
-
-
 			static void loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer);
 			static void loadDebugPlugins (TiXmlHandle &hRoot);
 #ifdef NAU_OPTIX

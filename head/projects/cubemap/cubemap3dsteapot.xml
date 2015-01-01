@@ -28,7 +28,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="cubemap3.mlib"/>
+			<materialLib filename="cubemap3.mlib"/>
 		</materialLibs>
 	</assets>
 	<pipelines>

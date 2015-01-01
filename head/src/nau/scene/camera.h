@@ -80,16 +80,14 @@ namespace nau
 			virtual ~Camera (void);
 
 
+			void setPropf4(Float4Property prop, vec4& aVec);
 			void setPropf4(Float4Property prop, float r, float g, float b, float a);
 			void setPropf(FloatProperty prop, float value);
 			void setPrope(EnumProperty prop, int value);
 			// Note: no validation is performed!
-			void setProp(int prop, Enums::DataType type, void *value);
+			//void setProp(int prop, Enums::DataType type, void *value);
 
-			//float getPropf(FloatProperty prop);
 			const mat4 &getPropm4(Mat4Property prop);
-			//const vec4 &getPropf4(Float4Property prop);
-			//int getPrope(EnumProperty prop);
 			void *getProp(int prop, Enums::DataType type);
 
 			void setOrtho (float left, float right, float bottom, float top, float near, float far);
@@ -141,7 +139,7 @@ namespace nau
 			static bool Init();
 			static bool Inited;
 
-			void setDefault();
+			//void setDefault();
 
 			//std::map<int, int> m_IntProps;
 			//std::map<int,vec4> m_Float4Props;

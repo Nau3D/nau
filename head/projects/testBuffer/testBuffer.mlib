@@ -1,14 +1,14 @@
 <?xml version="1.0" ?>
-<materiallib name="Buffer">
+<materialLib name="Buffer">
 
-	<rendertargets>
-		<rendertarget name="test">
+	<renderTargets>
+		<renderTarget name="test">
 			<size width=512 height="512" />
 			<colors>
 				<color name="color" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 
 	<shaders>
 		<shader name="fillBuffer" 		ps="shaders/fillBuffer.frag" 
@@ -52,4 +52,4 @@
 		</material>		
 	</materials>
 		
-</materiallib>		
+</materialLib>		

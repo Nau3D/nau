@@ -25,6 +25,8 @@ namespace nau
 			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts);
 			virtual void restore(unsigned int unit);
 
+			virtual void build();
+
 			//void enableCompareToTexture (void);
 			//void disableCompareToTexture (void);
 			//void enableObjectSpaceCoordGen (void);

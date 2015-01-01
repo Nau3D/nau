@@ -39,7 +39,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="testTextureArrays.mlib"/>
+			<materialLib filename="testTextureArrays.mlib"/>
 		</materialLibs>
 	</assets>
 	

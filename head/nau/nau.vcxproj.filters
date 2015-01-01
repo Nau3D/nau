@@ -475,9 +475,6 @@
     <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\math\bvec4.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
@@ -492,9 +489,6 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp">
-      <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp">
       <Filter>Source Files\render\opengl</Filter>
@@ -969,9 +963,6 @@
     <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\loader\textureloader.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
@@ -992,9 +983,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\patchLoader.h">
       <Filter>Source Files\loader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h">
-      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\attribute.h">
       <Filter>Source Files</Filter>

@@ -1,11 +1,11 @@
 #ifndef GLRENDERTARGET_H
 #define GLRENDERTARGET_H
 
-#include <assert.h>
-
 #include <nau/render/rendertarget.h>
 
 #include <GL/glew.h>
+
+#include <assert.h>
 
 #define CHECK_FRAMEBUFFER_STATUS() \
 { \

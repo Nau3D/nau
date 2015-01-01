@@ -1,35 +1,35 @@
 <?xml version="1.0" ?>
-<materiallib name="Ambient Occlusion">
-	<rendertargets>
-		<rendertarget name = "info">
+<materialLib name="Ambient Occlusion">
+	<renderTargets>
+		<renderTarget name = "info">
 			<size width="1024" height="1024" />
 			<depth name="depthMap" internalFormat="DEPTH_COMPONENT32F"/>
 			<colors>
 				<color name="normalMap" internalFormat="RGBA32F" />
 				<color name="posMap"  internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
-		<rendertarget name = "shadows">
+		</renderTarget>
+		<renderTarget name = "shadows">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="occMap"  internalFormat="RGBA32F" />
 				<color name="occMap2"  internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
-		<rendertarget name = "optix">
+		</renderTarget>
+		<renderTarget name = "optix">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="optixTex"  internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
-		<rendertarget name ="dummy">
+		</renderTarget>
+		<renderTarget name ="dummy">
 			<size width="1024" height="1024" />
 			<!--size width="512" height="512" /-->
 			<colors>
 				<color name="dummy" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 	
 	<buffers>
 		<buffer name="hits">
@@ -185,4 +185,4 @@
 			</textures>
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

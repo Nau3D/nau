@@ -137,7 +137,7 @@ DevILTextureLoader::convertType(std::string type) {
 
 	if (type == "FLOAT")
 		ilType = IL_FLOAT;
-	else if (type == "UNSIGNED_BYTE")
+	else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")
 		ilType = IL_UNSIGNED_BYTE;
 	else if (type == "UNSIGNED_SHORT")
 		ilType = IL_UNSIGNED_SHORT;

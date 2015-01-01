@@ -51,7 +51,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename = "stencil.mlib"/>
+			<materialLib filename = "stencil.mlib"/>
 		</materialLibs> 
 	</assets>
 	

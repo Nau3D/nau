@@ -65,7 +65,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="shadowMaterials3.mlib"/>
+			<materialLib filename="shadowMaterials3.mlib"/>
 		</materialLibs>
 		
 	</assets>

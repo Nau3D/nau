@@ -5,13 +5,11 @@
 #ifndef IMAGE_TEXTURE_H
 #define IMAGE_TEXTURE_H
 
+#include <nau/attribute.h>
+#include <nau/attributeValues.h>
 
 #include <string>
 #include <math.h>
-
-#include <nau/attribute.h>
-
-
 
 
 using namespace nau;
@@ -20,41 +18,18 @@ namespace nau
 {
 	namespace render
 	{
-		class ImageTexture
+		class ImageTexture: public AttributeValues
 		{
 		public:
+			ENUM_PROP(ACCESS, 0);
 
-			typedef enum { ACCESS,
-				COUNT_ENUMPROPERTY} EnumProperty;
+			UINT_PROP(LEVEL, 0);
+			UINT_PROP(TEX_ID, 1);
 
-			typedef enum { 
-				COUNT_INTPROPERTY} IntProperty;
-
-			typedef enum {LEVEL, TEX_ID, COUNT_UINTPROPERTY} UIntProperty;
-
-			typedef enum {CLEAR, COUNT_BOOLPROPERTY } BoolProperty;
-
-			typedef enum {COUNT_FLOAT4PROPERTY} Float4Property;
-			typedef enum {COUNT_FLOATPROPERTY} FloatProperty;
+			BOOL_PROP(CLEAR, 0);
 
 
 			static AttribSet Attribs;
-
-			std::map<int,int> m_EnumProps;
-			std::map<int,int> m_IntProps;
-			std::map<int,unsigned int> m_UIntProps;
-			std::map<int,bool> m_BoolProps;
-			std::map<int, vec4> m_Float4Props;
-			std::map<int, float> m_FloatProps;
-
-			// Note: no validation is performed!
-			void setProp(int prop, Enums::DataType type, void *value);
-
-			int getPropi(IntProperty prop);
-			unsigned int getPropui(UIntProperty prop);
-			void *getProp(int prop, Enums::DataType type);
-
-			void initArrays();
 
 			static ImageTexture* Create (std::string label, unsigned int texID, unsigned int level, unsigned int access);
 			static ImageTexture* Create (std::string label, unsigned int texID);
@@ -68,7 +43,7 @@ namespace nau
 			virtual void setLabel (std::string label);
 
 		protected:
-			ImageTexture() {};
+			ImageTexture();
 
 			static bool Init();
 			static bool Inited;

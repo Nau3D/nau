@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<materiallib name="RT vs SM">
+<materialLib name="RT vs SM">
 
-	<rendertargets>
+	<renderTargets>
 	
-		<rendertarget name ="deferred">
+		<renderTarget name ="deferred">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="color" internalFormat="RGBA" />
@@ -11,45 +11,45 @@
 				<color name="shadowContourProj" internalFormat="RGBA" />						
 				<color name="pos" internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name ="deferredResult">
+		<renderTarget name ="deferredResult">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="color2" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name ="deferredResult2">
+		<renderTarget name ="deferredResult2">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="compDR2" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
 		
-		<rendertarget name ="intersectionResult">
+		<renderTarget name ="intersectionResult">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="intersectionResult" internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 
-		<rendertarget name ="test">
+		<renderTarget name ="test">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name ="test_ubyte">
+		<renderTarget name ="test_ubyte">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="offscreenrender_ubyte" internalFormat="R8" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 
-		<rendertarget name="depthAndVertices">
+		<renderTarget name="depthAndVertices">
 			<size width="1024" height="1024" />
 			<depth name="shadowMapA" internalFormat="DEPTH_COMPONENT32F" />
 			<colors>
@@ -59,14 +59,14 @@
 									
 				<color name="vertexC" internalFormat="RGBA32F" />
 			</colors>			
-		</rendertarget>
+		</renderTarget>
 
-		<rendertarget name = "depth">
+		<renderTarget name = "depth">
 			<size width="1024" height="1024" />
 			<depth name="shadowMap" internalFormat="DEPTH_COMPONENT32F" />
-		</rendertarget>
+		</renderTarget>
 
-	</rendertargets>
+	</renderTargets>
 	
 	
 	<shaders>
@@ -92,11 +92,19 @@
 
 		
 	<textures>
-		<texture name="dataBuffer"  format="RGBA" 
-									internalFormat="RGBA32F" 
-									type="FLOAT" width=2 height=2 />
+		<texture name="dataBuffer">
+			<WIDTH value=2 />
+			<HEIGHT value=2 />
+			<INTERNAL_FORMAT value="RGBA32F" />
+		</texture>	
 	</textures>
 
+	<buffers>
+		<buffer name="test">
+			<SIZE value=44 />
+			<CLEAR value="BY_FRAME" />
+		</buffer>
+	</buffers>	
 
 	<states>
 		<state name="frontCull">
@@ -210,6 +218,13 @@
 				<texture UNIT="3" name="intersectionResult" />
 
 			</textures>	
+			<buffers>	
+				<buffer name="test"  >
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+
 		</material>
 
 
@@ -275,4 +290,4 @@
 
 	</materials>
 		
-</materiallib>
+</materialLib>

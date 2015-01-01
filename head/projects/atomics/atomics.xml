@@ -35,7 +35,7 @@
 		</atomics>	
 		
 		<materialLibs>
-			<mlib filename="atomics.mlib"/>
+			<materialLib filename="atomics.mlib"/>
 		</materialLibs>
 	</assets>
 	<pipelines>

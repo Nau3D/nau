@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
-<materiallib name="testTextureArrays">
+<materialLib name="testTextureArrays">
 
-	<rendertargets>
-		<rendertarget name="test">
+	<renderTargets>
+		<renderTarget name="test">
 			<size width=1024 height=1024 layers=2/>
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
 			<depth name="depth" internalFormat="DEPTH_COMPONENT32F" />
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 
 	<shaders>
 		<shader name="fillArrays" 		ps="shaders/dirlightdiffambpix.frag" 
@@ -93,4 +93,4 @@
 			</shader>
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

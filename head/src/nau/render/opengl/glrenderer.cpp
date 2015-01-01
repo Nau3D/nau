@@ -878,7 +878,7 @@ GLRenderer::addLight (nau::scene::Light& aLight) {
 
 	int id = m_Lights.size();
 
-	aLight.setProp(Light::ID, id);
+	aLight.setPropi(Light::ID, id);
 	m_Lights.push_back(&aLight);
 
 	return true;
@@ -888,7 +888,7 @@ void
 GLRenderer::removeLights () {
 
 	for (unsigned int i = 0; i < m_Lights.size(); i++) {
-		m_Lights[i]->setProp(Light::ID, -1);
+		m_Lights[i]->setPropi(Light::ID, -1);
 	}
 
 	m_Lights.clear();

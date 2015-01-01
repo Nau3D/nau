@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
-<materiallib name="Deferred Render Targets">
-	<rendertargets>
-		<rendertarget name ="deferred">
+<materialLib name="Deferred Render Targets">
+	<renderTargets>
+		<renderTarget name ="deferred">
 			<size width="1024" height="1024" />
 			<!--multisampling samples=32 /-->
 			<colors>
 				<color name="color" internalFormat="RGBA" />
 				<color name="pos" internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 	
 	<shaders>
 		<shader name="deferred" 	ps="shaders/deferredShading.frag" 
@@ -75,4 +75,4 @@
 			</textures>	
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

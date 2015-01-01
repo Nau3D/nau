@@ -314,7 +314,7 @@ void DlgTextureLib::OnSaveRaw( wxCommandEvent& event)
 	int *iData;
 	if (type == "FLOAT")
 		fData = (float *)data;
-	else if (type == "UNSIGNED BYTE")
+	else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")
 		ubData = (unsigned char *)data;
 	else if (type == "UNSIGNED_SHORT")
 		usData = (unsigned short *)data;
@@ -344,12 +344,18 @@ void DlgTextureLib::OnSaveRaw( wxCommandEvent& event)
 
 				if (type == "FLOAT")
 					fprintf(fp,"%f ",fData[(i*h + j)*n + k]);
+				else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")
+					fprintf(fp, "%d ", ubData[(i*h + j)*n + k]);
 				else if (type == "UNSIGNED_SHORT")
 					fprintf(fp,"%u ",usData[(i*h + j)*n + k]);
 				else if (type == "UNSIGNED_INT")
 					fprintf(fp,"%u ",uiData[(i*h + j)*n + k]);
 				else if (type == "SHORT")
 					fprintf(fp,"%i ",sData[(i*h + j)*n + k]);
+				else if (type == "BYTE")
+					fprintf(fp, "%i ", cData[(i*h + j)*n + k]);
+				else if (type == "INT")
+					fprintf(fp, "%d ", iData[(i*h + j)*n + k]);
 
 			}
 			fprintf(fp,"; ");

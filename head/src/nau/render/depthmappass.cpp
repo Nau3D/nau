@@ -68,7 +68,7 @@ DepthMapPass::addLight(const std::string &lightName)
 	m_LightCamera->setPropf4(Camera::POSITION, v.x,v.y,v.z,1.0f);
 	//m_LightCamera->setUpVector(0.0f,1.0f,0.0f);
 
-	if (light->getPrope(Light::TYPE) == Light::DIRECTIONAL) {
+	if (light->getPropf(Light::SPOT_CUTOFF) == 180.0f) {
 	
 		m_LightCamera->setOrtho(-100.0f, 100.0f,-100.0f, 100.0f,0.0f,200.0f);
 		m_LightCamera->setPrope(Camera::PROJECTION_TYPE, Camera::ORTHO);

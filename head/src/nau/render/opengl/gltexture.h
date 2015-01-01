@@ -22,10 +22,12 @@ namespace nau
 
 			~GLTexture(void);
 
-			// prepare the unit texture for rendering
+			//! prepare a texture for rendering
 			virtual void prepare(unsigned int unit, TextureSampler *ts);
-			/// restore the sampler state
+			//! restore default texture in texture unit
 			virtual void restore(unsigned int unit);
+			//! builds a texture with the attribute parameters previously set
+			virtual void build();
 
 			//void enableCompareToTexture (void);
 			//void disableCompareToTexture (void);
@@ -77,23 +79,18 @@ namespace nau
 			virtual int getNumberOfComponents(void);
 			virtual  int getElementSize();
 
-			// For loaded images
+			// for loaded images
 			GLTexture (std::string label, std::string internalFormat,
 				std::string aFormat, std::string aType, int width, int height, 
 				void* data, bool mipmap = true );
 
-			// For Texture Storage
-			GLTexture(std::string label, std::string anInternalFormat, int width, int height, int levels = 1);
+			// for empty textures
+			GLTexture(std::string label, std::string anInternalFormat, int width, int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
 
-			GLTexture():Texture() {};
+			// for empty textures with default parameters
+			GLTexture(std::string label);
 
-			// For ...
-			//GLTexture (std::string label);
-
-			//void setData(std::string internalFormat, std::string aFormat, 
-			//	std::string aType, int width, int height, unsigned char * data = NULL);
-
-			//GLenum translateCoord (TextureCoord aCoord);
+			GLTexture(){};
 		};
 	};
 };

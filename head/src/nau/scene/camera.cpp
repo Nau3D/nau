@@ -61,13 +61,13 @@ Camera::Init() {
 AttribSet Camera::Attribs;
 bool Camera::Inited = Init();
 
-void
-Camera::setDefault()
-{
-	Attribs.initAttribInstanceFloatArray(m_FloatProps);
-	Attribs.initAttribInstanceVec4Array(m_Float4Props);
-	Attribs.initAttribInstanceEnumArray(m_EnumProps);
-}
+//void
+//Camera::setDefault()
+//{
+//	Attribs.initAttribInstanceFloatArray(m_FloatProps);
+//	Attribs.initAttribInstanceVec4Array(m_Float4Props);
+//	Attribs.initAttribInstanceEnumArray(m_EnumProps);
+//}
 
 
 Camera::Camera (const std::string &name) :
@@ -80,7 +80,8 @@ Camera::Camera (const std::string &name) :
 	m_PositionOffset (0.0f)
 	//m_IsOrtho (false)
 {
-	setDefault();
+	//setDefault();
+	initArrays(Attribs);
 	m_Id = 0;
 	m_Name = name;
 	m_pViewport = NAU->getDefaultViewport();
@@ -242,6 +243,13 @@ Camera::setPropf(FloatProperty prop, float f)
 }
 
 
+void 
+Camera::setPropf4(Float4Property prop, vec4& aVec) {
+
+	setPropf4(prop, aVec.x, aVec.y, aVec.z, aVec.w);
+}
+
+
 void
 Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 {
@@ -319,24 +327,24 @@ Camera::setPrope(EnumProperty prop, int value)
 }
 
 
-void 
-Camera::setProp(int prop, Enums::DataType type, void *value) {
-
-	vec4 *v;
-	switch (type) {
-
-		case Enums::FLOAT:
-			setPropf((FloatProperty)prop, *(float *)value);
-			break;
-		case Enums::VEC4:
-			v = (vec4 *)value;
-			setPropf4((Float4Property)prop, v->x, v->y, v->z, v->w);
-			break;
-		case Enums::INT:
-			m_IntProps[prop] = *(int *)value;
-			break;
-	}
-}
+//void 
+//Camera::setProp(int prop, Enums::DataType type, void *value) {
+//
+//	vec4 *v;
+//	switch (type) {
+//
+//		case Enums::FLOAT:
+//			setPropf((FloatProperty)prop, *(float *)value);
+//			break;
+//		case Enums::VEC4:
+//			v = (vec4 *)value;
+//			setPropf4((Float4Property)prop, v->x, v->y, v->z, v->w);
+//			break;
+//		case Enums::INT:
+//			m_IntProps[prop] = *(int *)value;
+//			break;
+//	}
+//}
 
 
 void *
@@ -344,38 +352,48 @@ Camera::getProp(int prop, Enums::DataType type) {
 
 	switch (type) {
 
-	case Enums::FLOAT:
-		assert(m_FloatProps.count(prop) > 0);
-		return(&(m_FloatProps[prop]));
-		break;
-	case Enums::VEC4:
-		assert(m_Float4Props.count(prop) > 0);
-		return(&(m_Float4Props[prop]));
-		break;
-	case Enums::INT:
-		assert(m_IntProps.count(prop) > 0);
-		return(&(m_IntProps[prop]));
-		break;
-	case Enums::MAT4:
-		assert(m_Mat4Props.count(prop) > 0);
-		return((void *)m_Mat4Props[prop].getMat44().getMatrix());
-	}
+		case Enums::ENUM:
+			assert(m_EnumProps.count(prop) > 0);
+			return(&(m_EnumProps[prop]));
+			break;
+		case Enums::INT:
+			assert(m_IntProps.count(prop) > 0);
+			return(&(m_IntProps[prop]));
+			break;
+		case Enums::UINT:
+			assert(m_UIntProps.count(prop) > 0);
+			return(&(m_UIntProps[prop]));
+			break;
+		case Enums::BOOL:
+			assert(m_BoolProps.count(prop) > 0);
+			return(&(m_BoolProps[prop]));
+			break;
+		case Enums::BVEC4:
+			assert(m_Bool4Props.count(prop) > 0);
+			return(&(m_Bool4Props[prop]));
+			break;
+		case Enums::FLOAT:
+			assert(m_FloatProps.count(prop) > 0);
+			return(&(m_FloatProps[prop]));
+			break;
+		case Enums::VEC4:
+			assert(m_Float4Props.count(prop) > 0);
+			return(&(m_Float4Props[prop]));
+			break;
+		case Enums::MAT3:
+			assert(m_Mat3Props.count(prop) > 0);
+			return(&(m_Mat3Props[prop]));
+			break;
+
+		case Enums::MAT4:
+			assert(m_Mat4Props.count(prop) > 0);
+			return((void *)m_Mat4Props[prop].getMat44().getMatrix());
+		default:
+			assert(false && "Missing Data Type in class Camera");
+			return NULL;
+		}
 	return NULL;
 }
-
-
-//const vec4&
-//Camera::getPropf4(Float4Property prop) 
-//{
-//	return m_Float4Props[prop];
-//}
-//
-//
-//float 
-//Camera::getPropf(FloatProperty prop)
-//{
-//	return m_FloatProps[prop];
-//}
 
 
 const mat4&
@@ -383,14 +401,6 @@ Camera::getPropm4(Mat4Property prop)
 {
 	return m_Mat4Props[prop].getMat44();
 }
-
-
-//int
-//Camera::getPrope(EnumProperty prop) 
-//{
-//	return m_EnumProps[prop];
-//}
-
 
 
 IRenderable& 
@@ -572,8 +582,8 @@ Camera::buildProjectionMatrix() {
 		projection.set (3, 2, -(m_FloatProps[FARP] + m_FloatProps[NEARP]) / (m_FloatProps[FARP] - m_FloatProps[NEARP]));
 	}
 
-	//if (this->m_Renderable)
-	//	this->m_Renderable->resetCompilationFlags();
+	if (this->m_Renderable)
+		this->m_Renderable->resetCompilationFlags();
 
 }
 	
@@ -648,8 +658,8 @@ Camera::buildViewMatrix (void)
 		vec4 p = m_Float4Props[POSITION];
 		m_Mat4Props[VIEW_MATRIX].translate(-p.x, -p.y, -p.z);
 	}
-	//if (this->m_Renderable)
-	//	this->m_Renderable->resetCompilationFlags();
+	if (this->m_Renderable)
+		this->m_Renderable->resetCompilationFlags();
 
 }
 

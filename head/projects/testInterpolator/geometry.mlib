@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<materiallib name="Simple">
+<materialLib name="Simple">
 
 	<textures>
 		<texture name="Crate" filename="../../models/Texturas/crate.jpg" />		
@@ -19,4 +19,4 @@
 			</textures>
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

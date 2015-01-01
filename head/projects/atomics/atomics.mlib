@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<materiallib name="atomics">
+<materialLib name="atomics">
 
 	
 	<shaders>
@@ -64,4 +64,4 @@
 
 
 	</materials>
-</materiallib>
+</materialLib>

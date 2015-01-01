@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
-<materiallib name="PrimeShadows">
-	<rendertargets>
-		<rendertarget name ="gBuffer">
+<materialLib name="PrimeShadows">
+	<renderTargets>
+		<renderTarget name ="gBuffer">
 			<size width="1024" height="1024" />
 			<!--size width="512" height="512" /-->
 			<colors>
@@ -9,17 +9,17 @@
 				<color name="normal" internalFormat="RGBA" />
 				<color name="color" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name ="dummy">
+		<renderTarget name ="dummy">
 			<size width="1024" height="1024" />
 			<!--size width="512" height="512" /-->
 			<colors>
 				<color name="dummy" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-	</rendertargets>
+	</renderTargets>
 
 	<buffers>
 		<buffer name="hits" >
@@ -128,4 +128,4 @@
 		</material>	
 	</materials>
 	
-</materiallib>
+</materialLib>
