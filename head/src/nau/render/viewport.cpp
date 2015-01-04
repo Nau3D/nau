@@ -103,8 +103,9 @@ Viewport::getPropf(FloatProperty prop) {
 	
 		case RATIO:
 			return (m_Float2Props[ABSOLUT_SIZE].x / m_Float2Props[ABSOLUT_SIZE].y);
+		default:
+			return AttributeValues::getPropf(prop);
 	}
-	return 0;
 }
 
 
@@ -160,6 +161,8 @@ Viewport::setPropf2(Float2Property prop, vec2& values){
 				m_Float2Props[ABSOLUT_ORIGIN].y = values.y;
 			}
 			break;
+		default:
+			AttributeValues::setPropf2(prop, values);
 	}
 }
 

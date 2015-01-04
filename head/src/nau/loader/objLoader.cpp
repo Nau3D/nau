@@ -2450,11 +2450,16 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		// Set Name
 		//aMaterial->setName (currM->name);
 		// Pass on data
-		aMaterial->getColor().setProp(ColorMaterial::AMBIENT,currM->ambient);
-		aMaterial->getColor().setProp(ColorMaterial::DIFFUSE,currM->diffuse);
-		aMaterial->getColor().setProp(ColorMaterial::EMISSION,currM->emmissive);
-		aMaterial->getColor().setProp(ColorMaterial::SHININESS,currM->shininess);
-		aMaterial->getColor().setProp(ColorMaterial::SPECULAR,currM->specular);
+		GLfloat *f;
+		f = currM->ambient;
+		aMaterial->getColor().setPropf4(ColorMaterial::AMBIENT,f[0], f[1], f[2], f[3]);
+		f = currM->diffuse;
+		aMaterial->getColor().setPropf4(ColorMaterial::DIFFUSE, f[0], f[1], f[2], f[3]);
+		f = currM->emmissive;
+		aMaterial->getColor().setPropf4(ColorMaterial::EMISSION, f[0], f[1], f[2], f[3]);
+		f = currM->specular;
+		aMaterial->getColor().setPropf4(ColorMaterial::SPECULAR, f[0], f[1], f[2], f[3]);
+		aMaterial->getColor().setPropf(ColorMaterial::SHININESS,currM->shininess);
 
 		// Grab the texture
 		if (currM->texture!=NULL && currM->texture!="")

@@ -925,31 +925,31 @@ void DlgMaterials::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 	}
 	else if (name == wxT("WRAP_S")) {
 		
-		ts->setProp(TextureSampler::WRAP_S,value);
+		ts->setPrope(TextureSampler::WRAP_S,value);
 	}
 	else if (name == wxT("WRAP_T")) {
 
-		ts->setProp(TextureSampler::WRAP_T,value);
+		ts->setPrope(TextureSampler::WRAP_T,value);
 	}
 	else if (name == wxT("WRAP_R")) {
 
-		ts->setProp(TextureSampler::WRAP_R,value);
+		ts->setPrope(TextureSampler::WRAP_R,value);
 	}
 	else if (name == wxT("MAG_FILTER")) {
 
-		ts->setProp(TextureSampler::MAG_FILTER,value);
+		ts->setPrope(TextureSampler::MAG_FILTER,value);
 	}
 	else if (name == wxT("MIN_FILTER")) {
 
-		ts->setProp(TextureSampler::MIN_FILTER,value);
+		ts->setPrope(TextureSampler::MIN_FILTER,value);
 	}
 	else if (name == wxT("COMPARE_MODE")) {
 
-		ts->setProp(TextureSampler::COMPARE_MODE,value);
+		ts->setPrope(TextureSampler::COMPARE_MODE,value);
 	}
 	else if (name == wxT("COMPARE_FUNC")) {
 
-		ts->setProp(TextureSampler::COMPARE_FUNC,value);
+		ts->setPrope(TextureSampler::COMPARE_FUNC,value);
 	}
 	else if (name == wxT("Name")) {
 
@@ -1119,30 +1119,30 @@ void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("DIFFUSE.Alpha"));
 
-	mm->getColor().setProp(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setPropf4(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("AMBIENT.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("AMBIENT.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("AMBIENT.Alpha"));
 
-	mm->getColor().setProp(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setPropf4(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("SPECULAR.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("SPECULAR.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("SPECULAR.Alpha"));
 
-	mm->getColor().setProp(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setPropf4(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("EMISSION.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("EMISSION.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("EMISSION.Alpha"));
 
-	mm->getColor().setProp(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setPropf4(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
-	mm->getColor().setProp(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
+	mm->getColor().setPropf(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
 }
 
 

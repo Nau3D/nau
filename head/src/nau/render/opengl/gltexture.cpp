@@ -2,6 +2,7 @@
 #include <nau.h>
 #include <nau/render/irenderer.h>
 
+#include <GL/glew.h>
 using namespace nau::render;
 
 std::map<unsigned int, GLTexture::TexDataTypes> GLTexture::TexDataType;
@@ -13,6 +14,7 @@ bool GLTexture::Inited = GLTexture::InitGL();
 bool
 GLTexture::InitGL() {
 
+	TexFormat[GL_RED_INTEGER       ] = TexFormats("RED", 1);
 	TexFormat[GL_RED               ] = TexFormats("RED",1);
 	TexFormat[GL_RG                ] = TexFormats("RG", 2);
 	TexFormat[GL_RGB               ] = TexFormats("RGB", 3);

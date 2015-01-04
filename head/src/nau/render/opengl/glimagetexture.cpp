@@ -47,19 +47,20 @@ void
 GLImageTexture::prepare(int aUnit) {
 
 	m_Unit = aUnit;
+	glBindImageTexture(aUnit, m_UIntProps[TEX_ID], m_UIntProps[LEVEL],false,0,m_EnumProps[ACCESS],m_InternalFormat);
+	RENDERER->addImageTexture(m_Unit, this);
 #if NAU_OPENGL_VERSION >= 440
 	if (m_BoolProps[CLEAR]) {
 		glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, m_Data);
 	}
 #endif
-	glBindImageTexture(aUnit, m_UIntProps[TEX_ID], m_UIntProps[LEVEL],false,0,m_EnumProps[ACCESS],m_InternalFormat);
-	RENDERER->addImageTexture(m_Unit, this);
 }
 
 
 void 
 GLImageTexture::restore() {
 
+	glBindImageTexture(m_Unit, 0, m_UIntProps[LEVEL], false, 0, m_EnumProps[ACCESS], m_InternalFormat);
 	RENDERER->removeImageTexture(m_Unit);
 	m_Unit = 0;
 }

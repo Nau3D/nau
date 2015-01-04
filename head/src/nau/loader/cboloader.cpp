@@ -852,20 +852,20 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 
 	// write shader
 
-	// shader filenames
-	IProgram *aProgram = aMaterial->getProgram();
-	_writeString("",f);
-	_writeString("",f);
-	_writeString("",f);
-	_writeString("",f);
-	//_writeString(aProgram->getName(),f);
-	//_writeString(aProgram->getShaderFile(IProgram::VERTEX_SHADER),f);
-	//_writeString(aProgram->getShaderFile(IProgram::GEOMETRY_SHADER),f);
-	//_writeString(aProgram->getShaderFile(IProgram::FRAGMENT_SHADER),f);
+	//// shader filenames
+	//IProgram *aProgram = aMaterial->getProgram();
+	//_writeString("",f);
+	//_writeString("",f);
+	//_writeString("",f);
+	//_writeString("",f);
+	////_writeString(aProgram->getName(),f);
+	////_writeString(aProgram->getShaderFile(IProgram::VERTEX_SHADER),f);
+	////_writeString(aProgram->getShaderFile(IProgram::GEOMETRY_SHADER),f);
+	////_writeString(aProgram->getShaderFile(IProgram::FRAGMENT_SHADER),f);
 
-	// shader program values
-	size_t numValues = 0; // HACK
-	f.write (reinterpret_cast<char*> (&numValues), sizeof(numValues));
+	//// shader program values
+	//size_t numValues = 0; // HACK
+	//f.write (reinterpret_cast<char*> (&numValues), sizeof(numValues));
 
 
 	// write state
@@ -874,67 +874,67 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 //#elif NAU_DIRECTX
 //	DXState *s = (DXState *)aMaterial->getState();
 //#endif
-	IState *s = aMaterial->getState();
+	//IState *s = aMaterial->getState();
 
-	_writeString(s->getName(),f);
+	//_writeString(s->getName(),f);
 
 
-	IState::VarType vt;
-	int ivalue;
+	//IState::VarType vt;
+	//int ivalue;
 
-	float fvalue, fvalues[4];
-	bool bvalue, bvalues[4];
-	bvec4 bvec;
+	//float fvalue, fvalues[4];
+	//bool bvalue, bvalues[4];
+	//bvec4 bvec;
 
-	vt = IState::BOOL;
-	int numProps = IState::COUNT_BOOLPROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		bvalue = s->getPropb((IState::BoolProperty)i);
-		f.write (reinterpret_cast<char *> (&bvalue), sizeof(bool));
-	}
+	//vt = IState::BOOL;
+	//int numProps = IState::COUNT_BOOLPROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	bvalue = s->getPropb((IState::BoolProperty)i);
+	//	f.write (reinterpret_cast<char *> (&bvalue), sizeof(bool));
+	//}
 
-	vt = IState::ENUM;
-	numProps = IState::COUNT_ENUMPROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		ivalue = s->getPrope((IState::EnumProperty)i);
-		f.write (reinterpret_cast<char *> (&ivalue), sizeof(int));
-	}
+	//vt = IState::ENUM;
+	//numProps = IState::COUNT_ENUMPROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	ivalue = s->getPrope((IState::EnumProperty)i);
+	//	f.write (reinterpret_cast<char *> (&ivalue), sizeof(int));
+	//}
 
-	vt = IState::INT;
-	numProps = IState::COUNT_INTPROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		ivalue = s->getPropi((IState::IntProperty)i);
-		f.write (reinterpret_cast<char *> (&ivalue), sizeof(int));
-	}
+	//vt = IState::INT;
+	//numProps = IState::COUNT_INTPROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	ivalue = s->getPropi((IState::IntProperty)i);
+	//	f.write (reinterpret_cast<char *> (&ivalue), sizeof(int));
+	//}
 
-	vt = IState::FLOAT;
-	numProps = IState::COUNT_FLOATPROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		fvalue = s->getPropf((IState::FloatProperty)i);
-		f.write (reinterpret_cast<char *> (&fvalue), sizeof(float));
-	}
+	//vt = IState::FLOAT;
+	//numProps = IState::COUNT_FLOATPROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	fvalue = s->getPropf((IState::FloatProperty)i);
+	//	f.write (reinterpret_cast<char *> (&fvalue), sizeof(float));
+	//}
 
-	vt = IState::FLOAT4;
-	numProps = IState::COUNT_FLOAT4PROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		v = s->getProp4f((IState::Float4Property)i);
-		fvalues[0] = v.x; fvalues[1] = v.y; fvalues[2] = v.z; fvalues[3] = v.w;
-		f.write (reinterpret_cast<char *> (fvalues), sizeof(float)*4);
-	}
+	//vt = IState::FLOAT4;
+	//numProps = IState::COUNT_FLOAT4PROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	v = s->getProp4f((IState::Float4Property)i);
+	//	fvalues[0] = v.x; fvalues[1] = v.y; fvalues[2] = v.z; fvalues[3] = v.w;
+	//	f.write (reinterpret_cast<char *> (fvalues), sizeof(float)*4);
+	//}
 
-	vt = IState::BOOL4;
-	numProps = IState::COUNT_BOOL4PROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		bvec = s->getProp4b((IState::Bool4Property)i);
-		bvalues[0] = bvec.x; bvalues[1] = bvec.y; bvalues[2] = bvec.z; bvalues[3] = bvec.w;
-		f.write (reinterpret_cast<char *> (bvalues), sizeof(bool)*4);
-	}
+	//vt = IState::BOOL4;
+	//numProps = IState::COUNT_BOOL4PROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	bvec = s->getProp4b((IState::Bool4Property)i);
+	//	bvalues[0] = bvec.x; bvalues[1] = bvec.y; bvalues[2] = bvec.z; bvalues[3] = bvec.w;
+	//	f.write (reinterpret_cast<char *> (bvalues), sizeof(bool)*4);
+	//}
 }
 
 
@@ -953,19 +953,19 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 	float value;
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setProp(ColorMaterial::AMBIENT, values);
+	aMaterial->getColor().setPropf4(ColorMaterial::AMBIENT, values[0], values[1], values[2], values[3]);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setProp(ColorMaterial::SPECULAR, values);
+	aMaterial->getColor().setPropf4(ColorMaterial::SPECULAR, values[0], values[1], values[2], values[3]);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setProp(ColorMaterial::DIFFUSE, values);
+	aMaterial->getColor().setPropf4(ColorMaterial::DIFFUSE, values[0], values[1], values[2], values[3]);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setProp(ColorMaterial::EMISSION, values);
+	aMaterial->getColor().setPropf4(ColorMaterial::EMISSION, values[0], values[1], values[2], values[3]);
 
 	f.read (reinterpret_cast<char*> (&value), sizeof (float));
-	aMaterial->getColor().setProp(ColorMaterial::SHININESS, value);
+	aMaterial->getColor().setPropf(ColorMaterial::SHININESS, value);
 
 
 	// Textures
@@ -976,28 +976,28 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 		}
 	}
 
-	// Shaders
-	// shader filenames
-	_readString(buffer, f);
-	IProgram *aProgram = RESOURCEMANAGER->getProgram(buffer);
-	_readString(buffer,f);
-	aProgram->setShaderFile(IProgram::VERTEX_SHADER,buffer);
-	_readString(buffer,f);
-#if NAU_OPENGL_VERSION >= 320
-	aProgram->setShaderFile(IProgram::GEOMETRY_SHADER,buffer);
-#endif
-	_readString(buffer,f);
-	aProgram->setShaderFile(IProgram::FRAGMENT_SHADER,buffer);
-	aProgram->reload();
-
-	// shader program values
-	size_t numValues; // HACK
-	f.read (reinterpret_cast<char*> (&numValues), sizeof(numValues));
-	for (unsigned int i = 0; i < numValues; i++) {
-		// read Program Values
-	}
-
-
+//	// Shaders
+//	// shader filenames
+//	_readString(buffer, f);
+//	IProgram *aProgram = RESOURCEMANAGER->getProgram(buffer);
+//	_readString(buffer,f);
+//	aProgram->setShaderFile(IProgram::VERTEX_SHADER,buffer);
+//	_readString(buffer,f);
+//#if NAU_OPENGL_VERSION >= 320
+//	aProgram->setShaderFile(IProgram::GEOMETRY_SHADER,buffer);
+//#endif
+//	_readString(buffer,f);
+//	aProgram->setShaderFile(IProgram::FRAGMENT_SHADER,buffer);
+//	aProgram->reload();
+//
+//	// shader program values
+//	size_t numValues; // HACK
+//	f.read (reinterpret_cast<char*> (&numValues), sizeof(numValues));
+//	for (unsigned int i = 0; i < numValues; i++) {
+//		// read Program Values
+//	}
+//
+//
 	// State
 //#ifdef NAU_OPENGL
 //	GlState *s = (GlState *)aMaterial->getState();
@@ -1005,56 +1005,56 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 //	DXState *s = (DXState *)aMaterial->getState();
 //#endif
 
-	IState *s = aMaterial->getState();
-	_readString(buffer,f);
-	s->setName(buffer);
+	//IState *s = aMaterial->getState();
+	//_readString(buffer,f);
+	//s->setName(buffer);
 
-	int nProps,ivalue;
-	float fvalue, fvalues[4];
-	bool bvalue, bvalues[4];
-	IState::VarType type;
+	//int nProps,ivalue;
+	//float fvalue, fvalues[4];
+	//bool bvalue, bvalues[4];
+	//IState::VarType type;
 
-	type = IState::BOOL;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&bvalue), sizeof (bool));
-		s->setProp((IState::BoolProperty)i,bvalue);
-	}
+	//type = IState::BOOL;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&bvalue), sizeof (bool));
+	//	s->setProp((IState::BoolProperty)i,bvalue);
+	//}
 
-	type = IState::ENUM;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&ivalue), sizeof (int));
-		s->setProp((IState::EnumProperty)i,ivalue);
-	}
+	//type = IState::ENUM;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&ivalue), sizeof (int));
+	//	s->setProp((IState::EnumProperty)i,ivalue);
+	//}
 
-	type = IState::INT;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&ivalue), sizeof (int));
-		s->setProp((IState::IntProperty)i,ivalue);
-	}
+	//type = IState::INT;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&ivalue), sizeof (int));
+	//	s->setProp((IState::IntProperty)i,ivalue);
+	//}
 
-	type = IState::FLOAT;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&fvalue), sizeof (float));
-		s->setProp((IState::FloatProperty)i,fvalue);
-	}
+	//type = IState::FLOAT;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&fvalue), sizeof (float));
+	//	s->setProp((IState::FloatProperty)i,fvalue);
+	//}
 
-	type = IState::FLOAT4;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&fvalues), sizeof (float)*4);
-		s->setProp((IState::Float4Property)i,fvalues[0],fvalues[1],fvalues[2],fvalues[3]);
-	}
+	//type = IState::FLOAT4;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&fvalues), sizeof (float)*4);
+	//	s->setProp((IState::Float4Property)i,fvalues[0],fvalues[1],fvalues[2],fvalues[3]);
+	//}
 
-	type = IState::BOOL4;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&bvalues), sizeof (bool)*4);
-		s->setProp((IState::Bool4Property)i,bvalues[0],bvalues[1],bvalues[2],bvalues[3]);
-	}
+	//type = IState::BOOL4;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&bvalues), sizeof (bool)*4);
+	//	s->setProp((IState::Bool4Property)i,bvalues[0],bvalues[1],bvalues[2],bvalues[3]);
+	//}
 
 	//MATERIALLIBMANAGER->addMaterial (DEFAULTMATERIALLIBNAME, aMaterial);
 }

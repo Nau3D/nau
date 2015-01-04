@@ -202,6 +202,7 @@ Pipeline::execute() {
 	try {
 		PROFILE("Pipeline execute");
 
+		RENDERER->setDefaultState();			
 		for ( auto pass:m_Passes) {
 #ifdef GLINTERCEPTDEBUG
 			addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
@@ -209,7 +210,6 @@ Pipeline::execute() {
 
 			PROFILE (pass->getName());
 			m_CurrentPass = pass;
-			RENDERER->setDefaultState();			
 			pass->prepare();
 
 			if (true == pass->renderTest()) {	

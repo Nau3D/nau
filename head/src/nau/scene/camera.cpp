@@ -352,47 +352,13 @@ Camera::getProp(int prop, Enums::DataType type) {
 
 	switch (type) {
 
-		case Enums::ENUM:
-			assert(m_EnumProps.count(prop) > 0);
-			return(&(m_EnumProps[prop]));
-			break;
-		case Enums::INT:
-			assert(m_IntProps.count(prop) > 0);
-			return(&(m_IntProps[prop]));
-			break;
-		case Enums::UINT:
-			assert(m_UIntProps.count(prop) > 0);
-			return(&(m_UIntProps[prop]));
-			break;
-		case Enums::BOOL:
-			assert(m_BoolProps.count(prop) > 0);
-			return(&(m_BoolProps[prop]));
-			break;
-		case Enums::BVEC4:
-			assert(m_Bool4Props.count(prop) > 0);
-			return(&(m_Bool4Props[prop]));
-			break;
-		case Enums::FLOAT:
-			assert(m_FloatProps.count(prop) > 0);
-			return(&(m_FloatProps[prop]));
-			break;
-		case Enums::VEC4:
-			assert(m_Float4Props.count(prop) > 0);
-			return(&(m_Float4Props[prop]));
-			break;
-		case Enums::MAT3:
-			assert(m_Mat3Props.count(prop) > 0);
-			return(&(m_Mat3Props[prop]));
-			break;
-
+// ARF: Check who calls this
 		case Enums::MAT4:
 			assert(m_Mat4Props.count(prop) > 0);
 			return((void *)m_Mat4Props[prop].getMat44().getMatrix());
 		default:
-			assert(false && "Missing Data Type in class Camera");
-			return NULL;
+			return AttributeValues::getProp(prop, type);
 		}
-	return NULL;
 }
 
 

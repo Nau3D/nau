@@ -50,6 +50,7 @@ GLRenderer::GLRenderer(void) :
 	m_PrevRenderMode(IRenderer::MATERIAL_MODE),
 	m_Shader (0)
 {
+	init();
 	m_glCurrState.set();
 
 	for (int i = 0; i < IRenderer::COUNT_MATRIXMODE ; i++)
@@ -371,17 +372,17 @@ GLRenderer::prepareBuffers(Pass *p) {
 		glEnable(GL_DEPTH_TEST);
 		bool dm = p->getPropb(Pass::DEPTH_MASK);
 		glDepthMask(dm);
-		m_glDefaultState.setProp(IState::DEPTH_MASK, dm);
-		m_glCurrState.setProp(IState::DEPTH_MASK, dm);
+		m_glDefaultState.setPropb(IState::DEPTH_MASK, dm);
+		m_glCurrState.setPropb(IState::DEPTH_MASK, dm);
 		int df = translateStencilDepthFunc(p->getPrope(Pass::DEPTH_FUNC));
 		glDepthFunc(df);
-		m_glDefaultState.setProp(IState::DEPTH_FUNC, df);
-		m_glCurrState.setProp(IState::DEPTH_FUNC, df);
+		m_glDefaultState.setPrope(IState::DEPTH_FUNC, df);
+		m_glCurrState.setPrope(IState::DEPTH_FUNC, df);
 	}
 	else
 		glDisable(GL_DEPTH_TEST);
-	m_glDefaultState.setProp(IState::DEPTH_TEST, value);
-	m_glCurrState.setProp(IState::DEPTH_TEST, value);
+	m_glDefaultState.setPropb(IState::DEPTH_TEST, value);
+	m_glCurrState.setPropb(IState::DEPTH_TEST, value);
 
 	value = p->getPropb(Pass::STENCIL_ENABLE);
 
@@ -763,11 +764,11 @@ GLRenderer::restoreAttrib (void)
 void
 GLRenderer::setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) {
 
-	m_Material.setProp(ColorMaterial::SHININESS, shininess);
-	m_Material.setProp(ColorMaterial::DIFFUSE, diffuse);
-	m_Material.setProp(ColorMaterial::AMBIENT, ambient);
-	m_Material.setProp(ColorMaterial::EMISSION, emission);
-	m_Material.setProp(ColorMaterial::SPECULAR, specular);
+	m_Material.setPropf(ColorMaterial::SHININESS, shininess);
+	m_Material.setPropf4(ColorMaterial::DIFFUSE, diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+	m_Material.setPropf4(ColorMaterial::AMBIENT, ambient[0], ambient[1], ambient[2], ambient[3]);
+	m_Material.setPropf4(ColorMaterial::EMISSION, emission[0], emission[1], emission[2], emission[3]);
+	m_Material.setPropf4(ColorMaterial::SPECULAR, specular[0], specular[1], specular[2], specular[3]);
 }
 
 
@@ -809,7 +810,7 @@ GLRenderer::getColorProp(int prop, Enums::DataType dt) {
 void 
 GLRenderer::setColor (float r, float g, float b, float a) {
 
-	m_Material.setProp(ColorMaterial::DIFFUSE, r,g,b,a);
+	m_Material.setPropf4(ColorMaterial::DIFFUSE, r,g,b,a);
 }
 
 
@@ -818,7 +819,7 @@ GLRenderer::setColor (int r, int g, int b, int a) {
 
 	float m = 1.0f/255.0f;
 
-	m_Material.setProp(ColorMaterial::DIFFUSE, r*m,g*m,b*m,a*m);
+	m_Material.setPropf4(ColorMaterial::DIFFUSE, r*m,g*m,b*m,a*m);
 }
 
 
@@ -1028,8 +1029,9 @@ void
 GLRenderer::colorMask (bool r, bool g, bool b, bool a) {
 
 	glColorMask (r, g, b, a);
-	m_glCurrState.setProp(IState::COLOR_MASK_B4, r, g, b, a);
-	m_glDefaultState.setProp(IState::COLOR_MASK_B4, r, g, b, a);
+	bvec4 *bv = new bvec4(r, g, b, a);
+	m_glCurrState.setPropb4(IState::COLOR_MASK_B4, *bv);
+	m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, *bv);
 }
 void 
 GLRenderer::flush (void) {

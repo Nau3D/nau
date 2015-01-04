@@ -311,6 +311,10 @@ Material::restore() {
 
 	   b.second->unbind();
    }
+   for (auto b : m_ImageTexture) {
+
+	   b.second->restore();
+   }
 
 }
 
@@ -596,8 +600,8 @@ Material::clear()
    m_Shader = NULL; 
    m_ProgramValues.clear();
    m_Enabled = true;
-   m_State->clear();
-  // m_State->setDefault();
+   //m_State->clear();
+   m_State->setDefault();
    m_Name = "Default";
 }
 

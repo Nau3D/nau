@@ -48,11 +48,11 @@
 			<textures>
 				<texture name="Crate" UNIT="1" />
 			</textures>
-			<state>
+			<!--state>
 				<!-- Both attributes are user attributes -->
-				<FOG_MIN_DIST value = 1.0 />
-				<FOG_MAX_DIST value = 10.0 />
-			</state>
+				<!--FOG_MIN_DIST value = 1 />
+				<FOG_MAX_DIST value = 100.0 />
+			</state-->
 		</material>
 	</materials>
 </materialLib>

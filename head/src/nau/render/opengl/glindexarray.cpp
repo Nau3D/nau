@@ -16,8 +16,8 @@ GLIndexArray::GLIndexArray(void):
 }
 
 
-GLIndexArray::~GLIndexArray(void)
-{
+GLIndexArray::~GLIndexArray(void) {
+
 	if (0 != m_InternalIndexArray) {
 		delete m_InternalIndexArray;
 		m_InternalIndexArray = 0;
@@ -32,17 +32,18 @@ GLIndexArray::~GLIndexArray(void)
 
 
 std::vector<unsigned int>&
-GLIndexArray::getIndexData (void)
-{
+GLIndexArray::getIndexData (void) {
+
 	if (0 == m_InternalIndexArray) { // || true == m_IsCompiled) {
 		return IndexData::NoIndexData;
 	}
 	return (*m_InternalIndexArray);
 }
 
+
 bool 
-GLIndexArray::compile (VertexData &v) 
-{
+GLIndexArray::compile (VertexData &v) {
+
 	if (m_IsCompiled)
 		return false;
 
@@ -91,46 +92,32 @@ GLIndexArray::resetCompilationFlag() {
 
 	glDeleteBuffers(1, &m_GLBuffer);
 	glDeleteVertexArrays(1, &m_VAO);
-
 }
 
+
 bool
-GLIndexArray::isCompiled()
-{
+GLIndexArray::isCompiled() {
+
 	return (m_IsCompiled);
 }
 
+
 void 
-GLIndexArray::bind (void)
-{
-	if (true == m_IsCompiled) {
-		if (m_VAO)
+GLIndexArray::bind (void) {
+
+	if (true == m_IsCompiled  && m_VAO)
 			glBindVertexArray(m_VAO);
-		//else if (0 != m_GLBuffer) {
-		//	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
-		//}
-	} 
 }
 
 
-
-
-
 void 
-GLIndexArray::unbind (void)
-{
+GLIndexArray::unbind (void) {
+
 	if (m_VAO)
 		glBindVertexArray(0);
 	else
 		glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 }
-
-
-//std::vector<unsigned int>& 
-//GLIndexArray::_getReallyIndexData (void)
-//{
-//	return (*m_InternalIndexArray);
-//}
 
 
 unsigned int 

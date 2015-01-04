@@ -169,21 +169,21 @@ Texture::~Texture() {
 }
 
 
-int 
-Texture::addAtrib(std::string name, Enums::DataType dt, void *value) {
-
-	int id= Attribs.getNextFreeID();
-	switch (dt) {
-
-		case Enums::ENUM:
-			int *k = (int *)value;
-			m_EnumProps[id] = *k;
-			break;
-	}
-
-	return id;
-
-}
+//int 
+//Texture::addAtrib(std::string name, Enums::DataType dt, void *value) {
+//
+//	int id= Attribs.getNextFreeID();
+//	switch (dt) {
+//
+//		case Enums::ENUM:
+//			int *k = (int *)value;
+//			m_EnumProps[id] = *k;
+//			break;
+//	}
+//
+//	return id;
+//
+//}
 
 
 //void 

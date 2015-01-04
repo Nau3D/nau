@@ -100,13 +100,13 @@ Nau::~Nau()
 bool 
 Nau::init (bool context, std::string aConfigFile)
 {
-	bool result;
+	//bool result;
 	if (true == context) {
 
 		m_pRenderManager = new RenderManager;
-		result = m_pRenderManager->init();
-		if (!result)
-			return(0);
+		//result = m_pRenderManager->init();
+		//if (!result)
+		//	return(0);
 
 		m_pEventManager = new EventManager;
 	}	
@@ -426,11 +426,12 @@ void Nau::step() {
 	double deltaT = m_CurrentTime - m_LastFrameTime;
 	m_LastFrameTime = m_CurrentTime;
 
-	m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
-
 #ifdef GLINTERCEPTDEBUG
 	addMessageToGLILog("\n#NAU(FRAME,START)");
 #endif //GLINTERCEPTDEBUG
+
+	m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
+
 
 	renderer->resetCounters();
 	RESOURCEMANAGER->clearBuffers();

@@ -22,7 +22,7 @@ namespace nau
 
 		private:
 			static bool Inited;
-			static bool Init();
+			static bool InitGL();
 
 			bool difColor(vec4& a, vec4& b);
 			bool difBoolVector(bool* a, bool* b);

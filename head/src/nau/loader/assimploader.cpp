@@ -125,33 +125,28 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 				m->createTexture(0,FileUtil::GetFullPath(path,texPath.data));
 			}
 		
-			float c[4];
 			aiColor4D color;
 			ColorMaterial *cm = &(m->getColor());
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &color)) {
-				color4_to_float4(&color, c);
-				cm->setProp(ColorMaterial::DIFFUSE,c);
+				cm->setPropf4(ColorMaterial::DIFFUSE,color.r, color.g, color.b, color.a);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &color)) {
-				color4_to_float4(&color, c);
-				m->getColor().setProp(ColorMaterial::AMBIENT,c);
+				cm->setPropf4(ColorMaterial::AMBIENT, color.r, color.g, color.b, color.a);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &color)) {
-				color4_to_float4(&color, c);
-				m->getColor().setProp(ColorMaterial::SPECULAR,c);
+				cm->setPropf4(ColorMaterial::SPECULAR, color.r, color.g, color.b, color.a);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &color)) {
-				color4_to_float4(&color, c);
-				m->getColor().setProp(ColorMaterial::EMISSION,c);
+				cm->setPropf4(ColorMaterial::EMISSION, color.r, color.g, color.b, color.a);
 			}
 			float shininess = 0.0;
 			unsigned int max;
 			if (AI_SUCCESS == aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max))
-				m->getColor().setProp(ColorMaterial::SHININESS,shininess);
+				cm->setPropf(ColorMaterial::SHININESS, shininess);
 
 
 		}

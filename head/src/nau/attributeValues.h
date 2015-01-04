@@ -46,10 +46,9 @@ namespace nau {
 
 		virtual bool isValide(EnumProperty prop, int value) {
 
-			if (m_EnumProps.count(prop) == 0)
-				return false;
-
 			Attribute attr = m_Attribs.get(prop, Enums::ENUM);
+			if (attr.getName() == "NO_ATTR")
+				return false;
 			if (attr.isValid(value)) 
 				return true;
 			else
@@ -57,7 +56,7 @@ namespace nau {
 		}
 
 		virtual void setPrope(EnumProperty prop, int value) {
-			assert(m_EnumProps.count(prop) > 0 && isValide(prop,value));
+			assert(isValide(prop,value));
 			m_EnumProps[prop] = value;
 		}
 
@@ -71,10 +70,9 @@ namespace nau {
 
 		virtual bool isValidi(IntProperty prop, int value) {
 
-			if (m_IntProps.count(prop) == 0)
-				return false;
-
 			Attribute attr = m_Attribs.get(prop, Enums::INT);
+			if (attr.getName() == "NO_ATTR")
+				return false;
 			int *max, *min;
 			if (attr.getRangeDefined()) {
 				max = (int *)attr.getMax();
@@ -89,7 +87,7 @@ namespace nau {
 		}
 
 		virtual void setPropi(IntProperty prop, int value) {
-			assert(m_IntProps.count(prop) > 0 && isValidi(prop, value));
+			assert(isValidi(prop, value));
 			m_IntProps[prop] = value;
 		}
 
@@ -103,10 +101,10 @@ namespace nau {
 
 		virtual bool isValidui(UIntProperty prop, unsigned int value) {
 
-			if (m_UIntProps.count(prop) == 0)
+			Attribute attr = m_Attribs.get(prop, Enums::UINT);
+			if (attr.getName() == "NO_ATTR")
 				return false;
 
-			Attribute attr = m_Attribs.get(prop, Enums::UINT);
 			unsigned int *max, *min;
 			if (attr.getRangeDefined()) {
 				max = (unsigned int *)attr.getMax();
@@ -121,7 +119,7 @@ namespace nau {
 		}
 
 		virtual void setPropui(UIntProperty prop, int unsigned value) {
-			assert(m_UIntProps.count(prop) > 0 && isValidui(prop, value));
+			assert(isValidui(prop, value));
 			m_UIntProps[prop] = value;
 		}
 
@@ -135,14 +133,15 @@ namespace nau {
 
 		virtual bool isValidb(BoolProperty prop, bool value) {
 
-			if (m_BoolProps.count(prop) == 0)
+			Attribute attr = m_Attribs.get(prop, Enums::BOOL);
+			if (attr.getName() == "NO_ATTR")
 				return false;
 			else
 				return true;
 		}
 
 		virtual void setPropb(BoolProperty prop, bool value) {
-			assert(m_BoolProps.count(prop) > 0);
+			assert(isValidb(prop, value));
 			m_BoolProps[prop] = value;
 		}
 
@@ -156,16 +155,18 @@ namespace nau {
 
 		virtual bool isValidb4(Bool4Property prop, bvec4 &value) {
 
-			if (m_Bool4Props.count(prop) == 0)
+			Attribute attr = m_Attribs.get(prop, Enums::BVEC4);
+			if (attr.getName() == "NO_ATTR")
 				return false;
 			else
 				return true;
 		}
 
 		virtual void setPropb4(Bool4Property prop, bvec4 &value) {
-			assert(m_Bool4Props.count(prop) > 0);
+			assert(isValidb4(prop, value));
 			m_Bool4Props[prop] = value;
 		}
+
 
 		// FLOAT
 		typedef enum {} FloatProperty;
@@ -178,10 +179,9 @@ namespace nau {
 
 		virtual bool isValidf(FloatProperty prop, float f) {
 
-			if (m_FloatProps.count(prop) == 0)
-				return false;
-
 			Attribute attr = m_Attribs.get(prop, Enums::FLOAT);
+			if (attr.getName() == "NO_ATTR")
+				return false;
 			float *max, *min;
 			if (attr.getRangeDefined()) {
 				max = (float *)attr.getMax();
@@ -196,7 +196,7 @@ namespace nau {
 		}
 
 		virtual void setPropf(FloatProperty prop, float value) {
-			assert(m_FloatProps.count(prop) > 0 && isValidf(prop, value));
+			assert(isValidf(prop, value));
 			m_FloatProps[prop] = value;
 		}
 
@@ -210,10 +210,9 @@ namespace nau {
 
 		virtual bool isValidf4(Float4Property prop, vec4 &f) {
 
-			if (m_Float4Props.count(prop) == 0)
-				return false;
-
 			Attribute attr = m_Attribs.get(prop, Enums::VEC4);
+			if (attr.getName() == "NO_ATTR")
+				return false;
 			vec4 *max, *min;
 			if (attr.getRangeDefined()) {
 				max = (vec4 *)attr.getMax();
@@ -228,8 +227,14 @@ namespace nau {
 		}
 
 		virtual void setPropf4(Float4Property prop, vec4 &value) {
-			assert(m_Float4Props.count(prop) > 0 && isValidf4(prop, value));
+			assert(isValidf4(prop, value));
 			m_Float4Props[prop] = value;
+		}
+
+		virtual void setPropf4(Float4Property prop, float x, float y, float z, float w) {
+			vec4 *v = new vec4(x, y, z, w);
+			setPropf4(prop, *v);
+
 		}
 
 
@@ -243,10 +248,9 @@ namespace nau {
 
 		virtual bool isValidf2(Float2Property prop, vec2 &f) {
 
-			if (m_Float2Props.count(prop) == 0)
-				return false;
-
 			Attribute attr = m_Attribs.get(prop, Enums::VEC2);
+			if (attr.getName() == "NO_ATTR")
+				return false;
 			vec2 *max, *min;
 			if (attr.getRangeDefined()) {
 				max = (vec2 *)attr.getMax();
@@ -261,7 +265,7 @@ namespace nau {
 		}
 
 		virtual void setPropf2(Float2Property prop, vec2 &value) {
-			assert(m_Float2Props.count(prop) > 0 && isValidf2(prop, value));
+			assert(isValidf2(prop, value));
 			m_Float2Props[prop] = value;
 		}
 
@@ -273,8 +277,17 @@ namespace nau {
 			return m_Mat4Props[prop];
 		}
 
+		virtual bool isValidm4(Mat4Property prop, mat4 &value) {
+
+			Attribute attr = m_Attribs.get(prop, Enums::MAT4);
+			if (attr.getName() == "NO_ATTR")
+				return false;
+			else
+				return true;
+		}
+
 		virtual void setPropm4(Mat4Property prop, mat4 &value) {
-			assert(m_Mat4Props.count(prop) > 0);
+			assert(isValidm4(prop, value));
 			m_Mat4Props[prop] = value;
 		}
 
@@ -286,8 +299,17 @@ namespace nau {
 			return m_Mat3Props[prop];
 		}
 
+		virtual bool isValidm3(Mat3Property prop, mat3 &value) {
+
+			Attribute attr = m_Attribs.get(prop, Enums::MAT3);
+			if (attr.getName() == "NO_ATTR")
+				return false;
+			else
+				return true;
+		}
+
 		virtual void setPropm3(Mat3Property prop, mat3 &value) {
-			assert(m_Mat3Props.count(prop) > 0 );
+			assert(isValidm3(prop, value));
 			m_Mat3Props[prop] = value;
 		}
 
@@ -307,13 +329,34 @@ namespace nau {
 			to->m_Mat4Props =   m_Mat4Props;
 		}
 
+		void clearArrays() {
+
+			//to->m_StringProps = m_StringProps;
+			m_EnumProps.clear();
+			m_IntProps.clear();
+			m_UIntProps.clear();
+			m_BoolProps.clear();
+			m_Bool4Props.clear();
+			m_FloatProps.clear();
+			m_Float2Props.clear();
+			m_Float4Props.clear();
+			m_Mat3Props.clear();
+			m_Mat4Props.clear();
+		}
+
 		virtual void *getProp(int prop, Enums::DataType type) {
 
-			void *res = malloc(sizeof(Enums::getSize(type)));
+			int c;
 			switch (type) {
 
 				case Enums::ENUM:
-					assert(m_EnumProps.count(prop) > 0);
+					c = m_EnumProps.count(prop);
+					if (prop < AttribSet::USER_ATTRIBS) 
+						assert(c > 0);
+					else {
+						if (!c)
+							m_EnumProps[prop] = *(int *)m_Attribs.getDefault(prop, type);
+					}
 					return(&(m_EnumProps[prop]));
 					break;
 				case Enums::INT:
@@ -348,45 +391,11 @@ namespace nau {
 					assert(m_Mat3Props.count(prop) > 0);
 					return(&(m_Mat3Props[prop]));
 					break;
-				////case Enums::STRING:
-				////	assert(m_StringProps.count(prop) > 0);
-				////	return(&(m_StringProps[prop]));
-				////	break;
-				//case Enums::ENUM:
-				//	getPropf((FloatProperty)prop),size);
-				//	break;
-				//case Enums::INT:
-				//	res = getPropi((IntProperty)prop);
-				//	break;
-				//case Enums::UINT:
-				//	res = getPropui((UIntProperty)prop);
-				//	break;
-				//case Enums::BOOL:
-				//	res = getPrope((EnumProperty)prop);
-				//	break;
-				//case Enums::BVEC4:
-				//	res = getPropb4((Bool4Property)prop);
-				//	break;
-				//case Enums::FLOAT:
-				//	res = getPropf((FloatProperty)prop);
-				//	break;
-				//case Enums::VEC4:
-				//	res = getPropf4((Float4Property)prop);
-				//	break;
-				//case Enums::VEC2:
-				//	res = getPropf2((Float2Property)prop);
-				//	break;
-				//case Enums::MAT4:
-				//	res = getPropm4((Mat4Property)prop);
-				//	break;
-				//case Enums::MAT3:
-				//	res = getPropm3((Mat3Property)prop);
-				//	break;
 				default:
 					assert(false && "Missing Data Type in class attributeValues");
 					return NULL;
 			}
-			return res;
+
 		};
 
 
@@ -396,10 +405,6 @@ namespace nau {
 
 			switch (type) {
 
-			//case Enums::STRING:
-			//	assert(m_StringProps.count(prop) > 0);
-			//	m_StringProps[prop] = *(std::string *)value;
-			//	break;
 			case Enums::ENUM:
 				setPrope((EnumProperty)prop, *(int *)value);
 				break;
@@ -437,7 +442,6 @@ namespace nau {
 
 
 		void initArrays(AttribSet Attribs) {
-			//Attribs.initAttribInstanceStringArray(m_StringProps);
 			Attribs.initAttribInstanceEnumArray(m_EnumProps);
 			Attribs.initAttribInstanceIntArray(m_IntProps);
 			Attribs.initAttribInstanceUIntArray(m_UIntProps);

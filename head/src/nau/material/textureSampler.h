@@ -1,11 +1,12 @@
 #ifndef __TEXTURE_SAMPLER__
 #define __TEXTURE_SAMPLER__
 
-#include <vector>
-
 #include <nau/math/vec4.h>
 #include <nau/render/texture.h>
+#include <nau/attributeValues.h>
 #include <nau/attribute.h>
+
+#include <vector>
 
 using namespace nau::math;
 
@@ -20,31 +21,37 @@ namespace nau {
 
 	namespace material {
 	
-		class TextureSampler {
+		class TextureSampler : public AttributeValues {
 		
 		public:
 
-			typedef enum {WRAP_S, WRAP_T, WRAP_R, MIN_FILTER, MAG_FILTER, 
-					COMPARE_FUNC, COMPARE_MODE, COUNT_ENUMPROPERTY} EnumProperty;
-			typedef enum {BORDER_COLOR, COUNT_FLOAT4PROPERTY} Float4Property;
-			typedef enum {COUNT_UINTPROPERTY} UIntProperty;
-			typedef enum {MIPMAP, COUNT_BOOLPROPERTY} BoolProperty;
-			typedef enum {COUNT_FLOATPROPERTY} FloatProperty;
-			typedef enum {ID, COUNT_INTPROPERTY} IntProperty;
+			ENUM_PROP(WRAP_S, 0);
+			ENUM_PROP(WRAP_T, 1);
+			ENUM_PROP(WRAP_R, 2);
+			ENUM_PROP(MIN_FILTER, 3);
+			ENUM_PROP(MAG_FILTER, 4);
+			ENUM_PROP(COMPARE_FUNC, 5);
+			ENUM_PROP(COMPARE_MODE, 6);
+
+			FLOAT4_PROP(BORDER_COLOR, 0);
+
+			BOOL_PROP(MIPMAP, 0);
+
+			INT_PROP(ID, 0);	
 
 			static AttribSet Attribs;
 
-			int getPrope(EnumProperty prop);
-			const vec4 &getPropf4(Float4Property prop);
-			int getPropi(IntProperty);
-			bool getPropb(BoolProperty);
-			void *getProp(int prop, Enums::DataType type);
+			//int getPrope(EnumProperty prop);
+			//const vec4 &getPropf4(Float4Property prop);
+			//int getPropi(IntProperty);
+			//bool getPropb(BoolProperty);
+			//void *getProp(int prop, Enums::DataType type);
 
-			virtual void setProp(EnumProperty prop, int value) = 0;
-			virtual void setProp(Float4Property prop, float x, float y, float z, float w) = 0;
-			virtual void setProp(Float4Property prop, vec4& value) = 0;
+			//virtual void setProp(EnumProperty prop, int value) = 0;
+			//virtual void setProp(Float4Property prop, float x, float y, float z, float w) = 0;
+			//virtual void setProp(Float4Property prop, vec4& value) = 0;
 			// Note: no validation is performed!
-			void setProp(int prop, Enums::DataType type, void *value);
+			//void setProp(int prop, Enums::DataType type, void *value);
 
 			static TextureSampler* create(nau::render::Texture *t);
 
@@ -53,12 +60,9 @@ namespace nau {
 			TextureSampler() ;		
 		
 		protected:
-			std::map<int, vec4> m_Float4Props;
-			std::map<int, int> m_EnumProps;
-			//std::map<int, unsigned int> m_UIntProps;
-			std::map<int, bool> m_BoolProps;
-			std::map<int, float> m_FloatProps;
-			std::map<int, int> m_IntProps;
+
+			static bool Init();
+			static bool Inited;
 
 
 //			bool m_Mipmap;

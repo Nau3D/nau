@@ -32,6 +32,7 @@ namespace nau {
 			COLOUR
 		} Semantics;
 
+
 		Attribute(): m_Id(-1), m_Default(NULL), m_RangeDefined(false), m_ListDefined(false) {};
 
 		Attribute(int id, std::string name, Enums::DataType type, bool readOnlyFlag = false, void *defaultV = NULL ): 
@@ -215,7 +216,8 @@ namespace nau {
 
 	public:
 
-		AttribSet(): m_NextFreeID(1000), m_DummyS("") {m_Dummy.m_Name = "NO_ATTR"; };
+		static const int USER_ATTRIBS = 1000;
+		AttribSet() : m_NextFreeID(USER_ATTRIBS), m_DummyS("") { m_Dummy.m_Name = "NO_ATTR"; };
 		~AttribSet() {};
 
 		int getNextFreeID() {
@@ -223,6 +225,18 @@ namespace nau {
 			return m_NextFreeID++;
 		}
 
+
+		// TO DO: erase all attributes whose ID >= USER_ATTRIBS
+		void deleteUserAttributes() {
+
+			//std::map<int, Attribute>::iterator iter;
+			//iter = m_Attributes.begin;
+			//for (; iter != m_Attributes.end; ++iter) {
+
+			//	if (iter->second.m_Id >= USER_ATTRIBS)
+			//		m_Attributes.erase(*iter);
+			//}
+		}
 
 		void add(Attribute a) {
 			

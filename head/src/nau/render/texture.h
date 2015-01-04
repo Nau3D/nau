@@ -56,7 +56,7 @@ namespace nau
 
 			static AttribSet Attribs;
 
-			int addAtrib(std::string name, Enums::DataType dt, void *value);
+			//int addAtrib(std::string name, Enums::DataType dt, void *value);
 
 			// Note: no validation is performed!
 			//void setProp(int prop, Enums::DataType type, void *value);

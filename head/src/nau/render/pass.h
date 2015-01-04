@@ -16,9 +16,6 @@ https://github.com/Nau3D
 #ifndef PASS_H
 #define PASS_H
 
-#include <map>
-#include <string>
-#include <vector>
 
 #include <nau/attribute.h>
 #include <nau/attributeValues.h>
@@ -36,6 +33,9 @@ https://github.com/Nau3D
 #include <nau/scene/sceneobject.h>
 
 
+#include <map>
+#include <string>
+#include <vector>
 
 
 namespace nau

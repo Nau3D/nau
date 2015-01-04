@@ -3,6 +3,7 @@
 
 #include <nau/math/vec4.h>
 #include <nau/math/bvec4.h>
+#include <nau/attributeValues.h>
 #include <nau/attribute.h>
 
 #include <string>
@@ -15,33 +16,44 @@ namespace nau
 {
 	namespace render
 	{
-		class IState{
+		class IState: public AttributeValues {
 
 		public:
 
-			//-----------------------------------------------------------------
-			// These enums can grow safely as long as
-			// the new properties are appended at the end, but before the 
-			// COUNT_* item
-			// For enums that do not contain the COUNT_* item, always
-			// append in the end
-			//-----------------------------------------------------------------
-			typedef enum {BOOL,ENUM,INT,FLOAT,FLOAT4, BOOL4,COUNT_VARTYPE} VarType;
+			ENUM_PROP(DEPTH_FUNC, 0);
+			ENUM_PROP(CULL_TYPE, 1);
+			ENUM_PROP(ORDER_TYPE, 2);
+			ENUM_PROP(BLEND_SRC, 3);
+			ENUM_PROP(BLEND_DST, 4);
+			ENUM_PROP(BLEND_EQUATION, 5);
 
-			typedef enum  {BLEND,FOG,ALPHA_TEST,DEPTH_TEST,
-				CULL_FACE,COLOR_MASK, DEPTH_MASK, COUNT_BOOLPROPERTY} BoolProperty; 
+			BOOL_PROP(BLEND, 0);
+			BOOL_PROP(DEPTH_TEST, 1);
+			BOOL_PROP(CULL_FACE, 2);
+			BOOL_PROP(COLOR_MASK, 3);
+			BOOL_PROP(DEPTH_MASK, 4);
 
-			typedef enum {FOG_MODE,FOG_COORD_SRC,
-					DEPTH_FUNC, CULL_TYPE, ORDER_TYPE, 
-					BLEND_SRC, BLEND_DST, BLEND_EQUATION,ALPHA_FUNC,COUNT_ENUMPROPERTY} EnumProperty;
+			INT_PROP(ORDER, 0);
 
-			typedef enum {FOG_START, FOG_END, FOG_DENSITY, ALPHA_VALUE,COUNT_FLOATPROPERTY} FloatProperty;
+			FLOAT4_PROP(BLEND_COLOR, 0);
 
-			typedef enum {ORDER,COUNT_INTPROPERTY} IntProperty;
+			BOOL4_PROP(COLOR_MASK_B4, 0);
 
-			typedef enum   {BLEND_COLOR, FOG_COLOR,COUNT_FLOAT4PROPERTY} Float4Property;
+			//typedef enum  {
+			//	, FOG, ALPHA_TEST, ,
+			//	,, , COUNT_BOOLPROPERTY} BoolProperty; 
 
-			typedef enum {COLOR_MASK_B4, COUNT_BOOL4PROPERTY} Bool4Property;
+			//typedef enum {FOG_MODE,FOG_COORD_SRC,
+			//		, , , 
+			//		, , ,ALPHA_FUNC,COUNT_ENUMPROPERTY} EnumProperty;
+
+			//typedef enum {FOG_START, FOG_END, FOG_DENSITY, ALPHA_VALUE,COUNT_FLOATPROPERTY} FloatProperty;
+
+			//typedef enum {,COUNT_INTPROPERTY} IntProperty;
+
+			//typedef enum   {, FOG_COLOR,COUNT_FLOAT4PROPERTY} Float4Property;
+
+			//typedef enum {COLOR_MASK_B4, COUNT_BOOL4PROPERTY} Bool4Property;
 
 			typedef enum  { FRONT_TO_BACK, BACK_TO_FRONT, NONE} OrderType;
 
@@ -56,35 +68,35 @@ namespace nau
 			virtual std::string getName();
 
 			virtual IState* clone();
-			virtual void clear();
+			//virtual void clear();
 
 			virtual void setDiff(IState *defState, IState *pState) = 0;
 
-			virtual void setProp(BoolProperty ss, bool value);
-			virtual void setProp(EnumProperty prop, int value);
-			virtual void setProp(FloatProperty prop, float value);
-			virtual void setProp(IntProperty prop, int value);
-			virtual void setProp(Float4Property prop, float r, float g, float b, float a);
-			virtual void setProp(Float4Property prop, const vec4& color);
-			virtual void setProp(Bool4Property prop, bool r, bool g, bool b, bool a);
-			virtual void setProp(Bool4Property prop, bool* values); 
-			virtual void setProp(Bool4Property prop, bvec4& values); 
-			// Note: no validation is performed!
-			void setProp(int prop, Enums::DataType type, void *value);
+			//virtual void setProp(BoolProperty ss, bool value);
+			//virtual void setProp(EnumProperty prop, int value);
+			//virtual void setProp(FloatProperty prop, float value);
+			//virtual void setProp(IntProperty prop, int value);
+			//virtual void setProp(Float4Property prop, float r, float g, float b, float a);
+			//virtual void setProp(Float4Property prop, const vec4& color);
+			//virtual void setProp(Bool4Property prop, bool r, bool g, bool b, bool a);
+			//virtual void setProp(Bool4Property prop, bool* values); 
+			//virtual void setProp(Bool4Property prop, bvec4& values); 
+			//// Note: no validation is performed!
+			//void setProp(int prop, Enums::DataType type, void *value);
 
-			virtual bool getPropb(BoolProperty ss);
-			virtual int getPrope(EnumProperty prop);
-			virtual float getPropf(FloatProperty prop);
-			virtual int getPropi(IntProperty prop);
-			virtual const vec4& getProp4f(Float4Property prop);
-			virtual const bvec4& getProp4b(Bool4Property prop);
-			void *getProp(int prop, Enums::DataType type);
+			//virtual bool getPropb(BoolProperty ss);
+			//virtual int getPrope(EnumProperty prop);
+			//virtual float getPropf(FloatProperty prop);
+			//virtual int getPropi(IntProperty prop);
+			//virtual const vec4& getProp4f(Float4Property prop);
+			//virtual const bvec4& getProp4b(Bool4Property prop);
+			//void *getProp(int prop, Enums::DataType type);
 
-			virtual bool isSetProp(EnumProperty prop);
-			virtual bool isSetProp(FloatProperty prop);
-			virtual bool isSetProp(IntProperty prop);
-			virtual bool isSetProp(Float4Property prop);
-			virtual bool isSetProp(Bool4Property prop);
+			//virtual bool isSetProp(EnumProperty prop);
+			//virtual bool isSetProp(FloatProperty prop);
+			//virtual bool isSetProp(IntProperty prop);
+			//virtual bool isSetProp(Float4Property prop);
+			//virtual bool isSetProp(Bool4Property prop);
 
 		protected:
 			IState();
@@ -96,12 +108,12 @@ namespace nau
 			vec4 m_defColor;
 			bvec4 m_defBoolV;
 
-			std::map<int, int> m_IntProps;
-			std::map<int, bool> m_EnableProps;
-			std::map<int, float> m_FloatProps;
-			std::map<int, vec4> m_Float4Props;
-			std::map<int, bvec4> m_Bool4Props;
-			std::map<int, int> m_EnumProps;
+			//std::map<int, int> m_IntProps;
+			//std::map<int, bool> m_EnableProps;
+			//std::map<int, float> m_FloatProps;
+			//std::map<int, vec4> m_Float4Props;
+			//std::map<int, bvec4> m_Bool4Props;
+			//std::map<int, int> m_EnumProps;
 		};
 	};
 };

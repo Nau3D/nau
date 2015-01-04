@@ -8,7 +8,7 @@ GLTexImage::GLTexImage (Texture *t) :
 	TexImage (t)
 {
 	m_DataType = t->getPrope(Texture::TYPE);
-	int len = m_Width * m_Height * m_NumComponents; 
+	int len = m_Width * m_Height * m_Depth * m_NumComponents; 
 
 	switch (m_DataType) {
 		case GL_FLOAT: 
@@ -60,7 +60,7 @@ void
 GLTexImage::update(void) {
 	
 	int texType = m_Texture->getPrope(Texture::DIMENSION);
-	glBindTexture(m_Texture->getPrope(Texture::DIMENSION),m_Texture->getPropi(Texture::ID));
+	glBindTexture(texType,m_Texture->getPropi(Texture::ID));
 	if (texType == GL_TEXTURE_CUBE_MAP)
 		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 	glGetTexImage(texType,0,m_Texture->getPrope(Texture::FORMAT),m_DataType,m_Data);

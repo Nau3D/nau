@@ -2860,15 +2860,15 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 				if (!pAmbient && !pDiffuse && !pSpecular && !pEmission && !pShininess)
 					dstMat->getColor().clone(srcMat->getColor());
 				if (pAmbient && !strcmp("true",pAmbient))
-					dstMat->getColor().setProp(ColorMaterial::AMBIENT, srcMat->getColor().getPropf4(ColorMaterial::AMBIENT));
+					dstMat->getColor().setPropf4(ColorMaterial::AMBIENT, srcMat->getColor().getPropf4(ColorMaterial::AMBIENT));
 				if (pDiffuse && !strcmp("true",pDiffuse))
-					dstMat->getColor().setProp(ColorMaterial::DIFFUSE, srcMat->getColor().getPropf4(ColorMaterial::DIFFUSE));
+					dstMat->getColor().setPropf4(ColorMaterial::DIFFUSE, srcMat->getColor().getPropf4(ColorMaterial::DIFFUSE));
 				if (pSpecular && !strcmp("true",pSpecular))
-					dstMat->getColor().setProp(ColorMaterial::SPECULAR, srcMat->getColor().getPropf4(ColorMaterial::SPECULAR));
+					dstMat->getColor().setPropf4(ColorMaterial::SPECULAR, srcMat->getColor().getPropf4(ColorMaterial::SPECULAR));
 				if (pEmission && !strcmp("true",pEmission))
-					dstMat->getColor().setProp(ColorMaterial::EMISSION, srcMat->getColor().getPropf4(ColorMaterial::EMISSION));
+					dstMat->getColor().setPropf4(ColorMaterial::EMISSION, srcMat->getColor().getPropf4(ColorMaterial::EMISSION));
 				if (pShininess && !strcmp("true",pShininess))
-					dstMat->getColor().setProp(ColorMaterial::SHININESS, srcMat->getColor().getPropf(ColorMaterial::SHININESS));
+					dstMat->getColor().setPropf(ColorMaterial::SHININESS, srcMat->getColor().getPropf(ColorMaterial::SHININESS));
 			}
 
 		}
@@ -4047,8 +4047,6 @@ ProjectLoader::loadMatLib (std::string file)
 
 		//aLib->addMaterial (mat);
 	}
-
-
 }
 
 /* ----------------------------------------------------------------
