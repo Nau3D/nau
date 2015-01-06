@@ -311,10 +311,12 @@ Material::restore() {
 
 	   b.second->unbind();
    }
+#if NAU_OPENGL_VERSION >=  420
    for (auto b : m_ImageTexture) {
 
 	   b.second->restore();
    }
+#endif
 
 }
 
@@ -331,6 +333,12 @@ Material::restoreNoShaders() {
 
 	   b.second->unbind();
    }
+#if NAU_OPENGL_VERSION >=  420
+   for (auto b : m_ImageTexture) {
+
+	   b.second->restore();
+   }
+#endif
 }
 
 

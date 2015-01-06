@@ -1,19 +1,17 @@
 #ifndef ATTRIBUTE_H
 #define ATTRIBUTE_H
 
-
-
 #include <nau/enums.h>
-#include <nau/math/vec4.h>
-#include <nau/math/vec2.h>
 #include <nau/math/bvec4.h>
 #include <nau/math/mat3.h>
 #include <nau/math/mat4.h>
+#include <nau/math/vec4.h>
+#include <nau/math/vec2.h>
 
+#include <assert.h>
 #include <map>
 #include <string>
 #include <vector>
-#include <assert.h>
 
 using namespace nau::math;
 
@@ -148,18 +146,27 @@ namespace nau {
 		};
 
 
-		bool getRangeDefined() { return m_RangeDefined; };
-		bool getListDefined() { return m_ListDefined; };
+		bool getRangeDefined() { 
+			return m_RangeDefined; 
+		};
+
+
+		bool getListDefined() { 
+			return m_ListDefined; 
+		};
+
 
 		void *getMax() {
 		
 			return m_Max;
 		}
 
+
 		void *getMin() {
 
 			return m_Min;
 		}
+
 
 		int getListValue(std::string &s) {
 		
@@ -229,13 +236,13 @@ namespace nau {
 		// TO DO: erase all attributes whose ID >= USER_ATTRIBS
 		void deleteUserAttributes() {
 
-			//std::map<int, Attribute>::iterator iter;
-			//iter = m_Attributes.begin;
-			//for (; iter != m_Attributes.end; ++iter) {
+			std::map<std::string, Attribute>::iterator iter;
+			iter = m_Attributes.begin();
+			for (; iter != m_Attributes.end(); ++iter) {
 
-			//	if (iter->second.m_Id >= USER_ATTRIBS)
-			//		m_Attributes.erase(*iter);
-			//}
+				if (iter->second.m_Id >= USER_ATTRIBS)
+					m_Attributes.erase(iter);
+			}
 		}
 
 		void add(Attribute a) {
@@ -269,6 +276,7 @@ namespace nau {
 				return m_Dummy;
 
 		}
+
 
 		const Attribute &get(int id, Enums::DataType dt) {
 
@@ -325,9 +333,6 @@ namespace nau {
 		}
 
 
-		
-
-
 		const std::vector<std::string> &getListString(int id) {
 		
 			std::map<std::string, Attribute>::iterator it;
@@ -359,8 +364,6 @@ namespace nau {
 			Attribute a = get(s);
 			return (a.getListString(prop));
 		}
-
-
 
 
 		std::string getListStringOp(int id, int prop) {
@@ -430,18 +433,6 @@ namespace nau {
 		}
 
 
-		//void setDefaultString(std::string attr, std::string value) {
-
-		//	if (m_Attributes.find(attr) != m_Attributes.end()) {
-		//		assert(m_Attributes[attr].m_Type == Enums::STRING);
-		//		if (m_Attributes[attr].m_Type == Enums::STRING) {
-		//			m_Attributes[attr].m_Default = malloc(value.size());
-		//			memcpy(m_Attributes[attr].m_Default, &value, value.size());
-		//		}
-		//	}
-		//}
-
-
 		void *getDefault(int id, Enums::DataType type) {
 
 			std::map<std::string, Attribute>::iterator it;
@@ -454,31 +445,6 @@ namespace nau {
 			return NULL;
 		}
 
-
-		//const std::string &getDefaultString(int id) {
-
-		//	std::map<std::string, Attribute>::iterator it;
-		//	it = m_Attributes.begin();
-		//	for (; it != m_Attributes.end(); ++it) {
-
-		//		if (it->second.m_Id == id && it->second.m_Type == Enums::STRING)
-		//			return *(static_cast<std::string*>(it->second.m_Default));
-		//	}
-		//	return m_DummyS;
-		//}
-
-
-		void initAttribInstanceStringArray(std::map<int, std::string> &m) {
-
-			//std::map<std::string, Attribute>::iterator it;
-			//it = m_Attributes.begin();
-			//for ( ; it != m_Attributes.end(); ++it) {
-			//	if (it->second.m_Type == Enums::DataType::INT) {
-
-			//			m[it->second.m_Id] = *(std::string *)(it->second.m_Default);
-			//	}
-			//}
-		}
 
 		void initAttribInstanceIntArray(std::map<int, int> &m) {
 

@@ -37,7 +37,7 @@ Light::Light (std::string &name)
 {
 	m_Name = name;
 
-	initArrays(Attribs);
+	registerAndInitArrays("LIGHT", Attribs);
 }
 
 

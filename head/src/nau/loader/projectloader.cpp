@@ -3390,13 +3390,15 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		if (0 != pCSFile && (0 != pVSFile || 0 != pPSFile || 0 != pGSFile || 0 != pTEFile || 0 != pTCFile)) 
 			NAU_THROW("Mat Lib %s: Shader %s: Mixing Compute Shader with other shader stages",aLib->getName().c_str(), pProgramName);
 
-		if (pCSFile) {
+			
+			if (pCSFile) {
 #if (NAU_OPENGL_VERSION >= 430)
+			IProgram *aShader = RESOURCEMANAGER->getProgram (s_pFullName);		
 			std::string CSFileName(FileUtil::GetFullPath(path, pCSFile));
 			if (!FileUtil::exists(CSFileName))
 				NAU_THROW("Shader file %s in MatLib %s does not exist", pCSFile, aLib->getName().c_str());
 			SLOG("Program %s", pProgramName);
-			IProgram *aShader = RESOURCEMANAGER->getProgram (s_pFullName);
+
 			aShader->loadShader(IProgram::COMPUTE_SHADER, FileUtil::GetFullPath(path,pCSFile));
 			aShader->linkProgram();
 			SLOG("Linker: %s", aShader->getProgramInfoLog());

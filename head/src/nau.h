@@ -6,21 +6,14 @@
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
-#include <cmath>
-
-//#include <GL/glew.h>
-//#include <IL/il.h>
-#include <iostream>
 
 #include <nau/errors.h>
 #include <nau/config.h>
-
-//#include <nau/animation/ianimation.h>
-//#include <nau/animation/linearanimation.h> /***MARK***/ //A factory perhaps?
-#include <nau/world/iworld.h>
+#include <nau/event/eventManager.h>
+#include <nau/event/ilistener.h>
+#include <nau/material/materiallibmanager.h>
 #include <nau/math/vec3.h>
 #include <nau/math/vec4.h>
-#include <nau/material/materiallibmanager.h>
 #include <nau/render/pipeline.h>
 #include <nau/render/pass.h>
 #include <nau/render/viewport.h>
@@ -29,21 +22,20 @@
 #include <nau/scene/iscene.h>
 #include <nau/scene/camera.h>
 #include <nau/scene/light.h>
+#include <nau/world/iworld.h>
 
-#include <nau/event/eventManager.h>
-#include <nau/event/ilistener.h>
-
+#include <cmath>
+#include <iostream>
 
 using namespace nau;
 
 //I know Peter, but you'll see that this may come in handy ;)
-#define RENDERER Nau::getInstance()->getRenderManager()->getRenderer()
-#define RENDERMANAGER Nau::getInstance()->getRenderManager()
-#define MATERIALLIBMANAGER Nau::getInstance()->getMaterialLibManager()
-#define RESOURCEMANAGER Nau::getInstance()->getResourceManager()
 #define NAU Nau::getInstance()
-
-#define EVENTMANAGER Nau::getInstance()->getEventManager()
+#define RENDERER NAU->getRenderManager()->getRenderer()
+#define RENDERMANAGER NAU->getRenderManager()
+#define MATERIALLIBMANAGER NAU->getMaterialLibManager()
+#define RESOURCEMANAGER NAU->getResourceManager()
+#define EVENTMANAGER NAU->getEventManager()
 
 namespace nau {
 	
@@ -66,6 +58,7 @@ namespace nau {
 		std::string &getName();
 
 		// Attributes
+		void registerAttributes(std::string s, AttribSet &attrib);
 		bool validateUserAttribContext(std::string s);
 		bool validateUserAttribName(std::string context, std::string name);
 		AttribSet *getAttribs(std::string context);
@@ -150,6 +143,10 @@ namespace nau {
 		std::string m_Name;
 		unsigned long int m_FrameCount;
 
+		/*
+		Attributes
+		*/
+		std::map<std::string, AttribSet> m_Attributes;
 		/*
 		 * Rendering Flags
 		 */

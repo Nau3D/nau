@@ -7,7 +7,7 @@
 // enable and disable functionalities 
 // based on OpenGL version
 
-#define NAU_OPENGL_VERSION 440
+#define NAU_OPENGL_VERSION 450
 
 
 // use only core features (1 implies no fixed function)

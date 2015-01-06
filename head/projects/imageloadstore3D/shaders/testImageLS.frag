@@ -1,6 +1,6 @@
 #version 440
 
-layout (r32ui, binding=1) uniform uimage3D imageUnit;
+uniform layout (r32ui) uimage3D imageUnit;
 
 layout(std430, binding = 2) buffer test {
 	unsigned int k[];
@@ -34,52 +34,49 @@ void main()
 	if (Position.x < 0 && Position.y < 0 && Position.z < 0) {
 		atomicCounterIncrement(at0);
 		atomicAdd(k[0], 1);
-		imageAtomicAdd(imageUnit, v, uint(1));	
 	}
 	else if (Position.x < 0 && Position.y < 0 && Position.z >= 0) {
 		v.z = 1;
 		atomicCounterIncrement(at1);
 		atomicAdd(k[1], 1);
-		imageAtomicAdd(imageUnit, v, uint(1));	
 	}
 	else if (Position.x < 0 && Position.y >= 0 && Position.z < 0) {
 		v.y = 1;
 		atomicCounterIncrement(at2);
 		atomicAdd(k[2], 1);
-		imageAtomicAdd(imageUnit, v, uint(1));	
 	}
 	else if (Position.x < 0 && Position.y >= 0 && Position.z >= 0) {
-		v.y = 1; v.z = 1;
+		v.y = 1; 
+		v.z = 1;
 		atomicCounterIncrement(at3);
 		atomicAdd(k[3], 1);
-		imageAtomicAdd(imageUnit, v, uint(1));	
 	}
 	else if (Position.x >= 0 && Position.y < 0 && Position.z < 0) {
 		v.x = 1;
 		atomicCounterIncrement(at4);
 		atomicAdd(k[4], 1);
-		imageAtomicAdd(imageUnit, v, uint(1));	
 	}
 	else if (Position.x >=0 && Position.y < 0 && Position.z >= 0) {
-		v.x = 1;v.z = 1;
+		v.x = 1;
+		v.z = 1;
 		atomicCounterIncrement(at5);
 		atomicAdd(k[5], 1);
-		imageAtomicAdd(imageUnit, v, uint(1));	
 	}
 	else if (Position.x >= 0 && Position.y >= 0 && Position.z < 0) {
-		v.x = 1;v.y = 1;
+		v.x = 1;
+		v.y = 1;
 		atomicCounterIncrement(at6);
 		atomicAdd(k[6], 1);
-		imageAtomicAdd(imageUnit, v, uint(1));	
 	}
 	else if (Position.x >= 0 && Position.y >= 0 && Position.z >= 0) {
-		v.x = 1;v.y = 1; v.z = 1;
+		v.x = 1;
+		v.y = 1; 
+		v.z = 1;
 		atomicCounterIncrement(at7);
 		atomicAdd(k[7], 1);
-		imageAtomicAdd(imageUnit, v, uint(1));	
 	}
 
-//	imageAtomicAdd(imageUnit, v, uint(1));
+	imageAtomicAdd(imageUnit, v, uint(1));
 	
 	outColor = vec4(0.0,1.0,0.0,1.0) * intensity;
 	//discard;

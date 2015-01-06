@@ -1,13 +1,15 @@
 #ifndef PROJECTLOADER_H
 #define PROJECTLOADER_H
 
+#include <nau/material/materialLib.h>
+#include <nau/render/pass.h>
+#include <nau/system/fileutil.h>
+
+#include <tinyxml.h>
+
 #include <string>
 #include <vector>
 
-#include <tinyxml.h>
-#include <nau/system/fileutil.h>
-#include <nau/render/pass.h>
-#include <nau/material/materialLib.h>
 
 using namespace nau::render;
 using namespace nau::material;

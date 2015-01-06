@@ -872,9 +872,9 @@ void DlgMaterials::setTextureUnit(int index){
 	pgTextureProps->EnableProperty(wxT("COMPARE_FUNC"));
 	
 	wxString texDim;
-	texDim.Printf(wxT("%d x %d x %d"),texture->m_IntProps[Texture::WIDTH],
-								texture->m_IntProps[Texture::HEIGHT],
-								texture->m_IntProps[Texture::DEPTH]);
+	texDim.Printf(wxT("%d x %d x %d"),texture->getPropi(Texture::WIDTH),
+		texture->getPropi(Texture::HEIGHT),
+								texture->getPropi(Texture::DEPTH));
 	pgTextureProps->SetPropertyValue(wxT("Dimensions(WxHxD)"),texDim);
 
 	pgTextureProps->SetPropertyValue(wxT("WRAP_S"),(long)ts->getPrope(TextureSampler::WRAP_S));

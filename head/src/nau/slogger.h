@@ -26,14 +26,14 @@ public:
 
 #define SLOG(message, ...) \
 {\
-  char m[1024];\
+  char m[32768];\
   sprintf(m, message, ## __VA_ARGS__);\
   (SLogger::getInstance()).log(m);\
 };
 
 #define SLOG_INFO(message, ...) \
 {\
-  char m[1024];\
+  char m[32768];\
   sprintf(m, message, ## __VA_ARGS__);\
   (SLogger::getInstance()).log(m);\
 };

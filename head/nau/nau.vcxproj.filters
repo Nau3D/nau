@@ -520,6 +520,9 @@
     <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\attributeValues.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">

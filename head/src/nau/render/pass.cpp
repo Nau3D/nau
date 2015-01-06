@@ -112,7 +112,7 @@ Pass::Pass (const std::string &passName) :
 	m_RestoreViewport (0),
 	m_RemapMode (REMAP_DISABLED)
 {
-	initArrays(Attribs);
+	registerAndInitArrays("PASS", Attribs);
 
 	initVars();
 	EVENTMANAGER->addListener("SCENE_CHANGED",this);

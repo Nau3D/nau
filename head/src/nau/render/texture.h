@@ -1,10 +1,11 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <nau/material/textureSampler.h>
+#include <nau/config.h>
 #include <nau/attribute.h>
 #include <nau/attributeValues.h>
-#include <nau/config.h>
+#include <nau/material/textureSampler.h>
+
 
 #ifdef __SLANGER__
 #include <wx/bitmap.h>
@@ -50,9 +51,6 @@ namespace nau
 			INT_PROP(ELEMENT_SIZE, 8);
 
 			BOOL_PROP(MIPMAP, 0);
-
-			FLOAT_PROP(DUMMY, 0);
-
 
 			static AttribSet Attribs;
 

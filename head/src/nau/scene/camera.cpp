@@ -81,7 +81,7 @@ Camera::Camera (const std::string &name) :
 	//m_IsOrtho (false)
 {
 	//setDefault();
-	initArrays(Attribs);
+	registerAndInitArrays("CAMERA", Attribs);
 	m_Id = 0;
 	m_Name = name;
 	m_pViewport = NAU->getDefaultViewport();

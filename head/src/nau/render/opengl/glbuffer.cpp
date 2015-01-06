@@ -14,9 +14,8 @@ GLBuffer::Init() {
 bool GLBuffer::Inited = Init();
 
 
-GLBuffer::GLBuffer(std::string label): m_LastBound(GL_ARRAY_BUFFER) {
+GLBuffer::GLBuffer(std::string label): IBuffer(), m_LastBound(GL_ARRAY_BUFFER) {
 
-	initArrays(Attribs);
 	m_Label = label;
 	glGenBuffers(1, (GLuint *)&m_IntProps[ID]);
 #if NAU_OPENGL_VERSION >= 430
@@ -58,15 +57,15 @@ GLBuffer::unbind() {
 }
 
 
-#if NAU_OPENGL_VERSION >= 430
 void 
 GLBuffer::clear() {
+#if NAU_OPENGL_VERSION >= 430
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 	glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
 #endif
+}
 
 
 void 

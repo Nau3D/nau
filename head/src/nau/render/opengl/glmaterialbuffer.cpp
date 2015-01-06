@@ -21,9 +21,8 @@ GLMaterialBuffer::Init() {
 
 bool GLMaterialBuffer::Inited = Init();
 
-GLMaterialBuffer::GLMaterialBuffer() {
+GLMaterialBuffer::GLMaterialBuffer(): IMaterialBuffer() {
 
-	initArrays(Attribs);
 }
 
 

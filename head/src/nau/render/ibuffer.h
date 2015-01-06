@@ -53,9 +53,7 @@ namespace nau
 
 			virtual void bind(unsigned int type) = 0;
 			virtual void unbind() =0;
-#if NAU_OPENGL_VERSION >= 430
 			virtual void clear() = 0;
-#endif 
 
 			virtual IBuffer * clone() = 0;
 
@@ -69,7 +67,7 @@ namespace nau
 		
 		protected:
 
-			IBuffer(): m_Label("") { initArrays(Attribs); };
+			IBuffer() : m_Label("") { registerAndInitArrays("BUFFER", Attribs); };
 
 			static bool Init();
 			static bool Inited;

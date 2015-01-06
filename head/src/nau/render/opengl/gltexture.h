@@ -2,7 +2,6 @@
 #define GLTEXTURE_H
 
 #include <nau/render/texture.h>
-//#include <nau/material/textureSampler.h>
 #include <nau/render/opengl/gltexturesampler.h>
 
 #include <GL/glew.h>

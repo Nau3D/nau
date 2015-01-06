@@ -35,7 +35,7 @@ bool Viewport::Inited = Init();
 Viewport::Viewport(void) :
 	m_Name("default")
 {
-	initArrays(Attribs);
+	registerAndInitArrays("VIEWPORT", Attribs);
 	EVENTMANAGER->addListener("WINDOW_SIZE_CHANGED", this);
 }
 

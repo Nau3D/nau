@@ -117,7 +117,7 @@ GLTexture::GetCompatibleType(int dim, int internalFormat) {
 	GLint result;
 
 #if NAU_OPENGL_VERSION >= 420
-	glGetInternalformativ(GL_TEXTURE_2D, internalFormat, GL_TEXTURE_IMAGE_TYPE, 1, &result);
+	glGetInternalformativ(dim, internalFormat, GL_TEXTURE_IMAGE_TYPE, 1, &result);
 #else
 	result = TexIntFormat[internalFormat].type;
 #endif
@@ -317,7 +317,7 @@ GLTexture::build() {
 		glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
 #if NAU_OPENGL_VERSION < 420 
 		glTexImage3D(m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT],
-			m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH],
+			m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH], 0,
 			m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 #else
 		glTexStorage3D(m_EnumProps[DIMENSION], 1, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH]);

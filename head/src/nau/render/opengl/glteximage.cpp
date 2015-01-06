@@ -63,7 +63,9 @@ GLTexImage::update(void) {
 	glBindTexture(texType,m_Texture->getPropi(Texture::ID));
 	if (texType == GL_TEXTURE_CUBE_MAP)
 		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-	glGetTexImage(texType,0,m_Texture->getPrope(Texture::FORMAT),m_DataType,m_Data);
+	//glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+
+	glGetTexImage(texType, 0, m_Texture->getPrope(Texture::FORMAT), m_DataType, m_Data);
 }
 
 

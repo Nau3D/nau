@@ -39,7 +39,7 @@ bool ColorMaterial::Inited = Init();
 
 ColorMaterial::ColorMaterial() {
 
-	initArrays(Attribs);
+	registerAndInitArrays("COLOR_MATERIAL", Attribs);
 }
 
 

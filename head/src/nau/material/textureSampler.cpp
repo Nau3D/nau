@@ -46,7 +46,7 @@ TextureSampler::create(Texture *t) {
 
 TextureSampler::TextureSampler() {
 
-	initArrays(Attribs);
+	registerAndInitArrays("TEXTURE_SAMPLER", Attribs);
 }
 
 

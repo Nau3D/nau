@@ -1,13 +1,10 @@
 #include <nau/render/texture.h>
 
+#include <nau.h>
+#include <nau/loader/textureloader.h>
 #ifdef NAU_OPENGL
 #include <nau/render/opengl/gltexture.h>
-//#include <nau/render/opengl/gltextureMS.h>
-//#include <nau/render/opengl/gltexture2dArray.h>
 #endif
-#include <nau/loader/textureloader.h>
-#include <nau.h>
-
 
 using namespace nau::render;
 using namespace nau::loader;
@@ -153,7 +150,7 @@ Texture::Create (std::string file, std::string label, bool mipmap) {
 
 Texture::Texture(std::string label) :m_Label(label), bitmap(0), m_Bitmap(0) {
 
-	initArrays(Attribs);
+	registerAndInitArrays("TEXTURE", Attribs);
 }
 
 

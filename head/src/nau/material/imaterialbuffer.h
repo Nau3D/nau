@@ -40,7 +40,7 @@ namespace nau
 
 		protected:
 
-			IMaterialBuffer() {};
+			IMaterialBuffer() { registerAndInitArrays("MATERIAL_BUFFER", Attribs); };
 
 			static bool Init();
 			static bool Inited;

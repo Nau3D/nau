@@ -61,11 +61,6 @@ using namespace nau::render;
 
 GLTextureSampler::GLTextureSampler(Texture *t): TextureSampler() {
 
-	Attribs.initAttribInstanceBoolArray(m_BoolProps);
-	Attribs.initAttribInstanceEnumArray(m_EnumProps);
-	Attribs.initAttribInstanceIntArray(m_IntProps);
-	Attribs.initAttribInstanceVec4Array(m_Float4Props);
-
 #if NAU_OPENGL_VERSION > 320
 	glGenSamplers(1, (GLuint *)&(m_IntProps[ID]));
 #endif
@@ -75,17 +70,6 @@ GLTextureSampler::GLTextureSampler(Texture *t): TextureSampler() {
 	}
 	else
 		m_EnumProps[MIN_FILTER] = GL_LINEAR;
-
-	//m_EnumProps[MAG_FILTER] = GL_LINEAR;
-	//m_EnumProps[WRAP_S] = GL_REPEAT;
-	//m_EnumProps[WRAP_T] = GL_REPEAT;
-	//m_EnumProps[WRAP_R] = GL_REPEAT;
-
-	//m_EnumProps[COMPARE_MODE] = GL_NONE;
-	//m_EnumProps[COMPARE_FUNC] = GL_LEQUAL;
-
-	//float bordercolor[] = {-1.0f, -1.0f, -1.0f, -1.0f};
-	//m_Float4Props[BORDER_COLOR].set(bordercolor);
 
 	update();
 }

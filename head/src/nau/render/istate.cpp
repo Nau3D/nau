@@ -70,7 +70,8 @@ IState::create() {
 IState::IState():
 		m_defColor(0.0f, 0.0f, 0.0f, 1.0f)
 {
-	setDefault();
+	registerAndInitArrays("STATE", Attribs);
+	m_Name = "default";
 }
 
 			

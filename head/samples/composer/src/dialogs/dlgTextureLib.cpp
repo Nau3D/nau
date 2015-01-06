@@ -259,7 +259,7 @@ void DlgTextureLib::setTextureProps(int index){
 
 	pgTextureProps->SetPropertyValue(wxT("Type"),texture->getPrope(Texture::DIMENSION));
 
-	v = texture->m_IntProps[Texture::DEPTH];
+	v = texture->getPropi(Texture::DEPTH);
 	//if (texture->getHeight() == 1 || texture->getWidth() == 1) 
 	//	pgTextureProps->SetPropertyValue(wxT("Type"),Texture::TEXTURE_1D);
 	//else if (texture->getDepth() == 0)
@@ -268,8 +268,8 @@ void DlgTextureLib::setTextureProps(int index){
 	//	pgTextureProps->SetPropertyValue(wxT("Type"),Texture::TEXTURE_3D);
 
 	wxString texDim;
-	texDim.Printf(wxT("%d x %d x %d"),texture->m_IntProps[Texture::WIDTH],
-								 texture->m_IntProps[Texture::HEIGHT],
+	texDim.Printf(wxT("%d x %d x %d"), texture->getPropi(Texture::WIDTH),
+		texture->getPropi(Texture::HEIGHT),
 								 v);
 
 	pgTextureProps->SetPropertyValue(wxT("Dimensions(WxHxD)"),texDim);
@@ -348,11 +348,11 @@ void DlgTextureLib::OnSaveRaw(wxCommandEvent& event)
 					if (type == "FLOAT")
 						fprintf(fp, "%f ", fData[(g*w*h + i*h + j)*n + k]);
 					else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")
-						fprintf(fp, "%d ", ubData[(g*w*h + i*h + j)*n + k]);
+						fprintf(fp, "%u ", ubData[(g*w*h + i*h + j)*n + k]);
 					else if (type == "UNSIGNED_SHORT")
 						fprintf(fp, "%u ", usData[(g*w*h + i*h + j)*n + k]);
 					else if (type == "UNSIGNED_INT")
-						fprintf(fp, "%d ", uiData[(g*w*h + i*h + j)*n + k]);
+						fprintf(fp, "%u ", uiData[(g*w*h + i*h + j)*n + k]);
 					else if (type == "SHORT")
 						fprintf(fp, "%i ", sData[(g*w*h + i*h + j)*n + k]);
 					else if (type == "BYTE")
