@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene"  param="SWAP_YZ">
-				<file>../../models/teapot.3ds</file>
+				<file name="../../models/teapot.3ds"/>
 			</scene>
 		</scenes>
 		<viewports>

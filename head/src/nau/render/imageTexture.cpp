@@ -7,6 +7,8 @@
 #include <nau/render/opengl/glimagetexture.h>
 #endif
 
+#include <nau.h>
+
 using namespace nau::render;
 using namespace nau;
 
@@ -21,6 +23,9 @@ ImageTexture::Init() {
 	Attribs.add(Attribute(ACCESS, "ACCESS", Enums::DataType::ENUM, false));
 	// BOOL
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
+
+	NAU->registerAttributes("IMAGE_TEXTURE", &Attribs);
+
 	return true;
 }
 

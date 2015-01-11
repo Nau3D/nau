@@ -146,3 +146,13 @@ nau::system::textutil::ParseFloats (const std::string &InputString, int count)
 
 	return result;
 }
+
+
+void
+nau::system::textutil::join(const std::vector<std::string>& vec, const char* delim, std::string *result)
+{
+	std::stringstream res;
+	std::string s;
+	copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(res, delim));
+	*result = res.str();
+}

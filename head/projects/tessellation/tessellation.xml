@@ -3,8 +3,8 @@
 	<assets>
 		<scenes>
 			<scene name="Teapot" type="OctreeByMat">
-				<!--file>..\..\models\gumbo.patch</file-->
-				<file>..\..\models\teapot.patch</file>
+				<!--file name="..\..\models\gumbo.patch"/-->
+				<file  name="..\..\models\teapot.patch «"/>
 			</scene>
 		</scenes>
 		

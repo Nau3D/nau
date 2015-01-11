@@ -29,7 +29,7 @@
 	
 	<materials>
 		<material name ="imageStore">
-			<shader>
+			<shader >
 				<name>testImageLS</name>
 				<values>
 					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 

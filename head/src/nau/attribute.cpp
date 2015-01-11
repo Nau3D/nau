@@ -1,0 +1,579 @@
+#include <nau/attribute.h>
+
+#include <vector>
+
+using namespace nau;
+
+
+Attribute::Attribute() : m_Id(-1), m_Default(NULL), m_RangeDefined(false), m_ListDefined(false) {};
+
+
+Attribute::Attribute(int id, std::string name, Enums::DataType type, bool readOnlyFlag, void *defaultV) :
+	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), m_Default(NULL), m_Min(NULL), m_Max(NULL),
+		m_ListDefined(false), m_RangeDefined(false)  {
+		
+	if (defaultV) {
+		int s = Enums::getSize(m_Type);
+		m_Default = malloc(s);
+		memcpy(m_Default, defaultV, s);
+	}
+	else {
+		m_Default = Enums::getDefaultValue(m_Type);
+				
+	}
+};
+
+
+Attribute::~Attribute() {
+	// can't free this memory because it may be in use in other attribute
+	//bool isBasic = Enums::isBasicType(m_Type);
+	//if (m_RangeDefined) {
+	//	if (m_Min != NULL)
+	//		if (isBasic)
+	//			free(m_Min);
+	//		else
+	//			delete m_Min;
+	//	if (m_Max != NULL)
+	//		if (isBasic)
+	//			free(m_Max);
+	//		else
+	//			delete m_Max;
+	//}
+	//if (m_Default != NULL)
+	//	if (isBasic)
+	//		free(m_Default);
+	//	else
+	//		delete m_Default;
+};
+
+
+bool 
+Attribute::isValidUserAttrType(std::string s) {
+
+	if (s == "FLOAT" || s == "INT" || s == "VEC4")
+		return true;
+	else
+		return false;
+}
+
+
+std::string 
+Attribute::getName() {
+
+	return m_Name;
+};
+
+
+void 
+Attribute::setRange(void *min, void *max) {
+				
+	assert(m_Type != Enums::STRING);
+
+	if (min == NULL && max == NULL)
+		return;
+			
+	m_RangeDefined = true;
+
+	if (min != NULL) {
+		m_Min = (void *)malloc(Enums::getSize(m_Type));
+		memcpy(m_Min, min, Enums::getSize(m_Type));
+	}
+	else
+		m_Min = NULL;
+
+	if (max != NULL) {
+		m_Max = (void *)malloc(Enums::getSize(m_Type));
+		memcpy(m_Max, max, Enums::getSize(m_Type));
+	}
+	else
+		m_Max = NULL;
+};
+
+
+Enums::DataType 
+Attribute::getType() {
+
+	return m_Type;
+}
+
+
+int 
+Attribute::getId() {
+
+	return m_Id;
+}
+
+
+void 
+Attribute::listAdd(std::string name, int id) {
+		
+	m_ListDefined = true;
+	mListValues.push_back(id);
+	mListString.push_back(name);
+};
+
+		 
+bool 
+Attribute::isValid(std::string value) {
+		
+	if (m_ListDefined) {				
+		std::vector<std::string>::iterator it = mListString.begin();
+		for ( ; it != mListString.end(); ++it) {
+			if (*it == value)
+				return true;
+		}
+		return false;
+	}
+	return false;
+};
+
+
+bool 
+Attribute::getRangeDefined() {
+	return m_RangeDefined; 
+};
+
+
+bool 
+Attribute::getListDefined() {
+	return m_ListDefined; 
+};
+
+
+void *
+Attribute::getMax() {
+		
+	return m_Max;
+}
+
+
+void *
+Attribute::getMin() {
+
+	return m_Min;
+}
+
+
+int 
+Attribute::getListValue(std::string &s) {
+		
+	for(unsigned int i = 0 ; i < mListString.size(); ++i) {	
+		if (mListString[i] == s)
+			return mListValues[i];
+	}
+	return 0;
+};
+
+
+std::string 
+Attribute::getListString(int v) {
+		
+	for(unsigned int i = 0 ; i < mListValues.size(); ++i) {		
+		if (mListValues[i] == v)
+			return mListString[i];
+	}
+	return m_DummyS;
+};
+
+
+bool 
+Attribute::isValid(int v) {
+
+	for (unsigned int i = 0; i < mListValues.size(); ++i) {
+		if (mListValues[i] == v)
+			return true;
+	}
+	return false;
+
+}
+
+
+
+
+// -------------------------------------------------------------------------------------------
+//    Attribute Set 
+// -------------------------------------------------------------------------------------------
+
+
+
+AttribSet::AttribSet() : m_NextFreeID(USER_ATTRIBS), m_DummyS("") { 
+	
+	m_Dummy.m_Name = "NO_ATTR"; 
+};
+
+
+AttribSet::~AttribSet() {};
+
+int 
+AttribSet::getNextFreeID() {
+		
+	return m_NextFreeID++;
+}
+
+
+void 
+AttribSet::deleteUserAttributes() {
+
+	std::map<std::string, Attribute>::iterator iter;
+	iter = m_Attributes.begin();
+	while (iter != m_Attributes.end()) {
+
+		if (iter->second.m_Id >= USER_ATTRIBS)
+			m_Attributes.erase(iter++);
+		else
+			++iter;
+	}
+}
+
+void 
+AttribSet::add(Attribute a) {
+			
+	if (a.m_Id != -1) {
+		m_Attributes[a.m_Name] = a;
+	}
+	Enums::DataType dt = a.getType();
+	if (mDataTypeCounter.count(dt))
+		++mDataTypeCounter[dt];
+	else
+		mDataTypeCounter[dt] = 1;
+}
+
+
+int 
+AttribSet::getDataTypeCount(Enums::DataType dt) {
+
+	if (mDataTypeCounter.count(dt))
+		return mDataTypeCounter[dt];
+	else
+		return 0;
+}
+
+		
+const Attribute &
+AttribSet::get(std::string name) {
+
+	if (m_Attributes.find(name) != m_Attributes.end()) 
+
+		return(m_Attributes[name]);
+	else
+		return m_Dummy;
+
+}
+
+
+const Attribute &
+AttribSet::get(int id, Enums::DataType dt) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for (; it != m_Attributes.end(); ++it) {
+
+		if (it->second.m_Id == id && it->second.m_Type == dt)
+			return (it->second);
+	}
+	return m_Dummy;
+}
+
+
+int 
+AttribSet::getID(std::string name) {
+
+	if (m_Attributes.find(name) != m_Attributes.end()) 
+
+		return(m_Attributes[name].m_Id);
+	else
+		return -1;
+
+}
+
+
+const std::map<std::string, Attribute> &
+AttribSet::getAttributes() {
+
+	return (m_Attributes);
+}
+
+
+const std::string &
+AttribSet::getName(int id, Enums::DataType dt) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+
+		if (it->second.m_Id == id && it->second.m_Type == dt)
+			return (it->first);
+	}
+	return m_DummyS;
+}
+
+
+void 
+AttribSet::getPropTypeAndId(std::string &s, nau::Enums::DataType *dt, int *id) {
+			
+	Attribute a = get(s);
+	*id = a.m_Id;
+
+	if (a.m_Id != -1) {
+
+		*dt = a.m_Type;
+	}
+}
+
+
+const std::vector<std::string> &
+AttribSet::getListString(int id) {
+		
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+
+		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
+			return (it->second.mListString);
+	}
+	return m_DummyVS;
+}
+
+
+const std::vector<int> &
+AttribSet::getListValues(int id) {
+		
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+
+		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
+			return (it->second.mListValues);
+	}
+	return m_DummyVI;
+}
+
+
+std::string 
+AttribSet::getListStringOp(std::string s, int prop) {
+		
+	Attribute a = get(s);
+	return (a.getListString(prop));
+}
+
+
+std::string 
+AttribSet::getListStringOp(int id, int prop) {
+		
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+
+		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
+			return (it->second.getListString(prop));
+	}
+	return m_DummyS;
+}
+
+
+int 
+AttribSet::getListValueOp(std::string s, std::string prop) {
+		
+	Attribute a = get(s);
+	return (a.getListValue(prop));
+}
+
+
+int 
+AttribSet::getListValueOp(int id, std::string prop) {
+		
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+
+		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
+			return (it->second.getListValue(prop));
+	}
+	return -1;
+}
+
+
+void 
+AttribSet::listAdd(std::string attrName, std::string elemS, int elem_Id) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+
+		if (it->first == attrName) {
+			it->second.listAdd(elemS, elem_Id);
+			return;
+		}
+	}
+}
+
+
+bool 
+AttribSet::isValid(std::string attr, std::string value) {
+
+	Attribute a = get(attr);
+	return a.isValid(value);
+}
+
+
+void 
+AttribSet::setDefault(std::string attr, void *value) {
+		
+	if (m_Attributes.find(attr) != m_Attributes.end()) {
+		assert(m_Attributes[attr].m_Type != Enums::STRING);
+		if (m_Attributes[attr].m_Type != Enums::STRING) {
+			int s = Enums::getSize(m_Attributes[attr].m_Type);
+			m_Attributes[attr].m_Default = malloc(s);
+			memcpy(m_Attributes[attr].m_Default, value, s);
+		}
+	}
+}
+
+
+void *
+AttribSet::getDefault(int id, Enums::DataType type) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+
+		if (it->second.m_Id == id && it->second.m_Type == type)
+			return (it->second.m_Default);
+	}
+	return NULL;
+}
+
+
+void 
+AttribSet::initAttribInstanceIntArray(std::map<int, int> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for (; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::INT) {
+
+			m[it->second.m_Id] = *(int *)(it->second.m_Default);
+		}
+	}
+}
+
+void 
+AttribSet::initAttribInstanceEnumArray(std::map<int, int> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::ENUM) {
+
+				m[it->second.m_Id] = *(int *)(it->second.m_Default);
+		}
+	}
+}
+
+
+void 
+AttribSet::initAttribInstanceUIntArray(std::map<int, unsigned int> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::UINT) {
+
+				m[it->second.m_Id] = *(unsigned int *)(it->second.m_Default);
+		}
+	}
+}
+
+
+void 
+AttribSet::initAttribInstanceFloatArray(std::map<int, float> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::FLOAT) {
+
+				m[it->second.m_Id] = *(float *)(it->second.m_Default);
+		}
+	}
+}
+
+
+void 
+AttribSet::initAttribInstanceVec4Array(std::map<int, vec4> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::VEC4) {
+
+				m[it->second.m_Id] = *(vec4 *)(it->second.m_Default);
+		}
+	}
+}
+
+void 
+AttribSet::initAttribInstanceVec2Array(std::map<int, vec2> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for (; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::VEC2) {
+
+			m[it->second.m_Id] = *(vec2 *)(it->second.m_Default);
+		}
+	}
+}
+
+void 
+AttribSet::initAttribInstanceMat4Array(std::map<int, mat4> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for (; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::MAT4) {
+			m[it->second.m_Id] = *(mat4 *)(it->second.m_Default);
+		}
+	}
+}
+
+void 
+AttribSet::initAttribInstanceMat3Array(std::map<int, mat3> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for (; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::MAT3) {
+			m[it->second.m_Id] = *(mat3 *)(it->second.m_Default);
+		}
+	}
+}
+
+
+void 
+AttribSet::initAttribInstanceBvec4Array(std::map<int, bvec4> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::BVEC4) {
+
+				m[it->second.m_Id] = *(bvec4 *)(it->second.m_Default);
+		}
+	}
+}
+
+
+void 
+AttribSet::initAttribInstanceBoolArray(std::map<int, bool> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::BOOL) {
+
+				m[it->second.m_Id] = *(bool *)(it->second.m_Default);
+		}
+	}
+}
+

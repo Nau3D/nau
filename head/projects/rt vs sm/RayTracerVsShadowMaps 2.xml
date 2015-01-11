@@ -4,11 +4,8 @@
 	
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<!--file>..\ntg-bench\bench.obj</file-->
-				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
-				<!--file>..\3dsmodels\largoCamoes8000.cbo</file-->
-				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
-				<file>..\..\models\bench.obj</file>
+				<!--file name="..\ntg-bench\bench.obj"/-->
+				<file name="..\..\models\bench.obj"/>
 			</scene>
 		</scenes>
 		

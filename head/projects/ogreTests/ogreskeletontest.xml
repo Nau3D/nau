@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="Fish" type="SceneSkeleton">
-				<file>..\..\models\ogremodels\fish.mesh.xml</file>
+				<file name="..\..\models\ogremodels\fish.mesh.xml"/>
 			</scene>
 		</scenes>
 		

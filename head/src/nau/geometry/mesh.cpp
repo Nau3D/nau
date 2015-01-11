@@ -37,11 +37,15 @@ Mesh::Mesh(void) :
 
 Mesh::~Mesh(void)
 {
-	if (0 != m_VertexData) 
+	if (0 != m_VertexData) {
 		delete m_VertexData;
+		m_VertexData = 0;
+	}
 
-	if (0 != m_IndexData)
+	if (0 != m_IndexData) {
 		delete m_IndexData;
+		m_IndexData = 0;
+	}
 
 
 	std::vector<nau::material::MaterialGroup*>::iterator matIter;

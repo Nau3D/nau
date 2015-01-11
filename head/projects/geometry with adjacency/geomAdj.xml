@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="Al"  param="USE_ADJACENCY" type="OctreeByMat">
-				<file>..\..\models\cube2.obj</file>
+				<file name="..\..\models\al.obj"/>
 
 			</scene>
 		</scenes>

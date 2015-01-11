@@ -1,6 +1,6 @@
 #version 440
 
-uniform layout (r32ui) uimage3D imageUnit;
+layout (r32ui) uniform coherent uimage3D imageUnit;
 
 layout(std430, binding = 2) buffer test {
 	unsigned int k[];
@@ -77,7 +77,9 @@ void main()
 	}
 
 	imageAtomicAdd(imageUnit, v, uint(1));
+	k[0] = imageSize(imageUnit).x;
+	k[1] = imageSize(imageUnit).y;
+	k[2] = imageSize(imageUnit).z;
 	
 	outColor = vec4(0.0,1.0,0.0,1.0) * intensity;
-	//discard;
 }

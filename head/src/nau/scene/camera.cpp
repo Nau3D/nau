@@ -54,6 +54,9 @@ Camera::Init() {
 	Attribs.add(Attribute(PROJECTION_TYPE, "TYPE", Enums::DataType::ENUM, false, new int(PERSPECTIVE)));
 	Attribs.listAdd("TYPE", "PERSPECTIVE", PERSPECTIVE);
 	Attribs.listAdd("TYPE", "ORTHO", ORTHO);
+
+	NAU->registerAttributes("CAMERA", &Attribs);
+
 	return true;
 }
 

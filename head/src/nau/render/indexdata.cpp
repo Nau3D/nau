@@ -40,9 +40,10 @@ IndexData::IndexData(void) :
 
 IndexData::~IndexData(void)
 {
-	if (0 != m_InternalIndexArray) {
-		delete m_InternalIndexArray;
-	}
+	//if (0 != m_InternalIndexArray) {
+	//	delete m_InternalIndexArray;
+	//	m_InternalIndexArray = 0;
+	//}
 }
 
 

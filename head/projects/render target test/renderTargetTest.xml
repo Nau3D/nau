@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<file>..\..\models\cube.obj</file>
+				<file name="./../models/cube.obj"/>
 			</scene>
 		</scenes>
 		<viewports>

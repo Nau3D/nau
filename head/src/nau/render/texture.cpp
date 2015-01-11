@@ -32,6 +32,8 @@ Texture::Init() {
 	Attribs.add(Attribute(TYPE, "TYPE", Enums::DataType::ENUM, true));
 	Attribs.add(Attribute(INTERNAL_FORMAT, "INTERNAL_FORMAT", Enums::DataType::ENUM, false));
 
+	NAU->registerAttributes("TEXTURE", &Attribs);
+
 	return true;
 }
 

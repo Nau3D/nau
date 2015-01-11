@@ -11,9 +11,12 @@
  * 
  */
 
-#include <string>
 #include <climits>
 #include <cmath>
+#include <iterator>
+#include <ostream>
+#include <string>
+#include <vector>
 
 namespace nau {
 
@@ -46,7 +49,8 @@ namespace nau {
 	  float * ParseFloats (const std::string &InputString, int count);
 	  int *ParseInts (const std::string &InputString, int count);
 
-
+	  void join(const std::vector<std::string>& vec, const char* delim, std::string *result);
+	  
     } // namespace textutil
 
   } // namespace system

@@ -45,11 +45,10 @@ static nau::Nau *gInstance = 0;
 
 nau::Nau*
 Nau::create (void) {
-	if (0 != gInstance) {
-		throw (NauInstanciationError ("An instance of Nau already exists"));
+	if (0 == gInstance) {
+		gInstance = new Nau;
 	}
-	gInstance = new Nau;
-
+	
 	return gInstance;
 }
 
@@ -84,7 +83,10 @@ Nau::Nau() :
 
 Nau::~Nau() {
 
-	clear();
+	MATERIALLIBMANAGER->clear();
+	EVENTMANAGER->clear();
+	RENDERMANAGER->clear();
+	RESOURCEMANAGER->clear();
 
 }
 
@@ -144,7 +146,7 @@ Nau::getName() {
 // -----------------------------------------------------------
 
 void 
-Nau::registerAttributes(std::string s, AttribSet &attrib) {
+Nau::registerAttributes(std::string s, AttribSet *attrib) {
 
 	m_Attributes[s] = attrib;
 }
@@ -153,9 +155,7 @@ Nau::registerAttributes(std::string s, AttribSet &attrib) {
 bool 
 Nau::validateUserAttribContext(std::string context) {
 
-	if (context == "LIGHT" || context == "CAMERA" || context == "VIEWPORT"
-
-		|| context == "TEXTURE" || context == "STATE"  || context == "PASS")
+	if (m_Attributes.count(context) != 0)
 		return true;
 
 	return false;
@@ -165,22 +165,10 @@ Nau::validateUserAttribContext(std::string context) {
 AttribSet *
 Nau::getAttribs(std::string context) {
 
-	AttribSet *attribs = NULL;
-
-	if (context == "LIGHT")
-		attribs = &(Light::Attribs);
-	else if (context == "CAMERA")
-		attribs = &(Camera::Attribs);
-	else if (context == "VIEWPORT")
-		attribs = &(Viewport::Attribs);
-	else if (context == "TEXTURE")
-		attribs = &(Texture::Attribs);
-	else if (context == "STATE")
-		attribs = &(IState::Attribs);
-	else if (context == "PASS")
-		attribs = &(Pass::Attribs);
-
-	return attribs;
+	if (m_Attributes.count(context) != NULL)
+		return m_Attributes[context];
+	else
+		return NULL;
 }
 
 
@@ -199,6 +187,18 @@ Nau::validateUserAttribName(std::string context, std::string name) {
 	else
 		return false;
 }
+
+
+void
+Nau::deleteUserAttributes() {
+
+	for (auto attr : m_Attributes) {
+
+		attr.second->deleteUserAttributes();
+	}
+}
+
+
 
 
 // -----------------------------------------------------------
@@ -220,8 +220,6 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType, IEve
 void
 Nau::readProjectFile (std::string file, int *width, int *height) {
 
-	//clear();
-
 	try {
 		ProjectLoader::load (file, width, height, &m_UseTangents, &m_UseTriangleIDs);
 		isFrameBegin = true;
@@ -232,8 +230,6 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 	}
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
-		
-	//m_pWorld->setScene(RENDERMANAGER->getScene("Terrain"));
 
 	if (m_UseTriangleIDs)
 		RENDERMANAGER->prepareTriangleIDs(true);
@@ -275,7 +271,6 @@ Nau::readDirectory (std::string dirName) {
 	}
 	closedir (dir);
 	loadFilesAndFoldersAux(sceneName,false);	
-	
 }
 
 
@@ -364,8 +359,6 @@ Nau::reload (void) {
 	if (false == m_Inited) {
 		return false;
 	}
-	//RenderManager->reload();
-
 	return true;
 }
 
@@ -382,6 +375,8 @@ Nau::clear() {
 	RENDERMANAGER->clear();
 	RESOURCEMANAGER->clear();
 
+	deleteUserAttributes();
+
 	// Need to clear font manager
 
 	while (!m_vViewports.empty()){
@@ -390,8 +385,6 @@ Nau::clear() {
 	}
 
 	m_Viewport = createViewport("defaultFixedVP");
-
-	//_CrtDumpMemoryLeaks();
 
 	ProjectLoader::loadMatLib("./nauSystem.mlib");
 }

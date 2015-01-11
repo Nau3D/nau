@@ -4,18 +4,17 @@
 
 #if NAU_OPENGL_VERSION >= 420
 
-#include <sstream>
+#include <nau.h>
+#include <nau/debug/profile.h>
+#include <nau/geometry/frustum.h>
+#include <nau/render/passoptixprime.h>
+#include <nau/slogger.h>
 
 #include <GL/glew.h>
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 
-#include <nau/slogger.h>
-#include <nau/render/passoptixprime.h>
-#include <nau.h>
-#include <nau/geometry/frustum.h>
-#include <nau/debug/profile.h>
-
+#include <sstream>
 
 using namespace nau::material;
 using namespace nau::scene;

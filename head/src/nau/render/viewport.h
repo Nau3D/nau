@@ -8,8 +8,6 @@
 #include <nau/math/vec2.h>
 #include <nau/math/vec4.h>
 
-
-
 #include <string>
 
 using namespace nau::event_;

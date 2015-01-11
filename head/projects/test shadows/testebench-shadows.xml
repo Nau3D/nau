@@ -3,9 +3,8 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<!--file>..\3dsmodels\testGeomMaya.obj</file-->
-				<!--file>..\ntg-bin-pl3dxiv\pl3dsecxiv_iiii.cbo</file-->
-				<file>..\..\models\ntg-bench\bench.obj</file>
+				<!--file name="..\3dsmodels\testGeomMaya.obj"/-->
+				<file name="..\..\models\ntg-bench\bench.obj"/>
 			</scene>
 		</scenes>
 		<viewports>

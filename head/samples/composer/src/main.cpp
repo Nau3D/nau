@@ -167,6 +167,7 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
   EVT_MENU(idMenu_DLG_DBGSTEP, FrmMainFrame::OnDlgDbgStep)
   
+  EVT_CLOSE(FrmMainFrame::OnClose)
   
  END_EVENT_TABLE()
 
@@ -395,6 +396,15 @@ FrmMainFrame::~FrmMainFrame()
 #ifdef GLINTERCEPTDEBUG
 	gliSetIsGLIActive(true);
 #endif
+}
+
+
+void 
+FrmMainFrame::OnClose(wxCloseEvent& event)
+{
+	delete m_pRoot;
+	Destroy();  // you may also do:  event.Skip();
+	// since the default event handler does call Destroy(), too
 }
 
 

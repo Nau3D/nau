@@ -31,7 +31,7 @@ namespace nau
 			ENUM_PROP(CLEAR, 0);
 		//	ENUM_PROP(TYPE, 1);
 
-			typedef enum {
+			typedef enum CV{
 				NEVER,
 				BY_FRAME
 			} ClearValues; 

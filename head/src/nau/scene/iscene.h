@@ -1,14 +1,16 @@
 #ifndef ISCENE_H
 #define ISCENE_H
 
-#include <string>
-#include <vector>
-
+#include <nau/attribute.h>
+#include <nau/attributeValues.h>
+#include <nau/event/ilistener.h>
+#include <nau/geometry/frustum.h>
+#include <nau/math/transformfactory.h>
 #include <nau/scene/camera.h>
 #include <nau/scene/light.h>
-#include <nau/geometry/frustum.h>
-#include <nau/event/ilistener.h>
-#include <nau/math/transformfactory.h>
+
+#include <string>
+#include <vector>
 
 namespace nau 
 {
@@ -16,8 +18,12 @@ namespace nau
 	{
 		class SceneObject;
 
-		class IScene : public IListener
+		class IScene : public AttributeValues, public IListener
 		{
+		public:
+			FLOAT4_PROP(SCALE, 0);
+			FLOAT4_PROP(ROTATE, 1);
+			FLOAT4_PROP(TRANSLATE, 2);
 
 		protected:
 			std::string m_Name;

@@ -77,7 +77,7 @@ GlCanvas::GlCanvas (wxWindow *parent,
 
 GlCanvas::~GlCanvas()
 {
-   //dtor
+  //dtor
 
 }
 

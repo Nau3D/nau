@@ -1,4 +1,5 @@
 #include <nau/render/viewport.h>
+
 #include <nau.h>
 
 using namespace nau::render;
@@ -24,6 +25,9 @@ Viewport::Init() {
 	float *min = new float(0.0f);
 	r.setRange(&min, NULL);
 	Attribs.add(r);
+
+	NAU->registerAttributes("VIEWPORT", &Attribs);
+
 	return true;
 }
 

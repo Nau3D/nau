@@ -18,11 +18,6 @@ GLIndexArray::GLIndexArray(void):
 
 GLIndexArray::~GLIndexArray(void) {
 
-	if (0 != m_InternalIndexArray) {
-		delete m_InternalIndexArray;
-		m_InternalIndexArray = 0;
-	}
-
 	if (0 != m_GLBuffer) {
 		glDeleteBuffers (1, &m_GLBuffer);
 	}
@@ -122,7 +117,8 @@ GLIndexArray::unbind (void) {
 
 unsigned int 
 GLIndexArray::getBufferID() {
-
+//	if (m_VAO == 0)
+//		compile();
 	return m_GLBuffer;
 }
 

@@ -69,7 +69,7 @@ MeshPose::setPose(unsigned int index)
 	// if there are offsets
 	if (m_vOffsets.size()) {
 	
-		// have to add Pose offsets to the Reference pose
+		// add Pose offsets to the Reference pose
 		// and set the result in the vertexdata
 		std::vector<VertexData::Attr>& vertexData = m_VertexData->getDataOf(VertexData::getAttribIndex("position"));
 		std::vector<vec3> offsets = m_vOffsets[index]->getOffsets();

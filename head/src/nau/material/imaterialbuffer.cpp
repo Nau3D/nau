@@ -4,6 +4,8 @@
 #include <nau/render/opengl/glmaterialbuffer.h>
 #endif
 
+#include <nau.h>
+
 using namespace nau::material;
 
 bool
@@ -15,6 +17,9 @@ IMaterialBuffer::Init() {
 	Attribs.add(Attribute(TYPE, "TYPE", Enums::DataType::ENUM, false));
 	// BOOL
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
+
+	NAU->registerAttributes("MATERIAL_BUFFER", &Attribs);
+
 	return true;
 }
 

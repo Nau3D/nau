@@ -273,11 +273,11 @@ bool isDebugLogEnabled(){
 }
 
 bool debugLogPath(){
-	return gliGetLogPath();
+	return (gliGetLogPath() != NULL);
 }
 
 bool debugLogName(){
-	return gliGetLogName();
+	return (gliGetLogName() != NULL);
 }
 
 

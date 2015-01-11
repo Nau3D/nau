@@ -1,6 +1,6 @@
 #include <nau/scene/light.h>
-#include <nau/errors.h>
 
+#include <nau.h>
 using namespace nau;
 
 
@@ -25,6 +25,8 @@ Light::Init() {
 	//INT
 	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT,true, new int(-1)));
 
+	NAU->registerAttributes("LIGHT", &Attribs);
+
 	return true;
 }
 
@@ -33,35 +35,17 @@ AttribSet Light::Attribs;
 bool Light::Inited = Init();
 
 
-Light::Light (std::string &name) 
-{
+Light::Light (std::string &name) {
+
 	m_Name = name;
 
 	registerAndInitArrays("LIGHT", Attribs);
 }
 
 
-Light::~Light(void)
-{
+Light::~Light(void) {
+
 }
-
-
-
-
-//void
-//Light::init (nau::math::vec3 position,
-//				  nau::math::vec3 direction,
-//				  nau::math::vec4 color, int enabled, LightType type)
-//{
-//	setDefault();
-//	m_Float4Props[POSITION].set(position.x, position.y, position.z, 1.0f);
-//	m_Float4Props[DIRECTION].set(direction.x, direction.y, direction.z, 0.0f);
-//	m_Float4Props[NORMALIZED_DIRECTION].set(direction.x, direction.y, direction.z, 0.0f);
-//	m_Float4Props[NORMALIZED_DIRECTION].normalize();
-//	m_Float4Props[COLOR].set (color.x, color.y, color.z, color.w);
-//	m_BoolProps[ENABLED] = (enabled!=0);
-//	m_EnumProps[TYPE] = type;
-//}
 
 
 std::string
@@ -69,51 +53,6 @@ Light::getType() {
 
 	return("LIGHT");
 }
-
-
-//void 
-//Light::setProp(int prop, Enums::DataType type, void *value) {
-//
-//	switch (type) {
-//
-//		//case Enums::STRING:
-//		//	assert(m_StringProps.count(prop) > 0);
-//		//	m_StringProps[prop] = *(std::string *)value;
-//		//	break;
-//	case Enums::ENUM:
-//		setPrope((EnumProperty)prop, *(int *)value);
-//		break;
-//	case Enums::INT:
-//		setPropi((IntProperty)prop, *(int *)value);
-//		break;
-//	case Enums::UINT:
-//		setPropui((UIntProperty)prop, *(unsigned int *)value);
-//		break;
-//	case Enums::BOOL:
-//		setPropb((BoolProperty)prop, *(bool *)value);
-//		break;
-//	case Enums::BVEC4:
-//		setPropb4((Bool4Property)prop, *(bvec4 *)value);
-//		break;
-//	case Enums::FLOAT:
-//		setPropf((FloatProperty)prop, *(float *)value);
-//		break;
-//	case Enums::VEC2:
-//		setPropf2((Float2Property)prop, *(vec2 *)value);
-//		break;
-//	case Enums::VEC4:
-//		setPropf4((Float4Property)prop, *(vec4 *)value);
-//		break;
-//	case Enums::MAT4:
-//		setPropm4((Mat4Property)prop, *(mat4 *)value);
-//		break;
-//	case Enums::MAT3:
-//		setPropm3((Mat3Property)prop, *(mat3 *)value);
-//		break;
-//	default:
-//		assert(false && "Missing Data Type in class attributeValues or Invalid prop");
-//	}
-//}
 
 
 void
@@ -175,64 +114,5 @@ Light::setPropf4(Float4Property prop, vec4& values){
 	setPropf4(prop, values.x, values.y, values.z, values.w);
 }
 
-
-//void
-//Light::setProp(BoolProperty prop, bool value){
-//
-//	m_BoolProps[prop] = value;
-//}
-//
-//
-//void 
-//Light::setProp(IntProperty prop, int value) {
-//
-//	m_IntProps[prop] = value;
-//}
-
-
-//void
-//Light::setProp(EnumProperty prop, int value){
-//
-//	if (prop == TYPE && value > COUNT_LIGHTTYPE)
-//			
-//		NAU_THROW("Invalid Light Type Value %d", value);
-//
-//	m_EnumProps[prop] = value;
-//}
-
-
-//float
-//Light::getPropf(FloatProperty prop) {
-//
-//	return m_FloatProps[prop];
-//}
-//
-//
-//const vec4& 
-//Light::getPropf4(Float4Property prop) {
-//
-//	return m_Float4Props[prop];
-//}
-//
-//
-//bool 
-//Light::getPropb(BoolProperty prop) {
-//
-//	return m_BoolProps[prop];
-//}
-//
-//
-//int 
-//Light::getPrope(EnumProperty prop) {
-//
-//	return m_EnumProps[prop];
-//}
-//
-//
-//int 
-//Light::getPropi(IntProperty prop) {
-//
-//	return m_IntProps[prop];
-//}
 
 

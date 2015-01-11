@@ -98,6 +98,9 @@ Pass::Init() {
 
 	//UINT
 	Attribs.add(Attribute(STENCIL_OP_MASK, "STENCIL_OP_MASK", Enums::DataType::UINT, false, new unsigned int(255)));
+
+	NAU->registerAttributes("PASS", &Attribs);
+
 	return true;
 }
 

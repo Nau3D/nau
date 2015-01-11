@@ -353,6 +353,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\nau\attribute.cpp" />
     <ClCompile Include="..\src\nau\attributeValues.cpp" />
     <ClCompile Include="..\src\nau\clogger.cpp" />
     <ClCompile Include="..\src\nau\debug\state.cpp" />

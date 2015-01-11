@@ -34,7 +34,7 @@ ResourceManager::~ResourceManager(void) {
 
 	/***DESTROY ALL ALOCATED RESOURCES***/
 
-	while (!m_States.empty()){
+	while (!m_States.empty()) {
 	
 		m_States.erase(m_States.begin());
 	}
@@ -43,20 +43,25 @@ ResourceManager::~ResourceManager(void) {
 		delete m_pTextureManager;
 	}
 
-	while (!m_Meshes.empty()){
+	while (!m_Meshes.empty()) {
 	
 		m_Meshes.erase(m_Meshes.begin());
 	}
 	ResourceManager::renderableCount = 0;
 
-	while (!m_RenderTargets.empty()){
+	while (!m_RenderTargets.empty()) {
 	
 		m_RenderTargets.erase(m_RenderTargets.begin());
 	}
 
-	while (!m_Programs.empty()){
+	while (!m_Programs.empty()) {
 	
 		m_Programs.erase(m_Programs.begin());
+	}
+
+	while (!m_Buffers.empty()) {
+
+		m_Buffers.erase(m_Buffers.begin());
 	}
 }
 

@@ -98,6 +98,8 @@ private:
 	void OnDlgStateXML(wxCommandEvent& event);
 	//void OnNextFrame(wxCommandEvent& event);
 
+	void OnClose(wxCloseEvent& event);
+
 	void FreezeGLI();
 	void LoadDebugData();
 	//Debugger end

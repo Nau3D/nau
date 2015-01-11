@@ -58,10 +58,11 @@ namespace nau {
 		std::string &getName();
 
 		// Attributes
-		void registerAttributes(std::string s, AttribSet &attrib);
+		void registerAttributes(std::string s, AttribSet *attrib);
 		bool validateUserAttribContext(std::string s);
 		bool validateUserAttribName(std::string context, std::string name);
 		AttribSet *getAttribs(std::string context);
+		void deleteUserAttributes();
 
 
 		void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt);
@@ -130,7 +131,7 @@ namespace nau {
 		void setRenderFlag(RenderFlags aFlag, bool aState);
 		bool getRenderFlag(RenderFlags aFlag);
 
-		~Nau (void);
+		~Nau(void);
 		void clear();
 
 		//State
@@ -146,7 +147,9 @@ namespace nau {
 		/*
 		Attributes
 		*/
-		std::map<std::string, AttribSet> m_Attributes;
+		typedef AttribSet *AttribSetPointer;
+		AttribSetPointer a;
+		std::map<std::string, AttribSetPointer> m_Attributes;
 		/*
 		 * Rendering Flags
 		 */

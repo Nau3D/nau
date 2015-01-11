@@ -59,8 +59,8 @@ GLBuffer::unbind() {
 
 void 
 GLBuffer::clear() {
-#if NAU_OPENGL_VERSION >= 430
 
+#if NAU_OPENGL_VERSION >= 430
 	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 	glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -3,8 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<file>..\..\models\Teapot.3ds</file>
-				   <!--file>../../models/ntg-bin-pl3d-secxxi/pl3dsecXXI-octreeUnified.cbo</file-->
+				<file name="..\..\models\Teapot.3ds"/>
 			</scene>
 		</scenes>
 		<viewports>

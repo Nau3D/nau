@@ -7,6 +7,8 @@
 #include <nau/render/dx/dxstate.h>
 #endif
 
+#include <nau.h>
+
 using namespace nau::render;
 using namespace nau;
 
@@ -48,6 +50,9 @@ IState::Init() {
 
 	// BOOL4
 	Attribs.add(Attribute(COLOR_MASK_B4, "COLOR_MASK_B4", Enums::DataType::BVEC4, false, new bvec4(true, true, true, true)));
+
+	NAU->registerAttributes("STATE", &Attribs);
+
 	return true;
 }
 

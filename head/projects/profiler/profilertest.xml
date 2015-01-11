@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="Main" param="NO_SWAP">
-				<file>../../models/bench.obj</file>
+				<file name="./../models/bench.obj"/>
 			</scene>
 		</scenes>
 		

@@ -20,6 +20,8 @@ ColorMaterial::Init() {
 	// FLOAT
 	Attribs.add(Attribute(SHININESS, "SHININESS", Enums::DataType::FLOAT, false, new float(0)));
 
+	NAU->registerAttributes("COLOR_MATERIAL", &Attribs);
+
 	return true;
 }
 

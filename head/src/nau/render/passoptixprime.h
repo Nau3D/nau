@@ -5,14 +5,16 @@
 #ifndef PASSOPTIXPRIME_H
 #define PASSOPTIXPRIME_H
 
-#include <sstream>
+#include <nau/render/ibuffer.h>
+#include <nau/render/pass.h>
+
 #include <GL/glew.h>
-#include <optix_prime/optix_prime.h>
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
+#include <optix_prime/optix_prime.h>
 
-#include <nau/render/pass.h>
-#include <nau/render/ibuffer.h>
+#include <sstream>
+
 
 
 namespace nau

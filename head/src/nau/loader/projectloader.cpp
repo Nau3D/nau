@@ -2,8 +2,20 @@
 
 #include <nau.h>
 
+#include <nau/config.h>
+#include <nau/slogger.h>
+
+#include <nau/event/interpolatorFactory.h>
+#include <nau/event/objectAnimation.h>
+#include <nau/event/route.h>
+#include <nau/event/sensorfactory.h>
+
+#include <nau/geometry/primitive.h>
 #include <nau/material/programvalue.h>
-#include <nau/render/pipeline.h>
+#include <nau/math/transformfactory.h>
+
+#include <nau/render/ibuffer.h>
+#include <nau/render/passCompute.h>
 #include <nau/render/passfactory.h>
 #ifdef NAU_OPTIX_PRIME
 #include <nau/render/passoptixprime.h>
@@ -11,24 +23,15 @@
 #ifdef NAU_OPTIX
 #include <nau/render/passOptix.h>
 #endif
+#include <nau/render/pipeline.h>
+#include <nau/render/rendertarget.h>
 
-#include <nau/render/passCompute.h>
+#include <nau/scene/geometryobject.h>
+#include <nau/scene/sceneobjectfactory.h>
 
 #include <nau/system/textutil.h>
-//
-#include <nau/event/sensorfactory.h>
-#include <nau/event/interpolatorFactory.h>
-#include <nau/scene/sceneobjectfactory.h>
-#include <nau/event/route.h>
-#include <nau/event/objectAnimation.h>
-#include <nau/render/rendertarget.h>
-#include <nau/scene/geometryobject.h>
-#include <nau/geometry/primitive.h>
-#include <nau/math/transformfactory.h>
-#include <nau/render/ibuffer.h>
-#include <nau/slogger.h>
 
-#include <nau/config.h>
+
 
 #ifdef NAU_PLATFORM_WIN32
 #include <dirent.h>
@@ -86,7 +89,7 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 	
 		case Enums::FLOAT:
 			if (TIXML_SUCCESS != p->QueryFloatAttribute("value", &s_Dummy_float))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: Float Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_float;
 			break;
 		case Enums::VEC4:
@@ -99,7 +102,7 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 				return &s_Dummy_vec4;
 			}
 			else
-				NAU_THROW("File %s: Element %s: Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
+				NAU_THROW("File %s: Element %s: Vec4 Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
 			break;
 		case Enums::VEC2:
 			if ((TIXML_SUCCESS == p->QueryFloatAttribute("x", &(s_Dummy_vec2.x)) || TIXML_SUCCESS == p->QueryFloatAttribute("width", &(s_Dummy_vec2.x)))
@@ -108,7 +111,7 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 				return &s_Dummy_vec2;
 			}
 			else
-				NAU_THROW("File %s: Element %s: Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+				NAU_THROW("File %s: Element %s: Vec2 Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			break;
 
 		case Enums::BVEC4:
@@ -120,29 +123,35 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 				return &s_Dummy_bvec4;
 			}
 			else
-				NAU_THROW("File %s: Element %s: Attribute %s has absent or incomplete value (x,y,z and w are required)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
+				NAU_THROW("File %s: Element %s: BVec4Attribute %s has absent or incomplete value (x,y,z and w are required)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
 			break;
 
 		case Enums::INT:
 			if (TIXML_SUCCESS != p->QueryIntAttribute("value", &s_Dummy_int))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: Int Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_int;
 			break;
 		case Enums::UINT:
 			if (TIXML_SUCCESS != p->QueryIntAttribute("value", &s_Dummy_int))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: UInt Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_int;
 			break;
 		case Enums::BOOL:
 			if (TIXML_SUCCESS != p->QueryBoolAttribute("value", &s_Dummy_bool))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: Bool Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_bool;
 			break;
 		case Enums::ENUM:
 			if (TIXML_SUCCESS != p->QueryStringAttribute("value", &s))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
-			if (!attribs.isValid(p->Value(), s))
-				NAU_THROW("File %s: Element %s: Attribute %s has an invalid value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: Enum Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+			if (!attribs.isValid(p->Value(), s)) {
+
+				const std::vector<std::string> values = attribs.getListString(attribs.getID(p->Value()));
+				std::string delim = "\n";
+				std::string s;
+				nau::system::textutil::join(values, delim.c_str(), &s);
+				NAU_THROW("File: %s\n Element: %s\nAttribute %s has an invalid value. \nValid values are: \n%s", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value(), s.c_str());
+			}
 			s_Dummy_int = attribs.getListValueOp(attribs.getID(p->Value()), s); 
 			return &s_Dummy_int;
 			break;
@@ -343,7 +352,7 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 Specification of the scenes:
 
 		<scenes>
-			<scene name="MainScene" type="Octree" filename = "aScene.cbo" param="SWAP_YZ">
+			<scene name="MainScene" param="SWAP_YZ">
 				<file>..\ntg-bin-3\fonte-finallambert.dae</file>
 				<folder>..\ntg-bin-pl3dxiv</folder>
 			</scene>
@@ -351,7 +360,7 @@ Specification of the scenes:
 		</scenes>
 
 scenes can have multiple "scene" defined
-each scene can have files and folders OR a single file containing a scene.
+each scene can have files and folders .
 the path may be relative to the project file or absolute
 type see sceneFactory
 
@@ -517,7 +526,8 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 			pElementAux = handle.FirstChild ("file").Element();
 			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
-				const char * pFileName = pElementAux->GetText();
+
+				const char *pFileName = pElementAux->Attribute("name");
 
 				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName)))
 					NAU_THROW("Scene file %s does not exist", pFileName); 			
@@ -662,74 +672,31 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 
 		SLOG("Viewport : %s", pName);
 		v = nau::Nau::getInstance()->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		//TiXmlElement *pElemAux = 0;
-		//pElemAux = pElem->FirstChildElement ("CLEAR_COLOR");
-
-		//if (0 == pElemAux) {
-		//	// no color is specified
-		//	v = nau::Nau::getInstance()->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));				
-		//}
-		//else {
-		//	vec4 *v4;
-		//	//// clear color for viewport
-		//	v4 = (vec4 *)readAttr(pName, pElemAux, Enums::VEC4, Viewport::Attribs);
-		//	v = nau::Nau::getInstance()->createViewport (pName, vec4 (v4->x, v4->y, v4->z, 1.0f));
-		//}
-
-		//pElemAux = pElem->FirstChildElement("SIZE");
-		//if (!pElemAux) {
-		//	v->setPropb(Viewport::FULL, true);
-		//}
-		//else {
-		//	float width,height,ratio;
-		//	if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("width", &width) ||
-		//		(TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("height", &height) &&
-		//		TIXML_SUCCESS != pElemAux->QueryFloatAttribute("ratio", &ratio))){
-
-		//		NAU_THROW("File %s: Element %s: SIZE definition error", ProjectLoader::s_File.c_str(), pName);					
-		//	}
-		//	
-		//	if (TIXML_SUCCESS == pElemAux->QueryFloatAttribute("ratio", &ratio))
-		//		v->setPropf(Viewport::RATIO, ratio);
-
-		//	v->setPropf2(Viewport::SIZE, vec2(width, height));
-		//}
-
-		//pElemAux = pElem->FirstChildElement("ORIGIN");
-		//if (pElemAux)
-		//{
-		//	float x,y;
-		//	if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("x", &x) ||
-		//		TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("y", &y)){
-
-		//		NAU_THROW("File %s: Element %s: ORIGIN definition error", ProjectLoader::s_File.c_str(), pName);					
-		//	}		
-		//	v->setPropf2(Viewport::ORIGIN, vec2(x, y));
-		//}
-		//else
-		//	v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
 
 		// Reading remaining viewport attributes
-		std::map<std::string, Attribute> attribs = Viewport::Attribs.getAttributes();
-		TiXmlElement *p = pElem->FirstChildElement();
-		Attribute a; 	
-		void *value;
-				while (p) {
-			// skip previously processed elements
-			//if (strcmp(p->Value(), "ORIGIN") && strcmp(p->Value(), "SIZE") && strcmp(p->Value(), "CLEAR_COLOR")) {
-				// trying to define an attribute that does not exist?		
-				if (attribs.count(p->Value()) == 0)
-					NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
-				// trying to set the value of a read only attribute?
-				a = attribs[p->Value()];
-				if (a.m_ReadOnlyFlag)
-					NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+		std::vector<std::string> excluded;
+		readAttributes(pName, (AttributeValues *)v, Viewport::Attribs, excluded, pElem);
 
-				value = readAttr(pName, p, a.m_Type, Light::Attribs);
-				v->setProp(a.m_Id, a.m_Type, value);
-			//}
-			p = p->NextSiblingElement();
-		}
+		//std::map<std::string, Attribute> attribs = Viewport::Attribs.getAttributes();
+		//TiXmlElement *p = pElem->FirstChildElement();
+		//Attribute a; 	
+		//void *value;
+		//		while (p) {
+		//	// skip previously processed elements
+		//	//if (strcmp(p->Value(), "ORIGIN") && strcmp(p->Value(), "SIZE") && strcmp(p->Value(), "CLEAR_COLOR")) {
+		//		// trying to define an attribute that does not exist?		
+		//		if (attribs.count(p->Value()) == 0)
+		//			NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+		//		// trying to set the value of a read only attribute?
+		//		a = attribs[p->Value()];
+		//		if (a.m_ReadOnlyFlag)
+		//			NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+
+		//		value = readAttr(pName, p, a.m_Type, Light::Attribs);
+		//		v->setProp(a.m_Id, a.m_Type, value);
+		//	//}
+		//	p = p->NextSiblingElement();
+		//}
 
 	} //End of Viewports
 }
@@ -3034,34 +3001,29 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		if (RESOURCEMANAGER->hasBuffer(s_pFullName)) {
 			NAU_THROW("Mat Lib %s: Buffer %s is already defined", aLib->getName().c_str(), s_pFullName);
 		}
-		//int size;
-		//if (pElem->QueryIntAttribute("size", &size)) {
-		//	NAU_THROW("Mat Lib %s: Buffer %s: has no size", aLib->getName().c_str(), pName);
-		//}
-
-		//if (size < 0) {
-		//	NAU_THROW("Mat Lib %s: Buffer %s : size must be greater than zero", aLib->getName().c_str(), pName);
-		//}
 
 		IBuffer *b = RESOURCEMANAGER->createBuffer(s_pFullName);
 		// Reading buffer attributes
-		std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
-		TiXmlElement *p = pElem->FirstChildElement();
-		Attribute a;
-		void *value;
-		while (p) {
-			// trying to define an attribute that does not exist?		
-			if (attribs.count(p->Value()) == 0)
-				NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
-			// trying to set the value of a read only attribute?
-			a = attribs[p->Value()];
-			if (a.m_ReadOnlyFlag)
-				NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+		std::vector<std::string> excluded;
+		readAttributes(pName, (AttributeValues *)b, IBuffer::Attribs, excluded, pElem);
 
-			value = readAttr(pName, p, a.m_Type, IBuffer::Attribs);
-			b->setProp(a.m_Id, a.m_Type, value);
-			p = p->NextSiblingElement();
-		}
+		//std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+		//TiXmlElement *p = pElem->FirstChildElement();
+		//Attribute a;
+		//void *value;
+		//while (p) {
+		//	// trying to define an attribute that does not exist?		
+		//	if (attribs.count(p->Value()) == 0)
+		//		NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+		//	// trying to set the value of a read only attribute?
+		//	a = attribs[p->Value()];
+		//	if (a.m_ReadOnlyFlag)
+		//		NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+
+		//	value = readAttr(pName, p, a.m_Type, IBuffer::Attribs);
+		//	b->setProp(a.m_Id, a.m_Type, value);
+		//	p = p->NextSiblingElement();
+		//}
 
 
 	}

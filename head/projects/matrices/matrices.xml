@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="CubeLand">
-				<file>..\..\models\bench.obj</file>
+				<file name="..\..\models\bench.obj"/>
 			</scene>	
 		</scenes>
 		<viewports>

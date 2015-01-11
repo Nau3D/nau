@@ -4,6 +4,8 @@
 #include <nau/render/opengl/glbuffer.h>
 #endif
 
+#include <nau.h>
+
 using namespace nau::render;
 using namespace nau;
 
@@ -24,6 +26,8 @@ IBuffer::Init() {
 	Attribs.setDefault("CLEAR", new int(NEVER));
 	Attribs.listAdd("CLEAR", "NEVER", NEVER);
 	Attribs.listAdd("CLEAR", "BY_FRAME", BY_FRAME);
+
+	NAU->registerAttributes("BUFFER", &Attribs);
 
 	return true;
 }

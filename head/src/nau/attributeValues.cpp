@@ -1,7 +1,5 @@
 #include <nau/attributeValues.h>
 
-#include <nau.h>
-
 // ----------------------------------------------
 //		ENUM
 // ----------------------------------------------
@@ -499,9 +497,6 @@ void
 AttributeValues::registerAndInitArrays(std::string name, AttribSet &attribs) {
 
 	initArrays(attribs);
-
-	NAU->registerAttributes(name, attribs);
-
 }
 
 

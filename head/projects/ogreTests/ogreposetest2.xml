@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="Box" type="ScenePoses">
-				<file>..\..\models\ogremodels\Box01.mesh.xml</file>
+				<file name="..\..\models\ogremodels\Box01.mesh.xml"/>
 			</scene>
 		</scenes>
 		

@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<file>..\..\models\ntg-bench\bench.obj</file>
+				<file name="..\..\models\ntg-bench\bench.obj"/>
 			</scene>
 		</scenes>
 		<viewports>
