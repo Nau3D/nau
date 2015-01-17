@@ -1,5 +1,7 @@
 #include <nau/attributeValues.h>
 
+
+int AttributeValues::NextAttrib = 0;
 // ----------------------------------------------
 //		ENUM
 // ----------------------------------------------

@@ -156,7 +156,7 @@ Box::Box(void) : Primitive(),
 	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup(this, "Light Grey");
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "Light Grey");
 	
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(36);
 	//FRONT

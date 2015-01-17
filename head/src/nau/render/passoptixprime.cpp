@@ -309,7 +309,7 @@ PassOptixPrime::doPass(void) {
 
 void 
 PassOptixPrime::initOptixPrime() {
-
+	
 	// Create Context
 	CHK_PRIME(rtpContextCreate(RTP_CONTEXT_TYPE_CUDA, &m_Context));
 
@@ -318,11 +318,6 @@ PassOptixPrime::initOptixPrime() {
 	int vbo = renderable->getVertexData().getBufferID(0);
 	int numVert = renderable->getVertexData().getNumberOfVertices();
 	std::vector<vec4> vertex = renderable->getVertexData().getDataOf(0);
-	//GLuint vv;
-	//glGenBuffers(1, &vv);
-	//glBindBuffer(GL_ARRAY_BUFFER, vv);
-	//glBufferData(GL_ARRAY_BUFFER, vertex.size() * sizeof(float) * 4, &(vertex[0].x), GL_STATIC_DRAW);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	size_t size;
 	void * devPtr;
@@ -377,9 +372,6 @@ PassOptixPrime::initOptixPrime() {
 
 	// Create Rays Buffer
 	int rayBufferID = m_Rays->getPropi(IBuffer::ID);
-	//m_Rays->unbind();
-	int bp = -1;
-	//m_Rays->setProp(IBuffer::BINDING_POINT, Enums::INT, &bp);
 	int rayBufferRayCount = m_Rays->getPropui(IBuffer::SIZE) / (8 * sizeof(float));
 
 	void * devPtrBuff;
@@ -399,10 +391,8 @@ PassOptixPrime::initOptixPrime() {
 	
 	// Create Hits Buffer
 	int hitBufferID = m_Hits->getPropi(IBuffer::ID);
-	//m_Hits->unbind();
 	void * devPtrBuffH;
 	k = cudaGraphicsGLRegisterBuffer(&cglBuffH, hitBufferID, cudaGraphicsRegisterFlagsWriteDiscard);
-//	k = cudaGraphicsGLRegisterBuffer(&cglBuffH, hitBufferID, cudaGraphicsRegisterFlagsReadOnly);
 	k = cudaGraphicsMapResources(1, &cglBuffH, 0);
 	k = cudaGraphicsResourceGetMappedPointer((void **)&devPtrBuffH, &size, cglBuffH);
 

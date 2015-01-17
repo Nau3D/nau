@@ -113,8 +113,8 @@ Pass::Pass (const std::string &passName) :
 	m_MaterialMap(),
 	m_Viewport (0),
 	m_RestoreViewport (0),
-	m_RemapMode (REMAP_DISABLED)
-{
+	m_RemapMode (REMAP_DISABLED) {
+
 	registerAndInitArrays("PASS", Attribs);
 
 	initVars();
@@ -572,23 +572,7 @@ Pass::setCamera (const std::string &cameraName) {
 
 
 
-// --------------------------------------------------
-//		SET PROPS
-// --------------------------------------------------
 
-
-void
-Pass::setPropb(BoolProperty prop, bool value) {
-
-	m_BoolProps[prop] = value;
-}
-
-
-void
-Pass::setPropui(UIntProperty prop, unsigned int value) {
-
-	m_UIntProps[prop] = value;
-}
 
 
 // --------------------------------------------------

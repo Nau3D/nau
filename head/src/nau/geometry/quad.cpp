@@ -39,7 +39,7 @@ Quad::Quad(void) :
 	vertexData.setDataFor (VertexData::getAttribIndex("texCoord0"), textureCoords);
 	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup(renderable, "__Quad");
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Quad");
 	
 
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(6);

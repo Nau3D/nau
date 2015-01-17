@@ -77,7 +77,7 @@ DlgAtomics::update() {
 #if NAU_OPENGL_VERSION >= 400
 	IRenderer *renderer = RENDERER;
 	std::vector<unsigned int> atValues = renderer->getAtomicCounterValues();
-	std::map<std::pair<std::string, int>, std::string>::iterator iter;
+	std::map<std::pair<std::string, unsigned int>, std::string>::iterator iter;
 	iter = renderer->m_AtomicLabels.begin();
 	for (unsigned int i = 0; i < renderer->m_AtomicLabels.size(); ++i, ++iter) {
 

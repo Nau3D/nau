@@ -6,6 +6,11 @@
 				<file name="../../models/sponza/crytek/sponza.obj"/>
 				<!--file name="../../models/Teapot.3ds"/-->
 			</scene>
+			<scene name="Rays" >
+				<buffers primitive="LINES" material="showRays">
+					<position value="Ambient Occlusion::position" />				
+				</buffers>	
+			</scene>
 		</scenes>
 		<viewports>
 			<viewport name="dummy" >
@@ -50,7 +55,6 @@
 		</cameras>
 		<lights>
 			<light name="Sun" type="directional">
-				<POSITION x="-52" y="77.0" z="-27.0" />
 				<DIRECTION x="1" y="-1" z="1" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 			</light>
@@ -116,11 +120,30 @@
 				<viewport>SmallViewport4</viewport>
 				<texture name="occMap2" fromLibrary="Ambient Occlusion"/>	
 			</pass>
+			
 			<pass name="Optix Prime" class="optixPrime">
 				<scene name="MainScene" />
 				<rays buffer="Ambient Occlusion::rays" queryType = "ANY"/> 
 				<hits buffer ="Ambient Occlusion::hits" />
 			</pass>	 
+			
+			<pass class="compute" name="computeLineRays">
+				<material name="computeLineRays" fromLibrary="Ambient Occlusion" dimX=1, dimY=1 dimZ=1 />
+			</pass>
+			
+			<pass class="default" name="showRays">
+				<scenes>
+					<scene name="Rays" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport>SmallViewport3</viewport>
+				<color clear=false />
+				<materialMaps>
+					<map fromMaterial="showRays" 
+						 toLibrary="Ambient Occlusion" toMaterial="showRays" />
+				</materialMaps>	
+			</pass>
+
 			<pass class="quad" name="pass9">
 				<rendertarget name="optix" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>

@@ -1,8 +1,10 @@
 #include <nau/render/opengl/gltexture.h>
+
 #include <nau.h>
 #include <nau/render/irenderer.h>
 
 #include <GL/glew.h>
+
 using namespace nau::render;
 
 std::map<unsigned int, GLTexture::TexDataTypes> GLTexture::TexDataType;

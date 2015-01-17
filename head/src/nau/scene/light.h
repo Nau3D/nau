@@ -17,7 +17,7 @@ namespace nau
 {
 	namespace scene
 	{
-		class Light: public AttributeValues, public SceneObject
+		class Light: public SceneObject
 		{
 		public:
 

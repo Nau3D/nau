@@ -86,15 +86,6 @@ VertexData::setName(std::string &name) {
 	m_Name = name;
 }
 
-int 
-VertexData::getNumberOfVertices() 
-{
-	if (m_InternalArrays[0] == NULL)
-		return 0;
-	else
-		return m_InternalArrays[0]->size();
-}
-
 
 std::vector<VertexData::Attr>& 
 VertexData::getDataOf (unsigned int type)

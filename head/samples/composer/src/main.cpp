@@ -4,16 +4,6 @@
 #pragma warning( disable: 4299)
 #pragma warning( disable: 4099)
 
-
-#include <wx/filesys.h>
-#include <wx/dir.h>
-#include <wx/filename.h>
-#include <wx/splash.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-
-#include <fstream>
-
 #include <main.h>
 #include <glcanvas.h>
 #include <nau/errors.h>
@@ -23,6 +13,16 @@
 #ifdef GLINTERCEPTDEBUG
 #include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
 #endif
+
+#include <wx/bitmap.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
+#include <wx/filesys.h>
+#include <wx/splash.h>
+#include <wx/image.h>
+
+#include <fstream>
+
               
 using namespace nau::math;
 
@@ -182,6 +182,7 @@ BEGIN_EVENT_TABLE(GlCanvas, wxGLCanvas)
   EVT_LEFT_DOWN (GlCanvas::OnLeftDown)
   EVT_LEFT_UP (GlCanvas::OnLeftUp)
   EVT_IDLE(GlCanvas::OnIdle)
+  EVT_RIGHT_UP(GlCanvas::OnRightUp)
 END_EVENT_TABLE()
 
 
@@ -490,8 +491,7 @@ FrmMainFrame::updateDlgs()
 	DlgLights::Instance()->updateDlg();
 	DlgScenes::Instance()->updateDlg();
 	DlgPass::Instance()->updateDlg();
-	//DlgDbgBuffers::Instance()->clear();
-	DlgDbgBuffers::Instance()->updateDlg();
+	//DlgDbgBuffers::Instance()->updateDlg();
 
 
 	//Update state dialog

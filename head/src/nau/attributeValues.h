@@ -12,7 +12,7 @@
 #include <assert.h>
 
 #define STRING_PROP(A,B) static const StringProperty A = (StringProperty)B 
-#define ENUM_PROP(A,B) static const EnumProperty A = (EnumProperty)B 
+#define ENUM_PROP(A,B) static const EnumProperty A = (EnumProperty)B
 #define INT_PROP(A,B) static const IntProperty A = (IntProperty)B 
 #define UINT_PROP(A,B) static const UIntProperty A = (UIntProperty)B 
 #define BOOL_PROP(A,B) static const BoolProperty A = (BoolProperty)B 
@@ -43,6 +43,11 @@ namespace nau {
 		virtual int getPrope(EnumProperty prop);
 		virtual bool isValide(EnumProperty prop, int value);
 		virtual void setPrope(EnumProperty prop, int value);
+
+		static const int getNextAttrib() { return NextAttrib++;  }
+
+	protected:
+		static int NextAttrib;
 
 	// INT
 	protected:

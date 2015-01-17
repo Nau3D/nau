@@ -21,6 +21,7 @@ namespace nau
 		class ImageTexture: public AttributeValues
 		{
 		public:
+
 			ENUM_PROP(ACCESS, 0);
 
 			UINT_PROP(LEVEL, 0);

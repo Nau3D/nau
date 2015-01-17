@@ -1,0 +1,54 @@
+#version 430
+
+#define LS 1
+#define SAMPLES 9
+layout (local_size_x = LS, local_size_y = LS, local_size_z = 1) in;
+
+struct ray {
+	vec4 pos;
+	vec4 dir;
+};
+
+layout(std430, binding = 1) buffer RayBuffer {
+	ray rays[];
+};
+
+layout(std430, binding = 2) buffer OutputBuffer {
+	vec4 points[];
+};
+
+layout (std430, binding = 3) buffer Hits {
+	vec4 hit[];
+};
+
+uniform int clickX = 128;
+uniform int clickY = 128;
+
+
+void main() {
+
+//	int clickX = 0;
+//	int clickY = 0;
+
+	int cx = clickX - 600; // origin of viewport
+	int cy = 300 - clickY; // reverse
+	
+	cx = int(cx * 1024 / 300.0); // size
+	cy = int(cy * 1024 / 300.0);
+	
+	if (cx < 0 || cy < 0 || cx >= 1024 || cy >= 1024)
+		return;
+		
+	int offset = (cy * 1024 + cx) * SAMPLES;
+	int h;
+	for (int i = 0; i < SAMPLES; ++i) {
+		vec3 init = rays[offset+i].pos.xyz;
+		vec3 end = rays[offset+i].pos.xyz + rays[offset+i].dir.xyz * rays[offset+i].dir.w;
+		if (hit[offset+i].x > 0)
+			h = 1;
+		else
+			h = 0;
+		points[i*2] = vec4(rays[offset+i].pos.xyz, h);
+		points[i*2+1] = vec4(end, h);
+	}
+} 

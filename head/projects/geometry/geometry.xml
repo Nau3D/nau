@@ -3,17 +3,22 @@
 	<assets>
 	
 		<scenes>
-			<scene name="CubeLand" scaleY = 0.5 scaleX=1.0 scaleZ=1.0 >
-				<geometry name = "box1" type = "Sphere" slices=10 stacks=10 
-												transX=-2.5 transY=0 transZ=0 
-												scale=2 material="crateBox"/>
-				<geometry name = "box2" type = "Box" transX= 2.5 transY = 0 transZ=0 
-													 scaleX= 2 scaleY = 4 scaleZ =2 
-													 material="crateBox" />
-				<!--geometry name = "axis" type = "Axis" scale = 5 /-->
+			<scene name="CubeLand" >
+				<SCALE x = 1.0 y=0.5 z = 1.0 />
+				<geometry name = "sphere" type = "Sphere" slices=10 stacks=10 material="crateBox">
+					<TRANSLATE x =-2.5 y=0 z =0  />
+					<SCALE x=2 y=2 z=2 />
+				</geometry>								
+				<geometry name = "box" type = "Box"  material="crateBox" >
+					<TRANSLATE x =2.5 y=0 z =0  />
+					<SCALE x=2 y=4 z=2 />
+
+				</geometry>
 			</scene>
 			<scene name="Axis">
-				<geometry name = "axis" type = "Axis" scale = 5 />
+				<geometry name = "axis" type = "Axis"  >
+					<SCALE x=5 y=5 z =5 />
+				</geometry>
 			</scene>
 			
 		</scenes>

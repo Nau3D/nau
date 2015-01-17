@@ -11,6 +11,7 @@ namespace nau
 		class Sphere : public Primitive
 		{
 		public:
+
 			Sphere(void);			
 			~Sphere(void);
 

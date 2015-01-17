@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<materialLib name="atomics">
+
+	<renderTargets>
+			<renderTarget name = "output">
+			<size width="512" height="512" />
+			<colors>
+				<color name="output"  internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+	
+	<shaders>
+		<shader name="atomicCount" 
+								ps="shaders/atomicCount.frag" 
+								vs="shaders/atomicCount.vert" />
+	</shaders>
+	
+	<buffers>
+		<buffer name="test">
+			<SIZE value=16 />
+			<CLEAR value="BY_FRAME" />
+		</buffer>
+	</buffers>	
+		
+	<materials>
+		<material name="count">
+			<shader>
+				<name>atomicCount</name>
+				<values>														
+					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+														component="UNIT" id="0" />				
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="output" >
+					<MAG_FILTER value= "LINEAR" />
+					<MIN_FILTER value= "LINEAR" />
+				</texture>
+			</textures>	
+			<buffers>	
+				<buffer name="test"  fromLibrary="atomics">
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="2" />
+				</buffer>
+			</buffers>	
+		</material>		
+
+	</materials>
+</materialLib>

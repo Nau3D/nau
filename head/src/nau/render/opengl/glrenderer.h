@@ -63,7 +63,6 @@ namespace nau
 
 		public:
 			static unsigned int GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT];
-
 			//void setPassPropb(Pass::BoolProps prop, bool value);
 			//bool getPassPropb(Pass::BoolProps prop);
 

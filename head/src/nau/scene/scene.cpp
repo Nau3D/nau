@@ -1,10 +1,11 @@
 #include <nau/scene/scene.h>
-#include <nau/render/rendermanager.h>
-#include <nau/material/materialgroup.h>
 
-#include <nau/debug/profile.h>
-#include <nau/slogger.h>
 #include <nau.h>
+#include <nau/slogger.h>
+#include <nau/debug/profile.h>
+#include <nau/material/materialgroup.h>
+#include <nau/render/rendermanager.h>
+
 
 using namespace nau::scene;
 using namespace nau::geometry;
@@ -128,7 +129,7 @@ Scene::compile (void)
 		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 
 		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
-			(*matGroupsIter)->getIndexData().compile((*objIter)->getRenderable().getVertexData());
+			(*matGroupsIter)->compile();
 		}
 	}
 }

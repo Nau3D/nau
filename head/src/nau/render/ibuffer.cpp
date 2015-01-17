@@ -13,14 +13,10 @@ using namespace nau;
 bool
 IBuffer::Init() {
 
-	// BOOL
-	//Attribs.add(Attribute(BOUND, "BOUND", Enums::DataType::BOOL, true, new bool(false)));
-	//Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
 	// UINT
 	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::UINT, false, new unsigned int(0)));
 	// INT
 	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(-1)));
-	//Attribs.add(Attribute(BINDING_POINT, "BINDING_POINT", Enums::DataType::INT, false, new int(0)));
 	// ENUM
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::ENUM, false, new int(NEVER)));
 	Attribs.setDefault("CLEAR", new int(NEVER));

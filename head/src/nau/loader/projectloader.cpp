@@ -311,7 +311,7 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 	TiXmlElement *pElem;
 
 	pElem = handle.FirstChild ("attributes").FirstChild ("attribute").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("attribute")) {
 		const char *pContext = pElem->Attribute("context");
 		const char *pName = pElem->Attribute ("name");
 		const char *pType = pElem->Attribute ("type");
@@ -379,7 +379,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 	TiXmlElement *pElem;
 
 	pElem = handle.FirstChild ("scenes").FirstChild ("scene").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("scene")) {
 		const char *pName = pElem->Attribute ("name");
 		const char *pType = pElem->Attribute ("type");
 		const char *pFilename = pElem->Attribute("filename");
@@ -407,36 +407,6 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				NAU_THROW("Invalid type for scene %s in file %s", pName, ProjectLoader::s_File.c_str()); 	
 		}
 		
-
-		const char *pTransX = pElem->Attribute("transX");
-		const char *pTransY = pElem->Attribute("transY");
-		const char *pTransZ = pElem->Attribute("transZ");
-
-		const char *pScaleX = pElem->Attribute("scaleX");
-		const char *pScaleY = pElem->Attribute("scaleY");
-		const char *pScaleZ = pElem->Attribute("scaleZ");
-		const char *pScale = pElem->Attribute("scale");
-
-		ITransform *tis = TransformFactory::create("SimpleTransform");
-
-		if (pTransX && pTransY && pTransZ) {
-			tis->translate(nau::system::textutil::ParseFloat(pTransX),
-				nau::system::textutil::ParseFloat(pTransY),
-				nau::system::textutil::ParseFloat(pTransZ));
-
-		}
-		if (pScaleX && pScaleY && pScaleZ) {
-			tis->scale(nau::system::textutil::ParseFloat(pScaleX),
-				nau::system::textutil::ParseFloat(pScaleY),
-				nau::system::textutil::ParseFloat(pScaleZ));
-		}	
-		if (pScale) {
-			float scale = nau::system::textutil::ParseFloat(pScale);
-			tis->scale(scale);
-		}
-
-		is->setTransform(tis);
-
 		// the filename should point to a scene
 		if (0 != pFilename) {
 
@@ -455,19 +425,10 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 			TiXmlElement* pElementAux;
 
 			pElementAux = handle.FirstChild("geometry").Element();
-			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("geometry")) {
 				const char *pName = pElementAux->Attribute("name");
 				const char *pPrimType = pElementAux->Attribute ("type");
 				const char *pMaterial = pElementAux->Attribute("material");
-
-				pTransX = pElementAux->Attribute("transX");
-				pTransY = pElementAux->Attribute("transY");
-				pTransZ = pElementAux->Attribute("transZ");
-
-				pScaleX = pElementAux->Attribute("scaleX");
-				pScaleY = pElementAux->Attribute("scaleY");
-				pScaleZ = pElementAux->Attribute("scaleZ");
-				pScale = pElementAux->Attribute("scale");
 
 				if (pPrimType == NULL)
 					NAU_THROW("Scene %s has no type", pName); 			
@@ -493,24 +454,6 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (i)
 					p->build();
 								
-				ITransform *t = TransformFactory::create("SimpleTransform");
-
-				if (pTransX && pTransY && pTransZ) {
-					t->translate(nau::system::textutil::ParseFloat(pTransX),
-						nau::system::textutil::ParseFloat(pTransY),
-						nau::system::textutil::ParseFloat(pTransZ));
-
-				}
-				if (pScaleX && pScaleY && pScaleZ) {
-					t->scale(nau::system::textutil::ParseFloat(pScaleX),
-						nau::system::textutil::ParseFloat(pScaleY),
-						nau::system::textutil::ParseFloat(pScaleZ));
-				}	
-				if (pScale) {
-					float scale = nau::system::textutil::ParseFloat(pScale);
-					t->scale(scale);
-				}
-				go->setTransform(t);
 				go->setRenderable(p);
 
 				if (pMaterial) {
@@ -519,31 +462,80 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					}
 					go->setMaterial(pMaterial);
 				}
-				is ->add(go);
 
+				std::vector<std::string> excluded;
+				readAttributes(pName, (AttributeValues *)go, SceneObject::Attribs, excluded, pElementAux);
+
+				is ->add(go);
 			}
 
+			pElementAux = handle.FirstChild("buffers").Element();
+			std::string primString;
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("buffers")) {
 
-			pElementAux = handle.FirstChild ("file").Element();
-			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
+				pElementAux->QueryStringAttribute("primitive", &primString);
+				const char *pMaterial = pElementAux->Attribute("material");
+
+				if (IRenderer::PrimitiveTypes.count(primString) == 0) {
+					NAU_THROW("Scene %s: Invalid primitive type %s in buffers definition", pName, primString.c_str());
+				}
+				IRenderable::DrawPrimitive dp = IRenderer::PrimitiveTypes[primString];
+				SceneObject *so = SceneObjectFactory::create("SimpleObject");
+				so->setName(pName);
+				IRenderable *i = RESOURCEMANAGER->createRenderable("Mesh", pName);
+				i->setDrawingPrimitive(dp);
+				//i->setDrawingPrimitive(nau::render::IRenderable::LINES);
+				MaterialGroup *mg;
+				if (pMaterial)
+					mg = MaterialGroup::Create(i, pMaterial);
+				else
+					mg = MaterialGroup::Create(i, "dirLightDifAmbPix");
+
+				VertexData &v = i->getVertexData();
+				std::string bufferName;
+				TiXmlElement *p = pElementAux->FirstChildElement();
+				while (p) {
+					p->QueryStringAttribute("value", &bufferName);
+					IBuffer * b;
+					if (bufferName != "")
+						b = RESOURCEMANAGER->createBuffer(bufferName);
+					int attribIndex = VertexData::getAttribIndex(p->Value());
+					if (attribIndex != VertexData::MaxAttribs) {
+						v.setBuffer(attribIndex, b->getPropi(IBuffer::ID));
+					}
+					else if (p->Value() == "index"){
+
+						mg->getIndexData().setBuffer(b->getPropi(IBuffer::ID));
+					}
+					else {
+						NAU_THROW("Scene %s: Vertex Attribute %s is not valid", pName, p->Value());
+					}
+					p = p->NextSiblingElement();
+				}
+
+				i->addMaterialGroup(mg);
+				so->setRenderable(i);
+				is->add(so);
+			}
+
+			pElementAux = handle.FirstChild("file").Element();
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("file")) {
 
 				const char *pFileName = pElementAux->Attribute("name");
 
-				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName)))
-					NAU_THROW("Scene file %s does not exist", pFileName); 			
-
+				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName))) {
+					NAU_THROW("Scene file %s does not exist", pFileName);
+				}
 				nau::Nau::getInstance()->loadAsset (FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName), pName, s);
 			}
 
 			pElementAux = handle.FirstChild ("folder").Element();
-			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("folder")) {
 				
 				DIR *dir;
-
 				struct dirent *ent;
 
 				const char * pDirName = pElementAux->GetText();
-
 				dir = opendir (FileUtil::GetFullPath(ProjectLoader::s_Path, pDirName).c_str());
 
 				if (!dir)
@@ -575,6 +567,10 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				closedir (dir);
 				}
 			}
+			std::vector<std::string> excluded;
+			excluded.push_back("file"); excluded.push_back("folder"); 
+			excluded.push_back("geometry"); excluded.push_back("buffers");
+			readAttributes(pName, (AttributeValues *)is, IScene::Attribs, excluded, pElem);
 		}
 	}
 }
@@ -598,7 +594,7 @@ ProjectLoader::loadAtomicSemantics(TiXmlHandle handle)
 	TiXmlElement *pElem;
 
 	pElem = handle.FirstChild ("atomics").FirstChild ("atomic").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("atomic")) {
 		const char *pName = pElem->Attribute ("semantics");
 		int offset;
 		const char *pBuffer = pElem->Attribute("buffer");
@@ -2860,8 +2856,8 @@ will be the default
 in the pass definition if class is not present it will be "default"
 -----------------------------------------------------------------------------*/
 void
-ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
-{
+ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
+
 	TiXmlElement *pElem;
 	TiXmlHandle handle (0);
 	std::map<std::string, Pass*> passMapper;
@@ -2895,9 +2891,33 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 		handle = TiXmlHandle (pElem);
 		TiXmlElement *pElemPass;
 
+		pElemPass = handle.FirstChild("preScript").Element();
+		if (pElemPass != NULL) {
+
+			const char *pPreScriptFile = pElemPass->Attribute("file");
+			const char *pPreScriptName = pElemPass->Attribute("name");
+			if (pPreScriptFile && pPreScriptName)
+				aPipeline->setPreScript(pPreScriptFile, pPreScriptName);
+			else {
+				NAU_THROW("Pipeline %s: Pre script definition must have both file and name attributes", pNamePip);
+			}
+		}
+
+		pElemPass = handle.FirstChild("postScript").Element();
+		if (pElemPass != NULL) {
+
+			const char *pPostScriptFile = pElemPass->Attribute("file");
+			const char *pPostScriptName = pElemPass->Attribute("name");
+			if (pPostScriptFile && pPostScriptName)
+				aPipeline->setPostScript(pPostScriptFile, pPostScriptName);
+			else {
+				NAU_THROW("Pipeline %s: Pre script definition must have both file and name attributes", pNamePip);
+			}
+		}
 
 		pElemPass = handle.FirstChild ("pass").Element();
-		for ( ; 0 != pElemPass; pElemPass = pElemPass->NextSiblingElement()) {
+		for ( ; 0 != pElemPass; pElemPass = pElemPass->NextSiblingElement("pass")) {
+			
 			
 			TiXmlHandle hPass (pElemPass);
 			const char *pName = pElemPass->Attribute ("name");
@@ -2910,14 +2930,17 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 				NAU_THROW("Pass %s is defined more than once, in pipeline %s, in file %s", pName, pNamePip, ProjectLoader::s_File.c_str());
 
 			Pass *aPass = 0;
+			std::string passClass;
 			if (0 == pClass) {
 				aPass = aPipeline->createPass(pName);
+				passClass = "default";
 			} else {
 				if (PassFactory::isClass(pClass))
 					aPass = aPipeline->createPass (pName, pClass);
-				else
+				else {
 					NAU_THROW("Class %s is not available, in pass (%s,%s), in file %s", pClass, pNamePip, pName, ProjectLoader::s_File.c_str());
-
+				}
+				passClass = pClass;
 			}
 			passMapper[pName] = aPass;
 
@@ -2925,7 +2948,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 			loadPassMode(hPass, aPass);	
 
 
-			if (0 != strcmp(pClass, "optixPrime") && 0 != strcmp(pClass, "quad") && 0 != strcmp(pClass, "profiler")) {
+			if (passClass != "optixPrime" && passClass != "quad" && passClass != "profiler") {
 
 				loadPassScenes(hPass,aPass);
 				loadPassCamera(hPass,aPass);	
@@ -2933,14 +2956,14 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 			else
 				loadPassTexture(hPass,aPass);
 #ifdef NAU_OPTIX
-			if (0 == strcmp("optix", pClass))
+			if (passClass == "optix")
 				loadPassOptixSettings(hPass, aPass);
 #endif
-			if (0 == strcmp("compute", pClass))
+			if (passClass == "compute")
 				loadPassComputeSettings(hPass, aPass);
 			
 #ifdef NAU_OPTIX_PRIME
-			if (0 == strcmp("optixPrime", pClass))
+			if (passClass == "optixPrime")
 				loadPassOptixPrimeSettings(hPass, aPass);
 #endif
 
@@ -2952,14 +2975,10 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 
 			loadPassInjectionMaps(hPass, aPass);
 			loadPassMaterialMaps(hPass, aPass);
-			//loadPassStateMaps(hPass, aPass);
-			//loadPassShaderMaps(hPass, aPass);
 		} //End of pass
 		if (pDefaultCamera)
 			aPipeline->setDefaultCamera(pDefaultCamera);
 
-		//else
-		//	aPipeline->setDefaultCamera(aPipeline->getLastPassCameraName());
 	} //End of pipeline
 	
 	if (strlen (activePipeline) > 0) {
@@ -2998,34 +3017,14 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 
 		SLOG("Buffer : %s", s_pFullName);
 
-		if (RESOURCEMANAGER->hasBuffer(s_pFullName)) {
-			NAU_THROW("Mat Lib %s: Buffer %s is already defined", aLib->getName().c_str(), s_pFullName);
-		}
+		//if (RESOURCEMANAGER->hasBuffer(s_pFullName)) {
+		//	NAU_THROW("Mat Lib %s: Buffer %s is already defined", aLib->getName().c_str(), s_pFullName);
+		//}
 
 		IBuffer *b = RESOURCEMANAGER->createBuffer(s_pFullName);
 		// Reading buffer attributes
 		std::vector<std::string> excluded;
 		readAttributes(pName, (AttributeValues *)b, IBuffer::Attribs, excluded, pElem);
-
-		//std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
-		//TiXmlElement *p = pElem->FirstChildElement();
-		//Attribute a;
-		//void *value;
-		//while (p) {
-		//	// trying to define an attribute that does not exist?		
-		//	if (attribs.count(p->Value()) == 0)
-		//		NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
-		//	// trying to set the value of a read only attribute?
-		//	a = attribs[p->Value()];
-		//	if (a.m_ReadOnlyFlag)
-		//		NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
-
-		//	value = readAttr(pName, p, a.m_Type, IBuffer::Attribs);
-		//	b->setProp(a.m_Id, a.m_Type, value);
-		//	p = p->NextSiblingElement();
-		//}
-
-
 	}
 }
 

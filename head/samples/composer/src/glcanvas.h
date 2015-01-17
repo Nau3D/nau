@@ -41,6 +41,7 @@ public:
 	void OnMouseMove (wxMouseEvent& event);
 	void OnLeftDown (wxMouseEvent& event);
 	void OnLeftUp (wxMouseEvent& event);
+	void OnRightUp(wxMouseEvent& event);
 
 	bool IsPaused ();
 	void MultiStep(int stepSize = -1);

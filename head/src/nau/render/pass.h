@@ -99,11 +99,6 @@ namespace nau
 
 			static AttribSet Attribs;
 
-			void setPropui(UIntProperty prop, unsigned int value);
-			void setPropb(BoolProperty prop, bool value);
-
-
-
 			Pass (const std::string &passName);
 			virtual ~Pass();
 
@@ -198,6 +193,7 @@ namespace nau
 
 		
 		protected:
+
 			// CAMERAS
 			virtual void setupCamera (void);
 			void restoreCamera (void);
@@ -240,6 +236,8 @@ namespace nau
 			} RemapMode;
 
 			RemapMode m_RemapMode;
+
+			int m_IntDummy;
 
 		};
 	};

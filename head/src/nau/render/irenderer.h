@@ -40,6 +40,7 @@ namespace nau
 			static bool Inited;
 
 		public:	
+			static std::map<std::string, IRenderable::DrawPrimitive> PrimitiveTypes;
 
 			static AttribSet MatrixAttribs;
 
@@ -120,7 +121,7 @@ namespace nau
 			///  Max Atomic Counter ID	
 			// unsigned int m_AtomicMaxID = 0;
 			/// name of atomic counters
-			std::map<std::pair<std::string,int>, std::string> m_AtomicLabels;
+			std::map<std::pair<std::string,unsigned int>, std::string> m_AtomicLabels;
 
 			/// add an atomic counter
 			void addAtomic(std::string buffer, unsigned int offset, std::string name);

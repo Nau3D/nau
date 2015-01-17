@@ -37,7 +37,7 @@ GLMaterialBuffer::bind() {
 	if (m_BoolProps[CLEAR] == true) {
 		m_Buffer->clear();
 	}
-	glBindBuffer(m_EnumProps[TYPE], id);
+	//glBindBuffer(m_EnumProps[TYPE], id);
 	glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], id);
 
 
@@ -48,6 +48,6 @@ void
 GLMaterialBuffer::unbind() {
 
 	int id = m_Buffer->getPropi(IBuffer::ID);
-	glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], -1);
-	glBindBuffer(m_EnumProps[TYPE], 0);
+	glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], 0);
+	//glBindBuffer(m_EnumProps[TYPE], 0);
 }

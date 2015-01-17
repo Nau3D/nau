@@ -49,14 +49,13 @@ GLImageTexture::prepare(int aUnit) {
 	m_Unit = aUnit;
 	nau::render::Texture* t = RESOURCEMANAGER->getTextureByID(m_UIntProps[TEX_ID]);
 	
-	glBindTexture(t->getPrope(Texture::DIMENSION), m_UIntProps[TEX_ID]);
 	RENDERER->addImageTexture(m_Unit, this);
 #if NAU_OPENGL_VERSION >= 440
 	if (m_BoolProps[CLEAR]) {
 		glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, m_Data);
 	}
-#endif
 	glBindImageTexture(aUnit, m_UIntProps[TEX_ID], m_UIntProps[LEVEL],GL_TRUE,0,m_EnumProps[ACCESS],m_InternalFormat);
+#endif
 }
 
 

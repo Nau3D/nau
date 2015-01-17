@@ -30,6 +30,7 @@ namespace nau
 			//! Destructor
 			~SimpleTransform ();
 		   
+			// clones from s
 			void clone(ITransform *s);
 			virtual ITransform* clone();
 

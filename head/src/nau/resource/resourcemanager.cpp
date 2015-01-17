@@ -496,9 +496,13 @@ ResourceManager::getBuffer(std::string name) {
 nau::render::IBuffer*
 ResourceManager::createBuffer(std::string name) {
 
-	IBuffer *b = IBuffer::Create(name);
-	m_Buffers[name] = b;
-	return b;
+	if (m_Buffers.count(name))
+		return m_Buffers[name];
+	else {
+		IBuffer *b = IBuffer::Create(name);
+		m_Buffers[name] = b;
+		return b;
+	}
 }
 
 

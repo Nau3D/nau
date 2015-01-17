@@ -24,6 +24,12 @@
 #include <nau/scene/light.h>
 #include <nau/world/iworld.h>
 
+extern "C" {
+#include<lua/lua.h>
+#include <lua/lauxlib.h>
+#include <lua/lualib.h>
+}
+
 #include <cmath>
 #include <iostream>
 
@@ -55,7 +61,22 @@ namespace nau {
 		static nau::Nau* create (void);
 		static nau::Nau* getInstance (void);
 		bool init(bool context, std::string aConfigFile = "");
+		void initLua();
+		void initLuaScript(std::string file, std::string name);
+		void callLuaScript(std::string file, std::string name);
+		//int luaSet(lua_State *l);
 		std::string &getName();
+
+		// Global gets and sets
+
+		bool validate(std::string type, std::string context, std::string component);
+
+		void set(std::string type, std::string context, 
+				 std::string component, 
+				 void *values);
+
+		void *get(std::string type, std::string context,
+			std::string component);
 
 		// Attributes
 		void registerAttributes(std::string s, AttribSet *attrib);
@@ -106,6 +127,9 @@ namespace nau {
 		bool reload (void);
 
 		void sendKeyToEngine (char keyCode); /***Change this in to a register system. The sub-system register as a particular key receiver*/
+		void setClickPosition(int x, int y);
+		int getClickX();
+		int getClickY();
 
 		void enablePhysics (void);
 		void disablePhysics (void); 
@@ -141,6 +165,8 @@ namespace nau {
 	private:
 		Nau();
 
+		lua_State *m_LuaState;
+
 		std::string m_Name;
 		unsigned long int m_FrameCount;
 
@@ -172,6 +198,7 @@ namespace nau {
 		nau::world::IWorld *m_pWorld;
 		std::map <std::string, nau::render::Viewport*> m_vViewports;
 		nau::render::Viewport *m_Viewport;
+		int m_ClickX = 0, m_ClickY = 0;
 		//std::map <std::string, nau::animation::IAnimation*> m_Animations;
 		IState *m_DefaultState;
 

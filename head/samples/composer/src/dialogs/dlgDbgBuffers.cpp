@@ -437,7 +437,6 @@ DlgDbgBuffers::setBufferData(){
 		return;
 	}
 
-
 	int lines = bufferSettingsList[currentBuffer].lines;
 	int page = bufferSettingsList[currentBuffer].currentPage;
 	int lineSize = bufferSettingsList[currentBuffer].lineSize;
@@ -509,15 +508,13 @@ DlgDbgBuffers::setBufferData(){
 			pointerIndex += Enums::getSize(bufferSettingsList[currentBuffer].types[col]);
 		}
 	}
+	free(bufferValues);
 }
 
 
 void 
 DlgDbgBuffers::setSpinners(int lines, int columns, int page, int lineSize, int size) {
 
-	spinBufferLines->SetValue(lines);
-	spinBufferLength->SetValue(columns);
-	spinBufferPage->SetValue(page + 1);
 
 	int totalLines = size / lineSize;
 	if (size % lineSize != 0)
@@ -528,6 +525,9 @@ DlgDbgBuffers::setSpinners(int lines, int columns, int page, int lineSize, int s
 
 	spinBufferLines->SetRange(1, totalLines);
 	spinBufferPage->SetRange(1, totalPages);
+	spinBufferLines->SetValue(lines);
+	spinBufferLength->SetValue(columns);
+	spinBufferPage->SetValue(page + 1);
 
 	if (page > 0) {
 		spinBufferLines->Disable();

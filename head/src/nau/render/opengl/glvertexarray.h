@@ -33,12 +33,17 @@ namespace nau
 
 			virtual void appendVertex(unsigned int i);
 
+			virtual int getNumberOfVertices();
+
 			virtual bool compile (void);
+			virtual unsigned int getBufferID(unsigned int vertexAttrib);
+
 			virtual void bind (void);
 			virtual void unbind (void);
 			virtual bool isCompiled();
 			virtual void resetCompilationFlag();
-			virtual unsigned int getBufferID(unsigned int vertexAttrib);
+
+			void setBuffer(unsigned int type, int bufferID);
 
 			//void setAttributeLocationFor (VertexDataType type, int location);
 //			virtual void prepareTangents();
@@ -53,7 +58,7 @@ namespace nau
 			//	                      std::vector<VertexData::Attr>* dataArray, 
 			//						  int location);
 
-		private:
+		protected:
 			//void setGLArray (unsigned int type, float* pointer);
 			//GLenum translate (unsigned int type);
 			//void setGLArray (VertexDataType type, float* pointer);

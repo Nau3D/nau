@@ -806,7 +806,7 @@ OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, IRenderable *m, s
 		
 		if (!pUseSharedVertices || strcmp("true", pUseSharedVertices) == 0) {
 		
-			MaterialGroup *mg = new MaterialGroup(m, pMaterialName);
+			MaterialGroup *mg = MaterialGroup::Create(m, pMaterialName);
 			//mg->setMaterialName(pMaterialName);
 			//mg->setParent(m);
 			m->setDrawingPrimitive(operationType);
@@ -826,7 +826,7 @@ OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, IRenderable *m, s
 			//m->setName(aux);
 			//RESOURCEMANAGER->addRenderable(m, OgreMeshLoader::m_MeshFile);
 			scnObj->setRenderable(m);
-			MaterialGroup *mg = new MaterialGroup(m , pMaterialName);
+			MaterialGroup *mg = MaterialGroup::Create(m, pMaterialName);
 			//mg->setMaterialName(pMaterialName);
 			//mg->setParent(m);
 

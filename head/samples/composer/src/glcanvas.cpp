@@ -215,7 +215,6 @@ GlCanvas::Render ()
 		tlw->SetTitle(wxString::FromAscii(fps));
 
 		m_CounterFps = 0;
-
 	}
 }
 
@@ -608,6 +607,14 @@ GlCanvas::OnMouseMove (wxMouseEvent& event)
 
 	event.Skip ();
 }
+
+
+void
+GlCanvas::OnRightUp(wxMouseEvent &event) {
+
+	m_pEngine->setClickPosition(event.GetX(), event.GetY());
+}
+
 
 void
 GlCanvas::OnLeftDown (wxMouseEvent& event)

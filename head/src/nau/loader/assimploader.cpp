@@ -79,7 +79,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		 aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
 		aiString name;
 		mtl->Get(AI_MATKEY_NAME,name);
-		MaterialGroup *aMaterialGroup = new MaterialGroup(renderable, name.data);
+		MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, name.data);
 		aMaterialGroup->setIndexList(indices);
 		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
 			aMaterialGroup->getIndexData().useAdjacency(true);

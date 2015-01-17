@@ -1,25 +1,21 @@
 #ifndef MATERIALGROUP_H
 #define MATERIALGROUP_H
 
-#include <nau/render/irenderable.h>
 #include <nau/render/indexdata.h>
+#include <nau/render/irenderable.h>
 
 #include <string>
-
-//#include <nau/material/imaterialgroup.h>
-
-
 
 namespace nau
 {
 	namespace material
 	{
 
-		class MaterialGroup //: public IMaterialGroup
+		class MaterialGroup 
 		{
 		public:
-			MaterialGroup(nau::render::IRenderable *parent, std::string materialName);
-			~MaterialGroup();
+
+			static MaterialGroup *Create(nau::render::IRenderable *parent, std::string materialName);
 
 			const std::string& getMaterialName ();
 			void setMaterialName (std::string name);
@@ -39,6 +35,14 @@ namespace nau
 
 			std::string &getName();
 
+			virtual void compile() = 0;
+			virtual bool isCompiled() = 0;
+			virtual void resetCompilationFlag() = 0;
+			virtual void bind() = 0;
+			virtual void unbind() = 0;
+
+			~MaterialGroup();
+
 		protected:
 			nau::render::IRenderable* m_Parent;
 			std::string m_MaterialName;
@@ -46,6 +50,7 @@ namespace nau
 			std::string m_Name;
 
 			MaterialGroup();
+			MaterialGroup(nau::render::IRenderable *parent, std::string materialName);
 		};
 
 	};

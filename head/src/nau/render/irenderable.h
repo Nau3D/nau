@@ -2,20 +2,15 @@
 #define IRENDERABLE_H
 
 #include <nau/config.h>
-#include <nau/render/vertexdata.h>
-#include <nau/render/indexdata.h>
-#include <nau/math/vec3.h>
-
 #include <nau/event/ilistener.h>
+#include <nau/math/vec3.h>
+#include <nau/render/indexdata.h>
+#include <nau/render/vertexdata.h>
 
 #include <vector>
 #include <set>
 
-
-
 using namespace nau::event_;
-
-
 
 namespace nau
 {
@@ -38,7 +33,7 @@ namespace nau
 				POINTS,
 				TRIANGLES_ADJACENCY
 #if NAU_OPENGL_VERSION >= 400
-				, PATCH
+				, PATCHES
 #endif
 			} DrawPrimitive;
 

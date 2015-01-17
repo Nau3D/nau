@@ -58,6 +58,13 @@ ProgramValue::Validate(std::string type,std::string context,std::string componen
 		IRenderer::getPropId(component, &id);
 		return (id != -1);
 	}
+	else if (type == "CURRENT" && context == "MOUSE") {
+
+		if (component == "CLICK_X" || component == "CLICK_Y")
+			return true;
+		else
+			return false;
+	}
 	else if (type == "CURRENT" && context == "COLOR") {
 
 		ColorMaterial::Attribs.getPropTypeAndId(component, &dt, &id);
@@ -199,7 +206,16 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 			m_Cardinality = Enums::getCardinality(dt);
 			m_Values = (void *)malloc(Enums::getSize(dt));
 		}
+		else if (0 == context.compare("MOUSE")) {
 
+			m_ValueType = Enums::INT;
+			m_Cardinality = Enums::getCardinality(Enums::INT);
+			m_Values = (void *)malloc(Enums::getSize(Enums::INT));
+			if (valueof == "CLICK_X")
+				m_ValueOf = 0;
+			else
+				m_ValueOf = 1;
+		}
 		else if (0 == context.compare("MATRIX")) {
 
 			IRenderer::MatrixAttribs.getPropTypeAndId(valueof, &dt, &attr);
@@ -334,13 +350,9 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 			m_Param = valueof;
 			return;
 		}
-
 	}
-
-
-
-
 }
+
 
 ProgramValue::~ProgramValue () {
 
@@ -371,14 +383,15 @@ ProgramValue::clone(ProgramValue &pv)
 
 
 int 
-ProgramValue::getId() 
-{
+ProgramValue::getId() {
+
 	return m_Id;
 }
 
+
 void
-ProgramValue::setId(int id)
-{
+ProgramValue::setId(int id) {
+
 	m_Id = id;
 }
 
@@ -389,12 +402,14 @@ ProgramValue::getContext() {
 	return(m_Context);
 }
 
+
 bool
-ProgramValue::isInSpecML() 
-{
+ProgramValue::isInSpecML() {
+
 	return m_InSpecML;
 }
-	 
+	
+
 void 
 ProgramValue::setContext(std::string s) {
 
@@ -408,17 +423,17 @@ ProgramValue::getName() {
 	return(m_Name);
 }
 
+
 int
-ProgramValue::getCardinality (void)
-{
+ProgramValue::getCardinality (void) {
+
    return m_Cardinality;
 }
 
 
-
 void*
-ProgramValue::getValues (void)
-{
+ProgramValue::getValues (void) {
+
    switch (m_Type) {
 
 	   case CAMERA: {
@@ -449,7 +464,16 @@ ProgramValue::getValues (void)
 
 		}
 	   case CURRENT: {
-		   if ("MATRIX" == m_Context) {
+		   if ("MOUSE" == m_Context) {
+			   int res;
+			   if (m_ValueOf == 0)
+				   res = NAU->getClickX();
+			   else
+				   res = NAU->getClickY();
+			   memcpy(m_Values, &res, sizeof(int));
+			   return m_Values;
+		   }
+		   else if ("MATRIX" == m_Context) {
 			   m_Values = (void *)RENDERER->getMatrix((IRenderer::MatrixType)m_ValueOf);
 			   return m_Values;
 		   }
@@ -563,25 +587,7 @@ ProgramValue::setSemanticValueOf(int s) {
 
 
 nau::Enums::DataType
-ProgramValue::getValueType()
-{
-	//int pType;
-	//if (m_Type == PASS) {
-	//	pType = RENDERMANAGER->getPassParamType(m_Context, m_Param);
-	//	switch (pType) {
-	//		case Enums::FLOAT:
-	//			m_ValueType = Enums::FLOAT;
-	//			break;
-	//	}
-	//}
-	//else if (m_Type == CURRENT && m_Context == "PASS") {
-	//	pType = RENDERMANAGER->getCurrentPassParamType(m_Param);
-	//	switch (pType) {
-	//		case Enums::FLOAT:
-	//			m_ValueType = Enums::FLOAT;
-	//			break;
-	//	}
-	//}
+ProgramValue::getValueType() {
 
 	return m_ValueType;
 }
@@ -598,9 +604,6 @@ void
 ProgramValue::setValueOfUniform(void *values) {
 
 	memcpy(m_Values, values, Enums::getSize(m_ValueType));
-	//for (int i = 0; i < m_Cardinality; i++) {
-	//	m_IntValue[i] = (int)values[i];
-	//}
 }
 
 
@@ -616,42 +619,5 @@ ProgramValue::getLoc() {
 
 	return m_Loc;
 }
-
-
-//void 
-//ProgramValue::setValueOfUniform (int *values) { 
-//
-//	for (int i = 0 ; i < m_Cardinality; i++) {
-//		m_IntValue[i] = (int)values[i];	
-//	}
-//}
-//
-//// this version is more generic than the previous one
-//// this is on purpose!
-//void 
-//ProgramValue::setValueOfUniform (float *values) { 
-//
-//	switch (m_ValueType) {
-//		case Enums::INT:
-//		case Enums::IVEC2:
-//		case Enums::IVEC3:
-//		case Enums::IVEC4:
-//		case Enums::BOOL:
-//		case Enums::BVEC2:
-//		case Enums::BVEC3:
-//		case Enums::BVEC4:
-//		case Enums::SAMPLER:
-//		case Enums::ENUM:
-//			for (int i = 0 ; i < m_Cardinality; i++) {
-//				m_IntValue[i] = (int)values[i];	
-//			}
-//			break;
-//		default:
-//			for (int i = 0 ; i < m_Cardinality; i++) {
-//				m_Value[i] = values[i];	
-//			}
-//	}
-//
-//}
 
 

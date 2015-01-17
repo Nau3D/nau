@@ -1,22 +1,17 @@
 #include <nau/render/opengl/glrenderer.h>
 
 #include <nau.h>
+#include <nau/slogger.h>
 #include <nau/debug/profile.h>
-
 #include <nau/material/material.h> 
 #include <nau/material/materialgroup.h>
+#include <nau/math/mat3.h>
 #include <nau/math/transformfactory.h>
 #include <nau/render/opengl/glvertexarray.h>
 #include <nau/render/opengl/glrendertarget.h>
 
-
-#include <nau/slogger.h>
-
-#include <nau/math/mat3.h>
-
 using namespace nau::math;
 using namespace nau::render;
-
 using namespace nau::geometry;
 using namespace nau::scene;
 using namespace nau::material;
@@ -28,6 +23,7 @@ GLRenderer::Init() {
 
 	return true;
 }
+
 
 unsigned int GLRenderer::GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT] = 
 	{GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_LINES, GL_LINE_LOOP, GL_POINTS, GL_TRIANGLES_ADJACENCY
@@ -186,23 +182,27 @@ GLRenderer::getAtomicCounterValues() {
 	unsigned int offset;
 	unsigned int value;
 	int i = 0;
+	IBuffer *b;
 
 	m_AtomicCounterValues.resize(m_AtomicLabels.size());
 
 	if (m_AtomicCount) {
 	
+		glFinish();
 		for (auto at : m_AtomicLabels) {
 			buffer = at.first.first;
 			offset = at.first.second;
-			IBuffer *b = RESOURCEMANAGER->getBuffer(buffer);
+			b = RESOURCEMANAGER->getBuffer(buffer);
 			if (NULL != b) {
-				b->getData(offset, sizeof(unsigned int), &value);
+				//b->getData(offset, sizeof(unsigned int), &value);
+				glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, b->getPropi(IBuffer::ID));
+				glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, offset, sizeof(unsigned int), &value);
 				m_AtomicCounterValues[i++] = value;
 			}
 			else
 				m_AtomicCounterValues[i++] = 0;
 		}
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 	}
 	return m_AtomicCounterValues;
 
@@ -228,15 +228,15 @@ GLRenderer::drawGroup (MaterialGroup* aMatGroup)
 #endif
 	// this forces compilation for everything that is rendered!
 	// required for animated objects
-	if (!indexData.isCompiled())
-		indexData.compile(aRenderable.getVertexData());
+	if (!aMatGroup->isCompiled())
+		aMatGroup->compile();
 
 	unsigned int size;
 
 	{
 		PROFILE ("Bindings");
 
-		indexData.bind();
+		aMatGroup->bind();
 	}
 
 	{		
@@ -258,7 +258,7 @@ GLRenderer::drawGroup (MaterialGroup* aMatGroup)
 	accumTriCounter(drawPrimitive, size);
 #endif
 
-	aMatGroup->getIndexData().unbind();
+	aMatGroup->unbind();
 }
 
 

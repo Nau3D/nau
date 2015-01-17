@@ -1,10 +1,12 @@
 #include <nau/render/indexdata.h>
-#include <nau/config.h>
-#include <assert.h>
 
+#include <nau/config.h>
 #ifdef NAU_OPENGL
 #include <nau/render/opengl/glindexarray.h>
 #endif
+
+#include <assert.h>
+
 
 using namespace nau::render;
 using namespace nau::math;

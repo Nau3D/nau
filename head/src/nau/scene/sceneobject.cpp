@@ -1,4 +1,6 @@
 #include <nau/scene/sceneobject.h>
+
+#include <nau.h>
 #include <nau/geometry/boundingbox.h>
 #include <nau/math/transformfactory.h>
 
@@ -7,9 +9,47 @@ using namespace nau::render;
 using namespace nau::geometry;
 using namespace nau::math;
 
-unsigned int nau::scene::SceneObject::Counter = 0;
+unsigned int SceneObject::Counter = 0;
 
 
+bool
+SceneObject::Init() {
+
+	// VEC4
+	Attribs.add(Attribute(SCALE, "SCALE", Enums::DataType::VEC4, false, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
+	Attribs.add(Attribute(TRANSLATE, "TRANSLATE", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+	Attribs.add(Attribute(ROTATE, "ROTATE", Enums::DataType::VEC4, true, new vec4(0.0f, 0.0f, 1.0f, 0.0f)));
+
+	NAU->registerAttributes("SCENE", &Attribs);
+
+	return true;
+}
+
+AttribSet SceneObject::Attribs;
+bool SceneObject::Inited = Init();
+
+void
+SceneObject::setPropf4(Float4Property prop, vec4& aVec) {
+
+	ITransform *tis = TransformFactory::create("SimpleTransform");
+
+	switch (prop) {
+	case SCALE:
+		tis->scale(aVec.x, aVec.y, aVec.z);
+		transform(tis);
+		break;
+	case ROTATE:
+		tis->rotate(aVec.w, aVec.x, aVec.y, aVec.z);
+		transform(tis);
+		break;
+	case TRANSLATE:
+		tis->translate(aVec.x, aVec.y, aVec.z);
+		transform(tis);
+		break;
+	}
+	m_Float4Props[prop] = aVec;
+
+}
 void
 SceneObject::ResetCounter(void) {
 	Counter = 1;
@@ -162,6 +202,21 @@ SceneObject::setTransform (ITransform *t)
 	//	delete m_Transform; 
 	//}
 	m_Transform->clone(t);
+	m_ResultTransform->clone(m_GlobalTransform);
+	m_ResultTransform->compose(*m_Transform);
+
+	if (m_BoundingVolume)
+		m_BoundingVolume->setTransform(*m_ResultTransform);
+}
+
+
+void
+SceneObject::transform(ITransform *t)
+{
+	//if (0 != this->m_Transform){ 
+	//	delete m_Transform; 
+	//}
+	m_Transform->compose(*t);
 	m_ResultTransform->clone(m_GlobalTransform);
 	m_ResultTransform->compose(*m_Transform);
 

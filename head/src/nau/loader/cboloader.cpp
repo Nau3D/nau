@@ -354,7 +354,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 				_readString (buffer, f);
 				//SLOG ("[Reading] Material Groups name: [%s]", buffer);
 
-				MaterialGroup *aMatGroup = new MaterialGroup(aRenderable, buffer);
+				MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, buffer);
 				//aMatGroup->setMaterialName (buffer);				
 				//aMatGroup->setParent (aRenderable);
 
@@ -426,7 +426,7 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 		//SLOG ("[Reading] Material Groups name: [%s]", buffer);
 
 
-	MaterialGroup *aMatGroup = new MaterialGroup(aRenderable, buffer);
+	MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, buffer);
 	//aMatGroup->setParent (aRenderable);
 	//aMatGroup->setMaterialName (buffer);				
 

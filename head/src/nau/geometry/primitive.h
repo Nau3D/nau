@@ -9,15 +9,7 @@ namespace nau
 	{
 		class Primitive : public Mesh
 		{
-		protected:
-			//Primitive(void): Mesh() {};
-			//~Primitive(void);
-
-		protected:
-
 		public:
-			//static Primitive *Create(const std::string &type);
-			//static Primitive *Create(const std::string &type, int a, int b);
 
 			virtual void setParam(unsigned int, float value) {};
 			virtual float getParamf(unsigned int) = 0;

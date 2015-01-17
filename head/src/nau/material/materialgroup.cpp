@@ -2,14 +2,24 @@
 
 #include <nau.h>
 #include <nau/render/vertexdata.h>
-#include <nau/render/irenderer.h>
+#include <nau/render/opengl/glmaterialgroup.h>
 #include <nau/math/vec3.h>
 #include <nau/clogger.h>
 
 
 using namespace nau::material;
 using namespace nau::render;
+using namespace nau::render::opengl;
 using namespace nau::math;
+
+
+MaterialGroup *
+MaterialGroup::Create(nau::render::IRenderable *parent, std::string materialName) {
+
+#ifdef NAU_OPENGL
+	return new GLMaterialGroup(parent, materialName);
+#endif
+}
 
 
 MaterialGroup::MaterialGroup() :

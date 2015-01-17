@@ -32,8 +32,8 @@
 		<cameras>
 			<camera name="MainCamera" >
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
-				<POSITION x="-0.2" y="0.05" z="10" />
-				<VIEW x="0.0" y="0.0" z="-1" />
+				<POSITION x="-4.0" y="20.0" z="-29.0" />
+				<VIEW x="0.91" y="-0.29" z="0.26" />
 				<UP x="0" y="1" z="0" />
 			</camera>
 		</cameras>

@@ -1,14 +1,12 @@
-
-
-
 #include <nau/geometry/mesh.h>
+
+
+#include <nau.h>
 #include <nau/material/materialgroup.h>
+#include <nau/math/vec3.h>
 #include <nau/render/irenderable.h>
 #include <nau/render/vertexdata.h>
-#include <nau/math/vec3.h>
-#include <nau.h>
 
-//#include <algorithm>
 
 using namespace nau::geometry;
 using namespace nau::render;
@@ -17,8 +15,8 @@ using namespace nau::math;
 
 
 Mesh *
-Mesh::createUnregisteredMesh()
-{
+Mesh::createUnregisteredMesh() {
+
 	return new Mesh();
 }
 
@@ -35,8 +33,8 @@ Mesh::Mesh(void) :
 }
 
 
-Mesh::~Mesh(void)
-{
+Mesh::~Mesh(void) {
+
 	if (0 != m_VertexData) {
 		delete m_VertexData;
 		m_VertexData = 0;
@@ -46,7 +44,6 @@ Mesh::~Mesh(void)
 		delete m_IndexData;
 		m_IndexData = 0;
 	}
-
 
 	std::vector<nau::material::MaterialGroup*>::iterator matIter;
 
@@ -60,8 +57,8 @@ Mesh::~Mesh(void)
 
 
 void 
-Mesh::setName (std::string name)
-{
+Mesh::setName (std::string name) {
+
 	m_Name = name;
 	if (m_VertexData)
 		m_VertexData->setName(name);
@@ -72,52 +69,52 @@ Mesh::setName (std::string name)
 
 
 std::string& 
-Mesh::getName (void)
-{
+Mesh::getName (void) {
+
 	return m_Name;
 }
 
 
 unsigned int
-Mesh::getDrawingPrimitive() 
-{
+Mesh::getDrawingPrimitive() {
+
 	return(m_DrawPrimitive);
 }
 
 
 unsigned int
-Mesh::getRealDrawingPrimitive() 
-{
+Mesh::getRealDrawingPrimitive() {
+
 	return(m_RealDrawPrimitive);
 }
 
 
 void
-Mesh::setDrawingPrimitive(unsigned int aDrawingPrimitive)
-{
+Mesh::setDrawingPrimitive(unsigned int aDrawingPrimitive) {
+
 	m_DrawPrimitive = aDrawingPrimitive;
 	m_RealDrawPrimitive = RENDERER->translateDrawingPrimitive(m_DrawPrimitive);
 }
 
 
 void 
-Mesh::setNumberOfVerticesPerPatch(int i) 
-{
+Mesh::setNumberOfVerticesPerPatch(int i) {
+
 	m_VerticesPerPatch = i;
 }
 
 
 int
-Mesh::getnumberOfVerticesPerPatch() 
-{
+Mesh::getnumberOfVerticesPerPatch() {
+
 	return m_VerticesPerPatch;
 
 }
 
 
 nau::render::VertexData& 
-Mesh::getVertexData (void)
-{
+Mesh::getVertexData (void) {
+
 	if (0 == m_VertexData) {
 		m_VertexData = VertexData::create(m_Name);
 	}
@@ -126,8 +123,8 @@ Mesh::getVertexData (void)
 
 
 nau::render::IndexData&
-Mesh::getIndexData()
-{
+Mesh::getIndexData() {
+
 	if (m_UnifiedIndex.size() == 0)
 		createUnifiedIndexVector();
 
@@ -140,8 +137,8 @@ Mesh::getIndexData()
 
 
 std::vector<nau::material::MaterialGroup*>&
-Mesh::getMaterialGroups (void)
-{
+Mesh::getMaterialGroups (void) {
+
 	return (m_vMaterialGroups);
 }
 
@@ -187,8 +184,8 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 
 
 void 
-Mesh::prepareIndexData() 
-{
+Mesh::prepareIndexData() {
+
 	unsigned int size = m_VertexData->getDataOf(VertexData::getAttribIndex("position")).size();
 	std::vector<int> idsArray = std::vector<int>(size, -1.0f);
 	std::vector<int> outlaws;
@@ -248,15 +245,15 @@ Mesh::prepareIndexData()
 
 
 int 
-Mesh::getNumberOfVertices (void)
-{
+Mesh::getNumberOfVertices (void) {
+
 	return (int)(getVertexData().getDataOf (VertexData::getAttribIndex("position"))).size();
 }
 
 
 void 
-Mesh::createUnifiedIndexVector() 
-{
+Mesh::createUnifiedIndexVector() {
+
 	m_UnifiedIndex.clear();
 
 	std::vector<nau::material::MaterialGroup*>::iterator iter;
@@ -271,8 +268,8 @@ Mesh::createUnifiedIndexVector()
 
 
 void 
-Mesh::addMaterialGroup (MaterialGroup* materialGroup, int offset)
-{
+Mesh::addMaterialGroup (MaterialGroup* materialGroup, int offset) {
+
 	/*
 	- search material in vector
 	- if it doesn't exist push back
@@ -293,7 +290,7 @@ Mesh::addMaterialGroup (MaterialGroup* materialGroup, int offset)
 		}
 	}
 	if (m_vMaterialGroups.end() == matGroupIter) {
-		MaterialGroup *newMat = new MaterialGroup(this, materialGroup->getMaterialName());
+		MaterialGroup *newMat = MaterialGroup::Create(this, materialGroup->getMaterialName());
 
 		//newMat->setMaterialName (materialGroup->getMaterialName());
 		//newMat->setParent (this);	
@@ -304,8 +301,8 @@ Mesh::addMaterialGroup (MaterialGroup* materialGroup, int offset)
 
 
 void 
-Mesh::addMaterialGroup (MaterialGroup* materialGroup, IRenderable *aRenderable)
-{
+Mesh::addMaterialGroup (MaterialGroup* materialGroup, IRenderable *aRenderable) {
+
 	/* In this case it is necessary to copy the vertices from the 
 	 * IRenderable into the local buffer and reindex the materialgroup
 	 */
@@ -356,8 +353,8 @@ Mesh::addMaterialGroup (MaterialGroup* materialGroup, IRenderable *aRenderable)
 
 
 void 
-Mesh::merge (nau::render::IRenderable *aRenderable)
-{
+Mesh::merge (nau::render::IRenderable *aRenderable) {
+
 	VertexData &vVertexData = aRenderable->getVertexData();
 
 	int ofs = getVertexData().add (vVertexData);
@@ -378,8 +375,8 @@ Mesh::merge (nau::render::IRenderable *aRenderable)
 
 
 std::string 
-Mesh::getType (void)
-{
+Mesh::getType (void) {
+
 	return "Mesh";
 }
 
@@ -394,107 +391,9 @@ Mesh::unitize(float min, float max) {
 void
 Mesh::resetCompilationFlags() {
 
-	m_VertexData->resetCompilationFlag();
-
 	for (unsigned int i = 0; i < m_vMaterialGroups.size(); ++i) {
 
-		m_vMaterialGroups[i]->getIndexData().resetCompilationFlag();
+		m_vMaterialGroups[i]->resetCompilationFlag();
 	}
 }
 
-//int 
-//Mesh::getPrimitiveOffset(void) {
-//
-//	switch(m_DrawPrimitive) {
-//	
-//		case nau::render::IRenderer::TRIANGLES: 
-//			return (3);
-//		case nau::render::IRenderer::TRIANGLE_STRIP: 
-//		case nau::render::IRenderer::TRIANGLE_FAN:
-//			return (1);
-//		case nau::render::IRenderer::LINES:
-//			return (2);
-//		default: 
-//			return (3);
-//	}
-//}
-
-
-//int 
-//Mesh::getNumberOfPrimitives(void) 
-//{
-//	switch(m_DrawPrimitive) {
-//	
-//		case nau::render::IRenderer::TRIANGLES: 
-//			return (getNumberOfVertices() / 3);
-//		case nau::render::IRenderer::TRIANGLE_STRIP: 
-//		case nau::render::IRenderer::TRIANGLE_FAN:
-//			return (getNumberOfVertices() - 2);
-//		case nau::render::IRenderer::LINES:
-//			return (getNumberOfVertices() / 2);
-//		default: 
-//			return (getNumberOfVertices() / 3);
-//	}
-//}
-
-//void 
-//Mesh::addMaterialGroup (IMaterialGroup* materialGroup, IRenderable *aRenderable)
-//{
-//	/* In this case it is necessary to copy the vertices from the 
-//	 * IRenderable into the local buffer and reindex the materialgroup
-//	 */
-//	VertexData &renderableVertexData = aRenderable->getVertexData();
-//
-//	VertexData *newData = VertexData::create(); 
-//
-//	std::vector<VertexData::Attr> *verticesList = new std::vector<VertexData::Attr>;
-//	std::vector<VertexData::Attr> *normalsList = new std::vector<VertexData::Attr>;
-//	std::vector<VertexData::Attr> *texCoordsList = new std::vector<VertexData::Attr>;
-//	std::vector<VertexData::Attr> *tangentCoordList = new std::vector<VertexData::Attr>;
-//	std::vector<VertexData::Attr> *bitangentCoordList = new std::vector<VertexData::Attr>;
-//	std::map<unsigned int, unsigned int> newIndicesMap;
-//
-//
-//	std::vector<unsigned int>& indexesList	= materialGroup->getIndexData().getIndexData();
-//	std::vector<unsigned int>::iterator indexesIter;
-//	
-//	indexesIter = indexesList.begin();
-//
-//	/***MARK***/ //This needs refactoring! Diferent texture coordinates can exist and/or custum attributes
-//
-//	std::vector<vec4>& verticesPool = renderableVertexData.getDataOf (VertexData::getAttribIndex("position"));
-//	std::vector<vec4>& normalsPool = renderableVertexData.getDataOf (VertexData::getAttribIndex("normal")); 
-//	std::vector<vec4>& texCoordsPool = renderableVertexData.getDataOf (VertexData::getAttribIndex("texCoord0")); 
-//
-//	std::vector<vec4>& tangentPool = renderableVertexData.getDataOf (VertexData::getAttribIndex("tangent"));
-//	std::vector<vec4>& bitangentPool = renderableVertexData.getDataOf (VertexData::getAttribIndex("binormal"));
-//
-//	for ( ; indexesIter != indexesList.end(); indexesIter++){
-//		if (0 == newIndicesMap.count ((*indexesIter))){
-//			verticesList->push_back (verticesPool.at ((*indexesIter)));
-//			normalsList->push_back (normalsPool.at ((*indexesIter)));
-//			texCoordsList->push_back (texCoordsPool.at ((*indexesIter)));
-//			if (tangentPool.size())
-//				tangentCoordList->push_back (tangentPool.at ((*indexesIter)));
-//			if (bitangentPool.size())
-//				bitangentCoordList->push_back (bitangentPool.at ((*indexesIter)));
-//
-//			newIndicesMap[(*indexesIter)] = (unsigned int)(verticesList->size() - 1);
-//			//(*indexesIter) = verticesList->size() - 1;
-//		} //else {
-//		(*indexesIter) = newIndicesMap[(*indexesIter)];
-//		//}
-//	}
-//
-//	newData->setDataFor (VertexData::getAttribIndex("position"), verticesList);
-//	newData->setDataFor (VertexData::getAttribIndex("normal"), normalsList);
-//	newData->setDataFor (VertexData::getAttribIndex("texCoord0"), texCoordsList);
-//	newData->setAttributeDataFor (VertexData::getAttribIndex("tangent"), tangentCoordList, VertexData::NOLOC);
-//	newData->setAttributeDataFor (VertexData::getAttribIndex("binormal"), bitangentCoordList, VertexData::NOLOC);
-//
-//	int offset = getVertexData().add (*newData);
-//	delete newData;
-//	
-//	materialGroup->getIndexData().offsetIndices (offset);
-//	addMaterialGroup (materialGroup);			
-//}

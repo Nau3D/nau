@@ -236,6 +236,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <UndefinePreprocessorDefinitions>ENUM_PROP(A,B)</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)nauOptix_d.lib</OutputFile>
@@ -390,6 +391,7 @@
     <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp" />
     <ClCompile Include="..\src\nau\render\optix\optixBufferLib.cpp">
@@ -449,6 +451,7 @@
     <ClCompile Include="..\src\nau\render\profilerpass.cpp" />
     <ClCompile Include="..\src\nau\resource\font.cpp" />
     <ClCompile Include="..\src\nau\resource\fontmanager.cpp" />
+    <ClCompile Include="..\src\nau\scene\iscene.cpp" />
     <ClCompile Include="..\src\nau\scene\octreeByMat.cpp" />
     <ClCompile Include="..\src\nau\scene\octreeByMatnode.cpp" />
     <ClCompile Include="..\src\nau\scene\octreeByMatscene.cpp" />
@@ -626,6 +629,7 @@
     <ClInclude Include="..\src\nau\render\opengl\glbuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h" />
     <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h" />
     <ClInclude Include="..\src\nau\render\optix\optixBufferLib.h">

@@ -10,9 +10,9 @@ using namespace nau::math;
 
 GLIndexArray::GLIndexArray(void):
 	IndexData (),
-	m_VAO(0),
-	m_IsCompiled (false)
-{
+	m_GLBuffer(0),
+	m_IsCompiled (false) {
+
 }
 
 
@@ -21,37 +21,85 @@ GLIndexArray::~GLIndexArray(void) {
 	if (0 != m_GLBuffer) {
 		glDeleteBuffers (1, &m_GLBuffer);
 	}
+}
 
-	glDeleteVertexArrays(1,&m_VAO);
+
+unsigned int
+GLIndexArray::getBufferID() {
+
+	return m_GLBuffer;
+}
+
+
+void
+GLIndexArray::setBuffer(unsigned int id) {
+
+	m_GLBuffer = id;
+	m_IsCompiled = true;
 }
 
 
 std::vector<unsigned int>&
 GLIndexArray::getIndexData (void) {
 
-	if (0 == m_InternalIndexArray) { // || true == m_IsCompiled) {
+	if (0 == m_InternalIndexArray) { 
 		return IndexData::NoIndexData;
 	}
 	return (*m_InternalIndexArray);
 }
 
 
-bool 
-GLIndexArray::compile (VertexData &v) {
+//bool 
+//GLIndexArray::compile (VertexData &v) {
+//
+//	if (m_IsCompiled)
+//		return false;
+//
+//	m_IsCompiled = true;
+//
+//	if (!v.isCompiled())
+//		v.compile();
+//
+//	glGenVertexArrays(1, &m_VAO);
+//	glBindVertexArray(m_VAO);
+//
+//	v.bind();
+////	glBindVertexArray(0);
+//
+//	if (m_GLBuffer != 0)
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
+//
+//	else if (0 != m_InternalIndexArray && m_InternalIndexArray->size() != 0) {
+//
+//		std::vector<unsigned int>* pArray;
+//		if (m_UseAdjacency) {
+//			buildAdjacencyList();
+//			pArray = &m_AdjIndexArray;
+//		}
+//		else
+//			pArray = m_InternalIndexArray;
+//
+//		std::string s;
+//		
+//		IBuffer *b = RESOURCEMANAGER->createBuffer(m_Name);
+//		b->setStructure(std::vector<Enums::DataType>{Enums::UINT});
+//		m_GLBuffer = b->getPropi(IBuffer::ID);
+//		glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
+//		glBufferData (GL_ELEMENT_ARRAY_BUFFER, pArray->size() * sizeof (unsigned int), &(*pArray)[0], GL_STATIC_DRAW);
+//	}
+//
+//	glBindVertexArray(0);
+//	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);	
+//	v.unbind();
+//
+//	return true;
+//}
 
-	if (m_IsCompiled)
-		return false;
 
-	if (!v.isCompiled())
-		v.compile();
+void
+GLIndexArray::compile() {
 
 	m_IsCompiled = true;
-
-	glGenVertexArrays(1, &m_VAO);
-	glBindVertexArray(m_VAO);
-
-	v.bind();
-//	glBindVertexArray(0);
 
 	if (0 != m_InternalIndexArray && m_InternalIndexArray->size() != 0) {
 
@@ -63,30 +111,24 @@ GLIndexArray::compile (VertexData &v) {
 		else
 			pArray = m_InternalIndexArray;
 
-		std::string s;
-		
-		IBuffer *b = RESOURCEMANAGER->createBuffer(m_Name);
-		b->setStructure(std::vector<Enums::DataType>{Enums::UINT});
-		m_GLBuffer = b->getPropi(IBuffer::ID);
-		glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
-		glBufferData (GL_ELEMENT_ARRAY_BUFFER, pArray->size() * sizeof (unsigned int), &(*pArray)[0], GL_STATIC_DRAW);
+		if (m_GLBuffer == 0) {
+			std::string s;
+			IBuffer *b = RESOURCEMANAGER->createBuffer(m_Name);
+			b->setStructure(std::vector < Enums::DataType > {Enums::UINT});
+			m_GLBuffer = b->getPropi(IBuffer::ID);
+		}
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, pArray->size() * sizeof(unsigned int), &(*pArray)[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
-
-	glBindVertexArray(0);
-	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);	
-	v.unbind();
-
-	return true;
 }
-
 
 void 
 GLIndexArray::resetCompilationFlag() {
 
 	m_IsCompiled = false;
 
-	glDeleteBuffers(1, &m_GLBuffer);
-	glDeleteVertexArrays(1, &m_VAO);
+//	glDeleteBuffers(1, &m_GLBuffer);
 }
 
 
@@ -100,26 +142,14 @@ GLIndexArray::isCompiled() {
 void 
 GLIndexArray::bind (void) {
 
-	if (true == m_IsCompiled  && m_VAO)
-			glBindVertexArray(m_VAO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
 }
 
 
 void 
 GLIndexArray::unbind (void) {
 
-	if (m_VAO)
-		glBindVertexArray(0);
-	else
-		glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-
-unsigned int 
-GLIndexArray::getBufferID() {
-//	if (m_VAO == 0)
-//		compile();
-	return m_GLBuffer;
+	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 

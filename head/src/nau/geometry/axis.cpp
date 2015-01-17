@@ -30,7 +30,7 @@ Axis::Axis(void) : Primitive()
 	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
 	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup(this, "__Emission Red");
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(2);
 	indices->at (0) = 0;		
 	indices->at (1) = 1;
@@ -39,7 +39,7 @@ Axis::Axis(void) : Primitive()
 	//aMaterialGroup->setMaterialName("__Emission Red");
 	addMaterialGroup (aMaterialGroup);
 
-	aMaterialGroup = new MaterialGroup(this, "__Emission Green");
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Green");
 	indices = new std::vector<unsigned int>(2);
 	indices->at (0) = 2;		
 	indices->at (1) = 3;
@@ -48,7 +48,7 @@ Axis::Axis(void) : Primitive()
 	//aMaterialGroup->setMaterialName("__Emission Green");
 	addMaterialGroup (aMaterialGroup);
 
-	aMaterialGroup = new MaterialGroup(this, "__Emission Blue");
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Blue");
 	indices = new std::vector<unsigned int>(2);
 	indices->at (0) = 4;		
 	indices->at (1) = 5;

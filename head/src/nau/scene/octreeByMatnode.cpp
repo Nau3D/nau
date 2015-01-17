@@ -273,7 +273,7 @@ OctreeByMatNode::_split() {
 				}
 
 				if (0 == tempMaterialGroup[index]) {
-					tempMaterialGroup[index] = new MaterialGroup(NULL, pMaterialGroup->getMaterialName());
+					tempMaterialGroup[index] = MaterialGroup::Create(NULL, pMaterialGroup->getMaterialName());
 					tempMaterialGroup[index]->setMaterialName (pMaterialGroup->getMaterialName());
 				}
 
@@ -496,7 +496,7 @@ OctreeByMatNode::_compile (void)
 		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 
 		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
-			(*matGroupsIter)->getIndexData().compile(iter->second->getRenderable().getVertexData());
+			(*matGroupsIter)->compile();
 		}
 	}
 

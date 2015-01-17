@@ -24,7 +24,6 @@ namespace nau
 		public:
 
 			INT_PROP(ID,0);
-//			INT_PROP(BINDING_POINT, 1);
 
 			UINT_PROP(SIZE, 0);
 
@@ -40,7 +39,7 @@ namespace nau
 
 
 			// Note: no validation is performed!
-			virtual void setProp(int prop, Enums::DataType type, void *value)  = 0;
+			virtual void setPropui(UIntProperty  prop, unsigned int value) = 0;
 
 			static IBuffer* Create(std::string label);
 

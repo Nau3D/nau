@@ -23,6 +23,12 @@
 														
 					<valueof uniform="viewMatrix" 	type="CURRENT" context="MATRIX" 
 														component="VIEW" />
+					<valueof uniform="invViewMatrix" 		type="CAMERA" context="MainCamera"
+														component="VIEW_INVERSE_MATRIX" />
+					<valueof uniform="projMatrix" 	type="CURRENT" context="MATRIX" 
+														component="PROJECTION" />
+					<valueof uniform="invProjMatrix" 		type="CAMERA" context="MainCamera"
+														component="PROJECTION_INVERSE_MATRIX" />
 					<valueof uniform="normalMatrix" type="CURRENT" context="MATRIX" 
 														component="NORMAL" />
 					

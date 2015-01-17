@@ -526,6 +526,12 @@
     <ClCompile Include="..\src\nau\attribute.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\scene\iscene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1024,6 +1030,9 @@
       <Filter>Source Files\material</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,6 @@
 #include <nau.h>
 #include <nau/config.h>
-#include "nau/slogger.h"
+#include <nau/slogger.h>
 #include <nau/debug/profile.h>
 #include <nau/debug/state.h>
 #include <nau/event/eventFactory.h>
@@ -20,6 +20,11 @@
 #include <nau/world/worldfactory.h>
 
 #include <GL/glew.h>
+extern "C" {
+#include<lua/lua.h>
+#include <lua/lauxlib.h>
+#include <lua/lualib.h>
+}
 
 #include <ctime>
 
@@ -131,6 +136,11 @@ Nau::init (bool context, std::string aConfigFile) {
 
 	State::init();
 
+	// Init LUA
+
+	initLua();
+
+
 	return true;
 }
 
@@ -140,6 +150,115 @@ Nau::getName() {
 
 	return(m_Name);
 }
+
+
+// ----------------------------------------------------
+//		Lua Stuff
+// ----------------------------------------------------
+
+int 
+luaSet(lua_State *l) {
+
+	const char *tipo = lua_tostring(l, -4);
+	const char *context = lua_tostring(l, -3);
+	const char *component = lua_tostring(l, -2);
+
+	lua_pushstring(l, "x");
+	lua_gettable(l, -2);
+
+	const char* c = lua_tostring(l, -1);
+
+
+	NAU->set(tipo, context, component, (void *)c);
+	return 0;
+}
+
+
+void 
+Nau::initLua() {
+
+	m_LuaState = luaL_newstate();
+	luaL_openlibs(m_LuaState);
+	lua_pushcfunction(m_LuaState, luaSet);
+	lua_setglobal(m_LuaState, "set");
+}
+
+
+void
+Nau::initLuaScript(std::string file, std::string name) {
+
+	luaL_dofile(m_LuaState, "D:/Nau/head/build/samples/test.lua");
+}
+
+
+void
+Nau::callLuaScript(std::string file, std::string name) {
+
+	lua_getglobal(m_LuaState, name.c_str());
+	lua_pcall(m_LuaState, 0, 0, 0);
+
+	// com envio de parâmetros
+	//lua_pushnumber(m_LuaState, 12);
+	//lua_pushlightuserdata(m_LuaState, &file);
+	//lua_pcall(m_LuaState, 2, 0, 0);
+
+	// receber parâmetros
+	//lua_pcall(m_LuaState, 0, 1, 0);
+	//int k = lua_tonumber(m_LuaState, -1);
+
+}
+
+
+// ----------------------------------------------------------
+//		GET AND SET ATTRIBUTES
+// ----------------------------------------------------------
+
+
+bool
+Nau::validate(std::string type, std::string context, std::string component) {
+
+	if (type == "CAMERA") {
+	
+		if (!m_pRenderManager->hasCamera(context))
+			return false;
+	}
+
+	return ProgramValue::Validate(type, context, component);
+}
+
+
+void 
+Nau::set(std::string type, std::string context, std::string component, void *values) {
+
+	int id;
+	Enums::DataType dt;
+
+	if (type == "CAMERA") {
+		float *f = (float *)values;
+		SLOG("%s:%s:%s:%f", type.c_str(), context.c_str(), component.c_str(), *f);
+		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
+		Camera *cam = m_pRenderManager->getCamera(context);
+		cam->setProp(id, dt, values);
+	}
+}
+
+
+void *
+Nau::get(std::string type, std::string context, std::string component) {
+
+	int id;
+	Enums::DataType dt;
+
+	if (type == "CAMERA") {
+
+		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
+		Camera *cam = m_pRenderManager->getCamera(context);
+		return(cam->getProp(id, dt));
+	}
+	else
+		return NULL;
+}
+
 
 // -----------------------------------------------------------
 //		USER ATTRIBUTES
@@ -590,6 +709,28 @@ Nau::sendKeyToEngine (char keyCode) {
 }
 
 
+void 
+Nau::setClickPosition(int x, int y) {
+
+	m_ClickX = x;
+	m_ClickY = y;
+}
+
+
+int
+Nau::getClickX() {
+
+	return m_ClickX;
+}
+
+
+int
+Nau::getClickY() {
+
+	return m_ClickY;
+}
+
+
 IWorld&
 Nau::getWorld (void) {
 
@@ -832,177 +973,3 @@ Nau::getEventManager (void) {
 }
 
 
-///* =================================================
-//
-//	DATA TYPES
-//
-//================================================= */
-//
-//std::string 
-//Nau::getDataType(Enums::DataType dt) 
-//{
-//	switch(dt) {
-//		case Enums::DataType::INT: return("INT");
-//		case SAMPLER: return("SAMPLER");
-//		case BOOL: return("BOOL");
-//		case IVEC2: return("IVEC2");
-//		case IVEC3: return("IVEC3");
-//		case IVEC4: return("IVEC4");
-//		case BVEC2: return("BVEC2");
-//		case BVEC3: return("BVEC3");
-//		case BVEC4: return("BVEC4");
-//		case FLOAT: return("FLOAT");
-//		case VEC2: return("VEC2");
-//		case VEC3: return("VEC3");
-//		case VEC4: return("VEC4");
-//		case MAT3: return("MAT3");
-//		case MAT4: return("MAT4");
-//		default: return ("FLOAT");
-//	}
-//}
-//
-//Nau::DataType 
-//Nau::getDataType(std::string &s)
-//{
-//	if ("INT" == s)
-//		return INT;
-//	else if ("SAMPLER" == s)
-//		return SAMPLER;
-//	else if ("BOOL" == s)
-//		return BOOL;
-//	else if ("IVEC2" == s)
-//		return IVEC2;
-//	else if ("IVEC3" == s)
-//		return IVEC3;
-//	else if ("IVEC4" == s)
-//		return IVEC4;
-//	else if ("BVEC2" == s)
-//		return BVEC2;
-//	else if ("BVEC3" == s)
-//		return BVEC3;
-//	else if ("BVEC4" == s)
-//		return BVEC4;
-//	else if ("FLOAT" == s)
-//		return FLOAT;
-//	else if ("VEC2" == s)
-//		return VEC2;
-//	else if ("VEC3" == s)
-//		return VEC3;
-//	else if ("VEC4" == s)
-//		return VEC4;
-//	else if ("MAT3" == s)
-//		return MAT3;
-//	else if ("MAT4" == s)
-//		return MAT4;
-//	else
-//		return FLOAT;
-//}
-
-//void 
-//Nau::addAnimation (std::string animationName, nau::animation::IAnimation *anAnimation)
-//{
-//	m_Animations [animationName] = anAnimation; //Attention! Possibility of memory leak
-//}
-//
-//nau::animation::IAnimation*
-//Nau::getAnimation (std::string animationName)
-//{
-//	if (m_Animations.count (animationName) > 0) {
-//		return m_Animations [animationName];
-//	}
-//	
-//	return 0;
-//}
-//
-//
-//void
-//Nau::step(int count)
-//{
-//	IRenderer *renderer = RENDERER;
-//	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
-//	if (NO_TIME == m_LastFrameTime) {
-//		m_LastFrameTime = m_CurrentTime;
-//	}
-//	double deltaT = m_CurrentTime - m_LastFrameTime;
-//	m_LastFrameTime = m_CurrentTime;
-//	unsigned char pipeEventFlag;
-//
-//	renderer->resetCounters();
-//
-//	for (int i = 0; i < count || count <= 0; i++){
-//
-//		if (isFrameBegin){
-//			m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
-//#ifdef GLINTERCEPTDEBUG
-//			addMessageToGLILog("\n#NAU(FRAME,START)");
-//#endif //GLINTERCEPTDEBUG
-//			isFrameBegin = false;
-//		}
-//
-//
-//		//if (m_Animations.size() > 0) {
-//		//	std::map<std::string, nau::animation::IAnimation*>::iterator animIter;
-//		//	
-//		//	animIter = m_Animations.begin();
-//
-//		//	for (; animIter != m_Animations.end(); animIter++) {
-//		//		if (false == (*animIter).second->isFinished()) {
-//		//			(*animIter).second->step (static_cast<float> (deltaT));
-//		//		} else {
-//		//			delete ((*animIter).second);
-//		//			m_Animations.erase (animIter);
-//		//		}
-//		//	}
-//		//}
-//
-//		//### Será que deve ser por pass?
-//		if (true == m_Physics) {
-//			m_pWorld->update();
-//			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
-//		}
-//
-//		//renderer->setDefaultState();
-//
-//		Pass *renderPass = NULL;
-//		if (m_pRenderManager->getNumPipelines() > 0){
-//			renderPass = m_pRenderManager->getCurrentPass();
-//		}
-//#ifdef GLINTERCEPTDEBUG
-//		if (renderPass){
-//			addMessageToGLILog(("\n#NAU(PASS,START," + renderPass->getName() + ")").c_str());
-//		}
-//#endif //GLINTERCEPTDEBUG
-//		pipeEventFlag = m_pRenderManager->renderActivePipeline();
-//#ifdef GLINTERCEPTDEBUG
-//		if (renderPass){
-//			addMessageToGLILog(("\n#NAU(PASS,END," + renderPass->getName() + ")").c_str());
-//		}
-//#endif //GLINTERCEPTDEBUG
-//
-////<<<<<<< HEAD
-// //	m_pEventManager->notifyEvent("FRAME_END","Nau", "", NULL);
-//
-//		switch (pipeEventFlag){
-//			case PIPE_PASS_STARTEND:
-//			case PIPE_PASS_END:
-//				m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
-//				if (m_FrameCount == ULONG_MAX)
-//					// 2 avoid issues with run_once and skip_first
-//					// and allows a future implementation of odd and even frames for
-//					// ping-pong rendering
-//					m_FrameCount = 2;
-//				else
-//					++m_FrameCount;
-//#ifdef GLINTERCEPTDEBUG
-//				addMessageToGLILog("\n#NAU(FRAME,END)");
-//#endif //GLINTERCEPTDEBUG
-//				isFrameBegin = true;
-//				break;
-//		}
-//
-//		if (count <= 0){
-//			break;
-//		}
-//	}
-//
-//}

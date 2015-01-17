@@ -1,20 +1,32 @@
 #ifndef SCENEOBJECT_H
 #define SCENEOBJECT_H
 
+#include <nau/attribute.h>
+#include <nau/attributeValues.h>
 #include <nau/event/ilistener.h>
-#include <nau/render/irenderable.h>
 #include <nau/geometry/iboundingvolume.h>
 #include <nau/math/itransform.h>
+#include <nau/render/irenderable.h>
 #include <nau/scene/sceneobjectfactory.h>
+
+#include <string>
 
 namespace nau
 {
 	namespace scene
 	{
-		class SceneObject : public nau::event_::IListener
+		class SceneObject : public AttributeValues, public nau::event_::IListener
 		{
 		public:
 			friend class nau::scene::SceneObjectFactory;
+
+			FLOAT4_PROP(SCALE, 0);
+			FLOAT4_PROP(ROTATE, 1);
+			FLOAT4_PROP(TRANSLATE, 2);
+
+			static AttribSet Attribs;
+
+			virtual void setPropf4(Float4Property prop, vec4& aVec);
 
 			static void ResetCounter();
 			static unsigned int Counter;
@@ -36,6 +48,7 @@ namespace nau
 			virtual void setBoundingVolume (nau::geometry::IBoundingVolume *b);
 
 			virtual const nau::math::ITransform& getTransform();
+			virtual void transform(nau::math::ITransform *t);
 			virtual void setTransform (nau::math::ITransform *t);
 			virtual void burnTransform (void);
 			virtual nau::math::ITransform *_getTransformPtr (void);
@@ -54,6 +67,9 @@ namespace nau
 
 
 		protected:
+
+			static bool Init();
+			static bool Inited;
 
 			SceneObject (void);
 			int m_Id;

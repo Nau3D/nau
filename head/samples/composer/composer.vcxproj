@@ -295,7 +295,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     </ResourceCompile>
     <Link>
       <AdditionalOptions>  /ignore:4049 /ignore:4217 /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nauOptix_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;tinyxmlSTLd.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua52.lib;cudart_static.lib;optix_prime.1.lib;optix.1.lib;wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nauOptix_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;tinyxmlSTLd.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)composer_d.exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -470,7 +470,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     </ProjectReference>
     <Link>
       <AdditionalOptions> /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:LIBCMTD /ignore:4049 /ignore:4217 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua52.lib;cudart_static.lib;optix_prime.1.lib;optix.1.lib;libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)composer.exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

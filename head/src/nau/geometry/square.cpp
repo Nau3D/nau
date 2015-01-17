@@ -51,7 +51,7 @@ Square::Square(void) : Primitive(),
 	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup(this, "__Light Grey");
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
 	
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(6);
 

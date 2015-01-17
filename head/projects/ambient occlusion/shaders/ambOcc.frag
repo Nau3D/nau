@@ -36,10 +36,10 @@ void main(void) {
 	raios[2] = vec3(-0.5, 0.5, 0.5);
 	raios[3] = vec3(0.5, 0.5, -0.5);
 	raios[4] = vec3(-0.5, 0.5, -0.5);
-	raios[5] = vec3(-0.5, 0.1, 0.5);
-	raios[6] = vec3(0.5, 0.1, -0.5);
-	raios[7] = vec3(-0.5, 0.1, -0.5);
-	raios[8] = vec3(0.5, 0.1, 0.5);
+	raios[5] = vec3(-0.8, 0.2, 0.0);
+	raios[6] = vec3(0.8, 0.2, 0.0);
+	raios[7] = vec3(0.0, 0.2, -0.8);
+	raios[8] = vec3(0.0, 0.2, 0.8);
 	
 	vec4 posT;
 
@@ -63,13 +63,13 @@ void main(void) {
 	for (int i = 0; i < SAMPLES; ++i) {
 	
 		raio = rays[coordB+i].dir.xyz;
-		raio = vec3(CamV * vec4(raio, 0.0));
-		raio = normalize(raio)*1.0f; // just to test
+		//raio = vec3(CamV * vec4(raio, 0.0));
+		raio = raio*5.0f; 
 		//raio = u * raio.x + normal * raio.y + v * raio.z;
 		posT = vec4(rays[coordB+i].pos.xyz,1);
-		posT = CamV * posT;
+		posT = posT;
 		vec4 samplePos = posT + vec4(raio,0); // in camera space
-		vec4 sampleProjPos = CamP * samplePos;
+		vec4 sampleProjPos = CamP * CamV * samplePos;
 		sampleProjPos = sampleProjPos/sampleProjPos.w;
 		sampleProjPos = sampleProjPos * 0.5 + 0.5;
 		float sampleProjDepth = sampleProjPos.z;
@@ -86,22 +86,24 @@ void main(void) {
 	else
 		occMap2 = vec4(0);
 
-		float occ = 0.0;
-	posT = texture(positions, texPos.xy);
-	posT = CamV * posT;
-	vec3 normal =  texture(normals,texPos.xy).xyz * 2.0 -1.0;
-	vec3 n = vec3(CamV * vec4(normal,0));
-	vec3 u = cross(n, vec3(0,1,0));
-	if (dot(u,n) < 1.e-3f)
-		u = cross(n, vec3(1,0,0));
-	u = normalize(u);
-	vec3 v = cross(n, u);		
+		
+	float occ = 0.0;
+		
+	posT = vec4(texture(positions, texPos.xy).xyz, 1);
+	vec3 normal =  texture(normals,texPos.xy).xyz * 2.0 - 1.0;
+	vec3 u,k;
+	if (dot(normal, vec3(0,1,0)) < 0.9)
+		k = vec3(0,1,0);
+	else
+		k = vec3(1,0,0);
+	u = normalize(cross(k, normal));
+	vec3 v = cross(normal, u);
 	for (int i = 0 ; i < SAMPLES; ++i) {
-		raio = normalize(raios[i])*1.0f; // just to test
+		raio = normalize(raios[i])*5.0f; 
 		//ray = vec3(CamV * vec4(ray,0));
-		raio = u * raio.x + n * raio.y + v * raio.z;
+		raio = u * raio.x + normal * raio.y + v * raio.z;
 		vec4 samplePos = posT + vec4(raio,0); // in camera space
-		vec4 sampleProjPos = CamP * samplePos;
+		vec4 sampleProjPos = CamP * CamV * samplePos;
 		sampleProjPos = sampleProjPos/sampleProjPos.w;
 		sampleProjPos = sampleProjPos * 0.5 + 0.5;
 		float sampleProjDepth = sampleProjPos.z;
@@ -117,6 +119,5 @@ void main(void) {
 		//occMap = posT;
 	else
 		occMap = vec4(0);
-		
 
 }

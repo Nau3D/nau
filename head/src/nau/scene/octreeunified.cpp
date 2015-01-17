@@ -109,7 +109,11 @@ OctreeUnified::compile(void)
 	m_Compiled = true;
 	
 	if (m_SceneObject) {
-		m_SceneObject->getRenderable().getIndexData().compile(m_SceneObject->getRenderable().getVertexData());
+		std::vector<MaterialGroup*> &matGroups = m_SceneObject->getRenderable().getMaterialGroups();
+
+		for (auto mg : matGroups) {
+			mg->compile();
+		}
 	}
 }
 

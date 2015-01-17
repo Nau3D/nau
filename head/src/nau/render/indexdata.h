@@ -2,7 +2,6 @@
 #define INDEXDATA_H
 
 #include <nau/math/vec4.h>
-#include <nau/render/vertexdata.h>
 
 #include <map>
 #include <vector>
@@ -39,16 +38,19 @@ namespace nau
 
 			int add (IndexData &anIndexData);
 
-			virtual bool compile (VertexData &v) = 0;
-			virtual void resetCompilationFlag() = 0;
-			virtual void bind (void) = 0;
-			virtual void unbind (void) = 0;
-			virtual bool isCompiled() = 0;
 			virtual void useAdjacency(bool adj) = 0;
 			virtual bool getAdjacency() = 0;
 
 			//virtual std::vector<unsigned int>& _getReallyIndexData (void) = 0;
 			virtual unsigned int getBufferID() = 0;
+
+			virtual void setBuffer(unsigned int id) = 0;
+
+			virtual void resetCompilationFlag() = 0;
+			virtual void compile() = 0;
+			virtual void bind (void) = 0;
+			virtual void unbind (void) = 0;
+			virtual bool isCompiled() = 0;
 
 		protected:
 			IndexData(void);

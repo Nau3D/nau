@@ -97,6 +97,8 @@ namespace nau {
 		int getDataTypeCount(Enums::DataType dt);
 		const Attribute &get(std::string name);
 		const Attribute &get(int id, Enums::DataType dt);
+		// returns the ID of the attribute
+		// -1 if attribute does not exist
 		int getID(std::string name);
 		const std::string &getName(int id, Enums::DataType dt);
 		void getPropTypeAndId(std::string &s, nau::Enums::DataType *dt, int *id);

@@ -2,7 +2,7 @@
 <materialLib name="Test Render Targets">
 	<renderTargets>
 		<renderTarget name ="test">
-			<size width="1024" height="1024" />
+			<size width="512" height="512" />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>

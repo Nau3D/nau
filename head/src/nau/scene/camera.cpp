@@ -1,21 +1,22 @@
 #define _USE_MATH_DEFINES
-#include <cmath>
-#include <nau/slogger.h>
-
 
 #include <nau/scene/camera.h>
-#include <nau/math/utils.h>
-#include <nau/math/simpletransform.h>
-#include <nau/math/mat4.h>
-#include <nau/geometry/boundingbox.h>
-#include <nau/geometry/mesh.h>
-#include <nau/material/materialgroup.h>
-#include <nau/render/irenderer.h>
+
+#include <nau.h>
+#include <nau/slogger.h>
 #include <nau/event/eventFactory.h> 
 #include <nau/event/cameraMotion.h>
 #include <nau/event/cameraOrientation.h>
-#include <nau.h>
+#include <nau/geometry/boundingbox.h>
+#include <nau/geometry/mesh.h>
+#include <nau/material/materialgroup.h>
+#include <nau/math/mat4.h>
+#include <nau/math/simpletransform.h>
+#include <nau/math/utils.h>
+#include <nau/render/irenderer.h>
 
+
+#include <cmath>
 
 using namespace nau::scene;
 using namespace nau::math;
@@ -38,6 +39,8 @@ Camera::Init() {
 	Attribs.add(Attribute(VIEW_MATRIX, "VIEW_MATRIX",Enums::DataType::MAT4, true));
 	Attribs.add(Attribute(PROJECTION_MATRIX, "PROJECTION_MATRIX",Enums::DataType::MAT4, true));
 	Attribs.add(Attribute(VIEW_INVERSE_MATRIX, "VIEW_INVERSE_MATRIX",Enums::DataType::MAT4, true));
+	Attribs.add(Attribute(PROJECTION_INVERSE_MATRIX, "PROJECTION_INVERSE_MATRIX", Enums::DataType::MAT4, true));
+
 	Attribs.add(Attribute(PROJECTION_VIEW_MATRIX, "PROJECTION_VIEW_MATRIX",Enums::DataType::MAT4, true));
 	Attribs.add(Attribute(TS05_PVM_MATRIX, "TS05_PVM_MATRIX",Enums::DataType::MAT4, true));
 	// FLOAT
@@ -111,7 +114,7 @@ Camera::Camera (const std::string &name) :
 	//m_FloatProps[ZX_ANGLE] = (float)M_PI;
 
 	buildViewMatrix();
-	buildViewMatrixInverse();
+	buildInverses();
 
 	m_StaticCondition = false;
 
@@ -128,7 +131,7 @@ Camera::Camera (const std::string &name) :
 	VertexData &vertexData = renderable->getVertexData();
 	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup(renderable, "__Emission Green");
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Green");
 	
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(16);
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_LEFT_FAR;
@@ -150,7 +153,7 @@ Camera::Camera (const std::string &name) :
 	m_Transform = & m_Mat4Props[VIEW_INVERSE_MATRIX];
 	setRenderable (renderable);
 
-	aMaterialGroup = new MaterialGroup(renderable, "__Emission Red");
+	aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Red");
 	indices = new std::vector<unsigned int>(8);
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_RIGHT_NEAR;
 	indices->at (2) = Camera::TOP_RIGHT_NEAR;		indices->at (3) = Camera::BOTTOM_RIGHT_NEAR;
@@ -313,7 +316,7 @@ Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 			break;
 	}
 	buildViewMatrix();
-	buildViewMatrixInverse();
+	buildInverses();
 	buildProjectionViewMatrix();
 	buildTS05PVMMatrix();
 }
@@ -413,7 +416,7 @@ Camera::getRenderable (void)
 	//	normals->at(i).set(0.0f, 0.0f, 0.0f);
 	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
-	buildViewMatrixInverse();
+	buildInverses();
 	m_ResultTransform->clone(m_GlobalTransform);
 	m_ResultTransform->compose(*m_Transform);
 	return (*m_Renderable);
@@ -458,7 +461,7 @@ Camera::setCamera (vec3 position, vec3 view, vec3 up)
 	m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
 
 	buildViewMatrix();
-	buildViewMatrixInverse();
+	buildInverses();
 	buildProjectionViewMatrix();
 	buildTS05PVMMatrix();
 
@@ -466,7 +469,7 @@ Camera::setCamera (vec3 position, vec3 view, vec3 up)
 
 
 void 
-Camera::buildViewMatrixInverse(void) {
+Camera::buildInverses(void) {
 
 	// This is a simpler inverse because the view matrix has a specific format
 	//mat4& tmp = const_cast<mat4&>(m_ViewMatrix->getMat44());
@@ -491,6 +494,9 @@ Camera::buildViewMatrixInverse(void) {
 			aux += tmp.at(i,j) * tmp.at(3,j);
 		tmp2.set(3,i,-aux);
 	}
+
+	m_Mat4Props[PROJECTION_INVERSE_MATRIX].clone(&m_Mat4Props[PROJECTION_MATRIX]);
+	m_Mat4Props[PROJECTION_INVERSE_MATRIX].invert();
 }
 
 
@@ -518,7 +524,7 @@ Camera::setVectorsFromSpherical()
 	m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
 
 	buildViewMatrix();
-	buildViewMatrixInverse();
+	buildInverses();
 	buildProjectionViewMatrix();
 	buildTS05PVMMatrix();
 }

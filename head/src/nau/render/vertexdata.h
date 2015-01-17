@@ -34,7 +34,7 @@ namespace nau
 
 			void setName(std::string &name);
 
-			int getNumberOfVertices();
+			virtual int getNumberOfVertices() = 0;
 
 			//std::vector<Attr>& getDataOf (VertexDataType type);
 			std::vector<Attr>& getDataOf (unsigned int type);
@@ -67,13 +67,15 @@ namespace nau
 			virtual void setAttributeLocationFor (unsigned int type, int location) = 0;
 			void unitize(float min, float max);
 			virtual bool compile (void) = 0;
-			virtual void resetCompilationFlag() = 0;
-			virtual void bind (void) = 0;
-			//virtual void bind (unsigned int buffers) = 0;
-			virtual void unbind (void) = 0;
-			virtual bool isCompiled() = 0;
 //			virtual std::vector<unsigned int>& _getReallyIndexData (void) = 0;
 			virtual unsigned int getBufferID(unsigned int vertexAttrib) = 0;
+
+			virtual void resetCompilationFlag() = 0;
+			virtual void bind (void) = 0;
+			virtual void unbind (void) = 0;
+			virtual bool isCompiled() = 0;
+
+			virtual void setBuffer(unsigned int type, int bufferID) = 0;
 
 		protected:
 			VertexData(void);

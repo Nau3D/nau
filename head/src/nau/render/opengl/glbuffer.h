@@ -27,7 +27,7 @@ namespace nau
 
 			void bind(unsigned int target);
 			void unbind();
-			void setProp(int prop, Enums::DataType type, void *value);
+			void setPropui(UIntProperty  prop, unsigned int value);
 			void setData(unsigned int size, void *data);
 			void setSubData(unsigned int offset, unsigned int size, void*data);
 			int getData(unsigned int offset, unsigned int size, void *data);

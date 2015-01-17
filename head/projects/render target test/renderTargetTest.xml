@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<project name="Render Target Test" width=1024 height=1024>
+<project name="Render Target Test" width=512 height=512>
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<file name="./../models/cube.obj"/>
+				<file name="../../models/cube.obj"/>
 			</scene>
 		</scenes>
 		<viewports>

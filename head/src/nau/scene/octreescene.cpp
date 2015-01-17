@@ -161,7 +161,7 @@ OctreeScene::compile (void)
 
 		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 		for ( ; matGroupsIter != matGroups.end(); ++matGroupsIter){
-			(*matGroupsIter)->getIndexData().compile((*objIter)->getRenderable().getVertexData());
+			(*matGroupsIter)->compile();
 		}
 
 	}

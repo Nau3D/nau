@@ -62,9 +62,6 @@ OctreeByMatScene::getTransform()
 }
 
 
-
-
-
 void
 OctreeByMatScene::setTransform(nau::math::ITransform *t)
 {
@@ -161,12 +158,11 @@ OctreeByMatScene::compile (void)
 	std::vector<SceneObject*>::iterator objIter;
 	objIter = m_SceneObjects.begin();
 	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		(*objIter)->getRenderable().getVertexData().compile();
 		std::vector<MaterialGroup*> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
 
 		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 		for ( ; matGroupsIter != matGroups.end(); ++matGroupsIter){
-			(*matGroupsIter)->getIndexData().compile((*objIter)->getRenderable().getVertexData());
+			(*matGroupsIter)->compile();
 		}
 
 	}

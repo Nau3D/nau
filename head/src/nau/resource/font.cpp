@@ -172,7 +172,7 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence)
 		auxMG->setIndexList (indices);
 	}
 	else {
-		auxMG = new MaterialGroup(&renderable, mMaterialName);
+		auxMG = MaterialGroup::Create(&renderable, mMaterialName);
 //		auxMG->setMaterialName(mMaterialName);
 //		auxMG->setParent(&renderable);
 		auxMG->setIndexList (indices);

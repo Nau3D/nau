@@ -2545,7 +2545,7 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 			// Set material group name
 			s = obj->materials[currG->material].name;
 
-		MaterialGroup *aMatGroup = new MaterialGroup(aRenderable, s);
+		MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, s);
 		//aMatGroup->setParent (aRenderable);
 		// Set up the index array
 

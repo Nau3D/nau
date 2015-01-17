@@ -4,8 +4,8 @@
 	
 	<shaders>
 		<shader name="dirLightDifAmbPixAtomic" 
-								ps="dirlightdiffambpix.frag" 
-								vs="dirlightdiffambpix.vert" />
+								ps="shaders/dirlightdiffambpix.frag" 
+								vs="shaders/dirlightdiffambpix.vert" />
 	</shaders>
 	
 	<buffers>

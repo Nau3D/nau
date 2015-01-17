@@ -25,13 +25,20 @@ namespace nau
 			FLOAT4_PROP(ROTATE, 1);
 			FLOAT4_PROP(TRANSLATE, 2);
 
+			static AttribSet Attribs;
+
 		protected:
 			std::string m_Name;
 			bool m_Compiled;
 			ITransform *m_Transform;
 			bool m_Visible;
 
+			static bool Init();
+			static bool Inited;
+
 		public:
+
+			virtual void setPropf4(Float4Property prop, vec4& aVec);
 			virtual void setName(std::string name) {
 				m_Name = name; 
 			};

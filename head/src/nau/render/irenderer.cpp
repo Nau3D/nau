@@ -4,6 +4,19 @@
 using namespace nau;
 using namespace nau::math;
 
+std::map<std::string, IRenderable::DrawPrimitive> IRenderer::PrimitiveTypes = {
+	{ "TRIANGLES", IRenderable::TRIANGLES },
+	{ "TRIANGLE_STRIP", IRenderable::TRIANGLE_STRIP },
+	{ "TRIANGLE_FAN", IRenderable::TRIANGLE_FAN },
+	{ "LINES", IRenderable::LINES },
+	{ "LINE_LOOP", IRenderable::LINE_LOOP },
+	{ "POINTS", IRenderable::POINTS },
+	{ "TRIANGLES_ADJACENCY", IRenderable::TRIANGLES_ADJACENCY }
+#if NAU_OPENGL_VERSION >= 400	
+	, { "PATCHES", IRenderable::PATCHES }
+#endif
+};
+
 int IRenderer::MaxTextureUnits;
 int IRenderer::MaxColorAttachments;
 
@@ -21,8 +34,6 @@ IRenderer::Init() {
 	MatrixAttribs.add(Attribute(PROJECTION_VIEW, "PROJECTION_VIEW", Enums::DataType::MAT4, true, new mat4()));
 	MatrixAttribs.add(Attribute(TS05_PVM, "TS05_PVM", Enums::DataType::MAT4, true, new mat4()));
 	MatrixAttribs.add(Attribute(NORMAL, "NORMAL", Enums::DataType::MAT3, true, new mat3()));
-
-
 
 	// MOVE TO irenderable.h
 	//Attribs.add(Attribute(DRAW_PRIMITIVE, "DRAW_PRIMITIVE", Enums::DataType::ENUM, true));

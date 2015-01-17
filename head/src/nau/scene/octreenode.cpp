@@ -332,7 +332,7 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 					}
 
 					if (0 == tempMaterialGroup[index]) {
-						tempMaterialGroup[index] = new MaterialGroup(NULL, pMaterialGroup->getMaterialName());
+						tempMaterialGroup[index] = MaterialGroup::Create(NULL, pMaterialGroup->getMaterialName());
 
 						//tempMaterialGroup[index]->setMaterialName (pMaterialGroup->getMaterialName());
 						//tempMaterialGroup[index]->setMaterialId (pMaterialGroup->getMaterialId());
@@ -556,7 +556,7 @@ OctreeNode::_compile (void)
 		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 
 		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
-			(*matGroupsIter)->getIndexData().compile(m_pLocalMesh->getVertexData());
+			(*matGroupsIter)->compile();
 		}
 
 	}
