@@ -7,8 +7,9 @@
 #define _USE_MATH_DEFINES
 #endif
 
-#include <nau/errors.h>
 #include <nau/config.h>
+
+#include <nau/errors.h>
 #include <nau/event/eventManager.h>
 #include <nau/event/ilistener.h>
 #include <nau/material/materiallibmanager.h>
@@ -24,12 +25,17 @@
 #include <nau/scene/light.h>
 #include <nau/world/iworld.h>
 
+#ifdef NAU_LUA
 extern "C" {
 #include<lua/lua.h>
 #include <lua/lauxlib.h>
 #include <lua/lualib.h>
 }
+#endif
 
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 #include <iostream>
 
@@ -61,20 +67,23 @@ namespace nau {
 		static nau::Nau* create (void);
 		static nau::Nau* getInstance (void);
 		bool init(bool context, std::string aConfigFile = "");
+
+		// Lua Stuff
 		void initLua();
 		void initLuaScript(std::string file, std::string name);
 		void callLuaScript(std::string file, std::string name);
 		//int luaSet(lua_State *l);
+
 		std::string &getName();
 
 		// Global gets and sets
+		// note: gets and set perform no validation
+		// if in doubt call validate first
 
 		bool validate(std::string type, std::string context, std::string component);
-
 		void set(std::string type, std::string context, 
 				 std::string component, 
 				 void *values);
-
 		void *get(std::string type, std::string context,
 			std::string component);
 
@@ -84,6 +93,7 @@ namespace nau {
 		bool validateUserAttribName(std::string context, std::string name);
 		AttribSet *getAttribs(std::string context);
 		void deleteUserAttributes();
+		std::vector<std::string> &getContextList();
 
 
 		void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt);
@@ -118,6 +128,8 @@ namespace nau {
 		void setWindowSize (float width, float height);
 		float getWindowHeight();
 		float getWindowWidth();
+
+		// Viewports
 		nau::render::Viewport* createViewport (const std::string &name, nau::math::vec4 &bgColor);
 		nau::render::Viewport* createViewport (const std::string &name);
 		nau::render::Viewport* getViewport (const std::string &name);
@@ -162,10 +174,13 @@ namespace nau {
 		void loadStateXMLFile(std::string file);
 		std::vector<std::string> getStateEnumNames();
 		std::string getState(std::string enumName);
+
 	private:
 		Nau();
 
+#ifdef NAU_LUA
 		lua_State *m_LuaState;
+#endif
 
 		std::string m_Name;
 		unsigned long int m_FrameCount;
@@ -219,7 +234,9 @@ namespace nau {
 
 		bool isFrameBegin;
 
-
+		// this vector allows returning string vectors safely without
+		// memory leaks
+		std::vector<std::string> m_DummyVector;
 	};
 };
 

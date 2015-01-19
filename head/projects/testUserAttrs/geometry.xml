@@ -30,7 +30,7 @@
 		</scenes>
 		
 		<viewports>
-			<viewport name="MainViewport">
+			<viewport name="MainViewport">				
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 			</viewport>
 		</viewports>

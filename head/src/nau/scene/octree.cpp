@@ -1,4 +1,7 @@
 #include <algorithm>
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 #include <ctime>
 

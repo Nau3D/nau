@@ -2,7 +2,7 @@
 #define ATTRIBUTE_H
 
 #include <nau/enums.h>
-#include <nau/math/bvec4.h>
+//#include <nau/math/bvec4.h>
 #include <nau/math/mat3.h>
 #include <nau/math/mat4.h>
 #include <nau/math/vec4.h>
@@ -32,12 +32,15 @@ namespace nau {
 
 
 		Attribute();
-		Attribute(int id, std::string name, Enums::DataType type, bool readOnlyFlag = false, void *defaultV = NULL );
+		Attribute(int id, std::string name, Enums::DataType type, 
+			bool readOnlyFlag = false, void *defaultV = NULL,
+			void *min=NULL, void *max = NULL);
 		
 		~Attribute();
 
 
 		static bool isValidUserAttrType(std::string s);
+		static std::vector<std::string> &getValidUserAttrTypes();
 
 		std::string getName();
 		Enums::DataType getType();
@@ -46,8 +49,10 @@ namespace nau {
 		bool getListDefined();
 		void *getMax();
 		void *getMin();
+		bool getReadOnlyFlag();
 		int getListValue(std::string &s);
 		std::string getListString(int v);
+		bool isWithinRange(void *v);
 
 		void setRange(void *min, void *max);
 
@@ -57,6 +62,8 @@ namespace nau {
 		bool isValid(std::string value);
 		bool isValid(int v);
 
+
+		static std::vector<std::string> m_DummyVS;
 
 		int m_Id;
 		std::string m_Name;

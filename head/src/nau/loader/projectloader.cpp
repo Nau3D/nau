@@ -188,13 +188,13 @@ ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::A
 			if (attributes.count(p->Value()) == 0) {
 				NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value());
 			}
-			const Attribute a = attributes[p->Value()];
+			Attribute a = attributes[p->Value()];
 			// trying to set the value of a read only attribute?
-			if (a.m_ReadOnlyFlag)
+			if (a.getReadOnlyFlag())
 				NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value());
 
-			value = readAttr(parent, p, a.m_Type, attribs);
-			anObj->setProp(a.m_Id, a.m_Type, value);
+			value = readAttr(parent, p, a.getType(), attribs);
+			anObj->setProp(a.getId(), a.getType(), value);
 		}
 		p = p->NextSiblingElement();
 	}
@@ -218,7 +218,7 @@ Project Specification
 -------------------------------------------------------------------*/
 
 void
-ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, bool *triangleIDs)
+ProjectLoader::load (std::string file, int *width, int *height)
 {
 	ProjectLoader::s_Path = FileUtil::GetPath(file);
 	ProjectLoader::s_File = file;
@@ -228,20 +228,18 @@ ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, 
 	std::vector<std::string> matLibs;
 
 	if (!loadOkay) {
-
 		NAU_THROW("Parsing Error -%s- Line(%d) Column(%d) in file: %s", doc.ErrorDesc(), doc.ErrorRow(), doc.ErrorCol(),file.c_str());
 	}
+
 	TiXmlHandle hDoc (&doc);
 	TiXmlHandle hRoot (0);
 	TiXmlElement *pElem;
-
 
 	pElem = hDoc.FirstChildElement().Element();
 	if (0 == pElem) {
 		NAU_THROW("Parsing Error in file: %s", file.c_str());
 	}
 	hRoot = TiXmlHandle (pElem);
-
 
 	try {
 		*width = 0;
@@ -254,26 +252,6 @@ ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, 
 				}
 				NAU->setWindowSize(*width, *height);
 		}
-
-		const char *pUseTangents = pElem->Attribute("useTangents");
-		if (pUseTangents)
-			*tangents = !strcmp(pUseTangents, "yes");
-		else
-			*tangents = false;
-
-		const char *pUseTriangleIDs = pElem->Attribute("useTriangleIDs");
-		if (pUseTriangleIDs)
-			*triangleIDs = !strcmp(pUseTriangleIDs, "yes");
-		else
-			*triangleIDs = false;
-
-		//bool core;
-		//const char *pCoreProfile = pElem->Attribute("core");
-		//if (pCoreProfile)
-		//	core = !strcmp(pCoreProfile, "yes");
-		//else
-		//	core = false;
-		//RENDERER->setCore(core);
 		
 #ifdef GLINTERCEPTDEBUG
 		loadDebug(hRoot);
@@ -309,30 +287,34 @@ void
 ProjectLoader::loadUserAttrs(TiXmlHandle handle) 
 {
 	TiXmlElement *pElem;
+	std::string delim="\n", s;
 
 	pElem = handle.FirstChild ("attributes").FirstChild ("attribute").Element();
 	for (; 0 != pElem; pElem = pElem->NextSiblingElement("attribute")) {
 		const char *pContext = pElem->Attribute("context");
-		const char *pName = pElem->Attribute ("name");
-		const char *pType = pElem->Attribute ("type");
-			
-		if (0 == pContext)
-			NAU_THROW("File %s: Attribute without a context", ProjectLoader::s_File.c_str()); 					
+		const char *pName = pElem->Attribute("name");
+		const char *pType = pElem->Attribute("type");
 
-		if (!NAU->validateUserAttribContext(pContext))
-			NAU_THROW("File %s: Attribute with an invalid context %s", ProjectLoader::s_File.c_str(), pContext); 					
-
-		if (0 == pName) 
-			NAU_THROW("File %s: Attribute without a name", ProjectLoader::s_File.c_str()); 
-
-		if (!NAU->validateUserAttribName(pContext, pName))
-			NAU_THROW("File %s: Attribute name %s is already in use in context %s", ProjectLoader::s_File.c_str(), pName, pContext);
-		
-		if (0 == pType) 
-			NAU_THROW("File %s: Attribute without a type", ProjectLoader::s_File.c_str()); 					
-
-		if (!Attribute::isValidUserAttrType(pType))
-			NAU_THROW("File %s: Attribute with na invalid type", ProjectLoader::s_File.c_str()); 					
+		if (0 == pContext) {
+			NAU_THROW("File %s: Attribute without a context", ProjectLoader::s_File.c_str());
+		}
+		if (!NAU->validateUserAttribContext(pContext)) {
+			nau::system::textutil::join(NAU->getContextList(), delim.c_str(), &s);
+			NAU_THROW("File %s\nAttribute with an invalid context %s\nValid Values are: \n%s", ProjectLoader::s_File.c_str(), pContext, s.c_str());
+		}
+		if (0 == pName) {
+			NAU_THROW("File %s\nAttribute without a name", ProjectLoader::s_File.c_str());
+		}
+		if (!NAU->validateUserAttribName(pContext, pName)) {
+			NAU_THROW("File %s\nAttribute name %s is already in use in context %s", ProjectLoader::s_File.c_str(), pName, pContext);
+		}
+		if (0 == pType) {
+			NAU_THROW("File %s\nAttribute %s without a type", ProjectLoader::s_File.c_str(), pName);
+		}
+		if (!Attribute::isValidUserAttrType(pType)) {
+			nau::system::textutil::join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
+			NAU_THROW("File %s\nAttribute %s with na invalid type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
+		}
 
 		AttribSet *attribs = NAU->getAttribs(pContext);
 		Enums::DataType dt = Enums::getType(pType);
@@ -1318,54 +1300,14 @@ The available types so far are int and float.
 void 
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
-	void *value;
-
 	std::map<std::string, Attribute> attribs = Pass::Attribs.getAttributes();
-	TiXmlElement *p = hPass.FirstChild("userAttributes").FirstChild().Element();
-	Attribute a;
-	while (p) {
-		// trying to define an attribute that does not exist		
-		if (attribs.count(p->Value()) == 0)
-			NAU_THROW("Pass %s: %s is not an attribute, in file %s", aPass->getName().c_str() , p->Value(), ProjectLoader::s_File.c_str());
-		// trying to set the value of a read only attribute
-		a = attribs[p->Value()];
-		if (a.m_ReadOnlyFlag)
-			NAU_THROW("Pass %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), p->Value(), ProjectLoader::s_File.c_str());
-
-		value = readAttr(aPass->getName(), p, a.m_Type, Light::Attribs);
-		aPass->setProp(a.m_Id, a.m_Type, value);
-		p = p->NextSiblingElement();
+	TiXmlElement *p = hPass.FirstChild("userAttributes").Element();
+	if (p) {
+		std::vector<std::string> excluded;
+		readAttributes(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, p);
 	}
-
-
-
-
-
-
-	//int vi;
-	//float vf;
-	//std::string s;
-
-	//pElem = hPass.FirstChild("params").FirstChild("param").Element();
-	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-
-	//	const char *pName = pElem->Attribute ("name");
-	//	
-	//	if (!pName)
-	//		NAU_THROW("Param without name in pass: %s", aPass->getName().c_str());
-
-	//	const char *pValue = pElem->Attribute ("string");
-	//	if (TIXML_SUCCESS == pElem->QueryIntAttribute ("int",&vi))
-	//		aPass->setParam(pName,vi);
-	//	else if (TIXML_SUCCESS == pElem->QueryFloatAttribute ("float",&vf))
-	//		aPass->setParam(pName,vf);
-	//	//else if (pValue != NULL)
-	//	//		aPass->setParam(pName,pValue);
-	//	else {
-	//		NAU_THROW("Param %s without value in pass: %s", pName, aPass->getName().c_str());
-	//	}
-	//}
 }
+
 
 /* -----------------------------------------------------------------------------
 RENDERTARGET
@@ -2891,6 +2833,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 		handle = TiXmlHandle (pElem);
 		TiXmlElement *pElemPass;
 
+#ifdef NAU_LUA
 		pElemPass = handle.FirstChild("preScript").Element();
 		if (pElemPass != NULL) {
 
@@ -2914,7 +2857,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 				NAU_THROW("Pipeline %s: Pre script definition must have both file and name attributes", pNamePip);
 			}
 		}
-
+#endif
 		pElemPass = handle.FirstChild ("pass").Element();
 		for ( ; 0 != pElemPass; pElemPass = pElemPass->NextSiblingElement("pass")) {
 			
@@ -3607,8 +3550,8 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 			if (a.m_ReadOnlyFlag)
 				NAU_THROW("Library %s: Material %s: ImageTexture - %s is a read-only attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 
-			value = readAttr("", p, a.m_Type, ImageTexture::Attribs);
-			aMat->getImageTexture(unit)->setProp(a.m_Id, a.m_Type, value);
+			value = readAttr("", p, a.getType(), ImageTexture::Attribs);
+			aMat->getImageTexture(unit)->setProp(a.getId(), a.getType(), value);
 			p = p->NextSiblingElement();
 		}
 #else

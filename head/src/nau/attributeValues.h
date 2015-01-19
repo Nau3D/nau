@@ -154,8 +154,8 @@ namespace nau {
 		void copy(AttributeValues *to);
 		void clearArrays();
 
-		virtual void *getProp(int prop, Enums::DataType type);
-		virtual void setProp(int prop, Enums::DataType type, void *value);
+		virtual void *getProp(unsigned int prop, Enums::DataType type);
+		virtual void setProp(unsigned int prop, Enums::DataType type, void *value);
 
 		void registerAndInitArrays(std::string name, AttribSet  &attribs);
 		void initArrays(AttribSet  &attribs);

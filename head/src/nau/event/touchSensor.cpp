@@ -1,8 +1,14 @@
 #include <nau/event/touchSensor.h>
-#include <nau/event/eventFactory.h>
-#include <math.h>
-#include <time.h>
+
 #include <nau.h>
+#include <nau/event/eventFactory.h>
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
+#include <cmath>
+#include <time.h>
+
 
 using namespace nau::event_;
 using namespace nau::render;

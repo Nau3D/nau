@@ -58,7 +58,6 @@
 		
 		<lights>
 			<light name="Sun" >
-				<POSITION x="-52" y="77.0" z="-27.0" />
 				<DIRECTION x="0.78" y="-0.5" z="-0.22" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 			</light>
@@ -152,27 +151,11 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="simple" fromLibrary="Shadow Materials"/>
+				<!--rendertarget name="simple" fromLibrary="Shadow Materials"/-->
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="flat-with-shadow-4-depths" />
 				</materialMaps>
 			</pass>
-			
-			<pass class="quad" name="pass6">
-				<viewport>LargeViewport</viewport>
-				<texture name ="offscreenrender" fromLibrary="Shadow Materials"/>
-			</pass>
-			
-			<!--pass class="default" name="pass6a">
-				<scenes>
-					<scene name="MainScene" />
-					<scene name="MainCamera" />
-				</scenes>
-				<camera name="GodCamera" />
-				<lights>
-					<light name="Sun" />
-				</lights>
-			</pass-->
 			
 			<pass class="quad" name="pass7">
 				<viewport>SmallViewport1</viewport>

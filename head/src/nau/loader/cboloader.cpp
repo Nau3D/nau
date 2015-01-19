@@ -7,7 +7,7 @@
 #include <nau/geometry/iboundingvolume.h>
 #include <nau/geometry/boundingvolumefactory.h>
 #include <nau/math/vec3.h>
-#include <nau/math/bvec4.h>
+//#include <nau/math/bvec4.h>
 #include <nau/math/mat4.h>
 #include <nau/math/transformfactory.h>
 #include <nau/render/irenderable.h>

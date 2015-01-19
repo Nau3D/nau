@@ -532,6 +532,9 @@
     <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\math\vector4.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1034,6 +1037,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h">
       <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vector4.h">
+      <Filter>Source Files\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,8 +7,11 @@
 #include <nau/attribute.h>
 #include <nau/attributeValues.h>
 
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
+#include <cmath>
 #include <string>
-#include <math.h>
 
 
 

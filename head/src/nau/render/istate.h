@@ -2,7 +2,7 @@
 #define __STATE__
 
 #include <nau/math/vec4.h>
-#include <nau/math/bvec4.h>
+//#include <nau/math/bvec4.h>
 #include <nau/attributeValues.h>
 #include <nau/attribute.h>
 

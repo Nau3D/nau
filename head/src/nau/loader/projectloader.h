@@ -21,8 +21,7 @@ namespace nau
 		class ProjectLoader
 		{
 		public:
-			static void load (std::string file, int *width, int *height, 
-												bool *tangents, bool *triangleIDs);
+			static void load (std::string file, int *width, int *height);
 			static void loadMatLib (std::string file);
 			static std::string s_Path;
 			static std::string s_File;

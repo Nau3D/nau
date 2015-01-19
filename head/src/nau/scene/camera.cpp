@@ -1,5 +1,3 @@
-#define _USE_MATH_DEFINES
-
 #include <nau/scene/camera.h>
 
 #include <nau.h>
@@ -15,7 +13,9 @@
 #include <nau/math/utils.h>
 #include <nau/render/irenderer.h>
 
-
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 
 using namespace nau::scene;

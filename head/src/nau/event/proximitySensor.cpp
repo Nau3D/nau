@@ -1,6 +1,10 @@
 #include <nau/event/proximitySensor.h>
 #include <nau/event/eventFactory.h>
-#include <math.h>
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
+#include <cmath>
 #include <time.h>
 #include <nau.h>
 #include <string>

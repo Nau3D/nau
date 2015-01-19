@@ -9,10 +9,6 @@
 
 #define NAU_OPENGL_VERSION 440
 
-
-// use only core features (1 implies no fixed function)
-//#define NAU_CORE_OPENGL 1
-
 #define NAU_PLATFORM_WIN32 1
 
 #ifndef _USE_MATH_DEFINES
@@ -32,6 +28,8 @@
 
 
 #define GLINTERCEPTDEBUG
+#define NAU_LUA
+
 
 
 #endif // NAU_CONFIG_H

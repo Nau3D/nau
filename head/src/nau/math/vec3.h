@@ -1,164 +1,245 @@
-#ifndef VEC3_H
-#define VEC3_H
+#ifndef VECTOR3_H
+#define VECTOR3_H
 
-//#include <boost/archive/binary_oarchive.hpp>
-//#include <boost/archive/binary_iarchive.hpp>
+#include <nau/math/utils.h>
 
 namespace nau
 {
 	namespace math
 	{
-
-		//! \brief This class defines a vector in 3D space.
-		//!
-		//! \author Eduardo Marques
-		//!	
-		//! A vector defines both a magnitude (length) and a
-		//! direction. One use for the vec3 class is as a data type for the
-		//! entities in physics equations. A vector can also be use to
-		//! define a point in 3D space ( a point is essentially a vector
-		//! that originates at (0,0,0) ).
-		//!		
-		//! vec3 defines the three vector components (x,y,z) as data
-		//! members and has several vector operations as member functions.
-		class vec3 {
-			//friend class boost::serialization::access;
-		 public:
-		  
-		  /// Static copies of the unit vectors
-		  static const vec3 UNIT_X, 
-		    UNIT_Y, 
-		    UNIT_Z, 
-		    NEGATIVE_UNIT_X,
-		    NEGATIVE_UNIT_Y,
-		    NEGATIVE_UNIT_Z; 
-		  
-			//! x, y, z vector components 
-			float x,y,z;							
-		   
-			/// \name Constructors
-			//@{
-		   
-			//! Default class constructor. Initialize vector to (0,0,0,0)
-			explicit vec3 (): x(0.0f), y(0.0f), z(0.0f) {};
-		   
-			//! Complete class constructor
-			explicit vec3 (float x, float y, float z): x(x), y(y), z(z) {};
-		   
-			//! Copy constructor. 
-			vec3 (const vec3 &v);
-		   
-			//! Class destructor 
-			~vec3 () {};								
-			
-			//@}
-		   
-			//! \name Vector Accessing and Copying
-			//@{
-		   
-			//! Make this vector a copy of the vector <i>v</i>
-			void copy (const vec3 &v);
-
-			//! Return a new vector with the same contents a this vector
-			vec3 * clone () const;
-
-			//! Initialize ou change the vector's components
-			void set (float x,float y, float z);	
-
-		   
-			// Assignment operator
-			const vec3& operator = (const vec3 &v);
-		   
-			//@}
-		   
-			//! \name Overloaded Arithmetic Operators
-			//@{							
-		   
-			//! Vector addition
-			const vec3& operator += (const vec3 &v); 		
-		   
-			//! Vector subtraction
-			const vec3& operator -= (const vec3 &v);
-		   
-			//! Vector negation
-			const vec3& operator - (void);				
-
-			//! Vector scaling
-			const vec3& operator *= (float t);
-		   
-			//! Scalar division
-			const vec3& operator /= (float t);					
-		   
-			//@}
-		   
-		   
-			//! \name Overloaded comparation
-			//@{
-			
-			//! Equal
-			bool operator == (const vec3 &v) const;
-			
-			//! Diferent
-			bool operator != (const vec3 &v) const;
-
-			//@}
-
-			//! \name Methods
-			//@{
-		   
-			//! Length of vector
-			float length () const;
-		   
-			//! Length without the square root
-			float sqrLength () const;					       
-		   
-			//! distance between this vector and vector <i>v</i>
-			float distance (const vec3 &v) const;		
-			
-			//! Normalize this vector
-			void normalize ();
-		   
-			//! Return the unit vector of this vector
-			const vec3 unitVector () const;					
-		   
-			//! Dot product between this vector and vector <i>v</i>
-			float dot (const vec3 &v) const;	
-		   
-			//! Cross product between this vector and vector <i>v</i>
-			const vec3 cross (const vec3 &v) const;
-		   
-			//! Angle between two vectors.
-			float angle (vec3 &v) const;
-		   
-			//! Interpolated vector between this vector and vector <i>v</i> at
-			//! position alpha (0.0 <= alpha <= 1.0)
-			const vec3 lerp (const vec3 &v, float alpha) const;   
-		   
-			//! Add another vector to this one
-			void add (const vec3 &v);
-		   
-			//! Scalar multiplication
-			void scale (float a);				
-		   
-			//! Vector Equality
-			bool equals (const vec3 &v, float tolerance=-1.0f) const;
-		   
-			//@}			
-			
+		template <typename T>
+		class vector3 {
 
 		public:
-			/*
-			* boost serialization interface;
-			*/	
-			//template<class Archive>
-			//void serialize (Archive &ar, const unsigned int version)
-			//{
-			//	ar & x;
-			//	ar & y;
-			//	ar & z;
-			//}
-			//END: boost serialization interface
+
+			T x, y, z;
+
+			vector3() : x(0), y(0), z(0) {};
+			vector3(T x, T y, T z) : x(x), y(y), z(z) {};
+			vector3(const vector3 &v) : x(v.x), y(v.y), z(v.z) {};
+			~vector3() {};
+
+			const vector3&
+				vector3::operator =(const vector3 &v) {
+
+				if (this != &v) {
+					x = v.x;
+					y = v.y;
+					z = v.z;
+				}
+				return *this;
+			};
+
+			void
+				copy(const vector3 &v) {
+
+				x = v.x;
+				y = v.y;
+				z = v.z;
+			};
+
+			vector3 *
+				clone() const {
+
+				return new vector(*this);
+			};
+
+			void
+				set(T xx, T yy, T zz) {
+				x = xx;
+				y = yy;
+				z = zz;
+			};
+
+			void
+				set(T *values) {
+				x = values[0];
+				y = values[1];
+				z = values[2];
+			};
+
+			void
+				set(vector3* aVec) {
+				x = aVec->x;
+				y = aVec->y;
+				z = aVec->z;
+			};
+
+			void
+				set(const vector3& aVec) {
+				x = aVec.x;
+				y = aVec.y;
+				z = aVec.z;
+			};
+
+			const vector3&
+				operator += (const vector3 &v)	{
+
+				x += v.x;
+				y += v.y;
+				z += v.z;
+				return *this;
+			};
+
+			const vector3&
+				operator -= (const vector3 &v) {
+
+				x -= v.x;
+				y -= v.y;
+				z -= v.z;
+				return (*this);
+			};
+
+			const vector3 &
+				operator - (void) {
+
+				x = -x;
+				y = -y;
+				z = -z;
+				return (*this);
+			};
+
+			const vector3&
+				operator *=(T t) {
+
+				x *= t;
+				y *= t;
+				z *= t;
+				return *this;
+			};
+
+			const vector3&
+			operator /=(T t) {
+
+				x /= t;
+				y /= t;
+				z /= t;
+				return *this;
+			};
+
+			bool
+			operator == (const vector3 &v) const {
+
+				return equals(v);
+			};
+
+			bool
+			operator != (const vector3 &v) const {
+
+				return !equals(v);
+			};
+
+			bool 
+				operator > (const vector3 &v) const {
+
+				if (x > v.x && y > v.y && z > v.z)
+					return true;
+				else
+					return false;
+			}
+
+			bool
+				operator < (const vector3 &v) const {
+
+				if (x < v.x && y < v.y && z < v.z)
+					return true;
+				else
+					return false;
+			}
+
+			const vector3
+			lerp(const vector3 &v, T alpha) const {
+
+				vector result;
+
+				T ix = x + ((v.x - x) * alpha);
+				T iy = y + ((v.y - y) * alpha);
+				T iz = z + ((v.z - z) * alpha);
+
+				result.set(ix, iy, iz);
+
+				return (result);
+			};
+
+			void
+				add(const vector3 &v) {
+				x += v.x;
+				y += v.y;
+				z += v.z;
+			};
+
+			void
+				scale(T a) {
+
+				x *= a;
+				y *= a;
+				z *= a;
+			};
+
+			float
+				length() const {
+
+				return sqrtf(x*x + y*y + z*z);
+			};
+
+			void
+				normalize() {
+
+				float m = length();
+				if (m <= FLT_EPSILON) {
+					m = 1;
+				}
+				x /= m;
+				y /= m;
+				z /= m;
+			};
+
+			float
+				dot(const vector3 &v) const {
+
+				return (x*v.x + y*v.y + z*v.z);
+			};
+
+			const vector3
+				cross(const vector3 &v) const {
+
+				vector3 result;
+
+				result.x = (this->y * v.z) - (v.y * this->z);
+				result.y = (this->z * v.x) - (v.z * this->x);
+				result.z = (this->x * v.y) - (v.x * this->y);
+
+				return result;
+			};
+
+			bool
+			between(const vector3 &v1, const vector3 &v2) {
+
+				if (x < v1.x || x > v2.x)
+					return false;
+				if (y < v1.y || y > v2.y)
+					return false;
+				if (z < v1.z || z > v2.z)
+					return false;
+
+				return true;
+			};
+
+
+			bool
+				equals(const vector3 &v, float tolerance = -1.0f) const {
+				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance) && \
+					FloatEqual(z, v.z, tolerance));
+			};
 		};
+
+		typedef vector3<float> vec3;
+		typedef vector3<int> ivec3;
+		typedef vector3 < unsigned int >  uivec3;
+		typedef vector3<bool> bvec3;
+		typedef vector3<double> dvec3;
 	};
 };
-#endif // VEC3_H
+
+
+#endif 

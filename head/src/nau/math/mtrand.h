@@ -57,14 +57,18 @@
 #ifndef MERSENNETWISTER_H
 #define MERSENNETWISTER_H
 
+#pragma warning( disable : 4146 )
 // Not thread safe (unless auto-initialization is avoided and each thread has
 // its own MTRand object)
 
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
+#include <cmath>
 #include <iostream>
 #include <limits.h>
 #include <stdio.h>
 #include <time.h>
-#include <math.h>
 
 class MTRand {
 // Data

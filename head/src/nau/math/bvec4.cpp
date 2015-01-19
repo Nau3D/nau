@@ -32,7 +32,7 @@ namespace nau
 			w = v.w;
 		}
 		   
-		// Return a new vector with the same contents a this vector
+		// Return a new vector with the same contents of this vector
 		bvec4 * 
 		bvec4::clone () const
 		{

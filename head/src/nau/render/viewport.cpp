@@ -37,29 +37,29 @@ bool Viewport::Inited = Init();
 
 
 Viewport::Viewport(void) :
-	m_Name("default")
-{
+	m_Name("default") {
+
 	registerAndInitArrays("VIEWPORT", Attribs);
 	EVENTMANAGER->addListener("WINDOW_SIZE_CHANGED", this);
 }
 
 
-Viewport::~Viewport(void)
-{
+Viewport::~Viewport(void) {
+
 	EVENTMANAGER->removeListener("WINDOW_SIZE_CHANGED",this);
 }
 
 
 void 
-Viewport::setName(std::string aName)
-{
+Viewport::setName(std::string aName) {
+
 	m_Name = aName;
 }
 
 
 std::string&
-Viewport::getName() 
-{
+Viewport::getName() { 
+
 	return m_Name;
 }
 
@@ -114,7 +114,7 @@ Viewport::getPropf(FloatProperty prop) {
 
 
 void
-Viewport::setPropf2(Float2Property prop, vec2& values){
+Viewport::setPropf2(Float2Property prop, vec2& values) {
 
 	float width = values.x;
 	float height = values.y;
@@ -205,195 +205,3 @@ Viewport::eventReceived(const std::string &sender, const std::string &eventType,
 }
 
 
-
-
-//void *
-//Viewport::getProp(int prop, Enums::DataType type) {
-//
-//	switch (type) {
-//
-//	case Enums::FLOAT:
-//		assert(m_FloatProps.count(prop) > 0);
-//		return(&(m_FloatProps[prop]));
-//		break;
-//	case Enums::VEC4:
-//		assert(m_Float4Props.count(prop) > 0);
-//		return(&(m_Float4Props[prop]));
-//		break;
-//	case Enums::INT:
-//		assert(m_IntProps.count(prop) > 0);
-//		return(&(m_IntProps[prop]));
-//		break;
-//		
-//	}
-//	return NULL;
-//}
-
-
-//void 
-//Viewport::setProp(int prop, Enums::DataType type, void *value) {
-//	AttributeValues::setProp(prop, type, value);
-//
-//	switch (type) {
-//
-//		case Enums::FLOAT:
-//			assert(m_FloatProps.count(prop) > 0);
-//			setProp((FloatProperty)prop, *(float *)value);
-//			break;
-//		case Enums::VEC4:
-//			assert(m_Float4Props.count(prop) > 0);
-//			setProp((Float4Property)prop, *(vec4 *)value);
-//			break;
-//		case Enums::INT:
-//			m_IntProps[prop] = *(int *)value;
-//			break;
-//	}
-//}
-
-
-//void
-//Viewport::setPropf4(Float4Property prop, vec4& values) {
-//
-//	m_Float4Props[prop] = values;
-//}
-//
-//
-//const vec4 &
-//Viewport::getPropf4(Float4Property prop) {
-//
-//	return m_Float4Props[prop];
-//}
-
-
-
-
-//bool
-//Viewport::getPropb(BoolProperty prop) {
-//
-//	return m_BoolProps[prop];
-//}
-//const vec2 &
-//Viewport::getPropf2(Float2Property prop) {
-//
-//	return m_Float2Props[prop];
-//}
-
-//float 
-//Viewport::getRatio()
-//{
-//	if (m_Size.y == 0)
-//		return 1;
-//	else
-//		return m_Size.x / m_Size.y;
-//}
-//
-//
-//void 
-//Viewport::setRatio(float m) 
-//{
-//	if (m > 0) {
-//		m_Ratio = m;
-//		m_Size.y = m_Size.x * m_Ratio;
-//	}
-//}
-
-
-//const vec2&
-//Viewport::getSize (void) 
-//{
-//	return m_Size;
-//}
-
-
-//void
-//Viewport::setSize (float width, float height)
-//{
-//	if (width <=1) {
-//		m_RelSize.x = width;
-//		m_Size.x = m_RelSize.x * NAU->getWindowWidth();
-//	}
-//	else {
-//		m_RelSize.x = -1;
-//		m_Size.x = width;
-//	}
-//
-//	if (height <= 1) {
-//		m_RelSize.y = height;
-//		m_Size.y = m_RelSize.y * NAU->getWindowHeight();
-//	}
-//	else {
-//		m_RelSize.y = -1;
-//		m_Size.y = height;
-//	}
-//
-//	if (m_Ratio > 0)
-//		m_Size.y = m_Size.x * m_Ratio;
-//}
-//
-//
-//const vec2&
-//Viewport::getOrigin (void)
-//{
-//	return m_Origin;
-//}
-//
-//
-//void
-//Viewport::setOrigin (float x, float y)
-//{
-//	if (x < 1) {
-//		m_RelOrigin.x = x;
-//		m_Origin.x = NAU->getWindowWidth() * x;
-//	}
-//	else {
-//		m_RelOrigin.x = -1;
-//		m_Origin.x = x;
-//	}
-//
-//	if (y < 1) {
-//		m_RelOrigin.y = y;
-//		m_Origin.y = NAU->getWindowHeight() * y;
-//	}
-//	else {
-//		m_RelOrigin.y = -1;
-//		m_Origin.y = y;
-//	}
-//	
-//}
-
-
-//const vec4&
-//Viewport::getBackgroundColor (void)
-//{
-//	return m_BackgroundColor;
-//}
-//
-//
-//void
-//Viewport::setBackgroundColor (const vec4& aColor)
-//{
-//	m_BackgroundColor = aColor;
-//}
-
-
-//bool 
-//Viewport::isFixed (void)
-//{
-//	return m_Fixed;
-//}
-//
-//
-//void 
-//Viewport::setFixed (bool value)
-//{
-//	m_Fixed = value;
-//}
-//
-//
-//bool 
-//Viewport::isRelative (void)
-//{
-//	return (m_RelOrigin.x != -1 || m_RelOrigin.y != -1 || 
-//		    m_RelSize.x != -1 || m_RelSize.y != -1);
-//}
-//

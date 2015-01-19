@@ -144,7 +144,7 @@ AttributeValues::setPropb(BoolProperty prop, bool value) {
 
 
 // ----------------------------------------------
-//		BOOL
+//		BOOL4
 // ----------------------------------------------
 
 
@@ -174,7 +174,7 @@ AttributeValues::setPropb4(Bool4Property prop, bvec4 &value) {
 
 
 // ----------------------------------------------
-//		BOOL
+//		FLOAT
 // ----------------------------------------------
 
 
@@ -400,19 +400,12 @@ AttributeValues::clearArrays() {
 
 
 void *
-AttributeValues::getProp(int prop, Enums::DataType type) {
+AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 
-	int c;
 	switch (type) {
 
 		case Enums::ENUM:
-			c = m_EnumProps.count(prop);
-			if (prop < AttribSet::USER_ATTRIBS) 
-				assert(c > 0);
-			else {
-				if (!c)
-					m_EnumProps[prop] = *(int *)m_Attribs.getDefault(prop, type);
-			}
+			assert(m_EnumProps.count(prop) > 0);
 			return(&(m_EnumProps[prop]));
 			break;
 		case Enums::INT:
@@ -455,7 +448,7 @@ AttributeValues::getProp(int prop, Enums::DataType type) {
 
 
 void 
-AttributeValues::setProp(int prop, Enums::DataType type, void *value) {
+AttributeValues::setProp(unsigned int prop, Enums::DataType type, void *value) {
 
 	switch (type) {
 

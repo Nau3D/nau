@@ -1,160 +1,226 @@
-#ifndef VEC2_H
-#define VEC2_H
+#ifndef VECTOR2_H
+#define VECTOR2_H
 
-//#include <boost/archive/binary_oarchive.hpp>
-//#include <boost/archive/binary_iarchive.hpp>
+#include <nau/math/utils.h>
 
 namespace nau
 {
 	namespace math
 	{
-
-		//! \brief This class defines a vector in 2D space.
-		//!
-		//! \author Eduardo Marques
-		//!	
-		//! A vector defines both a magnitude (length) and a
-		//! direction. One use for the vec2 class is as a data type for the
-		//! entities in physics equations. A vector can also be use to
-		//! define a point in 2D space ( a point is essentially a vector
-		//! that originates at (0,0) ).
-		//!		
-		//! vec2 defines the three vector components (x,y) as data
-		//! members and has several vector operations as member functions.
-		class vec2 {
-			//friend class boost::serialization::access;
-		 public:
-		  
-		  /// Static copies of the unit vectors
-		  static const vec2 
-				UNIT_X, 
-				UNIT_Y, 
-				NEGATIVE_UNIT_X,
-				NEGATIVE_UNIT_Y;
-		  
-			//! x, y, z vector components 
-			float x,y;							
-		   
-			/// \name Constructors
-			//@{
-		   
-			//! Default class constructor. Initialize vector to (0,0,0,0)
-			explicit vec2 (): x(0.0f), y(0.0f) {};
-		   
-			//! Complete class constructor
-			explicit vec2 (float x, float y): x(x), y(y) {};
-		   
-			//! Copy constructor. 
-			vec2 (const vec2 &v);
-		   
-			//! Class destructor 
-			~vec2 () {};								
-			
-			//@}
-		   
-			//! \name Vector Accessing and Copying
-			//@{
-		   
-			//! Make this vector a copy of the vector <i>v</i>
-			void copy (const vec2 &v);
-
-			//! Return a new vector with the same contents a this vector
-			vec2 * clone () const;
-
-			//! Initialize ou change the vector's components
-			void set (float x,float y);	
-
-		   
-			// Assignment operator
-			const vec2& operator = (const vec2 &v);
-		   
-			//@}
-		   
-			//! \name Overloaded Arithmetic Operators
-			//@{							
-		   
-			//! Vector addition
-			const vec2& operator += (const vec2 &v); 		
-		   
-			//! Vector subtraction
-			const vec2& operator -= (const vec2 &v);
-		   
-			//! Vector negation
-			const vec2& operator - (void);				
-
-			//! Vector scaling
-			const vec2& operator *= (float t);
-		   
-			//! Scalar division
-			const vec2& operator /= (float t);					
-		   
-			//@}
-		   
-		   
-			//! \name Overloaded comparation
-			//@{
-			
-			//! Equal
-			bool operator == (const vec2 &v) const;
-			
-			//! Diferent
-			bool operator != (const vec2 &v) const;
-
-			//@}
-
-			//! \name Methods
-			//@{
-		   
-			//! Length of vector
-			float length () const;
-		   
-			//! Length without the square root
-			float sqrLength () const;					       
-		   
-			//! distance between this vector and vector <i>v</i>
-			float distance (const vec2 &v) const;		
-			
-			//! Normalize this vector
-			void normalize ();
-		   
-			//! Return the unit vector of this vector
-			const vec2 unitVector () const;					
-		   
-			//! Dot product between this vector and vector <i>v</i>
-			float dot (const vec2 &v) const;	
-		   		   
-			//! Angle between two vectors.
-			float angle (vec2 &v) const;
-		   
-			//! Interpolated vector between this vector and vector <i>v</i> at
-			//! position alpha (0.0 <= alpha <= 1.0)
-			const vec2 lerp (const vec2 &v, float alpha) const;   
-		   
-			//! Add another vector to this one
-			void add (const vec2 &v);
-		   
-			//! Scalar multiplication
-			void scale (float a);				
-		   
-			//! Vector Equality
-			bool equals (const vec2 &v, float tolerance=-1.0f) const;
-		   
-			//@}			
-			
+		template <typename T>
+		class vector2 {
 
 		public:
-			/*
-			* boost serialization interface;
-			*/	
-			//template<class Archive>
-			//void serialize (Archive &ar, const unsigned int version)
-			//{
-			//	ar & x;
-			//	ar & y;
-			//	ar & z;
-			//}
-			//END: boost serialization interface
+
+			T x, y;
+
+			vector2() : x(0), y(0) {};
+			vector2(T x, T y) : x(x), y(y) {};
+			vector2(const vector2 &v) : x(v.x), y(v.y) {};
+			~vector2() {};
+
+			const vector2&
+				vector2::operator =(const vector2 &v) {
+
+				if (this != &v) {
+					x = v.x;
+					y = v.y;
+				}
+				return *this;
+			};
+
+			void
+				copy(const vector2 &v) {
+
+				x = v.x;
+				y = v.y;
+			};
+
+			vector2 *
+				clone() const {
+
+				return new vector(*this);
+			};
+
+			void
+				set(T xx, T yy) {
+				x = xx;
+				y = yy;
+			};
+
+			void
+				set(T *values) {
+				x = values[0];
+				y = values[1];
+			};
+
+			void
+				set(vector2* aVec) {
+				x = aVec->x;
+				y = aVec->y;
+			};
+
+			void
+				set(const vector2& aVec) {
+				x = aVec.x;
+				y = aVec.y;
+			};
+
+			const vector2&
+				operator += (const vector2 &v)	{
+
+				x += v.x;
+				y += v.y;
+				return *this;
+			};
+
+			const vector2&
+				operator -= (const vector2 &v) {
+
+				x -= v.x;
+				y -= v.y;
+				return (*this);
+			};
+
+			const vector2 &
+				operator - (void) {
+
+				x = -x;
+				y = -y;
+				return (*this);
+			};
+
+			const vector2&
+				operator *=(T t) {
+
+				x *= t;
+				y *= t;
+				return *this;
+			};
+
+			const vector2&
+				operator /=(T t) {
+
+				x /= t;
+				y /= t;
+				return *this;
+			};
+
+			bool
+				operator == (const vector2 &v) const {
+
+				return equals(v);
+			};
+
+			bool
+				operator > (const vector2 &v) const {
+
+				if (x > v.x && y > v.y)
+					return true;
+				else
+					return false;
+			}
+
+			bool
+				operator < (const vector2 &v) const {
+
+				if (x < v.x && y < v.y)
+					return true;
+				else
+					return false;
+			}
+
+			bool
+				operator != (const vector2 &v) const {
+
+				return !equals(v);
+			};
+
+			const vector2
+				lerp(const vector2 &v, T alpha) const {
+
+				vector result;
+
+				T ix = x + ((v.x - x) * alpha);
+				T iy = y + ((v.y - y) * alpha);
+
+				result.set(ix, iy);
+
+				return (result);
+			};
+
+			void
+				add(const vector2 &v) {
+				x += v.x;
+				y += v.y;
+			};
+
+			void
+				scale(T a) {
+
+				x *= a;
+				y *= a;
+			};
+
+			float
+				length() const {
+
+				return sqrtf(x*x + y*y);
+			};
+
+			void
+				normalize() {
+
+				float m = length();
+				if (m <= FLT_EPSILON) {
+					m = 1;
+				}
+				x /= m;
+				y /= m;
+			};
+
+			float
+				dot(const vector2 &v) const {
+
+				return (x*v.x + y*v.y);
+			};
+
+			const vector2
+				cross(const vector2 &v) const {
+
+				vector2 result;
+
+				result.x = (this->y * v.z) - (v.y * this->z);
+				result.y = (this->z * v.x) - (v.z * this->x);
+
+				return result;
+			};
+
+			bool
+				between(const vector2 &v1, const vector2 &v2) {
+
+				if (x < v1.x || x > v2.x)
+					return false;
+				if (y < v1.y || y > v2.y)
+					return false;
+
+				return true;
+			};
+
+
+			bool
+				equals(const vector2 &v, float tolerance = -1.0f) const {
+				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance));
+			};
 		};
+
+		typedef vector2<float> vec2;
+		typedef vector2<int> ivec2;
+		typedef vector2 < unsigned int >  uivec2;
+		typedef vector2<bool> bvec2;
+		typedef vector2<double> dvec2;
 	};
 };
-#endif // VEC2_H
+
+
+#endif 

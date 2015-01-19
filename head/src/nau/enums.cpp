@@ -241,3 +241,4 @@ Enums::isBasicType(DataType t) {
 		return false;
 
 }
+

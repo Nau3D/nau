@@ -1,10 +1,10 @@
 #include <nau.h>
+
 #include <nau/config.h>
 #include <nau/slogger.h>
 #include <nau/debug/profile.h>
 #include <nau/debug/state.h>
 #include <nau/event/eventFactory.h>
-#include <nau/math/vec4.h>
 #include <nau/loader/cboloader.h>
 #include <nau/loader/objLoader.h>
 #include <nau/loader/ogremeshloader.h>
@@ -20,11 +20,14 @@
 #include <nau/world/worldfactory.h>
 
 #include <GL/glew.h>
+
+#ifdef NAU_LUA
 extern "C" {
 #include<lua/lua.h>
 #include <lua/lauxlib.h>
 #include <lua/lualib.h>
 }
+#endif
 
 #include <ctime>
 
@@ -81,7 +84,8 @@ Nau::Nau() :
 	m_UseTangents(false),
 	m_UseTriangleIDs(false),
 	m_CoreProfile(false),
-	isFrameBegin(true)
+	isFrameBegin(true), 
+	m_DummyVector()
 {
 }
 
@@ -156,6 +160,9 @@ Nau::getName() {
 //		Lua Stuff
 // ----------------------------------------------------
 
+#ifdef NAU_LUA
+
+
 int 
 luaSet(lua_State *l) {
 
@@ -207,6 +214,8 @@ Nau::callLuaScript(std::string file, std::string name) {
 	//int k = lua_tonumber(m_LuaState, -1);
 
 }
+
+#endif
 
 
 // ----------------------------------------------------------
@@ -264,6 +273,7 @@ Nau::get(std::string type, std::string context, std::string component) {
 //		USER ATTRIBUTES
 // -----------------------------------------------------------
 
+
 void 
 Nau::registerAttributes(std::string s, AttribSet *attrib) {
 
@@ -276,8 +286,8 @@ Nau::validateUserAttribContext(std::string context) {
 
 	if (m_Attributes.count(context) != 0)
 		return true;
-
-	return false;
+	else
+		return false;
 }
 
 
@@ -318,6 +328,15 @@ Nau::deleteUserAttributes() {
 }
 
 
+std::vector<std::string> &
+Nau::getContextList() {
+
+	m_DummyVector.clear();
+	for (auto attr : m_Attributes) {
+		m_DummyVector.push_back(attr.first);
+	}
+	return m_DummyVector;
+}
 
 
 // -----------------------------------------------------------
@@ -340,7 +359,7 @@ void
 Nau::readProjectFile (std::string file, int *width, int *height) {
 
 	try {
-		ProjectLoader::load (file, width, height, &m_UseTangents, &m_UseTriangleIDs);
+		ProjectLoader::load (file, width, height);
 		isFrameBegin = true;
 	}
 	catch (std::string s) {
@@ -349,9 +368,6 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 	}
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
-
-	if (m_UseTriangleIDs)
-		RENDERMANAGER->prepareTriangleIDs(true);
 }
 
 

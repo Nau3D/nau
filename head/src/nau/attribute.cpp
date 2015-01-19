@@ -4,16 +4,34 @@
 
 using namespace nau;
 
+std::vector<std::string> Attribute::m_DummyVS;
 
-Attribute::Attribute() : m_Id(-1), m_Default(NULL), m_RangeDefined(false), m_ListDefined(false) {};
+Attribute::Attribute() : m_Id(-1), m_Default(NULL), m_RangeDefined(false), m_ListDefined(false) {
+
+}
 
 
-Attribute::Attribute(int id, std::string name, Enums::DataType type, bool readOnlyFlag, void *defaultV) :
+Attribute::Attribute(int id, std::string name, Enums::DataType type, 
+	bool readOnlyFlag, void *defaultV,
+	void *min, void *max) :
 	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), m_Default(NULL), m_Min(NULL), m_Max(NULL),
 		m_ListDefined(false), m_RangeDefined(false)  {
 		
+	int s = Enums::getSize(m_Type);
+
+	if (min != NULL) {
+		m_RangeDefined = true;
+		m_Min = malloc(s);
+		memcpy(m_Min, min, Enums::getSize(m_Type));
+	}
+
+	if (max != NULL) {
+		m_RangeDefined = true;
+		m_Max = malloc(s);
+		memcpy(m_Max, max, Enums::getSize(m_Type));
+	}
+
 	if (defaultV) {
-		int s = Enums::getSize(m_Type);
 		m_Default = malloc(s);
 		memcpy(m_Default, defaultV, s);
 	}
@@ -21,30 +39,25 @@ Attribute::Attribute(int id, std::string name, Enums::DataType type, bool readOn
 		m_Default = Enums::getDefaultValue(m_Type);
 				
 	}
-};
+}
+
 
 
 Attribute::~Attribute() {
-	// can't free this memory because it may be in use in other attribute
-	//bool isBasic = Enums::isBasicType(m_Type);
-	//if (m_RangeDefined) {
-	//	if (m_Min != NULL)
-	//		if (isBasic)
-	//			free(m_Min);
-	//		else
-	//			delete m_Min;
-	//	if (m_Max != NULL)
-	//		if (isBasic)
-	//			free(m_Max);
-	//		else
-	//			delete m_Max;
-	//}
-	//if (m_Default != NULL)
-	//	if (isBasic)
-	//		free(m_Default);
-	//	else
-	//		delete m_Default;
+	// can't free this memory because it may be in use in other attribute ?
 };
+
+
+std::vector<std::string> &
+Attribute::getValidUserAttrTypes() {
+
+	m_DummyVS.clear();
+	m_DummyVS.push_back("INT");
+	m_DummyVS.push_back("FLOAT");
+	m_DummyVS.push_back("VEC4");
+
+	return m_DummyVS;
+}
 
 
 bool 
@@ -61,7 +74,7 @@ std::string
 Attribute::getName() {
 
 	return m_Name;
-};
+}
 
 
 void 
@@ -75,14 +88,14 @@ Attribute::setRange(void *min, void *max) {
 	m_RangeDefined = true;
 
 	if (min != NULL) {
-		m_Min = (void *)malloc(Enums::getSize(m_Type));
+		m_Min = malloc(Enums::getSize(m_Type));
 		memcpy(m_Min, min, Enums::getSize(m_Type));
 	}
 	else
 		m_Min = NULL;
 
 	if (max != NULL) {
-		m_Max = (void *)malloc(Enums::getSize(m_Type));
+		m_Max = malloc(Enums::getSize(m_Type));
 		memcpy(m_Max, max, Enums::getSize(m_Type));
 	}
 	else
@@ -94,6 +107,13 @@ Enums::DataType
 Attribute::getType() {
 
 	return m_Type;
+}
+
+
+bool 
+Attribute::getReadOnlyFlag() {
+
+	return m_ReadOnlyFlag;
 }
 
 
@@ -162,7 +182,7 @@ Attribute::getListValue(std::string &s) {
 			return mListValues[i];
 	}
 	return 0;
-};
+}
 
 
 std::string 
@@ -173,7 +193,7 @@ Attribute::getListString(int v) {
 			return mListString[i];
 	}
 	return m_DummyS;
-};
+}
 
 
 bool 
@@ -184,11 +204,27 @@ Attribute::isValid(int v) {
 			return true;
 	}
 	return false;
-
 }
 
 
+bool
+Attribute::isWithinRange(void *v) {
 
+	switch (m_Type) {
+
+	case Enums::INT:
+		if ((m_Max != NULL && *(int *)v > *(int *)m_Max) ||
+			(m_Min != NULL && *(int *)v < *(int *)m_Min))
+			return false;
+
+	case Enums::VEC2:
+		if ((m_Max != NULL && *(vec2 *)v > *(vec2 *)m_Max) ||
+			(m_Min != NULL && *(vec2 *)v < *(vec2 *)m_Min))
+			return false;
+
+	}
+	return true;
+}
 
 // -------------------------------------------------------------------------------------------
 //    Attribute Set 

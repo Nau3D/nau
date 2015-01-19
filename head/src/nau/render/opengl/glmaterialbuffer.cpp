@@ -14,8 +14,6 @@ GLMaterialBuffer::Init() {
 #if NAU_OPENGL_VERSION >= 430
 	Attribs.listAdd("TYPE", "SHADER_STORAGE", GL_SHADER_STORAGE_BUFFER);
 #endif	
-	Attribs.listAdd("TYPE", "ARRAY", GL_ARRAY_BUFFER);
-	Attribs.listAdd("TYPE", "ELEMENT", GL_ELEMENT_ARRAY_BUFFER);
 	return true;
 }
 

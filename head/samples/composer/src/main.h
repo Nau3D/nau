@@ -21,7 +21,11 @@
 #include "dialogs/DlgStateXML.h"
 
 #include "glcanvas.h"
+
 #include <nau.h>
+#ifdef NAU_LUA
+#pragma comment(lib, "lua52.lib")
+#endif
 
 #ifdef __BORLANDC__
     #pragma hdrstop
