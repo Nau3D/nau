@@ -141,8 +141,9 @@ Nau::init (bool context, std::string aConfigFile) {
 	State::init();
 
 	// Init LUA
-
+#ifdef NAU_LUA
 	initLua();
+#endif
 
 
 	return true;

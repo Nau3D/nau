@@ -69,11 +69,11 @@ namespace nau {
 		bool init(bool context, std::string aConfigFile = "");
 
 		// Lua Stuff
+#ifdef NAU_LUA
 		void initLua();
 		void initLuaScript(std::string file, std::string name);
 		void callLuaScript(std::string file, std::string name);
-		//int luaSet(lua_State *l);
-
+#endif
 		std::string &getName();
 
 		// Global gets and sets

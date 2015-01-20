@@ -23,6 +23,7 @@
 #include "glcanvas.h"
 
 #include <nau.h>
+#include <nau/config.h>
 #ifdef NAU_LUA
 #pragma comment(lib, "lua52.lib")
 #endif
