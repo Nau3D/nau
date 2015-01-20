@@ -16,7 +16,7 @@ void main()
 	n = normalize(Normal);	
 	intensity = max(dot(lightDir,n),0.0);
 	
-	imageStore(imageUnit, ivec2(gl_FragCoord.xy),vec4(1.0,1.0,0.0,1.0));
+	imageStore(imageUnit, ivec2(gl_FragCoord.xy),vec4(0.0,1.0,0.0,1.0) * intensity);
 	outColor = vec4(0.0,1.0,0.0,1.0) * intensity;
 	//discard;
 }
