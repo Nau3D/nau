@@ -187,15 +187,6 @@
     <ClCompile Include="..\src\nau\math\transformfactory.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\math\vec2.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\vec3.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\vec4.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\depthmappass.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
@@ -475,9 +466,6 @@
     <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\math\bvec4.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\imageTexture.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
@@ -531,9 +519,6 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp">
       <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\vector4.cpp">
-      <Filter>Source Files\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -667,15 +652,6 @@
       <Filter>Source Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\math\utils.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\vec2.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\vec3.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\vec4.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\depthmappass.h">
@@ -984,9 +960,6 @@
     <ClInclude Include="..\src\nau\bimap.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\math\bvec4.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\render\imageTexture.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
@@ -1038,7 +1011,13 @@
     <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\math\vector4.h">
+    <ClInclude Include="..\src\nau\math\vec2.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vec3.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vec4.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
   </ItemGroup>

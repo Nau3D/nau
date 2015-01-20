@@ -88,17 +88,11 @@
 				<imagesaveicon value="false"/>
 			</imageicon>
 		</imagelog>
-		<shaderlog>
-			<enabled value="false"/>
-		</shaderlog>
-		<displaylistlog>
-			<enabled value="false"/>
-		</displaylistlog>
 		<framelog>
-			<enabled value="false"/>
+			<enabled value="true"/>
 		</framelog>
 		<timerlog>
-			<enabled value="false"/>
+			<enabled value="true"/>
 		</timerlog>
 		<plugins>
 			<plugin name="OpenGLShaderEdit" dll="GLShaderEdit/GLShaderEdit.dll"/>
