@@ -53,7 +53,7 @@
 					<scene name="Box" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>MainViewport</viewport>				
+				<viewport name="MainViewport" />				
 				<lights>
 					<light name="Sun" />
 				</lights>

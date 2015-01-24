@@ -3,8 +3,7 @@
 
 #include <nau/enums.h>
 //#include <nau/math/bvec4.h>
-#include <nau/math/mat3.h>
-#include <nau/math/mat4.h>
+#include <nau/math/matrix.h>
 #include <nau/math/vec4.h>
 #include <nau/math/vec2.h>
 
@@ -42,7 +41,7 @@ namespace nau {
 		static bool isValidUserAttrType(std::string s);
 		static std::vector<std::string> &getValidUserAttrTypes();
 
-		std::string getName();
+		std::string &getName();
 		Enums::DataType getType();
 		int getId();
 		bool getRangeDefined();
@@ -51,8 +50,7 @@ namespace nau {
 		void *getMin();
 		bool getReadOnlyFlag();
 		int getListValue(std::string &s);
-		std::string getListString(int v);
-		bool isWithinRange(void *v);
+		std::string &getListString(int v);
 
 		void setRange(void *min, void *max);
 

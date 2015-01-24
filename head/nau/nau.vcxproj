@@ -497,8 +497,6 @@
     <ClCompile Include="..\src\nau\material\programvalue.cpp" />
     <ClCompile Include="..\src\nau\material\teximage.cpp" />
     <ClCompile Include="..\src\nau\material\texturemat.cpp" />
-    <ClCompile Include="..\src\nau\math\mat3.cpp" />
-    <ClCompile Include="..\src\nau\math\mat4.cpp" />
     <ClCompile Include="..\src\nau\math\plane.cpp" />
     <ClCompile Include="..\src\nau\math\randomgen.cpp" />
     <ClCompile Include="..\src\nau\math\simpletransform.cpp" />
@@ -618,6 +616,7 @@
     <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h" />
     <ClInclude Include="..\src\nau\material\imaterialbuffer.h" />
     <ClInclude Include="..\src\nau\material\textureSampler.h" />
+    <ClInclude Include="..\src\nau\math\matrix.h" />
     <ClInclude Include="..\src\nau\math\vec2.h" />
     <ClInclude Include="..\src\nau\math\vec3.h" />
     <ClInclude Include="..\src\nau\math\vec4.h" />
@@ -735,8 +734,6 @@
     <CustomBuildStep Include="..\src\nau\material\teximage.h" />
     <ClInclude Include="..\src\nau\material\texturemat.h" />
     <ClInclude Include="..\src\nau\math\itransform.h" />
-    <ClInclude Include="..\src\nau\math\mat3.h" />
-    <ClInclude Include="..\src\nau\math\mat4.h" />
     <ClInclude Include="..\src\nau\math\mtrand.h" />
     <ClInclude Include="..\src\nau\math\plane.h" />
     <ClInclude Include="..\src\nau\math\randomgen.h" />

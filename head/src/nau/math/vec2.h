@@ -3,6 +3,8 @@
 
 #include <nau/math/utils.h>
 
+#include <string>
+
 namespace nau
 {
 	namespace math
@@ -136,18 +138,6 @@ namespace nau
 				return !equals(v);
 			};
 
-			const vector2
-				lerp(const vector2 &v, T alpha) const {
-
-				vector result;
-
-				T ix = x + ((v.x - x) * alpha);
-				T iy = y + ((v.y - y) * alpha);
-
-				result.set(ix, iy);
-
-				return (result);
-			};
 
 			void
 				add(const vector2 &v) {
@@ -207,10 +197,15 @@ namespace nau
 				return true;
 			};
 
-
 			bool
 				equals(const vector2 &v, float tolerance = -1.0f) const {
 				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance));
+			};
+
+			std::string 
+				toString() {
+
+				return  "(" + std::to_string(x) + ", " + std::to_string(y) + ")";
 			};
 		};
 

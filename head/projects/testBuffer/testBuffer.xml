@@ -25,7 +25,7 @@
 >>>>>>> origin/debug_wrapper
 			</pass>
 			<pass class="quad" name="pass2" >
-				<viewport>Main</viewport>
+				<viewport name="Main" />
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Buffer" toMaterial="showBuffer" />
 				</materialMaps>

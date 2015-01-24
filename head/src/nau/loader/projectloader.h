@@ -34,6 +34,7 @@ namespace nau
 			static void loadPipelines (TiXmlHandle &hRoots);
 
 			static void readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem);
+			static std::string &getValidValuesString(Attribute &a, void *value);
 			static void *readAttr(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet &attribs);
 			static bool isExcluded(std::string , std::vector<std::string> &excluded);
 			// Asset Loading

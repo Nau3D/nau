@@ -1,6 +1,8 @@
 #include "dlgLog.h"
+
 #include <nau.h>
 #include <nau/debug/profile.h>
+
 #include <fstream>
 
 
@@ -34,8 +36,7 @@ DlgLog::Instance () {
  
 
 DlgLog::DlgLog(): wxDialog(DlgLog::m_Parent, -1, wxT("Nau - LOG"),wxDefaultPosition,
-						   wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE)
-{
+						   wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE) {
 
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize);
 
@@ -72,25 +73,30 @@ DlgLog::DlgLog(): wxDialog(DlgLog::m_Parent, -1, wxT("Nau - LOG"),wxDefaultPosit
 }
 
 
+DlgLog::~DlgLog() {
+
+}
+
+
 void
-DlgLog::updateDlg() 
-{
+DlgLog::updateDlg() {
+
 	EVENTMANAGER->removeListener("LOG",this);
 	EVENTMANAGER->addListener("LOG",this);
 }
 
 
 std::string &
-DlgLog::getName ()
-{
+DlgLog::getName () {
+
 	name = "DlgLog";
 	return(name);
 }
 
 
 void
-DlgLog::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt)
-{
+DlgLog::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+
 	if (eventType == "LOG") {
 		append(*(std::string *)evt->getData());
 	}

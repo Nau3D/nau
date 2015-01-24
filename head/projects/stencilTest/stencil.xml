@@ -62,7 +62,7 @@
 					<scene name="CubeLand" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -82,7 +82,7 @@
 					<stencilOp sfail=REPLACE dfail=REPLACE dpass=REPLACE/>
 				</stencil>
 				<camera name="MainCamera" />
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -102,7 +102,7 @@
 					<stencilOp sfail=KEEP dfail=KEEP dpass=KEEP/>
 				</stencil>
 				<camera name="MainCamera" />
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -118,7 +118,7 @@
 				<color clear=false />
 				<depth clear=false />
 				<camera name="MainCamera" />
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>

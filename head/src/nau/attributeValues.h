@@ -3,8 +3,7 @@
 
 
 #include <nau/attribute.h>
-#include <nau/math/mat3.h>
-#include <nau/math/mat4.h>
+#include <nau/math/matrix.h>
 
 
 #include <map>
@@ -141,6 +140,7 @@ namespace nau {
 	// MAT3
 	protected:
 		std::map<int, mat3> m_Mat3Props;
+		void initArrays(AttribSet  &attribs);
 
 	public:
 		typedef enum {} Mat3Property;
@@ -156,9 +156,9 @@ namespace nau {
 
 		virtual void *getProp(unsigned int prop, Enums::DataType type);
 		virtual void setProp(unsigned int prop, Enums::DataType type, void *value);
-
+		virtual bool isValid(unsigned int prop, Enums::DataType type, void *value);
 		void registerAndInitArrays(std::string name, AttribSet  &attribs);
-		void initArrays(AttribSet  &attribs);
+		void initArrays();
 
 		AttributeValues();
 

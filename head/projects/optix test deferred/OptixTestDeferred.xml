@@ -111,15 +111,15 @@
 
 
 			<pass class="quad" name="pass3">
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<texture name="color" fromLibrary="Deferred Render Targets" />			
 			</pass>
 			<pass class="quad" name="pass4">
-				<viewport>MiddleViewport</viewport>
+				<viewport name="MiddleViewport" />
 				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
 			<pass class="quad" name="pass5">
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Deferred Render Targets" toMaterial="combine" />
 				</materialMaps>

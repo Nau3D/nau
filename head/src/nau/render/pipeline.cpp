@@ -295,10 +295,12 @@ Pipeline::setPostScript(std::string file, std::string name) {
 
 
 void 
-Pipeline::callScript(std::string file, std::string name) {
+Pipeline::callScript(std::string &file, std::string &name) {
 
+#ifdef NAU_LUA
 	if (file != "" && name != "") {
 		NAU->callLuaScript(file, name);
 
 	}
+#endif
 }

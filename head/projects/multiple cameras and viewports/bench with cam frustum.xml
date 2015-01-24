@@ -55,7 +55,7 @@
 					<scene name="MainCamera" />
 				</scenes>
 				<camera name="GodCamera" />
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -65,7 +65,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>

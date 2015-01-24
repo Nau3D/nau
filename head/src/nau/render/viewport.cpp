@@ -9,21 +9,21 @@ bool
 Viewport::Init() {
 
 	// VEC2
-	Attribs.add(Attribute(ORIGIN, "ORIGIN", Enums::DataType::VEC2, false, new vec2(0.0f, 0.0f)));
-	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::VEC2, false, new vec2(1.0f, 1.0f)));
-	Attribs.add(Attribute(ABSOLUT_ORIGIN, "ABSOLUT_ORIGIN", Enums::DataType::VEC2, true, new vec2(0.0f, 0.0f)));
-	Attribs.add(Attribute(ABSOLUT_SIZE, "ABSOLUT_SIZE", Enums::DataType::VEC2, true, new vec2(1.0f, 1.0f)));
+	Attribs.add(Attribute(ORIGIN, "ORIGIN", Enums::DataType::VEC2, false, new vec2(0.0f, 0.0f), new vec2(0.0f, 0.0f)));
+	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::VEC2, false, new vec2(1.0f, 1.0f), new vec2(0.0f, 0.0f)));
+	Attribs.add(Attribute(ABSOLUT_ORIGIN, "ABSOLUT_ORIGIN", Enums::DataType::VEC2, true, new vec2(0.0f, 0.0f), new vec2(0.0f, 0.0f)));
+	Attribs.add(Attribute(ABSOLUT_SIZE, "ABSOLUT_SIZE", Enums::DataType::VEC2, true, new vec2(1.0f, 1.0f), new vec2(0.0f, 0.0f)));
 
 	// VEC4
-	Attribs.add(Attribute(CLEAR_COLOR, "CLEAR_COLOR", Enums::DataType::VEC4, false, new vec4()));
+	Attribs.add(Attribute(CLEAR_COLOR, "CLEAR_COLOR", Enums::DataType::VEC4, false, new vec4(), new vec4(), new vec4(1.0f)));
 
 	// BOOL
 	Attribs.add(Attribute(FULL, "FULL", Enums::DataType::BOOL, false, new bool(true)));
 
 	// FLOAT
-	Attribute r = Attribute(RATIO, "RATIO", Enums::DataType::FLOAT, false, new float(0.0f));
-	float *min = new float(0.0f);
-	r.setRange(&min, NULL);
+	Attribute r = Attribute(RATIO, "RATIO", Enums::DataType::FLOAT, false, new float(0.0f), new float(0.0f));
+	//float *min = new float(0.0f);
+	//r.setRange(&min, NULL);
 	Attribs.add(r);
 
 	NAU->registerAttributes("VIEWPORT", &Attribs);

@@ -5,7 +5,6 @@
 #include <nau/debug/profile.h>
 #include <nau/material/material.h> 
 #include <nau/material/materialgroup.h>
-#include <nau/math/mat3.h>
 #include <nau/math/transformfactory.h>
 #include <nau/render/opengl/glvertexarray.h>
 #include <nau/render/opengl/glrendertarget.h>

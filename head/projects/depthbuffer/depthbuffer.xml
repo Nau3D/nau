@@ -56,7 +56,7 @@
 			</pass>
 			
 			<pass class="quad" name="pass3">
-				<viewport>SmallViewport1</viewport>				
+				<viewport name="SmallViewport1" />				
 				<texture name="shadowMap" fromLibrary="Depth Buffer"/>
 			</pass>
 			
@@ -65,7 +65,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>SmallViewport2</viewport>
+				<viewport name="SmallViewport2" />
 				<lights>
 					<light name="Sun" />
 				</lights>

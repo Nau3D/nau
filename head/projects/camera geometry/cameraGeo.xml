@@ -62,7 +62,7 @@
 					<scene name="Perspective" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -73,7 +73,7 @@
 					<scene name="Orthographics" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>

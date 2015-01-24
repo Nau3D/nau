@@ -6,6 +6,7 @@
 #include <nau/math/utils.h>
 
 #include <assert.h>
+#include <string>
 
 namespace nau
 {
@@ -123,7 +124,7 @@ namespace nau
 			void multiply(const matrix &m) {
 
 				T aux[DIMENSION][DIMENSION];
-				
+
 				const T *m1 = this->m_Matrix;
 				const T *m2 = m.m_Matrix;
 
@@ -132,7 +133,7 @@ namespace nau
 						aux[i][j] = (T)0;
 						for (int k = 0; k < DIMENSION; ++k) {
 
-							aux[i][j] += at(k,j) * m.at(i, k);
+							aux[i][j] += at(k, j) * m.at(i, k);
 						}
 					}
 				}
@@ -150,12 +151,28 @@ namespace nau
 				setMatrix(m.m_Matrix);
 				return this;
 			}
+
+
+			std::string toString() {
+
+				std::string s;
+
+				for (int i = 0; i < DIMENSION; ++i) {
+					s = std::to_string(m_Matrix[i*DIMENSION]);
+					for (int j = 1; j < DIMENSION; ++j) {
+						s = s + ", " + std::to_string(m_Matrix[i*DIMENSION + j]);
+					}
+					if (i != DIMENSION -1)
+						s = s + "\n";
+				}
+				return "[" + s + "]";
+			}
 		};
 
 		// ---------------------------------------------------------
 		//		MATRIX 3x3
 		//----------------------------------------------------------
-
+#define M3(a,b) (a*3 + b)
 
 		template <typename T>
 		class matrix3 : public matrix < T, 3 > {
@@ -463,12 +480,12 @@ namespace nau
 
 			T at(unsigned int i, unsigned int j) const {
 				assert(i < LINES && j < COLUMNS);
-				return m_Matrix[i * DIMENSION + j];
+				return m_Matrix[i * COLUMNS + j];
 			}
 
 			void set(unsigned int i, unsigned int j, T value) {
 				assert(i < LINES && j < COLUMNS);
-				m_Matrix[i * DIMENSION + j] = value;
+				m_Matrix[i * COLUMNS + j] = value;
 			}
 
 			const T* getMatrix() {
@@ -477,13 +494,13 @@ namespace nau
 
 			void setMatrix(const T* values) {
 
-				for (int i = 0; i < DIMENSION*DIMENSION; ++i) {
+				for (int i = 0; i < LINES*COLUMNS; ++i) {
 					m_Matrix[i] = values[i];
 				}
 			}
 
 			// copy into this
-			void copy(const matrix &m) {
+			void copy(const matrixNS &m) {
 				setMatrix(m.m_Matrix);
 			}
 
@@ -493,6 +510,20 @@ namespace nau
 				return *this;
 			}
 
+			std::string toString() {
+
+				std::string s;
+
+				for (int i = 0; i < LINES; ++i) {
+					s = std::to_string(m_Matrix[i*COLUMNS]);
+					for (int j = 1; j < COLUMNS; ++j) {
+						s = s + ", " + std::to_string(m_Matrix[i*COLUMNS + j]);
+					}
+					if (i != LINES - 1)
+						s = s + "\n";
+				}
+				return "[" + s + "]";
+			}
 		};
 
 		typedef matrix3<float> mat3;

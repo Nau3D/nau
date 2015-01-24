@@ -255,8 +255,7 @@ AttributeValues::setPropf4(Float4Property prop, vec4 &value) {
 void 
 AttributeValues::setPropf4(Float4Property prop, float x, float y, float z, float w) {
 
-	vec4 *v = new vec4(x, y, z, w);
-	setPropf4(prop, *v);
+	setPropf4(prop, vec4(x,y,z,w));
 
 }
 
@@ -369,7 +368,7 @@ void
 AttributeValues::copy(AttributeValues *to) {
 
 	//to->m_StringProps = m_StringProps;
-	to->m_EnumProps = m_EnumProps;
+	to->m_EnumProps =   m_EnumProps;
 	to->m_IntProps =    m_IntProps;
 	to->m_UIntProps =   m_UIntProps;
 	to->m_BoolProps =   m_BoolProps;
@@ -488,6 +487,48 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, void *value) {
 }
 
 
+bool
+AttributeValues::isValid(unsigned int prop, Enums::DataType type, void *value) {
+
+	switch (type) {
+
+	case Enums::ENUM:
+		return isValide((EnumProperty)prop, *(int *)value);
+		break;
+	case Enums::INT:
+		return isValidi((IntProperty)prop, *(int *)value);
+		break;
+	case Enums::UINT:
+		return isValidui((UIntProperty)prop, *(unsigned int *)value);
+		break;
+	case Enums::BOOL:
+		return isValidb((BoolProperty)prop, *(bool *)value);
+		break;
+	case Enums::BVEC4:
+		return isValidb4((Bool4Property)prop, *(bvec4 *)value);
+		break;
+	case Enums::FLOAT:
+		return isValidf((FloatProperty)prop, *(float *)value);
+		break;
+	case Enums::VEC2:
+		return isValidf2((Float2Property)prop, *(vec2 *)value);
+		break;
+	case Enums::VEC4:
+		return isValidf4((Float4Property)prop, *(vec4 *)value);
+		break;
+	case Enums::MAT4:
+		return isValidm4((Mat4Property)prop, *(mat4 *)value);
+		break;
+	case Enums::MAT3:
+		return isValidm3((Mat3Property)prop, *(mat3 *)value);
+		break;
+	default:
+		assert(false && "Missing Data Type in class attributeValues or Invalid prop");
+		return false;
+	}
+}
+
+
 void 
 AttributeValues::registerAndInitArrays(std::string name, AttribSet &attribs) {
 
@@ -510,6 +551,22 @@ AttributeValues::initArrays(AttribSet &attribs) {
 	attribs.initAttribInstanceMat3Array(m_Mat3Props);
 
 	m_Attribs = attribs;
+}
+
+
+void
+AttributeValues::initArrays() {
+
+	m_Attribs.initAttribInstanceEnumArray(m_EnumProps);
+	m_Attribs.initAttribInstanceIntArray(m_IntProps);
+	m_Attribs.initAttribInstanceUIntArray(m_UIntProps);
+	m_Attribs.initAttribInstanceBoolArray(m_BoolProps);
+	m_Attribs.initAttribInstanceBvec4Array(m_Bool4Props);
+	m_Attribs.initAttribInstanceVec4Array(m_Float4Props);
+	m_Attribs.initAttribInstanceVec2Array(m_Float2Props);
+	m_Attribs.initAttribInstanceFloatArray(m_FloatProps);
+	m_Attribs.initAttribInstanceMat4Array(m_Mat4Props);
+	m_Attribs.initAttribInstanceMat3Array(m_Mat3Props);
 }
 
 

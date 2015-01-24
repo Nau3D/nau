@@ -70,15 +70,15 @@
 			</pass>
 			
 			<pass class="quad" name="showNormals">
-				<viewport>normals</viewport>
+				<viewport name="normals" />
 				<texture name="normals" fromLibrary="Deferred Rendering" />
 			</pass>
 			<pass class="quad" name="showColors">
-				<viewport>colors</viewport>
+				<viewport name="colors" />
 				<texture name="colors" fromLibrary="Deferred Rendering" />
 			</pass>
 			<pass class="quad" name="deferred">
-				<viewport>deferred</viewport>
+				<viewport name="deferred" />
 				<materialMaps>
 					<map fromMaterial="__Quad" 
 						 toLibrary="Deferred Rendering" toMaterial="compose" />
@@ -89,7 +89,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>oneshot</viewport>
+				<viewport name="oneshot" />
 				<lights>
 					<light name="Sun" />
 				</lights>

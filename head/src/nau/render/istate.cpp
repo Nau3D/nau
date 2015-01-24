@@ -146,7 +146,7 @@ IState::clone() {
 void 
 IState::setDefault() {
 
-	initArrays(Attribs);
+	initArrays();
 	//Attribs.initAttribInstanceBoolArray(m_EnableProps);
 	//Attribs.initAttribInstanceEnumArray(m_EnumProps);
 	//Attribs.initAttribInstanceFloatArray(m_FloatProps);

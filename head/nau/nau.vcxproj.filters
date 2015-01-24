@@ -166,12 +166,6 @@
     <ClCompile Include="..\src\nau\material\texturemat.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\math\mat3.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\mat4.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\math\plane.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
@@ -630,12 +624,6 @@
     <ClInclude Include="..\src\nau\math\itransform.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\math\mat3.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\mat4.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\math\mtrand.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
@@ -1018,6 +1006,9 @@
       <Filter>Source Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\math\vec4.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\matrix.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
   </ItemGroup>

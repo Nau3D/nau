@@ -135,6 +135,7 @@ namespace nau {
 		nau::render::Viewport* getViewport (const std::string &name);
 		nau::render::Viewport* getDefaultViewport ();
 		std::vector<std::string> *getViewportNames();
+		bool hasViewport(const std::string &name);
 
 		bool reload (void);
 

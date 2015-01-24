@@ -70,7 +70,7 @@ Attribute::isValidUserAttrType(std::string s) {
 }
 
 
-std::string 
+std::string &
 Attribute::getName() {
 
 	return m_Name;
@@ -185,7 +185,7 @@ Attribute::getListValue(std::string &s) {
 }
 
 
-std::string 
+std::string &
 Attribute::getListString(int v) {
 		
 	for(unsigned int i = 0 ; i < mListValues.size(); ++i) {		
@@ -207,24 +207,7 @@ Attribute::isValid(int v) {
 }
 
 
-bool
-Attribute::isWithinRange(void *v) {
 
-	switch (m_Type) {
-
-	case Enums::INT:
-		if ((m_Max != NULL && *(int *)v > *(int *)m_Max) ||
-			(m_Min != NULL && *(int *)v < *(int *)m_Min))
-			return false;
-
-	case Enums::VEC2:
-		if ((m_Max != NULL && *(vec2 *)v > *(vec2 *)m_Max) ||
-			(m_Min != NULL && *(vec2 *)v < *(vec2 *)m_Min))
-			return false;
-
-	}
-	return true;
-}
 
 // -------------------------------------------------------------------------------------------
 //    Attribute Set 

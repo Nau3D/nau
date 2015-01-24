@@ -52,7 +52,7 @@
 			</pass>
 
 			<pass class="quad" name="count" >
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<materialMaps>			
 					<map fromMaterial="__Quad" 
 						 toLibrary="atomics" toMaterial="count" />

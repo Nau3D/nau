@@ -58,7 +58,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>SmallViewport1</viewport>
+				<viewport name="SmallViewport1" />
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -69,7 +69,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>SmallViewport2</viewport>
+				<viewport name="SmallViewport2" />
 				<materialMaps>
 					<map fromMaterial="*" 
 						 toLibrary="Complexity Map" toMaterial="fivePerCentTest" />
@@ -82,7 +82,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>SmallViewport3</viewport>
+				<viewport name="SmallViewport3" />
 				<materialMaps>
 					<map fromMaterial="*" 
 						 toLibrary="Complexity Map" toMaterial="fivePerCentDraw" />

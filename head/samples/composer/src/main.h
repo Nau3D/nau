@@ -1,6 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+
+
 #include <wx/wxprec.h>
 
 #include <wx/string.h>

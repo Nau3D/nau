@@ -158,22 +158,22 @@
 			</pass>
 			
 			<pass class="quad" name="pass7">
-				<viewport>SmallViewport1</viewport>
+				<viewport name="SmallViewport1" />
 				<texture name ="shadowMap1" fromLibrary="Shadow Materials"/>
 			</pass>
 			
  			<pass class="quad" name="pass8">
-				<viewport>SmallViewport2</viewport>
+				<viewport name="SmallViewport2" />
 				<texture name ="shadowMap2" fromLibrary="Shadow Materials"/>
 			</pass>
 			
  			<pass class="quad" name="pass9">
-				<viewport>SmallViewport3</viewport>
+				<viewport name="SmallViewport3" />
 				<texture name ="shadowMap3" fromLibrary="Shadow Materials"/>
 			</pass>
 			
  			<pass class="quad" name="pass10">
-				<viewport>SmallViewport4</viewport>
+				<viewport name="SmallViewport4" />
 				<texture name ="shadowMap4" fromLibrary="Shadow Materials"/>
 			</pass>
 	 		

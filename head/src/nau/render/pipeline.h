@@ -72,7 +72,7 @@ namespace nau
 			// -----------------------------------------------------------------
 			void setPreScript(std::string file, std::string name);
 			void setPostScript(std::string file, std::string name);
-			void callScript(std::string file, std::string name);
+			void callScript(std::string &file, std::string &name);
 
 		protected:
 			Pipeline (const Pipeline&);

@@ -58,7 +58,7 @@
 			</pass>
 			
 			<pass class="quad" name="pass2">
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<!--texture name="offscreenrender" fromLibrary="Test Multisampling" /-->
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Test Multisampling" 
@@ -69,7 +69,7 @@
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<camera name="MainCamera" />
 				<lights>
 					<light name="Sun" />

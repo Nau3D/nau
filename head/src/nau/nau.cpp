@@ -92,7 +92,7 @@ Nau::Nau() :
 
 Nau::~Nau() {
 
-	MATERIALLIBMANAGER->clear();
+	delete MATERIALLIBMANAGER;
 	EVENTMANAGER->clear();
 	RENDERMANAGER->clear();
 	RESOURCEMANAGER->clear();
@@ -859,6 +859,13 @@ Nau::createViewport (const std::string &name, nau::math::vec4 &bgColor) {
 	m_vViewports[name] = v;
 
 	return v;
+}
+
+
+bool 
+Nau::hasViewport(const std::string &name) {
+
+	return m_vViewports.count(name);
 }
 
 

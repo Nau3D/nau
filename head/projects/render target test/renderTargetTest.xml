@@ -41,7 +41,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<rendertarget name="test" fromLibrary="Test Render Targets" />
 				<lights>
 					<light name="Sun" />
@@ -49,7 +49,7 @@
 			</pass>
 			
 			<pass class="quad" name="pass2">
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<texture name="offscreenrender" fromLibrary="Test Render Targets" />
 			</pass>
 		</pipeline>

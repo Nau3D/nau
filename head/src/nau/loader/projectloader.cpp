@@ -99,7 +99,9 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 			
 				if (TIXML_SUCCESS != p->QueryFloatAttribute("w", &(s_Dummy_vec4.w)))
 					p->QueryFloatAttribute("a", &(s_Dummy_vec4.w));
-				return &s_Dummy_vec4;
+
+					return &s_Dummy_vec4;
+
 			}
 			else
 				NAU_THROW("File %s: Element %s: Vec4 Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
@@ -174,6 +176,32 @@ ProjectLoader::isExcluded(std::string attr, std::vector<std::string> &excluded) 
 }
 
 
+std::string &
+ProjectLoader::getValidValuesString(Attribute &a, void *value) {
+
+	Enums::DataType type = a.getType();
+	if (type != Enums::ENUM) {
+
+		void *min = a.getMin();
+		void *max = a.getMax();
+
+		if (min != NULL && max != NULL) {
+
+			s_Dummy = "between" + Enums::valueToString(type, min) + " and " + Enums::valueToString(type, max);
+		}
+		else if (min != NULL) {
+			s_Dummy = "greater or equal than " + Enums::valueToString(type, min);
+		}
+		else {
+			s_Dummy = "less or equal than " + Enums::valueToString(type, min);
+
+		}
+	}
+	return s_Dummy;
+
+}
+
+
 void 
 ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem) {
 
@@ -191,10 +219,15 @@ ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::A
 			Attribute a = attributes[p->Value()];
 			// trying to set the value of a read only attribute?
 			if (a.getReadOnlyFlag())
-				NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value());
+				NAU_THROW("File %s\nElement %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value());
 
-			value = readAttr(parent, p, a.getType(), attribs);
-			anObj->setProp(a.getId(), a.getType(), value);
+			int id = a.getId();
+			Enums::DataType type = a.getType();
+			value = readAttr(parent, p, type, attribs);
+			if (!anObj->isValid(id, type, value))
+				NAU_THROW("File %s\nElement %s: %s has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value(), getValidValuesString(a,value).c_str());
+
+			anObj->setProp(id, a.getType(), value);
 		}
 		p = p->NextSiblingElement();
 	}
@@ -504,6 +537,8 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("file")) {
 
 				const char *pFileName = pElementAux->Attribute("name");
+				if (!pFileName)
+					NAU_THROW("Scene %s: file is not specified", pName);
 
 				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName))) {
 					NAU_THROW("Scene file %s does not exist", pFileName);
@@ -1228,9 +1263,15 @@ ProjectLoader::loadPassViewport(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("viewport").Element();
 	if (0 != pElem) {
-
-		// CHECK IF EXISTS
-		aPass->setViewport (nau::Nau::getInstance()->getViewport (pElem->GetText()));
+		const char *pViewport = pElem->Attribute("name");
+		if (pViewport) {
+			Viewport *vp = NAU->getViewport(pViewport);
+			if (vp == NULL) {
+				NAU_THROW("Pass %s\nViewport %s is not defined", aPass->getName().c_str(), pViewport);
+			}
+			else
+				aPass->setViewport(vp);
+		}
 	}
 }
 		
@@ -2896,7 +2937,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 				loadPassScenes(hPass,aPass);
 				loadPassCamera(hPass,aPass);	
 			}
-			else
+			else if (passClass == "quad")
 				loadPassTexture(hPass,aPass);
 #ifdef NAU_OPTIX
 			if (passClass == "optix")

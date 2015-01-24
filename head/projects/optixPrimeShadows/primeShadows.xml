@@ -83,18 +83,18 @@
 				<hits buffer ="PrimeShadows::hits" />
 			</pass>		
 			<pass name="showColor" class="quad" >
-				<viewport>MiddleViewport</viewport>
+				<viewport name="MiddleViewport" />
 				<texture name="color" fromLibrary="PrimeShadows" />
 			</pass>
 			<pass name="showBuffer" class="quad" >
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<materialMaps>
 					<map fromMaterial="__Quad" 
 						 toLibrary="PrimeShadows" toMaterial="showBuffer" />
 				</materialMaps>				
 			</pass>
 			<pass name="showFinal" class="quad" >
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<materialMaps>
 					<map fromMaterial="__Quad" 
 						 toLibrary="PrimeShadows" toMaterial="compose" />

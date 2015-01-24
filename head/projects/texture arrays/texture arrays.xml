@@ -64,7 +64,7 @@
 				
 			</pass>
 			<pass class="quad" name="showArrays">
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="testTextureArrays" 
 											 toMaterial="showArrays" />

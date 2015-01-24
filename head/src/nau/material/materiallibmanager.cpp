@@ -13,7 +13,12 @@ MaterialLibManager::MaterialLibManager() :
 
 MaterialLibManager::~MaterialLibManager()
 {
-  
+	while (!m_LibManager.empty()){
+
+		m_LibManager.begin()->second->clear();
+		m_LibManager.erase(m_LibManager.begin());
+	}
+
 }
 
 

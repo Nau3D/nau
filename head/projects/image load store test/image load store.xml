@@ -46,7 +46,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>Left</viewport>
+				<viewport name="Left" />
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -57,7 +57,7 @@
 			</pass>
 			
 			<pass class="quad" name="pass2">
-				<viewport>Right</viewport>
+				<viewport name="Right" />
 				<texture name="tex" fromLibrary="Image Load Store" />
 			</pass>
 		</pipeline>

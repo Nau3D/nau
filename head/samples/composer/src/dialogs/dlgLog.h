@@ -43,6 +43,8 @@ protected:
 
 
 public:
+
+	~DlgLog();
 	static wxWindow *m_Parent; 
 
 	static DlgLog* Instance () ;

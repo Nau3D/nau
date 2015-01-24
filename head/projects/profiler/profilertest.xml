@@ -37,7 +37,7 @@
 	
 		<pipeline name="fixedfunction" default="true"  defaultCamera="MainCamera">
 			<pass class="default" name="teapotRendering" >
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<scenes>
 					<scene name="Main" />
 				</scenes>

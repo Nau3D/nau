@@ -3,6 +3,8 @@
 
 #include <nau/math/utils.h>
 
+#include <string>
+
 namespace nau
 {
 	namespace math
@@ -17,6 +19,7 @@ namespace nau
 			vector4() : x(0), y(0), z(0), w(0) {};
 			vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
 			vector4(const vector4 &v) : x(v.x), y(v.y), z(v.z), w(v.w) {};
+			vector4(T v) : x(v), y(v), z(v), w(v) {};
 			~vector4() {};
 
 			const vector4&
@@ -158,20 +161,6 @@ namespace nau
 				return !equals(v);
 			};
 
-			const vector4
-			lerp(const vector4 &v, T alpha) const {
-
-				vector result;
-
-				T ix = x + ((v.x - x) * alpha);
-				T iy = y + ((v.y - y) * alpha);
-				T iz = z + ((v.z - z) * alpha);
-				T iw = w + ((v.w - w) * alpha);
-
-				result.set(ix, iy, iz, iw);
-
-				return (result);
-			};
 
 			void
 			add(const vector4 &v) {
@@ -247,7 +236,14 @@ namespace nau
 				equals(const vector4 &v, float tolerance = -1.0f) const {
 				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance) && \
 					FloatEqual(z, v.z, tolerance) && FloatEqual(w, v.w, tolerance));
-			};
+			}
+
+
+			std::string 
+				toString() {
+
+				return  "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ", " + std::to_string(w) + ")";
+			}
 		};
 
 		typedef vector4<float> vec4;

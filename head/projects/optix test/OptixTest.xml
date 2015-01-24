@@ -96,7 +96,7 @@
 
 			</pass>
 			<pass class="quad" name="pass2">
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
 			<pass class="default" name="pass3">
@@ -104,7 +104,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<lights>
 					<light name="Sun" />
 				</lights>

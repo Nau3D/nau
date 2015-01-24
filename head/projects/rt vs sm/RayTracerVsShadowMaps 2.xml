@@ -206,27 +206,27 @@
 			
 			
 			<pass class="quad" name="showColor">
-				<viewport>RightTopViewport</viewport>
+				<viewport name="RightTopViewport" />
 				<texture name="intersectionResult" fromLibrary="RT vs SM" />			
 			</pass>
 
 			<pass class="quad" name="showOptixShadows">
-				<viewport>RightTopMViewport</viewport>
+				<viewport name="RightTopMViewport" />
 				<texture name="offscreenrender_ubyte" fromLibrary="RT vs SM" />
 			</pass>
 
 			<pass class="quad" name="showShadowMapResult">
-				<viewport>RightBottomMViewport</viewport>
+				<viewport name="RightBottomMViewport" />
 				<texture name="shadow" fromLibrary="RT vs SM"/>
 			</pass>	
 			
 			<pass class="quad" name="showShadowMap">
-				<viewport>RightBottomViewport</viewport>
+				<viewport name="RightBottomViewport" />
 				<texture name="shadowMapA" fromLibrary="RT vs SM"/>
 			</pass>	
 
 			<pass class="quad" name="showComparison">
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<texture name="color2" fromLibrary="RT vs SM"/>
 			</pass>	
 		</pipeline>

@@ -281,6 +281,7 @@ PassOptixPrime::prepare(void) {
 ////		k = cudaGraphicsMapResources(1, &cglInd, 0);
 		k = cudaGraphicsMapResources(1, &cglBuff, 0);
 		k = cudaGraphicsMapResources(1, &cglBuffH, 0);
+		k = cudaGraphicsMapResources(1, &cglInd, 0);
 	}
 
 }
@@ -294,7 +295,8 @@ PassOptixPrime::restore(void) {
 //	cudaGraphicsUnmapResources(1, &cglInd, 0);
 	k = cudaGraphicsUnmapResources(1, &cglBuff, 0);
 	k = cudaGraphicsUnmapResources(1, &cglBuffH, 0);
-		//SLOG("%d", k);
+	k = cudaGraphicsUnmapResources(1, &cglInd, 0);
+	//SLOG("%d", k);
 }
 
 

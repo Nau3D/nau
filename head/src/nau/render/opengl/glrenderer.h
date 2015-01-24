@@ -7,8 +7,7 @@
 
 #include <nau/render/irenderer.h>
 #include <nau/math/simpletransform.h>
-#include <nau/math/mat4.h>
-#include <nau/math/mat3.h>
+#include <nau/math/matrix.h>
 
 #include <nau/geometry/frustum.h>
 #include <nau/scene/camera.h>

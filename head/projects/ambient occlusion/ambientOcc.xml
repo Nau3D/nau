@@ -88,21 +88,21 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>SmallViewport1</viewport>
+				<viewport name="SmallViewport1" />
 				<lights>
 					<light name="Sun" />
 				</lights>
 			</pass>
 			<!-- <pass class="quad" name="pass3">
-				<viewport>SmallViewport2</viewport>
+				<viewport name="SmallViewport2" />
 				<texture name="depthMap" fromLibrary="Ambient Occlusion"/>
 			</pass> -->
 			<pass class="quad" name="pass4">
-				<viewport>SmallViewport2</viewport>
+				<viewport name="SmallViewport2" />
 				<texture name="normalMap" fromLibrary="Ambient Occlusion"/>
 			</pass>
 			<!-- <pass class="quad" name="pass5">
-				<viewport>SmallViewport4</viewport>
+				<viewport name="SmallViewport4" />
 				<texture name="posMap" fromLibrary="Ambient Occlusion"/>
 			</pass> -->
 			<pass class="quad" name="pass6">
@@ -113,11 +113,11 @@
 			
 			</pass>
 			<pass class="quad" name="pass7">
-				<viewport>SmallViewport3</viewport>
+				<viewport name="SmallViewport3" />
 				<texture name="occMap" fromLibrary="Ambient Occlusion"/>	
 			</pass>
 			<pass class="quad" name="pass8">
-				<viewport>SmallViewport4</viewport>
+				<viewport name="SmallViewport4" />
 				<texture name="occMap2" fromLibrary="Ambient Occlusion"/>	
 			</pass>
 			
@@ -136,7 +136,7 @@
 					<scene name="Rays" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>SmallViewport3</viewport>
+				<viewport name="SmallViewport3" />
 				<color clear=false />
 				<materialMaps>
 					<map fromMaterial="showRays" 
@@ -152,7 +152,7 @@
 				</materialMaps>	
 			</pass>
 			<pass class="quad" name="pass10">
-				<viewport>SmallViewport5</viewport>
+				<viewport name="SmallViewport5" />
 				<texture name="optixTex" fromLibrary="Ambient Occlusion"/>
 			</pass>
 		</pipeline>

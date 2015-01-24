@@ -52,7 +52,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport>Main</viewport>
+				<viewport name="Main" />
 				<lights>
 					<light name="Sun" />
 				</lights>
