@@ -3,13 +3,14 @@
 	<assets>
 		<scenes>
 			<scene name="Other" type="Scene">
-				<folder>..\..\models\ntg-bin-pl3d-secxxi-other</folder>
+				<folder name="..\..\models\ntg-bin-pl3d-secxxi-other"/>
+				<file name="..\..\models\al.obj"/>
 			</scene>
 			<!--scene name="Arvores" type="Octree" 
 				   filename="..\ntg-bin-pl3d-secxxi\avPlatanosArvoresIII.cbo" /-->
 			<!--scene name="Main" type="Octree" 
 				   filename="..\ntg-bin-pl3d-secxxi\ponteLimaSecXX_with_octreeVI.cbo" /-->
-			<scene name="Arvores" type="OctreeByMat" 
+			<scene name="Arvores" 
 				   filename="..\..\models\ntg-bin-pl3d-secxxi\arvores.cbo" />
 			<scene name="Main" type="OctreeUnified" 
 				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3dsecXXI-octreeUnified.cbo" />

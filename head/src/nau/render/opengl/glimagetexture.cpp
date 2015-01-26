@@ -48,7 +48,6 @@ GLImageTexture::prepare(int aUnit) {
 
 	m_Unit = aUnit;
 	nau::render::Texture* t = RESOURCEMANAGER->getTextureByID(m_UIntProps[TEX_ID]);
-	
 	RENDERER->addImageTexture(m_Unit, this);
 #if NAU_OPENGL_VERSION >= 440
 	if (m_BoolProps[CLEAR]) {

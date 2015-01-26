@@ -3,8 +3,8 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<folder>../../models/pl3dsecxiv</folder>
-				<!--folder>..\..\ntg-bin-terrain</folder-->
+				<folder name="../../models/pl3dsecxiv" />
+				<!--<folder name="..\..\ntg-bin-terrain" />-->
 			</scene>
 		</scenes>
 		<viewports>

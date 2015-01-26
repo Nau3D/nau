@@ -4,7 +4,7 @@
 		<scenes>
 			<scene name="MainScene" type="OctreeUnified">
 				<file name="..\..\models\ntg-bench\bench.obj"/>
-				<!--folder>..\..\ntg-bin-5</folder-->
+				<!--<folder name="..\..\ntg-bin-5" />-->
 			</scene>
 		</scenes>
 		<viewports>

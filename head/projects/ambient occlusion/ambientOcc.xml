@@ -7,7 +7,7 @@
 				<!--file name="../../models/Teapot.3ds"/-->
 			</scene>
 			<scene name="Rays" >
-				<buffers primitive="LINES" material="showRays">
+				<buffers name="rays" primitive="LINES" material="showRays">
 					<position value="Ambient Occlusion::position" />				
 				</buffers>	
 			</scene>
@@ -71,13 +71,13 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<rendertarget name="info" fromLibrary="Ambient Occlusion"/>	
+				<renderTarget name="info" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Ambient Occlusion" toMaterial="gatherInfo" />
 				</materialMaps>
 			</pass>
 			<pass class="quad" name="fillRayBuffer" >
-				<rendertarget name="dummy" fromLibrary="Ambient Occlusion" />
+				<renderTarget name="dummy" fromLibrary="Ambient Occlusion" />
 				<materialMaps>			
 					<map fromMaterial="__Quad" 
 						 toLibrary="Ambient Occlusion" toMaterial="fillRayBuffer" />
@@ -106,7 +106,7 @@
 				<texture name="posMap" fromLibrary="Ambient Occlusion"/>
 			</pass> -->
 			<pass class="quad" name="pass6">
-				<rendertarget name="shadows" fromLibrary="Ambient Occlusion"/>	
+				<renderTarget name="shadows" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Ambient Occlusion" toMaterial="ambOcc" />
 				</materialMaps>
@@ -145,7 +145,7 @@
 			</pass>
 
 			<pass class="quad" name="pass9">
-				<rendertarget name="optix" fromLibrary="Ambient Occlusion"/>	
+				<renderTarget name="optix" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="__Quad" 
 						 toLibrary="Ambient Occlusion" toMaterial="compose" />

@@ -66,7 +66,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<rendertarget name="info" fromLibrary="Ambient Occlusion"/>	
+				<renderTarget name="info" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Ambient Occlusion" toMaterial="gatherInfo" />
 				</materialMaps>
@@ -94,7 +94,7 @@
 				<texture name="posMap" fromLibrary="Ambient Occlusion"/>
 			</pass>
 			<pass class="quad" name="pass6">
-				<rendertarget name="shadows" fromLibrary="Ambient Occlusion"/>	
+				<renderTarget name="shadows" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Ambient Occlusion" toMaterial="ambOcc" />
 				</materialMaps>
@@ -104,7 +104,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<rendertarget name="shadows" fromLibrary="Ambient Occlusion"/>	
+				<renderTarget name="shadows" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Ambient Occlusion" toMaterial="ambOcc" />
 				</materialMaps>

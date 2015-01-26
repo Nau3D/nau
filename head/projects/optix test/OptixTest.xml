@@ -47,7 +47,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<rendertarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
+				<renderTarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
 				<lights>
 					<light name="Sun" />
 				</lights>

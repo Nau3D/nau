@@ -18,9 +18,7 @@ SceneObject::Init() {
 	// VEC4
 	Attribs.add(Attribute(SCALE, "SCALE", Enums::DataType::VEC4, false, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
 	Attribs.add(Attribute(TRANSLATE, "TRANSLATE", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
-	Attribs.add(Attribute(ROTATE, "ROTATE", Enums::DataType::VEC4, true, new vec4(0.0f, 0.0f, 1.0f, 0.0f)));
-
-	NAU->registerAttributes("SCENE", &Attribs);
+	Attribs.add(Attribute(ROTATE, "ROTATE", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 1.0f, 0.0f)));
 
 	return true;
 }
@@ -67,6 +65,8 @@ SceneObject::SceneObject(void) :
 	m_ResultTransform = TransformFactory::create("SimpleTransform");
 	m_GlobalTransform = TransformFactory::create("SimpleTransform");
 	m_Id = SceneObject::Counter++;
+
+	registerAndInitArrays("SCENE_OBJECT", Attribs);
 //	m_BoundingVolume = new BoundingBox;
 }
 

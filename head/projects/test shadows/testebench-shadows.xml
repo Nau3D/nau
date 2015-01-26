@@ -75,7 +75,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="depth" fromLibrary="Shadow Materials" />
+				<renderTarget name="depth" fromLibrary="Shadow Materials" />
 					
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
@@ -89,7 +89,7 @@
 				</scenes>
 				<camera name="testCamera" />
 				
-				<rendertarget name="simple" fromLibrary="Shadow Materials" />
+				<renderTarget name="simple" fromLibrary="Shadow Materials" />
 				<!--materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="flat-with-shadow" />
 				</materialMaps-->

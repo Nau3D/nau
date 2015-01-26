@@ -12,6 +12,8 @@
 #include <nau/loader/projectloaderdebuglinker.h>
 #endif 
 
+#include <GL/glew.h>
+
 using namespace nau::geometry;
 using namespace nau::render;
 using namespace nau::scene;
@@ -201,14 +203,12 @@ Pipeline::executePass(Pass *pass) {
 	addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
-
 	PROFILE(pass->getName());
 	pass->prepare();
 	if (true == pass->renderTest()) {
 		pass->doPass();
 	}
 	pass->restore();
-
 
 #ifdef GLINTERCEPTDEBUG
 	addMessageToGLILog(("\n#NAU(PASS,END," + pass->getName() + ")").c_str());

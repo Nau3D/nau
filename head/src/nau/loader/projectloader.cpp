@@ -93,6 +93,7 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 			return &s_Dummy_float;
 			break;
 		case Enums::VEC4:
+			s_Dummy_vec4 = vec4(0);
 			if ((TIXML_SUCCESS == p->QueryFloatAttribute("x", &(s_Dummy_vec4.x)) || TIXML_SUCCESS == p->QueryFloatAttribute("r", &(s_Dummy_vec4.x))) 
 				&& ((TIXML_SUCCESS == p->QueryFloatAttribute("y", &(s_Dummy_vec4.y)) || TIXML_SUCCESS == p->QueryFloatAttribute("g", &(s_Dummy_vec4.y))) 
 				&& ((TIXML_SUCCESS == p->QueryFloatAttribute("z", &(s_Dummy_vec4.z)) || TIXML_SUCCESS == p->QueryFloatAttribute("b", &(s_Dummy_vec4.z)))))) {
@@ -192,7 +193,7 @@ ProjectLoader::getValidValuesString(Attribute &a, void *value) {
 		else if (min != NULL) {
 			s_Dummy = "greater or equal than " + Enums::valueToString(type, min);
 		}
-		else {
+		else if (max != NULL) {
 			s_Dummy = "less or equal than " + Enums::valueToString(type, min);
 
 		}
@@ -368,8 +369,8 @@ Specification of the scenes:
 
 		<scenes>
 			<scene name="MainScene" param="SWAP_YZ">
-				<file>..\ntg-bin-3\fonte-finallambert.dae</file>
-				<folder>..\ntg-bin-pl3dxiv</folder>
+				<file name="..\ntg-bin-3\fonte-finallambert.dae"/>
+				<folder name="..\ntg-bin-pl3dxiv"/>
 			</scene>
 			...
 		</scenes>
@@ -490,13 +491,15 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 				pElementAux->QueryStringAttribute("primitive", &primString);
 				const char *pMaterial = pElementAux->Attribute("material");
+				const char *pName = pElementAux->Attribute("name");
 
 				if (IRenderer::PrimitiveTypes.count(primString) == 0) {
 					NAU_THROW("Scene %s: Invalid primitive type %s in buffers definition", pName, primString.c_str());
 				}
 				IRenderable::DrawPrimitive dp = IRenderer::PrimitiveTypes[primString];
 				SceneObject *so = SceneObjectFactory::create("SimpleObject");
-				so->setName(pName);
+				if (pName)
+					so->setName(pName);
 				IRenderable *i = RESOURCEMANAGER->createRenderable("Mesh", pName);
 				i->setDrawingPrimitive(dp);
 				//i->setDrawingPrimitive(nau::render::IRenderable::LINES);
@@ -552,7 +555,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				DIR *dir;
 				struct dirent *ent;
 
-				const char * pDirName = pElementAux->GetText();
+				const char * pDirName = pElementAux->Attribute("name");
 				dir = opendir (FileUtil::GetFullPath(ProjectLoader::s_Path, pDirName).c_str());
 
 				if (!dir)
@@ -1366,7 +1369,7 @@ ProjectLoader::loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass,std::map<std
 	TiXmlElement *pElem;
 
 
-	pElem = hPass.FirstChild ("rendertarget").Element();
+	pElem = hPass.FirstChild ("renderTarget").Element();
 
 	if (0 != pElem) {
 		

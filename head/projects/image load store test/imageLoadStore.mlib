@@ -1,6 +1,15 @@
 <?xml version="1.0" ?>
 <materialLib name="Image Load Store">
 
+	<renderTargets>
+		<renderTarget name ="test">
+			<size width="512" height="512" />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+	
 	<textures>
 		<texture name="tex">
 			<WIDTH value=512 />
@@ -21,24 +30,15 @@
 			<shader>
 				<name>testImageLS</name>
 				<values>
-					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
-														id=0 component="DIRECTION" /> 
-																
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
-														component="PROJECTION_VIEW_MODEL" />
-														
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
-														component="NORMAL" />
-														
-					<valueof uniform="lightDir"		type="CURRENT" context="LIGHT"
-														id=0 component="DIRECTION" />
-
 					<valueof uniform="imageUnit"		type="CURRENT" context="TEXTURE"
 														id=1 component="UNIT" />
-														
+					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE"
+														id=0 component="UNIT" />														
 				</values>
 			</shader>
-			
+			<textures>
+				<texture name="offscreenrender" UNIT=0 />
+			</textures>
 			<imageTextures>
 				<imageTexture UNIT=1 texture="tex" >
 					<ACCESS value="WRITE_ONLY" />

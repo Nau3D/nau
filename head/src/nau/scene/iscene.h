@@ -85,7 +85,9 @@ namespace nau
 			virtual std::string getType (void) = 0;
 
 			virtual ~IScene(void) {};
-			IScene(void): m_Compiled(false), m_Visible(true) {};
+			IScene(void) : m_Compiled(false), m_Visible(true) {
+				registerAndInitArrays("SCENE", Attribs);
+			};
 
 		};
 	};

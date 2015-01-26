@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<folder>../../models/pl3dsecxiv</folder>
+				<folder name="../../models/pl3dsecxiv" />
 			</scene>
 		</scenes>
 		<viewports>
@@ -49,7 +49,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<rendertarget name="depth" fromLibrary="Depth Buffer"/>
+				<renderTarget name="depth" fromLibrary="Depth Buffer"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Depth Buffer" toMaterial="depthOnlyNoCull" />
 				</materialMaps>

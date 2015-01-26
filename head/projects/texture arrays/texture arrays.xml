@@ -53,7 +53,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="test" fromLibrary="testTextureArrays" />
+				<renderTarget name="test" fromLibrary="testTextureArrays" />
 					
 				<injectionMaps>
 					<map toMaterial="*">

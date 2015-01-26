@@ -88,7 +88,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="depthAndVertices" fromLibrary="RT vs SM" />
+				<renderTarget name="depthAndVertices" fromLibrary="RT vs SM" />
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="RT vs SM" toMaterial="depthAndVertices" />
 				</materialMaps>
@@ -102,7 +102,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="depth" fromLibrary="RT vs SM" />
+				<renderTarget name="depth" fromLibrary="RT vs SM" />
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="RT vs SM" toMaterial="depthOnly" />
 				</materialMaps>
@@ -112,7 +112,7 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="RT vs SM" toMaterial="computeContoursA" />
 				</materialMaps>
-				<rendertarget name="deferredResult2" fromLibrary="RT vs SM" />
+				<renderTarget name="deferredResult2" fromLibrary="RT vs SM" />
 			</pass>	
 			
 			<pass class="default" name="pass1">
@@ -120,7 +120,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<rendertarget name="deferred" fromLibrary="RT vs SM" />
+				<renderTarget name="deferred" fromLibrary="RT vs SM" />
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -148,7 +148,7 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="RT vs SM" toMaterial="testIntersection" />
 				</materialMaps>
-				<rendertarget name="intersectionResult" fromLibrary="RT vs SM" />
+				<renderTarget name="intersectionResult" fromLibrary="RT vs SM" />
 				<!--texture name="pos" fromLibrary="RT vs SM" /-->
 			</pass>
 		
@@ -160,7 +160,7 @@
 				
 				<camera name="MainCamera" />
 				
-				<rendertarget name="test_ubyte" fromLibrary="RT vs SM" />
+				<renderTarget name="test_ubyte" fromLibrary="RT vs SM" />
 				
 				<lights>
 					<light name="Sun" />
@@ -201,7 +201,7 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="RT vs SM" toMaterial="compareRTvsSM" />
 				</materialMaps>
-				<rendertarget name="deferredResult" fromLibrary="RT vs SM" />
+				<renderTarget name="deferredResult" fromLibrary="RT vs SM" />
 			</pass>	
 			
 			

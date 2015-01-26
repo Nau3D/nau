@@ -763,44 +763,30 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 	try {
 		switch (file.getType()) {
 			case File::PATCH:
-			{
 				PatchLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
 				break;
-			}
 			case File::COLLADA:
-			{
+			case File::BLENDER:
+			case File::PLY:
+			case File::LIGHTWAVE:
+			case File::STL:
+			case File::TRUESPACE:
 				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
-				//std::string uri (file.getURI());
-				//ColladaLoader::loadScene (RENDERMANAGER->getScene (sceneName), uri);
 				break;
-			}
 			case File::NAUBINARYOBJECT:
-			{
-				std::string filepath (file.getFullPath());
-				CBOLoader::loadScene (RENDERMANAGER->getScene (sceneName), filepath);
+				CBOLoader::loadScene(RENDERMANAGER->getScene(sceneName), file.getFullPath());
 				break;
-			}
 			case File::THREEDS:
-			{
 				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);
-				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
-				
+				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);				
 				break;
-			}
 			case File::WAVEFRONTOBJ:
-			{
 				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
-				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
-				
+				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());				
 				break;
-			}
 			case File::OGREXMLMESH:
-			{
-				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
-				
+				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());				
 				break;
-			}
-
 			default:
 			  break;
 		}
@@ -865,7 +851,7 @@ Nau::createViewport (const std::string &name, nau::math::vec4 &bgColor) {
 bool 
 Nau::hasViewport(const std::string &name) {
 
-	return m_vViewports.count(name);
+	return (m_vViewports.count(name) != NULL);
 }
 
 

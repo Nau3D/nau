@@ -48,7 +48,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="output" fromLibrary="atomics" />
+				<renderTarget name="output" fromLibrary="atomics" />
 			</pass>
 
 			<pass class="quad" name="count" >

@@ -58,7 +58,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<rendertarget name="gbuffer" fromLibrary="Deferred Rendering" />
+				<renderTarget name="gbuffer" fromLibrary="Deferred Rendering" />
 				<lights>
 					<light name="Sun" />
 				</lights>

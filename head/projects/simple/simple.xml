@@ -3,6 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="Al" type="OctreeByMat">
+			<!--file name="D:/Nau/head/models/bench.obj" /-->
 				<file name="../../models/bench.obj"/>
 			</scene>
 		</scenes>

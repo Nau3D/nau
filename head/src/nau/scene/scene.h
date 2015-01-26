@@ -23,7 +23,7 @@ namespace nau {
 			void updateSceneObjectTransforms();
 
 		public:
-			Scene (void);
+			Scene(void);
 			~Scene (void);
 
 			void clear();

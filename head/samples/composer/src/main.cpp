@@ -543,8 +543,8 @@ FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event)
 void
 FrmMainFrame::OnModelLoad (wxCommandEvent& event)
 {
-	static const wxChar *fileTypes = _T( "3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml)|*.cbo;*.3ds;*.dae;*.obj; *.xml|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml");
-	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
+	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn|");
+	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
 		wxStopWatch aTimer;
@@ -572,8 +572,8 @@ FrmMainFrame::OnModelLoad (wxCommandEvent& event)
 void
 FrmMainFrame::OnModelAppend (wxCommandEvent& event)
 {
-	static const wxChar *fileTypes = _T( "3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml)|*.cbo;*.3ds;*.dae;*.obj; *.xml|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml");
-	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
+	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn|");
+	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
 		wxStopWatch aTimer;

@@ -63,7 +63,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
 				<injectionMaps>
 					<map toMaterial="*">
 						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
@@ -71,7 +71,7 @@
 				</injectionMaps>
 			</pass>
 			<pass class="quad" name="fillRayBuffer" >
-				<rendertarget name="dummy" fromLibrary="PrimeShadows" />
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
 				<materialMaps>			
 					<map fromMaterial="__Quad" 
 						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />

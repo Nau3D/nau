@@ -51,7 +51,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<rendertarget name="test" fromLibrary="Test Multisampling" />
+				<renderTarget name="test" fromLibrary="Test Multisampling" />
 				<lights>
 					<light name="Sun" />
 				</lights>

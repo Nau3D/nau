@@ -9,12 +9,12 @@
 		<viewports>
 			<viewport name="Left" >
 				<SIZE width=0.5 height=1 />
-				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+				<CLEAR_COLOR  r="1.0" g="1.0" b="1.0" />
 			</viewport>
 			<viewport name="Right" >
 				<ORIGIN x = 0.5 y =0 />
 				<SIZE width=0.5 height=1 />
-				<CLEAR_COLOR  r=0.0 g=0.0 b=0.0 />
+				<CLEAR_COLOR  r=1.0 g=1.0 b=1.0 />
 			</viewport>
 		</viewports>
 		<cameras>
@@ -41,17 +41,22 @@
 	
 	<pipelines>
 		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
-			<pass class="default" name="pass1">
+		
+			<pass class="default" name="prepare">
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport name="Left" />
 				<lights>
 					<light name="Sun" />
 				</lights>
+				<renderTarget name="test" fromLibrary="Image Load Store" />
+			</pass>
+			
+			<pass class="quad" name="writeLS">
+				<viewport name="Left" />
 				<materialMaps>
-					<map fromMaterial="*" 
+					<map fromMaterial="__Quad" 
 						 toLibrary="Image Load Store" toMaterial="imageStore" />
 				</materialMaps>
 			</pass>

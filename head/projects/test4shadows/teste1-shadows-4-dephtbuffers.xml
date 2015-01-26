@@ -8,7 +8,7 @@
 
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<folder>..\..\models\pl3dsecxiv</folder>
+				<folder name="..\..\models\pl3dsecxiv" />
 			</scene>
 		</scenes>
 		<viewports>
@@ -83,7 +83,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="shadowMap1" fromLibrary="Shadow Materials"/>
+				<renderTarget name="shadowMap1" fromLibrary="Shadow Materials"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
 				</materialMaps>
@@ -101,7 +101,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="shadowMap2" fromLibrary="Shadow Materials"/>
+				<renderTarget name="shadowMap2" fromLibrary="Shadow Materials"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
 				</materialMaps>
@@ -119,7 +119,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="shadowMap3" fromLibrary="Shadow Materials"/>
+				<renderTarget name="shadowMap3" fromLibrary="Shadow Materials"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
 				</materialMaps>
@@ -137,7 +137,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<rendertarget name="shadowMap4" fromLibrary="Shadow Materials"/>
+				<renderTarget name="shadowMap4" fromLibrary="Shadow Materials"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
 				</materialMaps>
@@ -151,7 +151,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<!--rendertarget name="simple" fromLibrary="Shadow Materials"/-->
+				<!--renderTarget name="simple" fromLibrary="Shadow Materials"/-->
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="flat-with-shadow-4-depths" />
 				</materialMaps>

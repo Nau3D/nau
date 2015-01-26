@@ -541,13 +541,13 @@ OgreMeshLoader::loadTextureCoordElement(TiXmlElement *pElemVertexAttrib, vec4 *v
 void
 OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &vertexData)
 {
-	std::vector<VertexData::Attr> *vertices, *normals, *tangents, *binormals, *texCoord0, *texCoord1,
+	std::vector<VertexData::Attr> *vertices, *normals, *tangents, *bitangents, *texCoord0, *texCoord1,
 		*texCoord2, *texCoord3, *texCoord4, *texCoord5, *texCoord6, *texCoord7; 
 
 	// count actual vertices
 	int actualVertices = 0;
 	bool loadVertices = false, loadNormals = false, loadTangents = false,
-		loadBinormals = false;
+		loadBitangents = false;
 	TiXmlElement *pElemVertex = pElemVertexBuffer->FirstChildElement("vertex");
 	for ( ; pElemVertex != 0; actualVertices++, pElemVertex = pElemVertex->NextSiblingElement("vertex")) {
 	}
@@ -555,7 +555,7 @@ OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &ve
 	const char *pPositions	= pElemVertexBuffer->Attribute("positions");
 	const char *pNormals	= pElemVertexBuffer->Attribute("normals");
 	const char *pTangents = pElemVertexBuffer->Attribute("tangents");
-	const char *pBinormals = pElemVertexBuffer->Attribute("binormals");
+	const char *pBitangents = pElemVertexBuffer->Attribute("bitangents");
 	const char *pTextureCoords = pElemVertexBuffer->Attribute("texture_coords");
 	int iTextureCoords;
 	if (pTextureCoords)
@@ -579,10 +579,10 @@ OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &ve
 		vertexData.setDataFor (VertexData::getAttribIndex("tangent"), tangents);
 		loadTangents = true;
 	}
-	if (pBinormals && strcmp(pBinormals,"true") == 0) {
-		binormals = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::getAttribIndex("binormal"), binormals);
-		loadBinormals = true;
+	if (pBitangents && strcmp(pBitangents, "true") == 0) {
+		bitangents = new std::vector<VertexData::Attr>(actualVertices);
+		vertexData.setDataFor(VertexData::getAttribIndex("bitangent"), bitangents);
+		loadBitangents = true;
 	}
 	if (iTextureCoords >0) {
 		texCoord0 = new std::vector<VertexData::Attr>(actualVertices);
@@ -635,9 +635,9 @@ OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &ve
 		if (pElemVertexAttrib) 
 			loadVertexElement(pElemVertexAttrib,&tangents->at(i));
 
-		pElemVertexAttrib = pElemVertex->FirstChildElement("binormal");
+		pElemVertexAttrib = pElemVertex->FirstChildElement("bitangent");
 		if (pElemVertexAttrib) 
-			loadVertexElement(pElemVertexAttrib,&binormals->at(i));
+			loadVertexElement(pElemVertexAttrib,&bitangents->at(i));
 
 		pElemVertexAttrib = pElemVertex->FirstChildElement("texcoord");
 		if (pElemVertexAttrib)

@@ -18,11 +18,7 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Buffer" toMaterial="fillBuffer" />
 				</materialMaps>
-<<<<<<< HEAD
-				<rendertarget name="test" fromLibrary="Buffer" /> 
-=======
 				<renderTarget name="test" fromLibrary="Buffer" /> 
->>>>>>> origin/debug_wrapper
 			</pass>
 			<pass class="quad" name="pass2" >
 				<viewport name="Main" />

@@ -20,7 +20,7 @@ const std::string nau::render::VertexData::Syntax[] = {
 	"texCoord2",
 	"texCoord3",
 	"tangent",
-	"binormal",
+	"bitangent",
 	"triangleID",
 	"custom0",
 	"custom1"
