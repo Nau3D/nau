@@ -147,14 +147,14 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 		case Enums::ENUM:
 			if (TIXML_SUCCESS != p->QueryStringAttribute("value", &s))
 				NAU_THROW("File %s: Element %s: Enum Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
-			if (!attribs.isValid(p->Value(), s)) {
+			//if (!attribs.isValid(p->Value(), s)) {
 
-				const std::vector<std::string> values = attribs.getListString(attribs.getID(p->Value()));
-				std::string delim = "\n";
-				std::string s;
-				nau::system::textutil::join(values, delim.c_str(), &s);
-				NAU_THROW("File: %s\n Element: %s\nAttribute %s has an invalid value. \nValid values are: \n%s", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value(), s.c_str());
-			}
+			//	const std::vector<std::string> values = attribs.getListString(attribs.getID(p->Value()));
+			//	std::string delim = "\n";
+			//	std::string s;
+			//	nau::system::textutil::join(values, delim.c_str(), &s);
+			//	NAU_THROW("File: %s\n Element: %s\nAttribute %s has an invalid value. \nValid values are: \n%s", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value(), s.c_str());
+			//}
 			s_Dummy_int = attribs.getListValueOp(attribs.getID(p->Value()), s); 
 			return &s_Dummy_int;
 			break;
@@ -1036,12 +1036,13 @@ ProjectLoader::loadPassMode(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild("mode").Element();
 	if (pElem != 0) {
-		bool valid = Pass::Attribs.isValid("RUN_MODE", pElem->GetText());
+		const char *pMode = pElem->Attribute("value");
+		bool valid = Pass::Attribs.isValid("RUN_MODE", pMode);
 		if (!valid) {
-			NAU_THROW("Pass: %s - Invalid mode: %s", aPass->getName().c_str(), pElem->GetText());
+			NAU_THROW("Pass: %s - Invalid mode: %s", aPass->getName().c_str(), pMode);
 		}
 
-		aPass->setMode((Pass::RunMode)Pass::Attribs.getListValueOp(Pass::RUN_MODE, pElem->GetText()));
+		aPass->setMode((Pass::RunMode)Pass::Attribs.getListValueOp(Pass::RUN_MODE, pMode));
 	}
 }
 /* -----------------------------------------------------------------------------
@@ -1120,7 +1121,7 @@ CLEAR DEPTH AND COLOR
 	<color clear=true />
 	<depth clear=true clearValue=1.0 test=true write=true/>
 
-	<stencil clear=true clearValue=0 test=true mask=255>
+	<stencil clear=true clearValue=0 test=true>
 		<stencilFunc func=ALWAYS ref=1 mask=255/>
 		<stencilOp sfail=KEEP dfail=KEEP dpass=KEEP />
 	</stencil>

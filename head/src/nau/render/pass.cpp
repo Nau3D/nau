@@ -35,6 +35,8 @@ Pass::Init() {
 	Attribs.listAdd("RUN_MODE", "RUN_ALWAYS", RUN_ALWAYS);
 	Attribs.listAdd("RUN_MODE", "SKIP_FIRST_FRAME", SKIP_FIRST_FRAME);
 	Attribs.listAdd("RUN_MODE", "RUN_ONCE", RUN_ONCE);
+	Attribs.listAdd("RUN_MODE", "RUN_EVEN", RUN_EVEN);
+	Attribs.listAdd("RUN_MODE", "RUN_ODD", RUN_ODD);
 
 	Attribs.add(Attribute(STENCIL_FUNC, "STENCIL_FUNC", Enums::DataType::ENUM, false, new int(ALWAYS)));
 	Attribs.listAdd("STENCIL_FUNC", "LESS", LESS);
@@ -188,8 +190,12 @@ Pass::renderTest(void) {
 	else {
 		unsigned long f = NAU->getFrameCount();
 		bool even = (f % 2 == 0);
+		if (m_EnumProps[RUN_MODE] == RUN_EVEN && !even)
+			return false;
+		else if (m_EnumProps[RUN_MODE] == RUN_ODD && even)
+			return false;
 		// check for skip_first and run_once cases
-		if ((m_EnumProps[RUN_MODE] == SKIP_FIRST_FRAME && (f == 0)) || (m_EnumProps[RUN_MODE] == RUN_ONCE && (f > 0)))
+		else if ((m_EnumProps[RUN_MODE] == SKIP_FIRST_FRAME && (f == 0)) || (m_EnumProps[RUN_MODE] == RUN_ONCE && (f > 0)))
 			return false;
 		else
 			return true;
@@ -217,7 +223,6 @@ Pass::prepare (void) {
 	}
 
 	setupCamera();
-	prepareBuffers();
 	setupLights();
 }
 
@@ -232,6 +237,8 @@ Pass::doPass (void) {
 	std::vector<SceneObject*>::iterator objsIter;
 	std::vector<std::string>::iterator scenesIter;
 	std::vector<nau::scene::SceneObject*> sceneObjects;
+
+	prepareBuffers();
 
 	const float *a = RENDERER->getMatrix(IRenderer::PROJECTION_VIEW_MODEL);
 	camFrustum.setFromMatrix (a);

@@ -54,6 +54,7 @@
 			</pass>
 			
 			<pass class="quad" name="writeLS">
+				<mode value="RUN_EVEN" />
 				<viewport name="Left" />
 				<materialMaps>
 					<map fromMaterial="__Quad" 
@@ -62,6 +63,7 @@
 			</pass>
 			
 			<pass class="quad" name="pass2">
+				<mode value = "RUN_ODD" />
 				<viewport name="Right" />
 				<texture name="tex" fromLibrary="Image Load Store" />
 			</pass>

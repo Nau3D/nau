@@ -43,6 +43,7 @@ namespace nau {
 
 		static const std::string DataTypeToString[COUNT_DATATYPE];
 		static std::string &valueToString(DataType p, void *v);
+		static DataType getBasicType(DataType dt);
 
 	private:
 		static std::string m_Result;

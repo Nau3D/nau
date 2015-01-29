@@ -90,6 +90,8 @@ namespace nau
 				RUN_ALWAYS,
 				SKIP_FIRST_FRAME,
 				RUN_ONCE,
+				RUN_EVEN,
+				RUN_ODD
 			} RunMode;
 
 			typedef enum {

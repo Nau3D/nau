@@ -100,6 +100,64 @@ GLContext::~GLContext()
 
 }
 
+void GLContext::updateReferences(const ConfigData &configData, GLDriver *glDriver, FunctionTable *functionTable){
+	//Delete the image log
+	if (interceptImage)
+	{
+		interceptImage->ReleaseReference();
+	}
+
+	//Delete the shader log
+	if (interceptShader)
+	{
+		interceptShader->ReleaseReference();
+	}
+
+	//Delete the GLSL shader log
+	if (interceptShaderGLSL)
+	{
+		interceptShaderGLSL->ReleaseReference();
+	}
+
+	//Delete the frame logger
+	if (interceptFrame)
+	{
+		interceptFrame->ReleaseReference();
+	}
+
+	//Delete the list logger
+	if (interceptList)
+	{
+		interceptList->ReleaseReference();
+	}
+
+	//Create the new intercept image
+	if (configData.imageLogEnabled)
+	{
+		interceptImage = new InterceptImage(glDriver, functionTable, configData);
+	}
+
+	//Create the new intercept shader
+	if (configData.shaderLogEnabled)
+	{
+		interceptShader = new InterceptShader(glDriver, functionTable, configData);
+
+		//Due to the uniqeness of GLSL, these shaders have their own logger
+		interceptShaderGLSL = new InterceptShaderGLSL(glDriver, functionTable, configData);
+	}
+
+	//Create a new intercept display list
+	if (configData.displayListLogEnabled)
+	{
+		interceptList = new InterceptDisplayList(glDriver, functionTable, configData);
+	}
+
+	//Create the new intercept frame
+	if (configData.frameLogEnabled)
+	{
+		interceptFrame = new InterceptFrame(glDriver, functionTable, configData);
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////
 //
 void GLContext::InitActiveContext()

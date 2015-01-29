@@ -171,8 +171,18 @@ luaSet(lua_State *l) {
 	const char *context = lua_tostring(l, -3);
 	const char *component = lua_tostring(l, -2);
 
+	AttribSet *attr = NAU->getAttribs(tipo);
+	std::string s = component;
+	Enums::DataType dt, bdt;
+	int id;
+	attr->getPropTypeAndId(s, &dt, &id);
+	int card = Enums::getCardinality(dt);
+	bdt = Enums::getBasicType(dt);
+
 	lua_pushstring(l, "x");
 	lua_gettable(l, -2);
+
+
 
 	const char* c = lua_tostring(l, -1);
 

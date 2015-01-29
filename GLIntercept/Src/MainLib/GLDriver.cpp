@@ -411,6 +411,11 @@ bool GLDriver::ReConfigure()
   //Create the error data log
   //errorDataLog =  new InterceptLog(functionTable); /////////////////NEEEEEEEEED???????????????????
 
+  //Updating GLContext (other logs)
+  for (int i = 0; i < glContextArray.size(); i++){
+	  glContextArray[i]->updateReferences(configData, this, functionTable);
+  }
+
   ReloadPlugins();
 
   return true;
@@ -456,8 +461,13 @@ bool GLDriver::Reset(){
 
   //Create the error data log
   //errorDataLog =  new InterceptLog(functionTable); /////////////////NEEEEEEEEED???????????????????
+
+  //Updating GLContext (other logs)
+  for (int i = 0; i < glContextArray.size(); i++){
+	  glContextArray[i]->updateReferences(configData, this, functionTable);
+  }
   
-  printf("DEBUG: reloading plugins\n");
+ // printf("DEBUG: reloading plugins\n");
   //Delete existing pluginManager
   ReloadPlugins();
 
@@ -466,7 +476,7 @@ bool GLDriver::Reset(){
 
 void GLDriver::ReloadPlugins()
 {
-		printf("DEBUG: resetting plugin manager\n");
+		//printf("DEBUG: resetting plugin manager\n");
   //Delete existing pluginManager
   if(pluginManager)
   {
@@ -475,7 +485,7 @@ void GLDriver::ReloadPlugins()
   }
   pluginManager = new InterceptPluginManager(this,functionTable);
   
-		printf("DEBUG: loading plugins\n");
+		//printf("DEBUG: loading plugins\n");
   //Attempt to load the plugins
   if(!pluginManager->LoadPlugins(configData))
   {
@@ -483,11 +493,11 @@ void GLDriver::ReloadPlugins()
     pluginManager = NULL;
   }
   else{
-	  printf("DEBUG: readding contexts\n");
+	  //printf("DEBUG: readding contexts\n");
 	  for (int i=0; i < glContextArray.size(); i++){
-		  printf("DEBUG: Adding context number %d\n",i);
+		  //printf("DEBUG: Adding context number %d\n",i);
 		  HGLRC rchandle = glContextArray[i]->GetRCHandle();
-		  printf("DEBUG: RCHandle %x\n",rchandle);
+		  //printf("DEBUG: RCHandle %x\n",rchandle);
 		  pluginManager->OnGLContextCreate(rchandle);
 	  }
   }

@@ -403,3 +403,72 @@ Enums::valueToString(DataType p, void *v) {
 		return m_Result;
 	}
 }
+
+
+Enums::DataType
+Enums::getBasicType(Enums::DataType p) {
+
+	switch (p) {
+	case BYTE:
+	case SHORT:
+	case SAMPLER:
+	case UBYTE:
+	case USHORT:
+		return p;
+
+	case ENUM:
+	case INT:
+	case IVEC2:
+	case IVEC3:
+	case IVEC4:
+		return INT;
+
+	case BOOL:
+	case BVEC2:
+	case BVEC3:
+	case BVEC4:
+		return BOOL;
+
+	case UINT:
+	case UIVEC2:
+	case UIVEC3:
+	case UIVEC4:
+		return UINT;
+
+	case FLOAT:
+	case VEC2:
+	case VEC3:
+	case VEC4:
+	case MAT2:
+	case MAT3:
+	case MAT4:
+	case MAT2x3:
+	case MAT2x4:
+	case MAT3x2:
+	case MAT3x4:
+	case MAT4x2:
+	case MAT4x3:
+		return FLOAT;
+
+	case DOUBLE:
+	case DVEC2:
+	case DVEC3:
+	case DVEC4:
+	case DMAT2:
+	case DMAT3:
+	case DMAT4:
+	case DMAT2x3:
+	case DMAT2x4:
+	case DMAT3x2:
+	case DMAT3x4:
+	case DMAT4x2:
+	case DMAT4x3:
+		return DOUBLE;
+	default:
+		assert(false && "Missing data type in enums");
+		return FLOAT;
+	}
+
+
+}
+
