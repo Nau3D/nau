@@ -568,9 +568,12 @@ Camera::setViewport (Viewport* aViewport)
 {
 	m_pViewport = aViewport;
 
-	buildProjectionMatrix();
-	buildProjectionViewMatrix();
-	buildTS05PVMMatrix();
+	if (aViewport != NULL) {
+
+		buildProjectionMatrix();
+		buildProjectionViewMatrix();
+		buildTS05PVMMatrix();
+	}
 }
 
 
@@ -782,7 +785,7 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera)
 void 
 Camera::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt)
 {
-	if (eventType == "VIEWPORT_CHANGED" && m_pViewport->getName() == sender)
+	if (eventType == "VIEWPORT_CHANGED" && m_pViewport != NULL && m_pViewport->getName() == sender)
 		updateProjection();
 
 	if (eventType == "DYNAMIC_CAMERA") {

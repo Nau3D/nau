@@ -127,6 +127,9 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 			if (AI_SUCCESS == mtl->GetTexture(aiTextureType_HEIGHT, 0, &texPath)){
 				m->createTexture(1, FileUtil::GetFullPath(path, texPath.data));
 			}
+			if (AI_SUCCESS == mtl->GetTexture(aiTextureType_NORMALS, 0, &texPath)){
+				m->createTexture(2, FileUtil::GetFullPath(path, texPath.data));
+			}
 
 			aiColor4D color;
 			ColorMaterial *cm = &(m->getColor());

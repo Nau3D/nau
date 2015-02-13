@@ -17,8 +17,18 @@ SceneObject::Init() {
 
 	// VEC4
 	Attribs.add(Attribute(SCALE, "SCALE", Enums::DataType::VEC4, false, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
-	Attribs.add(Attribute(TRANSLATE, "TRANSLATE", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+	Attribs.add(Attribute(TRANSLATE, "TRANSLATE", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));
 	Attribs.add(Attribute(ROTATE, "ROTATE", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 1.0f, 0.0f)));
+
+	// ENUM
+	Attribs.add(Attribute(TRANSFORM_ORDER, "TRANSFORM_ORDER", Enums::ENUM, false, new int(T_R_S)));
+	Attribs.listAdd("TRANSFORM_ORDER", "T_R_S", T_R_S);
+	Attribs.listAdd("TRANSFORM_ORDER", "T_S_R", T_S_R);
+	Attribs.listAdd("TRANSFORM_ORDER", "R_T_S", R_T_S);
+	Attribs.listAdd("TRANSFORM_ORDER", "R_S_T", R_S_T);
+	Attribs.listAdd("TRANSFORM_ORDER", "S_R_T", S_R_T);
+	Attribs.listAdd("TRANSFORM_ORDER", "S_T_R", S_T_R);
+
 
 	return true;
 }
@@ -26,26 +36,62 @@ SceneObject::Init() {
 AttribSet SceneObject::Attribs;
 bool SceneObject::Inited = Init();
 
+
 void
-SceneObject::setPropf4(Float4Property prop, vec4& aVec) {
+SceneObject::updateTransform() {
 
 	ITransform *tis = TransformFactory::create("SimpleTransform");
 
-	switch (prop) {
-	case SCALE:
-		tis->scale(aVec.x, aVec.y, aVec.z);
-		transform(tis);
+	switch (m_EnumProps[TRANSFORM_ORDER]) {
+
+	case T_R_S:
+		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
 		break;
-	case ROTATE:
-		tis->rotate(aVec.w, aVec.x, aVec.y, aVec.z);
-		transform(tis);
+	case T_S_R:
+		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
 		break;
-	case TRANSLATE:
-		tis->translate(aVec.x, aVec.y, aVec.z);
-		transform(tis);
+	case R_T_S:
+		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		break;
+	case R_S_T:
+		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		break;
+	case S_R_T:
+		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		break;
+	case S_T_R:
+		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
 		break;
 	}
-	m_Float4Props[prop] = aVec;
+	setTransform(tis);
+}
+
+
+void
+SceneObject::setPropf4(Float4Property prop, vec4& aVec) {
+
+	switch (prop) {
+	case SCALE:
+	case ROTATE:
+	case TRANSLATE:
+		m_Float4Props[prop] = aVec;
+		updateTransform();
+		break;
+	default:
+		AttributeValues::setPropf4(prop, aVec);
+	}
 
 }
 void

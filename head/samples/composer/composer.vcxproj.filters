@@ -53,6 +53,12 @@
       <Filter>dialogs</Filter>
     </ClCompile>
     <ClCompile Include="src\NauGlBufferInfo.cpp" />
+    <ClCompile Include="src\dialogs\dlgViewports.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\propertyManager.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glcanvas.h" />
@@ -107,6 +113,12 @@
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\NauGlBufferInfo.h" />
+    <ClInclude Include="src\dialogs\dlgViewports.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\propertyManager.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="dialogs">

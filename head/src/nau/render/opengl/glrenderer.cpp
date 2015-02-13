@@ -6,6 +6,7 @@
 #include <nau/material/material.h> 
 #include <nau/material/materialgroup.h>
 #include <nau/math/transformfactory.h>
+#include <nau/math/vec4.h>
 #include <nau/render/opengl/glvertexarray.h>
 #include <nau/render/opengl/glrendertarget.h>
 
@@ -187,7 +188,7 @@ GLRenderer::getAtomicCounterValues() {
 
 	if (m_AtomicCount) {
 	
-		glFinish();
+		//glFinish();
 		for (auto at : m_AtomicLabels) {
 			buffer = at.first.first;
 			offset = at.first.second;
@@ -396,6 +397,15 @@ GLRenderer::prepareBuffers(Pass *p) {
 	glStencilOp(translateStencilOp(p->getPrope(Pass::STENCIL_FAIL)), 
 		translateStencilOp(p->getPrope(Pass::STENCIL_DEPTH_FAIL)), 
 		translateStencilOp(p->getPrope(Pass::STENCIL_DEPTH_PASS)));
+
+	if (p->getPropb(Pass::COLOR_ENABLE)) {
+		bvec4 b = bvec4(true, true, true, true);
+		m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, b);
+	}
+	else {
+		bvec4 b = bvec4(false, false, false, false);
+		m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, b);
+	}
 
 	if (p->getPropb(Pass::DEPTH_CLEAR)) {
 		clear = IRenderer::DEPTH_BUFFER;

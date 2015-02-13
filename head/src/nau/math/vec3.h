@@ -18,6 +18,7 @@ namespace nau
 
 			vector3() : x(0), y(0), z(0) {};
 			vector3(T x, T y, T z) : x(x), y(y), z(z) {};
+			vector3(T v) : x(v), y(v), z(v) {};
 			vector3(const vector3 &v) : x(v.x), y(v.y), z(v.z) {};
 			~vector3() {};
 

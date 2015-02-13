@@ -131,8 +131,8 @@ GlState::set() {
 						else
 							glDisable(GL_CULL_FACE);
 					break;
-			case COLOR_MASK: 
-					break;
+			//case COLOR_MASK: 
+			//		break;
 		}
 	}
 

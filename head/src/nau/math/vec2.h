@@ -18,6 +18,7 @@ namespace nau
 
 			vector2() : x(0), y(0) {};
 			vector2(T x, T y) : x(x), y(y) {};
+			vector2(T v) : x(v), y(v) {};
 			vector2(const vector2 &v) : x(v.x), y(v.y) {};
 			~vector2() {};
 

@@ -19,6 +19,7 @@
 #define FLOAT_PROP(A,B) static const FloatProperty A = (FloatProperty)B 
 #define FLOAT2_PROP(A,B) static const Float2Property A = (Float2Property)B 
 #define FLOAT4_PROP(A,B) static const Float4Property A = (Float4Property)B 
+#define FLOAT3_PROP(A,B) static const Float3Property A = (Float3Property)B 
 #define MAT4_PROP(A,B) static const Mat4Property A = (Mat4Property)B 
 #define MAT3_PROP(A,B) static const Mat3Property A = (Mat3Property)B 
 
@@ -29,7 +30,7 @@ namespace nau {
 	class AttributeValues {
 
 	protected:
-		AttribSet m_Attribs;
+		AttribSet *m_Attribs;
 
 
 	// ENUM
@@ -115,6 +116,18 @@ namespace nau {
 		virtual void setPropf4(Float4Property prop, vec4 &value);
 		virtual void setPropf4(Float4Property prop, float x, float y, float z, float w);
 
+	// VEC3
+	protected:
+		std::map<int, vec3> m_Float3Props;
+
+	public:
+		typedef enum {} Float3Property;
+
+		virtual vec3 &getPropf3(Float3Property prop);
+		virtual bool isValidf3(Float3Property prop, vec3 &f);
+		virtual void setPropf3(Float3Property prop, vec3 &value);
+		virtual void setPropf3(Float3Property prop, float x, float y, float z);
+		
 	// VEC2
 	protected:
 		std::map<int, vec2> m_Float2Props;

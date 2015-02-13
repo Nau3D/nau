@@ -531,6 +531,20 @@ AttribSet::initAttribInstanceVec4Array(std::map<int, vec4> &m) {
 	}
 }
 
+
+void
+AttribSet::initAttribInstanceVec3Array(std::map<int, vec3> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for (; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::VEC3) {
+
+			m[it->second.m_Id] = *(vec3 *)(it->second.m_Default);
+		}
+	}
+}
+
 void 
 AttribSet::initAttribInstanceVec2Array(std::map<int, vec2> &m) {
 

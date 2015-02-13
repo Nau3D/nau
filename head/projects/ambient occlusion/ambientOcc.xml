@@ -8,7 +8,7 @@
 			</scene>
 			<scene name="Rays" >
 				<buffers name="rays" primitive="LINES" material="showRays">
-					<position value="Ambient Occlusion::position" />				
+					<position name="position" fromLibrary="Ambient Occlusion" />				
 				</buffers>	
 			</scene>
 		</scenes>
@@ -123,7 +123,7 @@
 			
 			<pass name="Optix Prime" class="optixPrime">
 				<scene name="MainScene" />
-				<rays buffer="Ambient Occlusion::rays" queryType = "ANY"/> 
+				<rays buffer="rays" fromLibrary="Ambient Occlusion" queryType = "ANY"/> 
 				<hits buffer ="Ambient Occlusion::hits" />
 			</pass>	 
 			

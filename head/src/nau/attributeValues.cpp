@@ -1,5 +1,7 @@
 #include <nau/attributeValues.h>
 
+#include <nau/slogger.h>
+
 
 int AttributeValues::NextAttrib = 0;
 // ----------------------------------------------
@@ -16,7 +18,7 @@ AttributeValues::getPrope(EnumProperty prop) {
 bool 
 AttributeValues::isValide(EnumProperty prop, int value) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::ENUM);
+	Attribute attr = m_Attribs->get(prop, Enums::ENUM);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (attr.isValid(value)) 
@@ -49,7 +51,7 @@ AttributeValues::getPropi(IntProperty prop) {
 bool
 AttributeValues::isValidi(IntProperty prop, int value) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::INT);
+	Attribute attr = m_Attribs->get(prop, Enums::INT);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	int *max, *min;
@@ -88,7 +90,7 @@ AttributeValues::getPropui(UIntProperty prop) {
 bool 
 AttributeValues::isValidui(UIntProperty prop, unsigned int value) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::UINT);
+	Attribute attr = m_Attribs->get(prop, Enums::UINT);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 
@@ -128,7 +130,7 @@ AttributeValues::getPropb(BoolProperty prop) {
 bool 
 AttributeValues::isValidb(BoolProperty prop, bool value) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::BOOL);
+	Attribute attr = m_Attribs->get(prop, Enums::BOOL);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	else
@@ -158,7 +160,7 @@ AttributeValues::getPropb4(Bool4Property prop) {
 bool 
 AttributeValues::isValidb4(Bool4Property prop, bvec4 &value) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::BVEC4);
+	Attribute attr = m_Attribs->get(prop, Enums::BVEC4);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	else
@@ -188,7 +190,7 @@ AttributeValues::getPropf(FloatProperty prop) {
 bool 
 AttributeValues::isValidf(FloatProperty prop, float f) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::FLOAT);
+	Attribute attr = m_Attribs->get(prop, Enums::FLOAT);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	float *max, *min;
@@ -227,7 +229,7 @@ AttributeValues::getPropf4(Float4Property prop) {
 bool 
 AttributeValues::isValidf4(Float4Property prop, vec4 &f) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::VEC4);
+	Attribute attr = m_Attribs->get(prop, Enums::VEC4);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	vec4 *max, *min;
@@ -261,6 +263,53 @@ AttributeValues::setPropf4(Float4Property prop, float x, float y, float z, float
 
 
 // ----------------------------------------------
+//		VEC3
+// ----------------------------------------------
+
+
+vec3 &
+AttributeValues::getPropf3(Float3Property prop) {
+
+	return m_Float3Props[prop];
+}
+
+
+bool
+AttributeValues::isValidf3(Float3Property prop, vec3 &f) {
+
+	Attribute attr = m_Attribs->get(prop, Enums::VEC3);
+	if (attr.getName() == "NO_ATTR")
+		return false;
+	vec3 *max, *min;
+	if (attr.getRangeDefined()) {
+		max = (vec3 *)attr.getMax();
+		min = (vec3 *)attr.getMin();
+
+		if (max != NULL && (f.x > max->x || f.y > max->y || f.z > max->z ))
+			return false;
+		if (min != NULL && (f.x < min->x || f.y < min->y || f.z < min->z ))
+			return false;
+	}
+	return true;
+}
+
+
+void
+AttributeValues::setPropf3(Float3Property prop, vec3 &value) {
+
+	assert(isValidf3(prop, value));
+	m_Float3Props[prop] = value;
+}
+
+
+void
+AttributeValues::setPropf3(Float3Property prop, float x, float y, float z) {
+
+	setPropf3(prop, vec3(x, y, z));
+
+}
+
+// ----------------------------------------------
 //		VEC2
 // ----------------------------------------------
 
@@ -275,7 +324,7 @@ AttributeValues::getPropf2(Float2Property prop) {
 bool 
 AttributeValues::isValidf2(Float2Property prop, vec2 &f) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::VEC2);
+	Attribute attr = m_Attribs->get(prop, Enums::VEC2);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	vec2 *max, *min;
@@ -314,7 +363,7 @@ AttributeValues::getPropm4(Mat4Property prop) {
 bool 
 AttributeValues::isValidm4(Mat4Property prop, mat4 &value) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::MAT4);
+	Attribute attr = m_Attribs->get(prop, Enums::MAT4);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	else
@@ -344,7 +393,7 @@ AttributeValues::getPropm3(Mat3Property prop) {
 bool 
 AttributeValues::isValidm3(Mat3Property prop, mat3 &value) {
 
-	Attribute attr = m_Attribs.get(prop, Enums::MAT3);
+	Attribute attr = m_Attribs->get(prop, Enums::MAT3);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	else
@@ -375,6 +424,7 @@ AttributeValues::copy(AttributeValues *to) {
 	to->m_Bool4Props =  m_Bool4Props;
 	to->m_FloatProps =  m_FloatProps;
 	to->m_Float2Props = m_Float2Props;
+	to->m_Float3Props = m_Float3Props;
 	to->m_Float4Props = m_Float4Props;
 	to->m_Mat3Props =   m_Mat3Props;
 	to->m_Mat4Props =   m_Mat4Props;
@@ -392,6 +442,7 @@ AttributeValues::clearArrays() {
 	m_Bool4Props.clear();
 	m_FloatProps.clear();
 	m_Float2Props.clear();
+	m_Float3Props.clear();
 	m_Float4Props.clear();
 	m_Mat3Props.clear();
 	m_Mat4Props.clear();
@@ -401,42 +452,151 @@ AttributeValues::clearArrays() {
 void *
 AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 
+	void *val;
+
 	switch (type) {
 
 		case Enums::ENUM:
-			assert(m_EnumProps.count(prop) > 0);
+			if (m_EnumProps.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_EnumProps[prop] = *(int *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined attribute of type ENUM");
+					SLOG("Accessing undefined attribute of type ENUM - This should never occur");
+					m_EnumProps[prop] = 0;
+				}
+			}
 			return(&(m_EnumProps[prop]));
 			break;
 		case Enums::INT:
-			assert(m_IntProps.count(prop) > 0);
+			if (m_IntProps.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_IntProps[prop] = *(int *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined attribute of type INT");
+					SLOG("Accessing undefined attribute of type INT - This should never occur");
+					m_IntProps[prop] = 0;
+				}
+			}
 			return(&(m_IntProps[prop]));
 			break;
 		case Enums::UINT:
-			assert(m_UIntProps.count(prop) > 0);
+			if (m_UIntProps.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_UIntProps[prop] = *(unsigned int *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined attribute of type UINT");
+					SLOG("Accessing undefined attribute of type UINT - This should never occur");
+					m_UIntProps[prop] = 0;
+				}
+			}
 			return(&(m_UIntProps[prop]));
 			break;
 		case Enums::BOOL:
-			assert(m_BoolProps.count(prop) > 0);
+			if (m_BoolProps.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_BoolProps[prop] = *(bool *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined attribute of type BOOL");
+					SLOG("Accessing undefined attribute of type BOOL - This should never occur");
+					m_BoolProps[prop] = 0;
+				}
+			}
 			return(&(m_BoolProps[prop]));
 			break;
 		case Enums::BVEC4:
-			assert(m_Bool4Props.count(prop) > 0);
+			if (m_Bool4Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_Bool4Props[prop] = *(bvec4 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined attribute of type BVEC4");
+					SLOG("Accessing undefined attribute of type BVEC4 - This should never occur");
+					m_Bool4Props[prop] = 0;
+				}
+			}
 			return(&(m_Bool4Props[prop]));
 			break;
 		case Enums::FLOAT:
-			assert(m_FloatProps.count(prop) > 0);
+			if (m_FloatProps.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_FloatProps[prop] = *(float *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined user attribute of type FLOAT");
+					SLOG("Accessing undefined user attribute of type FLOAT - This should never occur");
+					m_FloatProps[prop] = 0;
+				}
+			}
 			return(&(m_FloatProps[prop]));
 			break;
 		case Enums::VEC4:
-			assert(m_Float4Props.count(prop) > 0);
+			if (m_Float4Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_Float4Props[prop] = *(vec4 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined user attribute of type VEC4");
+					SLOG("Accessing undefined user attribute of type VEC4 - This should never occur");
+					m_Float4Props[prop] = vec4(0.0f);
+				}
+			}
 			return(&(m_Float4Props[prop]));
 			break;
+		case Enums::VEC3:
+			if (m_Float3Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_Float3Props[prop] = *(vec3 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined user attribute of type VEC3");
+					SLOG("Accessing undefined user attribute of type VEC3 - This should never occur");
+					m_Float3Props[prop] = vec3(0.0f);
+				}
+			}
+			return(&(m_Float3Props[prop]));
+			break;
+		case Enums::VEC2:
+			if (m_Float2Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_Float2Props[prop] = *(vec2 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined user attribute of type VEC2");
+					SLOG("Accessing undefined user attribute of type VEC2 - This should never occur");
+					m_Float2Props[prop] = vec2(0.0f);
+				}
+			}
+			return(&(m_Float2Props[prop]));
+			break;
 		case Enums::MAT4:
-			assert(m_Mat4Props.count(prop) > 0);
+			if (m_Mat4Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_Mat4Props[prop] = *(mat4 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined user attribute of type MAT4");
+					SLOG("Accessing undefined user attribute of type MAT4 - This should never occur");
+					m_Mat4Props[prop] = mat4();
+				}
+			}
 			return(&(m_Mat4Props[prop]));
 			break;
 		case Enums::MAT3:
-			assert(m_Mat3Props.count(prop) > 0);
+			if (m_Mat3Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_Mat3Props[prop] = *(mat3 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined user attribute of type MAT3");
+					SLOG("Accessing undefined user attribute of type MAT3 - This should never occur");
+					m_Mat3Props[prop] = mat3();
+				}
+			}
 			return(&(m_Mat3Props[prop]));
 			break;
 		default:
@@ -471,6 +631,9 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, void *value) {
 		break;
 	case Enums::VEC2:
 		setPropf2((Float2Property)prop, *(vec2 *)value);
+		break;
+	case Enums::VEC3:
+		setPropf3((Float3Property)prop, *(vec3 *)value);
 		break;
 	case Enums::VEC4:
 		setPropf4((Float4Property)prop, *(vec4 *)value);
@@ -513,6 +676,9 @@ AttributeValues::isValid(unsigned int prop, Enums::DataType type, void *value) {
 	case Enums::VEC2:
 		return isValidf2((Float2Property)prop, *(vec2 *)value);
 		break;
+	case Enums::VEC3:
+		return isValidf3((Float3Property)prop, *(vec3 *)value);
+		break;
 	case Enums::VEC4:
 		return isValidf4((Float4Property)prop, *(vec4 *)value);
 		break;
@@ -545,28 +711,30 @@ AttributeValues::initArrays(AttribSet &attribs) {
 	attribs.initAttribInstanceBoolArray(m_BoolProps);
 	attribs.initAttribInstanceBvec4Array(m_Bool4Props);
 	attribs.initAttribInstanceVec4Array(m_Float4Props);
+	attribs.initAttribInstanceVec3Array(m_Float3Props);
 	attribs.initAttribInstanceVec2Array(m_Float2Props);
 	attribs.initAttribInstanceFloatArray(m_FloatProps);
 	attribs.initAttribInstanceMat4Array(m_Mat4Props);
 	attribs.initAttribInstanceMat3Array(m_Mat3Props);
 
-	m_Attribs = attribs;
+	m_Attribs = &attribs;
 }
 
 
 void
 AttributeValues::initArrays() {
 
-	m_Attribs.initAttribInstanceEnumArray(m_EnumProps);
-	m_Attribs.initAttribInstanceIntArray(m_IntProps);
-	m_Attribs.initAttribInstanceUIntArray(m_UIntProps);
-	m_Attribs.initAttribInstanceBoolArray(m_BoolProps);
-	m_Attribs.initAttribInstanceBvec4Array(m_Bool4Props);
-	m_Attribs.initAttribInstanceVec4Array(m_Float4Props);
-	m_Attribs.initAttribInstanceVec2Array(m_Float2Props);
-	m_Attribs.initAttribInstanceFloatArray(m_FloatProps);
-	m_Attribs.initAttribInstanceMat4Array(m_Mat4Props);
-	m_Attribs.initAttribInstanceMat3Array(m_Mat3Props);
+	m_Attribs->initAttribInstanceEnumArray(m_EnumProps);
+	m_Attribs->initAttribInstanceIntArray(m_IntProps);
+	m_Attribs->initAttribInstanceUIntArray(m_UIntProps);
+	m_Attribs->initAttribInstanceBoolArray(m_BoolProps);
+	m_Attribs->initAttribInstanceBvec4Array(m_Bool4Props);
+	m_Attribs->initAttribInstanceVec4Array(m_Float4Props);
+	m_Attribs->initAttribInstanceVec3Array(m_Float3Props);
+	m_Attribs->initAttribInstanceVec2Array(m_Float2Props);
+	m_Attribs->initAttribInstanceFloatArray(m_FloatProps);
+	m_Attribs->initAttribInstanceMat4Array(m_Mat4Props);
+	m_Attribs->initAttribInstanceMat3Array(m_Mat3Props);
 }
 
 

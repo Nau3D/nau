@@ -1,16 +1,16 @@
 #ifndef ATTRIBUTE_H
 #define ATTRIBUTE_H
 
-#include <nau/enums.h>
-//#include <nau/math/bvec4.h>
-#include <nau/math/matrix.h>
-#include <nau/math/vec4.h>
-#include <nau/math/vec2.h>
 
 #include <assert.h>
 #include <map>
 #include <string>
 #include <vector>
+
+#include <nau/enums.h>
+#include <nau/math/matrix.h>
+#include <nau/math/vec4.h>
+#include <nau/math/vec2.h>
 
 using namespace nau::math;
 
@@ -56,7 +56,7 @@ namespace nau {
 
 		void listAdd(std::string name, int id);
 
-		 
+		// for enum types only. Checks if it is a valid option. 
 		bool isValid(std::string value);
 		bool isValid(int v);
 
@@ -125,6 +125,7 @@ namespace nau {
 		void initAttribInstanceFloatArray(std::map<int, float> &m);
 		void initAttribInstanceVec4Array(std::map<int, vec4> &m);
 		void initAttribInstanceVec2Array(std::map<int, vec2> &m);
+		void initAttribInstanceVec3Array(std::map<int, vec3> &m);
 		void initAttribInstanceMat4Array(std::map<int, mat4> &m);
 		void initAttribInstanceMat3Array(std::map<int, mat3> &m);
 		void initAttribInstanceBvec4Array(std::map<int, bvec4> &m);

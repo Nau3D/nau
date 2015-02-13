@@ -23,7 +23,6 @@ namespace nau
 			};
 	
 			mutable std::vector<nau::math::vec3> m_vPoints,m_vLocalPoints; /***MARK***/ //Should not be mutable
-			//std::vector<nau::math::vec3> m_vLocalPoints;
 
 			SimpleTransform m_GeometryTransform; 
 

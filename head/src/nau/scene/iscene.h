@@ -25,6 +25,20 @@ namespace nau
 			FLOAT4_PROP(ROTATE, 1);
 			FLOAT4_PROP(TRANSLATE, 2);
 
+			FLOAT3_PROP(BB_MIN, 0);
+			FLOAT3_PROP(BB_MAX, 1);
+
+			ENUM_PROP(TRANSFORM_ORDER, 0);
+
+			typedef enum {
+				T_R_S,
+				T_S_R,
+				R_T_S,
+				R_S_T,
+				S_R_T,
+				S_T_R
+			} TransformationOrder;
+
 			static AttribSet Attribs;
 
 		protected:
@@ -33,12 +47,18 @@ namespace nau
 			ITransform *m_Transform;
 			bool m_Visible;
 
+			void updateTransform();
+
 			static bool Init();
 			static bool Inited;
 
 		public:
 
 			virtual void setPropf4(Float4Property prop, vec4& aVec);
+			virtual void setPrope(EnumProperty prop, int v);
+			void *getProp(unsigned int prop, Enums::DataType type);
+			vec3 &getPropf3(Float3Property prop);
+
 			virtual void setName(std::string name) {
 				m_Name = name; 
 			};
@@ -70,17 +90,10 @@ namespace nau
 			virtual void unitize() = 0;
 
 			virtual nau::math::ITransform *getTransform() = 0;
-			//virtual void scale(float factor) = 0;
-			//virtual void translate(float x, float y, float z) = 0;
-			//virtual void rotate(float ang, float ax, float ay, float az) = 0;
 			virtual void setTransform(nau::math::ITransform *t) = 0;
 			virtual void transform(nau::math::ITransform *t) = 0;
 
 			virtual nau::geometry::IBoundingVolume& getBoundingVolume (void) = 0;
-
-			//virtual void show (void) = 0;
-			//virtual void hide (void) = 0;
-			//virtual bool isVisible (void) = 0;
 
 			virtual std::string getType (void) = 0;
 

@@ -114,6 +114,7 @@ int idMenu_DLG_LOG = wxNewId();
 int idMenu_DLG_SCENES = wxNewId();
 int idMenu_DLG_PASS = wxNewId();
 int idMenu_DLG_ATOMICS = wxNewId();
+int idMenu_DLG_VIEWPORTS = wxNewId();
 
 int idMenu_DLG_STATEXML = wxNewId();
 #ifdef GLINTERCEPTDEBUG
@@ -159,7 +160,8 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_LOG, FrmMainFrame::OnDlgLog)
   EVT_MENU(idMenu_DLG_SCENES, FrmMainFrame::OnDlgScenes)
   EVT_MENU(idMenu_DLG_PASS, FrmMainFrame::OnDlgPass)
-  
+  EVT_MENU(idMenu_DLG_VIEWPORTS, FrmMainFrame::OnDlgViewports)
+
 #ifdef GLINTERCEPTDEBUG
   EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
 #endif
@@ -249,7 +251,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
     helpMenu->Append(idMenu_DLG_TEXTURES, _("&Texture Library\tF4"), _("Show Texture Library"));
     helpMenu->Append(idMenu_DLG_CAMERAS, _("&Camera Library\tF5"), _("Show Camera Library"));
     helpMenu->Append(idMenu_DLG_MATERIALS, _("&Material Library Manager\tF6"), _("Show Material Libraries"));
-    helpMenu->Append(idMenu_DLG_LIGHTS, _("&Light Library\tF7"), _("Show Light Library"));
+	helpMenu->Append(idMenu_DLG_VIEWPORTS, _("&Viewports Library\tF11"), _("Show Viewport Library"));
+	helpMenu->Append(idMenu_DLG_LIGHTS, _("&Light Library\tF7"), _("Show Light Library"));
     helpMenu->Append(idMenu_DLG_SHADERS, _("&Shader Library\tF8"), _("Show Shader Library"));
     helpMenu->Append(idMenu_DLG_SCENES, _("&Scene Library\tF9"), _("Show Scene Library"));
     helpMenu->Append(idMenu_DLG_PASS, _("&Pass Library\tF9"), _("Show Pass Library"));
@@ -263,6 +266,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	helpMenu->Enable(idMenu_DLG_PASS,false);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, false);
 	helpMenu->Enable(idMenu_DLG_SCENES, false);
+	helpMenu->Enable(idMenu_DLG_VIEWPORTS, false);
 
 	debugMenu = new wxMenu(_T(""));
 	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
@@ -374,6 +378,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgScenes::SetParent(this);
 	DlgPass::SetParent(this);
 	DlgAtomics::SetParent(this);
+	DlgViewports::SetParent(this);
 #ifdef GLINTERCEPTDEBUG
 	DlgDbgGLILogRead::SetParent(this);
 #endif
@@ -439,6 +444,13 @@ FrmMainFrame::OnDlgLog(wxCommandEvent& event) {
 }
 
 
+void
+FrmMainFrame::OnDlgViewports(wxCommandEvent& event) {
+
+	DlgViewports::Instance()->Show(TRUE);
+}
+
+
 void 
 FrmMainFrame::OnDlgTextures(wxCommandEvent& event) {
 
@@ -493,6 +505,7 @@ FrmMainFrame::updateDlgs()
 	DlgLights::Instance()->updateDlg();
 	DlgScenes::Instance()->updateDlg();
 	DlgPass::Instance()->updateDlg();
+	DlgViewports::Instance()->updateDlg();
 	//DlgDbgBuffers::Instance()->updateDlg();
 
 
@@ -506,6 +519,7 @@ FrmMainFrame::updateDlgs()
 	helpMenu->Enable(idMenu_DLG_PASS,true);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, true);
 	helpMenu->Enable(idMenu_DLG_SCENES, true);
+	helpMenu->Enable(idMenu_DLG_VIEWPORTS, true);
 	debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 }
 
@@ -543,7 +557,7 @@ FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event)
 void
 FrmMainFrame::OnModelLoad (wxCommandEvent& event)
 {
-	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn|");
+	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
 	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
@@ -572,7 +586,7 @@ FrmMainFrame::OnModelLoad (wxCommandEvent& event)
 void
 FrmMainFrame::OnModelAppend (wxCommandEvent& event)
 {
-	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn|");
+	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
 	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {

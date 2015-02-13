@@ -32,12 +32,11 @@
 
 class ImageGridCellRenderer;
 
-#include <nau/render/pipeline.h>
-#include <nau/render/pass.h>
-#include <nau/material/materiallibmanager.h>
 #include <nau.h>
-
 #include <nau/event/ilistener.h>
+#include <nau/render/pipeline.h>
+#include <nau/material/materiallibmanager.h>
+#include <nau/render/pass.h>
 
 
 using namespace nau::render;

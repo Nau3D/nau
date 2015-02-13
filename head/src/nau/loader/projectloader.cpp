@@ -80,6 +80,37 @@ ProjectLoader::toLower(std::string strToConvert) {
 
 }
 
+
+int
+ProjectLoader::readItemFromLib(TiXmlElement *p, std::string tag, std::string *lib, std::string *item) {
+
+	int res1, res2;
+	res1 = p->QueryStringAttribute("fromLibrary", lib);
+	res2 = p->QueryStringAttribute(tag.c_str(), item);
+
+	if (TIXML_SUCCESS != res2)
+		return ITEM_NAME_NOT_SPECIFIED;
+	else return OK;
+}
+
+
+int
+ProjectLoader::readItemFromLib(TiXmlElement *p, std::string tag, std::string *fullName) {
+
+	std::string item, lib = "";
+	int res = readItemFromLib(p, tag, &lib, &item);
+
+	if (OK != res)
+		return res;
+
+	if (lib == "")
+		*fullName = item;
+	else
+		*fullName = lib + "::" + item;
+	return OK;
+}
+
+
 void *
 ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type, AttribSet &attribs) {
 
@@ -347,7 +378,7 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 		}
 		if (!Attribute::isValidUserAttrType(pType)) {
 			nau::system::textutil::join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
-			NAU_THROW("File %s\nAttribute %s with na invalid type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
+			NAU_THROW("File %s\nAttribute %s with an invalid type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
 		}
 
 		AttribSet *attribs = NAU->getAttribs(pContext);
@@ -404,7 +435,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 		std::string s;
 
 		if (0 == pName) {
-			NAU_THROW("File %s: scene has no name", ProjectLoader::s_File.c_str()); 					
+			NAU_THROW("File %s\nscene has no name", ProjectLoader::s_File.c_str()); 					
 		}
 
 		SLOG("Scene : %s", pName);
@@ -420,14 +451,14 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 		else {
 			is = RENDERMANAGER->createScene(pName, pType);
 			if (is == NULL)
-				NAU_THROW("Invalid type for scene %s in file %s", pName, ProjectLoader::s_File.c_str()); 	
+				NAU_THROW("File %s\nScene %s\nInvalid type for scene", ProjectLoader::s_File.c_str(), pName); 	
 		}
 		
 		// the filename should point to a scene
 		if (0 != pFilename) {
 
 			if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFilename)))
-				NAU_THROW("Scene file %s does not exist", pFilename); 			
+				NAU_THROW("File %s\nScene %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFilename);
 
 			try {
 				nau::Nau::getInstance()->loadAsset (FileUtil::GetFullPath(ProjectLoader::s_Path, pFilename), pName, s);
@@ -447,12 +478,12 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				const char *pMaterial = pElementAux->Attribute("material");
 
 				if (pPrimType == NULL)
-					NAU_THROW("Scene %s has no type", pName); 			
+					NAU_THROW("File %s\nScene %s\ntype is not defined", ProjectLoader::s_File.c_str(), pName);
 
 				GeometricObject *go = (GeometricObject *)nau::scene::SceneObjectFactory::create("Geometry");
 				
 				if (go == NULL)
-					NAU_THROW("Scene %s has invalid type type", pName); 
+					NAU_THROW("File %s\nScene %s\nInvalid scene type", ProjectLoader::s_File.c_str(), pName);
 				if (pName)
 					go->setName(pName);
 
@@ -494,7 +525,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				const char *pName = pElementAux->Attribute("name");
 
 				if (IRenderer::PrimitiveTypes.count(primString) == 0) {
-					NAU_THROW("Scene %s: Invalid primitive type %s in buffers definition", pName, primString.c_str());
+					NAU_THROW("File %s\nScene: %s\nInvalid primitive type %s in buffers definition", ProjectLoader::s_File.c_str(), pName, primString.c_str());
 				}
 				IRenderable::DrawPrimitive dp = IRenderer::PrimitiveTypes[primString];
 				SceneObject *so = SceneObjectFactory::create("SimpleObject");
@@ -513,11 +544,15 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				std::string bufferName;
 				TiXmlElement *p = pElementAux->FirstChildElement();
 				while (p) {
-					p->QueryStringAttribute("value", &bufferName);
+
+					int res = readItemFromLib(p, "name", &bufferName);
+					if (res != OK)
+						NAU_THROW("File %s\nScene: %s\nBuffer has no name", ProjectLoader::s_File.c_str(), pName);
+					
 					IBuffer * b;
-					if (bufferName != "")
-						b = RESOURCEMANAGER->createBuffer(bufferName);
+					b = RESOURCEMANAGER->createBuffer(bufferName);
 					int attribIndex = VertexData::getAttribIndex(p->Value());
+
 					if (attribIndex != VertexData::MaxAttribs) {
 						v.setBuffer(attribIndex, b->getPropi(IBuffer::ID));
 					}
@@ -526,7 +561,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 						mg->getIndexData().setBuffer(b->getPropi(IBuffer::ID));
 					}
 					else {
-						NAU_THROW("Scene %s: Vertex Attribute %s is not valid", pName, p->Value());
+						NAU_THROW("File %s\nScene: %s\nVertex Attribute %s is not valid", ProjectLoader::s_File.c_str(), pName, p->Value());
 					}
 					p = p->NextSiblingElement();
 				}
@@ -541,10 +576,10 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 				const char *pFileName = pElementAux->Attribute("name");
 				if (!pFileName)
-					NAU_THROW("Scene %s: file is not specified", pName);
+					NAU_THROW("File %s\nScene: %s\nFile is not specified", ProjectLoader::s_File.c_str(), pName);
 
 				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName))) {
-					NAU_THROW("Scene file %s does not exist", pFileName);
+					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pFileName);
 				}
 				nau::Nau::getInstance()->loadAsset (FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName), pName, s);
 			}
@@ -559,7 +594,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				dir = opendir (FileUtil::GetFullPath(ProjectLoader::s_Path, pDirName).c_str());
 
 				if (!dir)
-					NAU_THROW("Scene folder %s does not exist", pDirName); 			
+					NAU_THROW("File %s\nScene: %s\nFolder %s does not exist", ProjectLoader::s_File.c_str(), pName, pDirName);
 
 				if (0 != dir) {
 
@@ -582,7 +617,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 						++count;
 					}
 					if (count < 3 )
-						NAU_THROW("Scene folder %s is empty", pDirName); 			
+						NAU_THROW("File %s\nScene: %s\nFolder %s is empty", ProjectLoader::s_File.c_str(), pName, pDirName);
 
 				closedir (dir);
 				}
@@ -617,23 +652,25 @@ ProjectLoader::loadAtomicSemantics(TiXmlHandle handle)
 	for (; 0 != pElem; pElem = pElem->NextSiblingElement("atomic")) {
 		const char *pName = pElem->Attribute ("semantics");
 		int offset;
-		const char *pBuffer = pElem->Attribute("buffer");
+		std::string buffer;
+		int res = readItemFromLib(pElem, "buffer", &buffer);
+		//const char *pBuffer = pElem->Attribute("buffer");
 
-		if (0 == pBuffer) {
-			NAU_THROW("Atomic has no buffer name, in file %s", ProjectLoader::s_File.c_str());
+		if (res != OK) {
+			NAU_THROW("File %s\nAtomic has no buffer name", ProjectLoader::s_File.c_str());
 		}
 
 		int failure = pElem->QueryIntAttribute("offset", &offset);
 		if (failure) {
-			NAU_THROW("Atomic has no offset, in file %s", ProjectLoader::s_File.c_str());
+			NAU_THROW("File %s\nAtomic has no offset", ProjectLoader::s_File.c_str());
 		}
 
 		if (0 == pName) {
-			NAU_THROW("Atomic from buffer %s with offset %d has no semantics, in file %s", pBuffer, offset, ProjectLoader::s_File.c_str());
+			NAU_THROW("File %s\nAtomic from buffer %s with offset %d has no semantics, in file %s", ProjectLoader::s_File.c_str(), buffer.c_str(), offset);
 		}
 
-		SLOG("Atomic : %s %d %s", pBuffer, offset, pName);
-		RENDERER->addAtomic(pBuffer, offset, pName);
+		SLOG("Atomic : %s %d %s", buffer.c_str(), offset, pName);
+		RENDERER->addAtomic(buffer, offset, pName);
 	} 
 }
 
@@ -1024,7 +1061,7 @@ ProjectLoader::loadPassCamera(TiXmlHandle hPass, Pass *aPass)
 /* -----------------------------------------------------------------------------
 MODE
 
-<mode>RUN_ALWAYS</mode>
+<mode value="RUN_ALWAYS" />
 
 Specifies the run mode. Valid values are defined in class Pass (file pass.h)
 -----------------------------------------------------------------------------*/
@@ -1118,7 +1155,7 @@ ProjectLoader::loadPassScenes(TiXmlHandle hPass, Pass *aPass)
 /* -----------------------------------------------------------------------------
 CLEAR DEPTH AND COLOR
 
-	<color clear=true />
+	<color clear=true enable=true/>
 	<depth clear=true clearValue=1.0 test=true write=true/>
 
 	<stencil clear=true clearValue=0 test=true>
@@ -1240,13 +1277,21 @@ ProjectLoader::loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("color").Element();
 	if (0 != pElem) {
-		const char *pEnable = pElem->Attribute ("clear");
+		const char *pClear = pElem->Attribute ("clear");
+		if (pClear != NULL) {
+			if (!strcmp(pClear, "false"))
+				*b = false;
+			else
+				*b = true;
+			aPass->setProp(Pass::COLOR_CLEAR, Enums::BOOL, b);
+		}
+		const char *pEnable = pElem->Attribute("enable");
 		if (pEnable != NULL) {
 			if (!strcmp(pEnable, "false"))
 				*b = false;
 			else
 				*b = true;
-			aPass->setProp(Pass::COLOR_CLEAR, Enums::BOOL, b);
+			aPass->setProp(Pass::COLOR_ENABLE, Enums::BOOL, b);
 		}
 	}
 }
@@ -1834,61 +1879,64 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (pSceneName != NULL) {
 
 			if (!RENDERMANAGER->hasScene(pSceneName)) {
-				NAU_THROW("Pass %s: Scene %s is not defined", aPass->getName().c_str(), pSceneName);
+				NAU_THROW("File %s\nPass %s\nScene %s has not been defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pSceneName);
 			}
 			else
 				p->addScene(pSceneName);
 		}
 	}
 	else {
-		NAU_THROW("Pass %s: Scene is not defined", aPass->getName().c_str());
+		NAU_THROW("File %s\nPass %s\nScene is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
 	pElem = hPass.FirstChildElement("rays").Element();
 	if (pElem != NULL) {
-		const char *pBufferName = pElem->Attribute("buffer");
 		const char *pQueryType = pElem->Attribute("queryType");
 
-		if (pBufferName != NULL) {
+		std::string bufferName;
+		int res = readItemFromLib(pElem, "buffer", &bufferName);
+		if (res == OK) {
 
-			if (!RESOURCEMANAGER->hasBuffer(pBufferName)) {
-				NAU_THROW("Pass %s: Ray buffer %s is not defined", aPass->getName().c_str(), pBufferName);
+			if (!RESOURCEMANAGER->hasBuffer(bufferName)) {
+				NAU_THROW("File %s\nPass %s\nRay buffer %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 			}
 			else
-				p->addRayBuffer(RESOURCEMANAGER->getBuffer(pBufferName));
+				p->addRayBuffer(RESOURCEMANAGER->getBuffer(bufferName));
 		}
 		else {
-			NAU_THROW("Pass %s: Ray buffer has no name", aPass->getName().c_str());
+			NAU_THROW("File %s\nPass %s\nRay buffer has no name", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		if (pQueryType != NULL) {
-			p->setQueryType(pQueryType);
+			if (!p->setQueryType(pQueryType))
+				NAU_THROW("File %s\nPass %s\nRay buffer %s: Query Type is invalid\nValidValues are: ANY or CLOSEST", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
+
 		}
 		else {
-			NAU_THROW("Pass %s: Ray buffer %s: Query Type not defined", aPass->getName().c_str(), pBufferName);
+			NAU_THROW("File %s\nPass %s\nRay buffer %s: Query Type not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 		}
 	}
 	else {
-		NAU_THROW("Pass %s: Ray buffer is not defined", aPass->getName().c_str());
+		NAU_THROW("File %s\nPass %s\nRay buffer is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
 	pElem = hPass.FirstChildElement("hits").Element();
 	if (pElem != NULL) {
-		const char *pBufferName = pElem->Attribute("buffer");
+		std::string bufferName;
+		int res = readItemFromLib(pElem, "buffer", &bufferName);
+		if (res == OK) {
 
-		if (pBufferName != NULL) {
-
-			if (!RESOURCEMANAGER->hasBuffer(pBufferName)) {
-				NAU_THROW("Pass %s: Hit Buffer %s is not defined", aPass->getName().c_str(), pBufferName);
+			if (!RESOURCEMANAGER->hasBuffer(bufferName)) {
+				NAU_THROW("File %s\nPass %s\nHit Buffer %s has not been defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 			}
 			else
-				p->addHitBuffer(RESOURCEMANAGER->getBuffer(pBufferName));
+				p->addHitBuffer(RESOURCEMANAGER->getBuffer(bufferName));
 		}
 		else {
-			NAU_THROW("Pass %s: Hit buffer has no name", aPass->getName().c_str(), pBufferName);
+			NAU_THROW("File %s\nPass %s\nHit buffer has no name", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 		}
 	}
 	else {
-		NAU_THROW("Pass %s: Hit buffer is not defined", aPass->getName().c_str());
+		NAU_THROW("File %s\nPass %s\nHit buffer is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
 #endif
@@ -1903,7 +1951,7 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 			<pass class="compute" name="test">
 				<material name="computeShader" fromLibrary="myLib" dimX=256, dimY=256, dimZ=0/>
 				<!-- or -->
-				<material name="computeShader" fromLibrary="myLib" bufferX="tt::aa", offsetX=4 bufferY="tt::aa", offsetY=0/>
+				<material name="computeShader" fromLibrary="myLib" bufferX="tt::aa" offsetX=4 bufferY="tt::aa"* offsetY=0/>
 			</pass>
 
 	The strings in the buffer(X,Y,Z) are buffer labels that must be previously defined

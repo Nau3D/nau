@@ -3,7 +3,7 @@
 	<assets>
 	
 		<scenes>
-			<scene name="CubeLand" >
+			<scene name="CubeLand" type="OctreeByMat">
 				<SCALE x = 1.0 y=0.5 z = 1.0 />
 				<geometry name = "sphere" type = "Sphere" slices=10 stacks=10 material="crateBox">
 					<TRANSLATE x =-2.5 y=0 z =0  />

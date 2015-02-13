@@ -27,11 +27,20 @@ namespace nau
 			static std::string s_File;
 
 		private:
+
+			typedef enum {
+				OK,
+				ITEM_NAME_NOT_SPECIFIED
+			};
+
 			ProjectLoader(void);
 
 
 			static void loadAssets (TiXmlHandle &hRoot, std::vector<std::string> &matLib);
 			static void loadPipelines (TiXmlHandle &hRoots);
+
+			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *lib, std::string *item);
+			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *fullName);
 
 			static void readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem);
 			static std::string &getValidValuesString(Attribute &a, void *value);

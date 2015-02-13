@@ -16,7 +16,7 @@ struct ray {
 	vec4 dir;
 };
 
-layout(std430, binding = 1) buffer RayBuffer {
+layout(std430, binding = 1) volatile buffer RayBuffer {
 	ray rays[];
 };
 

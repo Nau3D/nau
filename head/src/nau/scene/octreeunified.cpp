@@ -129,6 +129,7 @@ OctreeUnified::add(SceneObject *aSceneObject)
 		m_SceneObject->setRenderable(&(aSceneObject->getRenderable()));
 	}
 	else {
+		aSceneObject->burnTransform();
 		m_SceneObject->getRenderable().merge(&(aSceneObject->getRenderable()));
 	}
 	//int sizeV = m_SceneObject->getRenderable().getVertexData().getNumberOfVertices();

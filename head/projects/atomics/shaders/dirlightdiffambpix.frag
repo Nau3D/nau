@@ -1,6 +1,6 @@
 #version 420 
 
-layout(binding=2) uniform atomic_uint at0;
+layout(binding=2)  uniform atomic_uint at0;
 layout(binding=2, offset=4) uniform atomic_uint at1;
 layout(binding=2, offset=8) uniform atomic_uint at2;
 layout(binding=2, offset=12) uniform atomic_uint at3;
@@ -44,12 +44,13 @@ void main()
 	if (m == color.r) {
 		atomicCounterIncrement(at0);
 	}
-	else 	if (m == color.g) {
+	else if (m == color.g) {
 		 atomicCounterIncrement(at1);
 	 }
      else
 		 atomicCounterIncrement(at2);
 	atomicCounterIncrement(at3);
+	memoryBarrier();
 	outColor = color;
 
 		

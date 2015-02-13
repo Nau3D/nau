@@ -21,6 +21,7 @@
 #include "dialogs/dlgDbgBuffers.h"
 #include "dialogs/dlgDbgStep.h"
 #include "dialogs/DlgStateXML.h"
+#include "dialogs/dlgViewports.h"
 
 #include "glcanvas.h"
 
@@ -76,7 +77,8 @@ private:
 	void OnDlgShaders(wxCommandEvent& event);
 	void OnDlgScenes(wxCommandEvent& event);
 	void OnDlgPass(wxCommandEvent& event);
-    void OnProjectLoad(wxCommandEvent& event);
+	void OnDlgViewports(wxCommandEvent& event);
+	void OnProjectLoad(wxCommandEvent& event);
 	void OnDirectoryLoad (wxCommandEvent& event);
 	void OnModelLoad (wxCommandEvent& event);
 	void OnModelAppend (wxCommandEvent& event);

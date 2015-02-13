@@ -2,7 +2,7 @@
 <project name="Simple" width="512" height="512">
 	<assets>
 		<scenes>
-			<scene name="Al" type="OctreeByMat">
+			<scene name="Al" >
 			<!--file name="D:/Nau/head/models/bench.obj" /-->
 				<file name="../../models/bench.obj"/>
 			</scene>

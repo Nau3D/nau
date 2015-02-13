@@ -24,6 +24,18 @@ namespace nau
 			FLOAT4_PROP(ROTATE, 1);
 			FLOAT4_PROP(TRANSLATE, 2);
 
+			ENUM_PROP(TRANSFORM_ORDER, 0);
+
+			typedef enum {
+				T_R_S,
+				T_S_R,
+				R_T_S,
+				R_S_T,
+				S_R_T,
+				S_T_R
+			} TransformationOrder;
+
+
 			static AttribSet Attribs;
 
 			virtual void setPropf4(Float4Property prop, vec4& aVec);
@@ -80,6 +92,7 @@ namespace nau
 			nau::math::ITransform *m_Transform, *m_GlobalTransform, *m_ResultTransform;
 
 			void calculateBoundingVolume (void);
+			void updateTransform();
 		};
 	};
 };

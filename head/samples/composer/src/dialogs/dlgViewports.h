@@ -1,5 +1,5 @@
-#ifndef __SLANGER_DIALOGS_CAMERAS__
-#define __SLANGER_DIALOGS_CAMERAS__
+#ifndef __SLANGER_DIALOGS_VIEWPORTS__
+#define __SLANGER_DIALOGS_VIEWPORTS__
 
 
 #ifdef __GNUG__
@@ -25,70 +25,64 @@
 #include <wx/propgrid/advprops.h>
 #include <wx/propgrid/manager.h>
 
-#include "nau.h"
-#include "nau/scene/camera.h"
+#include <nau/event/ilistener.h>
 
-class DlgCameras : public wxDialog
+class DlgViewports : public wxDialog, nau::event_::IListener
 {
 public:
 	void updateDlg();
-	static DlgCameras* Instance ();
+	static DlgViewports* Instance();
 	static void SetParent(wxWindow *parent);
 	static wxWindow *Parent;
 
 	void updateInfo(std::string name);
-
+	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+	std::string &getName();
 
 protected:
 
-	DlgCameras();
-	DlgCameras(const DlgCameras&);
-	DlgCameras& operator= (const DlgCameras&);
-	static DlgCameras *Inst;
+	DlgViewports();
+	DlgViewports(const DlgViewports&);
+	DlgViewports& operator= (const DlgViewports&);
+	static DlgViewports *Inst;
 
 	/* GLOBAL STUFF */
+	// active viewport
 	std::string m_Active;
+	// the class name
+	std::string m_Name;
 
-	/* CAMERAS */
-	wxButton *m_BAdd,*m_BActivate;
+	/* VIEWPORTS */
+	wxButton *m_BAdd;
 	wxPropertyGridManager *m_PG;
 	wxComboBox *m_List;
-	wxPGChoices m_ViewportLabels;
 
 	/* EVENTS */
 	void OnListSelect(wxCommandEvent& event);
 	void OnAdd(wxCommandEvent& event);
-	void OnActivate(wxCommandEvent &event);
 	void OnPropsChange( wxPropertyGridEvent& e);
 
 	void update();
+	void updateList();
 	void setupPanel(wxSizer *siz, wxWindow *parent);
 	void setupGrid();
-
-	/* VIEWPORTS */
-	void updateList();
-	void updateViewportLabels();
 
 	enum {
 		DLG_COMBO,
 		DLG_BUTTON_ADD,
-		DLG_BUTTON_ACTIVATE,
 		DLG_PROPS
+
 	};
 
 	typedef enum {
-		NEW_CAMERA,
+		NEW_VIEWPORT,
 		PROPS_CHANGED
 	} Notification;
 
-	void notifyUpdate(Notification aNot, std::string camName, std::string value);
+	void notifyUpdate(Notification aNot, std::string vpName, std::string value);
 
     DECLARE_EVENT_TABLE()
 };
-
-
-
-
 
 
 #endif

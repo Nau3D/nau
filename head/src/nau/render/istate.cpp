@@ -21,7 +21,7 @@ IState::Init() {
 	//Attribs.add(Attribute(ALPHA_TEST, "ALPHA_TEST", Enums::DataType::BOOL, false, new bool(false)));
 	Attribs.add(Attribute(DEPTH_TEST, "DEPTH_TEST", Enums::DataType::BOOL, false, new bool(true)));
 	Attribs.add(Attribute(CULL_FACE, "CULL_FACE", Enums::DataType::BOOL, false, new bool(true)));
-	Attribs.add(Attribute(COLOR_MASK, "COLOR_MASK", Enums::DataType::BOOL, false, new bool(false)));
+	//Attribs.add(Attribute(COLOR_MASK, "COLOR_MASK", Enums::DataType::BOOL, false, new bool(false)));
 	Attribs.add(Attribute(DEPTH_MASK, "DEPTH_MASK", Enums::DataType::BOOL, false, new bool(true)));
 
 	// ENUM

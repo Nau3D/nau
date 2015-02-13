@@ -41,7 +41,6 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<viewport name="MainViewport" />
 				<renderTarget name="test" fromLibrary="Test Render Targets" />
 				<lights>
 					<light name="Sun" />
