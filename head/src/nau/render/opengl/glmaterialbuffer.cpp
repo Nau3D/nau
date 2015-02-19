@@ -32,9 +32,9 @@ void
 GLMaterialBuffer::bind() {
 
 	int id = m_Buffer->getPropi(IBuffer::ID);
-	if (m_BoolProps[CLEAR] == true) {
-		m_Buffer->clear();
-	}
+	//if (m_BoolProps[CLEAR] == true) {
+	//	m_Buffer->clear();
+	//}
 	//glBindBuffer(m_EnumProps[TYPE], id);
 	glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], id);
 

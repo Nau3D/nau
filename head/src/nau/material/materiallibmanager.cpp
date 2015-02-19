@@ -61,7 +61,7 @@ MaterialLibManager::hasLibrary(std::string lib)
 bool 
 MaterialLibManager::hasMaterial (std::string aLibrary, std::string name)
 {
-	return getLib (aLibrary)->hasMaterial (name);
+	return getLib(aLibrary)->hasMaterial (name);
 }
 
 

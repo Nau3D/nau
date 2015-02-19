@@ -1370,10 +1370,10 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 	const wxChar* units[] = {wxT("0"),wxT("1"),wxT("2"),wxT("3"),wxT("4"),wxT("5"),wxT("6"),wxT("7"),NULL};
 	const long unitsInd[] = {0,1,2,3,4,5,6,7};
 
-	const wxChar* vec4CamComp[] = {wxT("POSITION"), wxT("VIEW"), wxT("NORMALIZED_VIEW"), 
+	const wxChar* vec4CamComp[] = {wxT("POSITION"), wxT("VIEW"),  
 										wxT("UP"), wxT("NORMALIZED_UP"), 
 										wxT("NORMALIZED_RIGHT"), wxT("LOOK_AT_POINT"), NULL};
-	const long vec4CamCompInd[] = {Camera::POSITION, Camera::VIEW_VEC, Camera::NORMALIZED_VIEW_VEC,
+	const long vec4CamCompInd[] = {Camera::POSITION, Camera::VIEW_VEC, 
 										Camera::UP_VEC, Camera::NORMALIZED_UP_VEC,
 										Camera::NORMALIZED_RIGHT_VEC, Camera::LOOK_AT_POINT};
 

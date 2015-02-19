@@ -27,8 +27,7 @@
 	
 	<materials>
 		<material name ="imageStore">
-			<shader>
-				<name>testImageLS</name>
+			<shader name="testImageLS">
 				<values>
 					<valueof uniform="imageUnit"		type="CURRENT" context="TEXTURE"
 														id=1 component="UNIT" />

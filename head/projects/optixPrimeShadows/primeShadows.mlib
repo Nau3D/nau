@@ -45,8 +45,7 @@
 	
 	<materials>
 		<material name="fillGBuffers">
-			<shader>
-				<name>fillGBuffers</name>
+			<shader name="fillGBuffers">
 				<values>
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
@@ -65,8 +64,7 @@
 		</material>
 		
 		<material name="fillRayBuffer">			
-			<shader>
-				<name>fillRayBuffer</name>
+			<shader name="fillRayBuffer">
 				<values>
 					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />	
@@ -86,8 +84,7 @@
 		</material>
 		
 		<material name="compose">
-			<shader>
-				<name>compose</name>
+			<shader name="compose">
 				<values>
 					<valueof uniform="texColor" 		type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />	
@@ -112,8 +109,7 @@
 		</material>		
 		
 		<material name="showBuffer">			
-			<shader>
-				<name>showBuffer</name>
+			<shader name="showBuffer">
 			</shader>
 			<buffers>	
 				<buffer name="rays" >

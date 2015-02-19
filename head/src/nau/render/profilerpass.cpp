@@ -32,7 +32,7 @@ ProfilerPass::ProfilerPass (const std::string &name) :
 	m_pSO = SceneObjectFactory::create("SimpleObject");
 	m_pSO->setRenderable(RESOURCEMANAGER->createRenderable("Mesh", "__ProfilerResult", "Profiler"));
 
-	m_Viewport = NAU->createViewport("__Profiler", vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	m_Viewport = RENDERMANAGER->createViewport("__Profiler", vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	//m_pViewport = new nau::render::Viewport();
 	m_pCam->setViewport(m_Viewport);
 	m_Viewport->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowWidth()));

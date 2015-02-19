@@ -28,7 +28,7 @@ const std::string Enums::DataTypeToString[] = {
 						
 						"SAMPLER", "ENUM",
 
-						"BYTE", "UBYTE", "SHORT", "USHORT", "STRING"};
+						"BYTE", "UBYTE", "SHORT", "USHORT"};
 
 
 

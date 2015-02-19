@@ -405,7 +405,7 @@ PassOptix::setupCamera (void)
 	o_Context["V"]->setFloat(v2.x, v2.y, v2.z);
 	const vec4 &v3 = aCam->getPropf4(Camera::NORMALIZED_RIGHT_VEC);
 	o_Context["U"]->setFloat(v3.x, v3.y, v3.z);
-	const vec4 &v4 = aCam->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+	const vec4 &v4 = aCam->getPropf4(Camera::VIEW_VEC);
 	o_Context["W"]->setFloat(v4.x, v4.y, v4.z);
 	float fov = aCam->getPropf(Camera::FOV) * 0.5;
 	o_Context["fov"]->setFloat(tan(fov*3.14159/180.0));

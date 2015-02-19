@@ -30,7 +30,7 @@ Camera::Init() {
 	// VEC4
 	Attribs.add(Attribute(POSITION, "POSITION",Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 1.0f)));
 	Attribs.add(Attribute(VIEW_VEC, "VIEW", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
-	Attribs.add(Attribute(NORMALIZED_VIEW_VEC, "NORMALIZED_VIEW_VEC", Enums::DataType::VEC4, true,new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+	//Attribs.add(Attribute(NORMALIZED_VIEW_VEC, "NORMALIZED_VIEW_VEC", Enums::DataType::VEC4, true,new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	Attribs.add(Attribute(UP_VEC, "UP", Enums::DataType::VEC4, false, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 	Attribs.add(Attribute(NORMALIZED_UP_VEC, "NORMALIZED_UP" ,Enums::DataType::VEC4, true, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 	Attribs.add(Attribute(NORMALIZED_RIGHT_VEC, "NORMALIZED_RIGHT" ,Enums::DataType::VEC4, true, new vec4(1.0f, 0.0f, 0.0f, 0.0f)));
@@ -270,32 +270,32 @@ Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 			v.w = 1;	
 			m_Float4Props[POSITION].set(v);
 			m_Float4Props[LOOK_AT_POINT] = m_Float4Props[POSITION];
-			m_Float4Props[LOOK_AT_POINT] += m_Float4Props[NORMALIZED_VIEW_VEC];
+			m_Float4Props[LOOK_AT_POINT] += m_Float4Props[VIEW_VEC];
 			break;
 
 		case VIEW_VEC:
-		case NORMALIZED_VIEW_VEC:
 			v.w = 0.0f;
 			v2 = Spherical::toSpherical(x,y,z);
 			m_FloatProps[ZX_ANGLE] = v2.x;
 			m_FloatProps[ELEVATION_ANGLE] = v2.y;
 			m_Float4Props[VIEW_VEC].set(v);
-			m_Float4Props[NORMALIZED_VIEW_VEC].set(v);
-			m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
-			m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[NORMALIZED_VIEW_VEC].cross(m_Float4Props[NORMALIZED_UP_VEC]);
+			m_Float4Props[VIEW_VEC].normalize();
+//			m_Float4Props[NORMALIZED_VIEW_VEC] = m_Float4Props[VIEW_VEC];
+
+			m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]);
 			m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
-			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]);
-			m_Float4Props[UP_VEC].set(m_Float4Props[NORMALIZED_UP_VEC]);
+			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 			m_Float4Props[LOOK_AT_POINT] = m_Float4Props[POSITION];
-			m_Float4Props[LOOK_AT_POINT] += m_Float4Props[NORMALIZED_VIEW_VEC];
+			m_Float4Props[LOOK_AT_POINT] += m_Float4Props[VIEW_VEC];
 			break;
 
 		case UP_VEC:
 			v.w = 0.0f;
-			m_Float4Props[NORMALIZED_RIGHT_VEC].set(m_Float4Props[VIEW_VEC].cross(v));
+			m_Float4Props[UP_VEC] = v;
+			m_Float4Props[UP_VEC].normalize();
+			m_Float4Props[NORMALIZED_RIGHT_VEC].set(m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]));
 			m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
-			m_Float4Props[NORMALIZED_UP_VEC].set(m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]));
-			m_Float4Props[UP_VEC] = m_Float4Props[NORMALIZED_UP_VEC];
+			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 			break;
 
 		case LOOK_AT_POINT:
@@ -304,15 +304,15 @@ Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 			m_Float4Props[VIEW_VEC] = m_Float4Props[LOOK_AT_POINT];
 			m_Float4Props[VIEW_VEC] -= m_Float4Props[POSITION];
 			m_Float4Props[VIEW_VEC].w = 0.0f;
-			m_Float4Props[NORMALIZED_VIEW_VEC].set(m_Float4Props[VIEW_VEC]);
-			m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
-			v2 = Spherical::toSpherical(m_Float4Props[NORMALIZED_VIEW_VEC].x,m_Float4Props[NORMALIZED_VIEW_VEC].y,m_Float4Props[NORMALIZED_VIEW_VEC].z);
+			m_Float4Props[VIEW_VEC].normalize();
+//			m_Float4Props[NORMALIZED_VIEW_VEC].set(m_Float4Props[VIEW_VEC]);
+			v2 = Spherical::toSpherical(m_Float4Props[VIEW_VEC].x,m_Float4Props[VIEW_VEC].y,m_Float4Props[VIEW_VEC].z);
 			m_FloatProps[ZX_ANGLE] = v2.x;
 			m_FloatProps[ELEVATION_ANGLE] = v2.y;
 
-			m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[NORMALIZED_VIEW_VEC].cross(m_Float4Props[NORMALIZED_UP_VEC]);
+			m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]);
 			m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
-			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]);
+			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 			break;
 	}
 	buildViewMatrix();
@@ -440,24 +440,25 @@ Camera::setCamera (vec3 position, vec3 view, vec3 up)
 	} else {
 		m_Float4Props[POSITION].set(position.x, position.y, position.z, 1.0f);
 	}
-
+	view.normalize();
 	m_Float4Props[VIEW_VEC].set(view.x, view.y, view.z, 0.0f);
-	m_Float4Props[NORMALIZED_VIEW_VEC].set(view.x, view.y, view.z, 0.0f);
-	m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
+//	m_Float4Props[NORMALIZED_VIEW_VEC].set(view.x, view.y, view.z, 0.0f);
+//	m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
 
 	vec2 vs = Spherical::toSpherical(view.x, view.y, view.z);
 
+	up.normalize();
 	m_Float4Props[UP_VEC].set(up.x, up.y, up.z, 0.0f);
 
 	m_Float4Props[NORMALIZED_RIGHT_VEC].set(m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]));
 	m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
 
-	m_Float4Props[NORMALIZED_UP_VEC].set(m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]));
+	m_Float4Props[NORMALIZED_UP_VEC].set(m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]));
 	m_Float4Props[NORMALIZED_UP_VEC].normalize();
-	m_Float4Props[UP_VEC].set(m_Float4Props[NORMALIZED_UP_VEC]);
+	//m_Float4Props[UP_VEC].set(m_Float4Props[NORMALIZED_UP_VEC]);
 
 	vec4 v4 = m_Float4Props[POSITION];
-	v4 += m_Float4Props[NORMALIZED_VIEW_VEC];
+	v4 += m_Float4Props[VIEW_VEC];
 	m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
 
 	buildViewMatrix();
@@ -509,18 +510,16 @@ Camera::setVectorsFromSpherical()
 	// View vector = -Z from camera
 	vec3 v;
 	v = Spherical::toCartesian(m_FloatProps[ZX_ANGLE], m_FloatProps[ELEVATION_ANGLE]);
-	m_Float4Props[NORMALIZED_VIEW_VEC].set( v.x, v.y, v.z, 0.0f);
+	//m_Float4Props[NORMALIZED_VIEW_VEC].set( v.x, v.y, v.z, 0.0f);
 	m_Float4Props[VIEW_VEC].set(v.x, v.y, v.z, 0.0f);
 
-	v = Spherical::getRightVector(m_FloatProps[ZX_ANGLE], m_FloatProps[ELEVATION_ANGLE]);
-	m_Float4Props[NORMALIZED_RIGHT_VEC].set(v.x, v.y, v.z, 0.0f);
+	m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]);
+	m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
 
-	vec4 v4 = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]);
-	m_Float4Props[NORMALIZED_UP_VEC].set(v4.x, v4.y, v4.z, 0.0f);
-	m_Float4Props[UP_VEC].set(v4.x, v4.y, v4.z, 0.0f);
+	m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 
-	v4 = m_Float4Props[POSITION];
-	v4 += m_Float4Props[NORMALIZED_VIEW_VEC];
+	vec4 v4 = m_Float4Props[POSITION];
+	v4 += m_Float4Props[VIEW_VEC];
 	m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
 
 	buildViewMatrix();
@@ -610,7 +609,7 @@ Camera::buildViewMatrix (void)
 	vec4 s,u,v;
 	u = m_Float4Props[NORMALIZED_UP_VEC];
 	s = m_Float4Props[NORMALIZED_RIGHT_VEC];
-	v = m_Float4Props[NORMALIZED_VIEW_VEC];
+	v = m_Float4Props[VIEW_VEC];
 
 	mat4& viewMatrix = const_cast<mat4&>(m_Mat4Props[VIEW_MATRIX].getMat44()); 
 
@@ -680,7 +679,7 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera)
 	vec4 rightWNear (rightVector);
 	rightWNear *= (wNear * 0.5f);
 
-	vec4 view = aCamera->getPropf4(NORMALIZED_VIEW_VEC);
+	vec4 view = aCamera->getPropf4(VIEW_VEC);
 	vec4 fc = view;
 	fc *= cFar;
 	fc += aCamera->getPropf4(POSITION);
@@ -814,9 +813,9 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType, n
 		float vel=f->getVelocity();
 
 		vec4 vPos = m_Float4Props[POSITION];
-		vec4 vView = m_Float4Props[NORMALIZED_VIEW_VEC];
+		vec4 vView = m_Float4Props[VIEW_VEC];
 		vec4 vRight = m_Float4Props[NORMALIZED_RIGHT_VEC];
-		vec4 vUp = m_Float4Props[NORMALIZED_UP_VEC];
+		vec4 vUp = m_Float4Props[UP_VEC];
 
 		if(f->getDirection()=="BACKWARD") {
 

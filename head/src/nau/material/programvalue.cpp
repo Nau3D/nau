@@ -3,7 +3,7 @@
 #include <nau.h>
 
 #include <nau/math/simpletransform.h>
-#include <nau/system/textutil.h>
+#include <nau/system/TextUtil.h>
 
 using namespace nau::material;
 using namespace nau::math;
@@ -182,7 +182,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 		m_ValueType = nau::Enums::getType(context);
 		m_Cardinality = nau::Enums::getCardinality(m_ValueType);
 
-		m_Values = textutil::ParseFloats(valueof, m_Cardinality);
+		m_Values = TextUtil::ParseFloats(valueof, m_Cardinality);
 	}
 	else if (0 == type.compare("PASS")) {
 	

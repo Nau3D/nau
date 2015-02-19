@@ -1,5 +1,6 @@
 #include <nau/render/rendermanager.h>
 
+#include <nau.h>
 #include <nau/math/vec3.h>
 #include <nau/render/irenderer.h>
 #include <nau/render/renderfactory.h>
@@ -54,6 +55,11 @@ RenderManager::clear() {
 		delete ((*m_Pipelines.begin()).second);
 		m_Pipelines.erase(m_Pipelines.begin());
 	}
+	while (!m_Viewports.empty()){
+
+		m_Viewports.erase(m_Viewports.begin());
+	}
+
 
 	m_ActivePipeline = 0;
 
@@ -66,23 +72,91 @@ RenderManager::clear() {
 }
 
 
-bool RenderManager::init() {
+bool 
+RenderManager::init() {
 
 	return(m_pRenderer->init());
+}
+
+
+// =========  VIEWPORTS  =========================
+
+
+Viewport*
+RenderManager::createViewport(const std::string &name, nau::math::vec4 &bgColor) {
+
+	Viewport* v = new Viewport;
+
+	v->setName(name);
+	v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
+	v->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(), NAU->getWindowHeight()));
+
+	v->setPropf4(Viewport::CLEAR_COLOR, bgColor);
+	v->setPropb(Viewport::FULL, true);
+
+	m_Viewports[name] = v;
+
+	return v;
+}
+
+
+bool
+RenderManager::hasViewport(const std::string &name) {
+
+	return (m_Viewports.count(name) != NULL);
+}
+
+
+Viewport*
+RenderManager::createViewport(const std::string &name) {
+
+	Viewport* v = new Viewport;
+
+	v->setName(name);
+	v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
+	v->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(), NAU->getWindowHeight()));
+	v->setPropb(Viewport::FULL, true);
+
+	m_Viewports[name] = v;
+
+	return v;
+}
+
+
+Viewport*
+RenderManager::getViewport(const std::string &name) {
+
+	if (m_Viewports.count(name))
+		return m_Viewports[name];
+	else
+		return NULL;
+}
+
+
+std::vector<std::string> *
+RenderManager::getViewportNames() {
+
+	std::vector<std::string> *names = new std::vector<std::string>;
+
+	for (std::map<std::string, nau::render::Viewport*>::iterator iter = m_Viewports.begin(); iter != m_Viewports.end(); ++iter) {
+		names->push_back(iter->first);
+	}
+	return names;
 }
 
 
 // =========  PIPELINES  =========================
 
 bool 
-RenderManager::hasPipeline (const std::string &pipelineName)
-{
+RenderManager::hasPipeline (const std::string &pipelineName) {
+
 	return (m_Pipelines.count (pipelineName) > 0);
 }
 
+
 Pipeline*
-RenderManager::getPipeline(const std::string &pipelineName)
-{
+RenderManager::getPipeline(const std::string &pipelineName) {
+
 	if (m_Pipelines.find(pipelineName) == m_Pipelines.end()) {
 		m_Pipelines[pipelineName] = new Pipeline(pipelineName);
 		if (m_Pipelines.size() == 1)
@@ -93,22 +167,24 @@ RenderManager::getPipeline(const std::string &pipelineName)
 
 
 Pipeline*
-RenderManager::getActivePipeline()
-{
+RenderManager::getActivePipeline() {
+
 	if (m_ActivePipeline){
 		return m_ActivePipeline;
 	}
 	return NULL;
 }
+ 
 
 std::string
-RenderManager::getActivePipelineName()
-{ 
+RenderManager::getActivePipelineName() {
+
 	if (m_ActivePipeline){
 		return m_ActivePipeline->GetName();
 	}
 	return "";
 }
+
 
 void
 RenderManager::setActivePipeline (const std::string &pipelineName) {

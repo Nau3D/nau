@@ -22,8 +22,7 @@
 	<materials>
 
 		<material name="deferred">
-			<shader>
-				<name>deferred</name>
+			<shader name="deferred">
 				<values>
 					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 
@@ -60,8 +59,7 @@
 		</material>	
 		
 		<material name="combine">
-			<shader>
-				<name>combine</name>
+			<shader name="combine">
 				<values>
 					<valueof uniform="color" 			type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />		

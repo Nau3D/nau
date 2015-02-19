@@ -80,12 +80,13 @@ namespace nau {
 		// note: gets and set perform no validation
 		// if in doubt call validate first
 
-		bool validate(std::string type, std::string context, std::string component);
-		void set(std::string type, std::string context, 
-				 std::string component, 
+		bool validateAttribute(std::string type, std::string context, std::string component);
+		void setAttribute(std::string type, std::string context, 
+				 std::string component, int number,
 				 void *values);
-		void *get(std::string type, std::string context,
-			std::string component);
+		void *getAttribute(std::string type, std::string context,
+			std::string component, int number);
+		AttributeValues *getObjectAttributes(std::string type, std::string context, int number=0);
 
 		// Attributes
 		void registerAttributes(std::string s, AttribSet *attrib);
@@ -130,12 +131,12 @@ namespace nau {
 		float getWindowWidth();
 
 		// Viewports
-		nau::render::Viewport* createViewport (const std::string &name, nau::math::vec4 &bgColor);
-		nau::render::Viewport* createViewport (const std::string &name);
-		nau::render::Viewport* getViewport (const std::string &name);
+		//nau::render::Viewport* createViewport (const std::string &name, nau::math::vec4 &bgColor);
+		//nau::render::Viewport* createViewport (const std::string &name);
+		//nau::render::Viewport* getViewport (const std::string &name);
 		nau::render::Viewport* getDefaultViewport ();
-		std::vector<std::string> *getViewportNames();
-		bool hasViewport(const std::string &name);
+		//std::vector<std::string> *getViewportNames();
+		//bool hasViewport(const std::string &name);
 
 		bool reload (void);
 
@@ -212,7 +213,7 @@ namespace nau {
 		std::string m_ActiveCameraName;
 		float m_WindowWidth, m_WindowHeight;
 		nau::world::IWorld *m_pWorld;
-		std::map <std::string, nau::render::Viewport*> m_vViewports;
+		//std::map <std::string, nau::render::Viewport*> m_vViewports;
 		nau::render::Viewport *m_Viewport;
 		int m_ClickX = 0, m_ClickY = 0;
 		//std::map <std::string, nau::animation::IAnimation*> m_Animations;

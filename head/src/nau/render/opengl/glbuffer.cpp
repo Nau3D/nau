@@ -117,8 +117,9 @@ GLBuffer::getData(unsigned int offset, unsigned int size, void *data) {
 void
 GLBuffer::setPropui(UIntProperty  prop, unsigned int value) {
 
-	m_UIntProps[prop] = value;
+
 	if (prop == SIZE) {
+		m_UIntProps[SIZE] = value;
 		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 		//glBufferStorage(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT);
 		glBufferData(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_STATIC_DRAW);
@@ -127,8 +128,27 @@ GLBuffer::setPropui(UIntProperty  prop, unsigned int value) {
 #endif
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
+	else
+		AttributeValues::setPropui(prop, value);
 }
 
+
+void 
+GLBuffer::setPropui3(UInt3Property prop, uivec3 &v) {
+
+	if (prop == DIM) {
+
+		int size = v.x * v.y * v.z;
+		int s = 0;
+		for (auto t : m_Structure) {
+			s += Enums::getSize(t);
+		}
+		setPropui(SIZE, size * s);
+		setPropui(STRUCT_SIZE, s);
+	}
+	else
+		AttributeValues::setPropui3(prop, v);
+}
 
 void 
 GLBuffer::refreshBufferParameters() {

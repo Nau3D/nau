@@ -122,6 +122,7 @@ namespace nau
 			static float s_Dummy_float;
 			static int s_Dummy_int;
 			static bool s_Dummy_bool;
+			static uivec3 s_Dummy_uivec3;
 		};
 	};
 };

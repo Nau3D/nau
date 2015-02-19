@@ -15,8 +15,7 @@
 	
 	<materials>
 		<material name="tessMat">
-			<shader>
-				<name>tessShader</name>
+			<shader name="tessShader">
 				<values>
 					<valueof uniform="lightDir" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 

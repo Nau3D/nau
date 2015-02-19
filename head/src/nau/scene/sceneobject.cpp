@@ -46,33 +46,33 @@ SceneObject::updateTransform() {
 
 	case T_R_S:
 		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
-		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
 		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
 		break;
 	case T_S_R:
 		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
 		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
-		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
 		break;
 	case R_T_S:
-		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
 		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
 		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
 		break;
 	case R_S_T:
-		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
 		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
 		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
 		break;
 	case S_R_T:
 		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
-		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
 		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
 		break;
 	case S_T_R:
 		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
 		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
-		tis->rotate(m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z, m_Float4Props[ROTATE].w);
+		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
 		break;
 	}
 	setTransform(tis);

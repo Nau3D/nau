@@ -29,9 +29,11 @@ namespace nau
 			INT_PROP(ID,0);
 
 			UINT_PROP(SIZE, 0);
+			UINT_PROP(STRUCT_SIZE, 1);
 
 			ENUM_PROP(CLEAR, 0);
-		//	ENUM_PROP(TYPE, 1);
+
+			UINT3_PROP(DIM, 0);
 
 			typedef enum CV{
 				NEVER,
@@ -43,6 +45,7 @@ namespace nau
 
 			// Note: no validation is performed!
 			virtual void setPropui(UIntProperty  prop, unsigned int value) = 0;
+			virtual void setPropui3(UInt3Property  prop, uivec3 &v) = 0;
 
 			static IBuffer* Create(std::string label);
 
@@ -64,6 +67,8 @@ namespace nau
 			std::vector<Enums::DataType> &getStructure();
 
 			virtual void refreshBufferParameters() = 0;
+
+			void appendItemToStruct(Enums::DataType);
 		
 			~IBuffer(void) {};
 		

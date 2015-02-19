@@ -37,7 +37,8 @@ DlgCameras* DlgCameras::Instance () {
 
 
 DlgCameras::DlgCameras()
-	: wxDialog(DlgCameras::Parent, -1, wxT("Nau - Cameras"),wxDefaultPosition,wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE)
+	: wxDialog(DlgCameras::Parent, -1, wxT("Nau - Cameras"),wxDefaultPosition,wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE),
+	m_Name("Camera Dialog")
                 
 {
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
@@ -53,6 +54,22 @@ DlgCameras::DlgCameras()
 	this->SetSize(350,400);
 }
 
+
+void
+DlgCameras::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+
+	if (eventType == "NEW_VIEWPORT")
+		updateList();
+	else if (eventType == "VIEWPORT_CHANGED")
+		update();
+}
+
+
+std::string &
+DlgCameras::getName() {
+
+	return m_Name;
+}
 
 void
 DlgCameras::notifyUpdate(Notification aNot, std::string camName, std::string value) {
@@ -88,7 +105,7 @@ void DlgCameras::updateViewportLabels() {
 	m_ViewportLabels.Add(wxT("None"), -1);
 
 	std::vector<std::string>::iterator iter;
-	std::vector<std::string> *viewports = NAU->getViewportNames();
+	std::vector<std::string> *viewports = RENDERMANAGER->getViewportNames();
 	for (iter = viewports->begin(); iter != viewports->end(); ++iter)
 		m_ViewportLabels.Add(wxString(iter->c_str()));
 
@@ -213,7 +230,7 @@ void DlgCameras::OnPropsChange( wxPropertyGridEvent& e) {
 		int index = e.GetPropertyValue().GetInteger();
 		if (index != -1) {
 			wxString s = m_ViewportLabels.GetLabel(index);
-			cam->setViewport(NAU->getViewport(s.ToStdString()));
+			cam->setViewport(RENDERMANAGER->getViewport(s.ToStdString()));
 		}
 		else
 			cam->setViewport(NULL);

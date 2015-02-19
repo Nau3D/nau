@@ -20,8 +20,7 @@
 	<materials>
 		<material name="imageSpace">
 			
-			<shader>
-				<name>imageSpace</name>
+			<shader name="imageSpace">
 				<values>
 					<valueof uniform="pUser" 		type="CAMERA" 
 													context="UserCamera" 

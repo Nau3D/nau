@@ -32,8 +32,7 @@
 	
 	<materials>
 		<material name="dirLightDifAmbPix">
-			<shader>
-				<name>dirLightDifAmbPix</name>
+			<shader name = "dirLightDifAmbPix">
 				<values>
 					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 
@@ -95,8 +94,7 @@
 				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>quadShader</name>
+			<shader name ="quadShader" >
 				<values>
 					<valueof uniform="texUnit" 	type="CURRENT" context="TEXTURE" 
 												component="UNIT" id="0" />			
@@ -112,8 +110,7 @@
 				<EMISSION r="1.0" g="1.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>emission</name>
+			<shader name="emission">
 				<values>
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
@@ -135,8 +132,7 @@
 				<EMISSION r="1.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>emission</name>
+			<shader name="emission">
 				<values>
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
@@ -158,8 +154,7 @@
 				<EMISSION r="0.0" g="1.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>emission</name>
+			<shader name="emission">
 				<values>
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
@@ -181,8 +176,7 @@
 				<EMISSION r="0.0" g="0.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>emission</name>
+			<shader name="emission">
 				<values>
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
@@ -203,8 +197,7 @@
 				<EMISSION r="0.0" g="1.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>emission</name>
+			<shader name="emission">
 				<values>
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
@@ -226,8 +219,7 @@
 				<EMISSION r="1.0" g="0.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>emission</name>
+			<shader name="emission">
 				<values>
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
@@ -249,8 +241,7 @@
 				<EMISSION r="1.0" g="1.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>emission</name>
+			<shader name="emission">
 				<values>
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
@@ -286,8 +277,7 @@
 				<EMISSION r="1.0" g="1.0" b="1.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>font</name>
+			<shader name="font">
 				<values>
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />

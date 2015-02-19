@@ -22,8 +22,7 @@
 	
 	<materials>
 		<material name="fillGBuffers">
-			<shader>
-				<name>fillGBuffers</name>
+			<shader name="fillGBuffers">
 				<values>
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
@@ -41,8 +40,7 @@
 			</shader>
 		</material>
 		<material name="oneshot">
-			<shader>
-				<name>oneshot</name>
+			<shader name="oneshot">
 				<values>
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
@@ -65,8 +63,7 @@
 		</material>
 		
 		<material name="compose">
-			<shader>
-				<name>compose</name>
+			<shader name="compose">
 				<values>
 					<valueof uniform="texColor" 		type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />	

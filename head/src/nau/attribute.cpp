@@ -504,6 +504,20 @@ AttribSet::initAttribInstanceUIntArray(std::map<int, unsigned int> &m) {
 }
 
 
+void
+AttribSet::initAttribInstanceUInt3Array(std::map<int, uivec3> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for (; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::UIVEC3) {
+
+			m[it->second.m_Id] = *(uivec3 *)(it->second.m_Default);
+		}
+	}
+}
+
+
 void 
 AttribSet::initAttribInstanceFloatArray(std::map<int, float> &m) {
 

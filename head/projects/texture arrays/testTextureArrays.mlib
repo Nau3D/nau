@@ -28,8 +28,7 @@
 
 	<materials>
 		<material name="showArrays">
-			<shader>
-				<name>showArrays</name>
+			<shader name="showArrays">
 				<values>
 					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />		
@@ -42,8 +41,7 @@
 		
 		<material name="fillArrays">
 		
-			<shader>
-				<name>fillArrays</name>
+			<shader name="fillArrays">
 				<values>
 					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 

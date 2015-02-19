@@ -10,8 +10,7 @@
 	
 	<materials>
 		<material name="simpleTextured">
-			<shader>
-				<name>simple</name>
+			<shader name="simple">
 				<values>
 					<valueof uniform="fogMin" 	type="CURRENT" context="STATE" 
 														component="FOG_MIN_DIST" /> 

@@ -28,7 +28,7 @@
 #include "nau.h"
 #include "nau/scene/camera.h"
 
-class DlgCameras : public wxDialog
+class DlgCameras : public wxDialog, nau::event_::IListener
 {
 public:
 	void updateDlg();
@@ -36,7 +36,9 @@ public:
 	static void SetParent(wxWindow *parent);
 	static wxWindow *Parent;
 
+	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 	void updateInfo(std::string name);
+	std::string &getName();
 
 
 protected:
@@ -48,6 +50,7 @@ protected:
 
 	/* GLOBAL STUFF */
 	std::string m_Active;
+	std::string m_Name;
 
 	/* CAMERAS */
 	wxButton *m_BAdd,*m_BActivate;

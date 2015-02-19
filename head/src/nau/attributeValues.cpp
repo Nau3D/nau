@@ -116,6 +116,46 @@ AttributeValues::setPropui(UIntProperty prop, int unsigned value) {
 
 
 // ----------------------------------------------
+//		UINT3
+// ----------------------------------------------
+
+
+uivec3 &
+AttributeValues::getPropui3(UInt3Property prop) {
+
+	return m_UInt3Props[prop];
+}
+
+
+bool
+AttributeValues::isValidui3(UInt3Property prop, uivec3 &value) {
+
+	Attribute attr = m_Attribs->get(prop, Enums::UIVEC3);
+	if (attr.getName() == "NO_ATTR")
+		return false;
+
+	uivec3 *max, *min;
+	if (attr.getRangeDefined()) {
+		max = (uivec3 *)attr.getMax();
+		min = (uivec3 *)attr.getMin();
+
+		if (max != NULL && value > *max)
+			return false;
+		if (min != NULL && value < *min)
+			return false;
+	}
+	return true;
+}
+
+
+void
+AttributeValues::setPropui3(UInt3Property prop, uivec3 &value) {
+	assert(isValidui3(prop, value));
+	m_UInt3Props[prop] = value;
+}
+
+
+// ----------------------------------------------
 //		BOOL
 // ----------------------------------------------
 
@@ -420,7 +460,8 @@ AttributeValues::copy(AttributeValues *to) {
 	to->m_EnumProps =   m_EnumProps;
 	to->m_IntProps =    m_IntProps;
 	to->m_UIntProps =   m_UIntProps;
-	to->m_BoolProps =   m_BoolProps;
+	to->m_UInt3Props = m_UInt3Props;
+	to->m_BoolProps = m_BoolProps;
 	to->m_Bool4Props =  m_Bool4Props;
 	to->m_FloatProps =  m_FloatProps;
 	to->m_Float2Props = m_Float2Props;
@@ -438,6 +479,7 @@ AttributeValues::clearArrays() {
 	m_EnumProps.clear();
 	m_IntProps.clear();
 	m_UIntProps.clear();
+	m_UInt3Props.clear();
 	m_BoolProps.clear();
 	m_Bool4Props.clear();
 	m_FloatProps.clear();
@@ -494,6 +536,19 @@ AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 				}
 			}
 			return(&(m_UIntProps[prop]));
+			break;
+		case Enums::UIVEC3:
+			if (m_UInt3Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_UInt3Props[prop] = *(uivec3 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined attribute of type UINT3");
+					SLOG("Accessing undefined attribute of type UINT - This should never occur");
+					m_UInt3Props[prop] = uivec3(0);
+				}
+			}
+			return(&(m_UInt3Props[prop]));
 			break;
 		case Enums::BOOL:
 			if (m_BoolProps.count(prop) == 0) {
@@ -620,6 +675,9 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, void *value) {
 	case Enums::UINT:
 		setPropui((UIntProperty)prop, *(unsigned int *)value);
 		break;
+	case Enums::UIVEC3:
+		setPropui3((UInt3Property)prop, *(uivec3 *)value);
+		break;
 	case Enums::BOOL:
 		setPropb((BoolProperty)prop, *(bool *)value);
 		break;
@@ -664,6 +722,9 @@ AttributeValues::isValid(unsigned int prop, Enums::DataType type, void *value) {
 	case Enums::UINT:
 		return isValidui((UIntProperty)prop, *(unsigned int *)value);
 		break;
+	case Enums::UIVEC3:
+		return isValidui3((UInt3Property)prop, *(uivec3 *)value);
+		break;
 	case Enums::BOOL:
 		return isValidb((BoolProperty)prop, *(bool *)value);
 		break;
@@ -705,19 +766,21 @@ AttributeValues::registerAndInitArrays(std::string name, AttribSet &attribs) {
 void
 AttributeValues::initArrays(AttribSet &attribs) {
 
-	attribs.initAttribInstanceEnumArray(m_EnumProps);
-	attribs.initAttribInstanceIntArray(m_IntProps);
-	attribs.initAttribInstanceUIntArray(m_UIntProps);
-	attribs.initAttribInstanceBoolArray(m_BoolProps);
-	attribs.initAttribInstanceBvec4Array(m_Bool4Props);
-	attribs.initAttribInstanceVec4Array(m_Float4Props);
-	attribs.initAttribInstanceVec3Array(m_Float3Props);
-	attribs.initAttribInstanceVec2Array(m_Float2Props);
-	attribs.initAttribInstanceFloatArray(m_FloatProps);
-	attribs.initAttribInstanceMat4Array(m_Mat4Props);
-	attribs.initAttribInstanceMat3Array(m_Mat3Props);
+	//attribs.initAttribInstanceEnumArray(m_EnumProps);
+	//attribs.initAttribInstanceIntArray(m_IntProps);
+	//attribs.initAttribInstanceUIntArray(m_UIntProps);
+	//attribs.initAttribInstanceUInt3Array(m_UInt3Props);
+	//attribs.initAttribInstanceBoolArray(m_BoolProps);
+	//attribs.initAttribInstanceBvec4Array(m_Bool4Props);
+	//attribs.initAttribInstanceVec4Array(m_Float4Props);
+	//attribs.initAttribInstanceVec3Array(m_Float3Props);
+	//attribs.initAttribInstanceVec2Array(m_Float2Props);
+	//attribs.initAttribInstanceFloatArray(m_FloatProps);
+	//attribs.initAttribInstanceMat4Array(m_Mat4Props);
+	//attribs.initAttribInstanceMat3Array(m_Mat3Props);
 
 	m_Attribs = &attribs;
+	initArrays();
 }
 
 
@@ -727,6 +790,7 @@ AttributeValues::initArrays() {
 	m_Attribs->initAttribInstanceEnumArray(m_EnumProps);
 	m_Attribs->initAttribInstanceIntArray(m_IntProps);
 	m_Attribs->initAttribInstanceUIntArray(m_UIntProps);
+	m_Attribs->initAttribInstanceUInt3Array(m_UInt3Props);
 	m_Attribs->initAttribInstanceBoolArray(m_BoolProps);
 	m_Attribs->initAttribInstanceBvec4Array(m_Bool4Props);
 	m_Attribs->initAttribInstanceVec4Array(m_Float4Props);

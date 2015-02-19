@@ -65,8 +65,7 @@
 	
 	<materials>
 		<material name="gatherInfo">
-			<shader>
-				<name>gatherInfo</name>
+			<shader name="gatherInfo">
 				<values>
 					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
 											component="PROJECTION_VIEW_MODEL" />										
@@ -81,8 +80,7 @@
 		</material>
 		
 		<material name="fillRayBuffer">			
-			<shader>
-				<name>fillRayBuffer</name>
+			<shader name="fillRayBuffer">
 				<values>
 					<valueof uniform="texPos" 	type="CURRENT" context="TEXTURE" 
 												component="UNIT" id="0" />	
@@ -103,8 +101,7 @@
 		</material>
 		
 		<material name="computeLineRays">			
-			<shader>
-				<name>computeLineRays</name>
+			<shader name="computeLineRays">
 				<values>
 					<valueof uniform="clickX" type="CURRENT" context="MOUSE"
 											component="CLICK_X" />
@@ -129,8 +126,7 @@
 		</material>
 		
 		<material name="showRays">
-			<shader>
-				<name>showRays</name>
+			<shader name="showRays">
 				<values>
 					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
 											component="PROJECTION_VIEW_MODEL" />
@@ -139,8 +135,7 @@
 		</material>
 
 		<material name="ambOcc">
-			<shader>
-				<name>ambOcc</name>
+			<shader name="ambOcc">
 				<values>
 					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
 											component="PROJECTION_VIEW_MODEL" />
@@ -184,8 +179,7 @@
 		</material>
 		
 		<material name="compose">
-			<shader>
-				<name>compose</name>
+			<shader name="compose">
 				<values>
 					<valueof uniform="PVM" 				type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />

@@ -20,8 +20,7 @@
 	
 	<materials>
 		<material name="House">
-			<shader>
-				<name>perpixel-color-shadow</name>
+			<shader name="perpixel-color-shadow">
 				<values>
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />

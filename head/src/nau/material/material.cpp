@@ -380,25 +380,21 @@ Material::attachBuffer(IMaterialBuffer *b) {
 }
 
 
-//IBuffer *
-//Material::getBuffer(int id) {
-//
-//	if (m_Buffers.count(id))
-//		return m_Buffers[id].second;
-//	else
-//		return NULL;
-//}
-//
-//
-//int
-//Material::getBufferBindingPoint(int id) {
-//
-//	if (m_Buffers.count(id))
-//		return m_Buffers[id].first;
-//	else
-//		return -1;
-//}
+IMaterialBuffer *
+Material::getBuffer(int id) {
 
+	if (m_Buffers.count(id))
+		return m_Buffers[id];
+	else
+		return NULL;
+}
+
+
+bool
+Material::hasBuffer(int id) {
+
+	return  0 != m_Buffers.count(id);
+}
 
 
 bool

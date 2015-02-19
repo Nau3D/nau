@@ -74,7 +74,7 @@ Nau::getInstance (void) {
 Nau::Nau() :
 	m_WindowWidth (0.0f), 
 	m_WindowHeight (0.0f), 
-	m_vViewports(),
+//	m_vViewports(),
 	m_Inited (false),
 	m_Physics (false),
 	loadedScenes(0),
@@ -136,7 +136,7 @@ Nau::init (bool context, std::string aConfigFile) {
 	EVENTMANAGER->addListener("WINDOW_SIZE_CHANGED",this);
 
 	m_DefaultState = IState::create();
-	m_Viewport = createViewport("defaultFixedVP");
+	m_Viewport = m_pRenderManager->createViewport("defaultFixedVP");
 
 	State::init();
 
@@ -163,14 +163,15 @@ Nau::getName() {
 
 #ifdef NAU_LUA
 
+// Must do something when the parameters are invalid
+int
+luaGet(lua_State *l) {
 
-int 
-luaSet(lua_State *l) {
-
-	const char *tipo = lua_tostring(l, -4);
-	const char *context = lua_tostring(l, -3);
-	const char *component = lua_tostring(l, -2);
-
+	const char *tipo = lua_tostring(l, -5);
+	const char *context = lua_tostring(l, -4);
+	const char *component = lua_tostring(l, -3);
+	int number = lua_tonumber(l, -2);
+	void *arr;
 	AttribSet *attr = NAU->getAttribs(tipo);
 	std::string s = component;
 	Enums::DataType dt, bdt;
@@ -178,16 +179,75 @@ luaSet(lua_State *l) {
 	attr->getPropTypeAndId(s, &dt, &id);
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
+	arr = NAU->getAttribute(tipo, context, component, number);
+	float *arrF;
 
-	lua_pushstring(l, "x");
-	lua_gettable(l, -2);
+	switch (bdt) {
 
+	case Enums::FLOAT:
+		arrF = (float *)arr;
+		for (int i = 0; i < card ; ++i) {
+			lua_pushnumber(l, i + 1); // key
+			lua_pushnumber(l, arrF[i]); // value
+			lua_settable(l, -3); // two pushes 
+		}
+		break;
+	}
+	return 0;
+}
 
+int 
+luaSet(lua_State *l) {
 
-	const char* c = lua_tostring(l, -1);
+	const char *tipo = lua_tostring(l, -5);
+	const char *context = lua_tostring(l, -4);
+	const char *component = lua_tostring(l, -3);
+	int number = lua_tonumber(l, - 2);
+	void *arr;
+	AttribSet *attr = NAU->getAttribs(tipo);
+	std::string s = component;
+	Enums::DataType dt, bdt;
+	int id;
+	attr->getPropTypeAndId(s, &dt, &id);
+	int card = Enums::getCardinality(dt);
+	bdt = Enums::getBasicType(dt);
+	float *arrF;
+	int *arrI; 
+	unsigned int *arrUI;
 
+	switch (bdt) {
 
-	NAU->set(tipo, context, component, (void *)c);
+	case Enums::FLOAT:
+		arrF = (float *)malloc(sizeof(float) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l,-2) != 0; ++i) {
+			arrF[i] = lua_tonumber(l, -1);
+			lua_pop(l, 1);
+		}
+		arr = arrF;
+		break;
+	case Enums::INT:
+	case Enums::BOOL:
+		arrI = (int *)malloc(sizeof(int) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
+			arrI[i] = lua_tonumber(l, -1);
+			lua_pop(l, 1);
+		}
+		arr = arrI;
+		break;
+	case Enums::UINT :
+		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
+			arrUI[i] = lua_tounsigned(l, -1);
+			lua_pop(l, 1);
+		}
+		arr = arrUI;
+		break;
+	}
+
+	NAU->setAttribute(tipo, context, component, number, arr);
 	return 0;
 }
 
@@ -199,13 +259,18 @@ Nau::initLua() {
 	luaL_openlibs(m_LuaState);
 	lua_pushcfunction(m_LuaState, luaSet);
 	lua_setglobal(m_LuaState, "set");
+	lua_pushcfunction(m_LuaState, luaGet);
+	lua_setglobal(m_LuaState, "get");
 }
 
 
 void
 Nau::initLuaScript(std::string file, std::string name) {
 
-	luaL_dofile(m_LuaState, "D:/Nau/head/build/samples/test.lua");
+	int res = luaL_dofile(m_LuaState, file.c_str());
+	if (res) {
+		NAU_THROW("Error loading lua file: %s", lua_tostring(m_LuaState, -1));
+	}
 }
 
 
@@ -234,49 +299,128 @@ Nau::callLuaScript(std::string file, std::string name) {
 // ----------------------------------------------------------
 
 
-bool
-Nau::validate(std::string type, std::string context, std::string component) {
+AttributeValues *
+Nau::getObjectAttributes(std::string type, std::string context, int number) {
 
+	// From Render Manager
 	if (type == "CAMERA") {
-	
-		if (!m_pRenderManager->hasCamera(context))
-			return false;
+		if (m_pRenderManager->hasCamera(context))
+			return (AttributeValues *)m_pRenderManager->getCamera(context);
+	}
+	if (type == "LIGHT") {
+		if (m_pRenderManager->hasLight(context))
+			return (AttributeValues *)m_pRenderManager->getLight(context);
+	}
+	if (type == "SCENE") {
+		if (m_pRenderManager->hasScene(context))
+			return (AttributeValues *)m_pRenderManager->getScene(context);
+	}
+	if (type == "PASS") {
+		std::string pipName = m_pRenderManager->getActivePipelineName();
+		if (m_pRenderManager->hasPass(pipName, context))
+			return (AttributeValues *)m_pRenderManager->getPass(pipName, context);
+	}
+	if (type == "VIEWPORT") {
+		if (m_pRenderManager->hasViewport(context))
+			return (AttributeValues *)m_pRenderManager->getViewport(context);
 	}
 
+	// From ResourceManager
+
+	if (type == "BUFFER") {
+		if (m_pResourceManager->hasBuffer(context))
+			return (AttributeValues *)m_pResourceManager->getBuffer(context);
+	}
+	if (type == "STATE") {
+		if (m_pResourceManager->hasState(context))
+			return (AttributeValues *)m_pResourceManager->getState(context);
+	}
+
+	// From Materials
+
+	std::string lib, mat;
+	std::size_t found = context.find("::");
+	if (found != std::string::npos && context.size() > found+2) {
+		lib = context.substr(0, found);
+		mat = context.substr(found + 2);
+	}
+
+	if (type == "COLOR_MATERIAL") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)&(m_pMaterialLibManager->getMaterial(lib, mat)->getColor());
+	}
+	if (type == "TEXTURE") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTexture(number);
+	}
+	if (type == "IMAGE_TEXTURE") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getImageTexture(number);
+	}
+	if (type == "MATERIAL_BUFFER") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getBuffer(number);
+	}
+	if (type == "TEXTURE_SAMPLER") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTextureSampler(number);
+	}
+
+
+	// If we get here then we are trying to fetch something that does not exist
+	assert(false && "Getting an invalid attribute - Nau::getObject");
+	return NULL;
+}
+
+
+bool
+Nau::validateAttribute(std::string type, std::string context, std::string component) {
+
+	//if (type == "CAMERA") {
+	//
+	//	if (!m_pRenderManager->hasCamera(context))
+	//		return false;
+	//}
+	if (!getObjectAttributes(type, context))
+		return false;
 	return ProgramValue::Validate(type, context, component);
 }
 
 
 void 
-Nau::set(std::string type, std::string context, std::string component, void *values) {
+Nau::setAttribute(std::string type, std::string context, std::string component, int number, void *values) {
 
 	int id;
-	Enums::DataType dt;
+	Enums::DataType dt; 
+	AttributeValues *attrVal;
 
-	if (type == "CAMERA") {
-		float *f = (float *)values;
-		SLOG("%s:%s:%s:%f", type.c_str(), context.c_str(), component.c_str(), *f);
-		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
-		Camera *cam = m_pRenderManager->getCamera(context);
-		cam->setProp(id, dt, values);
+	m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
+	attrVal = getObjectAttributes(type, context, number);
+
+	if (attrVal == NULL) {
+		assert(false && "Invalid parameters Nau::getAttribute");
 	}
+	else
+		attrVal->setProp(id, dt, values);
 }
 
 
 void *
-Nau::get(std::string type, std::string context, std::string component) {
+Nau::getAttribute(std::string type, std::string context, std::string component, int number) {
 
 	int id;
 	Enums::DataType dt;
+	AttributeValues *attrVal;
 
-	if (type == "CAMERA") {
+	m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
+	attrVal = getObjectAttributes(type, context, number);
 
-		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
-		Camera *cam = m_pRenderManager->getCamera(context);
-		return(cam->getProp(id, dt));
+	if (attrVal == NULL) {
+		assert(false && "Invalid parameters Nau::getAttribute");
+		return NULL;
 	}
 	else
-		return NULL;
+		return attrVal->getProp(id, dt);
 }
 
 
@@ -465,8 +609,8 @@ Nau::appendModel(std::string fileName) {
 
 void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize) {
 
-	Camera *aNewCam = RENDERMANAGER->getCamera ("MainCamera");
-	Viewport *v = NAU->getViewport("defaultFixedVP");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	Camera *aNewCam = m_pRenderManager->getCamera ("MainCamera");
+	Viewport *v = m_pRenderManager->getViewport("defaultFixedVP");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	aNewCam->setViewport (v);
 
 	setActiveCameraName("MainCamera");
@@ -479,12 +623,12 @@ void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize) {
 		aNewCam->setPerspective (60.0f, 1.0f, 10000.0f);
 
 	// creates a directional light by default
-	Light *l = RENDERMANAGER->getLight ("MainDirectionalLight");
+	Light *l = m_pRenderManager->getLight("MainDirectionalLight");
 	l->setPropf4(Light::DIRECTION,1.0f,-1.0f,-1.0f, 0.0f);
 	l->setPropf4(Light::COLOR, 0.9f,0.9f,0.9f,1.0f);
 	l->setPropf4(Light::AMBIENT,0.5f,0.5f,0.5f,1.0f );
 
-	Pipeline *aPipeline = RENDERMANAGER->getPipeline ("MainPipeline");
+	Pipeline *aPipeline = m_pRenderManager->getPipeline("MainPipeline");
 	Pass *aPass = aPipeline->createPass("MainPass");
 	aPass->setCamera ("MainCamera");
 
@@ -494,7 +638,7 @@ void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize) {
 	aPass->addLight ("MainDirectionalLight");
 
 	aPass->addScene(sceneName);
-	RENDERMANAGER->setActivePipeline ("MainPipeline");
+	m_pRenderManager->setActivePipeline("MainPipeline");
 //	RENDERMANAGER->prepareTriangleIDsAndTangents(true,true);
 }
 
@@ -525,12 +669,12 @@ Nau::clear() {
 
 	// Need to clear font manager
 
-	while (!m_vViewports.empty()){
+	//while (!m_vViewports.empty()){
 
-		m_vViewports.erase(m_vViewports.begin());
-	}
+	//	m_vViewports.erase(m_vViewports.begin());
+	//}
 
-	m_Viewport = createViewport("defaultFixedVP");
+	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
 
 	ProjectLoader::loadMatLib("./nauSystem.mlib");
 }
@@ -840,55 +984,55 @@ Nau::getWindowWidth() {
 }
 
 
-Viewport*
-Nau::createViewport (const std::string &name, nau::math::vec4 &bgColor) {
+//Viewport*
+//Nau::createViewport (const std::string &name, nau::math::vec4 &bgColor) {
+//
+//	Viewport* v = new Viewport;
+//
+//	v->setName(name);
+//	v->setPropf2 (Viewport::ORIGIN, vec2(0.0f,0.0f));
+//	v->setPropf2 (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
+//
+//	v->setPropf4(Viewport::CLEAR_COLOR, bgColor);
+//	v->setPropb(Viewport::FULL, true);
+//
+//	m_vViewports[name] = v;
+//
+//	return v;
+//}
+//
+//
+//bool 
+//Nau::hasViewport(const std::string &name) {
+//
+//	return (m_vViewports.count(name) != NULL);
+//}
+//
+//
+//Viewport*
+//Nau::createViewport (const std::string &name) {
+//
+//	Viewport* v = new Viewport;
+//
+//	v->setName(name);
+//	v->setPropf2 (Viewport::ORIGIN, vec2(0.0f,0.0f));
+////	v->setPropf2 (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
+//	v->setPropb(Viewport::FULL, true);
+//
+//	m_vViewports[name] = v;
+//
+//	return v;
+//}
 
-	Viewport* v = new Viewport;
 
-	v->setName(name);
-	v->setPropf2 (Viewport::ORIGIN, vec2(0.0f,0.0f));
-	v->setPropf2 (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
-
-	v->setPropf4(Viewport::CLEAR_COLOR, bgColor);
-	v->setPropb(Viewport::FULL, true);
-
-	m_vViewports[name] = v;
-
-	return v;
-}
-
-
-bool 
-Nau::hasViewport(const std::string &name) {
-
-	return (m_vViewports.count(name) != NULL);
-}
-
-
-Viewport*
-Nau::createViewport (const std::string &name) {
-
-	Viewport* v = new Viewport;
-
-	v->setName(name);
-	v->setPropf2 (Viewport::ORIGIN, vec2(0.0f,0.0f));
-	v->setPropf2 (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
-	v->setPropb(Viewport::FULL, true);
-
-	m_vViewports[name] = v;
-
-	return v;
-}
-
-
-Viewport* 
-Nau::getViewport (const std::string &name) {
-
-	if (m_vViewports.count(name))
-		return m_vViewports[name];
-	else
-		return NULL;
-}
+//Viewport* 
+//Nau::getViewport (const std::string &name) {
+//
+//	if (m_vViewports.count(name))
+//		return m_vViewports[name];
+//	else
+//		return NULL;
+//}
 
 
 Viewport*
@@ -898,16 +1042,16 @@ Nau::getDefaultViewport() {
 }
 
 
-std::vector<std::string> *
-Nau::getViewportNames() {
-
-	std::vector<std::string> *names = new std::vector<std::string>; 
-
-	for( std::map<std::string, nau::render::Viewport*>::iterator iter = m_vViewports.begin(); iter != m_vViewports.end(); ++iter ) {
-      names->push_back(iter->first); 
-    }
-	return names;
-}
+//std::vector<std::string> *
+//Nau::getViewportNames() {
+//
+//	std::vector<std::string> *names = new std::vector<std::string>; 
+//
+//	for( std::map<std::string, nau::render::Viewport*>::iterator iter = m_vViewports.begin(); iter != m_vViewports.end(); ++iter ) {
+//      names->push_back(iter->first); 
+//    }
+//	return names;
+//}
 
 
 void

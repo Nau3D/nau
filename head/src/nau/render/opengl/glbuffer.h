@@ -31,6 +31,7 @@ namespace nau
 			void bind(unsigned int target);
 			void unbind();
 			void setPropui(UIntProperty  prop, unsigned int value);
+			void setPropui3(UInt3Property  prop, uivec3 &v);
 			void setData(unsigned int size, void *data);
 			void setSubData(unsigned int offset, unsigned int size, void*data);
 			int getData(unsigned int offset, unsigned int size, void *data);

@@ -12,13 +12,15 @@
 		<buffer name="test">
 			<SIZE value=16 />
 			<CLEAR value="BY_FRAME" />
+			<structure>
+				<field value="UINT" />
+			</structure>	
 		</buffer>
 	</buffers>	
 		
 	<materials>
 		<material name="atomic">
-			<shader>
-				<name>dirLightDifAmbPixAtomic</name>
+			<shader name="dirLightDifAmbPixAtomic">
 				<values>
 					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 

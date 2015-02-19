@@ -27,8 +27,7 @@
 	<materials>
 
 		<material name="fillBuffer">
-			<shader>
-				<name>fillBuffer</name>
+			<shader name="fillBuffer">
 			</shader>
 			<buffers>	
 				<buffer name="test" >
@@ -39,8 +38,7 @@
 		</material>
 		
 		<material name="showBuffer">
-			<shader>
-				<name>showBuffer</name>
+			<shader name="showBuffer">
 			</shader>
 			<buffers>	
 				<buffer name="test" >

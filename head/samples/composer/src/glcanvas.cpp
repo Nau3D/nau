@@ -92,7 +92,7 @@ GlCanvas::setCamera ()
 {
 	m_pCamera = NAU->getActiveCamera();
 	if (m_pCamera) {
-		vec4 v = m_pCamera->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+		vec4 v = m_pCamera->getPropf4(Camera::VIEW_VEC);
 		m_Beta = asin(v.y);
 		m_Alpha = atan2(v.x,v.z);
 	}
@@ -269,8 +269,8 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 
 
 	vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
-	vec4 camUp = m_pCamera->getPropf4(Camera::NORMALIZED_UP_VEC);
-	vec4 camView = m_pCamera->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+	vec4 camUp = m_pCamera->getPropf4(Camera::UP_VEC);
+	vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
 //	vec3& camLookAt = m_pCamera->getLookAtPoint();
 
 	if ('K' == event.GetKeyCode()) {
@@ -564,7 +564,7 @@ GlCanvas::OnMouseMove (wxMouseEvent& event)
 		return;
 	}
 	
-	vec4 camView = m_pCamera->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+	vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
 	vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
 
 	if (true == m_tracking) {

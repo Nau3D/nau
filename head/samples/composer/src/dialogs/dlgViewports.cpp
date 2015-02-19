@@ -159,7 +159,7 @@ DlgViewports::setupGrid() {
 void 
 DlgViewports::updateList() {
 
-	std::vector<std::string> *names = NAU->getViewportNames();
+	std::vector<std::string> *names = RENDERMANAGER->getViewportNames();
 	int num = names->size();
 
 	m_List->Clear();
@@ -177,7 +177,7 @@ DlgViewports::updateList() {
 void DlgViewports::update() {
 
 	nau::render::Viewport *elem;		
-	elem = NAU->getViewport(m_Active);
+	elem = RENDERMANAGER->getViewport(m_Active);
 
 	m_PG->ClearModifiedStatus();
 
@@ -188,7 +188,7 @@ void DlgViewports::update() {
 
 void DlgViewports::OnPropsChange(wxPropertyGridEvent& e) {
 
-	nau::render::Viewport *elem = NAU->getViewport(m_Active);
+	nau::render::Viewport *elem = RENDERMANAGER->getViewport(m_Active);
 	const wxString& name = e.GetPropertyName();
 	unsigned int dotLocation = name.find_first_of(wxT("."),0);
 	std::string topProp = std::string(name.substr(0,dotLocation).mb_str());
@@ -223,7 +223,7 @@ void DlgViewports::OnAdd(wxCommandEvent& event) {
 
 		result = dialog.ShowModal();
 		name = std::string(dialog.GetValue().mb_str());
-		nameUnique =  !NAU->hasViewport(name); 
+		nameUnique = !RENDERMANAGER->hasViewport(name);
 
 		if (!nameUnique && (result == wxID_OK)){
 			wxMessageBox(_T("Viewport name must be unique") , _T("Viewport Name Error"), wxOK | wxICON_INFORMATION, this);
@@ -242,7 +242,7 @@ void DlgViewports::OnAdd(wxCommandEvent& event) {
 	} while (!exit);
 
 	if (result == wxID_OK) {
-		NAU->createViewport(name);
+		RENDERMANAGER->createViewport(name);
 		updateList();
 		m_List->Select(m_List->FindString((wxString)name.c_str()));
 		m_Active = name;

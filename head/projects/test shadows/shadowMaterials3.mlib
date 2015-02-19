@@ -43,8 +43,7 @@
 				<SHININESS value="0.0" />
 			</color>
 			
-			<shader>
-				<name>perpixel-color-shadow</name>
+			<shader name="perpixel-color-shadow">
 				<values>
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />
@@ -98,8 +97,7 @@
 		</material>		
 		
 		<material  name="depthOnly" >
-			<shader>
-				<name>depthOnly</name>
+			<shader name="depthOnly">
 				<values>
 					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
 											component="PROJECTION_VIEW_MODEL" />

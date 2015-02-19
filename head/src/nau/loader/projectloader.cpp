@@ -29,7 +29,7 @@
 #include <nau/scene/geometryobject.h>
 #include <nau/scene/sceneobjectfactory.h>
 
-#include <nau/system/textutil.h>
+#include <nau/system/TextUtil.h>
 
 
 
@@ -67,6 +67,7 @@ bvec4 ProjectLoader::s_Dummy_bvec4;
 float ProjectLoader::s_Dummy_float;
 int ProjectLoader::s_Dummy_int;
 bool ProjectLoader::s_Dummy_bool;
+uivec3 ProjectLoader::s_Dummy_uivec3;
 
 
 std::string 
@@ -139,6 +140,7 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 				NAU_THROW("File %s: Element %s: Vec4 Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
 			break;
 		case Enums::VEC2:
+			s_Dummy_vec2 = vec2(0);
 			if ((TIXML_SUCCESS == p->QueryFloatAttribute("x", &(s_Dummy_vec2.x)) || TIXML_SUCCESS == p->QueryFloatAttribute("width", &(s_Dummy_vec2.x)))
 				&& ((TIXML_SUCCESS == p->QueryFloatAttribute("y", &(s_Dummy_vec2.y)) || TIXML_SUCCESS == p->QueryFloatAttribute("height", &(s_Dummy_vec2.y))))) {
 
@@ -170,6 +172,18 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 				NAU_THROW("File %s: Element %s: UInt Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_int;
 			break;
+		case Enums::UIVEC3:
+
+			if (TIXML_SUCCESS == p->QueryUnsignedAttribute("x", &(s_Dummy_uivec3.x)) &&
+				TIXML_SUCCESS == p->QueryUnsignedAttribute("y", &(s_Dummy_uivec3.y)) &&
+				TIXML_SUCCESS == p->QueryUnsignedAttribute("z", &(s_Dummy_uivec3.z))) {
+
+				return &s_Dummy_uivec3;
+			}
+			else
+				NAU_THROW("File %s: Element %s: UIVec3Attribute %s has absent or incomplete value (x,y,z are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+
 		case Enums::BOOL:
 			if (TIXML_SUCCESS != p->QueryBoolAttribute("value", &s_Dummy_bool))
 				NAU_THROW("File %s: Element %s: Bool Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
@@ -183,7 +197,7 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 			//	const std::vector<std::string> values = attribs.getListString(attribs.getID(p->Value()));
 			//	std::string delim = "\n";
 			//	std::string s;
-			//	nau::system::textutil::join(values, delim.c_str(), &s);
+			//	nau::system::TextUtil::join(values, delim.c_str(), &s);
 			//	NAU_THROW("File: %s\n Element: %s\nAttribute %s has an invalid value. \nValid values are: \n%s", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value(), s.c_str());
 			//}
 			s_Dummy_int = attribs.getListValueOp(attribs.getID(p->Value()), s); 
@@ -364,7 +378,7 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 			NAU_THROW("File %s: Attribute without a context", ProjectLoader::s_File.c_str());
 		}
 		if (!NAU->validateUserAttribContext(pContext)) {
-			nau::system::textutil::join(NAU->getContextList(), delim.c_str(), &s);
+			nau::system::TextUtil::Join(NAU->getContextList(), delim.c_str(), &s);
 			NAU_THROW("File %s\nAttribute with an invalid context %s\nValid Values are: \n%s", ProjectLoader::s_File.c_str(), pContext, s.c_str());
 		}
 		if (0 == pName) {
@@ -377,7 +391,7 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 			NAU_THROW("File %s\nAttribute %s without a type", ProjectLoader::s_File.c_str(), pName);
 		}
 		if (!Attribute::isValidUserAttrType(pType)) {
-			nau::system::textutil::join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
+			nau::system::TextUtil::Join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
 			NAU_THROW("File %s\nAttribute %s with an invalid type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
 		}
 
@@ -473,21 +487,24 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 			pElementAux = handle.FirstChild("geometry").Element();
 			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("geometry")) {
-				const char *pName = pElementAux->Attribute("name");
+				const char *pNameSO = pElementAux->Attribute("name");
 				const char *pPrimType = pElementAux->Attribute ("type");
 				const char *pMaterial = pElementAux->Attribute("material");
 
+				if (pNameSO == NULL)
+					NAU_THROW("File %s\nScene %s, Geometry object without a name", ProjectLoader::s_File.c_str(), pName);
+
 				if (pPrimType == NULL)
-					NAU_THROW("File %s\nScene %s\ntype is not defined", ProjectLoader::s_File.c_str(), pName);
+					NAU_THROW("File %s\nScene %s, Object:%s\ntype is not defined", ProjectLoader::s_File.c_str(), pName, pNameSO);
 
 				GeometricObject *go = (GeometricObject *)nau::scene::SceneObjectFactory::create("Geometry");
 				
 				if (go == NULL)
-					NAU_THROW("File %s\nScene %s\nInvalid scene type", ProjectLoader::s_File.c_str(), pName);
-				if (pName)
-					go->setName(pName);
+					NAU_THROW("File %s\nScene %s\nInvalid scene type", ProjectLoader::s_File.c_str(), pNameSO);
+				if (pNameSO)
+					go->setName(pNameSO);
 
-				Primitive *p = (Primitive *)RESOURCEMANAGER->createRenderable(pPrimType, pName);
+				Primitive *p = (Primitive *)RESOURCEMANAGER->createRenderable(pPrimType, pNameSO);
 				std::string n = p->getParamfName(0);
 				unsigned int i = 0;
 				while (Primitive::NoParam != n) {
@@ -511,7 +528,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				}
 
 				std::vector<std::string> excluded;
-				readAttributes(pName, (AttributeValues *)go, SceneObject::Attribs, excluded, pElementAux);
+				readAttributes(pNameSO, (AttributeValues *)go, SceneObject::Attribs, excluded, pElementAux);
 
 				is ->add(go);
 			}
@@ -522,16 +539,19 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 				pElementAux->QueryStringAttribute("primitive", &primString);
 				const char *pMaterial = pElementAux->Attribute("material");
-				const char *pName = pElementAux->Attribute("name");
+				const char *pNameSO = pElementAux->Attribute("name");
+				
+				if (!pNameSO) {
+					NAU_THROW("File %s\nScene: %s\nBuffer scene object without a name", ProjectLoader::s_File.c_str(), pName);
+				}
 
 				if (IRenderer::PrimitiveTypes.count(primString) == 0) {
 					NAU_THROW("File %s\nScene: %s\nInvalid primitive type %s in buffers definition", ProjectLoader::s_File.c_str(), pName, primString.c_str());
 				}
 				IRenderable::DrawPrimitive dp = IRenderer::PrimitiveTypes[primString];
 				SceneObject *so = SceneObjectFactory::create("SimpleObject");
-				if (pName)
-					so->setName(pName);
-				IRenderable *i = RESOURCEMANAGER->createRenderable("Mesh", pName);
+				so->setName(pNameSO);
+				IRenderable *i = RESOURCEMANAGER->createRenderable("Mesh", pNameSO);
 				i->setDrawingPrimitive(dp);
 				//i->setDrawingPrimitive(nau::render::IRenderable::LINES);
 				MaterialGroup *mg;
@@ -724,7 +744,7 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 		}
 
 		SLOG("Viewport : %s", pName);
-		v = nau::Nau::getInstance()->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		v = RENDERMANAGER->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
 		// Reading remaining viewport attributes
 		std::vector<std::string> excluded;
@@ -815,7 +835,7 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 				NAU_THROW("File %s: Element %s: viewport name is required", ProjectLoader::s_File.c_str(), pName);
 
 			// Check if previously defined
-			v = nau::Nau::getInstance()->getViewport (s);
+			v = RENDERMANAGER->getViewport(s);
 			if (!v)
 				NAU_THROW("File %s: Element %s: viewport %s is not previously defined", ProjectLoader::s_File.c_str(), pName, s.c_str());
 
@@ -865,28 +885,6 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 		std::vector<std::string> excluded;
 		excluded.push_back("projection"); excluded.push_back("viewport");
 		readAttributes(pName, (AttributeValues *)aNewCam, Camera::Attribs, excluded, pElem);
-		//std::map<std::string, Attribute> attribs = Camera::Attribs.getAttributes();
-		//TiXmlElement *p = pElem->FirstChildElement();
-		//Attribute a; 	
-		//void *value;
-
-		//while (p) {
-		//	// skip previously processed elements
-		//	if (strcmp(p->Value(), "projection") && strcmp(p->Value(), "viewport")) {
-		//		// trying to define an attribute that does not exist?		
-		//		if (attribs.count(p->Value()) == 0) {
-		//			NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
-		//		}
-		//		// trying to set the value of a read only attribute?
-		//		a = attribs[p->Value()];
-		//		if (a.m_ReadOnlyFlag)
-		//			NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
-
-		//		value = readAttr(pName, p, a.m_Type, Camera::Attribs);
-		//		aNewCam->setProp(a.m_Id, a.m_Type, value);
-		//	}
-		//	p = p->NextSiblingElement();
-		//}
 	} //End of Cameras
 }
 
@@ -1314,7 +1312,7 @@ ProjectLoader::loadPassViewport(TiXmlHandle hPass, Pass *aPass)
 	if (0 != pElem) {
 		const char *pViewport = pElem->Attribute("name");
 		if (pViewport) {
-			Viewport *vp = NAU->getViewport(pViewport);
+			Viewport *vp = RENDERMANAGER->getViewport(pViewport);
 			if (vp == NULL) {
 				NAU_THROW("Pass %s\nViewport %s is not defined", aPass->getName().c_str(), pViewport);
 			}
@@ -2929,11 +2927,12 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 #ifdef NAU_LUA
 		pElemPass = handle.FirstChild("preScript").Element();
 		if (pElemPass != NULL) {
+			
 
 			const char *pPreScriptFile = pElemPass->Attribute("file");
 			const char *pPreScriptName = pElemPass->Attribute("name");
 			if (pPreScriptFile && pPreScriptName)
-				aPipeline->setPreScript(pPreScriptFile, pPreScriptName);
+				aPipeline->setPreScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pPreScriptFile), pPreScriptName);
 			else {
 				NAU_THROW("Pipeline %s: Pre script definition must have both file and name attributes", pNamePip);
 			}
@@ -2945,7 +2944,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 			const char *pPostScriptFile = pElemPass->Attribute("file");
 			const char *pPostScriptName = pElemPass->Attribute("name");
 			if (pPostScriptFile && pPostScriptName)
-				aPipeline->setPostScript(pPostScriptFile, pPostScriptName);
+				aPipeline->setPostScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pPostScriptFile), pPostScriptName);
 			else {
 				NAU_THROW("Pipeline %s: Pre script definition must have both file and name attributes", pNamePip);
 			}
@@ -3028,11 +3027,19 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 /* -----------------------------------------------------------------------------
 BUFFERS
 
-<buffers>
-	<buffer name="bla" size=123 />
-</buffers>
+<buffer name="atBuffer">
+	<CLEAR value="BY_FRAME" />
 
-All fields are required. Size is in bytes
+	<SIZE value=16 />
+	or
+	<DIM x=256 y=256 z=1 />
+	<structure>
+		<item value="FLOAT" />
+		<item value="FLOAT" />
+	</structure>
+</buffer>
+
+All fields are required. SIZE is in bytes. DIM requires the definition of structure.
 -----------------------------------------------------------------------------*/
 
 
@@ -3051,15 +3058,31 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		}
 		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pName);
 
+		IBuffer *b = RESOURCEMANAGER->createBuffer(s_pFullName);
+
 		SLOG("Buffer : %s", s_pFullName);
+		TiXmlHandle handle(pElem);
+		TiXmlElement *pElemAux = handle.FirstChild("structure").FirstChild("field").Element();
+
+		for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement("field")) {
+			const char *pType = pElemAux->Attribute("value");
+			if (!pType) {
+				NAU_THROW("Mat Lib %s: Buffer %s - field has no value", aLib->getName().c_str(), pName);
+			}
+			if (!Enums::isValidType(pType)) {
+				NAU_THROW("Mat Lib %s: Buffer %s - field has an invalid type. Valid types are: INT, IVEC2, IVEC3, IVEC4, UINT, UIVEC2, UIVEC3, UIVEC4, BOOL, BVEC2, BVEC3, BVEC4, FLOAT, VEC2, VEC3, VEC4, DOUBLE, DVEC2, DVEC3, DVEC4, MAT2, MAT3, MAT4, MAT2x3, MAT2x4, MAT3x2, MAT3x4, MAT4x2, MAT4x3, DMAT2, DMAT3, DMAT4, DMAT2x3, DMAT2x4, DMAT3x2, DMAT3x4, DMAT4x2, DMAT4x3, SAMPLER, ENUM, BYTE, UBYTE, SHORT, USHORT", aLib->getName().c_str(), pName);
+			}
+			b->appendItemToStruct(Enums::getType(pType));
+		}
+
 
 		//if (RESOURCEMANAGER->hasBuffer(s_pFullName)) {
 		//	NAU_THROW("Mat Lib %s: Buffer %s is already defined", aLib->getName().c_str(), s_pFullName);
 		//}
 
-		IBuffer *b = RESOURCEMANAGER->createBuffer(s_pFullName);
 		// Reading buffer attributes
 		std::vector<std::string> excluded;
+		excluded.push_back("structure");
 		readAttributes(pName, (AttributeValues *)b, IBuffer::Attribs, excluded, pElem);
 	}
 }
@@ -3281,7 +3304,7 @@ STATES
 			<BLEND_SRC value="SRC_ALPHA" />
 			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
 			<CULL_FACE value="0" />
-			</state>
+		</state>
 	</states>
 
 func: NEVER, ALWAYS, LESS, LEQUAL, EQUAL, GEQUAL, GREATER, NOT_EQUAL
@@ -3794,8 +3817,7 @@ ProjectLoader::loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Mater
 /* -----------------------------------------------------------------------------
 MATERIALSHADER
 
-	<shader>
-		<name>perpixel-color-shadow</name>
+	<shader name="perpixel-color-shadow" >
 		<values>
 			<valueof uniform="lightPosition" type="LIGHT" context="Sun" component="POSITION" /> 
 		</values>
@@ -3809,13 +3831,14 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 
 	pElemAux = handle.FirstChild ("shader").Element();
 	if (0 != pElemAux) {
-		TiXmlHandle hShader (pElemAux);
 
-		pElemAux2 = hShader.FirstChild ("name").Element();
-		const char *pShaderName = pElemAux2->GetText();
+		const char *pShaderName = pElemAux->Attribute("name");
+
+		//pElemAux2 = hShader.FirstChild ("name").Element();
+		//const char *pShaderName = pElemAux2->GetText();
 
 		if (0 == pShaderName) {
-			NAU_THROW("Shader has no target in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
+			NAU_THROW("Shader has no name in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
 		}
 		sprintf(s_pFullName, "%s::%s",aLib->getName().c_str(),pShaderName);
 		if (!RESOURCEMANAGER->hasProgram(s_pFullName))
@@ -3825,6 +3848,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 		aMat->attachProgram (s_pFullName);
 		aMat->clearProgramValues();
 
+		TiXmlHandle hShader (pElemAux);
 		pElemAux2 = hShader.FirstChild ("values").FirstChild ("valueof").Element();
 		for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
 			const char *pUniformName = pElemAux2->Attribute ("uniform");
@@ -3891,22 +3915,13 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 /* -----------------------------------------------------------------------------
 MATERIALSTATE
 
-	<state>
-		<alphatest alphaFunc="GREATER" alphaRef="0.25" />
-		<blend src="ONE" dst="ZERO" />
-		<cull value="0" />
-		<order value="1" />
-	</state>	
-
-alphaFunc: ALPHA_NEVER, ALPHA_ALWAYS, ALPHA_LESS, ALPHA_LEQUAL,
-				ALPHA_EQUAL, ALPHA_GEQUAL, ALPHA_GREATER, ALPHA_NOT_EQUAL
-
-order: is a value that defines the order of rendering. Higher values are drawn later.
-
-src and dst: ZERO,ONE,SRC_COLOR,ONE_MINUS_SRC_COLOR,DST_COLOR,
-				ONE_MINUS_DST_COLOR, SRC_ALPHA, ONE_MINUS_SRC_ALPHA, DST_ALPHA,
-				ONE_MINUS_DST_ALPHA, SRC_ALPHA_SATURATE, CONSTANT_COLOR, 
-				ONE_MINUS_CONSTANT_COLOR, CONSTANT_ALPHA, ONE_MINUS_CONSTANT_ALPHA
+	<state name="Grades"> // see the definition of state
+		<ORDER value="2" />
+		<BLEND value=true />
+		<BLEND_SRC value="SRC_ALPHA" />
+		<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
+		<CULL_FACE value="0" />
+	</state>
 
 	OR
 

@@ -116,8 +116,7 @@
 	<materials>
 
 		<material name="testIntersection">
-			<shader>
-				<name>testIntersection</name>
+			<shader name="testIntersection">
 				<values>
 					<valueof uniform="vertexA" 			type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />		
@@ -145,8 +144,7 @@
 
 
 		<material name="deferred">
-			<shader>
-				<name>deferred</name>
+			<shader name="deferred">
 				<values>
 					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 
@@ -198,8 +196,7 @@
 		
 
 		<material name="compareRTvsSM">
-			<shader>
-				<name>compareRTvsSM</name>
+			<shader name="compareRTvsSM">
 				<values>
 					<valueof uniform="rayTrace"			type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />		
@@ -229,8 +226,7 @@
 
 
 		<material name="computeContoursA">
-			<shader>
-				<name>computeContours</name>
+			<shader name="computeContours">
 				<values>
 					<valueof uniform="textureUnit"		type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />		
@@ -243,8 +239,7 @@
 
 
 		<material name="computeContours">
-			<shader>
-				<name>computeContours</name>
+			<shader name="computeContours">
 				<values>
 					<valueof uniform="textureUnit"		type="CURRENT" context="TEXTURE" 
 														component="UNIT" id="0" />		
@@ -264,8 +259,7 @@
 				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>depthOnly</name>
+			<shader name="depthOnly">
 				<values>
 					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
 											component="PROJECTION_VIEW_MODEL" />
@@ -277,8 +271,7 @@
 		
 
 		<material  name="depthAndVertices" >
-			<shader>
-				<name>depthAndVertices</name>
+			<shader name="depthAndVertices">
 				<values>
 					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
 											component="PROJECTION_VIEW_MODEL" />

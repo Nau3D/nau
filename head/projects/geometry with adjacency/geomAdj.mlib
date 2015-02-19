@@ -10,8 +10,7 @@
 
 	<materials>
 		<material name="showContours">
-			<shader>
-				<name>geomAdj</name>
+			<shader name="geomAdj">
 				<values>
 					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
 														component="PROJECTION_VIEW_MODEL" />

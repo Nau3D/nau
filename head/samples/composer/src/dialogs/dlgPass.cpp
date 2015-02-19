@@ -636,7 +636,7 @@ void DlgPass::updateViewportList(Pass *p) {
 	//else {
 	//	m_pg->EnableProperty("Viewport");
 
-	std::vector<std::string> *viewports = NAU->getViewportNames();
+	std::vector<std::string> *viewports = RENDERMANAGER->getViewportNames();
 
 	for (iter = viewports->begin(); iter != viewports->end(); ++iter)
 		m_pgViewportList.Add(wxString(iter->c_str()), ++i);
@@ -806,7 +806,7 @@ DlgPass::OnProcessPGChange( wxPropertyGridEvent& e)
 			p->setViewport(RENDERMANAGER->getCamera(p->getCameraName())->getViewport());
 		else {
 			value = m_pgViewportList.GetLabel(index-1);
-			p->setViewport(NAU->getViewport(std::string(value.mb_str())));
+			p->setViewport(RENDERMANAGER->getViewport(std::string(value.mb_str())));
 		}
 	}
 	else if (name == wxT("Use Render Target")) {

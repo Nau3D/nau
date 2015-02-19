@@ -15,6 +15,7 @@ IBuffer::Init() {
 
 	// UINT
 	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::UINT, false, new unsigned int(0)));
+	Attribs.add(Attribute(STRUCT_SIZE, "STRUCT_SIZE", Enums::DataType::UINT, true, new unsigned int(0)));
 	// INT
 	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(-1)));
 	// ENUM
@@ -22,6 +23,8 @@ IBuffer::Init() {
 	Attribs.setDefault("CLEAR", new int(NEVER));
 	Attribs.listAdd("CLEAR", "NEVER", NEVER);
 	Attribs.listAdd("CLEAR", "BY_FRAME", BY_FRAME);
+	// UIVEC3
+	Attribs.add(Attribute(DIM, "DIM", Enums::DataType::UIVEC3, false, new uivec3(1)));
 
 	NAU->registerAttributes("BUFFER", &Attribs);
 
@@ -55,6 +58,12 @@ void
 IBuffer::setStructure(std::vector<Enums::DataType> s) {
 
 	m_Structure = s;
+	int sts = 0;
+	for (auto t : m_Structure) {
+		sts += Enums::getSize(t);
+	}
+	setPropui(STRUCT_SIZE, sts);
+
 }
 
 
@@ -64,3 +73,13 @@ IBuffer::getStructure() {
 	return m_Structure;
 }
 
+
+void
+IBuffer::appendItemToStruct(Enums::DataType dt) {
+
+	int card = Enums::getCardinality(dt);
+	Enums::DataType bdt = Enums::getBasicType(dt);
+
+	for (int i = 0; i < card; ++i)
+		m_Structure.push_back(bdt);
+}

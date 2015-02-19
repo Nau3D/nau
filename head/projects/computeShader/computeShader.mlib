@@ -16,8 +16,7 @@
 	
 	<materials>
 		<material name ="computeShader">
-			<shader>
-				<name>compute</name>
+			<shader name="compute">
 				<values>									
 					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
 														id=1 component="UNIT" />

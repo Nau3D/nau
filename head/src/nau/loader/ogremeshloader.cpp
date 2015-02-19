@@ -10,7 +10,7 @@
 #include <nau/geometry/poseoffset.h>
 #include <nau/geometry/meshwithpose.h>
 
-#include <nau/system/textutil.h>
+#include <nau/system/TextUtil.h>
 
 #include <nau/config.h>
 #include <nau/slogger.h>
@@ -184,7 +184,7 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 		if (!pName || !pId)
 			throw("Bone has no name or id. File: %s", OgreMeshLoader::m_SkeletonFile.c_str());
 
-		id = nau::system::textutil::ParseInt(pId);
+		id = nau::system::TextUtil::ParseInt(pId);
 
 		TiXmlElement *pPosition = pElem->FirstChildElement("position");
 
@@ -198,9 +198,9 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 		if (!pX || !pY || !pZ)
 			NAU_THROW("Bone %s has position x, y, or z missing. File: %s", pName, OgreMeshLoader::m_SkeletonFile.c_str());
 
-		pos.set(nau::system::textutil::ParseFloat(pX),
-			    nau::system::textutil::ParseFloat(pY),
-				nau::system::textutil::ParseFloat(pZ));
+		pos.set(nau::system::TextUtil::ParseFloat(pX),
+			    nau::system::TextUtil::ParseFloat(pY),
+				nau::system::TextUtil::ParseFloat(pZ));
 
 		TiXmlElement *pRotation = pElem->FirstChildElement("rotation");
 
@@ -212,7 +212,7 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 		if (!pAngle)
 			NAU_THROW("Bone %s has no angle in field rotation. File: %s", pName, OgreMeshLoader::m_SkeletonFile.c_str());
 
-		angle = nau::system::textutil::ParseFloat(pAngle);
+		angle = nau::system::TextUtil::ParseFloat(pAngle);
 
 		TiXmlElement *pAxis = pRotation->FirstChildElement("axis");
 
@@ -226,9 +226,9 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 		if (!pAx || !pAy || !pAz)
 			NAU_THROW("Bone %s has rotation axis x, y, or z missing. File: %s", pName, OgreMeshLoader::m_SkeletonFile.c_str());
 
-		axis.set(nau::system::textutil::ParseFloat(pAx),
-			     nau::system::textutil::ParseFloat(pAy),
-				 nau::system::textutil::ParseFloat(pAz));
+		axis.set(nau::system::TextUtil::ParseFloat(pAx),
+			     nau::system::TextUtil::ParseFloat(pAy),
+				 nau::system::TextUtil::ParseFloat(pAz));
 
 		sk->addBone(pName, id, pos, angle, axis);
 	}
@@ -266,7 +266,7 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 		}*/
 			NAU_THROW("Name or length missing in bone animation. File: %s", OgreMeshLoader::m_SkeletonFile.c_str());
 
-		sk->addAnim(pName, nau::system::textutil::ParseFloat(pLength));
+		sk->addAnim(pName, nau::system::TextUtil::ParseFloat(pLength));
 
 		// loading tracks
 		TiXmlElement *pElemTrack = pElem->FirstChildElement("tracks")->FirstChildElement("track");
@@ -283,7 +283,7 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 				if (!pTime)
 					time = 0;
 				else
-					time = nau::system::textutil::ParseFloat(pTime);
+					time = nau::system::TextUtil::ParseFloat(pTime);
 
 				TiXmlElement *pElemTrans = pElemKeyFrame->FirstChildElement("translate");
 
@@ -297,9 +297,9 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 				if (!pX || !pY || !pZ)
 					NAU_THROW("Missing coordinates in position. Anim %s for track %s. File: %s", pName, pBone, OgreMeshLoader::m_SkeletonFile.c_str());
 
-				pos.set(nau::system::textutil::ParseFloat(pX),
-					nau::system::textutil::ParseFloat(pY),
-					nau::system::textutil::ParseFloat(pZ));
+				pos.set(nau::system::TextUtil::ParseFloat(pX),
+					nau::system::TextUtil::ParseFloat(pY),
+					nau::system::TextUtil::ParseFloat(pZ));
 
 				TiXmlElement *pElemRot = pElemKeyFrame->FirstChildElement("rotate");
 
@@ -311,7 +311,7 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 				if (!pAngle)
 					NAU_THROW("Missing angle in anim %s for track %s. File: %s", pName, pBone, OgreMeshLoader::m_SkeletonFile.c_str());
 
-				angle = nau::system::textutil::ParseFloat(pAngle);
+				angle = nau::system::TextUtil::ParseFloat(pAngle);
 
 				TiXmlElement *pElemAxis = pElemRot->FirstChildElement("axis");
 
@@ -325,9 +325,9 @@ OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  thro
 				if (!pAx || !pAy || !pAz)
 					NAU_THROW("Missing coordinates in aixs. Anim %s for track %s. File: %s", pName, pBone, OgreMeshLoader::m_SkeletonFile.c_str());
 
-				axis.set(nau::system::textutil::ParseFloat(pAx),
-					nau::system::textutil::ParseFloat(pAy),
-					nau::system::textutil::ParseFloat(pAz));
+				axis.set(nau::system::TextUtil::ParseFloat(pAx),
+					nau::system::TextUtil::ParseFloat(pAy),
+					nau::system::TextUtil::ParseFloat(pAz));
 
 				sk->getAnim(pName).addKeyFrame(sk->seekBoneID(pBone),time, pos, axis, angle);
 			}
@@ -351,7 +351,7 @@ OgreMeshLoader::loadPoseAnimations(TiXmlHandle hRoot, ScenePoses *scn)
 		if (!pName || !pLength)
 			NAU_THROW("Animation misses name or length. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-		length = nau::system::textutil::ParseFloat(pLength);
+		length = nau::system::TextUtil::ParseFloat(pLength);
 
 		scn->addAnim(pName, length);
 
@@ -364,7 +364,7 @@ OgreMeshLoader::loadPoseAnimations(TiXmlHandle hRoot, ScenePoses *scn)
 			if (!pMeshIndex)
 				NAU_THROW("Animation Track misses an index. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-			meshIndex = nau::system::textutil::ParseInt(pMeshIndex);
+			meshIndex = nau::system::TextUtil::ParseInt(pMeshIndex);
 
 			//Load keyframes
 
@@ -376,7 +376,7 @@ OgreMeshLoader::loadPoseAnimations(TiXmlHandle hRoot, ScenePoses *scn)
 				if (!pTime)
 					NAU_THROW("Keyframe in animation %s misses a time. File: %s", pName, OgreMeshLoader::m_MeshFile.c_str());
 
-				time = nau::system::textutil::ParseFloat(pTime);
+				time = nau::system::TextUtil::ParseFloat(pTime);
 
 				// Load PoseRefs
 
@@ -389,8 +389,8 @@ OgreMeshLoader::loadPoseAnimations(TiXmlHandle hRoot, ScenePoses *scn)
 					if (!pPoseIndex || !pInfluence)
 						NAU_THROW("Invalid poseref element in animation %s. File: %s", pName, OgreMeshLoader::m_MeshFile.c_str());
 
-					poseIndex = nau::system::textutil::ParseFloat(pPoseIndex);
-					influence = nau::system::textutil::ParseFloat(pInfluence);
+					poseIndex = nau::system::TextUtil::ParseFloat(pPoseIndex);
+					influence = nau::system::TextUtil::ParseFloat(pInfluence);
 
 					scn->getAnim(pName).addInfluence(meshIndex,poseIndex,time,influence);
 				}
@@ -417,9 +417,9 @@ OgreMeshLoader::loadBoneAssignements(TiXmlElement *pElem, MeshBones *mb)
 		if (!pVertexIndex || !pBoneIndex || !pWeight) 
 			NAU_THROW("Invalid Vertex Bone Assignment. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-		vertexIndex = nau::system::textutil::ParseInt(pVertexIndex);
-		boneIndex = nau::system::textutil::ParseInt(pBoneIndex);
-		weight = nau::system::textutil::ParseFloat(pWeight);
+		vertexIndex = nau::system::TextUtil::ParseInt(pVertexIndex);
+		boneIndex = nau::system::TextUtil::ParseInt(pBoneIndex);
+		weight = nau::system::TextUtil::ParseFloat(pWeight);
 
 		mb->addBoneWeight(vertexIndex, boneIndex, weight);
 	}	
@@ -445,7 +445,7 @@ OgreMeshLoader::loadPoses(TiXmlHandle hRoot, IScene *scn, bool meshSharedGeometr
 			NAU_THROW("Pose misses target, index or name. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
 		if (strcmp(pTarget,"submesh") == 0) 
-			index = nau::system::textutil::ParseInt(pIndex);
+			index = nau::system::TextUtil::ParseInt(pIndex);
 		else 
 			index = 0;
 
@@ -462,10 +462,10 @@ OgreMeshLoader::loadPoses(TiXmlHandle hRoot, IScene *scn, bool meshSharedGeometr
 			if (!pX || !pY || !pZ || !pPoseIndex)
 				NAU_THROW("Invalid PoseOffset. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-			x = nau::system::textutil::ParseFloat(pX);
-			y = nau::system::textutil::ParseFloat(pY);
-			z = nau::system::textutil::ParseFloat(pZ);
-			poseIndex = nau::system::textutil::ParseInt(pPoseIndex);
+			x = nau::system::TextUtil::ParseFloat(pX);
+			y = nau::system::TextUtil::ParseFloat(pY);
+			z = nau::system::TextUtil::ParseFloat(pZ);
+			poseIndex = nau::system::TextUtil::ParseInt(pPoseIndex);
 
 			pos->addPoseOffset(poseIndex,x,y,z);
 
@@ -487,7 +487,7 @@ OgreMeshLoader::loadSubMeshNames(TiXmlHandle hRoot, IScene *scn, bool meshShared
 		if (!pName || !pIndex) 
 			NAU_THROW("Invalid submesh name definition. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-		int index = nau::system::textutil::ParseInt(pIndex);
+		int index = nau::system::TextUtil::ParseInt(pIndex);
 
 		if (!meshSharedGeometry)
 			scn->getSceneObject(index)->setName(pName);
@@ -507,9 +507,9 @@ OgreMeshLoader::loadVertexElement(TiXmlElement *pElemVertexAttrib, vec4 *vertexE
 	if (!x || !y || !z)
 		NAU_THROW("Invalid vertex element, missing x, y or z coordinates. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-	fx = nau::system::textutil::ParseFloat(x);
-	fy = nau::system::textutil::ParseFloat(y);
-	fz = nau::system::textutil::ParseFloat(z);
+	fx = nau::system::TextUtil::ParseFloat(x);
+	fy = nau::system::TextUtil::ParseFloat(y);
+	fz = nau::system::TextUtil::ParseFloat(z);
 
 	// Add value to array
 	vertexElem->set(fx,fy,fz);
@@ -527,10 +527,10 @@ OgreMeshLoader::loadTextureCoordElement(TiXmlElement *pElemVertexAttrib, vec4 *v
 	if (!x || !y )
 		NAU_THROW("Invalid texture coordinate, missing u or v coordinates. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-	fx = nau::system::textutil::ParseFloat(x);
-	fy = nau::system::textutil::ParseFloat(y);
+	fx = nau::system::TextUtil::ParseFloat(x);
+	fy = nau::system::TextUtil::ParseFloat(y);
 	if (z)
-		fz = nau::system::textutil::ParseFloat(z);
+		fz = nau::system::TextUtil::ParseFloat(z);
 	else 
 		fz = 0.0f;
 
@@ -559,7 +559,7 @@ OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &ve
 	const char *pTextureCoords = pElemVertexBuffer->Attribute("texture_coords");
 	int iTextureCoords;
 	if (pTextureCoords)
-		iTextureCoords = textutil::ParseInt(pTextureCoords);
+		iTextureCoords = TextUtil::ParseInt(pTextureCoords);
 	else
 		iTextureCoords = 0;
 
@@ -711,7 +711,7 @@ OgreMeshLoader::loadGeometry(TiXmlElement *pElem,VertexData &vertexData)
 	if (!vertexcount) 
 		NAU_THROW("Missing vertex count field File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-	int iVertexCount = textutil::ParseInt(vertexcount);
+	int iVertexCount = TextUtil::ParseInt(vertexcount);
 	loadVertexBuffers(pElemGeometry, vertexData);
 }
 
@@ -730,7 +730,7 @@ OgreMeshLoader::loadFaces(TiXmlElement *pElem, MaterialGroup *mg, unsigned int o
 	if (!pNumFaces)
 		NAU_THROW("Missing face count. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-	int iCount = textutil::ParseInt(pNumFaces);
+	int iCount = TextUtil::ParseInt(pNumFaces);
 	if (operationType == TRIANGLE_LIST)
 		iCount *= 3;
 	else
@@ -747,15 +747,15 @@ OgreMeshLoader::loadFaces(TiXmlElement *pElem, MaterialGroup *mg, unsigned int o
 		if (!v1 || ((!v2 || !v3) && operationType == TRIANGLE_LIST))
 			NAU_THROW("Invalid face definition. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
-		indices->at(faceIndex) = nau::system::textutil::ParseInt(v1);
+		indices->at(faceIndex) = nau::system::TextUtil::ParseInt(v1);
 		faceIndex++;
 
 		if (operationType == TRIANGLE_LIST) {
 
-			indices->at(faceIndex) = nau::system::textutil::ParseInt(v2);
+			indices->at(faceIndex) = nau::system::TextUtil::ParseInt(v2);
 			faceIndex++;
 
-			indices->at(faceIndex) = nau::system::textutil::ParseInt(v3);
+			indices->at(faceIndex) = nau::system::TextUtil::ParseInt(v3);
 			faceIndex++;
 		}
 		
