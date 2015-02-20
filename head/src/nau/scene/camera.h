@@ -1,15 +1,15 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
-#include <nau/enums.h>
-#include <nau/event/EventVec3.h>
-#include <nau/math/spherical.h>
-#include <nau/math/simpletransform.h>
-#include <nau/math/vec4.h>
-#include <nau/scene/sceneobject.h>
-#include <nau/render/viewport.h>
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
+#include "nau/enums.h"
+#include "nau/event/EventVec3.h"
+#include "nau/math/spherical.h"
+#include "nau/math/simpletransform.h"
+#include "nau/math/vec4.h"
+#include "nau/scene/sceneobject.h"
+#include "nau/render/viewport.h"
 
 #include <string>
 

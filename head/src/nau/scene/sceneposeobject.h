@@ -1,7 +1,7 @@
 #ifndef SCENEPOSEOBJECT_H
 #define SCENEPOSEOBJECT_H
 
-#include <nau/scene/sceneobject.h>
+#include "nau/scene/sceneobject.h"
 
 namespace nau
 {

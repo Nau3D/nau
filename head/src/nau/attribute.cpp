@@ -1,4 +1,4 @@
-#include <nau/attribute.h>
+#include "nau/attribute.h"
 
 #include <vector>
 
@@ -77,6 +77,13 @@ Attribute::getName() {
 }
 
 
+void *
+Attribute::getDefault() {
+
+	return m_Default;
+}
+
+
 void 
 Attribute::setRange(void *min, void *max) {
 				
@@ -128,8 +135,8 @@ void
 Attribute::listAdd(std::string name, int id) {
 		
 	m_ListDefined = true;
-	mListValues.push_back(id);
-	mListString.push_back(name);
+	m_ListValues.push_back(id);
+	m_ListString.push_back(name);
 };
 
 		 
@@ -137,8 +144,8 @@ bool
 Attribute::isValid(std::string value) {
 		
 	if (m_ListDefined) {				
-		std::vector<std::string>::iterator it = mListString.begin();
-		for ( ; it != mListString.end(); ++it) {
+		std::vector<std::string>::iterator it = m_ListString.begin();
+		for ( ; it != m_ListString.end(); ++it) {
 			if (*it == value)
 				return true;
 		}
@@ -175,22 +182,22 @@ Attribute::getMin() {
 
 
 int 
-Attribute::getListValue(std::string &s) {
+Attribute::getOptionValue(std::string &s) {
 		
-	for(unsigned int i = 0 ; i < mListString.size(); ++i) {	
-		if (mListString[i] == s)
-			return mListValues[i];
+	for(unsigned int i = 0 ; i < m_ListString.size(); ++i) {	
+		if (m_ListString[i] == s)
+			return m_ListValues[i];
 	}
 	return 0;
 }
 
 
 std::string &
-Attribute::getListString(int v) {
+Attribute::getOptionString(int v) {
 		
-	for(unsigned int i = 0 ; i < mListValues.size(); ++i) {		
-		if (mListValues[i] == v)
-			return mListString[i];
+	for(unsigned int i = 0 ; i < m_ListValues.size(); ++i) {		
+		if (m_ListValues[i] == v)
+			return m_ListString[i];
 	}
 	return m_DummyS;
 }
@@ -199,14 +206,19 @@ Attribute::getListString(int v) {
 bool 
 Attribute::isValid(int v) {
 
-	for (unsigned int i = 0; i < mListValues.size(); ++i) {
-		if (mListValues[i] == v)
+	for (unsigned int i = 0; i < m_ListValues.size(); ++i) {
+		if (m_ListValues[i] == v)
 			return true;
 	}
 	return false;
 }
 
 
+const std::vector<std::string> &
+Attribute::getOptionStringList() {
+
+	return m_ListString;
+}
 
 
 // -------------------------------------------------------------------------------------------
@@ -348,7 +360,7 @@ AttribSet::getListString(int id) {
 	for ( ; it != m_Attributes.end(); ++it) {
 
 		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
-			return (it->second.mListString);
+			return (it->second.m_ListString);
 	}
 	return m_DummyVS;
 }
@@ -362,7 +374,7 @@ AttribSet::getListValues(int id) {
 	for ( ; it != m_Attributes.end(); ++it) {
 
 		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
-			return (it->second.mListValues);
+			return (it->second.m_ListValues);
 	}
 	return m_DummyVI;
 }
@@ -372,7 +384,7 @@ std::string
 AttribSet::getListStringOp(std::string s, int prop) {
 		
 	Attribute a = get(s);
-	return (a.getListString(prop));
+	return (a.getOptionString(prop));
 }
 
 
@@ -384,7 +396,7 @@ AttribSet::getListStringOp(int id, int prop) {
 	for ( ; it != m_Attributes.end(); ++it) {
 
 		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
-			return (it->second.getListString(prop));
+			return (it->second.getOptionString(prop));
 	}
 	return m_DummyS;
 }
@@ -394,7 +406,7 @@ int
 AttribSet::getListValueOp(std::string s, std::string prop) {
 		
 	Attribute a = get(s);
-	return (a.getListValue(prop));
+	return (a.getOptionValue(prop));
 }
 
 
@@ -406,7 +418,7 @@ AttribSet::getListValueOp(int id, std::string prop) {
 	for ( ; it != m_Attributes.end(); ++it) {
 
 		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
-			return (it->second.getListValue(prop));
+			return (it->second.getOptionValue(prop));
 	}
 	return -1;
 }

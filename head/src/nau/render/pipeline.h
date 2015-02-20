@@ -8,10 +8,10 @@
 #include <fstream>
 #include <iostream>
 
-#include <nau/scene/camera.h>
-#include <nau/scene/sceneobject.h>
-#include <nau/render/pass.h>
-#include <nau/render/istate.h>
+#include "nau/scene/camera.h"
+#include "nau/scene/sceneobject.h"
+#include "nau/render/pass.h"
+#include "nau/render/istate.h"
 
 #define PIPE_PASS_MIDDLE 0
 #define PIPE_PASS_START 1

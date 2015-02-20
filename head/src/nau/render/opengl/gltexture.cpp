@@ -1,7 +1,7 @@
-#include <nau/render/opengl/gltexture.h>
+#include "nau/render/opengl/gltexture.h"
 
-#include <nau.h>
-#include <nau/render/irenderer.h>
+#include "nau.h"
+#include "nau/render/irenderer.h"
 
 #include <GL/glew.h>
 

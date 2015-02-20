@@ -10,10 +10,10 @@ This IRenderable contains only the attribute vectors. The index vectors are stor
 #include <set>
 #include <string>
 
-#include <nau/render/irenderer.h>
-#include <nau/render/irenderable.h>
-#include <nau/material/materialgroup.h>
-#include <nau/resource/resourcemanager.h>
+#include "nau/render/irenderer.h"
+#include "nau/render/irenderable.h"
+#include "nau/material/materialgroup.h"
+#include "nau/resource/resourcemanager.h"
 
 
 namespace nau

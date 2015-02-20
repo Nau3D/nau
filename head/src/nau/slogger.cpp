@@ -1,7 +1,7 @@
-#include <nau/slogger.h>
+#include "nau/slogger.h"
 
-#include <nau.h>
-#include <nau/event/eventString.h>
+#include "nau.h"
+#include "nau/event/eventString.h"
 
 
 static SLogger *instance = 0;

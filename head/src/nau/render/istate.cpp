@@ -1,13 +1,13 @@
-#include <nau/render/istate.h>
-#include <nau/config.h>
+#include "nau/render/istate.h"
+#include "nau/config.h"
 
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/glstate.h>	
+#include "nau/render/opengl/glstate.h"	
 #elif NAU_DIRECTX
-#include <nau/render/dx/dxstate.h>
+#include "nau/render/dx/dxstate.h"
 #endif
 
-#include <nau.h>
+#include "nau.h"
 
 using namespace nau::render;
 using namespace nau;

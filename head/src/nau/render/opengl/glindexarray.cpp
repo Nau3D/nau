@@ -1,6 +1,6 @@
-#include <nau/render/opengl/glindexarray.h>
+#include "nau/render/opengl/glindexarray.h"
 
-#include <nau.h>
+#include "nau.h"
 
 #include <assert.h>
 

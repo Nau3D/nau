@@ -1,12 +1,12 @@
-#include <nau/config.h>
+#include "nau/config.h"
 
 #ifndef GLBUFFER_H
 #define GLBUFFER_H
 
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
-#include <nau/config.h>
-#include <nau/render/ibuffer.h>
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
+#include "nau/config.h"
+#include "nau/render/ibuffer.h"
 
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES

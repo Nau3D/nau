@@ -1,7 +1,7 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
-#include <nau/math/utils.h>
+#include "nau/math/utils.h"
 
 #include <string>
 

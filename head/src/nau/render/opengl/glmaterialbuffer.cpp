@@ -1,4 +1,4 @@
-#include <nau/render/opengl/glmaterialbuffer.h>
+#include "nau/render/opengl/glmaterialbuffer.h"
 
 #include <GL/glew.h>
 
@@ -7,7 +7,7 @@ using namespace nau::render;
 bool
 GLMaterialBuffer::Init() {
 
-	Attribs.setDefault("TYPE", new int(GL_ARRAY_BUFFER));
+	Attribs.setDefault("TYPE", new int(GL_SHADER_STORAGE_BUFFER));
 #if NAU_OPENGL_VERSION >= 420
 	Attribs.listAdd("TYPE", "ATOMIC_COUNTER", GL_ATOMIC_COUNTER_BUFFER);
 #endif

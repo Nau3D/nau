@@ -1,7 +1,7 @@
 #ifndef OBJLOADER_H
 #define OBJLOADER_H
 
-#include <nau/scene/iscene.h>
+#include "nau/scene/iscene.h"
 
 namespace nau 
 {

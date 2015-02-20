@@ -1,10 +1,10 @@
-#include <nau/enums.h>
+#include "nau/enums.h"
 
-#include <nau/errors.h>
-#include <nau/math/vec2.h>
-#include <nau/math/vec3.h>
-#include <nau/math/vec4.h>
-#include <nau/math/matrix.h>
+#include "nau/errors.h"
+#include "nau/math/vec2.h"
+#include "nau/math/vec3.h"
+#include "nau/math/vec4.h"
+#include "nau/math/matrix.h"
 
 #include <assert.h>
 
@@ -260,6 +260,7 @@ Enums::valueToString(DataType p, void *v) {
 
 	int intconverter;
 	unsigned int uintconverter;
+	bool boolconverter;
 
 	switch (p) {
 	case BYTE:
@@ -270,9 +271,12 @@ Enums::valueToString(DataType p, void *v) {
 		intconverter = *((short *)v);
 		m_Result = std::to_string(intconverter);
 		return m_Result;
-	case ENUM:
-	case BOOL:										  
+	case BOOL:	
+		boolconverter = *((bool *)v);
+		m_Result = boolconverter == false ? "false" : "true";
+		return m_Result;
 	case SAMPLER:
+	case ENUM:
 	case INT:
 		intconverter = *((int *)v);
 		m_Result = std::to_string(intconverter);

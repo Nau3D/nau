@@ -1,4 +1,4 @@
-#include <nau/render/opengl/glteximage.h>
+#include "nau/render/opengl/glteximage.h"
 
 using namespace nau::render;
 

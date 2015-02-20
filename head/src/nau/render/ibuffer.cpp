@@ -1,10 +1,10 @@
-#include <nau/render/ibuffer.h>
+#include "nau/render/ibuffer.h"
 
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/glbuffer.h>
+#include "nau/render/opengl/glbuffer.h"
 #endif
 
-#include <nau.h>
+#include "nau.h"
 
 using namespace nau::render;
 using namespace nau;

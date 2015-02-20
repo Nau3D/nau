@@ -1,9 +1,9 @@
 #ifndef ISCENEPARTITIONED_H
 #define ISCENEPARTITIONED_H
 
-#include <nau/scene/iscene.h>
-#include <nau/geometry/frustum.h>
-#include <nau/geometry/boundingbox.h>
+#include "nau/scene/iscene.h"
+#include "nau/geometry/frustum.h"
+#include "nau/geometry/boundingbox.h"
 
 namespace nau {
 

@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 
-#include <nau/render/pass.h>
+#include "nau/render/pass.h"
 
 using namespace nau::render;
 

@@ -1,9 +1,9 @@
 #ifndef IPROGRAM_H
 #define IPROGRAM_H
 
-#include <nau/config.h>
-#include <nau/enums.h>
-#include <nau/render/iprogramvalue.h>
+#include "nau/config.h"
+#include "nau/enums.h"
+#include "nau/render/iprogramvalue.h"
 
 #include <string>
 

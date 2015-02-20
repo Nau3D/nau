@@ -14,6 +14,7 @@ BEGIN_EVENT_TABLE(DlgPass, wxDialog)
 	EVT_COMBOBOX(DLG_MI_COMBO_PIPELINE, DlgPass::OnSelectPipeline)
 
 	EVT_PG_CHANGED(DLG_MI_PG, DlgPass::OnProcessPGChange)
+	EVT_BUTTON(DLG_BUTTON_ACTIVATE, DlgPass::OnActivate)
 
 	EVT_MENU(PIPELINE_NEW, DlgPass::toolbarPipelineNew)
     EVT_MENU(PIPELINE_REMOVE, DlgPass::toolbarPipelineRemove)
@@ -54,19 +55,20 @@ DlgPass::DlgPass()
 {
 
 	m_parent = DlgPass::parent;
+	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
 	/* ----------------------------------------------------------------
 	                             Toolbar
 	-----------------------------------------------------------------*/
 
     // load the image wanted on the toolbar
-    wxBitmap newImage(wxT("bitmaps/new.bmp"), wxBITMAP_TYPE_BMP);
-    wxBitmap cutImage(wxT("bitmaps/cut.bmp"), wxBITMAP_TYPE_BMP);
+    //wxBitmap newImage(wxT("bitmaps/new.bmp"), wxBITMAP_TYPE_BMP);
+    //wxBitmap cutImage(wxT("bitmaps/cut.bmp"), wxBITMAP_TYPE_BMP);
 
 //	wxBitmap aboutImage = wxBITMAP(help) ;
 
     // create the toolbar and add our 1 tool to it
-    m_toolbar = new wxToolBar(this,TOOLBAR_ID);
+ /*   m_toolbar = new wxToolBar(this,TOOLBAR_ID);
 	long tstyle = m_toolbar->GetWindowStyle();
 	tstyle |= wxTB_TEXT;
 	m_toolbar->SetWindowStyle(tstyle);
@@ -82,9 +84,8 @@ DlgPass::DlgPass()
 	m_toolbar->Realize();
 
 
-	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(m_toolbar,0,wxGROW |wxALL, 1);
-
+*/
 	/* ----------------------------------------------------------------
 	                             Pipelines and Passes
 	-----------------------------------------------------------------*/
@@ -130,11 +131,23 @@ DlgPass::DlgPass()
 
 
 	/* ----------------------------------------------------------------
+								Activate button
+	-----------------------------------------------------------------*/
+
+	wxBoxSizer *sizH3 = new wxBoxSizer(wxHORIZONTAL);
+	m_BActivate = new wxButton(this, DLG_BUTTON_ACTIVATE, wxT("Activate Pipeline"));
+	m_ActivePipText = new wxStaticText(this, wxID_ANY, wxT("..."));
+	sizH3->Add(m_BActivate, 0, wxALL | wxGROW | wxHORIZONTAL | wxALIGN_CENTER_HORIZONTAL, 5);
+	sizH3->Add(m_ActivePipText, 0, wxALL | wxGROW | wxHORIZONTAL | wxALIGN_CENTER_HORIZONTAL, 5);
+
+
+	/* ----------------------------------------------------------------
 	                             End
 	-----------------------------------------------------------------*/
 
 
 	sizer->Add(sizerS,1,wxGROW | wxALL,5);
+	sizer->Add(sizH3, 0, wxALL | wxGROW | wxHORIZONTAL, 15);
 	//sizer->Add(5,5,0, wxGROW | wxALL,5);
 
     SetAutoLayout(TRUE);
@@ -186,7 +199,8 @@ void DlgPass::updatePipelines() {
 	std::vector<std::string> *pips = RENDERMANAGER->getPipelineNames();
 	std::vector<std::string>::iterator iter;
 
-	wxString sel = m_PipelineList->GetStringSelection();
+	//wxString sel = m_PipelineList->GetStringSelection();
+	wxString sel = wxString(RENDERMANAGER->getActivePipelineName());
 	m_PipelineList->Clear();
 	for (iter = pips->begin(); iter != pips->end(); ++iter)
 		m_PipelineList->Append(wxString(iter->c_str()));
@@ -197,6 +211,7 @@ void DlgPass::updatePipelines() {
 		m_PipelineList->SetSelection(0);
 
 	sel = m_PipelineList->GetStringSelection();
+	m_ActivePipText->SetLabelText(sel);
 	std::string pipName = std::string(sel.mb_str());
 
 	Pipeline *pip = RENDERMANAGER->getPipeline(pipName);
@@ -749,6 +764,13 @@ void DlgPass::updateMaterialList() {
 	Scenes Stuff
 
 -----------------------------------------------------------------------*/
+
+void DlgPass::OnActivate(wxCommandEvent& event) {
+
+	wxString sel = m_PipelineList->GetValue().mb_str();
+	m_ActivePipText->SetLabelText(sel);
+	RENDERMANAGER->setActivePipeline(std::string(sel));
+}
 
 
 

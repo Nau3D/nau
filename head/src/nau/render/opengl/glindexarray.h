@@ -1,7 +1,7 @@
 #ifndef GLINDEXARRAY_H
 #define GLINDEXARRAY_H
 
-#include <nau/render/indexdata.h>
+#include "nau/render/indexdata.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>

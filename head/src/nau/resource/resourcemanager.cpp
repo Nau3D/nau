@@ -1,12 +1,12 @@
-#include <nau/resource/resourcemanager.h>
+#include "nau/resource/resourcemanager.h"
 
-#include <nau/geometry/box.h>
-#include <nau/geometry/sphere.h>
-#include <nau/geometry/square.h>
-#include <nau/geometry/axis.h>
-#include <nau/geometry/bbox.h>
-#include <nau/geometry/meshwithpose.h>
-#include <nau/geometry/meshbones.h>
+#include "nau/geometry/box.h"
+#include "nau/geometry/sphere.h"
+#include "nau/geometry/square.h"
+#include "nau/geometry/axis.h"
+#include "nau/geometry/bbox.h"
+#include "nau/geometry/meshwithpose.h"
+#include "nau/geometry/meshbones.h"
 
 #include <sstream>
 

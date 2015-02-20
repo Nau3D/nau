@@ -5,9 +5,9 @@
 
 #include <map>
 
-#include <nau/render/irenderable.h>
-#include <nau/render/texture.h>
-#include <nau/material/teximage.h>
+#include "nau/render/irenderable.h"
+#include "nau/render/texture.h"
+#include "nau/material/teximage.h"
 
 
 

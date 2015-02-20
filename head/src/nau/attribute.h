@@ -7,10 +7,10 @@
 #include <string>
 #include <vector>
 
-#include <nau/enums.h>
-#include <nau/math/matrix.h>
-#include <nau/math/vec4.h>
-#include <nau/math/vec2.h>
+#include "nau/enums.h"
+#include "nau/math/matrix.h"
+#include "nau/math/vec4.h"
+#include "nau/math/vec2.h"
 
 using namespace nau::math;
 
@@ -49,8 +49,10 @@ namespace nau {
 		void *getMax();
 		void *getMin();
 		bool getReadOnlyFlag();
-		int getListValue(std::string &s);
-		std::string &getListString(int v);
+		int getOptionValue(std::string &s);
+		std::string &getOptionString(int v);
+		const std::vector<std::string> &getOptionStringList();
+		void *getDefault();
 
 		void setRange(void *min, void *max);
 
@@ -71,8 +73,8 @@ namespace nau {
 		bool m_ListDefined;
 		bool m_RangeDefined;
 		void *m_Min, *m_Max;
-		std::vector<int> mListValues;
-		std::vector<std::string> mListString;
+		std::vector<int> m_ListValues;
+		std::vector<std::string> m_ListString;
 		std::string m_DummyS;
 	};
 

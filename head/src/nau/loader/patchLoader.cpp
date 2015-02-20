@@ -1,11 +1,11 @@
-#include <nau/loader/patchLoader.h>
-#include <nau.h>
-#include <nau/scene/sceneobjectfactory.h>
-#include <nau/geometry/boundingvolumefactory.h>
-#include <nau/material/materialgroup.h>
-#include <nau/slogger.h>
+#include "nau/loader/patchLoader.h"
+#include "nau.h"
+#include "nau/scene/sceneobjectfactory.h"
+#include "nau/geometry/boundingvolumefactory.h"
+#include "nau/material/materialgroup.h"
+#include "nau/slogger.h"
 
-#include <nau/errors.h>
+#include "nau/errors.h"
 
 #include <stdlib.h>
 

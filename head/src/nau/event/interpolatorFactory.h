@@ -1,7 +1,7 @@
 #ifndef INTERPOLATORFACTORY_H
 #define INTERPOLATORFACTORY_H
 
-#include <nau/event/interpolator.h>
+#include "nau/event/interpolator.h"
 #include <string>
 
 namespace nau

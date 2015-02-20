@@ -1,6 +1,6 @@
-#include <nau/render/opengl/glstate.h>
+#include "nau/render/opengl/glstate.h"
 
-#include <nau/config.h>
+#include "nau/config.h"
 
 #include <GL/glew.h>
 

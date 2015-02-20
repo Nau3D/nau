@@ -2,7 +2,7 @@
 #define PROGRAMVALUE_H
 
 #include <string>
-#include <nau/enums.h>
+#include "nau/enums.h"
 
 namespace nau {
 

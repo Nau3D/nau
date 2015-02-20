@@ -1,8 +1,8 @@
 #ifndef TIMESENSOR_H
 #define TIMESENSOR_H
 
-#include <nau/event/eventFloat.h>
-#include <nau/event/sensor.h>
+#include "nau/event/eventFloat.h"
+#include "nau/event/sensor.h"
 #include <vector>
 
 namespace nau

@@ -1,13 +1,13 @@
 #ifndef SCENEOBJECT_H
 #define SCENEOBJECT_H
 
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
-#include <nau/event/ilistener.h>
-#include <nau/geometry/iboundingvolume.h>
-#include <nau/math/itransform.h>
-#include <nau/render/irenderable.h>
-#include <nau/scene/sceneobjectfactory.h>
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
+#include "nau/event/ilistener.h"
+#include "nau/geometry/iboundingvolume.h"
+#include "nau/math/itransform.h"
+#include "nau/render/irenderable.h"
+#include "nau/scene/sceneobjectfactory.h"
 
 #include <string>
 

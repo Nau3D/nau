@@ -1,14 +1,14 @@
 #ifdef NAU_OPTIX 
 
-#include <nau/config.h>
+#include "nau/config.h"
 
 #if NAU_OPENGL_VERSION >= 420
 
-#include <nau.h>
-#include <nau/debug/profile.h>
-#include <nau/geometry/frustum.h>
-#include <nau/render/passoptixprime.h>
-#include <nau/slogger.h>
+#include "nau.h"
+#include "nau/debug/profile.h"
+#include "nau/geometry/frustum.h"
+#include "nau/render/passoptixprime.h"
+#include "nau/slogger.h"
 
 #include <GL/glew.h>
 #include <cuda_runtime.h>

@@ -1,23 +1,23 @@
-#include <nau.h>
+#include "nau.h"
 
-#include <nau/config.h>
-#include <nau/slogger.h>
-#include <nau/debug/profile.h>
-#include <nau/debug/state.h>
-#include <nau/event/eventFactory.h>
-#include <nau/loader/cboloader.h>
-#include <nau/loader/objLoader.h>
-#include <nau/loader/ogremeshloader.h>
-#include <nau/loader/assimploader.h>
-#include <nau/loader/patchLoader.h>
-#include <nau/loader/projectloader.h>
+#include "nau/config.h"
+#include "nau/slogger.h"
+#include "nau/debug/profile.h"
+#include "nau/debug/state.h"
+#include "nau/event/eventFactory.h"
+#include "nau/loader/cboloader.h"
+#include "nau/loader/objLoader.h"
+#include "nau/loader/ogremeshloader.h"
+#include "nau/loader/assimploader.h"
+#include "nau/loader/patchLoader.h"
+#include "nau/loader/projectloader.h"
 #ifdef GLINTERCEPTDEBUG
-#include <nau/loader/projectloaderdebuglinker.h>
+#include "nau/loader/projectloaderdebuglinker.h"
 #endif //GLINTERCEPTDEBUG
-#include <nau/resource/fontmanager.h>
-#include <nau/scene/scenefactory.h>
-#include <nau/system/file.h>
-#include <nau/world/worldfactory.h>
+#include "nau/resource/fontmanager.h"
+#include "nau/scene/scenefactory.h"
+#include "nau/system/file.h"
+#include "nau/world/worldfactory.h"
 
 #include <GL/glew.h>
 
@@ -85,17 +85,25 @@ Nau::Nau() :
 	m_UseTriangleIDs(false),
 	m_CoreProfile(false),
 	isFrameBegin(true), 
-	m_DummyVector()
+	m_DummyVector(),
+	m_pRenderManager(NULL),
+	m_pMaterialLibManager(NULL),
+	m_pResourceManager(NULL),
+	m_pEventManager(NULL)
 {
 }
 
 
 Nau::~Nau() {
 
-	delete MATERIALLIBMANAGER;
-	EVENTMANAGER->clear();
-	RENDERMANAGER->clear();
-	RESOURCEMANAGER->clear();
+	if (m_pMaterialLibManager)
+		delete MATERIALLIBMANAGER;
+	if (m_pEventManager)
+		EVENTMANAGER->clear();
+	if (m_pRenderManager)
+		RENDERMANAGER->clear();
+	if (m_pResourceManager)
+		RESOURCEMANAGER->clear();
 
 }
 
@@ -376,14 +384,12 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 bool
 Nau::validateAttribute(std::string type, std::string context, std::string component) {
 
-	//if (type == "CAMERA") {
-	//
-	//	if (!m_pRenderManager->hasCamera(context))
-	//		return false;
-	//}
+	int id;
+	Enums::DataType dt;
 	if (!getObjectAttributes(type, context))
-		return false;
-	return ProgramValue::Validate(type, context, component);
+		return false; 
+	m_Attributes[type]->getPropTypeAndId(component, &dt, &id); 
+	return (id != -1);
 }
 
 

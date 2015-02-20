@@ -1,7 +1,7 @@
 #ifndef GLVERTEXARRAY_H
 #define GLVERTEXARRAY_H
 
-#include <nau/render/vertexdata.h>
+#include "nau/render/vertexdata.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>

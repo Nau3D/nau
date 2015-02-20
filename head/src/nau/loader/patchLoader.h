@@ -1,7 +1,7 @@
 #ifndef PATCHLOADER_H
 #define PATCHLOADER_H
 
-#include <nau/scene/iscene.h>
+#include "nau/scene/iscene.h"
 
 namespace nau 
 {

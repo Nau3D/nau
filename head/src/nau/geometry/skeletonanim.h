@@ -1,7 +1,7 @@
 #ifndef MESHSKELETONANIM_H
 #define MESHSKELETONANIM_H
 
-#include <nau.h>
+#include "nau.h"
 
 using namespace nau::math;
 

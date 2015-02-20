@@ -1,8 +1,8 @@
 #ifndef EventVec3_H
 #define EventVec3_H
 
-#include <nau/event/iEventData.h>
-#include <nau/math/vec3.h>
+#include "nau/event/iEventData.h"
+#include "nau/math/vec3.h"
 
 namespace nau
 {

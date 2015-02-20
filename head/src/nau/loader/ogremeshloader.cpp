@@ -1,20 +1,20 @@
 #pragma warning( disable: 4290)
 
 
-#include <nau/loader/ogremeshloader.h>
+#include "nau/loader/ogremeshloader.h"
 
-#include <nau/scene/scenefactory.h>
-#include <nau/scene/sceneobjectfactory.h>
+#include "nau/scene/scenefactory.h"
+#include "nau/scene/sceneobjectfactory.h"
 
-#include <nau/render/irenderable.h>
-#include <nau/geometry/poseoffset.h>
-#include <nau/geometry/meshwithpose.h>
+#include "nau/render/irenderable.h"
+#include "nau/geometry/poseoffset.h"
+#include "nau/geometry/meshwithpose.h"
 
-#include <nau/system/TextUtil.h>
+#include "nau/system/TextUtil.h"
 
-#include <nau/config.h>
-#include <nau/slogger.h>
-#include <nau/errors.h>
+#include "nau/config.h"
+#include "nau/slogger.h"
+#include "nau/errors.h"
 
 
 #ifdef NAU_PLATFORM_WIN32

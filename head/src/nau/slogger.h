@@ -2,7 +2,7 @@
 #define SLOGGER_H
 
 #include <stdio.h>
-#include <nau/event/eventString.h>
+#include "nau/event/eventString.h"
 #include <string>
 
 

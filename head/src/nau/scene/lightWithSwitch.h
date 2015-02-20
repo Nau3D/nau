@@ -2,9 +2,9 @@
 #define LIGHTWITHSWITCH_H
 
 // Marta
-#include <nau/scene/light.h>
-#include <nau/event/iEventData.h>
-#include <nau/event/ilistener.h>
+#include "nau/scene/light.h"
+#include "nau/event/iEventData.h"
+#include "nau/event/ilistener.h"
 
 namespace nau
 {

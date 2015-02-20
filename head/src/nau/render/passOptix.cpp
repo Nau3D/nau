@@ -1,11 +1,11 @@
 #ifdef NAU_OPTIX 
 
-#include <nau.h>
-#include <nau/slogger.h>
-#include <nau/debug/profile.h>
-#include <nau/geometry/axis.h>
-#include <nau/geometry/frustum.h>
-#include <nau/render/passOptix.h>
+#include "nau.h"
+#include "nau/slogger.h"
+#include "nau/debug/profile.h"
+#include "nau/geometry/axis.h"
+#include "nau/geometry/frustum.h"
+#include "nau/render/passOptix.h"
 
 #include <GL/glew.h>
 

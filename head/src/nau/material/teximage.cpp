@@ -1,7 +1,7 @@
-#include <nau/material/teximage.h>
+#include "nau/material/teximage.h"
 
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/glteximage.h>
+#include "nau/render/opengl/glteximage.h"
 #endif
 
 using namespace nau::material;

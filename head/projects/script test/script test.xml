@@ -70,5 +70,27 @@
 			</pass>
 			<!--postScript file="test2.lua" name="syncCamera2" /-->
 		</pipeline>
+		<pipeline name="no script" defaultCamera="Master">
+			<pass class="default" name="master">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="Master" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+			</pass>
+			
+			<pass class="default" name="slave">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="Slave" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+			</pass>
+			<!--postScript file="test2.lua" name="syncCamera2" /-->
+		</pipeline>
 	</pipelines>
 </project>	

@@ -1,13 +1,13 @@
-#include <nau/loader/sceneloader.h>
+#include "nau/loader/sceneloader.h"
 
 #include <tinyxml.h>
 
-#include <nau.h>
+#include "nau.h"
 
-#include <nau/config.h>
+#include "nau/config.h"
 
 #ifdef NAU_PLATFORM_WIN32
-#include <nau/system/dirent.h>
+#include "nau/system/dirent.h"
 #else
 #include <dirent.h>
 #include <sys/types.h>

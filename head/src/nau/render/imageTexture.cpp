@@ -1,13 +1,13 @@
-#include <nau/render/imageTexture.h>
+#include "nau/render/imageTexture.h"
 
 #if NAU_OPENGL_VERSION >= 420
 
 
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/glimagetexture.h>
+#include "nau/render/opengl/glimagetexture.h"
 #endif
 
-#include <nau.h>
+#include "nau.h"
 
 using namespace nau::render;
 using namespace nau;

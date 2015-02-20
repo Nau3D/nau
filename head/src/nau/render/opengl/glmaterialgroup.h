@@ -1,8 +1,8 @@
 #ifndef GLMATERIALGROUP_H
 #define GLMATERIALGROUP_H
 
-#include <nau/material/materialgroup.h>
-#include <nau/render/irenderable.h>
+#include "nau/material/materialgroup.h"
+#include "nau/render/irenderable.h"
 
 using namespace nau::material;
 

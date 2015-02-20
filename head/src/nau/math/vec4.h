@@ -1,7 +1,7 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
-#include <nau/math/utils.h>
+#include "nau/math/utils.h"
 
 #include <string>
 

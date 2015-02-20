@@ -1,7 +1,7 @@
 #ifndef GLRENDERTARGET_H
 #define GLRENDERTARGET_H
 
-#include <nau/render/rendertarget.h>
+#include "nau/render/rendertarget.h"
 
 #include <GL/glew.h>
 

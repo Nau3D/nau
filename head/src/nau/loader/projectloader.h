@@ -1,9 +1,9 @@
 #ifndef PROJECTLOADER_H
 #define PROJECTLOADER_H
 
-#include <nau/material/materialLib.h>
-#include <nau/render/pass.h>
-#include <nau/system/fileutil.h>
+#include "nau/material/materialLib.h"
+#include "nau/render/pass.h"
+#include "nau/system/fileutil.h"
 
 #include <tinyxml.h>
 

@@ -1,8 +1,8 @@
 #ifndef QUADPASS_H
 #define QUADPASS_H
 
-#include <nau/render/pass.h>
-#include <nau/geometry/quad.h>
+#include "nau/render/pass.h"
+#include "nau/geometry/quad.h"
 
 namespace nau
 {

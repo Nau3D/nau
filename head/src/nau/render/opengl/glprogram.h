@@ -6,8 +6,8 @@
 
 #include <GL/glew.h>
 
-#include <nau/render/iprogram.h>
-#include <nau/render/opengl/glprogramValue.h>
+#include "nau/render/iprogram.h"
+#include "nau/render/opengl/glprogramValue.h"
 
 
 

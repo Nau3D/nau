@@ -1,9 +1,9 @@
 #ifndef COLORMATERIAL_H
 #define COLORMATERIAL_H
 
-#include <nau/enums.h>
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
+#include "nau/enums.h"
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
 
 namespace nau
 {

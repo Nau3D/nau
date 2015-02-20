@@ -2,7 +2,7 @@
 #define SPHERE_H
 
 
-#include <nau/geometry/primitive.h>
+#include "nau/geometry/primitive.h"
 
 namespace nau
 {

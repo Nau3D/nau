@@ -1,6 +1,6 @@
-#include <nau/attributeValues.h>
+#include "nau/attributeValues.h"
 
-#include <nau/slogger.h>
+#include "nau/slogger.h"
 
 
 int AttributeValues::NextAttrib = 0;

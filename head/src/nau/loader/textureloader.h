@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include <nau/render/texture.h>
-#include <nau/material/teximage.h>
+#include "nau/render/texture.h"
+#include "nau/material/teximage.h"
 
 using namespace nau::material;
 

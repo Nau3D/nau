@@ -1,7 +1,7 @@
 
-#include <nau/geometry/meshwithpose.h>
-#include <nau.h>
-#include <nau/slogger.h>
+#include "nau/geometry/meshwithpose.h"
+#include "nau.h"
+#include "nau/slogger.h"
 
 MeshPose::MeshPose(void): Mesh(),
 		m_ActivePose(0)

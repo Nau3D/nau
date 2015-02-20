@@ -1,11 +1,11 @@
 #ifndef GLTEXTURE_H
 #define GLTEXTURE_H
 
-#include <nau/config.h>
+#include "nau/config.h"
 
 #if NAU_OPENGL_VERSION >=  420
 
-#include <nau/render/imageTexture.h>
+#include "nau/render/imageTexture.h"
 
 #include <GL/glew.h>
 #include <string>

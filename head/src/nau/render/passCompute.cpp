@@ -1,11 +1,11 @@
-#include <nau/render/passCompute.h>
+#include "nau/render/passCompute.h"
 
 #include <GL/glew.h>
 #include <sstream>
 #include <algorithm>
 
-#include <nau.h>
-#include <nau/debug/profile.h>
+#include "nau.h"
+#include "nau/debug/profile.h"
 
 using namespace nau::material;
 using namespace nau::scene;

@@ -1,10 +1,10 @@
-#include <nau/slogger.h>
-#include <nau/render/opengl/glprogram.h>
-#include <nau/render/vertexdata.h>
-#include <nau.h>
+#include "nau/slogger.h"
+#include "nau/render/opengl/glprogram.h"
+#include "nau/render/vertexdata.h"
+#include "nau.h"
 
-#include <nau/system/textfile.h>
-#include <nau/config.h>
+#include "nau/system/textfile.h"
+#include "nau/config.h"
 
 using namespace nau::render;
 using namespace nau::system;

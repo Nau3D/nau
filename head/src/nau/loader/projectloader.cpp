@@ -1,35 +1,35 @@
-#include <nau/loader/projectloader.h>
+#include "nau/loader/projectloader.h"
 
-#include <nau.h>
+#include "nau.h"
 
-#include <nau/config.h>
-#include <nau/slogger.h>
+#include "nau/config.h"
+#include "nau/slogger.h"
 
-#include <nau/event/interpolatorFactory.h>
-#include <nau/event/objectAnimation.h>
-#include <nau/event/route.h>
-#include <nau/event/sensorfactory.h>
+#include "nau/event/interpolatorFactory.h"
+#include "nau/event/objectAnimation.h"
+#include "nau/event/route.h"
+#include "nau/event/sensorfactory.h"
 
-#include <nau/geometry/primitive.h>
-#include <nau/material/programvalue.h>
-#include <nau/math/transformfactory.h>
+#include "nau/geometry/primitive.h"
+#include "nau/material/programvalue.h"
+#include "nau/math/transformfactory.h"
 
-#include <nau/render/ibuffer.h>
-#include <nau/render/passCompute.h>
-#include <nau/render/passfactory.h>
+#include "nau/render/ibuffer.h"
+#include "nau/render/passCompute.h"
+#include "nau/render/passfactory.h"
 #ifdef NAU_OPTIX_PRIME
-#include <nau/render/passoptixprime.h>
+#include "nau/render/passoptixprime.h"
 #endif
 #ifdef NAU_OPTIX
-#include <nau/render/passOptix.h>
+#include "nau/render/passOptix.h"
 #endif
-#include <nau/render/pipeline.h>
-#include <nau/render/rendertarget.h>
+#include "nau/render/pipeline.h"
+#include "nau/render/rendertarget.h"
 
-#include <nau/scene/geometryobject.h>
-#include <nau/scene/sceneobjectfactory.h>
+#include "nau/scene/geometryobject.h"
+#include "nau/scene/sceneobjectfactory.h"
 
-#include <nau/system/TextUtil.h>
+#include "nau/system/TextUtil.h"
 
 
 
@@ -41,7 +41,7 @@
 #endif
 
 #ifdef GLINTERCEPTDEBUG
-#include <nau/loader/projectloaderdebuglinker.h>
+#include "nau/loader/projectloaderdebuglinker.h"
 #endif
 
 
@@ -2917,7 +2917,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 		Pipeline *aPipeline = RENDERMANAGER->getPipeline (pNamePip);
 		
 		// if no default pipeline is set, then the first pipeline will be the default
-		if (0 == strcmp (pDefault, "true")) {
+		if (pDefault && 0 == strcmp (pDefault, "true")) {
 			strcpy (activePipeline, pNamePip);
 		}
 

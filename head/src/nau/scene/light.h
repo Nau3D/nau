@@ -1,11 +1,11 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include <nau/math/vec3.h>
-#include <nau/math/vec4.h>
-#include <nau/scene/sceneobject.h>
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
+#include "nau/math/vec3.h"
+#include "nau/math/vec4.h"
+#include "nau/scene/sceneobject.h"
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
 
 #include <string>
 #include <map>

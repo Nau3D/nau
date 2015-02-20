@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <nau/scene/sceneobject.h>
+#include "nau/scene/sceneobject.h"
 
 using namespace nau::scene;
 

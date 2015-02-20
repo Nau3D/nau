@@ -1,6 +1,6 @@
-#include <nau.h>
-#include <nau/slogger.h>
-#include <nau/render/opengl/glprogramValue.h>
+#include "nau.h"
+#include "nau/slogger.h"
+#include "nau/render/opengl/glprogramValue.h"
 
 
 using namespace nau::render;

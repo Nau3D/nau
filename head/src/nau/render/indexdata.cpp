@@ -1,8 +1,8 @@
-#include <nau/render/indexdata.h>
+#include "nau/render/indexdata.h"
 
-#include <nau/config.h>
+#include "nau/config.h"
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/glindexarray.h>
+#include "nau/render/opengl/glindexarray.h"
 #endif
 
 #include <assert.h>

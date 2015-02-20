@@ -1,15 +1,15 @@
-#include <nau/render/pipeline.h>
+#include "nau/render/pipeline.h"
 
-#include <nau.h>
-#include <nau/config.h>
-#include <nau/slogger.h>
-#include <nau/debug/profile.h>
-#include <nau/geometry/frustum.h>
-#include <nau/render/passfactory.h>
-#include <nau/render/rendermanager.h>
+#include "nau.h"
+#include "nau/config.h"
+#include "nau/slogger.h"
+#include "nau/debug/profile.h"
+#include "nau/geometry/frustum.h"
+#include "nau/render/passfactory.h"
+#include "nau/render/rendermanager.h"
 
 #ifdef GLINTERCEPTDEBUG
-#include <nau/loader/projectloaderdebuglinker.h>
+#include "nau/loader/projectloaderdebuglinker.h"
 #endif 
 
 #include <GL/glew.h>

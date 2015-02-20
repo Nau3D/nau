@@ -1,8 +1,8 @@
 #ifndef MATERIALGROUP_H
 #define MATERIALGROUP_H
 
-#include <nau/render/indexdata.h>
-#include <nau/render/irenderable.h>
+#include "nau/render/indexdata.h"
+#include "nau/render/irenderable.h"
 
 #include <string>
 

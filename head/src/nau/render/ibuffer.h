@@ -1,11 +1,11 @@
-#include <nau/config.h>
+#include "nau/config.h"
 
 
 #ifndef IBUFFER_H
 #define IBUFFER_H
 
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
 
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES

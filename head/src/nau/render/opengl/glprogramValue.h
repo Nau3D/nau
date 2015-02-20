@@ -6,8 +6,8 @@
 
 #include <GL/glew.h>
 
-#include <nau/enums.h>
-#include <nau/render/iprogramvalue.h>
+#include "nau/enums.h"
+#include "nau/render/iprogramvalue.h"
 
 
 namespace nau

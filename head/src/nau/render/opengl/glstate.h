@@ -1,7 +1,7 @@
 #ifndef GLSTATE_H
 #define GLSTATE_H
 
-#include <nau/render/istate.h>
+#include "nau/render/istate.h"
 #include <string>
 #include <GL/glew.h>
 

@@ -1,6 +1,6 @@
-#include <nau/system/textutil.h>
+#include "nau/system/textutil.h"
 
-#include <nau/math/randomgen.h>
+#include "nau/math/randomgen.h"
 
 #include <iostream>
 #include <sstream>

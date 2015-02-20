@@ -1,7 +1,7 @@
 #ifndef VERTEXDATA_H
 #define VERTEXDATA_H
 
-#include <nau/math/vec4.h>
+#include "nau/math/vec4.h"
 
 #include <map>
 #include <vector>

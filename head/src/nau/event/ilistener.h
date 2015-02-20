@@ -1,8 +1,9 @@
 #ifndef LISTENER_H
 #define LISTENER_H
 
+#include "nau/event/iEventData.h"
+
 #include <string>
-#include <nau/event/iEventData.h>
 
 namespace nau
 {

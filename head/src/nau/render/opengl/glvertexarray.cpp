@@ -1,7 +1,7 @@
-#include <nau/render/opengl/glvertexarray.h>
+#include "nau/render/opengl/glvertexarray.h"
 
-#include <nau.h>
-#include <nau/render/opengl/glbuffer.h>
+#include "nau.h"
+#include "nau/render/opengl/glbuffer.h"
 
 #include <assert.h>
 

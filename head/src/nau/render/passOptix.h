@@ -5,17 +5,17 @@
 #include <string>
 #include <map>
 
-#include <nau/render/optix/optixGeometry.h>
-#include <nau/render/optix/optixMaterialLib.h>
-#include <nau/render/optix/optixRenderer.h>
-#include <nau/render/optix/optixTextureLib.h>
+#include "nau/render/optix/optixGeometry.h"
+#include "nau/render/optix/optixMaterialLib.h"
+#include "nau/render/optix/optixRenderer.h"
+#include "nau/render/optix/optixTextureLib.h"
 
 //#include <optix.h>
 //#include <optixu/optixpp_namespace.h>
 //#include <optixu/optixu_math_namespace.h>
 using namespace nau::render::optixRender;
 
-#include <nau/render/pass.h>
+#include "nau/render/pass.h"
 
 namespace nau
 {

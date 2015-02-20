@@ -1,10 +1,10 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <nau/config.h>
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
-#include <nau/material/textureSampler.h>
+#include "nau/config.h"
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
+#include "nau/material/textureSampler.h"
 
 
 #ifdef __SLANGER__

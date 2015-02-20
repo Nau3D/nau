@@ -1,9 +1,9 @@
-#include <nau/render/texture.h>
+#include "nau/render/texture.h"
 
-#include <nau.h>
-#include <nau/loader/textureloader.h>
+#include "nau.h"
+#include "nau/loader/textureloader.h"
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/gltexture.h>
+#include "nau/render/opengl/gltexture.h"
 #endif
 
 using namespace nau::render;

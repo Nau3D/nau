@@ -1,9 +1,9 @@
-#include <nau/material/programvalue.h>
+#include "nau/material/programvalue.h"
 
-#include <nau.h>
+#include "nau.h"
 
-#include <nau/math/simpletransform.h>
-#include <nau/system/TextUtil.h>
+#include "nau/math/simpletransform.h"
+#include "nau/system/TextUtil.h"
 
 using namespace nau::material;
 using namespace nau::math;

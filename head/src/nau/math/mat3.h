@@ -1,7 +1,7 @@
 #ifndef MAT3_H
 #define MAT3_H
 
-#include <nau/math/vec3.h>
+#include "nau/math/vec3.h"
 
 namespace nau
 {

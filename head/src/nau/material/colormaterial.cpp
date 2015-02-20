@@ -1,8 +1,8 @@
-#include <nau/material/colormaterial.h>
+#include "nau/material/colormaterial.h"
 
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
-#include <nau.h>
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
+#include "nau.h"
 
 
 using namespace nau::material;

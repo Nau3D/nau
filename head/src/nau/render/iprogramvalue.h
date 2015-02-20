@@ -2,7 +2,7 @@
 #define IUNIFORM_H
 
 #include <string>
-#include <nau/enums.h>
+#include "nau/enums.h"
 
 
 using namespace nau;

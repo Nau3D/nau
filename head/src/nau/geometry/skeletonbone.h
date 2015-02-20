@@ -1,8 +1,8 @@
 #ifndef SKELETONBONE_H
 #define SKELETONBONE_H
 
-#include <nau/math/vec3.h>
-#include <nau/math/simpletransform.h>
+#include "nau/math/vec3.h"
+#include "nau/math/simpletransform.h"
 
 #include <string>
 

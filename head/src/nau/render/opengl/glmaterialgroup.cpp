@@ -1,7 +1,7 @@
-#include <nau/render/opengl/glmaterialgroup.h>
+#include "nau/render/opengl/glmaterialgroup.h"
 
-#include <nau/render/opengl/glindexarray.h>
-#include <nau/render/opengl/glvertexarray.h>
+#include "nau/render/opengl/glindexarray.h"
+#include "nau/render/opengl/glvertexarray.h"
 
 
 #include <GL/glew.h>

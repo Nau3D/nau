@@ -1,7 +1,7 @@
 #ifndef EventString_H
 #define EventString_H
 
-#include <nau/event/iEventData.h>
+#include "nau/event/iEventData.h"
 #include <string>
 
 namespace nau

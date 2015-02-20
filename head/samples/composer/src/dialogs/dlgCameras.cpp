@@ -71,6 +71,7 @@ DlgCameras::getName() {
 	return m_Name;
 }
 
+
 void
 DlgCameras::notifyUpdate(Notification aNot, std::string camName, std::string value) {
 

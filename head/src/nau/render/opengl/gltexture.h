@@ -1,8 +1,8 @@
 #ifndef GLTEXTURE_H
 #define GLTEXTURE_H
 
-#include <nau/render/texture.h>
-#include <nau/render/opengl/gltexturesampler.h>
+#include "nau/render/texture.h"
+#include "nau/render/opengl/gltexturesampler.h"
 
 #include <GL/glew.h>
 

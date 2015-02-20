@@ -2,8 +2,8 @@
 #define ATTRIBUTEVALUES_H
 
 
-#include <nau/attribute.h>
-#include <nau/math/matrix.h>
+#include "nau/attribute.h"
+#include "nau/math/matrix.h"
 
 
 #include <map>

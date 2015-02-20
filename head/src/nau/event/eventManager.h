@@ -1,11 +1,12 @@
 #ifndef EVENTMANAGER_H
 #define EVENTMANAGER_H
 
-#include <nau/event/listenerType.h>
-#include <nau/event/Ilistener.h>
-#include <nau/event/sensor.h>
-#include <nau/event/interpolator.h>
-#include <nau/event/route.h>
+#include "nau/event/listenerType.h"
+#include "nau/event/Ilistener.h"
+#include "nau/event/sensor.h"
+#include "nau/event/interpolator.h"
+#include "nau/event/route.h"
+
 #include <vector>
 #include <map>
 

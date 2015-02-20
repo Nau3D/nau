@@ -1,9 +1,9 @@
-#include <nau/material/textureSampler.h>
+#include "nau/material/textureSampler.h"
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/gltexturesampler.h>
+#include "nau/render/opengl/gltexturesampler.h"
 #endif
-#include <nau.h>
-#include <nau/config.h>
+#include "nau.h"
+#include "nau/config.h"
 
 #include <map>
 
@@ -26,7 +26,7 @@ TextureSampler::Init() {
 	Attribs.add(Attribute(COMPARE_FUNC, "COMPARE_FUNC", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(COMPARE_MODE, "COMPARE_MODE", Enums::DataType::ENUM, false));
 	//VEC4
-	Attribs.add(Attribute(BORDER_COLOR, "BORDER_COLOR", Enums::DataType::ENUM, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));
+	Attribs.add(Attribute(BORDER_COLOR, "BORDER_COLOR", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));
 
 	NAU->registerAttributes("TEXTURE_SAMPLER", &Attribs);
 

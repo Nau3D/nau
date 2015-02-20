@@ -308,8 +308,8 @@ PropertyManager::createEnum(wxPropertyGridManager *pg, nau::Attribute &a) {
 
 	wxPGProperty *pid;
 
-	std::vector<std::string> strs = a.mListString;
-	std::vector<int> inds = a.mListValues;
+	std::vector<std::string> strs = a.m_ListString;
+	std::vector<int> inds = a.m_ListValues;
 	wxArrayString arr;
 	wxArrayInt ind;
 	for (unsigned int i = 0; i < inds.size(); ++i) {

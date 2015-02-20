@@ -1,9 +1,9 @@
 #ifndef POSITIONINTERPOLATOR_H
 #define POSITIONINTERPOLATOR_H
 
-#include <nau/event/eventvec4.h>
-#include <nau/event/interpolator.h>
-#include <nau/math/vec4.h>
+#include "nau/event/eventvec4.h"
+#include "nau/event/interpolator.h"
+#include "nau/math/vec4.h"
 
 
 namespace nau

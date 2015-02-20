@@ -7,27 +7,27 @@
 #define _USE_MATH_DEFINES
 #endif
 
-#include <nau/config.h>
+#include "nau/config.h"
 
-#include <nau/errors.h>
-#include <nau/event/eventManager.h>
-#include <nau/event/ilistener.h>
-#include <nau/material/materiallibmanager.h>
-#include <nau/math/vec3.h>
-#include <nau/math/vec4.h>
-#include <nau/render/pipeline.h>
-#include <nau/render/pass.h>
-#include <nau/render/viewport.h>
-#include <nau/render/rendermanager.h>
-#include <nau/resource/resourcemanager.h>
-#include <nau/scene/iscene.h>
-#include <nau/scene/camera.h>
-#include <nau/scene/light.h>
-#include <nau/world/iworld.h>
+#include "nau/errors.h"
+#include "nau/event/eventManager.h"
+#include "nau/event/ilistener.h"
+#include "nau/material/materiallibmanager.h"
+#include "nau/math/vec3.h"
+#include "nau/math/vec4.h"
+#include "nau/render/pipeline.h"
+#include "nau/render/pass.h"
+#include "nau/render/viewport.h"
+#include "nau/render/rendermanager.h"
+#include "nau/resource/resourcemanager.h"
+#include "nau/scene/iscene.h"
+#include "nau/scene/camera.h"
+#include "nau/scene/light.h"
+#include "nau/world/iworld.h"
 
 #ifdef NAU_LUA
 extern "C" {
-#include<lua/lua.h>
+#include <lua/lua.h>
 #include <lua/lauxlib.h>
 #include <lua/lualib.h>
 }

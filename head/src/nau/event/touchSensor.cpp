@@ -1,7 +1,7 @@
-#include <nau/event/touchSensor.h>
+#include "nau/event/touchSensor.h"
 
-#include <nau.h>
-#include <nau/event/eventFactory.h>
+#include "nau.h"
+#include "nau/event/eventFactory.h"
 
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES

@@ -32,11 +32,11 @@
 
 class ImageGridCellRenderer;
 
-#include <nau.h>
-#include <nau/event/ilistener.h>
-#include <nau/render/pipeline.h>
-#include <nau/material/materiallibmanager.h>
-#include <nau/render/pass.h>
+#include "nau.h"
+#include "nau/event/ilistener.h"
+#include "nau/render/pipeline.h"
+#include "nau/material/materiallibmanager.h"
+#include "nau/render/pass.h"
 
 
 using namespace nau::render;
@@ -68,9 +68,11 @@ class DlgPass : public wxDialog, IListener
 		std::string m_Name;
 
 		// Data is presented in these
+		wxButton *m_BActivate;
 		wxComboBox *m_PipelineList, *m_PassList;
 		wxPropertyGridManager *m_pg;
 		wxPGProperty *pidScenes;
+		wxStaticText *m_ActivePipText;
 
 		// These vars must be updated whenever stuff (assigned to current pass) is updated
 		wxPGChoices m_pgCamList, m_pgLightList, m_pgMaterialList,m_pgMaterialListPlus, 
@@ -93,6 +95,7 @@ class DlgPass : public wxDialog, IListener
 		void OnSelectPass(wxCommandEvent& events);
 		void OnSelectPipeline(wxCommandEvent& events);
 		void OnProcessPGChange( wxPropertyGridEvent& e);
+		void OnActivate(wxCommandEvent &event);
 		// Auxiliary function when REMAP_TO_ONE is selected
 		void updateMats(Pass *p);
 
@@ -107,6 +110,7 @@ class DlgPass : public wxDialog, IListener
 			DLG_MI_COMBO_PASS,
 			DLG_MI_COMBO_PIPELINE,
 			DLG_MI_PG,
+			DLG_BUTTON_ACTIVATE,
 
 
 			/* TOOLBAR */

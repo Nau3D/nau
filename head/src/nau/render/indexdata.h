@@ -1,7 +1,7 @@
 #ifndef INDEXDATA_H
 #define INDEXDATA_H
 
-#include <nau/math/vec4.h>
+#include "nau/math/vec4.h"
 
 #include <map>
 #include <vector>

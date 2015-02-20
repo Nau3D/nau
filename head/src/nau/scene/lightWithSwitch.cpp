@@ -1,5 +1,5 @@
-#include <nau/scene/lightWithSwitch.h>
-#include <nau.h>
+#include "nau/scene/lightWithSwitch.h"
+#include "nau.h"
 
 using namespace nau::scene;
 using namespace nau::math;

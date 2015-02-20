@@ -1,10 +1,10 @@
 #ifndef __TEXTURE_SAMPLER__
 #define __TEXTURE_SAMPLER__
 
-#include <nau/math/vec4.h>
-#include <nau/render/texture.h>
-#include <nau/attributeValues.h>
-#include <nau/attribute.h>
+#include "nau/math/vec4.h"
+#include "nau/render/texture.h"
+#include "nau/attributeValues.h"
+#include "nau/attribute.h"
 
 #include <vector>
 

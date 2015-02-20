@@ -1,12 +1,12 @@
-#include <nau/config.h>
+#include "nau/config.h"
 
 #if NAU_OPENGL_VERSION >= 420
 
 #ifndef PASSOPTIXPRIME_H
 #define PASSOPTIXPRIME_H
 
-#include <nau/render/ibuffer.h>
-#include <nau/render/pass.h>
+#include "nau/render/ibuffer.h"
+#include "nau/render/pass.h"
 
 #include <GL/glew.h>
 #include <cuda_runtime.h>

@@ -7,16 +7,16 @@
 #include <map>
 #include <string>
 
-#include <nau/material/colormaterial.h>
-#include <nau/render/imageTexture.h>
-#include <nau/material/programvalue.h>
-#include <nau/material/texturemat.h>
-#include <nau/material/imaterialbuffer.h>
+#include "nau/material/colormaterial.h"
+#include "nau/render/imageTexture.h"
+#include "nau/material/programvalue.h"
+#include "nau/material/texturemat.h"
+#include "nau/material/imaterialbuffer.h"
 
-#include <nau/render/iprogram.h>
-#include <nau/render/istate.h> 
-#include <nau/render/texture.h>
-#include <nau/clogger.h>
+#include "nau/render/iprogram.h"
+#include "nau/render/istate.h" 
+#include "nau/render/texture.h"
+#include "nau/clogger.h"
 
 
 

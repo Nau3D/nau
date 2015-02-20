@@ -1,7 +1,7 @@
 #ifndef GLTEXTURESAMPLER_H
 #define GLTEXTURESAMPLER_H
 
-#include <nau/material/texturesampler.h>
+#include "nau/material/texturesampler.h"
 #include <map>
 
 #include <GL/glew.h>

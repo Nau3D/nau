@@ -1,9 +1,9 @@
 #ifndef SCENESKELETON_H
 #define SCENESKELETON_H
 
-#include <nau/scene/scene.h>
-#include <nau/geometry/skeletonanim.h>
-#include <nau/geometry/skeletonbone.h>
+#include "nau/scene/scene.h"
+#include "nau/geometry/skeletonanim.h"
+#include "nau/geometry/skeletonbone.h"
 
 using namespace nau::geometry;
 

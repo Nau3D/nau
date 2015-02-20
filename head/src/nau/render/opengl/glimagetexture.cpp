@@ -1,9 +1,9 @@
-#include <nau/render/opengl/glimagetexture.h>
+#include "nau/render/opengl/glimagetexture.h"
 
 #if NAU_OPENGL_VERSION >=  420
 
-#include <nau.h>
-#include <nau/render/irenderer.h>
+#include "nau.h"
+#include "nau/render/irenderer.h"
 
 using namespace nau::render;
 

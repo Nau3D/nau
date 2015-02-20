@@ -1,8 +1,8 @@
 #ifndef SCENEPOSES_H
 #define SCENEPOSES_H
 
-#include <nau/scene/scene.h>
-#include <nau/geometry/meshposeanim.h>
+#include "nau/scene/scene.h"
+#include "nau/geometry/meshposeanim.h"
 
 using namespace nau::geometry;
 

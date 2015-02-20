@@ -1,7 +1,7 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
-#include <nau/geometry/mesh.h>
+#include "nau/geometry/mesh.h"
 
 namespace nau
 {

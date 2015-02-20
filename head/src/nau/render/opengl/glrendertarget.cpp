@@ -1,5 +1,5 @@
-#include <nau/render/opengl/glrendertarget.h>
-#include <nau.h>
+#include "nau/render/opengl/glrendertarget.h"
+#include "nau.h"
 
 #include <assert.h>
 

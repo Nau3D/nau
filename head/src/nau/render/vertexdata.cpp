@@ -1,9 +1,9 @@
-#include <nau/render/vertexdata.h>
-#include <nau/config.h>
+#include "nau/render/vertexdata.h"
+#include "nau/config.h"
 #include <assert.h>
 
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/glvertexarray.h>
+#include "nau/render/opengl/glvertexarray.h"
 #endif
 
 using namespace nau::render;

@@ -5,9 +5,9 @@
 #include <vector>
 #include <map>
 
-//#include <nau/render/textureCubeMap.h>
-#include <nau/render/texture.h>
-#include <nau/material/teximage.h>
+//#include "nau/render/textureCubeMap.h"
+#include "nau/render/texture.h"
+#include "nau/material/teximage.h"
 
 
 namespace nau 
