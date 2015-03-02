@@ -37,7 +37,8 @@ GLBuffer::clone() {
 
 	GLBuffer *b = new GLBuffer();
 	b->m_Label = this->m_Label;
-	AttributeValues::copy(b);
+	b->copy(this);
+	//AttributeValues::copy(b);
 	return (IBuffer *)b;
 }
 

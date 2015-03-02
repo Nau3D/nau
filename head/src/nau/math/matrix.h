@@ -301,7 +301,7 @@ namespace nau
 			void transform(vec4 &v) const {
 
 				vector4<T> aux;
-				const float *m = m_Matrix;
+				const T *m = m_Matrix;
 
 				aux.x = (v.x * m[0]) + (v.y * m[4]) + (v.z * m[8]) + (v.w * m[12]);
 				aux.y = (v.x * m[1]) + (v.y * m[5]) + (v.z * m[9]) + (v.w * m[13]);
@@ -317,7 +317,7 @@ namespace nau
 			void transform3(vec4 &v) const {
 
 				vec4 aux;
-				const float *m = this->m_Matrix;
+				const T *m = this->m_Matrix;
 
 				aux.x = (v.x * m[0]) + (v.y * m[4]) + (v.z * m[8]);
 				aux.y = (v.x * m[1]) + (v.y * m[5]) + (v.z * m[9]);
@@ -331,7 +331,7 @@ namespace nau
 			void transform(vec3 &v) const {
 
 				vec3 aux;
-				const float *m = this->m_Matrix;
+				const T *m = this->m_Matrix;
 
 				aux.x = (v.x * m[0]) + (v.y * m[4]) + (v.z * m[8]) + (m[12]);
 				aux.y = (v.x * m[1]) + (v.y * m[5]) + (v.z * m[9]) + (m[13]);
@@ -348,8 +348,8 @@ namespace nau
 
 			void invert()
 			{
-				float *mat = this->m_Matrix;
-				float dst[16];
+				T *mat = this->m_Matrix;
+				T dst[16];
 				float    tmp[12]; /* temp array for pairs                      */
 				float    src[16]; /* array of transpose source matrix */
 				float    det;     /* determinant                                  */
@@ -442,6 +442,99 @@ namespace nau
 
 				setMatrix(m.m_Matrix);
 				return *this;
+			}
+
+			void translate(const vec3 &v) {
+
+				matrix4<T> translation;
+
+				translation.set(3, 0, v.x);
+				translation.set(3, 1, v.y);
+				translation.set(3, 2, v.z);
+
+				multiply(translation);
+			}
+			
+			void translate(float x, float y, float z) {
+
+				matrix4<T> translation;
+
+				translation.set(3, 0, x);
+				translation.set(3, 1, y);
+				translation.set(3, 2, z);
+
+				multiply(translation);
+			}
+
+			void scale(const vec3 &v) {
+
+				matrix4<T> scale;
+				scale.set(0, 0, v.x);
+				scale.set(1, 1, v.y);
+				scale.set(2, 2, v.z);
+
+				multiply(scale);
+			}
+
+			void scale(float x, float y, float z) {
+
+				matrix4<T> scale;
+				scale.set(0, 0, x);
+				scale.set(1, 1, y);
+				scale.set(2, 2, z);
+
+				multiply(scale);
+			}
+
+			void rotate(float angle, vec3 &axis) {
+
+				rotate(angle, axis.x, axis.y, axis.z);
+			}
+
+			void rotate(float angle, float x, float y, float z)
+			{
+				matrix4<T> matrix;
+				float radAngle = nau::math::DegToRad(angle);
+				float co = cos(radAngle);
+				float si = sin(radAngle);
+				float x2 = x*x;
+				float y2 = y*y;
+				float z2 = z*z;
+
+				matrix.set(0, 0, x2 + (y2 + z2) * co);
+				matrix.set(1, 0, x * y * (1 - co) - z * si);
+				matrix.set(2, 0, x * z * (1 - co) + y * si);
+				matrix.set(3, 0, 0.0f);
+
+				matrix.set(0, 1, x * y * (1 - co) + z * si);
+				matrix.set(1, 1, y2 + (x2 + z2) * co);
+				matrix.set(2, 1, y * z * (1 - co) - x * si);
+				matrix.set(3, 1, 0.0f);
+
+				matrix.set(0, 2, x * z * (1 - co) - y * si);
+				matrix.set(1, 2, y * z * (1 - co) + x * si);
+				matrix.set(2, 2, z2 + (x2 + y2) * co);
+				matrix.set(3, 2, 0.0f);
+
+				matrix.set(0, 3, 0.0f);
+				matrix.set(1, 3, 0.0f);
+				matrix.set(2, 3, 0.0f);
+				matrix.set(3, 3, 1.0f);
+
+				multiply(matrix);
+			}
+
+			bool isIdentity() {
+
+				T p_Identity[] = { 1.0f, 0.0f, 0.0f, 0.0f,
+					0.0f, 1.0f, 0.0f, 0.0f,
+					0.0f, 0.0f, 1.0f, 0.0f,
+					0.0f, 0.0f, 0.0f, 1.0f };
+
+				if (memcmp(m_Matrix, p_Identity, 16 * sizeof(float)))
+					return false;
+				else
+					return true;
 			}
 
 		protected:

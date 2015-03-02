@@ -1,24 +1,23 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include "nau/clogger.h"
+#include "nau/material/colormaterial.h"
+#include "nau/material/materialTexture.h"
+#include "nau/material/programvalue.h"
+//#include "nau/material/texturemat.h"
+#include "nau/material/imaterialbuffer.h"
+#include "nau/render/imageTexture.h"
+#include "nau/render/iprogram.h"
+#include "nau/render/istate.h" 
+#include "nau/render/texture.h"
+
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <map>
 #include <string>
-
-#include "nau/material/colormaterial.h"
-#include "nau/render/imageTexture.h"
-#include "nau/material/programvalue.h"
-#include "nau/material/texturemat.h"
-#include "nau/material/imaterialbuffer.h"
-
-#include "nau/render/iprogram.h"
-#include "nau/render/istate.h" 
-#include "nau/render/texture.h"
-#include "nau/clogger.h"
-
-
+#include <vector>
 
 using namespace nau::render;
 
@@ -38,13 +37,15 @@ namespace nau
 //			typedef enum  { FRONT_TO_BACK, BACK_TO_FRONT, NONE} orderType;
 
 			nau::material::ColorMaterial m_Color;
-			nau::material::TextureMat *m_Texmat;
+//			nau::material::TextureMat *m_Texmat;
 #if NAU_OPENGL_VERSION >=  420
-			std::map<int, ImageTexture*> m_ImageTexture;
+			std::map<int, ImageTexture*> m_ImageTextures;
 #endif
 
 			// ID -> (binding point, *buffer)
 			std::map<int, IMaterialBuffer *> m_Buffers;
+
+			std::map<int, MaterialTexture *> m_Textures;
 
 //			std::string m_Shader;
 			nau::render::IProgram *m_Shader;
@@ -89,15 +90,16 @@ namespace nau
 			IMaterialBuffer *getBuffer(int id);
 			//int getBufferBindingPoint(int id);
 
-			nau::material::TextureMat* getTextures (void);
+//			nau::material::TextureMat* getTextures (void);
+			MaterialTexture *getMaterialTexture(int unit);
 			bool createTexture (int unit, std::string fn);
 			void attachTexture (int unit, std::string label);
 			void attachTexture(int unit, Texture *t);
 			Texture *getTexture(int unit);
 			TextureSampler* getTextureSampler(unsigned int unit);
 			void unsetTexture(int unit);
-			std::vector<std::string> *getTextureNames();
-			std::vector<int> *getTextureUnits();
+			void getTextureNames(std::vector<std::string> *vs);
+			void getTextureUnits(std::vector<int> *vi);
 
 			void attachProgram (std::string shaderName);
 			void Material::cloneProgramFromMaterial(Material *mat);
@@ -114,21 +116,14 @@ namespace nau
 			std::map<std::string, nau::material::ProgramValue>& getUniformValues();
 			ProgramValue *getProgramValue(std::string name);
 			void setValueOfUniform(std::string name, void *values);
-			std::vector<std::string> *getValidProgramValueNames();
-			std::vector<std::string> *getUniformNames();
-
-
-
+			void getValidProgramValueNames(std::vector<std::string> *vs);
+			void getUniformNames(std::vector<std::string> *vs);
 
 			nau::material::ColorMaterial& getColor (void);
 			nau::render::IState* getState (void);
 
 			void setState(IState *s);
-
-
-
 		};
-
 	};
 };
 #endif // MATERIAL_H

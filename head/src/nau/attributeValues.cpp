@@ -75,6 +75,46 @@ AttributeValues::setPropi(IntProperty prop, int value) {
 	m_IntProps[prop] = value;
 }
 
+
+// ----------------------------------------------
+//		INT2
+// ----------------------------------------------
+
+
+ivec2 &
+AttributeValues::getPropi2(Int2Property prop) {
+
+	return m_Int2Props[prop];
+}
+
+
+bool
+AttributeValues::isValidi2(Int2Property prop, ivec2 &value) {
+
+	Attribute attr = m_Attribs->get(prop, Enums::IVEC2);
+	if (attr.getName() == "NO_ATTR")
+		return false;
+	ivec2 *max, *min;
+	if (attr.getRangeDefined()) {
+		max = (ivec2 *)attr.getMax();
+		min = (ivec2 *)attr.getMin();
+
+		if (max != NULL && value > *max)
+			return false;
+		if (min != NULL && value < *min)
+			return false;
+	}
+	return true;
+}
+
+
+void
+AttributeValues::setPropi2(Int2Property prop, ivec2 &value) {
+
+	assert(isValidi2(prop, value));
+	m_Int2Props[prop] = value;
+}
+
 // ----------------------------------------------
 //		UINT
 // ----------------------------------------------
@@ -452,23 +492,47 @@ AttributeValues::setPropm3(Mat3Property prop, mat3 &value) {
 //		All
 // ----------------------------------------------
 
+const AttributeValues& 
+AttributeValues::operator =(const AttributeValues &to) {
+
+	if (this != &to) {
+		m_EnumProps = to.m_EnumProps;
+		m_IntProps = to.m_IntProps;
+		m_Int2Props = to.m_Int2Props;
+		m_UIntProps = to.m_UIntProps;
+		m_UInt3Props = to.m_UInt3Props;
+		m_BoolProps = to.m_BoolProps;
+		m_Bool4Props = to.m_Bool4Props;
+		m_FloatProps = to.m_FloatProps;
+		m_Float2Props = to.m_Float2Props;
+		m_Float3Props = to.m_Float3Props;
+		m_Float4Props = to.m_Float4Props;
+		m_Mat3Props = to.m_Mat3Props;
+		m_Mat4Props = to.m_Mat4Props;
+		m_Attribs = to.m_Attribs;
+	}
+	return *this;
+}
+
 
 void
 AttributeValues::copy(AttributeValues *to) {
 
 	//to->m_StringProps = m_StringProps;
-	to->m_EnumProps =   m_EnumProps;
-	to->m_IntProps =    m_IntProps;
-	to->m_UIntProps =   m_UIntProps;
-	to->m_UInt3Props = m_UInt3Props;
-	to->m_BoolProps = m_BoolProps;
-	to->m_Bool4Props =  m_Bool4Props;
-	to->m_FloatProps =  m_FloatProps;
-	to->m_Float2Props = m_Float2Props;
-	to->m_Float3Props = m_Float3Props;
-	to->m_Float4Props = m_Float4Props;
-	to->m_Mat3Props =   m_Mat3Props;
-	to->m_Mat4Props =   m_Mat4Props;
+	m_EnumProps = to->m_EnumProps;
+	m_IntProps = to->m_IntProps;
+	m_Int2Props = to->m_Int2Props;
+	m_UIntProps = to->m_UIntProps;
+	m_UInt3Props = to->m_UInt3Props;
+	m_BoolProps = to->m_BoolProps;
+	m_Bool4Props = to->m_Bool4Props;
+	m_FloatProps = to->m_FloatProps;
+	m_Float2Props = to->m_Float2Props;
+	m_Float3Props = to->m_Float3Props;
+	m_Float4Props = to->m_Float4Props;
+	m_Mat3Props = to->m_Mat3Props;
+	m_Mat4Props = to->m_Mat4Props;
+	m_Attribs = to->m_Attribs;
 }
 
 
@@ -478,6 +542,7 @@ AttributeValues::clearArrays() {
 	//to->m_StringProps = m_StringProps;
 	m_EnumProps.clear();
 	m_IntProps.clear();
+	m_Int2Props.clear();
 	m_UIntProps.clear();
 	m_UInt3Props.clear();
 	m_BoolProps.clear();
@@ -523,6 +588,19 @@ AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 				}
 			}
 			return(&(m_IntProps[prop]));
+			break;
+		case Enums::IVEC2:
+			if (m_Int2Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)	
+					m_Int2Props[prop] = *(ivec2 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined attribute of type IVEC2");
+					SLOG("Accessing undefined attribute of type IVEC2 - This should never occur");
+					m_Int2Props[prop] = 0;
+				}
+			}
+			return(&(m_Int2Props[prop]));
 			break;
 		case Enums::UINT:
 			if (m_UIntProps.count(prop) == 0) {
@@ -672,6 +750,9 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, void *value) {
 	case Enums::INT:
 		setPropi((IntProperty)prop, *(int *)value);
 		break;
+	case Enums::IVEC2:
+		setPropi2((Int2Property)prop, *(ivec2 *)value);
+		break;
 	case Enums::UINT:
 		setPropui((UIntProperty)prop, *(unsigned int *)value);
 		break;
@@ -718,6 +799,9 @@ AttributeValues::isValid(unsigned int prop, Enums::DataType type, void *value) {
 		break;
 	case Enums::INT:
 		return isValidi((IntProperty)prop, *(int *)value);
+		break;
+	case Enums::IVEC2:
+		return isValidi2((Int2Property)prop, *(ivec2 *)value);
 		break;
 	case Enums::UINT:
 		return isValidui((UIntProperty)prop, *(unsigned int *)value);
@@ -789,6 +873,7 @@ AttributeValues::initArrays() {
 
 	m_Attribs->initAttribInstanceEnumArray(m_EnumProps);
 	m_Attribs->initAttribInstanceIntArray(m_IntProps);
+	m_Attribs->initAttribInstanceInt2Array(m_Int2Props);
 	m_Attribs->initAttribInstanceUIntArray(m_UIntProps);
 	m_Attribs->initAttribInstanceUInt3Array(m_UInt3Props);
 	m_Attribs->initAttribInstanceBoolArray(m_BoolProps);
@@ -804,6 +889,25 @@ AttributeValues::initArrays() {
 
 AttributeValues::AttributeValues() {
 
+}
+
+
+AttributeValues::AttributeValues(const AttributeValues &to) {
+
+	m_EnumProps = to.m_EnumProps;
+	m_IntProps = to.m_IntProps;
+	m_Int2Props = to.m_Int2Props;
+	m_UIntProps = to.m_UIntProps;
+	m_UInt3Props = to.m_UInt3Props;
+	m_BoolProps = to.m_BoolProps;
+	m_Bool4Props = to.m_Bool4Props;
+	m_FloatProps = to.m_FloatProps;
+	m_Float2Props = to.m_Float2Props;
+	m_Float3Props = to.m_Float3Props;
+	m_Float4Props = to.m_Float4Props;
+	m_Mat3Props = to.m_Mat3Props;
+	m_Mat4Props = to.m_Mat4Props;
+	m_Attribs = to.m_Attribs;
 }
 
 

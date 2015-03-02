@@ -28,11 +28,11 @@
 		<material name="gatherInfo">
 			<shader name="gatherInfo">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
 											component="PROJECTION_VIEW_MODEL" />										
-					<valueof uniform="VM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="VM"  type="CURRENT" context="RENDERER" 
 											component="VIEW_MODEL" />										
-					<valueof uniform="Normal"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="Normal"  type="CURRENT" context="RENDERER" 
 											component="NORMAL" />										
 				</values>
 			</shader>
@@ -40,22 +40,22 @@
 		<material name="ambOcc">
 			<shader name="ambOcc">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
 											component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="VM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="VM"  type="CURRENT" context="RENDERER" 
 											component="VIEW_MODEL" />
-					<valueof uniform="M"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="M"  type="CURRENT" context="RENDERER" 
 											component="MODEL" />
 											
 					<valueof uniform="CamV" type="CAMERA" context="MainCamera"
 											component="VIEW_MATRIX" />
 					<valueof uniform="CamP" type="CAMERA" context="MainCamera"
 											component="PROJECTION_MATRIX" />
-					<valueof uniform="depth" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="depth" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
-					<valueof uniform="normals" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="normals" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="1" />		
-					<valueof uniform="positions"		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="positions"		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="2" />											
 				</values>
 			</shader>

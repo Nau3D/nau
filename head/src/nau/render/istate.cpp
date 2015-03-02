@@ -85,7 +85,7 @@ IState::clone() {
 
 	IState *res = IState::create();
 
-	copy(res);
+	res->copy(this);
 
 	//std::map< int, int>::iterator iterInt;
 	//iterInt = m_IntProps.begin();

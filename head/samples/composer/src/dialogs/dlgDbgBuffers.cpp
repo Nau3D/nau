@@ -8,6 +8,8 @@
 #include <nau.h>
 #include <nau/system/fileutil.h>
 
+using namespace nau::system;
+
 #include <GL/glew.h>
 
 BEGIN_EVENT_TABLE(DlgDbgBuffers, wxDialog)

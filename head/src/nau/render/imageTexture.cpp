@@ -23,6 +23,8 @@ ImageTexture::Init() {
 	Attribs.add(Attribute(ACCESS, "ACCESS", Enums::DataType::ENUM, false));
 	// BOOL
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
+	// INT
+	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::BOOL, true, new int(-1)));
 
 	NAU->registerAttributes("IMAGE_TEXTURE", &Attribs);
 
@@ -37,10 +39,10 @@ bool ImageTexture::Inited = Init();
 
 
 ImageTexture*
-ImageTexture::Create (std::string label, unsigned int texID, unsigned int level, unsigned int access) {
+ImageTexture::Create(std::string label, unsigned int unit, unsigned int texID, unsigned int level, unsigned int access) {
 
 #ifdef NAU_OPENGL
-	return new GLImageTexture (label, texID, level, access);
+	return new GLImageTexture (label, unit, texID, level, access);
 #elif NAU_DIRECTX
 	//Meter função para DirectX
 #endif
@@ -48,10 +50,10 @@ ImageTexture::Create (std::string label, unsigned int texID, unsigned int level,
 
 
 ImageTexture*
-ImageTexture::Create (std::string label, unsigned int texID) {
+ImageTexture::Create(std::string label, unsigned int unit, unsigned int texID) {
 
 #ifdef NAU_OPENGL
-	return new GLImageTexture (label, texID);
+	return new GLImageTexture (label, unit, texID);
 #elif NAU_DIRECTX
 	//Meter função para DirectX
 #endif

@@ -13,7 +13,7 @@
 			<scene name="Arvores" 
 				   filename="..\..\models\ntg-bin-pl3d-secxxi\arvores.cbo" />
 			<scene name="Main" type="OctreeUnified" 
-				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3dsecXXI-octreeUnified.cbo" />
+				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3d-secxxi.cbo" />
 		</scenes>
 		<viewports>
 			<viewport name="MainViewport">

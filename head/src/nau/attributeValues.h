@@ -13,6 +13,7 @@
 #define STRING_PROP(A,B) static const StringProperty A = (StringProperty)B 
 #define ENUM_PROP(A,B) static const EnumProperty A = (EnumProperty)B
 #define INT_PROP(A,B) static const IntProperty A = (IntProperty)B 
+#define INT2_PROP(A,B) static const Int2Property A = (Int2Property)B 
 #define UINT_PROP(A,B) static const UIntProperty A = (UIntProperty)B 
 #define UINT3_PROP(A,B) static const UInt3Property A = (UInt3Property)B 
 
@@ -62,7 +63,18 @@ namespace nau {
 		virtual bool isValidi(IntProperty prop, int value);
 		virtual void setPropi(IntProperty prop, int value);
 
-	// UINT
+	// INT2
+	protected:
+		std::map<int, ivec2> m_Int2Props;
+
+	public:
+		typedef enum {} Int2Property;
+
+		virtual ivec2& getPropi2(Int2Property prop);
+		virtual bool isValidi2(Int2Property prop, ivec2 &value);
+		virtual void setPropi2(Int2Property prop, ivec2 &value);
+
+		// UINT
 	protected:
 		std::map<int,unsigned int> m_UIntProps;
 
@@ -188,8 +200,11 @@ namespace nau {
 		void initArrays();
 
 		AttributeValues();
+		AttributeValues(const AttributeValues &mt);
 
 		~AttributeValues();
+
+		const AttributeValues& operator =(const AttributeValues &mt);
 	};
 
 };

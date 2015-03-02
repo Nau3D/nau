@@ -14,7 +14,7 @@ using namespace nau::material;
 using namespace nau::math;
 using namespace nau;
 
-typedef std::pair<MaterialGroup*, ITransform*> pair_MatGroup_Transform;
+typedef std::pair<MaterialGroup*, mat4*> pair_MatGroup_Transform;
 
 MaterialSortRenderQueue::MaterialSortRenderQueue(void)
 {
@@ -99,7 +99,7 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 		for ( ; groupIter != nau::geometry::BoundingBox::getGeometry()->getMaterialGroups().end(); groupIter++ ) {
 			MaterialGroup *aGroup = (*groupIter);;
 			Material *aMaterial = MATERIALLIBMANAGER->getMaterial(DEFAULTMATERIALLIBNAME, aGroup->getMaterialName());
-			ITransform *trans = ((nau::geometry::BoundingBox *)(aObject->getBoundingVolume()))->getTransform();
+			mat4 *trans = &((nau::geometry::BoundingBox *)(aObject->getBoundingVolume()))->getTransform();
 			if (0 == m_RenderQueue.count (0)){
 					m_RenderQueue[0] = new std::map <Material*, std::vector<pair_MatGroup_Transform >* >;
 				}
@@ -110,7 +110,7 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 				}
 				std::vector<pair_MatGroup_Transform > *matGroupVec = (*materialMap)[aMaterial];
 				nau::geometry::BoundingBox *bb = (nau::geometry::BoundingBox *)(aObject->getBoundingVolume());
-				matGroupVec->push_back( pair_MatGroup_Transform(aGroup, bb->getTransform()));
+				matGroupVec->push_back( pair_MatGroup_Transform(aGroup, &(bb->getTransform())));
 		}
 	}
 #endif

@@ -33,13 +33,14 @@ namespace nau
 
 			BOOL_PROP(CLEAR, 0);
 
-
+			INT_PROP(UNIT, 0);
+			
 			static AttribSet Attribs;
 
-			static ImageTexture* Create (std::string label, unsigned int texID, unsigned int level, unsigned int access);
-			static ImageTexture* Create (std::string label, unsigned int texID);
+			static ImageTexture* Create(std::string label, unsigned int unit, unsigned int texID, unsigned int level, unsigned int access);
+			static ImageTexture* Create(std::string label, unsigned int unit, unsigned int texID);
 
-			virtual void prepare(int unit) = 0;
+			virtual void prepare() = 0;
 			virtual void restore() = 0;
 		
 			virtual ~ImageTexture(void){};

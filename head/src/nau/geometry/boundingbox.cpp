@@ -19,7 +19,8 @@ BBox *BoundingBox::Geometry = NULL;
 
 BoundingBox::BoundingBox(void):
 	m_vPoints(3),
-	m_vLocalPoints(3) 
+	m_vLocalPoints(3),
+	m_GeometryTransform()
 {
 	m_vPoints[MIN].set ((float)MAXFLOAT, (float)MAXFLOAT, (float)MAXFLOAT);
 	m_vPoints[MAX].set ((float)-MAXFLOAT, (float)-MAXFLOAT, (float)-MAXFLOAT);
@@ -27,7 +28,7 @@ BoundingBox::BoundingBox(void):
 	m_vLocalPoints[MIN].set ((float)MAXFLOAT, (float)MAXFLOAT, (float)MAXFLOAT);
 	m_vLocalPoints[MAX].set ((float)-MAXFLOAT, (float)-MAXFLOAT, (float)-MAXFLOAT);
 
-	m_GeometryTransform.setScale(-1.0f);
+	m_GeometryTransform.scale(-1.0f);
 
 #ifdef NAU_RENDER_FLAGS
 	if (Geometry == NULL) {
@@ -55,8 +56,8 @@ BoundingBox::BoundingBox (const BoundingBox &aBoundingBox):
 
 	m_vLocalPoints[MIN] = aBoundingBox.m_vLocalPoints[MIN];
 	m_vLocalPoints[MAX] = aBoundingBox.m_vLocalPoints[MAX];
-
-	m_GeometryTransform.clone((ITransform *)(&(aBoundingBox.m_GeometryTransform)));
+	m_GeometryTransform.copy(aBoundingBox.m_GeometryTransform);
+	//m_GeometryTransform.clone((ITransform *)(&(aBoundingBox.m_GeometryTransform)));
 }
 
 
@@ -72,10 +73,11 @@ BoundingBox::getGeometry()
 }
 
 
-ITransform *
+mat4 &
 BoundingBox::getTransform()
 {
-	return &m_GeometryTransform;
+	m_GeometryTransform;
+	return m_GeometryTransform;
 }
 
 
@@ -89,7 +91,9 @@ void BoundingBox::set(vec3 min, vec3 max) {
 
 	_calculateCenter();
 
-	m_GeometryTransform.setTranslation(m_vPoints[CENTER]);
+	m_GeometryTransform.setIdentity();
+	m_GeometryTransform.translate(m_vPoints[CENTER]);
+	//m_GeometryTransform.setTranslation();
 	m_GeometryTransform.scale(	
 						0.5 * (m_vPoints[MAX].x - m_vPoints[MIN].x),
 						0.5 * (m_vPoints[MAX].y - m_vPoints[MIN].y),
@@ -136,7 +140,8 @@ BoundingBox::calculate (const std::vector<VertexData::Attr> &vertices)
 	m_vLocalPoints[MIN] = m_vPoints[MIN];
 	m_vLocalPoints[MAX] = m_vPoints[MAX];
 
-	m_GeometryTransform.setTranslation(m_vPoints[CENTER]);
+	m_GeometryTransform.setIdentity();
+	m_GeometryTransform.translate(m_vPoints[CENTER]);
 	m_GeometryTransform.scale(	
 						0.5 * (m_vPoints[MAX].x - m_vPoints[MIN].x),
 						0.5 * (m_vPoints[MAX].y - m_vPoints[MIN].y),
@@ -146,10 +151,9 @@ BoundingBox::calculate (const std::vector<VertexData::Attr> &vertices)
 
 
 void
-BoundingBox::setTransform (ITransform &aTransform)
+BoundingBox::setTransform (mat4 &m)
 {
-	mat4 m = aTransform.getMat44();
-	m_GeometryTransform.setMat44(m);
+	m_GeometryTransform.copy(m);
 
 	std::vector<vec4> vertices (8);
 
@@ -174,7 +178,7 @@ BoundingBox::setTransform (ITransform &aTransform)
 	//vertices[7].set (m_vPoints[MIN].x, m_vPoints[MAX].y, m_vPoints[MAX].z);
 
 	for (int i = 0; i < 8; i++) {
-		aTransform.getMat44().transform (vertices[i]);
+		m.transform (vertices[i]);
 	}
 
 	//aTransform.getMat44().transform (m_vPoints[MIN]);
@@ -263,7 +267,8 @@ BoundingBox::compound (const IBoundingVolume  *volume)
 	}
 	_calculateCenter();
 	
-	m_GeometryTransform.setTranslation(m_vPoints[CENTER]);
+	m_GeometryTransform.setIdentity();
+	m_GeometryTransform.translate(m_vPoints[CENTER]);
 	m_GeometryTransform.scale(	0.5 * (m_vPoints[MAX].x - m_vPoints[MIN].x),
 						0.5 * (m_vPoints[MAX].y - m_vPoints[MIN].y),
 						0.5 * (m_vPoints[MAX].z - m_vPoints[MIN].z));
@@ -297,15 +302,15 @@ BoundingBox::getType (void) const
 }
 
 
-std::vector<vec3>& 
-BoundingBox::getPoints (void) const
+std::vector<vec3> 
+BoundingBox::getPoints (void) 
 { 
 	return m_vPoints;
 }
 
 
 std::vector<vec3>& 
-BoundingBox::getNonTransformedPoints (void) const
+BoundingBox::getNonTransformedPoints (void) 
 { 
 	return m_vLocalPoints;
 }

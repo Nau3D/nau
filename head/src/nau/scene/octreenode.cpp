@@ -5,7 +5,7 @@
 #undef LOGGING_ON
 #include "nau/render/vertexdata.h"
 #include "nau/material/materialgroup.h"
-#include "nau/math/simpletransform.h"
+#include "nau/math/matrix.h"
 #include "nau.h"
 
 #include <assert.h>
@@ -243,7 +243,7 @@ void OctreeNode::tightBoundingVolume() {
 
 
 void 
-OctreeNode::updateNodeTransform(nau::math::ITransform *t)
+OctreeNode::updateNodeTransform(nau::math::mat4 &t)
 {
 	if (0 != m_pLocalMesh) {
 		updateGlobalTransform(t);

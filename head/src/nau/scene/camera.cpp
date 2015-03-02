@@ -8,8 +8,7 @@
 #include "nau/geometry/boundingbox.h"
 #include "nau/geometry/mesh.h"
 #include "nau/material/materialgroup.h"
-#include "nau/math/mat4.h"
-#include "nau/math/simpletransform.h"
+#include "nau/math/matrix.h"
 #include "nau/math/utils.h"
 #include "nau/render/irenderer.h"
 
@@ -92,34 +91,12 @@ Camera::Camera (const std::string &name) :
 	m_Name = name;
 	m_pViewport = NAU->getDefaultViewport();
 
-	//m_Float4Props[POSITION].set(0.0f, 0.0f, 0.0f, 1.0f);
-	//m_Float4Props[VIEW_VEC].set(0.0f, 0.0f, -1.0f, 0.0f);
-	//m_Float4Props[NORMALIZED_VIEW_VEC].set(0.0f, 0.0f, -1.0f, 0.0f);
-
-	//m_Float4Props[NORMALIZED_RIGHT_VEC].set(1.0f, 0.0f, 0.0f, 0.0f);
-
-	//m_Float4Props[UP_VEC].set(0.0f, 1.0f, 0.0f, 0.0f);
-	//m_Float4Props[NORMALIZED_UP_VEC].set(0.0f, 1.0f, 0.0f, 0.0f);
-
-	//m_Float4Props[LOOK_AT_POINT].set(0.0f, 0.0f, -1.0f, 1.0f);
-
-	//m_FloatProps[FOV] = 60.0f;
-	//m_FloatProps[TOP] = 1.0f;
-	//m_FloatProps[BOTTOM] = -1.0f;
-	//m_FloatProps[LEFT] = -1.0f;
-	//m_FloatProps[RIGHT] = 1.0f;
-	//m_FloatProps[NEARP] = 1.0f;
-	//m_FloatProps[FARP] = 10000.0f;
-	//m_FloatProps[ELEVATION_ANGLE] = 0.0f;
-	//m_FloatProps[ZX_ANGLE] = (float)M_PI;
-
 	buildViewMatrix();
 	buildInverses();
 
 	m_StaticCondition = false;
 
 	m_BoundingVolume = new BoundingBox;
-	m_Transform = new SimpleTransform;
 	setVectorsFromSpherical();
 
 	// Adding a Mesh with the frustum lines
@@ -150,7 +127,7 @@ Camera::Camera (const std::string &name) :
 	//aMaterialGroup->setMaterialName("__Emission White");
 
 	renderable->addMaterialGroup (aMaterialGroup);
-	m_Transform = & m_Mat4Props[VIEW_INVERSE_MATRIX];
+	m_Transform = m_Mat4Props[VIEW_INVERSE_MATRIX];
 	setRenderable (renderable);
 
 	aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Red");
@@ -177,8 +154,6 @@ Camera::Camera (const std::string &name) :
 
 Camera::~Camera (void)
 {
-	m_Transform = NULL;
-	m_pViewport = NULL;
 }
 
 
@@ -223,28 +198,32 @@ Camera::updateProjection ()
 }
 
 
-void Camera::setPropm4(Mat4Property prop, mat4 &mat) 
-{
-	m_Mat4Props[prop].setMat44(mat);
-}
+//void Camera::setPropm4(Mat4Property prop, mat4 &mat) 
+//{
+//	m_Mat4Props[prop] = mat;
+//}
 
 
 void 
 Camera::setPropf(FloatProperty prop, float f) 
 {
-	m_FloatProps[prop] = f;
+	
 	vec3 v;
 
 	switch(prop) {
 
 		case ZX_ANGLE:
 		case ELEVATION_ANGLE:
+			m_FloatProps[prop] = f;
 			setVectorsFromSpherical();
 			break;
 		default:
+			AttributeValues::setPropf(prop, f);
+			buildViewMatrix();
 			buildProjectionMatrix();
 			buildProjectionViewMatrix();
 			buildTS05PVMMatrix();
+			buildInverses();
 	}
 }
 
@@ -314,6 +293,8 @@ Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 			m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
 			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 			break;
+		default:
+			AttributeValues::setPropf4(prop, x, y, z, w);
 	}
 	buildViewMatrix();
 	buildInverses();
@@ -325,32 +306,12 @@ Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 void 
 Camera::setPrope(EnumProperty prop, int value) 
 {
-	m_EnumProps[prop] = value;
+	AttributeValues::setPrope(prop, value);
 
 	buildProjectionMatrix();
 	buildProjectionViewMatrix();
 	buildTS05PVMMatrix();
 }
-
-
-//void 
-//Camera::setProp(int prop, Enums::DataType type, void *value) {
-//
-//	vec4 *v;
-//	switch (type) {
-//
-//		case Enums::FLOAT:
-//			setPropf((FloatProperty)prop, *(float *)value);
-//			break;
-//		case Enums::VEC4:
-//			v = (vec4 *)value;
-//			setPropf4((Float4Property)prop, v->x, v->y, v->z, v->w);
-//			break;
-//		case Enums::INT:
-//			m_IntProps[prop] = *(int *)value;
-//			break;
-//	}
-//}
 
 
 void *
@@ -361,18 +322,18 @@ Camera::getProp(int prop, Enums::DataType type) {
 // ARF: Check who calls this
 		case Enums::MAT4:
 			assert(m_Mat4Props.count(prop) > 0);
-			return((void *)m_Mat4Props[prop].getMat44().getMatrix());
+			return((void *)m_Mat4Props[prop].getMatrix());
 		default:
 			return AttributeValues::getProp(prop, type);
 		}
 }
 
 
-const mat4&
-Camera::getPropm4(Mat4Property prop)
-{
-	return m_Mat4Props[prop].getMat44();
-}
+//const mat4&
+//Camera::getPropm4(Mat4Property prop)
+//{
+//	return m_Mat4Props[prop];
+//}
 
 
 IRenderable& 
@@ -417,13 +378,13 @@ Camera::getRenderable (void)
 	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 	buildInverses();
-	m_ResultTransform->clone(m_GlobalTransform);
-	m_ResultTransform->compose(*m_Transform);
+	m_ResultTransform.copy(m_GlobalTransform);
+	m_ResultTransform *= m_Mat4Props[VIEW_INVERSE_MATRIX];
 	return (*m_Renderable);
 }
 
 
-const IBoundingVolume*
+IBoundingVolume*
 Camera::getBoundingVolume ()
 {
 	calculateBoundingVolume();
@@ -475,8 +436,8 @@ Camera::buildInverses(void) {
 	// This is a simpler inverse because the view matrix has a specific format
 	//mat4& tmp = const_cast<mat4&>(m_ViewMatrix->getMat44());
 	//mat4& tmp2 = const_cast<mat4&>(m_ViewMatrixInverse->getMat44());
-	mat4& tmp = const_cast<mat4&>(m_Mat4Props[VIEW_MATRIX].getMat44());
-	mat4& tmp2 = const_cast<mat4&>(m_Mat4Props[VIEW_INVERSE_MATRIX].getMat44());
+	mat4 &tmp = m_Mat4Props[VIEW_MATRIX];
+	mat4 &tmp2 = m_Mat4Props[VIEW_INVERSE_MATRIX];
 
 	int i,j;
 	float aux;
@@ -496,7 +457,7 @@ Camera::buildInverses(void) {
 		tmp2.set(3,i,-aux);
 	}
 
-	m_Mat4Props[PROJECTION_INVERSE_MATRIX].clone(&m_Mat4Props[PROJECTION_MATRIX]);
+	m_Mat4Props[PROJECTION_INVERSE_MATRIX] = m_Mat4Props[PROJECTION_MATRIX];
 	m_Mat4Props[PROJECTION_INVERSE_MATRIX].invert();
 }
 
@@ -511,21 +472,22 @@ Camera::setVectorsFromSpherical()
 	vec3 v;
 	v = Spherical::toCartesian(m_FloatProps[ZX_ANGLE], m_FloatProps[ELEVATION_ANGLE]);
 	//m_Float4Props[NORMALIZED_VIEW_VEC].set( v.x, v.y, v.z, 0.0f);
-	m_Float4Props[VIEW_VEC].set(v.x, v.y, v.z, 0.0f);
+	setPropf4(VIEW_VEC, v.x, v.y, v.z, 0.0f);
+	//m_Float4Props[VIEW_VEC].set(v.x, v.y, v.z, 0.0f);
 
-	m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]);
-	m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
+	//m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]);
+	//m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
 
-	m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
+	//m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 
-	vec4 v4 = m_Float4Props[POSITION];
-	v4 += m_Float4Props[VIEW_VEC];
-	m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
+	//vec4 v4 = m_Float4Props[POSITION];
+	//v4 += m_Float4Props[VIEW_VEC];
+	//m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
 
-	buildViewMatrix();
-	buildInverses();
-	buildProjectionViewMatrix();
-	buildTS05PVMMatrix();
+	//buildViewMatrix();
+	//buildInverses();
+	//buildProjectionViewMatrix();
+	//buildTS05PVMMatrix();
 }
 
 
@@ -537,7 +499,7 @@ Camera::buildProjectionMatrix() {
 
 	m_Mat4Props[PROJECTION_MATRIX].setIdentity();
 
-	mat4& projection = const_cast<mat4&>(m_Mat4Props[PROJECTION_MATRIX].getMat44()); 
+	mat4 &projection = m_Mat4Props[PROJECTION_MATRIX]; 
 
 	if (m_EnumProps[PROJECTION_TYPE] == PERSPECTIVE) {
 		projection.set (0, 0, f / aspect);
@@ -572,6 +534,8 @@ Camera::setViewport (Viewport* aViewport)
 		buildProjectionMatrix();
 		buildProjectionViewMatrix();
 		buildTS05PVMMatrix();
+		buildInverses();
+
 	}
 }
 
@@ -592,15 +556,15 @@ Camera::buildTS05PVMMatrix(void)
 	m_Mat4Props[TS05_PVM_MATRIX].translate (0.5f, 0.5f, 0.5f);
 	m_Mat4Props[TS05_PVM_MATRIX].scale (0.5f);
 
-	m_Mat4Props[TS05_PVM_MATRIX].compose (m_Mat4Props[PROJECTION_VIEW_MATRIX]);
+	m_Mat4Props[TS05_PVM_MATRIX] *= m_Mat4Props[PROJECTION_VIEW_MATRIX];
 }
 
 void
 Camera::buildProjectionViewMatrix (void)
 {
 	m_Mat4Props[PROJECTION_VIEW_MATRIX].setIdentity();
-	m_Mat4Props[PROJECTION_VIEW_MATRIX].compose(m_Mat4Props[PROJECTION_MATRIX]);
-	m_Mat4Props[PROJECTION_VIEW_MATRIX].compose(m_Mat4Props[VIEW_MATRIX]);
+	m_Mat4Props[PROJECTION_VIEW_MATRIX] *= m_Mat4Props[PROJECTION_MATRIX];
+	m_Mat4Props[PROJECTION_VIEW_MATRIX] *= m_Mat4Props[VIEW_MATRIX];
 }
 
 void
@@ -611,7 +575,7 @@ Camera::buildViewMatrix (void)
 	s = m_Float4Props[NORMALIZED_RIGHT_VEC];
 	v = m_Float4Props[VIEW_VEC];
 
-	mat4& viewMatrix = const_cast<mat4&>(m_Mat4Props[VIEW_MATRIX].getMat44()); 
+	mat4 &viewMatrix = m_Mat4Props[VIEW_MATRIX]; 
 
 	viewMatrix.setIdentity();
 
@@ -627,17 +591,11 @@ Camera::buildViewMatrix (void)
 	viewMatrix.set (1, 2, -v.y);
 	viewMatrix.set (2, 2, -v.z);
 
-	if (m_IsDynamic) {
-		vec3 p = m_Transform->getTranslation();
-		m_Mat4Props[VIEW_MATRIX].translate(-p.x, -p.y-0.85, -p.z);
-	}
-	else {
-		vec4 p = m_Float4Props[POSITION];
-		m_Mat4Props[VIEW_MATRIX].translate(-p.x, -p.y, -p.z);
-	}
+	vec4 p = m_Float4Props[POSITION];
+	m_Mat4Props[VIEW_MATRIX].translate(-p.x, -p.y, -p.z);
+
 	if (this->m_Renderable)
 		this->m_Renderable->resetCompilationFlags();
-
 }
 
 
@@ -730,10 +688,10 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera)
 	//}
 
 //	m_UpVector = aCamera->getUpVector();
-	ITransform &viewMatrix = m_Mat4Props[VIEW_MATRIX];
+	mat4 &viewMatrix = m_Mat4Props[VIEW_MATRIX];
 
 	for (int i = 0; i < 8; i++){
-		viewMatrix.getMat44().transform (points[i]);
+		viewMatrix.transform (points[i]);
 	}
 
 
@@ -787,17 +745,17 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType, n
 	if (eventType == "VIEWPORT_CHANGED" && m_pViewport != NULL && m_pViewport->getName() == sender)
 		updateProjection();
 
-	if (eventType == "DYNAMIC_CAMERA") {
+	//if (eventType == "DYNAMIC_CAMERA") {
 
-		vec3 p = m_Transform->getTranslation();
-		setPropf4(POSITION,p.x,p.y,p.z,1.0f);
-		buildViewMatrix();
+	//	vec3 p = m_Transform->getTranslation();
+	//	setPropf4(POSITION,p.x,p.y,p.z,1.0f);
+	//	buildViewMatrix();
 
-		result.set(p.x,p.y,p.z); 
-		m_Event.setData(&result);
-		EVENTMANAGER->notifyEvent("CAMERA_POSITION", m_Name,"", &m_Event);
+	//	result.set(p.x,p.y,p.z); 
+	//	m_Event.setData(&result);
+	//	EVENTMANAGER->notifyEvent("CAMERA_POSITION", m_Name,"", &m_Event);
 
-	}
+	//}
 	if(eventType == "CAMERA_ORIENTATION"  && !m_LookAt) {
 		CameraOrientation *f=(CameraOrientation *)evt->getData();
 		m_FloatProps[ELEVATION_ANGLE] = f->getBeta();

@@ -1,5 +1,7 @@
 #include "fileutil.h"
 
+using namespace nau::system;
+
 
 bool 
 FileUtil::exists(const std::string &fn) {

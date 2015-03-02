@@ -22,28 +22,25 @@
 		<material name="House">
 			<shader name="perpixel-color-shadow">
 				<values>
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="M"     		 type="CURRENT" context="MATRIX" 
+					<valueof uniform="M"     		 type="CURRENT" context="RENDERER" 
 														component="MODEL" />
 														
 									
-					<valueof uniform="VM"     		 type="CURRENT" context="MATRIX" 
+					<valueof uniform="VM"     		 type="CURRENT" context="RENDERER" 
 														component="VIEW_MODEL" />
 														
 									
-					<valueof uniform="texUnit"		type="CURRENT"
-												context="TEXTURE"
+					<valueof uniform="texUnit"		type="CURRENT" context="MATERIAL_TEXTURE"
 												component="UNIT"
 												id=0 />
 														
-					<!--valueof uniform="camWorldPos"	type="CAMERA" 
-												context="MainCamera"	
+					<!--valueof uniform="camWorldPos"	type="CAMERA" context="MainCamera"	
 												component="POSITION" /-->
 
-					<valueof uniform="camWorldPos"	type="CURRENT" 
-												context="CAMERA"	
+					<valueof uniform="camWorldPos"	type="CURRENT" context="CAMERA"	
 												component="POSITION" />
 
 				</values>

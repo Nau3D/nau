@@ -37,7 +37,7 @@ namespace nau
 			std::string getName();
 			void build (std::vector<nau::scene::SceneObject*> &sceneObjects);
 		
-			void updateOctreeTransform(nau::math::ITransform *m_Transform);
+			void updateOctreeTransform(nau::math::mat4 &m_Transform);
 			int getNumberOfVertices () { return 0; };
 
 			nau::math::vec3& getVertice (unsigned int v);

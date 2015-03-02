@@ -23,10 +23,9 @@
 				<NEARP value= 1/>
 				<FARP value= 100/>
 				<POSITION x=-16.4 y=9 z=-14.2 />
-				<!--VIEW x=0.0 y=0.0 z=-1.0 /-->
-				<ZX_ANGLE value = 0.76/>
-				<ELEVATION_ANGLE value=-0.24/>
-				<UP x=0 y=1 z=0 />
+				<!--VIEW x=1.0 y=-0.2 z=1.0 /-->
+				<ZX_ANGLE value = 0.707/>
+				<ELEVATION_ANGLE value=-0.3/>
 			</camera>
 		</cameras>
 		

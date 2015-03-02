@@ -17,9 +17,9 @@ namespace nau
 			virtual bool isStatic();
 			virtual void setStaticCondition(bool aCondition);
 
-			virtual const nau::geometry::IBoundingVolume* getBoundingVolume();
+			virtual nau::geometry::IBoundingVolume* getBoundingVolume();
 			virtual void setBoundingVolume (nau::geometry::IBoundingVolume *b);
-			virtual const nau::math::ITransform& getTransform();
+			virtual const nau::math::mat4& getTransform();
 			//virtual void setTransform (nau::math::ITransform *t);
 
 			virtual void burnTransform (void);

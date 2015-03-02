@@ -59,7 +59,7 @@ namespace nau
 			OctreeByMatNode ();
 			
 			OctreeByMatNode (OctreeByMatNode *parent, vec3 bbMin, vec3 bbMax, int nodeId = 0, int nodeDepth = 0);
-			void updateNodeTransform(nau::math::ITransform *t);
+			void updateNodeTransform(nau::math::mat4 &t);
 			//void addRenderable (nau::render::IRenderable *aRenderable);
 			void setRenderable (nau::render::IRenderable *renderable);
 

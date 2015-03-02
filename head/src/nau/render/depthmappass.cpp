@@ -150,7 +150,7 @@ DepthMapPass::doPass (void)
 	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
 
 	RENDERER->setCamera(m_LightCamera);
-	frustum.setFromMatrix (RENDERER->getMatrix(IRenderer::PROJECTION_VIEW_MODEL));
+	frustum.setFromMatrix ((float *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4));
 
 	RENDERMANAGER->clearQueue();
 

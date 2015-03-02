@@ -203,7 +203,7 @@ void Octree::unitize(float min, float max) {
 
 
 void 
-Octree::updateOctreeTransform(nau::math::ITransform *t)
+Octree::updateOctreeTransform(nau::math::mat4 &t)
 {
 	m_pOctreeRootNode->updateGlobalTransform(t);
 }

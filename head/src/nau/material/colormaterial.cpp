@@ -20,7 +20,7 @@ ColorMaterial::Init() {
 	// FLOAT
 	Attribs.add(Attribute(SHININESS, "SHININESS", Enums::DataType::FLOAT, false, new float(0)));
 
-	NAU->registerAttributes("COLOR_MATERIAL", &Attribs);
+	NAU->registerAttributes("COLOR", &Attribs);
 
 	return true;
 }
@@ -41,7 +41,7 @@ bool ColorMaterial::Inited = Init();
 
 ColorMaterial::ColorMaterial() {
 
-	registerAndInitArrays("COLOR_MATERIAL", Attribs);
+	registerAndInitArrays("COLOR", Attribs);
 }
 
 
@@ -83,7 +83,7 @@ ColorMaterial::clear() {
 void 
 ColorMaterial::clone( ColorMaterial &mat)
 {
-	mat.copy(this);
+	copy(&mat);
 }
 
 

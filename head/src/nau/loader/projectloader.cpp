@@ -12,7 +12,6 @@
 
 #include "nau/geometry/primitive.h"
 #include "nau/material/programvalue.h"
-#include "nau/math/transformfactory.h"
 
 #include "nau/render/ibuffer.h"
 #include "nau/render/passCompute.h"
@@ -51,6 +50,7 @@ using namespace nau::material;
 using namespace nau::render;
 using namespace nau::scene;
 using namespace nau::geometry;
+using namespace nau::system;
 //
 using namespace nau::event_;
 //
@@ -503,28 +503,34 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					NAU_THROW("File %s\nScene %s\nInvalid scene type", ProjectLoader::s_File.c_str(), pNameSO);
 				if (pNameSO)
 					go->setName(pNameSO);
-
+				bool alreadyThere = false;
+				if (RESOURCEMANAGER->hasRenderable(pNameSO, ""))
+					alreadyThere = true;
 				Primitive *p = (Primitive *)RESOURCEMANAGER->createRenderable(pPrimType, pNameSO);
-				std::string n = p->getParamfName(0);
-				unsigned int i = 0;
-				while (Primitive::NoParam != n) {
 
-					float value;
-					if (TIXML_SUCCESS == pElementAux->QueryFloatAttribute (n.c_str(), &value)) 
-						p->setParam(i,value);
-					++i;
-					n = p->getParamfName(i);
+				if (!alreadyThere) {
+					std::string n = p->getParamfName(0);
+					unsigned int i = 0;
+					while (Primitive::NoParam != n) {
+
+						float value;
+						if (TIXML_SUCCESS == pElementAux->QueryFloatAttribute(n.c_str(), &value))
+							p->setParam(i, value);
+						++i;
+						n = p->getParamfName(i);
+					}
+					if (i)
+						p->build();
 				}
-				if (i)
-					p->build();
-								
 				go->setRenderable(p);
 
-				if (pMaterial) {
-					if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME,pMaterial)) {
-						Material *mat = MATERIALLIBMANAGER->createMaterial(pMaterial);
+				if (!alreadyThere) {
+					if (pMaterial) {
+						if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME, pMaterial)) {
+							Material *mat = MATERIALLIBMANAGER->createMaterial(pMaterial);
+						}
+						go->setMaterial(pMaterial);
 					}
-					go->setMaterial(pMaterial);
 				}
 
 				std::vector<std::string> excluded;
@@ -599,7 +605,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					NAU_THROW("File %s\nScene: %s\nFile is not specified", ProjectLoader::s_File.c_str(), pName);
 
 				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName))) {
-					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pFileName);
+					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName,  pFileName);
 				}
 				nau::Nau::getInstance()->loadAsset (FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName), pName, s);
 			}
@@ -3869,11 +3875,12 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 			if (0 == pComponent) {
 				NAU_THROW("No component found for uniform %s, in library %s in material %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
 			}
-			if (!ProgramValue::Validate(pType, pContext, pComponent))
+			if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
+//			if (!ProgramValue::Validate(pType, pContext, pComponent))
 				NAU_THROW("Uniform %s is not valid, in library %s in material %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
 
 			int id = 0;
-			if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE")) || (0 == strcmp(pContext,"IMAGE_TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
+			if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"MATERIAL_TEXTURE")) || (0 == strcmp(pContext,"IMAGE_TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
 				if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
 					NAU_THROW("No id found for uniform %s, in library %s in material %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
 				if (id < 0)

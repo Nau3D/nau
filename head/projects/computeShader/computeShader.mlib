@@ -20,7 +20,7 @@
 				<values>									
 					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
 														id=1 component="UNIT" />
-					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE"
+					<valueof uniform="texUnit"		type="CURRENT" context="MATERIAL_TEXTURE"
 														id=1 component="UNIT" />								
 				</values>
 			</shader>

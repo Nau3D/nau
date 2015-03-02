@@ -10,7 +10,7 @@ using namespace nau::resource;
 
 Material::Material() : 
    m_Color (),
-   m_Texmat (0),
+   //m_Texmat (0),
    m_Shader (NULL),
    m_ProgramValues(),
    m_UniformValues(),
@@ -24,14 +24,12 @@ Material::Material() :
 
 Material::~Material()
 {
-   if (0 != m_Texmat) {
-      delete m_Texmat;
-	  m_Texmat = 0;
-   }
    if (0 != m_State) {
 		delete m_State;
 		m_State = 0;
    }
+   // Must delete textures
+
 }
 
 
@@ -53,8 +51,16 @@ Material::clone() { // check clone Program Values
 
    mat->m_Color.clone(m_Color);
 
-   if (m_Texmat != 0)
-		mat->m_Texmat = m_Texmat->clone();
+   mat->m_Buffers = m_Buffers;
+
+   for (auto mt : m_Textures) {
+
+	   mat->m_Textures[mt.first] = mt.second;
+   }
+
+#if NAU_OPENGL_VERSION >=  420
+   mat->m_ImageTextures = m_ImageTextures;
+#endif
 
    if (m_State != 0)
 		mat->m_State = m_State->clone();
@@ -90,27 +96,27 @@ Material::getUniformValues() {
 	return m_UniformValues;
 }
 
+
 void 
-Material::setName (std::string name)
-{
+Material::setName (std::string name) {
+
    m_Name = name;
 }
 
+
 std::string& 
-Material::getName ()
-{
+Material::getName () {
+
    return m_Name;
 }
 
 
-std::vector<std::string> *
-Material::getValidProgramValueNames() 
-{
+void 
+Material::getValidProgramValueNames(std::vector<std::string> *names) {
+
 	// valid program value names are program values that are not part of the uniforms map
 	// this is because there may be a program value specified in the project file whose type
 	// does not match the shader variable type
-
-	std::vector<std::string> *names = new std::vector<std::string>; 
 
 	std::map<std::string,ProgramValue>::iterator progValIter;
     progValIter = m_ProgramValues.begin();
@@ -119,14 +125,11 @@ Material::getValidProgramValueNames()
 		if (m_UniformValues.count(progValIter->first) == 0)
 		names->push_back(progValIter->first); 
 	}
-	return names;
-
 }
 
-std::vector<std::string> *
-Material::getUniformNames() 
-{
-	std::vector<std::string> *names = new std::vector<std::string>; 
+
+void
+Material::getUniformNames(std::vector<std::string> *names) {
 
 	std::map<std::string,ProgramValue>::iterator progValIter;
     progValIter = m_UniformValues.begin();
@@ -134,8 +137,6 @@ Material::getUniformNames()
     for (; progValIter != m_UniformValues.end(); progValIter++) {
 		names->push_back(progValIter->first); 
 	}
-	return names;
-
 }
 
 
@@ -148,23 +149,24 @@ Material::getProgramValue(std::string name) {
 		return NULL;
 }
 
-std::vector<std::string> *
-Material::getTextureNames() {
 
-	if (m_Texmat)
-		return m_Texmat->getTextureNames();
-	else
-		return NULL;
+void
+Material::getTextureNames(std::vector<std::string> *vs) {
+
+	for (auto t : m_Textures) {
+
+		vs->push_back(t.second->getTexture()->getLabel());
+	}
 }
 
 
-std::vector<int> *
-Material::getTextureUnits() {
+void
+Material::getTextureUnits(std::vector<int> *vi) {
 
-	if (m_Texmat)
-		return m_Texmat->getTextureUnits();
-	else
-		return NULL;
+	for (auto t : m_Textures) {
+
+		vi->push_back(t.second->getPropi(MaterialTexture::UNIT));
+	}
 }
 
 
@@ -215,11 +217,7 @@ Material::checkProgramValuesAndUniforms() {
 			SLOG("Material %s: uniform %s types are not compatiple (%s, %s)", m_Name.c_str(), s.c_str(), iu.getStringSimpleType().c_str(), Enums::DataTypeToString[m_ProgramValues[s].getValueType()].c_str());
 
 		}
-
-
 	}
-
-	
 }
 
 
@@ -230,16 +228,12 @@ Material::prepareNoShaders ()
 
 	m_Color.prepare();
 
-	if (0 != m_Texmat) {
-		m_Texmat->prepare(m_State);
-	}
+	for (auto t : m_Textures)
+		t.second->bind();
 
 #if NAU_OPENGL_VERSION >=  420
-	if (m_ImageTexture.size() != 0) {
-		std::map<int, ImageTexture*>::iterator it = m_ImageTexture.begin();
-		for ( ; it != m_ImageTexture.end(); ++it)
-			it->second->prepare(it->first);
-	}
+	for (auto it: m_ImageTextures) 
+		it.second->prepare();
 #endif
 
 	for (auto b : m_Buffers) {
@@ -250,7 +244,6 @@ Material::prepareNoShaders ()
 
 void 
 Material::prepare () {
-
 
 	{
 		PROFILE("Buffers");
@@ -267,18 +260,15 @@ Material::prepare () {
 		m_Color.prepare();
 	}
 	{	PROFILE("Texture");
-		if (0 != m_Texmat) {
-			m_Texmat->prepare(m_State);
+		for (auto t : m_Textures) {
+			t.second->bind();
 		}
 	}
 
 #if NAU_OPENGL_VERSION >=  420
 	{
-		if (m_ImageTexture.size() != 0) {
-			std::map<int, ImageTexture*>::iterator it = m_ImageTexture.begin();
-			for ( ; it != m_ImageTexture.end(); ++it)
-				it->second->prepare(it->first);
-		}
+		for (auto it : m_ImageTextures)
+			it.second->prepare();
 	}
 #endif
 	{
@@ -300,22 +290,20 @@ void
 Material::restore() {
 
    m_Color.restore();
+
    if (NULL != m_Shader && m_useShader) {
 	   m_Shader->restore();
     }
-   if (0 != m_Texmat) {
-      m_Texmat->restore(m_State);
-   }
 
-   for (auto b : m_Buffers) {
+   for (auto t : m_Textures)
+	   t.second->unbind();
 
+   for (auto b : m_Buffers) 
 	   b.second->unbind();
-   }
+   
 #if NAU_OPENGL_VERSION >=  420
-   for (auto b : m_ImageTexture) {
-
+   for (auto b : m_ImageTextures) 
 	   b.second->restore();
-   }
 #endif
 
 }
@@ -326,18 +314,16 @@ void
 Material::restoreNoShaders() {
 
    m_Color.restore();
-   if (0 != m_Texmat) {
-      m_Texmat->restore(m_State);
-   }
-   for (auto b : m_Buffers) {
 
-	   b.second->unbind();
-   }
+   for (auto t : m_Textures)
+	   t.second->unbind();
+
+   for (auto b : m_Buffers)
+		b.second->unbind();
+
 #if NAU_OPENGL_VERSION >=  420
-   for (auto b : m_ImageTexture) {
-
-	   b.second->restore();
-   }
+	for (auto b : m_ImageTextures) 
+		b.second->restore();
 #endif
 }
 
@@ -354,16 +340,16 @@ Material::setState(IState *s) {
 void
 Material::attachImageTexture(std::string label, unsigned int unit, unsigned int texID) {
 
-	ImageTexture *it = ImageTexture::Create(label, texID);
-	m_ImageTexture[unit] = it;
+	ImageTexture *it = ImageTexture::Create(label, unit, texID);
+	m_ImageTextures[unit] = it;
 }
 
 
 ImageTexture *
 Material::getImageTexture(unsigned int unit) {
 
-	if (m_ImageTexture.count(unit))
-		return m_ImageTexture[unit];
+	if (m_ImageTextures.count(unit))
+		return m_ImageTextures[unit];
 	else
 		return NULL;
 }
@@ -398,15 +384,14 @@ Material::hasBuffer(int id) {
 
 
 bool
-Material::createTexture (int unit, std::string fn)
-{
-   if (0 == m_Texmat) {
-      m_Texmat = new TextureMat;
-   }
+Material::createTexture (int unit, std::string fn) {
 
-   Texture *tex = RESOURCEMANAGER->addTexture (fn);
-   if (tex) {
-		m_Texmat->setTexture (unit, tex);
+	Texture *tex = RESOURCEMANAGER->addTexture (fn);
+	if (tex) {
+		MaterialTexture *t = new MaterialTexture(unit);
+		t->setSampler(TextureSampler::create(tex));
+		t->setTexture(tex);
+		m_Textures[unit] = t;
 		return(true);
    }
    else {
@@ -419,57 +404,62 @@ Material::createTexture (int unit, std::string fn)
 void 
 Material::unsetTexture(int unit) {
 
-	m_Texmat->unset(unit);
-}
-
-
-
-void
-Material::attachTexture (int unit, Texture *t)
-{
-	if (0 == m_Texmat) {
-      m_Texmat = new TextureMat;
-   }
-
-	m_Texmat->setTexture (unit, t);
+	m_Textures.erase(unit);
 }
 
 
 void
-Material::attachTexture (int unit, std::string label)
-{
-	if (0 == m_Texmat) {
-	  m_Texmat = new TextureMat;
-	}
-	
+Material::attachTexture (int unit, Texture *tex) {
+
+	MaterialTexture *t = new MaterialTexture(unit);
+	t->setSampler(TextureSampler::create(tex));
+	t->setTexture(tex);
+	m_Textures[unit] = t;
+}
+
+
+void
+Material::attachTexture (int unit, std::string label) {
+
 	Texture *tex = RESOURCEMANAGER->getTexture (label);
 
 	assert(tex != NULL);
-	// if (tex == NULL)
-	//	   tex = RESOURCEMANAGER->newEmptyTexture(label);
 
-	m_Texmat->setTexture (unit, tex);
+	MaterialTexture *t = new MaterialTexture(unit);
+	t->setSampler(TextureSampler::create(tex));
+	t->setTexture(tex);
+	m_Textures[unit] = t;
 }
 
 
 Texture*
 Material::getTexture(int unit) {
 
-	if (m_Texmat)
-		return(m_Texmat->getTexture(unit));
+	if (m_Textures.count(unit))
+		return m_Textures[unit]->getTexture() ;
 	else
 		return(NULL);
 }
 
 
-// unit must be in [0,7]
 TextureSampler*
-Material::getTextureSampler(unsigned int unit)
-{
-	if (m_Texmat)
-		return m_Texmat->getTextureSampler(unit);
+Material::getTextureSampler(unsigned int unit) {
+
+	if (m_Textures.count(unit))
+		return m_Textures[unit]->getSampler();
 	else
 		return(NULL);
+}
+
+
+MaterialTexture *
+Material::getMaterialTexture(int unit) {
+
+	if (m_Textures.count(unit))
+		return m_Textures[unit];
+	else
+		return(NULL);
+
 }
 
 
@@ -502,13 +492,12 @@ Material::cloneProgramFromMaterial(Material *mat) {
 	
 		m_UniformValues[(*iter).first] = (*iter).second;
 	}
-
 }
 
 
 std::string 
-Material::getProgramName() 
-{
+Material::getProgramName() {
+
 	if (m_Shader)
 		return m_Shader->getName();
 	else
@@ -516,22 +505,11 @@ Material::getProgramName()
 }
 
 
-
 nau::render::IProgram * 
-Material::getProgram() 
-{
+Material::getProgram() {
+
 	return m_Shader;
 }
-
-			
-//bool 
-//Material::isInSpecML(std::string name) 
-//{
-//	if (m_ProgramValues.count(name) == 0)
-//		return false;
-//	else 
-//		return m_ProgramValues[name].isInSpecML();
-//}
 
 			
 void 
@@ -543,15 +521,15 @@ Material::setValueOfUniform(std::string name, void *values) {
 
 
 void
-Material::clearProgramValues() 
-{
+Material::clearProgramValues() {
+
 	m_ProgramValues.clear();
 }
 
 
 void 
-Material::addProgramValue (std::string name, nau::material::ProgramValue progVal)
-{
+Material::addProgramValue (std::string name, nau::material::ProgramValue progVal) {
+
 	// if specified in the material lib, add it to the program values
 	if (progVal.isInSpecML())
 		m_ProgramValues[name] = progVal;
@@ -570,37 +548,41 @@ Material::addProgramValue (std::string name, nau::material::ProgramValue progVal
 				m_UniformValues[name] = progVal;
 		}
 	}
-
-		
 }
 
+
 nau::render::IState*
-Material::getState (void)
-{
+Material::getState (void) {
+
    return m_State;
 }
 
 
 nau::material::ColorMaterial& 
-Material::getColor (void)
-{
+Material::getColor (void) {
+
    return m_Color;
 }
 
 
-nau::material::TextureMat* 
-Material::getTextures (void)
-{
-   return m_Texmat;
-}
+//nau::material::TextureMat* 
+//Material::getTextures (void) {
+//
+//   return m_Texmat;
+//}
 
 
 void 
-Material::clear()
-{
+Material::clear() {
+
    m_Color.clear();
-   if (m_Texmat != 0)
-		m_Texmat->clear();
+   m_Buffers.clear();
+   m_Textures.clear();
+
+#if NAU_OPENGL_VERSION >=  420
+   m_ImageTextures.clear();
+#endif
+
    m_Shader = NULL; 
    m_ProgramValues.clear();
    m_Enabled = true;
@@ -611,22 +593,22 @@ Material::clear()
 
 
 void
-Material::enable (void)
-{
+Material::enable (void) {
+
    m_Enabled = true;
 }
 
 
 void
-Material::disable (void)
-{
+Material::disable (void) {
+
    m_Enabled = false;
 }
 
 
 bool
-Material::isEnabled (void)
-{
+Material::isEnabled (void) {
+
    return m_Enabled;
 }
 

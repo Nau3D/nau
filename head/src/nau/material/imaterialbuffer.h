@@ -5,15 +5,9 @@
 #include "nau/attributeValues.h"
 #include "nau/render/ibuffer.h"
 
-
-#ifndef _USE_MATH_DEFINES
-#define _USE_MATH_DEFINES
-#endif
-#include <cmath>
 #include <string>
 
 using namespace nau;
-
 
 namespace nau
 {
@@ -25,7 +19,6 @@ namespace nau
 
 			INT_PROP(BINDING_POINT, 0);
 			ENUM_PROP(TYPE, 0);
-			//BOOL_PROP(CLEAR, 0);
 
 			static AttribSet Attribs;
 

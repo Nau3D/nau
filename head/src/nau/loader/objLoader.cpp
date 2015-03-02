@@ -12,8 +12,7 @@
 #include "nau/geometry/iboundingvolume.h"
 #include "nau/geometry/boundingvolumefactory.h"
 #include "nau/math/vec3.h"
-#include "nau/math/mat4.h"
-#include "nau/math/transformfactory.h"
+#include "nau/math/matrix.h"
 #include "nau/render/vertexdata.h"
 #include "nau/render/irenderable.h"
 #include "nau/material/materialgroup.h"
@@ -2310,8 +2309,8 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 
 	// Transform
 	// Create Transform
-	ITransform *aTransform = TransformFactory::create ("SimpleTransform");
-
+	//ITransform *aTransform = TransformFactory::create ("SimpleTransform");
+	mat4 aTransform;
 	//// I have NO idea what matrix to generate. Identity, I choose you!
 	//mat4 *mat = new mat4;
 	//aTransform->setMat44(mat);

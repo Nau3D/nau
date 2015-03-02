@@ -360,6 +360,7 @@
     <ClCompile Include="..\src\nau\debug\state.cpp" />
     <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp" />
     <ClCompile Include="..\src\nau\material\imaterialbuffer.cpp" />
+    <ClCompile Include="..\src\nau\material\materialTexture.cpp" />
     <ClCompile Include="..\src\nau\nau.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -496,12 +497,9 @@
     <ClCompile Include="..\src\nau\material\materiallibmanager.cpp" />
     <ClCompile Include="..\src\nau\material\programvalue.cpp" />
     <ClCompile Include="..\src\nau\material\teximage.cpp" />
-    <ClCompile Include="..\src\nau\material\texturemat.cpp" />
     <ClCompile Include="..\src\nau\math\plane.cpp" />
     <ClCompile Include="..\src\nau\math\randomgen.cpp" />
-    <ClCompile Include="..\src\nau\math\simpletransform.cpp" />
     <ClCompile Include="..\src\nau\math\spherical.cpp" />
-    <ClCompile Include="..\src\nau\math\transformfactory.cpp" />
     <ClCompile Include="..\src\nau\render\depthmappass.cpp" />
     <ClCompile Include="..\src\nau\render\indexdata.cpp" />
     <ClCompile Include="..\src\nau\render\iprogram.cpp" />
@@ -615,6 +613,7 @@
     <ClInclude Include="..\src\nau\loader\patchLoader.h" />
     <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h" />
     <ClInclude Include="..\src\nau\material\imaterialbuffer.h" />
+    <ClInclude Include="..\src\nau\material\materialTexture.h" />
     <ClInclude Include="..\src\nau\material\textureSampler.h" />
     <ClInclude Include="..\src\nau\math\matrix.h" />
     <ClInclude Include="..\src\nau\math\vec2.h" />
@@ -732,14 +731,10 @@
     <ClInclude Include="..\src\nau\material\materiallibmanager.h" />
     <ClInclude Include="..\src\nau\material\programvalue.h" />
     <CustomBuildStep Include="..\src\nau\material\teximage.h" />
-    <ClInclude Include="..\src\nau\material\texturemat.h" />
-    <ClInclude Include="..\src\nau\math\itransform.h" />
     <ClInclude Include="..\src\nau\math\mtrand.h" />
     <ClInclude Include="..\src\nau\math\plane.h" />
     <ClInclude Include="..\src\nau\math\randomgen.h" />
-    <ClInclude Include="..\src\nau\math\simpletransform.h" />
     <CustomBuildStep Include="..\src\nau\math\spherical.h" />
-    <ClInclude Include="..\src\nau\math\transformfactory.h" />
     <ClInclude Include="..\src\nau\math\utils.h" />
     <ClInclude Include="..\src\nau\render\depthmappass.h" />
     <ClInclude Include="..\src\nau\render\indexdata.h" />

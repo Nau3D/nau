@@ -27,9 +27,9 @@
 			</color>
 			<shader name="resolveMS">
 				<values>
-					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit"		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
-					<valueof uniform="camM" 		type="CURRENT" context="MATRIX" 
+					<valueof uniform="camM" 		type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL"  />	
 				</values>
 			</shader>

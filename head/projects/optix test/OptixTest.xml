@@ -2,7 +2,7 @@
 <project name="Render Target Test" width=800 height=400>
 	<assets>
 		<scenes>
-			<scene name="MainScene" type="OctreeByMat">
+			<scene name="MainScene" >
 				<!--file>..\ntg-bench\bench.obj</file-->
 				<file name="../../models/Mercado/mercado_e_arvores.cbo"/>
 			</scene>
@@ -85,7 +85,7 @@
 
 				<optixMaterialAttributes>
 					<valueof optixVar="diffuse" type="CURRENT" context="COLOR" component="DIFFUSE" />
-					<valueof optixVar="texCount" type="CURRENT" context="TEXTURE" component="COUNT" />
+					<valueof optixVar="texCount" type="CURRENT" context="RENDERER" component="TEXTURE_COUNT" />
 				</optixMaterialAttributes>
 				<optixGlobalAttributes>
 					<valueof optixVar="lightDir" type="CURRENT" context="LIGHT" id=0 component="DIRECTION" />

@@ -39,11 +39,11 @@ namespace nau
 				y = v.y;
 			};
 
-			vector2 *
-				clone() const {
+			//vector2 *
+			//	clone() const {
 
-				return new vector(*this);
-			};
+			//	return new vector(*this);
+			//};
 
 			void
 				set(T xx, T yy) {

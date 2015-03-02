@@ -53,13 +53,13 @@ SkeletonBone::setName(std::string name)
 	m_Name = name;
 }
 
-SimpleTransform &
+mat4 &
 SkeletonBone::getFullTransform() 
 {
 	return m_CompositeTransform;
 }
 
-SimpleTransform &
+mat4 &
 SkeletonBone::getLocalTransform() 
 {
 	return m_LocalTransform;

@@ -1,10 +1,12 @@
-
 #ifndef NAU_GL_STATE_READER_CPP
 #define NAU_GL_STATE_READER_CPP
+
 #include "state.h"
 #include <GL/glew.h>
 #include "nau.h"
 #include "nau/system/fileutil.h"
+
+using namespace nau::system;
 
 std::map<std::string, State::StateVariable> State::stateVariablesMap;
 //std::map<std::string, State::StateFunction> State::functionMap;

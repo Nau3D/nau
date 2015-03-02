@@ -6,7 +6,7 @@
 #include "nau/material/material.h"
 #include "nau/material/materialgroup.h"
 #include "nau/material/materialid.h"
-#include "nau/math/itransform.h"
+#include "nau/math/matrix.h"
 
 namespace nau
 {
@@ -30,7 +30,7 @@ namespace nau
 			std::map<int, 
 					std::map<nau::material::Material*, 
 							std::vector<std::pair<nau::material::MaterialGroup*, 
-												  nau::math::ITransform*> >* >* > m_RenderQueue;
+												  nau::math::mat4 *> >* >* > m_RenderQueue;
 		};
 	};
 };

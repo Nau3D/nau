@@ -2,7 +2,7 @@
 <project name="Render Target Test" width=1280 height=512 >
 	<assets>
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" param="SWAP_YZ">
 				<file name="..\..\models\Teapot.3ds"/>
 			</scene>
 		</scenes>

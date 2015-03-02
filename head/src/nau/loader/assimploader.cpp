@@ -14,6 +14,7 @@
 
 using namespace nau::loader;
 using namespace nau::geometry;
+using namespace nau::system;
 
 Assimp::Importer AssimpLoader::importer;
 
@@ -157,7 +158,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 
 		}
 	}
-	SimpleTransform m;
+	mat4 m;
 	m.setIdentity();
 	recursiveWalk(aScene, aFilename, sc, sc->mRootNode, m, meshNameMap);
 
@@ -175,10 +176,11 @@ AssimpLoader::writeScene(nau::scene::IScene *aScene, std::string &aFilename)
 
 void 
 AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
-									const  aiScene *sc, const  aiNode* nd, SimpleTransform &m,
+									const  aiScene *sc, const  aiNode* nd, mat4 &m,
 									std::map<unsigned int, std::string> meshNameMap)
 {
-	ITransform *original = m.clone();
+	mat4 original;
+	original.copy(m);
 	
 	 aiMatrix4x4 mA = nd->mTransformation;
 	mA.Transpose();
@@ -186,11 +188,11 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 	memcpy(f,&mA, sizeof(float)*16);
 
 
-	SimpleTransform aux;
+	mat4 aux;
 	mat4 m4;
 	m4.setMatrix(f);
-	aux.setMat44(m4);
-	m.compose(aux);
+	aux.copy(m4);
+	m *= aux;
 
 	for (unsigned int n=0; n < nd->mNumMeshes; ++n) {
 	
@@ -198,7 +200,7 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 		//sc->mMeshes[nd->mMeshes[n]]->mName.data;
 		SceneObject *so = SceneObjectFactory::create("SimpleObject");
 		so->setRenderable(RESOURCEMANAGER->getRenderable(meshNameMap[nd->mMeshes[n]],""));
-		so->setTransform(m.clone());
+		so->setTransform(m);
 		aScene->add(so);
 		}
 	}
@@ -207,9 +209,7 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 		recursiveWalk(aScene, aFilename, sc, nd->mChildren[n], m, meshNameMap);
 	}
 
-	m.clone(original);
-	delete original;
-
+	m.copy(original);
 }
 
 

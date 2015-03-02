@@ -20,22 +20,22 @@
 					<valueof uniform="lightDir" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 
 														
-					<valueof uniform="viewMatrix" 	type="CURRENT" context="MATRIX" 
+					<valueof uniform="viewMatrix" 	type="CURRENT" context="RENDERER" 
 														component="VIEW" />
 					<valueof uniform="invViewMatrix" 		type="CAMERA" context="MainCamera"
 														component="VIEW_INVERSE_MATRIX" />
-					<valueof uniform="projMatrix" 	type="CURRENT" context="MATRIX" 
+					<valueof uniform="projMatrix" 	type="CURRENT" context="RENDERER" 
 														component="PROJECTION" />
 					<valueof uniform="invProjMatrix" 		type="CAMERA" context="MainCamera"
 														component="PROJECTION_INVERSE_MATRIX" />
-					<valueof uniform="normalMatrix" type="CURRENT" context="MATRIX" 
+					<valueof uniform="normalMatrix" type="CURRENT" context="RENDERER" 
 														component="NORMAL" />
 					
 					<valueof uniform="projModelViewMatrix"          	
-													type="CURRENT" context="MATRIX" 
+													type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 																									
-					<valueof uniform="texUnit" 		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />														
 				</values>
 			</shader>

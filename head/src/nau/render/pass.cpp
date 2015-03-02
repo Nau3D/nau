@@ -240,7 +240,7 @@ Pass::doPass (void) {
 
 	prepareBuffers();
 
-	const float *a = RENDERER->getMatrix(IRenderer::PROJECTION_VIEW_MODEL);
+	const float *a = (float *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4);
 	camFrustum.setFromMatrix (a);
 	aCam = RENDERMANAGER->getCamera (m_CameraName);
 	RENDERMANAGER->clearQueue();

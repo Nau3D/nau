@@ -2,7 +2,6 @@
 
 #include "nau.h"
 
-#include "nau/math/simpletransform.h"
 #include "nau/system/TextUtil.h"
 
 using namespace nau::material;
@@ -53,18 +52,18 @@ ProgramValue::Validate(std::string type,std::string context,std::string componen
 		return (id != -1);
 	}
 
-	else if (type == "CURRENT" && context == "MATRIX") {
+	else if (type == "CURRENT" && context == "RENDERER") {
 
-		IRenderer::getPropId(component, &id);
+		IRenderer::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 	}
-	else if (type == "CURRENT" && context == "MOUSE") {
+	//else if (type == "CURRENT" && context == "MOUSE") {
 
-		if (component == "CLICK_X" || component == "CLICK_Y")
-			return true;
-		else
-			return false;
-	}
+	//	if (component == "CLICK_X" || component == "CLICK_Y")
+	//		return true;
+	//	else
+	//		return false;
+	//}
 	else if (type == "CURRENT" && context == "COLOR") {
 
 		ColorMaterial::Attribs.getPropTypeAndId(component, &dt, &id);
@@ -102,6 +101,11 @@ ProgramValue::Validate(std::string type,std::string context,std::string componen
 	else if (type == "CURRENT" && context == "CAMERA") {
 
 		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
+		return (id != -1);
+	}
+	else if (type == "CURRENT" && context == "MATERIAL_TEXTURE") {
+
+		MaterialTexture::Attribs.getPropTypeAndId(component, &dt, &id);
 		return (id != -1);
 	}
 	else if (type == "CURRENT" && context == "STATE") {
@@ -206,37 +210,45 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 			m_Cardinality = Enums::getCardinality(dt);
 			m_Values = (void *)malloc(Enums::getSize(dt));
 		}
-		else if (0 == context.compare("MOUSE")) {
+		if (0 == context.compare("RENDERER")) {
 
-			m_ValueType = Enums::INT;
-			m_Cardinality = Enums::getCardinality(Enums::INT);
-			m_Values = (void *)malloc(Enums::getSize(Enums::INT));
-			if (valueof == "CLICK_X")
-				m_ValueOf = 0;
-			else
-				m_ValueOf = 1;
-		}
-		else if (0 == context.compare("MATRIX")) {
-
-			IRenderer::MatrixAttribs.getPropTypeAndId(valueof, &dt, &attr);
+			IRenderer::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
 			m_Cardinality = Enums::getCardinality(dt);
 			m_Values = (void *)malloc(Enums::getSize(dt));
-			return;
 		}
+		//else if (0 == context.compare("MOUSE")) {
+
+		//	m_ValueType = Enums::INT;
+		//	m_Cardinality = Enums::getCardinality(Enums::INT);
+		//	m_Values = (void *)malloc(Enums::getSize(Enums::INT));
+		//	if (valueof == "CLICK_X")
+		//		m_ValueOf = 0;
+		//	else
+		//		m_ValueOf = 1;
+		//}
+		//else if (0 == context.compare("MATRIX")) {
+
+		//	IRenderer::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+		//	m_ValueOf = attr;
+		//	m_ValueType = dt;
+		//	m_Cardinality = Enums::getCardinality(dt);
+		//	m_Values = (void *)malloc(Enums::getSize(dt));
+		//	return;
+		//}
 
 		else if (0 == context.compare("LIGHT")) {
 		
-			if (0 == valueof.compare("COUNT")) {
+			//if (0 == valueof.compare("COUNT")) {
 
-				m_ValueOf = COUNT;
-				m_ValueType = Enums::INT;
-				m_Cardinality = 1;
-				m_Values = (void *)malloc(Enums::getSize(m_ValueType));
-				//m_IntValue = (int *)malloc(sizeof(int));
-				return;
-			}
+			//	m_ValueOf = COUNT;
+			//	m_ValueType = Enums::INT;
+			//	m_Cardinality = 1;
+			//	m_Values = (void *)malloc(Enums::getSize(m_ValueType));
+			//	//m_IntValue = (int *)malloc(sizeof(int));
+			//	return;
+			//}
 			Light::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
@@ -288,10 +300,20 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 
 			return;
 		}
+		else if (0 == context.compare("MATERIAL_TEXTURE")) {
+
+			MaterialTexture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+			m_ValueOf = attr;
+			m_ValueType = dt;
+			m_Cardinality = Enums::getCardinality(dt);
+			m_Values = (void *)malloc(Enums::getSize(dt));
+
+			return;
+		}
 
 		else if (0 == context.compare("TEXTURE")) {
 		
-			if (0 == valueof.compare("COUNT")) {
+			/*if (0 == valueof.compare("COUNT")) {
 
 				m_ValueOf = COUNT;
 				m_ValueType = Enums::INT;
@@ -299,7 +321,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
 				return;
 			}
-			else if (0 == valueof.compare("UNIT")) {
+			else*/ if (0 == valueof.compare("UNIT")) {
 
 				m_ValueOf = UNIT;
 				m_ValueType = Enums::SAMPLER;
@@ -319,7 +341,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 #if NAU_OPENGL_VERSION >=  420
 		else if (0 == context.compare("IMAGE_TEXTURE")) {
 		
-			if (0 == valueof.compare("COUNT")) {
+/*			if (0 == valueof.compare("COUNT")) {
 
 				m_ValueOf = COUNT;
 				m_ValueType = Enums::INT;
@@ -327,7 +349,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
 				return;
 			}
-			else if (0 == valueof.compare("UNIT")) {
+			else*/ if (0 == valueof.compare("UNIT")) {
 
 				m_ValueOf = UNIT;
 				m_ValueType = Enums::SAMPLER;
@@ -464,48 +486,37 @@ ProgramValue::getValues (void) {
 
 		}
 	   case CURRENT: {
-		   if ("MOUSE" == m_Context) {
-			   int res;
-			   if (m_ValueOf == 0)
-				   res = NAU->getClickX();
-			   else
-				   res = NAU->getClickY();
-			   memcpy(m_Values, &res, sizeof(int));
-			   return m_Values;
-		   }
-		   else if ("MATRIX" == m_Context) {
-			   m_Values = (void *)RENDERER->getMatrix((IRenderer::MatrixType)m_ValueOf);
+		   if ("RENDERER" == m_Context) {
+			   m_Values = (void *)RENDERER->getProp(m_ValueOf, m_ValueType);
 			   return m_Values;
 		   }
 		   else if ("COLOR" == m_Context) {	
-			   m_Values = RENDERER->getColorProp(m_ValueOf, m_ValueType);
+			   m_Values = RENDERER->getMaterial()->getProp(m_ValueOf, m_ValueType);
+			   return m_Values;
+		   }
+		   else if ("MATERIAL_TEXTURE" == m_Context) {
+			   MaterialTexture *mt = RENDERER->getMaterialTexture(m_Id);
+			   if (mt != NULL)
+				m_Values = mt->getProp(m_ValueOf, m_ValueType);
 			   return m_Values;
 		   }
 		   else if ("TEXTURE" == m_Context) {
 
-			   if (m_ValueOf == COUNT) {
-				   int m = RENDERER->getTextureCount();
-					memcpy(m_Values,&(m), sizeof(int));
-				}
-			   else if (m_ValueOf == UNIT) {
-
-				   memcpy(m_Values, &m_Id, sizeof(int));
-			   }
-			   else if (m_Id < RENDERER->getTextureCount()) {
+				if (m_Id < RENDERER->getTextureCount()) {
 				   Texture *t = RENDERER->getTexture(m_Id);
 				   m_Values = t->getProp(m_ValueOf, m_ValueType);
-			   }
+				}
 			   return m_Values;
 
 		   }
 #if NAU_OPENGL_VERSION >=  420
 		   else if ("IMAGE_TEXTURE" == m_Context) {
 
-			   if (m_ValueOf == COUNT) {
+			  /* if (m_ValueOf == COUNT) {
 				   int m = RENDERER->getImageTextureCount();
 				   memcpy(m_Values, &m, sizeof(int));
 				}
-			   else if (m_ValueOf == UNIT) {
+			   else*/ if (m_ValueOf == UNIT) {
 
 				   memcpy(m_Values, &m_Id, sizeof(int));
 			   }
@@ -518,12 +529,7 @@ ProgramValue::getValues (void) {
 #endif
 		   else if ("LIGHT" == m_Context) {
 
-			   if (m_ValueOf == COUNT) {
-				   int m = RENDERER->getLightCount();
-				   memcpy(m_Values, &m, sizeof(int));
-				   return m_Values;
-				}
-			   else if (m_Id < RENDERER->getLightCount()) {
+				if (m_Id < RENDERER->getLightCount()) {
 				   Light *l = RENDERER->getLight(m_Id);
 				   m_Values = l->getProp(m_ValueOf, m_ValueType);
 			   }
@@ -619,5 +625,3 @@ ProgramValue::getLoc() {
 
 	return m_Loc;
 }
-
-

@@ -81,7 +81,8 @@ namespace nau {
 		// if in doubt call validate first
 
 		bool validateAttribute(std::string type, std::string context, std::string component);
-		void setAttribute(std::string type, std::string context, 
+		bool validateShaderAttribute(std::string type, std::string context, std::string component);
+		void setAttribute(std::string type, std::string context,
 				 std::string component, int number,
 				 void *values);
 		void *getAttribute(std::string type, std::string context,
@@ -142,8 +143,6 @@ namespace nau {
 
 		void sendKeyToEngine (char keyCode); /***Change this in to a register system. The sub-system register as a particular key receiver*/
 		void setClickPosition(int x, int y);
-		int getClickX();
-		int getClickY();
 
 		void enablePhysics (void);
 		void disablePhysics (void); 

@@ -47,10 +47,10 @@ namespace nau {
 
 
 	  
-    } // namespace TextUtil
+	}; // namespace TextUtil
 
-  } // namespace system
+  }; // namespace system
 
-} // namespace nau
+}; // namespace nau
 
 #endif // TEXTUTIL_H

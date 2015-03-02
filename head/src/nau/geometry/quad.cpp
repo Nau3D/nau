@@ -1,7 +1,6 @@
 #include "nau/geometry/quad.h"
 
 #include "nau/math/vec3.h"
-#include "nau/math/simpletransform.h"
 #include "nau/geometry/mesh.h"
 #include "nau/render/vertexdata.h"
 #include "nau/material/materialgroup.h"
@@ -44,7 +43,6 @@ Quad::Quad(void) :
 
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(6);
 
-	m_Transform = new SimpleTransform;
 
 	indices->at (0) = 0;
 	indices->at (1) = 1;
@@ -53,10 +51,7 @@ Quad::Quad(void) :
 	indices->at (4) = 2;
 	indices->at (5) = 3;
 
-//	aMaterialGroup->setMaterialId (0);
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (renderable);
-	//aMaterialGroup->setMaterialName("__Quad");
 
 	renderable->addMaterialGroup (aMaterialGroup);
 	setRenderable (renderable);

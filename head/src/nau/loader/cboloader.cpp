@@ -6,10 +6,8 @@
 #include "nau/scene/sceneobjectfactory.h"
 #include "nau/geometry/iboundingvolume.h"
 #include "nau/geometry/boundingvolumefactory.h"
+#include "nau/math/matrix.h"
 #include "nau/math/vec3.h"
-//#include "nau/math/bvec4.h"
-#include "nau/math/mat4.h"
-#include "nau/math/transformfactory.h"
 #include "nau/render/irenderable.h"
 #include "nau/material/materialgroup.h"
 #include "nau/material/materialgroup.h"
@@ -33,6 +31,7 @@ using namespace nau::math;
 using namespace nau::geometry;
 using namespace nau::render;
 using namespace nau::material;
+using namespace nau::system;
 
 std::string CBOLoader::m_FileName;
 
@@ -310,9 +309,6 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		//SLOG ("[Reading] Number of points [%d]", nPoints);
 		f.read (reinterpret_cast<char *> (&(points[0])), nPoints * sizeof (vec3));
 
-		_readString (buffer, f);
-		//SLOG ("[Reading] Type of Transform: [%s]", buffer);
-		ITransform *aTransform = TransformFactory::create (buffer);
 		mat4 mat; 
 		f.read (reinterpret_cast<char *> (const_cast<float*>(mat.getMatrix())), sizeof(float)*16);
 
@@ -320,8 +316,8 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		//	SLOG ("Matrix(%d): [%f]", i, mat.getMatrix()[i]);
 		//}
 
-		aTransform->setMat44 (mat);
-		aObject->setTransform (aTransform);
+		//aTransform->setMat44 (mat);
+		aObject->setTransform (mat);
 
 		_readString (buffer, f);
 		//SLOG ("[Reading] Renderable's name: [%s]", buffer);
@@ -405,13 +401,10 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	aBoundingVolume->set(points[0], points[1]);
 	so->setBoundingVolume (aBoundingVolume);
 
-	_readString (buffer, f);
-	//SLOG ("[Reading] Type of Transform: [%s]", buffer);
-	ITransform *aTransform = TransformFactory::create (buffer);
 	mat4 mat; 
 	f.read (reinterpret_cast<char *> (const_cast<float*>(mat.getMatrix())), sizeof(float)*16);
-	aTransform->setMat44 (mat);
-	so->setTransform (aTransform);
+	//aTransform->setMat44 (mat);
+	so->setTransform (mat);
 
 	IRenderable *aRenderable = 0;
 
@@ -458,9 +451,8 @@ CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 		static_cast<std::streamsize> (2) * sizeof (vec3));
 
 	/* Write the transform */
-	const ITransform &aTransform = so->getTransform();
-	_writeString (aTransform.getType(), f);
-	f.write(reinterpret_cast<char*> (const_cast<float *>(aTransform.getMat44().getMatrix())), sizeof(float)*16);
+	 mat4 aTransform = so->getTransform();
+	 f.write(reinterpret_cast<char*> ((float *)aTransform.getMatrix()), sizeof(float) * 16);
 
 
 	IRenderable *aRenderablePtr = so->_getRenderablePtr();
@@ -723,14 +715,14 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 		(*objIter)->writeSpecificData (f);
 		
 		/* Write the bounding volume */
-		const IBoundingVolume *aBoundingVolume = (*objIter)->getBoundingVolume();
+		IBoundingVolume *aBoundingVolume = (*objIter)->getBoundingVolume();
 
 		/* Bounding volume type */
 
 		_writeString (aBoundingVolume->getType(), f);
 
 		/* Bounding volume points */
-		std::vector<vec3> &points = aBoundingVolume->getPoints();
+		std::vector<vec3> points = aBoundingVolume->getPoints();
 
 		size = points.size();
 		f.write (reinterpret_cast<char*> (&size), sizeof(size));
@@ -739,13 +731,10 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 			static_cast<std::streamsize> (size) * sizeof (vec3));
 
 		/* Write the transform */
-		const ITransform &aTransform = (*objIter)->getTransform();
+		mat4 aTransform = (*objIter)->getTransform();
 		
-		/* Transform type */
-		_writeString (aTransform.getType(), f);
-
 		/* The transform's matrix */
-		f.write(reinterpret_cast<char*> (const_cast<float *>(aTransform.getMat44().getMatrix())), sizeof(float)*16);
+		f.write(reinterpret_cast<char*> (const_cast<float *>(aTransform.getMatrix())), sizeof(float)*16);
 
 		IRenderable *aRenderablePtr = (*objIter)->_getRenderablePtr();
 
@@ -842,9 +831,10 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 
 	// write textures
 	for (int i = 0; i < 8; i++) { /***MARK***/ //8!? Is it a magic number!?
-		if (0 != aMaterial->getTextures() && 0 != aMaterial->getTextures()->getTexture(i)) {
-			std::string label = aMaterial->getTextures()->getTexture(i)->getLabel();
-			_writeString (FileUtil::GetRelativePathTo(path,label), f);
+		if (NULL != aMaterial->getTexture(i)) {
+			std::string label = aMaterial->getTexture(i)->getLabel();
+			std::string k = FileUtil::GetRelativePathTo(path, label);
+			_writeString (k, f);
 		} else {
 			_writeString ("<no texture>", f);
 		}

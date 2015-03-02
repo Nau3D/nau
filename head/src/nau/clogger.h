@@ -22,33 +22,33 @@ static const char logLevelNames[][9] = {
 
 class CLogHandler
 {
-private:
-	std::string m_FileName;
-	LogLevel m_LogLevel;
+	private:
+		std::string m_FileName;
+		LogLevel m_LogLevel;
 
-public:
-	CLogHandler (LogLevel level, std::string file);
-	void log(std::string& message);
-	LogLevel getLogLevel ();
+	public:
+		CLogHandler (LogLevel level, std::string file);
+		void log(std::string& message);
+		LogLevel getLogLevel ();
 };
 
 class CLogger
 {
-private:
-	std::vector <CLogHandler*> m_Logs;
-	LogLevel m_LogLevel;
+	private:
+		std::vector <CLogHandler*> m_Logs;
+		LogLevel m_LogLevel;
 
-public:
-	static CLogger& getInstance();
-	void addLog (LogLevel level, std::string file = "");
-	void log (LogLevel logLevel, std::string sourceFile, int line, std::string message);
-	void setLogLevel (LogLevel level);
-	LogLevel getLogLevel ();
+	public:
+		static CLogger& getInstance();
+		void addLog (LogLevel level, std::string file = "");
+		void log (LogLevel logLevel, std::string sourceFile, int line, std::string message);
+		void setLogLevel (LogLevel level);
+		LogLevel getLogLevel ();
 
-private:
-	CLogger(void);
-public:
-	~CLogger(void);
+	private:
+		CLogger(void);
+	public:
+		~CLogger(void);
 };
 
 #define LOG_CONFIG(message, ...) \

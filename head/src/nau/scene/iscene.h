@@ -5,7 +5,6 @@
 #include "nau/attributeValues.h"
 #include "nau/event/ilistener.h"
 #include "nau/geometry/frustum.h"
-#include "nau/math/transformfactory.h"
 #include "nau/scene/camera.h"
 #include "nau/scene/light.h"
 
@@ -44,7 +43,8 @@ namespace nau
 		protected:
 			std::string m_Name;
 			bool m_Compiled;
-			ITransform *m_Transform;
+			//ITransform *m_Transform;
+			mat4 m_Transform;
 			bool m_Visible;
 
 			void updateTransform();
@@ -89,9 +89,9 @@ namespace nau
 
 			virtual void unitize() = 0;
 
-			virtual nau::math::ITransform *getTransform() = 0;
-			virtual void setTransform(nau::math::ITransform *t) = 0;
-			virtual void transform(nau::math::ITransform *t) = 0;
+			virtual nau::math::mat4 &getTransform() = 0;
+			virtual void setTransform(nau::math::mat4 &t) = 0;
+			virtual void transform(nau::math::mat4 &t) = 0;
 
 			virtual nau::geometry::IBoundingVolume& getBoundingVolume (void) = 0;
 

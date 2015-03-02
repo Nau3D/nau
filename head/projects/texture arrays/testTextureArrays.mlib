@@ -30,7 +30,7 @@
 		<material name="showArrays">
 			<shader name="showArrays">
 				<values>
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
 				</values>
 			</shader>
@@ -64,28 +64,28 @@
 					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
 														component="AMBIENT" />
 		
-					<valueof uniform="M"          		type="CURRENT" context="MATRIX" 
+					<valueof uniform="M"          		type="CURRENT" context="RENDERER" 
 														component="MODEL" />
 														
-					<valueof uniform="P"          		type="CURRENT" context="MATRIX" 
+					<valueof uniform="P"          		type="CURRENT" context="RENDERER" 
 														component="PROJECTION" />
 														
-					<valueof uniform="V"          		type="CURRENT" context="MATRIX" 
+					<valueof uniform="V"          		type="CURRENT" context="RENDERER" 
 														component="VIEW" />
 
 					<valueof uniform="camUp"   			type="CURRENT" context="CAMERA" 
 														component="NORMALIZED_UP" />
 					
 					<valueof uniform="camView"   		type="CURRENT" context="CAMERA" 
-														component="NORMALIZED_VIEW_VEC" />
+														component="VIEW" />
 					
 					<valueof uniform="camPos"   		type="CURRENT" context="CAMERA" 
 														component="POSITION" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />			
 				</values>
 			</shader>

@@ -199,7 +199,7 @@ void OctreeByMat::unitize(float min, float max) {
 
 
 void 
-OctreeByMat::updateOctreeTransform(nau::math::ITransform *t)
+OctreeByMat::updateOctreeTransform(nau::math::mat4 &t)
 {
 	m_pOctreeRootNode->updateNodeTransform(t);
 }

@@ -32,11 +32,11 @@
 													
 													
 					<valueof uniform="PV" 			type="CURRENT" 
-													context="MATRIX" 
+													context="RENDERER" 
 													component="PROJECTION_VIEW" />
 
 					<valueof uniform="modelMatrix" 	type="CURRENT" 
-													context="MATRIX" 
+													context="RENDERER" 
 													component="MODEL" />
 														
 														

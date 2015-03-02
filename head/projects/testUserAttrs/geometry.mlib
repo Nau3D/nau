@@ -27,19 +27,19 @@
 					<valueof uniform="dist" 	type="CURRENT" context="CAMERA" 
 														component="DIST" /> 
 
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="VM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="VM"          	type="CURRENT" context="RENDERER" 
 														component="VIEW_MODEL" />
 														
-					<valueof uniform="V"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="V"          	type="CURRENT" context="RENDERER" 
 														component="VIEW" />
 														
-					<valueof uniform="NormalMat"   	type="CURRENT" context="MATRIX" 
+					<valueof uniform="NormalMat"   	type="CURRENT" context="RENDERER" 
 														component="NORMAL" />
 														
-					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE"
+					<valueof uniform="texUnit"		type="CURRENT" context="MATERIAL_TEXTURE"
 														id=1 component="UNIT" />
 														
 				</values>

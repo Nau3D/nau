@@ -5,8 +5,8 @@
 #include "nau/attributeValues.h"
 #include "nau/enums.h"
 #include "nau/event/EventVec3.h"
+#include "nau/math/matrix.h"
 #include "nau/math/spherical.h"
-#include "nau/math/simpletransform.h"
 #include "nau/math/vec4.h"
 #include "nau/scene/sceneobject.h"
 #include "nau/render/viewport.h"
@@ -70,7 +70,7 @@ namespace nau
 			// Note: no validation is performed!
 			//void setProp(int prop, Enums::DataType type, void *value);
 
-			const mat4 &getPropm4(Mat4Property prop);
+			//const mat4 &getPropm4(Mat4Property prop);
 			void *getProp(int prop, Enums::DataType type);
 
 			void setOrtho (float left, float right, float bottom, float top, float near, float far);
@@ -93,7 +93,7 @@ namespace nau
 			void adjustMatrixPlus (float cNear, float cFar, nau::scene::Camera *targetCamera);
 
 			// Bounding Volume 	
-			virtual const nau::geometry::IBoundingVolume* getBoundingVolume();
+			virtual nau::geometry::IBoundingVolume* getBoundingVolume();
 
 			// Renderable is the graphic representation of the camera
 			// usefull for debug purposes
@@ -109,11 +109,11 @@ namespace nau
 			static bool Init();
 			static bool Inited;
 
-			std::map<int,SimpleTransform> m_Mat4Props;
+			//std::map<int,mat4> m_Mat4Props;
 
 			nau::event_::EventVec3 m_Event;
 			nau::render::Viewport *m_pViewport;
-			void setPropm4(Mat4Property prop, mat4 &mat);
+			//void setPropm4(Mat4Property prop, mat4 &mat);
 
 			vec3 result;
 			// LookAt settings

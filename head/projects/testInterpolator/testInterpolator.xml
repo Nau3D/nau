@@ -1,16 +1,18 @@
 <?xml version="1.0" ?>
-<project name="Interpolator Test">
+<project name="Interpolator Test"  >
 	<assets>
 		<scenes>
 			<scene name="Sphere" class="OctreeUnified">
-				<geometry name = "Sphere1" type = "Sphere" slices=10 stacks=10 
-												transX=-2.5 transY=0 transZ=0 
-												scale=2 material="crateBox"/>
+				<geometry name = "sphere" type = "Sphere" slices=10 stacks=10 material="crateBox">
+					<TRANSLATE x =-2.5 y=0 z =0  />
+				</geometry>								
 			</scene>
-			<scene name = "Box"	>		
-				<geometry name = "box2" type = "Box" transX= 2.5 transY = 0 transZ=0 
-													 scaleX= 2 scaleY = 4 scaleZ =2 
-													 material="crateBox" />
+			<scene name = "Box" type="OctreeByMat">		
+				<geometry name = "box" type = "Box"  material="crateBox" >
+					<TRANSLATE x =2.5 y=0 z =0  />
+					<ROTATE x=0 y=1 z=0 w=45 />
+
+				</geometry>
 				<geometry name = "axis" type = "Axis" scale = 5 />
 			</scene>
 		</scenes>
@@ -22,7 +24,7 @@
 		</viewports>
 		
 		<cameras>
-			<camera name="MainCamera" type="perspective">
+			<camera name="MainCamera" >
 				<viewport name="MainViewport"/>
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
 				<POSITION x="0" y="0.0" z="10" />
@@ -32,7 +34,7 @@
 		</cameras>
 		
 		<lights>
-			<light name="Sun" type="directional">
+			<light name="Sun" >
 				<POSITION x="-150.0" y="150.0" z="0.0" />
 				<DIRECTION x="1.0" y="-2.5" z="-2" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
@@ -61,7 +63,7 @@
 					<keyFrame key=0.5 w=180 x=1.0/>
 					<keyFrame key=1.0 w=360 x=1.0/>
 				</keyFrames>
-			</interpolator>aaa
+			</interpolator>
 		</interpolators>
 		
 		<routes>
@@ -93,7 +95,7 @@
 					<scene name="Box" />
 				</scenes>
 				<camera name="MainCamera" />
-				<lights>
+S				<lights>
 					<light name="Sun" />
 				</lights>
 				<materialMaps>

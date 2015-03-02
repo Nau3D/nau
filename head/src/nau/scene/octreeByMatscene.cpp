@@ -19,7 +19,7 @@ OctreeByMatScene::OctreeByMatScene(void) : IScenePartitioned(),
 	m_pGeometry (0),
 	m_BoundingBox()
 {
-	m_Transform = TransformFactory::create("SimpleTransform");
+//	m_Transform = TransformFactory::create("SimpleTransform");
 	EVENTMANAGER->addListener("SET_POSITION", this);
 	EVENTMANAGER->addListener("SET_ROTATION", this);
 }
@@ -42,20 +42,22 @@ OctreeByMatScene::eventReceived(const std::string &sender, const std::string &ev
 
 	if (eventType == "SET_POSITION") {
 
-		SimpleTransform t;
-		t.setTranslation(p->x, p->y, p->z);
-		this->setTransform(&t);
+		mat4 t;
+		t.setIdentity();
+		t.translate(p->x, p->y, p->z);
+		this->setTransform(t);
 	}
 	if (eventType == "SET_ROTATION") {
 
-		nau::math::mat4 m = m_Transform->getMat44();
-		m_Transform->setRotation(p->w, p->x, p->y, p->z);
+		//nau::math::mat4 m = m_Transform->getMat44();
+		m_Transform.setIdentity();
+		m_Transform.rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();	
 	}
 }
 
 
-ITransform *
+mat4 &
 OctreeByMatScene::getTransform() 
 {
 	return m_Transform;
@@ -63,17 +65,17 @@ OctreeByMatScene::getTransform()
 
 
 void
-OctreeByMatScene::setTransform(nau::math::ITransform *t)
+OctreeByMatScene::setTransform(nau::math::mat4 &t)
 {
-	m_Transform->clone(t);
+	m_Transform = t;
 	updateSceneObjectTransforms();
 }
 
 
 void
-OctreeByMatScene::transform(nau::math::ITransform *t)
+OctreeByMatScene::transform(nau::math::mat4 &t)
 {
-	m_Transform->compose(*t);
+	m_Transform*= t;
 	updateSceneObjectTransforms();
 }
 

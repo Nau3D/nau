@@ -5,7 +5,7 @@
 #undef LOGGING_ON
 #include "nau/render/vertexdata.h"
 #include "nau/material/materialgroup.h"
-#include "nau/math/simpletransform.h"
+#include "nau/math/matrix.h"
 #include "nau.h"
 
 #include <assert.h>
@@ -89,7 +89,7 @@ OctreeByMatNode::tightBoundingVolume() {
 
 
 void 
-OctreeByMatNode::updateNodeTransform(nau::math::ITransform *t)
+OctreeByMatNode::updateNodeTransform(nau::math::mat4 &t)
 {
 	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
 	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 

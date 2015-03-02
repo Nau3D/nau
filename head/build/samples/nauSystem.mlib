@@ -55,22 +55,22 @@
 					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
 														component="AMBIENT" />
 		
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="VM"          		type="CURRENT" context="MATRIX" 
+					<valueof uniform="VM"          		type="CURRENT" context="RENDERER" 
 														component="VIEW_MODEL" />
 														
-					<valueof uniform="V"          		type="CURRENT" context="MATRIX" 
+					<valueof uniform="V"          		type="CURRENT" context="RENDERER" 
 														component="VIEW" />
 
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
 														component="NORMAL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />														
 				</values>
 			</shader>
@@ -96,7 +96,7 @@
 			</color>
 			<shader name ="quadShader" >
 				<values>
-					<valueof uniform="texUnit" 	type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 	type="CURRENT" context="MATERIAL_TEXTURE" 
 												component="UNIT" id="0" />			
 				</values>
 			</shader>
@@ -115,11 +115,11 @@
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
 														
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -137,11 +137,11 @@
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
 														
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -159,11 +159,11 @@
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
 														
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -181,10 +181,10 @@
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
 														
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />						
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -202,11 +202,11 @@
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
 														
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -224,11 +224,11 @@
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
 														
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -246,11 +246,11 @@
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
 														
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -282,10 +282,10 @@
 					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
 														component="EMISSION" />
 															
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />
 				</values>
 			</shader>

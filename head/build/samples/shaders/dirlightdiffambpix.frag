@@ -30,14 +30,14 @@ void main()
 	lightIntensityDiffuse = lightColor * intensity;
 	float alpha;
 	if (texCount == 0) {
-		color = diffuse * lightIntensityDiffuse + diffuse * 0.3 + emission ;
+		color = diffuse * lightIntensityDiffuse + diffuse * 0.0 + emission ;
 		alpha = diffuse.a;
-	}
-	else {
-		color = (diffuse * lightIntensityDiffuse + emission + 0.3) * texture(texUnit, TexCoord);
-		alpha = texture(texUnit, TexCoord).a * diffuse.a;
-	}
-	outColor = vec4(vec3(color ), alpha);
+	 }
+	 else {
+		 color = (diffuse * lightIntensityDiffuse + emission + 0.0) * texture(texUnit, TexCoord);
+		 alpha = texture(texUnit, TexCoord).a * diffuse.a;
+	 }
+	 outColor = vec4(vec3(color ), alpha);
 //	output = (color * X) + amb;
 
 }

@@ -348,7 +348,7 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 
 	std::string lib, mat;
 	std::size_t found = context.find("::");
-	if (found != std::string::npos && context.size() > found+2) {
+	if (found != std::string::npos && context.size() > found + 2) {
 		lib = context.substr(0, found);
 		mat = context.substr(found + 2);
 	}
@@ -361,10 +361,12 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTexture(number);
 	}
+#if NAU_OPENGL_VERSION >= 420
 	if (type == "IMAGE_TEXTURE") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getImageTexture(number);
 	}
+#endif
 	if (type == "MATERIAL_BUFFER") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getBuffer(number);
@@ -373,7 +375,10 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTextureSampler(number);
 	}
-
+	if (type == "MATERIAL_TEXTURE") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialTexture(number);
+	}
 
 	// If we get here then we are trying to fetch something that does not exist
 	assert(false && "Getting an invalid attribute - Nau::getObject");
@@ -391,6 +396,27 @@ Nau::validateAttribute(std::string type, std::string context, std::string compon
 	m_Attributes[type]->getPropTypeAndId(component, &dt, &id); 
 	return (id != -1);
 }
+
+
+bool
+Nau::validateShaderAttribute(std::string type, std::string context, std::string component) {
+
+	int id;
+	Enums::DataType dt;
+	std::string what;
+
+	if (type == "CURRENT")
+		what = context;
+	else
+		what = type;
+
+	if (m_Attributes.count(what) == 0)
+		return false;
+
+	m_Attributes[what]->getPropTypeAndId(component, &dt, &id);
+	return (id != -1);
+}
+
 
 
 void 
@@ -889,22 +915,9 @@ Nau::sendKeyToEngine (char keyCode) {
 void 
 Nau::setClickPosition(int x, int y) {
 
-	m_ClickX = x;
-	m_ClickY = y;
-}
-
-
-int
-Nau::getClickX() {
-
-	return m_ClickX;
-}
-
-
-int
-Nau::getClickY() {
-
-	return m_ClickY;
+	ivec2 *v = new ivec2(x, y);
+	RENDERER->setProp(IRenderer::MOUSE_CLICK, Enums::IVEC2, v);
+	delete v;
 }
 
 

@@ -21,8 +21,7 @@ layout (std430, binding = 3) buffer Hits {
 	vec4 hit[];
 };
 
-uniform int clickX = 128;
-uniform int clickY = 128;
+uniform ivec2 click;// = uivec2(128,128);
 
 
 void main() {
@@ -30,8 +29,8 @@ void main() {
 //	int clickX = 0;
 //	int clickY = 0;
 
-	int cx = clickX - 600; // origin of viewport
-	int cy = 300 - clickY; // reverse
+	int cx = click.x - 600; // origin of viewport
+	int cy = 300 - click.y; // reverse
 	
 	cx = int(cx * 1024 / 300.0); // size
 	cy = int(cy * 1024 / 300.0);

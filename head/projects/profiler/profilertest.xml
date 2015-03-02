@@ -2,8 +2,8 @@
 <project name="teste1" width=512 height=512>
 	<assets>
 		<scenes>
-			<scene name="Main" param="NO_SWAP">
-				<file name="./../models/bench.obj"/>
+			<scene name="Main" >
+				<file name="../../models/bench.obj"/>
 			</scene>
 		</scenes>
 		

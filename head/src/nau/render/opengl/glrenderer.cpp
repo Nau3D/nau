@@ -5,7 +5,7 @@
 #include "nau/debug/profile.h"
 #include "nau/material/material.h" 
 #include "nau/material/materialgroup.h"
-#include "nau/math/transformfactory.h"
+#include "nau/math/matrix.h"
 #include "nau/math/vec4.h"
 #include "nau/render/opengl/glvertexarray.h"
 #include "nau/render/opengl/glrendertarget.h"
@@ -36,11 +36,9 @@ unsigned int GLRenderer::GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT] =
 GLRenderer::GLRenderer(void) :
 	m_TriCounter (0),
 	m_glCurrState (),
-	m_LightsOn (1),
 	m_Lights(),
 	m_Camera(NULL),
 	m_Textures(),
-	m_Matrices(IRenderer::COUNT_MATRIXMODE),
 	m_TexturingFlag(true),
 	m_ActualRenderMode(IRenderer::MATERIAL_MODE),
 	m_PrevRenderMode(IRenderer::MATERIAL_MODE),
@@ -49,27 +47,20 @@ GLRenderer::GLRenderer(void) :
 	init();
 	m_glCurrState.set();
 
-	for (int i = 0; i < IRenderer::COUNT_MATRIXMODE ; i++)
-		m_Matrices[i] = SimpleTransform();
-
-	m_CurrentMatrix = &(m_Matrices[MODEL_MATRIX]);
-
-	//for (int i = 0 ; i < 8; i++)
-	//	m_Textures.push_back(0);
-
 	glEnable(GL_MULTISAMPLE);
+	registerAndInitArrays("RENDERER", Attribs);
 }
 
 
-GLRenderer::~GLRenderer(void)
-{
+GLRenderer::~GLRenderer(void) {
+
 	m_Lights.clear();
 }
 
 
 bool 
-GLRenderer::init() 
-{
+GLRenderer::init() {
+
 	glewExperimental = true;
 	GLenum error = glewInit();
 	if (GLEW_OK != error){
@@ -78,53 +69,153 @@ GLRenderer::init()
 	}
 	else {
 		glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &MaxTextureUnits);
-		for (int i = 0; i < MaxTextureUnits; ++i) {
-			m_Textures.push_back(0);
-#if NAU_OPENGL_VERSION >=  420
-			m_ImageTextures.push_back(0);
-#endif
-		}
 		glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &MaxColorAttachments);
 		return true;
 	}
 }
 
 
-int 
-GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
+// -----------------------------------------------------------------
+//		PROPERTIES
+// -----------------------------------------------------------------
 
-	unsigned int indices = m->getIndexData().getIndexSize();
-	unsigned int primitive = m->getParent().getRealDrawingPrimitive();
+const mat4 &
+GLRenderer::getPropm4(Mat4Property prop) {
 
-	switch (primitive) {
+	switch (prop) {
+	case VIEW_MODEL:
+		m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
+		m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+		return m_pReturnMatrix;
+	case PROJECTION_VIEW_MODEL:
+		m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+		m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+		m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+		return m_pReturnMatrix;
+	case PROJECTION_VIEW:
+		m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+		m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+		return m_pReturnMatrix;
+	case TS05_PVM:
+		m_pReturnMatrix.setIdentity();
+		m_pReturnMatrix.translate(0.5f, 0.5f, 0.5f);
+		m_pReturnMatrix.scale(0.5f);
+		m_pReturnMatrix *= m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+		m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+		return m_pReturnMatrix;
+	default:
+		return AttributeValues::getPropm4(prop);
+	};
+}
 
-		case GL_TRIANGLES_ADJACENCY:
-			return (indices / 6);
-		case GL_TRIANGLES:
-			return (indices / 3);
-		case GL_TRIANGLE_STRIP:
-		case GL_TRIANGLE_FAN:
-			return (indices - 2);
-		case GL_LINES:
-			return (indices / 2);
-		case GL_LINE_LOOP:
-			return (indices - 1);
-		case GL_POINTS:
-			return indices; 
-#if NAU_OPENGL_VERSION >= 400			
-		case GL_PATCHES:
-			return indices / m->getParent().getnumberOfVerticesPerPatch();
-#endif
+
+const mat3 &
+GLRenderer::getPropm3(Mat3Property prop) {
+
+	switch (prop) {
+	case NORMAL:
+		m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
+		m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+		m_pReturnMat3.setMatrix(m_pReturnMatrix.getSubMat3());
+		m_pReturnMat3.invert();
+		m_pReturnMat3.transpose();
+		return m_pReturnMat3;
+	default:
+		return AttributeValues::getPropm3(prop);
+	}
+}
+
+
+void *
+GLRenderer::getProp(int prop, Enums::DataType dt) {
+
+	switch (dt) {
+
+	case Enums::MAT4:
+		switch (prop) {
+		case VIEW_MODEL:
+			m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
+			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+			return (void *)m_pReturnMatrix.getMatrix();
+		case PROJECTION_VIEW_MODEL:
+			m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+			return (void *)m_pReturnMatrix.getMatrix();
+		case PROJECTION_VIEW:
+			m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+			return (void *)m_pReturnMatrix.getMatrix();
+		case TS05_PVM:
+			m_pReturnMatrix.setIdentity();
+			m_pReturnMatrix.translate(0.5f, 0.5f, 0.5f);
+			m_pReturnMatrix.scale(0.5f);
+			m_pReturnMatrix *= m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+			return (void *)m_pReturnMatrix.getMatrix();
 		default:
-			assert(false && "invalid primitive type");
-			return (0);
+			return AttributeValues::getProp(prop, dt);
+		};
+		break;
+	case Enums::MAT3:
+		switch (prop) {
+		case NORMAL:
+			m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
+			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+			m_pReturnMat3.setMatrix(m_pReturnMatrix.getSubMat3());
+			m_pReturnMat3.invert();
+			m_pReturnMat3.transpose();
+			return (void *)m_pReturnMat3.getMatrix();
+		default:
+			return AttributeValues::getProp(prop, dt);
+		}
+		break;
+	default:
+		return AttributeValues::getProp(prop, dt);
 	}
 }
 
 
 
-// =============== ATOMIC COUNTERS ===================
+// -----------------------------------------------------------------
+//		ATOMICS
+// -----------------------------------------------------------------
+
 #if (NAU_OPENGL_VERSION >= 400)
+
+
+std::vector<unsigned int> &
+GLRenderer::getAtomicCounterValues() {
+
+	std::string buffer;
+	unsigned int offset;
+	unsigned int value;
+	int i = 0;
+	IBuffer *b;
+
+	m_AtomicCounterValues.resize(m_AtomicLabels.size());
+
+	if (m_AtomicCount) {
+
+		//glFinish();
+		for (auto at : m_AtomicLabels) {
+			buffer = at.first.first;
+			offset = at.first.second;
+			b = RESOURCEMANAGER->getBuffer(buffer);
+			if (NULL != b) {
+				//b->getData(offset, sizeof(unsigned int), &value);
+				glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, b->getPropi(IBuffer::ID));
+				glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, offset, sizeof(unsigned int), &value);
+				m_AtomicCounterValues[i++] = value;
+			}
+			else
+				m_AtomicCounterValues[i++] = 0;
+		}
+		glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+	}
+	return m_AtomicCounterValues;
+
+}
 
 //void 
 //GLRenderer::prepareAtomicCounterBuffer() {
@@ -175,46 +266,559 @@ GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
 //}
 
 
-std::vector<unsigned int> &
-GLRenderer::getAtomicCounterValues() {
+#endif
 
-	std::string buffer;
-	unsigned int offset;
-	unsigned int value;
-	int i = 0;
-	IBuffer *b;
 
-	m_AtomicCounterValues.resize(m_AtomicLabels.size());
+// -----------------------------------------------------------------
+//		LIGHTS
+// -----------------------------------------------------------------
 
-	if (m_AtomicCount) {
-	
-		//glFinish();
-		for (auto at : m_AtomicLabels) {
-			buffer = at.first.first;
-			offset = at.first.second;
-			b = RESOURCEMANAGER->getBuffer(buffer);
-			if (NULL != b) {
-				//b->getData(offset, sizeof(unsigned int), &value);
-				glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, b->getPropi(IBuffer::ID));
-				glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, offset, sizeof(unsigned int), &value);
-				m_AtomicCounterValues[i++] = value;
-			}
-			else
-				m_AtomicCounterValues[i++] = 0;
-		}
-		glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+int
+GLRenderer::getLightCount() {
+
+	return m_Lights.size();
+}
+
+
+Light *
+GLRenderer::getLight(unsigned int i) {
+
+	assert(i < m_Lights.size());
+	return m_Lights[i];
+}
+
+
+bool
+GLRenderer::addLight(nau::scene::Light& aLight) {
+
+	int id = m_Lights.size();
+
+	aLight.setPropi(Light::ID, id);
+	m_Lights.push_back(&aLight);
+	m_UIntProps[LIGHT_COUNT]++;
+
+	return true;
+}
+
+void
+GLRenderer::removeLights() {
+
+	for (unsigned int i = 0; i < m_Lights.size(); i++) {
+		m_Lights[i]->setPropi(Light::ID, -1);
 	}
-	return m_AtomicCounterValues;
 
+	m_Lights.clear();
+	m_UIntProps[LIGHT_COUNT] = 0;
+}
+
+
+// -----------------------------------------------------------------
+//		CAMERA
+// -----------------------------------------------------------------
+
+void
+GLRenderer::setViewport(nau::render::Viewport *aViewport) {
+
+	m_Viewport = aViewport;
+	const vec2& vpOrigin = aViewport->getPropf2(Viewport::ABSOLUT_ORIGIN);
+	const vec2& vpSize = aViewport->getPropf2(Viewport::ABSOLUT_SIZE);
+	const vec4& vpColor = aViewport->getPropf4(Viewport::CLEAR_COLOR);
+
+	glViewport((int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
+	glClearColor(vpColor.x, vpColor.y, vpColor.z, vpColor.w);
+
+	glEnable(GL_SCISSOR_TEST); // MARK - perform scissor test only if not using the whole window 
+	glScissor((int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
+}
+
+
+Viewport *
+GLRenderer::getViewport() {
+
+	return m_Viewport;
+}
+
+
+void
+GLRenderer::setCamera(nau::scene::Camera *aCamera) {
+
+	m_Camera = aCamera;
+	setViewport(aCamera->getViewport());
+
+	m_Mat4Props[IRenderer::PROJECTION_MATRIX] = aCamera->getPropm4(Camera::PROJECTION_MATRIX);
+	m_Mat4Props[IRenderer::VIEW_MATRIX] = aCamera->getPropm4(Camera::VIEW_MATRIX);
+	m_Mat4Props[IRenderer::MODEL_MATRIX].setIdentity();
+}
+
+
+Camera *
+GLRenderer::getCamera() {
+
+	return m_Camera;
+}
+
+
+// -----------------------------------------------------------------
+//		COUNTERS
+// -----------------------------------------------------------------
+
+
+void
+GLRenderer::accumTriCounter(unsigned int drawPrimitive, unsigned int size) {
+
+	switch (drawPrimitive) {
+	case GL_TRIANGLES:
+		m_TriCounter += size / 3;
+		break;
+	case GL_TRIANGLE_STRIP:
+	case GL_TRIANGLE_FAN:
+		m_TriCounter += size - 1;
+		break;
+	case GL_LINES:
+		m_TriCounter += size / 2;
+		break;
+	}
+}
+
+
+void
+GLRenderer::resetCounters(void) {
+
+	m_TriCounter = 0;
+}
+
+
+unsigned int
+GLRenderer::getCounter(Counters c) {
+
+	if (c == TRIANGLE_COUNTER)
+		return m_TriCounter;
+
+	return 0;
+}
+
+
+int
+GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
+
+	unsigned int indices = m->getIndexData().getIndexSize();
+	unsigned int primitive = m->getParent().getRealDrawingPrimitive();
+
+	switch (primitive) {
+
+	case GL_TRIANGLES_ADJACENCY:
+		return (indices / 6);
+	case GL_TRIANGLES:
+		return (indices / 3);
+	case GL_TRIANGLE_STRIP:
+	case GL_TRIANGLE_FAN:
+		return (indices - 2);
+	case GL_LINES:
+		return (indices / 2);
+	case GL_LINE_LOOP:
+		return (indices - 1);
+	case GL_POINTS:
+		return indices;
+#if NAU_OPENGL_VERSION >= 400			
+	case GL_PATCHES:
+		return indices / m->getParent().getnumberOfVerticesPerPatch();
+#endif
+	default:
+		assert(false && "invalid primitive type");
+		return (0);
+	}
+}
+
+
+
+// -----------------------------------------------------------------
+//		MATRICES
+// -----------------------------------------------------------------
+
+
+void
+GLRenderer::loadIdentity(MatrixMode mode) {
+
+	m_Mat4Props[mode].setIdentity();
+}
+
+
+void
+GLRenderer::pushMatrix(MatrixMode mode) {
+
+	m_MatrixStack[mode].push_back(m_Mat4Props[mode]);
+}
+
+
+void
+GLRenderer::popMatrix(MatrixMode mode) {
+
+	m_Mat4Props[mode] = m_MatrixStack[mode].back();
+	m_MatrixStack[mode].pop_back();
+}
+
+
+void
+GLRenderer::applyTransform(MatrixMode mode, const nau::math::mat4 &aTransform) {
+
+	m_Mat4Props[mode] *= aTransform;
+}
+
+
+void
+GLRenderer::translate(MatrixMode mode, nau::math::vec3 &aVec) {
+
+	m_Mat4Props[mode].translate(aVec);
+}
+
+
+void
+GLRenderer::scale(MatrixMode mode, nau::math::vec3 &aVec) {
+
+	m_Mat4Props[mode].scale(aVec);
+}
+
+
+void
+GLRenderer::rotate(MatrixMode mode, float angle, nau::math::vec3 &axis) {
+
+	m_Mat4Props[mode].rotate(angle, axis);
+}
+
+
+
+// -----------------------------------------------------------------
+//		MATERIAL - COLOR
+// -----------------------------------------------------------------
+
+
+void
+GLRenderer::setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) {
+
+	m_Material.setPropf(ColorMaterial::SHININESS, shininess);
+	m_Material.setPropf4(ColorMaterial::DIFFUSE, diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+	m_Material.setPropf4(ColorMaterial::AMBIENT, ambient[0], ambient[1], ambient[2], ambient[3]);
+	m_Material.setPropf4(ColorMaterial::EMISSION, emission[0], emission[1], emission[2], emission[3]);
+	m_Material.setPropf4(ColorMaterial::SPECULAR, specular[0], specular[1], specular[2], specular[3]);
+}
+
+
+void
+GLRenderer::setMaterial(ColorMaterial &mat) {
+
+	m_Material.clone(mat);
+}
+
+
+ColorMaterial *
+GLRenderer::getMaterial() {
+
+	return &m_Material;
+}
+
+
+// -----------------------------------------------------------------
+//		MATERIAL - STATE
+// -----------------------------------------------------------------
+
+
+void
+GLRenderer::setState(IState *aState) {
+
+	m_glCurrState.setDiff(&m_glDefaultState, aState);
+}
+
+
+void
+GLRenderer::setDefaultState() {
+
+	m_glCurrState.setDefault();
+	m_glDefaultState.setDefault();
+	m_glCurrState.set();
+}
+
+
+IState *
+GLRenderer::getState() {
+
+	return &m_glCurrState;
+}
+
+
+// -----------------------------------------------------------------
+//		MATERIAL - SHADER
+// -----------------------------------------------------------------
+
+
+void
+GLRenderer::setShader(IProgram *aShader)
+{
+	m_Shader = aShader;
+}
+
+
+int
+GLRenderer::getAttribLocation(std::string name) {
+
+	return VertexData::getAttribIndex(name);
+}
+
+
+// -----------------------------------------------------------------
+//		MATERIAL - IMAGE TEXTURE
+// -----------------------------------------------------------------
+
+
+#if NAU_OPENGL_VERSION >=  420
+
+void
+GLRenderer::addImageTexture(unsigned int aTexUnit, ImageTexture *t) {
+
+	if ((unsigned int)aTexUnit < m_ImageTextures.size())
+		m_ImageTextures[aTexUnit] = t;
+}
+
+
+void
+GLRenderer::removeImageTexture(unsigned int aTexUnit) {
+
+	if ((unsigned int)aTexUnit < m_ImageTextures.size())
+		m_ImageTextures[aTexUnit] = 0;
+}
+
+
+int
+GLRenderer::getImageTextureCount() {
+
+	int count = 0;
+	for (unsigned int i = 0; i < m_ImageTextures.size(); i++)
+		if (m_ImageTextures[i] != 0)
+			count++;
+
+	return count;
+}
+
+
+ImageTexture*
+GLRenderer::getImageTexture(unsigned int aTexUnit) {
+
+	if ((unsigned int)aTexUnit < m_ImageTextures.size())
+		return m_ImageTextures[aTexUnit];
+	else
+		return NULL;
 }
 
 #endif
 
-// =============== RENDER ===================
+
+// -----------------------------------------------------------------
+//		MATERIAL - TEXTURE
+// -----------------------------------------------------------------
+
 
 void
-GLRenderer::drawGroup (MaterialGroup* aMatGroup)
-{
+GLRenderer::setActiveTextureUnit(unsigned int aTexUnit) {
+
+	glActiveTexture(GL_TEXTURE0 + (int)aTexUnit);
+}
+
+
+void
+GLRenderer::addTexture(MaterialTexture *t) {
+
+	m_Textures[t->getPropi(MaterialTexture::UNIT)] = t;
+	m_UIntProps[TEXTURE_COUNT]++;
+}
+
+
+void
+GLRenderer::removeTexture(unsigned int aTexUnit) {
+
+	if (m_Textures.count(aTexUnit)) {
+		m_Textures.erase(aTexUnit);
+		m_UIntProps[TEXTURE_COUNT]--;
+	}
+}
+
+
+MaterialTexture *
+GLRenderer::getMaterialTexture(int unit) {
+
+	if (m_Textures.count(unit))
+		return m_Textures[unit];
+	else
+		return NULL;
+}
+
+
+Texture *
+GLRenderer::getTexture(int unit) {
+
+	if (m_Textures.count(unit))
+		return m_Textures[unit]->getTexture();
+	else
+		return NULL;
+}
+
+
+int
+GLRenderer::getTextureCount() {
+
+	return (int)m_UIntProps[TEXTURE_COUNT];
+}
+
+
+
+// -----------------------------------------------------------------
+//		FRAMEBUFFER OPS
+// -----------------------------------------------------------------
+
+
+void
+GLRenderer::clearFrameBuffer(unsigned int b) {
+
+	GLenum c = 0;
+
+	if (b & COLOR_BUFFER) {
+		c |= GL_COLOR_BUFFER_BIT;
+	}
+	if (b & DEPTH_BUFFER) {
+		c |= GL_DEPTH_BUFFER_BIT;
+	}
+	if (b & STENCIL_BUFFER) {
+		c |= GL_STENCIL_BUFFER_BIT;
+	}
+
+	glClear(c);
+
+	// scissor is enabled when setting the viewport
+	glDisable(GL_SCISSOR_TEST);
+}
+
+
+void
+GLRenderer::prepareBuffers(Pass *p) {
+
+	int clear = 0;
+
+	bool value = p->getPropb(Pass::DEPTH_ENABLE);
+	if (value) {
+		glEnable(GL_DEPTH_TEST);
+		bool dm = p->getPropb(Pass::DEPTH_MASK);
+		glDepthMask(dm);
+		m_glDefaultState.setPropb(IState::DEPTH_MASK, dm);
+		m_glCurrState.setPropb(IState::DEPTH_MASK, dm);
+		int df = translateStencilDepthFunc(p->getPrope(Pass::DEPTH_FUNC));
+		glDepthFunc(df);
+		m_glDefaultState.setPrope(IState::DEPTH_FUNC, df);
+		m_glCurrState.setPrope(IState::DEPTH_FUNC, df);
+	}
+	else
+		glDisable(GL_DEPTH_TEST);
+	m_glDefaultState.setPropb(IState::DEPTH_TEST, value);
+	m_glCurrState.setPropb(IState::DEPTH_TEST, value);
+
+	value = p->getPropb(Pass::STENCIL_ENABLE);
+
+	if (value) {
+		glEnable(GL_STENCIL_TEST);
+	}
+	else
+		glDisable(GL_STENCIL_TEST);
+	glStencilFunc(translateStencilDepthFunc(p->getPrope(Pass::STENCIL_FUNC)),
+		p->getPropi(Pass::STENCIL_OP_REF),
+		p->getPropui(Pass::STENCIL_OP_MASK));
+	glStencilOp(translateStencilOp(p->getPrope(Pass::STENCIL_FAIL)),
+		translateStencilOp(p->getPrope(Pass::STENCIL_DEPTH_FAIL)),
+		translateStencilOp(p->getPrope(Pass::STENCIL_DEPTH_PASS)));
+
+	if (p->getPropb(Pass::COLOR_ENABLE)) {
+		bvec4 b = bvec4(true, true, true, true);
+		m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, b);
+	}
+	else {
+		bvec4 b = bvec4(false, false, false, false);
+		m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, b);
+	}
+
+	if (p->getPropb(Pass::DEPTH_CLEAR)) {
+		clear = IRenderer::DEPTH_BUFFER;
+		glClearDepth(p->getPropf(Pass::DEPTH_CLEAR_VALUE));
+	}
+	if (p->getPropb(Pass::COLOR_CLEAR)) {
+		clear |= IRenderer::COLOR_BUFFER;
+	}
+	if (p->getPropb(Pass::STENCIL_CLEAR)) {
+		glClearStencil(p->getPropf(Pass::STENCIL_CLEAR_VALUE));
+		clear |= IRenderer::STENCIL_BUFFER;
+	}
+
+	clearFrameBuffer(clear);
+}
+
+
+void
+GLRenderer::flush(void) {
+
+	glFinish();
+}
+
+
+void
+GLRenderer::setDepthClamping(bool b) {
+
+	if (b)
+		glEnable(GL_DEPTH_CLAMP);
+	else
+		glDisable(GL_DEPTH_CLAMP);
+}
+
+
+void
+GLRenderer::colorMask(bool r, bool g, bool b, bool a) {
+
+	glColorMask(r, g, b, a);
+	bvec4 *bv = new bvec4(r, g, b, a);
+	m_glCurrState.setPropb4(IState::COLOR_MASK_B4, *bv);
+	m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, *bv);
+}
+
+
+// -----------------------------------------------------------------
+//		RENDER
+// -----------------------------------------------------------------
+
+
+void
+GLRenderer::setRenderMode(TRenderMode mode) {
+
+	m_ActualRenderMode = mode;
+
+	switch (mode) {
+	case POINT_MODE:
+		m_TexturingFlag = false;
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+		break;
+	case WIREFRAME_MODE:
+		m_TexturingFlag = false;
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		break;
+	case SOLID_MODE:
+		m_TexturingFlag = false;
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	case MATERIAL_MODE:
+		m_TexturingFlag = true;
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	}
+
+}
+
+
+void
+GLRenderer::drawGroup (MaterialGroup* aMatGroup) {
+
 	IRenderable& aRenderable = aMatGroup->getParent();
 	IndexData &indexData = aMatGroup->getIndexData();
 
@@ -262,225 +866,64 @@ GLRenderer::drawGroup (MaterialGroup* aMatGroup)
 }
 
 
+void
+GLRenderer::setCullFace(Face aFace) {
+
+	glCullFace(translateFace(aFace));
+}
 
 
-// =============== PRIMITIVE COUNTER ===================
+// -----------------------------------------------------------------
+//		RENDER
+// -----------------------------------------------------------------
 
 
 void
-GLRenderer::accumTriCounter(unsigned int drawPrimitive, unsigned int size) {
+GLRenderer::saveAttrib(IRenderer::RendererAttributes aAttrib) {
 
-	switch (drawPrimitive) {
-		case GL_TRIANGLES:
-			m_TriCounter += size / 3;
-			break;
-		case GL_TRIANGLE_STRIP:
-		case GL_TRIANGLE_FAN:
-			m_TriCounter += size - 1;
-			break;
-		case GL_LINES:
-			m_TriCounter += size/2;
-			break;
+	switch (aAttrib) {
+	case IRenderer::RENDER_MODE:
+		m_PrevRenderMode = m_ActualRenderMode;
+		break;
 	}
 }
 
 
-void 
-GLRenderer::resetCounters (void)
-{
-	m_TriCounter = 0;
+void
+GLRenderer::restoreAttrib(void) {
 
-//#if (NAU_OPENGL_VERSION >= 400)
-//	if (m_AtomicCount)
-//		resetAtomicCounters();
-//#endif
+	setRenderMode(m_PrevRenderMode);
 }
 
 
-unsigned int 
-GLRenderer::getCounter (Counters c)
-{
-	if (c == TRIANGLE_COUNTER)
-		return m_TriCounter;
+// -----------------------------------------------------------------
+//		MISC
+// -----------------------------------------------------------------
 
-	return 0;
+
+float
+GLRenderer::getDepthAtPoint(int x, int y) {
+
+	float f;
+	glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &f);
+	return f;
 }
 
 
+nau::math::vec3
+GLRenderer::readpixel(int x, int y) {
 
-// =============== SHADERS ===================
+	GLubyte pixels[3];
 
-void 
-GLRenderer::setShader (IProgram *aShader)
-{
-	m_Shader = aShader;
+	glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+	vec3 pixel(pixels[0], pixels[1], pixels[2]);
+
+	return pixel;
 }
 
 
-int
-GLRenderer::getAttribLocation(std::string name) {
-
-	return VertexData::getAttribIndex(name);
-/*	if (m_Shader)
-		return m_Shader->getAttributeLocation(name);
-	else
-		return -1;
-*/}
-
-
-
-// ================== ATTRIBUTES ====================
-void 
-GLRenderer::clearFrameBuffer(unsigned int b)
-{
-	GLenum c = 0;
-	
-	if (b & COLOR_BUFFER) {
-		c |= GL_COLOR_BUFFER_BIT;
-	}
-	if (b & DEPTH_BUFFER) {
-		c |= GL_DEPTH_BUFFER_BIT;
-	}
-	if (b & STENCIL_BUFFER) {
-		c |= GL_STENCIL_BUFFER_BIT;
-	}
-
-	glClear (c);
-
-	// scissor is enabled when setting the viewport
-	glDisable(GL_SCISSOR_TEST);
-}
-
-
-void 
-GLRenderer::setDepthClamping(bool b) {
-
-	if (b)
-		glEnable(GL_DEPTH_CLAMP);
-	else
-		glDisable(GL_DEPTH_CLAMP);
-}
-
-
-void 
-GLRenderer::prepareBuffers(Pass *p) {
-
-	int clear = 0;
-
-	bool value = p->getPropb(Pass::DEPTH_ENABLE);
-	if (value) {
-		glEnable(GL_DEPTH_TEST);
-		bool dm = p->getPropb(Pass::DEPTH_MASK);
-		glDepthMask(dm);
-		m_glDefaultState.setPropb(IState::DEPTH_MASK, dm);
-		m_glCurrState.setPropb(IState::DEPTH_MASK, dm);
-		int df = translateStencilDepthFunc(p->getPrope(Pass::DEPTH_FUNC));
-		glDepthFunc(df);
-		m_glDefaultState.setPrope(IState::DEPTH_FUNC, df);
-		m_glCurrState.setPrope(IState::DEPTH_FUNC, df);
-	}
-	else
-		glDisable(GL_DEPTH_TEST);
-	m_glDefaultState.setPropb(IState::DEPTH_TEST, value);
-	m_glCurrState.setPropb(IState::DEPTH_TEST, value);
-
-	value = p->getPropb(Pass::STENCIL_ENABLE);
-
-	if (value) {
-		glEnable(GL_STENCIL_TEST);
-	}
-	else
-		glDisable(GL_STENCIL_TEST);
-	glStencilFunc(translateStencilDepthFunc(p->getPrope(Pass::STENCIL_FUNC)), 
-		p->getPropi(Pass::STENCIL_OP_REF), 
-		p->getPropui(Pass::STENCIL_OP_MASK));
-	glStencilOp(translateStencilOp(p->getPrope(Pass::STENCIL_FAIL)), 
-		translateStencilOp(p->getPrope(Pass::STENCIL_DEPTH_FAIL)), 
-		translateStencilOp(p->getPrope(Pass::STENCIL_DEPTH_PASS)));
-
-	if (p->getPropb(Pass::COLOR_ENABLE)) {
-		bvec4 b = bvec4(true, true, true, true);
-		m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, b);
-	}
-	else {
-		bvec4 b = bvec4(false, false, false, false);
-		m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, b);
-	}
-
-	if (p->getPropb(Pass::DEPTH_CLEAR)) {
-		clear = IRenderer::DEPTH_BUFFER;
-		glClearDepth(p->getPropf(Pass::DEPTH_CLEAR_VALUE));
-	}
-	if (p->getPropb(Pass::COLOR_CLEAR)) {
-		clear |= IRenderer::COLOR_BUFFER;
-	}
-	if (p->getPropb(Pass::STENCIL_CLEAR)) {
-		glClearStencil(p->getPropf(Pass::STENCIL_CLEAR_VALUE));
-		clear |= IRenderer::STENCIL_BUFFER;
-	}
-
-	clearFrameBuffer(clear);
-
-
-}
-
-//void 
-//GLRenderer::setPassProp(Pass::BoolProps aprop, bool value) {
-//
-//	switch(aprop) {
-//
-//		case IRenderer::DEPTH_CLAMPING:
-//			if (value)
-//				glEnable(GL_DEPTH_CLAMP);
-//			else
-//				glDisable(GL_DEPTH_CLAMP);
-//			break;
-//		case IRenderer::COLOR_ENABLE:
-//			break;
-//		case IRenderer::DEPTH_CLEAR:
-//			break;
-//		case IRenderer::DEPTH_ENABLE:
-//			if (value)
-//				glEnable(GL_DEPTH_TEST);
-//			else
-//				glDisable(GL_DEPTH_TEST);
-//			m_glDefaultState.setProp(IState::DEPTH_TEST, value);
-//			m_glCurrState.setProp(IState::DEPTH_TEST, value);
-//			break;
-//		case IRenderer::DEPTH_MASK:
-//			glDepthMask(value);
-//			m_glDefaultState.setProp(IState::DEPTH_MASK, value);
-//			m_glCurrState.setProp(IState::DEPTH_MASK, value);
-//			break;
-//		case IRenderer::STENCIL_CLEAR:
-//			break;
-//		case IRenderer::STENCIL_ENABLE:
-//			if (value)
-//				glEnable(GL_STENCIL_TEST);
-//			else
-//				glDisable(GL_STENCIL_TEST);
-//			break;
-//	}
-//}
-
-
-//void 
-//GLRenderer::setDepthFunc(int f) {
-//
-//	glDepthFunc(f);
-//	m_glDefaultState.setProp(IState::DEPTH_FUNC, f);
-//	m_glCurrState.setProp(IState::DEPTH_FUNC, f);
-//}
-//
-//
-//void 
-//GLRenderer::setStencilFunc(StencilFunc f, int ref, unsigned int mask) {
-//
-//	glStencilFunc(translate(f), ref, mask);
-//}
-
-
-unsigned int 
+unsigned int
 GLRenderer::translateStencilDepthFunc(int anOp) {
 
 	unsigned int res;
@@ -516,558 +959,29 @@ GLRenderer::translateStencilDepthFunc(int anOp) {
 }
 
 
-//void 
-//GLRenderer::setStencilOp(StencilOp sfail, StencilOp dfail, StencilOp dpass) {
-//
-//	glStencilOp(translate(sfail), translate(dfail), translate(dpass));
-//}
-
-
-unsigned int 
+unsigned int
 GLRenderer::translateStencilOp(int aFunc) {
 
 	switch (aFunc) {
-		case Pass::KEEP:
-			return(GL_KEEP);
-		case Pass::ZERO:
-			return (GL_ZERO);
-		case Pass::REPLACE:
-			return (GL_REPLACE);
-		case Pass::INCR:
-			return(GL_INCR);
-		case Pass::INCR_WRAP:
-			return(GL_INCR_WRAP);
-		case Pass::DECR:
-			return(GL_DECR);
-		case Pass::DECR_WRAP:
-			return(GL_DECR_WRAP);
-		case Pass::INVERT:
-			return(GL_INVERT);
-		default:
-			return(GL_KEEP);
+	case Pass::KEEP:
+		return(GL_KEEP);
+	case Pass::ZERO:
+		return (GL_ZERO);
+	case Pass::REPLACE:
+		return (GL_REPLACE);
+	case Pass::INCR:
+		return(GL_INCR);
+	case Pass::INCR_WRAP:
+		return(GL_INCR_WRAP);
+	case Pass::DECR:
+		return(GL_DECR);
+	case Pass::DECR_WRAP:
+		return(GL_DECR_WRAP);
+	case Pass::INVERT:
+		return(GL_INVERT);
+	default:
+		return(GL_KEEP);
 	}
-}
-
-
-
-//void 
-//GLRenderer::setDepthClearValue(float v) {
-//
-//	glClearDepth(v);
-//}
-//
-//
-//void 
-//GLRenderer::setStencilClearValue(int v) {
-//
-//	glClearStencil(v);
-//}
-//
-//
-//void 
-//GLRenderer::setStencilMaskValue(int i) {
-//
-//	glStencilMask(i);
-//}
-
-
-void 
-GLRenderer::setRenderMode (TRenderMode mode)
-{
-	m_ActualRenderMode = mode;
-
-	switch(mode) {
-		case POINT_MODE:
-			m_TexturingFlag = false;
-			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-			break;
-		case WIREFRAME_MODE:
-			m_TexturingFlag = false;
-			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-			break;
-		case SOLID_MODE:
-			m_TexturingFlag = false;
-			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-			break;
-		case MATERIAL_MODE:
-			m_TexturingFlag = true;
-			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-			break;
-	}
-
-}
-
-
-
-Viewport *
-GLRenderer::getViewport() {
-
-	return m_Viewport;
-}
-
-//void 
-//GLRenderer::setViewport(int width, int height) {
-//
-//	glViewport (0,0,width,height);
-//}
-
-
-void 
-GLRenderer::setViewport(nau::render::Viewport *aViewport) {
-
-	m_Viewport = aViewport;
-	const vec2& vpOrigin = aViewport->getPropf2(Viewport::ABSOLUT_ORIGIN);
-	const vec2& vpSize = aViewport->getPropf2(Viewport::ABSOLUT_SIZE);
-	const vec4& vpColor = aViewport->getPropf4(Viewport::CLEAR_COLOR);
-
-	glViewport ((int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
-	glClearColor (vpColor.x, vpColor.y, vpColor.z, vpColor.w);
-
-	glEnable(GL_SCISSOR_TEST); // MARK - perform scissor test only if not using the whole window 
-	glScissor((int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
-}
-
-// ==============  CAMERA  =================
-
-void 
-GLRenderer::setCamera (nau::scene::Camera *aCamera) {
-
-	m_Camera = aCamera;
-	setViewport(aCamera->getViewport());
-
-	m_Matrices[IRenderer::PROJECTION_MATRIX].setMat44((mat4 &)(aCamera->getPropm4(Camera::PROJECTION_MATRIX)));
-	m_Matrices[IRenderer::VIEW_MATRIX].setMat44((mat4 &)(aCamera->getPropm4(Camera::VIEW_MATRIX)));
-	m_Matrices[IRenderer::MODEL_MATRIX].setIdentity();
-}
-
-
-Camera *
-GLRenderer::getCamera() {
-
-	return m_Camera;
-}
-
-
-// ==============  MATRICES  =================
-// See also setCamera
-
-void 
-GLRenderer::loadIdentity(MatrixMode mode) {
-
-	m_Matrices[mode].setIdentity();
-}
-
-
-void 
-GLRenderer::applyTransform(MatrixMode mode, const nau::math::ITransform &aTransform) {
-
-	m_Matrices[mode].compose(aTransform);
-}
-
-
-void
-GLRenderer::pushMatrix(MatrixMode mode) {
-
-	m_MatrixStack[mode].push_back(m_Matrices[mode]);
-}
-
-
-void
-GLRenderer::popMatrix(MatrixMode mode) {
-
-	m_Matrices[mode] = m_MatrixStack[mode].back();
-	m_MatrixStack[mode].pop_back();
-}
-
-
-void 
-GLRenderer::translate(MatrixMode mode, nau::math::vec3 &aVec) {
-
-	m_Matrices[mode].translate(aVec);
-}
-
-
-void 
-GLRenderer::scale(MatrixMode mode, nau::math::vec3 &aVec) {
-
-	m_Matrices[mode].scale(aVec);
-}
-
-
-void 
-GLRenderer::rotate(MatrixMode mode, float angle, nau::math::vec3 &axis) {
-
-	m_Matrices[mode].rotate(angle, axis);
-}
-
-
-const float *
-GLRenderer::getMatrix(IRenderer::MatrixType aMode) {
-
-	SimpleTransform s;
-
-	// these matrices should be updated every time each of the components is updated
-	// otherwise, light camera vectors will not work.
-	switch (aMode) {
-		case VIEW_MODEL:
-			m_pReturnMatrix.copy(m_Matrices[IRenderer::VIEW_MATRIX].getMat44());
-			m_pReturnMatrix.multiply(m_Matrices[IRenderer::MODEL_MATRIX].getMat44());
-			break;
-		case PROJECTION_VIEW_MODEL:
-			m_pReturnMatrix.copy(m_Matrices[IRenderer::PROJECTION_MATRIX].getMat44());
-			m_pReturnMatrix.multiply(m_Matrices[IRenderer::VIEW_MATRIX].getMat44());
-			m_pReturnMatrix.multiply(m_Matrices[IRenderer::MODEL_MATRIX].getMat44());
-			break;
-		case PROJECTION_VIEW:
-			m_pReturnMatrix.copy(m_Matrices[IRenderer::PROJECTION_MATRIX].getMat44());
-			m_pReturnMatrix.multiply(m_Matrices[IRenderer::VIEW_MATRIX].getMat44());
-			break;
-		case TS05_PVM:
-			s.setIdentity();
-			s.translate (0.5f, 0.5f, 0.5f);
-			s.scale (0.5f);	
-			m_pReturnMatrix.copy(s.getMat44());
-			m_pReturnMatrix.multiply(m_Matrices[IRenderer::PROJECTION_MATRIX].getMat44());
-			m_pReturnMatrix.multiply(m_Matrices[IRenderer::VIEW_MATRIX].getMat44());
-			break;
-		case NORMAL:
-			m_pReturnMatrix.copy(m_Matrices[IRenderer::VIEW_MATRIX].getMat44());
-			m_pReturnMatrix.multiply(m_Matrices[IRenderer::MODEL_MATRIX].getMat44());
-			m_pReturnMat3.setMatrix(m_pReturnMatrix.getSubMat3());
-			m_pReturnMat3.invert();
-			m_pReturnMat3.transpose();
-			return m_pReturnMat3.getMatrix();
-			break;
-
-			// all other types
-		default: return m_Matrices[aMode].getMat44().getMatrix();
-	}
-	return m_pReturnMatrix.getMatrix();
-}
-
-
-// ===========================================================
-
-
-void
-GLRenderer::saveAttrib(IRenderer::RendererAttributes aAttrib)
-{
-	switch(aAttrib) {
-		case IRenderer::RENDER_MODE: 
-			m_PrevRenderMode = m_ActualRenderMode;
-			break;
-	}
-	
-}
-
-
-void
-GLRenderer::restoreAttrib (void) 
-{
-	setRenderMode(m_PrevRenderMode);
-}
-
-
-// ================= MATERIAL ===================
-
-void
-GLRenderer::setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) {
-
-	m_Material.setPropf(ColorMaterial::SHININESS, shininess);
-	m_Material.setPropf4(ColorMaterial::DIFFUSE, diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
-	m_Material.setPropf4(ColorMaterial::AMBIENT, ambient[0], ambient[1], ambient[2], ambient[3]);
-	m_Material.setPropf4(ColorMaterial::EMISSION, emission[0], emission[1], emission[2], emission[3]);
-	m_Material.setPropf4(ColorMaterial::SPECULAR, specular[0], specular[1], specular[2], specular[3]);
-}
-
-
-void
-GLRenderer::setMaterial( ColorMaterial &mat) 
-{
-	m_Material.clone(mat);
-}
-
-
-const vec4 &
-GLRenderer::getColorProp4f(ColorMaterial::Float4Property prop) {
-
-	return m_Material.getPropf4(prop);
-}
-
-
-float
-GLRenderer::getColorPropf(ColorMaterial::FloatProperty prop) {
-
-	return m_Material.getPropf(prop);
-}
-
-float *
-GLRenderer::getColorProp(int prop, Enums::DataType dt) {
-
-	switch (dt) {
-
-		case Enums::VEC4:
-			m_vDummy = m_Material.getPropf4((ColorMaterial::Float4Property)prop);
-			return &m_vDummy.x;
-		case Enums::FLOAT:
-			m_fDummy = m_Material.getPropf((ColorMaterial::FloatProperty)prop);
-			return &m_fDummy;
-	}
-	return NULL;
-}
-
-void 
-GLRenderer::setColor (float r, float g, float b, float a) {
-
-	m_Material.setPropf4(ColorMaterial::DIFFUSE, r,g,b,a);
-}
-
-
-void 
-GLRenderer::setColor (int r, int g, int b, int a) {
-
-	float m = 1.0f/255.0f;
-
-	m_Material.setPropf4(ColorMaterial::DIFFUSE, r*m,g*m,b*m,a*m);
-}
-
-
-
-
-
-// =============== STATE ==============================
-void 
-GLRenderer::setDefaultState() {
-
-	m_glCurrState.setDefault();
-	m_glDefaultState.setDefault();
-	m_glCurrState.set();
-}
-
-
-IState *
-GLRenderer::getState() {
-
-	return &m_glCurrState;
-}
-
-
-void
-GLRenderer::setState (IState *aState) {
-
-	m_glCurrState.setDiff (&m_glDefaultState, aState);
-}
-
-
-void 
-GLRenderer::setCullFace (Face aFace) {
-
-	glCullFace (translateFace(aFace));
-}
-
-
-// =================   LIGHTS   ======================
-
-int
-GLRenderer::getLightCount() {
-
-	return m_Lights.size();
-}
-
-
-Light *
-GLRenderer::getLight(unsigned int i) {
-
-	assert(i < m_Lights.size());
-	return m_Lights[i];
-}
-
-
-bool 
-GLRenderer::addLight (nau::scene::Light& aLight) {
-
-	int id = m_Lights.size();
-
-	aLight.setPropi(Light::ID, id);
-	m_Lights.push_back(&aLight);
-
-	return true;
-}
-
-void 
-GLRenderer::removeLights () {
-
-	for (unsigned int i = 0; i < m_Lights.size(); i++) {
-		m_Lights[i]->setPropi(Light::ID, -1);
-	}
-
-	m_Lights.clear();
-}
-
-
-
-
-// =================   IMAGE TEXTURES   ======================
-
-#if NAU_OPENGL_VERSION >=  420
-
-void 
-GLRenderer::addImageTexture(unsigned int aTexUnit, ImageTexture *t) {
-
-	if ((unsigned int)aTexUnit < m_ImageTextures.size())
-		m_ImageTextures[aTexUnit] = t;
-}
-
-
-void 
-GLRenderer::removeImageTexture(unsigned int aTexUnit) {
-
-	if ((unsigned int)aTexUnit < m_ImageTextures.size())
-		m_ImageTextures[aTexUnit] = 0;
-}
-
-
-int
-GLRenderer::getImageTextureCount() {
-
-	int count = 0;
-	for (unsigned int i = 0 ; i < m_ImageTextures.size(); i++)
-		if (m_ImageTextures[i] != 0)
-			count++;
-
-	return count;
-}
-
-
-ImageTexture*
-GLRenderer::getImageTexture(unsigned int aTexUnit) {
-
-	if ((unsigned int)aTexUnit < m_ImageTextures.size())
-		return m_ImageTextures[aTexUnit];
-	else
-		return NULL;
-}
-
-#endif
-
-
-// =================   TEXTURES   ======================
-
-
-
-void 
-GLRenderer::addTexture(unsigned int aTexUnit, Texture *t) {
-
-	if ((unsigned int)aTexUnit < m_Textures.size())
-		m_Textures[aTexUnit] = t;
-}
-
-
-void 
-GLRenderer::removeTexture(unsigned int aTexUnit) {
-
-	if ((unsigned int)aTexUnit < m_Textures.size())
-		m_Textures[aTexUnit] = 0;
-}
-
-
-int
-GLRenderer::getTextureCount() {
-
-	int count = 0;
-	for (unsigned int i = 0 ; i < m_Textures.size(); i++)
-		if (m_Textures[i] != 0)
-			count++;
-
-	return count;
-}
-
-
-Texture *
-GLRenderer::getTexture(int unit){
-
-	if ((unsigned int)unit < m_Textures.size())
-		return m_Textures[unit];
-	else
-		return NULL;
-}
-
-
-int 
-GLRenderer::getPropi(unsigned int aTexUnit, Texture::IntProperty prop) {
-
-	if ((unsigned int)aTexUnit < m_Textures.size() && m_Textures[aTexUnit] != 0)
-		return (m_Textures[aTexUnit]->getPropi(prop));
-	else
-		return -1;
-}
-
-void 
-GLRenderer::setActiveTextureUnit(unsigned int aTexUnit) {
-
-	glActiveTexture (GL_TEXTURE0 + (int)aTexUnit);
-}
-
-
-
-// =========== CLIP PLANES ===============
-
-void 
-GLRenderer::activateUserClipPlane(unsigned int  aClipPlane) {
-
-	glEnable (GL_CLIP_PLANE0 + (int)aClipPlane);
-}
-
-
-void 
-GLRenderer::setUserClipPlane(unsigned int  aClipPlane, double *plane) {
-
-	glClipPlane (GL_CLIP_PLANE0 + (int)aClipPlane, plane);
-}
-
-
-void 
-GLRenderer::deactivateUserClipPlane(unsigned int  aClipPlane) {
-
-	glDisable (GL_CLIP_PLANE0 + (int)aClipPlane);
-}
-
-
-
-void 
-GLRenderer::colorMask (bool r, bool g, bool b, bool a) {
-
-	glColorMask (r, g, b, a);
-	bvec4 *bv = new bvec4(r, g, b, a);
-	m_glCurrState.setPropb4(IState::COLOR_MASK_B4, *bv);
-	m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, *bv);
-}
-void 
-GLRenderer::flush (void) {
-
-	glFinish();
-}
-
-
-nau::math::vec3 
-GLRenderer::readpixel (int x, int y) {
-
-	GLubyte pixels[3];
-
-	glReadPixels (x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-	
-	vec3 pixel (pixels[0], pixels[1], pixels[2]);
-
-	return pixel;
-}
-
-
-float
-GLRenderer::getDepthAtPoint(int x, int y) {
-
-	float f;
-	glReadPixels( x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &f);
-	return f; 
 }
 
 

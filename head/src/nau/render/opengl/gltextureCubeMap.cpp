@@ -1,6 +1,6 @@
 #include "nau/render/opengl/gltextureCubeMap.h"
 #include "nau/render/opengl/gltexture.h"
-#include "nau/math/mat4.h"
+#include "nau/math/matrix.h"
 
 using namespace nau::render;
 
@@ -89,7 +89,6 @@ GLTextureCubeMap::getNumberOfComponents(void) {
 void 
 GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts) {
 
-	RENDERER->addTexture(aUnit, this);
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,m_IntProps[ID]);
 	glBindSampler(aUnit, ts->getPropi(TextureSampler::ID));
@@ -101,7 +100,6 @@ GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts)
 void 
 GLTextureCubeMap::restore(unsigned int aUnit) 
 {
-
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,0);
 

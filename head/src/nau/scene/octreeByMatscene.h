@@ -57,9 +57,9 @@ namespace nau {
 
 			virtual void getMaterialNames(std::set<std::string> *nameList);
 
-			virtual nau::math::ITransform *getTransform();
-			virtual void setTransform(nau::math::ITransform *t);
-			virtual void transform(nau::math::ITransform *t);
+			virtual nau::math::mat4 &getTransform();
+			virtual void setTransform(nau::math::mat4 &t);
+			virtual void transform(nau::math::mat4 &t);
 
 
 

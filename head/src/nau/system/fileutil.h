@@ -13,24 +13,28 @@
 // set this to '\\' for DOS or '/' for UNIX
 #define SLASH '\\'
 
+namespace nau {
+
+	namespace system {
 
 
-class FileUtil {
+		class FileUtil {
 
-private:
-	FileUtil();
-	~FileUtil();
+		private:
+			FileUtil();
+			~FileUtil();
 
-public:
-	static std::string GetName(const std::string &fn);
-	static std::string GetExtension(const std::string &fn);
-	static std::string GetPath(const std::string &fn);
-	static std::string GetRelativePathTo(const std::string &currentDir, const std::string &absFileName);
-	static std::string GetFullPath(const std::string &currentDir, const std::string &relFileName);
-	static bool IsRelative(const std::string &fn);
-	static std::string CleanFullPath(const std::string &fn);
-	static bool exists(const std::string &fn);
-
+		public:
+			static std::string GetName(const std::string &fn);
+			static std::string GetExtension(const std::string &fn);
+			static std::string GetPath(const std::string &fn);
+			static std::string GetRelativePathTo(const std::string &currentDir, const std::string &absFileName);
+			static std::string GetFullPath(const std::string &currentDir, const std::string &relFileName);
+			static bool IsRelative(const std::string &fn);
+			static std::string CleanFullPath(const std::string &fn);
+			static bool exists(const std::string &fn);
+		};
+	};
 };
 
 #endif

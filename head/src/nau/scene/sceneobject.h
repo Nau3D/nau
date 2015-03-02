@@ -5,7 +5,7 @@
 #include "nau/attributeValues.h"
 #include "nau/event/ilistener.h"
 #include "nau/geometry/iboundingvolume.h"
-#include "nau/math/itransform.h"
+#include "nau/math/matrix.h"
 #include "nau/render/irenderable.h"
 #include "nau/scene/sceneobjectfactory.h"
 
@@ -56,15 +56,15 @@ namespace nau
 			virtual bool isStatic();
 			virtual void setStaticCondition(bool aCondition);
 
-			virtual const nau::geometry::IBoundingVolume* getBoundingVolume();
+			virtual nau::geometry::IBoundingVolume* getBoundingVolume();
 			virtual void setBoundingVolume (nau::geometry::IBoundingVolume *b);
 
-			virtual const nau::math::ITransform& getTransform();
-			virtual void transform(nau::math::ITransform *t);
-			virtual void setTransform (nau::math::ITransform *t);
+			virtual const nau::math::mat4& getTransform();
+			virtual void transform(nau::math::mat4 &t);
+			virtual void setTransform(nau::math::mat4 &t);
 			virtual void burnTransform (void);
-			virtual nau::math::ITransform *_getTransformPtr (void);
-			virtual void updateGlobalTransform(nau::math::ITransform *m_Transform);
+			virtual nau::math::mat4 *_getTransformPtr(void);
+			virtual void updateGlobalTransform(nau::math::mat4 &m_Transform);
 			
 			virtual nau::render::IRenderable& getRenderable (void);
 			virtual nau::render::IRenderable* _getRenderablePtr (void);
@@ -89,7 +89,7 @@ namespace nau
 			bool m_StaticCondition;
 			nau::render::IRenderable *m_Renderable;
 			nau::geometry::IBoundingVolume *m_BoundingVolume;
-			nau::math::ITransform *m_Transform, *m_GlobalTransform, *m_ResultTransform;
+			nau::math::mat4 m_Transform, m_GlobalTransform, m_ResultTransform;
 
 			void calculateBoundingVolume (void);
 			void updateTransform();

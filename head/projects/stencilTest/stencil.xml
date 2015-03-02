@@ -4,24 +4,28 @@
 	
 		<scenes>
 			<scene name="Ground" >
-				<geometry name="plane"  type="Square" 
-												scale=10 material="ground"/>
+				<geometry name="plane"  type="Square" material="ground">
+					<SCALE x=10 y=10 z=10 />
+				</geometry>	
 			</scene>
 			
-			<scene name="CubeLand" >
-				<geometry name = "sphere1" type = "Sphere" slices=10 stacks=10 
-												transX=-2.5 transY=2.0 transZ=0 
-												 material="crateBox"/>
-				<geometry name = "box2" type = "Box" transX= 2.5 transY = 2 transZ=0 
-													 material="crateBox" />
+			<scene name="CubeLand" type="OctreeByMat">
+				<geometry name = "sphere1" type = "Sphere" slices=10 stacks=10 material="crateBox">
+					<TRANSLATE x =-2.5 y=2.0 z =0  />
+				</geometry>	
+				<geometry name = "box1" type = "Box"  material="crateBox" >
+					<TRANSLATE x =2.5 y=2.0 z =0  />
+				</geometry>	
 			</scene>
 			
-			<scene name="CubeLandReflected"  scaleZ=1 scaleX=1 scaleY=-1>
-				<geometry name = "sphere2" type = "Sphere" slices=10 stacks=10 
-												transX=-2.5 transY=2.0 transZ=0 
-												 material="crateBox"/>
-				<geometry name = "box2r" type = "Box" transX= 2.5 transY = 2 transZ=0 
-													 material="crateBox" />
+			<scene name="CubeLandReflected"  type="OctreeByMat">
+				<SCALE x=1 y=-1 z=1 />
+				<geometry name = "sphere1" type = "Sphere" slices=10 stacks=10 material="crateBox">
+					<TRANSLATE x =-2.5 y=2.0 z =0  />
+				</geometry>	
+				<geometry name = "box1" type = "Box"  material="crateBox" >
+					<TRANSLATE x =2.5 y=2.0 z =0  />
+				</geometry>	
 			</scene>
 		</scenes>
 		

@@ -122,6 +122,7 @@ namespace nau {
 		void *getDefault(int id, Enums::DataType type);
 
 		void initAttribInstanceIntArray(std::map<int, int> &m);
+		void initAttribInstanceInt2Array(std::map<int, ivec2> &m);
 		void initAttribInstanceEnumArray(std::map<int, int> &m);
 		void initAttribInstanceUIntArray(std::map<int, unsigned int> &m);
 		void initAttribInstanceUInt3Array(std::map<int, uivec3> &m);

@@ -1,4 +1,5 @@
 #include "dlgMaterials.h"
+
 #include <nau.h>
 #include <nau/event/eventFactory.h>
 #include <nau/loader/projectloader.h>
@@ -1309,29 +1310,30 @@ void DlgMaterials::updateShader(Material *m){
 
 
 		m_pgTextureList.Clear();
-		std::vector<std::string> *textureNames = m->getTextureNames();
-		if (textureNames) {
-			std::vector<int> *textureUnits = m->getTextureUnits();
+		std::vector<std::string> textureNames;
+		m->getTextureNames(&textureNames);
+		if (textureNames.size() != 0) {
+			std::vector<int> textureUnits;
+			m->getTextureUnits(&textureUnits);
 			std::vector<int>::iterator itUnits;
-			it = textureNames->begin();
-			for ( itUnits = textureUnits->begin(); it != textureNames->end(); it++, itUnits++) {
+			it = textureNames.begin();
+			for ( itUnits = textureUnits.begin(); it != textureNames.end(); it++, itUnits++) {
 			
 				m_pgTextureList.Add(wxString((*it).c_str()),(int)(*itUnits));
 			}
-			delete textureNames;
 		}
 
 		m_pgTextUnitsList.Clear();
-		std::vector<int> *textureUnits = m->getTextureUnits();
-		if (textureUnits) {
+		std::vector<int> textureUnits;
+		m->getTextureUnits(&textureUnits);
+		if (textureUnits.size()) {
 			std::vector<int>::iterator itUnits;
-			itUnits = textureUnits->begin();
-			for ( ; itUnits != textureUnits->end(); itUnits++) {
+			itUnits = textureUnits.begin();
+			for ( ; itUnits != textureUnits.end(); itUnits++) {
 				wxString s;
 				s.Printf(wxT("%d"),(*itUnits));
 				m_pgTextUnitsList.Add(s,(*itUnits));
 			}
-			delete textureUnits;
 		}
 		updateShaderAux(m);
 	}

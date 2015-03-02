@@ -214,6 +214,9 @@ Enums::isCompatible(DataType nau, DataType shader) {
 	if (nau == shader)
 		return true;
 
+	if (nau == INT && shader == SAMPLER)
+		return true;
+
 	if (nau == VEC4 && (shader == VEC4 || shader == VEC3 || shader == VEC2))
 		return true;
 	if (nau == VEC3 && (shader == VEC3 || shader == VEC2))

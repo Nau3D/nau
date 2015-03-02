@@ -488,6 +488,21 @@ AttribSet::initAttribInstanceIntArray(std::map<int, int> &m) {
 	}
 }
 
+
+void
+AttribSet::initAttribInstanceInt2Array(std::map<int, ivec2> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for (; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::IVEC2) {
+
+			m[it->second.m_Id] = *(ivec2 *)(it->second.m_Default);
+		}
+	}
+}
+
+
 void 
 AttribSet::initAttribInstanceEnumArray(std::map<int, int> &m) {
 

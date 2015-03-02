@@ -2,7 +2,6 @@
 
 #include "nau.h"
 #include "nau/geometry/boundingbox.h"
-#include "nau/math/transformfactory.h"
 
 using namespace nau::scene;
 using namespace nau::render;
@@ -40,39 +39,39 @@ bool SceneObject::Inited = Init();
 void
 SceneObject::updateTransform() {
 
-	ITransform *tis = TransformFactory::create("SimpleTransform");
+	mat4 tis;
 
 	switch (m_EnumProps[TRANSFORM_ORDER]) {
 
 	case T_R_S:
-		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
-		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
-		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis.translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis.rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
+		tis.scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
 		break;
 	case T_S_R:
-		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
-		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
-		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
+		tis.translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis.scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis.rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
 		break;
 	case R_T_S:
-		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
-		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
-		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis.rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
+		tis.translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis.scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
 		break;
 	case R_S_T:
-		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
-		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
-		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis.rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
+		tis.scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis.translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
 		break;
 	case S_R_T:
-		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
-		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
-		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis.scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis.rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
+		tis.translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
 		break;
 	case S_T_R:
-		tis->scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
-		tis->translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
-		tis->rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
+		tis.scale(m_Float4Props[SCALE].x, m_Float4Props[SCALE].y, m_Float4Props[SCALE].z);
+		tis.translate(m_Float4Props[TRANSLATE].x, m_Float4Props[TRANSLATE].y, m_Float4Props[TRANSLATE].z);
+		tis.rotate(m_Float4Props[ROTATE].w, m_Float4Props[ROTATE].x, m_Float4Props[ROTATE].y, m_Float4Props[ROTATE].z);
 		break;
 	}
 	setTransform(tis);
@@ -107,9 +106,6 @@ SceneObject::SceneObject(void) :
 	m_BoundingVolume (0),
 	m_StaticCondition(true)
 {
-	m_Transform = TransformFactory::create("SimpleTransform");
-	m_ResultTransform = TransformFactory::create("SimpleTransform");
-	m_GlobalTransform = TransformFactory::create("SimpleTransform");
 	m_Id = SceneObject::Counter++;
 
 	registerAndInitArrays("SCENE_OBJECT", Attribs);
@@ -120,10 +116,6 @@ SceneObject::SceneObject(void) :
 SceneObject::~SceneObject(void) {
 
 	delete m_BoundingVolume;
-	if (m_Transform)
-		delete m_Transform;
-	delete m_GlobalTransform;
-	delete m_ResultTransform;
 }
 
 
@@ -171,13 +163,12 @@ SceneObject::setName (const std::string &name)
 }
 
 
-const nau::geometry::IBoundingVolume*
+nau::geometry::IBoundingVolume*
 SceneObject::getBoundingVolume()
 {
 	if (0 == m_BoundingVolume) {
 		calculateBoundingVolume();
-		if (m_Transform)
-			m_BoundingVolume->setTransform (*m_ResultTransform);
+		m_BoundingVolume->setTransform (m_ResultTransform);
 	}
 //	m_BoundingVolume->setTransform (*m_ResultTransform);
 	return (m_BoundingVolume);
@@ -194,22 +185,22 @@ SceneObject::setBoundingVolume (IBoundingVolume *b)
 }
 
 
-const ITransform& 
+const mat4& 
 SceneObject::getTransform ()
 {
-	return (*m_ResultTransform);
+	return (m_ResultTransform);
 }
 
 
 void 
 SceneObject::burnTransform(void)
 {
-	const mat4 &transformationMatrix = m_ResultTransform->getMat44();
+	//const mat4 &transformationMatrix = m_ResultTransform;
 
-	ITransform *aux = m_ResultTransform->clone();
-	aux->invert();
-	aux->transpose();
-	const mat4 &normalMatrix = aux->getMat44();
+	mat4 aux = m_ResultTransform;
+	aux.invert();
+	aux.transpose();
+	const mat4 &normalMatrix = aux;
 
 	VertexData &vertexData = m_Renderable->getVertexData();
 
@@ -227,14 +218,13 @@ SceneObject::burnTransform(void)
 	}
 	verticesIter = vertices.begin();
 	for (; verticesIter != vertices.end(); ++verticesIter) {
-		transformationMatrix.transform(*verticesIter);
+		m_ResultTransform.transform(*verticesIter);
 	}
 
 	//Reset transform to the identity
-	mat4 &thisMatrixShouldNotExist = const_cast<mat4 &> (transformationMatrix); 
-	m_ResultTransform->setIdentity();
-	m_Transform->setIdentity();
-	m_GlobalTransform->setIdentity();
+	m_ResultTransform.setIdentity();
+	m_Transform.setIdentity();
+	m_GlobalTransform.setIdentity();
 
 	//Recalculate bounding box
 	calculateBoundingVolume();
@@ -242,43 +232,40 @@ SceneObject::burnTransform(void)
 
 
 void 
-SceneObject::setTransform (ITransform *t)
+SceneObject::setTransform (mat4 &t)
 {
 	//if (0 != this->m_Transform){ 
 	//	delete m_Transform; 
 	//}
-	m_Transform->clone(t);
-	m_ResultTransform->clone(m_GlobalTransform);
-	m_ResultTransform->compose(*m_Transform);
+	m_Transform = t;
+	m_ResultTransform = m_GlobalTransform;
+	m_ResultTransform *= m_Transform;
 
 	if (m_BoundingVolume)
-		m_BoundingVolume->setTransform(*m_ResultTransform);
+		m_BoundingVolume->setTransform(m_ResultTransform);
 }
 
 
 void
-SceneObject::transform(ITransform *t)
+SceneObject::transform(mat4 &t)
 {
-	//if (0 != this->m_Transform){ 
-	//	delete m_Transform; 
-	//}
-	m_Transform->compose(*t);
-	m_ResultTransform->clone(m_GlobalTransform);
-	m_ResultTransform->compose(*m_Transform);
+	m_Transform = t;
+	m_ResultTransform = m_GlobalTransform;
+	m_ResultTransform *= m_Transform;
 
 	if (m_BoundingVolume)
-		m_BoundingVolume->setTransform(*m_ResultTransform);
+		m_BoundingVolume->setTransform(m_ResultTransform);
 }
 
 
 void 
-SceneObject::updateGlobalTransform(ITransform *t)
+SceneObject::updateGlobalTransform(mat4 &t)
 {
-	m_GlobalTransform->clone(t);
-	m_ResultTransform->clone(m_GlobalTransform);
-	m_ResultTransform->compose(*m_Transform);
+	m_GlobalTransform =t;
+	m_ResultTransform = m_GlobalTransform;
+	m_ResultTransform *= m_Transform;
 	if (m_BoundingVolume)
-		m_BoundingVolume->setTransform(*m_ResultTransform);
+		m_BoundingVolume->setTransform(m_ResultTransform);
 }
 
 
@@ -322,7 +309,7 @@ SceneObject::calculateBoundingVolume (void)
 	m_BoundingVolume->
 		calculate (m_Renderable->getVertexData().getDataOf (VertexData::getAttribIndex("position")));
 
-	m_BoundingVolume->setTransform(*m_ResultTransform);
+	m_BoundingVolume->setTransform(m_ResultTransform);
 }
 
 
@@ -340,10 +327,10 @@ SceneObject::readSpecificData (std::fstream &f)
 }
 
 
-nau::math::ITransform*
+nau::math::mat4*
 SceneObject::_getTransformPtr (void)
 {
-	return m_ResultTransform;
+	return &m_ResultTransform;
 }
 
 
