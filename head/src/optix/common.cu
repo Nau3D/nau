@@ -19,7 +19,7 @@ rtDeclareVariable(float,         fov, , );
 
 // Material
 rtDeclareVariable(float4, diffuse, , );
-rtDeclareVariable(unsigned int, texCount, , );
+rtDeclareVariable(int, texCount, , );
 
 // Light
 rtDeclareVariable(float4, lightDir, , );

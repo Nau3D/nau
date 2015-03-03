@@ -80,7 +80,9 @@ namespace nau {
 		// note: gets and set perform no validation
 		// if in doubt call validate first
 
+		// Fully validate - context must refer to an existing object
 		bool validateAttribute(std::string type, std::string context, std::string component);
+		// Only validates the existence of the component in a particular type/context of object
 		bool validateShaderAttribute(std::string type, std::string context, std::string component);
 		void setAttribute(std::string type, std::string context,
 				 std::string component, int number,
@@ -88,6 +90,7 @@ namespace nau {
 		void *getAttribute(std::string type, std::string context,
 			std::string component, int number);
 		AttributeValues *getObjectAttributes(std::string type, std::string context, int number=0);
+		AttributeValues *getCurrentObjectAttributes(std::string context, int number = 0);
 
 		// Attributes
 		void registerAttributes(std::string s, AttribSet *attrib);

@@ -58,9 +58,6 @@
 					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="VM"          		type="CURRENT" context="RENDERER" 
-														component="VIEW_MODEL" />
-														
 					<valueof uniform="V"          		type="CURRENT" context="RENDERER" 
 														component="VIEW" />
 
@@ -263,6 +260,18 @@
 				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
+			<shader name="emission">
+				<values>
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+				</values>
+			</shader>
 		</material>
 		
 		<material name="__No Render">

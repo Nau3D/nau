@@ -44,7 +44,7 @@ namespace nau
 
 			bool init();
 
-			void *getProp(int prop, Enums::DataType dt);
+			void *getProp(unsigned int prop, Enums::DataType dt);
 			const mat4 &getPropm4(Mat4Property prop);
 			const mat3 &getPropm3(Mat3Property prop);
 

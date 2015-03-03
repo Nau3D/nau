@@ -52,8 +52,8 @@ namespace nau
 
 			MAT3_PROP(NORMAL, 0);
 
-			UINT_PROP(TEXTURE_COUNT, 0);
-			UINT_PROP(LIGHT_COUNT, 1);
+			INT_PROP(TEXTURE_COUNT, 0);
+			INT_PROP(LIGHT_COUNT, 1);
 
 
 			INT2_PROP(MOUSE_CLICK, 0);
@@ -83,7 +83,7 @@ namespace nau
 
 			virtual bool init() = 0;
 
-			virtual void *getProp(int prop, Enums::DataType dt) = 0;
+			virtual void *getProp(unsigned int prop, Enums::DataType dt) = 0;
 			virtual const mat4 &getPropm4(Mat4Property prop) = 0;
 			virtual const mat3 &getPropm3(Mat3Property prop) = 0;
 			

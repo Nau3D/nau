@@ -308,6 +308,48 @@ Nau::callLuaScript(std::string file, std::string name) {
 
 
 AttributeValues *
+Nau::getCurrentObjectAttributes(std::string context, int number) {
+
+	IRenderer *renderer = m_pRenderManager->getRenderer();
+
+	if (context == "CAMERA") {
+		return (AttributeValues *)renderer->getCamera();
+	}
+	if (context == "RENDERER") {
+		return (AttributeValues *)renderer;
+	}
+	if (context == "COLOR") {
+		return (AttributeValues *)renderer->getMaterial();
+	}
+	if (context == "MATERIAL_TEXTURE") {
+		return (AttributeValues *)renderer->getMaterialTexture(number);
+	}
+	if (context == "TEXTURE") {
+		return (AttributeValues *)renderer->getTexture(number);
+	}
+	if (context == "IMAGE_TEXTURE") {
+		return (AttributeValues *)renderer->getImageTexture(number);
+	}
+	if (context == "LIGHT") {
+		return (AttributeValues *)renderer->getLight(number);
+	}
+	if (context == "STATE") {
+		return (AttributeValues *)renderer->getState();
+	}
+	if (context == "VIEWPORT") {
+		return (AttributeValues *)renderer->getViewport();
+	}
+	if (context == "PASS") {
+		return (AttributeValues *)m_pRenderManager->getCurrentCamera();
+	}
+	// If we get here then we are trying to fetch something that does not exist
+	assert(false && "Getting an invalid attribute - Nau::getCurrentObjectAttributes");
+	return NULL;
+	return NULL;
+}
+
+
+AttributeValues *
 Nau::getObjectAttributes(std::string type, std::string context, int number) {
 
 	// From Render Manager
@@ -381,7 +423,7 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 	}
 
 	// If we get here then we are trying to fetch something that does not exist
-	assert(false && "Getting an invalid attribute - Nau::getObject");
+	assert(false && "Getting an invalid attribute - Nau::getObjectAttributes");
 	return NULL;
 }
 
@@ -396,7 +438,6 @@ Nau::validateAttribute(std::string type, std::string context, std::string compon
 	m_Attributes[type]->getPropTypeAndId(component, &dt, &id); 
 	return (id != -1);
 }
-
 
 bool
 Nau::validateShaderAttribute(std::string type, std::string context, std::string component) {

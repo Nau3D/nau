@@ -46,6 +46,7 @@ GLRenderer::GLRenderer(void) :
 {
 	init();
 	m_glCurrState.set();
+	m_Textures.clear();
 
 	glEnable(GL_MULTISAMPLE);
 	registerAndInitArrays("RENDERER", Attribs);
@@ -127,7 +128,7 @@ GLRenderer::getPropm3(Mat3Property prop) {
 
 
 void *
-GLRenderer::getProp(int prop, Enums::DataType dt) {
+GLRenderer::getProp(unsigned int prop, Enums::DataType dt) {
 
 	switch (dt) {
 
@@ -295,7 +296,7 @@ GLRenderer::addLight(nau::scene::Light& aLight) {
 
 	aLight.setPropi(Light::ID, id);
 	m_Lights.push_back(&aLight);
-	m_UIntProps[LIGHT_COUNT]++;
+	m_IntProps[LIGHT_COUNT]++;
 
 	return true;
 }
@@ -308,7 +309,7 @@ GLRenderer::removeLights() {
 	}
 
 	m_Lights.clear();
-	m_UIntProps[LIGHT_COUNT] = 0;
+	m_IntProps[LIGHT_COUNT] = 0;
 }
 
 
@@ -627,7 +628,7 @@ void
 GLRenderer::addTexture(MaterialTexture *t) {
 
 	m_Textures[t->getPropi(MaterialTexture::UNIT)] = t;
-	m_UIntProps[TEXTURE_COUNT]++;
+	m_IntProps[TEXTURE_COUNT]++;
 }
 
 
@@ -636,7 +637,7 @@ GLRenderer::removeTexture(unsigned int aTexUnit) {
 
 	if (m_Textures.count(aTexUnit)) {
 		m_Textures.erase(aTexUnit);
-		m_UIntProps[TEXTURE_COUNT]--;
+		m_IntProps[TEXTURE_COUNT]--;
 	}
 }
 
@@ -664,7 +665,7 @@ GLRenderer::getTexture(int unit) {
 int
 GLRenderer::getTextureCount() {
 
-	return (int)m_UIntProps[TEXTURE_COUNT];
+	return (int)m_IntProps[TEXTURE_COUNT];
 }
 
 

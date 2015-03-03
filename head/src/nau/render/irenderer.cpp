@@ -40,9 +40,9 @@ IRenderer::Init() {
 	// MAT3
 	Attribs.add(Attribute(NORMAL, "NORMAL", Enums::DataType::MAT3, true, new mat3()));
 
-	// UINT
-	Attribs.add(Attribute(TEXTURE_COUNT, "TEXTURE_COUNT", Enums::DataType::UINT, true, new unsigned int(0)));
-	Attribs.add(Attribute(LIGHT_COUNT, "LIGHT_COUNT", Enums::DataType::UINT, true, new unsigned int(0)));
+	// INT
+	Attribs.add(Attribute(TEXTURE_COUNT, "TEXTURE_COUNT", Enums::DataType::INT, true, new int(0)));
+	Attribs.add(Attribute(LIGHT_COUNT, "LIGHT_COUNT", Enums::DataType::INT, true, new int(0)));
 
 	// VEC2
 	Attribs.add(Attribute(MOUSE_CLICK, "MOUSE_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));

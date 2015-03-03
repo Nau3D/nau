@@ -1692,7 +1692,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (0 == pComponent) {
 			NAU_THROW("No component found for optix variable %s, in pass %s", pUniformName, aPass->getName().c_str());
 		}
-		if (!ProgramValue::Validate(pType, pContext, pComponent))
+		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
 			NAU_THROW("Optix variable %s is not valid, in pass %s", pUniformName, aPass->getName().c_str());
 
 		int id = 0;
@@ -1752,7 +1752,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (0 == pComponent) {
 			NAU_THROW("No component found for optix variable %s, in pass %s", pUniformName, aPass->getName().c_str());
 		}
-		if (!ProgramValue::Validate(pType, pContext, pComponent))
+		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
 			NAU_THROW("Optix variable %s is not valid, in pass %s", pUniformName, aPass->getName().c_str());
 
 		int id = 0;
@@ -1812,7 +1812,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (0 == pComponent) {
 			NAU_THROW("No component found for optix variable %s, in pass %s", pUniformName, aPass->getName().c_str());
 		}
-		if (!ProgramValue::Validate(pType, pContext, pComponent))
+		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
 			NAU_THROW("Optix variable %s is not valid, in pass %s", pUniformName, aPass->getName().c_str());
 
 		int id = 0;
@@ -3876,7 +3876,6 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 				NAU_THROW("No component found for uniform %s, in library %s in material %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
 			}
 			if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-//			if (!ProgramValue::Validate(pType, pContext, pComponent))
 				NAU_THROW("Uniform %s is not valid, in library %s in material %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
 
 			int id = 0;

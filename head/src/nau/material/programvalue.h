@@ -32,7 +32,7 @@ namespace nau {
 			};
 
 		private:
-
+			std::string m_TypeString;
 			SEMANTIC_TYPE m_Type;
 			int m_ValueOf;
 			nau::Enums::DataType m_ValueType;
@@ -48,7 +48,7 @@ namespace nau {
 			float m_fDummy;
 		public:
 
-			static bool Validate(std::string type,std::string context,std::string component);
+			//static bool Validate(std::string type,std::string context,std::string component);
 			static std::string getSemanticTypeString(SEMANTIC_TYPE s);
 			static const std::string semanticTypeString[];
 
