@@ -15,8 +15,8 @@ IScene::Init() {
 	Attribs.add(Attribute(ROTATE, "ROTATE", Enums::DataType::VEC4, false, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 
 	// VEC3
-	Attribs.add(Attribute(BB_MAX, "BB_MAX", Enums::DataType::VEC3, true, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
-	Attribs.add(Attribute(BB_MIN, "BB_MIN", Enums::DataType::VEC3, true, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
+	Attribs.add(Attribute(BB_MAX, "BB_MAX", Enums::DataType::VEC3, true, new vec3(-1.0f, -1.0f, -1.0f)));
+	Attribs.add(Attribute(BB_MIN, "BB_MIN", Enums::DataType::VEC3, true, new vec3(1.0f, 1.0f, 1.0f)));
 
 	// ENUM
 	Attribs.add(Attribute(TRANSFORM_ORDER, "TRANSFORM_ORDER", Enums::ENUM, false, new int(T_R_S)));

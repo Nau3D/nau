@@ -11,14 +11,14 @@ using namespace nau::scene;
 using namespace nau::system;
 
 
-const std::string ProgramValue::semanticTypeString[] = {"CAMERA", "LIGHT", "TEXTURE",
-											"DATA", "PASS", "CURRENT", "IMAGE_TEXTURE"};
-
-std::string 
-ProgramValue::getSemanticTypeString(SEMANTIC_TYPE s) 
-{
-	return (semanticTypeString[s]);
-}
+//const std::string ProgramValue::semanticTypeString[] = {"CAMERA", "LIGHT", "TEXTURE",
+//											"DATA", "PASS", "CURRENT", "IMAGE_TEXTURE"};
+//
+//std::string 
+//ProgramValue::getSemanticTypeString(SEMANTIC_TYPE s) 
+//{
+//	return (semanticTypeString[s]);
+//}
 
 
 
@@ -144,237 +144,256 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 	m_Name = name;
 	m_Context = context;
 	m_Id = id;
+	std::string what;
 
-	if (0 == type.compare ("CAMERA")) {
+	if (type == "CURRENT")
+		what = context;
+	else
+		what = type;
 
-		m_Type = CAMERA;
-
-		Camera::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-		m_ValueOf = attr;
-		m_ValueType = dt;
-		m_Cardinality = Enums::getCardinality(dt);
-		m_Values = (void *)malloc(Enums::getSize(dt));
-		return;
-	} 
-	else if (0 == type.compare ("LIGHT")) {
-
-		m_Type = LIGHT;
-
-		Light::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-		m_ValueOf = attr;
-		m_ValueType = dt;
-		m_Cardinality = Enums::getCardinality(dt);
-		m_Values = (void *)malloc(Enums::getSize(dt));
-
-		return;
-	} 
-	else if (0 == type.compare ("TEXTURE")) {
-
-		m_Type = TEXTURE;
-
-		Texture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-		m_ValueOf = attr;
-		m_ValueType = dt;
-		m_Cardinality = Enums::getCardinality(dt);
-		m_Values = (void *)malloc(Enums::getSize(dt));
-
-		return;
-	}
-	else if (0 == type.compare ("DATA")) {
-		m_Type = DATA;
-
-		m_ValueOf = USERDATA;
-		m_ValueType = nau::Enums::getType(context);
-		m_Cardinality = nau::Enums::getCardinality(m_ValueType);
-
-		m_Values = TextUtil::ParseFloats(valueof, m_Cardinality);
-	}
-	else if (0 == type.compare("PASS")) {
+	AttribSet *attrSet = NAU->getAttribs(what);
+	if (attrSet == NULL)
+		NAU_THROW("Exception creating a program value. name=%s, type=%s, context=%s, component=%s, int=%d", name.c_str(), type.c_str(), context.c_str(), valueof.c_str(), id);
 	
-		m_Type = PASS;
-
-		Pass::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-		m_ValueOf = attr;
-		m_ValueType = dt;
-		m_Cardinality = Enums::getCardinality(dt);
-		m_Values = (void *)malloc(Enums::getSize(dt));
-	}
-	else if (0 == type.compare("CURRENT")) {
-
-		m_Type = CURRENT;
-
-		if (0 == context.compare("COLOR")) {
-
-			ColorMaterial::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-		}
-		if (0 == context.compare("RENDERER")) {
-
-			IRenderer::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-		}
-		//else if (0 == context.compare("MOUSE")) {
-
-		//	m_ValueType = Enums::INT;
-		//	m_Cardinality = Enums::getCardinality(Enums::INT);
-		//	m_Values = (void *)malloc(Enums::getSize(Enums::INT));
-		//	if (valueof == "CLICK_X")
-		//		m_ValueOf = 0;
-		//	else
-		//		m_ValueOf = 1;
-		//}
-		//else if (0 == context.compare("MATRIX")) {
-
-		//	IRenderer::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-		//	m_ValueOf = attr;
-		//	m_ValueType = dt;
-		//	m_Cardinality = Enums::getCardinality(dt);
-		//	m_Values = (void *)malloc(Enums::getSize(dt));
-		//	return;
-		//}
-
-		else if (0 == context.compare("LIGHT")) {
-		
-			//if (0 == valueof.compare("COUNT")) {
-
-			//	m_ValueOf = COUNT;
-			//	m_ValueType = Enums::INT;
-			//	m_Cardinality = 1;
-			//	m_Values = (void *)malloc(Enums::getSize(m_ValueType));
-			//	//m_IntValue = (int *)malloc(sizeof(int));
-			//	return;
-			//}
-			Light::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-			return;
-		} 
-
-		else if (0 == context.compare("CAMERA")) {
-
-			Camera::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-
-			return;
-		}
-
-		else if (0 == context.compare("STATE")) {
-
-			IState::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-
-			return;
-		}
-
-		else if (0 == context.compare("PASS")) {
-
-			Pass::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-
-			return;
-		}
-
-		else if (0 == context.compare("VIEWPORT")) {
-
-			Viewport::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-
-			return;
-		}
-		else if (0 == context.compare("MATERIAL_TEXTURE")) {
-
-			MaterialTexture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-			memset(m_Values, 0, Enums::getSize(dt));
-
-			return;
-		}
-
-		else if (0 == context.compare("TEXTURE")) {
-		
-			/*if (0 == valueof.compare("COUNT")) {
-
-				m_ValueOf = COUNT;
-				m_ValueType = Enums::INT;
-				m_Cardinality = 1;
-				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
-				return;
-			}
-			else*/ if (0 == valueof.compare("UNIT")) {
-
-				m_ValueOf = UNIT;
-				m_ValueType = Enums::SAMPLER;
-				m_Cardinality = 1;
-				m_Values = (void *)malloc(Enums::getSize(Enums::SAMPLER));
-				memcpy(m_Values, &m_Id, Enums::getSize(Enums::SAMPLER));
-				return;
-			}
-			Texture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-
-			return;
-		} 
-#if NAU_OPENGL_VERSION >=  420
-		else if (0 == context.compare("IMAGE_TEXTURE")) {
-		
-/*			if (0 == valueof.compare("COUNT")) {
-
-				m_ValueOf = COUNT;
-				m_ValueType = Enums::INT;
-				m_Cardinality = 1;
-				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
-				return;
-			}
-			else*/ if (0 == valueof.compare("UNIT")) {
-
-				m_ValueOf = UNIT;
-				m_ValueType = Enums::SAMPLER;
-				m_Cardinality = 1;
-				m_Values = (void *)malloc(Enums::getSize(Enums::SAMPLER));
-				memcpy(m_Values, &m_Id, Enums::getSize(Enums::SAMPLER));
-				return;
-			}
-			ImageTexture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
-			m_ValueOf = attr;
-			m_ValueType = dt;
-			m_Cardinality = Enums::getCardinality(dt);
-			m_Values = (void *)malloc(Enums::getSize(dt));
-
-			return;
-		} 
-#endif
-		else if (0 == context.compare("PASS")) {
-		
-			m_Param = valueof;
-			return;
-		}
-	}
+	attrSet->getPropTypeAndId(valueof, &dt, &attr);
+	m_ValueOf = attr;
+	m_ValueType = dt;
+	m_Cardinality = Enums::getCardinality(dt);
+	m_Values = (void *)malloc(Enums::getSize(dt));
+	
+	
+	//return;
+	
+//	if (0 == type.compare ("CAMERA")) {
+//
+//		m_Type = CAMERA;
+//
+//		Camera::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//		m_ValueOf = attr;
+//		m_ValueType = dt;
+//		m_Cardinality = Enums::getCardinality(dt);
+//		m_Values = (void *)malloc(Enums::getSize(dt));
+//		return;
+//	} 
+//	else if (0 == type.compare ("LIGHT")) {
+//
+//		m_Type = LIGHT;
+//
+//		Light::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//		m_ValueOf = attr;
+//		m_ValueType = dt;
+//		m_Cardinality = Enums::getCardinality(dt);
+//		m_Values = (void *)malloc(Enums::getSize(dt));
+//
+//		return;
+//	} 
+//	else if (0 == type.compare ("TEXTURE")) {
+//
+//		m_Type = TEXTURE;
+//
+//		Texture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//		m_ValueOf = attr;
+//		m_ValueType = dt;
+//		m_Cardinality = Enums::getCardinality(dt);
+//		m_Values = (void *)malloc(Enums::getSize(dt));
+//
+//		return;
+//	}
+//	else if (0 == type.compare ("DATA")) {
+//		m_Type = DATA;
+//
+//		m_ValueOf = USERDATA;
+//		m_ValueType = nau::Enums::getType(context);
+//		m_Cardinality = nau::Enums::getCardinality(m_ValueType);
+//
+//		m_Values = TextUtil::ParseFloats(valueof, m_Cardinality);
+//	}
+//	else if (0 == type.compare("PASS")) {
+//	
+//		m_Type = PASS;
+//
+//		Pass::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//		m_ValueOf = attr;
+//		m_ValueType = dt;
+//		m_Cardinality = Enums::getCardinality(dt);
+//		m_Values = (void *)malloc(Enums::getSize(dt));
+//	}
+//	else if (0 == type.compare("CURRENT")) {
+//
+//		m_Type = CURRENT;
+//
+//		if (0 == context.compare("COLOR")) {
+//
+//			ColorMaterial::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//		}
+//		if (0 == context.compare("RENDERER")) {
+//
+//			IRenderer::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//		}
+//		//else if (0 == context.compare("MOUSE")) {
+//
+//		//	m_ValueType = Enums::INT;
+//		//	m_Cardinality = Enums::getCardinality(Enums::INT);
+//		//	m_Values = (void *)malloc(Enums::getSize(Enums::INT));
+//		//	if (valueof == "CLICK_X")
+//		//		m_ValueOf = 0;
+//		//	else
+//		//		m_ValueOf = 1;
+//		//}
+//		//else if (0 == context.compare("MATRIX")) {
+//
+//		//	IRenderer::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//		//	m_ValueOf = attr;
+//		//	m_ValueType = dt;
+//		//	m_Cardinality = Enums::getCardinality(dt);
+//		//	m_Values = (void *)malloc(Enums::getSize(dt));
+//		//	return;
+//		//}
+//
+//		else if (0 == context.compare("LIGHT")) {
+//		
+//			//if (0 == valueof.compare("COUNT")) {
+//
+//			//	m_ValueOf = COUNT;
+//			//	m_ValueType = Enums::INT;
+//			//	m_Cardinality = 1;
+//			//	m_Values = (void *)malloc(Enums::getSize(m_ValueType));
+//			//	//m_IntValue = (int *)malloc(sizeof(int));
+//			//	return;
+//			//}
+//			Light::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//			return;
+//		} 
+//
+//		else if (0 == context.compare("CAMERA")) {
+//
+//			Camera::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//
+//			return;
+//		}
+//
+//		else if (0 == context.compare("STATE")) {
+//
+//			IState::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//
+//			return;
+//		}
+//
+//		else if (0 == context.compare("PASS")) {
+//
+//			Pass::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//
+//			return;
+//		}
+//
+//		else if (0 == context.compare("VIEWPORT")) {
+//
+//			Viewport::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//
+//			return;
+//		}
+//		else if (0 == context.compare("MATERIAL_TEXTURE")) {
+//
+//			MaterialTexture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//			memset(m_Values, 0, Enums::getSize(dt));
+//
+//			return;
+//		}
+//
+//		else if (0 == context.compare("TEXTURE")) {
+//		
+//			/*if (0 == valueof.compare("COUNT")) {
+//
+//				m_ValueOf = COUNT;
+//				m_ValueType = Enums::INT;
+//				m_Cardinality = 1;
+//				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
+//				return;
+//			}
+//			else*/ if (0 == valueof.compare("UNIT")) {
+//
+//				m_ValueOf = UNIT;
+//				m_ValueType = Enums::SAMPLER;
+//				m_Cardinality = 1;
+//				m_Values = (void *)malloc(Enums::getSize(Enums::SAMPLER));
+//				memcpy(m_Values, &m_Id, Enums::getSize(Enums::SAMPLER));
+//				return;
+//			}
+//			Texture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//
+//			return;
+//		} 
+//#if NAU_OPENGL_VERSION >=  420
+//		else if (0 == context.compare("IMAGE_TEXTURE")) {
+//		
+///*			if (0 == valueof.compare("COUNT")) {
+//
+//				m_ValueOf = COUNT;
+//				m_ValueType = Enums::INT;
+//				m_Cardinality = 1;
+//				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
+//				return;
+//			}
+//			else*/ if (0 == valueof.compare("UNIT")) {
+//
+//				m_ValueOf = UNIT;
+//				m_ValueType = Enums::SAMPLER;
+//				m_Cardinality = 1;
+//				m_Values = (void *)malloc(Enums::getSize(Enums::SAMPLER));
+//				memcpy(m_Values, &m_Id, Enums::getSize(Enums::SAMPLER));
+//				return;
+//			}
+//			ImageTexture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+//			m_ValueOf = attr;
+//			m_ValueType = dt;
+//			m_Cardinality = Enums::getCardinality(dt);
+//			m_Values = (void *)malloc(Enums::getSize(dt));
+//
+//			return;
+//		} 
+//#endif
+//		else if (0 == context.compare("PASS")) {
+//		
+//			m_Param = valueof;
+//			return;
+//		}
+//	}
 }
 
 
@@ -394,7 +413,7 @@ ProgramValue::~ProgramValue () {
 void 
 ProgramValue::clone(ProgramValue &pv) 
 {
-	m_Type = pv.m_Type;
+//	m_Type = pv.m_Type;
 	m_Id = pv.m_Id;
 	m_ValueOf = pv.m_ValueOf;
 	m_ValueType = pv.m_ValueType;
@@ -405,6 +424,12 @@ ProgramValue::clone(ProgramValue &pv)
 	memcpy(m_Values, pv.m_Values, Enums::getSize(m_ValueType));
 }
 
+
+std::string 
+ProgramValue::getType() {
+
+	return m_TypeString;
+}
 
 int 
 ProgramValue::getId() {
@@ -581,18 +606,18 @@ ProgramValue::getValues (void) {
 }
 
 
-ProgramValue::SEMANTIC_TYPE 
-ProgramValue::getSemanticType() {
-
-	return m_Type;
-}
-
-	 
-void 
-ProgramValue::setSemanticType(SEMANTIC_TYPE s) {
-
-	m_Type = s;
-}
+//ProgramValue::SEMANTIC_TYPE 
+//ProgramValue::getSemanticType() {
+//
+//	return m_Type;
+//}
+//
+//	 
+//void 
+//ProgramValue::setSemanticType(SEMANTIC_TYPE s) {
+//
+//	m_Type = s;
+//}
 
 int 
 ProgramValue::getSemanticValueOf() {

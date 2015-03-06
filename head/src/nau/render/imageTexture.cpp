@@ -24,7 +24,7 @@ ImageTexture::Init() {
 	// BOOL
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
 	// INT
-	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::BOOL, true, new int(-1)));
+	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, true, new int(-1)));
 
 	NAU->registerAttributes("IMAGE_TEXTURE", &Attribs);
 

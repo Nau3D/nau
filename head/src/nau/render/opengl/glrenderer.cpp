@@ -575,35 +575,29 @@ GLRenderer::getAttribLocation(std::string name) {
 void
 GLRenderer::addImageTexture(unsigned int aTexUnit, ImageTexture *t) {
 
-	if ((unsigned int)aTexUnit < m_ImageTextures.size())
-		m_ImageTextures[aTexUnit] = t;
+	m_ImageTextures[aTexUnit] = t;
 }
 
 
 void
 GLRenderer::removeImageTexture(unsigned int aTexUnit) {
 
-	if ((unsigned int)aTexUnit < m_ImageTextures.size())
-		m_ImageTextures[aTexUnit] = 0;
+	if (m_ImageTextures.count(aTexUnit))
+		m_ImageTextures.erase(aTexUnit);
 }
 
 
 int
 GLRenderer::getImageTextureCount() {
 
-	int count = 0;
-	for (unsigned int i = 0; i < m_ImageTextures.size(); i++)
-		if (m_ImageTextures[i] != 0)
-			count++;
-
-	return count;
+	return m_ImageTextures.size();
 }
 
 
 ImageTexture*
 GLRenderer::getImageTexture(unsigned int aTexUnit) {
 
-	if ((unsigned int)aTexUnit < m_ImageTextures.size())
+	if (m_ImageTextures.count(aTexUnit))
 		return m_ImageTextures[aTexUnit];
 	else
 		return NULL;

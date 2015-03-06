@@ -12,28 +12,28 @@ namespace nau {
 	 
 		public:
  
-			enum SEMANTIC_TYPE {
-				CAMERA,
-				LIGHT,
-				TEXTURE,
-				DATA,
-				PASS,
-				CURRENT
-			};
+			//enum SEMANTIC_TYPE {
+			//	CAMERA,
+			//	LIGHT,
+			//	TEXTURE,
+			//	DATA,
+			//	PASS,
+			//	CURRENT
+			//};
 
-			enum SEMANTIC_VALUEOF {
-			//	ID=100,
-				UNIT=100, 
-				COUNT,
-			//	TYPE,
-			//	FLOATS,// place int values before this point SEE dlgmaterials.cpp(2178): if (semValueOf < ProgramValue::FLOATS) { // INT VALUES
-			//	ENABLED,
-				USERDATA
-			};
+			//enum SEMANTIC_VALUEOF {
+			////	ID=100,
+			//	UNIT=100, 
+			//	COUNT,
+			////	TYPE,
+			////	FLOATS,// place int values before this point SEE dlgmaterials.cpp(2178): if (semValueOf < ProgramValue::FLOATS) { // INT VALUES
+			////	ENABLED,
+			//	USERDATA
+			//};
 
 		private:
 			std::string m_TypeString;
-			SEMANTIC_TYPE m_Type;
+			//SEMANTIC_TYPE m_Type;
 			int m_ValueOf;
 			nau::Enums::DataType m_ValueType;
 			std::string m_Context, m_Name;
@@ -49,8 +49,8 @@ namespace nau {
 		public:
 
 			//static bool Validate(std::string type,std::string context,std::string component);
-			static std::string getSemanticTypeString(SEMANTIC_TYPE s);
-			static const std::string semanticTypeString[];
+			//static std::string getSemanticTypeString(SEMANTIC_TYPE s);
+			//static const std::string semanticTypeString[];
 
 			ProgramValue ();
 			ProgramValue (std::string name, std::string type,std::string context,std::string valueof, int id, bool inSpecML = true);
@@ -59,6 +59,7 @@ namespace nau {
 			void clone(ProgramValue &pv);
 
 			std::string getName();
+			std::string getType();
 			std::string getContext();
 			void setContext(std::string s);
 
@@ -69,9 +70,9 @@ namespace nau {
 			int getId();
 			void setId(int id);
 			nau::Enums::DataType getValueType ();
-			SEMANTIC_TYPE getSemanticType();
+//			SEMANTIC_TYPE getSemanticType();
 			int getSemanticValueOf();
-			void setSemanticType(SEMANTIC_TYPE s);
+			//void setSemanticType(SEMANTIC_TYPE s);
 			void setSemanticValueOf(int s);
 			void setValueType(nau::Enums::DataType s);
 				

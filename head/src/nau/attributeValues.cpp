@@ -887,6 +887,13 @@ AttributeValues::initArrays() {
 }
 
 
+AttribSet *
+AttributeValues::getAttribSet() {
+
+	return m_Attribs;
+}
+
+
 AttributeValues::AttributeValues() {
 
 }
