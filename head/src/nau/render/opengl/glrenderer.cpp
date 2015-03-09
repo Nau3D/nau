@@ -204,6 +204,7 @@ GLRenderer::getAtomicCounterValues() {
 			offset = at.first.second;
 			b = RESOURCEMANAGER->getBuffer(buffer);
 			if (NULL != b) {
+				//GL_ATOMIC_COUNTER_BUFFER
 				//b->getData(offset, sizeof(unsigned int), &value);
 				glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, b->getPropi(IBuffer::ID));
 				glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, offset, sizeof(unsigned int), &value);

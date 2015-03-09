@@ -171,7 +171,73 @@ Nau::getName() {
 
 #ifdef NAU_LUA
 
-// Must do something when the parameters are invalid
+void luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
+
+	float *arrF;
+	int *arrI;
+	unsigned int *arrUI;
+
+	switch (bdt) {
+
+	case Enums::FLOAT:
+		arrF = (float *)arr;
+		for (int i = 0; i < card; ++i) {
+			lua_pushnumber(l, i + 1); // key
+			lua_pushnumber(l, arrF[i]); // value
+			lua_settable(l, -3); // two pushes 
+		}
+		break;
+	case Enums::INT:
+	case Enums::BOOL:
+		arrI = (int *)arr;
+		for (int i = 0; i < card; ++i) {
+			lua_pushnumber(l, i + 1); // key
+			lua_pushnumber(l, arrI[i]); // value
+			lua_settable(l, -3); // two pushes 
+		}
+		break;
+	case Enums::UINT:
+		arrUI = (unsigned int *)arr;
+		for (int i = 0; i < card; ++i) {
+			lua_pushnumber(l, i + 1); // key
+			lua_pushnumber(l, arrUI[i]); // value
+			lua_settable(l, -3); // two pushes 
+		}
+		break;
+	}
+}
+
+int
+luaGetBuffer(lua_State *l) {
+
+	const char *name = lua_tostring(l, -4);
+	int offset = lua_tonumber(l, -3);
+	const char *dataType = lua_tostring(l, -2);
+
+	Enums::DataType dt = Enums::getType(dataType);
+	int card = Enums::getCardinality(dt);
+	Enums::DataType bdt = Enums::getBasicType(dt);
+
+	IBuffer *buff = RESOURCEMANAGER->getBuffer(name);
+	if (buff == NULL) {
+		SLOG("Lua getBuffer: invalid buffer: %s", name);
+		return 0;
+	}
+
+	int size = Enums::getSize(dt);
+	void *arr = malloc(size);
+	int count = buff->getData(offset, size , arr);
+	if (size != count) {
+		SLOG("Lua getBuffer: buffer %s offset %d, out of bounds", name, offset);
+		return 0;
+	}
+
+	luaGetValues(l, arr, card, bdt);
+
+	return 0;
+}
+
+
 int
 luaGet(lua_State *l) {
 
@@ -181,28 +247,34 @@ luaGet(lua_State *l) {
 	int number = lua_tonumber(l, -2);
 	void *arr;
 	AttribSet *attr = NAU->getAttribs(tipo);
+	if (attr == NULL) {
+		SLOG("Lua get: invalid type: %s", tipo);
+		return 0;
+	}
+
 	std::string s = component;
 	Enums::DataType dt, bdt;
 	int id;
 	attr->getPropTypeAndId(s, &dt, &id);
+	if (id == -1) {
+		SLOG("Lua get: invalid attribute: %s", component);
+		return 0;
+	}
+
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
 	arr = NAU->getAttribute(tipo, context, component, number);
-	float *arrF;
-
-	switch (bdt) {
-
-	case Enums::FLOAT:
-		arrF = (float *)arr;
-		for (int i = 0; i < card ; ++i) {
-			lua_pushnumber(l, i + 1); // key
-			lua_pushnumber(l, arrF[i]); // value
-			lua_settable(l, -3); // two pushes 
-		}
-		break;
+	if (arr == NULL) {
+		SLOG("Lua get: Invalid context or number: %s %d", context, number);
+		return 0;
 	}
+
+	luaGetValues(l, arr, card, bdt);
+
+
 	return 0;
 }
+
 
 int 
 luaSet(lua_State *l) {
@@ -266,9 +338,11 @@ Nau::initLua() {
 	m_LuaState = luaL_newstate();
 	luaL_openlibs(m_LuaState);
 	lua_pushcfunction(m_LuaState, luaSet);
-	lua_setglobal(m_LuaState, "set");
+	lua_setglobal(m_LuaState, "setAttr");
 	lua_pushcfunction(m_LuaState, luaGet);
-	lua_setglobal(m_LuaState, "get");
+	lua_setglobal(m_LuaState, "getAttr");
+	lua_pushcfunction(m_LuaState, luaGetBuffer);
+	lua_setglobal(m_LuaState, "getBuffer");
 }
 
 

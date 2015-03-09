@@ -159,7 +159,11 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 	m_ValueOf = attr;
 	m_ValueType = dt;
 	m_Cardinality = Enums::getCardinality(dt);
-	m_Values = (void *)malloc(Enums::getSize(dt));
+	void *def = attrSet->getDefault(attr, dt);
+	if (def != NULL)
+		m_Values = def;
+	else
+		m_Values = (void *)malloc(Enums::getSize(dt));
 	
 	
 	//return;
@@ -488,12 +492,13 @@ ProgramValue::getValues (void) {
 		attr = NAU->getObjectAttributes(m_TypeString, m_Context, m_Id);
 	}
 	else {
-
 		attr = NAU->getCurrentObjectAttributes(m_Context, m_Id);
 	}
+
 	if (attr != NULL) {
 		m_Values = attr->getProp(m_ValueOf, m_ValueType);
 	}
+	// otherwise m_Values will have the default value
 	return m_Values;
 
 //  switch (m_Type) {
