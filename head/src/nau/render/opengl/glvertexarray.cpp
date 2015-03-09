@@ -183,14 +183,10 @@ GLVertexArray::compile (void) {
 			else {
 				b = RESOURCEMANAGER->getBuffer(s);
 			}
-
-			glBindBuffer(GL_ARRAY_BUFFER, m_GLBuffers[i]);
-			glBufferData(GL_ARRAY_BUFFER, pArray->size() * 4 * sizeof(float), (float*)&(*pArray)[0], GL_STATIC_DRAW);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-			NOTA: O setprop do size causa o clear do buffer
-			b->setPropui(IBuffer::SIZE, pArray->size() * 4 * sizeof(float));
-
+			b->setData(pArray->size() * 4 * sizeof(float), (float*)&(*pArray)[0]);
+			//glBindBuffer(GL_ARRAY_BUFFER, m_GLBuffers[i]);
+			//glBufferData(GL_ARRAY_BUFFER, pArray->size() * 4 * sizeof(float), (float*)&(*pArray)[0], GL_STATIC_DRAW);
+			//glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 	}
 	return true;

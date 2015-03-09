@@ -114,7 +114,6 @@ GLIndexArray::compile() {
 		IBuffer *b = NULL;
 
 		if (m_GLBuffer == 0) {
-			std::string s;
 			b = RESOURCEMANAGER->createBuffer(m_Name);
 			b->setStructure(std::vector < Enums::DataType > {Enums::UINT});
 			m_GLBuffer = b->getPropi(IBuffer::ID);
@@ -122,10 +121,11 @@ GLIndexArray::compile() {
 		else {
 			b = RESOURCEMANAGER->getBuffer(m_Name);
 		}
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, pArray->size() * sizeof(unsigned int), &(*pArray)[0], GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		b->setPropui(IBuffer::SIZE, pArray->size() * sizeof(unsigned int));
+		b->setData(pArray->size() * sizeof(unsigned int), &(*pArray)[0]);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
+		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, pArray->size() * sizeof(unsigned int), &(*pArray)[0], GL_STATIC_DRAW);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		//b->setPropui(IBuffer::SIZE, pArray->size() * sizeof(unsigned int));
 	}
 }
 
