@@ -51,10 +51,12 @@ void main()
 				else if (i == 1){
 					color += diffuse * (NdotL * f2) * vec4(0.0, 1.0, 0.0, 1.0);
 				}
-				else if (i == 2)
+				else if (i == 2) {
 					color += diffuse * NdotL * f3 * vec4(0.0, 0.0, 1.0, 1.0);
-				else if (i == 3)
+				}
+				else if (i == 3) {
 					color += diffuse * NdotL * f4 * vec4(1.0, 0.0, 1.0, 1.0);
+				}
  			//float depth = projShadowCoord[i].z / projShadowCoord[i].w;
 				//float depthShadow = shadow2DProj (shadowMap[i], projShadowCoord[i]).r;
 				//if (depthShadow > depthShadow) {
@@ -74,7 +76,7 @@ void main()
 					}*/
 								
 			//	}
-			break;		
+				break;		
 
 			}
 		}

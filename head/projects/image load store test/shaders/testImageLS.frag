@@ -1,7 +1,7 @@
 #version 430
 
 uniform sampler2D texUnit;
-uniform writeonly coherent image2D imageUnit;
+uniform writeonly image2D imageUnit;
 
 in vec4 texCoord;
 

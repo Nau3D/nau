@@ -1,6 +1,6 @@
 #version 440
 
-layout (r32ui) uniform coherent uimage3D imageUnit;
+layout (r32ui) uniform uimage3D imageUnit;
 
 layout(std430, binding = 2) buffer test {
 	unsigned int k[];
