@@ -888,7 +888,7 @@ std::string getDatatypeString(int datatype){
 }
 
 void getBlockNames(unsigned int program, std::vector<std::string> &namelist){
-	int count, index;
+	int count;
 	char name[256];
 
 	namelist.clear();
@@ -908,7 +908,7 @@ void getBlockNames(unsigned int program, std::vector<std::string> &namelist){
 
 //untested
 void getBlockData(unsigned int program, std::string blockName, int &datasize, int &blockbindingpoint, int &bufferbindingpoint, std::vector<std::string> &uniformnamelist){
-	int count, index, activeUnif, actualLen;
+	int index, activeUnif, actualLen;
 	char name[256];
 
 	uniformnamelist.clear();
@@ -944,8 +944,8 @@ void getUniformData(unsigned int program, std::string uniformName, std::string &
 		return;
 	}
 	
-	int activeUnif, actualLen, index, uniType, 
-		uniSize, uniMatStride, uniArrayStride, uniOffset;
+	int uniType, 
+		uniSize, uniArrayStride;
 	GLenum type;
 	GLsizei l;
 	GLint s;
@@ -1014,11 +1014,9 @@ void getUniformData(unsigned int program, std::string blockName, std::string uni
 	int prevBuffer;
 	glGetIntegerv(spBoundBuffer[GL_UNIFORM_BUFFER], &prevBuffer);
 
-	int activeUnif, actualLen, index, uniType, 
-		uniSize, uniMatStride, uniArrayStride, uniOffset;
+	int uniType, 
+		uniSize,uniArrayStride;
 	GLint type;
-	GLsizei l;
-	GLint s;
 	const char *c = uniformName.c_str();
 	unsigned int loc;
 	glGetUniformIndices(program, 1, &c, &loc);

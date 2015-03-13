@@ -111,15 +111,21 @@ GLIndexArray::compile() {
 		else
 			pArray = m_InternalIndexArray;
 
+		IBuffer *b = NULL;
+
 		if (m_GLBuffer == 0) {
 			std::string s;
-			IBuffer *b = RESOURCEMANAGER->createBuffer(m_Name);
+			b = RESOURCEMANAGER->createBuffer(m_Name);
 			b->setStructure(std::vector < Enums::DataType > {Enums::UINT});
 			m_GLBuffer = b->getPropi(IBuffer::ID);
+		}
+		else {
+			b = RESOURCEMANAGER->getBuffer(m_Name);
 		}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, pArray->size() * sizeof(unsigned int), &(*pArray)[0], GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		b->setPropui(IBuffer::SIZE, pArray->size() * sizeof(unsigned int));
 	}
 }
 

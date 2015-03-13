@@ -99,8 +99,9 @@ IndexData::getIndexSize (void)
 void
 IndexData::setIndexData (std::vector<unsigned int>* indexData)
 {
-	if (m_InternalIndexArray != 0)
+	if (m_InternalIndexArray != 0 && m_InternalIndexArray != indexData) {
 		delete m_InternalIndexArray;
+	}
 
 	m_InternalIndexArray = indexData;
 }
