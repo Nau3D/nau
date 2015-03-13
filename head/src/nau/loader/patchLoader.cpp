@@ -1,11 +1,11 @@
-#include <nau/loader/patchLoader.h>
-#include <nau.h>
-#include <nau/scene/sceneobjectfactory.h>
-#include <nau/geometry/boundingvolumefactory.h>
-#include <nau/material/materialgroup.h>
-#include <nau/slogger.h>
+#include "nau/loader/patchLoader.h"
+#include "nau.h"
+#include "nau/scene/sceneobjectfactory.h"
+#include "nau/geometry/boundingvolumefactory.h"
+#include "nau/material/materialgroup.h"
+#include "nau/slogger.h"
 
-#include <nau/errors.h>
+#include "nau/errors.h"
 
 #include <stdlib.h>
 
@@ -95,14 +95,14 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	VertexData *vData = &(aRenderable->getVertexData());
 	vData->setDataFor(VertexData::getAttribIndex("position"), vertices);
 
-	MaterialGroup *aMatGroup = new MaterialGroup;
-	aMatGroup->setParent(aRenderable);
-	aMatGroup->setMaterialName("dirLightDifAmbPix");
+	MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, "dirLightDifAmbPix");
+	//aMatGroup->setParent(aRenderable);
+	//aMatGroup->setMaterialName("dirLightDifAmbPix");
 	if (hasIndices[0] == 'y')
 		aMatGroup->setIndexList(indices);
 
 	aRenderable->addMaterialGroup(aMatGroup);
-	aRenderable->setDrawingPrimitive(IRenderable::PATCH);
+	aRenderable->setDrawingPrimitive(IRenderable::PATCHES);
 	aRenderable->setNumberOfVerticesPerPatch(verticesPerPatch);
 
 	anObject->setRenderable(aRenderable);

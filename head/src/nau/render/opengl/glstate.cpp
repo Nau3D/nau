@@ -1,12 +1,13 @@
-#include <nau/render/opengl/glstate.h>
-#include <nau/config.h>
+#include "nau/render/opengl/glstate.h"
+
+#include "nau/config.h"
 
 #include <GL/glew.h>
 
 using namespace nau::render;
 
 bool
-GlState::Init() {
+GlState::InitGL() {
 
 	// ENUM
 	Attribs.setDefault("DEPTH_FUNC", new int(GL_LESS));
@@ -72,7 +73,7 @@ GlState::Init() {
 	return true;
 }
 
-bool GlState::Inited = Init();
+bool GlState::Inited = InitGL();
 
 
 //
@@ -105,8 +106,8 @@ GlState::set() {
 
 
 	std::map< int, bool>::iterator iterBool;
-	iterBool = m_EnableProps.begin();
-	for ( ; iterBool != m_EnableProps.end(); ++iterBool) {
+	iterBool = m_BoolProps.begin();
+	for (; iterBool != m_BoolProps.end(); ++iterBool) {
 	
 		switch(iterBool->first) {
 			case BLEND: 
@@ -130,8 +131,8 @@ GlState::set() {
 						else
 							glDisable(GL_CULL_FACE);
 					break;
-			case COLOR_MASK: 
-					break;
+			//case COLOR_MASK: 
+			//		break;
 		}
 	}
 
@@ -145,7 +146,7 @@ GlState::set() {
 				glBlendColor(iterVec4->second.x,
 					 iterVec4->second.y,
 					  iterVec4->second.z,
-					  iterVec4->second.w);;
+					  iterVec4->second.w);
 				break;
 		}
 	}
@@ -155,7 +156,7 @@ GlState::set() {
 	for ( ; iterBool4 != m_Bool4Props.end(); ++iterBool4) {
 	
 		switch(iterBool4->first) {
-			case COLOR_MASK:
+			case COLOR_MASK_B4:
 				glColorMask(iterBool4->second.x,
 					iterBool4->second.y,
 					iterBool4->second.z,
@@ -210,6 +211,7 @@ GlState::setDiff(IState *def, IState *aState) {
 	GlState *d = (GlState *)def;
 	GlState *a = (GlState *)aState;
 
+	s.clearArrays();
 	std::map< int, int>::iterator iterInt;
 	iterInt = m_IntProps.begin();
 	// for all properties (with current values)
@@ -235,22 +237,22 @@ GlState::setDiff(IState *def, IState *aState) {
 	}
 
 	std::map< int, bool>::iterator iterBool;
-	iterBool = m_EnableProps.begin();
-	for ( ; iterBool != m_EnableProps.end(); ++iterBool) {
+	iterBool = m_BoolProps.begin();
+	for (; iterBool != m_BoolProps.end(); ++iterBool) {
 	
-		if (a->m_EnableProps.count(iterBool->first)) {
-			if (a->m_EnableProps[iterBool->first] != iterBool->second) {
+		if (a->m_BoolProps.count(iterBool->first)) {
+			if (a->m_BoolProps[iterBool->first] != iterBool->second) {
 				// add property to new state
-				s.m_EnableProps[iterBool->first] = a->m_EnableProps[iterBool->first];
+				s.m_BoolProps[iterBool->first] = a->m_BoolProps[iterBool->first];
 				// change current state accordingly
-				m_EnableProps[iterBool->first] = a->m_EnableProps[iterBool->first];
+				m_BoolProps[iterBool->first] = a->m_BoolProps[iterBool->first];
 			}
 		}
 
-		else if (d->m_EnableProps.count(iterBool->first) && d->m_EnableProps[iterBool->first] != iterBool->second) {
+		else if (d->m_BoolProps.count(iterBool->first) && d->m_BoolProps[iterBool->first] != iterBool->second) {
 
-			s.m_EnableProps[iterBool->first] = d->m_EnableProps[iterBool->first];
-			m_EnableProps[iterBool->first] = d->m_EnableProps[iterBool->first];
+			s.m_BoolProps[iterBool->first] = d->m_BoolProps[iterBool->first];
+			m_BoolProps[iterBool->first] = d->m_BoolProps[iterBool->first];
 		}
 	}
 

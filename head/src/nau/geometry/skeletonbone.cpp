@@ -1,4 +1,4 @@
-#include <nau/geometry/skeletonbone.h>
+#include "nau/geometry/skeletonbone.h"
 
 using namespace nau::geometry;
 
@@ -53,13 +53,13 @@ SkeletonBone::setName(std::string name)
 	m_Name = name;
 }
 
-SimpleTransform &
+mat4 &
 SkeletonBone::getFullTransform() 
 {
 	return m_CompositeTransform;
 }
 
-SimpleTransform &
+mat4 &
 SkeletonBone::getLocalTransform() 
 {
 	return m_LocalTransform;

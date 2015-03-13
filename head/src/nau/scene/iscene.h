@@ -1,14 +1,15 @@
 #ifndef ISCENE_H
 #define ISCENE_H
 
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
+#include "nau/event/ilistener.h"
+#include "nau/geometry/frustum.h"
+#include "nau/scene/camera.h"
+#include "nau/scene/light.h"
+
 #include <string>
 #include <vector>
-
-#include <nau/scene/camera.h>
-#include <nau/scene/light.h>
-#include <nau/geometry/frustum.h>
-#include <nau/event/ilistener.h>
-#include <nau/math/transformfactory.h>
 
 namespace nau 
 {
@@ -16,16 +17,48 @@ namespace nau
 	{
 		class SceneObject;
 
-		class IScene : public IListener
+		class IScene : public AttributeValues, public IListener
 		{
+		public:
+			FLOAT4_PROP(SCALE, 0);
+			FLOAT4_PROP(ROTATE, 1);
+			FLOAT4_PROP(TRANSLATE, 2);
+
+			FLOAT3_PROP(BB_MIN, 0);
+			FLOAT3_PROP(BB_MAX, 1);
+
+			ENUM_PROP(TRANSFORM_ORDER, 0);
+
+			typedef enum {
+				T_R_S,
+				T_S_R,
+				R_T_S,
+				R_S_T,
+				S_R_T,
+				S_T_R
+			} TransformationOrder;
+
+			static AttribSet Attribs;
 
 		protected:
 			std::string m_Name;
 			bool m_Compiled;
-			ITransform *m_Transform;
+			//ITransform *m_Transform;
+			mat4 m_Transform;
 			bool m_Visible;
 
+			void updateTransform();
+
+			static bool Init();
+			static bool Inited;
+
 		public:
+
+			virtual void setPropf4(Float4Property prop, vec4& aVec);
+			virtual void setPrope(EnumProperty prop, int v);
+			void *getProp(unsigned int prop, Enums::DataType type);
+			vec3 &getPropf3(Float3Property prop);
+
 			virtual void setName(std::string name) {
 				m_Name = name; 
 			};
@@ -56,23 +89,18 @@ namespace nau
 
 			virtual void unitize() = 0;
 
-			virtual nau::math::ITransform *getTransform() = 0;
-			//virtual void scale(float factor) = 0;
-			//virtual void translate(float x, float y, float z) = 0;
-			//virtual void rotate(float ang, float ax, float ay, float az) = 0;
-			virtual void setTransform(nau::math::ITransform *t) = 0;
-			virtual void transform(nau::math::ITransform *t) = 0;
+			virtual nau::math::mat4 &getTransform() = 0;
+			virtual void setTransform(nau::math::mat4 &t) = 0;
+			virtual void transform(nau::math::mat4 &t) = 0;
 
 			virtual nau::geometry::IBoundingVolume& getBoundingVolume (void) = 0;
-
-			//virtual void show (void) = 0;
-			//virtual void hide (void) = 0;
-			//virtual bool isVisible (void) = 0;
 
 			virtual std::string getType (void) = 0;
 
 			virtual ~IScene(void) {};
-			IScene(void): m_Compiled(false), m_Visible(true) {};
+			IScene(void) : m_Compiled(false), m_Visible(true) {
+				registerAndInitArrays("SCENE", Attribs);
+			};
 
 		};
 	};

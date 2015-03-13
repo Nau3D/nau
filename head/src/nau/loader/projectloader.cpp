@@ -1,34 +1,36 @@
-#include <nau/loader/projectloader.h>
+#include "nau/loader/projectloader.h"
 
-#include <nau.h>
+#include "nau.h"
 
-#include <nau/material/programvalue.h>
-#include <nau/render/pipeline.h>
-#include <nau/render/passfactory.h>
+#include "nau/config.h"
+#include "nau/slogger.h"
+
+#include "nau/event/interpolatorFactory.h"
+#include "nau/event/objectAnimation.h"
+#include "nau/event/route.h"
+#include "nau/event/sensorfactory.h"
+
+#include "nau/geometry/primitive.h"
+#include "nau/material/programvalue.h"
+
+#include "nau/render/ibuffer.h"
+#include "nau/render/passCompute.h"
+#include "nau/render/passfactory.h"
 #ifdef NAU_OPTIX_PRIME
-#include <nau/render/passoptixprime.h>
+#include "nau/render/passoptixprime.h"
 #endif
 #ifdef NAU_OPTIX
-#include <nau/render/passOptix.h>
+#include "nau/render/passOptix.h"
 #endif
+#include "nau/render/pipeline.h"
+#include "nau/render/rendertarget.h"
 
-#include <nau/render/passCompute.h>
+#include "nau/scene/geometryobject.h"
+#include "nau/scene/sceneobjectfactory.h"
 
-#include <nau/system/textutil.h>
-//
-#include <nau/event/sensorfactory.h>
-#include <nau/event/interpolatorFactory.h>
-#include <nau/scene/sceneobjectfactory.h>
-#include <nau/event/route.h>
-#include <nau/event/objectAnimation.h>
-#include <nau/render/rendertarget.h>
-#include <nau/scene/geometryobject.h>
-#include <nau/geometry/primitive.h>
-#include <nau/math/transformfactory.h>
+#include "nau/system/TextUtil.h"
 
-#include <nau/slogger.h>
 
-#include <nau/config.h>
 
 #ifdef NAU_PLATFORM_WIN32
 #include <dirent.h>
@@ -38,7 +40,7 @@
 #endif
 
 #ifdef GLINTERCEPTDEBUG
-#include <nau/loader/projectloaderdebuglinker.h>
+#include "nau/loader/projectloaderdebuglinker.h"
 #endif
 
 
@@ -48,6 +50,7 @@ using namespace nau::material;
 using namespace nau::render;
 using namespace nau::scene;
 using namespace nau::geometry;
+using namespace nau::system;
 //
 using namespace nau::event_;
 //
@@ -59,10 +62,12 @@ std::string ProjectLoader::s_Dummy;
 char ProjectLoader::s_pFullName[256] = "";
 
 vec4 ProjectLoader::s_Dummy_vec4;
+vec2 ProjectLoader::s_Dummy_vec2;
 bvec4 ProjectLoader::s_Dummy_bvec4;
 float ProjectLoader::s_Dummy_float;
 int ProjectLoader::s_Dummy_int;
 bool ProjectLoader::s_Dummy_bool;
+uivec3 ProjectLoader::s_Dummy_uivec3;
 
 
 std::string 
@@ -76,8 +81,39 @@ ProjectLoader::toLower(std::string strToConvert) {
 
 }
 
+
+int
+ProjectLoader::readItemFromLib(TiXmlElement *p, std::string tag, std::string *lib, std::string *item) {
+
+	int res1, res2;
+	res1 = p->QueryStringAttribute("fromLibrary", lib);
+	res2 = p->QueryStringAttribute(tag.c_str(), item);
+
+	if (TIXML_SUCCESS != res2)
+		return ITEM_NAME_NOT_SPECIFIED;
+	else return OK;
+}
+
+
+int
+ProjectLoader::readItemFromLib(TiXmlElement *p, std::string tag, std::string *fullName) {
+
+	std::string item, lib = "";
+	int res = readItemFromLib(p, tag, &lib, &item);
+
+	if (OK != res)
+		return res;
+
+	if (lib == "")
+		*fullName = item;
+	else
+		*fullName = lib + "::" + item;
+	return OK;
+}
+
+
 void *
-ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type, AttribSet attribs) {
+ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type, AttribSet &attribs) {
 
 	std::string s;
 
@@ -85,20 +121,33 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 	
 		case Enums::FLOAT:
 			if (TIXML_SUCCESS != p->QueryFloatAttribute("value", &s_Dummy_float))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: Float Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_float;
 			break;
 		case Enums::VEC4:
+			s_Dummy_vec4 = vec4(0);
 			if ((TIXML_SUCCESS == p->QueryFloatAttribute("x", &(s_Dummy_vec4.x)) || TIXML_SUCCESS == p->QueryFloatAttribute("r", &(s_Dummy_vec4.x))) 
 				&& ((TIXML_SUCCESS == p->QueryFloatAttribute("y", &(s_Dummy_vec4.y)) || TIXML_SUCCESS == p->QueryFloatAttribute("g", &(s_Dummy_vec4.y))) 
 				&& ((TIXML_SUCCESS == p->QueryFloatAttribute("z", &(s_Dummy_vec4.z)) || TIXML_SUCCESS == p->QueryFloatAttribute("b", &(s_Dummy_vec4.z)))))) {
 			
 				if (TIXML_SUCCESS != p->QueryFloatAttribute("w", &(s_Dummy_vec4.w)))
 					p->QueryFloatAttribute("a", &(s_Dummy_vec4.w));
-				return &s_Dummy_vec4;
+
+					return &s_Dummy_vec4;
+
 			}
 			else
-				NAU_THROW("File %s: Element %s: Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
+				NAU_THROW("File %s: Element %s: Vec4 Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
+			break;
+		case Enums::VEC2:
+			s_Dummy_vec2 = vec2(0);
+			if ((TIXML_SUCCESS == p->QueryFloatAttribute("x", &(s_Dummy_vec2.x)) || TIXML_SUCCESS == p->QueryFloatAttribute("width", &(s_Dummy_vec2.x)))
+				&& ((TIXML_SUCCESS == p->QueryFloatAttribute("y", &(s_Dummy_vec2.y)) || TIXML_SUCCESS == p->QueryFloatAttribute("height", &(s_Dummy_vec2.y))))) {
+
+				return &s_Dummy_vec2;
+			}
+			else
+				NAU_THROW("File %s: Element %s: Vec2 Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			break;
 
 		case Enums::BVEC4:
@@ -110,29 +159,47 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 				return &s_Dummy_bvec4;
 			}
 			else
-				NAU_THROW("File %s: Element %s: Attribute %s has absent or incomplete value (x,y,z and w are required)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
+				NAU_THROW("File %s: Element %s: BVec4Attribute %s has absent or incomplete value (x,y,z and w are required)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
 			break;
 
 		case Enums::INT:
 			if (TIXML_SUCCESS != p->QueryIntAttribute("value", &s_Dummy_int))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: Int Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_int;
 			break;
 		case Enums::UINT:
 			if (TIXML_SUCCESS != p->QueryIntAttribute("value", &s_Dummy_int))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: UInt Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_int;
 			break;
+		case Enums::UIVEC3:
+
+			if (TIXML_SUCCESS == p->QueryUnsignedAttribute("x", &(s_Dummy_uivec3.x)) &&
+				TIXML_SUCCESS == p->QueryUnsignedAttribute("y", &(s_Dummy_uivec3.y)) &&
+				TIXML_SUCCESS == p->QueryUnsignedAttribute("z", &(s_Dummy_uivec3.z))) {
+
+				return &s_Dummy_uivec3;
+			}
+			else
+				NAU_THROW("File %s: Element %s: UIVec3Attribute %s has absent or incomplete value (x,y,z are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+
 		case Enums::BOOL:
 			if (TIXML_SUCCESS != p->QueryBoolAttribute("value", &s_Dummy_bool))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: Bool Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return &s_Dummy_bool;
 			break;
 		case Enums::ENUM:
 			if (TIXML_SUCCESS != p->QueryStringAttribute("value", &s))
-				NAU_THROW("File %s: Element %s: Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
-			if (!attribs.isValid(p->Value(), s))
-				NAU_THROW("File %s: Element %s: Attribute %s has an invalid value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+				NAU_THROW("File %s: Element %s: Enum Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+			//if (!attribs.isValid(p->Value(), s)) {
+
+			//	const std::vector<std::string> values = attribs.getListString(attribs.getID(p->Value()));
+			//	std::string delim = "\n";
+			//	std::string s;
+			//	nau::system::TextUtil::join(values, delim.c_str(), &s);
+			//	NAU_THROW("File: %s\n Element: %s\nAttribute %s has an invalid value. \nValid values are: \n%s", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value(), s.c_str());
+			//}
 			s_Dummy_int = attribs.getListValueOp(attribs.getID(p->Value()), s); 
 			return &s_Dummy_int;
 			break;
@@ -141,6 +208,77 @@ ProjectLoader::readAttr(std::string pName, TiXmlElement *p, Enums::DataType type
 	}
 	return NULL;
 }
+
+
+bool
+ProjectLoader::isExcluded(std::string attr, std::vector<std::string> &excluded) {
+
+	for (auto s : excluded) {
+
+		if (s == attr)
+			return true;
+	}
+	return false;
+}
+
+
+std::string &
+ProjectLoader::getValidValuesString(Attribute &a, void *value) {
+
+	Enums::DataType type = a.getType();
+	if (type != Enums::ENUM) {
+
+		void *min = a.getMin();
+		void *max = a.getMax();
+
+		if (min != NULL && max != NULL) {
+
+			s_Dummy = "between" + Enums::valueToString(type, min) + " and " + Enums::valueToString(type, max);
+		}
+		else if (min != NULL) {
+			s_Dummy = "greater or equal than " + Enums::valueToString(type, min);
+		}
+		else if (max != NULL) {
+			s_Dummy = "less or equal than " + Enums::valueToString(type, min);
+
+		}
+	}
+	return s_Dummy;
+
+}
+
+
+void 
+ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem) {
+
+	TiXmlElement *p = pElem->FirstChildElement();
+	std::map<std::string, nau::Attribute> attributes = attribs.getAttributes();
+	void *value;
+
+	while (p) {
+		// skip previously excluded attributes
+		if (!isExcluded(p->Value(), excluded)) {
+			// trying to define an attribute that does not exist?		
+			if (attributes.count(p->Value()) == 0) {
+				NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value());
+			}
+			Attribute a = attributes[p->Value()];
+			// trying to set the value of a read only attribute?
+			if (a.getReadOnlyFlag())
+				NAU_THROW("File %s\nElement %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value());
+
+			int id = a.getId();
+			Enums::DataType type = a.getType();
+			value = readAttr(parent, p, type, attribs);
+			if (!anObj->isValid(id, type, value))
+				NAU_THROW("File %s\nElement %s: %s has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value(), getValidValuesString(a,value).c_str());
+
+			anObj->setProp(id, a.getType(), value);
+		}
+		p = p->NextSiblingElement();
+	}
+}
+
 
 
 /*--------------------------------------------------------------------
@@ -159,7 +297,7 @@ Project Specification
 -------------------------------------------------------------------*/
 
 void
-ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, bool *triangleIDs)
+ProjectLoader::load (std::string file, int *width, int *height)
 {
 	ProjectLoader::s_Path = FileUtil::GetPath(file);
 	ProjectLoader::s_File = file;
@@ -169,20 +307,18 @@ ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, 
 	std::vector<std::string> matLibs;
 
 	if (!loadOkay) {
-
 		NAU_THROW("Parsing Error -%s- Line(%d) Column(%d) in file: %s", doc.ErrorDesc(), doc.ErrorRow(), doc.ErrorCol(),file.c_str());
 	}
+
 	TiXmlHandle hDoc (&doc);
 	TiXmlHandle hRoot (0);
 	TiXmlElement *pElem;
-
 
 	pElem = hDoc.FirstChildElement().Element();
 	if (0 == pElem) {
 		NAU_THROW("Parsing Error in file: %s", file.c_str());
 	}
 	hRoot = TiXmlHandle (pElem);
-
 
 	try {
 		*width = 0;
@@ -195,26 +331,6 @@ ProjectLoader::load (std::string file, int *width, int *height, bool *tangents, 
 				}
 				NAU->setWindowSize(*width, *height);
 		}
-
-		const char *pUseTangents = pElem->Attribute("useTangents");
-		if (pUseTangents)
-			*tangents = !strcmp(pUseTangents, "yes");
-		else
-			*tangents = false;
-
-		const char *pUseTriangleIDs = pElem->Attribute("useTriangleIDs");
-		if (pUseTriangleIDs)
-			*triangleIDs = !strcmp(pUseTriangleIDs, "yes");
-		else
-			*triangleIDs = false;
-
-		//bool core;
-		//const char *pCoreProfile = pElem->Attribute("core");
-		//if (pCoreProfile)
-		//	core = !strcmp(pCoreProfile, "yes");
-		//else
-		//	core = false;
-		//RENDERER->setCore(core);
 		
 #ifdef GLINTERCEPTDEBUG
 		loadDebug(hRoot);
@@ -250,30 +366,34 @@ void
 ProjectLoader::loadUserAttrs(TiXmlHandle handle) 
 {
 	TiXmlElement *pElem;
+	std::string delim="\n", s;
 
 	pElem = handle.FirstChild ("attributes").FirstChild ("attribute").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("attribute")) {
 		const char *pContext = pElem->Attribute("context");
-		const char *pName = pElem->Attribute ("name");
-		const char *pType = pElem->Attribute ("type");
-			
-		if (0 == pContext)
-			NAU_THROW("File %s: Attribute without a context", ProjectLoader::s_File.c_str()); 					
+		const char *pName = pElem->Attribute("name");
+		const char *pType = pElem->Attribute("type");
 
-		if (!NAU->validateUserAttribContext(pContext))
-			NAU_THROW("File %s: Attribute with an invalid context %s", ProjectLoader::s_File.c_str(), pContext); 					
-
-		if (0 == pName) 
-			NAU_THROW("File %s: Attribute without a name", ProjectLoader::s_File.c_str()); 
-
-		if (!NAU->validateUserAttribName(pContext, pName))
-			NAU_THROW("File %s: Attribute name %s is already in use in context %s", ProjectLoader::s_File.c_str(), pName, pContext);
-		
-		if (0 == pType) 
-			NAU_THROW("File %s: Attribute without a type", ProjectLoader::s_File.c_str()); 					
-
-		if (!Attribute::isValidUserAttrType(pType))
-			NAU_THROW("File %s: Attribute with na invalid type", ProjectLoader::s_File.c_str()); 					
+		if (0 == pContext) {
+			NAU_THROW("File %s: Attribute without a context", ProjectLoader::s_File.c_str());
+		}
+		if (!NAU->validateUserAttribContext(pContext)) {
+			nau::system::TextUtil::Join(NAU->getContextList(), delim.c_str(), &s);
+			NAU_THROW("File %s\nAttribute with an invalid context %s\nValid Values are: \n%s", ProjectLoader::s_File.c_str(), pContext, s.c_str());
+		}
+		if (0 == pName) {
+			NAU_THROW("File %s\nAttribute without a name", ProjectLoader::s_File.c_str());
+		}
+		if (!NAU->validateUserAttribName(pContext, pName)) {
+			NAU_THROW("File %s\nAttribute name %s is already in use in context %s", ProjectLoader::s_File.c_str(), pName, pContext);
+		}
+		if (0 == pType) {
+			NAU_THROW("File %s\nAttribute %s without a type", ProjectLoader::s_File.c_str(), pName);
+		}
+		if (!Attribute::isValidUserAttrType(pType)) {
+			nau::system::TextUtil::Join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
+			NAU_THROW("File %s\nAttribute %s with an invalid type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
+		}
 
 		AttribSet *attribs = NAU->getAttribs(pContext);
 		Enums::DataType dt = Enums::getType(pType);
@@ -293,15 +413,15 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 Specification of the scenes:
 
 		<scenes>
-			<scene name="MainScene" type="Octree" filename = "aScene.cbo" param="SWAP_YZ">
-				<file>..\ntg-bin-3\fonte-finallambert.dae</file>
-				<folder>..\ntg-bin-pl3dxiv</folder>
+			<scene name="MainScene" param="SWAP_YZ">
+				<file name="..\ntg-bin-3\fonte-finallambert.dae"/>
+				<folder name="..\ntg-bin-pl3dxiv"/>
 			</scene>
 			...
 		</scenes>
 
 scenes can have multiple "scene" defined
-each scene can have files and folders OR a single file containing a scene.
+each scene can have files and folders .
 the path may be relative to the project file or absolute
 type see sceneFactory
 
@@ -309,7 +429,9 @@ param is passed to the loader
 	SWAP_YZ to indicate that ZY axis should be swaped 
 	USE_ADJACENCY to create an index list with adjacency information
 
+
 ----------------------------------------------------------------- */
+
 
 
 void 
@@ -318,7 +440,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 	TiXmlElement *pElem;
 
 	pElem = handle.FirstChild ("scenes").FirstChild ("scene").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("scene")) {
 		const char *pName = pElem->Attribute ("name");
 		const char *pType = pElem->Attribute ("type");
 		const char *pFilename = pElem->Attribute("filename");
@@ -327,7 +449,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 		std::string s;
 
 		if (0 == pName) {
-			NAU_THROW("File %s: scene has no name", ProjectLoader::s_File.c_str()); 					
+			NAU_THROW("File %s\nscene has no name", ProjectLoader::s_File.c_str()); 					
 		}
 
 		SLOG("Scene : %s", pName);
@@ -343,44 +465,14 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 		else {
 			is = RENDERMANAGER->createScene(pName, pType);
 			if (is == NULL)
-				NAU_THROW("Invalid type for scene %s in file %s", pName, ProjectLoader::s_File.c_str()); 	
+				NAU_THROW("File %s\nScene %s\nInvalid type for scene", ProjectLoader::s_File.c_str(), pName); 	
 		}
 		
-
-		const char *pTransX = pElem->Attribute("transX");
-		const char *pTransY = pElem->Attribute("transY");
-		const char *pTransZ = pElem->Attribute("transZ");
-
-		const char *pScaleX = pElem->Attribute("scaleX");
-		const char *pScaleY = pElem->Attribute("scaleY");
-		const char *pScaleZ = pElem->Attribute("scaleZ");
-		const char *pScale = pElem->Attribute("scale");
-
-		ITransform *tis = TransformFactory::create("SimpleTransform");
-
-		if (pTransX && pTransY && pTransZ) {
-			tis->translate(nau::system::textutil::ParseFloat(pTransX),
-				nau::system::textutil::ParseFloat(pTransY),
-				nau::system::textutil::ParseFloat(pTransZ));
-
-		}
-		if (pScaleX && pScaleY && pScaleZ) {
-			tis->scale(nau::system::textutil::ParseFloat(pScaleX),
-				nau::system::textutil::ParseFloat(pScaleY),
-				nau::system::textutil::ParseFloat(pScaleZ));
-		}	
-		if (pScale) {
-			float scale = nau::system::textutil::ParseFloat(pScale);
-			tis->scale(scale);
-		}
-
-		is->setTransform(tis);
-
 		// the filename should point to a scene
 		if (0 != pFilename) {
 
 			if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFilename)))
-				NAU_THROW("Scene file %s does not exist", pFilename); 			
+				NAU_THROW("File %s\nScene %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFilename);
 
 			try {
 				nau::Nau::getInstance()->loadAsset (FileUtil::GetFullPath(ProjectLoader::s_Path, pFilename), pName, s);
@@ -394,98 +486,141 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 			TiXmlElement* pElementAux;
 
 			pElementAux = handle.FirstChild("geometry").Element();
-			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
-				const char *pName = pElementAux->Attribute("name");
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("geometry")) {
+				const char *pNameSO = pElementAux->Attribute("name");
 				const char *pPrimType = pElementAux->Attribute ("type");
 				const char *pMaterial = pElementAux->Attribute("material");
 
-				pTransX = pElementAux->Attribute("transX");
-				pTransY = pElementAux->Attribute("transY");
-				pTransZ = pElementAux->Attribute("transZ");
-
-				pScaleX = pElementAux->Attribute("scaleX");
-				pScaleY = pElementAux->Attribute("scaleY");
-				pScaleZ = pElementAux->Attribute("scaleZ");
-				pScale = pElementAux->Attribute("scale");
+				if (pNameSO == NULL)
+					NAU_THROW("File %s\nScene %s, Geometry object without a name", ProjectLoader::s_File.c_str(), pName);
 
 				if (pPrimType == NULL)
-					NAU_THROW("Scene %s has no type", pName); 			
+					NAU_THROW("File %s\nScene %s, Object:%s\ntype is not defined", ProjectLoader::s_File.c_str(), pName, pNameSO);
 
 				GeometricObject *go = (GeometricObject *)nau::scene::SceneObjectFactory::create("Geometry");
 				
 				if (go == NULL)
-					NAU_THROW("Scene %s has invalid type type", pName); 
-				if (pName)
-					go->setName(pName);
+					NAU_THROW("File %s\nScene %s\nInvalid scene type", ProjectLoader::s_File.c_str(), pNameSO);
+				if (pNameSO)
+					go->setName(pNameSO);
+				bool alreadyThere = false;
+				if (RESOURCEMANAGER->hasRenderable(pNameSO, ""))
+					alreadyThere = true;
+				Primitive *p = (Primitive *)RESOURCEMANAGER->createRenderable(pPrimType, pNameSO);
 
-				Primitive *p = (Primitive *)RESOURCEMANAGER->createRenderable(pPrimType, pName);
-				std::string n = p->getParamfName(0);
-				unsigned int i = 0;
-				while (Primitive::NoParam != n) {
+				if (!alreadyThere) {
+					std::string n = p->getParamfName(0);
+					unsigned int i = 0;
+					while (Primitive::NoParam != n) {
 
-					float value;
-					if (TIXML_SUCCESS == pElementAux->QueryFloatAttribute (n.c_str(), &value)) 
-						p->setParam(i,value);
-					++i;
-					n = p->getParamfName(i);
+						float value;
+						if (TIXML_SUCCESS == pElementAux->QueryFloatAttribute(n.c_str(), &value))
+							p->setParam(i, value);
+						++i;
+						n = p->getParamfName(i);
+					}
+					if (i)
+						p->build();
 				}
-				if (i)
-					p->build();
-								
-				ITransform *t = TransformFactory::create("SimpleTransform");
-
-				if (pTransX && pTransY && pTransZ) {
-					t->translate(nau::system::textutil::ParseFloat(pTransX),
-						nau::system::textutil::ParseFloat(pTransY),
-						nau::system::textutil::ParseFloat(pTransZ));
-
-				}
-				if (pScaleX && pScaleY && pScaleZ) {
-					t->scale(nau::system::textutil::ParseFloat(pScaleX),
-						nau::system::textutil::ParseFloat(pScaleY),
-						nau::system::textutil::ParseFloat(pScaleZ));
-				}	
-				if (pScale) {
-					float scale = nau::system::textutil::ParseFloat(pScale);
-					t->scale(scale);
-				}
-				go->setTransform(t);
 				go->setRenderable(p);
 
-				if (pMaterial) {
-					if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME,pMaterial)) {
-						Material *mat = MATERIALLIBMANAGER->createMaterial(pMaterial);
+				if (!alreadyThere) {
+					if (pMaterial) {
+						if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME, pMaterial)) {
+							Material *mat = MATERIALLIBMANAGER->createMaterial(pMaterial);
+						}
+						go->setMaterial(pMaterial);
 					}
-					go->setMaterial(pMaterial);
 				}
-				is ->add(go);
 
+				std::vector<std::string> excluded;
+				readAttributes(pNameSO, (AttributeValues *)go, SceneObject::Attribs, excluded, pElementAux);
+
+				is ->add(go);
 			}
 
+			pElementAux = handle.FirstChild("buffers").Element();
+			std::string primString;
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("buffers")) {
 
-			pElementAux = handle.FirstChild ("file").Element();
-			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
-				const char * pFileName = pElementAux->GetText();
+				pElementAux->QueryStringAttribute("primitive", &primString);
+				const char *pMaterial = pElementAux->Attribute("material");
+				const char *pNameSO = pElementAux->Attribute("name");
+				
+				if (!pNameSO) {
+					NAU_THROW("File %s\nScene: %s\nBuffer scene object without a name", ProjectLoader::s_File.c_str(), pName);
+				}
 
-				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName)))
-					NAU_THROW("Scene file %s does not exist", pFileName); 			
+				if (IRenderer::PrimitiveTypes.count(primString) == 0) {
+					NAU_THROW("File %s\nScene: %s\nInvalid primitive type %s in buffers definition", ProjectLoader::s_File.c_str(), pName, primString.c_str());
+				}
+				IRenderable::DrawPrimitive dp = IRenderer::PrimitiveTypes[primString];
+				SceneObject *so = SceneObjectFactory::create("SimpleObject");
+				so->setName(pNameSO);
+				IRenderable *i = RESOURCEMANAGER->createRenderable("Mesh", pNameSO);
+				i->setDrawingPrimitive(dp);
+				//i->setDrawingPrimitive(nau::render::IRenderable::LINES);
+				MaterialGroup *mg;
+				if (pMaterial)
+					mg = MaterialGroup::Create(i, pMaterial);
+				else
+					mg = MaterialGroup::Create(i, "dirLightDifAmbPix");
 
+				VertexData &v = i->getVertexData();
+				std::string bufferName;
+				TiXmlElement *p = pElementAux->FirstChildElement();
+				while (p) {
+
+					int res = readItemFromLib(p, "name", &bufferName);
+					if (res != OK)
+						NAU_THROW("File %s\nScene: %s\nBuffer has no name", ProjectLoader::s_File.c_str(), pName);
+					
+					IBuffer * b;
+					b = RESOURCEMANAGER->createBuffer(bufferName);
+					int attribIndex = VertexData::getAttribIndex(p->Value());
+
+					if (attribIndex != VertexData::MaxAttribs) {
+						v.setBuffer(attribIndex, b->getPropi(IBuffer::ID));
+					}
+					else if (p->Value() == "index"){
+
+						mg->getIndexData().setBuffer(b->getPropi(IBuffer::ID));
+					}
+					else {
+						NAU_THROW("File %s\nScene: %s\nVertex Attribute %s is not valid", ProjectLoader::s_File.c_str(), pName, p->Value());
+					}
+					p = p->NextSiblingElement();
+				}
+
+				i->addMaterialGroup(mg);
+				so->setRenderable(i);
+				is->add(so);
+			}
+
+			pElementAux = handle.FirstChild("file").Element();
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("file")) {
+
+				const char *pFileName = pElementAux->Attribute("name");
+				if (!pFileName)
+					NAU_THROW("File %s\nScene: %s\nFile is not specified", ProjectLoader::s_File.c_str(), pName);
+
+				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName))) {
+					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName,  pFileName);
+				}
 				nau::Nau::getInstance()->loadAsset (FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName), pName, s);
 			}
 
 			pElementAux = handle.FirstChild ("folder").Element();
-			for ( ; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement()) {
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("folder")) {
 				
 				DIR *dir;
-
 				struct dirent *ent;
 
-				const char * pDirName = pElementAux->GetText();
-
+				const char * pDirName = pElementAux->Attribute("name");
 				dir = opendir (FileUtil::GetFullPath(ProjectLoader::s_Path, pDirName).c_str());
 
 				if (!dir)
-					NAU_THROW("Scene folder %s does not exist", pDirName); 			
+					NAU_THROW("File %s\nScene: %s\nFolder %s does not exist", ProjectLoader::s_File.c_str(), pName, pDirName);
 
 				if (0 != dir) {
 
@@ -508,11 +643,15 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 						++count;
 					}
 					if (count < 3 )
-						NAU_THROW("Scene folder %s is empty", pDirName); 			
+						NAU_THROW("File %s\nScene: %s\nFolder %s is empty", ProjectLoader::s_File.c_str(), pName, pDirName);
 
 				closedir (dir);
 				}
 			}
+			std::vector<std::string> excluded;
+			excluded.push_back("file"); excluded.push_back("folder"); 
+			excluded.push_back("geometry"); excluded.push_back("buffers");
+			readAttributes(pName, (AttributeValues *)is, IScene::Attribs, excluded, pElem);
 		}
 	}
 }
@@ -521,7 +660,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 Specification of the atomic semantics:
 
 		<atomics>
-			<atomic id=0 semantics="Red Pixels"/>
+			<atomic buffer = "name" offset=0 semantics="Red Pixels"/>
 			...
 		</atomics>
 
@@ -536,22 +675,28 @@ ProjectLoader::loadAtomicSemantics(TiXmlHandle handle)
 	TiXmlElement *pElem;
 
 	pElem = handle.FirstChild ("atomics").FirstChild ("atomic").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("atomic")) {
 		const char *pName = pElem->Attribute ("semantics");
-		int id;
-		int failure = pElem->QueryIntAttribute("id", &id);
+		int offset;
+		std::string buffer;
+		int res = readItemFromLib(pElem, "buffer", &buffer);
+		//const char *pBuffer = pElem->Attribute("buffer");
 
+		if (res != OK) {
+			NAU_THROW("File %s\nAtomic has no buffer name", ProjectLoader::s_File.c_str());
+		}
+
+		int failure = pElem->QueryIntAttribute("offset", &offset);
 		if (failure) {
-			NAU_THROW("Atomic has no id, in file %s", ProjectLoader::s_File.c_str());
+			NAU_THROW("File %s\nAtomic has no offset", ProjectLoader::s_File.c_str());
 		}
 
 		if (0 == pName) {
-			NAU_THROW("Atomic %d has no semantics, in file %s", id, ProjectLoader::s_File.c_str());
+			NAU_THROW("File %s\nAtomic from buffer %s with offset %d has no semantics, in file %s", ProjectLoader::s_File.c_str(), buffer.c_str(), offset);
 		}
 
-		SLOG("Atomic : %d %s", id, pName);
-
-		RENDERER->addAtomic(id,pName);
+		SLOG("Atomic : %s %d %s", buffer.c_str(), offset, pName);
+		RENDERER->addAtomic(buffer, offset, pName);
 	} 
 }
 
@@ -563,7 +708,7 @@ Specification of the viewport:
 			<viewport name="MainViewport">
 				<CLEAR_COLOR r = 0.0 g = 0.0 b = 0.3 />
 				<ORIGIN x = 0.66 y = 0 />
-				<SIZE width= 0.33 ratio = 1.0 />
+				<SIZE width= 0.33 height = 1.0 />
 			</viewport>
 			...
 		</viewports>
@@ -575,6 +720,7 @@ Specification of the viewport:
 				<CLEAR_COLOR r = 0.0 g = 0.0 b = 0.3 />
 				<ORIGIN x = 0.66 y = 0 />
 				<SIZE width=0.33 height = 1.0 />
+				<RATIO value=0.5 />
 			</viewport>
 			...
 		</viewports>
@@ -586,7 +732,7 @@ it is assumed to be relative.
 
 geometry is specified with ORIGIN and SIZE
 
-ratio can be used instead of height, in which case height = width*ratio
+ratio can be used instead of height, in which case height = absolute_width*ratio
 ----------------------------------------------------------------- */
 
 void
@@ -604,75 +750,32 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 		}
 
 		SLOG("Viewport : %s", pName);
-
-		TiXmlElement *pElemAux = 0;
-		pElemAux = pElem->FirstChildElement ("CLEAR_COLOR");
-
-		if (0 == pElemAux) {
-			// no color is specified
-			v = nau::Nau::getInstance()->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));				
-		}
-		else {
-			vec4 *v4;
-			//// clear color for viewport
-			v4 = (vec4 *)readAttr(pName, pElemAux, Enums::VEC4, Viewport::Attribs);
-			v = nau::Nau::getInstance()->createViewport (pName, vec4 (v4->x, v4->y, v4->z, 1.0f));
-		}
-
-		pElemAux = pElem->FirstChildElement("SIZE");
-		if (!pElemAux) {
-			v->setProp(Viewport::FULL, true);
-		}
-		else {
-			float width,height,ratio;
-			if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("width", &width) ||
-				(TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("height", &height) &&
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute("ratio", &ratio))){
-
-				NAU_THROW("File %s: Element %s: SIZE definition error", ProjectLoader::s_File.c_str(), pName);					
-			}
-			
-			if (TIXML_SUCCESS == pElemAux->QueryFloatAttribute("ratio", &ratio))
-				v->setProp(Viewport::RATIO, ratio);
-
-			v->setProp(Viewport::SIZE, vec2(width, height));
-		}
-
-		pElemAux = pElem->FirstChildElement("ORIGIN");
-		if (pElemAux)
-		{
-			float x,y;
-			if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("x", &x) ||
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("y", &y)){
-
-				NAU_THROW("File %s: Element %s: ORIGIN definition error", ProjectLoader::s_File.c_str(), pName);					
-			}		
-			v->setProp(Viewport::ORIGIN, vec2(x, y));
-		}
-		else
-			v->setProp(Viewport::ORIGIN, vec2(0.0f, 0.0f));
+		v = RENDERMANAGER->createViewport(pName, vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
 		// Reading remaining viewport attributes
-		std::map<std::string, Attribute> attribs = Viewport::Attribs.getAttributes();
-		TiXmlElement *p = pElem->FirstChildElement();
-		Attribute a; 	
-		void *value;
-				while (p) {
-			// skip previously processed elements
-			if (strcmp(p->Value(), "ORIGIN") && strcmp(p->Value(), "SIZE") && strcmp(p->Value(), "CLEAR_COLOR")) {
-				// trying to define an attribute that does not exist?		
-				if (attribs.count(p->Value()) == 0)
-					NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
-				// trying to set the value of a read only attribute?
-				a = attribs[p->Value()];
-				if (a.mReadOnlyFlag)
-					NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+		std::vector<std::string> excluded;
+		readAttributes(pName, (AttributeValues *)v, Viewport::Attribs, excluded, pElem);
 
-				value = readAttr(pName, p, a.mType, Light::Attribs);
-				v->setProp(a.mId, a.mType, value);
-			}
-			p = p->NextSiblingElement();
-		}
+		//std::map<std::string, Attribute> attribs = Viewport::Attribs.getAttributes();
+		//TiXmlElement *p = pElem->FirstChildElement();
+		//Attribute a; 	
+		//void *value;
+		//		while (p) {
+		//	// skip previously processed elements
+		//	//if (strcmp(p->Value(), "ORIGIN") && strcmp(p->Value(), "SIZE") && strcmp(p->Value(), "CLEAR_COLOR")) {
+		//		// trying to define an attribute that does not exist?		
+		//		if (attribs.count(p->Value()) == 0)
+		//			NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+		//		// trying to set the value of a read only attribute?
+		//		a = attribs[p->Value()];
+		//		if (a.m_ReadOnlyFlag)
+		//			NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+
+		//		value = readAttr(pName, p, a.m_Type, Light::Attribs);
+		//		v->setProp(a.m_Id, a.m_Type, value);
+		//	//}
+		//	p = p->NextSiblingElement();
+		//}
 
 	} //End of Viewports
 }
@@ -738,7 +841,7 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 				NAU_THROW("File %s: Element %s: viewport name is required", ProjectLoader::s_File.c_str(), pName);
 
 			// Check if previously defined
-			v = nau::Nau::getInstance()->getViewport (s);
+			v = RENDERMANAGER->getViewport(s);
 			if (!v)
 				NAU_THROW("File %s: Element %s: viewport %s is not previously defined", ProjectLoader::s_File.c_str(), pName, s.c_str());
 
@@ -747,63 +850,47 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 
 		// read projection values
 		pElemAux = pElem->FirstChildElement("projection");
-		if (pElemAux == NULL)
-			NAU_THROW("File %s: Element %s: projection definition missing", ProjectLoader::s_File.c_str(), pName);
 
-		if (TIXML_SUCCESS != pElemAux->QueryStringAttribute("TYPE", &s))
-			NAU_THROW("File %s: Element %s: projection type is not defined", ProjectLoader::s_File.c_str(), pName);
+		if (pElemAux != NULL)
+		{
+			//NAU_THROW("File %s: Element %s: projection definition missing", ProjectLoader::s_File.c_str(), pName);
 
-		if (s == "PERSPECTIVE") {
+			if (TIXML_SUCCESS != pElemAux->QueryStringAttribute("TYPE", &s))
+				NAU_THROW("File %s: Element %s: projection type is not defined", ProjectLoader::s_File.c_str(), pName);
 
-			float fov, nearPlane, farPlane;
-			if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("FOV", &fov) || 
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("NEAR", &nearPlane) ||
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("FAR", &farPlane)) {
+			if (s == "PERSPECTIVE") {
 
-				NAU_THROW("File %s: Element %s: perspective definition error (FOV, NEAR and FAR are required)", ProjectLoader::s_File.c_str(), pName);
-			}	
-			aNewCam->setPerspective (fov, nearPlane, farPlane);
-		}
-		else if (s == "ORTHO") {
-			float left, right, bottom, top, nearPlane, farPlane;
+				float fov, nearPlane, farPlane;
+				if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute("FOV", &fov) ||
+					TIXML_SUCCESS != pElemAux->QueryFloatAttribute("NEAR", &nearPlane) ||
+					TIXML_SUCCESS != pElemAux->QueryFloatAttribute("FAR", &farPlane)) {
 
-			if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("LEFT", &left) || 
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("RIGHT", &right) ||
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("BOTTOM", &bottom) ||
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("TOP", &top) || 
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("NEAR", &nearPlane) ||
-				TIXML_SUCCESS != pElemAux->QueryFloatAttribute ("FAR", &farPlane)) {
-
-				NAU_THROW("File %s: Element %s: ortho definition error (LEFT, RIGHT, BOTTOM, TOP, NEAR and FAR are required)", ProjectLoader::s_File.c_str(), pName);
-			}
-			aNewCam->setOrtho (left, right, bottom, top, nearPlane, farPlane);
-		}
-		else
-			NAU_THROW("File %s: Element %s: projection type is not valid", ProjectLoader::s_File.c_str(), pName);
-
-		// Reading remaining camera attributes
-		std::map<std::string, Attribute> attribs = Camera::Attribs.getAttributes();
-		TiXmlElement *p = pElem->FirstChildElement();
-		Attribute a; 	
-		void *value;
-
-		while (p) {
-			// skip previously processed elements
-			if (strcmp(p->Value(), "projection") && strcmp(p->Value(), "viewport")) {
-				// trying to define an attribute that does not exist?		
-				if (attribs.count(p->Value()) == 0) {
-					NAU_THROW("File %s: Element %s: %s is not an attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
+					NAU_THROW("File %s: Element %s: perspective definition error (FOV, NEAR and FAR are required)", ProjectLoader::s_File.c_str(), pName);
 				}
-				// trying to set the value of a read only attribute?
-				a = attribs[p->Value()];
-				if (a.mReadOnlyFlag)
-					NAU_THROW("File %s: Element %s: %s is a read-only attribute", ProjectLoader::s_File.c_str(), pName, p->Value());
-
-				value = readAttr(pName, p, a.mType, Light::Attribs);
-				aNewCam->setProp(a.mId, a.mType, value);
+				aNewCam->setPerspective(fov, nearPlane, farPlane);
 			}
-			p = p->NextSiblingElement();
+			else if (s == "ORTHO") {
+				float left, right, bottom, top, nearPlane, farPlane;
+
+				if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute("LEFT", &left) ||
+					TIXML_SUCCESS != pElemAux->QueryFloatAttribute("RIGHT", &right) ||
+					TIXML_SUCCESS != pElemAux->QueryFloatAttribute("BOTTOM", &bottom) ||
+					TIXML_SUCCESS != pElemAux->QueryFloatAttribute("TOP", &top) ||
+					TIXML_SUCCESS != pElemAux->QueryFloatAttribute("NEAR", &nearPlane) ||
+					TIXML_SUCCESS != pElemAux->QueryFloatAttribute("FAR", &farPlane)) {
+
+					NAU_THROW("File %s: Element %s: ortho definition error (LEFT, RIGHT, BOTTOM, TOP, NEAR and FAR are required)", ProjectLoader::s_File.c_str(), pName);
+				}
+				aNewCam->setOrtho(left, right, bottom, top, nearPlane, farPlane);
+			}
+			else
+				NAU_THROW("File %s: Element %s: projection type is not valid", ProjectLoader::s_File.c_str(), pName);
 		}
+		// Reading remaining camera attributes
+
+		std::vector<std::string> excluded;
+		excluded.push_back("projection"); excluded.push_back("viewport");
+		readAttributes(pName, (AttributeValues *)aNewCam, Camera::Attribs, excluded, pElem);
 	} //End of Cameras
 }
 
@@ -831,7 +918,6 @@ ProjectLoader::loadLights(TiXmlHandle handle)
 {
 	TiXmlElement *pElem;
 	Light *l;
-	void *value;
 
 	pElem = handle.FirstChild ("lights").FirstChild ("light").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
@@ -853,23 +939,25 @@ ProjectLoader::loadLights(TiXmlHandle handle)
 			l = RENDERMANAGER->getLight (pName, pClass);
 		
 		// Reading Light Attributes
+		std::vector<std::string> excluded;
+		readAttributes(pName, (AttributeValues *)l, Light::Attribs, excluded, pElem);
 
-		std::map<std::string, Attribute> attribs = Light::Attribs.getAttributes();
-		TiXmlElement *p = pElem->FirstChildElement();
-		Attribute a;
-		while (p) {
-			// trying to define an attribute that does not exist		
-			if (attribs.count(p->Value()) == 0)
-				NAU_THROW("Light %s: %s is not an attribute, in file %s", pName, p->Value(),ProjectLoader::s_File.c_str());
-			// trying to set the value of a read only attribute
-			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
-				NAU_THROW("Light %s: %s is a read-only attribute, in file %s", pName, p->Value(),ProjectLoader::s_File.c_str());
+		//std::map<std::string, Attribute> attribs = Light::Attribs.getAttributes();
+		//TiXmlElement *p = pElem->FirstChildElement();
+		//Attribute a;
+		//while (p) {
+		//	// trying to define an attribute that does not exist		
+		//	if (attribs.count(p->Value()) == 0)
+		//		NAU_THROW("Light %s: %s is not an attribute, in file %s", pName, p->Value(),ProjectLoader::s_File.c_str());
+		//	// trying to set the value of a read only attribute
+		//	a = attribs[p->Value()];
+		//	if (a.m_ReadOnlyFlag)
+		//		NAU_THROW("Light %s: %s is a read-only attribute, in file %s", pName, p->Value(),ProjectLoader::s_File.c_str());
 
-			value = readAttr(pName, p, a.mType, Light::Attribs);
-			l->setProp(a.mId, a.mType, value);
-			p = p->NextSiblingElement();
-		}
+		//	value = readAttr(pName, p, a.m_Type, Light::Attribs);
+		//	l->setProp(a.m_Id, a.m_Type, value);
+		//	p = p->NextSiblingElement();
+		//}
 
 	}//End of lights
 }
@@ -922,7 +1010,7 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 #if NAU_OPENGL_VERSION >= 400
 	loadAtomicSemantics(handle);
 #endif
-	pElem = handle.FirstChild ("materialLibs").FirstChild ("mlib").Element();
+	pElem = handle.FirstChild ("materialLibs").FirstChild ("materialLib").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char *pFilename = pElem->Attribute ("filename");
 
@@ -948,7 +1036,7 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 /* -----------------------------------------------------------------------------
 CAMERAS
 
-	<camera>testCamera</camera>
+	<camera name="MainCamera">
 
 Specifies a previously defined camera (in the assets part of the file)
 -----------------------------------------------------------------------------*/
@@ -963,10 +1051,13 @@ ProjectLoader::loadPassCamera(TiXmlHandle hPass, Pass *aPass)
 		NAU_THROW("No camera element found in pass: %s", aPass->getName().c_str());
 	}
 	else if (pElem != 0) {
-		if (!RENDERMANAGER->hasCamera(pElem->GetText()))
-			NAU_THROW("Camera %s is not defined, in pass: %s", pElem->GetText(), aPass->getName().c_str());
+		const char *pCam = pElem->Attribute("name");
+		if (pCam) {
+			if (!RENDERMANAGER->hasCamera(pCam))
+				NAU_THROW("Pass %s - Camera %s is not defined, in pass: %s", aPass->getName().c_str(), pCam, aPass->getName().c_str());
 
-		aPass->setCamera (pElem->GetText());
+			aPass->setCamera(pCam);
+		}
 	}
 }
 
@@ -974,7 +1065,7 @@ ProjectLoader::loadPassCamera(TiXmlHandle hPass, Pass *aPass)
 /* -----------------------------------------------------------------------------
 MODE
 
-<mode>RUN_ALWAYS</mode>
+<mode value="RUN_ALWAYS" />
 
 Specifies the run mode. Valid values are defined in class Pass (file pass.h)
 -----------------------------------------------------------------------------*/
@@ -986,19 +1077,21 @@ ProjectLoader::loadPassMode(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild("mode").Element();
 	if (pElem != 0) {
-		bool valid = Pass::Attribs.isValid("RUN_MODE", pElem->GetText());
+		const char *pMode = pElem->Attribute("value");
+		bool valid = Pass::Attribs.isValid("RUN_MODE", pMode);
 		if (!valid) {
-			NAU_THROW("Pass: %s - Invalid mode: %s", aPass->getName().c_str(), pElem->GetText());
+			NAU_THROW("Pass: %s - Invalid mode: %s", aPass->getName().c_str(), pMode);
 		}
 
-		aPass->setMode((Pass::RunMode)Pass::Attribs.getListValueOp(Pass::RUN_MODE, pElem->GetText()));
+		aPass->setMode((Pass::RunMode)Pass::Attribs.getListValueOp(Pass::RUN_MODE, pMode));
 	}
 }
 /* -----------------------------------------------------------------------------
 LIGHTS
 
 	<lights>
-		<light>Sun</light>
+		<light name="Sun" />
+		...
 	</lights>
 
 Specifies a previously defined light (in the assets part of the file)
@@ -1011,13 +1104,13 @@ ProjectLoader::loadPassLights(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("lights").FirstChild ("light").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-		const char *pName = pElem->GetText();
+		const char *pName = pElem->Attribute("name");
 
 		if (0 == pName) {
-			NAU_THROW("Light has no name in pass: %s", aPass->getName().c_str());
+			NAU_THROW("Pass: %s - Light has no name in pass", aPass->getName().c_str());
 		}
 		if (!RENDERMANAGER->hasLight(pName))
-			NAU_THROW("Light %s is not defined, in pass: %s", pName, aPass->getName().c_str());
+			NAU_THROW("Pass: %s - Light %s is not defined", aPass->getName().c_str(), pName);
 
 		aPass->addLight (pName);
 	}//End of lights
@@ -1029,7 +1122,7 @@ ProjectLoader::loadPassLights(TiXmlHandle hPass, Pass *aPass)
 SCENES
 
 	<scenes>
-		<scene>MainScene</scene>
+		<scene name="MainScene" />
 		...
 	</scenes>
 
@@ -1049,10 +1142,16 @@ ProjectLoader::loadPassScenes(TiXmlHandle hPass, Pass *aPass)
 	}
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		if (!RENDERMANAGER->hasScene(pElem->GetText()))
-				NAU_THROW("Scene %s is not defined, in pass: %s", pElem->GetText(),aPass->getName().c_str());
+		const char *pName = pElem->Attribute("name");
 
-		aPass->addScene (pElem->GetText());
+		if (pName && !RENDERMANAGER->hasScene(pName)) {
+			NAU_THROW("Pass: %s - Scene %s is not defined", aPass->getName().c_str(), pName);
+		}
+		else if (!pName) {
+			NAU_THROW("Pass: %s - Scene has no name attribute", aPass->getName().c_str());
+		}
+
+		aPass->addScene (pName);
 	} //End of scenes
 }
 
@@ -1060,10 +1159,10 @@ ProjectLoader::loadPassScenes(TiXmlHandle hPass, Pass *aPass)
 /* -----------------------------------------------------------------------------
 CLEAR DEPTH AND COLOR
 
-	<color clear=true />
+	<color clear=true enable=true/>
 	<depth clear=true clearValue=1.0 test=true write=true/>
 
-	<stencil clear=true clearValue=0 test=true mask=255>
+	<stencil clear=true clearValue=0 test=true>
 		<stencilFunc func=ALWAYS ref=1 mask=255/>
 		<stencilOp sfail=KEEP dfail=KEEP dpass=KEEP />
 	</stencil>
@@ -1182,13 +1281,21 @@ ProjectLoader::loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("color").Element();
 	if (0 != pElem) {
-		const char *pEnable = pElem->Attribute ("clear");
+		const char *pClear = pElem->Attribute ("clear");
+		if (pClear != NULL) {
+			if (!strcmp(pClear, "false"))
+				*b = false;
+			else
+				*b = true;
+			aPass->setProp(Pass::COLOR_CLEAR, Enums::BOOL, b);
+		}
+		const char *pEnable = pElem->Attribute("enable");
 		if (pEnable != NULL) {
 			if (!strcmp(pEnable, "false"))
 				*b = false;
 			else
 				*b = true;
-			aPass->setProp(Pass::COLOR_CLEAR, Enums::BOOL, b);
+			aPass->setProp(Pass::COLOR_ENABLE, Enums::BOOL, b);
 		}
 	}
 }
@@ -1209,9 +1316,15 @@ ProjectLoader::loadPassViewport(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("viewport").Element();
 	if (0 != pElem) {
-
-		// CHECK IF EXISTS
-		aPass->setViewport (nau::Nau::getInstance()->getViewport (pElem->GetText()));
+		const char *pViewport = pElem->Attribute("name");
+		if (pViewport) {
+			Viewport *vp = RENDERMANAGER->getViewport(pViewport);
+			if (vp == NULL) {
+				NAU_THROW("Pass %s\nViewport %s is not defined", aPass->getName().c_str(), pViewport);
+			}
+			else
+				aPass->setViewport(vp);
+		}
 	}
 }
 		
@@ -1281,54 +1394,14 @@ The available types so far are int and float.
 void 
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
-	void *value;
-
 	std::map<std::string, Attribute> attribs = Pass::Attribs.getAttributes();
-	TiXmlElement *p = hPass.FirstChild("userAttributes").FirstChild().Element();
-	Attribute a;
-	while (p) {
-		// trying to define an attribute that does not exist		
-		if (attribs.count(p->Value()) == 0)
-			NAU_THROW("Pass %s: %s is not an attribute, in file %s", aPass->getName().c_str() , p->Value(), ProjectLoader::s_File.c_str());
-		// trying to set the value of a read only attribute
-		a = attribs[p->Value()];
-		if (a.mReadOnlyFlag)
-			NAU_THROW("Pass %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), p->Value(), ProjectLoader::s_File.c_str());
-
-		value = readAttr(aPass->getName(), p, a.mType, Light::Attribs);
-		aPass->setProp(a.mId, a.mType, value);
-		p = p->NextSiblingElement();
+	TiXmlElement *p = hPass.FirstChild("userAttributes").Element();
+	if (p) {
+		std::vector<std::string> excluded;
+		readAttributes(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, p);
 	}
-
-
-
-
-
-
-	//int vi;
-	//float vf;
-	//std::string s;
-
-	//pElem = hPass.FirstChild("params").FirstChild("param").Element();
-	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-
-	//	const char *pName = pElem->Attribute ("name");
-	//	
-	//	if (!pName)
-	//		NAU_THROW("Param without name in pass: %s", aPass->getName().c_str());
-
-	//	const char *pValue = pElem->Attribute ("string");
-	//	if (TIXML_SUCCESS == pElem->QueryIntAttribute ("int",&vi))
-	//		aPass->setParam(pName,vi);
-	//	else if (TIXML_SUCCESS == pElem->QueryFloatAttribute ("float",&vf))
-	//		aPass->setParam(pName,vf);
-	//	//else if (pValue != NULL)
-	//	//		aPass->setParam(pName,pValue);
-	//	else {
-	//		NAU_THROW("Param %s without value in pass: %s", pName, aPass->getName().c_str());
-	//	}
-	//}
 }
+
 
 /* -----------------------------------------------------------------------------
 RENDERTARGET
@@ -1346,7 +1419,7 @@ ProjectLoader::loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass,std::map<std
 	TiXmlElement *pElem;
 
 
-	pElem = hPass.FirstChild ("rendertarget").Element();
+	pElem = hPass.FirstChild ("renderTarget").Element();
 
 	if (0 != pElem) {
 		
@@ -1619,7 +1692,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (0 == pComponent) {
 			NAU_THROW("No component found for optix variable %s, in pass %s", pUniformName, aPass->getName().c_str());
 		}
-		if (!ProgramValue::Validate(pType, pContext, pComponent))
+		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
 			NAU_THROW("Optix variable %s is not valid, in pass %s", pUniformName, aPass->getName().c_str());
 
 		int id = 0;
@@ -1679,7 +1752,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (0 == pComponent) {
 			NAU_THROW("No component found for optix variable %s, in pass %s", pUniformName, aPass->getName().c_str());
 		}
-		if (!ProgramValue::Validate(pType, pContext, pComponent))
+		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
 			NAU_THROW("Optix variable %s is not valid, in pass %s", pUniformName, aPass->getName().c_str());
 
 		int id = 0;
@@ -1739,7 +1812,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (0 == pComponent) {
 			NAU_THROW("No component found for optix variable %s, in pass %s", pUniformName, aPass->getName().c_str());
 		}
-		if (!ProgramValue::Validate(pType, pContext, pComponent))
+		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
 			NAU_THROW("Optix variable %s is not valid, in pass %s", pUniformName, aPass->getName().c_str());
 
 		int id = 0;
@@ -1810,61 +1883,64 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (pSceneName != NULL) {
 
 			if (!RENDERMANAGER->hasScene(pSceneName)) {
-				NAU_THROW("Pass %s: Scene %s is not defined", aPass->getName().c_str(), pSceneName);
+				NAU_THROW("File %s\nPass %s\nScene %s has not been defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pSceneName);
 			}
 			else
 				p->addScene(pSceneName);
 		}
 	}
 	else {
-		NAU_THROW("Pass %s: Scene is not defined", aPass->getName().c_str());
+		NAU_THROW("File %s\nPass %s\nScene is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
 	pElem = hPass.FirstChildElement("rays").Element();
 	if (pElem != NULL) {
-		const char *pBufferName = pElem->Attribute("buffer");
 		const char *pQueryType = pElem->Attribute("queryType");
 
-		if (pBufferName != NULL) {
+		std::string bufferName;
+		int res = readItemFromLib(pElem, "buffer", &bufferName);
+		if (res == OK) {
 
-			if (!RESOURCEMANAGER->hasBuffer(pBufferName)) {
-				NAU_THROW("Pass %s: Ray buffer %s is not defined", aPass->getName().c_str(), pBufferName);
+			if (!RESOURCEMANAGER->hasBuffer(bufferName)) {
+				NAU_THROW("File %s\nPass %s\nRay buffer %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 			}
 			else
-				p->addRayBuffer(RESOURCEMANAGER->getBuffer(pBufferName));
+				p->addRayBuffer(RESOURCEMANAGER->getBuffer(bufferName));
 		}
 		else {
-			NAU_THROW("Pass %s: Ray buffer has no name", aPass->getName().c_str());
+			NAU_THROW("File %s\nPass %s\nRay buffer has no name", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		if (pQueryType != NULL) {
-			p->setQueryType(pQueryType);
+			if (!p->setQueryType(pQueryType))
+				NAU_THROW("File %s\nPass %s\nRay buffer %s: Query Type is invalid\nValidValues are: ANY or CLOSEST", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
+
 		}
 		else {
-			NAU_THROW("Pass %s: Ray buffer %s: Query Type not defined", aPass->getName().c_str(), pBufferName);
+			NAU_THROW("File %s\nPass %s\nRay buffer %s: Query Type not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 		}
 	}
 	else {
-		NAU_THROW("Pass %s: Ray buffer is not defined", aPass->getName().c_str());
+		NAU_THROW("File %s\nPass %s\nRay buffer is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
 	pElem = hPass.FirstChildElement("hits").Element();
 	if (pElem != NULL) {
-		const char *pBufferName = pElem->Attribute("buffer");
+		std::string bufferName;
+		int res = readItemFromLib(pElem, "buffer", &bufferName);
+		if (res == OK) {
 
-		if (pBufferName != NULL) {
-
-			if (!RESOURCEMANAGER->hasBuffer(pBufferName)) {
-				NAU_THROW("Pass %s: Hit Buffer %s is not defined", aPass->getName().c_str(), pBufferName);
+			if (!RESOURCEMANAGER->hasBuffer(bufferName)) {
+				NAU_THROW("File %s\nPass %s\nHit Buffer %s has not been defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 			}
 			else
-				p->addHitBuffer(RESOURCEMANAGER->getBuffer(pBufferName));
+				p->addHitBuffer(RESOURCEMANAGER->getBuffer(bufferName));
 		}
 		else {
-			NAU_THROW("Pass %s: Hit buffer has no name", aPass->getName().c_str(), pBufferName);
+			NAU_THROW("File %s\nPass %s\nHit buffer has no name", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 		}
 	}
 	else {
-		NAU_THROW("Pass %s: Hit buffer is not defined", aPass->getName().c_str());
+		NAU_THROW("File %s\nPass %s\nHit buffer is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
 #endif
@@ -1879,11 +1955,11 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 			<pass class="compute" name="test">
 				<material name="computeShader" fromLibrary="myLib" dimX=256, dimY=256, dimZ=0/>
 				<!-- or -->
-				<material name="computeShader" fromLibrary="myLib" atomicX="at1", atomicY="at2", atomicZ="at3"/>
+				<material name="computeShader" fromLibrary="myLib" bufferX="tt::aa" offsetX=4 bufferY="tt::aa"* offsetY=0/>
 			</pass>
 
-	The strings in the atomics(X,Y,Z) are atomic labels that must be previously defined
-	Dims and atomics can be mixed, but for each dimension there must be only one
+	The strings in the buffer(X,Y,Z) are buffer labels that must be previously defined
+	Dims and buffers can be mixed, but for each dimension there must be only one
 -------------------------------------------------------------------------------*/
 
 
@@ -1898,9 +1974,10 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 	if (pElem != NULL) {
 		const char *pMatName = pElem->Attribute ("name");
 		const char *pLibName = pElem->Attribute ("fromLibrary");
-		const char *pAtX = pElem->Attribute("atomicX");
-		const char *pAtY = pElem->Attribute("atomicY");
-		const char *pAtZ = pElem->Attribute("atomicZ");
+		const char *pAtX = pElem->Attribute("bufferX");
+		const char *pAtY = pElem->Attribute("bufferY");
+		const char *pAtZ = pElem->Attribute("bufferZ");
+
 
 		if (pMatName != NULL && pLibName != NULL) {
 			if (!MATERIALLIBMANAGER->hasMaterial(pLibName,pMatName))
@@ -1910,56 +1987,70 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("Pass %s: Material not defined", aPass->getName().c_str());
 
 		int dimX, dimY, dimZ;
-		int atX = -1, atY = -1, atZ = -1;
+		IBuffer * bX = NULL, *bY = NULL, *bZ = NULL;
+		unsigned int offX = 0, offY = 0, offZ = 0;
 		
-		// Read value or atomic id for dimX
+		// Read value or buffer id for dimX
 		int res = pElem->QueryIntAttribute("dimX", &dimX);
 		if (TIXML_SUCCESS != res && pAtX == NULL) {
-			NAU_THROW("Pass %s: dimX or atomicX are not defined", aPass->getName().c_str());
+			NAU_THROW("Pass %s: dimX or bufferX are not defined", aPass->getName().c_str());
 		}
 		else if (TIXML_SUCCESS == res && pAtX != NULL) {
-			NAU_THROW("Pass %s: dimX and atomicX are both defined", aPass->getName().c_str());
+			NAU_THROW("Pass %s: dimX and bufferX are both defined", aPass->getName().c_str());
 		}
-
+		// 
 		if (pAtX != NULL) {
-			atX = RENDERER->getAtomicID(pAtX);
-			if (atX == -1) {
-				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+			bX = RESOURCEMANAGER->getBuffer(pAtX);
+			if (!bX) {
+				NAU_THROW("Pass %s: buffer %s is not defined", aPass->getName().c_str(), pAtX);
+			}
+			else {
+				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("offsetX", &offX))
+					NAU_THROW("Pass %s: No offset defined for buffer %s", aPass->getName().c_str(), pAtX);
 			}
 		}
 
-		// Read value or atomic id for dimY
+		// Read value or buffer id for dimY
 		res = pElem->QueryIntAttribute("dimY", &dimY);
 		if (TIXML_SUCCESS == res && pAtY != NULL) {
-			NAU_THROW("Pass %s: dimY and atomicY are both defined", aPass->getName().c_str());
+			NAU_THROW("Pass %s: dimY and bufferY are both defined", aPass->getName().c_str());
 		}
 
 		if (TIXML_SUCCESS != res)
 			dimY = 1;
 		if (pAtY != NULL) {
-			atY = RENDERER->getAtomicID(pAtX);
-			if (atY == -1) {
-				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+			bY = RESOURCEMANAGER->getBuffer(pAtY);
+			if (!bY) {
+				NAU_THROW("Pass %s: buffer %s is not defined", aPass->getName().c_str(), pAtY);
+			}
+			else {
+				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("offsetY", &offY))
+					NAU_THROW("Pass %s: No offset defined for buffer %s", aPass->getName().c_str(), pAtY);
 			}
 		}
-		// Read value or atomic id for dimZ
+		// Read value or buffer id for dimZ
 		res = pElem->QueryIntAttribute("dimZ", &dimZ);
 		if (TIXML_SUCCESS == res && pAtZ != NULL) {
-			NAU_THROW("Pass %s: dimZ and atomicZ are both defined", aPass->getName().c_str());
+			NAU_THROW("Pass %s: dimZ and bufferZ are both defined", aPass->getName().c_str());
 		}
 
 		if (TIXML_SUCCESS != res)
 			dimZ = 1;
 		if (pAtZ != NULL) {
-			atZ = RENDERER->getAtomicID(pAtX);
-			if (atZ == -1) {
-				NAU_THROW("Pass %s: atomic %s is not defined", aPass->getName().c_str(), pAtX);
+			bZ = RESOURCEMANAGER->getBuffer(pAtZ);
+			if (!bZ) {
+				NAU_THROW("Pass %s: buffer %s is not defined", aPass->getName().c_str(), pAtZ);
+			}
+			else {
+				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("offsetZ", &offZ))
+					NAU_THROW("Pass %s: No offset defined for buffer %s", aPass->getName().c_str(), pAtZ);
 			}
 		}
 
+
 		p->setMaterialName (pLibName, pMatName);
 		p->setDimension( dimX, dimY, dimZ);	
-		p->setAtomics(atX, atY, atZ);
+		p->setDimFromBuffer(bX, offX, bY, offY, bZ, offZ);
 	}
 	else
 		NAU_THROW("Pass %s: Missing material", aPass->getName().c_str());
@@ -1969,8 +2060,8 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 /* -----------------------------------------------------------------------------
 MATERIAL LIBRAY RENDERTARGET DEFINITION
 
-	<rendertargets>
-		<rendertarget name = "test" />
+	<renderTargets>
+		<renderTarget name = "test" />
 			<size width=2048 height=2048 samples=16 layers = 2/>
 			<clear r=0.0 g=0.0 b=0.0 />
 			<colors>
@@ -1979,8 +2070,8 @@ MATERIAL LIBRAY RENDERTARGET DEFINITION
 			<depth name="shadowMap1"  internalFormat="DEPTH_COMPONENT24"  />
 				or
 			<depthStencil name="bli" />
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 
 The names of both color and depth RTs will be available for other passes to use
 	as textures
@@ -2000,7 +2091,7 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 	RenderTarget *m_RT;
 	int rtWidth, rtHeight, rtSamples = 0, rtLayers = 0; 
 
-	pElem = hRoot.FirstChild ("rendertargets").FirstChild ("rendertarget").Element();
+	pElem = hRoot.FirstChild ("renderTargets").FirstChild ("renderTarget").Element();
 	for ( ; 0 != pElem; pElem=pElem->NextSiblingElement()) {
 		const char *pRTName = pElem->Attribute ("name");
 
@@ -2679,11 +2770,11 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 							NAU_THROW("Pass %s: Texture %s: %s is not an attribute", aPass->getName().c_str(),  s_pFullName, p->Value());
 						// trying to set the value of a read only attribute
 						a = attribs[p->Value()];
-						if (a.mReadOnlyFlag)
+						if (a.m_ReadOnlyFlag)
 							NAU_THROW("Pass %s: Texture %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(),  s_pFullName, p->Value());
 
-						value = readAttr(s_pFullName, p, a.mType, TextureSampler::Attribs);
-						dstMat->getTextureSampler(unit)->setProp(a.mId, a.mType, value);
+						value = readAttr(s_pFullName, p, a.m_Type, TextureSampler::Attribs);
+						dstMat->getTextureSampler(unit)->setProp(a.m_Id, a.m_Type, value);
 						p = p->NextSiblingElement();
 					}
 				}
@@ -2691,7 +2782,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		
 			}
 		}
-#if NAU_OPENGL_VERSION >= 420
+
 		pElemNode = pElem->FirstChild("buffers");
 		if (pElemNode) {
 			pElemAux = pElemNode->FirstChildElement("buffer");
@@ -2715,9 +2806,10 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 					std::string name = *iter;
 					dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
 					IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
-					IBuffer *b = buffer->clone();
+					IMaterialBuffer *imb = IMaterialBuffer::Create(buffer);
+					//IBuffer *b = buffer->clone();
 
-					std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+					std::map<std::string, Attribute> attribs = IMaterialBuffer::Attribs.getAttributes();
 					TiXmlElement *p = pElemAux->FirstChildElement();
 					Attribute a;
 					void *value;
@@ -2727,21 +2819,22 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 							NAU_THROW("Pass %s: Buffer %s: %s is not an attribute", aPass->getName().c_str(), s_pFullName, p->Value());
 						// trying to set the value of a read only attribute
 						a = attribs[p->Value()];
-						if (a.mReadOnlyFlag)
-							NAU_THROW("Pass %s: Buffer %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), s_pFullName, p->Value());
+						if (a.m_ReadOnlyFlag)
+							NAU_THROW("Pass %s: MaterialBuffer %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), s_pFullName, p->Value());
 
-						value = readAttr(s_pFullName, p, a.mType, IBuffer::Attribs);
-						b->setProp(a.mId, a.mType, value);
+						value = readAttr(s_pFullName, p, a.m_Type, IMaterialBuffer::Attribs);
+						imb->setProp(a.m_Id, a.m_Type, value);
 						p = p->NextSiblingElement();
 					}
-					dstMat->attachBuffer(b);
+					dstMat->attachBuffer(imb);
 				}
 
 
 			}
 		}
 
-#endif
+
+
 		pElemAux = pElem->FirstChildElement("color");
 		if (pElemAux) {
 
@@ -2769,15 +2862,15 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 				if (!pAmbient && !pDiffuse && !pSpecular && !pEmission && !pShininess)
 					dstMat->getColor().clone(srcMat->getColor());
 				if (pAmbient && !strcmp("true",pAmbient))
-					dstMat->getColor().setProp(ColorMaterial::AMBIENT, srcMat->getColor().getPropf4(ColorMaterial::AMBIENT));
+					dstMat->getColor().setPropf4(ColorMaterial::AMBIENT, srcMat->getColor().getPropf4(ColorMaterial::AMBIENT));
 				if (pDiffuse && !strcmp("true",pDiffuse))
-					dstMat->getColor().setProp(ColorMaterial::DIFFUSE, srcMat->getColor().getPropf4(ColorMaterial::DIFFUSE));
+					dstMat->getColor().setPropf4(ColorMaterial::DIFFUSE, srcMat->getColor().getPropf4(ColorMaterial::DIFFUSE));
 				if (pSpecular && !strcmp("true",pSpecular))
-					dstMat->getColor().setProp(ColorMaterial::SPECULAR, srcMat->getColor().getPropf4(ColorMaterial::SPECULAR));
+					dstMat->getColor().setPropf4(ColorMaterial::SPECULAR, srcMat->getColor().getPropf4(ColorMaterial::SPECULAR));
 				if (pEmission && !strcmp("true",pEmission))
-					dstMat->getColor().setProp(ColorMaterial::EMISSION, srcMat->getColor().getPropf4(ColorMaterial::EMISSION));
+					dstMat->getColor().setPropf4(ColorMaterial::EMISSION, srcMat->getColor().getPropf4(ColorMaterial::EMISSION));
 				if (pShininess && !strcmp("true",pShininess))
-					dstMat->getColor().setProp(ColorMaterial::SHININESS, srcMat->getColor().getPropf(ColorMaterial::SHININESS));
+					dstMat->getColor().setPropf(ColorMaterial::SHININESS, srcMat->getColor().getPropf(ColorMaterial::SHININESS));
 			}
 
 		}
@@ -2802,8 +2895,8 @@ will be the default
 in the pass definition if class is not present it will be "default"
 -----------------------------------------------------------------------------*/
 void
-ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
-{
+ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
+
 	TiXmlElement *pElem;
 	TiXmlHandle handle (0);
 	std::map<std::string, Pass*> passMapper;
@@ -2830,16 +2923,42 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 		Pipeline *aPipeline = RENDERMANAGER->getPipeline (pNamePip);
 		
 		// if no default pipeline is set, then the first pipeline will be the default
-		if (0 == strcmp (pDefault, "true")) {
+		if (pDefault && 0 == strcmp (pDefault, "true")) {
 			strcpy (activePipeline, pNamePip);
 		}
 
 		handle = TiXmlHandle (pElem);
 		TiXmlElement *pElemPass;
 
+#ifdef NAU_LUA
+		pElemPass = handle.FirstChild("preScript").Element();
+		if (pElemPass != NULL) {
+			
 
+			const char *pPreScriptFile = pElemPass->Attribute("file");
+			const char *pPreScriptName = pElemPass->Attribute("name");
+			if (pPreScriptFile && pPreScriptName)
+				aPipeline->setPreScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pPreScriptFile), pPreScriptName);
+			else {
+				NAU_THROW("Pipeline %s: Pre script definition must have both file and name attributes", pNamePip);
+			}
+		}
+
+		pElemPass = handle.FirstChild("postScript").Element();
+		if (pElemPass != NULL) {
+
+			const char *pPostScriptFile = pElemPass->Attribute("file");
+			const char *pPostScriptName = pElemPass->Attribute("name");
+			if (pPostScriptFile && pPostScriptName)
+				aPipeline->setPostScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pPostScriptFile), pPostScriptName);
+			else {
+				NAU_THROW("Pipeline %s: Pre script definition must have both file and name attributes", pNamePip);
+			}
+		}
+#endif
 		pElemPass = handle.FirstChild ("pass").Element();
-		for ( ; 0 != pElemPass; pElemPass = pElemPass->NextSiblingElement()) {
+		for ( ; 0 != pElemPass; pElemPass = pElemPass->NextSiblingElement("pass")) {
+			
 			
 			TiXmlHandle hPass (pElemPass);
 			const char *pName = pElemPass->Attribute ("name");
@@ -2852,35 +2971,40 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 				NAU_THROW("Pass %s is defined more than once, in pipeline %s, in file %s", pName, pNamePip, ProjectLoader::s_File.c_str());
 
 			Pass *aPass = 0;
+			std::string passClass;
 			if (0 == pClass) {
 				aPass = aPipeline->createPass(pName);
+				passClass = "default";
 			} else {
 				if (PassFactory::isClass(pClass))
 					aPass = aPipeline->createPass (pName, pClass);
-				else
+				else {
 					NAU_THROW("Class %s is not available, in pass (%s,%s), in file %s", pClass, pNamePip, pName, ProjectLoader::s_File.c_str());
-
+				}
+				passClass = pClass;
 			}
 			passMapper[pName] = aPass;
+
 				
 			loadPassMode(hPass, aPass);	
 
-			if (0 != strcmp(pClass, "optixPrime") && 0 != strcmp(pClass, "quad") && 0 != strcmp(pClass, "profiler")) {
+
+			if (passClass != "optixPrime" && passClass != "quad" && passClass != "profiler") {
 
 				loadPassScenes(hPass,aPass);
 				loadPassCamera(hPass,aPass);	
 			}
-			else
+			else if (passClass == "quad")
 				loadPassTexture(hPass,aPass);
 #ifdef NAU_OPTIX
-			if (0 == strcmp("optix", pClass))
+			if (passClass == "optix")
 				loadPassOptixSettings(hPass, aPass);
 #endif
-			if (0 == strcmp("compute", pClass))
+			if (passClass == "compute")
 				loadPassComputeSettings(hPass, aPass);
 			
 #ifdef NAU_OPTIX_PRIME
-			if (0 == strcmp("optixPrime", pClass))
+			if (passClass == "optixPrime")
 				loadPassOptixPrimeSettings(hPass, aPass);
 #endif
 
@@ -2892,14 +3016,10 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 
 			loadPassInjectionMaps(hPass, aPass);
 			loadPassMaterialMaps(hPass, aPass);
-			//loadPassStateMaps(hPass, aPass);
-			//loadPassShaderMaps(hPass, aPass);
 		} //End of pass
 		if (pDefaultCamera)
 			aPipeline->setDefaultCamera(pDefaultCamera);
 
-		//else
-		//	aPipeline->setDefaultCamera(aPipeline->getLastPassCameraName());
 	} //End of pipeline
 	
 	if (strlen (activePipeline) > 0) {
@@ -2913,18 +3033,26 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot)
 /* -----------------------------------------------------------------------------
 BUFFERS
 
-<buffers>
-	<buffer name="bla" size=123 />
-</buffers>
+<buffer name="atBuffer">
+	<CLEAR value="BY_FRAME" />
 
-All fields are required. Size is in bytes
+	<SIZE value=16 />
+	or
+	<DIM x=256 y=256 z=1 />
+	<structure>
+		<item value="FLOAT" />
+		<item value="FLOAT" />
+	</structure>
+</buffer>
+
+All fields are required. SIZE is in bytes. DIM requires the definition of structure.
 -----------------------------------------------------------------------------*/
 
 
 void
 ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
 {
-#if NAU_OPENGL_VERSION >= 420
+
 	TiXmlElement *pElem;
 	int layers = 0;
 	pElem = hRoot.FirstChild("buffers").FirstChild("buffer").Element();
@@ -2936,23 +3064,33 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		}
 		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pName);
 
+		IBuffer *b = RESOURCEMANAGER->createBuffer(s_pFullName);
+
 		SLOG("Buffer : %s", s_pFullName);
+		TiXmlHandle handle(pElem);
+		TiXmlElement *pElemAux = handle.FirstChild("structure").FirstChild("field").Element();
 
-		if (RESOURCEMANAGER->hasBuffer(s_pFullName)) {
-			NAU_THROW("Mat Lib %s: Buffer %s is already defined", aLib->getName().c_str(), s_pFullName);
-		}
-		int size;
-		if (pElem->QueryIntAttribute("size", &size)) {
-			NAU_THROW("Mat Lib %s: Buffer %s: has no size", aLib->getName().c_str(), pName);
+		for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement("field")) {
+			const char *pType = pElemAux->Attribute("value");
+			if (!pType) {
+				NAU_THROW("Mat Lib %s: Buffer %s - field has no value", aLib->getName().c_str(), pName);
+			}
+			if (!Enums::isValidType(pType)) {
+				NAU_THROW("Mat Lib %s: Buffer %s - field has an invalid type. Valid types are: INT, IVEC2, IVEC3, IVEC4, UINT, UIVEC2, UIVEC3, UIVEC4, BOOL, BVEC2, BVEC3, BVEC4, FLOAT, VEC2, VEC3, VEC4, DOUBLE, DVEC2, DVEC3, DVEC4, MAT2, MAT3, MAT4, MAT2x3, MAT2x4, MAT3x2, MAT3x4, MAT4x2, MAT4x3, DMAT2, DMAT3, DMAT4, DMAT2x3, DMAT2x4, DMAT3x2, DMAT3x4, DMAT4x2, DMAT4x3, SAMPLER, ENUM, BYTE, UBYTE, SHORT, USHORT", aLib->getName().c_str(), pName);
+			}
+			b->appendItemToStruct(Enums::getType(pType));
 		}
 
-		if (size < 0) {
-			NAU_THROW("Mat Lib %s: Buffer %s : size must be greater than zero", aLib->getName().c_str(), pName);
-		}
 
-		RESOURCEMANAGER->createBuffer(s_pFullName, size);
+		//if (RESOURCEMANAGER->hasBuffer(s_pFullName)) {
+		//	NAU_THROW("Mat Lib %s: Buffer %s is already defined", aLib->getName().c_str(), s_pFullName);
+		//}
+
+		// Reading buffer attributes
+		std::vector<std::string> excluded;
+		excluded.push_back("structure");
+		readAttributes(pName, (AttributeValues *)b, IBuffer::Attribs, excluded, pElem);
 	}
-#endif
 }
 
 
@@ -2986,20 +3124,6 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char* pTextureName = pElem->Attribute ("name");
 		const char* pFilename = pElem->Attribute ("filename");
-		const char *internalFormat = pElem->Attribute("internalFormat");
-
-		// layers
-		if (!pElem->QueryIntAttribute("layers", &layers))
-			layers = 0;
-		else if (layers < 2 && layers != 0)
-			NAU_THROW("Mat Lib &s - Texture %s - Layers must be equal or greater than 2", aLib->getName().c_str(), s_pFullName);
-			
-		//const char *type = pElem->Attribute("type");
-		//const char *format = pElem->Attribute("format");
-		int mipmap=0;
-		const char *pMipMap = pElem->Attribute("mipmap", &mipmap);
-
-
 
 		if (0 == pTextureName) {
 			NAU_THROW("Texture has no name in Mat Lib %s", aLib->getName().c_str());
@@ -3012,36 +3136,24 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 		if (RESOURCEMANAGER->hasTexture(s_pFullName))
 			NAU_THROW("Texture %s is already defined, in Mat Lib %s", s_pFullName, aLib->getName().c_str());
 
-		if (0 == pFilename && 0 == internalFormat /*&& 0 == type && 0 == format */) {
-			NAU_THROW("Incomplete texture %s definition Mat Lib %s", pTextureName, aLib->getName().c_str());
-		}
-
 		// empty texture
 		if (0 == pFilename) {
-			if (0 == internalFormat  /*|| 0 == type || 0 == format*/) {
-				NAU_THROW("Incomplete texture %s definition Mat Lib %s", pTextureName, aLib->getName().c_str());		
-			}
-			if (!Texture::Attribs.isValid("INTERNAL_FORMAT", internalFormat))//isValidInternalFormat(internalFormat))
-				NAU_THROW("Texture %s internal format is invalid, in material lib: %s", pTextureName, aLib->getName().c_str());
+			Texture *tex = RESOURCEMANAGER->createTexture(s_pFullName);
 
-		/*	if (!Texture::Attribs.isValid("FORMAT", format))//isValidFormat(format))
-				NAU_THROW("Texture %s format is invalid, in material lib: %s", pTextureName, aLib->getName().c_str());
-				*/
-			int width, height;
-			if (pElem->QueryIntAttribute("width", &width) || pElem->QueryIntAttribute("height", &height))
-				NAU_THROW("Texture %s dimensions are missing or invalid, in material lib: %s", pTextureName, aLib->getName().c_str());
+			std::vector<std::string> excluded;
+			readAttributes(s_pFullName, (AttributeValues *)tex, Texture::Attribs, excluded, pElem);
 
-			RESOURCEMANAGER->createTexture (s_pFullName, internalFormat, width, height, layers);
+			tex->build();
 		}
-
+		// texture from a file
 		else {
 			bool mipmap = false;
-			if (pMipMap != 0 && strcmp(pMipMap,"1") == 0)
-				mipmap = true;
+			pElem->QueryBoolAttribute("mipmap", &mipmap);
 
 			RESOURCEMANAGER->addTexture (FileUtil::GetFullPath(path,pFilename), s_pFullName, mipmap);
 		}
 	}
+
 	pElem = hRoot.FirstChild ("textures").FirstChild ("cubeMap").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char* pTextureName = pElem->Attribute ("name");
@@ -3083,6 +3195,111 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 }
 
 
+//void
+//ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
+//{
+//	TiXmlElement *pElem;
+//	int layers = 0;
+//	pElem = hRoot.FirstChild("textures").FirstChild("texture").Element();
+//	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+//		const char* pTextureName = pElem->Attribute("name");
+//		const char* pFilename = pElem->Attribute("filename");
+//		const char *internalFormat = pElem->Attribute("internalFormat");
+//
+//		// layers
+//		if (!pElem->QueryIntAttribute("layers", &layers))
+//			layers = 0;
+//		else if (layers < 2 && layers != 0)
+//			NAU_THROW("Mat Lib &s - Texture %s - Layers must be equal or greater than 2", aLib->getName().c_str(), s_pFullName);
+//
+//		//const char *type = pElem->Attribute("type");
+//		//const char *format = pElem->Attribute("format");
+//		int mipmap = 0;
+//		const char *pMipMap = pElem->Attribute("mipmap", &mipmap);
+//
+//
+//
+//		if (0 == pTextureName) {
+//			NAU_THROW("Texture has no name in Mat Lib %s", aLib->getName().c_str());
+//		}
+//
+//		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pTextureName);
+//
+//		SLOG("Texture : %s", s_pFullName);
+//
+//		if (RESOURCEMANAGER->hasTexture(s_pFullName))
+//			NAU_THROW("Texture %s is already defined, in Mat Lib %s", s_pFullName, aLib->getName().c_str());
+//
+//		if (0 == pFilename && 0 == internalFormat /*&& 0 == type && 0 == format */) {
+//			NAU_THROW("Incomplete texture %s definition Mat Lib %s", pTextureName, aLib->getName().c_str());
+//		}
+//
+//		// empty texture
+//		if (0 == pFilename) {
+//			if (0 == internalFormat  /*|| 0 == type || 0 == format*/) {
+//				NAU_THROW("Incomplete texture %s definition Mat Lib %s", pTextureName, aLib->getName().c_str());
+//			}
+//			if (!Texture::Attribs.isValid("INTERNAL_FORMAT", internalFormat))//isValidInternalFormat(internalFormat))
+//				NAU_THROW("Texture %s internal format is invalid, in material lib: %s", pTextureName, aLib->getName().c_str());
+//
+//			/*	if (!Texture::Attribs.isValid("FORMAT", format))//isValidFormat(format))
+//			NAU_THROW("Texture %s format is invalid, in material lib: %s", pTextureName, aLib->getName().c_str());
+//			*/
+//			int width, height;
+//			if (pElem->QueryIntAttribute("width", &width) || pElem->QueryIntAttribute("height", &height))
+//				NAU_THROW("Texture %s dimensions are missing or invalid, in material lib: %s", pTextureName, aLib->getName().c_str());
+//
+//			RESOURCEMANAGER->createTexture(s_pFullName, internalFormat, width, height, layers);
+//		}
+//
+//		else {
+//			bool mipmap = false;
+//			if (pMipMap != 0 && strcmp(pMipMap, "1") == 0)
+//				mipmap = true;
+//
+//			RESOURCEMANAGER->addTexture(FileUtil::GetFullPath(path, pFilename), s_pFullName, mipmap);
+//		}
+//	}
+//	pElem = hRoot.FirstChild("textures").FirstChild("cubeMap").Element();
+//	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+//		const char* pTextureName = pElem->Attribute("name");
+//		const char* pFilePosX = pElem->Attribute("filePosX");
+//		const char* pFileNegX = pElem->Attribute("fileNegX");
+//		const char* pFilePosY = pElem->Attribute("filePosY");
+//		const char* pFileNegY = pElem->Attribute("fileNegY");
+//		const char* pFilePosZ = pElem->Attribute("filePosZ");
+//		const char* pFileNegZ = pElem->Attribute("fileNegZ");
+//		const char *pMipMap = pElem->Attribute("mipmap");
+//
+//		if (0 == pTextureName) {
+//			NAU_THROW("Library %s: Cube Map texture has no name", aLib->getName().c_str());
+//		}
+//
+//		if (!(pFilePosX && pFileNegX && pFilePosY && pFileNegY && pFilePosZ && pFileNegZ)) {
+//			NAU_THROW("Library %s: Cube Map is not complete", aLib->getName().c_str());
+//		}
+//
+//		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pTextureName);
+//		if (RESOURCEMANAGER->hasTexture(s_pFullName))
+//			NAU_THROW("Library %s: Cube Map %s is already defined", aLib->getName().c_str(), s_pFullName);
+//
+//		bool mipmap = false;
+//		if (pMipMap != 0 && strcmp(pMipMap, "1") == 0)
+//			mipmap = true;
+//
+//
+//		std::vector<std::string> files(6);
+//		files[0] = FileUtil::GetFullPath(path, pFilePosX);
+//		files[1] = FileUtil::GetFullPath(path, pFileNegX);
+//		files[2] = FileUtil::GetFullPath(path, pFilePosY);
+//		files[3] = FileUtil::GetFullPath(path, pFileNegY);
+//		files[4] = FileUtil::GetFullPath(path, pFilePosZ);
+//		files[5] = FileUtil::GetFullPath(path, pFileNegZ);
+//
+//		RESOURCEMANAGER->addTexture(files, s_pFullName, mipmap);
+//	}
+//}
+
 /* -----------------------------------------------------------------------------
 STATES
 
@@ -3093,7 +3310,7 @@ STATES
 			<BLEND_SRC value="SRC_ALPHA" />
 			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
 			<CULL_FACE value="0" />
-			</state>
+		</state>
 	</states>
 
 func: NEVER, ALWAYS, LESS, LEQUAL, EQUAL, GEQUAL, GREATER, NOT_EQUAL
@@ -3117,11 +3334,11 @@ ProjectLoader::loadState(TiXmlElement *pElemAux, MaterialLib *aLib, Material *aM
 			NAU_THROW("Library %s: State %s: %s is not an attribute", aLib->getName().c_str(), s->getName().c_str(), p->Value());
 		// trying to set the value of a read only attribute
 		a = attribs[p->Value()];
-		if (a.mReadOnlyFlag)
+		if (a.m_ReadOnlyFlag)
 			NAU_THROW("Library %s: State %s: %s is a read-only attribute, in file %s", aLib->getName().c_str(),  s->getName().c_str(), p->Value());
 
-		value = readAttr(s->getName(), p, a.mType, IState::Attribs);
-		s->setProp(a.mId, a.mType, value);
+		value = readAttr(s->getName(), p, a.m_Type, IState::Attribs);
+		s->setProp(a.m_Id, a.m_Type, value);
 		//aMat->getTextureSampler(unit)->setProp(a.mId, a.mType, value);
 		p = p->NextSiblingElement();
 	}
@@ -3199,13 +3416,15 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		if (0 != pCSFile && (0 != pVSFile || 0 != pPSFile || 0 != pGSFile || 0 != pTEFile || 0 != pTCFile)) 
 			NAU_THROW("Mat Lib %s: Shader %s: Mixing Compute Shader with other shader stages",aLib->getName().c_str(), pProgramName);
 
-		if (pCSFile) {
+			
+			if (pCSFile) {
 #if (NAU_OPENGL_VERSION >= 430)
+			IProgram *aShader = RESOURCEMANAGER->getProgram (s_pFullName);		
 			std::string CSFileName(FileUtil::GetFullPath(path, pCSFile));
 			if (!FileUtil::exists(CSFileName))
 				NAU_THROW("Shader file %s in MatLib %s does not exist", pCSFile, aLib->getName().c_str());
 			SLOG("Program %s", pProgramName);
-			IProgram *aShader = RESOURCEMANAGER->getProgram (s_pFullName);
+
 			aShader->loadShader(IProgram::COMPUTE_SHADER, FileUtil::GetFullPath(path,pCSFile));
 			aShader->linkProgram();
 			SLOG("Linker: %s", aShader->getProgramInfoLog());
@@ -3318,11 +3537,11 @@ ProjectLoader::loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material
 			NAU_THROW("Library %s: Material %s: Color - %s is not an attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 		// trying to set the value of a read only attribute
 		a = attribs[p->Value()];
-		if (a.mReadOnlyFlag)
+		if (a.m_ReadOnlyFlag)
 			NAU_THROW("Library %s: Material %s: Color - %s is a read-only attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 
-		value = readAttr("", p, a.mType, ColorMaterial::Attribs);
-		aMat->getColor().setProp(a.mId, a.mType, value);
+		value = readAttr("", p, a.m_Type, ColorMaterial::Attribs);
+		aMat->getColor().setProp(a.m_Id, a.m_Type, value);
 		p = p->NextSiblingElement();
 	}
 
@@ -3450,11 +3669,11 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 				NAU_THROW("Library %s: Material %s: ImageTexture - %s is not an attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 			// trying to set the value of a read only attribute
 			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
+			if (a.m_ReadOnlyFlag)
 				NAU_THROW("Library %s: Material %s: ImageTexture - %s is a read-only attribute", aLib->getName().c_str(),  aMat->getName().c_str(), p->Value());
 
-			value = readAttr("", p, a.mType, ImageTexture::Attribs);
-			aMat->getImageTexture(unit)->setProp(a.mId, a.mType, value);
+			value = readAttr("", p, a.getType(), ImageTexture::Attribs);
+			aMat->getImageTexture(unit)->setProp(a.getId(), a.getType(), value);
 			p = p->NextSiblingElement();
 		}
 #else
@@ -3500,10 +3719,11 @@ ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Materi
 			NAU_THROW("Library %s: Material %s: Buffer %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pName);
 
 		IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
-		IBuffer *b = buffer->clone();
+		IMaterialBuffer *imb = IMaterialBuffer::Create(buffer);
+		//IBuffer *b = buffer->clone();
 		// Reading Buffer Attributes
 
-		std::map<std::string, Attribute> attribs = IBuffer::Attribs.getAttributes();
+		std::map<std::string, Attribute> attribs = IMaterialBuffer::Attribs.getAttributes();
 		TiXmlElement *p = pElemAux->FirstChildElement();
 		Attribute a;
 		void *value;
@@ -3513,14 +3733,14 @@ ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Materi
 				NAU_THROW("Library %s: Material %s: Buffer - %s is not an attribute", aLib->getName().c_str(), aMat->getName().c_str(), p->Value());
 			// trying to set the value of a read only attribute
 			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
+			if (a.m_ReadOnlyFlag)
 				NAU_THROW("Library %s: Material %s: Buffer - %s is a read-only attribute", aLib->getName().c_str(), aMat->getName().c_str(), p->Value());
 
-			value = readAttr("", p, a.mType, IBuffer::Attribs);
-			b->setProp(a.mId, a.mType, value);
+			value = readAttr("", p, a.m_Type, IMaterialBuffer::Attribs);
+			imb->setProp(a.m_Id, a.m_Type, value);
 			p = p->NextSiblingElement();
 		}
-		aMat->attachBuffer(b);
+		aMat->attachBuffer(imb);
 #else
 		NAU_THROW("Library %s: Material %s: Buffers Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), NAU_OPENGL_VERSION);
 
@@ -3589,11 +3809,11 @@ ProjectLoader::loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Mater
 				NAU_THROW("Library %s: Material %s: Texture %s: %s is not an attribute", aLib->getName().c_str(),  aMat->getName().c_str(), pTextureName, p->Value());
 			// trying to set the value of a read only attribute
 			a = attribs[p->Value()];
-			if (a.mReadOnlyFlag)
+			if (a.m_ReadOnlyFlag)
 				NAU_THROW("Library %s: Material %s: Texture %s: %s is a read-only attribute, in file %s", aLib->getName().c_str(),  aMat->getName().c_str(), pTextureName, p->Value());
 
-			value = readAttr(pTextureName, p, a.mType, TextureSampler::Attribs);
-			aMat->getTextureSampler(unit)->setProp(a.mId, a.mType, value);
+			value = readAttr(pTextureName, p, a.m_Type, TextureSampler::Attribs);
+			aMat->getTextureSampler(unit)->setProp(a.m_Id, a.m_Type, value);
 			p = p->NextSiblingElement();
 		}
 	}
@@ -3603,8 +3823,7 @@ ProjectLoader::loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Mater
 /* -----------------------------------------------------------------------------
 MATERIALSHADER
 
-	<shader>
-		<name>perpixel-color-shadow</name>
+	<shader name="perpixel-color-shadow" >
 		<values>
 			<valueof uniform="lightPosition" type="LIGHT" context="Sun" component="POSITION" /> 
 		</values>
@@ -3618,13 +3837,14 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 
 	pElemAux = handle.FirstChild ("shader").Element();
 	if (0 != pElemAux) {
-		TiXmlHandle hShader (pElemAux);
 
-		pElemAux2 = hShader.FirstChild ("name").Element();
-		const char *pShaderName = pElemAux2->GetText();
+		const char *pShaderName = pElemAux->Attribute("name");
+
+		//pElemAux2 = hShader.FirstChild ("name").Element();
+		//const char *pShaderName = pElemAux2->GetText();
 
 		if (0 == pShaderName) {
-			NAU_THROW("Shader has no target in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
+			NAU_THROW("Shader has no name in library %s in material %s", aLib->getName().c_str(), aMat->getName().c_str());
 		}
 		sprintf(s_pFullName, "%s::%s",aLib->getName().c_str(),pShaderName);
 		if (!RESOURCEMANAGER->hasProgram(s_pFullName))
@@ -3634,6 +3854,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 		aMat->attachProgram (s_pFullName);
 		aMat->clearProgramValues();
 
+		TiXmlHandle hShader (pElemAux);
 		pElemAux2 = hShader.FirstChild ("values").FirstChild ("valueof").Element();
 		for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
 			const char *pUniformName = pElemAux2->Attribute ("uniform");
@@ -3654,11 +3875,11 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 			if (0 == pComponent) {
 				NAU_THROW("No component found for uniform %s, in library %s in material %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
 			}
-			if (!ProgramValue::Validate(pType, pContext, pComponent))
+			if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
 				NAU_THROW("Uniform %s is not valid, in library %s in material %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
 
 			int id = 0;
-			if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE")) || (0 == strcmp(pContext,"IMAGE_TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
+			if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"MATERIAL_TEXTURE")) || (0 == strcmp(pContext,"IMAGE_TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
 				if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
 					NAU_THROW("No id found for uniform %s, in library %s in material %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
 				if (id < 0)
@@ -3700,22 +3921,13 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 /* -----------------------------------------------------------------------------
 MATERIALSTATE
 
-	<state>
-		<alphatest alphaFunc="GREATER" alphaRef="0.25" />
-		<blend src="ONE" dst="ZERO" />
-		<cull value="0" />
-		<order value="1" />
-	</state>	
-
-alphaFunc: ALPHA_NEVER, ALPHA_ALWAYS, ALPHA_LESS, ALPHA_LEQUAL,
-				ALPHA_EQUAL, ALPHA_GEQUAL, ALPHA_GREATER, ALPHA_NOT_EQUAL
-
-order: is a value that defines the order of rendering. Higher values are drawn later.
-
-src and dst: ZERO,ONE,SRC_COLOR,ONE_MINUS_SRC_COLOR,DST_COLOR,
-				ONE_MINUS_DST_COLOR, SRC_ALPHA, ONE_MINUS_SRC_ALPHA, DST_ALPHA,
-				ONE_MINUS_DST_ALPHA, SRC_ALPHA_SATURATE, CONSTANT_COLOR, 
-				ONE_MINUS_CONSTANT_COLOR, CONSTANT_ALPHA, ONE_MINUS_CONSTANT_ALPHA
+	<state name="Grades"> // see the definition of state
+		<ORDER value="2" />
+		<BLEND value=true />
+		<BLEND_SRC value="SRC_ALPHA" />
+		<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
+		<CULL_FACE value="0" />
+	</state>
 
 	OR
 
@@ -3855,8 +4067,6 @@ ProjectLoader::loadMatLib (std::string file)
 
 		//aLib->addMaterial (mat);
 	}
-
-
 }
 
 /* ----------------------------------------------------------------
@@ -3929,13 +4139,15 @@ ProjectLoader::loadDebug (TiXmlHandle &hRoot)
 			startGlilog();
 		}
 
+		activateGLI();
+
 		//TiXmlElement *pElem;
 		loadDebugFunctionlog(handle);
 		loadDebugLogperframe(handle);
 		loadDebugErrorchecking(handle);
 		loadDebugImagelog(handle);
 		loadDebugShaderlog(handle);
-		loadDebugDisplaylistlog(handle);
+//		loadDebugDisplaylistlog(handle);
 		loadDebugFramelog(handle);
 		loadDebugTimerlog(handle);
 		loadDebugPlugins(handle);
@@ -3948,7 +4160,7 @@ ProjectLoader::loadDebug (TiXmlHandle &hRoot)
 Specification of the functionlog:
 
 		<functionlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<logxmlformat value="bool"/> (REMOVED)
 			<logflush value="bool"/> (REMOVED)
 			<logmaxframeloggingenabled value="bool"/>
@@ -3963,6 +4175,14 @@ Specification of the functionlog:
 void
 ProjectLoader::loadDebugFunctionlog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("functionlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "functionlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"functionlog");
 
@@ -4094,7 +4314,7 @@ ProjectLoader::loadDebugImagelogimageicon (TiXmlHandle &hRoot){
 Specification of the shaderlog:
 
 		<shaderlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<shaderrendercallstatelog value="bool"/>
 			<shaderattachlogstate value="bool"/>
 			<shadervalidateprerender value="bool"/>
@@ -4103,24 +4323,20 @@ Specification of the shaderlog:
 ----------------------------------------------------------------- */
 void
 ProjectLoader::loadDebugShaderlog (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("shaderlog").Element());
+	TiXmlHandle handle(hRoot.FirstChild("shaderlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "shaderlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"shaderlog");
 }
 
-/* ----------------------------------------------------------------
-Specification of the displaylistlog:
 
-		<displaylistlog>
-			<enabled value="bool"/>
-		</displaylistlog>
------------------------------------------------------------------ */
-void
-ProjectLoader::loadDebugDisplaylistlog (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("displaylistlog").Element());
-
-	loadDebugConfigData(handle,"displaylistlog");
-}
 
 /* ----------------------------------------------------------------
 Specification of the framelog:
@@ -4133,7 +4349,7 @@ AABBGGRR. If an index is missing, it will take the value of the index as the col
 (ie. stencil index 128 = (255, 128,128,128) = greyscale values)
 
 		<framelog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<frameimageformat value="string"/>
 			<framestencilcolors>
 				<item value="uint"/>
@@ -4177,6 +4393,14 @@ void
 ProjectLoader::loadDebugFramelog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("framelog").Element());
 
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "framelog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
+
 	loadDebugConfigData(handle,"framelog");
 
 	
@@ -4209,7 +4433,7 @@ ProjectLoader::loadDebugFramelogFrameicon (TiXmlHandle &hRoot){
 Specification of the framemovie:
 
 			<framemovie>
-				<framemovieenabled value="bool"/>
+				<framemovieenabled value="bool"/> (Automatic)
 				<framemoviewidth value="uint"/>
 				<framemovieheight value="uint"/>
 				<framemovierate value="uint"/>
@@ -4224,6 +4448,14 @@ void
 ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("framemovie").Element());
 
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("framemovieenabled", "framelogframemovie");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
+
 	loadDebugConfigData(handle,"framelogframemovie");
 
 }
@@ -4232,13 +4464,21 @@ ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
 Specification of the timerlog:
 
 		<timerlog>
-			<enabled value="bool"/>
+			<enabled value="bool"/> (Automatic)
 			<timerlogcutoff value="uint"/>
 		</timerlog>
 ----------------------------------------------------------------- */
 void
 ProjectLoader::loadDebugTimerlog (TiXmlHandle &hRoot){
 	TiXmlHandle handle (hRoot.FirstChild ("timerlog").Element());
+
+#ifdef GLINTERCEPTDEBUG
+	if (handle.Element()){
+		bool defaultValue = true;
+		void *functionSetPointer = getGLIFunction("enabled", "timerlog");
+		useGLIFunction(functionSetPointer, &defaultValue);
+	}
+#endif
 
 	loadDebugConfigData(handle,"timerlog");
 

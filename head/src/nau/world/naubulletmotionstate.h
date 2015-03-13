@@ -3,7 +3,7 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include <nau/scene/sceneobject.h>
+#include "nau/scene/sceneobject.h"
 
 namespace nau
 {
@@ -15,7 +15,7 @@ namespace nau
 		{
 		private:
 			nau::scene::SceneObject *m_SceneObject;
-			nau::math::ITransform *t;
+			nau::math::mat4 m_Matrix;
 
 		public:
 			NauBulletMotionState(nau::scene::SceneObject *aObject);

@@ -3,7 +3,7 @@
 #ifndef DISTANCEMAP_H
 #define DISTANCEMAP_H
 
-#include <nau/math/ray.h>
+#include "nau/math/ray.h"
 
 namespace nau
 {

@@ -1,8 +1,8 @@
-#include <nau/resource/texturemanager.h>
-#include <nau/render/textureCubeMap.h>
+#include "nau/resource/texturemanager.h"
+#include "nau/render/textureCubeMap.h"
 
-#include <nau/system/file.h>
-#include <nau/clogger.h>
+#include "nau/system/file.h"
+#include "nau/clogger.h"
 
 using namespace nau::resource;
 using namespace nau::render;
@@ -93,64 +93,82 @@ TextureManager::addTexture (std::vector<std::string> filenames, std::string labe
 }
 
 
+//Texture*
+//TextureManager::createTexture (std::string label, 
+//							   std::string internalFormat, 
+//							   std::string aFormat, 
+//							   std::string aType, int width, int height,
+//							   unsigned char* data)
+//{
+//	Texture *tex;
+//
+//	if (true == hasTexture (label)) {
+//		tex = getTexture (label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
+////		tex->setData(internalFormat,aFormat,aType,width,height,data);
+//		return(tex);
+//	}
+//
+//	tex = Texture::Create (label, internalFormat, aFormat, aType, width, height, data);
+//	m_Lib.push_back(tex);
+//
+//	return(tex);
+//}
+
+
 Texture*
 TextureManager::createTexture (std::string label, 
 							   std::string internalFormat, 
-							   std::string aFormat, 
-							   std::string aType, int width, int height,
-							   unsigned char* data)
+							   int width, int height, int depth, int layers, int levels, int samples)
 {
 	Texture *tex;
 
 	if (true == hasTexture (label)) {
 		tex = getTexture (label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
-//		tex->setData(internalFormat,aFormat,aType,width,height,data);
 		return(tex);
 	}
 
-	tex = Texture::Create (label, internalFormat, aFormat, aType, width, height, data);
+	tex = Texture::Create(label, internalFormat, width, height, depth, layers, levels, samples);
 	m_Lib.push_back(tex);
 
 	return(tex);
 }
 
 
-Texture*
-TextureManager::createTexture (std::string label, 
-							   std::string internalFormat, 
-							   int width, int height, int layers)
-{
+//Texture*
+//TextureManager::createTextureMS (std::string label, 
+//							   std::string internalFormat, 
+//							   int width, int height,
+//							   int samples)
+//{
+//	Texture *tex;
+//
+//	if (true == hasTexture (label)) {
+//		tex = getTexture (label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
+//		return(tex);
+//	}
+//
+//	tex = Texture::CreateMS (label, internalFormat, width, height, samples);
+//	m_Lib.push_back(tex);
+//
+//	return(tex);
+//}
+
+
+nau::render::Texture *
+TextureManager::createTexture(std::string label) {
+
 	Texture *tex;
 
-	if (true == hasTexture (label)) {
-		tex = getTexture (label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
+	if (true == hasTexture(label)) {
+		tex = getTexture(label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
 		return(tex);
 	}
 
-	tex = Texture::Create (label, internalFormat, width, height,layers);
+	tex = Texture::Create(label);
 	m_Lib.push_back(tex);
 
 	return(tex);
-}
 
-
-Texture*
-TextureManager::createTextureMS (std::string label, 
-							   std::string internalFormat, 
-							   int width, int height,
-							   int samples)
-{
-	Texture *tex;
-
-	if (true == hasTexture (label)) {
-		tex = getTexture (label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
-		return(tex);
-	}
-
-	tex = Texture::CreateMS (label, internalFormat, width, height, samples);
-	m_Lib.push_back(tex);
-
-	return(tex);
 }
 
 

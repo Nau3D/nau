@@ -1,8 +1,8 @@
-#include <nau/geometry/sphere.h>
+#include "nau/geometry/sphere.h"
 
-#include <nau/math/vec3.h>
-#include <nau/render/vertexdata.h>
-#include <nau/material/materialgroup.h>
+#include "nau/math/vec3.h"
+#include "nau/render/vertexdata.h"
+#include "nau/material/materialgroup.h"
 
 using namespace nau::geometry;
 using namespace nau::math;
@@ -52,7 +52,7 @@ Sphere::build() {
 	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup();
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
 	
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>((slices)*(stacks)*2*3);
 
@@ -70,8 +70,8 @@ Sphere::build() {
 	
 	}
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("Light Grey");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("Light Grey");
 
 	addMaterialGroup (aMaterialGroup);
 }

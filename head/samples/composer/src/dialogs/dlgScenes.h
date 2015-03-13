@@ -42,8 +42,8 @@ protected:
 	DlgScenes();
 	DlgScenes(const DlgScenes&);
 	DlgScenes& operator= (const DlgScenes&);
-	static DlgScenes *inst;
-	static wxWindow *parent;
+	static DlgScenes *Inst;
+	static wxWindow *Parent;
 	wxWindow *m_Parent;
 
 
@@ -51,10 +51,10 @@ protected:
 	std::string m_Active;
 
 	/* SPECIFIC */
-	wxPropertyGridManager *pg;
-	wxComboBox *list;
-	wxListBox *objects;
-	wxStaticText *tType, *tBoundingBoxMin, *tBoundingBoxMax;
+	wxPropertyGridManager *m_PG;
+	wxComboBox *m_List;
+	wxListBox *m_Objects;
+	wxStaticText *m_TType;//, *tBoundingBoxMin, *tBoundingBoxMax;
 
 
 	/* EVENTS */
@@ -72,10 +72,12 @@ protected:
 	void update();
 	void updateList();
 	void setupPanel(wxSizer *siz, wxWindow *parent);
+	void setupGrid();
 
 
 	enum {
 		DLG_COMBO,
+		DLG_PROPS,
 		NEW_SCENE,
 		ADD_FILE,
 		ADD_DIR,
@@ -89,16 +91,16 @@ protected:
 
 	wxToolBar *m_toolbar;
 
-	enum {
-		/* SCENE TYPES */
-		DLG_MI_PERSPECTIVE=0,
-		DLG_MI_ORTHOGONAL
-	}cameraTypes;
+	//enum {
+	//	/* SCENE TYPES */
+	//	DLG_MI_PERSPECTIVE=0,
+	//	DLG_MI_ORTHOGONAL
+	//}cameraTypes;
 
-	typedef enum {
-		NEW_CAMERA,
-		PROPS_CHANGED
-	} Notification;
+	//typedef enum {
+	//	NEW_CAMERA,
+	//	PROPS_CHANGED
+	//} Notification;
 
     DECLARE_EVENT_TABLE()
 };

@@ -1,18 +1,18 @@
-#include <nau/config.h>
-
-#if NAU_OPENGL_VERSION >= 430
+#include "nau/config.h"
 
 #ifndef GLBUFFER_H
 #define GLBUFFER_H
 
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
+#include "nau/config.h"
+#include "nau/render/ibuffer.h"
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
+#include <cmath>
 #include <string>
-#include <math.h>
-
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
-
-#include <nau/config.h>
-#include <nau/render/ibuffer.h>
 
 using namespace nau;
 
@@ -25,14 +25,22 @@ namespace nau
 		{
 		public:
 
-			GLBuffer(std::string label, int size);
+			GLBuffer(std::string label);
 			~GLBuffer(void) ;
 
-			void bind();
+			void bind(unsigned int target);
 			void unbind();
-			void setProp(int prop, Enums::DataType type, void *value);
+			void setPropui(UIntProperty  prop, unsigned int value);
+			void setPropui3(UInt3Property  prop, uivec3 &v);
+			void setData(unsigned int size, void *data);
+			void setSubData(unsigned int offset, unsigned int size, void*data);
+			int getData(unsigned int offset, unsigned int size, void *data);
 			void clear();
 			IBuffer * clone();
+
+			//! Should be called before getting the size
+			// and other properties
+			void refreshBufferParameters();
 
 		protected:
 			static bool Init();
@@ -40,10 +48,12 @@ namespace nau
 
 			GLBuffer() {};
 
+			int m_LastBound;
+
 		};
 	};
 };
 
-#endif // NAU_OPENGL_VERSION
+
 
 #endif // GLBUFFER_H

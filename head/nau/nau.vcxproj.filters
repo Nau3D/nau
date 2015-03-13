@@ -163,37 +163,13 @@
     <ClCompile Include="..\src\nau\material\teximage.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\material\texturemat.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\mat3.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\mat4.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\math\plane.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\math\randomgen.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\math\simpletransform.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\math\spherical.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\transformfactory.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\vec2.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\vec3.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\vec4.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\depthmappass.cpp">
@@ -475,12 +451,6 @@
     <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\math\bvec4.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\imageTexture.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
@@ -492,9 +462,6 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp">
-      <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp">
       <Filter>Source Files\render\opengl</Filter>
@@ -516,6 +483,30 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp">
       <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\debug\state.cpp">
+      <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\imaterialbuffer.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\attributeValues.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\attribute.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\iscene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materialTexture.cpp">
+      <Filter>Source Files\material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -603,9 +594,6 @@
     <ClInclude Include="..\src\nau\material\colormaterial.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\material\imaterialgroup.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\material\material.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
@@ -624,18 +612,6 @@
     <ClInclude Include="..\src\nau\material\programvalue.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\material\texturemat.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\itransform.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\mat3.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\mat4.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\math\mtrand.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
@@ -645,22 +621,7 @@
     <ClInclude Include="..\src\nau\math\randomgen.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\math\simpletransform.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\transformfactory.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\math\utils.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\vec2.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\vec3.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\vec4.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\depthmappass.h">
@@ -963,17 +924,11 @@
     <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\loader\textureloader.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\bimap.hpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\math\bvec4.h">
-      <Filter>Source Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\imageTexture.h">
       <Filter>Source Files\render</Filter>
@@ -986,9 +941,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\patchLoader.h">
       <Filter>Source Files\loader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h">
-      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\attribute.h">
       <Filter>Source Files</Filter>
@@ -1016,6 +968,33 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h">
       <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\debug\state.h">
+      <Filter>Source Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\imaterialbuffer.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vec2.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vec3.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\vec4.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\matrix.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materialTexture.h">
+      <Filter>Source Files\material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,8 @@
-#include <nau/geometry/axis.h>
+#include "nau/geometry/axis.h"
 
-#include <nau/math/vec3.h>
-#include <nau/render/vertexdata.h>
-#include <nau/material/materialgroup.h>
+#include "nau/math/vec3.h"
+#include "nau/render/vertexdata.h"
+#include "nau/material/materialgroup.h"
 
 using namespace nau::geometry;
 using namespace nau::math;
@@ -15,7 +15,7 @@ Axis::Axis(void) : Primitive()
 {
 	setDrawingPrimitive(nau::render::IRenderable::LINES);
 	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(6);
-	std::vector<VertexData::Attr> *normals = new std::vector<vec4>(6);
+	//std::vector<VertexData::Attr> *normals = new std::vector<vec4>(6);
 
 	// FRONT
 	vertices->at (0).set	(-1.0f,  0.0f,  0.0f);
@@ -28,33 +28,33 @@ Axis::Axis(void) : Primitive()
 	VertexData &vertexData = getVertexData();
 
 	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
-	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
+	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup();
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(2);
 	indices->at (0) = 0;		
 	indices->at (1) = 1;
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Red");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Red");
 	addMaterialGroup (aMaterialGroup);
 
-	aMaterialGroup = new MaterialGroup();
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Green");
 	indices = new std::vector<unsigned int>(2);
 	indices->at (0) = 2;		
 	indices->at (1) = 3;
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Green");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Green");
 	addMaterialGroup (aMaterialGroup);
 
-	aMaterialGroup = new MaterialGroup();
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Blue");
 	indices = new std::vector<unsigned int>(2);
 	indices->at (0) = 4;		
 	indices->at (1) = 5;
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Blue");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Blue");
 	addMaterialGroup (aMaterialGroup);
 }
 

@@ -1,12 +1,12 @@
 #ifndef MATERIALSORTRENDERQUEUE_H
 #define MATERIALSORTRENDERQUEUE_H
 
-#include <nau/render/irenderqueue.h>
+#include "nau/render/irenderqueue.h"
 
-#include <nau/material/material.h>
-#include <nau/material/imaterialgroup.h>
-#include <nau/material/materialid.h>
-#include <nau/math/itransform.h>
+#include "nau/material/material.h"
+#include "nau/material/materialgroup.h"
+#include "nau/material/materialid.h"
+#include "nau/math/matrix.h"
 
 namespace nau
 {
@@ -29,8 +29,8 @@ namespace nau
 		private:
 			std::map<int, 
 					std::map<nau::material::Material*, 
-							std::vector<std::pair<nau::material::IMaterialGroup*, 
-												  nau::math::ITransform*> >* >* > m_RenderQueue;
+							std::vector<std::pair<nau::material::MaterialGroup*, 
+												  nau::math::mat4 *> >* >* > m_RenderQueue;
 		};
 	};
 };

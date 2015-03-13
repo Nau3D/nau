@@ -1,21 +1,21 @@
 <?xml version="1.0" ?>
-<materiallib name="Shadow Materials">
+<materialLib name="Shadow Materials">
 
-	<rendertargets>
-		<rendertarget name = "depth">
+	<renderTargets>
+		<renderTarget name = "depth">
 			<size width="1024" height="1024" />
 			<depth name="shadowMap" internalFormat="DEPTH_COMPONENT32F" />
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name="simple">
+		<renderTarget name="simple">
 			<size width="1024" height="1024" />
 			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 
-	</rendertargets>
+	</renderTargets>
 	
 	<shaders>
 		<shader name="perpixel-color-shadow" 
@@ -43,19 +43,18 @@
 				<SHININESS value="0.0" />
 			</color>
 			
-			<shader>
-				<name>perpixel-color-shadow</name>
+			<shader name="perpixel-color-shadow">
 				<values>
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="V"          		type="CURRENT" context="MATRIX" 
+					<valueof uniform="V"          		type="CURRENT" context="RENDERER" 
 														component="VIEW" />
 														
-					<valueof uniform="M"          		type="CURRENT" context="MATRIX" 
+					<valueof uniform="M"          		type="CURRENT" context="RENDERER" 
 														component="MODEL" />
 														
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
 														component="NORMAL" />
 					
 					<!--valueof uniform="lightDirection" 	type="CAMERA" 
@@ -70,16 +69,16 @@
 														context="COLOR" 
 														component="DIFFUSE" />
 														
- 					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
-														context="shadow#getShadowMap-LightCam" 
+ 					<valueof uniform="lightSpaceMat" 	type="CAMERA"  context="shadow#getShadowMap-LightCam" 
 														component="TS05_PVM_MATRIX" />
-					<valueof uniform="shadowMap" 		type="CURRENT" 
-														context="TEXTURE" id=1 
-														component="UNIT" />	
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
 														
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="shadowMap" 		type="CURRENT"  context="MATERIAL_TEXTURE" id=1 
+														component="UNIT" />	
+														
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
 				</values>
 			</shader>
@@ -98,10 +97,9 @@
 		</material>		
 		
 		<material  name="depthOnly" >
-			<shader>
-				<name>depthOnly</name>
+			<shader name="depthOnly">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
 											component="PROJECTION_VIEW_MODEL" />
 				</values>
 			</shader>
@@ -109,4 +107,4 @@
 		</material>
 		
 	</materials>
-</materiallib>
+</materialLib>

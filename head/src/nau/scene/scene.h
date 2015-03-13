@@ -1,11 +1,11 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include <nau/scene/iscene.h>
-#include <nau/scene/camera.h>
-#include <nau/scene/light.h>
-#include <nau/geometry/frustum.h>
-#include <nau/geometry/boundingbox.h>
+#include "nau/scene/iscene.h"
+#include "nau/scene/camera.h"
+#include "nau/scene/light.h"
+#include "nau/geometry/frustum.h"
+#include "nau/geometry/boundingbox.h"
 
 namespace nau {
 
@@ -23,7 +23,7 @@ namespace nau {
 			void updateSceneObjectTransforms();
 
 		public:
-			Scene (void);
+			Scene(void);
 			~Scene (void);
 
 			void clear();
@@ -48,36 +48,11 @@ namespace nau {
 
 			virtual void getMaterialNames(std::set<std::string> *nameList);
 
-			virtual nau::math::ITransform *getTransform();
-			//virtual void scale(float factor) = 0;
-			//virtual void translate(float x, float y, float z);
-			//virtual void rotate(float ang, float ax, float ay, float az) = 0;
-			virtual void setTransform(nau::math::ITransform *t);
-			virtual void transform(nau::math::ITransform *t);
-
-
-
-			//void show (void);
-			//void hide (void);
-			//bool isVisible (void);
+			virtual nau::math::mat4 &getTransform();
+			virtual void setTransform(nau::math::mat4 &t);
+			virtual void transform(nau::math::mat4 &t);
 
 			virtual std::string getType (void);
-
-			/*
-			 * Statistical information
-			 */
-
-			//int getNumTriangles() { return 0; };
-			//int getNumVertices() { return 0; };
-		
-			//// Por material
-			//int getNumTrianglesMat(int i) { return 0; };
-			//int getNumVerticesMat(int i) { return 0; ;}
-
-			//// Por Object
-			//int getNumTrianglesObject(int i) { return 0; };
-			//int getNumVerticesObject(int i) { return 0; };
-
 		};
 	};
 };

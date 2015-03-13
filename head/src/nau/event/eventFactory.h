@@ -1,7 +1,7 @@
 #ifndef EVENTFACTORY_H
 #define EVENTFACTORY_H
 
-#include <nau/event/iEventData.h>
+#include "nau/event/iEventData.h"
 #include <string>
 
 namespace nau

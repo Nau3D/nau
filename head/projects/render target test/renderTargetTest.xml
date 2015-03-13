@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<project name="Render Target Test" width=1024 height=1024>
+<project name="Render Target Test" width=512 height=512>
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<file>..\..\models\cube.obj</file>
+				<file name="../../models/cube.obj"/>
 			</scene>
 		</scenes>
 		<viewports>
@@ -29,7 +29,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="testRenderTargets.mlib"/>
+			<materialLib filename="testRenderTargets.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -38,18 +38,17 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>MainViewport</viewport>
-				<rendertarget name="test" fromLibrary="Test Render Targets" />
+				<camera name="MainCamera" />
+				<renderTarget name="test" fromLibrary="Test Render Targets" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			
 			<pass class="quad" name="pass2">
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<texture name="offscreenrender" fromLibrary="Test Render Targets" />
 			</pass>
 		</pipeline>

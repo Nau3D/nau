@@ -1,8 +1,8 @@
 #ifndef IRENDERQUEUE_H
 #define IRENDERQUEUE_H
 
-#include <nau/material/materialid.h>
-#include <nau/scene/sceneobject.h>
+#include "nau/material/materialid.h"
+#include "nau/scene/sceneobject.h"
 
 namespace nau
 {

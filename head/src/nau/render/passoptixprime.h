@@ -1,18 +1,20 @@
-#include <nau/config.h>
+#include "nau/config.h"
 
 #if NAU_OPENGL_VERSION >= 420
 
 #ifndef PASSOPTIXPRIME_H
 #define PASSOPTIXPRIME_H
 
-#include <sstream>
+#include "nau/render/ibuffer.h"
+#include "nau/render/pass.h"
+
 #include <GL/glew.h>
-#include <optix_prime/optix_prime.h>
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
+#include <optix_prime/optix_prime.h>
 
-#include <nau/render/pass.h>
-#include <nau/render/ibuffer.h>
+#include <sstream>
+
 
 
 namespace nau
@@ -28,6 +30,9 @@ namespace nau
 
 			virtual void prepare (void);
 			virtual void restore (void);
+
+			//virtual bool renderTest (void);
+
 			virtual void doPass (void);
 
 			bool setQueryType(std::string);

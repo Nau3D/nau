@@ -3,16 +3,17 @@
 	<assets>
 		<scenes>
 			<scene name="Other" type="Scene">
-				<folder>..\..\models\ntg-bin-pl3d-secxxi-other</folder>
+				<folder name="..\..\models\ntg-bin-pl3d-secxxi-other"/>
+				<file name="..\..\models\al.obj"/>
 			</scene>
 			<!--scene name="Arvores" type="Octree" 
 				   filename="..\ntg-bin-pl3d-secxxi\avPlatanosArvoresIII.cbo" /-->
 			<!--scene name="Main" type="Octree" 
 				   filename="..\ntg-bin-pl3d-secxxi\ponteLimaSecXX_with_octreeVI.cbo" /-->
-			<scene name="Arvores" type="OctreeByMat" 
+			<scene name="Arvores" 
 				   filename="..\..\models\ntg-bin-pl3d-secxxi\arvores.cbo" />
 			<scene name="Main" type="OctreeUnified" 
-				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3dsecXXI-octreeUnified.cbo" />
+				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3d-secxxi.cbo" />
 		</scenes>
 		<viewports>
 			<viewport name="MainViewport">
@@ -37,21 +38,21 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename = "PL3D_Materials.mlib"/>
+			<materialLib filename = "PL3D_Materials.mlib"/>
 		</materialLibs> 
 	</assets>
 	<pipelines>
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>Main</scene>
-					<scene>Arvores</scene>
-					<scene>Other</scene>
+					<scene name="Main" />
+					<scene name="Arvores" />
+					<scene name="Other" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>MainViewport</viewport>				
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />				
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="Vidro" 

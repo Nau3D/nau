@@ -5,8 +5,8 @@
  material settings, since primitives have a single material with a fixed name */
 
 
-#include <nau/scene/sceneobject.h>
-#include <nau/scene/sceneobjectfactory.h>
+#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneobjectfactory.h"
 
 namespace nau
 {

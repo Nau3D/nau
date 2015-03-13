@@ -1,4 +1,4 @@
-#include <nau/render/opengl/glteximage.h>
+#include "nau/render/opengl/glteximage.h"
 
 using namespace nau::render;
 
@@ -7,8 +7,8 @@ using namespace nau::render;
 GLTexImage::GLTexImage (Texture *t) :
 	TexImage (t)
 {
-	int m_DataType = t->getPrope(Texture::TYPE);
-	int len = m_Width * m_Height * m_NumComponents; 
+	m_DataType = t->getPrope(Texture::TYPE);
+	int len = m_Width * m_Height * m_Depth * m_NumComponents; 
 
 	switch (m_DataType) {
 		case GL_FLOAT: 
@@ -24,6 +24,7 @@ GLTexImage::GLTexImage (Texture *t) :
 			update();
 			break;
 		case GL_UNSIGNED_BYTE:
+		case GL_UNSIGNED_INT_8_8_8_8_REV:
 			m_Data = ( unsigned char *)malloc(sizeof( unsigned char) * len);
 			update();
 			break;
@@ -59,10 +60,12 @@ void
 GLTexImage::update(void) {
 	
 	int texType = m_Texture->getPrope(Texture::DIMENSION);
-	glBindTexture(m_Texture->getPrope(Texture::DIMENSION),m_Texture->getPropi(Texture::ID));
+	glBindTexture(texType,m_Texture->getPropi(Texture::ID));
 	if (texType == GL_TEXTURE_CUBE_MAP)
 		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-	glGetTexImage(texType,0,m_Texture->getPrope(Texture::FORMAT),m_DataType,m_Data);
+	//glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+
+	glGetTexImage(texType, 0, m_Texture->getPrope(Texture::FORMAT), m_DataType, m_Data);
 }
 
 

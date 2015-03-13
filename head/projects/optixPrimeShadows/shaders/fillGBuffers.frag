@@ -17,7 +17,7 @@ layout (location = 2) out vec4 outColor;
 void main()
 {
 	outPos = vec4(Pos);
-	outNormal = vec4(normalize(Normal)*0.5+0.5, 1.0);
+	outNormal = vec4(normalize(Normal)*0.5+0.5, 0.0);
 	vec4 auxColor;
 	if (texCount != 0)
 		auxColor = texture(texUnit, TexCoord);

@@ -206,7 +206,7 @@
       <AdditionalOptions>  /ignore:4049 /ignore:4217 /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nau_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;tinyxmlSTLd.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)composer_d.exe</OutputFile>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Nau\GLIntercept\Src\Intermediate\GLI\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>msvcrtd.lib;msvcprtd.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -219,6 +219,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -310,6 +311,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">
@@ -380,7 +382,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
       <AdditionalDependencies>OpenGL32.lib;libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nau.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32s.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)composer.exe</OutputFile>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Nau\GLIntercept\Src\Intermediate\GLI\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>msvcprt.lib</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -394,6 +396,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -470,7 +473,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     </ProjectReference>
     <Link>
       <AdditionalOptions> /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:LIBCMTD /ignore:4049 /ignore:4217 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;libcpmt.lib;assimp.lib;wxmsw29u_adv.lib;wxmsw29u_core.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)composer.exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -487,6 +490,7 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">
@@ -553,6 +557,10 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     <ClCompile Include="src\dialogs\dlgDbgBuffers.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgGLILogRead.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp" />
+    <ClCompile Include="src\dialogs\dlgDbgStep.cpp" />
+    <ClCompile Include="src\dialogs\dlgStateXML.cpp" />
+    <ClCompile Include="src\dialogs\dlgViewports.cpp" />
+    <ClCompile Include="src\dialogs\propertyManager.cpp" />
     <ClCompile Include="src\glcanvas.cpp" />
     <ClCompile Include="src\glInfo.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -566,19 +574,29 @@ copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
     <ClCompile Include="src\dialogs\dlgScenes.cpp" />
     <ClCompile Include="src\dialogs\dlgShaders.cpp" />
     <ClCompile Include="src\dialogs\dlgTextureLib.cpp" />
+    <ClCompile Include="src\NauGlBufferInfo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\dialogs\dlgAtomics.h" />
     <ClInclude Include="src\dialogs\dlgDbgBuffers.h" />
     <ClInclude Include="src\dialogs\dlgDbgGLILogRead.h" />
     <ClInclude Include="src\dialogs\dlgDbgPrograms.h" />
+    <ClInclude Include="src\dialogs\dlgDbgStep.h" />
     <ClInclude Include="src\dialogs\dlgLights.h" />
     <ClInclude Include="src\dialogs\dlgLog.h" />
     <ClInclude Include="src\dialogs\dlgPass.h" />
+    <ClInclude Include="src\dialogs\dlgStateXML.h" />
+    <ClInclude Include="src\dialogs\dlgViewports.h" />
+    <ClInclude Include="src\dialogs\propertyManager.h" />
     <ClInclude Include="src\glcanvas.h" />
     <ClInclude Include="src\glInfo.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\dialogs\dlgCameras.h" />
+    <ClInclude Include="src\NauGlBufferInfo.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <CustomBuildStep Include="src\dialogs\dlgLights.h" />
     <CustomBuildStep Include="src\dialogs\dlgLog.h" />
     <ClInclude Include="src\dialogs\dlgMaterials.h" />

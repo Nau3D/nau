@@ -1,9 +1,9 @@
 #ifndef COLORMATERIAL_H
 #define COLORMATERIAL_H
 
-#include <nau/enums.h>
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
+#include "nau/enums.h"
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
 
 namespace nau
 {
@@ -26,15 +26,15 @@ namespace nau
 
 
 			// Note: no validation is performed!
-			void setProp(int prop, Enums::DataType type, void *value);
+			//void setProp(int prop, Enums::DataType type, void *value);
 
 			//float  getPropf(const FloatProperty prop) ;
 			//const vec4 &getProp4f(Float4Property prop) ;
 
-			void setProp(Float4Property prop, float r, float g, float b, float a);
-			void setProp(Float4Property prop, float *v);
-			void setProp(Float4Property prop, const vec4& color);
-			void setProp(FloatProperty prop, float f);
+			//void setProp(Float4Property prop, float r, float g, float b, float a);
+			//void setProp(Float4Property prop, float *v);
+			//void setProp(Float4Property prop, const vec4& color);
+			//void setProp(FloatProperty prop, float f);
 			//void initArrays();
 
 			ColorMaterial();

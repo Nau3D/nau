@@ -3,24 +3,25 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" type="OctreeUnified">
-				<file>..\..\models\ntg-bench\bench.obj</file>
-				<!--folder>..\..\ntg-bin-5</folder-->
+				<file name="..\..\models\ntg-bench\bench.obj"/>
+				<!--<folder name="..\..\ntg-bin-5" />-->
 			</scene>
 		</scenes>
 		<viewports>
 			<viewport name="RightViewport" >
 				<ORIGIN x=0.5 y=0.0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR r="0.2" g="0.2" b="0.4" />
 			</viewport>
 			<viewport name="LeftViewport" >
 				<ORIGIN x=0.0 y=0.0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR r="0.2" g="0.2" b="0.4" />
 			</viewport>
 		</viewports>
 		<cameras>
 			<camera name="MainCamera" >
+				<viewport name="RightViewport" />
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=100.0 />
 				<POSITION x="1.80" y="13.40" z="-22.74" />
 				<VIEW x="-0.124" y="-0.314" z="0.941" />
@@ -51,23 +52,23 @@
 		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="Gods View">
 				<scenes>
-					<scene>MainScene</scene>
-					<scene>MainCamera</scene>
+					<scene name="MainScene" />
+					<scene name="MainCamera" />
 				</scenes>
-				<camera>GodCamera</camera>
-				<viewport>LeftViewport</viewport>
+				<camera name="GodCamera" />
+				<viewport name="LeftViewport" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			<pass class="default" name="Main View">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>RightViewport</viewport>
+				<camera name="MainCamera" />
+				<viewport name="RightViewport" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			

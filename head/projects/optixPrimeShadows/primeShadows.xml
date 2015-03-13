@@ -6,7 +6,7 @@
 			<!--scene name="bench" type="OctreeUnified" 
 				   filename="../../models/ntg-bench/bench.obj" /--> 
 			<scene name="bench" type="OctreeUnified" 
-				   filename="../../models/ntg-bin-pl3d-secxxi/pl3dsecXXI-octreeUnified.cbo" />
+				   filename="../../models/ntg-bin-pl3d-secxxi/pl3d-secxxi.cbo" />
 			<!--scene name="bench" type="OctreeUnified" 
 				   filename="../../models/cow.obj" /--> 
 		</scenes>
@@ -15,25 +15,25 @@
 			<viewport name="LeftViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 				<ORIGIN x=0.0 y=0.0 />
-				<SIZE width=0.33 ratio=1 />
+				<SIZE width=0.33 height=1 />
 			</viewport>
 			<viewport name="MiddleViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 				<ORIGIN x=0.33 y=0.0 />
-				<SIZE width=0.33 ratio=1 />
+				<SIZE width=0.33 height=1 />
 			</viewport>
 			<viewport name="RightViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 				<ORIGIN x=0.66 y=0.0 />
-				<SIZE width=0.34 ratio=1 />
+				<SIZE width=0.34 height=1 />
 			</viewport>
 		</viewports>
 		
 		<cameras>
 			<camera name="MainCamera" >
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
-				<POSITION x="-0.2" y="0.05" z="10" />
-				<VIEW x="0.0" y="0.0" z="-1" />
+				<POSITION x="-4.0" y="20.0" z="-29.0" />
+				<VIEW x="0.91" y="-0.29" z="0.26" />
 				<UP x="0" y="1" z="0" />
 			</camera>
 		</cameras>
@@ -41,14 +41,14 @@
 		<lights>
 			<light name="Sun">
 				<POSITION x="-150.0" y="150.0" z="0.0" />
-				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<DIRECTION x="1.0" y="-1.0" z="-1" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 				<AMBIENT r="0.3" g="0.3" b="0.3" />
 			</light>
 		</lights>
 		
 		<materialLibs>
-			<mlib filename = "primeShadows.mlib"/>
+			<materialLib filename = "primeShadows.mlib"/>
 		</materialLibs> 
 	</assets>
 	
@@ -56,14 +56,14 @@
 		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="GBuffer" >
 				<scenes>
-					<scene>bench</scene>
+					<scene name="bench" />
 				</scenes>
 				<!--viewport>LeftViewport</viewport-->
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
 				<injectionMaps>
 					<map toMaterial="*">
 						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
@@ -71,7 +71,7 @@
 				</injectionMaps>
 			</pass>
 			<pass class="quad" name="fillRayBuffer" >
-				<rendertarget name="dummy" fromLibrary="PrimeShadows" />
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
 				<materialMaps>			
 					<map fromMaterial="__Quad" 
 						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
@@ -83,18 +83,18 @@
 				<hits buffer ="PrimeShadows::hits" />
 			</pass>		
 			<pass name="showColor" class="quad" >
-				<viewport>MiddleViewport</viewport>
+				<viewport name="MiddleViewport" />
 				<texture name="color" fromLibrary="PrimeShadows" />
 			</pass>
 			<pass name="showBuffer" class="quad" >
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<materialMaps>
 					<map fromMaterial="__Quad" 
 						 toLibrary="PrimeShadows" toMaterial="showBuffer" />
 				</materialMaps>				
 			</pass>
 			<pass name="showFinal" class="quad" >
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<materialMaps>
 					<map fromMaterial="__Quad" 
 						 toLibrary="PrimeShadows" toMaterial="compose" />

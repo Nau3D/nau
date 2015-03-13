@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<file>..\..\models\ntg-bench\bench.obj</file>
+				<file name="..\..\models\ntg-bench\bench.obj"/>
 			</scene>
 		</scenes>
 		<viewports>
@@ -39,7 +39,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="testTextureArrays.mlib"/>
+			<materialLib filename="testTextureArrays.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -47,13 +47,13 @@
 		<pipeline name="textureArrays" default="true" defaultCamera="testCamera">
 			<pass class="default" name="fillTextureArray">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>testCamera</camera>
+				<camera name="testCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="test" fromLibrary="testTextureArrays" />
+				<renderTarget name="test" fromLibrary="testTextureArrays" />
 					
 				<injectionMaps>
 					<map toMaterial="*">
@@ -64,7 +64,7 @@
 				
 			</pass>
 			<pass class="quad" name="showArrays">
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="testTextureArrays" 
 											 toMaterial="showArrays" />

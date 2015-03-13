@@ -1,6 +1,6 @@
-#include <nau/loader/textureloader.h>
+#include "nau/loader/textureloader.h"
 
-#include <nau/loader/deviltextureloader.h>
+#include "nau/loader/deviltextureloader.h"
 
 using namespace nau::loader;
 

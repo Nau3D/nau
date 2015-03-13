@@ -46,6 +46,21 @@ public:
   //
   GLContext(HGLRC rcHandle, const ConfigData &configData, GLDriver *glDriver, FunctionTable *functionTable);
   virtual ~GLContext();
+
+
+  //@
+  //  Summary:
+  //    Updating other logs
+  //
+  //  Parameters:
+  //    configData - The configuration options used when creating the context. 
+  //                 (ie. what loggers to create)
+  //
+  //    glDriver   - The GLIntercept driver used for this context
+  //
+  //    functionTable - The function table of known OpenGL functions
+  //
+  void updateReferences(const ConfigData &configData, GLDriver *glDriver, FunctionTable *functionTable);
   
   //@
   //  Summary:

@@ -1,13 +1,15 @@
 #ifndef PROJECTLOADER_H
 #define PROJECTLOADER_H
 
+#include "nau/material/materialLib.h"
+#include "nau/render/pass.h"
+#include "nau/system/fileutil.h"
+
+#include <tinyxml.h>
+
 #include <string>
 #include <vector>
 
-#include <tinyxml.h>
-#include <nau/system/fileutil.h>
-#include <nau/render/pass.h>
-#include <nau/material/materialLib.h>
 
 using namespace nau::render;
 using namespace nau::material;
@@ -19,20 +21,31 @@ namespace nau
 		class ProjectLoader
 		{
 		public:
-			static void load (std::string file, int *width, int *height, 
-												bool *tangents, bool *triangleIDs);
+			static void load (std::string file, int *width, int *height);
 			static void loadMatLib (std::string file);
 			static std::string s_Path;
 			static std::string s_File;
 
 		private:
+
+			typedef enum {
+				OK,
+				ITEM_NAME_NOT_SPECIFIED
+			};
+
 			ProjectLoader(void);
 
 
 			static void loadAssets (TiXmlHandle &hRoot, std::vector<std::string> &matLib);
 			static void loadPipelines (TiXmlHandle &hRoots);
 
-			static void *readAttr(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet attribs);
+			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *lib, std::string *item);
+			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *fullName);
+
+			static void readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem);
+			static std::string &getValidValuesString(Attribute &a, void *value);
+			static void *readAttr(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet &attribs);
+			static bool isExcluded(std::string , std::vector<std::string> &excluded);
 			// Asset Loading
 			static void loadUserAttrs(TiXmlHandle handle);
 			static void loadScenes(TiXmlHandle handle);
@@ -66,24 +79,10 @@ namespace nau
 			static void loadDebugImagelog (TiXmlHandle &hRoot);
 			static void loadDebugImagelogimageicon (TiXmlHandle &hRoot);
 			static void loadDebugShaderlog (TiXmlHandle &hRoot);
-			static void loadDebugDisplaylistlog (TiXmlHandle &hRoot);
 			static void loadDebugFramelog (TiXmlHandle &hRoot);
 			static void loadDebugFramelogFrameicon (TiXmlHandle &hRoot);
 			static void loadDebugFramelogFramemovie (TiXmlHandle &hRoot);
 			static void loadDebugTimerlog (TiXmlHandle &hRoot);
-			
-			
-
-
-
-
-
-
-
-
-
-
-
 			static void loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer);
 			static void loadDebugPlugins (TiXmlHandle &hRoot);
 #ifdef NAU_OPTIX
@@ -118,10 +117,12 @@ namespace nau
 			static std::string toLower(std::string);
 
 			static vec4 s_Dummy_vec4;
+			static vec2 s_Dummy_vec2;
 			static bvec4 s_Dummy_bvec4;
 			static float s_Dummy_float;
 			static int s_Dummy_int;
 			static bool s_Dummy_bool;
+			static uivec3 s_Dummy_uivec3;
 		};
 	};
 };

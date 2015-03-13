@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
-<materiallib name="PrimeShadows">
-	<rendertargets>
-		<rendertarget name ="gBuffer">
+<materialLib name="PrimeShadows">
+	<renderTargets>
+		<renderTarget name ="gBuffer">
 			<size width="1024" height="1024" />
 			<!--size width="512" height="512" /-->
 			<colors>
@@ -9,21 +9,25 @@
 				<color name="normal" internalFormat="RGBA" />
 				<color name="color" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name ="dummy">
+		<renderTarget name ="dummy">
 			<size width="1024" height="1024" />
 			<!--size width="512" height="512" /-->
 			<colors>
 				<color name="dummy" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-	</rendertargets>
+	</renderTargets>
 
 	<buffers>
-		<buffer name="hits" size=16777216 />
-		<buffer name="rays" size=33554432 />
+		<buffer name="hits" >
+			<SIZE value=16777216 />
+		</buffer>	
+		<buffer name="rays" >
+			<SIZE value=33554432 />
+		</buffer>	
 		<!--buffer name="hits" size=4194304 />
 		<buffer name="rays" size=8388608 /-->
 	</buffers>	
@@ -41,30 +45,28 @@
 	
 	<materials>
 		<material name="fillGBuffers">
-			<shader>
-				<name>fillGBuffers</name>
+			<shader name="fillGBuffers">
 				<values>
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="M"          		type="CURRENT" context="MATRIX" 
+					<valueof uniform="M"          		type="CURRENT" context="RENDERER" 
 														component="MODEL" />
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
 														component="NORMAL" />
 					<valueof uniform="diffuse" 			type="CURRENT" context="COLOR" 
 														component="DIFFUSE" />
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />	
-					<valueof uniform="texCount" 		type="CURRENT" context="TEXTURE" 
-														component="COUNT"  />	
+					<valueof uniform="texCount" 		type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT"  />	
 				</values>
 			</shader>
 		</material>
 		
 		<material name="fillRayBuffer">			
-			<shader>
-				<name>fillRayBuffer</name>
+			<shader name="fillRayBuffer">
 				<values>
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
 														component="DIRECTION" /> 
@@ -82,15 +84,16 @@
 		</material>
 		
 		<material name="compose">
-			<shader>
-				<name>compose</name>
+			<shader name="compose">
 				<values>
-					<valueof uniform="texColor" 		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texColor" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />	
-					<valueof uniform="texNormal" 		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texNormal" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="1" />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
 														component="DIRECTION" /> 
+					<valueof uniform="V"				type="CAMERA" context="MainCamera" 
+														component="VIEW_MATRIX" />								
 				</values>
 			</shader>
 			<textures>
@@ -106,8 +109,7 @@
 		</material>		
 		
 		<material name="showBuffer">			
-			<shader>
-				<name>showBuffer</name>
+			<shader name="showBuffer">
 			</shader>
 			<buffers>	
 				<buffer name="rays" >
@@ -122,4 +124,4 @@
 		</material>	
 	</materials>
 	
-</materiallib>
+</materialLib>

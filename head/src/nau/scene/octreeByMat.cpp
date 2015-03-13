@@ -1,12 +1,15 @@
-#include <algorithm>
+#include "nau/scene/octreeByMat.h"
+
+#include "nau.h"
+#include "nau/clogger.h" 
+#include "nau/scene/octreeByMatnode.h"
+
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 #include <ctime>
-
-#include <nau/scene/octreeByMat.h>
-#include <nau/scene/octreeByMatnode.h>
-#include <nau/clogger.h> /***MARK***/
-#include <nau.h>
-
 #include <list>
 
 using namespace nau::scene;
@@ -196,7 +199,7 @@ void OctreeByMat::unitize(float min, float max) {
 
 
 void 
-OctreeByMat::updateOctreeTransform(nau::math::ITransform *t)
+OctreeByMat::updateOctreeTransform(nau::math::mat4 &t)
 {
 	m_pOctreeRootNode->updateNodeTransform(t);
 }

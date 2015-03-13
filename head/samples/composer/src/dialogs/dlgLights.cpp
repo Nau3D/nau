@@ -115,13 +115,13 @@ DlgLights::setupPanel(wxSizer *siz, wxWindow *parent) {
 	pg->AddPage(wxT("Lights"));
 	//wxPropertyGridPage* pgPropsPage = pg->GetPage("Cameras");
 
-	const wxChar* lightType[] = { wxT("DIRECTIONAL"), wxT("POINT"), wxT("SPOT"), NULL};
-	const long lightTypeInd[] = { Light::DIRECTIONAL, Light::POSITIONAL, Light::SPOT_LIGHT};
+//	const wxChar* lightType[] = { wxT("DIRECTIONAL"), wxT("POINT"), wxT("SPOT"), NULL};
+//	const long lightTypeInd[] = { Light::DIRECTIONAL, Light::POSITIONAL, Light::SPOT_LIGHT};
 
 	//pg->Append(new wxStringProperty(wxT("Name"),wxPG_LABEL,""));
  	//pg->DisableProperty(wxT("Name"));
 
-	pg->Append(new wxEnumProperty(wxT("TYPE"),wxPG_LABEL,lightType,lightTypeInd,Light::DIRECTIONAL));
+//	pg->Append(new wxEnumProperty(wxT("TYPE"),wxPG_LABEL,lightType,lightTypeInd,Light::DIRECTIONAL));
     pg->Append( new wxBoolProperty( wxT("ENABLED"), wxPG_LABEL ) );
 
 	wxPGProperty* topId;
@@ -209,42 +209,42 @@ void DlgLights::update() {
 
 	nau::scene::Light *light;		
 	light = RENDERMANAGER->getLight(m_active);
-	unsigned int type = light->getPrope(Light::TYPE);
+//	unsigned int type = light->getPrope(Light::TYPE);
 
 	pg->ClearSelection();
 
 	pg->SetPropertyValue(wxT("ENABLED"),light->getPropb(Light::ENABLED));
 
-	if (nau::scene::Light::DIRECTIONAL == type) {
-		pg->SetPropertyValue(wxT("TYPE"), DLG_MI_DIRECTIONAL);
-		pg->DisableProperty(wxT("POSITION"));
-		pg->DisableProperty(wxT("SPOT_CUTOFF"));
-		pg->DisableProperty(wxT("SPOT_EXPONENT"));
-		//pg->DisableProperty(wxT("Attenuation"));
-		pg->DisableProperty(wxT("CONSTANT_ATT"));
-		pg->DisableProperty(wxT("LINEAR_ATT"));
-		pg->DisableProperty(wxT("QUADRATIC_ATT"));
-	}
-	else if (nau::scene::Light::POSITIONAL == type) {
-		pg->SetPropertyValue(wxT("TYPE"), DLG_MI_POINT);
-		pg->EnableProperty(wxT("POSITION"));
-		pg->DisableProperty(wxT("SPOT_CUTOFF"));
-		pg->DisableProperty(wxT("SPOT_EXPONENT"));
-		//pg->EnableProperty(wxT("Attenuation"));
-		pg->EnableProperty(wxT("CONSTANT_ATT"));
-		pg->EnableProperty(wxT("LINEAR_ATT"));
-		pg->EnableProperty(wxT("QUADRATIC_ATT"));
-	}
-	else if (nau::scene::Light::SPOT_LIGHT == type) {
-		pg->SetPropertyValue(wxT("TYPE"), DLG_MI_SPOT);
-		pg->EnableProperty(wxT("POSITION"));
-		pg->EnableProperty(wxT("SPOT_CUTOFF"));
-		pg->EnableProperty(wxT("SPOT_EXPONENT"));
-		//pg->EnableProperty(wxT("Attenuation"));
-		pg->EnableProperty(wxT("CONSTANT_ATT"));
-		pg->EnableProperty(wxT("LINEAR_ATT"));
-		pg->EnableProperty(wxT("QUADRATIC_ATT"));
-	}
+	//if (nau::scene::Light::DIRECTIONAL == type) {
+	//	pg->SetPropertyValue(wxT("TYPE"), DLG_MI_DIRECTIONAL);
+	//	pg->DisableProperty(wxT("POSITION"));
+	//	pg->DisableProperty(wxT("SPOT_CUTOFF"));
+	//	pg->DisableProperty(wxT("SPOT_EXPONENT"));
+	//	//pg->DisableProperty(wxT("Attenuation"));
+	//	pg->DisableProperty(wxT("CONSTANT_ATT"));
+	//	pg->DisableProperty(wxT("LINEAR_ATT"));
+	//	pg->DisableProperty(wxT("QUADRATIC_ATT"));
+	//}
+	//else if (nau::scene::Light::POSITIONAL == type) {
+	//	pg->SetPropertyValue(wxT("TYPE"), DLG_MI_POINT);
+	//	pg->EnableProperty(wxT("POSITION"));
+	//	pg->DisableProperty(wxT("SPOT_CUTOFF"));
+	//	pg->DisableProperty(wxT("SPOT_EXPONENT"));
+	//	//pg->EnableProperty(wxT("Attenuation"));
+	//	pg->EnableProperty(wxT("CONSTANT_ATT"));
+	//	pg->EnableProperty(wxT("LINEAR_ATT"));
+	//	pg->EnableProperty(wxT("QUADRATIC_ATT"));
+	//}
+	//else if (nau::scene::Light::SPOT_LIGHT == type) {
+	//	pg->SetPropertyValue(wxT("TYPE"), DLG_MI_SPOT);
+	//	pg->EnableProperty(wxT("POSITION"));
+	//	pg->EnableProperty(wxT("SPOT_CUTOFF"));
+	//	pg->EnableProperty(wxT("SPOT_EXPONENT"));
+	//	//pg->EnableProperty(wxT("Attenuation"));
+	//	pg->EnableProperty(wxT("CONSTANT_ATT"));
+	//	pg->EnableProperty(wxT("LINEAR_ATT"));
+	//	pg->EnableProperty(wxT("QUADRATIC_ATT"));
+	//}
 
 	nau::math::vec4 v = light->getPropf4(Light::POSITION);
 	pg->SetPropertyValue(wxT("POSITION.X"),v.x);
@@ -302,103 +302,103 @@ void DlgLights::OnPropsChange( wxPropertyGridEvent& e) {
 //	pg->ClearSelection();
 	nau::math::vec4 v1,v2;
 	if (topProp == "ENABLED")
-		light->setProp(Light::ENABLED, e.GetPropertyValue().GetBool() != 0);
+		light->setPropb(Light::ENABLED, e.GetPropertyValue().GetBool() != 0);
 
 
 	if (topProp == "POSITION") {
 		v1 = light->getPropf4(Light::POSITION);
 		if      (prop == "X") {
 			v2.set(e.GetPropertyValue().GetDouble(),v1.y,v1.z);
-			light->setProp(Light::POSITION,v2);
+			light->setPropf4(Light::POSITION,v2);
 		}
 		else if (prop == "Y") {
 			v2.set(v1.x,e.GetPropertyValue().GetDouble(),v1.z);
-			light->setProp(Light::POSITION,v2);
+			light->setPropf4(Light::POSITION,v2);
 		}
 		else if (prop == "Z") {
 			v2.set(v1.x,v1.y,e.GetPropertyValue().GetDouble());
-			light->setProp(Light::POSITION,v2);
+			light->setPropf4(Light::POSITION,v2);
 		}
 	}
 	else if (topProp == "DIRECTION") {
 		v1 = light->getPropf4(Light::DIRECTION);
 		if      (prop == "X") {
 			v2.set(e.GetPropertyValue().GetDouble(),v1.y,v1.z, 0.0);
-			light->setProp(Light::DIRECTION,v2);
+			light->setPropf4(Light::DIRECTION,v2);
 		}
 		else if (prop == "Y") {
 			v2.set(v1.x,e.GetPropertyValue().GetDouble(),v1.z, 0.0);
-			light->setProp(Light::DIRECTION,v2);
+			light->setPropf4(Light::DIRECTION,v2);
 		}
 		else if (prop == "Z") {
 			v2.set(v1.x,v1.y,e.GetPropertyValue().GetDouble(), 0.0);
-			light->setProp(Light::DIRECTION,v2);
+			light->setPropf4(Light::DIRECTION,v2);
 		}
 	}	
 		
-	else if (topProp == "TYPE") {
+	//else if (topProp == "TYPE") {
 
-		int op = e.GetPropertyValue().GetInteger();
-		light->setProp(Light::TYPE, (Light::EnumProperty)op);
+	//	int op = e.GetPropertyValue().GetInteger();
+	//	light->setProp(Light::TYPE, (Light::EnumProperty)op);
 
-		if (op == Light::DIRECTIONAL) {	
-			pg->DisableProperty(wxT("POSITION"));
-			pg->EnableProperty(wxT("DIRECTION"));
-			pg->DisableProperty(wxT("SPOT_CUTOFF"));
-			pg->DisableProperty(wxT("SPOT_EXPONENT"));
-			pg->DisableProperty(wxT("CONSTANT_ATT"));
-			pg->DisableProperty(wxT("LINEAR_ATT"));
-			pg->DisableProperty(wxT("QUADRATIC_ATT"));
-		}
-		else if (op == Light::POSITIONAL){
-			pg->EnableProperty(wxT("POSITION"));
-			pg->DisableProperty(wxT("DIRECTION"));
-			pg->DisableProperty(wxT("SPOT_CUTOFF"));
-			pg->DisableProperty(wxT("SPOT_EXPONENT"));
-			pg->EnableProperty(wxT("CONSTANT_ATT"));
-			pg->EnableProperty(wxT("LINEAR_ATT"));
-			pg->EnableProperty(wxT("QUADRATIC_ATT"));
-		}
-		else if (op == Light::SPOT_LIGHT){
-			pg->EnableProperty(wxT("POSITION"));
-			pg->EnableProperty(wxT("DIRECTION"));
-			pg->EnableProperty(wxT("SPOT_CUTOFF"));
-			pg->EnableProperty(wxT("SPOT_EXPONENT"));
-			pg->EnableProperty(wxT("CONSTANT_ATT"));
-			pg->EnableProperty(wxT("LINEAR_ATT"));
-			pg->EnableProperty(wxT("QUADRATIC_ATT"));
-		}
-	}
+	//	if (op == Light::DIRECTIONAL) {	
+	//		pg->DisableProperty(wxT("POSITION"));
+	//		pg->EnableProperty(wxT("DIRECTION"));
+	//		pg->DisableProperty(wxT("SPOT_CUTOFF"));
+	//		pg->DisableProperty(wxT("SPOT_EXPONENT"));
+	//		pg->DisableProperty(wxT("CONSTANT_ATT"));
+	//		pg->DisableProperty(wxT("LINEAR_ATT"));
+	//		pg->DisableProperty(wxT("QUADRATIC_ATT"));
+	//	}
+	//	else if (op == Light::POSITIONAL){
+	//		pg->EnableProperty(wxT("POSITION"));
+	//		pg->DisableProperty(wxT("DIRECTION"));
+	//		pg->DisableProperty(wxT("SPOT_CUTOFF"));
+	//		pg->DisableProperty(wxT("SPOT_EXPONENT"));
+	//		pg->EnableProperty(wxT("CONSTANT_ATT"));
+	//		pg->EnableProperty(wxT("LINEAR_ATT"));
+	//		pg->EnableProperty(wxT("QUADRATIC_ATT"));
+	//	}
+	//	else if (op == Light::SPOT_LIGHT){
+	//		pg->EnableProperty(wxT("POSITION"));
+	//		pg->EnableProperty(wxT("DIRECTION"));
+	//		pg->EnableProperty(wxT("SPOT_CUTOFF"));
+	//		pg->EnableProperty(wxT("SPOT_EXPONENT"));
+	//		pg->EnableProperty(wxT("CONSTANT_ATT"));
+	//		pg->EnableProperty(wxT("LINEAR_ATT"));
+	//		pg->EnableProperty(wxT("QUADRATIC_ATT"));
+	//	}
+	//}
 
 	else if (topProp == "COLOR") {
 		variant = pg->GetPropertyValue(wxT("COLOR.RGB"));
 		col << variant;
-		light->setProp(Light::COLOR, vec4(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, 1.0));
+		light->setPropf4(Light::COLOR, vec4(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, 1.0));
 	}
 	else if (topProp == "AMBIENT") {
 		variant = pg->GetPropertyValue(wxT("AMBIENT.RGB"));
 		col << variant;
-		light->setProp(Light::AMBIENT, vec4(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, 1.0));
+		light->setPropf4(Light::AMBIENT, vec4(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, 1.0));
 	}
 	else if (topProp == "SPECULAR") {
 		variant = pg->GetPropertyValue(wxT("SPECULAR.RGB"));
 		col << variant;
-		light->setProp(Light::SPECULAR, vec4(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, 1.0));
+		light->setPropf4(Light::SPECULAR, vec4(col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, 1.0));
 	}
 	else if (topProp == "SPOT_CUTOFF") {
-		light->setProp(Light::SPOT_CUTOFF, e.GetPropertyValue().GetDouble());
+		light->setPropf(Light::SPOT_CUTOFF, e.GetPropertyValue().GetDouble());
 	}
 	else if (topProp == "SPOT_EXPONENT") {
-		light->setProp(Light::SPOT_EXPONENT, e.GetPropertyValue().GetDouble());
+		light->setPropf(Light::SPOT_EXPONENT, e.GetPropertyValue().GetDouble());
 	}
 	else if (topProp == "CONSTANT_ATT") {
-		light->setProp(Light::CONSTANT_ATT, e.GetPropertyValue().GetDouble());
+		light->setPropf(Light::CONSTANT_ATT, e.GetPropertyValue().GetDouble());
 	}
 	else if (topProp == "LINEAR_ATT") {
-		light->setProp(Light::LINEAR_ATT, e.GetPropertyValue().GetDouble());
+		light->setPropf(Light::LINEAR_ATT, e.GetPropertyValue().GetDouble());
 	}
 	else if (topProp == "QUADRATIC_ATT") {
-		light->setProp(Light::QUADRATIC_ATT, e.GetPropertyValue().GetDouble());
+		light->setPropf(Light::QUADRATIC_ATT, e.GetPropertyValue().GetDouble());
 	}
 	notifyUpdate(PROPS_CHANGED,m_active,topProp);
 }

@@ -1,8 +1,8 @@
 #include <assert.h>
 
-#include <nau/resource/fontmanager.h>
-#include <nau/loader/fontxmlloader.h>
-#include <nau.h>
+#include "nau/resource/fontmanager.h"
+#include "nau/loader/fontxmlloader.h"
+#include "nau.h"
 
 using namespace nau::loader;
 

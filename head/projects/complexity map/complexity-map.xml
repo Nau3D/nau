@@ -3,8 +3,8 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<folder>../../models/pl3dsecxiv</folder>
-				<!--folder>..\..\ntg-bin-terrain</folder-->
+				<folder name="../../models/pl3dsecxiv" />
+				<!--<folder name="..\..\ntg-bin-terrain" />-->
 			</scene>
 		</scenes>
 		<viewports>
@@ -12,17 +12,17 @@
 				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport1" >
-				<SIZE width=0.33 ratio=1 />
+				<SIZE width=0.33 height=1 />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport2" >
 				<ORIGIN x = 0.33 y =0 />
-				<SIZE width=0.34 ratio=1 />
+				<SIZE width=0.34 height=1 />
 				<CLEAR_COLOR  r=0.0 g=0.0 b=0.0 />
 			</viewport>
 			<viewport name="SmallViewport3" >
 				<ORIGIN x = 0.67 y =0 />
-				<SIZE  width=".33"  ratio=1/>
+				<SIZE  width=".33"  height=1/>
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 		</viewports>
@@ -46,7 +46,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="complexity map.mlib"/>
+			<materialLib filename="complexity map.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -55,21 +55,21 @@
 			
 			<pass class="default" name="normal">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>SmallViewport1</viewport>
+				<camera name="MainCamera" />
+				<viewport name="SmallViewport1" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			
 			<pass class="default" name="tested pixels">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>SmallViewport2</viewport>
+				<camera name="MainCamera" />
+				<viewport name="SmallViewport2" />
 				<materialMaps>
 					<map fromMaterial="*" 
 						 toLibrary="Complexity Map" toMaterial="fivePerCentTest" />
@@ -79,10 +79,10 @@
 			
 			<pass class="default" name="written pixels">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>SmallViewport3</viewport>
+				<camera name="MainCamera" />
+				<viewport name="SmallViewport3" />
 				<materialMaps>
 					<map fromMaterial="*" 
 						 toLibrary="Complexity Map" toMaterial="fivePerCentDraw" />

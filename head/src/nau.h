@@ -6,44 +6,48 @@
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
+
+#include "nau/config.h"
+
+#include "nau/errors.h"
+#include "nau/event/eventManager.h"
+#include "nau/event/ilistener.h"
+#include "nau/material/materiallibmanager.h"
+#include "nau/math/vec3.h"
+#include "nau/math/vec4.h"
+#include "nau/render/pipeline.h"
+#include "nau/render/pass.h"
+#include "nau/render/viewport.h"
+#include "nau/render/rendermanager.h"
+#include "nau/resource/resourcemanager.h"
+#include "nau/scene/iscene.h"
+#include "nau/scene/camera.h"
+#include "nau/scene/light.h"
+#include "nau/world/iworld.h"
+
+#ifdef NAU_LUA
+extern "C" {
+#include <lua/lua.h>
+#include <lua/lauxlib.h>
+#include <lua/lualib.h>
+}
+#endif
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
-
-//#include <GL/glew.h>
-//#include <IL/il.h>
 #include <iostream>
-
-#include <nau/errors.h>
-#include <nau/config.h>
-
-//#include <nau/animation/ianimation.h>
-//#include <nau/animation/linearanimation.h> /***MARK***/ //A factory perhaps?
-#include <nau/world/iworld.h>
-#include <nau/math/vec3.h>
-#include <nau/math/vec4.h>
-#include <nau/material/materiallibmanager.h>
-#include <nau/render/pipeline.h>
-#include <nau/render/pass.h>
-#include <nau/render/viewport.h>
-#include <nau/render/rendermanager.h>
-#include <nau/resource/resourcemanager.h>
-#include <nau/scene/iscene.h>
-#include <nau/scene/camera.h>
-#include <nau/scene/light.h>
-
-#include <nau/event/eventManager.h>
-#include <nau/event/ilistener.h>
-
 
 using namespace nau;
 
 //I know Peter, but you'll see that this may come in handy ;)
-#define RENDERER Nau::getInstance()->getRenderManager()->getRenderer()
-#define RENDERMANAGER Nau::getInstance()->getRenderManager()
-#define MATERIALLIBMANAGER Nau::getInstance()->getMaterialLibManager()
-#define RESOURCEMANAGER Nau::getInstance()->getResourceManager()
 #define NAU Nau::getInstance()
-
-#define EVENTMANAGER Nau::getInstance()->getEventManager()
+#define RENDERER NAU->getRenderManager()->getRenderer()
+#define RENDERMANAGER NAU->getRenderManager()
+#define MATERIALLIBMANAGER NAU->getMaterialLibManager()
+#define RESOURCEMANAGER NAU->getResourceManager()
+#define EVENTMANAGER NAU->getEventManager()
 
 namespace nau {
 	
@@ -63,12 +67,38 @@ namespace nau {
 		static nau::Nau* create (void);
 		static nau::Nau* getInstance (void);
 		bool init(bool context, std::string aConfigFile = "");
+
+		// Lua Stuff
+#ifdef NAU_LUA
+		void initLua();
+		void initLuaScript(std::string file, std::string name);
+		void callLuaScript(std::string file, std::string name);
+#endif
 		std::string &getName();
 
+		// Global gets and sets
+		// note: gets and set perform no validation
+		// if in doubt call validate first
+
+		// Fully validate - context must refer to an existing object
+		bool validateAttribute(std::string type, std::string context, std::string component);
+		// Only validates the existence of the component in a particular type/context of object
+		bool validateShaderAttribute(std::string type, std::string context, std::string component);
+		void setAttribute(std::string type, std::string context,
+				 std::string component, int number,
+				 void *values);
+		void *getAttribute(std::string type, std::string context,
+			std::string component, int number);
+		AttributeValues *getObjectAttributes(std::string type, std::string context, int number=0);
+		AttributeValues *getCurrentObjectAttributes(std::string context, int number = 0);
+
 		// Attributes
+		void registerAttributes(std::string s, AttribSet *attrib);
 		bool validateUserAttribContext(std::string s);
 		bool validateUserAttribName(std::string context, std::string name);
 		AttribSet *getAttribs(std::string context);
+		void deleteUserAttributes();
+		std::vector<std::string> &getContextList();
 
 
 		void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt);
@@ -82,7 +112,18 @@ namespace nau {
 
 		nau::world::IWorld& getWorld (void);
 
-		void step (void);
+		// Executes the whole pipeline
+		void step ();
+		// Executes the next pass
+		// only to be used when in paused mode
+		void stepPass();
+		// Executes the pipeline from the current pass to the end
+		// only to be used when in paused mode
+		void stepCompleteFrame();
+		// executes n passes from the pipeline. It may loop.
+		// only to be used when in paused mode
+		void stepPasses(int n);
+
 		void resetFrameCount();
 		unsigned long int getFrameCount();
 
@@ -92,15 +133,19 @@ namespace nau {
 		void setWindowSize (float width, float height);
 		float getWindowHeight();
 		float getWindowWidth();
-		nau::render::Viewport* createViewport (const std::string &name, const nau::math::vec4 &bgColor);
-		nau::render::Viewport* createViewport (const std::string &name);
-		nau::render::Viewport* getViewport (const std::string &name);
+
+		// Viewports
+		//nau::render::Viewport* createViewport (const std::string &name, nau::math::vec4 &bgColor);
+		//nau::render::Viewport* createViewport (const std::string &name);
+		//nau::render::Viewport* getViewport (const std::string &name);
 		nau::render::Viewport* getDefaultViewport ();
-		std::vector<std::string> *getViewportNames();
+		//std::vector<std::string> *getViewportNames();
+		//bool hasViewport(const std::string &name);
 
 		bool reload (void);
 
 		void sendKeyToEngine (char keyCode); /***Change this in to a register system. The sub-system register as a particular key receiver*/
+		void setClickPosition(int x, int y);
 
 		void enablePhysics (void);
 		void disablePhysics (void); 
@@ -126,15 +171,30 @@ namespace nau {
 		void setRenderFlag(RenderFlags aFlag, bool aState);
 		bool getRenderFlag(RenderFlags aFlag);
 
-		~Nau (void);
+		~Nau(void);
 		void clear();
-	
+
+		//State
+		void loadStateXMLFile(std::string file);
+		std::vector<std::string> getStateEnumNames();
+		std::string getState(std::string enumName);
+
 	private:
 		Nau();
+
+#ifdef NAU_LUA
+		lua_State *m_LuaState;
+#endif
 
 		std::string m_Name;
 		unsigned long int m_FrameCount;
 
+		/*
+		Attributes
+		*/
+		typedef AttribSet *AttribSetPointer;
+		AttribSetPointer a;
+		std::map<std::string, AttribSetPointer> m_Attributes;
 		/*
 		 * Rendering Flags
 		 */
@@ -155,8 +215,9 @@ namespace nau {
 		std::string m_ActiveCameraName;
 		float m_WindowWidth, m_WindowHeight;
 		nau::world::IWorld *m_pWorld;
-		std::map <std::string, nau::render::Viewport*> m_vViewports;
+		//std::map <std::string, nau::render::Viewport*> m_vViewports;
 		nau::render::Viewport *m_Viewport;
+		int m_ClickX = 0, m_ClickY = 0;
 		//std::map <std::string, nau::animation::IAnimation*> m_Animations;
 		IState *m_DefaultState;
 
@@ -175,6 +236,11 @@ namespace nau {
 
 		int loadedScenes;
 
+		bool isFrameBegin;
+
+		// this vector allows returning string vectors safely without
+		// memory leaks
+		std::vector<std::string> m_DummyVector;
 	};
 };
 

@@ -2,12 +2,9 @@
 <project name="Render Target Test" width=800 height=400>
 	<assets>
 		<scenes>
-			<scene name="MainScene" type="OctreeByMat">
+			<scene name="MainScene" >
 				<!--file>..\ntg-bench\bench.obj</file-->
-				<file>../../models/Mercado/mercado_e_arvores.cbo</file>
-				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
-				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
-				<!--file>..\3dsmodels\sjeep1.3ds</file-->
+				<file name="../../models/Mercado/mercado_e_arvores.cbo"/>
 			</scene>
 		</scenes>
 		<viewports>
@@ -40,19 +37,19 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="optixTest.mlib"/>
+			<materialLib filename="optixTest.mlib"/>
 		</materialLibs>
 	</assets>
 	<pipelines>
 		<pipeline name="fixedfunction" default="true">
 			<pass class="optix" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<rendertarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
+				<camera name="MainCamera" />
+				<renderTarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<optixEntryPoint>
 					<optixProgram type="RayGen" file="optix/common.ptx" proc="pinhole_camera"/> 
@@ -88,7 +85,7 @@
 
 				<optixMaterialAttributes>
 					<valueof optixVar="diffuse" type="CURRENT" context="COLOR" component="DIFFUSE" />
-					<valueof optixVar="texCount" type="CURRENT" context="TEXTURE" component="COUNT" />
+					<valueof optixVar="texCount" type="CURRENT" context="RENDERER" component="TEXTURE_COUNT" />
 				</optixMaterialAttributes>
 				<optixGlobalAttributes>
 					<valueof optixVar="lightDir" type="CURRENT" context="LIGHT" id=0 component="DIRECTION" />
@@ -99,17 +96,17 @@
 
 			</pass>
 			<pass class="quad" name="pass2">
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
 			<pass class="default" name="pass3">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>LeftViewport</viewport>
+				<camera name="MainCamera" />
+				<viewport name="LeftViewport" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass> 
 		</pipeline>

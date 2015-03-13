@@ -1,25 +1,22 @@
 #ifndef TEXTUTIL_H
 #define TEXTUTIL_H
 
-/**
- * \file   textutil.h
- * \author  <pangelo@doublemv.com>
- * \date   Sat Jun 28 18:48:30 2008
- * 
- * \brief  Misc utility functions for dealing with text
- * 
- * 
- */
 
-#include <string>
 #include <climits>
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
+#include <iterator>
+#include <ostream>
+#include <string>
+#include <vector>
 
 namespace nau {
 
   namespace system {
 
-    namespace textutil {
+    namespace TextUtil {
       
       // Trims whitespace from the beginning and end of a string
       std::string TrimWhitespace (const std::string &InputString);
@@ -46,11 +43,14 @@ namespace nau {
 	  float * ParseFloats (const std::string &InputString, int count);
 	  int *ParseInts (const std::string &InputString, int count);
 
+	  void Join(const std::vector<std::string>& vec, const char* delim, std::string *result);
 
-    } // namespace textutil
 
-  } // namespace system
+	  
+	}; // namespace TextUtil
 
-} // namespace nau
+  }; // namespace system
+
+}; // namespace nau
 
 #endif // TEXTUTIL_H

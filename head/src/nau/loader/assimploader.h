@@ -6,7 +6,7 @@
 #include "assimp/PostProcess.h"
 #include "assimp/Scene.h"
 
-#include <nau/scene/iscene.h>
+#include "nau/scene/iscene.h"
 
 namespace nau 
 {
@@ -42,7 +42,7 @@ namespace nau
 			static void set_float4(float f[4], float a, float b, float c, float d);
 			static void recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 									const  aiScene *sc, const  aiNode* nd,
-									SimpleTransform &m, std::map<unsigned int, std::string> meshNameMap);
+									mat4 &m, std::map<unsigned int, std::string> meshNameMap);
 		};
 	};
 };

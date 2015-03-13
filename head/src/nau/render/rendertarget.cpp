@@ -1,8 +1,8 @@
-#include <nau/render/rendertarget.h>
+#include "nau/render/rendertarget.h"
 
-#include <nau/config.h>
+#include "nau/config.h"
 
-#include <nau/render/opengl/glrendertarget.h>
+#include "nau/render/opengl/glrendertarget.h"
 
 using namespace nau::render;
 
@@ -68,7 +68,7 @@ RenderTarget::setLayerCount(int layers)
 }
 
 
-const nau::math::vec4 &
+nau::math::vec4 &
 RenderTarget::getClearValues() 
 {
 	return m_ClearValues;

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="teste1-shadows" width=750 height=1000 >
+<project name="teste1-shadows" width=1000 height=1000 >
 	<assets>
 		<attributes>
 			<attribute context="PASS" name="FROM" type="FLOAT" value = -1 />
@@ -8,7 +8,7 @@
 
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<folder>..\..\models\pl3dsecxiv</folder>
+				<folder name="..\..\models\pl3dsecxiv" />
 			</scene>
 		</scenes>
 		<viewports>
@@ -17,27 +17,31 @@
 			</viewport>
 			<viewport name="LargeViewport"  >
 				<ORIGIN  x="0" y="250" />
-				<SIZE width="750" height= "750" />
+				<SIZE width="1" height= "750" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport1" >
 				<ORIGIN  x="0" y="0" />
-				<SIZE width=".25"  ratio="1" />
+				<SIZE width=".25"  height=0 />
+				<RATIO value="1" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport2" >
 				<ORIGIN  x="0.25" y="0" />
-				<SIZE width=".25"  ratio="1" />
+				<SIZE width=".25"    height=0 />
+				<RATIO value="1" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport3" >
 				<ORIGIN  x="0.5" y="0" />
-				<SIZE width=".25"  ratio="1" />
+				<SIZE width=".25"    height=0 />
+				<RATIO value="1" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport4" >
 				<ORIGIN  x="0.75" y="0.0" />
-				<SIZE width=".25"  ratio="1" />
+				<SIZE width=".25"    height=0 />
+				<RATIO value="1" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>			
 		</viewports>
@@ -54,14 +58,13 @@
 		
 		<lights>
 			<light name="Sun" >
-				<POSITION x="-52" y="77.0" z="-27.0" />
 				<DIRECTION x="0.78" y="-0.5" z="-0.22" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 			</light>
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="shadowMaterials3.mlib"/>
+			<materialLib filename="shadowMaterials3.mlib"/>
 		</materialLibs>
 		
 	</assets>
@@ -71,16 +74,16 @@
 		
 			<pass class="depthmap" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
 				<userAttributes>
 					<TO value="5" />
 				</userAttributes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="shadowMap1" fromLibrary="Shadow Materials"/>
+				<renderTarget name="shadowMap1" fromLibrary="Shadow Materials"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
 				</materialMaps>
@@ -88,17 +91,17 @@
 			
 			<pass class="depthmap" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
 				<userAttributes>
 					<FROM value="5" />
 					<TO value="15" />
 				</userAttributes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="shadowMap2" fromLibrary="Shadow Materials"/>
+				<renderTarget name="shadowMap2" fromLibrary="Shadow Materials"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
 				</materialMaps>
@@ -106,17 +109,17 @@
 			
 			<pass class="depthmap" name="pass3">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
 				<userAttributes>
 					<FROM value="15" />
 					<TO value="50" />
 				</userAttributes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="shadowMap3" fromLibrary="Shadow Materials"/>
+				<renderTarget name="shadowMap3" fromLibrary="Shadow Materials"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
 				</materialMaps>
@@ -124,17 +127,17 @@
 			
 			<pass class="depthmap" name="pass4">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
 				<userAttributes>
 					<FROM value="50" />
 					<TO value="150" />
 				</userAttributes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="shadowMap4" fromLibrary="Shadow Materials"/>
+				<renderTarget name="shadowMap4" fromLibrary="Shadow Materials"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
 				</materialMaps>
@@ -142,51 +145,35 @@
 			
 			<pass class="default" name="pass5">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="simple" fromLibrary="Shadow Materials"/>
+				<!--renderTarget name="simple" fromLibrary="Shadow Materials"/-->
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="flat-with-shadow-4-depths" />
 				</materialMaps>
 			</pass>
 			
-			<pass class="quad" name="pass6">
-				<viewport>LargeViewport</viewport>
-				<texture name ="offscreenrender" fromLibrary="Shadow Materials"/>
-			</pass>
-			
-			<!--pass class="default" name="pass6a">
-				<scenes>
-					<scene>MainScene</scene>
-					<scene>MainCamera</scene>
-				</scenes>
-				<camera>GodCamera</camera>
-				<lights>
-					<light>Sun</light>
-				</lights>
-			</pass-->
-			
 			<pass class="quad" name="pass7">
-				<viewport>SmallViewport1</viewport>
+				<viewport name="SmallViewport1" />
 				<texture name ="shadowMap1" fromLibrary="Shadow Materials"/>
 			</pass>
 			
  			<pass class="quad" name="pass8">
-				<viewport>SmallViewport2</viewport>
+				<viewport name="SmallViewport2" />
 				<texture name ="shadowMap2" fromLibrary="Shadow Materials"/>
 			</pass>
 			
  			<pass class="quad" name="pass9">
-				<viewport>SmallViewport3</viewport>
+				<viewport name="SmallViewport3" />
 				<texture name ="shadowMap3" fromLibrary="Shadow Materials"/>
 			</pass>
 			
  			<pass class="quad" name="pass10">
-				<viewport>SmallViewport4</viewport>
+				<viewport name="SmallViewport4" />
 				<texture name ="shadowMap4" fromLibrary="Shadow Materials"/>
 			</pass>
 	 		

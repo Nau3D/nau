@@ -1,15 +1,12 @@
-#include <GL/glew.h>
-#include <nau/render/opengl/glbuffer.h>
+#include "nau/render/opengl/glbuffer.h"
 
-#if NAU_OPENGL_VERSION >= 420
+#include <GL/glew.h>
 
 using namespace nau::render;
 
 bool
 GLBuffer::Init() {
 
-	Attribs.setDefault("TYPE", new int(GL_SHADER_STORAGE_BUFFER));
-	Attribs.listAdd("TYPE", "SHADER_STORAGE", GL_SHADER_STORAGE_BUFFER);
 	return true;
 }
 
@@ -17,17 +14,15 @@ GLBuffer::Init() {
 bool GLBuffer::Inited = Init();
 
 
-GLBuffer::GLBuffer(std::string label, int size) {
-
-	initArrays(Attribs);
+GLBuffer::GLBuffer(std::string label): IBuffer(), m_LastBound(GL_ARRAY_BUFFER) {
 
 	m_Label = label;
-	m_UIntProps[SIZE] = size;
-
 	glGenBuffers(1, (GLuint *)&m_IntProps[ID]);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_IntProps[ID]);
-	glBufferStorage(GL_SHADER_STORAGE_BUFFER, m_UIntProps[SIZE], NULL, GL_DYNAMIC_STORAGE_BIT);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+#if NAU_OPENGL_VERSION >= 430
+	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+	glObjectLabel(GL_BUFFER, m_IntProps[ID], m_Label.size(), m_Label.c_str());
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 }
 
 
@@ -42,67 +37,127 @@ GLBuffer::clone() {
 
 	GLBuffer *b = new GLBuffer();
 	b->m_Label = this->m_Label;
-	AttributeValues::copy(b);
+	b->copy(this);
+	//AttributeValues::copy(b);
 	return (IBuffer *)b;
 }
 
 
 void
-GLBuffer::bind() {
+GLBuffer::bind(unsigned int target) {
 
-	m_BoolProps[BIND] = true;
-	glBindBuffer(m_EnumProps[TYPE], m_IntProps[ID]);
+	m_LastBound = target;
+	glBindBuffer(target, m_IntProps[ID]);
 }
 
 
 void
 GLBuffer::unbind() {
 
-	m_BoolProps[BIND] = false;
-	glBindBuffer(m_EnumProps[TYPE], 0);
+	glBindBuffer(m_LastBound, 0);
 }
 
 
 void 
 GLBuffer::clear() {
-	unsigned char c = 0;
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_IntProps[ID]);
-	glClearBufferData(GL_SHADER_STORAGE_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+#if NAU_OPENGL_VERSION >= 430
+	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+	glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
+}
+
+
+void 
+GLBuffer::setData(unsigned int size, void *data) {
+
+	m_UIntProps[SIZE] = size;
+	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+	glBufferData(GL_ARRAY_BUFFER, m_UIntProps[SIZE], data, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
 void
-GLBuffer::setProp(int prop, Enums::DataType type, void *value) {
+GLBuffer::setSubData(unsigned int offset, unsigned int size, void *data) {
 
-	switch (type) {
-
-		case Enums::FLOAT:
-			m_FloatProps[prop] = *(float *)value;
-			break;
-		case Enums::VEC4:
-			m_Float4Props[prop].set((vec4 *)value);
-			break;
-		case Enums::INT:
-			if (prop == BINDING_POINT) {
-				int i = *(int *)value;
-				if (i == -1)
-					glBindBufferBase(m_EnumProps[TYPE], m_IntProps[BINDING_POINT], 0);
-				else
-					glBindBufferBase(m_EnumProps[TYPE], i, m_IntProps[ID]);
-			}
-			m_IntProps[prop] = *(int *)value;
-			break;
-		case Enums::UINT:
-			m_UIntProps[prop] = *(unsigned int *)value;
-			break;
-		case Enums::ENUM:
-			m_EnumProps[prop] = *(int *)value;
-			break;
-		case Enums::BOOL:
-			m_BoolProps[prop] = *(bool *)value;
-			break;
-	}
+	m_UIntProps[SIZE] = size;
+	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, m_UIntProps[SIZE], data);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+
+int
+GLBuffer::getData(unsigned int offset, unsigned int size, void *data) {
+
+	int actualSize = size;
+
+	if (offset >= m_UIntProps[SIZE])
+		return 0;
+	
+	if (offset + size > m_UIntProps[SIZE])
+		actualSize = m_UIntProps[SIZE] - offset;
+
+	//glFinish();
+	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	int type = GL_SHADER_STORAGE_BUFFER;
+	glBindBuffer(type, m_IntProps[ID]);
+	//void *bufferData;
+	//bufferData = glMapBufferRange(type, offset, actualSize, GL_MAP_READ_BIT);
+	//memcpy(data, bufferData, actualSize);
+	//glUnmapBuffer(type);
+	glGetBufferSubData(type, offset, actualSize, data);
+	glBindBuffer(type, 0);
+
+	return actualSize;
+}
+
+
+void
+GLBuffer::setPropui(UIntProperty  prop, unsigned int value) {
+
+
+	if (prop == SIZE) {
+		m_UIntProps[SIZE] = value;
+		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+		//glBufferStorage(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT);
+		glBufferData(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_STATIC_DRAW);
+#if NAU_OPENGL_VERSION >= 430
+		glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
 #endif
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	else
+		AttributeValues::setPropui(prop, value);
+}
+
+
+void 
+GLBuffer::setPropui3(UInt3Property prop, uivec3 &v) {
+
+	if (prop == DIM) {
+
+		int size = v.x * v.y * v.z;
+		int s = 0;
+		for (auto t : m_Structure) {
+			s += Enums::getSize(t);
+		}
+		setPropui(SIZE, size * s);
+		setPropui(STRUCT_SIZE, s);
+	}
+	else
+		AttributeValues::setPropui3(prop, v);
+}
+
+void 
+GLBuffer::refreshBufferParameters() {
+
+	int value;
+	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+	glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &value);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	m_UIntProps[SIZE] = (unsigned int)value;
+}

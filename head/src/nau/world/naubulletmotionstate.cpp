@@ -1,11 +1,10 @@
-#include <nau/world/naubulletmotionstate.h>
-#include <nau/math/transformfactory.h>
+#include "nau/world/naubulletmotionstate.h"
+#include "nau/math/matrix.h"
 
 using namespace nau::world;
 
 NauBulletMotionState::NauBulletMotionState (nau::scene::SceneObject *aObject) : m_SceneObject (aObject)
 {
-	t = TransformFactory::create("SimpleTransform");
 }
 
 NauBulletMotionState::~NauBulletMotionState(void)
@@ -15,7 +14,7 @@ NauBulletMotionState::~NauBulletMotionState(void)
 void 
 NauBulletMotionState::getWorldTransform (btTransform &worldTrans) const
 {
-	worldTrans.setFromOpenGLMatrix (m_SceneObject->getTransform().getMat44().getMatrix());
+	worldTrans.setFromOpenGLMatrix (m_SceneObject->getTransform().getMatrix());
 }
 
 // updates scene object transform
@@ -24,6 +23,6 @@ void
 NauBulletMotionState::setWorldTransform (const btTransform &worldTrans)
 {
 //	worldTrans.getOpenGLMatrix (const_cast<float*> (m_SceneObject->getTransform().getMat44().getMatrix()));
-	worldTrans.getOpenGLMatrix (const_cast<float*> (t->getMat44().getMatrix()));
-	m_SceneObject->setTransform(t);
+	worldTrans.getOpenGLMatrix (const_cast<float*> (m_Matrix.getMatrix()));
+	m_SceneObject->setTransform(m_Matrix);
 }

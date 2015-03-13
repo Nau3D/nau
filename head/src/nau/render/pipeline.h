@@ -8,10 +8,15 @@
 #include <fstream>
 #include <iostream>
 
-#include <nau/scene/camera.h>
-#include <nau/scene/sceneobject.h>
-#include <nau/render/pass.h>
-#include <nau/render/istate.h>
+#include "nau/scene/camera.h"
+#include "nau/scene/sceneobject.h"
+#include "nau/render/pass.h"
+#include "nau/render/istate.h"
+
+#define PIPE_PASS_MIDDLE 0
+#define PIPE_PASS_START 1
+#define PIPE_PASS_STARTEND 2
+#define PIPE_PASS_END 3
 
 namespace nau
 {
@@ -22,25 +27,14 @@ namespace nau
 
 		public:
 			static const int MAXPASSEs = 16;
-		private:
 
-			std::deque<Pass *> m_Passes;
-			std::string m_Name;
-
-			//! The default camera is the camera that, by default, will receive events from the EventManager
-			std::string m_DefaultCamera;
-
-			Pass *m_CurrentPass;
-
-			bool m_Active;
-
-
-		public:
 			Pipeline (std::string pipelineName = "Default");
 			
-			const std::string &getLastPassCameraName(); 
-			int getNumberOfPasses();
+			std::string GetName();
 			std::vector<std::string> *getPassNames();
+
+			int getNumberOfPasses();
+			int getPassCounter();
 
 			/** 
 			 * Add a pass to the pipeline. 
@@ -55,54 +49,47 @@ namespace nau
 			bool hasPass(const std::string &passName);
 			Pass* getPass (const std::string &passName);
 			Pass* getPass (int n);
+			Pass *getCurrentPass();
 
 			//! Gets the name of the camera from the current pass being executed
 			const std::string &getCurrentCamera();
+			const std::string &getLastPassCameraName(); 
 
 			//! Gets the default camera, if not set it returns the last pass camera
 			const std::string &getDefaultCameraName();
-			//! Sets the default camera name. No error checking is performed!
 			void setDefaultCamera(const std::string &defCam);
 
 			void initState(IState *state);
 
-			Pass *getCurrentPass();
 
-			void execute (/*nau::scene::Camera* aCamera, nau::scene::IScene *aScene*/);
+			void execute();
+			void executePass(Pass *p);
+			void executeNextPass();
+
 		
-			bool isActive (void);
+			// -----------------------------------------------------------------
+			//		PRE POST SCRIPTS
+			// -----------------------------------------------------------------
+			void setPreScript(std::string file, std::string name);
+			void setPostScript(std::string file, std::string name);
+			void callScript(std::string &file, std::string &name);
 
-		  
 		protected:
-			  Pipeline (const Pipeline&);
-			  Pipeline& operator= (const Pipeline&);
+			Pipeline (const Pipeline&);
+			Pipeline& operator= (const Pipeline&);
 
-		//private:
-			//float lightPos[8][4],spotDir[8][3];
-			//int lightWhere[8];
-			//TrackBall tb;
+			std::deque<Pass *> m_Passes;
+			std::string m_Name;
 
-			//CCamera *m_defaultCamera;
-			//int m_activeCameraIndex;
-			//CProjection *m_defaultProjection;
-			//CViewport *m_defaultViewport;
-			
-			//int vpw,vph; // window viewport dimension
+			//! The default camera will receive events from the EventManager
+			std::string m_DefaultCamera;
 
-			//CMaterialLibManager *m_materialLibManager;
-			//std::vector<CMaterial *> m_mats;
+			Pass *m_CurrentPass;
 
-			//void setCamera(	CCamera *cam,CProjection *proj,CViewport *vp);
-			//int getActiveCameraIndex();
-			//void setActiveCameraIndex(int i);
-			//void setPassCamera(int pass, CCamera *cam);			
-			//std::string m_Path;
-			//std::string m_Filename;
-			
-			//IState *m_GlCurrState, *m_GlDefState;
+			unsigned int m_NextPass;
 
-			//std::string m_DefaultCamera;
-
+			std::string m_PreScriptFile, m_PreScriptName,
+				m_PostScriptFile, m_PostScriptName;
 		};
 	};
 };

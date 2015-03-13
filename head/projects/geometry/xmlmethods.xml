@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<methods>
+	<method>
+		<enums>
+			<enum value="0x0BE2" name="GL_BLEND"/>
+			<enum value="0x8076" name="GL_COLOR_ARRAY"/>
+			<enum value="0x8010" name="GL_CONVOLUTION_1D"/>
+			<enum value="0x8011" name="GL_CONVOLUTION_2D"/>
+			<enum value="0x8012" name="GL_SEPARABLE_2D"/>
+			<enum value="0x0DE0" name="GL_TEXTURE_1D"/>
+			<enum value="0x0DE1" name="GL_TEXTURE_2D"/>
+			<enum value="0x806F" name="GL_TEXTURE_3D"/>
+			<enum value="0x0C23" name="GL_COLOR_WRITEMASK" length="4" />
+		</enums>
+		<function name="glGetBooleanv">
+			<param type="GLenum"/>
+			<param type="GLboolean*"/>
+		</function>
+	</method>
+	<method>
+		<enums>
+			<enum value="0x8455" name="GL_FOG_COORD_ARRAY_STRIDE" alias="GL_FOG_COORDINATE_ARRAY_STRIDE"/>
+			<enum value="0x0B70" name="GL_DEPTH_RANGE" length="2"/>
+			<enum value="0x846D" name="GL_ALIASED_POINT_SIZE_RANGE" length="2"/>
+			<enum value="0x846E" name="GL_ALIASED_LINE_WIDTH_RANGE" length="2"/>
+		</enums>
+		<function name="glGetIntegerv">
+			<param type="GLenum"/>
+			<param type="GLint*"/>
+		</function>
+	</method>
+</methods>

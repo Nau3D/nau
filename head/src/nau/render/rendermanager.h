@@ -6,14 +6,14 @@
 #include <string>
 #include <map>
 
-#include <nau/render/pipeline.h>
-#include <nau/render/irenderer.h>
-#include <nau/render/irenderqueue.h>
-//#include <nau/render/console.h>
-#include <nau/scene/camera.h>
-#include <nau/scene/iscene.h>
-#include <nau/scene/light.h>
-#include <nau/scene/sceneobject.h>
+#include "nau/render/pipeline.h"
+#include "nau/render/irenderer.h"
+#include "nau/render/irenderqueue.h"
+#include "nau/render/viewport.h"
+#include "nau/scene/camera.h"
+#include "nau/scene/iscene.h"
+#include "nau/scene/light.h"
+#include "nau/scene/sceneobject.h"
 
 namespace nau 
 {
@@ -33,6 +33,7 @@ namespace nau
 			std::map<std::string, nau::scene::Light*> m_Lights;
 			std::map<std::string, nau::scene::IScene*> m_Scenes;
 			std::vector<nau::scene::SceneObject*> m_SceneObjects;
+			std::map <std::string, nau::render::Viewport*> m_Viewports; 
 			Pipeline *m_ActivePipeline;
 
 		public:
@@ -45,7 +46,8 @@ namespace nau
 			//! Returns the actual renderer
 			IRenderer* getRenderer (void);
 			//! Renders the active pipeline
-			void renderActivePipeline ();
+			unsigned char renderActivePipeline();
+			void renderActivePipelineNextPass();
 
 			// OCTREE STUFF
 			//! Creates an octree for every OctreeScene
@@ -54,11 +56,24 @@ namespace nau
 			//! Create VBOs for every IScene, erases all vertex data, except vertex coordinates 
 			void compile();
 			
+			// VIEWPORTS
+			nau::render::Viewport* createViewport(const std::string &name, nau::math::vec4 &bgColor);
+			nau::render::Viewport* createViewport(const std::string &name);
+			nau::render::Viewport* getViewport(const std::string &name);
+			std::vector<std::string> *getViewportNames();
+			bool hasViewport(const std::string &name);
+
+
 			// PIPELINES
 			//! Checks if a given named pipeline exists
 			bool hasPipeline (const std::string &pipelineName);
 			//! Returns a pointer to the named pipeline
 			Pipeline* getPipeline (const std::string &pipelineName);
+			//! Returns a pointer to the active pipeline
+			Pipeline* getActivePipeline();
+
+			//! Returns the active pipeline name
+			std::string getActivePipelineName();
 			//! Sets the named pipeline as the active pipeline for rendering purposes
 			void setActivePipeline (const std::string &pipelineName);
 			//! Returns the number of pipelines

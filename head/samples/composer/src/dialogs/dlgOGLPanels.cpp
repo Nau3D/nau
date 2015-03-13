@@ -55,31 +55,32 @@ void DlgOGLPanels::setPanel(wxSizer *siz, wxWindow *parent){
 	const wxChar* enable[] = { wxT("Disabled"), wxT("Enabled"), NULL };
 	const long enableInd[] = { 0, 1, NULL };
 
-	pg->Append(new  wxEnumProperty(wxT("FOG"),wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::FOG)));
-
 	vec4 fColor;
-	fColor = m_glState->getProp4f(IState::FOG_COLOR);
-	pg->Append(new  wxColourProperty(wxT("FOG_COLOR"),wxPG_LABEL,
-				wxColour((unsigned char)fColor.x*255,(unsigned char)fColor.y*255,(unsigned char)fColor.z*255)) );
-	
-	pg->Append( new wxEnumProperty(wxT("FOG_MODE"),wxPG_LABEL,fogF,fogFInd,m_glState->getPrope(IState::FOG_MODE)));
 
-	pg->Append(new  wxFloatProperty(wxT("FOG_DENSITY"),wxPG_LABEL,m_glState->getPropf(IState::FOG_DENSITY)));
+	//pg->Append(new  wxEnumProperty(wxT("FOG"),wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::FOG)));
 
-	pg->Append(new  wxFloatProperty(wxT("FOG_START"),wxPG_LABEL,m_glState->getPropf(IState::FOG_START)));
+	//fColor = m_glState->getProp4f(IState::FOG_COLOR);
+	//pg->Append(new  wxColourProperty(wxT("FOG_COLOR"),wxPG_LABEL,
+	//			wxColour((unsigned char)fColor.x*255,(unsigned char)fColor.y*255,(unsigned char)fColor.z*255)) );
+	//
+	//pg->Append( new wxEnumProperty(wxT("FOG_MODE"),wxPG_LABEL,fogF,fogFInd,m_glState->getPrope(IState::FOG_MODE)));
 
-	pg->Append(new  wxFloatProperty(wxT("FOG_END"),wxPG_LABEL,m_glState->getPropf(IState::FOG_END)));
+	//pg->Append(new  wxFloatProperty(wxT("FOG_DENSITY"),wxPG_LABEL,m_glState->getPropf(IState::FOG_DENSITY)));
 
-	if (m_glState->getPrope(IState::FOG_MODE) == GL_LINEAR) {
-		pg->EnableProperty(wxT("FOG_END"));
-		pg->EnableProperty(wxT("FOG_START"));
-		pg->DisableProperty(wxT("FOG_DENSITY"));
-	}
-	else {
-		pg->EnableProperty(wxT("FOG_DENSITY"));
-		pg->DisableProperty(wxT("FOG_START"));
-		pg->DisableProperty(wxT("FOG_END"));
-	}
+	//pg->Append(new  wxFloatProperty(wxT("FOG_START"),wxPG_LABEL,m_glState->getPropf(IState::FOG_START)));
+
+	//pg->Append(new  wxFloatProperty(wxT("FOG_END"),wxPG_LABEL,m_glState->getPropf(IState::FOG_END)));
+
+	//if (m_glState->getPrope(IState::FOG_MODE) == GL_LINEAR) {
+	//	pg->EnableProperty(wxT("FOG_END"));
+	//	pg->EnableProperty(wxT("FOG_START"));
+	//	pg->DisableProperty(wxT("FOG_DENSITY"));
+	//}
+	//else {
+	//	pg->EnableProperty(wxT("FOG_DENSITY"));
+	//	pg->DisableProperty(wxT("FOG_START"));
+	//	pg->DisableProperty(wxT("FOG_END"));
+	//}
 
 
 	// BLEND
@@ -102,7 +103,7 @@ void DlgOGLPanels::setPanel(wxSizer *siz, wxWindow *parent){
 
 	pg->Append( new wxEnumProperty(wxT("BLEND"),wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::BLEND)));
 
-	fColor = m_glState->getProp4f(IState::BLEND_COLOR);
+	fColor = m_glState->getPropf4(IState::BLEND_COLOR);
 	pg->Append( new wxColourProperty(wxT("BLEND_COLOR"),wxPG_LABEL,
 				wxColour((unsigned char)fColor.x*255,(unsigned char)fColor.y*255,(unsigned char)fColor.z*255)) );
 
@@ -113,18 +114,18 @@ void DlgOGLPanels::setPanel(wxSizer *siz, wxWindow *parent){
 	pg->Append(new wxEnumProperty(wxT("BLEND_DST"),wxPG_LABEL,blendF,blendFInd,m_glState->getPrope(IState::BLEND_DST)));
 
 
-	pg->Append( new wxPropertyCategory(wxT("Alpha"),wxPG_LABEL) );	
+	//pg->Append( new wxPropertyCategory(wxT("Alpha"),wxPG_LABEL) );	
 
-	pg->Append( new wxEnumProperty(wxT("ALPHA_TEST"),wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::ALPHA_TEST)));
+	//pg->Append( new wxEnumProperty(wxT("ALPHA_TEST"),wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::ALPHA_TEST)));
 
-	const wxChar* alphaF[] =  {wxT("ALWAYS"),wxT("NEVER"),  wxT("LESS"), wxT("LEQUAL"),
-				wxT("EQUAL"), wxT("GEQUAL"),wxT("GREATER"), wxT("NOT_EQUAL"), NULL};
-	const long alphaFInd[] =  {GL_ALWAYS, GL_NEVER, GL_LESS, GL_LEQUAL,
-				GL_EQUAL, GL_GEQUAL, GL_GREATER, GL_NOTEQUAL,NULL};
+	//const wxChar* alphaF[] =  {wxT("ALWAYS"),wxT("NEVER"),  wxT("LESS"), wxT("LEQUAL"),
+	//			wxT("EQUAL"), wxT("GEQUAL"),wxT("GREATER"), wxT("NOT_EQUAL"), NULL};
+	//const long alphaFInd[] =  {GL_ALWAYS, GL_NEVER, GL_LESS, GL_LEQUAL,
+	//			GL_EQUAL, GL_GEQUAL, GL_GREATER, GL_NOTEQUAL,NULL};
 
-	pg->Append( new wxEnumProperty(wxT("ALPHA_FUNC"),wxPG_LABEL,alphaF,alphaFInd,m_glState->getPrope(IState::ALPHA_FUNC)));
+	//pg->Append( new wxEnumProperty(wxT("ALPHA_FUNC"),wxPG_LABEL,alphaF,alphaFInd,m_glState->getPrope(IState::ALPHA_FUNC)));
 
-	pg->Append(new  wxFloatProperty(wxT("ALPHA_REF"),wxPG_LABEL,m_glState->getPropf(IState::ALPHA_VALUE)));
+	//pg->Append(new  wxFloatProperty(wxT("ALPHA_REF"),wxPG_LABEL,m_glState->getPropf(IState::ALPHA_VALUE)));
 
 	pg->Append( new wxPropertyCategory(wxT("Cull"), wxPG_LABEL));
 	pg->Append( new wxEnumProperty(wxT("CULL"), wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::CULL_FACE)));
@@ -157,85 +158,85 @@ void DlgOGLPanels::OnProcessPanelChange(wxPropertyGridEvent& e){
 	float f[4];
 
 	// FOG
-	if (name== wxT("FOG")) {
-		m_glState->setProp(IState::FOG,pg->GetPropertyValueAsInt(name) != 0);
-	}
-	else if (name == wxT("FOG_COLOR")) {
-		variant = pg->GetPropertyValue(wxT("FOG_COLOR"));
-		colour << variant;
-		//colour = (wxColour *)pg->GetPropertyValueAsWxObjectPtr("FOG_COLOR");
-		f[0] = colour.Red()/255.0; f[1] = colour.Green()/255.0; f[2] = colour.Blue()/255.0; f[3] = 1.0;
-		m_glState->setProp(IState::FOG_COLOR,f[0],f[1],f[2],1.0f);
-	} 
-	else if (name == wxT("FOG_MODE")) {
+	//if (name== wxT("FOG")) {
+	//	m_glState->setProp(IState::FOG,pg->GetPropertyValueAsInt(name) != 0);
+	//}
+	//else if (name == wxT("FOG_COLOR")) {
+	//	variant = pg->GetPropertyValue(wxT("FOG_COLOR"));
+	//	colour << variant;
+	//	//colour = (wxColour *)pg->GetPropertyValueAsWxObjectPtr("FOG_COLOR");
+	//	f[0] = colour.Red()/255.0; f[1] = colour.Green()/255.0; f[2] = colour.Blue()/255.0; f[3] = 1.0;
+	//	m_glState->setProp(IState::FOG_COLOR,f[0],f[1],f[2],1.0f);
+	//} 
+	//else if (name == wxT("FOG_MODE")) {
 
-		int p = pg->GetPropertyValueAsInt(name);
-		m_glState->setProp(IState::FOG_MODE,p);
-		if (p == GL_LINEAR) {
-			pg->EnableProperty(wxT("FOG_END"));
-			pg->EnableProperty(wxT("FOG_START"));
-			pg->DisableProperty(wxT("FOG_DENSITY"));
-		}
-		else {
-			pg->EnableProperty(wxT("FOG_DENSITY"));
-			pg->DisableProperty(wxT("FOG_START"));
-			pg->DisableProperty(wxT("FOG_END"));
-		}
-	}
-	else if (name == wxT("FOG_DENSITY")) {
-		m_glState->setProp(IState::FOG_DENSITY, (float)pg->GetPropertyValueAsDouble(name));
-	}
-	else if (name == wxT("FOG_START")) {
-		m_glState->setProp(IState::FOG_START, (float)pg->GetPropertyValueAsDouble(name));
-	}
-	else if (name == wxT("FOG_END")) {
-		m_glState->setProp(IState::FOG_END, (float)pg->GetPropertyValueAsDouble(name));
-	}
+	//	int p = pg->GetPropertyValueAsInt(name);
+	//	m_glState->setProp(IState::FOG_MODE,p);
+	//	if (p == GL_LINEAR) {
+	//		pg->EnableProperty(wxT("FOG_END"));
+	//		pg->EnableProperty(wxT("FOG_START"));
+	//		pg->DisableProperty(wxT("FOG_DENSITY"));
+	//	}
+	//	else {
+	//		pg->EnableProperty(wxT("FOG_DENSITY"));
+	//		pg->DisableProperty(wxT("FOG_START"));
+	//		pg->DisableProperty(wxT("FOG_END"));
+	//	}
+	//}
+	//else if (name == wxT("FOG_DENSITY")) {
+	//	m_glState->setProp(IState::FOG_DENSITY, (float)pg->GetPropertyValueAsDouble(name));
+	//}
+	//else if (name == wxT("FOG_START")) {
+	//	m_glState->setProp(IState::FOG_START, (float)pg->GetPropertyValueAsDouble(name));
+	//}
+	//else if (name == wxT("FOG_END")) {
+	//	m_glState->setProp(IState::FOG_END, (float)pg->GetPropertyValueAsDouble(name));
+	//}
 
 	// BLEND
-	else if (name == wxT("BLEND")) {
-		m_glState->setProp(IState::BLEND, 0 != pg->GetPropertyValueAsInt(name));
+	if (name == wxT("BLEND")) {
+		m_glState->setPropb(IState::BLEND, 0 != pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("BLEND_COLOR")) {
 		variant = pg->GetPropertyValue(wxT("BLEND_COLOR"));
 		colour << variant;
 		//colour = (wxColour *)pg->GetPropertyValueAsWxObjectPtr("BLEND_COLOR");
 		f[0] = colour.Red()/255.0; f[1] = colour.Green()/255.0; f[2] = colour.Blue()/255.0; f[3] = 1.0;
-		m_glState->setProp(IState::BLEND_COLOR,f[0],f[1],f[2],1.0f);
+		m_glState->setPropf4(IState::BLEND_COLOR,f[0],f[1],f[2],1.0f);
 	}
 	else if (name == wxT("BLEND_EQUATION")) {
-		m_glState->setProp(IState::BLEND_EQUATION, pg->GetPropertyValueAsInt(name));
+		m_glState->setPrope(IState::BLEND_EQUATION, pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("BLEND_SRC")) {
-		m_glState->setProp(IState::BLEND_SRC, pg->GetPropertyValueAsInt(name));
+		m_glState->setPrope(IState::BLEND_SRC, pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("BLEND_DST")) {
-		m_glState->setProp(IState::BLEND_DST, pg->GetPropertyValueAsInt(name));
+		m_glState->setPrope(IState::BLEND_DST, pg->GetPropertyValueAsInt(name));
 	}	
 
 
-	// ALPHA TEST
-	else if (name == wxT("ALPHA_TEST")) {
-		m_glState->setProp(IState::ALPHA_TEST, 0 != pg->GetPropertyValueAsInt(name));
-	}
-	else if (name == wxT("ALPHA_FUNC")) {
-		m_glState->setProp(IState::ALPHA_FUNC, pg->GetPropertyValueAsInt(name));	
-	}
-	else if (name == wxT("ALPHA_REF")) {
-		m_glState->setProp(IState::ALPHA_VALUE, (float)pg->GetPropertyValueAsDouble(name));
-	}
+	//// ALPHA TEST
+	//else if (name == wxT("ALPHA_TEST")) {
+	//	m_glState->setProp(IState::ALPHA_TEST, 0 != pg->GetPropertyValueAsInt(name));
+	//}
+	//else if (name == wxT("ALPHA_FUNC")) {
+	//	m_glState->setProp(IState::ALPHA_FUNC, pg->GetPropertyValueAsInt(name));	
+	//}
+	//else if (name == wxT("ALPHA_REF")) {
+	//	m_glState->setProp(IState::ALPHA_VALUE, (float)pg->GetPropertyValueAsDouble(name));
+	//}
 
 	else if (name == wxT("CULL")) {
-		m_glState->setProp(IState::CULL_FACE,  0 != pg->GetPropertyValueAsInt(name));
+		m_glState->setPropb(IState::CULL_FACE,  0 != pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("FACE")) {
-		m_glState->setProp(IState::CULL_TYPE, pg->GetPropertyValueAsInt(name));	
+		m_glState->setPrope(IState::CULL_TYPE, pg->GetPropertyValueAsInt(name));	
 	}
 	else if (name == wxT("DEPTH TEST")) {
-		m_glState->setProp(IState::DEPTH_TEST,  0 != pg->GetPropertyValueAsInt(name));
+		m_glState->setPropb(IState::DEPTH_TEST,  0 != pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("FUNC")) {
-		m_glState->setProp(IState::DEPTH_FUNC, pg->GetPropertyValueAsInt(name));	
+		m_glState->setPrope(IState::DEPTH_FUNC, pg->GetPropertyValueAsInt(name));	
 	}
 }
 
@@ -245,33 +246,33 @@ void DlgOGLPanels::updatePanel(){
 	//FOG
 
 	vec4 v;
-	pg->SetPropertyValue(wxT("FOG"),(int)m_glState->getPropb(IState::FOG));
-	pg->SetPropertyValue(wxT("FOG_MODE"),m_glState->getPrope(IState::FOG_MODE));
-	v = m_glState->getProp4f(IState::FOG_COLOR);
-	pg->SetPropertyValue(wxT("FOG_COLOR"),
-				wxColour(255*v.x,
-						 255*v.y,
-						 255*v.z));
+	//pg->SetPropertyValue(wxT("FOG"),(int)m_glState->getPropb(IState::FOG));
+	//pg->SetPropertyValue(wxT("FOG_MODE"),m_glState->getPrope(IState::FOG_MODE));
+	//v = m_glState->getProp4f(IState::FOG_COLOR);
+	//pg->SetPropertyValue(wxT("FOG_COLOR"),
+	//			wxColour(255*v.x,
+	//					 255*v.y,
+	//					 255*v.z));
 
-	pg->SetPropertyValue(wxT("FOG_DENSITY"),m_glState->getPrope(IState::FOG_MODE));
-	pg->SetPropertyValue(wxT("FOG_START"),m_glState->getPropf(IState::FOG_START));
-	pg->SetPropertyValue(wxT("FOG_END"),m_glState->getPropf(IState::FOG_END));
+	//pg->SetPropertyValue(wxT("FOG_DENSITY"),m_glState->getPrope(IState::FOG_MODE));
+	//pg->SetPropertyValue(wxT("FOG_START"),m_glState->getPropf(IState::FOG_START));
+	//pg->SetPropertyValue(wxT("FOG_END"),m_glState->getPropf(IState::FOG_END));
 
-	if (m_glState->getPrope(IState::FOG_MODE) == GL_LINEAR) {
-		pg->EnableProperty(wxT("FOG_END"));
-		pg->EnableProperty(wxT("FOG_START"));
-		pg->DisableProperty(wxT("FOG_DENSITY"));
-	}
-	else {
-		pg->EnableProperty(wxT("FOG_DENSITY"));
-		pg->DisableProperty(wxT("FOG_START"));
-		pg->DisableProperty(wxT("FOG_END"));
-	}
+	//if (m_glState->getPrope(IState::FOG_MODE) == GL_LINEAR) {
+	//	pg->EnableProperty(wxT("FOG_END"));
+	//	pg->EnableProperty(wxT("FOG_START"));
+	//	pg->DisableProperty(wxT("FOG_DENSITY"));
+	//}
+	//else {
+	//	pg->EnableProperty(wxT("FOG_DENSITY"));
+	//	pg->DisableProperty(wxT("FOG_START"));
+	//	pg->DisableProperty(wxT("FOG_END"));
+	//}
 
 	//BLEND
 	pg->SetPropertyValue(wxT("BLEND"),(int)m_glState->getPropb(IState::BLEND));
 	pg->SetPropertyValue(wxT("BLEND_EQUATION"),m_glState->getPrope(IState::BLEND_EQUATION));
-	v = m_glState->getProp4f(IState::BLEND_COLOR);
+	v = m_glState->getPropf4(IState::BLEND_COLOR);
 	pg->SetPropertyValue(wxT("BLEND_COLOR"),
 				wxColour(255*v.x,
 						 255*v.y,
@@ -281,9 +282,9 @@ void DlgOGLPanels::updatePanel(){
 	pg->SetPropertyValue(wxT("BLEND_DST"),m_glState->getPrope(IState::BLEND_DST));
 
 	//ALPHA
-	pg->SetPropertyValue(wxT("ALPHA_TEST"),(int)m_glState->getPropb(IState::ALPHA_TEST));	
-	pg->SetPropertyValue(wxT("ALPHA_FUNC"),m_glState->getPrope(IState::ALPHA_FUNC));
-	pg->SetPropertyValue(wxT("ALPHA_REF"),m_glState->getPropf(IState::ALPHA_VALUE));
+	//pg->SetPropertyValue(wxT("ALPHA_TEST"),(int)m_glState->getPropb(IState::ALPHA_TEST));	
+	//pg->SetPropertyValue(wxT("ALPHA_FUNC"),m_glState->getPrope(IState::ALPHA_FUNC));
+	//pg->SetPropertyValue(wxT("ALPHA_REF"),m_glState->getPropf(IState::ALPHA_VALUE));
 
 	//CULL
 	pg->SetPropertyValue(wxT("CULL"),(int)m_glState->getPropb(IState::CULL_FACE));	

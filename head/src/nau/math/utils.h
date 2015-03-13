@@ -5,7 +5,6 @@
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
-
 #include <cmath>
 #include <cfloat>
 
@@ -34,7 +33,7 @@ namespace nau
     
     // test floating point values for equality
     static inline bool 
-    FloatEqual(float a, float b, float tolerance) 
+		FloatEqual(float a, float b, float tolerance = FLT_EPSILON)
     {
       float tol = tolerance;
       if (tol < 0.0f) { tol = FLT_EPSILON; }

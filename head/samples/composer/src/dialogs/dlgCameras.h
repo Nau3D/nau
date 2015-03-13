@@ -28,15 +28,17 @@
 #include "nau.h"
 #include "nau/scene/camera.h"
 
-class DlgCameras : public wxDialog
+class DlgCameras : public wxDialog, nau::event_::IListener
 {
 public:
 	void updateDlg();
 	static DlgCameras* Instance ();
 	static void SetParent(wxWindow *parent);
-	static wxWindow *parent;
+	static wxWindow *Parent;
 
+	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 	void updateInfo(std::string name);
+	std::string &getName();
 
 
 protected:
@@ -44,19 +46,17 @@ protected:
 	DlgCameras();
 	DlgCameras(const DlgCameras&);
 	DlgCameras& operator= (const DlgCameras&);
-	static DlgCameras *inst;
+	static DlgCameras *Inst;
 
 	/* GLOBAL STUFF */
-	std::string m_active;
+	std::string m_Active;
+	std::string m_Name;
 
 	/* CAMERAS */
-	wxButton *bAdd,*bActivate;
-	wxPropertyGridManager *pg;
-	wxComboBox *list;
-	wxPGChoices viewportLabels;
-
-	void addMatrix(wxPropertyGridManager *pg, Camera::Mat4Property m);
-	void updateMatrix(Camera *cam, Camera::Mat4Property m) ;
+	wxButton *m_BAdd,*m_BActivate;
+	wxPropertyGridManager *m_PG;
+	wxComboBox *m_List;
+	wxPGChoices m_ViewportLabels;
 
 	/* EVENTS */
 	void OnListSelect(wxCommandEvent& event);
@@ -65,23 +65,19 @@ protected:
 	void OnPropsChange( wxPropertyGridEvent& e);
 
 	void update();
+	void setupPanel(wxSizer *siz, wxWindow *parent);
+	void setupGrid();
+
+	/* VIEWPORTS */
 	void updateList();
 	void updateViewportLabels();
-	void setupPanel(wxSizer *siz, wxWindow *parent);
-
 
 	enum {
 		DLG_COMBO,
 		DLG_BUTTON_ADD,
 		DLG_BUTTON_ACTIVATE,
 		DLG_PROPS
-
 	};
-	enum {
-		/* CAMERA TYPES */
-		DLG_MI_PERSPECTIVE=0,
-		DLG_MI_ORTHOGONAL
-	}cameraTypes;
 
 	typedef enum {
 		NEW_CAMERA,
@@ -89,8 +85,6 @@ protected:
 	} Notification;
 
 	void notifyUpdate(Notification aNot, std::string camName, std::string value);
-
-
 
     DECLARE_EVENT_TABLE()
 };

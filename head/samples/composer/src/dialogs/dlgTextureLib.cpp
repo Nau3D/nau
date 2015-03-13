@@ -259,7 +259,7 @@ void DlgTextureLib::setTextureProps(int index){
 
 	pgTextureProps->SetPropertyValue(wxT("Type"),texture->getPrope(Texture::DIMENSION));
 
-	v = texture->m_IntProps[Texture::DEPTH];
+	v = texture->getPropi(Texture::DEPTH);
 	//if (texture->getHeight() == 1 || texture->getWidth() == 1) 
 	//	pgTextureProps->SetPropertyValue(wxT("Type"),Texture::TEXTURE_1D);
 	//else if (texture->getDepth() == 0)
@@ -268,8 +268,8 @@ void DlgTextureLib::setTextureProps(int index){
 	//	pgTextureProps->SetPropertyValue(wxT("Type"),Texture::TEXTURE_3D);
 
 	wxString texDim;
-	texDim.Printf(wxT("%d x %d x %d"),texture->m_IntProps[Texture::WIDTH],
-								 texture->m_IntProps[Texture::HEIGHT],
+	texDim.Printf(wxT("%d x %d x %d"), texture->getPropi(Texture::WIDTH),
+		texture->getPropi(Texture::HEIGHT),
 								 v);
 
 	pgTextureProps->SetPropertyValue(wxT("Dimensions(WxHxD)"),texDim);
@@ -292,19 +292,20 @@ void DlgTextureLib::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 }
 
 
-void DlgTextureLib::OnSaveRaw( wxCommandEvent& event) 
+void DlgTextureLib::OnSaveRaw(wxCommandEvent& event)
 {
 	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_activeTexture);
 	TexImage *ti = RESOURCEMANAGER->createTexImage(texture);
-	
+
 	void *data = ti->getData();
 
 	int w = ti->getWidth();
 	int h = ti->getHeight();
+	int d = ti->getDepth();
 	int n = ti->getNumComponents();
 	std::string type = ti->getType();
 
-	// WHEN ADDING MORE TYPES MAKE SURE THEY EXIST  IN GLTEXIMAGE.CPP
+	// WHEN ADDING MORE TYPES MAKE SURE THEY EXIST IN GLTEXIMAGE.CPP
 	float *fData;
 	unsigned int *uiData;
 	unsigned short *usData;
@@ -314,7 +315,7 @@ void DlgTextureLib::OnSaveRaw( wxCommandEvent& event)
 	int *iData;
 	if (type == "FLOAT")
 		fData = (float *)data;
-	else if (type == "UNSIGNED BYTE")
+	else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")
 		ubData = (unsigned char *)data;
 	else if (type == "UNSIGNED_SHORT")
 		usData = (unsigned short *)data;
@@ -326,35 +327,44 @@ void DlgTextureLib::OnSaveRaw( wxCommandEvent& event)
 		cData = (char *)data;
 	else if (type == "INT")
 		iData = (int *)data;
- 
+
 	FILE *fp;
 	char name[256];
-	sprintf(name,"%s.raw", texture->getLabel().c_str());
+	sprintf(name, "%s.raw", texture->getLabel().c_str());
 	for (int i = 0; name[i] != '\0'; i++)
 		if (name[i] == ':')
 			name[i] = '_';
 
 	fp = fopen(name, "wt+");
 
-	for (int i = 0; i < w; i++) {
-	
-		for  (int j = 0; j < h; j++) {
-		
-			for (int k = 0; k < n; k++) {
+	for (int g = 0; g < d; ++g) {
 
-				if (type == "FLOAT")
-					fprintf(fp,"%f ",fData[(i*h + j)*n + k]);
-				else if (type == "UNSIGNED_SHORT")
-					fprintf(fp,"%u ",usData[(i*h + j)*n + k]);
-				else if (type == "UNSIGNED_INT")
-					fprintf(fp,"%u ",uiData[(i*h + j)*n + k]);
-				else if (type == "SHORT")
-					fprintf(fp,"%i ",sData[(i*h + j)*n + k]);
+		for (int i = 0; i < w; ++i) {
 
+			for (int j = 0; j < h; ++j) {
+
+				for (int k = 0; k < n; ++k) {
+
+					if (type == "FLOAT")
+						fprintf(fp, "%f ", fData[(g*w*h + i*h + j)*n + k]);
+					else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")
+						fprintf(fp, "%u ", ubData[(g*w*h + i*h + j)*n + k]);
+					else if (type == "UNSIGNED_SHORT")
+						fprintf(fp, "%u ", usData[(g*w*h + i*h + j)*n + k]);
+					else if (type == "UNSIGNED_INT")
+						fprintf(fp, "%u ", uiData[(g*w*h + i*h + j)*n + k]);
+					else if (type == "SHORT")
+						fprintf(fp, "%i ", sData[(g*w*h + i*h + j)*n + k]);
+					else if (type == "BYTE")
+						fprintf(fp, "%i ", cData[(g*w*h + i*h + j)*n + k]);
+					else if (type == "INT")
+						fprintf(fp, "%d ", iData[(g*w*h + i*h + j)*n + k]);
+
+				}
+				fprintf(fp, "; ");
 			}
-			fprintf(fp,"; ");
+			fprintf(fp, "\n");
 		}
-		fprintf(fp,"\n");
 	}
 	fclose(fp);
 

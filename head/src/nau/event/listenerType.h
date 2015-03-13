@@ -1,7 +1,8 @@
 #ifndef LISTENERTYPE_H
 #define LISTENERTYPE_H
 
-#include <nau/event/ilistener.h>
+#include "nau/event/ilistener.h"
+
 #include <vector>
 
 using namespace std;

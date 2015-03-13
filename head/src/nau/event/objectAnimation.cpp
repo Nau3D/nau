@@ -1,6 +1,6 @@
-#include <nau/event/objectAnimation.h>
-#include <nau/event/eventFactory.h>
-#include <nau.h>
+#include "nau/event/objectAnimation.h"
+#include "nau/event/eventFactory.h"
+#include "nau.h"
 
 ObjectAnimation::ObjectAnimation(std::string name, SceneObject *object)
 {

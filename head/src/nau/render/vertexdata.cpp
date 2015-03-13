@@ -1,9 +1,9 @@
-#include <nau/render/vertexdata.h>
-#include <nau/config.h>
+#include "nau/render/vertexdata.h"
+#include "nau/config.h"
 #include <assert.h>
 
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/glvertexarray.h>
+#include "nau/render/opengl/glvertexarray.h"
 #endif
 
 using namespace nau::render;
@@ -15,19 +15,12 @@ const std::string nau::render::VertexData::Syntax[] = {
 	"position", 
 	"normal", 
 	"color",
-	//"secondaryColor",
-	//"edge",
-	//"fogCoord",
 	"texCoord0",
 	"texCoord1",
 	"texCoord2",
 	"texCoord3",
-	//"texCoord4",
-	//"texCoord5",
-	//"texCoord6",
-	//"texCoord7",
 	"tangent",
-	"binormal",
+	"bitangent",
 	"triangleID",
 	"custom0",
 	"custom1"
@@ -54,13 +47,17 @@ VertexData::getAttribIndex(std::string attribName) {
 
 
 VertexData* 
-VertexData::create (void)
+VertexData::create (std::string name)
 {
+	VertexData *v;
 #ifdef NAU_OPENGL
-	return new GLVertexArray;
+	v = new GLVertexArray;
 #elif NAU_DIRECTX
-	return new DXVertexArray;
+	v = new DXVertexArray;
 #endif
+	v->m_Name = name;
+
+	return v;
 }
 
 
@@ -83,13 +80,10 @@ VertexData::~VertexData(void)
 }
 
 
-int 
-VertexData::getNumberOfVertices() 
-{
-	if (m_InternalArrays[0] == NULL)
-		return 0;
-	else
-		return m_InternalArrays[0]->size();
+void
+VertexData::setName(std::string &name) {
+
+	m_Name = name;
 }
 
 

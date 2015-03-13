@@ -1,4 +1,5 @@
 #include "dlgMaterials.h"
+
 #include <nau.h>
 #include <nau/event/eventFactory.h>
 #include <nau/loader/projectloader.h>
@@ -872,9 +873,9 @@ void DlgMaterials::setTextureUnit(int index){
 	pgTextureProps->EnableProperty(wxT("COMPARE_FUNC"));
 	
 	wxString texDim;
-	texDim.Printf(wxT("%d x %d x %d"),texture->m_IntProps[Texture::WIDTH],
-								texture->m_IntProps[Texture::HEIGHT],
-								texture->m_IntProps[Texture::DEPTH]);
+	texDim.Printf(wxT("%d x %d x %d"),texture->getPropi(Texture::WIDTH),
+		texture->getPropi(Texture::HEIGHT),
+								texture->getPropi(Texture::DEPTH));
 	pgTextureProps->SetPropertyValue(wxT("Dimensions(WxHxD)"),texDim);
 
 	pgTextureProps->SetPropertyValue(wxT("WRAP_S"),(long)ts->getPrope(TextureSampler::WRAP_S));
@@ -925,31 +926,31 @@ void DlgMaterials::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 	}
 	else if (name == wxT("WRAP_S")) {
 		
-		ts->setProp(TextureSampler::WRAP_S,value);
+		ts->setPrope(TextureSampler::WRAP_S,value);
 	}
 	else if (name == wxT("WRAP_T")) {
 
-		ts->setProp(TextureSampler::WRAP_T,value);
+		ts->setPrope(TextureSampler::WRAP_T,value);
 	}
 	else if (name == wxT("WRAP_R")) {
 
-		ts->setProp(TextureSampler::WRAP_R,value);
+		ts->setPrope(TextureSampler::WRAP_R,value);
 	}
 	else if (name == wxT("MAG_FILTER")) {
 
-		ts->setProp(TextureSampler::MAG_FILTER,value);
+		ts->setPrope(TextureSampler::MAG_FILTER,value);
 	}
 	else if (name == wxT("MIN_FILTER")) {
 
-		ts->setProp(TextureSampler::MIN_FILTER,value);
+		ts->setPrope(TextureSampler::MIN_FILTER,value);
 	}
 	else if (name == wxT("COMPARE_MODE")) {
 
-		ts->setProp(TextureSampler::COMPARE_MODE,value);
+		ts->setPrope(TextureSampler::COMPARE_MODE,value);
 	}
 	else if (name == wxT("COMPARE_FUNC")) {
 
-		ts->setProp(TextureSampler::COMPARE_FUNC,value);
+		ts->setPrope(TextureSampler::COMPARE_FUNC,value);
 	}
 	else if (name == wxT("Name")) {
 
@@ -1119,30 +1120,30 @@ void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("DIFFUSE.Alpha"));
 
-	mm->getColor().setProp(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setPropf4(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("AMBIENT.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("AMBIENT.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("AMBIENT.Alpha"));
 
-	mm->getColor().setProp(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setPropf4(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("SPECULAR.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("SPECULAR.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("SPECULAR.Alpha"));
 
-	mm->getColor().setProp(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setPropf4(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
 	//col = pgMaterial->GetPropertyColour("EMISSION.RGB");
 	variant = pgMaterial->GetPropertyValue(wxT("EMISSION.RGB"));
 	col << variant;
 	f = pgMaterial->GetPropertyValueAsDouble(wxT("EMISSION.Alpha"));
 
-	mm->getColor().setProp(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	mm->getColor().setPropf4(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
-	mm->getColor().setProp(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
+	mm->getColor().setPropf(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
 }
 
 
@@ -1309,29 +1310,30 @@ void DlgMaterials::updateShader(Material *m){
 
 
 		m_pgTextureList.Clear();
-		std::vector<std::string> *textureNames = m->getTextureNames();
-		if (textureNames) {
-			std::vector<int> *textureUnits = m->getTextureUnits();
+		std::vector<std::string> textureNames;
+		m->getTextureNames(&textureNames);
+		if (textureNames.size() != 0) {
+			std::vector<int> textureUnits;
+			m->getTextureUnits(&textureUnits);
 			std::vector<int>::iterator itUnits;
-			it = textureNames->begin();
-			for ( itUnits = textureUnits->begin(); it != textureNames->end(); it++, itUnits++) {
+			it = textureNames.begin();
+			for ( itUnits = textureUnits.begin(); it != textureNames.end(); it++, itUnits++) {
 			
 				m_pgTextureList.Add(wxString((*it).c_str()),(int)(*itUnits));
 			}
-			delete textureNames;
 		}
 
 		m_pgTextUnitsList.Clear();
-		std::vector<int> *textureUnits = m->getTextureUnits();
-		if (textureUnits) {
+		std::vector<int> textureUnits;
+		m->getTextureUnits(&textureUnits);
+		if (textureUnits.size()) {
 			std::vector<int>::iterator itUnits;
-			itUnits = textureUnits->begin();
-			for ( ; itUnits != textureUnits->end(); itUnits++) {
+			itUnits = textureUnits.begin();
+			for ( ; itUnits != textureUnits.end(); itUnits++) {
 				wxString s;
 				s.Printf(wxT("%d"),(*itUnits));
 				m_pgTextUnitsList.Add(s,(*itUnits));
 			}
-			delete textureUnits;
 		}
 		updateShaderAux(m);
 	}
@@ -1359,8 +1361,8 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 	const wxChar* boolLightComp[] = {wxT("ENABLED"), NULL};
 	const long boolLightCompInd[] = {Light::ENABLED};
 
-	const wxChar* enumLightComp[] = {wxT("TYPE"), NULL};
-	const long enumLightCompInd[] = {Light::TYPE};
+	//const wxChar* enumLightComp[] = {wxT("TYPE"), NULL};
+	//const long enumLightCompInd[] = {Light::TYPE};
 
 	int edit = strncmp("gl_",u.getName().c_str(),3);
 	if ((!showGlobal) && (edit == 0))
@@ -1370,10 +1372,10 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 	const wxChar* units[] = {wxT("0"),wxT("1"),wxT("2"),wxT("3"),wxT("4"),wxT("5"),wxT("6"),wxT("7"),NULL};
 	const long unitsInd[] = {0,1,2,3,4,5,6,7};
 
-	const wxChar* vec4CamComp[] = {wxT("POSITION"), wxT("VIEW"), wxT("NORMALIZED_VIEW"), 
+	const wxChar* vec4CamComp[] = {wxT("POSITION"), wxT("VIEW"),  
 										wxT("UP"), wxT("NORMALIZED_UP"), 
 										wxT("NORMALIZED_RIGHT"), wxT("LOOK_AT_POINT"), NULL};
-	const long vec4CamCompInd[] = {Camera::POSITION, Camera::VIEW_VEC, Camera::NORMALIZED_VIEW_VEC,
+	const long vec4CamCompInd[] = {Camera::POSITION, Camera::VIEW_VEC, 
 										Camera::UP_VEC, Camera::NORMALIZED_UP_VEC,
 										Camera::NORMALIZED_RIGHT_VEC, Camera::LOOK_AT_POINT};
 
@@ -1516,9 +1518,9 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,boolLightComp,boolLightCompInd,u.getSemanticValueOf()));
 				break;
 
-			case Enums::ENUM:
-				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,enumLightComp,enumLightCompInd,u.getSemanticValueOf()));
-				break;
+			//case Enums::ENUM:
+			//	pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,enumLightComp,enumLightCompInd,u.getSemanticValueOf()));
+			//	break;
 		}
 	}
 	else if (ProgramValue::TEXTURE == u.getSemanticType() || (ProgramValue::CURRENT == u.getSemanticType() && "TEXTURE" == u.getContext())) {

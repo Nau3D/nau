@@ -1,8 +1,8 @@
 #ifndef MESHWITHPOSE_H
 #define MESHWITHPOSE_H
 
-#include <nau/geometry/mesh.h>
-#include <nau/geometry/poseoffset.h>
+#include "nau/geometry/mesh.h"
+#include "nau/geometry/poseoffset.h"
 
 using namespace nau::math;
 using namespace nau::geometry;

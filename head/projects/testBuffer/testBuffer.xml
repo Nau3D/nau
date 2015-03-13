@@ -8,7 +8,7 @@
 		</viewports>
 	
 		<materialLibs>
-			<mlib filename="testBuffer.mlib"/>
+			<materialLib filename="testBuffer.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -18,10 +18,10 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Buffer" toMaterial="fillBuffer" />
 				</materialMaps>
-				<rendertarget name="test" fromLibrary="Buffer" /> 
+				<renderTarget name="test" fromLibrary="Buffer" /> 
 			</pass>
 			<pass class="quad" name="pass2" >
-				<viewport>Main</viewport>
+				<viewport name="Main" />
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Buffer" toMaterial="showBuffer" />
 				</materialMaps>

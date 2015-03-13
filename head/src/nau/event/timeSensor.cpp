@@ -1,8 +1,11 @@
-#include <nau/event/timeSensor.h>
-#include <nau/event/eventFactory.h>
-#include <math.h>
+#include "nau/event/timeSensor.h"
+#include "nau/event/eventFactory.h"
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
+#include <cmath>
 #include <time.h>
-#include <nau.h>
+#include "nau.h"
 
 using namespace nau::event_;
 

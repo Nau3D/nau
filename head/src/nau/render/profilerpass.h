@@ -1,10 +1,10 @@
 #ifndef PROFILERPASS_H
 #define PROFILERPASS_H
 
-#include <nau/render/pass.h>
-#include <nau/resource/font.h>
-#include <nau/scene/camera.h>
-#include <nau/render/irenderable.h>
+#include "nau/render/pass.h"
+#include "nau/resource/font.h"
+#include "nau/scene/camera.h"
+#include "nau/render/irenderable.h"
 
 namespace nau
 {

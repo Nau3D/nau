@@ -1,19 +1,20 @@
-#include <nau/config.h>
-#include <nau/loader/assimploader.h>
-#include <nau/slogger.h>
+#include "nau/config.h"
+#include "nau/loader/assimploader.h"
+#include "nau/slogger.h"
 
-#include <nau.h>
-#include <nau/render/irenderable.h>
-#include <nau/geometry/mesh.h>
-#include <nau/material/materialgroup.h>
-#include <nau/material/material.h>
-#include <nau/render/vertexdata.h>
-#include <nau/system/fileutil.h>
+#include "nau.h"
+#include "nau/render/irenderable.h"
+#include "nau/geometry/mesh.h"
+#include "nau/material/materialgroup.h"
+#include "nau/material/material.h"
+#include "nau/render/vertexdata.h"
+#include "nau/system/fileutil.h"
 
 #include <fstream>
 
 using namespace nau::loader;
 using namespace nau::geometry;
+using namespace nau::system;
 
 Assimp::Importer AssimpLoader::importer;
 
@@ -75,16 +76,17 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 			indices->push_back(face->mIndices[1]);
 			indices->push_back(face->mIndices[2]);
 		}
-		MaterialGroup *aMaterialGroup = new MaterialGroup;
-		aMaterialGroup->setIndexList(indices);
-		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
-			aMaterialGroup->getIndexData().useAdjacency(true);
-		aMaterialGroup->setParent(renderable);
 
 		 aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
 		aiString name;
 		mtl->Get(AI_MATKEY_NAME,name);
-		aMaterialGroup->setMaterialName(name.data);
+		MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, name.data);
+		aMaterialGroup->setIndexList(indices);
+		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
+			aMaterialGroup->getIndexData().useAdjacency(true);
+		//aMaterialGroup->setMaterialName(name.data);
+		//aMaterialGroup->setParent(renderable);
+
 
 		renderable->addMaterialGroup(aMaterialGroup);
 
@@ -123,39 +125,40 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 			if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
 				m->createTexture(0,FileUtil::GetFullPath(path,texPath.data));
 			}
-		
-			float c[4];
+			if (AI_SUCCESS == mtl->GetTexture(aiTextureType_HEIGHT, 0, &texPath)){
+				m->createTexture(1, FileUtil::GetFullPath(path, texPath.data));
+			}
+			if (AI_SUCCESS == mtl->GetTexture(aiTextureType_NORMALS, 0, &texPath)){
+				m->createTexture(2, FileUtil::GetFullPath(path, texPath.data));
+			}
+
 			aiColor4D color;
 			ColorMaterial *cm = &(m->getColor());
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &color)) {
-				color4_to_float4(&color, c);
-				cm->setProp(ColorMaterial::DIFFUSE,c);
+				cm->setPropf4(ColorMaterial::DIFFUSE,color.r, color.g, color.b, color.a);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &color)) {
-				color4_to_float4(&color, c);
-				m->getColor().setProp(ColorMaterial::AMBIENT,c);
+				cm->setPropf4(ColorMaterial::AMBIENT, color.r, color.g, color.b, color.a);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &color)) {
-				color4_to_float4(&color, c);
-				m->getColor().setProp(ColorMaterial::SPECULAR,c);
+				cm->setPropf4(ColorMaterial::SPECULAR, color.r, color.g, color.b, color.a);
 			}
 
 			if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &color)) {
-				color4_to_float4(&color, c);
-				m->getColor().setProp(ColorMaterial::EMISSION,c);
+				cm->setPropf4(ColorMaterial::EMISSION, color.r, color.g, color.b, color.a);
 			}
 			float shininess = 0.0;
 			unsigned int max;
 			if (AI_SUCCESS == aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max))
-				m->getColor().setProp(ColorMaterial::SHININESS,shininess);
+				cm->setPropf(ColorMaterial::SHININESS, shininess);
 
 
 		}
 	}
-	SimpleTransform m;
+	mat4 m;
 	m.setIdentity();
 	recursiveWalk(aScene, aFilename, sc, sc->mRootNode, m, meshNameMap);
 
@@ -173,10 +176,11 @@ AssimpLoader::writeScene(nau::scene::IScene *aScene, std::string &aFilename)
 
 void 
 AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
-									const  aiScene *sc, const  aiNode* nd, SimpleTransform &m,
+									const  aiScene *sc, const  aiNode* nd, mat4 &m,
 									std::map<unsigned int, std::string> meshNameMap)
 {
-	ITransform *original = m.clone();
+	mat4 original;
+	original.copy(m);
 	
 	 aiMatrix4x4 mA = nd->mTransformation;
 	mA.Transpose();
@@ -184,11 +188,11 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 	memcpy(f,&mA, sizeof(float)*16);
 
 
-	SimpleTransform aux;
+	mat4 aux;
 	mat4 m4;
 	m4.setMatrix(f);
-	aux.setMat44(m4);
-	m.compose(aux);
+	aux.copy(m4);
+	m *= aux;
 
 	for (unsigned int n=0; n < nd->mNumMeshes; ++n) {
 	
@@ -196,7 +200,7 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 		//sc->mMeshes[nd->mMeshes[n]]->mName.data;
 		SceneObject *so = SceneObjectFactory::create("SimpleObject");
 		so->setRenderable(RESOURCEMANAGER->getRenderable(meshNameMap[nd->mMeshes[n]],""));
-		so->setTransform(m.clone());
+		so->setTransform(m);
 		aScene->add(so);
 		}
 	}
@@ -205,9 +209,7 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 		recursiveWalk(aScene, aFilename, sc, nd->mChildren[n], m, meshNameMap);
 	}
 
-	m.clone(original);
-	delete original;
-
+	m.copy(original);
 }
 
 

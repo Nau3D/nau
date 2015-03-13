@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
-<materiallib name="Deferred Render Targets">
-	<rendertargets>
-		<rendertarget name ="deferred">
+<materialLib name="Deferred Render Targets">
+	<renderTargets>
+		<renderTarget name ="deferred">
 			<size width="1024" height="1024" />
 			<!--multisampling samples=32 /-->
 			<colors>
 				<color name="color" internalFormat="RGBA" />
 				<color name="pos" internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 	
 	<shaders>
 		<shader name="deferred" 	ps="shaders/deferredShading.frag" 
@@ -22,8 +22,7 @@
 	<materials>
 
 		<material name="deferred">
-			<shader>
-				<name>deferred</name>
+			<shader name="deferred">
 				<values>
 					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 
@@ -40,32 +39,31 @@
 					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
 														component="AMBIENT" />
 		
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="V"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="V"          	type="CURRENT" context="RENDERER" 
 														component="VIEW" />
-					<valueof uniform="M"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="M"          	type="CURRENT" context="RENDERER" 
 														component="MODEL" />
 														
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
 														component="NORMAL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />														
 				</values>
 			</shader>
 		</material>	
 		
 		<material name="combine">
-			<shader>
-				<name>combine</name>
+			<shader name="combine">
 				<values>
-					<valueof uniform="color" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="color" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
-					<valueof uniform="shadow" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="shadow" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="1" />
 				</values>
 			</shader>
@@ -75,4 +73,4 @@
 			</textures>	
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

@@ -2,7 +2,7 @@
 #ifndef LIGHTFACTORY_H
 #define LIGHTFACTORY_H
 
-#include <nau/scene/light.h>
+#include "nau/scene/light.h"
 
 namespace nau
 {

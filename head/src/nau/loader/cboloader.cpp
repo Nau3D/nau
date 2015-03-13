@@ -1,31 +1,29 @@
-#include <nau/loader/cboloader.h>
+#include "nau/loader/cboloader.h"
 
-#include <nau.h>
+#include "nau.h"
 
-#include <nau/scene/sceneobject.h>
-#include <nau/scene/sceneobjectfactory.h>
-#include <nau/geometry/iboundingvolume.h>
-#include <nau/geometry/boundingvolumefactory.h>
-#include <nau/math/vec3.h>
-#include <nau/math/bvec4.h>
-#include <nau/math/mat4.h>
-#include <nau/math/transformfactory.h>
-#include <nau/render/irenderable.h>
-#include <nau/material/imaterialgroup.h>
-#include <nau/material/materialgroup.h>
-#include <nau/slogger.h>
-#include <nau/system/fileutil.h>
+#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneobjectfactory.h"
+#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/boundingvolumefactory.h"
+#include "nau/math/matrix.h"
+#include "nau/math/vec3.h"
+#include "nau/render/irenderable.h"
+#include "nau/material/materialgroup.h"
+#include "nau/material/materialgroup.h"
+#include "nau/slogger.h"
+#include "nau/system/fileutil.h"
 
 #include <assert.h>
 #include <fstream>
 #include <map>
 
 //#ifdef NAU_OPENGL
-//#include <nau/render/opengl/glstate.h>
+//#include "nau/render/opengl/glstate.h"
 //#elif NAU_DIRECTX
-//#include <nau/render/dx/dxstate.h>
+//#include "nau/render/dx/dxstate.h"
 //#endif
-#include <nau/render/istate.h>
+#include "nau/render/istate.h"
 
 using namespace nau::loader;
 using namespace nau::scene;
@@ -33,6 +31,7 @@ using namespace nau::math;
 using namespace nau::geometry;
 using namespace nau::render;
 using namespace nau::material;
+using namespace nau::system;
 
 std::string CBOLoader::m_FileName;
 
@@ -310,9 +309,6 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		//SLOG ("[Reading] Number of points [%d]", nPoints);
 		f.read (reinterpret_cast<char *> (&(points[0])), nPoints * sizeof (vec3));
 
-		_readString (buffer, f);
-		//SLOG ("[Reading] Type of Transform: [%s]", buffer);
-		ITransform *aTransform = TransformFactory::create (buffer);
 		mat4 mat; 
 		f.read (reinterpret_cast<char *> (const_cast<float*>(mat.getMatrix())), sizeof(float)*16);
 
@@ -320,8 +316,8 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		//	SLOG ("Matrix(%d): [%f]", i, mat.getMatrix()[i]);
 		//}
 
-		aTransform->setMat44 (mat);
-		aObject->setTransform (aTransform);
+		//aTransform->setMat44 (mat);
+		aObject->setTransform (mat);
 
 		_readString (buffer, f);
 		//SLOG ("[Reading] Renderable's name: [%s]", buffer);
@@ -351,12 +347,13 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 			f.read (reinterpret_cast<char *> (&nMatGroups), sizeof (nMatGroups));
 			for (unsigned int i = 0; i < nMatGroups; i++) {
 
-				MaterialGroup *aMatGroup = new MaterialGroup;
-				aMatGroup->setParent (aRenderable);
-
 				_readString (buffer, f);
 				//SLOG ("[Reading] Material Groups name: [%s]", buffer);
-				aMatGroup->setMaterialName (buffer);				
+
+				MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, buffer);
+				//aMatGroup->setMaterialName (buffer);				
+				//aMatGroup->setParent (aRenderable);
+
 
 				IndexData &indexData = aMatGroup->getIndexData();
 				_readIndexData (indexData, f);
@@ -404,13 +401,10 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	aBoundingVolume->set(points[0], points[1]);
 	so->setBoundingVolume (aBoundingVolume);
 
-	_readString (buffer, f);
-	//SLOG ("[Reading] Type of Transform: [%s]", buffer);
-	ITransform *aTransform = TransformFactory::create (buffer);
 	mat4 mat; 
 	f.read (reinterpret_cast<char *> (const_cast<float*>(mat.getMatrix())), sizeof(float)*16);
-	aTransform->setMat44 (mat);
-	so->setTransform (aTransform);
+	//aTransform->setMat44 (mat);
+	so->setTransform (mat);
 
 	IRenderable *aRenderable = 0;
 
@@ -421,14 +415,14 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	_readVertexData (vertexData, f);
 
 	//SLOG ("[Reading] Renderable type: [%s]", buffer);
-
-
-	MaterialGroup *aMatGroup = new MaterialGroup;
-	aMatGroup->setParent (aRenderable);
-
 	_readString (buffer, f);
 		//SLOG ("[Reading] Material Groups name: [%s]", buffer);
-	aMatGroup->setMaterialName (buffer);				
+
+
+	MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, buffer);
+	//aMatGroup->setParent (aRenderable);
+	//aMatGroup->setMaterialName (buffer);				
+
 
 	IndexData &indexData = aMatGroup->getIndexData();
 	_readIndexData (indexData, f);
@@ -457,9 +451,8 @@ CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 		static_cast<std::streamsize> (2) * sizeof (vec3));
 
 	/* Write the transform */
-	const ITransform &aTransform = so->getTransform();
-	_writeString (aTransform.getType(), f);
-	f.write(reinterpret_cast<char*> (const_cast<float *>(aTransform.getMat44().getMatrix())), sizeof(float)*16);
+	 mat4 aTransform = so->getTransform();
+	 f.write(reinterpret_cast<char*> ((float *)aTransform.getMatrix()), sizeof(float) * 16);
 
 
 	IRenderable *aRenderablePtr = so->_getRenderablePtr();
@@ -470,9 +463,9 @@ CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	_writeVertexData (aVertexData, f);
 
 	/* Material groups */
-	std::vector<nau::material::IMaterialGroup*>& materialGroups = aRenderablePtr->getMaterialGroups();
+	std::vector<nau::material::MaterialGroup*>& materialGroups = aRenderablePtr->getMaterialGroups();
 
-	IMaterialGroup *aMaterialGroup = materialGroups[0];
+	MaterialGroup *aMaterialGroup = materialGroups[0];
 				
 	_writeString (aMaterialGroup->getMaterialName(), f);
 
@@ -657,14 +650,14 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 		IRenderable &aRenderable = (*objIter)->getRenderable();
 		
 		// Material groups 
-		std::vector<nau::material::IMaterialGroup*>& materialGroups = aRenderable.getMaterialGroups();
-		std::vector<nau::material::IMaterialGroup*>::iterator mgIter;
+		std::vector<nau::material::MaterialGroup*>& materialGroups = aRenderable.getMaterialGroups();
+		std::vector<nau::material::MaterialGroup*>::iterator mgIter;
 
 		// collect material names in a set
 		mgIter = materialGroups.begin();
 
 		for ( ; mgIter != materialGroups.end(); mgIter++) {
-			IMaterialGroup *aMaterialGroup = (*mgIter);
+			MaterialGroup *aMaterialGroup = (*mgIter);
 			
 			std::string matName = aMaterialGroup->getMaterialName();
 
@@ -722,14 +715,14 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 		(*objIter)->writeSpecificData (f);
 		
 		/* Write the bounding volume */
-		const IBoundingVolume *aBoundingVolume = (*objIter)->getBoundingVolume();
+		IBoundingVolume *aBoundingVolume = (*objIter)->getBoundingVolume();
 
 		/* Bounding volume type */
 
 		_writeString (aBoundingVolume->getType(), f);
 
 		/* Bounding volume points */
-		std::vector<vec3> &points = aBoundingVolume->getPoints();
+		std::vector<vec3> points = aBoundingVolume->getPoints();
 
 		size = points.size();
 		f.write (reinterpret_cast<char*> (&size), sizeof(size));
@@ -738,13 +731,10 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 			static_cast<std::streamsize> (size) * sizeof (vec3));
 
 		/* Write the transform */
-		const ITransform &aTransform = (*objIter)->getTransform();
+		mat4 aTransform = (*objIter)->getTransform();
 		
-		/* Transform type */
-		_writeString (aTransform.getType(), f);
-
 		/* The transform's matrix */
-		f.write(reinterpret_cast<char*> (const_cast<float *>(aTransform.getMat44().getMatrix())), sizeof(float)*16);
+		f.write(reinterpret_cast<char*> (const_cast<float *>(aTransform.getMatrix())), sizeof(float)*16);
 
 		IRenderable *aRenderablePtr = (*objIter)->_getRenderablePtr();
 
@@ -785,8 +775,8 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 			_writeVertexData (aVertexData, f);
 
 			/* Material groups */
-			std::vector<nau::material::IMaterialGroup*>& materialGroups = aRenderable.getMaterialGroups();
-			std::vector<nau::material::IMaterialGroup*>::iterator mgIter;
+			std::vector<nau::material::MaterialGroup*>& materialGroups = aRenderable.getMaterialGroups();
+			std::vector<nau::material::MaterialGroup*>::iterator mgIter;
 
 			size = materialGroups.size();
 
@@ -795,7 +785,7 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 			mgIter = materialGroups.begin();
 
 			for ( ; mgIter != materialGroups.end(); mgIter++) {
-				IMaterialGroup *aMaterialGroup = (*mgIter);
+				MaterialGroup *aMaterialGroup = (*mgIter);
 				
 				/*Write material's name */
 
@@ -841,9 +831,10 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 
 	// write textures
 	for (int i = 0; i < 8; i++) { /***MARK***/ //8!? Is it a magic number!?
-		if (0 != aMaterial->getTextures() && 0 != aMaterial->getTextures()->getTexture(i)) {
-			std::string label = aMaterial->getTextures()->getTexture(i)->getLabel();
-			_writeString (FileUtil::GetRelativePathTo(path,label), f);
+		if (NULL != aMaterial->getTexture(i)) {
+			std::string label = aMaterial->getTexture(i)->getLabel();
+			std::string k = FileUtil::GetRelativePathTo(path, label);
+			_writeString (k, f);
 		} else {
 			_writeString ("<no texture>", f);
 		}
@@ -851,20 +842,20 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 
 	// write shader
 
-	// shader filenames
-	IProgram *aProgram = aMaterial->getProgram();
-	_writeString("",f);
-	_writeString("",f);
-	_writeString("",f);
-	_writeString("",f);
-	//_writeString(aProgram->getName(),f);
-	//_writeString(aProgram->getShaderFile(IProgram::VERTEX_SHADER),f);
-	//_writeString(aProgram->getShaderFile(IProgram::GEOMETRY_SHADER),f);
-	//_writeString(aProgram->getShaderFile(IProgram::FRAGMENT_SHADER),f);
+	//// shader filenames
+	//IProgram *aProgram = aMaterial->getProgram();
+	//_writeString("",f);
+	//_writeString("",f);
+	//_writeString("",f);
+	//_writeString("",f);
+	////_writeString(aProgram->getName(),f);
+	////_writeString(aProgram->getShaderFile(IProgram::VERTEX_SHADER),f);
+	////_writeString(aProgram->getShaderFile(IProgram::GEOMETRY_SHADER),f);
+	////_writeString(aProgram->getShaderFile(IProgram::FRAGMENT_SHADER),f);
 
-	// shader program values
-	size_t numValues = 0; // HACK
-	f.write (reinterpret_cast<char*> (&numValues), sizeof(numValues));
+	//// shader program values
+	//size_t numValues = 0; // HACK
+	//f.write (reinterpret_cast<char*> (&numValues), sizeof(numValues));
 
 
 	// write state
@@ -873,67 +864,67 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 //#elif NAU_DIRECTX
 //	DXState *s = (DXState *)aMaterial->getState();
 //#endif
-	IState *s = aMaterial->getState();
+	//IState *s = aMaterial->getState();
 
-	_writeString(s->getName(),f);
+	//_writeString(s->getName(),f);
 
 
-	IState::VarType vt;
-	int ivalue;
+	//IState::VarType vt;
+	//int ivalue;
 
-	float fvalue, fvalues[4];
-	bool bvalue, bvalues[4];
-	bvec4 bvec;
+	//float fvalue, fvalues[4];
+	//bool bvalue, bvalues[4];
+	//bvec4 bvec;
 
-	vt = IState::BOOL;
-	int numProps = IState::COUNT_BOOLPROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		bvalue = s->getPropb((IState::BoolProperty)i);
-		f.write (reinterpret_cast<char *> (&bvalue), sizeof(bool));
-	}
+	//vt = IState::BOOL;
+	//int numProps = IState::COUNT_BOOLPROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	bvalue = s->getPropb((IState::BoolProperty)i);
+	//	f.write (reinterpret_cast<char *> (&bvalue), sizeof(bool));
+	//}
 
-	vt = IState::ENUM;
-	numProps = IState::COUNT_ENUMPROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		ivalue = s->getPrope((IState::EnumProperty)i);
-		f.write (reinterpret_cast<char *> (&ivalue), sizeof(int));
-	}
+	//vt = IState::ENUM;
+	//numProps = IState::COUNT_ENUMPROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	ivalue = s->getPrope((IState::EnumProperty)i);
+	//	f.write (reinterpret_cast<char *> (&ivalue), sizeof(int));
+	//}
 
-	vt = IState::INT;
-	numProps = IState::COUNT_INTPROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		ivalue = s->getPropi((IState::IntProperty)i);
-		f.write (reinterpret_cast<char *> (&ivalue), sizeof(int));
-	}
+	//vt = IState::INT;
+	//numProps = IState::COUNT_INTPROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	ivalue = s->getPropi((IState::IntProperty)i);
+	//	f.write (reinterpret_cast<char *> (&ivalue), sizeof(int));
+	//}
 
-	vt = IState::FLOAT;
-	numProps = IState::COUNT_FLOATPROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		fvalue = s->getPropf((IState::FloatProperty)i);
-		f.write (reinterpret_cast<char *> (&fvalue), sizeof(float));
-	}
+	//vt = IState::FLOAT;
+	//numProps = IState::COUNT_FLOATPROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	fvalue = s->getPropf((IState::FloatProperty)i);
+	//	f.write (reinterpret_cast<char *> (&fvalue), sizeof(float));
+	//}
 
-	vt = IState::FLOAT4;
-	numProps = IState::COUNT_FLOAT4PROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		v = s->getProp4f((IState::Float4Property)i);
-		fvalues[0] = v.x; fvalues[1] = v.y; fvalues[2] = v.z; fvalues[3] = v.w;
-		f.write (reinterpret_cast<char *> (fvalues), sizeof(float)*4);
-	}
+	//vt = IState::FLOAT4;
+	//numProps = IState::COUNT_FLOAT4PROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	v = s->getProp4f((IState::Float4Property)i);
+	//	fvalues[0] = v.x; fvalues[1] = v.y; fvalues[2] = v.z; fvalues[3] = v.w;
+	//	f.write (reinterpret_cast<char *> (fvalues), sizeof(float)*4);
+	//}
 
-	vt = IState::BOOL4;
-	numProps = IState::COUNT_BOOL4PROPERTY;
-	f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
-	for (int i = 0; i < numProps; i++) {
-		bvec = s->getProp4b((IState::Bool4Property)i);
-		bvalues[0] = bvec.x; bvalues[1] = bvec.y; bvalues[2] = bvec.z; bvalues[3] = bvec.w;
-		f.write (reinterpret_cast<char *> (bvalues), sizeof(bool)*4);
-	}
+	//vt = IState::BOOL4;
+	//numProps = IState::COUNT_BOOL4PROPERTY;
+	//f.write (reinterpret_cast<char *> (&numProps), sizeof(int));
+	//for (int i = 0; i < numProps; i++) {
+	//	bvec = s->getProp4b((IState::Bool4Property)i);
+	//	bvalues[0] = bvec.x; bvalues[1] = bvec.y; bvalues[2] = bvec.z; bvalues[3] = bvec.w;
+	//	f.write (reinterpret_cast<char *> (bvalues), sizeof(bool)*4);
+	//}
 }
 
 
@@ -952,19 +943,19 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 	float value;
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setProp(ColorMaterial::AMBIENT, values);
+	aMaterial->getColor().setPropf4(ColorMaterial::AMBIENT, values[0], values[1], values[2], values[3]);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setProp(ColorMaterial::SPECULAR, values);
+	aMaterial->getColor().setPropf4(ColorMaterial::SPECULAR, values[0], values[1], values[2], values[3]);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setProp(ColorMaterial::DIFFUSE, values);
+	aMaterial->getColor().setPropf4(ColorMaterial::DIFFUSE, values[0], values[1], values[2], values[3]);
 
 	f.read (reinterpret_cast<char*> (values), sizeof (float) * 4);
-	aMaterial->getColor().setProp(ColorMaterial::EMISSION, values);
+	aMaterial->getColor().setPropf4(ColorMaterial::EMISSION, values[0], values[1], values[2], values[3]);
 
 	f.read (reinterpret_cast<char*> (&value), sizeof (float));
-	aMaterial->getColor().setProp(ColorMaterial::SHININESS, value);
+	aMaterial->getColor().setPropf(ColorMaterial::SHININESS, value);
 
 
 	// Textures
@@ -975,28 +966,28 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 		}
 	}
 
-	// Shaders
-	// shader filenames
-	_readString(buffer, f);
-	IProgram *aProgram = RESOURCEMANAGER->getProgram(buffer);
-	_readString(buffer,f);
-	aProgram->setShaderFile(IProgram::VERTEX_SHADER,buffer);
-	_readString(buffer,f);
-#if NAU_OPENGL_VERSION >= 320
-	aProgram->setShaderFile(IProgram::GEOMETRY_SHADER,buffer);
-#endif
-	_readString(buffer,f);
-	aProgram->setShaderFile(IProgram::FRAGMENT_SHADER,buffer);
-	aProgram->reload();
-
-	// shader program values
-	size_t numValues; // HACK
-	f.read (reinterpret_cast<char*> (&numValues), sizeof(numValues));
-	for (unsigned int i = 0; i < numValues; i++) {
-		// read Program Values
-	}
-
-
+//	// Shaders
+//	// shader filenames
+//	_readString(buffer, f);
+//	IProgram *aProgram = RESOURCEMANAGER->getProgram(buffer);
+//	_readString(buffer,f);
+//	aProgram->setShaderFile(IProgram::VERTEX_SHADER,buffer);
+//	_readString(buffer,f);
+//#if NAU_OPENGL_VERSION >= 320
+//	aProgram->setShaderFile(IProgram::GEOMETRY_SHADER,buffer);
+//#endif
+//	_readString(buffer,f);
+//	aProgram->setShaderFile(IProgram::FRAGMENT_SHADER,buffer);
+//	aProgram->reload();
+//
+//	// shader program values
+//	size_t numValues; // HACK
+//	f.read (reinterpret_cast<char*> (&numValues), sizeof(numValues));
+//	for (unsigned int i = 0; i < numValues; i++) {
+//		// read Program Values
+//	}
+//
+//
 	// State
 //#ifdef NAU_OPENGL
 //	GlState *s = (GlState *)aMaterial->getState();
@@ -1004,56 +995,56 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 //	DXState *s = (DXState *)aMaterial->getState();
 //#endif
 
-	IState *s = aMaterial->getState();
-	_readString(buffer,f);
-	s->setName(buffer);
+	//IState *s = aMaterial->getState();
+	//_readString(buffer,f);
+	//s->setName(buffer);
 
-	int nProps,ivalue;
-	float fvalue, fvalues[4];
-	bool bvalue, bvalues[4];
-	IState::VarType type;
+	//int nProps,ivalue;
+	//float fvalue, fvalues[4];
+	//bool bvalue, bvalues[4];
+	//IState::VarType type;
 
-	type = IState::BOOL;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&bvalue), sizeof (bool));
-		s->setProp((IState::BoolProperty)i,bvalue);
-	}
+	//type = IState::BOOL;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&bvalue), sizeof (bool));
+	//	s->setProp((IState::BoolProperty)i,bvalue);
+	//}
 
-	type = IState::ENUM;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&ivalue), sizeof (int));
-		s->setProp((IState::EnumProperty)i,ivalue);
-	}
+	//type = IState::ENUM;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&ivalue), sizeof (int));
+	//	s->setProp((IState::EnumProperty)i,ivalue);
+	//}
 
-	type = IState::INT;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&ivalue), sizeof (int));
-		s->setProp((IState::IntProperty)i,ivalue);
-	}
+	//type = IState::INT;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&ivalue), sizeof (int));
+	//	s->setProp((IState::IntProperty)i,ivalue);
+	//}
 
-	type = IState::FLOAT;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&fvalue), sizeof (float));
-		s->setProp((IState::FloatProperty)i,fvalue);
-	}
+	//type = IState::FLOAT;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&fvalue), sizeof (float));
+	//	s->setProp((IState::FloatProperty)i,fvalue);
+	//}
 
-	type = IState::FLOAT4;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&fvalues), sizeof (float)*4);
-		s->setProp((IState::Float4Property)i,fvalues[0],fvalues[1],fvalues[2],fvalues[3]);
-	}
+	//type = IState::FLOAT4;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&fvalues), sizeof (float)*4);
+	//	s->setProp((IState::Float4Property)i,fvalues[0],fvalues[1],fvalues[2],fvalues[3]);
+	//}
 
-	type = IState::BOOL4;
-	f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
-	for (int i = 0 ;  i < nProps; i++) {
-		f.read(reinterpret_cast<char *> (&bvalues), sizeof (bool)*4);
-		s->setProp((IState::Bool4Property)i,bvalues[0],bvalues[1],bvalues[2],bvalues[3]);
-	}
+	//type = IState::BOOL4;
+	//f.read (reinterpret_cast<char *> (&nProps), sizeof (nProps));
+	//for (int i = 0 ;  i < nProps; i++) {
+	//	f.read(reinterpret_cast<char *> (&bvalues), sizeof (bool)*4);
+	//	s->setProp((IState::Bool4Property)i,bvalues[0],bvalues[1],bvalues[2],bvalues[3]);
+	//}
 
 	//MATERIALLIBMANAGER->addMaterial (DEFAULTMATERIALLIBNAME, aMaterial);
 }

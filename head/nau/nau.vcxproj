@@ -183,7 +183,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_DEBUG;_LIB;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -227,7 +227,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../src;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NAU_OPTIX;NAU_OPTIX_PRIME;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_DEBUG;_LIB;NAU_OPTIX;NAU_OPTIX_PRIME;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -236,6 +236,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <UndefinePreprocessorDefinitions>ENUM_PROP(A,B)</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)nauOptix_d.lib</OutputFile>
@@ -271,7 +272,7 @@
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;GLEW_STATIC;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;NDEBUG;_LIB;GLEW_STATIC;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -313,7 +314,7 @@
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;NAU_OPTIX;NAU_OPTIX_PRIME;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;NDEBUG;_LIB;NAU_OPTIX;NAU_OPTIX_PRIME;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -324,7 +325,8 @@
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)nauOptix.lib</OutputFile>
-      <AdditionalDependencies>optix.1.lib</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>copy "$(OutDir)nauOptix.lib" d:\toolkits\libs</Command>
@@ -352,8 +354,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\nau\attribute.cpp" />
+    <ClCompile Include="..\src\nau\attributeValues.cpp" />
     <ClCompile Include="..\src\nau\clogger.cpp" />
+    <ClCompile Include="..\src\nau\debug\state.cpp" />
     <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp" />
+    <ClCompile Include="..\src\nau\material\imaterialbuffer.cpp" />
+    <ClCompile Include="..\src\nau\material\materialTexture.cpp" />
     <ClCompile Include="..\src\nau\nau.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -378,15 +385,14 @@
     <ClCompile Include="..\src\nau\loader\fontxmlloader.cpp" />
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp" />
     <ClCompile Include="..\src\nau\material\textureSampler.cpp" />
-    <ClCompile Include="..\src\nau\math\bvec4.cpp" />
     <ClCompile Include="..\src\nau\render\ibuffer.cpp" />
     <ClCompile Include="..\src\nau\render\imageTexture.cpp" />
     <ClCompile Include="..\src\nau\render\iprogramvalue.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\gltexture2dArray.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\gltextureMS.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp" />
     <ClCompile Include="..\src\nau\render\optix\optixBufferLib.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -445,6 +451,7 @@
     <ClCompile Include="..\src\nau\render\profilerpass.cpp" />
     <ClCompile Include="..\src\nau\resource\font.cpp" />
     <ClCompile Include="..\src\nau\resource\fontmanager.cpp" />
+    <ClCompile Include="..\src\nau\scene\iscene.cpp" />
     <ClCompile Include="..\src\nau\scene\octreeByMat.cpp" />
     <ClCompile Include="..\src\nau\scene\octreeByMatnode.cpp" />
     <ClCompile Include="..\src\nau\scene\octreeByMatscene.cpp" />
@@ -490,17 +497,9 @@
     <ClCompile Include="..\src\nau\material\materiallibmanager.cpp" />
     <ClCompile Include="..\src\nau\material\programvalue.cpp" />
     <ClCompile Include="..\src\nau\material\teximage.cpp" />
-    <ClCompile Include="..\src\nau\material\texturemat.cpp" />
-    <ClCompile Include="..\src\nau\math\mat3.cpp" />
-    <ClCompile Include="..\src\nau\math\mat4.cpp" />
     <ClCompile Include="..\src\nau\math\plane.cpp" />
     <ClCompile Include="..\src\nau\math\randomgen.cpp" />
-    <ClCompile Include="..\src\nau\math\simpletransform.cpp" />
     <ClCompile Include="..\src\nau\math\spherical.cpp" />
-    <ClCompile Include="..\src\nau\math\transformfactory.cpp" />
-    <ClCompile Include="..\src\nau\math\vec2.cpp" />
-    <ClCompile Include="..\src\nau\math\vec3.cpp" />
-    <ClCompile Include="..\src\nau\math\vec4.cpp" />
     <ClCompile Include="..\src\nau\render\depthmappass.cpp" />
     <ClCompile Include="..\src\nau\render\indexdata.cpp" />
     <ClCompile Include="..\src\nau\render\iprogram.cpp" />
@@ -595,6 +594,7 @@
     <ClInclude Include="..\src\nau\clogger.h" />
     <ClInclude Include="..\src\nau\config.h" />
     <ClInclude Include="..\src\nau.h" />
+    <ClInclude Include="..\src\nau\debug\state.h" />
     <ClInclude Include="..\src\nau\enums.h" />
     <ClInclude Include="..\src\nau\errors.h" />
     <ClInclude Include="..\src\nau\geometry\distancemap.h">
@@ -612,16 +612,21 @@
     <ClInclude Include="..\src\nau\loader\fontxmlloader.h" />
     <ClInclude Include="..\src\nau\loader\patchLoader.h" />
     <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h" />
+    <ClInclude Include="..\src\nau\material\imaterialbuffer.h" />
+    <ClInclude Include="..\src\nau\material\materialTexture.h" />
     <ClInclude Include="..\src\nau\material\textureSampler.h" />
-    <ClInclude Include="..\src\nau\math\bvec4.h" />
+    <ClInclude Include="..\src\nau\math\matrix.h" />
+    <ClInclude Include="..\src\nau\math\vec2.h" />
+    <ClInclude Include="..\src\nau\math\vec3.h" />
+    <ClInclude Include="..\src\nau\math\vec4.h" />
     <ClInclude Include="..\src\nau\render\ibuffer.h" />
     <ClInclude Include="..\src\nau\render\imageTexture.h" />
     <ClInclude Include="..\src\nau\render\iprogramvalue.h" />
     <ClInclude Include="..\src\nau\render\opengl\glbuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h" />
     <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h" />
-    <ClInclude Include="..\src\nau\render\opengl\gltexture2dArray.h" />
-    <ClInclude Include="..\src\nau\render\opengl\gltextureMS.h" />
     <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h" />
     <ClInclude Include="..\src\nau\render\optix\optixBufferLib.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -719,7 +724,6 @@
     <ClInclude Include="..\src\nau\loader\projectloader.h" />
     <ClInclude Include="..\src\nau\loader\textureloader.h" />
     <ClInclude Include="..\src\nau\material\colormaterial.h" />
-    <ClInclude Include="..\src\nau\material\imaterialgroup.h" />
     <ClInclude Include="..\src\nau\material\material.h" />
     <ClInclude Include="..\src\nau\material\materialgroup.h" />
     <ClInclude Include="..\src\nau\material\materialid.h" />
@@ -727,20 +731,11 @@
     <ClInclude Include="..\src\nau\material\materiallibmanager.h" />
     <ClInclude Include="..\src\nau\material\programvalue.h" />
     <CustomBuildStep Include="..\src\nau\material\teximage.h" />
-    <ClInclude Include="..\src\nau\material\texturemat.h" />
-    <ClInclude Include="..\src\nau\math\itransform.h" />
-    <ClInclude Include="..\src\nau\math\mat3.h" />
-    <ClInclude Include="..\src\nau\math\mat4.h" />
     <ClInclude Include="..\src\nau\math\mtrand.h" />
     <ClInclude Include="..\src\nau\math\plane.h" />
     <ClInclude Include="..\src\nau\math\randomgen.h" />
-    <ClInclude Include="..\src\nau\math\simpletransform.h" />
     <CustomBuildStep Include="..\src\nau\math\spherical.h" />
-    <ClInclude Include="..\src\nau\math\transformfactory.h" />
     <ClInclude Include="..\src\nau\math\utils.h" />
-    <ClInclude Include="..\src\nau\math\vec2.h" />
-    <ClInclude Include="..\src\nau\math\vec3.h" />
-    <ClInclude Include="..\src\nau\math\vec4.h" />
     <ClInclude Include="..\src\nau\render\depthmappass.h" />
     <ClInclude Include="..\src\nau\render\indexdata.h" />
     <ClInclude Include="..\src\nau\render\iprogram.h" />

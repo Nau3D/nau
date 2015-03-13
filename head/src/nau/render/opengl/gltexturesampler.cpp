@@ -1,39 +1,34 @@
-#include <nau/render/opengl/gltexturesampler.h>
+#include "nau/render/opengl/gltexturesampler.h"
 
 //#include <GL/glew.h>
 
-bool GLTextureSampler::Inited = Init();
+bool GLTextureSampler::Inited = GLTextureSampler::InitGL();
 
 bool
-GLTextureSampler::Init() {
+GLTextureSampler::InitGL() {
 	// ENUM
-	Attribs.add(Attribute(WRAP_S, "WRAP_S", Enums::DataType::ENUM, false, new int(GL_REPEAT)));
 	Attribs.listAdd("WRAP_S", "REPEAT", GL_REPEAT);
 	Attribs.listAdd("WRAP_S", "CLAMP_TO_EDGE", GL_CLAMP_TO_EDGE);
 	Attribs.listAdd("WRAP_S", "CLAMP_TO_BOREDER", GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_S", "MIRRORED_REPEAT", GL_MIRRORED_REPEAT);
 	Attribs.setDefault("WRAP_S", new int(GL_REPEAT));
 
-	Attribs.add(Attribute(WRAP_T, "WRAP_T", Enums::DataType::ENUM, false, new int(GL_REPEAT)));
 	Attribs.listAdd("WRAP_T", "REPEAT", GL_REPEAT);
 	Attribs.listAdd("WRAP_T", "CLAMP_TO_EDGE", GL_CLAMP_TO_EDGE);
 	Attribs.listAdd("WRAP_T", "CLAMP_TO_BOREDER", GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_T", "MIRRORED_REPEAT", GL_MIRRORED_REPEAT);
 	Attribs.setDefault("WRAP_T", new int(GL_REPEAT));
 
-	Attribs.add(Attribute(WRAP_R, "WRAP_R", Enums::DataType::ENUM, false, new int(GL_REPEAT)));
 	Attribs.listAdd("WRAP_R", "REPEAT", GL_REPEAT);
 	Attribs.listAdd("WRAP_R", "CLAMP_TO_EDGE", GL_CLAMP_TO_EDGE);
 	Attribs.listAdd("WRAP_R", "CLAMP_TO_BOREDER", GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_R", "MIRRORED_REPEAT", GL_MIRRORED_REPEAT);
 	Attribs.setDefault("WRAP_R", new int(GL_REPEAT));
 
-	Attribs.add(Attribute(MAG_FILTER, "MAG_FILTER", Enums::DataType::ENUM, false, new int(GL_LINEAR)));
 	Attribs.listAdd("MAG_FILTER", "NEAREST", GL_NEAREST);
 	Attribs.listAdd("MAG_FILTER", "LINEAR", GL_LINEAR);
 	Attribs.setDefault("MAG_FILTER", new int(GL_LINEAR));
 
-	Attribs.add(Attribute(MIN_FILTER, "MIN_FILTER", Enums::DataType::ENUM, false, new int(GL_LINEAR)));
 	Attribs.listAdd("MIN_FILTER", "NEAREST", GL_NEAREST);
 	Attribs.listAdd("MIN_FILTER", "LINEAR", GL_LINEAR);
 	Attribs.listAdd("MIN_FILTER", "LINEAR_MIPMAP_LINEAR", GL_LINEAR_MIPMAP_LINEAR);
@@ -42,7 +37,6 @@ GLTextureSampler::Init() {
 	Attribs.listAdd("MIN_FILTER", "NEAREST_MIPMAP_NEAREST", GL_NEAREST_MIPMAP_NEAREST);
 	Attribs.setDefault("MIN_FILTER", new int(GL_LINEAR));
 
-	Attribs.add(Attribute(COMPARE_FUNC, "COMPARE_FUNC", Enums::DataType::ENUM, false, new int(GL_LEQUAL)));
 	Attribs.listAdd("COMPARE_FUNC", "LEQUAL", GL_LEQUAL);
 	Attribs.listAdd("COMPARE_FUNC", "GEQUAL", GL_GEQUAL);
 	Attribs.listAdd("COMPARE_FUNC", "LESS", GL_LESS);
@@ -53,17 +47,10 @@ GLTextureSampler::Init() {
 	Attribs.listAdd("COMPARE_FUNC", "NEVER", GL_NEVER);
 	Attribs.setDefault("COMPARE_FUNC", new int(GL_LEQUAL));
 
-	Attribs.add(Attribute(COMPARE_MODE, "COMPARE_MODE", Enums::DataType::ENUM, false, new int(GL_NONE)));
 	Attribs.listAdd("COMPARE_MODE", "NONE", GL_NONE);
 	Attribs.listAdd("COMPARE_MODE", "COMPARE_REF_TO_TEXTURE", GL_COMPARE_REF_TO_TEXTURE);
 	Attribs.setDefault("COMPARE_MODE", new int(GL_NONE));
 
-	//VEC4
-	Attribs.add(Attribute(BORDER_COLOR, "BORDER_COLOR", Enums::DataType::ENUM, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));
-	//INT
-	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(0)));
-	//BOOL
-	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, true, new bool(false)));
 
 	return true;
 }
@@ -74,11 +61,6 @@ using namespace nau::render;
 
 GLTextureSampler::GLTextureSampler(Texture *t): TextureSampler() {
 
-	Attribs.initAttribInstanceBoolArray(m_BoolProps);
-	Attribs.initAttribInstanceEnumArray(m_EnumProps);
-	Attribs.initAttribInstanceIntArray(m_IntProps);
-	Attribs.initAttribInstanceVec4Array(m_Float4Props);
-
 #if NAU_OPENGL_VERSION > 320
 	glGenSamplers(1, (GLuint *)&(m_IntProps[ID]));
 #endif
@@ -88,17 +70,6 @@ GLTextureSampler::GLTextureSampler(Texture *t): TextureSampler() {
 	}
 	else
 		m_EnumProps[MIN_FILTER] = GL_LINEAR;
-
-	//m_EnumProps[MAG_FILTER] = GL_LINEAR;
-	//m_EnumProps[WRAP_S] = GL_REPEAT;
-	//m_EnumProps[WRAP_T] = GL_REPEAT;
-	//m_EnumProps[WRAP_R] = GL_REPEAT;
-
-	//m_EnumProps[COMPARE_MODE] = GL_NONE;
-	//m_EnumProps[COMPARE_FUNC] = GL_LEQUAL;
-
-	//float bordercolor[] = {-1.0f, -1.0f, -1.0f, -1.0f};
-	//m_Float4Props[BORDER_COLOR].set(bordercolor);
 
 	update();
 }
@@ -172,7 +143,7 @@ GLTextureSampler::restore(unsigned int aUnit, int aDim) {
 
 
 void 
-GLTextureSampler::setProp(EnumProperty prop, int value) {
+GLTextureSampler::setPrope(EnumProperty prop, int value) {
 
 	int v2 = value;
 
@@ -222,16 +193,3 @@ GLTextureSampler::setProp(EnumProperty prop, int value) {
 }
 
 
-void 
-GLTextureSampler::setProp(Float4Property prop, float x, float y, float z, float w) {
-
-	m_Float4Props[prop].set(x,y,z,w);
-}
-			
-
-void 
-GLTextureSampler::setProp(Float4Property prop, vec4& value) {
-
-	m_Float4Props[prop].set(value.x,value.y,value.z,value.w);
-}
-			

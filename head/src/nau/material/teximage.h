@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <nau/render/texture.h>
+#include "nau/render/texture.h"
 
 using namespace nau::render;
 
@@ -19,17 +19,17 @@ namespace nau
 			Texture *m_Texture;
 
 
-			typedef enum {
-				FLOAT,
-				INT,
-				SHORT,
-				BYTE,
-				UNSIGNED_CHAR,
-				UNSIGNED_INT,
-				UNSIGNED_SHORT,
-				UNISGNED_BYTE} dataTypes;
+			//typedef enum {
+			//	FLOAT,
+			//	INT,
+			//	SHORT,
+			//	BYTE,
+			//	UNSIGNED_CHAR,
+			//	UNSIGNED_INT,
+			//	UNSIGNED_SHORT,
+			//	UNISGNED_BYTE} dataTypes;
 
-			Enums::DataType  m_DataType;
+			int  m_DataType;
 			unsigned int m_NumComponents;
 			unsigned int m_Height, m_Width, m_Depth;
 			TexImage(Texture *t);

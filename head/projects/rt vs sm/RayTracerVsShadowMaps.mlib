@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<materiallib name="RT vs SM">
+<materialLib name="RT vs SM">
 
-	<rendertargets>
+	<renderTargets>
 	
-		<rendertarget name ="deferred">
+		<renderTarget name ="deferred">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="color" internalFormat="RGBA" />
@@ -11,45 +11,45 @@
 				<color name="shadowContourProj" internalFormat="RGBA" />						
 				<color name="pos" internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name ="deferredResult">
+		<renderTarget name ="deferredResult">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="color2" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name ="deferredResult2">
+		<renderTarget name ="deferredResult2">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="compDR2" internalFormat="RGBA" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
 		
-		<rendertarget name ="intersectionResult">
+		<renderTarget name ="intersectionResult">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="intersectionResult" internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 
-		<rendertarget name ="test">
+		<renderTarget name ="test">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 		
-		<rendertarget name ="test_ubyte">
+		<renderTarget name ="test_ubyte">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="offscreenrender_ubyte" internalFormat="R8" />
 			</colors>
-		</rendertarget>
+		</renderTarget>
 
-		<rendertarget name="depthAndVertices">
+		<renderTarget name="depthAndVertices">
 			<size width="1024" height="1024" />
 			<depth name="shadowMapA" internalFormat="DEPTH_COMPONENT32F" />
 			<colors>
@@ -59,14 +59,14 @@
 									
 				<color name="vertexC" internalFormat="RGBA32F" />
 			</colors>			
-		</rendertarget>
+		</renderTarget>
 
-		<rendertarget name = "depth">
+		<renderTarget name = "depth">
 			<size width="1024" height="1024" />
 			<depth name="shadowMap" internalFormat="DEPTH_COMPONENT32F" />
-		</rendertarget>
+		</renderTarget>
 
-	</rendertargets>
+	</renderTargets>
 	
 	
 	<shaders>
@@ -92,11 +92,19 @@
 
 		
 	<textures>
-		<texture name="dataBuffer"  format="RGBA" 
-									internalFormat="RGBA32F" 
-									type="FLOAT" width=2 height=2 />
+		<texture name="dataBuffer">
+			<WIDTH value=2 />
+			<HEIGHT value=2 />
+			<INTERNAL_FORMAT value="RGBA32F" />
+		</texture>	
 	</textures>
 
+	<buffers>
+		<buffer name="test">
+			<SIZE value=44 />
+			<CLEAR value="BY_FRAME" />
+		</buffer>
+	</buffers>	
 
 	<states>
 		<state name="frontCull">
@@ -108,16 +116,15 @@
 	<materials>
 
 		<material name="testIntersection">
-			<shader>
-				<name>testIntersection</name>
+			<shader name="testIntersection">
 				<values>
-					<valueof uniform="vertexA" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="vertexA" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
-					<valueof uniform="vertexB" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="vertexB" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="1" />		
-					<valueof uniform="vertexC" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="vertexC" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="2" />		
-					<valueof uniform="positions" 		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="positions" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="3" />
 					<valueof uniform="lightSpaceMat"	type="CAMERA" 
 														context="RTvsSM#getShadowMap-LightCam" 
@@ -137,8 +144,7 @@
 
 
 		<material name="deferred">
-			<shader>
-				<name>deferred</name>
+			<shader name="deferred">
 				<values>
 					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
 														id=0 component="DIRECTION" /> 
@@ -155,32 +161,32 @@
 					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
 														component="AMBIENT" />
 		
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="V"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="V"          	type="CURRENT" context="RENDERER" 
 														component="VIEW" />
-					<valueof uniform="M"          	type="CURRENT" context="MATRIX" 
+					<valueof uniform="M"          	type="CURRENT" context="RENDERER" 
 														component="MODEL" />
 														
 					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
 														context="RTvsSM#getShadowMap-LightCam" 
 														component="TS05_PVM_MATRIX" />
 
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
 														component="NORMAL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="TEXTURE" 
-														component="COUNT" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />					
 														
-					<valueof uniform="shadowMap" 		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="shadowMap" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="1" />					
 						 
-					<valueof uniform="contourProj" 		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="contourProj" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="2" />														
-					<valueof uniform="shadowMapBF" 		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="shadowMapBF" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="3" />	
 
 						 
@@ -190,16 +196,15 @@
 		
 
 		<material name="compareRTvsSM">
-			<shader>
-				<name>compareRTvsSM</name>
+			<shader name="compareRTvsSM">
 				<values>
-					<valueof uniform="rayTrace"			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="rayTrace"			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
-					<valueof uniform="shadowMap" 		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="shadowMap" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="1" />
-					<valueof uniform="projShadowContour" type="CURRENT" context="TEXTURE" 
+					<valueof uniform="projShadowContour" type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="2" />
-					<valueof uniform="intersectionRes" type="CURRENT" context="TEXTURE" 
+					<valueof uniform="intersectionRes" type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="3" />
 				</values>
 			</shader>
@@ -210,14 +215,20 @@
 				<texture UNIT="3" name="intersectionResult" />
 
 			</textures>	
+			<buffers>	
+				<buffer name="test"  >
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+
 		</material>
 
 
 		<material name="computeContoursA">
-			<shader>
-				<name>computeContours</name>
+			<shader name="computeContours">
 				<values>
-					<valueof uniform="textureUnit"		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="textureUnit"		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
 				</values>
 			</shader>
@@ -228,10 +239,9 @@
 
 
 		<material name="computeContours">
-			<shader>
-				<name>computeContours</name>
+			<shader name="computeContours">
 				<values>
-					<valueof uniform="textureUnit"		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="textureUnit"		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
 				</values>
 			</shader>
@@ -249,10 +259,9 @@
 				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>depthOnly</name>
+			<shader name="depthOnly">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
 											component="PROJECTION_VIEW_MODEL" />
 				
 				</values>
@@ -262,10 +271,9 @@
 		
 
 		<material  name="depthAndVertices" >
-			<shader>
-				<name>depthAndVertices</name>
+			<shader name="depthAndVertices">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
 											component="PROJECTION_VIEW_MODEL" />
 				
 				</values>
@@ -275,4 +283,4 @@
 
 	</materials>
 		
-</materiallib>
+</materialLib>

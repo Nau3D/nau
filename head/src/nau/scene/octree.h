@@ -1,12 +1,12 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 
-#include <nau/scene/octreenode.h>
-#include <nau/scene/iscene.h>
-#include <nau/scene/camera.h>
-#include <nau/math/vec3.h>
-#include <nau/geometry/boundingbox.h>
-#include <nau/clogger.h> /***MARK***/
+#include "nau/scene/octreenode.h"
+#include "nau/scene/iscene.h"
+#include "nau/scene/camera.h"
+#include "nau/math/vec3.h"
+#include "nau/geometry/boundingbox.h"
+#include "nau/clogger.h" /***MARK***/
 
 #include <vector>
 #include <string>
@@ -30,7 +30,7 @@ namespace nau
 
 			void build (std::vector<nau::scene::SceneObject*> &sceneObjects);
 		
-			void updateOctreeTransform(nau::math::ITransform *m_Transform);
+			void updateOctreeTransform(nau::math::mat4  &m_Transform);
 			int getNumberOfVertices () { return 0; };
 
 			nau::math::vec3& getVertice (unsigned int v);

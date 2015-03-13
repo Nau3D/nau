@@ -1,6 +1,6 @@
 #include <map>
 #include <string>
-#include <nau/loader/projectloaderdebuglinker.h>
+#include "nau/loader/projectloaderdebuglinker.h"
 #include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
 
 using namespace std;
@@ -82,6 +82,10 @@ map<string,map<string,functionSet>> attributeList;
 //TimerLog
 //  LogEnabled    
 //  LogCutoff    
+
+void activateGLI(){
+	gliSetIsGLIActive(true);
+}
 
 void addGLInterceptFunction(void *function,void (*functionClear)(),unsigned int type,const char* name,const char* mapName){
 	functionSet temp={function,functionClear,type};
@@ -269,10 +273,14 @@ bool isDebugLogEnabled(){
 }
 
 bool debugLogPath(){
-	return gliGetLogPath();
+	return (gliGetLogPath() != NULL);
 }
 
 bool debugLogName(){
-	return gliGetLogName();
+	return (gliGetLogName() != NULL);
 }
 
+
+void addMessageToGLILog(const char * message){
+	return gliInsertLogMessage(message);
+}

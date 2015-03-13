@@ -1,10 +1,10 @@
-#include <nau/slogger.h>
-#include <nau/render/opengl/glprogram.h>
-#include <nau/render/vertexdata.h>
-#include <nau.h>
+#include "nau/slogger.h"
+#include "nau/render/opengl/glprogram.h"
+#include "nau/render/vertexdata.h"
+#include "nau.h"
 
-#include <nau/system/textfile.h>
-#include <nau/config.h>
+#include "nau/system/textfile.h"
+#include "nau/config.h"
 
 using namespace nau::render;
 using namespace nau::system;
@@ -468,13 +468,13 @@ GlProgram::setUniforms() {
 				uni.setLoc (loc);
 				m_Uniforms.push_back (uni);
 			}
-#if NAU_OPENGL_VERSION >= 400 
-			if (type == GL_UNSIGNED_INT_ATOMIC_COUNTER) {
-				GLenum prop = GL_OFFSET; int len, params;
-				glGetProgramResourceiv(m_P, GL_UNIFORM, i, 1, &prop, sizeof(int), &len, &params);
-				RENDERER->addAtomic(params/4, name);
-			}
-#endif
+//#if NAU_OPENGL_VERSION >= 400 
+//			if (type == GL_UNSIGNED_INT_ATOMIC_COUNTER) {
+//				GLenum prop = GL_OFFSET; int len, params;
+//				glGetProgramResourceiv(m_P, GL_UNIFORM, i, 1, &prop, sizeof(int), &len, &params);
+//				RENDERER->addAtomic(params/4, name);
+//			}
+//#endif
 			if (size > 1) {
 
 				for (int i = 0; i < size; i++) {

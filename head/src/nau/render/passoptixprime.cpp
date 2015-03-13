@@ -1,19 +1,20 @@
-#include <nau/config.h>
+#ifdef NAU_OPTIX 
+
+#include "nau/config.h"
 
 #if NAU_OPENGL_VERSION >= 420
 
-#include <sstream>
+#include "nau.h"
+#include "nau/debug/profile.h"
+#include "nau/geometry/frustum.h"
+#include "nau/render/passoptixprime.h"
+#include "nau/slogger.h"
 
 #include <GL/glew.h>
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 
-#include <nau/slogger.h>
-#include <nau/render/passoptixprime.h>
-#include <nau.h>
-#include <nau/geometry/frustum.h>
-#include <nau/debug/profile.h>
-
+#include <sstream>
 
 using namespace nau::material;
 using namespace nau::scene;
@@ -280,6 +281,7 @@ PassOptixPrime::prepare(void) {
 ////		k = cudaGraphicsMapResources(1, &cglInd, 0);
 		k = cudaGraphicsMapResources(1, &cglBuff, 0);
 		k = cudaGraphicsMapResources(1, &cglBuffH, 0);
+		k = cudaGraphicsMapResources(1, &cglInd, 0);
 	}
 
 }
@@ -293,7 +295,8 @@ PassOptixPrime::restore(void) {
 //	cudaGraphicsUnmapResources(1, &cglInd, 0);
 	k = cudaGraphicsUnmapResources(1, &cglBuff, 0);
 	k = cudaGraphicsUnmapResources(1, &cglBuffH, 0);
-		//SLOG("%d", k);
+	k = cudaGraphicsUnmapResources(1, &cglInd, 0);
+	//SLOG("%d", k);
 }
 
 
@@ -308,7 +311,7 @@ PassOptixPrime::doPass(void) {
 
 void 
 PassOptixPrime::initOptixPrime() {
-
+	
 	// Create Context
 	CHK_PRIME(rtpContextCreate(RTP_CONTEXT_TYPE_CUDA, &m_Context));
 
@@ -317,11 +320,6 @@ PassOptixPrime::initOptixPrime() {
 	int vbo = renderable->getVertexData().getBufferID(0);
 	int numVert = renderable->getVertexData().getNumberOfVertices();
 	std::vector<vec4> vertex = renderable->getVertexData().getDataOf(0);
-	//GLuint vv;
-	//glGenBuffers(1, &vv);
-	//glBindBuffer(GL_ARRAY_BUFFER, vv);
-	//glBufferData(GL_ARRAY_BUFFER, vertex.size() * sizeof(float) * 4, &(vertex[0].x), GL_STATIC_DRAW);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	size_t size;
 	void * devPtr;
@@ -342,7 +340,10 @@ PassOptixPrime::initOptixPrime() {
 	IndexData *ind = &(renderable->getIndexData());
 	std::vector<int> *v = ind->getIndexDataAsInt();
 	GLuint index;
-	glGenBuffers(1, &index);
+	IBuffer *b;
+	b = RESOURCEMANAGER->createBuffer(m_Name);
+	index = b->getPropi(IBuffer::ID);
+	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, v->size() * sizeof(int), &(*v)[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -373,9 +374,6 @@ PassOptixPrime::initOptixPrime() {
 
 	// Create Rays Buffer
 	int rayBufferID = m_Rays->getPropi(IBuffer::ID);
-	m_Rays->unbind();
-	int bp = -1;
-	m_Rays->setProp(IBuffer::BINDING_POINT, Enums::INT, &bp);
 	int rayBufferRayCount = m_Rays->getPropui(IBuffer::SIZE) / (8 * sizeof(float));
 
 	void * devPtrBuff;
@@ -395,10 +393,8 @@ PassOptixPrime::initOptixPrime() {
 	
 	// Create Hits Buffer
 	int hitBufferID = m_Hits->getPropi(IBuffer::ID);
-	m_Hits->unbind();
 	void * devPtrBuffH;
 	k = cudaGraphicsGLRegisterBuffer(&cglBuffH, hitBufferID, cudaGraphicsRegisterFlagsWriteDiscard);
-//	k = cudaGraphicsGLRegisterBuffer(&cglBuffH, hitBufferID, cudaGraphicsRegisterFlagsReadOnly);
 	k = cudaGraphicsMapResources(1, &cglBuffH, 0);
 	k = cudaGraphicsResourceGetMappedPointer((void **)&devPtrBuffH, &size, cglBuffH);
 
@@ -447,5 +443,7 @@ PassOptixPrime::addRayBuffer(IBuffer *b) {
 
 	m_Rays = b;
 }
+
+#endif
 
 #endif

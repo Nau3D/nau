@@ -1,8 +1,8 @@
 #ifndef IRENDERALGORITHM
 #define IRENDERALGORITHM
 
-#include <nau/scene/iscene.h>
-#include <nau/render/irenderer.h>
+#include "nau/scene/iscene.h"
+#include "nau/render/irenderer.h"
 
 namespace nau 
 {

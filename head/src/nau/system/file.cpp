@@ -1,10 +1,10 @@
-#include <nau/system/file.h>
+#include "nau/system/file.h"
 
 #include <sstream>
 
 using namespace nau::system;
 
-#include <nau/config.h>
+#include "nau/config.h"
 
 #ifdef NAU_PLATFORM_WIN32
 
@@ -380,6 +380,24 @@ File::getType (void) {
 	}
 	else if ("xml" == m_FileExtension) {
 		return File::OGREXMLMESH;
+	}
+	else if ("blend" == m_FileExtension) {
+		return File::BLENDER;
+	}
+	else if ("ply" == m_FileExtension) {
+		return File::PLY;
+	}
+	else if ("lwo" == m_FileExtension) {
+		return File::LIGHTWAVE;
+	}
+	else if ("stl" == m_FileExtension) {
+		return File::STL;
+	}
+	else if ("cob" == m_FileExtension) {
+		return File::TRUESPACE;
+	}
+	else if ("scn" == m_FileExtension) {
+		return File::TRUESPACE;
 	}
 	else
 	return File::UNKNOWN;

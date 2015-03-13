@@ -1,8 +1,8 @@
-#include <nau/geometry/bbox.h>
+#include "nau/geometry/bbox.h"
 
-#include <nau/math/vec3.h>
-#include <nau/render/vertexdata.h>
-#include <nau/material/materialgroup.h>
+#include "nau/math/vec3.h"
+#include "nau/render/vertexdata.h"
+#include "nau/material/materialgroup.h"
 
 using namespace nau::geometry;
 using namespace nau::math;
@@ -43,10 +43,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2) = 5;
 	indices->at (3) = 4;
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup();
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Emission Blue");
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Blue");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Blue");
 	addMaterialGroup (aMaterialGroup);
 
 	//LEFT
@@ -56,10 +56,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2) = 7;
 	indices->at (3) = 3;
 
-	aMaterialGroup = new MaterialGroup();
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Cyan");
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Cyan");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Cyan");
 	addMaterialGroup (aMaterialGroup);
 
 	//BACK
@@ -69,10 +69,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2)= 7;
 	indices->at (3)= 6;
 
-	aMaterialGroup = new MaterialGroup();
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Yellow");
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Yellow");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Yellow");
 	addMaterialGroup (aMaterialGroup);
 
 	//RIGHT
@@ -82,10 +82,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2)= 6;
 	indices->at (3)= 5;
 
-	aMaterialGroup = new MaterialGroup();
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Red");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Red");
 	addMaterialGroup (aMaterialGroup);
 
 	//TOP
@@ -95,10 +95,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2)= 6;
 	indices->at (3)= 7;
 
-	aMaterialGroup = new MaterialGroup();
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Green");
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Green");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Green");
 	addMaterialGroup (aMaterialGroup);
 
 	//BOTTOM
@@ -108,10 +108,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2)= 2;
 	indices->at (3)= 3;
 
-	aMaterialGroup = new MaterialGroup();
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Purple");
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (this);
-	aMaterialGroup->setMaterialName("__Emission Purple");
+	//aMaterialGroup->setParent (this);
+	//aMaterialGroup->setMaterialName("__Emission Purple");
 	addMaterialGroup (aMaterialGroup);
 }
 

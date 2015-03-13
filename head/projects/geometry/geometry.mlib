@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
-<materiallib name="Simple">
+<materialLib name="Simple">
 
 	<textures>
-		<texture name="Crate" filename="../../models/Texturas/crate.jpg" />		
+		<texture name="Crate" filename="../../models/Texturas/crate.jpg" mipmap=true/>		
 	</textures>
 	
 	<materials>
@@ -19,4 +19,4 @@
 			</textures>
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

@@ -1,8 +1,8 @@
-#include <nau/render/iprogram.h>
+#include "nau/render/iprogram.h"
 
 
 #ifdef NAU_OPENGL
-#include <nau/render/opengl/glprogram.h>
+#include "nau/render/opengl/glprogram.h"
 #endif
 
 using namespace nau::render;

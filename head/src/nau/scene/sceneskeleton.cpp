@@ -1,4 +1,4 @@
-#include <nau/scene/sceneskeleton.h>
+#include "nau/scene/sceneskeleton.h"
 
 using namespace nau::scene;
 

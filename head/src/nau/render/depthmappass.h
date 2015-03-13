@@ -1,7 +1,7 @@
 #ifndef DEPTHMAPPASS_H
 #define DEPTHMAPPASS_H
 
-#include <nau/render/pass.h>
+#include "nau/render/pass.h"
 
 namespace nau
 {

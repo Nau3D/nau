@@ -1,7 +1,7 @@
-#include <assert.h>
+#include "nau/render/opengl/glrendertarget.h"
+#include "nau.h"
 
-#include <nau/render/opengl/glrendertarget.h>
-#include <nau.h>
+#include <assert.h>
 
 using namespace nau::render;
 
@@ -45,8 +45,8 @@ GLRenderTarget::GLRenderTarget (std::string name) :
 }
 
 
-GLRenderTarget::~GLRenderTarget(void)
-{
+GLRenderTarget::~GLRenderTarget(void) {
+
 	glDeleteFramebuffers (1, &m_Id);
 	glDeleteRenderbuffers(1, &m_DepthBuffer);
 	if (m_Color)
@@ -75,9 +75,10 @@ GLRenderTarget::checkStatus() {
 		return false;
 }
 
+
 void
-GLRenderTarget::bind (void)
-{
+GLRenderTarget::bind (void) {
+
 	glBindFramebuffer (GL_FRAMEBUFFER, m_Id);
 	if (m_Color)
 		glDrawBuffers(m_Color, (GLenum *)&m_RenderTargets[0]);
@@ -85,15 +86,15 @@ GLRenderTarget::bind (void)
 
 
 void 
-GLRenderTarget::unbind (void)
-{
+GLRenderTarget::unbind (void) {
+
 	glBindFramebuffer (GL_FRAMEBUFFER, 0);
 }
 
 
 void 
-GLRenderTarget::addColorTarget (std::string name, std::string internalFormat)
-{
+GLRenderTarget::addColorTarget (std::string name, std::string internalFormat) {
+
 	assert(m_Color < (unsigned int)IRenderer::MaxColorAttachments);
 
 	if (m_Color >= (unsigned int)IRenderer::MaxColorAttachments)
@@ -102,12 +103,12 @@ GLRenderTarget::addColorTarget (std::string name, std::string internalFormat)
 	if (!m_Init)
 		init();
 
-	if (m_Samples > 1)
-		m_TexId[m_Color] = RESOURCEMANAGER->createTextureMS
-			(name, internalFormat,m_Width, m_Height, m_Samples);
-	else
+	//if (m_Samples > 1)
+	//	m_TexId[m_Color] = RESOURCEMANAGER->createTextureMS
+	//		(name, internalFormat,m_Width, m_Height, m_Samples);
+	//else
 		m_TexId[m_Color] = RESOURCEMANAGER->createTexture
-			(name, internalFormat,m_Width, m_Height, m_Layers);
+			(name, internalFormat,m_Width, m_Height, 1, m_Layers, 1, m_Samples);
 
 	bind();
 	attachColorTexture(m_TexId[m_Color], m_Color);
@@ -119,27 +120,9 @@ GLRenderTarget::addColorTarget (std::string name, std::string internalFormat)
 }
 
 
-//void 
-//GLRenderTarget::addColorTarget (std::string name, std::string internalFormat, int samples)
-//{
-//	if (m_Color >= MAXFBOs) 
-//		return;
-//
-//	m_TexId[m_Color] = RESOURCEMANAGER->createTextureMS(name, internalFormat,m_Width, m_Height, samples);
-//
-//	bind();
-//	attachColorTexture (m_TexId[m_Color], (RenderTarget::ColorAttachment)m_Color);
-//	unbind();	
-//
-//	m_Color++;
-//
-//	setDrawBuffers();
-//}
-
-
 void 
-GLRenderTarget::addDepthTarget (std::string name, std::string internalFormat)
-{
+GLRenderTarget::addDepthTarget (std::string name, std::string internalFormat) {
+
 	if (!m_Init)
 		init();
 
@@ -150,12 +133,12 @@ GLRenderTarget::addDepthTarget (std::string name, std::string internalFormat)
 		m_DepthTexture = NULL;
 	}
 
-	if (m_Samples > 1)
-		m_DepthTexture = RESOURCEMANAGER->createTextureMS
-			(name, internalFormat,m_Width, m_Height, m_Samples);
-	else
+	//if (m_Samples > 1)
+	//	m_DepthTexture = RESOURCEMANAGER->createTextureMS
+	//		(name, internalFormat,m_Width, m_Height, m_Samples);
+	//else
 		m_DepthTexture = RESOURCEMANAGER->createTexture
-			(name, internalFormat, m_Width, m_Height, m_Layers);
+			(name, internalFormat, m_Width, m_Height, 1, m_Layers, 1, m_Samples);
 
 	bind();
 	attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
@@ -164,8 +147,8 @@ GLRenderTarget::addDepthTarget (std::string name, std::string internalFormat)
 
 
 void 
-GLRenderTarget::addStencilTarget (std::string name)
-{
+GLRenderTarget::addStencilTarget (std::string name) {
+
 	if (!m_Init)
 		init();
 
@@ -176,12 +159,12 @@ GLRenderTarget::addStencilTarget (std::string name)
 		m_StencilTexture = 0;
 	}
 
-	if (m_Samples > 1)
-		m_StencilTexture = RESOURCEMANAGER->createTextureMS
-			(name, "STENCIL_INDEX8",m_Width, m_Height, m_Samples);
-	else
+	//if (m_Samples > 1)
+	//	m_StencilTexture = RESOURCEMANAGER->createTextureMS
+	//		(name, "STENCIL_INDEX8",m_Width, m_Height, m_Samples);
+	//else
 		m_StencilTexture = RESOURCEMANAGER->createTexture
-			(name, "STENCIL_INDEX8", m_Width, m_Height, m_Layers);
+			(name, "STENCIL_INDEX8", m_Width, m_Height, 1, m_Layers, 1, m_Samples);
 
 	bind();
 	attachDepthStencilTexture(m_StencilTexture, GL_STENCIL_ATTACHMENT);
@@ -190,8 +173,8 @@ GLRenderTarget::addStencilTarget (std::string name)
 
 
 void 
-GLRenderTarget::addDepthStencilTarget (std::string name)
-{
+GLRenderTarget::addDepthStencilTarget (std::string name) {
+
 	if (!m_Init)
 		init();
 
@@ -203,12 +186,12 @@ GLRenderTarget::addDepthStencilTarget (std::string name)
 		m_DepthTexture = 0;
 	}
 
-	if (m_Samples > 1)
-		m_DepthTexture = RESOURCEMANAGER->createTextureMS
-			(name, "DEPTH24_STENCIL8",m_Width, m_Height, m_Samples);
-	else
+	//if (m_Samples > 1)
+	//	m_DepthTexture = RESOURCEMANAGER->createTextureMS
+	//		(name, "DEPTH24_STENCIL8",m_Width, m_Height, m_Samples);
+	//else
 		m_DepthTexture = RESOURCEMANAGER->createTexture
-			(name, "DEPTH24_STENCIL8", m_Width, m_Height, m_Layers);
+			(name, "DEPTH24_STENCIL8", m_Width, m_Height, 1, m_Layers, 1, m_Samples);
 
 	bind();
 	dettachDepthStencilTexture(GL_DEPTH_ATTACHMENT);
@@ -218,8 +201,8 @@ GLRenderTarget::addDepthStencilTarget (std::string name)
 
 
 void
-GLRenderTarget::attachColorTexture (Texture* aTexture, unsigned int colorAttachment)
-{	
+GLRenderTarget::attachColorTexture (Texture* aTexture, unsigned int colorAttachment) {
+
 	  if (-1 == (int) m_RenderTargets[colorAttachment]) {
 			m_RenderTargets[m_Color] = GL_COLOR_ATTACHMENT0 + colorAttachment;
 		}
@@ -228,8 +211,8 @@ GLRenderTarget::attachColorTexture (Texture* aTexture, unsigned int colorAttachm
 
 
 void
-GLRenderTarget::dettachColorTexture (unsigned int colorAttachment)
-{
+GLRenderTarget::dettachColorTexture (unsigned int colorAttachment) {
+
 	glFramebufferTexture  (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment, 0, 0);
 	m_RenderTargets[(int)colorAttachment] = -1;
 	--m_Color;
@@ -237,34 +220,32 @@ GLRenderTarget::dettachColorTexture (unsigned int colorAttachment)
 
 
 void 
-GLRenderTarget::attachDepthStencilTexture (Texture* aTexture, GLuint type)
-{
+GLRenderTarget::attachDepthStencilTexture (Texture* aTexture, GLuint type) {
+
 	glFramebufferTexture (GL_FRAMEBUFFER, type, aTexture->getPropi(Texture::ID), 0);
 }
 
 
 void
-GLRenderTarget::dettachDepthStencilTexture (GLuint type)
-{
+GLRenderTarget::dettachDepthStencilTexture (GLuint type) {
+
 	glFramebufferTexture (GL_FRAMEBUFFER, type, 0, 0);
 }
 
 
 void
-GLRenderTarget::setDrawBuffers (void)
-{
+GLRenderTarget::setDrawBuffers (void) {
+
 	if (m_Color)
 		glDrawBuffers(m_Color, (unsigned int *)&m_RenderTargets[0]);
 }
 
 
 void 
-GLRenderTarget::_rebuild() 
-{
+GLRenderTarget::_rebuild() {
+
 	std::string texName;
 	std::string internalFormat;
-	std::string format;
-	std::string type;
 
 	if (m_Color > 0) {
 
@@ -274,14 +255,12 @@ GLRenderTarget::_rebuild()
 			if (0 != m_TexId[i]) {
 				texName = m_TexId[i]->getLabel();
 				internalFormat = m_TexId[i]->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_TexId[i]->getPrope(Texture::INTERNAL_FORMAT));;
-				format = m_TexId[i]->Attribs.getListStringOp(Texture::FORMAT, m_TexId[i]->getPrope(Texture::FORMAT));
-				type = m_TexId[i]->Attribs.getListStringOp(Texture::TYPE, m_TexId[i]->getPrope(Texture::TYPE));
 				RESOURCEMANAGER->removeTexture (m_TexId[i]->getLabel());
 				m_TexId[i] = NULL;
 			}
 
 			m_TexId[i] = RESOURCEMANAGER->createTexture 
-				(texName, internalFormat, format, type, m_Width, m_Height);
+				(texName, internalFormat, /*format, type, */m_Width, m_Height);
 
 			bind();
 			attachColorTexture (m_TexId[i], i);
@@ -294,18 +273,16 @@ GLRenderTarget::_rebuild()
 		if (0 != m_DepthTexture) {
 			texName = m_DepthTexture->getLabel();
 			internalFormat = m_DepthTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_DepthTexture->getPrope(Texture::INTERNAL_FORMAT));;
-			format = m_DepthTexture->Attribs.getListStringOp(Texture::FORMAT, m_DepthTexture->getPrope(Texture::FORMAT));
-			type = m_DepthTexture->Attribs.getListStringOp(Texture::TYPE, m_DepthTexture->getPrope(Texture::TYPE));
 			RESOURCEMANAGER->removeTexture(m_DepthTexture->getLabel());
 			m_DepthTexture = 0;
 		}
 
-		if (m_Samples > 1)
-			m_DepthTexture = RESOURCEMANAGER->createTextureMS
-			(texName, "DEPTH24_STENCIL8", m_Width, m_Height, m_Samples);
+		//if (m_Samples > 1)
+		//	m_DepthTexture = RESOURCEMANAGER->createTextureMS
+		//	(texName, "DEPTH24_STENCIL8", m_Width, m_Height, m_Samples);
 		else
 			m_DepthTexture = RESOURCEMANAGER->createTexture
-			(texName, "DEPTH24_STENCIL8", m_Width, m_Height, m_Layers);
+			(texName, "DEPTH24_STENCIL8", m_Width, m_Height, 1, m_Layers, 1, m_Samples);
 
 		bind();
 		attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
@@ -317,16 +294,15 @@ GLRenderTarget::_rebuild()
 		if (0 != m_StencilTexture) {
 			texName = m_StencilTexture->getLabel();
 			internalFormat = m_StencilTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_StencilTexture->getPrope(Texture::INTERNAL_FORMAT));;
-			format = m_StencilTexture->Attribs.getListStringOp(Texture::FORMAT, m_StencilTexture->getPrope(Texture::FORMAT));
-			type = m_StencilTexture->Attribs.getListStringOp(Texture::TYPE, m_StencilTexture->getPrope(Texture::TYPE));
 			RESOURCEMANAGER->removeTexture(m_StencilTexture->getLabel());
 			m_StencilTexture = 0;
 		}
 
-		if (m_Samples > 1)
-			m_StencilTexture = RESOURCEMANAGER->createTextureMS(texName, "STENCIL_INDEX8", m_Width, m_Height, m_Samples);
-		else
-			m_StencilTexture = RESOURCEMANAGER->createTexture(texName, "STENCIL_INDEX8", m_Width, m_Height, m_Layers);
+		//if (m_Samples > 1)
+		//	m_StencilTexture = RESOURCEMANAGER->createTextureMS(texName, "STENCIL_INDEX8", m_Width, m_Height, m_Samples);
+		//else
+			m_StencilTexture = RESOURCEMANAGER->createTexture(texName, "STENCIL_INDEX8", 
+						m_Width, m_Height, 1, m_Layers, 1, m_Samples);
 
 		bind();
 		attachDepthStencilTexture(m_StencilTexture, GL_DEPTH_ATTACHMENT);

@@ -16,26 +16,26 @@ https://github.com/Nau3D
 #ifndef PASS_H
 #define PASS_H
 
+
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
+#include "nau/event/eventManager.h"
+#include "nau/event/eventString.h"
+#include "nau/event/ilistener.h"
+#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/quad.h"
+#include "nau/material/materialid.h"
+#include "nau/render/rendertarget.h"
+#include "nau/render/texture.h"
+#include "nau/scene/camera.h"
+#include "nau/scene/geometryobject.h"
+#include "nau/scene/iscene.h"
+#include "nau/scene/sceneobject.h"
+
+
 #include <map>
 #include <string>
 #include <vector>
-
-#include <nau/attribute.h>
-#include <nau/attributeValues.h>
-#include <nau/event/eventManager.h>
-#include <nau/event/eventString.h>
-#include <nau/event/ilistener.h>
-#include <nau/geometry/boundingbox.h>
-#include <nau/geometry/quad.h>
-#include <nau/material/materialid.h>
-#include <nau/render/rendertarget.h>
-#include <nau/render/texture.h>
-#include <nau/scene/camera.h>
-#include <nau/scene/geometryobject.h>
-#include <nau/scene/iscene.h>
-#include <nau/scene/sceneobject.h>
-
-
 
 
 namespace nau
@@ -90,6 +90,8 @@ namespace nau
 				RUN_ALWAYS,
 				SKIP_FIRST_FRAME,
 				RUN_ONCE,
+				RUN_EVEN,
+				RUN_ODD
 			} RunMode;
 
 			typedef enum {
@@ -98,11 +100,6 @@ namespace nau
 			} StencilFunc;
 
 			static AttribSet Attribs;
-
-			void setPropui(UIntProperty prop, unsigned int value);
-			void setPropb(BoolProperty prop, bool value);
-
-
 
 			Pass (const std::string &passName);
 			virtual ~Pass();
@@ -198,6 +195,7 @@ namespace nau
 
 		
 		protected:
+
 			// CAMERAS
 			virtual void setupCamera (void);
 			void restoreCamera (void);
@@ -240,6 +238,8 @@ namespace nau
 			} RemapMode;
 
 			RemapMode m_RemapMode;
+
+			int m_IntDummy;
 
 		};
 	};

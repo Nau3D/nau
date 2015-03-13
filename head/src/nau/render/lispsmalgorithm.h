@@ -1,14 +1,14 @@
 #ifndef LISPSMALGORITHM
 #define LISPSMALGORITHM
 
-#include <nau/render/irenderalgorithm.h>
-#include <nau/scene/iscene.h>
-#include <nau/render/irenderer.h>
-#include <nau/render/texture.h>
-#include <nau/render/rendertarget.h>
-#include <nau/geometry/quad.h>
+#include "nau/render/irenderalgorithm.h"
+#include "nau/scene/iscene.h"
+#include "nau/render/irenderer.h"
+#include "nau/render/texture.h"
+#include "nau/render/rendertarget.h"
+#include "nau/geometry/quad.h"
 
-#include <nau/math/simpletransform.h>
+#include "nau/math/simpletransform.h"
 
 namespace nau
 {

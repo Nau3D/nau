@@ -1,12 +1,12 @@
 #ifndef OCTREEBYMAT_H
 #define OCTREEBYMAT_H
 
-#include <nau/scene/octreeByMatnode.h>
-#include <nau/scene/iscene.h>
-#include <nau/scene/camera.h>
-#include <nau/math/vec3.h>
-#include <nau/geometry/boundingbox.h>
-#include <nau/clogger.h> /***MARK***/
+#include "nau/scene/octreeByMatnode.h"
+#include "nau/scene/iscene.h"
+#include "nau/scene/camera.h"
+#include "nau/math/vec3.h"
+#include "nau/geometry/boundingbox.h"
+#include "nau/clogger.h" /***MARK***/
 
 #include <vector>
 #include <string>
@@ -23,7 +23,7 @@ namespace nau
 	namespace scene
 	{
 
-		//class COctreeNode;
+
 		class OctreeByMat {
 
 			friend class nau::loader::CBOLoader;
@@ -37,7 +37,7 @@ namespace nau
 			std::string getName();
 			void build (std::vector<nau::scene::SceneObject*> &sceneObjects);
 		
-			void updateOctreeTransform(nau::math::ITransform *m_Transform);
+			void updateOctreeTransform(nau::math::mat4 &m_Transform);
 			int getNumberOfVertices () { return 0; };
 
 			nau::math::vec3& getVertice (unsigned int v);

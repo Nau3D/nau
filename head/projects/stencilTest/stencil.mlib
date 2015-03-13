@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<materiallib name="Stencil">
+<materialLib name="Stencil">
 	<textures>
 		<texture name="Crate"   filename="../../models/Texturas/crate.jpg"  mipmap="No"/>		
 		<texture name="Caustic" filename="../../models/Texturas/caustic.jpg" />
@@ -62,10 +62,10 @@
 			</textures>
 			<state >
 				<ORDER value="2" />
-				<BLEND value="1" />
-				<BLEND_SRC value ="SRC_ALPHA" />
+				<BLEND value="TRUE" />
+				<BLEND_SRC value="SRC_ALPHA" />
 				<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
 			</state>
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

@@ -1,13 +1,12 @@
-#include <nau/scene/octreeByMatnode.h>
+#include "nau/scene/octreeByMatnode.h"
 
 #define LOGGING_ON
-#include <nau/clogger.h>
+#include "nau/clogger.h"
 #undef LOGGING_ON
-#include <nau/render/vertexdata.h>
-#include <nau/material/imaterialgroup.h>
-#include <nau/material/materialgroup.h>
-#include <nau/math/simpletransform.h>
-#include <nau.h>
+#include "nau/render/vertexdata.h"
+#include "nau/material/materialgroup.h"
+#include "nau/math/matrix.h"
+#include "nau.h"
 
 #include <assert.h>
 #include <sstream>
@@ -90,7 +89,7 @@ OctreeByMatNode::tightBoundingVolume() {
 
 
 void 
-OctreeByMatNode::updateNodeTransform(nau::math::ITransform *t)
+OctreeByMatNode::updateNodeTransform(nau::math::mat4 &t)
 {
 	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
 	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 
@@ -145,10 +144,10 @@ OctreeByMatNode::setRenderable (nau::render::IRenderable *aRenderable)
 
 	// first divide the renderable so that each renderable has only one material
 
-	std::vector<IMaterialGroup*> &vMaterialGroups = aRenderable->getMaterialGroups();
-	std::vector<IMaterialGroup*>::iterator matIter;
+	std::vector<MaterialGroup*> &vMaterialGroups = aRenderable->getMaterialGroups();
+	std::vector<MaterialGroup*>::iterator matIter;
 	matIter = vMaterialGroups.begin();
-	IMaterialGroup *pMaterialGroup;
+	MaterialGroup *pMaterialGroup;
 
 	for ( ; matIter != vMaterialGroups.end(); matIter++) {
 
@@ -229,7 +228,7 @@ OctreeByMatNode::_split() {
 	std::map<std::string, nau::scene::SceneObject *>::iterator matIter;
 	SceneObject *s;
 	std::string name;
-	IMaterialGroup *pMaterialGroup;
+	MaterialGroup *pMaterialGroup;
 
 	// do the splitting for each material 
 	int countSplits = m_pLocalMeshes.size();
@@ -274,7 +273,7 @@ OctreeByMatNode::_split() {
 				}
 
 				if (0 == tempMaterialGroup[index]) {
-					tempMaterialGroup[index] = new MaterialGroup;
+					tempMaterialGroup[index] = MaterialGroup::Create(NULL, pMaterialGroup->getMaterialName());
 					tempMaterialGroup[index]->setMaterialName (pMaterialGroup->getMaterialName());
 				}
 
@@ -493,11 +492,11 @@ OctreeByMatNode::_compile (void)
 
 		iter->second->getRenderable().getVertexData().compile();
 
-		std::vector<IMaterialGroup*> &matGroups = iter->second->getRenderable().getMaterialGroups();
-		std::vector<IMaterialGroup*>::iterator matGroupsIter = matGroups.begin();
+		std::vector<MaterialGroup*> &matGroups = iter->second->getRenderable().getMaterialGroups();
+		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 
 		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
-			(*matGroupsIter)->getIndexData().compile(iter->second->getRenderable().getVertexData());
+			(*matGroupsIter)->compile();
 		}
 	}
 

@@ -4,11 +4,8 @@
 	
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<!--file>..\ntg-bench\bench.obj</file-->
-				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
-				<!--file>..\3dsmodels\largoCamoes8000.cbo</file-->
-				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
-				<file>..\..\models\bench.obj</file>
+				<!--file name="..\ntg-bench\bench.obj"/-->
+				<file name="..\..\models\bench.obj"/>
 			</scene>
 		</scenes>
 		
@@ -61,21 +58,21 @@
 		</lights>
 		
 		<atomics>
-			<atomic id=0 semantics="Diff SM to RT" />
-			<atomic id=1 semantics="Shadow Pixels wrong in SM" />
-			<atomic id=2 semantics="Light Pixels wrong in SM" />
-			<atomic id=3 semantics="Pixels not facing the light" />
-			<atomic id=4 semantics="Pixels in SM contours" />
-			<atomic id=5 semantics="SM Contours facing the light" />
-			<atomic id=6 semantics="Pixels that intersect tri stored in SM" />
-			<atomic id=7 semantics="Intersecting pixels in light - corrections" />
-			<atomic id=8 semantics="Intersecting pixels in shadow - confirmations" />
-			<atomic id=9 semantics="Intersecting in contour facing the light" />
-			<atomic id=10 semantics="Wrong pixels outside contours" />
+			<atomic buffer="RT vs SM::test" offset=0 semantics="Diff SM to RT" />
+			<atomic buffer="RT vs SM::test" offset=4 semantics="Shadow Pixels wrong in SM" />
+			<atomic buffer="RT vs SM::test" offset=8 semantics="Light Pixels wrong in SM" />
+			<atomic buffer="RT vs SM::test" offset=12 semantics="Pixels not facing the light" />
+			<atomic buffer="RT vs SM::test" offset=16 semantics="Pixels in SM contours" />
+			<atomic buffer="RT vs SM::test" offset=20 semantics="SM Contours facing the light" />
+			<atomic buffer="RT vs SM::test" offset=24 semantics="Pixels that intersect tri stored in SM" />
+			<atomic buffer="RT vs SM::test" offset=28 semantics="Intersecting pixels in light - corrections" />
+			<atomic buffer="RT vs SM::test" offset=32 semantics="Intersecting pixels in shadow - confirmations" />
+			<atomic buffer="RT vs SM::test" offset=36 semantics="Intersecting in contour facing the light" />
+			<atomic buffer="RT vs SM::test" offset=40 semantics="Wrong pixels outside contours" />
 		</atomics>	
 			
 		<materialLibs>
-			<mlib filename="RayTracerVsShadowMaps.mlib"/>
+			<materialLib filename="RayTracerVsShadowMaps.mlib"/>
 		</materialLibs>
 		
 	</assets>
@@ -85,13 +82,13 @@
 		
 			<pass class="depthmap" name="getShadowMap">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="depthAndVertices" fromLibrary="RT vs SM" />
+				<renderTarget name="depthAndVertices" fromLibrary="RT vs SM" />
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="RT vs SM" toMaterial="depthAndVertices" />
 				</materialMaps>
@@ -99,13 +96,13 @@
 			
 			<pass class="depthmap" name="getShadowMapBF">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<rendertarget name="depth" fromLibrary="RT vs SM" />
+				<renderTarget name="depth" fromLibrary="RT vs SM" />
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="RT vs SM" toMaterial="depthOnly" />
 				</materialMaps>
@@ -115,17 +112,17 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="RT vs SM" toMaterial="computeContoursA" />
 				</materialMaps>
-				<rendertarget name="deferredResult2" fromLibrary="RT vs SM" />
+				<renderTarget name="deferredResult2" fromLibrary="RT vs SM" />
 			</pass>	
 			
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<rendertarget name="deferred" fromLibrary="RT vs SM" />
+				<camera name="MainCamera" />
+				<renderTarget name="deferred" fromLibrary="RT vs SM" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<injectionMaps>
 					<map toMaterial="*">
@@ -151,22 +148,22 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="RT vs SM" toMaterial="testIntersection" />
 				</materialMaps>
-				<rendertarget name="intersectionResult" fromLibrary="RT vs SM" />
+				<renderTarget name="intersectionResult" fromLibrary="RT vs SM" />
 				<!--texture name="pos" fromLibrary="RT vs SM" /-->
 			</pass>
 		
 
 			<pass class="optix" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
 				
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				
-				<rendertarget name="test_ubyte" fromLibrary="RT vs SM" />
+				<renderTarget name="test_ubyte" fromLibrary="RT vs SM" />
 				
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				
 				<materialMaps>
@@ -204,32 +201,32 @@
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="RT vs SM" toMaterial="compareRTvsSM" />
 				</materialMaps>
-				<rendertarget name="deferredResult" fromLibrary="RT vs SM" />
+				<renderTarget name="deferredResult" fromLibrary="RT vs SM" />
 			</pass>	
 			
 			
 			<pass class="quad" name="showColor">
-				<viewport>RightTopViewport</viewport>
+				<viewport name="RightTopViewport" />
 				<texture name="intersectionResult" fromLibrary="RT vs SM" />			
 			</pass>
 
 			<pass class="quad" name="showOptixShadows">
-				<viewport>RightTopMViewport</viewport>
+				<viewport name="RightTopMViewport" />
 				<texture name="offscreenrender_ubyte" fromLibrary="RT vs SM" />
 			</pass>
 
 			<pass class="quad" name="showShadowMapResult">
-				<viewport>RightBottomMViewport</viewport>
+				<viewport name="RightBottomMViewport" />
 				<texture name="shadow" fromLibrary="RT vs SM"/>
 			</pass>	
 			
 			<pass class="quad" name="showShadowMap">
-				<viewport>RightBottomViewport</viewport>
+				<viewport name="RightBottomViewport" />
 				<texture name="shadowMapA" fromLibrary="RT vs SM"/>
 			</pass>	
 
 			<pass class="quad" name="showComparison">
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<texture name="color2" fromLibrary="RT vs SM"/>
 			</pass>	
 		</pipeline>

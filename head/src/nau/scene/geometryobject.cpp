@@ -1,7 +1,7 @@
-#include <nau/scene/geometryobject.h>
-#include <nau/geometry/box.h>
-#include <nau.h>
-#include <nau/material/material.h>
+#include "nau/scene/geometryobject.h"
+#include "nau/geometry/box.h"
+#include "nau.h"
+#include "nau/material/material.h"
 #include <sstream>
 
 using namespace nau::scene;
@@ -40,7 +40,7 @@ GeometricObject::setRenderable (nau::render::IRenderable *renderable)
 void 
 GeometricObject::setMaterial(const std::string &name) 
 {
-	IMaterialGroup *mg = m_Renderable->getMaterialGroups().at(0);
+	MaterialGroup *mg = m_Renderable->getMaterialGroups().at(0);
 
 	mg ->setMaterialName(name);
 }

@@ -1,8 +1,8 @@
-#include <nau/render/optix/optixTextureLib.h>
+#include "nau/render/optix/optixTextureLib.h"
 
 #include <vector>
 
-#include <nau.h>
+#include "nau.h"
 #include <GL/glew.h>
 
 using namespace nau::render::optixRender;

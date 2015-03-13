@@ -1,8 +1,11 @@
 #ifndef RENDERTARGET_H
 #define RENDERTARGET_H
 
-#include <nau/render/rendertarget.h>
-#include <nau/render/texture.h>
+#include "nau/render/rendertarget.h"
+#include "nau/render/texture.h"
+
+#include <string>
+#include <vector>
 
 namespace nau
 {
@@ -50,7 +53,7 @@ namespace nau
 			void setClearValues(float r, float g, float b, float a);
 			void setSampleCount(int samples);
 			void setLayerCount(int layers);
-			const nau::math::vec4 & getClearValues(); 
+			nau::math::vec4 & getClearValues(); 
 			virtual unsigned int getNumberOfColorTargets();
 			virtual int getId (void);
 			virtual std::string &getName (void);

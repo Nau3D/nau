@@ -1,8 +1,8 @@
 #ifndef EventCameraMotion_H
 #define EventCameraMotion_H
 
-#include <nau/event/iEventData.h>
-#include <nau/event/cameraMotion.h>
+#include "nau/event/iEventData.h"
+#include "nau/event/cameraMotion.h"
 
 namespace nau
 {

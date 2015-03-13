@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<materiallib name="PL3D_Materials">
+<materialLib name="PL3D_Materials">
 
 	<textures>
 		<texture name="Grade_01_02_03" filename="../../models/Texturas/AL01_Grade1.tif" />
@@ -78,4 +78,4 @@
 			</textures>
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

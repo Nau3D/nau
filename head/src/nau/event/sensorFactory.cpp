@@ -1,7 +1,7 @@
-#include <nau/event/sensorFactory.h>
-//#include <nau/event/touchSensor.h>
-#include <nau/event/proximitySensor.h>
-#include <nau/event/timeSensor.h>
+#include "nau/event/sensorFactory.h"
+//#include "nau/event/touchSensor.h"
+#include "nau/event/proximitySensor.h"
+#include "nau/event/timeSensor.h"
 
 using namespace nau::event_;
 using namespace std;

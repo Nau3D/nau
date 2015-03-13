@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include <nau/geometry/iboundingvolume.h>
-#include <nau/math/simpletransform.h>
-#include <nau/math/vec3.h>
-#include <nau/geometry/bbox.h>
+#include "nau/geometry/iboundingvolume.h"
+#include "nau/math/matrix.h"
+#include "nau/math/vec3.h"
+#include "nau/geometry/bbox.h"
 
 namespace nau
 {
@@ -22,10 +22,9 @@ namespace nau
 				CENTER
 			};
 	
-			mutable std::vector<nau::math::vec3> m_vPoints,m_vLocalPoints; /***MARK***/ //Should not be mutable
-			//std::vector<nau::math::vec3> m_vLocalPoints;
+			std::vector<nau::math::vec3> m_vPoints,m_vLocalPoints; 
 
-			SimpleTransform m_GeometryTransform; 
+			mat4 m_GeometryTransform; 
 
 		public:
 
@@ -41,8 +40,8 @@ namespace nau
 			void calculate (const std::vector<VertexData::Attr> &vertices);
 
 			// updates the geometry transform
-			void setTransform (nau::math::ITransform &aTransform);
-			ITransform *getTransform();
+			void setTransform(nau::math::mat4 &aTransform);
+			mat4 &getTransform();
 
 
 			bool intersect (const IBoundingVolume *volume);
@@ -50,8 +49,8 @@ namespace nau
 			
 			bool isA (BoundingVolumeKind kind) const;
 			std::string getType (void) const;
-			std::vector<nau::math::vec3>& getPoints (void) const;
-			std::vector<nau::math::vec3>& getNonTransformedPoints (void) const;
+			std::vector<nau::math::vec3> getPoints (void);
+			std::vector<nau::math::vec3>& getNonTransformedPoints (void) ;
 
 			const nau::math::vec3& getMin (void) const;
 			const nau::math::vec3& getMax (void) const;

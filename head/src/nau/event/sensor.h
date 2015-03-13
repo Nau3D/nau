@@ -1,11 +1,10 @@
 #ifndef ISENSOR_H
 #define ISENSOR_H
 
+#include "nau/math/vec3.h"
+#include "nau/event/ilistener.h"
+
 #include <string>
-
-#include <nau/math/vec3.h>
-#include <nau/event/ilistener.h>
-
 
 namespace nau
 {

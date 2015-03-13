@@ -1,21 +1,21 @@
+#include "nau/scene/camera.h"
+
+#include "nau.h"
+#include "nau/slogger.h"
+#include "nau/event/eventFactory.h" 
+#include "nau/event/cameraMotion.h"
+#include "nau/event/cameraOrientation.h"
+#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/mesh.h"
+#include "nau/material/materialgroup.h"
+#include "nau/math/matrix.h"
+#include "nau/math/utils.h"
+#include "nau/render/irenderer.h"
+
+#ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
+#endif
 #include <cmath>
-#include <nau/slogger.h>
-
-
-#include <nau/scene/camera.h>
-#include <nau/math/utils.h>
-#include <nau/math/simpletransform.h>
-#include <nau/math/mat4.h>
-#include <nau/geometry/boundingbox.h>
-#include <nau/geometry/mesh.h>
-#include <nau/material/materialgroup.h>
-#include <nau/render/irenderer.h>
-#include <nau/event/eventFactory.h> 
-#include <nau/event/cameraMotion.h>
-#include <nau/event/cameraOrientation.h>
-#include <nau.h>
-
 
 using namespace nau::scene;
 using namespace nau::math;
@@ -29,7 +29,7 @@ Camera::Init() {
 	// VEC4
 	Attribs.add(Attribute(POSITION, "POSITION",Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 1.0f)));
 	Attribs.add(Attribute(VIEW_VEC, "VIEW", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
-	Attribs.add(Attribute(NORMALIZED_VIEW_VEC, "NORMALIZED_VIEW_VEC", Enums::DataType::VEC4, true,new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+	//Attribs.add(Attribute(NORMALIZED_VIEW_VEC, "NORMALIZED_VIEW_VEC", Enums::DataType::VEC4, true,new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	Attribs.add(Attribute(UP_VEC, "UP", Enums::DataType::VEC4, false, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 	Attribs.add(Attribute(NORMALIZED_UP_VEC, "NORMALIZED_UP" ,Enums::DataType::VEC4, true, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 	Attribs.add(Attribute(NORMALIZED_RIGHT_VEC, "NORMALIZED_RIGHT" ,Enums::DataType::VEC4, true, new vec4(1.0f, 0.0f, 0.0f, 0.0f)));
@@ -38,6 +38,8 @@ Camera::Init() {
 	Attribs.add(Attribute(VIEW_MATRIX, "VIEW_MATRIX",Enums::DataType::MAT4, true));
 	Attribs.add(Attribute(PROJECTION_MATRIX, "PROJECTION_MATRIX",Enums::DataType::MAT4, true));
 	Attribs.add(Attribute(VIEW_INVERSE_MATRIX, "VIEW_INVERSE_MATRIX",Enums::DataType::MAT4, true));
+	Attribs.add(Attribute(PROJECTION_INVERSE_MATRIX, "PROJECTION_INVERSE_MATRIX", Enums::DataType::MAT4, true));
+
 	Attribs.add(Attribute(PROJECTION_VIEW_MATRIX, "PROJECTION_VIEW_MATRIX",Enums::DataType::MAT4, true));
 	Attribs.add(Attribute(TS05_PVM_MATRIX, "TS05_PVM_MATRIX",Enums::DataType::MAT4, true));
 	// FLOAT
@@ -54,6 +56,9 @@ Camera::Init() {
 	Attribs.add(Attribute(PROJECTION_TYPE, "TYPE", Enums::DataType::ENUM, false, new int(PERSPECTIVE)));
 	Attribs.listAdd("TYPE", "PERSPECTIVE", PERSPECTIVE);
 	Attribs.listAdd("TYPE", "ORTHO", ORTHO);
+
+	NAU->registerAttributes("CAMERA", &Attribs);
+
 	return true;
 }
 
@@ -61,13 +66,13 @@ Camera::Init() {
 AttribSet Camera::Attribs;
 bool Camera::Inited = Init();
 
-void
-Camera::setDefault()
-{
-	Attribs.initAttribInstanceFloatArray(m_FloatProps);
-	Attribs.initAttribInstanceVec4Array(m_Float4Props);
-	Attribs.initAttribInstanceEnumArray(m_EnumProps);
-}
+//void
+//Camera::setDefault()
+//{
+//	Attribs.initAttribInstanceFloatArray(m_FloatProps);
+//	Attribs.initAttribInstanceVec4Array(m_Float4Props);
+//	Attribs.initAttribInstanceEnumArray(m_EnumProps);
+//}
 
 
 Camera::Camera (const std::string &name) :
@@ -80,39 +85,18 @@ Camera::Camera (const std::string &name) :
 	m_PositionOffset (0.0f)
 	//m_IsOrtho (false)
 {
-	setDefault();
+	//setDefault();
+	registerAndInitArrays("CAMERA", Attribs);
 	m_Id = 0;
 	m_Name = name;
 	m_pViewport = NAU->getDefaultViewport();
 
-	//m_Float4Props[POSITION].set(0.0f, 0.0f, 0.0f, 1.0f);
-	//m_Float4Props[VIEW_VEC].set(0.0f, 0.0f, -1.0f, 0.0f);
-	//m_Float4Props[NORMALIZED_VIEW_VEC].set(0.0f, 0.0f, -1.0f, 0.0f);
-
-	//m_Float4Props[NORMALIZED_RIGHT_VEC].set(1.0f, 0.0f, 0.0f, 0.0f);
-
-	//m_Float4Props[UP_VEC].set(0.0f, 1.0f, 0.0f, 0.0f);
-	//m_Float4Props[NORMALIZED_UP_VEC].set(0.0f, 1.0f, 0.0f, 0.0f);
-
-	//m_Float4Props[LOOK_AT_POINT].set(0.0f, 0.0f, -1.0f, 1.0f);
-
-	//m_FloatProps[FOV] = 60.0f;
-	//m_FloatProps[TOP] = 1.0f;
-	//m_FloatProps[BOTTOM] = -1.0f;
-	//m_FloatProps[LEFT] = -1.0f;
-	//m_FloatProps[RIGHT] = 1.0f;
-	//m_FloatProps[NEARP] = 1.0f;
-	//m_FloatProps[FARP] = 10000.0f;
-	//m_FloatProps[ELEVATION_ANGLE] = 0.0f;
-	//m_FloatProps[ZX_ANGLE] = (float)M_PI;
-
 	buildViewMatrix();
-	buildViewMatrixInverse();
+	buildInverses();
 
 	m_StaticCondition = false;
 
 	m_BoundingVolume = new BoundingBox;
-	m_Transform = new SimpleTransform;
 	setVectorsFromSpherical();
 
 	// Adding a Mesh with the frustum lines
@@ -124,7 +108,7 @@ Camera::Camera (const std::string &name) :
 	VertexData &vertexData = renderable->getVertexData();
 	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
 
-	MaterialGroup *aMaterialGroup = new MaterialGroup;
+	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Green");
 	
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(16);
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_LEFT_FAR;
@@ -138,15 +122,15 @@ Camera::Camera (const std::string &name) :
 	indices->at (14) = Camera::BOTTOM_LEFT_FAR;		indices->at (15) = Camera::TOP_LEFT_FAR;
 
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (renderable);
-	aMaterialGroup->setMaterialName("__Black");
-//	aMaterialGroup->setMaterialName("__Emission White");
+	//aMaterialGroup->setParent (renderable);
+	//aMaterialGroup->setMaterialName("__Black");
+	//aMaterialGroup->setMaterialName("__Emission White");
 
 	renderable->addMaterialGroup (aMaterialGroup);
-	m_Transform = & m_Mat4Props[VIEW_INVERSE_MATRIX];
+	m_Transform = m_Mat4Props[VIEW_INVERSE_MATRIX];
 	setRenderable (renderable);
 
-	aMaterialGroup = new MaterialGroup;
+	aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Red");
 	indices = new std::vector<unsigned int>(8);
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_RIGHT_NEAR;
 	indices->at (2) = Camera::TOP_RIGHT_NEAR;		indices->at (3) = Camera::BOTTOM_RIGHT_NEAR;
@@ -154,8 +138,8 @@ Camera::Camera (const std::string &name) :
 	indices->at (6) = Camera::BOTTOM_LEFT_NEAR;		indices->at (7) = Camera::TOP_LEFT_NEAR;
 
 	aMaterialGroup->setIndexList (indices);
-	aMaterialGroup->setParent (renderable);
-	aMaterialGroup->setMaterialName("__Black");
+	//aMaterialGroup->setParent (renderable);
+	//aMaterialGroup->setMaterialName("__Black");
 //	aMaterialGroup->setMaterialName("__Emission Red");
 
 	renderable->addMaterialGroup (aMaterialGroup);
@@ -170,8 +154,6 @@ Camera::Camera (const std::string &name) :
 
 Camera::~Camera (void)
 {
-	m_Transform = NULL;
-	m_pViewport = NULL;
 }
 
 
@@ -216,34 +198,45 @@ Camera::updateProjection ()
 }
 
 
-void Camera::setProp(Mat4Property prop, mat4 &mat) 
-{
-	m_Mat4Props[prop].setMat44(mat);
-}
+//void Camera::setPropm4(Mat4Property prop, mat4 &mat) 
+//{
+//	m_Mat4Props[prop] = mat;
+//}
 
 
 void 
-Camera::setProp(FloatProperty prop, float f) 
+Camera::setPropf(FloatProperty prop, float f) 
 {
-	m_FloatProps[prop] = f;
+	
 	vec3 v;
 
 	switch(prop) {
 
 		case ZX_ANGLE:
 		case ELEVATION_ANGLE:
+			m_FloatProps[prop] = f;
 			setVectorsFromSpherical();
 			break;
 		default:
+			AttributeValues::setPropf(prop, f);
+			buildViewMatrix();
 			buildProjectionMatrix();
 			buildProjectionViewMatrix();
 			buildTS05PVMMatrix();
+			buildInverses();
 	}
 }
 
 
+void 
+Camera::setPropf4(Float4Property prop, vec4& aVec) {
+
+	setPropf4(prop, aVec.x, aVec.y, aVec.z, aVec.w);
+}
+
+
 void
-Camera::setProp(Float4Property prop, float x, float y, float z, float w)
+Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 {
 	vec4 v;
 	vec2 v2;
@@ -256,32 +249,32 @@ Camera::setProp(Float4Property prop, float x, float y, float z, float w)
 			v.w = 1;	
 			m_Float4Props[POSITION].set(v);
 			m_Float4Props[LOOK_AT_POINT] = m_Float4Props[POSITION];
-			m_Float4Props[LOOK_AT_POINT] += m_Float4Props[NORMALIZED_VIEW_VEC];
+			m_Float4Props[LOOK_AT_POINT] += m_Float4Props[VIEW_VEC];
 			break;
 
 		case VIEW_VEC:
-		case NORMALIZED_VIEW_VEC:
 			v.w = 0.0f;
 			v2 = Spherical::toSpherical(x,y,z);
 			m_FloatProps[ZX_ANGLE] = v2.x;
 			m_FloatProps[ELEVATION_ANGLE] = v2.y;
 			m_Float4Props[VIEW_VEC].set(v);
-			m_Float4Props[NORMALIZED_VIEW_VEC].set(v);
-			m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
-			m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[NORMALIZED_VIEW_VEC].cross(m_Float4Props[NORMALIZED_UP_VEC]);
+			m_Float4Props[VIEW_VEC].normalize();
+//			m_Float4Props[NORMALIZED_VIEW_VEC] = m_Float4Props[VIEW_VEC];
+
+			m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]);
 			m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
-			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]);
-			m_Float4Props[UP_VEC].set(m_Float4Props[NORMALIZED_UP_VEC]);
+			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 			m_Float4Props[LOOK_AT_POINT] = m_Float4Props[POSITION];
-			m_Float4Props[LOOK_AT_POINT] += m_Float4Props[NORMALIZED_VIEW_VEC];
+			m_Float4Props[LOOK_AT_POINT] += m_Float4Props[VIEW_VEC];
 			break;
 
 		case UP_VEC:
 			v.w = 0.0f;
-			m_Float4Props[NORMALIZED_RIGHT_VEC].set(m_Float4Props[VIEW_VEC].cross(v));
+			m_Float4Props[UP_VEC] = v;
+			m_Float4Props[UP_VEC].normalize();
+			m_Float4Props[NORMALIZED_RIGHT_VEC].set(m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]));
 			m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
-			m_Float4Props[NORMALIZED_UP_VEC].set(m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]));
-			m_Float4Props[UP_VEC] = m_Float4Props[NORMALIZED_UP_VEC];
+			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 			break;
 
 		case LOOK_AT_POINT:
@@ -290,52 +283,34 @@ Camera::setProp(Float4Property prop, float x, float y, float z, float w)
 			m_Float4Props[VIEW_VEC] = m_Float4Props[LOOK_AT_POINT];
 			m_Float4Props[VIEW_VEC] -= m_Float4Props[POSITION];
 			m_Float4Props[VIEW_VEC].w = 0.0f;
-			m_Float4Props[NORMALIZED_VIEW_VEC].set(m_Float4Props[VIEW_VEC]);
-			m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
-			v2 = Spherical::toSpherical(m_Float4Props[NORMALIZED_VIEW_VEC].x,m_Float4Props[NORMALIZED_VIEW_VEC].y,m_Float4Props[NORMALIZED_VIEW_VEC].z);
+			m_Float4Props[VIEW_VEC].normalize();
+//			m_Float4Props[NORMALIZED_VIEW_VEC].set(m_Float4Props[VIEW_VEC]);
+			v2 = Spherical::toSpherical(m_Float4Props[VIEW_VEC].x,m_Float4Props[VIEW_VEC].y,m_Float4Props[VIEW_VEC].z);
 			m_FloatProps[ZX_ANGLE] = v2.x;
 			m_FloatProps[ELEVATION_ANGLE] = v2.y;
 
-			m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[NORMALIZED_VIEW_VEC].cross(m_Float4Props[NORMALIZED_UP_VEC]);
+			m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]);
 			m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
-			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]);
+			m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 			break;
+		default:
+			AttributeValues::setPropf4(prop, x, y, z, w);
 	}
 	buildViewMatrix();
-	buildViewMatrixInverse();
+	buildInverses();
 	buildProjectionViewMatrix();
 	buildTS05PVMMatrix();
 }
 
 
 void 
-Camera::setProp(EnumProperty prop, int value) 
+Camera::setPrope(EnumProperty prop, int value) 
 {
-	m_EnumProps[prop] = value;
+	AttributeValues::setPrope(prop, value);
 
 	buildProjectionMatrix();
 	buildProjectionViewMatrix();
 	buildTS05PVMMatrix();
-}
-
-
-void 
-Camera::setProp(int prop, Enums::DataType type, void *value) {
-
-	vec4 *v;
-	switch (type) {
-
-		case Enums::FLOAT:
-			setProp((FloatProperty)prop, *(float *)value);
-			break;
-		case Enums::VEC4:
-			v = (vec4 *)value;
-			setProp((Float4Property)prop, v->x, v->y, v->z, v->w);
-			break;
-		case Enums::INT:
-			m_IntProps[prop] = *(int *)value;
-			break;
-	}
 }
 
 
@@ -344,53 +319,21 @@ Camera::getProp(int prop, Enums::DataType type) {
 
 	switch (type) {
 
-	case Enums::FLOAT:
-		assert(m_FloatProps.count(prop) > 0);
-		return(&(m_FloatProps[prop]));
-		break;
-	case Enums::VEC4:
-		assert(m_Float4Props.count(prop) > 0);
-		return(&(m_Float4Props[prop]));
-		break;
-	case Enums::INT:
-		assert(m_IntProps.count(prop) > 0);
-		return(&(m_IntProps[prop]));
-		break;
-	case Enums::MAT4:
-		assert(m_Mat4Props.count(prop) > 0);
-		return((void *)m_Mat4Props[prop].getMat44().getMatrix());
-	}
-	return NULL;
+// ARF: Check who calls this
+		case Enums::MAT4:
+			assert(m_Mat4Props.count(prop) > 0);
+			return((void *)m_Mat4Props[prop].getMatrix());
+		default:
+			return AttributeValues::getProp(prop, type);
+		}
 }
 
 
-//const vec4&
-//Camera::getPropf4(Float4Property prop) 
+//const mat4&
+//Camera::getPropm4(Mat4Property prop)
 //{
-//	return m_Float4Props[prop];
+//	return m_Mat4Props[prop];
 //}
-//
-//
-//float 
-//Camera::getPropf(FloatProperty prop)
-//{
-//	return m_FloatProps[prop];
-//}
-
-
-const mat4&
-Camera::getPropm4(Mat4Property prop)
-{
-	return m_Mat4Props[prop].getMat44();
-}
-
-
-//int
-//Camera::getPrope(EnumProperty prop) 
-//{
-//	return m_EnumProps[prop];
-//}
-
 
 
 IRenderable& 
@@ -429,19 +372,19 @@ Camera::getRenderable (void)
 	VertexData &vertexData = m_Renderable->getVertexData();
 	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
 
-	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(8);
-	for (int i = 0; i < 8 ; ++i) 
-		normals->at(i).set(0.0f, 0.0f, 0.0f);
-	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
+	//std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(8);
+	//for (int i = 0; i < 8 ; ++i) 
+	//	normals->at(i).set(0.0f, 0.0f, 0.0f);
+	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
-	buildViewMatrixInverse();
-	m_ResultTransform->clone(m_GlobalTransform);
-	m_ResultTransform->compose(*m_Transform);
+	buildInverses();
+	m_ResultTransform.copy(m_GlobalTransform);
+	m_ResultTransform *= m_Mat4Props[VIEW_INVERSE_MATRIX];
 	return (*m_Renderable);
 }
 
 
-const IBoundingVolume*
+IBoundingVolume*
 Camera::getBoundingVolume ()
 {
 	calculateBoundingVolume();
@@ -458,28 +401,29 @@ Camera::setCamera (vec3 position, vec3 view, vec3 up)
 	} else {
 		m_Float4Props[POSITION].set(position.x, position.y, position.z, 1.0f);
 	}
-
+	view.normalize();
 	m_Float4Props[VIEW_VEC].set(view.x, view.y, view.z, 0.0f);
-	m_Float4Props[NORMALIZED_VIEW_VEC].set(view.x, view.y, view.z, 0.0f);
-	m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
+//	m_Float4Props[NORMALIZED_VIEW_VEC].set(view.x, view.y, view.z, 0.0f);
+//	m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
 
 	vec2 vs = Spherical::toSpherical(view.x, view.y, view.z);
 
+	up.normalize();
 	m_Float4Props[UP_VEC].set(up.x, up.y, up.z, 0.0f);
 
 	m_Float4Props[NORMALIZED_RIGHT_VEC].set(m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]));
 	m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
 
-	m_Float4Props[NORMALIZED_UP_VEC].set(m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]));
+	m_Float4Props[NORMALIZED_UP_VEC].set(m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]));
 	m_Float4Props[NORMALIZED_UP_VEC].normalize();
-	m_Float4Props[UP_VEC].set(m_Float4Props[NORMALIZED_UP_VEC]);
+	//m_Float4Props[UP_VEC].set(m_Float4Props[NORMALIZED_UP_VEC]);
 
 	vec4 v4 = m_Float4Props[POSITION];
-	v4 += m_Float4Props[NORMALIZED_VIEW_VEC];
+	v4 += m_Float4Props[VIEW_VEC];
 	m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
 
 	buildViewMatrix();
-	buildViewMatrixInverse();
+	buildInverses();
 	buildProjectionViewMatrix();
 	buildTS05PVMMatrix();
 
@@ -487,13 +431,13 @@ Camera::setCamera (vec3 position, vec3 view, vec3 up)
 
 
 void 
-Camera::buildViewMatrixInverse(void) {
+Camera::buildInverses(void) {
 
 	// This is a simpler inverse because the view matrix has a specific format
 	//mat4& tmp = const_cast<mat4&>(m_ViewMatrix->getMat44());
 	//mat4& tmp2 = const_cast<mat4&>(m_ViewMatrixInverse->getMat44());
-	mat4& tmp = const_cast<mat4&>(m_Mat4Props[VIEW_MATRIX].getMat44());
-	mat4& tmp2 = const_cast<mat4&>(m_Mat4Props[VIEW_INVERSE_MATRIX].getMat44());
+	mat4 &tmp = m_Mat4Props[VIEW_MATRIX];
+	mat4 &tmp2 = m_Mat4Props[VIEW_INVERSE_MATRIX];
 
 	int i,j;
 	float aux;
@@ -512,6 +456,9 @@ Camera::buildViewMatrixInverse(void) {
 			aux += tmp.at(i,j) * tmp.at(3,j);
 		tmp2.set(3,i,-aux);
 	}
+
+	m_Mat4Props[PROJECTION_INVERSE_MATRIX] = m_Mat4Props[PROJECTION_MATRIX];
+	m_Mat4Props[PROJECTION_INVERSE_MATRIX].invert();
 }
 
 
@@ -524,24 +471,23 @@ Camera::setVectorsFromSpherical()
 	// View vector = -Z from camera
 	vec3 v;
 	v = Spherical::toCartesian(m_FloatProps[ZX_ANGLE], m_FloatProps[ELEVATION_ANGLE]);
-	m_Float4Props[NORMALIZED_VIEW_VEC].set( v.x, v.y, v.z, 0.0f);
-	m_Float4Props[VIEW_VEC].set(v.x, v.y, v.z, 0.0f);
+	//m_Float4Props[NORMALIZED_VIEW_VEC].set( v.x, v.y, v.z, 0.0f);
+	setPropf4(VIEW_VEC, v.x, v.y, v.z, 0.0f);
+	//m_Float4Props[VIEW_VEC].set(v.x, v.y, v.z, 0.0f);
 
-	v = Spherical::getRightVector(m_FloatProps[ZX_ANGLE], m_FloatProps[ELEVATION_ANGLE]);
-	m_Float4Props[NORMALIZED_RIGHT_VEC].set(v.x, v.y, v.z, 0.0f);
+	//m_Float4Props[NORMALIZED_RIGHT_VEC] = m_Float4Props[VIEW_VEC].cross(m_Float4Props[UP_VEC]);
+	//m_Float4Props[NORMALIZED_RIGHT_VEC].normalize();
 
-	vec4 v4 = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[NORMALIZED_VIEW_VEC]);
-	m_Float4Props[NORMALIZED_UP_VEC].set(v4.x, v4.y, v4.z, 0.0f);
-	m_Float4Props[UP_VEC].set(v4.x, v4.y, v4.z, 0.0f);
+	//m_Float4Props[NORMALIZED_UP_VEC] = m_Float4Props[NORMALIZED_RIGHT_VEC].cross(m_Float4Props[VIEW_VEC]);
 
-	v4 = m_Float4Props[POSITION];
-	v4 += m_Float4Props[NORMALIZED_VIEW_VEC];
-	m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
+	//vec4 v4 = m_Float4Props[POSITION];
+	//v4 += m_Float4Props[VIEW_VEC];
+	//m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
 
-	buildViewMatrix();
-	buildViewMatrixInverse();
-	buildProjectionViewMatrix();
-	buildTS05PVMMatrix();
+	//buildViewMatrix();
+	//buildInverses();
+	//buildProjectionViewMatrix();
+	//buildTS05PVMMatrix();
 }
 
 
@@ -553,7 +499,7 @@ Camera::buildProjectionMatrix() {
 
 	m_Mat4Props[PROJECTION_MATRIX].setIdentity();
 
-	mat4& projection = const_cast<mat4&>(m_Mat4Props[PROJECTION_MATRIX].getMat44()); 
+	mat4 &projection = m_Mat4Props[PROJECTION_MATRIX]; 
 
 	if (m_EnumProps[PROJECTION_TYPE] == PERSPECTIVE) {
 		projection.set (0, 0, f / aspect);
@@ -572,8 +518,8 @@ Camera::buildProjectionMatrix() {
 		projection.set (3, 2, -(m_FloatProps[FARP] + m_FloatProps[NEARP]) / (m_FloatProps[FARP] - m_FloatProps[NEARP]));
 	}
 
-	//if (this->m_Renderable)
-	//	this->m_Renderable->resetCompilationFlags();
+	if (this->m_Renderable)
+		this->m_Renderable->resetCompilationFlags();
 
 }
 	
@@ -583,9 +529,14 @@ Camera::setViewport (Viewport* aViewport)
 {
 	m_pViewport = aViewport;
 
-	buildProjectionMatrix();
-	buildProjectionViewMatrix();
-	buildTS05PVMMatrix();
+	if (aViewport != NULL) {
+
+		buildProjectionMatrix();
+		buildProjectionViewMatrix();
+		buildTS05PVMMatrix();
+		buildInverses();
+
+	}
 }
 
 
@@ -605,15 +556,15 @@ Camera::buildTS05PVMMatrix(void)
 	m_Mat4Props[TS05_PVM_MATRIX].translate (0.5f, 0.5f, 0.5f);
 	m_Mat4Props[TS05_PVM_MATRIX].scale (0.5f);
 
-	m_Mat4Props[TS05_PVM_MATRIX].compose (m_Mat4Props[PROJECTION_VIEW_MATRIX]);
+	m_Mat4Props[TS05_PVM_MATRIX] *= m_Mat4Props[PROJECTION_VIEW_MATRIX];
 }
 
 void
 Camera::buildProjectionViewMatrix (void)
 {
 	m_Mat4Props[PROJECTION_VIEW_MATRIX].setIdentity();
-	m_Mat4Props[PROJECTION_VIEW_MATRIX].compose(m_Mat4Props[PROJECTION_MATRIX]);
-	m_Mat4Props[PROJECTION_VIEW_MATRIX].compose(m_Mat4Props[VIEW_MATRIX]);
+	m_Mat4Props[PROJECTION_VIEW_MATRIX] *= m_Mat4Props[PROJECTION_MATRIX];
+	m_Mat4Props[PROJECTION_VIEW_MATRIX] *= m_Mat4Props[VIEW_MATRIX];
 }
 
 void
@@ -622,9 +573,9 @@ Camera::buildViewMatrix (void)
 	vec4 s,u,v;
 	u = m_Float4Props[NORMALIZED_UP_VEC];
 	s = m_Float4Props[NORMALIZED_RIGHT_VEC];
-	v = m_Float4Props[NORMALIZED_VIEW_VEC];
+	v = m_Float4Props[VIEW_VEC];
 
-	mat4& viewMatrix = const_cast<mat4&>(m_Mat4Props[VIEW_MATRIX].getMat44()); 
+	mat4 &viewMatrix = m_Mat4Props[VIEW_MATRIX]; 
 
 	viewMatrix.setIdentity();
 
@@ -640,17 +591,11 @@ Camera::buildViewMatrix (void)
 	viewMatrix.set (1, 2, -v.y);
 	viewMatrix.set (2, 2, -v.z);
 
-	if (m_IsDynamic) {
-		vec3 p = m_Transform->getTranslation();
-		m_Mat4Props[VIEW_MATRIX].translate(-p.x, -p.y-0.85, -p.z);
-	}
-	else {
-		vec4 p = m_Float4Props[POSITION];
-		m_Mat4Props[VIEW_MATRIX].translate(-p.x, -p.y, -p.z);
-	}
-	//if (this->m_Renderable)
-	//	this->m_Renderable->resetCompilationFlags();
+	vec4 p = m_Float4Props[POSITION];
+	m_Mat4Props[VIEW_MATRIX].translate(-p.x, -p.y, -p.z);
 
+	if (this->m_Renderable)
+		this->m_Renderable->resetCompilationFlags();
 }
 
 
@@ -692,7 +637,7 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera)
 	vec4 rightWNear (rightVector);
 	rightWNear *= (wNear * 0.5f);
 
-	vec4 view = aCamera->getPropf4(NORMALIZED_VIEW_VEC);
+	vec4 view = aCamera->getPropf4(VIEW_VEC);
 	vec4 fc = view;
 	fc *= cFar;
 	fc += aCamera->getPropf4(POSITION);
@@ -743,10 +688,10 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera)
 	//}
 
 //	m_UpVector = aCamera->getUpVector();
-	ITransform &viewMatrix = m_Mat4Props[VIEW_MATRIX];
+	mat4 &viewMatrix = m_Mat4Props[VIEW_MATRIX];
 
 	for (int i = 0; i < 8; i++){
-		viewMatrix.getMat44().transform (points[i]);
+		viewMatrix.transform (points[i]);
 	}
 
 
@@ -797,20 +742,20 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera)
 void 
 Camera::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt)
 {
-	if (eventType == "VIEWPORT_CHANGED" && m_pViewport->getName() == sender)
+	if (eventType == "VIEWPORT_CHANGED" && m_pViewport != NULL && m_pViewport->getName() == sender)
 		updateProjection();
 
-	if (eventType == "DYNAMIC_CAMERA") {
+	//if (eventType == "DYNAMIC_CAMERA") {
 
-		vec3 p = m_Transform->getTranslation();
-		setProp(POSITION,p.x,p.y,p.z,1.0f);
-		buildViewMatrix();
+	//	vec3 p = m_Transform->getTranslation();
+	//	setPropf4(POSITION,p.x,p.y,p.z,1.0f);
+	//	buildViewMatrix();
 
-		result.set(p.x,p.y,p.z); 
-		m_Event.setData(&result);
-		EVENTMANAGER->notifyEvent("CAMERA_POSITION", m_Name,"", &m_Event);
+	//	result.set(p.x,p.y,p.z); 
+	//	m_Event.setData(&result);
+	//	EVENTMANAGER->notifyEvent("CAMERA_POSITION", m_Name,"", &m_Event);
 
-	}
+	//}
 	if(eventType == "CAMERA_ORIENTATION"  && !m_LookAt) {
 		CameraOrientation *f=(CameraOrientation *)evt->getData();
 		m_FloatProps[ELEVATION_ANGLE] = f->getBeta();
@@ -826,54 +771,54 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType, n
 		float vel=f->getVelocity();
 
 		vec4 vPos = m_Float4Props[POSITION];
-		vec4 vView = m_Float4Props[NORMALIZED_VIEW_VEC];
+		vec4 vView = m_Float4Props[VIEW_VEC];
 		vec4 vRight = m_Float4Props[NORMALIZED_RIGHT_VEC];
-		vec4 vUp = m_Float4Props[NORMALIZED_UP_VEC];
+		vec4 vUp = m_Float4Props[UP_VEC];
 
 		if(f->getDirection()=="BACKWARD") {
 
 			vView *= vel;
 			vPos -=  vView;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 
 		else if(f->getDirection()=="FORWARD") {
 
 			vView *= vel;
 			vPos += vView;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 				
 		else if(f->getDirection()=="LEFT") {
 			
 			vRight *= vel;
 			vPos -= vRight;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 
 		else if(f->getDirection()=="RIGHT") {
 			
 			vRight *= vel;
 			vPos += vRight;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 		else if (f->getDirection() == "UP") {
 		
 			vUp *= vel;
 			vPos += vUp;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 		else if (f->getDirection() == "DOWN") {
 
 			vUp *= vel;
 			vPos -= vUp;
-			setProp((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
+			setPropf4((Float4Property)POSITION, vPos.x, vPos.y, vPos.z, 1.0f);
 		}
 
 		if (m_LookAt) {
 
 			vec4 v = m_Float4Props[LOOK_AT_POINT];
-			setProp((Float4Property)LOOK_AT_POINT, v.x, v.y, v.z, 1.0f);
+			setPropf4((Float4Property)LOOK_AT_POINT, v.x, v.y, v.z, 1.0f);
 		}
 
 		result.set(m_Float4Props[POSITION].x, m_Float4Props[POSITION].y, m_Float4Props[POSITION].z); 

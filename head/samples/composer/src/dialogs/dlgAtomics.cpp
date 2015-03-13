@@ -60,10 +60,12 @@ DlgAtomics::updateDlg() {
 	m_propertyGrid1->Clear();
 	m_propertyGrid1->AddPage(wxT("Atomics"));
 
-	std::map<int, std::string>::iterator iter;
-	iter = renderer->m_AtomicLabels.begin();
-	for (; iter != renderer->m_AtomicLabels.end(); ++iter) {
-		m_propertyGrid1->Append(new wxFloatProperty( wxString(iter->second.c_str()), wxPG_LABEL ));
+	//std::map<std::pair<std::string, int>, std::string>::iterator iter;
+	//iter = renderer->m_AtomicLabels.begin();
+	
+//	for (; iter != renderer->m_AtomicLabels.end(); ++iter) {
+	for (auto iter:renderer->m_AtomicLabels) {
+		m_propertyGrid1->Append(new wxFloatProperty( wxString(iter.second.c_str()), wxPG_LABEL ));
 
 	}
 #endif
@@ -74,12 +76,12 @@ void
 DlgAtomics::update() {
 #if NAU_OPENGL_VERSION >= 400
 	IRenderer *renderer = RENDERER;
-	unsigned int *ac = renderer->getAtomicCounterValues();
-	std::map<int, std::string>::iterator iter;
+	std::vector<unsigned int> atValues = renderer->getAtomicCounterValues();
+	std::map<std::pair<std::string, unsigned int>, std::string>::iterator iter;
 	iter = renderer->m_AtomicLabels.begin();
-	for (; iter != renderer->m_AtomicLabels.end(); ++iter) {
-	
-		m_propertyGrid1->SetPropertyValue(wxString(iter->second.c_str()),(int)(ac[iter->first]));
+	for (unsigned int i = 0; i < renderer->m_AtomicLabels.size(); ++i, ++iter) {
+
+		m_propertyGrid1->SetPropertyValue(wxString(iter->second.c_str()),(int)(atValues[i]));
 	}
 #endif
 }

@@ -1,10 +1,10 @@
 #ifndef OCTREEBYMATSCENE_H
 #define OCTREEBYMATSCENE_H
 
-#include <nau/scene/iscenepartitioned.h>
-#include <nau/scene/octreeByMat.h>
-#include <nau/geometry/frustum.h>
-#include <nau/geometry/boundingbox.h>
+#include "nau/scene/iscenepartitioned.h"
+#include "nau/scene/octreeByMat.h"
+#include "nau/geometry/frustum.h"
+#include "nau/geometry/boundingbox.h"
 
 
 namespace nau {
@@ -24,9 +24,6 @@ namespace nau {
 		private:
 			std::vector<SceneObject*> m_vReturnVector;
 			std::vector<SceneObject*> m_SceneObjects;
-
-
-			//bool m_Visible;
 
 			nau::geometry::BoundingBox m_BoundingBox;
 
@@ -60,9 +57,9 @@ namespace nau {
 
 			virtual void getMaterialNames(std::set<std::string> *nameList);
 
-			virtual nau::math::ITransform *getTransform();
-			virtual void setTransform(nau::math::ITransform *t);
-			virtual void transform(nau::math::ITransform *t);
+			virtual nau::math::mat4 &getTransform();
+			virtual void setTransform(nau::math::mat4 &t);
+			virtual void transform(nau::math::mat4 &t);
 
 
 

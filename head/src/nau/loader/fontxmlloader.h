@@ -1,7 +1,7 @@
 #ifndef FONTXMLLOADER_H
 #define FONTXMLLOADER_H
 
-#include <nau/resource/font.h>
+#include "nau/resource/font.h"
 
 using namespace nau::resource;
 

@@ -1,18 +1,16 @@
 #ifdef NAU_OPTIX 
 
-#include <nau/render/passOptix.h>
+#include "nau.h"
+#include "nau/slogger.h"
+#include "nau/debug/profile.h"
+#include "nau/geometry/axis.h"
+#include "nau/geometry/frustum.h"
+#include "nau/render/passOptix.h"
 
-#include <nau/geometry/axis.h>
+#include <GL/glew.h>
 
 #include <sstream>
 #include <algorithm>
-
-#include <nau.h>
-#include <nau/geometry/frustum.h>
-#include <nau/debug/profile.h>
-#include <nau/slogger.h>
-
-#include <GL/glew.h>
 
 using namespace nau::material;
 using namespace nau::scene;
@@ -203,7 +201,7 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 			m_UseRT = true;
 		}
 		setRTSize(rt->getWidth(), rt->getHeight());
-		m_Viewport->setProp(Viewport::CLEAR_COLOR, rt->getClearValues());
+		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getClearValues());
 	}
 	m_RenderTarget = rt;
 
@@ -407,7 +405,7 @@ PassOptix::setupCamera (void)
 	o_Context["V"]->setFloat(v2.x, v2.y, v2.z);
 	const vec4 &v3 = aCam->getPropf4(Camera::NORMALIZED_RIGHT_VEC);
 	o_Context["U"]->setFloat(v3.x, v3.y, v3.z);
-	const vec4 &v4 = aCam->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+	const vec4 &v4 = aCam->getPropf4(Camera::VIEW_VEC);
 	o_Context["W"]->setFloat(v4.x, v4.y, v4.z);
 	float fov = aCam->getPropf(Camera::FOV) * 0.5;
 	o_Context["fov"]->setFloat(tan(fov*3.14159/180.0));

@@ -4,8 +4,8 @@
 #include <string>
 #include <map>
 
-#include <nau/material/materialid.h>
-#include <nau/material/materiallib.h>
+#include "nau/material/materialid.h"
+#include "nau/material/materiallib.h"
 
 using namespace nau::material;
 

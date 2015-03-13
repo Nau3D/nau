@@ -1,8 +1,8 @@
 #ifndef GLTEXIMAGE_H
 #define GLTEXIMAGE_H
 
-#include <nau/render/opengl/gltexture.h>
-#include <nau/material/teximage.h>
+#include "nau/render/opengl/gltexture.h"
+#include "nau/material/teximage.h"
 
 #include <GL/glew.h>
 

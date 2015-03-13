@@ -27,19 +27,24 @@ public:
                long style = 0,
                const wxString &name = _("GlCanvas"));
 
-   void OnPaint(wxPaintEvent & event);
-   void BreakResume ();
-   void OnSize(wxSizeEvent & event);
-   void OnEraseBackground(wxEraseEvent & event);
-   void OnEnterWindow(wxMouseEvent & event);
+	void OnPaint(wxPaintEvent & event);
+	void BreakResume ();
+	void StepPass();
+	void StepToEndOfFrame();
+	void StepUntilSamePassNextFrame();
+	void OnSize(wxSizeEvent & event);
+	void OnEraseBackground(wxEraseEvent & event);
+	void OnEnterWindow(wxMouseEvent & event);
 	void OnKeyDown(wxKeyEvent & event);
 	void OnKeyUp(wxKeyEvent & event);
 	void OnIdle (wxIdleEvent& event);
 	void OnMouseMove (wxMouseEvent& event);
 	void OnLeftDown (wxMouseEvent& event);
 	void OnLeftUp (wxMouseEvent& event);
+	void OnRightUp(wxMouseEvent& event);
 
 	bool IsPaused ();
+	void MultiStep(int stepSize = -1);
 
    void Render(void);
   // void InitGL(void);
@@ -84,9 +89,11 @@ private:
 	int m_CounterFps;
 
 	bool m_Stereo;
-
+	
 	nau::math::vec4 m_OldCamView;
 	//nau::animation::IAnimation *m_RiverAnimation;
+
+	int step;
 
 };
 

@@ -19,6 +19,11 @@ namespace nau
 				WAVEFRONTOBJ,
 				OGREXMLMESH,
 				PATCH,
+				BLENDER,
+				PLY,
+				LIGHTWAVE,
+				STL,
+				TRUESPACE,
 				UNKNOWN
 			} FileType;
 

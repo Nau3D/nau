@@ -1,9 +1,9 @@
 #ifndef INTERPOLATOR_H
 #define INTERPOLATOR_H
 
-#include <nau/math/vec3.h>
-#include <nau/math/vec4.h>
-#include <nau/event/ilistener.h>
+#include "nau/math/vec3.h"
+#include "nau/math/vec4.h"
+#include "nau/event/ilistener.h"
 
 #include <map>
 

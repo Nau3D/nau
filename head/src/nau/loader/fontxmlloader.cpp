@@ -1,8 +1,8 @@
-#include <nau/loader/fontxmlloader.h>
+#include "nau/loader/fontxmlloader.h"
 
 #include <tinyxml.h>
 
-#include <nau/errors.h>
+#include "nau/errors.h"
 
 using namespace nau::loader;
 using namespace nau::resource;

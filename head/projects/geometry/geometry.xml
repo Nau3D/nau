@@ -3,15 +3,25 @@
 	<assets>
 	
 		<scenes>
-			<scene name="CubeLand" scaleY = 0.5 scaleX=1.0 scaleZ=1.0 type="OctreeByMat">
-				<geometry name = "box1" type = "Sphere" slices=10 stacks=10 
-												transX=-2.5 transY=0 transZ=0 
-												scale=2 material="crateBox"/>
-				<geometry name = "box2" type = "Box" transX= 2.5 transY = 0 transZ=0 
-													 scaleX= 2 scaleY = 4 scaleZ =2 
-													 material="crateBox" />
-				<geometry name = "axis" type = "Axis" scale = 5 />
+			<scene name="CubeLand" type="OctreeByMat">
+				<SCALE x = 1.0 y=0.5 z = 1.0 />
+				<geometry name = "sphere" type = "Sphere" slices=10 stacks=10 material="crateBox">
+					<TRANSLATE x =-2.5 y=0 z =0  />
+					<SCALE x=2 y=2 z=2 />
+				</geometry>								
+				<geometry name = "box" type = "Box"  material="crateBox" >
+					<TRANSLATE x =2.5 y=0 z =0  />
+					<SCALE x=2 y=4 z=2 />
+					<ROTATE x=0 y=1 z=0 w=45 />
+
+				</geometry>
 			</scene>
+			<scene name="Axis">
+				<geometry name = "axis" type = "Axis"  >
+					<SCALE x=5 y=5 z =5 />
+				</geometry>
+			</scene>
+			
 		</scenes>
 		
 		<viewports>
@@ -32,7 +42,6 @@
 		
 		<lights>
 			<light name="Sun" type="directional">
-				<POSITION x="-150.0" y="150.0" z="0.0" />
 				<DIRECTION x="1.0" y="-2.5" z="-2" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 				<AMBIENT r="0.3" g="0.3" b="0.3" />
@@ -40,24 +49,27 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename = "geometry.mlib"/>
+			<materialLib filename = "geometry.mlib"/>
 		</materialLibs> 
 	</assets>
 	
 	<pipelines>
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1" axis="5">
+				<preScript name="pre1" />
 				<scenes>
-					<scene>CubeLand</scene>
+					<scene name="CubeLand" />
+					<scene name="Axis" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>MainViewport</viewport>
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
 				</materialMaps>
+				<postScript name="pre2" />
 			</pass>
 			
 		</pipeline>

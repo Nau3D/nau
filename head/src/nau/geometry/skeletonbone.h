@@ -1,8 +1,9 @@
 #ifndef SKELETONBONE_H
 #define SKELETONBONE_H
 
-#include <nau/math/vec3.h>
-#include <nau/math/simpletransform.h>
+#include "nau/math/matrix.h"
+#include "nau/math/vec3.h"
+
 
 #include <string>
 
@@ -20,7 +21,7 @@ namespace nau {
 			float m_Angle;
 			unsigned int m_Id;
 			std::string m_Name;
-			SimpleTransform m_LocalTransform, m_CompositeTransform;
+			mat4 m_LocalTransform, m_CompositeTransform;
 
 		public:
 
@@ -36,8 +37,8 @@ namespace nau {
 			unsigned int getID();
 			std::string getName();
 
-			SimpleTransform &getFullTransform();
-			SimpleTransform &getLocalTransform();
+			mat4 &getFullTransform();
+			mat4 &getLocalTransform();
 
 
 		

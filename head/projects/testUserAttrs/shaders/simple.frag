@@ -16,9 +16,9 @@ void main() {
 
 	float intensity = max(0.0, dot(normalize(normalV), lightDirV ));
 	vec4 texColor = texture(texUnit, texCoordV);
-	if (depth > dist)
-		colorOut = vec4(intensity + 0.2);
-	else
+	// if (depth > dist)
+		// colorOut = vec4(intensity + 0.2);
+	// else
 		colorOut = texColor * (intensity + 0.2);
 		
 	float fogFactor = (fogMax - depth) / 

@@ -3,14 +3,14 @@
 
 #include <vector>
 
-#include <nau/scene/sceneobject.h>
-#include <nau/scene/camera.h>
-#include <nau/material/materialgroup.h>
-#include <nau/render/irenderable.h>
-#include <nau/geometry/boundingbox.h>
-#include <nau/geometry/mesh.h>
-#include <nau/geometry/frustum.h>
-#include <nau/math/vec3.h>
+#include "nau/scene/sceneobject.h"
+#include "nau/scene/camera.h"
+#include "nau/material/materialgroup.h"
+#include "nau/render/irenderable.h"
+#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/mesh.h"
+#include "nau/geometry/frustum.h"
+#include "nau/math/vec3.h"
 
 namespace nau
 {
@@ -54,7 +54,7 @@ namespace nau
 			OctreeNode ();
 			
 			OctreeNode (OctreeNode *parent, nau::geometry::IBoundingVolume *boundingBox, int nodeId = 0, int nodeDepth = 0);
-			void updateNodeTransform(nau::math::ITransform *t);
+			void updateNodeTransform(nau::math::mat4 &t);
 			//void addRenderable (nau::render::IRenderable *aRenderable);
 			void setRenderable (nau::render::IRenderable *renderable);
 

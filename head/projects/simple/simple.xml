@@ -2,8 +2,9 @@
 <project name="Simple" width="512" height="512">
 	<assets>
 		<scenes>
-			<scene name="Al" type="OctreeByMat">
-				<file>..\..\models\al.obj</file>
+			<scene name="Al" >
+			<!--file name="D:/Nau/head/models/bench.obj" /-->
+				<file name="../../models/bench.obj"/>
 			</scene>
 		</scenes>
 		
@@ -16,17 +17,21 @@
 		<cameras>
 			<camera name="MainCamera" >
 				<viewport name="MainViewport" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=100.0 />
-				<POSITION x=0 y=-0.5 z=7.5 />
-				<VIEW x=0.0 y=0.0 z=-1.0 />
-				<UP x=0 y=1 z=0 />
+				<!--projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=100.0 /-->
+				<TYPE value="PERSPECTIVE"/>
+				<FOV value=60/>
+				<NEARP value= 1/>
+				<FARP value= 100/>
+				<POSITION x=-16.4 y=9 z=-14.2 />
+				<!--VIEW x=1.0 y=-0.2 z=1.0 /-->
+				<ZX_ANGLE value = 0.707/>
+				<ELEVATION_ANGLE value=-0.3/>
 			</camera>
 		</cameras>
 		
 		<lights>
 			<light name="Sun">
-				<POSITION x="-150.0" y="150.0" z="0.0" />
-				<DIRECTION x="1.0" y="-0.5" z="-2" />
+				<DIRECTION x=-2 y=-1 z=2 />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 				<AMBIENT r="0.5" g="0.0" b="0.0" />
 			</light>
@@ -37,11 +42,11 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>Al</scene>
+					<scene name="Al" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 		</pipeline>

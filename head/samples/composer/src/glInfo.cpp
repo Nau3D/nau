@@ -27,6 +27,11 @@ Types getType(GLenum type);
 int getRows(GLenum type);
 int getColumns(GLenum type);
 int getUniformByteSize(int size, int uniType, int arrayStride, int matStride);
+void mapCurrentBufferNames();
+
+//std::map<int, NauGlBufferInfo> buffermapping;
+
+
 
 // local variables
 std::map<int, std::string> spInternalF;
@@ -878,6 +883,10 @@ void getUniformNames(unsigned int program, std::vector<std::string> &namelist){
 }
 
 //Additional Custom Functions
+std::string getDatatypeString(int datatype){
+	return spDataF[datatype];
+}
+
 void getBlockNames(unsigned int program, std::vector<std::string> &namelist){
 	int count, index;
 	char name[256];
@@ -1261,34 +1270,3 @@ getAttributesData(unsigned int program, std::vector<std::pair<std::string, std::
 	}
 }
 
-//Returns the number of subnodes per buffer, (5 means that each 6 items belong to the same buffer);
-int getCurrentBufferInfoData(std::vector<std::string> bufferInfoData) {
-
-	int info;
-
-	// iterate for all buffer types
-	std::map<int, int>::iterator iter = spBufferBound.begin();
-	for ( ; iter != spBufferBound.end(); ++iter) {
-		// get current binding for a type of buffer
-		glGetIntegerv(iter->first, &info);
-		// if a buffer is bound get its info
-		if (info) {
-			bufferInfoData.push_back("Buffer: " + std::to_string(info) + ">");
-			bufferInfoData.push_back("Type: " + spBufferBinding[iter->first]);
-
-			glGetBufferParameteriv(iter->second, GL_BUFFER_ACCESS, &info);
-			bufferInfoData.push_back("Access: " + spBufferAccess[info]);
-
-			glGetBufferParameteriv(iter->second, GL_BUFFER_MAPPED, &info);
-			bufferInfoData.push_back("Mapped: " + std::to_string(info));
-
-			glGetBufferParameteriv(iter->second, GL_BUFFER_SIZE, &info);
-			bufferInfoData.push_back("Size: " + std::to_string(info));
-
-			glGetBufferParameteriv(iter->second, GL_BUFFER_USAGE, &info);
-			bufferInfoData.push_back("Usage: " + spBufferUsage[info]);
-		}
-	}
-
-	return 5;
-}

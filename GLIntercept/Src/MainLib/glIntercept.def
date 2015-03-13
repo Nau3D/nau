@@ -362,6 +362,7 @@ EXPORTS
    wglUseFontOutlinesA
    wglUseFontOutlinesW
 
+   gliSetIsGLIActive
    gliSetLogEnabled
    gliIsLogEnabled
    gliSetLogXMLFormat
@@ -442,3 +443,5 @@ EXPORTS
    gliKillGliLog
    gliGetEnumsCount
    gliGetEnumsName
+
+   gliInsertLogMessage

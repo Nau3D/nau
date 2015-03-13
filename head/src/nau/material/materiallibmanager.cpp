@@ -1,4 +1,4 @@
-#include <nau/material/materiallibmanager.h>
+#include "nau/material/materiallibmanager.h"
 
 using namespace nau::material;
 
@@ -13,7 +13,12 @@ MaterialLibManager::MaterialLibManager() :
 
 MaterialLibManager::~MaterialLibManager()
 {
-  
+	while (!m_LibManager.empty()){
+
+		m_LibManager.begin()->second->clear();
+		m_LibManager.erase(m_LibManager.begin());
+	}
+
 }
 
 
@@ -56,7 +61,7 @@ MaterialLibManager::hasLibrary(std::string lib)
 bool 
 MaterialLibManager::hasMaterial (std::string aLibrary, std::string name)
 {
-	return getLib (aLibrary)->hasMaterial (name);
+	return getLib(aLibrary)->hasMaterial (name);
 }
 
 

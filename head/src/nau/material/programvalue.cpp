@@ -1,9 +1,8 @@
-#include <nau/material/programvalue.h>
+#include "nau/material/programvalue.h"
 
-#include <nau.h>
+#include "nau.h"
 
-#include <nau/math/simpletransform.h>
-#include <nau/system/textutil.h>
+#include "nau/system/TextUtil.h"
 
 using namespace nau::material;
 using namespace nau::math;
@@ -24,97 +23,109 @@ ProgramValue::getSemanticTypeString(SEMANTIC_TYPE s)
 
 
 
-bool
-ProgramValue::Validate(std::string type,std::string context,std::string component)
-{
-		int id;
-		nau::Enums::DataType dt;
-
-	if (type == "CAMERA") {
-
-		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-	else if (type == "LIGHT") {
-
-		Light::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-	else if (type == "TEXTURE") {
-
-		Texture::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-	else if (type == "DATA") {
-		return (Enums::isValidType(context));
-	}
-	else if (type == "PASS") {
-		Pass::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-
-	else if (type == "CURRENT" && context == "MATRIX") {
-
-		IRenderer::getPropId(component, &id);
-		return (id != -1);
-	}
-	else if (type == "CURRENT" && context == "COLOR") {
-
-		ColorMaterial::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-	else if (type == "CURRENT" && context == "TEXTURE") {
-
-		if (component == "COUNT" || component == "UNIT")
-			return true;
-
-		Texture::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-
-	}
-#if NAU_OPENGL_VERSION >=  420
-
-	else if (type == "CURRENT" && context == "IMAGE_TEXTURE") {
-
-		if (component == "UNIT")
-			return true;
-
-		ImageTexture::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-
-	}
-#endif
-	else if (type == "CURRENT" && context == "LIGHT") {
-
-		if (component == "COUNT")
-			return true;
-
-		Light::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-	else if (type == "CURRENT" && context == "CAMERA") {
-
-		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-	else if (type == "CURRENT" && context == "STATE") {
-
-		IState::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-
-	else if (type == "CURRENT" && context == "VIEWPORT") {
-
-		Viewport::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-	else if (type == "CURRENT" && context == "PASS") {
-	
-		Pass::Attribs.getPropTypeAndId(component, &dt, &id);
-		return (id != -1);
-	}
-	return false;
-}
+//bool
+//ProgramValue::Validate(std::string type,std::string context,std::string component)
+//{
+//		int id;
+//		nau::Enums::DataType dt;
+//
+//	if (type == "CAMERA") {
+//
+//		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	else if (type == "LIGHT") {
+//
+//		Light::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	else if (type == "TEXTURE") {
+//
+//		Texture::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	else if (type == "DATA") {
+//		return (Enums::isValidType(context));
+//	}
+//	else if (type == "PASS") {
+//		Pass::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//
+//	else if (type == "CURRENT" && context == "RENDERER") {
+//
+//		IRenderer::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	//else if (type == "CURRENT" && context == "MOUSE") {
+//
+//	//	if (component == "CLICK_X" || component == "CLICK_Y")
+//	//		return true;
+//	//	else
+//	//		return false;
+//	//}
+//	else if (type == "CURRENT" && context == "COLOR") {
+//
+//		ColorMaterial::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	else if (type == "CURRENT" && context == "TEXTURE") {
+//
+//		if (component == "COUNT" || component == "UNIT")
+//			return true;
+//
+//		Texture::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//
+//	}
+//#if NAU_OPENGL_VERSION >=  420
+//
+//	else if (type == "CURRENT" && context == "IMAGE_TEXTURE") {
+//
+//		if (component == "UNIT")
+//			return true;
+//
+//		ImageTexture::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//
+//	}
+//#endif
+//	else if (type == "CURRENT" && context == "LIGHT") {
+//
+//		if (component == "COUNT")
+//			return true;
+//
+//		Light::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	else if (type == "CURRENT" && context == "CAMERA") {
+//
+//		Camera::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	else if (type == "CURRENT" && context == "MATERIAL_TEXTURE") {
+//
+//		MaterialTexture::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	else if (type == "CURRENT" && context == "STATE") {
+//
+//		IState::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//
+//	else if (type == "CURRENT" && context == "VIEWPORT") {
+//
+//		Viewport::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	else if (type == "CURRENT" && context == "PASS") {
+//	
+//		Pass::Attribs.getPropTypeAndId(component, &dt, &id);
+//		return (id != -1);
+//	}
+//	return false;
+//}
 
 
 ProgramValue::ProgramValue () {
@@ -128,6 +139,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 	m_Values = NULL;
 //	m_IntValue = NULL;
 	m_InSpecML = inSpecML;
+	m_TypeString = type;
 
 	m_Name = name;
 	m_Context = context;
@@ -175,7 +187,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 		m_ValueType = nau::Enums::getType(context);
 		m_Cardinality = nau::Enums::getCardinality(m_ValueType);
 
-		m_Values = textutil::ParseFloats(valueof, m_Cardinality);
+		m_Values = TextUtil::ParseFloats(valueof, m_Cardinality);
 	}
 	else if (0 == type.compare("PASS")) {
 	
@@ -199,28 +211,45 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 			m_Cardinality = Enums::getCardinality(dt);
 			m_Values = (void *)malloc(Enums::getSize(dt));
 		}
+		if (0 == context.compare("RENDERER")) {
 
-		else if (0 == context.compare("MATRIX")) {
-
-			IRenderer::MatrixAttribs.getPropTypeAndId(valueof, &dt, &attr);
+			IRenderer::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
 			m_Cardinality = Enums::getCardinality(dt);
 			m_Values = (void *)malloc(Enums::getSize(dt));
-			return;
 		}
+		//else if (0 == context.compare("MOUSE")) {
+
+		//	m_ValueType = Enums::INT;
+		//	m_Cardinality = Enums::getCardinality(Enums::INT);
+		//	m_Values = (void *)malloc(Enums::getSize(Enums::INT));
+		//	if (valueof == "CLICK_X")
+		//		m_ValueOf = 0;
+		//	else
+		//		m_ValueOf = 1;
+		//}
+		//else if (0 == context.compare("MATRIX")) {
+
+		//	IRenderer::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+		//	m_ValueOf = attr;
+		//	m_ValueType = dt;
+		//	m_Cardinality = Enums::getCardinality(dt);
+		//	m_Values = (void *)malloc(Enums::getSize(dt));
+		//	return;
+		//}
 
 		else if (0 == context.compare("LIGHT")) {
 		
-			if (0 == valueof.compare("COUNT")) {
+			//if (0 == valueof.compare("COUNT")) {
 
-				m_ValueOf = COUNT;
-				m_ValueType = Enums::INT;
-				m_Cardinality = 1;
-				m_Values = (void *)malloc(Enums::getSize(m_ValueType));
-				//m_IntValue = (int *)malloc(sizeof(int));
-				return;
-			}
+			//	m_ValueOf = COUNT;
+			//	m_ValueType = Enums::INT;
+			//	m_Cardinality = 1;
+			//	m_Values = (void *)malloc(Enums::getSize(m_ValueType));
+			//	//m_IntValue = (int *)malloc(sizeof(int));
+			//	return;
+			//}
 			Light::Attribs.getPropTypeAndId(valueof, &dt, &attr);
 			m_ValueOf = attr;
 			m_ValueType = dt;
@@ -272,10 +301,21 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 
 			return;
 		}
+		else if (0 == context.compare("MATERIAL_TEXTURE")) {
+
+			MaterialTexture::Attribs.getPropTypeAndId(valueof, &dt, &attr);
+			m_ValueOf = attr;
+			m_ValueType = dt;
+			m_Cardinality = Enums::getCardinality(dt);
+			m_Values = (void *)malloc(Enums::getSize(dt));
+			memset(m_Values, 0, Enums::getSize(dt));
+
+			return;
+		}
 
 		else if (0 == context.compare("TEXTURE")) {
 		
-			if (0 == valueof.compare("COUNT")) {
+			/*if (0 == valueof.compare("COUNT")) {
 
 				m_ValueOf = COUNT;
 				m_ValueType = Enums::INT;
@@ -283,7 +323,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
 				return;
 			}
-			else if (0 == valueof.compare("UNIT")) {
+			else*/ if (0 == valueof.compare("UNIT")) {
 
 				m_ValueOf = UNIT;
 				m_ValueType = Enums::SAMPLER;
@@ -303,7 +343,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 #if NAU_OPENGL_VERSION >=  420
 		else if (0 == context.compare("IMAGE_TEXTURE")) {
 		
-			if (0 == valueof.compare("COUNT")) {
+/*			if (0 == valueof.compare("COUNT")) {
 
 				m_ValueOf = COUNT;
 				m_ValueType = Enums::INT;
@@ -311,7 +351,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 				m_Values = (void *)malloc(Enums::getSize(Enums::INT));
 				return;
 			}
-			else if (0 == valueof.compare("UNIT")) {
+			else*/ if (0 == valueof.compare("UNIT")) {
 
 				m_ValueOf = UNIT;
 				m_ValueType = Enums::SAMPLER;
@@ -334,13 +374,9 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 			m_Param = valueof;
 			return;
 		}
-
 	}
-
-
-
-
 }
+
 
 ProgramValue::~ProgramValue () {
 
@@ -371,14 +407,15 @@ ProgramValue::clone(ProgramValue &pv)
 
 
 int 
-ProgramValue::getId() 
-{
+ProgramValue::getId() {
+
 	return m_Id;
 }
 
+
 void
-ProgramValue::setId(int id)
-{
+ProgramValue::setId(int id) {
+
 	m_Id = id;
 }
 
@@ -389,12 +426,14 @@ ProgramValue::getContext() {
 	return(m_Context);
 }
 
+
 bool
-ProgramValue::isInSpecML() 
-{
+ProgramValue::isInSpecML() {
+
 	return m_InSpecML;
 }
-	 
+	
+
 void 
 ProgramValue::setContext(std::string s) {
 
@@ -408,141 +447,137 @@ ProgramValue::getName() {
 	return(m_Name);
 }
 
+
 int
-ProgramValue::getCardinality (void)
-{
+ProgramValue::getCardinality (void) {
+
    return m_Cardinality;
 }
 
 
-
 void*
-ProgramValue::getValues (void)
-{
-   switch (m_Type) {
+ProgramValue::getValues (void) {
 
-	   case CAMERA: {
-		  Camera *cam = RENDERMANAGER->getCamera (m_Context);
-		  m_Values = cam->getProp(m_ValueOf, m_ValueType);
-		  return m_Values;
-	   }
-		break;
-	   case LIGHT: {
-			Light *light = RENDERMANAGER->getLight (m_Context);
-			m_Values = light->getProp(m_ValueOf, m_ValueType);
-			return m_Values;
-	   }
-		break;
-	   case TEXTURE: {
-			Texture *t = RESOURCEMANAGER->getTexture (m_Context);
-			m_Values = t->getProp(m_ValueOf, m_ValueType);
-			return m_Values;
-		}
-		break;
-	   case DATA: {
-		   return m_Values;
-		}
-	   case PASS: {		
-		   Pass *p = RENDERMANAGER->getPass(m_Context);
-		   m_Values = p->getProp(m_ValueOf, m_ValueType);
-		   return m_Values;
-		   // int pType = RENDERMANAGER->getPassParamType(m_Context, m_Param);
-		  // switch (pType) {
-		  // 
-				//case Enums::FLOAT:
-				//	m_ValueType = Enums::FLOAT;
-				//	m_Cardinality = Enums::getCardinality(m_ValueType);
-				//	m_Values = malloc(Enums::getSize(Enums::FLOAT));
-				//	memcpy(m_Values, RENDERMANAGER->getPassParamf(m_Context, m_Param), Enums::getSize(Enums::FLOAT));
-				//	return m_Values;
-		  // }
+	AttributeValues *attr = NULL;
+	if (m_TypeString != "CURRENT") {
+		attr = NAU->getObjectAttributes(m_TypeString, m_Context, m_Id);
+	}
+	else {
 
-		}
-	   case CURRENT: {
-		   if ("MATRIX" == m_Context) {
-			   m_Values = (void *)RENDERER->getMatrix((IRenderer::MatrixType)m_ValueOf);
-			   return m_Values;
-		   }
-		   else if ("COLOR" == m_Context) {	
-			   m_Values = RENDERER->getColorProp(m_ValueOf, m_ValueType);
-			   return m_Values;
-		   }
-		   else if ("TEXTURE" == m_Context) {
+		attr = NAU->getCurrentObjectAttributes(m_Context, m_Id);
+	}
+	if (attr != NULL) {
+		m_Values = attr->getProp(m_ValueOf, m_ValueType);
+	}
+	return m_Values;
 
-			   if (m_ValueOf == COUNT) {
-				   int m = RENDERER->getTextureCount();
-					memcpy(m_Values,&(m), sizeof(int));
-				}
-			   else if (m_ValueOf == UNIT) {
-
-				   memcpy(m_Values, &m_Id, sizeof(int));
-			   }
-			   else if (m_Id < RENDERER->getTextureCount()) {
-				   Texture *t = RENDERER->getTexture(m_Id);
-				   m_Values = t->getProp(m_ValueOf, m_ValueType);
-			   }
-			   return m_Values;
-
-		   }
-#if NAU_OPENGL_VERSION >=  420
-		   else if ("IMAGE_TEXTURE" == m_Context) {
-
-			   if (m_ValueOf == COUNT) {
-				   int m = RENDERER->getImageTextureCount();
-				   memcpy(m_Values, &m, sizeof(int));
-				}
-			   else if (m_ValueOf == UNIT) {
-
-				   memcpy(m_Values, &m_Id, sizeof(int));
-			   }
-			   else if (m_Id < RENDERER->getImageTextureCount()) {
-				   ImageTexture *t = RENDERER->getImageTexture(m_Id);
-				   m_Values = t->getProp(m_ValueOf, m_ValueType);
-			   }
-			   return m_Values;
-		   }
-#endif
-		   else if ("LIGHT" == m_Context) {
-
-			   if (m_ValueOf == COUNT) {
-				   int m = RENDERER->getLightCount();
-				   memcpy(m_Values, &m, sizeof(int));
-				   return m_Values;
-				}
-			   else if (m_Id < RENDERER->getLightCount()) {
-				   Light *l = RENDERER->getLight(m_Id);
-				   m_Values = l->getProp(m_ValueOf, m_ValueType);
-			   }
-			   return m_Values;
-		   }
-		   else if ("CAMERA" == m_Context) {
-
-			  Camera *cam = RENDERER->getCamera();				
-			  return cam->getProp(m_ValueOf, m_ValueType);
-		   }
-		   else if ("STATE" == m_Context) {
-
-			   IState *s = RENDERER->getState();
-			   return s->getProp(m_ValueOf, m_ValueType);
-		   }
-		   else if ("VIEWPORT" == m_Context) {
-
-			   Viewport *s = RENDERER->getViewport();
-			   return s->getProp(m_ValueOf, m_ValueType);
-		   }
-		   else if ("PASS" == m_Context) {
-		   
-			   Pass *p = RENDERMANAGER->getCurrentPass();
-			   return p->getProp(m_ValueOf, m_ValueType);
-		   }
-		   else return 0;
-		}
-	   default:
-		   return 0;
-		
-   }
-   assert("Getting the Value of an Invalid ProgramValue");
-   return 0;
+//  switch (m_Type) {
+//
+//	   case CAMERA: {
+//		  Camera *cam = RENDERMANAGER->getCamera (m_Context);
+//		  m_Values = cam->getProp(m_ValueOf, m_ValueType);
+//		  return m_Values;
+//	   }
+//		break;
+//	   case LIGHT: {
+//			Light *light = RENDERMANAGER->getLight (m_Context);
+//			m_Values = light->getProp(m_ValueOf, m_ValueType);
+//			return m_Values;
+//	   }
+//		break;
+//	   case TEXTURE: {
+//			Texture *t = RESOURCEMANAGER->getTexture (m_Context);
+//			m_Values = t->getProp(m_ValueOf, m_ValueType);
+//			return m_Values;
+//		}
+//		break;
+//	   case DATA: {
+//		   return m_Values;
+//		}
+//	   case PASS: {		
+//		   Pass *p = RENDERMANAGER->getPass(m_Context);
+//		   m_Values = p->getProp(m_ValueOf, m_ValueType);
+//		   return m_Values;
+//
+//		}
+//	   case CURRENT: {
+//		   if ("RENDERER" == m_Context) {
+//			   m_Values = (void *)RENDERER->getProp(m_ValueOf, m_ValueType);
+//			   return m_Values;
+//		   }
+//		   else if ("COLOR" == m_Context) {	
+//			   m_Values = RENDERER->getMaterial()->getProp(m_ValueOf, m_ValueType);
+//			   return m_Values;
+//		   }
+//		   else if ("MATERIAL_TEXTURE" == m_Context) {
+//			   MaterialTexture *mt = RENDERER->getMaterialTexture(m_Id);
+//			   if (mt != NULL)
+//				m_Values = mt->getProp(m_ValueOf, m_ValueType);
+//			   return m_Values;
+//		   }
+//		   else if ("TEXTURE" == m_Context) {
+//
+//				if (m_Id < RENDERER->getTextureCount()) {
+//				   Texture *t = RENDERER->getTexture(m_Id);
+//				   m_Values = t->getProp(m_ValueOf, m_ValueType);
+//				}
+//			   return m_Values;
+//
+//		   }
+//#if NAU_OPENGL_VERSION >=  420
+//		   else if ("IMAGE_TEXTURE" == m_Context) {
+//
+//			  /* if (m_ValueOf == COUNT) {
+//				   int m = RENDERER->getImageTextureCount();
+//				   memcpy(m_Values, &m, sizeof(int));
+//				}
+//			   else*/ if (m_ValueOf == UNIT) {
+//
+//				   memcpy(m_Values, &m_Id, sizeof(int));
+//			   }
+//			   else if (m_Id < RENDERER->getImageTextureCount()) {
+//				   ImageTexture *t = RENDERER->getImageTexture(m_Id);
+//				   m_Values = t->getProp(m_ValueOf, m_ValueType);
+//			   }
+//			   return m_Values;
+//		   }
+//#endif
+//		   else if ("LIGHT" == m_Context) {
+//
+//				if (m_Id < RENDERER->getLightCount()) {
+//				   Light *l = RENDERER->getLight(m_Id);
+//				   m_Values = l->getProp(m_ValueOf, m_ValueType);
+//			   }
+//			   return m_Values;
+//		   }
+//		   else if ("CAMERA" == m_Context) {
+//
+//			  Camera *cam = RENDERER->getCamera();				
+//			  return cam->getProp(m_ValueOf, m_ValueType);
+//		   }
+//		   else if ("STATE" == m_Context) {
+//
+//			   IState *s = RENDERER->getState();
+//			   return s->getProp(m_ValueOf, m_ValueType);
+//		   }
+//		   else if ("VIEWPORT" == m_Context) {
+//
+//			   Viewport *s = RENDERER->getViewport();
+//			   return s->getProp(m_ValueOf, m_ValueType);
+//		   }
+//		   else if ("PASS" == m_Context) {
+//		   
+//			   Pass *p = RENDERMANAGER->getCurrentPass();
+//			   return p->getProp(m_ValueOf, m_ValueType);
+//		   }
+//		   else return 0;
+//		}
+//	   default:
+//		   return 0;
+//		
+//   }
+//   assert("Getting the Value of an Invalid ProgramValue");
+//   return 0;
 }
 
 
@@ -573,25 +608,7 @@ ProgramValue::setSemanticValueOf(int s) {
 
 
 nau::Enums::DataType
-ProgramValue::getValueType()
-{
-	//int pType;
-	//if (m_Type == PASS) {
-	//	pType = RENDERMANAGER->getPassParamType(m_Context, m_Param);
-	//	switch (pType) {
-	//		case Enums::FLOAT:
-	//			m_ValueType = Enums::FLOAT;
-	//			break;
-	//	}
-	//}
-	//else if (m_Type == CURRENT && m_Context == "PASS") {
-	//	pType = RENDERMANAGER->getCurrentPassParamType(m_Param);
-	//	switch (pType) {
-	//		case Enums::FLOAT:
-	//			m_ValueType = Enums::FLOAT;
-	//			break;
-	//	}
-	//}
+ProgramValue::getValueType() {
 
 	return m_ValueType;
 }
@@ -608,9 +625,6 @@ void
 ProgramValue::setValueOfUniform(void *values) {
 
 	memcpy(m_Values, values, Enums::getSize(m_ValueType));
-	//for (int i = 0; i < m_Cardinality; i++) {
-	//	m_IntValue[i] = (int)values[i];
-	//}
 }
 
 
@@ -626,42 +640,3 @@ ProgramValue::getLoc() {
 
 	return m_Loc;
 }
-
-
-//void 
-//ProgramValue::setValueOfUniform (int *values) { 
-//
-//	for (int i = 0 ; i < m_Cardinality; i++) {
-//		m_IntValue[i] = (int)values[i];	
-//	}
-//}
-//
-//// this version is more generic than the previous one
-//// this is on purpose!
-//void 
-//ProgramValue::setValueOfUniform (float *values) { 
-//
-//	switch (m_ValueType) {
-//		case Enums::INT:
-//		case Enums::IVEC2:
-//		case Enums::IVEC3:
-//		case Enums::IVEC4:
-//		case Enums::BOOL:
-//		case Enums::BVEC2:
-//		case Enums::BVEC3:
-//		case Enums::BVEC4:
-//		case Enums::SAMPLER:
-//		case Enums::ENUM:
-//			for (int i = 0 ; i < m_Cardinality; i++) {
-//				m_IntValue[i] = (int)values[i];	
-//			}
-//			break;
-//		default:
-//			for (int i = 0 ; i < m_Cardinality; i++) {
-//				m_Value[i] = values[i];	
-//			}
-//	}
-//
-//}
-
-

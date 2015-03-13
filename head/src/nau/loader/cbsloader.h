@@ -1,7 +1,7 @@
 #ifndef CBSLOADER_H
 #define CBSLOADER_H
 
-#include <nau/scene/iscene.h>
+#include "nau/scene/iscene.h"
 
 namespace nau 
 {

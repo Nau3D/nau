@@ -6,10 +6,8 @@
 
 // enable and disable functionalities 
 // based on OpenGL version
-#define NAU_OPENGL_VERSION 430
 
-// use only core features (1 implies no fixed function)
-//#define NAU_CORE_OPENGL 1
+#define NAU_OPENGL_VERSION 450
 
 #define NAU_PLATFORM_WIN32 1
 
@@ -19,15 +17,16 @@
 
 #define __SLANGER__ 1
 
-#if _MSC_VER >= 1400
-#ifndef _CRT_SECURE_NO_DEPRECATE
-    #define _CRT_SECURE_NO_DEPRECATE
-    #define _CRT_NONSTDC_NO_DEPRECATE
-#endif
-#endif
+//#if _MSC_VER >= 1400
+//#ifndef _CRT_SECURE_NO_DEPRECATE
+//    #define _CRT_SECURE_NO_DEPRECATE
+//    #define _CRT_NONSTDC_NO_DEPRECATE
+//#endif
+//#endif
 
 #define NAU_RENDER_FLAGS
 
-#define GLINTERCEPTDEBUG
+//#define GLINTERCEPTDEBUG
+#define NAU_LUA
 
 #endif // NAU_CONFIG_H

@@ -19,6 +19,10 @@ void setConfigDataExport(ConfigData *configData, GLDriver *driver){
 void setFunctionTableExport(FunctionTable * fTable){
 	functionTableExport = fTable;
 }
+void gliSetIsGLIActive(bool isGLIActive){
+	configDataExport->isGLIActive = isGLIActive;
+}
+
   void gliSetLogEnabled(bool logEnabled){
 	  configDataExport->logEnabled=logEnabled;
   }
@@ -399,4 +403,9 @@ void setFunctionTableExport(FunctionTable * fTable){
 
   const char *gliGetEnumsName(unsigned int index){
 	  return functionTableExport->GetEnumData(index)->GetName().c_str();
+  }
+
+
+  void gliInsertLogMessage(const char *message){
+	  glDriver->AddLoggerString(message);
   }

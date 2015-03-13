@@ -1,9 +1,9 @@
-#include <nau/world/bulletworld.h>
+#include "nau/world/bulletworld.h"
 
-#include <nau/geometry/iboundingvolume.h>
-#include <nau/world/naubulletmotionstate.h>
-#include <nau/render/vertexdata.h>
-#include <nau/material/imaterialgroup.h>
+#include "nau/geometry/iboundingvolume.h"
+#include "nau/world/naubulletmotionstate.h"
+#include "nau/render/vertexdata.h"
+#include "nau/material/materialgroup.h"
 
 using namespace nau::world;
 using namespace nau::geometry;
@@ -66,8 +66,8 @@ BulletWorld::build (void) /***MARK***/ //I'm assuming all objects inside scene a
 			VertexData &vd = (*sceneObjectsIter)->getRenderable().getVertexData();
 			
 
-			std::vector<IMaterialGroup*> &matGroups = (*sceneObjectsIter)->getRenderable().getMaterialGroups();
-			std::vector<IMaterialGroup*>::iterator matGroupsIter;
+			std::vector<MaterialGroup*> &matGroups = (*sceneObjectsIter)->getRenderable().getMaterialGroups();
+			std::vector<MaterialGroup*>::iterator matGroupsIter;
 
 			matGroupsIter = matGroups.begin();
 

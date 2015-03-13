@@ -8,9 +8,9 @@
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_math_namespace.h>
 
-#include <nau/render/optix/optixMaterialLib.h>
-#include <nau/render/optix/optixBufferLib.h>
-#include <nau/scene/sceneobject.h>
+#include "nau/render/optix/optixMaterialLib.h"
+#include "nau/render/optix/optixBufferLib.h"
+#include "nau/scene/sceneobject.h"
 
 namespace nau {
   namespace render {

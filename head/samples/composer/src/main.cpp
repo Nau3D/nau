@@ -4,21 +4,26 @@
 #pragma warning( disable: 4299)
 #pragma warning( disable: 4099)
 
-
-#include <wx/filesys.h>
-#include <wx/dir.h>
-#include <wx/filename.h>
-#include <wx/splash.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-
-#include <fstream>
+//#include <vld.h>
 
 #include <main.h>
 #include <glcanvas.h>
 #include <nau/errors.h>
 #include <nau/clogger.h>
 #include <nau/slogger.h>
+
+#ifdef GLINTERCEPTDEBUG
+#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+#endif
+
+#include <wx/bitmap.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
+#include <wx/filesys.h>
+#include <wx/splash.h>
+#include <wx/image.h>
+
+#include <fstream>
 
               
 using namespace nau::math;
@@ -92,8 +97,9 @@ int idMenuMaterialsAll = wxNewId();
 
 int idMenuReload = wxNewId();
 
-#ifdef GLINTERCEPTDEBUG
 int idMenuDbgBreak = wxNewId();
+int idMenuDbgStep = wxNewId();
+#ifdef GLINTERCEPTDEBUG
 //int idMenuDbgGLILogRead = wxNewId();
 #endif
 // dialogs //
@@ -108,12 +114,15 @@ int idMenu_DLG_LOG = wxNewId();
 int idMenu_DLG_SCENES = wxNewId();
 int idMenu_DLG_PASS = wxNewId();
 int idMenu_DLG_ATOMICS = wxNewId();
+int idMenu_DLG_VIEWPORTS = wxNewId();
 
+int idMenu_DLG_STATEXML = wxNewId();
 #ifdef GLINTERCEPTDEBUG
 int idMenu_DLG_DBGGLILOGREAD = wxNewId();
+#endif
 int idMenu_DLG_DBGPROGRAM = wxNewId();
 int idMenu_DLG_DBGBUFFER = wxNewId();
-#endif
+int idMenu_DLG_DBGSTEP = wxNewId();
 
 
 
@@ -151,14 +160,19 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_LOG, FrmMainFrame::OnDlgLog)
   EVT_MENU(idMenu_DLG_SCENES, FrmMainFrame::OnDlgScenes)
   EVT_MENU(idMenu_DLG_PASS, FrmMainFrame::OnDlgPass)
-  
+  EVT_MENU(idMenu_DLG_VIEWPORTS, FrmMainFrame::OnDlgViewports)
+
 #ifdef GLINTERCEPTDEBUG
-  EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
   EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
+#endif
+  EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
+  EVT_MENU(idMenu_DLG_STATEXML, FrmMainFrame::OnDlgStateXML)
   EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
-#endif
-
+  EVT_MENU(idMenu_DLG_DBGSTEP, FrmMainFrame::OnDlgDbgStep)
+  
+  EVT_CLOSE(FrmMainFrame::OnClose)
+  
  END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(GlCanvas, wxGLCanvas)
@@ -172,6 +186,7 @@ BEGIN_EVENT_TABLE(GlCanvas, wxGLCanvas)
   EVT_LEFT_DOWN (GlCanvas::OnLeftDown)
   EVT_LEFT_UP (GlCanvas::OnLeftUp)
   EVT_IDLE(GlCanvas::OnIdle)
+  EVT_RIGHT_UP(GlCanvas::OnRightUp)
 END_EVENT_TABLE()
 
 
@@ -236,7 +251,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
     helpMenu->Append(idMenu_DLG_TEXTURES, _("&Texture Library\tF4"), _("Show Texture Library"));
     helpMenu->Append(idMenu_DLG_CAMERAS, _("&Camera Library\tF5"), _("Show Camera Library"));
     helpMenu->Append(idMenu_DLG_MATERIALS, _("&Material Library Manager\tF6"), _("Show Material Libraries"));
-    helpMenu->Append(idMenu_DLG_LIGHTS, _("&Light Library\tF7"), _("Show Light Library"));
+	helpMenu->Append(idMenu_DLG_VIEWPORTS, _("&Viewports Library\tF11"), _("Show Viewport Library"));
+	helpMenu->Append(idMenu_DLG_LIGHTS, _("&Light Library\tF7"), _("Show Light Library"));
     helpMenu->Append(idMenu_DLG_SHADERS, _("&Shader Library\tF8"), _("Show Shader Library"));
     helpMenu->Append(idMenu_DLG_SCENES, _("&Scene Library\tF9"), _("Show Scene Library"));
     helpMenu->Append(idMenu_DLG_PASS, _("&Pass Library\tF9"), _("Show Pass Library"));
@@ -250,19 +266,26 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	helpMenu->Enable(idMenu_DLG_PASS,false);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, false);
 	helpMenu->Enable(idMenu_DLG_SCENES, false);
+	helpMenu->Enable(idMenu_DLG_VIEWPORTS, false);
+
+	debugMenu = new wxMenu(_T(""));
+	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
+	debugMenu->Append(idMenuDbgStep, _("Next Pass"), _("Renders next pass"));
+	debugMenu->Append(idMenu_DLG_STATEXML, _("State"), _("Shows OpenGL state variables"));
+	debugMenu->Append(idMenu_DLG_DBGSTEP, _("Advanced Pass Controller"), _("Aditional Pass control options"));
+	debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"), _("Views Program information"));
+	debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"), _("Views Buffer information"));
+	
+	debugMenu->Enable(idMenuDbgStep, false);
+	debugMenu->Enable(idMenu_DLG_DBGPROGRAM, false);
+	debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 
 #ifdef GLINTERCEPTDEBUG
-	debugMenu = new wxMenu(_T(""));
-	debugMenu->Append(idMenuDbgBreak, _("Pause"),_("Pauses or resumes rendering"));
     debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
-    debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"),_("Views Program information"));
-    debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"),_("Views Buffer information"));
-
 	debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
-	debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
-	debugMenu->Enable(idMenu_DLG_DBGBUFFER,false);
-    mbar->Append(debugMenu, _("&Debug"));
 #endif
+    mbar->Append(debugMenu, _("&Debug"));
 
     SetMenuBar(mbar);
 
@@ -355,10 +378,19 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgScenes::SetParent(this);
 	DlgPass::SetParent(this);
 	DlgAtomics::SetParent(this);
+	DlgViewports::SetParent(this);
+#ifdef GLINTERCEPTDEBUG
 	DlgDbgGLILogRead::SetParent(this);
+#endif
 	DlgDbgPrograms::SetParent(this);
 	DlgDbgBuffers::SetParent(this);
-	
+	DlgDbgStep::SetParent(this);
+	DlgStateXML::SetParent(this);
+	DlgDbgStep::SetCanvas(m_Canvas);
+
+#ifdef GLINTERCEPTDEBUG
+	gliSetIsGLIActive(true);
+#endif
 
 #ifdef FINAL
 	startStandAlone();
@@ -369,6 +401,18 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
 FrmMainFrame::~FrmMainFrame()
 {
+#ifdef GLINTERCEPTDEBUG
+	gliSetIsGLIActive(true);
+#endif
+}
+
+
+void 
+FrmMainFrame::OnClose(wxCloseEvent& event)
+{
+	delete m_pRoot;
+	Destroy();  // you may also do:  event.Skip();
+	// since the default event handler does call Destroy(), too
 }
 
 
@@ -397,6 +441,13 @@ void
 FrmMainFrame::OnDlgLog(wxCommandEvent& event) {
 
 	DlgLog::Instance()->Show(TRUE);
+}
+
+
+void
+FrmMainFrame::OnDlgViewports(wxCommandEvent& event) {
+
+	DlgViewports::Instance()->Show(TRUE);
 }
 
 
@@ -454,6 +505,13 @@ FrmMainFrame::updateDlgs()
 	DlgLights::Instance()->updateDlg();
 	DlgScenes::Instance()->updateDlg();
 	DlgPass::Instance()->updateDlg();
+	DlgViewports::Instance()->updateDlg();
+	//DlgDbgBuffers::Instance()->updateDlg();
+
+
+	//Update state dialog
+	DlgStateXML::Instance()->updateDlg();
+
 	helpMenu->Enable(idMenu_DLG_TEXTURES,true);
 	helpMenu->Enable(idMenu_DLG_CAMERAS,true);
 	helpMenu->Enable(idMenu_DLG_LIGHTS,true);
@@ -461,6 +519,8 @@ FrmMainFrame::updateDlgs()
 	helpMenu->Enable(idMenu_DLG_PASS,true);
 	helpMenu->Enable(idMenu_DLG_ATOMICS, true);
 	helpMenu->Enable(idMenu_DLG_SCENES, true);
+	helpMenu->Enable(idMenu_DLG_VIEWPORTS, true);
+	debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 }
 
 
@@ -497,8 +557,8 @@ FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event)
 void
 FrmMainFrame::OnModelLoad (wxCommandEvent& event)
 {
-	static const wxChar *fileTypes = _T( "3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml)|*.cbo;*.3ds;*.dae;*.obj; *.xml|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml");
-	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
+	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
+	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
 		wxStopWatch aTimer;
@@ -526,8 +586,8 @@ FrmMainFrame::OnModelLoad (wxCommandEvent& event)
 void
 FrmMainFrame::OnModelAppend (wxCommandEvent& event)
 {
-	static const wxChar *fileTypes = _T( "3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml)|*.cbo;*.3ds;*.dae;*.obj; *.xml|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml");
-	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
+	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
+	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
 		wxStopWatch aTimer;
@@ -636,7 +696,7 @@ void FrmMainFrame::OnQuit(wxCommandEvent& event)
 void FrmMainFrame::OnAbout(wxCommandEvent& event)
 {
     wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to Composer"));
+    wxMessageBox(_("Welcome to Composer - Nau3D's GUI\nhttps://github.com/Nau3D"), _("About Composer"));
 }
 
 
@@ -820,39 +880,90 @@ FrmMainFrame::OnKeyUp(wxKeyEvent & event)
 void 
 FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 {
-#ifdef GLINTERCEPTDEBUG
 	m_Canvas->BreakResume();
 	if (m_Canvas->IsPaused()){
-		DlgDbgGLILogRead::Instance()->clear();
-		DlgDbgGLILogRead::Instance()->loadLog();
-	
-		DlgDbgPrograms::Instance()->clear();
-		DlgDbgPrograms::Instance()->loadShaderInfo();
-	
-		DlgDbgBuffers::Instance()->clear();
-		DlgDbgBuffers::Instance()->loadBufferInfo();
+		
+#ifdef GLINTERCEPTDEBUG
+		FreezeGLI();
+#endif
+		LoadDebugData();
 
+
+#ifdef GLINTERCEPTDEBUG		
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,true);
-		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,true);
-		debugMenu->Enable(idMenu_DLG_DBGBUFFER,true);
+#endif
+		debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);
+		
+		//debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+		debugMenu->Enable(idMenu_DLG_DBGSTEP, true);
+		debugMenu->Enable(idMenuDbgStep, true);
 
 		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
 	}
 	else{
+
+#ifdef GLINTERCEPTDEBUG		
+		gliSetIsGLIActive(true);
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
+#endif
+
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
-		debugMenu->Enable(idMenu_DLG_DBGBUFFER,false);
+		//debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
+		debugMenu->Enable(idMenuDbgStep, false);
+		debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 
 	}
+
+
+}
+
+//void
+//FrmMainFrame::OnNextFrame(wxCommandEvent& event)
+//{
+//	if (m_Canvas->IsPaused()){
+//#ifdef GLINTERCEPTDEBUG
+//		gliSetIsGLIActive(true);
+//#endif
+//		m_Canvas->MultiStep();
+//	}
+//
+//}
+
+void
+FrmMainFrame::FreezeGLI(){
+#ifdef GLINTERCEPTDEBUG
+	gliSetIsGLIActive(false);
 #endif
+}
+
+void
+FrmMainFrame::LoadDebugData(){
+#ifdef GLINTERCEPTDEBUG
+	DlgDbgGLILogRead::Instance()->loadLog();
+#endif
+	DlgDbgPrograms::Instance()->clear();
+	DlgDbgPrograms::Instance()->loadShaderInfo();
+
+	DlgDbgStep::Instance()->updateDlg();
+
+
+}
+
+
+
+void
+FrmMainFrame::OnDlgStateXML(wxCommandEvent& event){
+	DlgStateXML::Instance()->Show(TRUE);
 }
 
 
 void
 FrmMainFrame::OnDlgDbgGLILogRead(wxCommandEvent& event){
+#ifdef GLINTERCEPTDEBUG
 	DlgDbgGLILogRead::Instance()->Show(TRUE);
+#endif
 }
 
 
@@ -866,7 +977,14 @@ FrmMainFrame::OnDlgDbgProgram(wxCommandEvent& event){
 
 void
 FrmMainFrame::OnDlgDbgBuffer(wxCommandEvent& event){
+	DlgDbgBuffers::Instance()->updateDlg();
 	DlgDbgBuffers::Instance()->Show(TRUE);
+}
+
+
+void
+FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event){
+	DlgDbgStep::Instance()->Show(TRUE);
 }
 
 

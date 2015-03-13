@@ -1,8 +1,8 @@
-#include <nau/render/depthmappass.h>
+#include "nau/render/depthmappass.h"
 
-#include <nau/geometry/frustum.h>
+#include "nau/geometry/frustum.h"
 
-#include <nau.h>
+#include "nau.h"
 
 /*
 
@@ -55,27 +55,27 @@ DepthMapPass::addLight(const std::string &lightName)
 
 	Light *light = RENDERMANAGER->getLight (m_Lights[0]);
 
-	m_Viewport->setProp(Viewport::SIZE, vec2(m_RenderTarget->getWidth(), m_RenderTarget->getHeight()));
+	m_Viewport->setPropf2(Viewport::SIZE, vec2(m_RenderTarget->getWidth(), m_RenderTarget->getHeight()));
 	m_LightCamera->setViewport (m_Viewport);
 	
 
 	// common properties to both direction and point lights
 	vec4 v = light->getPropf4(Light::DIRECTION);
-	m_LightCamera->setProp(Camera::VIEW_VEC, v.x,v.y,v.z,0.0f);
+	m_LightCamera->setPropf4(Camera::VIEW_VEC, v.x,v.y,v.z,0.0f);
 
 	// although directional lights do not have a position
 	v = light->getPropf4(Light::POSITION);
-	m_LightCamera->setProp(Camera::POSITION, v.x,v.y,v.z,1.0f);
+	m_LightCamera->setPropf4(Camera::POSITION, v.x,v.y,v.z,1.0f);
 	//m_LightCamera->setUpVector(0.0f,1.0f,0.0f);
 
-	if (light->getPrope(Light::TYPE) == Light::DIRECTIONAL) {
+	if (light->getPropf(Light::SPOT_CUTOFF) == 180.0f) {
 	
 		m_LightCamera->setOrtho(-100.0f, 100.0f,-100.0f, 100.0f,0.0f,200.0f);
-		m_LightCamera->setProp(Camera::PROJECTION_TYPE, Camera::ORTHO);
+		m_LightCamera->setPrope(Camera::PROJECTION_TYPE, Camera::ORTHO);
 	}
 	else {
 		m_LightCamera->setPerspective(60.0f, 0.1f, 100.0f);
-		m_LightCamera->setProp(Camera::PROJECTION_TYPE, Camera::PERSPECTIVE);
+		m_LightCamera->setPrope(Camera::PROJECTION_TYPE, Camera::PERSPECTIVE);
 	}
 }
 
@@ -119,16 +119,16 @@ void
 DepthMapPass::doPass (void)
 {
 
-	// THIS ONLY WORKS WITH ONE DIRECTIONAL LIGHT, MULTIPLE LIGHTS IMPLY MULTIPLE PASSES //
+	// THIS ONLY WORKS WITH ONE DIRECTIONAL LIGHT, MULTIPLE LIGHTS REQUIRE MULTIPLE PASSES //
 	
 	//RENDERMANAGER->getRenderer()->setDepthCompare();
 		
 	Frustum frustum;
 	float cNear, cFar;
 
-	m_LightCamera->setProp(Camera::UP_VEC, 0,1,0,0);
+	m_LightCamera->setPropf4(Camera::UP_VEC, 0,1,0,0);
 	vec4 l = RENDERMANAGER->getLight(m_Lights[0])->getPropf4(Light::DIRECTION);
-	m_LightCamera->setProp(Camera::VIEW_VEC,l.x,l.y,l.z,l.w);
+	m_LightCamera->setPropf4(Camera::VIEW_VEC,l.x,l.y,l.z,l.w);
 
 	Camera *aCamera = RENDERMANAGER->getCamera(m_CameraName);
 
@@ -150,7 +150,7 @@ DepthMapPass::doPass (void)
 	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
 
 	RENDERER->setCamera(m_LightCamera);
-	frustum.setFromMatrix (RENDERER->getMatrix(IRenderer::PROJECTION_VIEW_MODEL));
+	frustum.setFromMatrix ((float *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4));
 
 	RENDERMANAGER->clearQueue();
 

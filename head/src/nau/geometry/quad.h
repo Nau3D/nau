@@ -1,7 +1,7 @@
 #ifndef QUAD_H
 #define QUAD_H
 
-#include <nau/scene/sceneobject.h>
+#include "nau/scene/sceneobject.h"
 
 namespace nau
 {

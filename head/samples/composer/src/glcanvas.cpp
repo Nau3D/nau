@@ -19,6 +19,10 @@
 #include <nau/slogger.h>
 
 
+#ifdef GLINTERCEPTDEBUG
+#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+#endif
+
 
 using namespace std;
 using namespace nau::math;
@@ -48,6 +52,8 @@ GlCanvas::GlCanvas (wxWindow *parent,
 	m_Timer.Start();
 	p_GLC = new wxGLContext(this);
 	SetCurrent(*p_GLC);
+
+	step = 0;
 }
 
 GlCanvas::GlCanvas (wxWindow *parent,
@@ -64,12 +70,14 @@ GlCanvas::GlCanvas (wxWindow *parent,
   p_GLC = new wxGLContext(this);
   
   SetCurrent(*p_GLC);
+
+  step = 0;
 }
 
 
 GlCanvas::~GlCanvas()
 {
-   //dtor
+  //dtor
 
 }
 
@@ -84,7 +92,7 @@ GlCanvas::setCamera ()
 {
 	m_pCamera = NAU->getActiveCamera();
 	if (m_pCamera) {
-		vec4 v = m_pCamera->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+		vec4 v = m_pCamera->getPropf4(Camera::VIEW_VEC);
 		m_Beta = asin(v.y);
 		m_Alpha = atan2(v.x,v.z);
 	}
@@ -104,8 +112,34 @@ GlCanvas::OnPaint (wxPaintEvent &event)
 	PROFILE("Composer");
 	wxPaintDC dc(this);
 
+
+   //SetCurrent (*p_GLC);
 	if(!isPaused){
+
 		Render();
+
+		if (step != 0){
+
+#ifdef GLINTERCEPTDEBUG
+			gliSetIsGLIActive(false);
+			if (gliIsLogPerFrame()){
+				DlgDbgGLILogRead::Instance()->clear();
+			}
+
+			DlgDbgGLILogRead::Instance()->loadLog();
+
+			DlgDbgPrograms::Instance()->clear();
+			DlgDbgPrograms::Instance()->loadShaderInfo();
+
+			//DlgDbgBuffers::Instance()->clear();
+			//DlgDbgBuffers::Instance()->loadBufferInfo();
+
+			DlgDbgStep::Instance()->updateDlg();
+#endif
+
+			DlgStateXML::Instance()->updateDlg();
+			step = 0;
+		}
 	}
 	event.Skip ();
 }
@@ -181,7 +215,6 @@ GlCanvas::Render ()
 		tlw->SetTitle(wxString::FromAscii(fps));
 
 		m_CounterFps = 0;
-
 	}
 }
 
@@ -191,11 +224,11 @@ GlCanvas::OnIdle (wxIdleEvent& event)
 {
 	PROFILE("Composer");
 
-    if(!isPaused){
+	if (!isPaused){
 		this->Render();
-    }
+		DlgAtomics::Instance()->update();
+   }
 	event.RequestMore();
-	DlgAtomics::Instance()->update();
 }
 
 /*void 
@@ -236,8 +269,8 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 
 
 	vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
-	vec4 camUp = m_pCamera->getPropf4(Camera::NORMALIZED_UP_VEC);
-	vec4 camView = m_pCamera->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+	vec4 camUp = m_pCamera->getPropf4(Camera::UP_VEC);
+	vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
 //	vec3& camLookAt = m_pCamera->getLookAtPoint();
 
 	if ('K' == event.GetKeyCode()) {
@@ -531,7 +564,7 @@ GlCanvas::OnMouseMove (wxMouseEvent& event)
 		return;
 	}
 	
-	vec4 camView = m_pCamera->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+	vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
 	vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
 
 	if (true == m_tracking) {
@@ -574,6 +607,14 @@ GlCanvas::OnMouseMove (wxMouseEvent& event)
 
 	event.Skip ();
 }
+
+
+void
+GlCanvas::OnRightUp(wxMouseEvent &event) {
+
+	m_pEngine->setClickPosition(event.GetX(), event.GetY());
+}
+
 
 void
 GlCanvas::OnLeftDown (wxMouseEvent& event)
@@ -684,15 +725,59 @@ GlCanvas::OnLeftUp (wxMouseEvent &event) {
 void
 GlCanvas::BreakResume ()
 {
-   
-   isPaused=!isPaused;
+	if (isPaused)
+		m_pEngine->stepCompleteFrame();
+
+	isPaused=!isPaused;
 }
 
+
+void 
+GlCanvas::StepPass() {
+
+	if (isPaused) {
+		m_pEngine->stepPass();
+
+		if (RENDERMANAGER->getActivePipeline()->getPassCounter() == 0)
+			SwapBuffers();
+	}
+}
+
+void 
+GlCanvas::StepToEndOfFrame() {
+
+	if (isPaused) {
+		m_pEngine->stepCompleteFrame();
+		SwapBuffers();
+	}
+}
+
+void
+GlCanvas::StepUntilSamePassNextFrame() {
+
+	if (isPaused) {
+		int n = RENDERMANAGER->getActivePipeline()->getPassCounter();
+		m_pEngine->stepCompleteFrame();
+		SwapBuffers();
+		m_pEngine->stepPasses(n);
+
+	}
+}
+
+
 bool
-GlCanvas::IsPaused ()
+GlCanvas::IsPaused()
 {
 	return isPaused;
 }
+
+void
+GlCanvas::MultiStep(int stepSize)
+{
+	step = stepSize;
+}
+
+
 
 //bool
 //GlCanvas::changeWaterState (bool state)

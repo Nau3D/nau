@@ -1,11 +1,11 @@
 #ifndef GLTEXTURE_H
 #define GLTEXTURE_H
 
-#include <nau/config.h>
+#include "nau/config.h"
 
 #if NAU_OPENGL_VERSION >=  420
 
-#include <nau/render/imageTexture.h>
+#include "nau/render/imageTexture.h"
 
 #include <GL/glew.h>
 #include <string>
@@ -26,7 +26,7 @@ namespace nau
 			~GLImageTexture(void);
 
 			// prepare the unit texture for rendering
-			virtual void prepare(int unit);
+			virtual void prepare();
 			/// restore the sampler state
 			virtual void restore();
 
@@ -34,10 +34,10 @@ namespace nau
 			static bool InitGL();
 			static bool Inited;
 
-			unsigned int m_Unit;
+//			unsigned int m_Unit;
 
 			// For loaded images
-			GLImageTexture (std::string label, unsigned int texID, unsigned int level=0, unsigned int access=GL_WRITE_ONLY );
+			GLImageTexture (std::string label, unsigned int unit, unsigned int texID, unsigned int level=0, unsigned int access=GL_WRITE_ONLY );
 
 			GLImageTexture() {};
 		};

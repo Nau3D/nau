@@ -1,7 +1,7 @@
-#include <nau/scene/sceneposeobject.h>
-#include <nau/geometry/boundingbox.h>
-#include <nau/math/transformfactory.h>
-#include <nau/geometry/meshwithpose.h>
+#include "nau/scene/sceneposeobject.h"
+#include "nau/geometry/boundingbox.h"
+#include "nau/math/matrix.h"
+#include "nau/geometry/meshwithpose.h"
 
 using namespace nau::scene;
 using namespace nau::render;
@@ -30,13 +30,12 @@ ScenePoseObject::setStaticCondition(bool aCondition) {
 }
 
 
-const IBoundingVolume*
+IBoundingVolume*
 ScenePoseObject::getBoundingVolume ()
 {
 	if (0 == m_BoundingVolume) {
 		calculateBoundingVolume();
-		if (m_Transform)
-			m_BoundingVolume->setTransform (*m_Transform);
+		m_BoundingVolume->setTransform (m_Transform);
 	}
 	//m_BoundingVolume->transform (*m_Transform);
 	return (m_BoundingVolume);

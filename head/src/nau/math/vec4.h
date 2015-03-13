@@ -1,159 +1,258 @@
-#ifndef vec4_H
-#define vec4_H
+#ifndef VECTOR4_H
+#define VECTOR4_H
 
-//#include <boost/archive/binary_oarchive.hpp>
-//#include <boost/archive/binary_iarchive.hpp>
+#include "nau/math/utils.h"
+
+#include <string>
 
 namespace nau
 {
 	namespace math
 	{
-
-		//! \brief This class defines a vector in 3D space.
-		//!
-		//! \author Eduardo Marques
-		//!	
-		//! A vector defines both a magnitude (length) and a
-		//! direction. One use for the vec4 class is as a data type for the
-		//! entities in physics equations. A vector can also be use to
-		//! define a point in 3D space ( a point is essentially a vector
-		//! that originates at (0,0,0) ).
-		//!		
-		//! vec4 defines the three vector components (x,y,z) as data
-		//! members and has several vector operations as member functions.
-		class vec4 {
-			//friend class boost::serialization::access;
-		 public:
-		  
-			//! x, y, z vector components 
-			float x,y,z,w;							
-		   
-			/// \name Constructors
-			//@{
-		   
-			//! Default class constructor. Initialize vector to (0,0,0,0)
-			explicit vec4 (): x(0.0f), y(0.0f), z(0.0f), w(0.0f) {};
-		   
-			//! Complete class constructor
-			explicit vec4 (float x, float y, float z, float w): x(x), y(y), z(z), w(w) {};
-		   
-			//! Copy constructor. 
-			vec4 (const vec4 &v);
-		   
-			//! Class destructor 
-			~vec4 () {};								
-			
-			//@}
-		   
-			//! \name Vector Accessing and Copying
-			//@{
-		   
-			//! Make this vector a copy of the vector <i>v</i>
-			void copy (const vec4 &v);
-
-			//! Return a new vector with the same contents a this vector
-			vec4 * clone () const;
-
-			//! Initialize ou change the vector's components
-			void set (float x,float y, float z, float w = 1.0);					
-		    void set(vec4* aVec );
-			void set(float *values);
-			void set(const vec4& aVec );
-			// Assignment operator
-			const vec4& operator = (const vec4 &v);
-		   
-			//@}
-		   
-			//! \name Overloaded Arithmetic Operators
-			//@{							
-		   
-			//! Vector addition
-			const vec4& operator += (const vec4 &v); 		
-		   
-			//! Vector subtraction
-			const vec4& operator -= (const vec4 &v);
-		   
-			//! Vector negation
-			const vec4& operator - (void);				
-
-			//! Vector scaling
-			const vec4& operator *= (float t);
-		   
-			//! Scalar division
-			const vec4& operator /= (float t);					
-		   
-			//@}
-		   
-		   
-			//! \name Overloaded comparation
-			//@{
-			
-			//! Equal
-			bool operator == (const vec4 &v) const;
-			
-			//! Diferent
-			bool operator != (const vec4 &v) const;
-
-			//@}
-
-			//! \name Methods
-			//@{
-		   
-			//! Length of vector
-			float length () const;
-		   
-			//! Length without the square root
-			float sqrLength () const;					       
-		   
-			//! distance between this vector and vector <i>v</i>
-			float distance (const vec4 &v) const;		
-			
-			//! Normalize this vector
-			void normalize ();
-		   
-			//! Return the unit vector of this vector
-			const vec4 unitVector () const;					
-		   
-			//! Dot product between this vector and vector <i>v</i>
-			float dot (const vec4 &v) const;	
-		   
-			//! Cross product between this vector and vector <i>v</i>. 
-			//! Assumes that what we really wnat is a 3D vector in homogeneous coordinates
-			const vec4 cross (const vec4 &v) const;
-		   
-			//! Angle between two vectors.
-			//float angle (vec4 &v) const;
-		   
-			//! Interpolated vector between this vector and vector <i>v</i> at
-			//! position alpha (0.0 <= alpha <= 1.0)
-			const vec4 lerp (const vec4 &v, float alpha) const;   
-		   
-			//! Add another vector to this one
-			void add (const vec4 &v);
-		   
-			//! Scalar multiplication
-			void scale (float a);				
-		   
-			//! Vector Equality
-			bool equals (const vec4 &v, float tolerance=-1.0f) const;
-		   
-			//@}			
-			
+		template <typename T>
+		class vector4 {
 
 		public:
-			/*
-			* boost serialization interface;
-			*/	
-			//template<class Archive>
-			//void serialize (Archive &ar, const unsigned int version)
-			//{
-			//	ar & x;
-			//	ar & y;
-			//	ar & z;
-			//	ar & w;
-			//}
-			//END: boost serialization interface
+
+			T x, y, z, w;
+
+			vector4() : x(0), y(0), z(0), w(0) {};
+			vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
+			vector4(const vector4 &v) : x(v.x), y(v.y), z(v.z), w(v.w) {};
+			vector4(T v) : x(v), y(v), z(v), w(v) {};
+			~vector4() {};
+
+			const vector4&
+			vector4::operator =(const vector4 &v) {
+
+				if (this != &v) {
+					x = v.x;
+					y = v.y;
+					z = v.z;
+					w = v.w;
+				}
+				return *this;
+			};
+
+			void
+			copy(const vector4 &v) {
+
+				x = v.x;
+				y = v.y;
+				z = v.z;
+				w = v.w;
+			};
+
+			vector4 *
+			clone() const {
+
+				return new vector(*this);
+			};
+
+			void
+			set(T xx, T yy, T zz, T ww = 1) {
+				x = xx;
+				y = yy;
+				z = zz;
+				w = ww;
+			};
+
+			void
+			set(T *values) {
+				x = values[0];
+				y = values[1];
+				z = values[2];
+				w = values[3];
+			};
+
+			void
+			set(vector4* aVec) {
+				x = aVec->x;
+				y = aVec->y;
+				z = aVec->z;
+				w = aVec->w;
+			};
+
+			void
+			set(const vector4& aVec) {
+				x = aVec.x;
+				y = aVec.y;
+				z = aVec.z;
+				w = aVec.w;
+			};
+
+			const vector4&
+			operator += (const vector4 &v)	{
+
+				x += v.x;
+				y += v.y;
+				z += v.z;
+				w += v.w;
+				return *this;
+			};
+
+			const vector4&
+			operator -= (const vector4 &v) {
+
+				x -= v.x;
+				y -= v.y;
+				z -= v.z;
+				w -= v.w;
+				return (*this);
+			};
+
+			const vector4 &
+			operator - (void) {
+
+				x = -x;
+				y = -y;
+				z = -z;
+				w = -w;
+				return (*this);
+			};
+
+			const vector4&
+			operator *=(T t) {
+
+				x *= t;
+				y *= t;
+				z *= t;
+				w *= t;
+				return *this;
+			};
+
+			const vector4&
+			operator /=(T t) {
+
+				x /= t;
+				y /= t;
+				z /= t;
+				w /= t;
+				return *this;
+			};
+
+			bool
+			operator == (const vector4 &v) const {
+
+				return equals(v);
+			};
+
+			bool
+				operator > (const vector4 &v) const {
+
+				if (x > v.x && y > v.y && z > v.z && w > v.w)
+					return true;
+				else
+					return false;
+			}
+
+			bool
+				operator < (const vector4 &v) const {
+
+				if (x < v.x && y < v.y && z < v.z && w < v.w)
+					return true;
+				else
+					return false;
+			}
+
+			bool
+			operator != (const vector4 &v) const {
+
+				return !equals(v);
+			};
+
+
+			void
+			add(const vector4 &v) {
+				x += v.x;
+				y += v.y;
+				z += v.z;
+				w += v.w;
+			};
+
+			void
+			scale(T a) {
+
+				x *= a;
+				y *= a;
+				z *= a;
+				w *= a;
+			};
+
+			float
+			length() const {
+
+				return sqrtf(x*x + y*y + z*z);
+			};
+
+			void
+			normalize() {
+
+				float m = length();
+				if (m <= FLT_EPSILON) {
+					m = 1;
+				}
+				x /= m;
+				y /= m;
+				z /= m;
+			};
+
+			float
+			dot(const vector4 &v) const {
+
+				return (x*v.x + y*v.y + z*v.z);
+			};
+
+			const vector4
+			cross(const vector4 &v) const {
+
+				vector4 result;
+
+				result.x = (this->y * v.z) - (v.y * this->z);
+				result.y = (this->z * v.x) - (v.z * this->x);
+				result.z = (this->x * v.y) - (v.x * this->y);
+				result.w = 0.0f;
+
+				return result;
+			};
+
+			bool 
+			between(const vector4 &v1, const vector4 &v2) {
+
+				if (x < v1.x || x > v2.x)
+					return false;
+				if (y < v1.y || y > v2.y)
+					return false;
+				if (z < v1.z || z > v2.z)
+					return false;
+				if (w < v1.w || w > v2.w)
+					return false;
+
+				return true;
+			};
+
+
+			bool
+				equals(const vector4 &v, float tolerance = -1.0f) const {
+				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance) && \
+					FloatEqual(z, v.z, tolerance) && FloatEqual(w, v.w, tolerance));
+			}
+
+
+			std::string 
+				toString() {
+
+				return  "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ", " + std::to_string(w) + ")";
+			}
 		};
+
+		typedef vector4<float> vec4;
+		typedef vector4<int> ivec4;
+		typedef vector4 < unsigned int >  uivec4;
+		typedef vector4<bool> bvec4;
+		typedef vector4<double> dvec4;
 	};
 };
-#endif // vec4_H
+
+
+#endif 

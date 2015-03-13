@@ -6,6 +6,9 @@ struct hit {
 	float u,v;
 };
 
+
+
+
 layout(std430, binding = 2) buffer hitsBuffer {
 	hit hits[];
 //	vec4 hits[];
@@ -14,6 +17,8 @@ layout(std430, binding = 2) buffer hitsBuffer {
 uniform sampler2D texColor;
 uniform sampler2D texNormal;
 uniform vec3 lightDirection;
+
+uniform mat4 V;
 
 in vec2 texCoordV;
 out vec4 colorOut;
@@ -26,9 +31,10 @@ void main() {
 //	 vec4 h = hits[coordB];
 	
 	vec4 color = texture(texColor, texCoordV);
-	vec3 n = texture(texNormal, texCoordV).xyz;
+	vec3 n = texture(texNormal, texCoordV).xyz * 2.0 - 1.0;
 
-	float intensity = max(0.0, dot(n, -normalize(lightDirection)));
+	vec3 ld = vec3(V * vec4(-lightDirection, 0.0));
+	float intensity = max(0.0, dot(n, normalize(ld)));
 	color = vec4(color.rgb*intensity+0.2, color.a);
 	
 	 if (h.t_id >= 0)
@@ -36,4 +42,6 @@ void main() {
 		colorOut = color * vec4(0.5, 0.5, 0.5, 1.0);
 	 else
 		 colorOut = color * vec4(1.0, 1.0, 1.0, 1.0);
+		 
+		//colorOut = vec4(ld,1); 
 }	

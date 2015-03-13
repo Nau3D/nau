@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="Box" type="ScenePoses">
-				<file>..\..\models\ogremodels\Box01.mesh.xml</file>
+				<file name="..\..\models\ogremodels\Box01.mesh.xml"/>
 			</scene>
 		</scenes>
 		
@@ -50,12 +50,12 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>Box</scene>
+					<scene name="Box" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>MainViewport</viewport>				
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />				
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			

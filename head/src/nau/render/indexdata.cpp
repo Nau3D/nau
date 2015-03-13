@@ -1,10 +1,12 @@
-#include <nau/render/indexdata.h>
-#include <nau/config.h>
+#include "nau/render/indexdata.h"
+
+#include "nau/config.h"
+#ifdef NAU_OPENGL
+#include "nau/render/opengl/glindexarray.h"
+#endif
+
 #include <assert.h>
 
-#ifdef NAU_OPENGL
-#include <nau/render/opengl/glindexarray.h>
-#endif
 
 using namespace nau::render;
 using namespace nau::math;
@@ -13,16 +15,19 @@ std::vector<unsigned int> IndexData::NoIndexData;
 
 
 
-IndexData* 
-IndexData::create (void)
+IndexData*
+IndexData::create(std::string name)
 {
+	IndexData *i;
+
 #ifdef NAU_OPENGL
-	return new GLIndexArray;
+	i = new GLIndexArray;
 #elif NAU_DIRECTX
-	return new DXIndexArray;
-#else
-	return 0;
+	i =  new DXIndexArray;
 #endif
+
+	i->m_Name = name;
+	return i;
 }
 
 
@@ -37,11 +42,18 @@ IndexData::IndexData(void) :
 
 IndexData::~IndexData(void)
 {
-	if (0 != m_InternalIndexArray) {
-		delete m_InternalIndexArray;
-	}
+	//if (0 != m_InternalIndexArray) {
+	//	delete m_InternalIndexArray;
+	//	m_InternalIndexArray = 0;
+	//}
 }
 
+
+void 
+IndexData::setName(std::string name) {
+
+	m_Name = name;
+}
 
 std::vector<unsigned int>&
 IndexData::getIndexData (void)

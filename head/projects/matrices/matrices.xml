@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="CubeLand">
-				<file>..\..\models\bench.obj</file>
+				<file name="..\..\models\bench.obj"/>
 			</scene>	
 		</scenes>
 		<viewports>
@@ -11,17 +11,17 @@
 				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport1" >
-				<SIZE width=0.33 ratio=1 />
+				<SIZE width=0.33 height=1 />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="SmallViewport2" >
 				<ORIGIN x = 0.33 y =0 />
-				<SIZE width=0.34 ratio=1 />
+				<SIZE width=0.34 height=1 />
 				<CLEAR_COLOR  r=0.0 g=0.0 b=0.0 />
 			</viewport>
 			<viewport name="SmallViewport3" >
 				<ORIGIN x = 0.67 y =0 />
-				<SIZE  width=".33"  ratio=1/>
+				<SIZE  width=".33"  height=1/>
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
 			</viewport>
 		</viewports>
@@ -59,7 +59,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="matricesDemoMaterials.mlib"/>
+			<materialLib filename="matricesDemoMaterials.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -68,33 +68,33 @@
 		
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>CubeLand</scene>
+					<scene name="CubeLand" />
 				</scenes>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<camera>UserCamera</camera>
+				<camera name="UserCamera" />
 			</pass>
 			
 			<pass class="default" name="pass2">
 				<scenes>
-					<scene>CubeLand</scene>
-					<scene>UserCamera</scene>
+					<scene name="CubeLand" />
+					<scene name="UserCamera" />
 				</scenes>
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
-				<camera>GodCamera</camera>
+				<camera name="GodCamera" />
 			</pass>
 			
 			<pass class="default" name="pass3">
 				<scenes>
-					<scene>CubeLand</scene>
-					<scene>UserCamera</scene>
+					<scene name="CubeLand" />
+					<scene name="UserCamera" />
 				</scenes>
-				<camera>ClipSpaceCamera</camera>
+				<camera name="ClipSpaceCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<injectionMaps>
 					<map toMaterial="*">

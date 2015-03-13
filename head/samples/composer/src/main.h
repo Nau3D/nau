@@ -1,6 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+
+
 #include <wx/wxprec.h>
 
 #include <wx/string.h>
@@ -17,9 +19,17 @@
 #include "dialogs/dlgDbgGLILogRead.h"
 #include "dialogs/dlgDbgPrograms.h"
 #include "dialogs/dlgDbgBuffers.h"
+#include "dialogs/dlgDbgStep.h"
+#include "dialogs/DlgStateXML.h"
+#include "dialogs/dlgViewports.h"
 
 #include "glcanvas.h"
+
 #include <nau.h>
+#include <nau/config.h>
+#ifdef NAU_LUA
+#pragma comment(lib, "lua52.lib")
+#endif
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -67,7 +77,8 @@ private:
 	void OnDlgShaders(wxCommandEvent& event);
 	void OnDlgScenes(wxCommandEvent& event);
 	void OnDlgPass(wxCommandEvent& event);
-    void OnProjectLoad(wxCommandEvent& event);
+	void OnDlgViewports(wxCommandEvent& event);
+	void OnProjectLoad(wxCommandEvent& event);
 	void OnDirectoryLoad (wxCommandEvent& event);
 	void OnModelLoad (wxCommandEvent& event);
 	void OnModelAppend (wxCommandEvent& event);
@@ -92,6 +103,14 @@ private:
 	void OnDlgDbgGLILogRead(wxCommandEvent& event);
 	void OnDlgDbgProgram(wxCommandEvent& event);
 	void OnDlgDbgBuffer(wxCommandEvent& event);
+	void OnDlgDbgStep(wxCommandEvent& event);
+	void OnDlgStateXML(wxCommandEvent& event);
+	//void OnNextFrame(wxCommandEvent& event);
+
+	void OnClose(wxCloseEvent& event);
+
+	void FreezeGLI();
+	void LoadDebugData();
 	//Debugger end
 
 

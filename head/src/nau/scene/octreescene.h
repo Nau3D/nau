@@ -1,10 +1,10 @@
 #ifndef OCTREESCENE_H
 #define OCTREESCENE_H
 
-#include <nau/scene/iscenepartitioned.h>
-#include <nau/scene/octree.h>
-#include <nau/geometry/frustum.h>
-#include <nau/geometry/boundingbox.h>
+#include "nau/scene/iscenepartitioned.h"
+#include "nau/scene/octree.h"
+#include "nau/geometry/frustum.h"
+#include "nau/geometry/boundingbox.h"
 
 namespace nau {
 
@@ -54,9 +54,9 @@ namespace nau {
 
 			virtual void getMaterialNames(std::set<std::string> *nameList);
 
-			virtual nau::math::ITransform *getTransform();
-			virtual void setTransform(nau::math::ITransform *t);
-			virtual void transform(nau::math::ITransform *t);
+			virtual nau::math::mat4 &getTransform();
+			virtual void setTransform(nau::math::mat4 &t);
+			virtual void transform(nau::math::mat4 &t);
 
 
 			virtual std::string getType (void);

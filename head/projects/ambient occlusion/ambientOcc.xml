@@ -2,8 +2,14 @@
 <project name="try" width=1500 height=300>
 	<assets>
 		<scenes>
-			<scene name="MainScene">
-				<file>..\..\models\Teapot.3ds</file>
+			<scene name="MainScene" >
+				<file name="../../models/sponza/crytek/sponza.obj"/>
+				<!--file name="../../models/Teapot.3ds"/-->
+			</scene>
+			<scene name="Rays" >
+				<buffers name="rays" primitive="LINES" material="showRays">
+					<position name="position" fromLibrary="Ambient Occlusion" />				
+				</buffers>	
 			</scene>
 		</scenes>
 		<viewports>
@@ -41,21 +47,20 @@
 		<cameras>
 			<camera name="MainCamera" >
 				<viewport name="dummy" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR="1000.0" />
-				<POSITION x="0.0" y="15.0" z="-10.0" />
-				<VIEW x="10.0" y="0.0" z="-1.0" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR="5000.0" />
+				<POSITION x="0.0" y="15.0" z="125.0" />
+				<VIEW x="0.0" y="0.0" z="-1.0" />
 				<UP x="0.0" y="1.0" z="0.0" />
 			</camera>
 		</cameras>
 		<lights>
 			<light name="Sun" type="directional">
-				<POSITION x="-52" y="77.0" z="-27.0" />
 				<DIRECTION x="1" y="-1" z="1" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="ambientOcc.mlib"/>
+			<materialLib filename="ambientOcc.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -63,55 +68,92 @@
 		<pipeline name="ao" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<rendertarget name="info" fromLibrary="Ambient Occlusion"/>	
+				<camera name="MainCamera" />
+				<renderTarget name="info" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Ambient Occlusion" toMaterial="gatherInfo" />
 				</materialMaps>
 			</pass>
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="Ambient Occlusion" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="Ambient Occlusion" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
 			<pass class="default" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>SmallViewport1</viewport>
+				<camera name="MainCamera" />
+				<viewport name="SmallViewport1" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
-			<pass class="quad" name="pass3">
-				<viewport>SmallViewport2</viewport>
+			<!-- <pass class="quad" name="pass3">
+				<viewport name="SmallViewport2" />
 				<texture name="depthMap" fromLibrary="Ambient Occlusion"/>
-			</pass>
+			</pass> -->
 			<pass class="quad" name="pass4">
-				<viewport>SmallViewport3</viewport>
+				<viewport name="SmallViewport2" />
 				<texture name="normalMap" fromLibrary="Ambient Occlusion"/>
 			</pass>
-			<pass class="quad" name="pass5">
-				<viewport>SmallViewport4</viewport>
+			<!-- <pass class="quad" name="pass5">
+				<viewport name="SmallViewport4" />
 				<texture name="posMap" fromLibrary="Ambient Occlusion"/>
-			</pass>
+			</pass> -->
 			<pass class="quad" name="pass6">
-				<rendertarget name="shadows" fromLibrary="Ambient Occlusion"/>	
+				<renderTarget name="shadows" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Ambient Occlusion" toMaterial="ambOcc" />
 				</materialMaps>
+			
 			</pass>
-			<!--pass class="default" name="pass6">
-				<scenes>
-					<scene>MainScene</scene>
-				</scenes>
-				<camera>MainCamera</camera>
-				<rendertarget name="shadows" fromLibrary="Ambient Occlusion"/>	
-				<materialMaps>
-					<map fromMaterial="*" toLibrary="Ambient Occlusion" toMaterial="ambOcc" />
-				</materialMaps>
-			</pass-->
 			<pass class="quad" name="pass7">
-				<viewport>SmallViewport5</viewport>
+				<viewport name="SmallViewport3" />
 				<texture name="occMap" fromLibrary="Ambient Occlusion"/>	
+			</pass>
+			<pass class="quad" name="pass8">
+				<viewport name="SmallViewport4" />
+				<texture name="occMap2" fromLibrary="Ambient Occlusion"/>	
+			</pass>
+			
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="rays" fromLibrary="Ambient Occlusion" queryType = "ANY"/> 
+				<hits buffer ="Ambient Occlusion::hits" />
+			</pass>	 
+			
+			<pass class="compute" name="computeLineRays">
+				<material name="computeLineRays" fromLibrary="Ambient Occlusion" dimX=1, dimY=1 dimZ=1 />
+			</pass>
+			
+			<pass class="default" name="showRays">
+				<scenes>
+					<scene name="Rays" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="SmallViewport3" />
+				<color clear=false />
+				<materialMaps>
+					<map fromMaterial="showRays" 
+						 toLibrary="Ambient Occlusion" toMaterial="showRays" />
+				</materialMaps>	
+			</pass>
+
+			<pass class="quad" name="pass9">
+				<renderTarget name="optix" fromLibrary="Ambient Occlusion"/>	
+				<materialMaps>
+					<map fromMaterial="__Quad" 
+						 toLibrary="Ambient Occlusion" toMaterial="compose" />
+				</materialMaps>	
+			</pass>
+			<pass class="quad" name="pass10">
+				<viewport name="SmallViewport5" />
+				<texture name="optixTex" fromLibrary="Ambient Occlusion"/>
 			</pass>
 		</pipeline>
 	</pipelines>

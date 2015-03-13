@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<materiallib name="Complexity Map">
+<materialLib name="Complexity Map">
 	<states>
 		<state name="CountPixelTest">
 			<DEPTH_TEST value="0" />
@@ -29,13 +29,13 @@
 		<material name="fivePerCentDraw">
 			<color>
 				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
-				<DIFFUSE r="0.05" g="0.05" b="0.05" a="1.0" />
+				<DIFFUSE r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
-				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION  r="0.05" g="0.05" b="0.05" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
 			<state name="CountPixelDraw" />
 		</material>
 		
 	</materials>
-</materiallib>
+</materialLib>

@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<project name="Render Target Test" width=1280 height=512 >
+	<assets>
+		<scenes>
+			<scene name="MainScene" param="SWAP_YZ">
+				<file name="..\..\models\Teapot.3ds"/>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="normals" >
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=0.20 height=0.5 />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="colors" >
+				<ORIGIN x=0.0 y=0.5 />
+				<SIZE width=0.20 height=0.5 />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="deferred" >
+				<ORIGIN x=0.2 y=0.0 />
+				<SIZE width=0.40 height=1.0 />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="oneshot" >
+				<ORIGIN x=0.6 y=0.0 />
+				<SIZE width=0.40 height=1.0 />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera">
+				<viewport name="oneshot" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x=0 y=0 z=75 />
+				<VIEW x=0.0 y=0.0 z=-1.0 />
+				<UP x=0 y=1 z=0 />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun" >
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-1.0" z="-1" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.0" b="0.0" />
+			</light>
+		</lights>
+		<materialLibs>
+			<materialLib filename="deferred.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	
+	<pipelines>
+		<pipeline name="deferred" default="true">
+			<pass class="default" name="fillBuffers">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<renderTarget name="gbuffer" fromLibrary="Deferred Rendering" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="Deferred Rendering" />
+					</map>
+				</injectionMaps>
+			</pass>
+			
+			<pass class="quad" name="showNormals">
+				<viewport name="normals" />
+				<texture name="normals" fromLibrary="Deferred Rendering" />
+			</pass>
+			<pass class="quad" name="showColors">
+				<viewport name="colors" />
+				<texture name="colors" fromLibrary="Deferred Rendering" />
+			</pass>
+			<pass class="quad" name="deferred">
+				<viewport name="deferred" />
+				<materialMaps>
+					<map fromMaterial="__Quad" 
+						 toLibrary="Deferred Rendering" toMaterial="compose" />
+				</materialMaps>				
+			</pass>
+			<pass class="default" name="oneshot">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="oneshot" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="oneshot" fromLibrary="Deferred Rendering" />
+					</map>
+				</injectionMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

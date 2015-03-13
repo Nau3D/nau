@@ -1,7 +1,7 @@
 #ifndef SCENEAUX_H
 #define SCENEAUX_H
 
-#include <nau/scene/scene.h>
+#include "nau/scene/scene.h"
 
 /* -------------------------------------------------------
 

@@ -397,6 +397,7 @@ bool GLDriver::ReConfigure()
   //Set if the any logging is enabled
   loggingEnabled = !configData.logPerFrame;
 
+
   //If we are not-perframe logging, create the initial logger here
   if(loggingEnabled && configData.logEnabled)
   {
@@ -409,6 +410,11 @@ bool GLDriver::ReConfigure()
 
   //Create the error data log
   //errorDataLog =  new InterceptLog(functionTable); /////////////////NEEEEEEEEED???????????????????
+
+  //Updating GLContext (other logs)
+  for (int i = 0; i < glContextArray.size(); i++){
+	  glContextArray[i]->updateReferences(configData, this, functionTable);
+  }
 
   ReloadPlugins();
 
@@ -455,8 +461,13 @@ bool GLDriver::Reset(){
 
   //Create the error data log
   //errorDataLog =  new InterceptLog(functionTable); /////////////////NEEEEEEEEED???????????????????
+
+  //Updating GLContext (other logs)
+  for (int i = 0; i < glContextArray.size(); i++){
+	  glContextArray[i]->updateReferences(configData, this, functionTable);
+  }
   
-  printf("DEBUG: reloading plugins\n");
+ // printf("DEBUG: reloading plugins\n");
   //Delete existing pluginManager
   ReloadPlugins();
 
@@ -465,7 +476,7 @@ bool GLDriver::Reset(){
 
 void GLDriver::ReloadPlugins()
 {
-		printf("DEBUG: resetting plugin manager\n");
+		//printf("DEBUG: resetting plugin manager\n");
   //Delete existing pluginManager
   if(pluginManager)
   {
@@ -474,7 +485,7 @@ void GLDriver::ReloadPlugins()
   }
   pluginManager = new InterceptPluginManager(this,functionTable);
   
-		printf("DEBUG: loading plugins\n");
+		//printf("DEBUG: loading plugins\n");
   //Attempt to load the plugins
   if(!pluginManager->LoadPlugins(configData))
   {
@@ -482,11 +493,11 @@ void GLDriver::ReloadPlugins()
     pluginManager = NULL;
   }
   else{
-	  printf("DEBUG: readding contexts\n");
+	  //printf("DEBUG: readding contexts\n");
 	  for (int i=0; i < glContextArray.size(); i++){
-		  printf("DEBUG: Adding context number %d\n",i);
+		  //printf("DEBUG: Adding context number %d\n",i);
 		  HGLRC rchandle = glContextArray[i]->GetRCHandle();
-		  printf("DEBUG: RCHandle %x\n",rchandle);
+		  //printf("DEBUG: RCHandle %x\n",rchandle);
 		  pluginManager->OnGLContextCreate(rchandle);
 	  }
   }
@@ -594,6 +605,9 @@ bool GLDriver::AddOverrideFunction(const string & funcName, void * overrideFunct
 //
 bool GLDriver::LogFunctionPre(uint index, const FunctionArgs & args)
 {
+  if (!configData.isGLIActive){
+  	return false;
+  }
   //Check the function table
   if(!functionTable)
   {
@@ -685,6 +699,9 @@ bool GLDriver::LogFunctionPre(uint index, const FunctionArgs & args)
 //
 bool GLDriver::LogFunctionPost(uint index, const FunctionRetValue & returnVal)
 {
+  if (!configData.isGLIActive){
+    return false;
+  }
   //Return now if not init (or there was no pre call)
   if(!isInit || functionCallDepth == 0)
   {

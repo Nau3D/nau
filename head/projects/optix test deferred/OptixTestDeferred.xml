@@ -5,7 +5,7 @@
 			<scene name="MainScene" type="OctreeByMat">
 				<!--file>..\3dsmodels\cow.obj</file-->
 				<!--file>..\ntg-bench\bench.obj</file-->
-				<file>..\..\models\LargoCamoes\largoCamoes.cbo</file>--
+				<file name="..\..\models\LargoCamoes\largoCamoes.cbo"/>
 				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
 				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
 				<!--file>..\3dsmodels\jeep1.3ds</file-->
@@ -46,8 +46,8 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="optixTest.mlib"/>
-			<mlib filename="DeferredRenderTargets.mlib"/>
+			<materialLib filename="optixTest.mlib"/>
+			<materialLib filename="DeferredRenderTargets.mlib"/>
 		</materialLibs>
 	</assets>
 
@@ -59,12 +59,12 @@
 		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<rendertarget name="deferred" fromLibrary="Deferred Render Targets" />
+				<camera name="MainCamera" />
+				<renderTarget name="deferred" fromLibrary="Deferred Render Targets" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<injectionMaps>
 					<map toMaterial="*">
@@ -76,12 +76,12 @@
 
 			<pass class="optix" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<rendertarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
+				<camera name="MainCamera" />
+				<renderTarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="nau_material_lib" toMaterial="__Black" />
@@ -111,15 +111,15 @@
 
 
 			<pass class="quad" name="pass3">
-				<viewport>LeftViewport</viewport>
+				<viewport name="LeftViewport" />
 				<texture name="color" fromLibrary="Deferred Render Targets" />			
 			</pass>
 			<pass class="quad" name="pass4">
-				<viewport>MiddleViewport</viewport>
+				<viewport name="MiddleViewport" />
 				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
 			<pass class="quad" name="pass5">
-				<viewport>RightViewport</viewport>
+				<viewport name="RightViewport" />
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Deferred Render Targets" toMaterial="combine" />
 				</materialMaps>

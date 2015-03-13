@@ -3,8 +3,8 @@
 	<assets>
 		<scenes>
 			<scene name="Al"  param="USE_ADJACENCY" type="OctreeByMat">
-				<!--file>..\..\models\cubewithplane3.obj</file-->
-				<file>..\..\models\sponza\crytek\sponza.obj</file>
+				<file name="..\..\models\al.obj"/>
+
 			</scene>
 		</scenes>
 		
@@ -33,7 +33,7 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="geomAdj.mlib"/>
+			<materialLib filename="geomAdj.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -41,11 +41,11 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>Al</scene>
+					<scene name="Al" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Geometry With Adjacency" toMaterial="showContours" />

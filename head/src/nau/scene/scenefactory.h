@@ -1,7 +1,7 @@
 #ifndef SCENEFACTORY_H
 #define SCENEFACTORY_H
 
-#include <nau/scene/iscene.h>
+#include "nau/scene/iscene.h"
 
 namespace nau
 {

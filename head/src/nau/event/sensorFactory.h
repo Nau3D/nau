@@ -1,7 +1,7 @@
 #ifndef SENSORFACTORY_H
 #define SENSORFACTORY_H
 
-#include <nau/event/sensor.h>
+#include "nau/event/sensor.h"
 #include <string>
 
 namespace nau

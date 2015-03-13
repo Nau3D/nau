@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 
-#include <nau/material/material.h>
+#include "nau/material/material.h"
 
 //include "filenames.h"
 

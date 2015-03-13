@@ -1,10 +1,10 @@
 #include <sstream>
 
-#include <nau/render/pass.h>
-#include <nau/geometry/axis.h>
-#include <nau/geometry/frustum.h>
-#include <nau/debug/profile.h>
-#include <nau.h>
+#include "nau/render/pass.h"
+#include "nau/geometry/axis.h"
+#include "nau/geometry/frustum.h"
+#include "nau/debug/profile.h"
+#include "nau.h"
 
 using namespace nau::material;
 using namespace nau::scene;
@@ -35,6 +35,8 @@ Pass::Init() {
 	Attribs.listAdd("RUN_MODE", "RUN_ALWAYS", RUN_ALWAYS);
 	Attribs.listAdd("RUN_MODE", "SKIP_FIRST_FRAME", SKIP_FIRST_FRAME);
 	Attribs.listAdd("RUN_MODE", "RUN_ONCE", RUN_ONCE);
+	Attribs.listAdd("RUN_MODE", "RUN_EVEN", RUN_EVEN);
+	Attribs.listAdd("RUN_MODE", "RUN_ODD", RUN_ODD);
 
 	Attribs.add(Attribute(STENCIL_FUNC, "STENCIL_FUNC", Enums::DataType::ENUM, false, new int(ALWAYS)));
 	Attribs.listAdd("STENCIL_FUNC", "LESS", LESS);
@@ -98,6 +100,9 @@ Pass::Init() {
 
 	//UINT
 	Attribs.add(Attribute(STENCIL_OP_MASK, "STENCIL_OP_MASK", Enums::DataType::UINT, false, new unsigned int(255)));
+
+	NAU->registerAttributes("PASS", &Attribs);
+
 	return true;
 }
 
@@ -110,9 +115,9 @@ Pass::Pass (const std::string &passName) :
 	m_MaterialMap(),
 	m_Viewport (0),
 	m_RestoreViewport (0),
-	m_RemapMode (REMAP_DISABLED)
-{
-	initArrays(Attribs);
+	m_RemapMode (REMAP_DISABLED) {
+
+	registerAndInitArrays("PASS", Attribs);
 
 	initVars();
 	EVENTMANAGER->addListener("SCENE_CHANGED",this);
@@ -185,8 +190,12 @@ Pass::renderTest(void) {
 	else {
 		unsigned long f = NAU->getFrameCount();
 		bool even = (f % 2 == 0);
+		if (m_EnumProps[RUN_MODE] == RUN_EVEN && !even)
+			return false;
+		else if (m_EnumProps[RUN_MODE] == RUN_ODD && even)
+			return false;
 		// check for skip_first and run_once cases
-		if ((m_EnumProps[RUN_MODE] == SKIP_FIRST_FRAME && (f == 0)) || (m_EnumProps[RUN_MODE] == RUN_ONCE && (f > 0)))
+		else if ((m_EnumProps[RUN_MODE] == SKIP_FIRST_FRAME && (f == 0)) || (m_EnumProps[RUN_MODE] == RUN_ONCE && (f > 0)))
 			return false;
 		else
 			return true;
@@ -214,7 +223,6 @@ Pass::prepare (void) {
 	}
 
 	setupCamera();
-	prepareBuffers();
 	setupLights();
 }
 
@@ -230,7 +238,9 @@ Pass::doPass (void) {
 	std::vector<std::string>::iterator scenesIter;
 	std::vector<nau::scene::SceneObject*> sceneObjects;
 
-	const float *a = RENDERER->getMatrix(IRenderer::PROJECTION_VIEW_MODEL);
+	prepareBuffers();
+
+	const float *a = (float *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4);
 	camFrustum.setFromMatrix (a);
 	aCam = RENDERMANAGER->getCamera (m_CameraName);
 	RENDERMANAGER->clearQueue();
@@ -491,7 +501,7 @@ Pass::setRenderTarget (nau::render::RenderTarget* rt) {
 			m_UseRT = true;
 		}
 		setRTSize(rt->getWidth(), rt->getHeight());
-		m_Viewport->setProp(Viewport::CLEAR_COLOR, rt->getClearValues());
+		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getClearValues());
 	}
 	m_RenderTarget = rt;
 }
@@ -504,9 +514,9 @@ Pass::setRTSize(int width, int height) {
 
 	m_RTSizeWidth = width;
 	m_RTSizeHeight = height;
-	m_Viewport->setProp(Viewport::SIZE, vec2(width, height));
-	m_Viewport->setProp(Viewport::ORIGIN, vec2(0.0f, 0.0f));
-	m_Viewport->setProp(Viewport::FULL, false);
+	m_Viewport->setPropf2(Viewport::SIZE, vec2(width, height));
+	m_Viewport->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
+	m_Viewport->setPropb(Viewport::FULL, false);
 }
 
 
@@ -569,23 +579,7 @@ Pass::setCamera (const std::string &cameraName) {
 
 
 
-// --------------------------------------------------
-//		SET PROPS
-// --------------------------------------------------
 
-
-void
-Pass::setPropb(BoolProperty prop, bool value) {
-
-	m_BoolProps[prop] = value;
-}
-
-
-void
-Pass::setPropui(UIntProperty prop, unsigned int value) {
-
-	m_UIntProps[prop] = value;
-}
 
 
 // --------------------------------------------------

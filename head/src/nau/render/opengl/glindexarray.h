@@ -1,7 +1,7 @@
 #ifndef GLINDEXARRAY_H
 #define GLINDEXARRAY_H
 
-#include <nau/render/indexdata.h>
+#include "nau/render/indexdata.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -12,25 +12,26 @@ namespace nau
 	{
 		class GLIndexArray : public IndexData
 		{
-		private:
+		protected:
 			bool m_IsCompiled;
 			GLuint m_GLBuffer;
-			GLuint m_VAO;
+			//bool compile (VertexData &v);
+			void resetCompilationFlag();
+			bool isCompiled();
+			void bind (void);
+			void unbind (void);
 
 		public:
 			GLIndexArray(void);
 
 			std::vector<unsigned int>& getIndexData (void);
-			bool compile (VertexData &v);
-			void resetCompilationFlag();
-			void bind (void);
-			void unbind (void);
-			bool isCompiled();
+			void compile();
 			void useAdjacency(bool adj);
 			bool getAdjacency();
 
-			//virtual std::vector<unsigned int>& _getReallyIndexData (void);
 			virtual unsigned int getBufferID();
+			void setBuffer(unsigned int id);
+
 			~GLIndexArray(void);
 
 		};

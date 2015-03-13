@@ -1,7 +1,7 @@
 #ifndef GLSTATE_H
 #define GLSTATE_H
 
-#include <nau/render/istate.h>
+#include "nau/render/istate.h"
 #include <string>
 #include <GL/glew.h>
 
@@ -22,7 +22,7 @@ namespace nau
 
 		private:
 			static bool Inited;
-			static bool Init();
+			static bool InitGL();
 
 			bool difColor(vec4& a, vec4& b);
 			bool difBoolVector(bool* a, bool* b);

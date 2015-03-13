@@ -1,11 +1,11 @@
-#include <nau/scene/octreeByMatscene.h>
-#include <nau/render/rendermanager.h>
-#include <nau/material/imaterialgroup.h>
+#include "nau/scene/octreeByMatscene.h"
+#include "nau/render/rendermanager.h"
+#include "nau/material/materialgroup.h"
 
-#include <nau/debug/profile.h>
-#include <nau.h>
+#include "nau/debug/profile.h"
+#include "nau.h"
 
-#include <nau/slogger.h>
+#include "nau/slogger.h"
 
 using namespace nau::scene;
 using namespace nau::geometry;
@@ -19,7 +19,7 @@ OctreeByMatScene::OctreeByMatScene(void) : IScenePartitioned(),
 	m_pGeometry (0),
 	m_BoundingBox()
 {
-	m_Transform = TransformFactory::create("SimpleTransform");
+//	m_Transform = TransformFactory::create("SimpleTransform");
 	EVENTMANAGER->addListener("SET_POSITION", this);
 	EVENTMANAGER->addListener("SET_ROTATION", this);
 }
@@ -42,41 +42,40 @@ OctreeByMatScene::eventReceived(const std::string &sender, const std::string &ev
 
 	if (eventType == "SET_POSITION") {
 
-		SimpleTransform t;
-		t.setTranslation(p->x, p->y, p->z);
-		this->setTransform(&t);
+		mat4 t;
+		t.setIdentity();
+		t.translate(p->x, p->y, p->z);
+		this->setTransform(t);
 	}
 	if (eventType == "SET_ROTATION") {
 
-		nau::math::mat4 m = m_Transform->getMat44();
-		m_Transform->setRotation(p->w, p->x, p->y, p->z);
+		//nau::math::mat4 m = m_Transform->getMat44();
+		m_Transform.setIdentity();
+		m_Transform.rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();	
 	}
 }
 
 
-ITransform *
+mat4 &
 OctreeByMatScene::getTransform() 
 {
 	return m_Transform;
 }
 
 
-
-
-
 void
-OctreeByMatScene::setTransform(nau::math::ITransform *t)
+OctreeByMatScene::setTransform(nau::math::mat4 &t)
 {
-	m_Transform->clone(t);
+	m_Transform = t;
 	updateSceneObjectTransforms();
 }
 
 
 void
-OctreeByMatScene::transform(nau::math::ITransform *t)
+OctreeByMatScene::transform(nau::math::mat4 &t)
 {
-	m_Transform->compose(*t);
+	m_Transform*= t;
 	updateSceneObjectTransforms();
 }
 
@@ -161,12 +160,11 @@ OctreeByMatScene::compile (void)
 	std::vector<SceneObject*>::iterator objIter;
 	objIter = m_SceneObjects.begin();
 	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		(*objIter)->getRenderable().getVertexData().compile();
-		std::vector<IMaterialGroup*> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
+		std::vector<MaterialGroup*> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
 
-		std::vector<IMaterialGroup*>::iterator matGroupsIter = matGroups.begin();
+		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 		for ( ; matGroupsIter != matGroups.end(); ++matGroupsIter){
-			(*matGroupsIter)->getIndexData().compile((*objIter)->getRenderable().getVertexData());
+			(*matGroupsIter)->compile();
 		}
 
 	}

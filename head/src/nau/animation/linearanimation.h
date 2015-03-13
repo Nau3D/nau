@@ -1,10 +1,10 @@
 #ifndef LINEARANIMATION_H
 #define LINEARANIMATION_H
 
-#include <nau/animation/ianimation.h>
+#include "nau/animation/ianimation.h"
 
-#include <nau/scene/sceneobject.h>
-#include <nau/math/vec3.h>
+#include "nau/scene/sceneobject.h"
+#include "nau/math/vec3.h"
 
 namespace nau
 {

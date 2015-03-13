@@ -1,10 +1,10 @@
 #ifndef GLTEXTURE_CUBEMAP_H
 #define GLTEXTURE_CUBEMAP_H
 
-#include <nau/render/textureCubeMap.h>
-#include <nau/scene/camera.h>
+#include "nau/render/textureCubeMap.h"
+#include "nau/scene/camera.h"
 
-#include <nau.h>
+#include "nau.h"
 
 #include <GL/glew.h>
 
@@ -24,6 +24,8 @@ namespace nau
 
 			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts);
 			virtual void restore(unsigned int unit);
+
+			virtual void build();
 
 			//void enableCompareToTexture (void);
 			//void disableCompareToTexture (void);

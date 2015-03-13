@@ -1,21 +1,48 @@
 <?xml version="1.0" ?>
-<materiallib name="Ambient Occlusion">
-	<rendertargets>
-		<rendertarget name = "info">
+<materialLib name="Ambient Occlusion">
+	<renderTargets>
+		<renderTarget name = "info">
 			<size width="1024" height="1024" />
 			<depth name="depthMap" internalFormat="DEPTH_COMPONENT32F"/>
 			<colors>
 				<color name="normalMap" internalFormat="RGBA32F" />
 				<color name="posMap"  internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
-		<rendertarget name = "shadows">
+		</renderTarget>
+		<renderTarget name = "shadows">
 			<size width="1024" height="1024" />
 			<colors>
 				<color name="occMap"  internalFormat="RGBA32F" />
+				<color name="occMap2"  internalFormat="RGBA32F" />
 			</colors>
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+		<renderTarget name = "optix">
+			<size width="1024" height="1024" />
+			<colors>
+				<color name="optixTex"  internalFormat="RGBA32F" />
+			</colors>
+		</renderTarget>
+		<renderTarget name ="dummy">
+			<size width="1024" height="1024" />
+			<!--size width="512" height="512" /-->
+			<colors>
+				<color name="dummy" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+	
+	<buffers>
+		<buffer name="hits">
+			<SIZE value=150994944 /> <!-- 4 * 4 * nraios * larg*altura -->
+		</buffer>	
+		<buffer name="rays">
+			<SIZE value=301989888 /> <!-- 8 * 4 * nraios * larg* altura -->
+		</buffer>
+		<buffer name="position">
+			<SIZE value=288 /> <!-- 4 size of float * 4 floats per point * 2 points per line * nraios  -->
+		</buffer>	
+	</buffers>
+	
 	<shaders>
 		<shader name="gatherInfo" 
 							ps="shaders/gatherInfo.frag" 
@@ -23,44 +50,156 @@
 		<shader name="ambOcc"
 							ps="shaders/ambOcc.frag"
 							vs="shaders/ambOcc.vert" />
+		<shader name="compose"
+							ps="shaders/compose.frag"
+							vs="shaders/compose.vert" />
+		<shader name="fillRayBuffer" 	
+							ps="shaders/fillRayBuffer.frag" 
+							vs="shaders/fillRayBuffer.vert" />	
+		<shader name="computeLineRays"
+							cs="shaders/computeLineRays.comp" />
+		<shader name="showRays"
+							ps="shaders/showRays.frag"
+							vs="shaders/showRays.vert" />
 	</shaders>
+	
 	<materials>
 		<material name="gatherInfo">
-			<shader>
-				<name>gatherInfo</name>
+			<shader name="gatherInfo">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
 											component="PROJECTION_VIEW_MODEL" />										
-					<valueof uniform="VM"  type="CURRENT" context="MATRIX" 
-											component="VIEW_MODEL" />										
-					<valueof uniform="Normal"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="VM"  type="CURRENT" context="RENDERER" 
+											component="VIEW_MODEL" />						
+					<valueof uniform="M"  type="CURRENT" context="RENDERER" 
+											component="MODEL" />																		
+					<valueof uniform="Normal"  type="CURRENT" context="RENDERER" 
 											component="NORMAL" />										
 				</values>
 			</shader>
 		</material>
-		<material name="ambOcc">
-			<shader>
-				<name>ambOcc</name>
+		
+		<material name="fillRayBuffer">			
+			<shader name="fillRayBuffer">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="texPos" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+												component="UNIT" id="0" />	
+					<valueof uniform="texNormal" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+												component="UNIT" id="1" />	
+				</values>
+			</shader>
+			<buffers>	
+				<buffer name="rays" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+			<textures>
+				<texture UNIT="0" name="posMap" />
+				<texture UNIT="1" name="normalMap" />
+			</textures>
+		</material>
+		
+		<material name="computeLineRays">			
+			<shader name="computeLineRays">
+				<values>
+					<valueof uniform="click" type="CURRENT" context="RENDERER"
+											component="MOUSE_CLICK" />
+				</values>
+			</shader>
+			<buffers>	
+				<buffer name="rays" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+				<buffer name="position" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value=2 />
+				</buffer>	
+				<buffer name="hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="3" />
+				</buffer>
+			</buffers>	
+		</material>
+		
+		<material name="showRays">
+			<shader name="showRays">
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
 											component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="VM"  type="CURRENT" context="MATRIX" 
+				</values>
+			</shader>
+		</material>
+
+		<material name="ambOcc">
+			<shader name="ambOcc">
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
+											component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="VM"  type="CURRENT" context="RENDERER" 
 											component="VIEW_MODEL" />
-					<valueof uniform="M"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="M"  type="CURRENT" context="RENDERER" 
 											component="MODEL" />
 											
 					<valueof uniform="CamV" type="CAMERA" context="MainCamera"
 											component="VIEW_MATRIX" />
 					<valueof uniform="CamP" type="CAMERA" context="MainCamera"
 											component="PROJECTION_MATRIX" />
-					<valueof uniform="depth" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="depth" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
-					<valueof uniform="normals" 			type="CURRENT" context="TEXTURE" 
+					<valueof uniform="normals" 			type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="1" />		
-					<valueof uniform="positions"		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="positions"		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="2" />											
 				</values>
 			</shader>
+			<buffers>	
+				<buffer name="rays" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>
+			<textures>
+				<texture UNIT="0" name="depthMap" >
+					<MAG_FILTER value= "NEAREST" />
+					<MIN_FILTER value= "NEAREST" />
+				</texture>
+				<texture UNIT="1" name="normalMap" >
+					<MAG_FILTER value= "NEAREST" />
+					<MIN_FILTER value= "NEAREST" />
+				</texture>
+				<texture UNIT="2" name="posMap" >
+					<MAG_FILTER value= "NEAREST" />
+					<MIN_FILTER value= "NEAREST" />
+				</texture>
+			</textures>
+		</material>
+		
+		<material name="compose">
+			<shader name="compose">
+				<values>
+					<valueof uniform="PVM" 				type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="VM"  				type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
+					<valueof uniform="M"  				type="CURRENT" context="RENDERER" 
+														component="MODEL" />
+							
+					<valueof uniform="depth" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />		
+					<valueof uniform="normals" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="1" />		
+					<valueof uniform="positions"		type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="2" />											
+				</values>
+			</shader>
+			<buffers>	
+				<buffer name="hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="2" />
+				</buffer>
+			</buffers>
 			<textures>
 				<texture UNIT="0" name="depthMap" >
 					<MAG_FILTER value= "NEAREST" />
@@ -77,4 +216,4 @@
 			</textures>
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
-<materiallib name="Test Multisampling">
+<materialLib name="Test Multisampling">
 
-	<rendertargets>
-		<rendertarget name="test">
+	<renderTargets>
+		<renderTarget name="test">
 			<size width=1024 height=1024 samples=16/>
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
 			<depth name="depth" internalFormat="DEPTH_COMPONENT32F" />
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 
 	<shaders>
 		<shader name="resolveMS" 		ps="shaders/resolve.frag" 
@@ -25,12 +25,11 @@
 				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>resolveMS</name>
+			<shader name="resolveMS">
 				<values>
-					<valueof uniform="texUnit"		type="CURRENT" context="TEXTURE" 
+					<valueof uniform="texUnit"		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />		
-					<valueof uniform="camM" 		type="CAMERA" context="MainCamera" 
+					<valueof uniform="camM" 		type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL"  />	
 				</values>
 			</shader>
@@ -39,4 +38,4 @@
 			</textures>			
 		</material>
 	</materials>
-</materiallib>
+</materialLib>

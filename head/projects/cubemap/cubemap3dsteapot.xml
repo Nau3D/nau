@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene"  param="SWAP_YZ">
-				<file>../../models/teapot.3ds</file>
+				<file name="../../models/teapot.3ds"/>
 			</scene>
 		</scenes>
 		<viewports>
@@ -28,19 +28,19 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<mlib filename="cubemap3.mlib"/>
+			<materialLib filename="cubemap3.mlib"/>
 		</materialLibs>
 	</assets>
 	<pipelines>
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>MainViewport</viewport>
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="CubeMap" toMaterial="House" />

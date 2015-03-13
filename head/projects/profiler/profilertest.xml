@@ -2,8 +2,8 @@
 <project name="teste1" width=512 height=512>
 	<assets>
 		<scenes>
-			<scene name="Main" param="NO_SWAP">
-				<file>../../models/bench.obj</file>
+			<scene name="Main" >
+				<file name="../../models/bench.obj"/>
 			</scene>
 		</scenes>
 		
@@ -37,13 +37,13 @@
 	
 		<pipeline name="fixedfunction" default="true"  defaultCamera="MainCamera">
 			<pass class="default" name="teapotRendering" >
-				<viewport>MainViewport</viewport>
+				<viewport name="MainViewport" />
 				<scenes>
-					<scene>Main</scene>
+					<scene name="Main" />
 				</scenes>
-				<camera>MainCamera</camera>
+				<camera name="MainCamera" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			

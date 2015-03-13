@@ -1,4 +1,4 @@
-#include <nau/event/eventInt.h>
+#include "nau/event/eventInt.h"
 
 using namespace nau::event_;
 

@@ -1,8 +1,8 @@
-#include <nau/resource/font.h>
-#include <nau/scene/sceneobjectfactory.h>
-#include <nau.h>
-#include <nau/geometry/mesh.h>
-#include <nau/material/materialgroup.h>
+#include "nau/resource/font.h"
+#include "nau/scene/sceneobjectfactory.h"
+#include "nau.h"
+#include "nau/geometry/mesh.h"
+#include "nau/material/materialgroup.h"
 #include <assert.h>
 
 
@@ -166,15 +166,15 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence)
 
 	MaterialGroup* auxMG;
 
-	std::vector<IMaterialGroup *> aMatG = renderable.getMaterialGroups();
+	std::vector<MaterialGroup *> aMatG = renderable.getMaterialGroups();
 	if (aMatG.size()) {
 		auxMG = (MaterialGroup *)aMatG[0];
 		auxMG->setIndexList (indices);
 	}
 	else {
-		auxMG = new MaterialGroup();
-		auxMG->setMaterialName(mMaterialName);
-		auxMG->setParent(&renderable);
+		auxMG = MaterialGroup::Create(&renderable, mMaterialName);
+//		auxMG->setMaterialName(mMaterialName);
+//		auxMG->setParent(&renderable);
 		auxMG->setIndexList (indices);
 		renderable.addMaterialGroup(auxMG);
 	}

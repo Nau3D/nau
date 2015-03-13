@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
-<materiallib name="Depth Buffer">
+<materialLib name="Depth Buffer">
 
-	<rendertargets>
-		<rendertarget name = "depth">
+	<renderTargets>
+		<renderTarget name = "depth">
 			<size width="1024" height="1024" />
 			<depth name="shadowMap" noreadandwrite="true"  
 									internalFormat="DEPTH_COMPONENT32F"  />
-		</rendertarget>
-	</rendertargets>
+		</renderTarget>
+	</renderTargets>
 	
 	<shaders>
 		<shader name="depthOnly" 
@@ -24,14 +24,13 @@
 				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<shader>
-				<name>depthOnly</name>
+			<shader name="depthOnly">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="MATRIX" 
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
 											component="PROJECTION_VIEW_MODEL" />		
 				</values>
 			</shader>
 		</material>
 		
 	</materials>
-</materiallib>
+</materialLib>

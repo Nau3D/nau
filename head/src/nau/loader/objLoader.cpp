@@ -1,35 +1,34 @@
+#include "nau/loader/OBJLoader.h"
+
 // Include files
 // Class definition
-#include <nau/config.h>
-#include <nau/loader/OBJLoader.h>
-#include <nau/slogger.h>
+#include "nau/config.h"
+#include "nau/slogger.h"
+
+#include "nau.h"
+#include "nau/debug/profile.h"
+#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneobjectfactory.h"
+#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/boundingvolumefactory.h"
+#include "nau/math/vec3.h"
+#include "nau/math/matrix.h"
+#include "nau/render/vertexdata.h"
+#include "nau/render/irenderable.h"
+#include "nau/material/materialgroup.h"
+#include "nau/clogger.h"
+#include "nau/material/material.h"
 
 // Assert and other basics
 #include <assert.h>
 #include <fstream>
 #include <map>
-
-// Nau stuff
-#include <nau.h>
-#include <nau/debug/profile.h>
-
-#include <nau/scene/sceneobject.h>
-#include <nau/scene/sceneobjectfactory.h>
-#include <nau/geometry/iboundingvolume.h>
-#include <nau/geometry/boundingvolumefactory.h>
-#include <nau/math/vec3.h>
-#include <nau/math/mat4.h>
-#include <nau/math/transformfactory.h>
-#include <nau/render/vertexdata.h>
-#include <nau/render/irenderable.h>
-#include <nau/material/imaterialgroup.h>
-#include <nau/material/materialgroup.h>
-#include <nau/clogger.h>
-#include <nau/material/material.h>
+#include <cstring>
 
 #ifdef WIN32
 #define PATH_SEPARATOR "\\"
 #define PATH_SEPARATOR_C '\\'
+#define strdup _strdup
 #else
 #define PATH_SEPARATOR "/"
 #define PATH_SEPARATOR_C '/'
@@ -2310,8 +2309,8 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 
 	// Transform
 	// Create Transform
-	ITransform *aTransform = TransformFactory::create ("SimpleTransform");
-
+	//ITransform *aTransform = TransformFactory::create ("SimpleTransform");
+	mat4 aTransform;
 	//// I have NO idea what matrix to generate. Identity, I choose you!
 	//mat4 *mat = new mat4;
 	//aTransform->setMat44(mat);
@@ -2450,11 +2449,16 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		// Set Name
 		//aMaterial->setName (currM->name);
 		// Pass on data
-		aMaterial->getColor().setProp(ColorMaterial::AMBIENT,currM->ambient);
-		aMaterial->getColor().setProp(ColorMaterial::DIFFUSE,currM->diffuse);
-		aMaterial->getColor().setProp(ColorMaterial::EMISSION,currM->emmissive);
-		aMaterial->getColor().setProp(ColorMaterial::SHININESS,currM->shininess);
-		aMaterial->getColor().setProp(ColorMaterial::SPECULAR,currM->specular);
+		GLfloat *f;
+		f = currM->ambient;
+		aMaterial->getColor().setPropf4(ColorMaterial::AMBIENT,f[0], f[1], f[2], f[3]);
+		f = currM->diffuse;
+		aMaterial->getColor().setPropf4(ColorMaterial::DIFFUSE, f[0], f[1], f[2], f[3]);
+		f = currM->emmissive;
+		aMaterial->getColor().setPropf4(ColorMaterial::EMISSION, f[0], f[1], f[2], f[3]);
+		f = currM->specular;
+		aMaterial->getColor().setPropf4(ColorMaterial::SPECULAR, f[0], f[1], f[2], f[3]);
+		aMaterial->getColor().setPropf(ColorMaterial::SHININESS,currM->shininess);
 
 		// Grab the texture
 		if (currM->texture!=NULL && currM->texture!="")
@@ -2515,14 +2519,12 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		#endif
 
 		// Then import MaterialGroups
-		MaterialGroup *aMatGroup = new MaterialGroup;
 
 		#ifdef OBJLOADER_DEBUG
 			fprintf(out,"Setting Parent\n");
 			fflush(out);
 		#endif
 
-		aMatGroup->setParent (aRenderable);
 
 		#ifdef OBJLOADER_DEBUG
 			fprintf(out,"Finished setting Parent\n");
@@ -2533,16 +2535,17 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 		#endif
 
 		// SANITY CHECK - ARE THERE ANY ACTUAL MATERIALS DEFINED?
+			
+		std::string s;
 		if (obj->nummaterials==0)
-		{
 			// NONE! Use default
-			aMatGroup->setMaterialName("Default3DSMat");
-		}
+			s = "Default3DSMat";
 		else
-		{
 			// Set material group name
-			aMatGroup->setMaterialName(obj->materials[currG->material].name);
-		}
+			s = obj->materials[currG->material].name;
+
+		MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, s);
+		//aMatGroup->setParent (aRenderable);
 		// Set up the index array
 
 		#ifdef OBJLOADER_DEBUG

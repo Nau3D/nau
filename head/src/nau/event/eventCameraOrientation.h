@@ -1,8 +1,8 @@
 #ifndef EventCameraOrientation_H
 #define EventCameraOrientation_H
 
-#include <nau/event/iEventData.h>
-#include <nau/event/cameraOrientation.h>
+#include "nau/event/iEventData.h"
+#include "nau/event/cameraOrientation.h"
 
 namespace nau
 {

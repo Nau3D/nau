@@ -1,204 +1,210 @@
 #ifndef ATTRIBUTEVALUES_H
 #define ATTRIBUTEVALUES_H
 
+
+#include "nau/attribute.h"
+#include "nau/math/matrix.h"
+
+
 #include <map>
+#include <string>
 #include <assert.h>
 
-#include <nau/attribute.h>
-#include <nau/math/mat3.h>
-#include <nau/math/mat4.h>
-
-#define ENUM_PROP(A,B) static const EnumProperty A = (EnumProperty)B 
+#define STRING_PROP(A,B) static const StringProperty A = (StringProperty)B 
+#define ENUM_PROP(A,B) static const EnumProperty A = (EnumProperty)B
 #define INT_PROP(A,B) static const IntProperty A = (IntProperty)B 
+#define INT2_PROP(A,B) static const Int2Property A = (Int2Property)B 
 #define UINT_PROP(A,B) static const UIntProperty A = (UIntProperty)B 
+#define UINT3_PROP(A,B) static const UInt3Property A = (UInt3Property)B 
+
 #define BOOL_PROP(A,B) static const BoolProperty A = (BoolProperty)B 
 #define BOOL4_PROP(A,B) static const Bool4Property A = (Bool4Property)B 
 #define FLOAT_PROP(A,B) static const FloatProperty A = (FloatProperty)B 
+#define FLOAT2_PROP(A,B) static const Float2Property A = (Float2Property)B 
 #define FLOAT4_PROP(A,B) static const Float4Property A = (Float4Property)B 
+#define FLOAT3_PROP(A,B) static const Float3Property A = (Float3Property)B 
 #define MAT4_PROP(A,B) static const Mat4Property A = (Mat4Property)B 
 #define MAT3_PROP(A,B) static const Mat3Property A = (Mat3Property)B 
 
+using namespace nau;
+
 namespace nau {
+
 	class AttributeValues {
+
+	protected:
+		AttribSet *m_Attribs;
+
+
+	// ENUM
+	protected:
+		std::map<int, int> m_EnumProps;
+
 	public:
 		typedef enum {} EnumProperty;
-		typedef enum {} IntProperty;
-		typedef enum {} UIntProperty;
-		typedef enum {} BoolProperty;
-		typedef enum {} Bool4Property;
-		typedef enum {} FloatProperty;
-		typedef enum {} Float4Property;
-		typedef enum {} Mat4Property;
-		typedef enum {} Mat3Property;
 
-		std::map<int,int> m_EnumProps;
+		virtual int getPrope(EnumProperty prop);
+		virtual bool isValide(EnumProperty prop, int value);
+		virtual void setPrope(EnumProperty prop, int value);
+
+		static const int getNextAttrib() { return NextAttrib++;  }
+
+	protected:
+		static int NextAttrib;
+
+	// INT
+	protected:
 		std::map<int,int> m_IntProps;
+
+	public:
+		typedef enum {} IntProperty;
+
+		virtual int getPropi(IntProperty prop);
+		virtual bool isValidi(IntProperty prop, int value);
+		virtual void setPropi(IntProperty prop, int value);
+
+	// INT2
+	protected:
+		std::map<int, ivec2> m_Int2Props;
+
+	public:
+		typedef enum {} Int2Property;
+
+		virtual ivec2& getPropi2(Int2Property prop);
+		virtual bool isValidi2(Int2Property prop, ivec2 &value);
+		virtual void setPropi2(Int2Property prop, ivec2 &value);
+
+		// UINT
+	protected:
 		std::map<int,unsigned int> m_UIntProps;
+
+	public:
+		typedef enum {} UIntProperty;
+
+		virtual unsigned int getPropui(UIntProperty prop);
+		virtual bool isValidui(UIntProperty prop, unsigned int value);
+		virtual void setPropui(UIntProperty prop, int unsigned value);
+
+	// UINT3
+	protected:
+		std::map<int, uivec3> m_UInt3Props;
+
+	public:
+		typedef enum {} UInt3Property;
+
+		virtual uivec3 &getPropui3(UInt3Property prop);
+		virtual bool isValidui3(UInt3Property prop, uivec3 &value);
+		virtual void setPropui3(UInt3Property prop, uivec3 &value);
+
+		
+		// BOOL
+	protected:
 		std::map<int,bool> m_BoolProps;
+
+	public:
+		typedef enum {} BoolProperty;
+
+		virtual bool getPropb(BoolProperty prop);
+		virtual bool isValidb(BoolProperty prop, bool value);
+		virtual void setPropb(BoolProperty prop, bool value);
+
+	// BOOL4
+	protected:
 		std::map<int, bvec4> m_Bool4Props;
-		std::map<int, vec4> m_Float4Props;
+
+	public:
+		typedef enum {} Bool4Property;
+
+		virtual bvec4 &getPropb4(Bool4Property prop);
+		virtual bool isValidb4(Bool4Property prop, bvec4 &value);
+		virtual void setPropb4(Bool4Property prop, bvec4 &value);
+
+	// FLOAT
+	protected:
 		std::map<int, float> m_FloatProps;
-		std::map<int, mat3> m_Mat3Props;
+
+	public:
+		typedef enum {} FloatProperty;
+
+		virtual float getPropf(FloatProperty prop);
+		virtual bool isValidf(FloatProperty prop, float f);
+		virtual void setPropf(FloatProperty prop, float value);
+
+	// VEC4
+	protected:
+		std::map<int, vec4> m_Float4Props;
+
+	public:
+		typedef enum {} Float4Property;
+
+		virtual vec4 &getPropf4(Float4Property prop);
+		virtual bool isValidf4(Float4Property prop, vec4 &f);
+		virtual void setPropf4(Float4Property prop, vec4 &value);
+		virtual void setPropf4(Float4Property prop, float x, float y, float z, float w);
+
+	// VEC3
+	protected:
+		std::map<int, vec3> m_Float3Props;
+
+	public:
+		typedef enum {} Float3Property;
+
+		virtual vec3 &getPropf3(Float3Property prop);
+		virtual bool isValidf3(Float3Property prop, vec3 &f);
+		virtual void setPropf3(Float3Property prop, vec3 &value);
+		virtual void setPropf3(Float3Property prop, float x, float y, float z);
+		
+	// VEC2
+	protected:
+		std::map<int, vec2> m_Float2Props;
+
+	public:
+		typedef enum {} Float2Property;
+
+		virtual vec2 &getPropf2(Float2Property prop);
+		virtual bool isValidf2(Float2Property prop, vec2 &f);
+		virtual void setPropf2(Float2Property prop, vec2 &value);
+
+	// MAT4
+	protected:
 		std::map<int, mat4> m_Mat4Props;
 
+	public:
+		typedef enum {} Mat4Property;
 
-		void copy(AttributeValues *to) {
+		virtual const mat4 &getPropm4(Mat4Property prop);
+		virtual bool isValidm4(Mat4Property prop, mat4 &value);
+		virtual void setPropm4(Mat4Property prop, mat4 &value);
 
-			to->m_EnumProps =   m_EnumProps;
-			to->m_IntProps =    m_IntProps;
-			to->m_UIntProps =   m_UIntProps;
-			to->m_BoolProps =   m_BoolProps;
-			to->m_Bool4Props =  m_Bool4Props;
-			to->m_FloatProps =  m_FloatProps;
-			to->m_Float4Props = m_Float4Props;
-			to->m_Mat3Props =   m_Mat3Props;
-			to->m_Mat4Props =   m_Mat4Props;
-		}
+	// MAT3
+	protected:
+		std::map<int, mat3> m_Mat3Props;
+		void initArrays(AttribSet  &attribs);
 
-		int getPrope(EnumProperty prop) {
-			return m_EnumProps[prop];
-		}
+	public:
+		typedef enum {} Mat3Property;
 
-		int getPropi(IntProperty prop) {
-			return m_IntProps[prop];
-		}
+		virtual const mat3 &getPropm3(Mat3Property prop);
+		virtual bool isValidm3(Mat3Property prop, mat3 &value);
+		virtual void setPropm3(Mat3Property prop, mat3 &value);
 
-		unsigned int getPropui(UIntProperty prop) {
-			return m_UIntProps[prop];
-		}
+	// All
 
-		bool getPropb(BoolProperty prop) {
-			return m_BoolProps[prop];
-		}
+		void copy(AttributeValues *to);
+		void clearArrays();
 
-		vec4 &getPropf4(Float4Property prop) {
-			return m_Float4Props[prop];
-		}
+		virtual void *getProp(unsigned int prop, Enums::DataType type);
+		virtual void setProp(unsigned int prop, Enums::DataType type, void *value);
+		virtual bool isValid(unsigned int prop, Enums::DataType type, void *value);
+		void registerAndInitArrays(std::string name, AttribSet  &attribs);
+		void initArrays();
 
-		float getPropf(FloatProperty prop) {
-			return m_FloatProps[prop];
-		}
+		AttributeValues();
+		AttributeValues(const AttributeValues &mt);
 
-		bvec4 &getPropb4(Bool4Property prop) {
-			return m_Bool4Props[prop];
-		}
+		~AttributeValues();
 
-		mat4 &getPropMat4(Mat4Property prop) {
-			return m_Mat4Props[prop];
-		}
-
-		mat3 &getPropMat3(Mat3Property prop) {
-			return m_Mat3Props[prop];
-		}
-
-		void *getProp(int prop, Enums::DataType type) {
-
-			switch (type) {
-
-			case Enums::ENUM:
-				assert(m_EnumProps.count(prop) > 0);
-				return(&(m_EnumProps[prop]));
-				break;
-			case Enums::INT:
-				assert(m_IntProps.count(prop) > 0);
-				return(&(m_IntProps[prop]));
-				break;
-			case Enums::UINT:
-				assert(m_UIntProps.count(prop) > 0);
-				return(&(m_UIntProps[prop]));
-				break;
-			case Enums::BOOL:
-				assert(m_BoolProps.count(prop) > 0);
-				return(&(m_BoolProps[prop]));
-				break;
-			case Enums::BVEC4:
-				assert(m_Bool4Props.count(prop) > 0);
-				return(&(m_Bool4Props[prop]));
-				break;
-			case Enums::FLOAT:
-				assert(m_FloatProps.count(prop) > 0);
-				return(&(m_FloatProps[prop]));
-				break;
-			case Enums::VEC4:
-				assert(m_Float4Props.count(prop) > 0);
-				return(&(m_Float4Props[prop]));
-				break;
-			case Enums::MAT4:
-				assert(m_Mat4Props.count(prop) > 0);
-				return(&(m_Mat4Props[prop]));
-				break;
-			case Enums::MAT3:
-				assert(m_Mat3Props.count(prop) > 0);
-				return(&(m_Mat3Props[prop]));
-				break;
-
-			}
-			assert(false && "Missibng Data Type in class attributeValues");
-			return NULL;
-		}
-
-
-
-		void setProp(int prop, Enums::DataType type, void *value) {
-
-			switch (type) {
-
-			case Enums::ENUM:
-				assert(m_EnumProps.count(prop) > 0);
-				m_EnumProps[prop] = *(int *)value;
-				break;
-			case Enums::INT:
-				assert(m_IntProps.count(prop) > 0);
-				m_IntProps[prop] = *(int *)value;
-				break;
-			case Enums::UINT:
-				assert(m_UIntProps.count(prop) > 0);
-				m_UIntProps[prop] = *(unsigned int *)value;
-				break;
-			case Enums::BOOL:
-				assert(m_BoolProps.count(prop) > 0);
-				m_BoolProps[prop] = *(bool *)value;
-				break;
-			case Enums::BVEC4:
-				assert(m_Bool4Props.count(prop) > 0);
-				m_Bool4Props[prop] = *(bvec4 *)value;
-				break;
-			case Enums::FLOAT:
-				assert(m_FloatProps.count(prop) > 0);
-				m_FloatProps[prop] = *(float *)value;
-				break;
-			case Enums::VEC4:
-				assert(m_Float4Props.count(prop) > 0);
-				m_Float4Props[prop] = *(vec4 *)value;
-				break;
-			case Enums::MAT4:
-				assert(m_Mat4Props.count(prop) > 0);
-				m_Mat4Props[prop] = *(mat4 *)value;
-				break;
-			case Enums::MAT3:
-				assert(m_Mat3Props.count(prop) > 0);
-				m_Mat3Props[prop] = *(mat3 *)value;
-				break;
-			default:
-				assert(false && "Missing Data Type in class attributeValues or Invalid prop");
-			}	
-		}
-
-
-		void initArrays(AttribSet Attribs) {
-			Attribs.initAttribInstanceEnumArray(m_EnumProps);
-			Attribs.initAttribInstanceIntArray(m_IntProps);
-			Attribs.initAttribInstanceUIntArray(m_UIntProps);
-			Attribs.initAttribInstanceBoolArray(m_BoolProps);
-			Attribs.initAttribInstanceBvec4Array(m_Bool4Props);
-			Attribs.initAttribInstanceVec4Array(m_Float4Props);
-			Attribs.initAttribInstanceFloatArray(m_FloatProps);
-			Attribs.initAttribInstanceMat4Array(m_Mat4Props);
-			Attribs.initAttribInstanceMat3Array(m_Mat3Props);
-		}
-
-		AttributeValues() {
-		}
+		const AttributeValues& operator =(const AttributeValues &mt);
 	};
 
 };

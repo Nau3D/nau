@@ -27,6 +27,8 @@ namespace nau {
 
 						SAMPLER,
 						ENUM,
+
+						BYTE, UBYTE, SHORT, USHORT, STRING,
 						COUNT_DATATYPE
 		};
 
@@ -37,9 +39,14 @@ namespace nau {
 		static void* getDefaultValue(DataType p);
 		/// returns true if p1 is compatible with p2 
 		static bool isCompatible(DataType p1, DataType p2);
+		static bool isBasicType(DataType t);
 
 		static const std::string DataTypeToString[COUNT_DATATYPE];
+		static std::string &valueToString(DataType p, void *v);
+		static DataType getBasicType(DataType dt);
 
+	private:
+		static std::string m_Result;
 
 	};
 };

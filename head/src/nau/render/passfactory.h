@@ -1,7 +1,7 @@
 #ifndef PASSFACTORY_H
 #define PASSFACTORY_H
 
-#include <nau/render/pass.h>
+#include "nau/render/pass.h"
 
 namespace nau
 {

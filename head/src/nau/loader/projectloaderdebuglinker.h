@@ -23,6 +23,8 @@ public:
 
 };
 
+void activateGLI();
+
 void initGLInterceptFunctions();
 
 void useGLIFunction(void *functionSetPointer, void *value);
@@ -35,3 +37,5 @@ void startGLIConfiguration();
 void addPlugin(const char *pluginName, const char *pluginDLLName, const char *pluginConfigData);
 void clearPlugins();
 void startGlilog();
+
+void addMessageToGLILog(const char * message);

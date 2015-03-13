@@ -3,18 +3,18 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<folder>../../models/pl3dsecxiv</folder>
+				<folder name="../../models/pl3dsecxiv" />
 			</scene>
 		</scenes>
 		<viewports>
 			<viewport name="SmallViewport1" >
 				<ORIGIN x=0.0 y=0.0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
 			</viewport>
 			<viewport name="SmallViewport2" >
 				<ORIGIN x=0.5 y=0.0 />
-				<SIZE width=0.5 ratio=1 />
+				<SIZE width=0.5 height=1 />
 				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
 			</viewport>
 		</viewports>
@@ -37,7 +37,7 @@
 		</lights>
 		
 		<materialLibs>
-			<mlib filename="depthbuffer.mlib"/>
+			<materialLib filename="depthbuffer.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -46,28 +46,28 @@
 		
 			<pass class="default" name="pass1">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<rendertarget name="depth" fromLibrary="Depth Buffer"/>
+				<camera name="MainCamera" />
+				<renderTarget name="depth" fromLibrary="Depth Buffer"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Depth Buffer" toMaterial="depthOnlyNoCull" />
 				</materialMaps>
 			</pass>
 			
 			<pass class="quad" name="pass3">
-				<viewport>SmallViewport1</viewport>				
+				<viewport name="SmallViewport1" />				
 				<texture name="shadowMap" fromLibrary="Depth Buffer"/>
 			</pass>
 			
 			<pass class="default" name="pass2">
 				<scenes>
-					<scene>MainScene</scene>
+					<scene name="MainScene" />
 				</scenes>
-				<camera>MainCamera</camera>
-				<viewport>SmallViewport2</viewport>
+				<camera name="MainCamera" />
+				<viewport name="SmallViewport2" />
 				<lights>
-					<light>Sun</light>
+					<light name="Sun" />
 				</lights>
 			</pass>
 			

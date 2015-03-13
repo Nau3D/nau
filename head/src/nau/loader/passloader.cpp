@@ -1,10 +1,10 @@
-#include <nau/loader/passloader.h>
+#include "nau/loader/passloader.h"
 
 #include <tinyxml.h>
 
-#include <nau.h>
-#include <nau/render/pipeline.h>
-#include <nau/render/pass.h>
+#include "nau.h"
+#include "nau/render/pipeline.h"
+#include "nau/render/pass.h"
 
 using namespace nau::loader;
 using namespace nau::render;

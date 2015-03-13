@@ -1,11 +1,11 @@
-#include <nau/scene/octreeunified.h>
-#include <nau/render/rendermanager.h>
-#include <nau/material/materialgroup.h>
+#include "nau/scene/octreeunified.h"
+#include "nau/render/rendermanager.h"
+#include "nau/material/materialgroup.h"
 
-#include <nau/debug/profile.h>
-#include <nau.h>
+#include "nau/debug/profile.h"
+#include "nau.h"
 
-#include <nau/slogger.h>
+#include "nau/slogger.h"
 
 using namespace nau::scene;
 using namespace nau::geometry;
@@ -18,7 +18,6 @@ OctreeUnified::OctreeUnified(void) : IScenePartitioned(),
 	m_SceneObject(NULL),
 	m_BoundingBox()
 {
-	m_Transform = TransformFactory::create("SimpleTransform");
 	EVENTMANAGER->addListener("SET_POSITION", this);
 	EVENTMANAGER->addListener("SET_ROTATION", this);
 }
@@ -41,20 +40,20 @@ OctreeUnified::eventReceived(const std::string &sender, const std::string &event
 
 	if (eventType == "SET_POSITION") {
 
-		SimpleTransform t;
-		t.setTranslation(p->x, p->y, p->z);
-		this->setTransform(&t);
+		mat4 t;
+		t.translate(p->x, p->y, p->z);
+		this->setTransform(t);
 	}
 	if (eventType == "SET_ROTATION") {
 
-		nau::math::mat4 m = m_Transform->getMat44();
-		m_Transform->setRotation(p->w, p->x, p->y, p->z);
+		m_Transform.setIdentity();
+		m_Transform.rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();
 	}
 }
 
 
-ITransform *
+mat4 &
 OctreeUnified::getTransform()
 {
 	return m_Transform;
@@ -63,17 +62,17 @@ OctreeUnified::getTransform()
 
 
 void
-OctreeUnified::setTransform(nau::math::ITransform *t)
+OctreeUnified::setTransform(nau::math::mat4 &t)
 {
-	m_Transform->clone(t);
+	m_Transform = t;
 	updateSceneObjectTransforms();
 }
 
 
 void
-OctreeUnified::transform(nau::math::ITransform *t)
+OctreeUnified::transform(nau::math::mat4 &t)
 {
-	m_Transform->compose(*t);
+	m_Transform *= t;
 	updateSceneObjectTransforms();
 }
 
@@ -109,7 +108,11 @@ OctreeUnified::compile(void)
 	m_Compiled = true;
 	
 	if (m_SceneObject) {
-		m_SceneObject->getRenderable().getIndexData().compile(m_SceneObject->getRenderable().getVertexData());
+		std::vector<MaterialGroup*> &matGroups = m_SceneObject->getRenderable().getMaterialGroups();
+
+		for (auto mg : matGroups) {
+			mg->compile();
+		}
 	}
 }
 
@@ -125,6 +128,7 @@ OctreeUnified::add(SceneObject *aSceneObject)
 		m_SceneObject->setRenderable(&(aSceneObject->getRenderable()));
 	}
 	else {
+		aSceneObject->burnTransform();
 		m_SceneObject->getRenderable().merge(&(aSceneObject->getRenderable()));
 	}
 	//int sizeV = m_SceneObject->getRenderable().getVertexData().getNumberOfVertices();

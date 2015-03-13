@@ -1,6 +1,6 @@
-#include <nau/render/opengl/gltextureCubeMap.h>
-#include <nau/render/opengl/gltexture.h>
-#include <nau/math/mat4.h>
+#include "nau/render/opengl/gltextureCubeMap.h"
+#include "nau/render/opengl/gltexture.h"
+#include "nau/math/matrix.h"
 
 using namespace nau::render;
 
@@ -44,12 +44,6 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 
 	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
 	glBindTexture (GL_TEXTURE_CUBE_MAP, m_IntProps[ID]);
-
-	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	for(int i = 0 ; i < 6 ; i++) {
 		
@@ -95,7 +89,6 @@ GLTextureCubeMap::getNumberOfComponents(void) {
 void 
 GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts) {
 
-	RENDERER->addTexture(aUnit, this);
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,m_IntProps[ID]);
 	glBindSampler(aUnit, ts->getPropi(TextureSampler::ID));
@@ -107,7 +100,6 @@ GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts)
 void 
 GLTextureCubeMap::restore(unsigned int aUnit) 
 {
-
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,0);
 
@@ -117,55 +109,6 @@ GLTextureCubeMap::restore(unsigned int aUnit)
 }
 
 
-
-//void 
-//GLTextureCubeMap::prepare(int aUnit, nau::render::IState *state) 
-//{
-//	IState::TextureUnit tu = (IState::TextureUnit)(IState::TEXTURE0 + aUnit);
-//
-//	glActiveTexture (GL_TEXTURE0+aUnit);
-//	glBindTexture(GL_TEXTURE_CUBE_MAP,m_Id);
-//#if NAU_OPENGL_VERSION < 400
-//	glEnable(GL_TEXTURE_CUBE_MAP);
-//	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-//	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-//	glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-//
-//
-//	nau::scene::Camera *theCam = RENDERMANAGER->getCurrentCamera();
-//	glMatrixMode(GL_TEXTURE);
-//	mat4 m;
-//	m.copy(theCam->getPropm4(Camera::VIEW_INVERSE_MATRIX).getMatrix());
-//	m.set(3,0,0.0);
-//	m.set(3,1,0.0);
-//	m.set(3,2,0.0);
-//	glLoadMatrixf(m.getMatrix());
-//	glMatrixMode(GL_MODELVIEW);
-//
-//	glEnable(GL_TEXTURE_GEN_S);
-//    glEnable(GL_TEXTURE_GEN_T);
-//    glEnable(GL_TEXTURE_GEN_R);
-//#endif
-//}
-//
-//void 
-//GLTextureCubeMap::restore(int aUnit, nau::render::IState *state) 
-//{
-//	IState::TextureUnit tu = (IState::TextureUnit)(IState::TEXTURE0 + aUnit);
-//
-//	glActiveTexture (GL_TEXTURE0+aUnit);
-//	glBindTexture(GL_TEXTURE_CUBE_MAP,0);
-//#if NAU_OPENGL_VERSION < 400
-//	glMatrixMode(GL_TEXTURE);
-//	glLoadIdentity();
-//	glMatrixMode(GL_MODELVIEW);
-//
-//	glDisable(GL_TEXTURE_GEN_S);
-//    glDisable(GL_TEXTURE_GEN_T);
-//    glDisable(GL_TEXTURE_GEN_R);
-//
-//	glDisable(GL_TEXTURE_CUBE_MAP);
-//#endif
-//}
-
+void 
+GLTextureCubeMap::build() {}
 

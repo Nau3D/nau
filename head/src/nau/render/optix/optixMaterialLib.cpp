@@ -1,9 +1,9 @@
-#include <nau/render/optix/optixMaterialLib.h>
-#include <nau/render/optix/optixMaterial.h>
+#include "nau/render/optix/optixMaterialLib.h"
+#include "nau/render/optix/optixMaterial.h"
 
 #include <vector>
 
-#include <nau.h>
+#include "nau.h"
 
 using namespace nau::render::optixRender;
 
@@ -125,6 +125,9 @@ OptixMaterialLib::addMaterial(nau::material::MaterialID aMat) {
 			if (iter->second.getValues() != NULL) {
 				switch (iter->second.getValueType()) {
 							
+					case Enums::UINT:
+						omat[iter->first]->set1uiv((unsigned int *)iter->second.getValues());
+						break;
 					case Enums::INT:
 					case Enums::BOOL:
 					case Enums::ENUM:
@@ -165,6 +168,7 @@ OptixMaterialLib::addMaterial(nau::material::MaterialID aMat) {
 						omat[iter->first]->setMatrix4x4fv(false,(float *)iter->second.getValues());
 						break;
 					default:
+						assert(false && "Missing type in OptixMaterialLib.cpp");
 						continue;
 				}
 			}

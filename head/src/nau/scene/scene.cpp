@@ -1,10 +1,11 @@
-#include <nau/scene/scene.h>
-#include <nau/render/rendermanager.h>
-#include <nau/material/imaterialgroup.h>
+#include "nau/scene/scene.h"
 
-#include <nau/debug/profile.h>
-#include <nau/slogger.h>
-#include <nau.h>
+#include "nau.h"
+#include "nau/slogger.h"
+#include "nau/debug/profile.h"
+#include "nau/material/materialgroup.h"
+#include "nau/render/rendermanager.h"
+
 
 using namespace nau::scene;
 using namespace nau::geometry;
@@ -15,29 +16,19 @@ using namespace nau::material;
 Scene::Scene(void) :
 	m_vReturnVector(),
 	m_SceneObjects(),
-//	m_Visible (true),
 	m_BoundingBox()
 {
-	m_Transform = TransformFactory::create("SimpleTransform");
 	EVENTMANAGER->addListener("SET_POSITION", this);
 	EVENTMANAGER->addListener("SET_ROTATION", this);
 
 }
 
 
-Scene::~Scene(void)
-{
+Scene::~Scene(void) {
 
 	m_SceneObjects.clear();
 	m_vReturnVector.clear();
-
-/*	std::vector<SceneObject*>::iterator iter; 
-
-    for(iter = m_SceneObjects.begin(); iter != m_SceneObjects.end(); ++iter)
-    {
-		m_SceneObjects.erase(iter);
-    }
-*/}
+}
 
 
 void
@@ -46,24 +37,21 @@ Scene::eventReceived(const std::string &sender, const std::string &eventType, na
 	if (eventType == "SET_POSITION") {
 
 		vec4 *p = (vec4 *)evt->getData();
-		nau::math::mat4 m = m_Transform->getMat44();
-		m.set(0,3, p->x);
-		m.set(1,3, p->y);
-		m.set(2,3, p->z);
+		m_Transform.setIdentity();
+		m_Transform.translate(p->x, p->y, p->z);
 //		SLOG("Scene SET_POS %f %f %f", p->x, p->y, p->z);
 	}
 	if (eventType == "SET_ROTATION") {
 
 		vec4 *p = (vec4 *)evt->getData();
 		
-		nau::math::mat4 m = m_Transform->getMat44();
-		m_Transform->setRotation(p->w, p->x, p->y, p->z);
-		
+		m_Transform.setIdentity();
+		m_Transform.rotate(p->w, p->x, p->y, p->z);
 	}
 }
 
 
-ITransform *
+mat4 &
 Scene::getTransform() 
 {
 	return m_Transform;
@@ -71,17 +59,17 @@ Scene::getTransform()
 
 
 void
-Scene::setTransform(nau::math::ITransform *t)
+Scene::setTransform(nau::math::mat4 &t)
 {
-	m_Transform->clone(t);
+	m_Transform.copy(t);
 	updateSceneObjectTransforms();
 }
 
 
 void
-Scene::transform(nau::math::ITransform *t)
+Scene::transform(nau::math::mat4 &t)
 {
-	m_Transform->compose(*t);
+	m_Transform *= t;
 	updateSceneObjectTransforms();
 }
 
@@ -123,12 +111,12 @@ Scene::compile (void)
 	objIter = m_SceneObjects.begin();
 	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
 		(*objIter)->getRenderable().getVertexData().compile();
-		std::vector<IMaterialGroup*> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
+		std::vector<MaterialGroup*> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
 
-		std::vector<IMaterialGroup*>::iterator matGroupsIter = matGroups.begin();
+		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
 
 		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
-			(*matGroupsIter)->getIndexData().compile((*objIter)->getRenderable().getVertexData());
+			(*matGroupsIter)->compile();
 		}
 	}
 }

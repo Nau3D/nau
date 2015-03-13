@@ -1,7 +1,7 @@
 #ifndef EventInt_H
 #define EventInt_H
 
-#include <nau/event/iEventData.h>
+#include "nau/event/iEventData.h"
 
 namespace nau
 {

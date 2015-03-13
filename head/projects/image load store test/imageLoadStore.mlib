@@ -1,8 +1,21 @@
 <?xml version="1.0" ?>
-<materiallib name="Image Load Store">
+<materialLib name="Image Load Store">
 
+	<renderTargets>
+		<renderTarget name ="test">
+			<size width="512" height="512" />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+	
 	<textures>
-		<texture name="tex" width=512 height=512 internalFormat="RGBA" />
+		<texture name="tex">
+			<WIDTH value=512 />
+			<HEIGHT value=512 />
+			<INTERNAL_FORMAT value="RGBA" />
+		</texture>	
 		<texture name="Grade_01_02_03" filename="../../Texturas/AL01_Grade1.tif" mipmap="1" />
 	</textures>
 
@@ -14,27 +27,17 @@
 	
 	<materials>
 		<material name ="imageStore">
-			<shader>
-				<name>testImageLS</name>
+			<shader name="testImageLS">
 				<values>
-					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
-														id=0 component="DIRECTION" /> 
-																
-					<valueof uniform="PVM"          	type="CURRENT" context="MATRIX" 
-														component="PROJECTION_VIEW_MODEL" />
-														
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="MATRIX" 
-														component="NORMAL" />
-														
-					<valueof uniform="lightDir"		type="CURRENT" context="LIGHT"
-														id=0 component="DIRECTION" />
-
-					<valueof uniform="imageUnit"		type="CURRENT" context="TEXTURE"
+					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
 														id=1 component="UNIT" />
-														
+					<valueof uniform="texUnit"		type="CURRENT" context="MATERIAL_TEXTURE"
+														id=0 component="UNIT" />														
 				</values>
 			</shader>
-			
+			<textures>
+				<texture name="offscreenrender" UNIT=0 />
+			</textures>
 			<imageTextures>
 				<imageTexture UNIT=1 texture="tex" >
 					<ACCESS value="WRITE_ONLY" />
@@ -47,4 +50,4 @@
 	
 	</materials>
 
-</materiallib>
+</materialLib>

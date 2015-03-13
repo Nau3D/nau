@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include <nau/render/texture.h>
-#include <nau/render/istate.h>
+#include "nau/render/texture.h"
+#include "nau/render/istate.h"
 
 namespace nau {
 

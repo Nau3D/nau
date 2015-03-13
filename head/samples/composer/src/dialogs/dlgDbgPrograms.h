@@ -41,9 +41,13 @@ protected:
 
 	
 	wxTreeCtrl *m_log;
-	wxButton *m_bClear, *m_bProfiler, *m_bSave;
+	wxButton *m_bSave;
 	std::string name;
 	bool isLogClear;
+	wxTreeItemId rootnode;
+
+	//unsigned int frameNumber;
+	//bool isRecording;
 
 	void loadProgramInfo(wxTreeItemId basenode, unsigned int program);
 	void loadProgramUniformsInfo(wxTreeItemId basenode, unsigned int program);
@@ -64,6 +68,7 @@ public:
 	void loadShaderInfo();
 	void OnSaveInfo(wxCommandEvent& event);
 	void OnSaveInfoAux(std::fstream &s, wxTreeItemId parent, int nodelevel);
+	//void startRecording();
 	enum { DLG_BTN_SAVELOG};
 
 
