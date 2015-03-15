@@ -89,6 +89,7 @@ DepthMapPass::prepare (void)
 	prepareBuffers();
 
 	RENDERER->setCamera(m_LightCamera);
+	setupLights();
 }
 
 

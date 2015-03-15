@@ -16,6 +16,7 @@ namespace nau
 
 		protected:
 			void *m_Data;
+			int m_DataSize;
 			Texture *m_Texture;
 
 

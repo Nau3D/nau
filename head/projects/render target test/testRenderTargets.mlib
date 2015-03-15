@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <materialLib name="Test Render Targets">
+
 	<renderTargets>
 		<renderTarget name ="test">
 			<size width="512" height="512" />

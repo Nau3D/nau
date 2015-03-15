@@ -198,7 +198,7 @@ GLRenderer::getAtomicCounterValues() {
 
 	if (m_AtomicCount) {
 
-		//glFinish();
+		glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
 		for (auto at : m_AtomicLabels) {
 			buffer = at.first.first;
 			offset = at.first.second;

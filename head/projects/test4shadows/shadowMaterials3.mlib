@@ -121,25 +121,25 @@
 			<textures>
 				<texture UNIT="0" name="shadowMap1" >
 					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
-					<COMPARE_FUNC value="LEQUAL" />
+					<COMPARE_FUNC value="LESS" />
 					<MIN_FILTER value="LINEAR" />
 					<MAG_FILTER value="LINEAR" />
 				</texture>	
 				<texture UNIT="1" name="shadowMap2" >
 					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
-					<COMPARE_FUNC value="LEQUAL" />
+					<COMPARE_FUNC value="LESS" />
 					<MIN_FILTER value="LINEAR" />
 					<MAG_FILTER value="LINEAR" />
 				</texture>	
 				<texture UNIT="2" name="shadowMap3" >
 					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
-					<COMPARE_FUNC value="LEQUAL" />
+					<COMPARE_FUNC value="LESS" />
 					<MIN_FILTER value="LINEAR" />
 					<MAG_FILTER value="LINEAR" />
 				</texture>	
 				<texture UNIT="3" name="shadowMap4" >
 					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
-					<COMPARE_FUNC value="LEQUAL" />
+					<COMPARE_FUNC value="LESS" />
 					<MIN_FILTER value="LINEAR" />
 					<MAG_FILTER value="LINEAR" />
 				</texture>	

@@ -1,19 +1,19 @@
 #version 440
 
-layout (r32ui) uniform uimage3D imageUnit;
+layout (r32ui) uniform coherent uimage3D imageUnit;
 
 layout(std430, binding = 2) buffer test {
 	unsigned int k[];
 };
 
-layout(binding=1, offset=0)  uniform atomic_uint at0;
-layout(binding=1, offset=4)  uniform atomic_uint at1;
-layout(binding=1, offset=8)  uniform atomic_uint at2;
-layout(binding=1, offset=12) uniform atomic_uint at3;
-layout(binding=1, offset=16) uniform atomic_uint at4;
-layout(binding=1, offset=20) uniform atomic_uint at5;
-layout(binding=1, offset=24) uniform atomic_uint at6;
-layout(binding=1, offset=28) uniform atomic_uint at7;
+ layout(binding=1, offset=0)  uniform atomic_uint at0;
+ layout(binding=1, offset=4)  uniform atomic_uint at1;
+ layout(binding=1, offset=8)  uniform atomic_uint at2;
+ layout(binding=1, offset=12) uniform atomic_uint at3;
+ layout(binding=1, offset=16) uniform atomic_uint at4;
+ layout(binding=1, offset=20) uniform atomic_uint at5;
+ layout(binding=1, offset=24) uniform atomic_uint at6;
+ layout(binding=1, offset=28) uniform atomic_uint at7;
 
 in vec3 Normal;
 in vec4 Position;
@@ -75,8 +75,9 @@ void main()
 		atomicCounterIncrement(at7);
 		atomicAdd(k[7], 1);
 	}
+	
+	imageAtomicAdd(imageUnit, v, uint(1));	
 
-	imageAtomicAdd(imageUnit, v, uint(1));
 	k[0] = imageSize(imageUnit).x;
 	k[1] = imageSize(imageUnit).y;
 	k[2] = imageSize(imageUnit).z;

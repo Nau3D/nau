@@ -1,7 +1,7 @@
-#version 400
+#version 440
 
-uniform sampler2DShadow shadowMap1,shadowMap2,shadowMap3,shadowMap4;
-//uniform sampler2DShadow shadowMap[4];
+uniform sampler2DShadow shadowMap1,shadowMap3,shadowMap4;
+uniform sampler2D shadowMap2;
 //uniform float split[4];
 uniform float split1,split2,split3, split4;
 
@@ -34,10 +34,12 @@ void main()
 		float distance = -viewSpacePos.z /  viewSpacePos.w;
 		
 		//sfloat distance = -viewSpacePos.z;
-		vec4 f1= vec4(textureProj(shadowMap1, projShadowCoord[0]));
-		vec4 f2= vec4(textureProj(shadowMap2, projShadowCoord[1]));
-		vec4 f3= vec4(textureProj(shadowMap3, projShadowCoord[2]));
-		vec4 f4= vec4(textureProj(shadowMap4, projShadowCoord[3]));
+		float f1= textureProj(shadowMap1, projShadowCoord[0]);
+		vec4 p = projShadowCoord[1];
+		//p.z *= p.w;
+		vec4 f2= texture(shadowMap2, p.xy);
+		float f3= textureProj(shadowMap3, projShadowCoord[2]);
+		float f4= textureProj(shadowMap4, projShadowCoord[3]);
 		// vec4 f1= vec4(textureProj(shadowMap[0], projShadowCoord[0]));
 		// vec4 f2= vec4(textureProj(shadowMap[1], projShadowCoord[1]));
 		// vec4 f3= vec4(textureProj(shadowMap[2], projShadowCoord[2]));
@@ -49,13 +51,16 @@ void main()
 					//color += diffuse * NdotL * textureGather (shadowMap[i], projShadowCoord[i].xy, projShadowCoord[i].z/projShadowCoord[i].w) * vec4(1.0, 0.0, 0.0, 1.0);
 				}
 				else if (i == 1){
-					color += diffuse * (NdotL * f2) * vec4(0.0, 1.0, 0.0, 1.0);
+					if (f2.z < projShadowCoord[1].z)
+						color =  vec4(0.3, 0.3, 0.3, 1.0) * (NdotL ) * vec4(0.0, 1.0, 0.0, 1.0);
+					else
+						color = vec4(0.8,0.8, 0.8 ,1.0)* (NdotL ) * vec4(0.0, 1.0, 0.0, 1.0);
 				}
 				else if (i == 2) {
-					color += diffuse * NdotL * f3 * vec4(0.0, 0.0, 1.0, 1.0);
+					color += diffuse * NdotL * f3 * vec4(1.0, 0.0, 1.0, 1.0);
 				}
 				else if (i == 3) {
-					color += diffuse * NdotL * f4 * vec4(1.0, 0.0, 1.0, 1.0);
+					color += diffuse * NdotL * f4 * vec4(0.0, 0.0, 1.0, 1.0);
 				}
  			//float depth = projShadowCoord[i].z / projShadowCoord[i].w;
 				//float depthShadow = shadow2DProj (shadowMap[i], projShadowCoord[i]).r;
