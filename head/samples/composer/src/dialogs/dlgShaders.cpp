@@ -340,7 +340,7 @@ DlgShaders::updateShaderAux() {
 		if (uni){
 			pg->Append( new wxPropertyCategory(wxT("Uniform Variables"),wxPG_LABEL));
 		}
-		p->updateUniforms();
+		//p->updateUniforms();
 		for (int i = 0; i < uni; i++) {
 			u = p->getUniform(i);
 			addUniform(wxString(u.getName().c_str()),wxString(u.getStringSimpleType().c_str()));

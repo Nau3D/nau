@@ -389,6 +389,7 @@
     <ClCompile Include="..\src\nau\render\imageTexture.cpp" />
     <ClCompile Include="..\src\nau\render\iprogramvalue.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glDebug.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp" />
@@ -623,6 +624,7 @@
     <ClInclude Include="..\src\nau\render\imageTexture.h" />
     <ClInclude Include="..\src\nau\render\iprogramvalue.h" />
     <ClInclude Include="..\src\nau\render\opengl\glbuffer.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glDebug.h" />
     <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h" />

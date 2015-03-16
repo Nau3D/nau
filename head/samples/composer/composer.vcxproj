@@ -223,7 +223,7 @@
     </Link>
     <PostBuildEvent>
       <Command>
-copy "..\..\src\gliConfig.ini" "..\..\build\samples"</Command>
+      </Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>

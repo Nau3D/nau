@@ -277,11 +277,15 @@ GlProgram::linkProgram()
 		glBindAttribLocation(m_P, index , VertexData::Syntax[index].c_str());
 	}
 
+	//for (int i = 0; i < SHADER_COUNT; ++i) {
+	//	if (m_Compiled[i])
+	//		glAttachShader(m_P, m_ID[i]);
+	//	else
+	//		glDetachShader(m_P,m_ID[i]);
+	//}
 	for (int i = 0; i < SHADER_COUNT; ++i) {
-		if (m_Compiled[i])
+		if (m_ID[i] != 0)
 			glAttachShader(m_P, m_ID[i]);
-		else
-			glDetachShader(m_P,m_ID[i]);
 	}
 	glLinkProgram (m_P);
 	glUseProgram (m_P);
@@ -514,16 +518,16 @@ GlProgram::setUniforms() {
 		}
 	}
 	m_NumUniforms = m_Uniforms.size();
-	for (int i = 0; i < m_NumUniforms; i++) {
-		setValueOfUniform (i);
-	}
+	//for (int i = 0; i < m_NumUniforms; i++) {
+	//	setValueOfUniform (i);
+	//}
 }
 
 void 
 GlProgram::updateUniforms() {
 
 //	glUseProgram (m_P);
-	for (int i = 0; i < m_NumUniforms; i++) {
+	for (int i = 0; i < m_NumUniforms; i++) { 
 		glGetUniformfv (m_P, m_Uniforms[i].getLoc(), (float *)m_Uniforms[i].getValues());
 	}
 
