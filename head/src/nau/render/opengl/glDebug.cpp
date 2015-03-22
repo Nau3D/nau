@@ -51,6 +51,10 @@ GLDebug::DebugLog(GLenum source,
                        const GLchar* message,
 					   void* userParam) {
 	
+	return;
+	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+		return;
+
 	SLOG("OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
 		GetStringForType(type).c_str(),
 		GetStringForSource(source).c_str(), id,
@@ -94,6 +98,8 @@ GLDebug::GetStringForSeverity(GLenum severity) {
 			return("Medium");
 		case GL_DEBUG_SEVERITY_LOW_ARB:
 			return("Low");
+		case GL_DEBUG_SEVERITY_NOTIFICATION:
+			return("Notification");
 		default:
 			return("");
 	}

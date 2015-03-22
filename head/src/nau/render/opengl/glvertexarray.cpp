@@ -3,6 +3,8 @@
 #include "nau.h"
 #include "nau/render/opengl/glbuffer.h"
 
+#include <GL/glew.h>
+
 #include <assert.h>
 
 using namespace nau::render;
