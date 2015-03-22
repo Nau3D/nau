@@ -21,8 +21,11 @@ namespace nau
 		class ProjectLoader
 		{
 		public:
+			// loads a project
 			static void load (std::string file, int *width, int *height);
+			// loads a material lib
 			static void loadMatLib (std::string file);
+
 			static std::string s_Path;
 			static std::string s_File;
 
@@ -35,17 +38,30 @@ namespace nau
 
 			ProjectLoader(void);
 
-
+			// load the assets section
 			static void loadAssets (TiXmlHandle &hRoot, std::vector<std::string> &matLib);
+			// load the pipelines section
 			static void loadPipelines (TiXmlHandle &hRoots);
 
+			// check for tags that are not allowed
+			static void checkForNonValidChildTags(std::string parent, std::vector<std::string> &excluded, TiXmlElement *pElem);
+			static void checkForNonValidAttributes(std::string parent, std::vector<std::string> &excluded, TiXmlElement *pElem);
+
+			// read an item from a library
 			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *lib, std::string *item);
 			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *fullName);
 
+			// read attributes
 			static void readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem);
+			// get valid attribute values 
 			static std::string &getValidValuesString(Attribute &a, void *value);
+			// read a particular attrib
 			static void *readAttr(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet &attribs);
-			static bool isExcluded(std::string , std::vector<std::string> &excluded);
+			// check if a tring is in a vector
+			static bool isExcluded(std::string what, std::vector<std::string> &excluded);
+			// get all keys in a vector
+			static void getKeystoVector(std::map<std::string, Attribute >, std::vector<std::string> *result);
+
 			// Asset Loading
 			static void loadUserAttrs(TiXmlHandle handle);
 			static void loadScenes(TiXmlHandle handle);
@@ -66,8 +82,17 @@ namespace nau
 			static void loadPassParams(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass, std::map<std::string, Pass*> passMapper);
 			static void loadPassTexture(TiXmlHandle hPass, Pass *aPass);
+			static void loadPassMaterial(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass);
+
+#ifdef NAU_OPTIX
+			static void loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass);
+#endif
+#ifdef NAU_OPTIX_PRIME
+			static void loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass);
+#endif
+			static void loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass);
 
 			//Debug Loading
 			static void loadDebug (TiXmlHandle &hRoot);
@@ -85,22 +110,15 @@ namespace nau
 			static void loadDebugTimerlog (TiXmlHandle &hRoot);
 			static void loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer);
 			static void loadDebugPlugins (TiXmlHandle &hRoot);
-#ifdef NAU_OPTIX
-			static void loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass);
-#endif
-#ifdef NAU_OPTIX_PRIME
-			static void loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass);
-#endif
-			static void loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass);
-			//static void loadPassShaderMaps(TiXmlHandle hPass, Pass *aPass);
-			//static void loadPassStateMaps(TiXmlHandle hPass, Pass *aPass);
 
+			// load Material Lib elements
 			static void loadMatLibRenderTargets(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 			static void loadMatLibTextures(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 			static void loadMatLibStates(TiXmlHandle hPass, MaterialLib *aLib);
 			static void loadMatLibShaders(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 			static void loadMatLibBuffers(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 
+			// load material elements
 			static void loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
@@ -108,14 +126,13 @@ namespace nau
 			static void loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 			static void loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, Material *aMat);
 
+			// load state
 			static void loadState(TiXmlElement *pElemAux, MaterialLib *aLib, Material *aMat, IState *s);
 
-			// aux pre alocated variable
+			// aux pre alocated variables
 			static char s_pFullName[256];
-
 			static string s_Dummy;
 			static std::string toLower(std::string);
-
 			static vec4 s_Dummy_vec4;
 			static vec2 s_Dummy_vec2;
 			static bvec4 s_Dummy_bvec4;
@@ -123,6 +140,7 @@ namespace nau
 			static int s_Dummy_int;
 			static bool s_Dummy_bool;
 			static uivec3 s_Dummy_uivec3;
+			static uivec2 s_Dummy_uivec2;
 		};
 	};
 };

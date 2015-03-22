@@ -19,6 +19,8 @@ namespace nau
 			void prepare (void);
 			void restore (void);
 			void doPass (void);
+
+			void setMaterialName(std::string &lib, std::string &mat);
 			
 			~QuadPass(void);
 

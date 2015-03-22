@@ -157,12 +157,14 @@ Attribute::isValid(std::string value) {
 
 bool 
 Attribute::getRangeDefined() {
+
 	return m_RangeDefined; 
 };
 
 
 bool 
 Attribute::getListDefined() {
+
 	return m_ListDefined; 
 };
 
@@ -526,6 +528,20 @@ AttribSet::initAttribInstanceUIntArray(std::map<int, unsigned int> &m) {
 		if (it->second.m_Type == Enums::DataType::UINT) {
 
 				m[it->second.m_Id] = *(unsigned int *)(it->second.m_Default);
+		}
+	}
+}
+
+
+void 
+AttribSet::initAttribInstanceUInt2Array(std::map<int, uivec2> &m) {
+
+	std::map<std::string, Attribute>::iterator it;
+	it = m_Attributes.begin();
+	for ( ; it != m_Attributes.end(); ++it) {
+		if (it->second.m_Type == Enums::DataType::UIVEC2) {
+
+				m[it->second.m_Id] = *(uivec2 *)(it->second.m_Default);
 		}
 	}
 }

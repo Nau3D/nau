@@ -30,7 +30,7 @@ void main(void) {
 
 	float occ = 0.0;
 	vec4 pos = texture(positions, texPos.xy);
-	float depthV = texture(depth, texPos.xy);
+	float depthV = texture(depth, texPos.xy).r;
 	vec3 normal =  texture(normals,texPos.xy).xyz;// * 2.0 -1.0;
 	float hasGeometry = texture(normals,texPos.xy).w;
 	vec3 u = cross(normal, vec3(0,1,0));

@@ -221,12 +221,12 @@ ResourceManager::getNumTextures() {
 //-------------------------------------
 
 nau::render::RenderTarget* 
-ResourceManager::createRenderTarget (std::string name, int width, int height) {
+ResourceManager::createRenderTarget (std::string name) {
 
 	if (m_RenderTargets.count (name) > 0) {
 		return 0;
 	}
-	m_RenderTargets[name] = RenderTarget::Create (name, width, height);
+	m_RenderTargets[name] = RenderTarget::Create (name);
 	return m_RenderTargets[name];
 }
 
@@ -254,6 +254,16 @@ ResourceManager::getRenderTarget(const std::string &name) {
 		return m_RenderTargets[name];
 	else
 		return 0;
+}
+
+
+bool
+ResourceManager::hasRenderTarget(const std::string &name) {
+
+	if (m_RenderTargets.count (name) > 0)
+		return true;
+	else
+		return false;
 }
 
 

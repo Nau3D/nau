@@ -11,7 +11,7 @@ out vec4 outputF;
 
 void main()
 {
-	int samples=16;
+	int samples=8;
 	ivec2 tc = ivec2(DataIn.texCoord.xy * 1024);
 
 	outputF = vec4(0.0);

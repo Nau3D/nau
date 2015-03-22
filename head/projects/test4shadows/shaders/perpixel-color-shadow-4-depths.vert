@@ -1,4 +1,4 @@
-#version 330
+#version 440
 
 uniform vec4 lightDirection;
 uniform mat4 lightSpaceMat1,lightSpaceMat2,lightSpaceMat3,lightSpaceMat4;

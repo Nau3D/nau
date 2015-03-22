@@ -50,7 +50,7 @@ GLImageTexture::prepare() {
 	RENDERER->addImageTexture(m_IntProps[UNIT], this);
 #if NAU_OPENGL_VERSION >= 440
 	if (m_BoolProps[CLEAR]) {
-		glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, m_Data);
+		glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, NULL);
 	}
 	glBindImageTexture(m_IntProps[UNIT], m_UIntProps[TEX_ID], m_UIntProps[LEVEL],GL_TRUE,0,m_EnumProps[ACCESS],m_InternalFormat);
 #endif

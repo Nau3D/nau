@@ -2,7 +2,7 @@
 <materialLib name="Deferred Render Targets">
 	<renderTargets>
 		<renderTarget name ="deferred">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<!--multisampling samples=32 /-->
 			<colors>
 				<color name="color" internalFormat="RGBA" />

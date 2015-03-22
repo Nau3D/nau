@@ -7,6 +7,7 @@
 #include "nau/material/materialgroup.h"
 #include "nau/math/matrix.h"
 #include "nau/math/vec4.h"
+#include "nau/render/opengl/gldebug.h"
 #include "nau/render/opengl/glvertexarray.h"
 #include "nau/render/opengl/glrendertarget.h"
 
@@ -45,6 +46,7 @@ GLRenderer::GLRenderer(void) :
 	m_Shader (0)
 {
 	init();
+	GLDebug::Init();
 	m_glCurrState.set();
 	m_Textures.clear();
 
@@ -198,7 +200,7 @@ GLRenderer::getAtomicCounterValues() {
 
 	if (m_AtomicCount) {
 
-		//glFinish();
+		glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
 		for (auto at : m_AtomicLabels) {
 			buffer = at.first.first;
 			offset = at.first.second;

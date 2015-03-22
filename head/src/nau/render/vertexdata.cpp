@@ -23,7 +23,7 @@ const std::string nau::render::VertexData::Syntax[] = {
 	"bitangent",
 	"triangleID",
 	"custom0",
-	"custom1"
+	"custom1",
 	"custom2",
 	"custom3",
 	"custom4",

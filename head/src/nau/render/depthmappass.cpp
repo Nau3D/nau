@@ -54,8 +54,8 @@ DepthMapPass::addLight(const std::string &lightName)
 	m_Lights.push_back (lightName);
 
 	Light *light = RENDERMANAGER->getLight (m_Lights[0]);
-
-	m_Viewport->setPropf2(Viewport::SIZE, vec2(m_RenderTarget->getWidth(), m_RenderTarget->getHeight()));
+	uivec2 uiv = uivec2(m_RenderTarget->getPropui2(RenderTarget::SIZE));
+	m_Viewport->setPropf2(Viewport::SIZE, vec2(uiv.x, uiv.y));
 	m_LightCamera->setViewport (m_Viewport);
 	
 
@@ -89,6 +89,7 @@ DepthMapPass::prepare (void)
 	prepareBuffers();
 
 	RENDERER->setCamera(m_LightCamera);
+	setupLights();
 }
 
 

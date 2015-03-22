@@ -3,28 +3,28 @@
 
 	<renderTargets>
 		<renderTarget name="shadowMap1">
-			<size width="2048" height="2048" />
+			<SIZE width=2048 height=2048 />
 			<depth name="shadowMap1" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 		
 		<renderTarget name="shadowMap2">
-			<size width="2048" height="2048" />
+			<SIZE width=2048 height=2048 />
 			<depth name="shadowMap2" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 		
 		<renderTarget name="shadowMap3">
-			<size width="2048" height="2048" />
+			<SIZE width=2048 height=2048 />
 			<depth name="shadowMap3" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 		
 		<renderTarget name="shadowMap4">
-			<size width="2048" height="2048" />
+			<SIZE width=2048 height=2048 />
 			<depth name="shadowMap4" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 
 				
 		<renderTarget name="simple">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
@@ -121,25 +121,25 @@
 			<textures>
 				<texture UNIT="0" name="shadowMap1" >
 					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
-					<COMPARE_FUNC value="LEQUAL" />
+					<COMPARE_FUNC value="LESS" />
 					<MIN_FILTER value="LINEAR" />
 					<MAG_FILTER value="LINEAR" />
 				</texture>	
 				<texture UNIT="1" name="shadowMap2" >
 					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
-					<COMPARE_FUNC value="LEQUAL" />
+					<COMPARE_FUNC value="LESS" />
 					<MIN_FILTER value="LINEAR" />
 					<MAG_FILTER value="LINEAR" />
 				</texture>	
 				<texture UNIT="2" name="shadowMap3" >
 					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
-					<COMPARE_FUNC value="LEQUAL" />
+					<COMPARE_FUNC value="LESS" />
 					<MIN_FILTER value="LINEAR" />
 					<MAG_FILTER value="LINEAR" />
 				</texture>	
 				<texture UNIT="3" name="shadowMap4" >
 					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
-					<COMPARE_FUNC value="LEQUAL" />
+					<COMPARE_FUNC value="LESS" />
 					<MIN_FILTER value="LINEAR" />
 					<MAG_FILTER value="LINEAR" />
 				</texture>	

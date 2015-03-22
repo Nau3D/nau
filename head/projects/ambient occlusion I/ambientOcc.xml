@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
-<project name="try" width=1500 height=300>
+<project name="try" width=1500 height=300 >
 	<assets>
 		<scenes>
-			<scene name="MainScene">
+			<scene name="MainScene" param="SWAP_YZ">
 				<file name="..\..\models\Teapot.3ds"/>
 			</scene>
 		</scenes>
@@ -95,9 +95,10 @@
 			</pass>
 			<pass class="quad" name="pass6">
 				<renderTarget name="shadows" fromLibrary="Ambient Occlusion"/>	
-				<materialMaps>
+				<material name="ambOcc" fromLibrary="Ambient Occlusion" />
+				<!--materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Ambient Occlusion" toMaterial="ambOcc" />
-				</materialMaps>
+				</materialMaps-->
 			</pass>
 			<!--pass class="default" name="pass6">
 				<scenes>

@@ -14,15 +14,15 @@ QuadPass::QuadPass (const std::string &name) :
 }
 
 
-QuadPass::~QuadPass(void)
-{
+QuadPass::~QuadPass(void) {
+
 	delete m_QuadObject;
 }
 
 
 void
-QuadPass::prepare (void)
-{
+QuadPass::prepare (void) {
+
 	if (0 != m_RenderTarget && true == m_UseRT) {
 		m_RenderTarget->bind();
 	}
@@ -45,8 +45,8 @@ QuadPass::prepare (void)
 
 
 void
-QuadPass::restore (void)
-{
+QuadPass::restore(void) {
+
 	if (0 != m_RenderTarget && true == m_UseRT) {
 		m_RenderTarget->unbind();
 	}
@@ -57,11 +57,17 @@ QuadPass::restore (void)
 
 
 void 
-QuadPass::doPass (void)
-{
+QuadPass::doPass (void) {
+
 	RENDERMANAGER->clearQueue();
 	RENDERMANAGER->addToQueue (m_QuadObject, m_MaterialMap);
 	RENDERMANAGER->processQueue();
 
 }
 
+
+void 
+QuadPass::setMaterialName(std::string &lib, std::string &mat) {
+
+	m_MaterialMap["__Quad"].setMaterialID (lib, mat);
+}

@@ -4,7 +4,7 @@
 	<renderTargets>
 	
 		<renderTarget name ="deferred">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="color" internalFormat="RGBA" />
 				<color name="shadow" internalFormat="RGBA"  />
@@ -14,14 +14,14 @@
 		</renderTarget>
 		
 		<renderTarget name ="deferredResult">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="color2" internalFormat="RGBA" />
 			</colors>
 		</renderTarget>
 		
 		<renderTarget name ="deferredResult2">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="compDR2" internalFormat="RGBA" />
 			</colors>
@@ -29,28 +29,28 @@
 		
 		
 		<renderTarget name ="intersectionResult">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="intersectionResult" internalFormat="RGBA32F" />
 			</colors>
 		</renderTarget>
 
 		<renderTarget name ="test">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA32F" />
 			</colors>
 		</renderTarget>
 		
 		<renderTarget name ="test_ubyte">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="offscreenrender_ubyte" internalFormat="R8" />
 			</colors>
 		</renderTarget>
 
 		<renderTarget name="depthAndVertices">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<depth name="shadowMapA" internalFormat="DEPTH_COMPONENT32F" />
 			<colors>
 				<color name="vertexA" internalFormat="RGBA32F" />
@@ -62,7 +62,7 @@
 		</renderTarget>
 
 		<renderTarget name = "depth">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<depth name="shadowMap" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 

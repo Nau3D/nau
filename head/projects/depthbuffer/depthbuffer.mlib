@@ -3,7 +3,7 @@
 
 	<renderTargets>
 		<renderTarget name = "depth">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<depth name="shadowMap" noreadandwrite="true"  
 									internalFormat="DEPTH_COMPONENT32F"  />
 		</renderTarget>

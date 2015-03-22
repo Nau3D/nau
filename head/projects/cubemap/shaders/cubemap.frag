@@ -31,7 +31,7 @@ void main() {
 
 	//color1 = vec4(k * refract + (1-k) * reflect, 1.0) ;
 	//color2 = vec4(vec3(k), 1.0);//vec4(refract, 1.0);
-	if (textureSize(texUnit,0) == 1)
+	if (textureSize(texUnit,0).x == 1)
 		outColor = vec4(0.5);
 	else
 		outColor = vec4(ref, 1.0);

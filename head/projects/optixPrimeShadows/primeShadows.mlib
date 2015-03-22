@@ -2,7 +2,7 @@
 <materialLib name="PrimeShadows">
 	<renderTargets>
 		<renderTarget name ="gBuffer">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<!--size width="512" height="512" /-->
 			<colors>
 				<color name="pos" internalFormat="RGBA32F" />
@@ -12,7 +12,7 @@
 		</renderTarget>
 		
 		<renderTarget name ="dummy">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<!--size width="512" height="512" /-->
 			<colors>
 				<color name="dummy" internalFormat="RGBA" />

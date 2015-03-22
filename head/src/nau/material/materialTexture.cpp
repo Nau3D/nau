@@ -8,7 +8,7 @@ bool
 MaterialTexture::Init() {
 
 	// INT
-	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, false, new int(-1)));
+	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, false, new int(0)));
 
 	NAU->registerAttributes("MATERIAL_TEXTURE", &Attribs);
 

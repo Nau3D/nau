@@ -100,8 +100,7 @@ GLBuffer::getData(unsigned int offset, unsigned int size, void *data) {
 	if (offset + size > m_UIntProps[SIZE])
 		actualSize = m_UIntProps[SIZE] - offset;
 
-	//glFinish();
-	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
+		//glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	int type = GL_ARRAY_BUFFER;// SHADER_STORAGE_BUFFER;
 	glBindBuffer(type, m_IntProps[ID]);
 	//void *bufferData;

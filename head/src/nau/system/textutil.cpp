@@ -150,13 +150,27 @@ TextUtil::ParseFloats (const std::string &InputString, int count)
 }
 
 
+//void
+//TextUtil::Join(const std::vector<std::string>& vec, const char* delim, std::string *result)
+//{
+//	std::stringstream res;
+//	std::string s;
+//	copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(res, delim));
+//	s = res.str();
+//	*result = s.substr(0, s.length() - 2);
+//}
+
+
 void
-TextUtil::Join(const std::vector<std::string>& vec, const char* delim, std::string *result)
+TextUtil::Join(const std::vector<std::string>& vec, std::string delim, std::string *result)
 {
 	std::stringstream res;
 	std::string s;
-	copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(res, delim));
-	*result = res.str();
+	for (auto s1 : vec) {
+
+		s += s1 + delim;
+	}
+	//copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(res, delim));
+	//s = res.str();
+	*result = s.substr(0, s.length() - delim.length());
 }
-
-

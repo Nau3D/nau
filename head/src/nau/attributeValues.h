@@ -15,6 +15,7 @@
 #define INT_PROP(A,B) static const IntProperty A = (IntProperty)B 
 #define INT2_PROP(A,B) static const Int2Property A = (Int2Property)B 
 #define UINT_PROP(A,B) static const UIntProperty A = (UIntProperty)B 
+#define UINT2_PROP(A,B) static const UInt2Property A = (UInt2Property)B 
 #define UINT3_PROP(A,B) static const UInt3Property A = (UInt3Property)B 
 
 #define BOOL_PROP(A,B) static const BoolProperty A = (BoolProperty)B 
@@ -84,6 +85,17 @@ namespace nau {
 		virtual unsigned int getPropui(UIntProperty prop);
 		virtual bool isValidui(UIntProperty prop, unsigned int value);
 		virtual void setPropui(UIntProperty prop, int unsigned value);
+
+	// UINT2
+	protected:
+		std::map<int, uivec2> m_UInt2Props;
+
+	public:
+		typedef enum {} UInt2Property;
+
+		virtual uivec2 &getPropui2(UInt2Property prop);
+		virtual bool isValidui2(UInt2Property prop, uivec2 &value);
+		virtual void setPropui2(UInt2Property prop, uivec2 &value);
 
 	// UINT3
 	protected:

@@ -74,8 +74,9 @@ namespace nau
 
 
 			/***Rendertargets***/
-			nau::render::RenderTarget* createRenderTarget (std::string name, int width, int height);
+			nau::render::RenderTarget* createRenderTarget (std::string name);
 			void removeRenderTarget (std::string name);
+			bool hasRenderTarget(const std::string &name);
 			nau::render::RenderTarget *getRenderTarget(const std::string &name);
 			int getNumRenderTargets();
 			std::vector<std::string>* ResourceManager::getRenderTargetNames();
