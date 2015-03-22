@@ -390,17 +390,8 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 	if (context == "CAMERA") {
 		return (AttributeValues *)renderer->getCamera();
 	}
-	if (context == "RENDERER") {
-		return (AttributeValues *)renderer;
-	}
 	if (context == "COLOR") {
 		return (AttributeValues *)renderer->getMaterial();
-	}
-	if (context == "MATERIAL_TEXTURE") {
-		return (AttributeValues *)renderer->getMaterialTexture(number);
-	}
-	if (context == "TEXTURE") {
-		return (AttributeValues *)renderer->getTexture(number);
 	}
 	if (context == "IMAGE_TEXTURE") {
 		return (AttributeValues *)renderer->getImageTexture(number);
@@ -408,18 +399,29 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 	if (context == "LIGHT") {
 		return (AttributeValues *)renderer->getLight(number);
 	}
-	if (context == "STATE") {
-		return (AttributeValues *)renderer->getState();
-	}
-	if (context == "VIEWPORT") {
-		return (AttributeValues *)renderer->getViewport();
+	if (context == "MATERIAL_TEXTURE") {
+		return (AttributeValues *)renderer->getMaterialTexture(number);
 	}
 	if (context == "PASS") {
 		return (AttributeValues *)m_pRenderManager->getCurrentCamera();
 	}
+	if (context == "RENDERER") {
+		return (AttributeValues *)renderer;
+	}
+	if (context == "RENDER_TARGET") {
+		return (AttributeValues *)m_pResourceManager->getRenderTarget(context);
+	}
+	if (context == "STATE") {
+		return (AttributeValues *)renderer->getState();
+	}
+	if (context == "TEXTURE") {
+		return (AttributeValues *)renderer->getTexture(number);
+	}
+	if (context == "VIEWPORT") {
+		return (AttributeValues *)renderer->getViewport();
+	}
 	// If we get here then we are trying to fetch something that does not exist
 	assert(false && "Getting an invalid attribute - Nau::getCurrentObjectAttributes");
-	return NULL;
 	return NULL;
 }
 
@@ -455,6 +457,10 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 	if (type == "BUFFER") {
 		if (m_pResourceManager->hasBuffer(context))
 			return (AttributeValues *)m_pResourceManager->getBuffer(context);
+	}
+	if (type == "RENDER_TARGET") {
+		if (m_pResourceManager->hasRenderTarget(context))
+			return (AttributeValues *)m_pResourceManager->getRenderTarget(context);
 	}
 	if (type == "STATE") {
 		if (m_pResourceManager->hasState(context))

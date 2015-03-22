@@ -500,21 +500,21 @@ Pass::setRenderTarget (nau::render::RenderTarget* rt) {
 			m_Viewport = new Viewport();
 			m_UseRT = true;
 		}
-		setRTSize(rt->getWidth(), rt->getHeight());
-		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getClearValues());
+		setRTSize(rt->getPropui2(RenderTarget::SIZE));
+		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(RenderTarget::CLEAR_VALUES));
 	}
 	m_RenderTarget = rt;
 }
 
 
 void
-Pass::setRTSize(int width, int height) {
+Pass::setRTSize(uivec2 &v) {
 
 	assert(m_Viewport != NULL);
 
-	m_RTSizeWidth = width;
-	m_RTSizeHeight = height;
-	m_Viewport->setPropf2(Viewport::SIZE, vec2(width, height));
+	m_RTSizeWidth = v.x;
+	m_RTSizeHeight = v.y;
+	m_Viewport->setPropf2(Viewport::SIZE, vec2(v.x, v.y));
 	m_Viewport->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
 	m_Viewport->setPropb(Viewport::FULL, false);
 }

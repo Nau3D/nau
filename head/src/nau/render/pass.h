@@ -204,7 +204,7 @@ namespace nau
 			// called in prepare()
 			void prepareBuffers();
 
-			void setRTSize (int width, int height);
+			void setRTSize (uivec2 &v);
 
 			// init class variables
 			void initVars();

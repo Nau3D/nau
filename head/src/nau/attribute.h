@@ -125,6 +125,7 @@ namespace nau {
 		void initAttribInstanceInt2Array(std::map<int, ivec2> &m);
 		void initAttribInstanceEnumArray(std::map<int, int> &m);
 		void initAttribInstanceUIntArray(std::map<int, unsigned int> &m);
+		void initAttribInstanceUInt2Array(std::map<int, uivec2> &m);
 		void initAttribInstanceUInt3Array(std::map<int, uivec3> &m);
 		void initAttribInstanceFloatArray(std::map<int, float> &m);
 		void initAttribInstanceVec4Array(std::map<int, vec4> &m);

@@ -2,7 +2,7 @@
 <materialLib name="Optix Ray Tracer Render Target">
 	<renderTargets>
 		<renderTarget name ="test">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA32F" />
 				<!--color name="offscreenrender2" internalFormat="RGBA32F" /-->
@@ -10,7 +10,7 @@
 		</renderTarget>
 		
 		<renderTarget name ="test_ubyte">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="offscreenrender_ubyte" internalFormat="R8" />
 				<!--color name="offscreenrender2" internalFormat="RGBA32F" /-->

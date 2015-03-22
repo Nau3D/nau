@@ -3,7 +3,8 @@
 
 	<renderTargets>
 		<renderTarget name="test">
-			<size width=1024 height=1024 samples=8/>
+			<SIZE width=1024 height=1024 />
+			<SAMPLES value=8/>
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>

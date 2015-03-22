@@ -2,7 +2,7 @@
 <materialLib name="Ambient Occlusion">
 	<renderTargets>
 		<renderTarget name = "info">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<depth name="depthMap" internalFormat="DEPTH_COMPONENT32F"/>
 			<colors>
 				<color name="normalMap" internalFormat="RGBA32F" />
@@ -10,7 +10,7 @@
 			</colors>
 		</renderTarget>
 		<renderTarget name = "shadows">
-			<size width="1024" height="1024" />
+			<SIZE width=1024 height=1024 />
 			<colors>
 				<color name="occMap"  internalFormat="RGBA32F" />
 			</colors>

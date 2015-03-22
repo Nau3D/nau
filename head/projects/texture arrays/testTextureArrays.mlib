@@ -3,7 +3,9 @@
 
 	<renderTargets>
 		<renderTarget name="test">
-			<size width=1024 height=1024 layers=2/>
+			<SIZE width=1024 height=1024 />
+			<LAYERS value=2/>
+			<CLEAR_VALUES r=1 g=1 b=1.5 />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>

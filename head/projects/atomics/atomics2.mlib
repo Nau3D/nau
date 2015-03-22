@@ -3,7 +3,7 @@
 
 	<renderTargets>
 			<renderTarget name = "output">
-			<size width="512" height="512" />
+			<SIZE width=512 height=512 />
 			<colors>
 				<color name="output"  internalFormat="RGBA" />
 			</colors>

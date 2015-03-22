@@ -156,6 +156,46 @@ AttributeValues::setPropui(UIntProperty prop, int unsigned value) {
 
 
 // ----------------------------------------------
+//		UINT2
+// ----------------------------------------------
+
+
+uivec2 &
+AttributeValues::getPropui2(UInt2Property prop) {
+
+	return m_UInt2Props[prop];
+}
+
+
+bool
+AttributeValues::isValidui2(UInt2Property prop, uivec2 &value) {
+
+	Attribute attr = m_Attribs->get(prop, Enums::UIVEC2);
+	if (attr.getName() == "NO_ATTR")
+		return false;
+
+	uivec2 *max, *min;
+	if (attr.getRangeDefined()) {
+		max = (uivec2 *)attr.getMax();
+		min = (uivec2 *)attr.getMin();
+
+		if (max != NULL && value > *max)
+			return false;
+		if (min != NULL && value < *min)
+			return false;
+	}
+	return true;
+}
+
+
+void
+AttributeValues::setPropui2(UInt2Property prop, uivec2 &value) {
+	assert(isValidui2(prop, value));
+	m_UInt2Props[prop] = value;
+}
+
+
+// ----------------------------------------------
 //		UINT3
 // ----------------------------------------------
 
@@ -500,6 +540,7 @@ AttributeValues::operator =(const AttributeValues &to) {
 		m_IntProps = to.m_IntProps;
 		m_Int2Props = to.m_Int2Props;
 		m_UIntProps = to.m_UIntProps;
+		m_UInt2Props = to.m_UInt2Props;
 		m_UInt3Props = to.m_UInt3Props;
 		m_BoolProps = to.m_BoolProps;
 		m_Bool4Props = to.m_Bool4Props;
@@ -523,6 +564,7 @@ AttributeValues::copy(AttributeValues *to) {
 	m_IntProps = to->m_IntProps;
 	m_Int2Props = to->m_Int2Props;
 	m_UIntProps = to->m_UIntProps;
+	m_UInt2Props = to->m_UInt2Props;
 	m_UInt3Props = to->m_UInt3Props;
 	m_BoolProps = to->m_BoolProps;
 	m_Bool4Props = to->m_Bool4Props;
@@ -544,6 +586,7 @@ AttributeValues::clearArrays() {
 	m_IntProps.clear();
 	m_Int2Props.clear();
 	m_UIntProps.clear();
+	m_UInt2Props.clear();
 	m_UInt3Props.clear();
 	m_BoolProps.clear();
 	m_Bool4Props.clear();
@@ -615,6 +658,19 @@ AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 			}
 			return(&(m_UIntProps[prop]));
 			break;
+		case Enums::UIVEC2:
+			if (m_UInt2Props.count(prop) == 0) {
+				val = m_Attribs->getDefault(prop, type);
+				if (val != NULL)
+					m_UInt2Props[prop] = *(uivec2 *)val;
+				else { // life goes on ... except in debug mode
+					assert(false && "Accessing undefined attribute of type UINT2");
+					SLOG("Accessing undefined attribute of type UINT2 - This should never occur");
+					m_UInt2Props[prop] = uivec2(0);
+				}
+			}
+			return(&(m_UInt3Props[prop]));
+			break;
 		case Enums::UIVEC3:
 			if (m_UInt3Props.count(prop) == 0) {
 				val = m_Attribs->getDefault(prop, type);
@@ -622,7 +678,7 @@ AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 					m_UInt3Props[prop] = *(uivec3 *)val;
 				else { // life goes on ... except in debug mode
 					assert(false && "Accessing undefined attribute of type UINT3");
-					SLOG("Accessing undefined attribute of type UINT - This should never occur");
+					SLOG("Accessing undefined attribute of type UINT3 - This should never occur");
 					m_UInt3Props[prop] = uivec3(0);
 				}
 			}
@@ -756,6 +812,9 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, void *value) {
 	case Enums::UINT:
 		setPropui((UIntProperty)prop, *(unsigned int *)value);
 		break;
+	case Enums::UIVEC2:
+		setPropui2((UInt2Property)prop, *(uivec2 *)value);
+		break;
 	case Enums::UIVEC3:
 		setPropui3((UInt3Property)prop, *(uivec3 *)value);
 		break;
@@ -805,6 +864,9 @@ AttributeValues::isValid(unsigned int prop, Enums::DataType type, void *value) {
 		break;
 	case Enums::UINT:
 		return isValidui((UIntProperty)prop, *(unsigned int *)value);
+		break;
+	case Enums::UIVEC2:
+		return isValidui2((UInt2Property)prop, *(uivec2 *)value);
 		break;
 	case Enums::UIVEC3:
 		return isValidui3((UInt3Property)prop, *(uivec3 *)value);
@@ -875,6 +937,7 @@ AttributeValues::initArrays() {
 	m_Attribs->initAttribInstanceIntArray(m_IntProps);
 	m_Attribs->initAttribInstanceInt2Array(m_Int2Props);
 	m_Attribs->initAttribInstanceUIntArray(m_UIntProps);
+	m_Attribs->initAttribInstanceUInt2Array(m_UInt2Props);
 	m_Attribs->initAttribInstanceUInt3Array(m_UInt3Props);
 	m_Attribs->initAttribInstanceBoolArray(m_BoolProps);
 	m_Attribs->initAttribInstanceBvec4Array(m_Bool4Props);
@@ -905,6 +968,7 @@ AttributeValues::AttributeValues(const AttributeValues &to) {
 	m_IntProps = to.m_IntProps;
 	m_Int2Props = to.m_Int2Props;
 	m_UIntProps = to.m_UIntProps;
+	m_UInt2Props = to.m_UInt2Props;
 	m_UInt3Props = to.m_UInt3Props;
 	m_BoolProps = to.m_BoolProps;
 	m_Bool4Props = to.m_Bool4Props;
