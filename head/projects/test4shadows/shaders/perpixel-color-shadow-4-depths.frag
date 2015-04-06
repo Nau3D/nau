@@ -47,7 +47,7 @@ void main()
 		for (int i = 0; i < 4; i++) {
 			if (distance < split[i]) {
  				if (i == 0) {
-					color += diffuse * (NdotL * f1) * vec4(1.0, 0.0, 0.0, 1.0);
+					color += diffuse * (NdotL * textureProj(shadowMap1, projShadowCoord[0])) * vec4(1.0, 0.0, 0.0, 1.0);
 					//color += diffuse * NdotL * textureGather (shadowMap[i], projShadowCoord[i].xy, projShadowCoord[i].z/projShadowCoord[i].w) * vec4(1.0, 0.0, 0.0, 1.0);
 				}
 				else if (i == 1){

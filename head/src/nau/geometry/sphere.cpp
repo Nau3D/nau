@@ -1,5 +1,6 @@
 #include "nau/geometry/sphere.h"
 
+#include "nau.h"
 #include "nau/math/vec3.h"
 #include "nau/render/vertexdata.h"
 #include "nau/material/materialgroup.h"
@@ -12,17 +13,43 @@ using namespace nau::material;
 
 const std::string Sphere::FloatParamNames[] = {"slices", "stacks"};
 
-Sphere::Sphere() : Primitive(),
-	m_Floats(COUNT_FLOATPARAMS)
+
+
+bool
+Sphere::InitSphere() {
+
+	//UINT
+	Attribs.add(Attribute(STACKS, "STACKS", Enums::UINT, false, new unsigned int(10), new unsigned int(2), NULL));
+	Attribs.add(Attribute(SLICES, "SLICES", Enums::UINT, false, new unsigned int(10), new unsigned int(3), NULL));
+
+	NAU->registerAttributes("SPHERE", &Attribs);
+
+	return true;
+}
+
+
+AttribSet Sphere::Attribs;
+bool Sphere::InitedSphere = InitSphere();
+
+
+Sphere::Sphere(): Primitive()/*,
+	m_Floats(COUNT_FLOATPARAMS)*/ {
+
+		registerAndInitArrays("SPHERE", Attribs);
+}
+
+
+Sphere::~Sphere(void)
 {
+
 }
 
 
 void 
 Sphere::build() {
 
-	int slices = (int)m_Floats[SLICES] + 1;
-	int stacks = (int)m_Floats[STACKS] + 1;
+	int slices = m_UIntProps[SLICES] + 1;// (int)m_Floats[SLICES] + 1;
+	int stacks = m_UIntProps[STACKS] + 1;//(int)m_Floats[STACKS] + 1;
 	int total = (slices) * (stacks);
 	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(total);
 	std::vector<VertexData::Attr> *tangents = new std::vector<vec4>(total);
@@ -74,12 +101,6 @@ Sphere::build() {
 	//aMaterialGroup->setMaterialName("Light Grey");
 
 	addMaterialGroup (aMaterialGroup);
-}
-
-
-Sphere::~Sphere(void)
-{
-
 }
 
 

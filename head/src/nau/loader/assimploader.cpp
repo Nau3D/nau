@@ -1,12 +1,12 @@
-#include "nau/config.h"
 #include "nau/loader/assimploader.h"
-#include "nau/slogger.h"
 
 #include "nau.h"
-#include "nau/render/irenderable.h"
+#include "nau/config.h"
+#include "nau/slogger.h"
 #include "nau/geometry/mesh.h"
-#include "nau/material/materialgroup.h"
 #include "nau/material/material.h"
+#include "nau/material/materialgroup.h"
+#include "nau/render/irenderable.h"
 #include "nau/render/vertexdata.h"
 #include "nau/system/fileutil.h"
 
@@ -19,8 +19,7 @@ using namespace nau::system;
 Assimp::Importer AssimpLoader::importer;
 
 void
-AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std::string &params)
-{
+AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std::string &params) {
 
 	std::string path = FileUtil::GetPath(aFilename);
 	const aiScene *sc;
@@ -84,15 +83,10 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		aMaterialGroup->setIndexList(indices);
 		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
 			aMaterialGroup->getIndexData().useAdjacency(true);
-		//aMaterialGroup->setMaterialName(name.data);
-		//aMaterialGroup->setParent(renderable);
-
 
 		renderable->addMaterialGroup(aMaterialGroup);
-
 		
 		VertexData &vertexData = renderable->getVertexData();
-
 
 		if (mesh->HasPositions()) {
 			std::vector<nau::math::vec4>* vertex = readGL3FArray((float *)mesh->mVertices,mesh->mNumVertices, order, 1.0f);
@@ -154,22 +148,16 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 			unsigned int max;
 			if (AI_SUCCESS == aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max))
 				cm->setPropf(ColorMaterial::SHININESS, shininess);
-
-
 		}
 	}
 	mat4 m;
 	m.setIdentity();
 	recursiveWalk(aScene, aFilename, sc, sc->mRootNode, m, meshNameMap);
-
 }
 
 
-
 void
-AssimpLoader::writeScene(nau::scene::IScene *aScene, std::string &aFilename)
-{
-
+AssimpLoader::writeScene(nau::scene::IScene *aScene, std::string &aFilename) {
 
 }
 
@@ -177,19 +165,15 @@ AssimpLoader::writeScene(nau::scene::IScene *aScene, std::string &aFilename)
 void 
 AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 									const  aiScene *sc, const  aiNode* nd, mat4 &m,
-									std::map<unsigned int, std::string> meshNameMap)
-{
-	mat4 original;
+									std::map<unsigned int, std::string> meshNameMap) {
+	mat4 original, aux, m4;
 	original.copy(m);
 	
-	 aiMatrix4x4 mA = nd->mTransformation;
+	aiMatrix4x4 mA = nd->mTransformation;
 	mA.Transpose();
 	float f[16];
 	memcpy(f,&mA, sizeof(float)*16);
 
-
-	mat4 aux;
-	mat4 m4;
 	m4.setMatrix(f);
 	aux.copy(m4);
 	m *= aux;
@@ -214,8 +198,8 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 
 
 std::vector<nau::math::vec4>* 
-AssimpLoader::readGL3FArray(float* a, unsigned int arraysize, unsigned int order, float w)
-{
+AssimpLoader::readGL3FArray(float* a, unsigned int arraysize, unsigned int order, float w) {
+
 	std::vector<nau::math::vec4> *v = new std::vector<nau::math::vec4>(arraysize);
 
 	for(unsigned int i=0;i<arraysize;i++)
@@ -227,9 +211,10 @@ AssimpLoader::readGL3FArray(float* a, unsigned int arraysize, unsigned int order
 	return v;
 }
 
+
 std::vector<nau::math::vec4>* 
-AssimpLoader::readGL2FArray(float* a, unsigned int arraysize)
-{
+AssimpLoader::readGL2FArray(float* a, unsigned int arraysize) {
+
 	std::vector<vec4> *v = new std::vector<nau::math::vec4>(arraysize);
 
 	for(unsigned int i=0;i<arraysize;i++)
@@ -240,8 +225,8 @@ AssimpLoader::readGL2FArray(float* a, unsigned int arraysize)
 
 
 void 
-AssimpLoader::color4_to_float4(const  aiColor4D *c, float f[4])
-{
+AssimpLoader::color4_to_float4(const  aiColor4D *c, float f[4]) {
+
 	f[0] = c->r;
 	f[1] = c->g;
 	f[2] = c->b;
@@ -250,8 +235,8 @@ AssimpLoader::color4_to_float4(const  aiColor4D *c, float f[4])
 
 
 void 
-AssimpLoader::set_float4(float f[4], float a, float b, float c, float d)
-{
+AssimpLoader::set_float4(float f[4], float a, float b, float c, float d) {
+
 	f[0] = a;
 	f[1] = b;
 	f[2] = c;

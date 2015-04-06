@@ -313,20 +313,22 @@ ResourceManager::createRenderable(std::string type, std::string name, std::strin
 	else if ("MeshBones" == type) 
 		r = new MeshBones();
 	
-	else if ("Box" == type) 
+	else if ("BOX" == type) 
 		r = new Box();
 
-	else if ("Square" == type) 
+	else if ("SQUARE" == type) 
 		r = new Square();
 
-	else if ("Sphere" == type) 
+	else if ("SPHERE" == type) 
 		r = new Sphere();
 
-	else if ("Axis" == type)
+	else if ("AXIS" == type)
 		r = new Axis();
 
 	else if ("BoundingBox" == type)
 		r = new BBox();
+	else
+		return NULL;
 
 	r->setName(name);
 	addRenderable(r,filename);

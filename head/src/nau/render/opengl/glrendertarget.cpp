@@ -41,6 +41,8 @@ GLRenderTarget::GLRenderTarget (std::string name) :
 {
 	m_Name = name;
 	m_DepthTexture = NULL;
+	m_DepthBuffer = 0;
+	m_Depth = 0;
 
 	glGenFramebuffers (1, &m_Id);
 }
@@ -61,6 +63,16 @@ GLRenderTarget::init() {
 	m_Init = true;
 	m_RenderTargets.resize(IRenderer::MaxColorAttachments, -1);
 	m_TexId.resize(IRenderer::MaxColorAttachments, NULL);
+
+	glGenRenderbuffers (1, &m_DepthBuffer);
+	glBindRenderbuffer (GL_RENDERBUFFER, m_DepthBuffer);
+	glRenderbufferStorage (GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y);
+
+	bind();
+	glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
+	unbind();
+
+	glBindRenderbuffer (GL_RENDERBUFFER, 0);
 }
 
 

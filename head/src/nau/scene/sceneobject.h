@@ -51,7 +51,7 @@ namespace nau
 			virtual std::string& getName ();
 			virtual void setName (const std::string &name);
 
-			virtual void unitize(float min, float max);
+			virtual void unitize(vec3 &center, vec3 &min, vec3 &max);
 
 			virtual bool isStatic();
 			virtual void setStaticCondition(bool aCondition);

@@ -3,17 +3,17 @@
 	<assets>
 		<scenes>
 			<scene name="Sphere" class="OctreeUnified">
-				<geometry name = "sphere" type = "Sphere" slices=10 stacks=10 material="crateBox">
+				<geometry name = "sphere" type = "SPHERE" SLICES=10 STACKS=10 material="crateBox">
 					<TRANSLATE x =-2.5 y=0 z =0  />
 				</geometry>								
 			</scene>
 			<scene name = "Box" type="OctreeByMat">		
-				<geometry name = "box" type = "Box"  material="crateBox" >
+				<geometry name = "box" type = "BOX"  material="crateBox" >
 					<TRANSLATE x =2.5 y=0 z =0  />
 					<ROTATE x=0 y=1 z=0 w=45 />
 
 				</geometry>
-				<geometry name = "axis" type = "Axis" scale = 5 />
+				<geometry name = "axis" type = "AXIS" scale = 5 />
 			</scene>
 		</scenes>
 		

@@ -91,7 +91,7 @@ GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts)
 
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,m_IntProps[ID]);
-	glBindSampler(aUnit, ts->getPropi(TextureSampler::ID));
+	//glBindSampler(aUnit, ts->getPropi(TextureSampler::ID));
 
 	ts->prepare(aUnit, GL_TEXTURE_CUBE_MAP);
 }

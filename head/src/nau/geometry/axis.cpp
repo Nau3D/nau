@@ -10,6 +10,7 @@ using namespace nau::render;
 using namespace nau::material;
 
 
+
 Axis::Axis(void) : Primitive()
 	
 {

@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<project name="Render Target Test" width=512 height=512>
+	<assets>
+		<scenes>
+			<scene name="MainScene">
+				<file name="..\..\models\al.obj"/>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="Main" >
+				<ORIGIN x = 0 y =0 />
+				<SIZE width=1 height=1 />
+				<CLEAR_COLOR  r=0.0 g=0.0 b=0.0 />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera">
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=100.0 />
+				<POSITION x=0 y=-0.5 z=7.5 />
+				<VIEW x=0.0 y=0.0 z=-1.0 />
+				<UP x=0 y=1 z=0 />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun" >
+				<POSITION x="-150.0" y="150.0" z="0.0" />
+				<DIRECTION x="1.0" y="-0.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.0" b="0.0" />
+			</light>
+		</lights>
+		<atomics>
+			<atomic buffer="Image Load Store::atomic" offset=0  semantics="---" />
+			<atomic buffer="Image Load Store::atomic" offset=4  semantics="--+" />
+			<atomic buffer="Image Load Store::atomic" offset=8  semantics="-+-" />
+			<atomic buffer="Image Load Store::atomic" offset=12 semantics="-++" />
+			<atomic buffer="Image Load Store::atomic" offset=16 semantics="+--" />
+			<atomic buffer="Image Load Store::atomic" offset=20 semantics="+-+" />
+			<atomic buffer="Image Load Store::atomic" offset=24 semantics="++-" />
+			<atomic buffer="Image Load Store::atomic" offset=28 semantics="+++" />
+		</atomics>	
+		<materialLibs>
+			<materialLib filename="imageLoadStore II.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="Main" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="*" 
+						 toLibrary="Image Load Store" toMaterial="imageStore" />
+				</materialMaps>
+			</pass>
+			
+			<pass class="quad" name="pass2">
+				<materialMaps>
+					<map fromMaterial="__Quad" toLibrary="Image Load Store" toMaterial="test" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

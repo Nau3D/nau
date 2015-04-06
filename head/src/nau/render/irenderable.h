@@ -1,6 +1,8 @@
 #ifndef IRENDERABLE_H
 #define IRENDERABLE_H
 
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
 #include "nau/config.h"
 #include "nau/event/ilistener.h"
 #include "nau/math/vec3.h"
@@ -20,7 +22,7 @@ namespace nau
 	}
 	namespace render 
 	{
-		class IRenderable: public IListener 
+		class IRenderable: public IListener, public AttributeValues
 		{
 		public:
 
@@ -37,6 +39,10 @@ namespace nau
 #endif
 			} DrawPrimitive;
 
+			ENUM_PROP(PRIMITIVE_TYPE, 0);
+
+			static AttribSet Attribs;
+
 			virtual void setName(std::string name) = 0;
 			virtual std::string& getName () = 0;
 			virtual unsigned int getDrawingPrimitive() = 0; 
@@ -44,7 +50,7 @@ namespace nau
 			virtual void setDrawingPrimitive(unsigned int aDrawingPrimitive) = 0;
 
 			virtual void prepareTriangleIDs(unsigned int sceneObjectID) = 0;
-			virtual void unitize(float min, float max) = 0;
+			virtual void unitize(vec3 &vCenter, vec3 &vMin, vec3 &vMax) = 0;
 
 			virtual void getMaterialNames(std::set<std::string> *nameList) = 0;
 			virtual void addMaterialGroup (nau::material::MaterialGroup*, int offset=0) = 0;
@@ -64,6 +70,13 @@ namespace nau
 			virtual void resetCompilationFlags() = 0;
 
 			virtual ~IRenderable(void) {};
+
+		protected:
+			static bool Init();
+			static bool Inited;
+
+			IRenderable();
+
 		};
 	};
 };

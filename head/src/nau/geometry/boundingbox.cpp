@@ -206,7 +206,25 @@ BoundingBox::setTransform (mat4 &m)
 bool 
 BoundingBox::intersect (const IBoundingVolume *volume)
 {
-	return true; /***MARK***/
+	vec3 max = volume->getMax();
+	if (max.x < m_vPoints[MAX].x)
+		m_vPoints[MAX].x = max.x; 
+	if (max.y < m_vPoints[MAX].y)
+		m_vPoints[MAX].y = max.y; 
+	if (max.z < m_vPoints[MAX].z)
+		m_vPoints[MAX].z = max.z; 
+
+	vec3 min = volume->getMin();
+	if (min.x > m_vPoints[MIN].x)
+		m_vPoints[MIN].x = min.x; 
+	if (min.y > m_vPoints[MIN].y)
+		m_vPoints[MIN].y = min.y; 
+	if (min.z > m_vPoints[MIN].z)
+		m_vPoints[MIN].z = min.z; 
+
+	_calculateCenter();
+
+	return true; 
 }
 
 

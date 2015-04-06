@@ -47,8 +47,8 @@ VertexData::getAttribIndex(std::string attribName) {
 
 
 VertexData* 
-VertexData::create (std::string name)
-{
+VertexData::create (std::string name) {
+
 	VertexData *v;
 #ifdef NAU_OPENGL
 	v = new GLVertexArray;
@@ -61,16 +61,16 @@ VertexData::create (std::string name)
 }
 
 
-VertexData::VertexData(void) 
-{
+VertexData::VertexData(void) {
+
 	for (int i = 0; i < VertexData::MaxAttribs; i++) {
 		m_InternalArrays[i] = 0;
 	}
 }
 
 
-VertexData::~VertexData(void)
-{
+VertexData::~VertexData(void) {
+
 	for (int i = 0; i < VertexData::MaxAttribs; i++) {
 
 		if (0 != m_InternalArrays[i]){
@@ -88,8 +88,8 @@ VertexData::setName(std::string &name) {
 
 
 std::vector<VertexData::Attr>& 
-VertexData::getDataOf (unsigned int type)
-{
+VertexData::getDataOf (unsigned int type) {
+
 	if (0 == m_InternalArrays[type]) {
 		return VertexData::NoData;
 	}
@@ -98,8 +98,8 @@ VertexData::getDataOf (unsigned int type)
 
 
 void 
-VertexData::setDataFor (unsigned index, std::vector<Attr>* dataArray)
-{
+VertexData::setDataFor (unsigned index, std::vector<Attr>* dataArray) {
+
 	assert(index < VertexData::MaxAttribs && *dataArray != VertexData::NoData);
 
 	if (0 != m_InternalArrays[index])
@@ -112,8 +112,8 @@ VertexData::setDataFor (unsigned index, std::vector<Attr>* dataArray)
 
 
 int
-VertexData::add (VertexData &aVertexData)
-{
+VertexData::add (VertexData &aVertexData) {
+
 	size_t offset = 0;
 
 	std::vector<Attr> &vertices = getDataOf (getAttribIndex("position"));
@@ -156,28 +156,49 @@ VertexData::add (VertexData &aVertexData)
 		}
 	}
 
-
-
 	return (int)offset;
 }
 
 
-void
-VertexData::unitize(float min, float max) {
+void 
+VertexData::unitize(vec3 &vCenter, vec3 &vMin, vec3 &vMax) {
 
 	std::vector<Attr> &vertices = getDataOf (getAttribIndex("position"));
-	unsigned int i;
 
 	if (vertices == VertexData::NoData) 
 		return;
 
-	//scale vertices so that min = -1 and max = 1
-	for( i = 0; i < vertices.size(); i++) {
-	
-		vertices[i].x = ((vertices[i].x - min)/(max - min) * 2.0f) - 1.0f;
-		vertices[i].y = ((vertices[i].y - min)/(max - min) * 2.0f) - 1.0f;
-		vertices[i].z = ((vertices[i].z - min)/(max - min) * 2.0f) - 1.0f;
+	float max;
+	vec3 diff;
+
+	diff = vMax;
+	diff -= vMin;
+	if (diff.x > diff.y) {
+
+		if (diff.x > diff.z) {
+			max = diff.x;
+		}
+		else {
+			max = diff.z;
+		} 
 	}
+	else if (diff.y > diff.z) {
+
+		max = diff.y;
+	}
+	else {
+		max = diff.z;
+	}
+
+	max *= 0.5;
+	//scale vertices so that min = -1 and max = 1
+	for(unsigned int i = 0; i < vertices.size(); i++) {
+	
+		vertices[i].x = (vertices[i].x - vCenter.x) / max; 
+		vertices[i].y = (vertices[i].y - vCenter.y) / max; 
+		vertices[i].z = (vertices[i].z - vCenter.z) / max; 
+	}
+
 }
 
 

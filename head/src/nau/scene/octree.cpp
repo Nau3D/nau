@@ -196,9 +196,9 @@ Octree::_place (nau::scene::SceneObject *aSceneObject)
 }
 
 
-void Octree::unitize(float min, float max) {
+void Octree::unitize(vec3 &center, vec3 &min, vec3 &max) {
 
-	m_pOctreeRootNode->unitize(min,max);
+	m_pOctreeRootNode->unitize(center, min, max);
 }
 
 

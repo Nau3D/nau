@@ -212,6 +212,8 @@ RenderManager::getPipelineNames() {
 }
 
 
+// =========  PASS  =========================
+
 bool
 RenderManager::hasPass(const std::string &pipeline, const std::string &pass) {
 

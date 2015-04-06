@@ -20,6 +20,9 @@
 		<buffer name="test">
 			<SIZE value=16 />
 			<CLEAR value="BY_FRAME" />
+			<structure>
+				<field value = "UINT" />
+			</structure>
 		</buffer>
 	</buffers>	
 		

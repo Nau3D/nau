@@ -44,8 +44,8 @@ Camera::Init() {
 	Attribs.add(Attribute(TS05_PVM_MATRIX, "TS05_PVM_MATRIX",Enums::DataType::MAT4, true));
 	// FLOAT
 	Attribs.add(Attribute(FOV, "FOV",Enums::DataType::FLOAT, false, new float(60.0f)));
-	Attribs.add(Attribute(NEARP, "NEARP",Enums::DataType::FLOAT, false, new float(1.0f)));
-	Attribs.add(Attribute(FARP, "FARP",Enums::DataType::FLOAT, false, new float(10000.0f)));
+	Attribs.add(Attribute(NEARP, "NEAR",Enums::DataType::FLOAT, false, new float(1.0f)));
+	Attribs.add(Attribute(FARP, "FAR",Enums::DataType::FLOAT, false, new float(10000.0f)));
 	Attribs.add(Attribute(LEFT, "LEFT",Enums::DataType::FLOAT, false, new float(-1.0f)));
 	Attribs.add(Attribute(RIGHT, "RIGHT",Enums::DataType::FLOAT, false, new float(1.0f)));
 	Attribs.add(Attribute(TOP, "TOP",Enums::DataType::FLOAT, false, new float(1.0f)));
@@ -158,15 +158,15 @@ Camera::~Camera (void)
 
 
 void
-Camera::setOrtho(float left, float right, float bottom, float top, float near, float far)
+Camera::setOrtho(float left, float right, float bottom, float top, float nearp, float farp)
 {
 	m_EnumProps[PROJECTION_TYPE] = ORTHO;
 	m_FloatProps[LEFT] = left;
 	m_FloatProps[RIGHT] = right;
 	m_FloatProps[BOTTOM] = bottom;
 	m_FloatProps[TOP] = top;
-	m_FloatProps[NEARP] = near;
-	m_FloatProps[FARP] = far;
+	m_FloatProps[NEARP] = nearp;
+	m_FloatProps[FARP] = farp;
 
 	buildProjectionMatrix();
 	buildProjectionViewMatrix();
@@ -175,12 +175,12 @@ Camera::setOrtho(float left, float right, float bottom, float top, float near, f
 
 
 void 
-Camera::setPerspective (float fov, float near, float far)
+Camera::setPerspective (float fov, float nearp, float farp)
 {
 	m_EnumProps[PROJECTION_TYPE] = PERSPECTIVE;
 	m_FloatProps[FOV] = fov;
-	m_FloatProps[NEARP] = near;
-	m_FloatProps[FARP] = far;
+	m_FloatProps[NEARP] = nearp;
+	m_FloatProps[FARP] = farp;
 
 	buildProjectionMatrix();
 	buildProjectionViewMatrix();

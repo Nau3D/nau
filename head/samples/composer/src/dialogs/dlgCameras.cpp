@@ -171,7 +171,7 @@ DlgCameras::setupGrid() {
 	m_PG->Append(new wxEnumProperty(wxT("Viewport"), wxPG_LABEL, m_ViewportLabels));
 
 	std::vector<std::string> order = { "POSITION", "VIEW", "UP", "LOOK_AT_POINT", "TYPE",
-		"FOV", "NEARP", "FARP", "LEFT", "RIGHT", "BOTTOM", "TOP" };
+		"FOV", "NEAR", "FAR", "LEFT", "RIGHT", "BOTTOM", "TOP" };
 
 	PropertyManager::createOrderedGrid(m_PG, Camera::Attribs, order);
 	m_PG->SetSplitterLeft(true, true);

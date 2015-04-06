@@ -1,6 +1,8 @@
 #ifndef VERTEXDATA_H
 #define VERTEXDATA_H
 
+
+#include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
 
 #include <map>
@@ -65,8 +67,8 @@ namespace nau
 											  int location = -1) = 0;
 			//virtual void setAttributeLocationFor (VertexDataType type, int location) = 0;
 			virtual void setAttributeLocationFor (unsigned int type, int location) = 0;
-			void unitize(float min, float max);
-			virtual bool compile (void) = 0;
+			void unitize(vec3 &vCenter, vec3 &vMin, vec3 &vMax);
+			virtual bool compile(void) = 0;
 //			virtual std::vector<unsigned int>& _getReallyIndexData (void) = 0;
 			virtual unsigned int getBufferID(unsigned int vertexAttrib) = 0;
 

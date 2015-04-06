@@ -1,16 +1,16 @@
-#include <sstream>
-
 #include "nau/render/pass.h"
+
 #include "nau/geometry/axis.h"
 #include "nau/geometry/frustum.h"
 #include "nau/debug/profile.h"
 #include "nau.h"
 
+#include <sstream>
+
 using namespace nau::material;
 using namespace nau::scene;
 using namespace nau::render;
 using namespace nau::geometry;
-
 
 
 AttribSet Pass::Attribs;
@@ -130,8 +130,8 @@ Pass::~Pass() {
 
 
 void
-Pass::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) 
-{
+Pass::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData)  {
+
 	if (eventType == "SCENE_CHANGED") 
 		updateMaterialMaps(sender);
 }
@@ -145,8 +145,8 @@ Pass::getClassName() {
 
 
 std::string &
-Pass::getName (void)
-{
+Pass::getName (void) {
+
 	return m_Name;
 }
 
@@ -284,15 +284,15 @@ Pass::restore(void) {
 
 
 void
-Pass::setViewport(nau::render::Viewport *aViewport)
-{
+Pass::setViewport(nau::render::Viewport *aViewport) {
+
 	m_Viewport = aViewport;
 }
 
 
 nau::render::Viewport *
-Pass::getViewport()
-{
+Pass::getViewport() {
+
 	return (m_Viewport);
 }
 
@@ -311,8 +311,8 @@ Pass::addLight (const std::string &name) {
 
 
 void
-Pass::removeLight(const std::string &name)
-{
+Pass::removeLight(const std::string &name) {
+
 	std::vector <std::string>::iterator iter;
 
 	iter = m_Lights.begin();
@@ -325,8 +325,8 @@ Pass::removeLight(const std::string &name)
 
 
 bool
-Pass::hasLight(const std::string &name) 
-{
+Pass::hasLight(const std::string &name) {
+
 	std::vector <std::string>::iterator iter;
 	iter = m_Lights.begin();
 
@@ -435,8 +435,8 @@ Pass::materialNamesFromLoadedScenes (std::vector<std::string> &materials) {
 
 
 void
-Pass::updateMaterialMaps(const std::string &sceneName)
-{
+Pass::updateMaterialMaps(const std::string &sceneName) {
+
 	if (this->hasScene(sceneName)) {
 		std::set<std::string> *materialNames = new std::set<std::string>;
 		RENDERMANAGER->getScene(sceneName)->getMaterialNames(materialNames);
@@ -650,8 +650,10 @@ Pass::addScene (const std::string &sceneName) {
 		std::set<std::string>::iterator iter;
 		iter = materialNames->begin();
 		for ( ; iter != materialNames->end(); ++iter) {
-			
-			if (m_MaterialMap.count((*iter)) == 0)
+			if (m_MaterialMap.count("*") != 0) {
+				m_MaterialMap[(*iter)] = MaterialID(m_MaterialMap["*"].getLibName(), m_MaterialMap["*"].getMaterialName());
+			}
+			else if (m_MaterialMap.count((*iter)) == 0)
 				m_MaterialMap[(*iter)] = MaterialID(DEFAULTMATERIALLIBNAME, (*iter));
 		}
 		delete materialNames;

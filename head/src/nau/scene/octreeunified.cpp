@@ -213,35 +213,17 @@ OctreeUnified::getType(void) {
 
 void OctreeUnified::unitize() {
 
-	float max, min;
-	nau::math::vec3 vMax, vMin;
+//	float max, min;
+	nau::math::vec3 max, min, center;
 
-	vMax = m_BoundingBox.getMax();
-	vMin = m_BoundingBox.getMin();
-
-	if (vMax.x > vMax.y)
-		if (vMax.x > vMax.z)
-			max = vMax.x;
-		else
-			max = vMax.z;
-	else if (vMax.y > vMax.z)
-		max = vMax.y;
-	else
-		max = vMax.z;
-
-	if (vMin.x > vMin.y)
-		if (vMin.x > vMin.z)
-			min = vMin.x;
-		else
-			min = vMin.z;
-	else if (vMin.y > vMin.z)
-		min = vMin.y;
-	else
-		min = vMin.z;
+	max = m_BoundingBox.getMax();
+	min = m_BoundingBox.getMin();
+	center = m_BoundingBox.getCenter();
 
 	if (m_SceneObject) {
 
-		m_SceneObject->unitize(min, max);
+		m_SceneObject->unitize(center, min, max);
 	}
+	m_BoundingBox = *(BoundingBox *)(m_SceneObject->getBoundingVolume());
 }
 

@@ -80,8 +80,8 @@ DlgAtomics::update() {
 	std::map<std::pair<std::string, unsigned int>, std::string>::iterator iter;
 	iter = renderer->m_AtomicLabels.begin();
 	for (unsigned int i = 0; i < renderer->m_AtomicLabels.size(); ++i, ++iter) {
-
-		m_propertyGrid1->SetPropertyValue(wxString(iter->second.c_str()),(int)(atValues[i]));
+		if (m_propertyGrid1->GetProperty(wxString(iter->second.c_str())))
+			m_propertyGrid1->SetPropertyValue(wxString(iter->second.c_str()),(int)(atValues[i]));
 	}
 #endif
 }

@@ -511,6 +511,9 @@
     <ClCompile Include="..\src\nau\render\opengl\glDebug.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\irenderable.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">

@@ -4,7 +4,8 @@
 	
 		<scenes>
 			<scene name="CubeLand" >
-				<geometry name = "axis" type = "Axis" scale = 5 />
+				<SCALE x=5 y=5 z=5 />
+				<geometry name = "axis" type = "AXIS" />
 			</scene>
 		</scenes>
 		
@@ -34,7 +35,7 @@
 				<VIEW x="0.0" y="0.0" z="-1" />
 				<UP x="0" y="1" z="0" />
 			</camera>
-			<camera name="Orthographics" >
+			<camera name="Orthographic" >
 				<projection TYPE="ORTHO" LEFT="-1" RIGHT="1" BOTTOM="-1" TOP="1" NEAR="1" FAR="3" />
 				<POSITION x="0" y="0.0" z="2" />
 				<VIEW x="0.0" y="0.0" z="-1" />
@@ -58,8 +59,8 @@
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1" >
 				<scenes>
-					<scene name="CubeLand" />
 					<scene name="Perspective" />
+					<scene name="CubeLand" />
 				</scenes>
 				<camera name="MainCamera" />
 				<viewport name="LeftViewport" />
@@ -70,7 +71,7 @@
 			<pass class="default" name="pass2" >
 				<scenes>
 					<scene name="CubeLand" />
-					<scene name="Orthographics" />
+					<scene name="Orthographic" />
 				</scenes>
 				<camera name="MainCamera" />
 				<viewport name="RightViewport" />

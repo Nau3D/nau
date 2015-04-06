@@ -15,6 +15,7 @@ namespace nau
 			Sphere(void);			
 			~Sphere(void);
 
+			static AttribSet Attribs;
 
 			static const std::string FloatParamNames[];
 			
@@ -27,9 +28,11 @@ namespace nau
 
 			virtual unsigned int translate(const std::string &name);
 
-		private:
+		protected:
 
 			std::vector<float> m_Floats;
+			static bool InitSphere();
+			static bool InitedSphere;
 
 		};
 	};

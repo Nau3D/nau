@@ -106,16 +106,16 @@ OctreeByMatNode::updateNodeTransform(nau::math::mat4 &t)
 
 
 void 
-OctreeByMatNode::unitize(float min, float max) {
+OctreeByMatNode::unitize(vec3 &center, vec3 &min, vec3 &max) {
 	
 	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
 	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 
-		iter->second->unitize(min,max);
+		iter->second->unitize(center, min, max);
 
 	for (int i = OctreeByMatNode::TOPFRONTLEFT; i < OctreeByMatNode::ROOT;  i++) {
 	
 		if (0 != m_pChilds[i]) {
-			m_pChilds[i]->unitize(min,max);
+			m_pChilds[i]->unitize(center, min, max);
 		}
 	}
 	tightBoundingVolume();

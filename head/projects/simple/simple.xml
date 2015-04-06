@@ -2,9 +2,8 @@
 <project name="Simple" width="512" height="512">
 	<assets>
 		<scenes>
-			<scene name="Al" >
-			<!--file name="D:/Nau/head/models/bench.obj" /-->
-				<file name="../../models/bench.obj"/>
+			<scene name="Al" param="UNITIZE">
+				<file name="../../models/apple.obj"/>
 			</scene>
 		</scenes>
 		
@@ -20,12 +19,12 @@
 				<!--projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=100.0 /-->
 				<TYPE value="PERSPECTIVE"/>
 				<FOV value=60/>
-				<NEARP value= 1/>
-				<FARP value= 100/>
-				<POSITION x=-16.4 y=9 z=-14.2 />
+				<NEAR value= 1/>
+				<FAR value= 100/>
+				<POSITION x=-1.69 y=0.774 z=-1.158 />
 				<!--VIEW x=1.0 y=-0.2 z=1.0 /-->
-				<ZX_ANGLE value = 0.707/>
-				<ELEVATION_ANGLE value=-0.3/>
+				<ZX_ANGLE value = 0.877/>
+				<ELEVATION_ANGLE value=-0.27548/>
 			</camera>
 		</cameras>
 		

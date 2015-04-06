@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<materialLib name="Voxels">
+
+	<renderTargets>
+		<renderTarget name ="dummy">
+			<SIZE width="GridSize" height="GridSize" />
+			<colors>
+				<color name="dummy" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+
+	<textures>
+		<texture name="grid">
+			<WIDTH value="GridSize" />
+			<HEIGHT value="GridSize" />
+			<DEPTH value="GridSize" />
+			<INTERNAL_FORMAT value="RGBA" />
+		</texture>	
+	</textures>
+
+	<buffers>
+		<buffer name="atomic">
+			<SIZE value=32 />
+			<CLEAR value="BY_FRAME" />
+		</buffer>
+		<buffer name="position" >
+			<SIZE value = 16 />
+		</buffer>	
+	</buffers>
+	
+	<shaders>
+		<shader name="voxelization" 	vs = "shaders/voxelization.vert" 
+										gs = "shaders/voxelization.geom"
+										ps = "shaders/voxelization.frag" /> 
+										
+		<shader name="showVoxels" 		vs = "shaders/showVoxels.vert" 
+										gs = "shaders/showVoxels.geom"
+										ps = "shaders/showVoxels.frag" /> 
+	</shaders>
+	
+	<materials>
+		<material name ="voxelization">
+			<shader name="voxelization">
+				<values>
+					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
+															id=1 component="UNIT" />
+					<valueof uniform="camXPV"			type="CAMERA" context="xx"
+															component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="camYPV"			type="CAMERA" context="yy"
+															component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="camZPV"			type="CAMERA" context="zz"
+															component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="WindowSize"		type="CURRENT" context="VIEWPORT"
+															component="ABSOLUT_SIZE" />
+					<valueof uniform="M"				type="CURRENT" context="RENDERER"
+															component="MODEL" />
+				</values>
+			</shader>
+			
+			<imageTextures>
+				<imageTexture UNIT=1 texture="grid" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+					<CLEAR value=true/>
+				</imageTexture>
+			</imageTextures>
+			
+			<buffers>	
+				<buffer name="atomic"  >
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+			<state>
+				<CULL_FACE value=0 />
+				<DEPTH_TEST value=0 />
+			</state>	
+		</material>
+	
+		<material name ="showVoxels">
+			<shader name="showVoxels">
+				<values>
+					<valueof uniform="RayOrigin"        type="CURRENT" context="CAMERA" 
+															component="POSITION" />
+					<valueof uniform="FOV"				type="CURRENT" context="CAMERA"
+															component="FOV" />
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+															component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="VM"         		type="CURRENT" context="RENDERER" 
+															component="VIEW_MODEL" />
+					<valueof uniform="grid"				type="CURRENT" context="MATERIAL_TEXTURE"
+															id=1 component="UNIT" />
+					<valueof uniform="WindowSize"		type="CURRENT" context="VIEWPORT"
+															component="ABSOLUT_SIZE" />
+				</values>
+			</shader>
+			
+			<textures>
+				<texture UNIT=1 name="grid" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+			<state>
+				<CULL_FACE value=0 />
+			</state>	
+			
+		</material>
+	</materials>
+	
+</materialLib>

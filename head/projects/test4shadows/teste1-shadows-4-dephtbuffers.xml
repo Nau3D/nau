@@ -76,9 +76,7 @@
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
-				<userAttributes>
-					<TO value="5" />
-				</userAttributes>
+				<TO value="5" />
 				<camera name="MainCamera" />
 				<lights>
 					<light name="Sun" />
@@ -93,10 +91,8 @@
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
-				<userAttributes>
-					<FROM value="5" />
-					<TO value="15" />
-				</userAttributes>
+				<FROM value="5" />
+				<TO value="15" />
 				<camera name="MainCamera" />
 				<lights>
 					<light name="Sun" />
@@ -111,10 +107,8 @@
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
-				<userAttributes>
-					<FROM value="15" />
-					<TO value="50" />
-				</userAttributes>
+				<FROM value="15" />
+				<TO value="50" />
 				<camera name="MainCamera" />
 				<lights>
 					<light name="Sun" />
@@ -129,10 +123,8 @@
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
-				<userAttributes>
-					<FROM value="50" />
-					<TO value="150" />
-				</userAttributes>
+				<FROM value="50" />
+				<TO value="150" />
 				<camera name="MainCamera" />
 				<lights>
 					<light name="Sun" />

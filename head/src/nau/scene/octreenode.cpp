@@ -258,14 +258,14 @@ OctreeNode::updateNodeTransform(nau::math::mat4 &t)
 }
 
 
-void OctreeNode::unitize(float min, float max) {
+void OctreeNode::unitize(vec3 &center, vec3 &min, vec3 &max) {
 	
-	m_pLocalMesh->unitize(min,max);
+	m_pLocalMesh->unitize(center, min, max);
 
 	for (int i = OctreeNode::TOPFRONTLEFT; i < OctreeNode::ROOT;  i++) {
 	
 		if (0 != m_pChilds[i]) {
-			m_pChilds[i]->unitize(min,max);
+			m_pChilds[i]->unitize(center, min, max);
 		}
 	}
 	tightBoundingVolume();

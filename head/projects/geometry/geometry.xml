@@ -5,11 +5,11 @@
 		<scenes>
 			<scene name="CubeLand" type="OctreeByMat">
 				<SCALE x = 1.0 y=0.5 z = 1.0 />
-				<geometry name = "sphere" type = "Sphere" slices=10 stacks=10 material="crateBox">
+				<geometry name = "Sphere" type = "SPHERE" material="crateBox" SLICES=15 STACKS=15 > 
 					<TRANSLATE x =-2.5 y=0 z =0  />
 					<SCALE x=2 y=2 z=2 />
 				</geometry>								
-				<geometry name = "box" type = "Box"  material="crateBox" >
+				<geometry name = "box" type = "BOX"  material="crateBox" >
 					<TRANSLATE x =2.5 y=0 z =0  />
 					<SCALE x=2 y=4 z=2 />
 					<ROTATE x=0 y=1 z=0 w=45 />
@@ -17,7 +17,7 @@
 				</geometry>
 			</scene>
 			<scene name="Axis">
-				<geometry name = "axis" type = "Axis"  >
+				<geometry name = "axis" type = "AXIS"  >
 					<SCALE x=5 y=5 z =5 />
 				</geometry>
 			</scene>
@@ -56,7 +56,6 @@
 	<pipelines>
 		<pipeline name="fixedfunction" default="true">
 			<pass class="default" name="pass1" axis="5">
-				<preScript name="pre1" />
 				<scenes>
 					<scene name="CubeLand" />
 					<scene name="Axis" />
@@ -69,7 +68,6 @@
 				<materialMaps>
 					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
 				</materialMaps>
-				<postScript name="pre2" />
 			</pass>
 			
 		</pipeline>

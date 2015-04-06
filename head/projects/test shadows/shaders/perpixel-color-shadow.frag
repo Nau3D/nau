@@ -28,10 +28,7 @@ void main()
 	
 	if (NdotL > 0.01) {
 
-		if (textureProj (shadowMap, projShadowCoord) < 1.0) 
-			color += diff  * NdotL * textureProj (shadowMap, projShadowCoord) ;
-		else
-			color += diff  * NdotL ;
+		color += diff  * NdotL * textureProj (shadowMap, projShadowCoord) ;
 		
 	}
 	

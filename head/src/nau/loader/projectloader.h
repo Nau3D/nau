@@ -38,6 +38,8 @@ namespace nau
 
 			ProjectLoader(void);
 
+			// load the constants section
+			static void loadConstants(TiXmlHandle &hRoot);
 			// load the assets section
 			static void loadAssets (TiXmlHandle &hRoot, std::vector<std::string> &matLib);
 			// load the pipelines section
@@ -51,16 +53,34 @@ namespace nau
 			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *lib, std::string *item);
 			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *fullName);
 
-			// read attributes
+			// read child tags
+			static void readChildTags(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem, bool showOnlyExcluded=false);
 			static void readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem);
+			static void readAttributeList(std::string parent, 
+											AttributeValues *anObj, 
+											std::map<std::string, nau::Attribute> attributes, 
+											nau::AttribSet &attribs, 
+											std::vector<std::string> &excluded, 
+											TiXmlElement *pElem);
 			// get valid attribute values 
 			static std::string &getValidValuesString(Attribute &a, void *value);
-			// read a particular attrib
-			static void *readAttr(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet &attribs);
+			// read a child tag 
+			static void *readChildTag(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet &attribs);
+			// read an attribute 
+			//static void *readAttribute(const char *name, TiXmlElement *p, Enums::DataType type, AttribSet &attribs);
+			static void *readAttribute(std::string tag, Attribute &attr, TiXmlElement *p, Enums::DataType type);
 			// check if a tring is in a vector
 			static bool isExcluded(std::string what, std::vector<std::string> &excluded);
 			// get all keys in a vector
 			static void getKeystoVector(std::map<std::string, Attribute >, std::vector<std::string> *result);
+
+			// checks if a constant has been defined
+			static bool isConstantDefined(std::string s);
+
+			// read single attributes. values can be numbers of constant labels
+			static bool readFloatAttribute(TiXmlElement *p, std::string label, float *value);
+			static bool readIntAttribute(TiXmlElement *p, std::string label, int *value);
+			static bool readUIntAttribute(TiXmlElement *p, std::string label, unsigned int *value);
 
 			// Asset Loading
 			static void loadUserAttrs(TiXmlHandle handle);
@@ -138,9 +158,12 @@ namespace nau
 			static bvec4 s_Dummy_bvec4;
 			static float s_Dummy_float;
 			static int s_Dummy_int;
+			static unsigned int s_Dummy_uint;
 			static bool s_Dummy_bool;
 			static uivec3 s_Dummy_uivec3;
 			static uivec2 s_Dummy_uivec2;
+
+			static std::map<std::string, float> s_Constants;
 		};
 	};
 };

@@ -283,36 +283,19 @@ OctreeByMatScene::getType (void) {
 void OctreeByMatScene::unitize() {
 
 	unsigned int i;
-	float max,min;
-	nau::math::vec3 vMax,vMin;
+	nau::math::vec3 vMax, vMin, vCenter;;
 	
 	vMax = m_BoundingBox.getMax();
 	vMin = m_BoundingBox.getMin();
+	vCenter = m_BoundingBox.getCenter();
 
-	if (vMax.x > vMax.y)
-		if (vMax.x > vMax.z)
-			max = vMax.x;
-		else 
-			max = vMax.z;
-	else if (vMax.y > vMax.z)
-		max = vMax.y;
-	else
-		max = vMax.z;
+	m_BoundingBox.set(vec3(-1), vec3(1));
 
-	if (vMin.x > vMin.y)
-		if (vMin.x > vMin.z)
-			min = vMin.x;
-		else
-			min = vMin.z;
-	else if (vMin.y > vMin.z)
-		min = vMin.y;
-	else
-		min = vMin.z;
 
 	if (m_SceneObjects.size()) {
 
 		for ( i = 0; i < m_SceneObjects.size(); i++) 
-			m_SceneObjects[i]->unitize(min,max);
+			m_SceneObjects[i]->unitize(vCenter, vMin, vMax);
 
 		m_BoundingBox.intersect(m_SceneObjects[0]->getBoundingVolume());
 		for (i = 1; i < m_SceneObjects.size(); i++)
@@ -321,7 +304,7 @@ void OctreeByMatScene::unitize() {
 
 	// if the scene is in a octree
 	if (0 != m_pGeometry) {
-		m_pGeometry->unitize(min,max);
+		m_pGeometry->unitize(vCenter, vMin, vMax);
 
 	}
 

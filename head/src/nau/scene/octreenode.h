@@ -65,7 +65,7 @@ namespace nau
 			virtual void writeSpecificData (std::fstream &f);
 			virtual void readSpecificData (std::fstream &f);
 			void tightBoundingVolume();
-			void OctreeNode::unitize(float min, float max);
+			void OctreeNode::unitize(vec3 &center, vec3 &min, vec3 &max);
 			
 			virtual ~OctreeNode(void);
 

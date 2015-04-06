@@ -190,7 +190,7 @@ Attribute::getOptionValue(std::string &s) {
 		if (m_ListString[i] == s)
 			return m_ListValues[i];
 	}
-	return 0;
+	return -1;
 }
 
 

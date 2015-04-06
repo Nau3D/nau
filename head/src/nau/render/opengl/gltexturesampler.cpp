@@ -9,19 +9,19 @@ GLTextureSampler::InitGL() {
 	// ENUM
 	Attribs.listAdd("WRAP_S", "REPEAT", GL_REPEAT);
 	Attribs.listAdd("WRAP_S", "CLAMP_TO_EDGE", GL_CLAMP_TO_EDGE);
-	Attribs.listAdd("WRAP_S", "CLAMP_TO_BOREDER", GL_CLAMP_TO_BORDER);
+	Attribs.listAdd("WRAP_S", "CLAMP_TO_BORDER", GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_S", "MIRRORED_REPEAT", GL_MIRRORED_REPEAT);
 	Attribs.setDefault("WRAP_S", new int(GL_REPEAT));
 
 	Attribs.listAdd("WRAP_T", "REPEAT", GL_REPEAT);
 	Attribs.listAdd("WRAP_T", "CLAMP_TO_EDGE", GL_CLAMP_TO_EDGE);
-	Attribs.listAdd("WRAP_T", "CLAMP_TO_BOREDER", GL_CLAMP_TO_BORDER);
+	Attribs.listAdd("WRAP_T", "CLAMP_TO_BORDER", GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_T", "MIRRORED_REPEAT", GL_MIRRORED_REPEAT);
 	Attribs.setDefault("WRAP_T", new int(GL_REPEAT));
 
 	Attribs.listAdd("WRAP_R", "REPEAT", GL_REPEAT);
 	Attribs.listAdd("WRAP_R", "CLAMP_TO_EDGE", GL_CLAMP_TO_EDGE);
-	Attribs.listAdd("WRAP_R", "CLAMP_TO_BOREDER", GL_CLAMP_TO_BORDER);
+	Attribs.listAdd("WRAP_R", "CLAMP_TO_BORDER", GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_R", "MIRRORED_REPEAT", GL_MIRRORED_REPEAT);
 	Attribs.setDefault("WRAP_R", new int(GL_REPEAT));
 
@@ -160,8 +160,6 @@ GLTextureSampler::setPrope(EnumProperty prop, int value) {
 			v2 = GL_LINEAR;
 
 	}
-	else 
-		v2 = value;
 
 	m_EnumProps[prop] = v2;
 

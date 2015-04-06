@@ -382,9 +382,9 @@ Mesh::getType (void) {
 
 
 void 
-Mesh::unitize(float min, float max) {
+Mesh::unitize(vec3 &center, vec3 &min, vec3 &max) {
 
-	m_VertexData->unitize(min,max);
+	m_VertexData->unitize(center, min,max);
 }
 
 

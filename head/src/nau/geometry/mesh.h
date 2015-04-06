@@ -50,7 +50,7 @@ namespace nau
 			void setDrawingPrimitive(unsigned int aDrawingPrimitive);
 
 			void prepareTriangleIDs(unsigned int sceneObjectID);
-			void unitize(float min, float max);
+			void unitize(vec3 &center, vec3 &min, vec3 &max);
 
 			void getMaterialNames(std::set<std::string> *nameList);
 			void addMaterialGroup (nau::material::MaterialGroup*, int offset = 0);

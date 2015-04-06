@@ -26,6 +26,7 @@ namespace nau
 
 			FLOAT3_PROP(BB_MIN, 0);
 			FLOAT3_PROP(BB_MAX, 1);
+			FLOAT3_PROP(BB_CENTER, 2);
 
 			ENUM_PROP(TRANSFORM_ORDER, 0);
 

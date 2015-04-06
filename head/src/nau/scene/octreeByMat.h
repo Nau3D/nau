@@ -41,7 +41,7 @@ namespace nau
 			int getNumberOfVertices () { return 0; };
 
 			nau::math::vec3& getVertice (unsigned int v);
-			void unitize(float min, float max);
+			void unitize(vec3 &center, vec3 &min, vec3 &max);
 			void _compile (void);
 			void _findVisibleSceneObjects (std::vector<nau::scene::SceneObject*> &m_vReturnVector,
 																nau::geometry::Frustum &aFrustum, 

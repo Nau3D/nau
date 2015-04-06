@@ -5,7 +5,7 @@
 		<renderTarget name="test">
 			<SIZE width=1024 height=1024 />
 			<LAYERS value=2/>
-			<CLEAR_VALUES r=1 g=1 b=1.5 />
+			<CLEAR_VALUES r=1 g=1 b=1.0 />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
