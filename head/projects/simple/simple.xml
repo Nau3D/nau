@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="Al" param="UNITIZE">
-				<file name="../../models/apple.obj"/>
+				<file name="../../models/al.obj"/>
 			</scene>
 		</scenes>
 		

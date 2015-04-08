@@ -14,7 +14,7 @@ namespace nau
 		{
 		public:
 			// Load Scene
-			static void loadScene (nau::scene::IScene *aScene, std::string &aFilename);
+			static void loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::string &params);
 			// Write Scene
 			static void writeScene (nau::scene::IScene *aScene, std::string &aFilename);
 

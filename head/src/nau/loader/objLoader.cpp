@@ -2187,7 +2187,7 @@ std::vector<nau::math::vec4>* readGL2FArray(GLfloat* a, unsigned int arraysize)
 	return v;
 }
 
-void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
+void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::string &params)
 {
 	// TODO
 	// 
@@ -2211,6 +2211,12 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 	fprintf(out,"Starting intermediate reading\n");
 	fflush(out);
 #endif
+
+	unsigned int primitive;
+	if (params.find("USE_ADJACENCY") != std::string::npos)
+		primitive = IRenderable::TRIANGLES_ADJACENCY;
+	else
+		primitive = IRenderable::TRIANGLES;
 
 	// Intermediate Vertices
 	// Number of Vertices
@@ -2606,6 +2612,8 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 
 		// Assign it to Material Group
 		aMatGroup->setIndexList(iArr);
+		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
+			aMatGroup->getIndexData().useAdjacency(true);
 
 		#ifdef OBJLOADER_DEBUG
 			fprintf(out,"Adding MatGroup to Renderable\n");

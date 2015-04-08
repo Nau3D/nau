@@ -1683,7 +1683,9 @@ void
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
 	std::vector<std::string> excluded = {"mode", "scenes", "camera", "lights", "viewport", "renderTarget",
-		"materialMaps", "injectionMaps", "texture", "material", "depth", "stencil", "color"};
+		"materialMaps", "injectionMaps", "texture", "material", "depth", "stencil", "color", 
+		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
+		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes"};
 	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),true);
 }
 

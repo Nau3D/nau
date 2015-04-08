@@ -200,8 +200,8 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 			m_Viewport = new Viewport();
 			m_UseRT = true;
 		}
-		setRTSize(rt->getWidth(), rt->getHeight());
-		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getClearValues());
+		setRTSize(rt->getPropui2(RenderTarget::SIZE));
+		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(RenderTarget::CLEAR_VALUES));
 	}
 	m_RenderTarget = rt;
 
@@ -219,11 +219,13 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, o_OutputPBO[i]);
 			// need to allow different types
-			glBufferData(GL_PIXEL_UNPACK_BUFFER, rt->getWidth()*rt->getHeight()*rt->getTexture(i)->getPropi(Texture::ELEMENT_SIZE), 0, GL_STREAM_READ);
+			nau::math::uivec2 vec2;
+			vec2 = rt->getPropui2(RenderTarget::SIZE);
+			glBufferData(GL_PIXEL_UNPACK_BUFFER, vec2.x * vec2.y * rt->getTexture(i)->getPropi(Texture::ELEMENT_SIZE), 0, GL_STREAM_READ);
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
 			optix::Buffer b = o_Context->createBufferFromGLBO(RT_BUFFER_OUTPUT, o_OutputPBO[i]);
-			b->setSize(rt->getWidth(), rt->getHeight());
+			b->setSize(vec2.x, vec2.y);
 			// same here (types)
 			b->setFormat(getOptixFormat(rt->getTexture(i)));
 
@@ -323,11 +325,12 @@ PassOptix::doPass (void)
 	glGetError();
 	glFinish();
 
+	nau::math::uivec2 vec2 = m_RenderTarget->getPropui2(RenderTarget::SIZE);
 	try {
 		PROFILE("Optix");
 
 		o_Context->validate();
-		o_Context->launch(0, m_RenderTarget->getWidth(), m_RenderTarget->getHeight());
+		o_Context->launch(0, vec2.x, vec2.y);
 	} 
 	catch(optix::Exception& e) {
 		NAU_THROW("Optix Error: Launching Kernel in pass %s [%s]", m_Name.c_str(), e.getErrorString().c_str());
@@ -340,7 +343,7 @@ PassOptix::doPass (void)
 		glBindTexture(GL_TEXTURE_2D, m_RenderTarget->getTexture(i)->getPropi(Texture::ID));
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 
-						m_RenderTarget->getWidth(), m_RenderTarget->getHeight(),
+						vec2.x, vec2.y,
 						m_RenderTarget->getTexture(i)->getPrope(Texture::FORMAT),
 						m_RenderTarget->getTexture(i)->getPrope(Texture::TYPE), 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
