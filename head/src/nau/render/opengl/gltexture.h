@@ -28,6 +28,8 @@ namespace nau
 			//! builds a texture with the attribute parameters previously set
 			virtual void build();
 
+			virtual void clear();
+			virtual void clearLevel(int l);
 			//void enableCompareToTexture (void);
 			//void disableCompareToTexture (void);
 			//void enableObjectSpaceCoordGen (void);

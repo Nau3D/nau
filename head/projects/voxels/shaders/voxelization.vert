@@ -3,11 +3,16 @@
 uniform mat4 M;
 
 in vec4 position;
-out vec4 positionV;
+in vec3 normal;
+in vec2 texCoord0;
+
+out vec3 normalV;
+out vec2 texCoordV;
 
 void main() {
 	
 	gl_Position = M * position;
-	positionV = M * position;
+	normalV = normal;
+	texCoordV = texCoord0;
 }
 

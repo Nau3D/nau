@@ -90,6 +90,10 @@ namespace nau
 			virtual void restore(unsigned int unit) = 0;
 			//! builds a texture with the attribute parameters previously set
 			virtual void build() = 0;
+
+			virtual void clear() = 0;
+			virtual void clearLevel(int l) = 0;
+
 			virtual ~Texture(void);
 
 		protected:

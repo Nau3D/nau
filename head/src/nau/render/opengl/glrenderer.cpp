@@ -847,12 +847,17 @@ GLRenderer::drawGroup (MaterialGroup* aMatGroup) {
 		size = indexData.getIndexSize();
 
 		if (size != 0) {
-		
-			glDrawElements(drawPrimitive, size, GL_UNSIGNED_INT, 0);
+			if (m_UIntProps[IRenderer::INSTANCE_COUNT])
+				glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, m_UIntProps[IRenderer::INSTANCE_COUNT]);
+			else
+				glDrawElements(drawPrimitive, size, GL_UNSIGNED_INT, 0);
 		}
 		else {
 			size = aRenderable.getVertexData().getNumberOfVertices();
-			glDrawArrays(drawPrimitive, 0, size);
+			if (m_UIntProps[IRenderer::INSTANCE_COUNT])
+				glDrawArraysInstanced(drawPrimitive, 0, size, m_UIntProps[IRenderer::INSTANCE_COUNT]);
+			else
+				glDrawArrays(drawPrimitive, 0, size);
 		}
 	}
 

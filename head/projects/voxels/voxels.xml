@@ -2,17 +2,24 @@
 <project name="Voxels" width=512 height=512>
 	<assets>
 		<constants>
-			<constant name="GridSize" value = 128 />
+			<constant name="GridSize" value = 256 />
+			<constant name="GridVolume" value = 16777216 />
 		</constants>
+		<attributes>
+			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
+		</attributes>
 		<scenes>
 			<scene name="MainScene" param="UNITIZE">
-				<file name="../../models/apple.obj"/>
+				<file name="../../models/bunny.obj"/>
 			</scene>
 			<scene name="VoxelTest" param="UNITIZE">
 				<file name="../../models/voxeltest.obj"/>
 			</scene>
 			<scene name="Bench" param="UNITIZE">
 				<file name="../../models/bench.obj"/>
+			</scene>
+			<scene name="Cube">
+				<file name="../../models/cube2.obj"/>
 			</scene>
 			<scene name="Dummy" >
 				<buffers name="positions" primitive="POINTS" material="showRays">
@@ -84,9 +91,9 @@
 	
 	
 	<pipelines>
-		<pipeline name="voxels" default="true">
+		<pipeline name="voxels">
 			<pass class="default" name="voxelization">
-				<!--mode value="RUN_ONCE" /-->
+				<mode value="RUN_ONCE" />
 				<viewport name="Grid"/>
 				<camera name="MainCamera" />
 				<scenes>
@@ -113,6 +120,61 @@
 				</materialMaps>				
 			</pass>
 		</pipeline>
+		<pipeline name="voxels2" default="true">
+			<pass class="default" name="voxelization">
+				<mode value="RUN_ONCE" />
+				<viewport name="Grid"/>
+				<camera name="MainCamera" />
+				<scenes>
+					<scene name="Bench" />
+				</scenes>
+				<color clear=false enable=false />
+				<depth test=false write=false />
+				<renderTarget name="dummy" fromLibrary="Voxels" />
+				<!--process>
+					<texture name="gridColor" fromLibrary="Voxels" preClear=true postMipmap=true />
+					<texture name="gridNormal" fromLibrary="Voxels" preClear=true postMipmap=true />
+					<buffer name="atomic" fromLibrary="Voxels" preClear=true />
+				</process-->	
+				<injectionMaps>
+					<map toMaterial="*" >
+						<shader fromMaterial ="voxelization" fromLibrary="Voxels" />
+						<state name="voxelization" fromLibrary="Voxels" />
+						<imageTextures>
+							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 >
+								<ACCESS value="WRITE_ONLY" />
+								<LEVEL value=0 />
+								<!--CLEAR value=true/-->
+							</imageTexture>
+							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 >
+								<ACCESS value="WRITE_ONLY" />
+								<LEVEL value=0 />
+								<!--CLEAR value=true/-->
+							</imageTexture>
+						</imageTextures>
+						<buffers>	
+							<buffer name="atomic"  fromLibrary="Voxels">
+								<TYPE value="ATOMIC_COUNTER" />
+								<BINDING_POINT value="1" />
+							</buffer>
+						</buffers>	
+					</map>
+				</injectionMaps>
+			</pass>
+			
+			<pass class="default" name="showVoxels2">
+				<scenes instances="GridVolume">
+					<scene name="Cube" />
+				</scenes>	
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
+				<materialMaps>			
+					<map fromMaterial="*" 
+						 toLibrary="Voxels" toMaterial="showVoxels2" />
+				</materialMaps>				
+			</pass>
+		</pipeline>
+		
 		<pipeline name="debug">
 			<pass class="default" name="voxelization">
 				<viewport name="MainViewport"/>

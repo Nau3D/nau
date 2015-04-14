@@ -7,6 +7,7 @@ uniform mat4 VM;
 uniform float FOV;
 uniform vec2 WindowSize;
 uniform vec3 RayOrigin;
+uniform int GridSize;
 
 
 struct Ray {
@@ -36,7 +37,7 @@ bool IntersectBox(Ray r, AABB aabb, out float t0, out float t1)
 void main()
 {
 	
-	int numSamples = int(WindowSize.x);
+	int numSamples = GridSize;//64;//int(WindowSize.x);
 	float stepSize = 1/float(numSamples);
 	float FocalLength = 1.0/ tan(radians(FOV*0.5));
     vec3 rayDirection;

@@ -47,6 +47,9 @@ IRenderer::Init() {
 	// VEC2
 	Attribs.add(Attribute(MOUSE_CLICK, "MOUSE_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
 
+	//UINT
+	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
+
 	NAU->registerAttributes("RENDERER", &Attribs);
 	// MOVE TO irenderable.h
 	//Attribs.add(Attribute(DRAW_PRIMITIVE, "DRAW_PRIMITIVE", Enums::DataType::ENUM, true));

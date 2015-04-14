@@ -68,7 +68,7 @@ namespace nau
 			static void *readChildTag(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet &attribs);
 			// read an attribute 
 			//static void *readAttribute(const char *name, TiXmlElement *p, Enums::DataType type, AttribSet &attribs);
-			static void *readAttribute(std::string tag, Attribute &attr, TiXmlElement *p, Enums::DataType type);
+			static void *readAttribute(std::string tag, Attribute &attr, TiXmlElement *p);
 			// check if a tring is in a vector
 			static bool isExcluded(std::string what, std::vector<std::string> &excluded);
 			// get all keys in a vector

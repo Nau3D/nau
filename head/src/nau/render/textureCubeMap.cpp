@@ -1,11 +1,11 @@
 #include "nau/render/textureCubeMap.h"
 #include "nau/config.h"
 
+#include "nau/loader/textureloader.h"
 #ifdef NAU_OPENGL
 #include "nau/render/opengl/gltextureCubeMap.h"
 #endif
 
-#include "nau/loader/textureloader.h"
 
 
 using namespace nau::render;
@@ -13,8 +13,8 @@ using namespace nau::loader;
 
 
 TextureCubeMap*
-TextureCubeMap::Create (std::vector<std::string> files, std::string label, bool mipmap)
-{
+TextureCubeMap::Create (std::vector<std::string> files, std::string label, bool mipmap) {
+
 	TextureLoader *loader[6];
 	unsigned char* data[6];
 	
@@ -47,12 +47,13 @@ TextureCubeMap::Create (std::vector<std::string> files, std::string label, bool 
 	return t;
 }
 
+
 TextureCubeMap::TextureCubeMap(std::string label, std::vector<std::string> files, 
 							   std::string internalFormat, std::string aFormat, 
 							   std::string aType, int width) :
 	Texture(label), //"TEXTURE_CUBE_MAP", internalFormat, aFormat, aType,width,width),
-	m_Files(6)
-{
+	m_Files(6) {
+
 	for (int i = 0; i < 6; i++) 
 		m_Files[i] = files[i];
 }
@@ -68,31 +69,35 @@ TextureCubeMap::TextureCubeMap(std::string label, std::vector<std::string> files
 //}
 
 
-TextureCubeMap::~TextureCubeMap(){
+TextureCubeMap::~TextureCubeMap() {
 
 }
 
+
 std::string&
-TextureCubeMap::getLabel ()
-{
+TextureCubeMap::getLabel () {
+
 	return m_Label;
 }
 
+
 void
-TextureCubeMap::setLabel (std::string label)
-{
+TextureCubeMap::setLabel (std::string label) {
+
 	m_Label = label;
 }
 
+
 std::string&
-TextureCubeMap::getFile (TextureCubeMapFaces i)
-{
+TextureCubeMap::getFile (TextureCubeMapFaces i) {
+
 	return m_Files[i];
 }
+ 
 
 void
-TextureCubeMap::setFile (std::string file, TextureCubeMapFaces i)
-{
+TextureCubeMap::setFile (std::string file, TextureCubeMapFaces i) {
+
 	m_Files[i] = file;
 }
 

@@ -52,6 +52,9 @@ namespace nau
 			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts) = 0;
 			virtual void restore(unsigned int unit) = 0;
 
+			virtual void clear() = 0;
+			virtual void clearLevel(int l) = 0;
+
 			//virtual void enableCompareToTexture (void) = 0;
 			//virtual void disableCompareToTexture (void) = 0;
 

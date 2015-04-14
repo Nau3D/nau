@@ -5,7 +5,6 @@ layout(triangle_strip, max_vertices = 24) out;
 
 uniform mat4 PVM;
 
-
 vec4 objCube[8]; // Object space coordinate of cube corner
 vec4 ndcCube[8]; // Normalized device coordinate of cube corner
 ivec4 faces[6];  // Vertex indices of the cube faces

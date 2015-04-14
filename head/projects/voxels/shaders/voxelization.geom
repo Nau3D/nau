@@ -6,11 +6,14 @@ layout(triangle_strip, max_vertices = 3) out;
 uniform mat4 camXPV, camYPV, camZPV;
 uniform vec2 WindowSize;
 
-in vec4 positionV[3];
+in vec3 normalV[3];
+in vec2 texCoordV[3];
 
 out vec4 worldPos;
 out vec4 bBox;
-out vec4 color;
+out vec4 colorG;
+out vec3 normalG;
+out vec2 texCoordG;
 
 float pixelDiagonal = 1.0/WindowSize.x;
 
@@ -28,40 +31,30 @@ void expandTriangle(inout vec4 screenPos[3]) {
 void main() {
 
 	vec4 screenPos[3];
-	vec3 po0 = positionV[0].xyz;
-	vec3 po1 = positionV[1].xyx;
-	vec3 po2 = positionV[2].xyz;
-	vec3 p1 = po1 - po0;
-	vec3 p2 = po2 - po0;
-	// vec3 p1 = gl_in[1].gl_Position.xyx - gl_in[0].gl_Position.xyz;
-	// vec3 p2 = gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz;
-	vec3 normal = abs(cross(p1,p2));
-	
-	mat4 PV;
-	float m = max(normal.x, max(normal.y,normal.z));
-	
+	vec3 p1 = gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz;
+	vec3 p2 = gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz;
+	vec3 normal = abs(cross(p2,p1));
+
+	float m = max(normal.z, max(normal.y, normal.x));
+
 	if (m == normal.x) {
 		screenPos[0] = camXPV * gl_in[0].gl_Position;
 		screenPos[1] = camXPV * gl_in[1].gl_Position;
 		screenPos[2] = camXPV * gl_in[2].gl_Position;
-		color = vec4(1,0,0,1);
+		colorG = vec4(1,0,0,1);
 	}
 	else if (m == normal.y) {
 		screenPos[0] = camYPV * gl_in[0].gl_Position;
 		screenPos[1] = camYPV * gl_in[1].gl_Position;
 		screenPos[2] = camYPV * gl_in[2].gl_Position;
-		color = vec4(0,1,0,1);
+		colorG = vec4(0,1,0,1);
 	}
 	else /*if (m == normal.z)*/ {
 		screenPos[0] = camZPV * gl_in[0].gl_Position;
 		screenPos[1] = camZPV * gl_in[1].gl_Position;
 		screenPos[2] = camZPV * gl_in[2].gl_Position;
-		color = vec4(0,0,1,1);
+		colorG = vec4(0,0,1,1);
 	}
-	
-	// screenPos[0] = PV * gl_in[0].gl_Position;
-	// screenPos[1] = PV * gl_in[1].gl_Position;
-	// screenPos[2] = PV * gl_in[2].gl_Position;
 	
 	// Calculate screen space bounding box to be used for clipping in the fragment shader.
 	bBox.xy = min(screenPos[0].xy, min(screenPos[1].xy, screenPos[2].xy));
@@ -71,22 +64,23 @@ void main() {
 	
 	// Expand triangle for conservative rasterization.
 	expandTriangle(screenPos);
-
-	
-	// screenPos[0] /= screenPos[0].w;	
-	// screenPos[1] /= screenPos[1].w;	
-	// screenPos[2] /= screenPos[2].w;	
 	
 	worldPos = gl_in[0].gl_Position;
 	gl_Position = screenPos[0];
+	normalG = normalV[0];
+	texCoordG = texCoordV[0];
 	EmitVertex();
 	
 	worldPos = gl_in[1].gl_Position;
 	gl_Position = screenPos[1];
+	normalG = normalV[1];
+	texCoordG = texCoordV[1];
 	EmitVertex();
 
 	worldPos = gl_in[2].gl_Position;
 	gl_Position = screenPos[2];
+	normalG = normalV[2];
+	texCoordG = texCoordV[2];
 	EmitVertex();
 	
 	EndPrimitive();

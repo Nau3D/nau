@@ -112,3 +112,22 @@ GLTextureCubeMap::restore(unsigned int aUnit)
 void 
 GLTextureCubeMap::build() {}
 
+
+void
+GLTextureCubeMap::clear() {
+
+#if NAU_OPENGL_VERSION >= 440
+	for (int i = 0; i < m_IntProps[LEVELS]; ++i)
+		glClearTexImage(m_UIntProps[ID], i, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
+#endif
+}
+
+
+void
+GLTextureCubeMap::clearLevel(int l) {
+
+#if NAU_OPENGL_VERSION >= 440
+	if (l < m_IntProps[LEVELS])
+		glClearTexImage(m_UIntProps[ID], l, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
+#endif
+}

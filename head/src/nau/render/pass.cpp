@@ -100,6 +100,7 @@ Pass::Init() {
 
 	//UINT
 	Attribs.add(Attribute(STENCIL_OP_MASK, "STENCIL_OP_MASK", Enums::DataType::UINT, false, new unsigned int(255)));
+	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
 
 	NAU->registerAttributes("PASS", &Attribs);
 
@@ -224,6 +225,8 @@ Pass::prepare (void) {
 
 	setupCamera();
 	setupLights();
+
+	RENDERER->setPropui(IRenderer::INSTANCE_COUNT, m_UIntProps[INSTANCE_COUNT]);
 }
 
 

@@ -268,11 +268,11 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 
 
 void *
-ProjectLoader::readAttribute(std::string tag, Attribute &attrib, TiXmlElement *p, Enums::DataType type) {
+ProjectLoader::readAttribute(std::string tag, Attribute &attrib, TiXmlElement *p) {
 
 	std::string s;
 	const char *name = tag.c_str();
-
+	Enums::DataType type = attrib.getType();
 	switch (type) {
 	
 		case Enums::FLOAT:
@@ -398,10 +398,8 @@ ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::A
 				NAU_THROW("File %s\nElement %s: \"%s\" is a read-only attribute", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name());
 
 			int id = a.getId();
-			Enums::DataType type = a.getType();
-			//value = readAttribute(a.getName().c_str(), pElem, type, attribs);
-			value = readAttribute(a.getName(), a, pElem, type);
-			if (!anObj->isValid(id, type, value))
+			value = readAttribute(a.getName(), a, pElem);
+			if (!anObj->isValid(id, a.getType(), value))
 				NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(),attrib->Name(), getValidValuesString(a,value).c_str());
 
 			anObj->setProp(id, a.getType(), value);
@@ -438,9 +436,8 @@ ProjectLoader::readAttributeList(std::string parent, AttributeValues *anObj, std
 				NAU_THROW("File %s\nElement %s: \"%s\" is a read-only attribute", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name());
 
 			int id = a.getId();
-			Enums::DataType type = a.getType();
-			value = readAttribute(attrib->Name(), a, pElem, type);
-			if (value == NULL || !anObj->isValid(id, type, value))
+			value = readAttribute(attrib->Name(), a, pElem);
+			if (value == NULL || !anObj->isValid(id, a.getType(), value))
 				NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(),attrib->Name(), getValidValuesString(a,value).c_str());
 
 			anObj->setProp(id, a.getType(), value);
@@ -1468,6 +1465,15 @@ ProjectLoader::loadPassScenes(TiXmlHandle hPass, Pass *aPass)
 {
 	TiXmlElement *pElem;
 
+	//if (aPass->getName() == "voxels2#showVoxels2")
+	//	aPass->setPropui(Pass::INSTANCE_COUNT, 64*64*64);
+	pElem = hPass.FirstChild("scenes").Element();
+	AttribSet *attrs = aPass->getAttribSet();
+	Attribute attr = attrs->get(Pass::INSTANCE_COUNT, Enums::UINT);
+	unsigned int *ui = (unsigned int *)readAttribute("instances", attr, pElem);
+	if (ui != NULL)
+		aPass->setPropui(Pass::INSTANCE_COUNT, *ui);
+
 	pElem = hPass.FirstChild ("scenes").FirstChild ("scene").Element();
 	if (0 == pElem && aPass->getClassName() != "compute" && aPass->getClassName() != "quad") {
 		NAU_THROW("File %s\nPass %s\nNo Scene element found", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
@@ -1682,8 +1688,8 @@ Passes can take user attributes
 void 
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
-	std::vector<std::string> excluded = {"mode", "scenes", "camera", "lights", "viewport", "renderTarget",
-		"materialMaps", "injectionMaps", "texture", "material", "depth", "stencil", "color", 
+	std::vector<std::string> excluded = {"mode", "scene", "scenes", "camera", "lights", "viewport", "renderTarget",
+		"materialMaps", "injectionMaps", "texture", "material", "depth", "stencil", "color", "rays", "hits",
 		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
 		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes"};
 	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),true);
@@ -2816,7 +2822,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 	pElem = hPass.FirstChild ("injectionMaps").FirstChild ("map").Element();
 	for ( ; pElem != NULL; pElem = pElem->NextSiblingElement()) {
 	
-		std::vector<std::string> ok = {"state", "shader", "color", "textures", "buffers"};
+		std::vector<std::string> ok = {"state", "shader", "color", "textures", "imageTextures", "buffers"};
 		std::string s = aPass->getName() + " injectionMaps";
 		checkForNonValidChildTags(s, ok, pElem);
 
@@ -2923,23 +2929,44 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 					std::vector <std::string> excluded;
 					readChildTags(s, (AttributeValues *)dstMat->getTextureSampler(unit), TextureSampler::Attribs,
 						excluded, pElemAux);
-					//TiXmlElement *p = pElemAux->FirstChildElement();
-					//Attribute a;
-					//void *value;
-					//while (p) {
-					//	// trying to define an attribute that does not exist		
-					//	if (attribs.count(p->Value()) == 0)
-					//		NAU_THROW("Pass %s: Texture %s: %s is not an attribute", aPass->getName().c_str(),  s_pFullName, p->Value());
-					//	// trying to set the value of a read only attribute
-					//	a = attribs[p->Value()];
-					//	if (a.m_ReadOnlyFlag)
-					//		NAU_THROW("Pass %s: Texture %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(),  s_pFullName, p->Value());
-
-					//	value = readChildTag(s_pFullName, p, a.m_Type, TextureSampler::Attribs);
-					//	dstMat->getTextureSampler(unit)->setProp(a.m_Id, a.m_Type, value);
-					//	p = p->NextSiblingElement();
-					//}
 				}	
+			}
+		}
+
+		pElemNode = pElem->FirstChild("imageTextures");
+		if (pElemNode) {
+			pElemAux = pElemNode->FirstChildElement("imageTexture");
+			for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement()) {
+
+				const char *pName = pElemAux->Attribute("texture");
+				const char *pLib = pElemAux->Attribute("fromLibrary");
+
+
+				if (0 == pName || 0 == pLib) {
+					NAU_THROW("Image Texture map error in pass: %s", aPass->getName().c_str());
+				}
+
+				int unit;
+				if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("toUnit", &unit))
+					NAU_THROW("Image Texture unit not specified in material map, in pass: %s", aPass->getName().c_str());
+
+				sprintf(s_pFullName, "%s::%s", pLib, pName);
+				if (!RESOURCEMANAGER->hasTexture(s_pFullName))
+					NAU_THROW("Texture %s is not defined in lib %s, in pass: %s", pName, pLib, aPass->getName().c_str());
+
+				std::vector<std::string>::iterator iter;
+				for (iter = names->begin(); iter != names->end(); ++iter) {
+
+					std::string name = *iter;
+					dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+					Texture *t = RESOURCEMANAGER->getTexture(s_pFullName);
+					dstMat->attachImageTexture(t->getLabel(), unit, t->getPropi(Texture::ID));
+
+					std::string s = aPass->getName() + " injectionMaps: imageTexture unit " + std::to_string(unit);
+					std::vector <std::string> excluded;
+					readChildTags(s, (AttributeValues *)dstMat->getImageTexture(unit), ImageTexture::Attribs,
+						excluded, pElemAux);
+				}
 			}
 		}
 
@@ -2973,23 +3000,6 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 					readChildTags(s, (AttributeValues *)imb, IMaterialBuffer::Attribs,
 						excluded, pElemAux);
 
-					//std::map<std::string, Attribute> attribs = IMaterialBuffer::Attribs.getAttributes();
-					//TiXmlElement *p = pElemAux->FirstChildElement();
-					//Attribute a;
-					//void *value;
-					//while (p) {
-					//	// trying to define an attribute that does not exist		
-					//	if (attribs.count(p->Value()) == 0)
-					//		NAU_THROW("Pass %s: Buffer %s: %s is not an attribute", aPass->getName().c_str(), s_pFullName, p->Value());
-					//	// trying to set the value of a read only attribute
-					//	a = attribs[p->Value()];
-					//	if (a.m_ReadOnlyFlag)
-					//		NAU_THROW("Pass %s: MaterialBuffer %s: %s is a read-only attribute, in file %s", aPass->getName().c_str(), s_pFullName, p->Value());
-
-					//	value = readChildTag(s_pFullName, p, a.m_Type, IMaterialBuffer::Attribs);
-					//	imb->setProp(a.m_Id, a.m_Type, value);
-					//	p = p->NextSiblingElement();
-					//}
 					dstMat->attachBuffer(imb);
 				}
 			}

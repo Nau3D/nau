@@ -26,7 +26,7 @@
 
 #define NAU_RENDER_FLAGS
 
-//#define GLINTERCEPTDEBUG
+#define GLINTERCEPTDEBUG
 #define NAU_LUA
 
 #endif // NAU_CONFIG_H

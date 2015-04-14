@@ -514,6 +514,9 @@
     <ClCompile Include="..\src\nau\render\irenderable.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\passProcessTexture.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1004,6 +1007,12 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glDebug.h">
       <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passProcessItem.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passProcessTexture.h">
+      <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

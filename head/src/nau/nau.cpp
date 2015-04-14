@@ -403,7 +403,7 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 		return (AttributeValues *)renderer->getMaterialTexture(number);
 	}
 	if (context == "PASS") {
-		return (AttributeValues *)m_pRenderManager->getCurrentCamera();
+		return (AttributeValues *)m_pRenderManager->getCurrentPass();
 	}
 	if (context == "RENDERER") {
 		return (AttributeValues *)renderer;
@@ -820,13 +820,6 @@ Nau::clear() {
 	RESOURCEMANAGER->clear();
 
 	deleteUserAttributes();
-
-	// Need to clear font manager
-
-	//while (!m_vViewports.empty()){
-
-	//	m_vViewports.erase(m_vViewports.begin());
-	//}
 
 	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
 

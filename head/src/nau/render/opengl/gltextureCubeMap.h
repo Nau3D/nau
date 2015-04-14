@@ -27,6 +27,9 @@ namespace nau
 
 			virtual void build();
 
+			virtual void clear();
+			virtual void clearLevel(int l);
+
 			//void enableCompareToTexture (void);
 			//void disableCompareToTexture (void);
 			//void enableObjectSpaceCoordGen (void);
