@@ -51,7 +51,7 @@ GLRenderer::GLRenderer(void) :
 	m_Textures.clear();
 
 	glEnable(GL_MULTISAMPLE);
-	registerAndInitArrays("RENDERER", Attribs);
+	registerAndInitArrays(Attribs);
 }
 
 

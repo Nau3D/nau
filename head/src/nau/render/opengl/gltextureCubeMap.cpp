@@ -131,3 +131,12 @@ GLTextureCubeMap::clearLevel(int l) {
 		glClearTexImage(m_UIntProps[ID], l, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 #endif
 }
+
+
+void 
+GLTextureCubeMap::generateMipmaps() {
+
+	glBindTexture(m_EnumProps[DIMENSION], m_UIntProps[ID]);
+	glGenerateMipmap(m_EnumProps[DIMENSION]);
+}
+

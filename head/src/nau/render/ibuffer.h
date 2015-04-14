@@ -74,7 +74,7 @@ namespace nau
 		
 		protected:
 
-			IBuffer() : m_Label("") { registerAndInitArrays("BUFFER", Attribs); };
+			IBuffer() : m_Label("") { registerAndInitArrays(Attribs); };
 
 			static bool Init();
 			static bool Inited;

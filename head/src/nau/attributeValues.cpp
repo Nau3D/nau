@@ -903,7 +903,7 @@ AttributeValues::isValid(unsigned int prop, Enums::DataType type, void *value) {
 
 
 void 
-AttributeValues::registerAndInitArrays(std::string name, AttribSet &attribs) {
+AttributeValues::registerAndInitArrays(AttribSet &attribs) {
 
 	initArrays(attribs);
 }

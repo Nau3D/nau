@@ -55,7 +55,7 @@ RenderTarget::Create (std::string name) {
 
 RenderTarget::RenderTarget () {
 	
-	registerAndInitArrays("RENDER_TARGET", Attribs);
+	registerAndInitArrays(Attribs);
 	m_Color = 0;
 	m_Depth = 0;
 	m_Stencil = 0;

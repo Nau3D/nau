@@ -16,6 +16,8 @@
 #include "nau/render/ibuffer.h"
 #include "nau/render/passCompute.h"
 #include "nau/render/passfactory.h"
+#include "nau/render/passProcessTexture.h"
+#include "nau/render/passProcessBuffer.h"
 #ifdef NAU_OPTIX_PRIME
 #include "nau/render/passoptixprime.h"
 #endif
@@ -1688,7 +1690,7 @@ Passes can take user attributes
 void 
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
-	std::vector<std::string> excluded = {"mode", "scene", "scenes", "camera", "lights", "viewport", "renderTarget",
+	std::vector<std::string> excluded = {"preProcess", "postProcess", "mode", "scene", "scenes", "camera", "lights", "viewport", "renderTarget",
 		"materialMaps", "injectionMaps", "texture", "material", "depth", "stencil", "color", "rays", "hits",
 		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
 		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes"};
@@ -3159,6 +3161,8 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 				
 			loadPassMode(hPass, aPass);	
 
+			loadPassPreProcess(hPass, aPass);
+			loadPassPostProcess(hPass, aPass);
 
 			if (passClass != "optixPrime" && passClass != "quad" && passClass != "profiler") {
 
@@ -3199,6 +3203,114 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 		RENDERMANAGER->setActivePipeline (activePipeline);
 	} else {
 		NAU_THROW("No default pipeline");
+	}
+}
+
+
+/* -----------------------------------------------------------------------------
+PRE POST PROCESS
+
+<preProcess>
+	<texture name="bla" fromLibrary="blu" CLEAR_LEVEL=0 />
+	<texture name="ble" fromLibrary="blu" CLEAR=true />
+</preProcess>
+
+<preProcess>
+	<texture name="bla" fromLibrary="blu" MIPMAP=true />
+</preProcess>
+
+ ----------------------------------------------------------------------------- */
+
+void 
+ProjectLoader::loadPassPreProcess(TiXmlHandle hPass, Pass *aPass) 
+{
+	TiXmlElement *pElem;
+	std::vector <std::string> excluded = {"name", "fromLibrary"};
+
+	pElem = hPass.FirstChild("preProcess").FirstChild().Element();
+	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		if (!strcmp(pElem->Value(), "texture")) {
+
+			PassProcessTexture *pp  = new PassProcessTexture();
+
+			std::string s;
+			readItemFromLib(pElem, "name", &s);
+			Texture *t = RESOURCEMANAGER->getTexture(s);
+			if (!t) {
+				NAU_THROW("File : %s\nElement: %s\nPost process texture %s does not exist", s_File.c_str(), aPass->getName().c_str(), s.c_str());
+			}
+
+			readAttributes(aPass->getName(), (AttributeValues *)pp, PassProcessTexture::Attribs, excluded, pElem);
+			pp->setItem(t);
+			aPass->addPreProcessItem(pp);
+		}
+
+		else if (!strcmp(pElem->Value(), "buffer")) {
+				
+			PassProcessBuffer *pp  = new PassProcessBuffer();
+
+			std::string s;
+			readItemFromLib(pElem, "name", &s);
+			IBuffer *b = RESOURCEMANAGER->getBuffer(s);
+			if (!b) {
+				NAU_THROW("File : %s\nElement: %s\nPost process buffer %s does not exist", s_File.c_str(), aPass->getName().c_str(), s.c_str());
+			}
+
+			readAttributes(aPass->getName(), (AttributeValues *)pp, PassProcessBuffer::Attribs, excluded, pElem);
+			pp->setItem(b);
+			aPass->addPreProcessItem(pp);
+		}
+		else {
+			NAU_THROW("File : %s\nElement: %s\nError in pre process tag\nValid child tags are: texture or buffer", s_File.c_str(), aPass->getName().c_str());
+		}
+
+
+	}
+}
+
+
+void 
+ProjectLoader::loadPassPostProcess(TiXmlHandle hPass, Pass *aPass) 
+{
+	TiXmlElement *pElem;
+	std::vector <std::string> excluded = {"name", "fromLibrary"};
+
+	pElem = hPass.FirstChild("postProcess").FirstChild().Element();
+	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		if (!strcmp(pElem->Value(), "texture")) {
+
+			PassProcessTexture *pp  = new PassProcessTexture();
+
+			std::string s;
+			readItemFromLib(pElem, "name", &s);
+			Texture *t = RESOURCEMANAGER->getTexture(s);
+			if (!t) {
+				NAU_THROW("File : %s\nElement: %s\nPost process texture %s does not exist", s_File.c_str(), aPass->getName().c_str(), s.c_str());
+			}
+
+			readAttributes(aPass->getName(), (AttributeValues *)pp, PassProcessTexture::Attribs, excluded, pElem);
+			pp->setItem(t);
+			aPass->addPostProcessItem(pp);
+		}
+
+		else if (!strcmp(pElem->Value(), "buffer")) {
+				
+			PassProcessBuffer *pp  = new PassProcessBuffer();
+
+			std::string s;
+			readItemFromLib(pElem, "name", &s);
+			IBuffer *b = RESOURCEMANAGER->getBuffer(s);
+			if (!b) {
+				NAU_THROW("File : %s\nElement: %s\nPost process buffer %s does not exist", s_File.c_str(), aPass->getName().c_str(), s.c_str());
+			}
+
+			readAttributes(aPass->getName(), (AttributeValues *)pp, PassProcessBuffer::Attribs, excluded, pElem);
+			pp->setItem(b);
+			aPass->addPostProcessItem(pp);
+		}
+		else {
+			NAU_THROW("File : %s\nElement: %s\nError in pre process tag\nValid child tags are: texture or buffer", s_File.c_str(), aPass->getName().c_str());
+		}
 	}
 }
 

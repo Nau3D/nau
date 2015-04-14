@@ -2,15 +2,15 @@
 <project name="Voxels" width=512 height=512>
 	<assets>
 		<constants>
-			<constant name="GridSize" value = 256 />
-			<constant name="GridVolume" value = 16777216 />
+			<constant name="GridSize" value = 128 />
+			<constant name="GridVolume" value = 4194304 />
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
 		</attributes>
 		<scenes>
 			<scene name="MainScene" param="UNITIZE">
-				<file name="../../models/bunny.obj"/>
+				<file name="../../models/cube.obj"/>
 			</scene>
 			<scene name="VoxelTest" param="UNITIZE">
 				<file name="../../models/voxeltest.obj"/>
@@ -91,7 +91,7 @@
 	
 	
 	<pipelines>
-		<pipeline name="voxels">
+		<pipeline name="voxels" default="true">
 			<pass class="default" name="voxelization">
 				<mode value="RUN_ONCE" />
 				<viewport name="Grid"/>
@@ -120,22 +120,27 @@
 				</materialMaps>				
 			</pass>
 		</pipeline>
-		<pipeline name="voxels2" default="true">
+		<pipeline name="voxels2" >
 			<pass class="default" name="voxelization">
 				<mode value="RUN_ONCE" />
 				<viewport name="Grid"/>
 				<camera name="MainCamera" />
 				<scenes>
-					<scene name="Bench" />
+					<scene name="MainScene" />
 				</scenes>
 				<color clear=false enable=false />
 				<depth test=false write=false />
 				<renderTarget name="dummy" fromLibrary="Voxels" />
-				<!--process>
-					<texture name="gridColor" fromLibrary="Voxels" preClear=true postMipmap=true />
-					<texture name="gridNormal" fromLibrary="Voxels" preClear=true postMipmap=true />
-					<buffer name="atomic" fromLibrary="Voxels" preClear=true />
-				</process-->	
+				<preProcess>
+					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 />
+					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
+				</preProcess>	
+				<postProcess>
+					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
+					<texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true />
+					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
+				</postProcess>	
 				<injectionMaps>
 					<map toMaterial="*" >
 						<shader fromMaterial ="voxelization" fromLibrary="Voxels" />
@@ -149,7 +154,6 @@
 							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 >
 								<ACCESS value="WRITE_ONLY" />
 								<LEVEL value=0 />
-								<!--CLEAR value=true/-->
 							</imageTexture>
 						</imageTextures>
 						<buffers>	

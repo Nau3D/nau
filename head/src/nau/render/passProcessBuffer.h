@@ -1,18 +1,17 @@
-#ifndef PASS_PRE_PROCESS_TEXTURE_H
-#define PASS_PRE_PROCESS_TEXTURE_H
+#ifndef PASS_PRE_PROCESS_BUFFER_H
+#define PASS_PRE_PROCESS_BUFFER_H
 
 #include "nau/render/passProcessItem.h"
-#include "nau/render/texture.h"
+#include "nau/render/ibuffer.h"
 
 namespace nau {
 	namespace render {
 	
-		class PassProcessTexture : public PassProcessItem {
+		class PassProcessBuffer : public PassProcessItem {
 
 		public:
 
-
-			PassProcessTexture();
+			PassProcessBuffer();
 			
 			BOOL_PROP(CLEAR, 0);
 			BOOL_PROP(MIPMAP, 1);
@@ -22,11 +21,11 @@ namespace nau {
 			static AttribSet Attribs;
 
 			virtual void process();
-			void setItem(Texture *tex);
+			void setItem(IBuffer *buf);
 
 		protected:
 
-			Texture *m_Tex;
+			IBuffer *m_Buffer;
 
 			static bool Init();
 			static bool Inited;

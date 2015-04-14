@@ -22,8 +22,6 @@ Sphere::InitSphere() {
 	Attribs.add(Attribute(STACKS, "STACKS", Enums::UINT, false, new unsigned int(10), new unsigned int(2), NULL));
 	Attribs.add(Attribute(SLICES, "SLICES", Enums::UINT, false, new unsigned int(10), new unsigned int(3), NULL));
 
-	NAU->registerAttributes("SPHERE", &Attribs);
-
 	return true;
 }
 
@@ -35,7 +33,7 @@ bool Sphere::InitedSphere = InitSphere();
 Sphere::Sphere(): Primitive()/*,
 	m_Floats(COUNT_FLOATPARAMS)*/ {
 
-		registerAndInitArrays("SPHERE", Attribs);
+		registerAndInitArrays(Attribs);
 }
 
 

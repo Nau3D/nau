@@ -517,6 +517,9 @@
     <ClCompile Include="..\src\nau\render\passProcessTexture.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\passProcessBuffer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1012,6 +1015,9 @@
       <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passProcessTexture.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passProcessBuffer.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>

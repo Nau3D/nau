@@ -118,7 +118,7 @@ Pass::Pass (const std::string &passName) :
 	m_RestoreViewport (0),
 	m_RemapMode (REMAP_DISABLED) {
 
-	registerAndInitArrays("PASS", Attribs);
+	registerAndInitArrays(Attribs);
 
 	initVars();
 	EVENTMANAGER->addListener("SCENE_CHANGED",this);
@@ -127,6 +127,7 @@ Pass::Pass (const std::string &passName) :
 
 Pass::~Pass() {
 
+	// must delete pre and post process lists
 }
 
 
@@ -165,6 +166,22 @@ Pass::initVars() {
 }
 
 
+// --------------------------------------------------
+//		PROCESS ITEMS
+// --------------------------------------------------
+
+void 
+Pass::addPreProcessItem(PassProcessItem *pp) {
+
+	m_PreProcessList.push_back(pp);
+}
+
+
+void 
+Pass::addPostProcessItem(PassProcessItem *pp) {
+
+	m_PostProcessList.push_back(pp);
+}
 
 // --------------------------------------------------
 //		RENDER TEST
@@ -243,6 +260,9 @@ Pass::doPass (void) {
 
 	prepareBuffers();
 
+	for (auto pp : m_PreProcessList)
+		pp->process();
+
 	const float *a = (float *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4);
 	camFrustum.setFromMatrix (a);
 	aCam = RENDERMANAGER->getCamera (m_CameraName);
@@ -265,6 +285,10 @@ Pass::doPass (void) {
 	}
 	RENDERMANAGER->processQueue();	
 
+	for (auto pp : m_PostProcessList)
+		pp->process();
+
+
 }
 
 
@@ -277,6 +301,9 @@ Pass::restore(void) {
 
 	restoreCamera();
 	RENDERER->removeLights();
+
+	for (auto pp : m_PostProcessList)
+		pp->process();
 }
 
 

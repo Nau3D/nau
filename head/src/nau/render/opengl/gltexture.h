@@ -30,10 +30,8 @@ namespace nau
 
 			virtual void clear();
 			virtual void clearLevel(int l);
-			//void enableCompareToTexture (void);
-			//void disableCompareToTexture (void);
-			//void enableObjectSpaceCoordGen (void);
-			//void generateObjectSpaceCoords (TextureCoord aCoord, float *plane);
+
+			virtual void generateMipmaps();
 
 			static int GetCompatibleFormat(int dim, int anInternalFormat);
 			static int GetCompatibleType(int dim, int anInternalFormat);

@@ -25,6 +25,7 @@ https://github.com/Nau3D
 #include "nau/geometry/boundingbox.h"
 #include "nau/geometry/quad.h"
 #include "nau/material/materialid.h"
+#include "nau/render/passProcessItem.h"
 #include "nau/render/rendertarget.h"
 #include "nau/render/texture.h"
 #include "nau/scene/camera.h"
@@ -109,6 +110,13 @@ namespace nau
 
 			const std::string &getClassName();
 			std::string &getName (void);
+
+
+			//
+			// PRE POST PROCESS
+			//
+			void addPreProcessItem(PassProcessItem *pp);
+			void addPostProcessItem(PassProcessItem *pp);
 
 			//
 			// RENDER TEST
@@ -196,6 +204,10 @@ namespace nau
 
 		
 		protected:
+
+			// PRE POST PROCESS
+			std::vector <PassProcessItem *> m_PreProcessList;
+			std::vector <PassProcessItem *> m_PostProcessList;
 
 			// CAMERAS
 			virtual void setupCamera (void);

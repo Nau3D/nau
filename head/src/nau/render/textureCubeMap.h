@@ -55,6 +55,8 @@ namespace nau
 			virtual void clear() = 0;
 			virtual void clearLevel(int l) = 0;
 
+			virtual void generateMipmaps() = 0;
+
 			//virtual void enableCompareToTexture (void) = 0;
 			//virtual void disableCompareToTexture (void) = 0;
 

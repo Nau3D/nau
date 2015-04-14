@@ -62,7 +62,7 @@ ImageTexture::Create(std::string label, unsigned int unit, unsigned int texID) {
 
 ImageTexture::ImageTexture() {
 
-	registerAndInitArrays("IMAGE_TEXTURE", Attribs);
+	registerAndInitArrays(Attribs);
 }
 
 

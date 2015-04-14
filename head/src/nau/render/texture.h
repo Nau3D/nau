@@ -94,6 +94,8 @@ namespace nau
 			virtual void clear() = 0;
 			virtual void clearLevel(int l) = 0;
 
+			virtual void generateMipmaps() = 0;
+
 			virtual ~Texture(void);
 
 		protected:

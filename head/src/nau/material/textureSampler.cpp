@@ -28,8 +28,6 @@ TextureSampler::Init() {
 	//VEC4
 	Attribs.add(Attribute(BORDER_COLOR, "BORDER_COLOR", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));
 
-	NAU->registerAttributes("TEXTURE_SAMPLER", &Attribs);
-
 	return true;
 }
 
@@ -49,7 +47,7 @@ TextureSampler::create(Texture *t) {
 
 TextureSampler::TextureSampler() {
 
-	registerAndInitArrays("TEXTURE_SAMPLER", Attribs);
+	registerAndInitArrays(Attribs);
 }
 
 

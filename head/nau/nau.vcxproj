@@ -450,6 +450,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\passProcessBuffer.cpp" />
     <ClCompile Include="..\src\nau\render\passProcessTexture.cpp" />
     <ClCompile Include="..\src\nau\render\profilerpass.cpp" />
     <ClCompile Include="..\src\nau\resource\font.cpp" />
@@ -686,6 +687,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\src\nau\render\passProcessBuffer.h" />
     <ClInclude Include="..\src\nau\render\passProcessItem.h" />
     <ClInclude Include="..\src\nau\render\passProcessTexture.h" />
     <ClInclude Include="..\src\nau\render\profilerpass.h" />

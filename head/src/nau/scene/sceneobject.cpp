@@ -108,7 +108,7 @@ SceneObject::SceneObject(void) :
 {
 	m_Id = SceneObject::Counter++;
 
-	registerAndInitArrays("SCENE_OBJECT", Attribs);
+	registerAndInitArrays(Attribs);
 //	m_BoundingVolume = new BoundingBox;
 }
 

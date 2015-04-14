@@ -208,7 +208,7 @@ namespace nau {
 		virtual void *getProp(unsigned int prop, Enums::DataType type);
 		virtual void setProp(unsigned int prop, Enums::DataType type, void *value);
 		virtual bool isValid(unsigned int prop, Enums::DataType type, void *value);
-		void registerAndInitArrays(std::string name, AttribSet  &attribs);
+		void registerAndInitArrays(AttribSet  &attribs);
 		void initArrays();
 		AttribSet *getAttribSet();
 

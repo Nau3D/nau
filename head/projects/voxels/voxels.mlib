@@ -28,7 +28,6 @@
 	<buffers>
 		<buffer name="atomic">
 			<SIZE value=32 />
-			<CLEAR value="BY_FRAME" />
 		</buffer>
 		<buffer name="position" >
 			<SIZE value = 16 />

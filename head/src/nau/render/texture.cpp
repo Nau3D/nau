@@ -152,7 +152,7 @@ Texture::Create (std::string file, std::string label, bool mipmap) {
 
 Texture::Texture(std::string label) :m_Label(label), bitmap(0), m_Bitmap(0) {
 
-	registerAndInitArrays("TEXTURE", Attribs);
+	registerAndInitArrays(Attribs);
 }
 
 

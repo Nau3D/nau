@@ -10,8 +10,6 @@ namespace nau {
 		class PassProcessItem : public AttributeValues {
 
 		public:
-			
-			static AttribSet Attribs;
 
 			virtual void process() = 0;
 			virtual void setItemName(std::string &name) {

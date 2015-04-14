@@ -100,7 +100,7 @@ namespace nau
 
 			virtual ~IScene(void) {};
 			IScene(void) : m_Compiled(false), m_Visible(true) {
-				registerAndInitArrays("SCENE", Attribs);
+				registerAndInitArrays(Attribs);
 			};
 
 		};

@@ -32,5 +32,5 @@ bool IRenderable::Inited = Init();
 
 IRenderable::IRenderable() {
 
-	registerAndInitArrays("RENDERABLE", Attribs);
+	registerAndInitArrays(Attribs);
 }

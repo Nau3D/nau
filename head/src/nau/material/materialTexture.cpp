@@ -22,14 +22,14 @@ bool MaterialTexture::Inited = Init();
 
 MaterialTexture::MaterialTexture(int unit) : m_Texture(NULL), m_Sampler(NULL) {
 
-	registerAndInitArrays("MATERIAL_TEXTURE", Attribs);
+	registerAndInitArrays(Attribs);
 	m_IntProps[UNIT] = unit;
 }
 
 
 MaterialTexture::MaterialTexture() : m_Texture(NULL), m_Sampler(NULL) {
 
-	registerAndInitArrays("MATERIAL_TEXTURE", Attribs);
+	registerAndInitArrays(Attribs);
 }
 
 

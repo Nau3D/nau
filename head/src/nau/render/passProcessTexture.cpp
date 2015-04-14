@@ -9,7 +9,7 @@ PassProcessTexture::Init() {
 
 	// BOOL
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
-	Attribs.add(Attribute(CLEAR, "MIPMAP", Enums::DataType::BOOL, false, new bool(false)));
+	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new bool(false)));
 
 	// INT
 	Attribs.add(Attribute(CLEAR_LEVEL, "CLEAR_LEVEL", Enums::DataType::INT, false, new int(-1)));
@@ -19,10 +19,13 @@ PassProcessTexture::Init() {
 }
 
 
+AttribSet PassProcessTexture::Attribs;
 bool PassProcessTexture::Inited = Init();
+
 
 PassProcessTexture::PassProcessTexture() : m_Tex(NULL), PassProcessItem() {
 
+	registerAndInitArrays(Attribs);
 }
 
 
@@ -35,6 +38,9 @@ PassProcessTexture::setItem(Texture *tex) {
 
 void 
 PassProcessTexture::process() {
+
+	if (!m_Tex)
+		return;
 
 #if NAU_OPENGL_VERSION >= 440
 	if (m_BoolProps[CLEAR])
