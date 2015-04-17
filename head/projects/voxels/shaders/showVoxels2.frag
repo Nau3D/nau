@@ -8,13 +8,14 @@ out vec4 outColor;
 uniform sampler3D grid;
 uniform sampler3D gridN;
 uniform mat4 VM;
+uniform int level = 3;
 
 void main()
 {
-	if (texelFetch(grid, posW, 0).w == 1.0) {
-		vec3 normal = texelFetch(gridN, posW, 0).xyz;
-		float intensity = max(0.0, dot(normal, normalize(vec3(1,2,3))));	
-		outColor = vec4(texelFetch(grid, posW, 0) * (intensity + 0.2));
+
+	if (texelFetch(grid, ivec3(posW/(pow(2.0,level))), level).w != 0.0) {
+		float intensity = max(0.0, dot(normalV, normalize(vec3(1,2,3))));	
+		outColor = vec4(texelFetch(grid, ivec3(posW/(pow(2.0,level))), level) * (intensity + 0.4));
 	}
 	else 
 		discard;

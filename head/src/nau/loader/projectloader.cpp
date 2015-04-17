@@ -506,7 +506,7 @@ ProjectLoader::checkForNonValidChildTags(std::string parent, std::vector<std::st
 			std::string result;
 			TextUtil::Join(ok, ", ", &result);
 			// trying to define an attribute that does not exist?		
-			NAU_THROW("File %s: Element %s: \"%s\" is not a valid child tag\nValid tags are: %s", 
+			NAU_THROW("File %s\nElement %s\n\"%s\" is not a valid child tag\nValid tags are: %s", 
 				ProjectLoader::s_File.c_str(), parent.c_str(), p->Value(), result.c_str());
 		}
 		p = p->NextSiblingElement();
@@ -525,7 +525,7 @@ ProjectLoader::checkForNonValidAttributes(std::string parent, std::vector<std::s
 			std::string result;
 			TextUtil::Join(ok, ", ", &result);
 			// trying to define an attribute that does not exist?		
-			NAU_THROW("File %s: Element %s: \"%s\" is not an attribute\nValid attributes are: %s", 
+			NAU_THROW("File %s\nElement %s\n\"%s\" is not an attribute\nValid attributes are: %s", 
 				ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name(), result.c_str());
 		}
 		attrib = attrib->Next();
@@ -597,8 +597,7 @@ ProjectLoader::load (std::string file, int *width, int *height)
 				}
 				NAU->setWindowSize(*width, *height);
 		}
-		std::vector<std::string> ok;
-		ok.push_back("name"); ok.push_back("width"); ok.push_back("height");
+		std::vector<std::string> ok = {"name", "width", "height"};
 		checkForNonValidAttributes("project", ok, pElem);
 		
 #ifdef GLINTERCEPTDEBUG
@@ -642,8 +641,7 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 	std::string delim="\n", s;
 
 	pElem2 = handle.FirstChild("attributes").Element();
-	std::vector<std::string> v;
-	v.push_back("attribute"); 
+	std::vector<std::string> v = {"attribute"};
 	checkForNonValidChildTags("attributes", v, pElem2);
 
 	pElem = handle.FirstChild ("attributes").FirstChild ("attribute").Element();
@@ -659,7 +657,7 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 		const char *pType = pElem->Attribute("type");
 
 		if (0 == pContext) {
-			NAU_THROW("File %s: Attribute without a context", ProjectLoader::s_File.c_str());
+			NAU_THROW("File %s\nAttribute without a context", ProjectLoader::s_File.c_str());
 		}
 		if (!NAU->validateUserAttribContext(pContext)) {
 			nau::system::TextUtil::Join(NAU->getContextList(), delim.c_str(), &s);
@@ -711,17 +709,11 @@ ProjectLoader::loadConstants(TiXmlHandle &handle)
 	std::string delim="\n", s;
 
 	pElem2 = handle.FirstChild("constants").Element();
-	std::vector<std::string> v;
-	v.push_back("constant"); 
+	std::vector<std::string> v = {"constant"};
 	checkForNonValidChildTags("constants", v, pElem2);
 
 	pElem = handle.FirstChild ("constants").FirstChild ("constant").Element();
 	for (; 0 != pElem; pElem = pElem->NextSiblingElement("constant")) {
-
-
-		//std::vector<std::string> ok;
-		//ok.push_back("context"); ok.push_back("name"); ok.push_back("type");
-		//checkForNonValidAttributes("attribute", ok, pElem);
 
 		const char *pName = pElem->Attribute("name");
 

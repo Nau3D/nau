@@ -16,12 +16,14 @@
 			<HEIGHT value="GridSize" />
 			<DEPTH value="GridSize" />
 			<INTERNAL_FORMAT value="RGBA" />
+			<MIPMAP value = true />
 		</texture>	
 		<texture name="gridNormal">
 			<WIDTH value="GridSize" />
 			<HEIGHT value="GridSize" />
 			<DEPTH value="GridSize" />
 			<INTERNAL_FORMAT value="RGBA" />
+			<MIPMAP value = true />
 		</texture>	
 	</textures>
 

@@ -248,9 +248,20 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 	}
 }
 
+#include <algorithm>  
 
 void 
 GLTexture::build() {
+
+	int levels = 1, max;
+	if (m_BoolProps[MIPMAP]) {
+		max = std::max(m_IntProps[HEIGHT], std::max(m_IntProps[WIDTH], m_IntProps[DEPTH]));
+		while (max != 1) {
+			max /= 2;
+			levels++;
+		}
+		m_IntProps[LEVELS] = levels;
+	}
 
 	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
 
@@ -287,7 +298,7 @@ GLTexture::build() {
 					m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS],0,
 					m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 #else
-				glTexStorage3D(m_EnumProps[DIMENSION], 1, m_EnumProps[INTERNAL_FORMAT],
+				glTexStorage3D(m_EnumProps[DIMENSION], m_IntProps[LEVELS], m_EnumProps[INTERNAL_FORMAT],
 					m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS]);
 #endif
 			}
@@ -321,7 +332,7 @@ GLTexture::build() {
 					m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
 					m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 #else
-				glTexStorage2D(m_EnumProps[DIMENSION], 1, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT]);
+				glTexStorage2D(m_EnumProps[DIMENSION], m_IntProps[LEVELS], m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT]);
 #endif
 
 			}
@@ -339,7 +350,7 @@ GLTexture::build() {
 			m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH], 0,
 			m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 #else
-		glTexStorage3D(m_EnumProps[DIMENSION], 1, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH]);
+		glTexStorage3D(m_EnumProps[DIMENSION], m_IntProps[LEVELS], m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH]);
 #endif
 
 	}				
@@ -404,4 +415,5 @@ GLTexture::generateMipmaps() {
 
 	glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
 	glGenerateMipmap(m_EnumProps[DIMENSION]);
+
 }
