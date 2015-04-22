@@ -29,6 +29,8 @@ namespace nau {
 				void bind();
 				void unbind();
 
+				unsigned int getVAO();
+
 				~GLMaterialGroup();
 			};
 

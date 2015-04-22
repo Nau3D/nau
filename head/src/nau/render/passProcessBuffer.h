@@ -14,9 +14,6 @@ namespace nau {
 			PassProcessBuffer();
 			
 			BOOL_PROP(CLEAR, 0);
-			BOOL_PROP(MIPMAP, 1);
-
-			INT_PROP(CLEAR_LEVEL, 0);
 
 			static AttribSet Attribs;
 

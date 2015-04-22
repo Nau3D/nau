@@ -50,6 +50,9 @@ IRenderer::Init() {
 	//UINT
 	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
 
+	// BOOL
+	Attribs.add(Attribute(DEBUG_DRAW_CALL, "DEBUG_DRAW_CALL", Enums::DataType::BOOL, true, new bool(false)));
+
 	NAU->registerAttributes("RENDERER", &Attribs);
 	// MOVE TO irenderable.h
 	//Attribs.add(Attribute(DRAW_PRIMITIVE, "DRAW_PRIMITIVE", Enums::DataType::ENUM, true));

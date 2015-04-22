@@ -216,6 +216,8 @@ GlCanvas::Render ()
 
 		m_CounterFps = 0;
 	}
+	if (RENDERER->getPropb(IRenderer::DEBUG_DRAW_CALL))
+		RENDERER->setPropb(IRenderer::DEBUG_DRAW_CALL, false);
 }
 
 
@@ -469,6 +471,10 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 
 	if (m_pCamera->isDynamic()){
 		EVENTMANAGER->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+	}
+
+	if ('N' == event.GetKeyCode()) {
+		RENDERER->setPropb(IRenderer::DEBUG_DRAW_CALL, true);
 	}
 
 /*	if (WXK_SPACE == event.GetKeyCode()) {

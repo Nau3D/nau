@@ -7,7 +7,7 @@
 // enable and disable functionalities 
 // based on OpenGL version
 
-#define NAU_OPENGL_VERSION 440
+#define NAU_OPENGL_VERSION 300
 
 #define NAU_PLATFORM_WIN32 1
 

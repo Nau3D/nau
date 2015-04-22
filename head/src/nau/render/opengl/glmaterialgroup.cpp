@@ -82,3 +82,10 @@ GLMaterialGroup::unbind() {
 
 	glBindVertexArray(0);
 }
+
+
+unsigned int
+GLMaterialGroup::getVAO() {
+
+	return m_VAO;
+}

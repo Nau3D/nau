@@ -815,7 +815,7 @@ GLRenderer::setRenderMode(TRenderMode mode) {
 
 
 void
-GLRenderer::drawGroup (MaterialGroup* aMatGroup) {
+GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 
 	IRenderable& aRenderable = aMatGroup->getParent();
 	IndexData &indexData = aMatGroup->getIndexData();
@@ -836,13 +836,13 @@ GLRenderer::drawGroup (MaterialGroup* aMatGroup) {
 	unsigned int size;
 
 	{
-		PROFILE ("Bindings");
+		PROFILE("Bindings");
 
 		aMatGroup->bind();
 	}
 
-	{		
-		PROFILE_GL ("Draw elements");
+	{
+		PROFILE_GL("Draw elements");
 
 		size = indexData.getIndexSize();
 
@@ -861,6 +861,11 @@ GLRenderer::drawGroup (MaterialGroup* aMatGroup) {
 		}
 	}
 
+	if (m_BoolProps[DEBUG_DRAW_CALL]) {
+
+		showDrawDebugInfo(aMatGroup);
+	}
+
 #ifdef PROFILE
 	accumTriCounter(drawPrimitive, size);
 #endif
@@ -873,6 +878,18 @@ void
 GLRenderer::setCullFace(Face aFace) {
 
 	glCullFace(translateFace(aFace));
+}
+
+
+// -----------------------------------------------------------------
+//		DEBUG
+// -----------------------------------------------------------------
+
+
+void
+GLRenderer::showDrawDebugInfo(MaterialGroup *mg) {
+
+	SLOG("Drawing with Material: %s", mg->getMaterialName().c_str());
 }
 
 

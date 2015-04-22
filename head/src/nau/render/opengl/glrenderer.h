@@ -165,6 +165,11 @@ namespace nau
 			void colorMask (bool r, bool g, bool b, bool a);
 
 
+			// DEBUG
+		protected:
+			void showDrawDebugInfo(MaterialGroup *aMatGroup);
+
+
 			// RENDER
 
 		protected:

@@ -127,32 +127,32 @@ getProgramNames() {
 }
 
 
-// gets all the names currently bound to Shaders
-std::vector<unsigned int> &
-getShaderNames() {
+//// gets all the names currently bound to Shaders
+//std::vector<unsigned int> &
+//getShaderNames() {
+//
+//	spResult.clear();
+//	for (unsigned int i = 0; i < 65535; ++i) {
+//
+//		if (glIsShader(i))
+//		 spResult.push_back(i);
+//	}
+//	return spResult;
+//}
 
-	spResult.clear();
-	for (unsigned int i = 0; i < 65535; ++i) {
 
-		if (glIsShader(i))
-		 spResult.push_back(i);
-	}
-	return spResult;
-}
-
-
-// gets all the names currently bound to VAOs
-std::vector<unsigned int> &
-getVAONames() {
-
-	spResult.clear();
-	for (unsigned int i = 0; i < 65535; ++i) {
-
-		if (glIsVertexArray(i))
-		 spResult.push_back(i);
-	}
-	return spResult;
-}
+//// gets all the names currently bound to VAOs
+//std::vector<unsigned int> &
+//getVAONames() {
+//
+//	spResult.clear();
+//	for (unsigned int i = 0; i < 65535; ++i) {
+//
+//		if (glIsVertexArray(i))
+//		 spResult.push_back(i);
+//	}
+//	return spResult;
+//}
 
 
 

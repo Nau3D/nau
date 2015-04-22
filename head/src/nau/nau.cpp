@@ -393,9 +393,11 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 	if (context == "COLOR") {
 		return (AttributeValues *)renderer->getMaterial();
 	}
+#if NAU_OPENGL_VERSION >= 420
 	if (context == "IMAGE_TEXTURE") {
 		return (AttributeValues *)renderer->getImageTexture(number);
 	}
+#endif
 	if (context == "LIGHT") {
 		return (AttributeValues *)renderer->getLight(number);
 	}

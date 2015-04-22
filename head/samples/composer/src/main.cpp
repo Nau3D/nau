@@ -257,6 +257,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
     helpMenu->Append(idMenu_DLG_SCENES, _("&Scene Library\tF9"), _("Show Scene Library"));
     helpMenu->Append(idMenu_DLG_PASS, _("&Pass Library\tF9"), _("Show Pass Library"));
 	helpMenu->Append(idMenu_DLG_ATOMICS, _("&Atomics\tF10"), _("Show Atomics Info"));
+	helpMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info\tF12"), _("Views Buffer information"));
     mbar->Append(helpMenu, _("&Help"));
 
 	helpMenu->Enable(idMenu_DLG_TEXTURES,false);
@@ -267,6 +268,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	helpMenu->Enable(idMenu_DLG_ATOMICS, false);
 	helpMenu->Enable(idMenu_DLG_SCENES, false);
 	helpMenu->Enable(idMenu_DLG_VIEWPORTS, false);
+	helpMenu->Enable(idMenu_DLG_DBGBUFFER, false);
 
 	debugMenu = new wxMenu(_T(""));
 	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
@@ -274,11 +276,11 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	debugMenu->Append(idMenu_DLG_STATEXML, _("State"), _("Shows OpenGL state variables"));
 	debugMenu->Append(idMenu_DLG_DBGSTEP, _("Advanced Pass Controller"), _("Aditional Pass control options"));
 	debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"), _("Views Program information"));
-	debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"), _("Views Buffer information"));
+	//debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"), _("Views Buffer information"));
 	
 	debugMenu->Enable(idMenuDbgStep, false);
 	debugMenu->Enable(idMenu_DLG_DBGPROGRAM, false);
-	debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+	//debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 
 #ifdef GLINTERCEPTDEBUG
@@ -520,7 +522,8 @@ FrmMainFrame::updateDlgs()
 	helpMenu->Enable(idMenu_DLG_ATOMICS, true);
 	helpMenu->Enable(idMenu_DLG_SCENES, true);
 	helpMenu->Enable(idMenu_DLG_VIEWPORTS, true);
-	debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+	helpMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+	//debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 }
 
 

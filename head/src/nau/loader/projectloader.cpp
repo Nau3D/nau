@@ -2929,6 +2929,10 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 
 		pElemNode = pElem->FirstChild("imageTextures");
 		if (pElemNode) {
+
+			if (NAU_OPENGL_VERSION < 420)
+				NAU_THROW("Image textures require OpenGL 4.2 or greater. Current version is %d", NAU_OPENGL_VERSION);
+#if NAU_OPENGL_VERSION >= 420
 			pElemAux = pElemNode->FirstChildElement("imageTexture");
 			for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement()) {
 
@@ -2962,6 +2966,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 						excluded, pElemAux);
 				}
 			}
+#endif
 		}
 
 		pElemNode = pElem->FirstChild("buffers");
