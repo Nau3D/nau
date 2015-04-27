@@ -17,7 +17,7 @@ namespace nau
 	namespace render
 	{
 
-		class GlProgram : public IProgram 
+		class GLProgram : public IProgram 
 		{
 		public:
 			static void FixedFunction (void);
@@ -41,9 +41,9 @@ namespace nau
 		
 		public:
 		
-			GlProgram();
-			//GlProgram (const std::string &vf, const std::string &gf, const std::string &ff); // filenames
-			~GlProgram();
+			GLProgram();
+			//GLProgram (const std::string &vf, const std::string &gf, const std::string &ff); // filenames
+			~GLProgram();
 
 			virtual bool loadShader(IProgram::ShaderType type, const std::string &filename);
 			bool reload (void);
@@ -74,6 +74,8 @@ namespace nau
 			bool compileShader (IProgram::ShaderType);
 			bool linkProgram (void);
 			void useProgram (void);
+
+			unsigned int getProgramID();
 
 			bool isCompiled(ShaderType type);
 			bool areCompiled();

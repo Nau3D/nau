@@ -1,9 +1,5 @@
 #include "nau/render/passCompute.h"
 
-#include <GL/glew.h>
-#include <sstream>
-#include <algorithm>
-
 #include "nau.h"
 #include "nau/debug/profile.h"
 
@@ -16,27 +12,26 @@ using namespace nau::geometry;
 PassCompute::PassCompute(const std::string &passName) : Pass(passName),
 m_Mat(0), m_DimX(1), m_DimY(1), m_DimZ(1),
 m_BufferX(0), m_BufferY(0), m_BufferZ(0),
-m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0)
-{
+m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0) {
+
 	m_ClassName = "compute";
 }
 
 
 void
-PassCompute::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) 
-{
+PassCompute::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) {
+
 }
 
 
+PassCompute::~PassCompute(){
 
-PassCompute::~PassCompute()
-{
 }
 
 
 void
-PassCompute::prepare (void)
-{
+PassCompute::prepare (void) {
+
 	m_Mat->prepare();
 
 	if (m_BufferX) {
@@ -52,30 +47,37 @@ PassCompute::prepare (void)
 
 
 void
-PassCompute::restore (void)
-{
+PassCompute::restore (void) {
+
 	m_Mat->restore();
 }
 
 
 void
-PassCompute::doPass (void)
-{	
-	glDispatchCompute(m_DimX, m_DimY, m_DimZ);
+PassCompute::doPass (void) {
+
+	RENDERER->dispatchCompute(m_DimX, m_DimY, m_DimZ);
 }
 
 
 void 
-PassCompute::setMaterialName(const std::string &lName,const std::string &mName) 
-{
+PassCompute::setMaterialName(const std::string &lName,const std::string &mName) {
+
 	m_Mat = MATERIALLIBMANAGER->getMaterial(lName, mName);
 	m_MaterialMap[mName] = MaterialID(lName, mName);
 }
 
 
+Material *
+PassCompute::getMaterial() {
+
+	return m_Mat;
+}
+
+
 void
-PassCompute::setDimension(int dimX, int dimY, int dimZ)
-{
+PassCompute::setDimension(int dimX, int dimY, int dimZ) {
+
 	m_DimX = dimX;
 	m_DimY = dimY;
 	m_DimZ = dimZ;
@@ -85,8 +87,8 @@ PassCompute::setDimension(int dimX, int dimY, int dimZ)
 void
 PassCompute::setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX,
 								IBuffer  *buffNameY, unsigned int offY, 
-								IBuffer  *buffNameZ, unsigned int offZ )
-{
+								IBuffer  *buffNameZ, unsigned int offZ ) {
+
 	m_BufferX = buffNameX;
 	m_BufferY = buffNameY;
 	m_BufferZ = buffNameZ;

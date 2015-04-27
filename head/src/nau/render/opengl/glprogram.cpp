@@ -1,38 +1,39 @@
-#include "nau/slogger.h"
-#include "nau/render/opengl/glprogram.h"
-#include "nau/render/vertexdata.h"
-#include "nau.h"
+#include "nau/render/opengl/GLProgram.h"
 
-#include "nau/system/textfile.h"
+#include "nau.h"
 #include "nau/config.h"
+#include "nau/render/vertexdata.h"
+#include "nau/slogger.h"
+#include "nau/system/textfile.h"
+
 
 using namespace nau::render;
 using namespace nau::system;
 
 // STATIC METHOD
 
-void GlProgram::FixedFunction() {
+void GLProgram::FixedFunction() {
 
 	glUseProgram(0);
 }
 
 #if NAU_OPENGL_VERSION >= 430
-int GlProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
+int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
 	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER};
 #elif NAU_OPENGL_VERSION >= 400
-int GlProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
+int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
 	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_FRAGMENT_SHADER};
 #elif NAU_OPENGL_VERSION >= 320
-int GlProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
+int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
 	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER};
 #else
-int GlProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
+int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
 	{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 #endif
 
 // CONSTRUCTORS
 
-GlProgram::GlProgram() : 
+GLProgram::GLProgram() : 
 	m_File(SHADER_COUNT,""),
 	m_Source(SHADER_COUNT,""),
 	m_ID(SHADER_COUNT,0),
@@ -41,16 +42,14 @@ GlProgram::GlProgram() :
 	m_MaxLength (0),
 	m_PLinked (false),
 	m_ShowGlobalUniforms (false),
-	m_Name("default")
-{
+	m_Name("default") {
+
 	m_P = glCreateProgram();
 }
 
 
+GLProgram::~GLProgram() {
 
-
-GlProgram::~GlProgram()
-{
 	if (m_P != 0)
 		glDeleteProgram(m_P);
 
@@ -59,12 +58,11 @@ GlProgram::~GlProgram()
 		if (m_ID[i] != 0)
 			glDeleteShader(m_ID[i]);
 	}
-
 }
 
 
 bool
-GlProgram::areCompiled(){
+GLProgram::areCompiled() {
 	
 	bool res = true;
 
@@ -77,36 +75,36 @@ GlProgram::areCompiled(){
 
 
 bool 
-GlProgram::isCompiled(IProgram::ShaderType type){
+GLProgram::isCompiled(IProgram::ShaderType type) {
 	
 	return m_Compiled[type];
 }
 
 
 bool 
-GlProgram::isLinked() {
+GLProgram::isLinked() {
 
 	return(m_PLinked);
 }
 
 
 void 
-GlProgram::setName(const std::string &name)
-{
+GLProgram::setName(const std::string &name) {
+
 	m_Name = name;
 }
 
 
 const std::string &
-GlProgram::getName() 
-{
+GLProgram::getName() {
+
 	return(m_Name);
 }
 
 
 bool
-GlProgram::loadShader (IProgram::ShaderType type, const std::string &filename)
-{
+GLProgram::loadShader (IProgram::ShaderType type, const std::string &filename) {
+
 	if (true == setShaderFile(type,filename)) {
 		m_Compiled[type] = compileShader(type);
 		return m_Compiled[type];
@@ -117,15 +115,15 @@ GlProgram::loadShader (IProgram::ShaderType type, const std::string &filename)
 
 
 const std::string &
-GlProgram::getShaderFile(ShaderType type) 
-{
+GLProgram::getShaderFile(ShaderType type) {
+
 	return m_File[type];
 }
 
 
 bool 
-GlProgram::setValueOfUniform (const std::string &name, void *values)
-{
+GLProgram::setValueOfUniform (const std::string &name, void *values) {
+
 	int i;
 
 	i = findUniform (name);
@@ -141,7 +139,7 @@ GlProgram::setValueOfUniform (const std::string &name, void *values)
 
 
 bool
-GlProgram::setValueOfUniform(int loc, void *values) {
+GLProgram::setValueOfUniform(int loc, void *values) {
 
 	int i = findUniformByLocation(loc);
 	if (-1 == i) {
@@ -153,7 +151,7 @@ GlProgram::setValueOfUniform(int loc, void *values) {
 }
 
 int
-GlProgram::getUniformLocation(std::string name) {
+GLProgram::getUniformLocation(std::string name) {
 
 	int i = findUniform(name);
 	if (-1 == i)
@@ -165,7 +163,7 @@ GlProgram::getUniformLocation(std::string name) {
 
 
 bool
-GlProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename)
+GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename)
 {
 	// reset shader
 	if (filename == "" && m_ID[type] != 0) {
@@ -197,7 +195,7 @@ GlProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename
 
 
 bool
-GlProgram::reloadShaderFile (IProgram::ShaderType type)
+GLProgram::reloadShaderFile (IProgram::ShaderType type)
 {
 
 	m_Compiled[type] = false;
@@ -217,7 +215,7 @@ GlProgram::reloadShaderFile (IProgram::ShaderType type)
 
 
 bool 
-GlProgram::reload (void) 
+GLProgram::reload (void) 
 {
 	for (int i = 0; i < SHADER_COUNT; ++i) {
 		reloadShaderFile((IProgram::ShaderType)i);
@@ -233,7 +231,7 @@ GlProgram::reload (void)
 
 
 int 
-GlProgram::programValidate() {
+GLProgram::programValidate() {
 
 	int v;
 
@@ -244,7 +242,7 @@ GlProgram::programValidate() {
 
 
 bool
-GlProgram::compileShader (IProgram::ShaderType type)
+GLProgram::compileShader (IProgram::ShaderType type)
 {
 	int r;
 
@@ -264,7 +262,7 @@ GlProgram::compileShader (IProgram::ShaderType type)
 
 
 bool 
-GlProgram::linkProgram() 
+GLProgram::linkProgram() 
 {
 	int r;
 
@@ -305,8 +303,8 @@ GlProgram::linkProgram()
 
 
 int
-GlProgram::getNumberOfUniforms() 
-{
+GLProgram::getNumberOfUniforms() {
+
 	if (true == m_PLinked) {
 		return (m_NumUniforms);
 	} else {
@@ -316,15 +314,14 @@ GlProgram::getNumberOfUniforms()
 
 
 int
-GlProgram::getAttributeLocation (const std::string &name)
-{
+GLProgram::getAttributeLocation (const std::string &name) {
+
 	return glGetAttribLocation (m_P, name.c_str());
 }
 
 
 void 
-GlProgram::useProgram (void) 
-{
+GLProgram::useProgram (void) {
 
 	if (true == m_PLinked) {
 		glUseProgram (m_P);
@@ -334,29 +331,39 @@ GlProgram::useProgram (void)
 }
 
 
+unsigned int 
+GLProgram::getProgramID() {
+
+	return m_P;
+}
+
+
 void 
-GlProgram::showGlobalUniforms (void)
-{
+GLProgram::showGlobalUniforms (void) {
+
 	m_ShowGlobalUniforms = !m_ShowGlobalUniforms;
 }
 
+
 bool 
-GlProgram::prepare (void) 
-{
+GLProgram::prepare (void) {
+
 	useProgram();
 	return true;
 }
 
+
 bool
-GlProgram::restore (void)
-{
+GLProgram::restore (void) {
+
 	glUseProgram (0);
 	return true;
 }
 
+
 int 
-GlProgram::findUniform (const std::string &name)
-{
+GLProgram::findUniform (const std::string &name) {
+
 	GLUniform uni;
 	int i = 0;
 	bool found (false);
@@ -380,8 +387,8 @@ GlProgram::findUniform (const std::string &name)
 
 
 int
-GlProgram::findUniformByLocation(int loc)
-{
+GLProgram::findUniformByLocation(int loc) {
+
 	GLUniform uni;
 	int i = 0;
 	bool found(false);
@@ -407,7 +414,7 @@ GlProgram::findUniformByLocation(int loc)
 
 
 const GLUniform& 
-GlProgram::getUniform(const std::string &name) {
+GLProgram::getUniform(const std::string &name) {
 
 	int i = findUniform (name);
 	if (-1 == i) {
@@ -418,7 +425,7 @@ GlProgram::getUniform(const std::string &name) {
 
 
 const IUniform&
-GlProgram::getIUniform(int i) {
+GLProgram::getIUniform(int i) {
 
 	assert((unsigned int) i < m_Uniforms.size());
 	return (m_Uniforms[i]);
@@ -426,7 +433,7 @@ GlProgram::getIUniform(int i) {
 
 
 void 
-GlProgram::setValueOfUniform (int i) {
+GLProgram::setValueOfUniform (int i) {
 
 	GLUniform uni;
 	uni = m_Uniforms[i];
@@ -436,7 +443,7 @@ GlProgram::setValueOfUniform (int i) {
 
 
 void 
-GlProgram::setUniforms() {
+GLProgram::setUniforms() {
 
 	int i,index,len,size;
 	
@@ -524,7 +531,7 @@ GlProgram::setUniforms() {
 }
 
 void 
-GlProgram::updateUniforms() {
+GLProgram::updateUniforms() {
 
 //	glUseProgram (m_P);
 	for (int i = 0; i < m_NumUniforms; i++) { 
@@ -535,7 +542,7 @@ GlProgram::updateUniforms() {
 }
 
 const GLUniform& 
-GlProgram::getUniform (int i) {
+GLProgram::getUniform (int i) {
 
 	if (i < m_NumUniforms) {
 		return (m_Uniforms[i]);
@@ -546,8 +553,8 @@ GlProgram::getUniform (int i) {
 
 
 std::string  
-GlProgram::getShaderInfoLog(ShaderType type) 
-{
+GLProgram::getShaderInfoLog(ShaderType type) {
+
 //	GLuint shader;
     int infologLength = 0;
     int charsWritten  = 0;
@@ -572,8 +579,7 @@ GlProgram::getShaderInfoLog(ShaderType type)
 
 
 char* 
-GlProgram::getProgramInfoLog() 
-{
+GLProgram::getProgramInfoLog() {
 
     int infologLength = 0;
     int charsWritten  = 0;
@@ -595,8 +601,8 @@ GlProgram::getProgramInfoLog()
 
 
 int 
-GlProgram::getNumberOfUserUniforms()
-{
+GLProgram::getNumberOfUserUniforms() {
+
 	int count = 0;
 
 	if (true == m_PLinked) {
@@ -611,7 +617,7 @@ GlProgram::getNumberOfUserUniforms()
 
 
 bool 
-GlProgram::getPropertyb(int query) {
+GLProgram::getPropertyb(int query) {
 
 	int res;
 	glGetProgramiv(m_P, query, &res);
@@ -620,7 +626,7 @@ GlProgram::getPropertyb(int query) {
 
 
 int 
-GlProgram::getPropertyi(int query) {
+GLProgram::getPropertyi(int query) {
 
 	int res;
 	glGetProgramiv(m_P, query, &res);

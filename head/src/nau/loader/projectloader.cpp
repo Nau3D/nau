@@ -1459,9 +1459,10 @@ ProjectLoader::loadPassScenes(TiXmlHandle hPass, Pass *aPass)
 {
 	TiXmlElement *pElem;
 
-	//if (aPass->getName() == "voxels2#showVoxels2")
-	//	aPass->setPropui(Pass::INSTANCE_COUNT, 64*64*64);
 	pElem = hPass.FirstChild("scenes").Element();
+	if (pElem == NULL)
+		return;
+
 	AttribSet *attrs = aPass->getAttribSet();
 	Attribute attr = attrs->get(Pass::INSTANCE_COUNT, Enums::UINT);
 	unsigned int *ui = (unsigned int *)readAttribute("instances", attr, pElem);

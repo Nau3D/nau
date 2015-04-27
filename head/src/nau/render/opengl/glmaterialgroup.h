@@ -12,7 +12,7 @@ namespace nau {
 	
 		namespace opengl {
 
-			class GLMaterialGroup : MaterialGroup {
+			class GLMaterialGroup : public MaterialGroup {
 
 			friend class MaterialGroup;
 

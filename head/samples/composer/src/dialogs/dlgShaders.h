@@ -27,7 +27,7 @@
 
 #include <nau.h>
 #include <nau/render/iprogram.h>
-#include <nau/render/opengl/glprogram.h>
+#include <nau/render/opengl/GLProgram.h>
 #include <nau/material/programvalue.h>
 //#include "dlgMaterials.h"
 
@@ -75,7 +75,7 @@ protected:
 
 	void update();
 	void updateList();
-	void updateProgramProperties(GlProgram *p);
+	void updateProgramProperties(GLProgram *p);
 	void setupPanel(wxSizer *siz, wxWindow *parent);
 
 	void OnProcessValidateShaders(wxCommandEvent& event);

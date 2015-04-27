@@ -12,6 +12,7 @@
 #include "nau/render/iprogram.h"
 #include "nau/render/irenderer.h"
 #include "nau/render/pass.h"
+#include "nau/render/passCompute.h"
 #include "nau/render/opengl/glstate.h"
 #include "nau/scene/camera.h"
 
@@ -168,6 +169,9 @@ namespace nau
 			// DEBUG
 		protected:
 			void showDrawDebugInfo(MaterialGroup *aMatGroup);
+			void showDrawDebugInfo(PassCompute *aPass);
+			void showDrawDebugInfo(Material *mat);
+			void showDrawDebugInfo(IProgram *p);
 
 
 			// RENDER
@@ -179,8 +183,9 @@ namespace nau
 		public:
 			void setRenderMode(TRenderMode mode);
 			void drawGroup (nau::material::MaterialGroup* aMatGroup);
-			virtual void setCullFace (Face aFace);
+			void setCullFace (Face aFace);
 
+			void dispatchCompute(int dimX, int dimY, int dimZ);
 
 			// RENDER ATTRIBS
 

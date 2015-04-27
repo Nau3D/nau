@@ -1767,7 +1767,7 @@ void DlgMaterials::updateUniforms(Material *m) {
 //		return;
 //	}
 //
-//	GlProgram *p = (GlProgram *)m->getProgram();
+//	GLProgram *p = (GLProgram *)m->getProgram();
 //
 //	std::map<std::string, nau::material::ProgramValue> progValues, uniformValues;
 //	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;

@@ -63,7 +63,7 @@ namespace nau
 
 
 			void execute();
-			void executePass(Pass *p);
+
 			void executeNextPass();
 
 		
@@ -75,6 +75,7 @@ namespace nau
 			void callScript(std::string &file, std::string &name);
 
 		protected:
+			void executePass(Pass *p);			
 			Pipeline (const Pipeline&);
 			Pipeline& operator= (const Pipeline&);
 

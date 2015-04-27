@@ -199,9 +199,14 @@ Pipeline::getPassCounter() {
 void 
 Pipeline::executePass(Pass *pass) {
 
+	m_CurrentPass = pass;
+
 #ifdef GLINTERCEPTDEBUG
 	addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
+
+	if (RENDERER->getPropb(IRenderer::DEBUG_DRAW_CALL))
+		SLOG("Pass: %s", pass->getName().c_str());
 
 	PROFILE(pass->getName());
 	pass->prepare();
@@ -227,7 +232,7 @@ Pipeline::execute() {
 		RENDERER->setDefaultState();			
 		for ( auto pass:m_Passes) {
 			
-			m_CurrentPass = pass;
+
 			executePass(pass);
 		}
 	}
@@ -263,9 +268,9 @@ Pipeline::executeNextPass() {
 
 Pass *
 Pipeline::getCurrentPass() {
-	if (m_Passes.size() > m_NextPass){
-		m_CurrentPass = m_Passes[m_NextPass];
-	}
+	//if (m_Passes.size() > m_NextPass){
+	//	m_CurrentPass = m_Passes[m_NextPass];
+	//}
 	return m_CurrentPass;
 }
 

@@ -45,3 +45,10 @@ IMaterialBuffer::setBuffer(nau::render::IBuffer *b) {
 
 	m_Buffer = b;
 }
+
+
+IBuffer *
+IMaterialBuffer::getBuffer() {
+
+	return m_Buffer;
+}

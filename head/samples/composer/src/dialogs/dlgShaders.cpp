@@ -253,7 +253,7 @@ DlgShaders::update(){
 		m_log->Enable();
 		m_log->Clear();
 
-		GlProgram *p = (GlProgram *)RESOURCEMANAGER->getProgram(m_active);
+		GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_active);
 		std::string f[IProgram::SHADER_COUNT];
 		
 		pg->ClearSelection();
@@ -288,7 +288,7 @@ DlgShaders::update(){
 void 
 DlgShaders::updateShaderAux() {
 
-	GlProgram *p = (GlProgram *)RESOURCEMANAGER->getProgram(m_active);
+	GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_active);
 	std::string vfn = p->getShaderFile(IProgram::VERTEX_SHADER),
 				ffn = p->getShaderFile(IProgram::FRAGMENT_SHADER)
 #if NAU_OPENGL_VERSION >= 320
@@ -394,7 +394,7 @@ DlgShaders::getUniformType(int type) {
 
 
 void 
-DlgShaders::updateProgramProperties(GlProgram *p) {
+DlgShaders::updateProgramProperties(GLProgram *p) {
 
 	pg->SetPropertyValue(m_LinkStatus, p->getPropertyb(GL_LINK_STATUS));
 	pg->DisableProperty(m_LinkStatus);

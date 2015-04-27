@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 
+#include "nau/material/material.h"
 #include "nau/render/pass.h"
 
 using namespace nau::render;
@@ -29,6 +30,8 @@ namespace nau
 			void doPass();
 
 			void setMaterialName(const std::string &lName,const std::string &mName);
+			Material *getMaterial();
+
 			void setDimension(int dimX, int dimY, int dimZ);
 			void setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX,
 				IBuffer  *buffNameY, unsigned int offY,

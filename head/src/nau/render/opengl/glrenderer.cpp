@@ -8,11 +8,14 @@
 #include "nau/math/matrix.h"
 #include "nau/math/vec4.h"
 #include "nau/render/opengl/gldebug.h"
+#include "nau/render/opengl/glmaterialgroup.h"
+#include "nau/render/opengl/GLProgram.h"
 #include "nau/render/opengl/glvertexarray.h"
 #include "nau/render/opengl/glrendertarget.h"
 
 using namespace nau::math;
 using namespace nau::render;
+using namespace nau::render::opengl;
 using namespace nau::geometry;
 using namespace nau::scene;
 using namespace nau::material;
@@ -862,7 +865,6 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 	}
 
 	if (m_BoolProps[DEBUG_DRAW_CALL]) {
-
 		showDrawDebugInfo(aMatGroup);
 	}
 
@@ -871,6 +873,17 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 #endif
 
 	aMatGroup->unbind();
+}
+
+
+void 
+GLRenderer::dispatchCompute(int dimX, int dimY, int dimZ) {
+
+	glDispatchCompute(dimX, dimY, dimZ);
+
+	if (m_BoolProps[DEBUG_DRAW_CALL]) {
+		showDrawDebugInfo((PassCompute *)RENDERMANAGER->getCurrentPass());
+	}
 }
 
 
@@ -886,10 +899,235 @@ GLRenderer::setCullFace(Face aFace) {
 // -----------------------------------------------------------------
 
 
+void 
+GLRenderer::showDrawDebugInfo(PassCompute *p) {
+
+	Material *mat = p->getMaterial();
+	showDrawDebugInfo(mat);
+}
+
+
 void
 GLRenderer::showDrawDebugInfo(MaterialGroup *mg) {
 
-	SLOG("Drawing with Material: %s", mg->getMaterialName().c_str());
+	GLMaterialGroup *glMG = (GLMaterialGroup *)mg;
+	std::string s = mg->getMaterialName();
+	std::map<string, MaterialID> m = RENDERMANAGER->getCurrentPass()->getMaterialMap();
+	if (m.count(s) == 0)
+		s = "*";
+	std::string matName = m[s].getLibName() + "::" + m[s].getMaterialName();
+	SLOG("Drawing with Material: %s", matName.c_str());
+	SLOG("VAO: %d", glMG->getVAO());
+	SLOG("\tIndex Buffer: %d", glMG->getIndexData().getBufferID());
+	SLOG("\tAttribute 0 Buffer: %d", glMG->getParent().getVertexData().getBufferID(0));
+	Material *mat = MATERIALLIBMANAGER->getMaterial(m[s]);
+
+	showDrawDebugInfo(mat);
+}
+
+
+void
+GLRenderer::showDrawDebugInfo(Material *mat) {
+
+	std::vector<int> vi;
+	mat->getTextureUnits(&vi);
+	if (vi.size() > 0) {
+		SLOG("Textures");
+		for (unsigned int i = 0; i < vi.size(); ++i) {
+			Texture *t = mat->getTexture(vi[i]);
+			SLOG("\tUnit %d ID %d Name %s", vi[i], t->getPropi(Texture::ID), t->getLabel().c_str());
+			int id;
+			glActiveTexture(GL_TEXTURE0+vi[i]);
+			glGetIntegerv(GL_TEXTURE_BINDING_2D, &id);
+			SLOG("\tActual texture bound to unit %d: %d", vi[i], id);
+		}
+	}
+
+	vi.clear();
+	mat->getBufferBindings(&vi);
+	if (vi.size() > 0) {
+		SLOG("Buffers");
+		for (unsigned int i = 0; i < vi.size(); ++i) {
+			IMaterialBuffer *b = mat->getBuffer(vi[i]);
+			IBuffer *buff = b->getBuffer();
+			SLOG("\tBinding point %d ID %d Name %s", vi[i], buff->getPropi(IBuffer::ID), buff->getLabel().c_str());
+			int k, pname;
+			switch (b->getPrope(IMaterialBuffer::TYPE)) {
+#if NAU_OPENGL_VERSION >= 430
+				case GL_SHADER_STORAGE_BUFFER: pname = GL_SHADER_STORAGE_BUFFER_BINDING; break;
+#endif
+#if NAU_OPENGL_VERSION >= 420
+				case GL_ATOMIC_COUNTER_BUFFER: pname = GL_ATOMIC_COUNTER_BUFFER_BINDING; break;
+#endif
+				case GL_TRANSFORM_FEEDBACK_BUFFER: pname = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING; break;
+				case GL_UNIFORM_BUFFER: pname = GL_UNIFORM_BUFFER_BINDING; break;
+			}
+			glGetIntegeri_v(pname, vi[i], &k);
+			SLOG("\tActual buffer for binding point %d: %d", vi[i], k);
+		}
+	}
+	showDrawDebugInfo(mat->getProgram());
+}
+
+
+
+int getUniformByteSize2(int uniSize, 
+				int uniType, 
+				int uniArrayStride, 
+				int uniMatStride) {
+
+	int auxSize;
+	if (uniArrayStride > 0)
+		auxSize = uniArrayStride * uniSize;
+				
+	else if (uniMatStride > 0) {
+
+		switch(uniType) {
+			case GL_FLOAT_MAT2:
+			case GL_FLOAT_MAT2x3:
+			case GL_FLOAT_MAT2x4:
+			case GL_DOUBLE_MAT2:
+			case GL_DOUBLE_MAT2x3:
+			case GL_DOUBLE_MAT2x4:
+				auxSize = 2 * uniMatStride;
+				break;
+			case GL_FLOAT_MAT3:
+			case GL_FLOAT_MAT3x2:
+			case GL_FLOAT_MAT3x4:
+			case GL_DOUBLE_MAT3:
+			case GL_DOUBLE_MAT3x2:
+			case GL_DOUBLE_MAT3x4:
+				auxSize = 3 * uniMatStride;
+				break;
+			case GL_FLOAT_MAT4:
+			case GL_FLOAT_MAT4x2:
+			case GL_FLOAT_MAT4x3:
+			case GL_DOUBLE_MAT4:
+			case GL_DOUBLE_MAT4x2:
+			case GL_DOUBLE_MAT4x3:
+				auxSize = 4 * uniMatStride;
+				break;
+		}
+	}
+	else
+		auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]);
+
+	return auxSize;
+}
+
+
+void
+GLRenderer::showDrawDebugInfo(IProgram *pp) {
+
+	int activeUnif, actualLen, index, uniType, 
+		uniSize, uniMatStride, uniArrayStride, uniOffset;
+	char name[256];
+
+	GLProgram *p = (GLProgram *)pp;
+	unsigned int program = p->getProgramID();
+	SLOG("Uniforms Info for program %s (%d)", p->getName(), program);
+
+	// Get uniforms info (not in named blocks)
+	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &activeUnif);
+
+	for (unsigned int i = 0; i < (unsigned int)activeUnif; ++i) {
+		glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_BLOCK_INDEX, &index);
+		if (index == -1) {
+			glGetActiveUniformName(program, i, 256, &actualLen, name);	
+			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_TYPE, &uniType);
+			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_SIZE, &uniSize);
+			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
+
+			int auxSize;
+			if (uniArrayStride > 0)
+				auxSize = uniArrayStride * uniSize;
+			else
+				auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]) * uniSize;
+			SLOG("%s (%s) location: %d size: %d stride: %d", name, GLUniform::spGLSLType[uniType].c_str(), i,
+				auxSize, uniArrayStride);
+		}
+	}
+	// Get named blocks info
+	int count, dataSize, info;
+	glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, &count);
+
+	for (int i = 0; i < count; ++i) {
+		// Get blocks name
+		glGetActiveUniformBlockName(program, i, 256, NULL, name);
+		glGetActiveUniformBlockiv(program, i, GL_UNIFORM_BLOCK_DATA_SIZE, &dataSize);
+		SLOG("%s\n  Size %d", name, dataSize);
+
+		glGetActiveUniformBlockiv(program, i,  GL_UNIFORM_BLOCK_BINDING, &index);
+		SLOG("  Block binding point: %d", index);
+		glGetIntegeri_v(GL_UNIFORM_BUFFER_BINDING, index, &info);
+		SLOG("  Buffer bound to binding point: %d {", info);
+
+
+		glGetActiveUniformBlockiv(program, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &activeUnif);
+
+		unsigned int *indices;
+		indices = (unsigned int *)malloc(sizeof(unsigned int) * activeUnif);
+		glGetActiveUniformBlockiv(program, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, (int *)indices);
+			
+		for (int k = 0; k < activeUnif; ++k) {
+		
+			glGetActiveUniformName(program, indices[k], 256, &actualLen, name);
+			glGetActiveUniformsiv(program, 1, &indices[k], GL_UNIFORM_TYPE, &uniType);
+			SLOG("\t%s\n\t    %s", name, GLUniform::spGLSLType[uniType].c_str());
+
+			glGetActiveUniformsiv(program, 1, &indices[k], GL_UNIFORM_OFFSET, &uniOffset);
+			SLOG("\t    offset: %d", uniOffset);
+
+			glGetActiveUniformsiv(program, 1, &indices[k], GL_UNIFORM_SIZE, &uniSize);
+
+			glGetActiveUniformsiv(program, 1, &indices[k], GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
+
+			glGetActiveUniformsiv(program, 1, &indices[k], GL_UNIFORM_MATRIX_STRIDE, &uniMatStride);
+
+			int auxSize;
+			if (uniArrayStride > 0)
+				auxSize = uniArrayStride * uniSize;
+				
+			else if (uniMatStride > 0) {
+
+				switch(uniType) {
+					case GL_FLOAT_MAT2:
+					case GL_FLOAT_MAT2x3:
+					case GL_FLOAT_MAT2x4:
+					case GL_DOUBLE_MAT2:
+					case GL_DOUBLE_MAT2x3:
+					case GL_DOUBLE_MAT2x4:
+						auxSize = 2 * uniMatStride;
+						break;
+					case GL_FLOAT_MAT3:
+					case GL_FLOAT_MAT3x2:
+					case GL_FLOAT_MAT3x4:
+					case GL_DOUBLE_MAT3:
+					case GL_DOUBLE_MAT3x2:
+					case GL_DOUBLE_MAT3x4:
+						auxSize = 3 * uniMatStride;
+						break;
+					case GL_FLOAT_MAT4:
+					case GL_FLOAT_MAT4x2:
+					case GL_FLOAT_MAT4x3:
+					case GL_DOUBLE_MAT4:
+					case GL_DOUBLE_MAT4x2:
+					case GL_DOUBLE_MAT4x3:
+						auxSize = 4 * uniMatStride;
+						break;
+				}
+			}
+			else
+				auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]);
+
+			auxSize = getUniformByteSize2(uniSize, uniType, uniArrayStride, uniMatStride);
+			SLOG("\t    size: %d", auxSize);
+			if (uniArrayStride > 0)
+				SLOG("\t    array stride: %d", uniArrayStride);
+			if (uniMatStride > 0)
+				SLOG("\t    mat stride: %d", uniMatStride);
+		}
+	}
 }
 
 

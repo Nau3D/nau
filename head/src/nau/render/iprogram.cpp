@@ -2,7 +2,7 @@
 
 
 #ifdef NAU_OPENGL
-#include "nau/render/opengl/glprogram.h"
+#include "nau/render/opengl/GLProgram.h"
 #endif
 
 using namespace nau::render;
@@ -27,7 +27,7 @@ IProgram*
 IProgram::create (void) 
 {
 #ifdef NAU_OPENGL
-	return new GlProgram;
+	return new GLProgram;
 #elif NAU_DIRECTX
 	return new DXProgram;
 #endif

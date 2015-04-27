@@ -31,6 +31,7 @@ namespace nau
 			virtual void bind() = 0;
 			virtual void unbind() = 0;
 			void setBuffer(nau::render::IBuffer *b);
+			nau::render::IBuffer *getBuffer();
 
 			~IMaterialBuffer(void) {};
 
