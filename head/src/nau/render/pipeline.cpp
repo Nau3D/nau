@@ -200,24 +200,34 @@ void
 Pipeline::executePass(Pass *pass) {
 
 	m_CurrentPass = pass;
+	bool keepRunning = false;
 
+	if (pass->getPrope(Pass::RUN_MODE) == Pass::RUN_WHILE_TRUE)
+		keepRunning = true;
+
+	do {
 #ifdef GLINTERCEPTDEBUG
-	addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
+		addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
-	if (RENDERER->getPropb(IRenderer::DEBUG_DRAW_CALL))
-		SLOG("Pass: %s", pass->getName().c_str());
+		if (RENDERER->getPropb(IRenderer::DEBUG_DRAW_CALL))
+			SLOG("Pass: %s", pass->getName().c_str());
 
-	PROFILE(pass->getName());
-	pass->prepare();
-	if (true == pass->renderTest()) {
-		pass->doPass();
-	}
-	pass->restore();
+		PROFILE(pass->getName());
+
+		bool run = pass->renderTest();
+		if (run) {
+			pass->prepare();
+			pass->doPass();
+			pass->restore();
+		}
 
 #ifdef GLINTERCEPTDEBUG
-	addMessageToGLILog(("\n#NAU(PASS,END," + pass->getName() + ")").c_str());
+		addMessageToGLILog(("\n#NAU(PASS,END," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
+
+		keepRunning = keepRunning && run;
+	} while (keepRunning);
 
 }
 
@@ -225,21 +235,37 @@ Pipeline::executePass(Pass *pass) {
 void
 Pipeline::execute() {
 
-	callScript(m_PreScriptFile, m_PreScriptName);
+	callScript(m_PreScriptName);
 	try {
 		PROFILE("Pipeline execute");
 
 		RENDERER->setDefaultState();			
 		for ( auto pass:m_Passes) {
-			
 
-			executePass(pass);
+			int mode = pass->getPrope(Pass::RUN_MODE);
+			// most common case: run pass in all frames
+			if (mode == Pass::RUN_ALWAYS || mode == Pass::RUN_WHILE_TRUE)
+				executePass(pass);
+
+			else {
+				unsigned long f = NAU->getFrameCount();
+				bool even = (f % 2 == 0);
+				if (mode == Pass::RUN_EVEN && !even)
+					continue;
+				else if (mode == Pass::RUN_ODD && even)
+					continue;
+				// check for skip_first and run_once cases
+				else if ((mode == Pass::SKIP_FIRST_FRAME && (f == 0)) || (mode == Pass::RUN_ONCE && (f > 0)))
+					continue;
+				else
+					executePass(pass);
+			}
 		}
 	}
 	catch (Exception &e) {
 		SLOG(e.getException().c_str());
 	}
-	callScript(m_PostScriptFile, m_PostScriptName);
+	callScript(m_PostScriptName);
 }
 
 
@@ -247,7 +273,7 @@ void
 Pipeline::executeNextPass() {
 
 	if (m_NextPass == 0)
-		callScript(m_PreScriptFile, m_PreScriptName);
+		callScript(m_PreScriptName);
 
 	try {
 		Pass *p = m_Passes[m_NextPass];
@@ -261,7 +287,7 @@ Pipeline::executeNextPass() {
 		SLOG(e.getException().c_str());
 	}
 	if (m_NextPass == 0)
-		callScript(m_PostScriptFile, m_PostScriptName);
+		callScript(m_PostScriptName);
 
 }
 
@@ -300,11 +326,11 @@ Pipeline::setPostScript(std::string file, std::string name) {
 
 
 void 
-Pipeline::callScript(std::string &file, std::string &name) {
+Pipeline::callScript(std::string &name) {
 
 #ifdef NAU_LUA
-	if (file != "" && name != "") {
-		NAU->callLuaScript(file, name);
+	if (name != "") {
+		NAU->callLuaScript(name);
 
 	}
 #endif

@@ -93,7 +93,8 @@ namespace nau
 				SKIP_FIRST_FRAME,
 				RUN_ONCE,
 				RUN_EVEN,
-				RUN_ODD
+				RUN_ODD,
+				RUN_WHILE_TRUE
 			} RunMode;
 
 			typedef enum {
@@ -111,7 +112,11 @@ namespace nau
 			const std::string &getClassName();
 			std::string &getName (void);
 
-
+			//
+			// LUA SCRIPTS
+			//
+			void setTestScript(std::string file, std::string name);
+			bool testScript();
 			//
 			// PRE POST PROCESS
 			//
@@ -122,7 +127,7 @@ namespace nau
 			// RENDER TEST
 			//
 			void setMode(RunMode value);
-			// checks the run mode and the frame number
+			// 
 			bool renderTest (void);
 
 			// 
@@ -204,6 +209,9 @@ namespace nau
 
 		
 		protected:
+
+			// LUA SCRIPTS
+			std::string m_TestScriptFile, m_TestScriptName;
 
 			// PRE POST PROCESS
 			std::vector <PassProcessItem *> m_PreProcessList;

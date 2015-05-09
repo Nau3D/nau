@@ -72,7 +72,8 @@ namespace nau {
 #ifdef NAU_LUA
 		void initLua();
 		void initLuaScript(std::string file, std::string name);
-		void callLuaScript(std::string file, std::string name);
+		void callLuaScript(std::string name);
+		bool callLuaTestScript(std::string name);
 #endif
 		std::string &getName();
 

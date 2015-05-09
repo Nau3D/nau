@@ -358,7 +358,7 @@ Nau::initLuaScript(std::string file, std::string name) {
 
 
 void
-Nau::callLuaScript(std::string file, std::string name) {
+Nau::callLuaScript(std::string name) {
 
 	lua_getglobal(m_LuaState, name.c_str());
 	lua_pcall(m_LuaState, 0, 0, 0);
@@ -373,6 +373,16 @@ Nau::callLuaScript(std::string file, std::string name) {
 	//int k = lua_tonumber(m_LuaState, -1);
 
 }
+
+
+bool
+Nau::callLuaTestScript(std::string name) {
+
+	lua_getglobal(m_LuaState, name.c_str());
+	lua_pcall(m_LuaState, 0, 1, 0);
+	return (lua_toboolean(m_LuaState, -1) != 0);
+}
+
 
 #endif
 

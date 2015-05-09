@@ -51,7 +51,7 @@ GLImageTexture::prepare() {
 #if NAU_OPENGL_VERSION >= 440
 	if (m_BoolProps[CLEAR]) {
 		t->clearLevel(m_UIntProps[LEVEL]);
-		glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, NULL);
+		//glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, NULL);
 	}
 	glBindImageTexture(m_IntProps[UNIT], m_UIntProps[TEX_ID], m_UIntProps[LEVEL],GL_TRUE,0,m_EnumProps[ACCESS],m_InternalFormat);
 #endif

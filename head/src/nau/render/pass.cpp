@@ -37,6 +37,7 @@ Pass::Init() {
 	Attribs.listAdd("RUN_MODE", "RUN_ONCE", RUN_ONCE);
 	Attribs.listAdd("RUN_MODE", "RUN_EVEN", RUN_EVEN);
 	Attribs.listAdd("RUN_MODE", "RUN_ODD", RUN_ODD);
+	Attribs.listAdd("RUN_MODE", "RUN_WHILE_TRUE", RUN_WHILE_TRUE);
 
 	Attribs.add(Attribute(STENCIL_FUNC, "STENCIL_FUNC", Enums::DataType::ENUM, false, new int(ALWAYS)));
 	Attribs.listAdd("STENCIL_FUNC", "LESS", LESS);
@@ -116,7 +117,8 @@ Pass::Pass (const std::string &passName) :
 	m_MaterialMap(),
 	m_Viewport (0),
 	m_RestoreViewport (0),
-	m_RemapMode (REMAP_DISABLED) {
+	m_RemapMode (REMAP_DISABLED),
+	m_TestScriptFile("") {
 
 	registerAndInitArrays(Attribs);
 
@@ -197,27 +199,38 @@ Pass::setMode(RunMode value) {
 bool
 Pass::renderTest(void) {
 
-	// most common case: run pass in all frames
-	if (m_EnumProps[RUN_MODE] == RUN_ALWAYS)
-		return true;
-
-	// pass disabled
-	else if (m_EnumProps[RUN_MODE] == DONT_RUN)
-		return false;
-
-	else {
-		unsigned long f = NAU->getFrameCount();
-		bool even = (f % 2 == 0);
-		if (m_EnumProps[RUN_MODE] == RUN_EVEN && !even)
+#ifdef NAU_LUA
+	bool test;
+	if (m_TestScriptName != "") {
+		test = NAU->callLuaTestScript(m_TestScriptName);
+		if (!test)
 			return false;
-		else if (m_EnumProps[RUN_MODE] == RUN_ODD && even)
-			return false;
-		// check for skip_first and run_once cases
-		else if ((m_EnumProps[RUN_MODE] == SKIP_FIRST_FRAME && (f == 0)) || (m_EnumProps[RUN_MODE] == RUN_ONCE && (f > 0)))
-			return false;
-		else
-			return true;
 	}
+#endif
+
+	//// most common case: run pass in all frames
+	//if (m_EnumProps[RUN_MODE] == RUN_ALWAYS)
+	//	return true;
+
+	//// pass disabled
+	//else if (m_EnumProps[RUN_MODE] == DONT_RUN)
+	//	return false;
+
+	//else {
+	//	unsigned long f = NAU->getFrameCount();
+	//	bool even = (f % 2 == 0);
+	//	if (m_EnumProps[RUN_MODE] == RUN_EVEN && !even)
+	//		return false;
+	//	else if (m_EnumProps[RUN_MODE] == RUN_ODD && even)
+	//		return false;
+	//	// check for skip_first and run_once cases
+	//	else if ((m_EnumProps[RUN_MODE] == SKIP_FIRST_FRAME && (f == 0)) || (m_EnumProps[RUN_MODE] == RUN_ONCE && (f > 0)))
+	//		return false;
+	//	else
+	//		return true;
+	//}
+
+	return true;
 }
 
 
@@ -304,6 +317,21 @@ Pass::restore(void) {
 
 	for (auto pp : m_PostProcessList)
 		pp->process();
+}
+
+
+// --------------------------------------------------
+//		LUA SCRIPTS
+// --------------------------------------------------
+
+
+void 
+Pass::setTestScript(std::string file, std::string name) {
+
+	m_TestScriptFile = file;
+	m_TestScriptName = name;
+	if (file != "" && name != "")
+		NAU->initLuaScript(file, name);
 }
 
 

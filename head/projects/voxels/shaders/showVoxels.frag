@@ -8,7 +8,7 @@ uniform float FOV;
 uniform vec2 WindowSize;
 uniform vec3 RayOrigin;
 uniform int GridSize;
-
+uniform int level = 3;
 
 struct Ray {
     vec3 Origin;
@@ -63,11 +63,12 @@ void main()
 	vec4 density = vec4(0);
     for (;  density.w == 0  &&  travel > 0.0;  travel -= stepSize) {
 
-        density = texture(grid, pos*0.5 + 0.5) ;
+        //density = texture(grid, pos*0.5 + 0.5) ;
+		density = texelFetch(grid, ivec3((pos*0.5 + 0.5) * GridSize/pow(2.0,level)), level) ;
 		pos += step;
      }
 
-    FragColor.rgb = vec3(density);
+    FragColor.rgb = vec3(density)/density.w;
     FragColor.a = 1;
 	
 	//FragColor = vec4(1.0);

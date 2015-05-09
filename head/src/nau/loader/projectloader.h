@@ -95,6 +95,7 @@ namespace nau
 			//Pass Elements
 			static void loadPassCamera(TiXmlHandle hPass, Pass *aPass); 	
 			static void loadPassMode(TiXmlHandle hPass, Pass *aPass);
+			static void loadPassScripts(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassPreProcess(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassPostProcess(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassLights(TiXmlHandle hPass, Pass *aPass);

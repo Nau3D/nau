@@ -1403,12 +1403,41 @@ ProjectLoader::loadPassMode(TiXmlHandle hPass, Pass *aPass)
 		const char *pMode = pElem->Attribute("value");
 		bool valid = Pass::Attribs.isValid("RUN_MODE", pMode);
 		if (!valid) {
-			NAU_THROW("File %s\nPass %s\nInvalid mode: %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pMode);
+			Attribute a = aPass->getAttribSet()->get("RUN_MODE");
+			NAU_THROW("File %s\nPass %s\nInvalid mode: %s\n Valid Values are: %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pMode, getValidValuesString(a,NULL).c_str());
 		}
 
 		aPass->setMode((Pass::RunMode)Pass::Attribs.getListValueOp(Pass::RUN_MODE, pMode));
 	}
 }
+
+
+/* -----------------------------------------------------------------------------
+testScript
+
+<testScript file="test.lua" script="testFunction" />
+
+Specifies a test script for the pass. The pass will only execute if the test returns true
+-----------------------------------------------------------------------------*/
+
+void
+ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
+{
+	TiXmlElement *pElem;
+
+	pElem = hPass.FirstChild("testScript").Element();
+	if (pElem != 0) {
+		const char *pFile = pElem->Attribute("file");
+		const char *pFunction = pElem->Attribute("script");
+		if (!pFile || !pFunction) {
+			NAU_THROW("File %s\nPass %s\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		}
+
+		aPass->setTestScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+	}
+}
+
+
 /* -----------------------------------------------------------------------------
 LIGHTS
 
@@ -1683,7 +1712,7 @@ Passes can take user attributes
 void 
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
-	std::vector<std::string> excluded = {"preProcess", "postProcess", "mode", "scene", "scenes", "camera", "lights", "viewport", "renderTarget",
+	std::vector<std::string> excluded = {"testScript", "preProcess", "postProcess", "mode", "scene", "scenes", "camera", "lights", "viewport", "renderTarget",
 		"materialMaps", "injectionMaps", "texture", "material", "depth", "stencil", "color", "rays", "hits",
 		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
 		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes"};
@@ -3158,6 +3187,8 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 
 				
 			loadPassMode(hPass, aPass);	
+
+			loadPassScripts(hPass, aPass);
 
 			loadPassPreProcess(hPass, aPass);
 			loadPassPostProcess(hPass, aPass);

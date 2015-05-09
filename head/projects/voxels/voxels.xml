@@ -7,6 +7,8 @@
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
+			<attribute name="GridLevels" context="PASS" type="INT" value=7 />
+			<attribute name="GridCurrentLevel" context="PASS" type="INT" value=0 />
 		</attributes>
 		<scenes>
 			<scene name="MainScene" param="UNITIZE">
@@ -97,17 +99,55 @@
 				<viewport name="Grid"/>
 				<camera name="MainCamera" />
 				<scenes>
-					<scene name="MainScene" />
+					<scene name="Bench" />
 				</scenes>
 				<color clear=false enable=false />
 				<depth test=false write=false />
 				<renderTarget name="dummy" fromLibrary="Voxels" />
-				<materialMaps>			
+				<injectionMaps>
+					<map toMaterial="*" >
+						<shader fromMaterial ="voxelization" fromLibrary="Voxels" />
+						<state name="voxelization" fromLibrary="Voxels" />
+						<imageTextures>
+							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 >
+								<ACCESS value="WRITE_ONLY" />
+								<LEVEL value=0 />
+								<!--CLEAR value=true/-->
+							</imageTexture>
+							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 >
+								<ACCESS value="WRITE_ONLY" />
+								<LEVEL value=0 />
+							</imageTexture>
+						</imageTextures>
+						<buffers>	
+							<buffer name="atomic"  fromLibrary="Voxels">
+								<TYPE value="ATOMIC_COUNTER" />
+								<BINDING_POINT value="1" />
+							</buffer>
+						</buffers>	
+					</map>
+				</injectionMaps>
+				<!--materialMaps>			
 					<map fromMaterial="*" 
 						 toLibrary="Voxels" toMaterial="voxelization" />
-				</materialMaps>				
+				</materialMaps-->				
+				<preProcess>
+					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 />
+					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
+				</preProcess>	
+				<postProcess>
+					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
+					<texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true />
+				</postProcess>	
 			</pass>
-			
+						
+			<!--pass class="compute" name="mipmap" >
+				<mode value="RUN_WHILE_TRUE" />
+				<testScript file="test.lua" script="test" />
+				<material name="mipmap" fromLibrary="Voxels" dimX=64, dimY=64 dimZ=64 />
+			</pass-->
+
 			<pass class="default" name="showVoxels">
 				<scenes>
 					<scene name="Dummy" />
@@ -120,13 +160,16 @@
 				</materialMaps>				
 			</pass>
 		</pipeline>
-		<pipeline name="voxels2" >
+		
+		
+		
+		<pipeline name="voxels2">
 			<pass class="default" name="voxelization">
 				<mode value="RUN_ONCE" />
 				<viewport name="Grid"/>
 				<camera name="MainCamera" />
 				<scenes>
-					<scene name="MainScene" />
+					<scene name="Bench" />
 				</scenes>
 				<color clear=false enable=false />
 				<depth test=false write=false />
@@ -139,7 +182,6 @@
 				<postProcess>
 					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
 					<texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true />
-					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
 				</postProcess>	
 				<injectionMaps>
 					<map toMaterial="*" >
@@ -165,8 +207,9 @@
 					</map>
 				</injectionMaps>
 			</pass>
+
 			
-			<pass class="default" name="showVoxels2">
+			<pass class="default" name="showVoxels">
 				<scenes instances="GridVolume">
 					<scene name="Cube" />
 				</scenes>	

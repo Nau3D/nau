@@ -1,9 +1,10 @@
 #ifndef PASS_COMPUTE_H
 #define PASS_COMPUTE_H
 
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
+
 
 #include "nau/material/material.h"
 #include "nau/render/pass.h"
@@ -18,6 +19,11 @@ namespace nau
 		class PassCompute : public Pass {
 
 		public:
+
+			UINT_PROP(DIM_X, 0);
+			UINT_PROP(DIM_Y, 1);
+			UINT_PROP(DIM_Z, 2);
+
 			PassCompute (const std::string &passName);
 			virtual ~PassCompute();
 
@@ -38,6 +44,10 @@ namespace nau
 				IBuffer  *buffNameZ, unsigned int offZ);
 
 		protected:
+
+			static bool Init();
+			static bool Inited;
+
 			Material *m_Mat;
 			int m_DimX, m_DimY, m_DimZ;
 			IBuffer  *m_BufferX, *m_BufferY, *m_BufferZ;

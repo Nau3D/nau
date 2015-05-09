@@ -44,8 +44,12 @@
 		<shader name="showVoxels" 		vs = "shaders/showVoxels.vert" 
 										gs = "shaders/showVoxels.geom"
 										ps = "shaders/showVoxels.frag" /> 
+										
 		<shader name="showVoxels2" 		vs = "shaders/showVoxels2.vert" 
 										ps = "shaders/showVoxels2.frag" /> 
+										
+		<shader name="mipmap" 			cs = "shaders/mipmap.comp" /> 
+
 	</shaders>
 	
 	<states>
@@ -110,6 +114,52 @@
 			</state>	
 		</material>
 	
+		<material name="mipmap" >
+			<shader name="mipmap">
+				<values>
+					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
+															id=1 component="UNIT" />
+					<valueof uniform="imageUnitN"		type="CURRENT" context="IMAGE_TEXTURE"
+															id=2 component="UNIT" />
+					<valueof uniform="grid"				type="CURRENT" context="MATERIAL_TEXTURE"
+															id=1 component="UNIT" />
+					<valueof uniform="normal"			type="CURRENT" context="MATERIAL_TEXTURE"
+															id=2 component="UNIT" />
+					<valueof uniform="destMipLevel"		type="CURRENT" context="PASS"
+															component="GridCurrentLevel" />
+				</values>
+			</shader>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="gridColor" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=1 />
+					<CLEAR value=true/>
+				</imageTexture>
+				<imageTexture UNIT=2 texture="gridNormal" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=1 />
+					<CLEAR value=true/>
+				</imageTexture>
+			</imageTextures>
+			<textures>
+				<texture UNIT=1 name="gridColor" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=2 name="gridNormal" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		
+		</material>
+		
 		<material name ="showVoxels">
 			<shader name="showVoxels">
 				<values>

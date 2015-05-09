@@ -8,13 +8,29 @@ using namespace nau::scene;
 using namespace nau::render;
 using namespace nau::geometry;
 
+bool PassCompute::Inited = PassCompute::Init();
+
+bool
+PassCompute::Init() {
+
+	//UINT
+	Attribs.add(Attribute(DIM_X, "DIM_X", Enums::DataType::UINT, false, new unsigned int(1)));
+	Attribs.add(Attribute(DIM_Y, "DIM_Y", Enums::DataType::UINT, false, new unsigned int(1)));
+	Attribs.add(Attribute(DIM_Z, "DIM_Z", Enums::DataType::UINT, false, new unsigned int(1)));
+
+//	NAU->registerAttributes("PASS_COMPUTE", &Attribs);
+	return true;
+}
+
 
 PassCompute::PassCompute(const std::string &passName) : Pass(passName),
-m_Mat(0), m_DimX(1), m_DimY(1), m_DimZ(1),
+m_Mat(0), 
 m_BufferX(0), m_BufferY(0), m_BufferZ(0),
 m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0) {
 
 	m_ClassName = "compute";
+
+	registerAndInitArrays(Attribs);
 }
 
 
@@ -32,16 +48,16 @@ PassCompute::~PassCompute(){
 void
 PassCompute::prepare (void) {
 
-	m_Mat->prepare();
+	m_Mat->prepare();	
 
 	if (m_BufferX) {
-		m_BufferX->getData(m_OffsetX, 4, &m_DimX);
+		m_BufferX->getData(m_OffsetX, 4, &m_UIntProps[DIM_X]);
 	}
 	if (m_BufferY) {
-		m_BufferY->getData(m_OffsetY, 4, &m_DimY);
+		m_BufferY->getData(m_OffsetY, 4, &m_UIntProps[DIM_Y]);
 	}
 	if (m_BufferZ) {
-		m_BufferZ->getData(m_OffsetZ, 4, &m_DimZ);
+		m_BufferZ->getData(m_OffsetZ, 4, &m_UIntProps[DIM_Z]);
 	}
 }
 
@@ -56,7 +72,7 @@ PassCompute::restore (void) {
 void
 PassCompute::doPass (void) {
 
-	RENDERER->dispatchCompute(m_DimX, m_DimY, m_DimZ);
+	RENDERER->dispatchCompute(m_UIntProps[DIM_X], m_UIntProps[DIM_Y], m_UIntProps[DIM_Z]);
 }
 
 
@@ -78,9 +94,9 @@ PassCompute::getMaterial() {
 void
 PassCompute::setDimension(int dimX, int dimY, int dimZ) {
 
-	m_DimX = dimX;
-	m_DimY = dimY;
-	m_DimZ = dimZ;
+	m_UIntProps[DIM_X] = dimX;
+	m_UIntProps[DIM_Y] = dimY;
+	m_UIntProps[DIM_Z] = dimZ;
 }
 
 
