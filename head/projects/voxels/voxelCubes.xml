@@ -2,8 +2,8 @@
 <project name="Voxels" width=512 height=512>
 	<assets>
 		<constants>
-			<constant name="GridSize" value = 512 />
-			<constant name="GridVolume" value = 134217728 />
+			<constant name="GridSize" value = 64 />
+			<constant name="GridVolume" value = 262144 />
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
@@ -15,16 +15,13 @@
 				<file name="../../models/cube.obj"/>
 			</scene>
 			<scene name="VoxelTest" param="UNITIZE">
-				<file name="../../models/voxeltest.obj"/>
+				<file name="../../models/bunny.obj"/>
 			</scene>
 			<scene name="Bench" param="UNITIZE">
-				<file name="../../models/ntg-bench/bench.obj"/>
+				<file name="../../models/bench.obj"/>
 			</scene>
-			<scene name="Sponza" param="UNITIZE">
-				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
-			</scene>
-			<scene name="Cube" param="UNITIZE">
-				<file name="../../models/cube.obj"/>
+			<scene name="Cube" >
+				<file name="../../models/cube2.obj"/>
 			</scene>
 			<scene name="Dummy" >
 				<buffers name="positions" primitive="POINTS" material="showRays">
@@ -83,6 +80,10 @@
 				<AMBIENT r="0.5" g="0.0" b="0.0" />
 			</light>
 		</lights>
+
+		<atomics>
+			<atomic buffer="Voxels::atomic" offset=0  semantics="count" />
+		</atomics>
 		
 		<materialLibs>
 		<materialLib filename="voxels.mlib"/>
@@ -97,7 +98,7 @@
 				<viewport name="Grid"/>
 				<camera name="MainCamera" />
 				<scenes>
-					<scene name="Sponza" />
+					<scene name="VoxelTest" />
 				</scenes>
 				<color clear=false enable=false />
 				<depth test=false write=false />
@@ -116,6 +117,12 @@
 								<LEVEL value=0 />
 							</imageTexture>
 						</imageTextures>
+						<buffers>	
+							<buffer name="atomic"  fromLibrary="Voxels">
+								<TYPE value="ATOMIC_COUNTER" />
+								<BINDING_POINT value="1" />
+							</buffer>
+						</buffers>	
 					</map>
 				</injectionMaps>
 				<preProcess>
@@ -129,17 +136,19 @@
 				</postProcess>	
 			</pass>
 						
+			
 			<pass class="default" name="showVoxels">
-				<scenes>
-					<scene name="Dummy" />
+				<scenes instances="GridVolume">
+					<scene name="Cube" />
 				</scenes>	
 				<camera name="MainCamera" />
 				<viewport name="MainViewport" />
 				<materialMaps>			
-					<map fromMaterial="showRays" 
-						 toLibrary="Voxels" toMaterial="showVoxels" />
+					<map fromMaterial="*" 
+						 toLibrary="Voxels" toMaterial="showVoxels2" />
 				</materialMaps>				
 			</pass>
 		</pipeline>
+		
 	</pipelines>
 </project>

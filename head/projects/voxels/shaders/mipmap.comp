@@ -1,5 +1,5 @@
 #version 430
-layout (local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 uniform int destMipLevel = 0;
 layout(binding = 1, rgba8) writeonly uniform image3D imageUnit;
@@ -24,8 +24,11 @@ void main()
 	float f = srcColor0.w + srcColor1.w + srcColor2.w + srcColor3.w +
 		srcColor4.w + srcColor5.w + srcColor6.w + srcColor7.w;
 		
-	vec4 outColor = srcColor0 + srcColor1 + srcColor2 + srcColor3 + srcColor4 + srcColor5 + srcColor6 + srcColor7;
-	outColor /= f;
+	vec4 outColor = 0.125 * (srcColor0 + srcColor1 + srcColor2 + srcColor3 + srcColor4 + srcColor5 + srcColor6 + srcColor7);
+	// if (f != 0)
+		// outColor.xyz /= f;
+	
+	// outColor.w = f/8.0;
 		
 	imageStore(imageUnit, dstPos, outColor);
 }

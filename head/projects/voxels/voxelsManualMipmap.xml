@@ -83,6 +83,10 @@
 				<AMBIENT r="0.5" g="0.0" b="0.0" />
 			</light>
 		</lights>
+
+		<atomics>
+			<atomic buffer="Voxels::atomic" offset=0  semantics="count" />
+		</atomics>
 		
 		<materialLibs>
 		<materialLib filename="voxels.mlib"/>
@@ -116,6 +120,12 @@
 								<LEVEL value=0 />
 							</imageTexture>
 						</imageTextures>
+						<buffers>	
+							<buffer name="atomic"  fromLibrary="Voxels">
+								<TYPE value="ATOMIC_COUNTER" />
+								<BINDING_POINT value="1" />
+							</buffer>
+						</buffers>	
 					</map>
 				</injectionMaps>
 				<preProcess>
@@ -123,12 +133,14 @@
 					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 />
 					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
 				</preProcess>	
-				<postProcess>
-					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
-					<texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true />
-				</postProcess>	
 			</pass>
 						
+			<pass class="compute" name="mipmap" >
+				<mode value="RUN_WHILE_TRUE" />
+				<testScript file="test.lua" script="test" />
+				<material name="mipmap" fromLibrary="Voxels" dimX=64, dimY=64 dimZ=64 />
+			</pass>
+
 			<pass class="default" name="showVoxels">
 				<scenes>
 					<scene name="Dummy" />

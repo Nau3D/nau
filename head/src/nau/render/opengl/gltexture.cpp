@@ -10,11 +10,19 @@ using namespace nau::render;
 std::map<unsigned int, GLTexture::TexDataTypes> GLTexture::TexDataType;
 std::map<unsigned int, GLTexture::TexFormats> GLTexture::TexFormat;
 std::map<unsigned int, GLTexture::TexIntFormats> GLTexture::TexIntFormat;
+std::map<int, int> GLTexture::TextureBound;
 
 bool GLTexture::Inited = GLTexture::InitGL();
 
 bool
 GLTexture::InitGL() {
+
+	TextureBound[GL_TEXTURE_2D] = GL_TEXTURE_BINDING_2D;
+	TextureBound[GL_TEXTURE_2D_ARRAY] = GL_TEXTURE_BINDING_2D_ARRAY;
+	TextureBound[GL_TEXTURE_2D_MULTISAMPLE] = GL_TEXTURE_BINDING_2D_MULTISAMPLE;
+	TextureBound[GL_TEXTURE_2D_MULTISAMPLE_ARRAY] = GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY;
+	TextureBound[GL_TEXTURE_3D] = GL_TEXTURE_BINDING_3D;
+	TextureBound[GL_TEXTURE_CUBE_MAP] = GL_TEXTURE_BINDING_CUBE_MAP;
 
 	TexFormat[GL_RED_INTEGER       ] = TexFormats("RED", 1);
 	TexFormat[GL_RED               ] = TexFormats("RED",1);
@@ -359,7 +367,7 @@ GLTexture::build() {
 	m_IntProps[COMPONENT_COUNT] = getNumberOfComponents();
 	m_IntProps[ELEMENT_SIZE] = getElementSize();
 
-	m_BoolProps[MIPMAP] = false;
+//	m_BoolProps[MIPMAP] = false;
 	glBindTexture(m_EnumProps[DIMENSION], 0);
 }
 

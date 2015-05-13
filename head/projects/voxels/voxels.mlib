@@ -8,6 +8,12 @@
 				<color name="dummy" internalFormat="RGBA" />
 			</colors>
 		</renderTarget>
+		<renderTarget name ="scene">
+			<SIZE width="GridSize" height="GridSize" />
+			<colors>
+				<color name="pos" internalFormat="RGBA32F" />
+			</colors>
+		</renderTarget>
 	</renderTargets>
 
 	<textures>
@@ -50,6 +56,11 @@
 										
 		<shader name="mipmap" 			cs = "shaders/mipmap.comp" /> 
 
+		<shader name="renderToTexture" 	vs = "shaders/renderToTexture.vert" 
+										ps = "shaders/renderToTexture.frag" /> 
+		<shader name="computeAO" 		vs = "shaders/computeAO.vert" 
+										ps = "shaders/computeAO.frag" /> 
+		
 	</shaders>
 	
 	<states>
@@ -91,14 +102,16 @@
 			
 			<imageTextures>
 				<imageTexture UNIT=1 texture="gridColor" >
-					<ACCESS value="WRITE_ONLY" />
+					<ACCESS value="READ_WRITE" />
 					<LEVEL value=0 />
 					<CLEAR value=true/>
+					<INTERNAL_FORMAT value="R32UI" />
 				</imageTexture>
 				<imageTexture UNIT=2 texture="gridNormal" >
-					<ACCESS value="WRITE_ONLY" />
+					<ACCESS value="READ_WRITE" />
 					<LEVEL value=0 />
 					<CLEAR value=true/>
+					<INTERNAL_FORMAT value="R32UI" />
 				</imageTexture>
 			</imageTextures>
 			
@@ -143,14 +156,14 @@
 			</imageTextures>
 			<textures>
 				<texture UNIT=1 name="gridColor" >
-					<MIN_FILTER value="NEAREST" />
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
 					<MAG_FILTER value="NEAREST" />
 					<WRAP_S value="CLAMP_TO_BORDER" />
 					<WRAP_T value="CLAMP_TO_BORDER" />
 					<WRAP_R value="CLAMP_TO_BORDER" />
 				</texture>
 				<texture UNIT=2 name="gridNormal" >
-					<MIN_FILTER value="NEAREST" />
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
 					<MAG_FILTER value="NEAREST" />
 					<WRAP_S value="CLAMP_TO_BORDER" />
 					<WRAP_T value="CLAMP_TO_BORDER" />
@@ -182,7 +195,7 @@
 			
 			<textures>
 				<texture UNIT=1 name="gridColor" >
-					<MIN_FILTER value="NEAREST" />
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
 					<MAG_FILTER value="NEAREST" />
 					<WRAP_S value="CLAMP_TO_BORDER" />
 					<WRAP_T value="CLAMP_TO_BORDER" />
@@ -194,7 +207,63 @@
 			</state>	
 			
 		</material>
+		
+		<material name ="renderScene">
+			<shader name="renderToTexture">
+				<values>
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+															component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="NormalMat"        type="CURRENT" context="RENDERER" 
+															component="NORMAL" />
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+															component="DIFFUSE" />
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+															component="SHININESS" />
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+															component="TEXTURE_COUNT" />
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+															component="UNIT" id="0" />				
+				</values>
+			</shader>
+		</material>
 
+		<material name ="computeAO">
+			<shader name="computeAO">
+				<values>
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+															component="UNIT" id="0" />				
+					<valueof uniform="grid" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+															component="UNIT" id="1" />				
+					<valueof uniform="gridNormal" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+															component="UNIT" id="2" />				
+				</values>
+			</shader>	
+			<textures>
+				<texture UNIT=0 name="pos" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=1 name="gridColor" >
+					<MIN_FILTER value="LINEAR_MIPMAP_LINEAR" />
+					<MAG_FILTER value="LINEAR" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=2 name="gridNormal" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+				
+			</textures>
+		</material>
+		
 		<material name ="showVoxels2">
 			<shader name="showVoxels2">
 				<values>

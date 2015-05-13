@@ -8,7 +8,7 @@ out vec4 outColor;
 uniform sampler3D grid;
 uniform sampler3D gridN;
 uniform mat4 VM;
-uniform int level = 3;
+uniform int level = 0;
 
 void main()
 {

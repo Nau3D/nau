@@ -314,9 +314,6 @@ Pass::restore(void) {
 
 	restoreCamera();
 	RENDERER->removeLights();
-
-	for (auto pp : m_PostProcessList)
-		pp->process();
 }
 
 

@@ -158,7 +158,7 @@ namespace nau
 				std::string s;
 
 				for (int i = 0; i < DIMENSION; ++i) {
-					s = std::to_string(m_Matrix[i*DIMENSION]);
+					s = s + std::to_string(m_Matrix[i*DIMENSION]);
 					for (int j = 1; j < DIMENSION; ++j) {
 						s = s + ", " + std::to_string(m_Matrix[i*DIMENSION + j]);
 					}

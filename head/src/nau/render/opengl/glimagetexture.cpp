@@ -4,6 +4,7 @@
 
 #include "nau.h"
 #include "nau/render/irenderer.h"
+#include "nau/render/opengl/gltexture.h"
 
 using namespace nau::render;
 
@@ -17,6 +18,10 @@ GLImageTexture::InitGL() {
 	Attribs.listAdd("ACCESS", "WRITE_ONLY", GL_WRITE_ONLY);
 	Attribs.listAdd("ACCESS", "READ_WRITE", GL_READ_WRITE);
 
+	for (auto f: nau::render::GLTexture::TexIntFormat) {
+	
+		Attribs.listAdd("INTERNAL_FORMAT", f.second.name,		f.first);
+	}
 	return(true);
 };
 
@@ -28,11 +33,12 @@ GLImageTexture::GLImageTexture(std::string label, unsigned int unit, unsigned in
 	m_UIntProps[TEX_ID] = texID;
 	m_IntProps[UNIT] = unit;
 	nau::render::Texture* t = RESOURCEMANAGER->getTextureByID(texID);
+
 	assert(t != NULL);
 	m_Format = t->getPrope(Texture::FORMAT);
 	m_Type = t->getPrope(Texture::TYPE);
 	m_Dimension = t->getPrope(Texture::DIMENSION);
-	m_InternalFormat = t->getPrope(Texture::INTERNAL_FORMAT);
+	m_EnumProps[INTERNAL_FORMAT] = t->getPrope(Texture::INTERNAL_FORMAT);
 	memset(m_Data, 0, sizeof(m_Data));
 	m_Label = label;
 }
@@ -53,7 +59,7 @@ GLImageTexture::prepare() {
 		t->clearLevel(m_UIntProps[LEVEL]);
 		//glClearTexImage(m_UIntProps[TEX_ID], m_UIntProps[LEVEL], m_Format, m_Type, NULL);
 	}
-	glBindImageTexture(m_IntProps[UNIT], m_UIntProps[TEX_ID], m_UIntProps[LEVEL],GL_TRUE,0,m_EnumProps[ACCESS],m_InternalFormat);
+	glBindImageTexture(m_IntProps[UNIT], m_UIntProps[TEX_ID], m_UIntProps[LEVEL],GL_TRUE,0, m_EnumProps[ACCESS], m_EnumProps[INTERNAL_FORMAT]);
 #endif
 }
 
@@ -61,7 +67,7 @@ GLImageTexture::prepare() {
 void 
 GLImageTexture::restore() {
 
-	glBindImageTexture(m_IntProps[UNIT], 0, m_UIntProps[LEVEL], false, 0, m_EnumProps[ACCESS], m_InternalFormat);
+	glBindImageTexture(m_IntProps[UNIT], 0, m_UIntProps[LEVEL], false, 0, m_EnumProps[ACCESS], m_EnumProps[INTERNAL_FORMAT]);
 	RENDERER->removeImageTexture(m_IntProps[UNIT]);
 }
 

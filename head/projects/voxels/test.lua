@@ -4,7 +4,7 @@ test = function()
 	local g = {}
 	getAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
 	
-	if f[1] == 7 then
+	if f[1] == 9 then
 		f[1] = 0
 		setAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
 		return false
@@ -12,7 +12,7 @@ test = function()
 		f[1] = f[1] + 1
 		setAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
 
-		k = 7 - f[1];
+		k = 9 - f[1];
 		g[1] = math.pow(2,k);
 		setAttr("PASS", "voxels#mipmap", "DIM_X", 0, g);
 		setAttr("PASS", "voxels#mipmap", "DIM_Y", 0, g);

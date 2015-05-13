@@ -38,11 +38,7 @@ namespace nau
 			static int GetNumberOfComponents(unsigned int format);
 			static int GetElementSize(unsigned int format, unsigned int type);
 
-
-		protected:
-			static bool InitGL();
-			static bool Inited;
-
+			static std::map<int, int> GLTexture::TextureBound;
 			struct TexIntFormats{
 				unsigned int format;
 				unsigned int type;				
@@ -52,7 +48,12 @@ namespace nau
 					format(f), type(t)   {memcpy(name,n,32);}
 				TexIntFormats(): format(0), type(0) {name[0]='\0';}
 			};
-			static std::map<unsigned int, TexIntFormats> TexIntFormat;
+			static std::map<unsigned int, GLTexture::TexIntFormats> TexIntFormat;
+
+		protected:
+			static bool InitGL();
+			static bool Inited;
+
 
 			struct TexFormats{
 				unsigned int numComp;				

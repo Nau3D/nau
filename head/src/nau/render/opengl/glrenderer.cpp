@@ -7,9 +7,11 @@
 #include "nau/material/materialgroup.h"
 #include "nau/math/matrix.h"
 #include "nau/math/vec4.h"
+#include "nau/render/vertexdata.h"
 #include "nau/render/opengl/gldebug.h"
 #include "nau/render/opengl/glmaterialgroup.h"
-#include "nau/render/opengl/GLProgram.h"
+#include "nau/render/opengl/glprogram.h"
+#include "nau/render/opengl/gltexture.h"
 #include "nau/render/opengl/glvertexarray.h"
 #include "nau/render/opengl/glrendertarget.h"
 
@@ -910,6 +912,7 @@ GLRenderer::showDrawDebugInfo(PassCompute *p) {
 void
 GLRenderer::showDrawDebugInfo(MaterialGroup *mg) {
 
+	int buffID;
 	GLMaterialGroup *glMG = (GLMaterialGroup *)mg;
 	std::string s = mg->getMaterialName();
 	std::map<string, MaterialID> m = RENDERMANAGER->getCurrentPass()->getMaterialMap();
@@ -918,8 +921,14 @@ GLRenderer::showDrawDebugInfo(MaterialGroup *mg) {
 	std::string matName = m[s].getLibName() + "::" + m[s].getMaterialName();
 	SLOG("Drawing with Material: %s", matName.c_str());
 	SLOG("VAO: %d", glMG->getVAO());
-	SLOG("\tIndex Buffer: %d", glMG->getIndexData().getBufferID());
-	SLOG("\tAttribute 0 Buffer: %d", glMG->getParent().getVertexData().getBufferID(0));
+	buffID = glMG->getIndexData().getBufferID();
+	if (buffID)
+		SLOG("\tIndex Buffer: %d", buffID );
+	for (int i = 0; i < VertexData::MaxAttribs; ++i) {
+		buffID = glMG->getParent().getVertexData().getBufferID(i);
+		if (buffID)
+			SLOG("\tAttribute %s Buffer: %d", VertexData::Syntax[i].c_str(), buffID);
+	}
 	Material *mat = MATERIALLIBMANAGER->getMaterial(m[s]);
 
 	showDrawDebugInfo(mat);
@@ -938,7 +947,7 @@ GLRenderer::showDrawDebugInfo(Material *mat) {
 			SLOG("\tUnit %d ID %d Name %s", vi[i], t->getPropi(Texture::ID), t->getLabel().c_str());
 			int id;
 			glActiveTexture(GL_TEXTURE0+vi[i]);
-			glGetIntegerv(GL_TEXTURE_BINDING_2D, &id);
+			glGetIntegerv(GLTexture::TextureBound[t->getPrope(Texture::DIMENSION)], &id);
 			SLOG("\tActual texture bound to unit %d: %d", vi[i], id);
 		}
 	}
@@ -1022,10 +1031,11 @@ GLRenderer::showDrawDebugInfo(IProgram *pp) {
 	int activeUnif, actualLen, index, uniType, 
 		uniSize, uniMatStride, uniArrayStride, uniOffset;
 	char name[256];
+	char values[256];
 
 	GLProgram *p = (GLProgram *)pp;
 	unsigned int program = p->getProgramID();
-	SLOG("Uniforms Info for program %s (%d)", p->getName(), program);
+	SLOG("Uniforms Info for program %s (%d)", p->getName().c_str(), program);
 
 	// Get uniforms info (not in named blocks)
 	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &activeUnif);
@@ -1038,13 +1048,32 @@ GLRenderer::showDrawDebugInfo(IProgram *pp) {
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_SIZE, &uniSize);
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
 
+			std::string s;
+			switch (Enums::getBasicType(GLUniform::spSimpleType[uniType])) {
+
+			case Enums::BOOL:
+			case Enums::INT:
+				glGetUniformiv(program, i, (GLint *)values);
+				break;
+			case Enums::FLOAT:
+				glGetUniformfv(program, i, (GLfloat *)values);
+				break;
+			case Enums::UINT:
+				glGetUniformuiv(program, i, (GLuint *)values);
+				break;
+			case Enums::DOUBLE:
+				glGetUniformdv(program, i, (GLdouble *)values);
+				break;
+			}
+			s = Enums::valueToString(GLUniform::spSimpleType[uniType], values);
+			
 			int auxSize;
 			if (uniArrayStride > 0)
 				auxSize = uniArrayStride * uniSize;
 			else
 				auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]) * uniSize;
-			SLOG("%s (%s) location: %d size: %d stride: %d", name, GLUniform::spGLSLType[uniType].c_str(), i,
-				auxSize, uniArrayStride);
+			SLOG("%s (%s) location: %d size: %d values: %s", name, GLUniform::spGLSLType[uniType].c_str(), i,
+				auxSize, s.c_str());
 		}
 	}
 	// Get named blocks info

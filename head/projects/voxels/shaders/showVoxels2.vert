@@ -19,7 +19,7 @@ void main()
 	pos.y = (inst - pos.x * (k)) / GridSize;
 	pos.z = inst - pos.x * (k) - pos.y * GridSize;
 	pos.w = 1;
-	posF = pos + position* 0.95;
+	posF = pos + position * 0.95;
 	posF /= GridSize;
 	posF = 2 * posF - vec4(1.0, 1.0, 1.0, 0);
 	posF.w = 1;

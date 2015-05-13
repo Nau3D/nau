@@ -21,6 +21,7 @@ ImageTexture::Init() {
 	Attribs.add(Attribute(LEVEL, "LEVEL", Enums::DataType::UINT, false, new int(0)));
 	// ENUM
 	Attribs.add(Attribute(ACCESS, "ACCESS", Enums::DataType::ENUM, false));
+	Attribs.add(Attribute(INTERNAL_FORMAT, "INTERNAL_FORMAT", Enums::DataType::ENUM, false));
 	// BOOL
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
 	// INT

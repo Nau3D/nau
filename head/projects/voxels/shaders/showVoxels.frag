@@ -8,7 +8,7 @@ uniform float FOV;
 uniform vec2 WindowSize;
 uniform vec3 RayOrigin;
 uniform int GridSize;
-uniform int level = 3;
+uniform int level = 0;
 
 struct Ray {
     vec3 Origin;
@@ -41,7 +41,7 @@ void main()
 	float stepSize = 1/float(numSamples);
 	float FocalLength = 1.0/ tan(radians(FOV*0.5));
     vec3 rayDirection;
-    rayDirection.xy = 2.0 * gl_FragCoord.xy / WindowSize - 1.0;
+    rayDirection.xy = 2.0 * gl_FragCoord.xy / WindowSize.x - 1.0;
     rayDirection.z = -FocalLength;
     rayDirection = (vec4(rayDirection, 0) * VM).xyz;
 
@@ -69,7 +69,7 @@ void main()
      }
 
     FragColor.rgb = vec3(density)/density.w;
-    FragColor.a = 1;
+    FragColor.a = density.w;
 	
 	//FragColor = vec4(1.0);
 }

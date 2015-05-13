@@ -27,6 +27,7 @@ namespace nau
 		public:
 
 			ENUM_PROP(ACCESS, 0);
+			ENUM_PROP(INTERNAL_FORMAT, 1);
 
 			UINT_PROP(LEVEL, 0);
 			UINT_PROP(TEX_ID, 1);
@@ -55,7 +56,7 @@ namespace nau
 			static bool Inited;
 
 			std::string m_Label;
-			unsigned int m_Format, m_Type, m_Dimension, m_InternalFormat;
+			unsigned int m_Format, m_Type, m_Dimension;
 
 			float m_Data[4];
 
