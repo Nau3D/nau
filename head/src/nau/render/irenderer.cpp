@@ -49,6 +49,7 @@ IRenderer::Init() {
 
 	//UINT
 	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
+	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, false, new unsigned int(0)));
 
 	// BOOL
 	Attribs.add(Attribute(DEBUG_DRAW_CALL, "DEBUG_DRAW_CALL", Enums::DataType::BOOL, true, new bool(false)));

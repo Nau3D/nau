@@ -102,6 +102,7 @@ Pass::Init() {
 	//UINT
 	Attribs.add(Attribute(STENCIL_OP_MASK, "STENCIL_OP_MASK", Enums::DataType::UINT, false, new unsigned int(255)));
 	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
+	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, true, new unsigned int(0)));
 
 	NAU->registerAttributes("PASS", &Attribs);
 
@@ -118,7 +119,8 @@ Pass::Pass (const std::string &passName) :
 	m_Viewport (0),
 	m_RestoreViewport (0),
 	m_RemapMode (REMAP_DISABLED),
-	m_TestScriptFile("") {
+	m_TestScriptFile(""),
+	m_BufferDrawIndirect(NULL) {
 
 	registerAndInitArrays(Attribs);
 
@@ -184,6 +186,19 @@ Pass::addPostProcessItem(PassProcessItem *pp) {
 
 	m_PostProcessList.push_back(pp);
 }
+
+
+// --------------------------------------------------
+//		BUFFER DRAW INDIRECT
+// --------------------------------------------------
+
+void 
+Pass::setBufferDrawIndirect(std::string s) {
+
+	m_BufferDrawIndirect = RESOURCEMANAGER->getBuffer(s);
+	m_UIntProps[BUFFER_DRAW_INDIRECT] = m_BufferDrawIndirect->getPropi(IBuffer::ID);
+}
+
 
 // --------------------------------------------------
 //		RENDER TEST
@@ -257,6 +272,7 @@ Pass::prepare (void) {
 	setupLights();
 
 	RENDERER->setPropui(IRenderer::INSTANCE_COUNT, m_UIntProps[INSTANCE_COUNT]);
+	RENDERER->setPropui(IRenderer::BUFFER_DRAW_INDIRECT, m_UIntProps[BUFFER_DRAW_INDIRECT]);
 }
 
 

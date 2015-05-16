@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<project name="Voxels" width=512 height=512>
+<project name="Voxels" width="512" height="512">
 	<assets>
 		<constants>
-			<constant name="GridSize" value = 512 />
-			<constant name="GridVolume" value = 134217728 />
+			<constant name="GridSize" value = "256" />
+			<constant name="GridVolume" value = 16777216 />
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />

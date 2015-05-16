@@ -15,6 +15,6 @@ void main()
 {
 	texCoordV = texCoord0;
     gl_Position = PVM * position;
-	normalV = NormalMat * normal;
+	normalV = normal;
 	posV = position;
 }

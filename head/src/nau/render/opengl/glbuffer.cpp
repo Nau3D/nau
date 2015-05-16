@@ -82,9 +82,9 @@ GLBuffer::setData(unsigned int size, void *data) {
 void
 GLBuffer::setSubData(unsigned int offset, unsigned int size, void *data) {
 
-	m_UIntProps[SIZE] = size;
+	//m_UIntProps[SIZE] = size;
 	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
-	glBufferSubData(GL_ARRAY_BUFFER, offset, m_UIntProps[SIZE], data);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

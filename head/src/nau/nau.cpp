@@ -1081,8 +1081,8 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);				
 				break;
 			case File::WAVEFRONTOBJ:
-				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
-				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);				
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
+				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);				
 				break;
 			case File::OGREXMLMESH:
 				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());				

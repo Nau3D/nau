@@ -852,14 +852,39 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 		size = indexData.getIndexSize();
 
 		if (size != 0) {
-			if (m_UIntProps[IRenderer::INSTANCE_COUNT])
+			if (m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]) {
+
+				IBuffer *b = RESOURCEMANAGER->getBufferByID(m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]); 
+				b->setSubData(0, 4, &size);
+				unsigned int aux[3] = { 0, 0, 0 };
+				b->setSubData(8, 12, &aux);
+				//aux[0] = 1000;
+				//b->setSubData(4, 4, &aux);
+				//b->bind(GL_DRAW_INDIRECT_BUFFER);
+				unsigned int temp = 0;
+				//glDrawElementsInstancedBaseVertexBaseInstance(drawPrimitive, size, GL_UNSIGNED_INT, NULL, 1000, 0,0);
+				//glMultiDrawElementsIndirect(drawPrimitive, GL_UNSIGNED_INT, &temp,1,0);
+				unsigned int instCount;
+				b->getData(4, 4, &instCount);
+				glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, instCount);
+			}
+			else if (m_UIntProps[IRenderer::INSTANCE_COUNT])
 				glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, m_UIntProps[IRenderer::INSTANCE_COUNT]);
 			else
 				glDrawElements(drawPrimitive, size, GL_UNSIGNED_INT, 0);
 		}
 		else {
 			size = aRenderable.getVertexData().getNumberOfVertices();
-			if (m_UIntProps[IRenderer::INSTANCE_COUNT])
+						
+			if (m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]) {
+
+				IBuffer *b = RESOURCEMANAGER->getBufferByID(m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]); 
+				b->setSubData(0, 4, &size);
+				b->bind(GL_DRAW_INDIRECT_BUFFER);
+				unsigned int temp = 0;
+				glDrawArraysIndirect(drawPrimitive, &temp);
+			}
+			else if (m_UIntProps[IRenderer::INSTANCE_COUNT])
 				glDrawArraysInstanced(drawPrimitive, 0, size, m_UIntProps[IRenderer::INSTANCE_COUNT]);
 			else
 				glDrawArrays(drawPrimitive, 0, size);
@@ -970,6 +995,7 @@ GLRenderer::showDrawDebugInfo(Material *mat) {
 #endif
 				case GL_TRANSFORM_FEEDBACK_BUFFER: pname = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING; break;
 				case GL_UNIFORM_BUFFER: pname = GL_UNIFORM_BUFFER_BINDING; break;
+				case GL_DRAW_INDIRECT_BUFFER: pname = GL_DRAW_INDIRECT_BUFFER_BINDING; break;
 			}
 			glGetIntegeri_v(pname, vi[i], &k);
 			SLOG("\tActual buffer for binding point %d: %d", vi[i], k);
@@ -1047,26 +1073,27 @@ GLRenderer::showDrawDebugInfo(IProgram *pp) {
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_TYPE, &uniType);
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_SIZE, &uniSize);
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
-
 			std::string s;
-			switch (Enums::getBasicType(GLUniform::spSimpleType[uniType])) {
+			if (uniType != GL_UNSIGNED_INT_ATOMIC_COUNTER) {
+				switch (Enums::getBasicType(GLUniform::spSimpleType[uniType])) {
 
-			case Enums::BOOL:
-			case Enums::INT:
-				glGetUniformiv(program, i, (GLint *)values);
-				break;
-			case Enums::FLOAT:
-				glGetUniformfv(program, i, (GLfloat *)values);
-				break;
-			case Enums::UINT:
-				glGetUniformuiv(program, i, (GLuint *)values);
-				break;
-			case Enums::DOUBLE:
-				glGetUniformdv(program, i, (GLdouble *)values);
-				break;
+				case Enums::BOOL:
+				case Enums::INT:
+					glGetUniformiv(program, i, (GLint *)values);
+					break;
+				case Enums::FLOAT:
+					glGetUniformfv(program, i, (GLfloat *)values);
+					break;
+				case Enums::UINT:
+					glGetUniformuiv(program, i, (GLuint *)values);
+					break;
+				case Enums::DOUBLE:
+					glGetUniformdv(program, i, (GLdouble *)values);
+					break;
+				}
+				s = Enums::valueToString(GLUniform::spSimpleType[uniType], values);
 			}
-			s = Enums::valueToString(GLUniform::spSimpleType[uniType], values);
-			
+			else s = "";
 			int auxSize;
 			if (uniArrayStride > 0)
 				auxSize = uniArrayStride * uniSize;

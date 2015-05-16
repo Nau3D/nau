@@ -14,6 +14,9 @@ GLMaterialBuffer::Init() {
 #if NAU_OPENGL_VERSION >= 430
 	Attribs.listAdd("TYPE", "SHADER_STORAGE", GL_SHADER_STORAGE_BUFFER);
 #endif	
+//#if NAU_OPENGL_VERSION >= 400
+//	Attribs.listAdd("TYPE", "DRAW_INDIRECT", GL_DRAW_INDIRECT_BUFFER);
+//#endif	
 	return true;
 }
 

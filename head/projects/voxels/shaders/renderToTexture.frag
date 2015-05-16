@@ -4,7 +4,9 @@ in vec3 normalV;
 in vec2 texCoordV;
 in vec4 posV;
 
-out vec4 outColor;
+layout (location = 0) out vec4 outPos;
+layout (location = 1) out vec4 outNormal;
+layout (location = 2) out vec4 outColor;
 
 uniform float shininess;
 uniform vec4 diffuse;
@@ -13,5 +15,10 @@ uniform sampler2D texUnit;
 
 void main()
 {
-	outColor = posV*0.5 + 0.5;
+	outPos = posV * 0.5 + 0.5;
+	outNormal = vec4(normalV * 0.5 + 0.5, 0);
+	if (texCount != 0)
+		outColor = texture(texUnit, texCoordV);
+	else
+		outColor = diffuse;
 }

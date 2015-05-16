@@ -1,0 +1,64 @@
+<NotepadPlus>
+    <Project name="VoxelAO">
+        <File name="voxels.mlib" />
+        <File name="voxelsAO.xml" />
+        <Folder name="shaders">
+            <File name="shaders\computeAO.frag" />
+            <File name="shaders\computeAO.vert" />
+            <File name="shaders\mipmap.comp" />
+            <File name="shaders\renderToTexture.frag" />
+            <File name="shaders\renderToTexture.vert" />
+            <File name="shaders\voxelization.frag" />
+            <File name="shaders\voxelization.geom" />
+            <File name="shaders\voxelization.vert" />
+        </Folder>
+        <File name="test.lua" />
+    </Project>
+    <Project name="VoxelManualClipMap">
+        <File name="voxels.mlib" />
+        <File name="voxelsManualMipmap.xml" />
+        <Folder name="shaders">
+            <File name="shaders\mipmap.comp" />
+            <File name="shaders\showVoxels.frag" />
+            <File name="shaders\showVoxels.geom" />
+            <File name="shaders\showVoxels.vert" />
+            <File name="shaders\voxelization.frag" />
+            <File name="shaders\voxelization.geom" />
+            <File name="shaders\voxelization.vert" />
+        </Folder>
+        <File name="test.lua" />
+    </Project>
+    <Project name="VoxelCubes">
+        <File name="voxelCubes.xml" />
+        <File name="voxels.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\computeCubePos.comp" />
+            <File name="shaders\showVoxels2.frag" />
+            <File name="shaders\showVoxels2.vert" />
+            <File name="shaders\voxelization.frag" />
+            <File name="shaders\voxelization.geom" />
+            <File name="shaders\voxelization.vert" />
+        </Folder>
+    </Project>
+    <Project name="VoxelShow">
+        <File name="voxels.mlib" />
+        <File name="voxels.xml" />
+        <Folder name="shaders">
+            <File name="shaders\showVoxels.frag" />
+            <File name="shaders\showVoxels.geom" />
+            <File name="shaders\showVoxels.vert" />
+            <File name="shaders\voxelization.frag" />
+            <File name="shaders\voxelization.geom" />
+            <File name="shaders\voxelization.vert" />
+        </Folder>
+    </Project>
+    <Project name="VoxelLightInjection">
+        <File name="voxels.mlib" />
+        <File name="voxelsLightInjection.xml" />
+        <Folder name="shaders">
+            <File name="shaders\voxelization.frag" />
+            <File name="shaders\voxelization.geom" />
+            <File name="shaders\voxelization.vert" />
+        </Folder>
+    </Project>
+</NotepadPlus>

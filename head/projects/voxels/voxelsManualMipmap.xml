@@ -120,12 +120,6 @@
 								<LEVEL value=0 />
 							</imageTexture>
 						</imageTextures>
-						<buffers>	
-							<buffer name="atomic"  fromLibrary="Voxels">
-								<TYPE value="ATOMIC_COUNTER" />
-								<BINDING_POINT value="1" />
-							</buffer>
-						</buffers>	
 					</map>
 				</injectionMaps>
 				<preProcess>
@@ -138,7 +132,7 @@
 			<pass class="compute" name="mipmap" >
 				<mode value="RUN_WHILE_TRUE" />
 				<testScript file="test.lua" script="test" />
-				<material name="mipmap" fromLibrary="Voxels" dimX=64, dimY=64 dimZ=64 />
+				<material name="mipmap" fromLibrary="Voxels" dimX=256, dimY=256 dimZ=256 />
 			</pass>
 
 			<pass class="default" name="showVoxels">

@@ -9,9 +9,11 @@
 			</colors>
 		</renderTarget>
 		<renderTarget name ="scene">
-			<SIZE width="GridSize" height="GridSize" />
+			<SIZE width="1024" height="1024" />
 			<colors>
 				<color name="pos" internalFormat="RGBA32F" />
+				<color name="normal" internalFormat="RGBA" />
+				<color name="color" internalFormat="RGBA" />
 			</colors>
 		</renderTarget>
 	</renderTargets>
@@ -36,10 +38,20 @@
 	<buffers>
 		<buffer name="atomic">
 			<SIZE value=32 />
+			<!--CLEAR value="BY_FRAME" /-->
+			<structure>
+				<field value="UINT" />
+			</structure>	
 		</buffer>
 		<buffer name="position" >
-			<SIZE value = 16 />
-		</buffer>	
+			<SIZE value = 40000000 />
+			<structure>
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+			</structure>	
+		</buffer>
 	</buffers>
 	
 	<shaders>
@@ -51,10 +63,12 @@
 										gs = "shaders/showVoxels.geom"
 										ps = "shaders/showVoxels.frag" /> 
 										
-		<shader name="showVoxels2" 		vs = "shaders/showVoxels2.vert" 
+		<shader name="showVoxelCubes" 	vs = "shaders/showVoxels2.vert" 
 										ps = "shaders/showVoxels2.frag" /> 
 										
 		<shader name="mipmap" 			cs = "shaders/mipmap.comp" /> 
+
+		<shader name="computeCubePos" 	cs = "shaders/computeCubePos.comp" /> 
 
 		<shader name="renderToTexture" 	vs = "shaders/renderToTexture.vert" 
 										ps = "shaders/renderToTexture.frag" /> 
@@ -71,31 +85,31 @@
 	</states>
 	
 	<materials>
+	
 		<material name ="voxelization">
 			<shader name="voxelization">
 				<values>
-					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
-															id=1 component="UNIT" />
-					<valueof uniform="imageUnitN"		type="CURRENT" context="IMAGE_TEXTURE"
-															id=2 component="UNIT" />
-					<valueof uniform="camXPV"			type="CAMERA" context="xx"
-															component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="camYPV"			type="CAMERA" context="yy"
-															component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="camZPV"			type="CAMERA" context="zz"
-															component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="WindowSize"		type="CURRENT" context="VIEWPORT"
-															component="ABSOLUT_SIZE" />
-					<valueof uniform="M"				type="CURRENT" context="RENDERER"
-															component="MODEL" />
-															
-					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+														id=1 component="UNIT" />
+					<valueof uniform="imageUnitN"	type="CURRENT" context="IMAGE_TEXTURE"
+														id=2 component="UNIT" />
+					<valueof uniform="camXPV"		type="CAMERA" context="xx"
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="camYPV"		type="CAMERA" context="yy"
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="camZPV"		type="CAMERA" context="zz"
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
+														component="ABSOLUT_SIZE" />
+					<valueof uniform="M"			type="CURRENT" context="RENDERER"
+														component="MODEL" />	
+					<valueof uniform="diffuse" 		type="CURRENT" context="COLOR" 
 														component="DIFFUSE" />
-					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+					<valueof uniform="shininess" 	type="CURRENT" context="COLOR" 
 														component="SHININESS" />
-					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount"		type="CURRENT" context="RENDERER" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="0" />				
 				</values>
 			</shader>
@@ -115,12 +129,6 @@
 				</imageTexture>
 			</imageTextures>
 			
-			<buffers>	
-				<buffer name="atomic"  >
-					<TYPE value="ATOMIC_COUNTER" />
-					<BINDING_POINT value="1" />
-				</buffer>
-			</buffers>	
 			<state>
 				<CULL_FACE value=0 />
 				<DEPTH_TEST value=0 />
@@ -170,7 +178,6 @@
 					<WRAP_R value="CLAMP_TO_BORDER" />
 				</texture>
 			</textures>
-		
 		</material>
 		
 		<material name ="showVoxels">
@@ -208,21 +215,51 @@
 			
 		</material>
 		
+		<material name ="computeCubePos">
+			<shader name="computeCubePos">
+				<values>
+					<valueof uniform="grid"		type="CURRENT" context="MATERIAL_TEXTURE"
+													id=1 component="UNIT" />
+				</values>
+			</shader>
+			
+			<textures>
+				<texture UNIT=1 name="gridColor" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+			<buffers>	
+				<buffer name="atomic" >
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="2" />
+				</buffer>
+				<buffer name="position">
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+
+		</material>
+
 		<material name ="renderScene">
 			<shader name="renderToTexture">
 				<values>
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
-															component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="NormalMat"        type="CURRENT" context="RENDERER" 
-															component="NORMAL" />
-					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
-															component="DIFFUSE" />
-					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
-															component="SHININESS" />
-					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
-															component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
-															component="UNIT" id="0" />				
+					<valueof uniform="PVM"      	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="NormalMat"    type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+					<valueof uniform="diffuse" 		type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+					<valueof uniform="shininess" 	type="CURRENT" context="COLOR" 
+														component="SHININESS" />
+					<valueof uniform="texCount"		type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+					<valueof uniform="texUnit" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+													component="UNIT" id="0" />				
 				</values>
 			</shader>
 		</material>
@@ -230,16 +267,36 @@
 		<material name ="computeAO">
 			<shader name="computeAO">
 				<values>
-					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
-															component="UNIT" id="0" />				
-					<valueof uniform="grid" 			type="CURRENT" context="MATERIAL_TEXTURE" 
-															component="UNIT" id="1" />				
-					<valueof uniform="gridNormal" 		type="CURRENT" context="MATERIAL_TEXTURE" 
-															component="UNIT" id="2" />				
+					<valueof uniform="texPos" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />				
+					<valueof uniform="texNormal" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="3" />				
+					<valueof uniform="texColor" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="4" />				
+					<valueof uniform="grid" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="1" />				
+					<valueof uniform="gridNormal" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="2" />				
+					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
+														component="GridSize" />
 				</values>
 			</shader>	
 			<textures>
 				<texture UNIT=0 name="pos" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=3 name="normal" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=4 name="color" >
 					<MIN_FILTER value="NEAREST" />
 					<MAG_FILTER value="NEAREST" />
 					<WRAP_S value="CLAMP_TO_BORDER" />
@@ -264,17 +321,17 @@
 			</textures>
 		</material>
 		
-		<material name ="showVoxels2">
-			<shader name="showVoxels2">
+		<material name ="showVoxelCubes">
+			<shader name="showVoxelCubes">
 				<values>
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
-															component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="GridSize" 		type="CURRENT" context="PASS"
-															component="GridSize" />
-					<valueof uniform="grid"				type="CURRENT" context="MATERIAL_TEXTURE"
-															id=1 component="UNIT" />
-					<valueof uniform="gridN"				type="CURRENT" context="MATERIAL_TEXTURE"
-															id=2 component="UNIT" />
+					<valueof uniform="PVM"      	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="grid"			type="CURRENT" context="MATERIAL_TEXTURE"
+														id=1 component="UNIT" />
+					<valueof uniform="gridN"		type="CURRENT" context="MATERIAL_TEXTURE"
+														id=2 component="UNIT" />
+					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
+														component="GridSize" />
 				</values>
 			</shader>
 			
@@ -294,6 +351,12 @@
 					<WRAP_R value="CLAMP_TO_BORDER" />
 				</texture>
 			</textures>		
+			<buffers>	
+				<buffer name="position">
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
 		</material>
 
 		</materials>

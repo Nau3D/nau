@@ -25,6 +25,7 @@ https://github.com/Nau3D
 #include "nau/geometry/boundingbox.h"
 #include "nau/geometry/quad.h"
 #include "nau/material/materialid.h"
+#include "nau/render/ibuffer.h"
 #include "nau/render/passProcessItem.h"
 #include "nau/render/rendertarget.h"
 #include "nau/render/texture.h"
@@ -67,6 +68,7 @@ namespace nau
 
 			UINT_PROP(STENCIL_OP_MASK, 0);
 			UINT_PROP(INSTANCE_COUNT, 1);
+			UINT_PROP(BUFFER_DRAW_INDIRECT, 2);
 
 			ENUM_PROP(STENCIL_FUNC, 0);
 			ENUM_PROP(STENCIL_FAIL, 1);
@@ -207,8 +209,12 @@ namespace nau
 			void removeScene(const std::string &name);
 			const std::vector<std::string>& getScenesNames (void);
 
-		
+			//
+			void setBufferDrawIndirect(std::string s);
+
 		protected:
+			// BUFFER DRAW INDIRECT
+			IBuffer *m_BufferDrawIndirect = NULL;
 
 			// LUA SCRIPTS
 			std::string m_TestScriptFile, m_TestScriptName;

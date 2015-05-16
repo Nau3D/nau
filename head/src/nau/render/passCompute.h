@@ -20,9 +20,9 @@ namespace nau
 
 		public:
 
-			UINT_PROP(DIM_X, 0);
-			UINT_PROP(DIM_Y, 1);
-			UINT_PROP(DIM_Z, 2);
+			UINT_PROP(DIM_X, 101);
+			UINT_PROP(DIM_Y, 102);
+			UINT_PROP(DIM_Z, 103);
 
 			PassCompute (const std::string &passName);
 			virtual ~PassCompute();

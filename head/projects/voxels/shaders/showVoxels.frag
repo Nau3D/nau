@@ -8,7 +8,7 @@ uniform float FOV;
 uniform vec2 WindowSize;
 uniform vec3 RayOrigin;
 uniform int GridSize;
-uniform int level = 0;
+uniform int level = 3;
 
 struct Ray {
     vec3 Origin;
@@ -68,7 +68,7 @@ void main()
 		pos += step;
      }
 
-    FragColor.rgb = vec3(density)/density.w;
+    FragColor.rgb = vec3(density);///density.w;
     FragColor.a = density.w;
 	
 	//FragColor = vec4(1.0);

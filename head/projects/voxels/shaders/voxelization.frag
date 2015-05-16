@@ -5,8 +5,6 @@ layout (r32ui) uniform coherent volatile uimage3D imageUnit;
 //layout (rgba8) uniform writeonly coherent volatile image3D imageUnitN;
 layout (r32ui) uniform coherent volatile uimage3D imageUnitN;
 
-layout(binding=1, offset=0)  uniform atomic_uint at0;
-
 uniform vec2 WindowSize;
 uniform vec4 diffuse;
 uniform float shininess;
@@ -68,7 +66,6 @@ void main() {
 		//imageStore(imageUnit, ivec3(x,y,z),color);
 		imageAtomicRGBA8Avg(imageUnitN, ivec3(x,y,z),vec4(normalG * 0.5 + 0.5,1));
 		//imageStore(imageUnitN, ivec3(x,y,z), vec4(normalG * 0.5 + 0.5,shininess));
-		atomicCounterIncrement(at0);
 	 }
 	 else 
 		 discard;

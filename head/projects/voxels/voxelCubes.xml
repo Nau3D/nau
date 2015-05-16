@@ -2,8 +2,8 @@
 <project name="Voxels" width=512 height=512>
 	<assets>
 		<constants>
-			<constant name="GridSize" value = 64 />
-			<constant name="GridVolume" value = 262144 />
+			<constant name="GridSize" value = 256 />
+			<constant name="GridVolume" value = 16777216 />
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
@@ -15,7 +15,7 @@
 				<file name="../../models/cube.obj"/>
 			</scene>
 			<scene name="VoxelTest" param="UNITIZE">
-				<file name="../../models/bunny.obj"/>
+				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
 			</scene>
 			<scene name="Bench" param="UNITIZE">
 				<file name="../../models/bench.obj"/>
@@ -25,6 +25,11 @@
 			</scene>
 			<scene name="Dummy" >
 				<buffers name="positions" primitive="POINTS" material="showRays">
+					<position name="position" fromLibrary="Voxels" />				
+				</buffers>	
+			</scene>
+			<scene name="cubePos" >
+				<buffers name="cubePos" primitive="TRIANGLES" material="drawCubes">
 					<position name="position" fromLibrary="Voxels" />				
 				</buffers>	
 			</scene>
@@ -83,10 +88,14 @@
 
 		<atomics>
 			<atomic buffer="Voxels::atomic" offset=0  semantics="count" />
+			<atomic buffer="Voxels::atomic" offset=4  semantics="primCount" />
+			<atomic buffer="Voxels::atomic" offset=8  semantics="firstIndex" />
+			<atomic buffer="Voxels::atomic" offset=12  semantics="baseVertex" />
+			<atomic buffer="Voxels::atomic" offset=16  semantics="baseInstance" />
 		</atomics>
 		
 		<materialLibs>
-		<materialLib filename="voxels.mlib"/>
+			<materialLib filename="voxels.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -117,35 +126,35 @@
 								<LEVEL value=0 />
 							</imageTexture>
 						</imageTextures>
-						<buffers>	
-							<buffer name="atomic"  fromLibrary="Voxels">
-								<TYPE value="ATOMIC_COUNTER" />
-								<BINDING_POINT value="1" />
-							</buffer>
-						</buffers>	
 					</map>
 				</injectionMaps>
 				<preProcess>
 					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
 					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 />
-					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
 				</preProcess>	
 				<postProcess>
 					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
 					<texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true />
 				</postProcess>	
 			</pass>
-						
 			
+			<pass class="compute" name="computeCubePos">
+				<mode value=RUN_ONCE />
+				<preProcess>
+					<buffer name="atomic" fromLibrary="Voxels" CLEAR=1  />
+				</preProcess>	
+				<material name="computeCubePos" fromLibrary="Voxels" dimX=32, dimY=32 dimZ=32 />
+			</pass>
+				
 			<pass class="default" name="showVoxels">
-				<scenes instances="GridVolume">
+				<scenes drawIndirectBuffer="Voxels::atomic">
 					<scene name="Cube" />
 				</scenes>	
 				<camera name="MainCamera" />
 				<viewport name="MainViewport" />
 				<materialMaps>			
 					<map fromMaterial="*" 
-						 toLibrary="Voxels" toMaterial="showVoxels2" />
+						 toLibrary="Voxels" toMaterial="showVoxelCubes" />
 				</materialMaps>				
 			</pass>
 		</pipeline>

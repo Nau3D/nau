@@ -1498,6 +1498,13 @@ ProjectLoader::loadPassScenes(TiXmlHandle hPass, Pass *aPass)
 	if (ui != NULL)
 		aPass->setPropui(Pass::INSTANCE_COUNT, *ui);
 
+	const char* pDrawIndirect = pElem->Attribute("drawIndirectBuffer");
+	if (pDrawIndirect != NULL)
+		aPass->setBufferDrawIndirect(pDrawIndirect);
+
+	std::vector<std::string> ok = { "instances", "drawIndirectBuffer" };
+	checkForNonValidAttributes("Pass:Scenes", ok, pElem);
+
 	pElem = hPass.FirstChild ("scenes").FirstChild ("scene").Element();
 	if (0 == pElem && aPass->getClassName() != "compute" && aPass->getClassName() != "quad") {
 		NAU_THROW("File %s\nPass %s\nNo Scene element found", ProjectLoader::s_File.c_str(), aPass->getName().c_str());

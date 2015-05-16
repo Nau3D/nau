@@ -3,17 +3,17 @@
 	<assets>
 		<constants>
 			<constant name="GridSize" value = 512 />
-			<!--constant name="GridVolume" value = 134217728 /-->
+			<constant name="GridVolume" value = 134217728 />
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
-			<attribute name="GridLevels" context="PASS" type="INT" value=9 />
+			<attribute name="GridLevels" context="PASS" type="INT" value=7 />
 			<attribute name="GridCurrentLevel" context="PASS" type="INT" value=0 />
 		</attributes>
 		<scenes>
 			<scene name="MainScene" param="UNITIZE">
 				<file name="../../models/cube.obj"/>
-			</scene> 
+			</scene>
 			<scene name="VoxelTest" param="UNITIZE">
 				<file name="../../models/voxeltest.obj"/>
 			</scene>
@@ -126,10 +126,10 @@
 				</postProcess-->	
 			</pass>
 			
-			<pass class="compute" name="mipmap" >
+			<pass class="default" name="mipmap" >
 				<mode value="RUN_WHILE_TRUE" />
 				<testScript file="test.lua" script="test" />
-				<material name="mipmap" fromLibrary="Voxels" dimX=256, dimY=256 dimZ=256 />
+				<material name="mipmap" fromLibrary="Voxels" dimX=64, dimY=64 dimZ=64 />
 			</pass>
 
 			<pass class="default" name="renderScene">
