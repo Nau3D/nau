@@ -52,6 +52,15 @@
 				<field value="FLOAT" />
 			</structure>	
 		</buffer>
+		<buffer name="dummy" >
+			<SIZE value = 16 />
+			<structure>
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+			</structure>	
+		</buffer>
 	</buffers>
 	
 	<shaders>
@@ -63,6 +72,10 @@
 										gs = "shaders/showVoxels.geom"
 										ps = "shaders/showVoxels.frag" /> 
 										
+		<shader name="lightInjection" 	vs = "shaders/showVoxels.vert" 
+										gs = "shaders/showVoxels.geom"
+										ps = "shaders/lightInjection.frag" /> 
+
 		<shader name="showVoxelCubes" 	vs = "shaders/showVoxels2.vert" 
 										ps = "shaders/showVoxels2.frag" /> 
 										
@@ -138,16 +151,16 @@
 		<material name="mipmap" >
 			<shader name="mipmap">
 				<values>
-					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
-															id=1 component="UNIT" />
-					<valueof uniform="imageUnitN"		type="CURRENT" context="IMAGE_TEXTURE"
-															id=2 component="UNIT" />
-					<valueof uniform="grid"				type="CURRENT" context="MATERIAL_TEXTURE"
-															id=1 component="UNIT" />
-					<valueof uniform="normal"			type="CURRENT" context="MATERIAL_TEXTURE"
-															id=2 component="UNIT" />
-					<valueof uniform="destMipLevel"		type="CURRENT" context="PASS"
-															component="GridCurrentLevel" />
+					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+														id=1 component="UNIT" />
+					<valueof uniform="imageUnitN"	type="CURRENT" context="IMAGE_TEXTURE"
+														id=2 component="UNIT" />
+					<valueof uniform="grid"			type="CURRENT" context="MATERIAL_TEXTURE"
+														id=1 component="UNIT" />
+					<valueof uniform="normal"		type="CURRENT" context="MATERIAL_TEXTURE"
+														id=2 component="UNIT" />
+					<valueof uniform="destMipLevel"	type="CURRENT" context="PASS"
+														component="GridCurrentLevel" />
 				</values>
 			</shader>	
 			<imageTextures>
@@ -183,20 +196,20 @@
 		<material name ="showVoxels">
 			<shader name="showVoxels">
 				<values>
-					<valueof uniform="RayOrigin"        type="CURRENT" context="CAMERA" 
-															component="POSITION" />
-					<valueof uniform="FOV"				type="CURRENT" context="CAMERA"
-															component="FOV" />
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
-															component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="VM"         		type="CURRENT" context="RENDERER" 
-															component="VIEW_MODEL" />
-					<valueof uniform="grid"				type="CURRENT" context="MATERIAL_TEXTURE"
-															id=1 component="UNIT" />
-					<valueof uniform="WindowSize"		type="CURRENT" context="VIEWPORT"
-															component="ABSOLUT_SIZE" />
-					<valueof uniform="GridSize" 		type="CURRENT" context="PASS"
-															component="GridSize" />
+					<valueof uniform="RayOrigin"    type="CURRENT" context="CAMERA" 
+														component="POSITION" />
+					<valueof uniform="FOV"			type="CURRENT" context="CAMERA"
+														component="FOV" />
+					<valueof uniform="PVM"          type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="VM"         	type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
+					<valueof uniform="grid"			type="CURRENT" context="MATERIAL_TEXTURE"
+														id=1 component="UNIT" />
+					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
+														component="ABSOLUT_SIZE" />
+					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
+														component="GridSize" />
 				</values>
 			</shader>
 			
@@ -209,6 +222,35 @@
 					<WRAP_R value="CLAMP_TO_BORDER" />
 				</texture>
 			</textures>
+			
+			<state>
+				<CULL_FACE value=0 />
+			</state>	
+		</material>
+
+		<material name ="lightInjection">
+			<shader name="lightInjection">
+				<values>
+					<valueof uniform="RayDir"    	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" />
+					<valueof uniform="PVM"          type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="grid"			type="CURRENT" context="IMAGE_TEXTURE"
+														id=1 component="UNIT" />
+					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
+														component="ABSOLUT_SIZE" />
+					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
+														component="GridSize" />
+				</values>
+			</shader>
+			
+			<imageTextures>
+				<imageTexture UNIT=1 texture="gridColor" >
+					<ACCESS value="READ_WRITE" />
+					<LEVEL value=1 />
+					<CLEAR value=true/>
+				</imageTexture>
+			</imageTextures>
 			<state>
 				<CULL_FACE value=0 />
 			</state>	

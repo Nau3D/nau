@@ -3,11 +3,10 @@
 	<assets>
 		<constants>
 			<constant name="GridSize" value = 512 />
-			<constant name="GridVolume" value = 134217728 />
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
-			<attribute name="GridLevels" context="PASS" type="INT" value=7 />
+			<attribute name="GridLevels" context="PASS" type="INT" value=9 />
 			<attribute name="GridCurrentLevel" context="PASS" type="INT" value=0 />
 		</attributes>
 		<scenes>

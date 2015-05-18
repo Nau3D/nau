@@ -23,11 +23,6 @@
 			<scene name="Cube" >
 				<file name="../../models/cube2.obj"/>
 			</scene>
-			<scene name="Dummy" >
-				<buffers name="positions" primitive="POINTS" material="showRays">
-					<position name="position" fromLibrary="Voxels" />				
-				</buffers>	
-			</scene>
 			<scene name="cubePos" >
 				<buffers name="cubePos" primitive="TRIANGLES" material="drawCubes">
 					<position name="position" fromLibrary="Voxels" />				

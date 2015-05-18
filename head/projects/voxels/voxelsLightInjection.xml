@@ -42,6 +42,11 @@
 				<CLEAR_COLOR r="0.0" g="1.0" b="0.0" />
 				<SIZE x="GridSize" y="GridSize" />
 			</viewport>
+			
+			<viewport name="Cube">
+				<ORIGIN x = -1 y = -1/>
+				<SIZE X = 2 y = 2 />
+			</viewport>
 		</viewports>
 
 		<cameras>
@@ -149,15 +154,32 @@
 				</injectionMaps>
 			</pass>
 			
-			<pass class="quad" name="computeAO" >
-				<material name="computeAO" fromLibrary="Voxels" />
-				<viewport name="MainViewport" />
+			<pass class="depthmap" name="lightInjection">
+				<scenes>
+					<scene name="Dummy" />
+				</scenes>	
+				<lights>
+					<light name="Sun" />
+				</lights>	
+				<camera name="xx" />
+				<renderTarget name="dummy" fromLibrary="Voxels" />
+				<materialMaps>			
+					<map fromMaterial="*" 
+						 toLibrary="Voxels" toMaterial="lightInjection" />
+				</materialMaps>				
 			</pass>
 			
-			<!--pass class="quad" name="show" >
-				<texture name="pos" fromLibrary="Voxels" />
+			<pass class="default" name="showVoxels">
+				<scenes drawIndirectBuffer="Voxels::atomic">
+					<scene name="Cube" />
+				</scenes>	
+				<camera name="MainCamera" />
 				<viewport name="MainViewport" />
-			</pass-->
+				<materialMaps>			
+					<map fromMaterial="*" 
+						 toLibrary="Voxels" toMaterial="showVoxelCubes" />
+				</materialMaps>				
+			</pass>
 		</pipeline>
 	</pipelines>
 </project>

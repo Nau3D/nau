@@ -2,12 +2,11 @@
 <project name="Voxels" width="512" height="512">
 	<assets>
 		<constants>
-			<constant name="GridSize" value = "256" />
-			<constant name="GridVolume" value = 16777216 />
+			<constant name="GridSize" value = "512" />
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
-			<attribute name="GridLevels" context="PASS" type="INT" value=7 />
+			<attribute name="GridLevels" context="PASS" type="INT" value=8 />
 			<attribute name="GridCurrentLevel" context="PASS" type="INT" value=0 />
 		</attributes>
 		<scenes>
@@ -28,7 +27,7 @@
 			</scene>
 			<scene name="Dummy" >
 				<buffers name="positions" primitive="POINTS" material="showRays">
-					<position name="position" fromLibrary="Voxels" />				
+					<position name="dummy" fromLibrary="Voxels" />				
 				</buffers>	
 			</scene>
 		</scenes>
@@ -107,14 +106,8 @@
 						<shader fromMaterial ="voxelization" fromLibrary="Voxels" />
 						<state name="voxelization" fromLibrary="Voxels" />
 						<imageTextures>
-							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 >
-								<ACCESS value="WRITE_ONLY" />
-								<LEVEL value=0 />
-							</imageTexture>
-							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 >
-								<ACCESS value="WRITE_ONLY" />
-								<LEVEL value=0 />
-							</imageTexture>
+							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 />
+							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 />
 						</imageTextures>
 					</map>
 				</injectionMaps>
