@@ -2334,6 +2334,7 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, s
 	// Set Renderable Factory 
 	IRenderable *aRenderable = 0;
 	aRenderable = RESOURCEMANAGER->createRenderable ("Mesh","unnamed", aObject->getName());
+	aRenderable->setDrawingPrimitive(primitive);
 	//aRenderable->setName("unnamed");
 	//RESOURCEMANAGER->addRenderable(aRenderable, aObject->getName());
 	// --------------------------------
@@ -2559,6 +2560,7 @@ void OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, s
 			fflush(out);
 		#endif
 
+			
 		// Create array
 		std::vector<unsigned int> *iArr = new std::vector<unsigned int>;
 		iArr->resize(currG->numtriangles*3);

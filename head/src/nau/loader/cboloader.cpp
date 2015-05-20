@@ -247,7 +247,7 @@ CBOLoader::_ignoreString (std::fstream &f)
 }
 
 void 
-CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
+CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::string &params)
 {
 	m_FileName = aFilename;
 	std::string path = FileUtil::GetPath(aFilename);
@@ -337,6 +337,12 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 			//aRenderable->setName (renderableName);
 			//RESOURCEMANAGER->addRenderable(aRenderable,aFilename);
 			//assert (0 == aRenderable);
+			unsigned int primitive;
+			if (params.find("USE_ADJACENCY") != std::string::npos) 
+				primitive = IRenderable::TRIANGLES_ADJACENCY;
+			else 
+				primitive = IRenderable::TRIANGLES;
+			aRenderable->setDrawingPrimitive(primitive);
 			renderables[renderableName] = aRenderable;
 			
 			VertexData &vertexData = aRenderable->getVertexData();
@@ -351,6 +357,8 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename)
 				//SLOG ("[Reading] Material Groups name: [%s]", buffer);
 
 				MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, buffer);
+				if (primitive == IRenderable::TRIANGLES_ADJACENCY)
+					aMatGroup->getIndexData().useAdjacency(true);
 				//aMatGroup->setMaterialName (buffer);				
 				//aMatGroup->setParent (aRenderable);
 

@@ -2,7 +2,7 @@
 <project name="Simple" width="512" height="512">
 	<assets>
 		<scenes>
-			<scene name="Al"  param="USE_ADJACENCY" type="OctreeByMat">
+			<scene name="Al"  param="USE_ADJACENCY" >
 				<file name="..\..\models\al.obj"/>
 
 			</scene>

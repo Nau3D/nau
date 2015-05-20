@@ -1074,7 +1074,7 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
 				break;
 			case File::NAUBINARYOBJECT:
-				CBOLoader::loadScene(RENDERMANAGER->getScene(sceneName), file.getFullPath());
+				CBOLoader::loadScene(RENDERMANAGER->getScene(sceneName), file.getFullPath(), params);
 				break;
 			case File::THREEDS:
 				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);

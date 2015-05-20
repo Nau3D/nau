@@ -18,7 +18,7 @@ namespace nau
 		class CBOLoader
 		{
 		public:	
-			static void loadScene (nau::scene::IScene *aScene, std::string &aFilename);
+			static void loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::string &params);
 			static void writeScene (nau::scene::IScene *aScene, std::string &aFilename);
 
 		private:
