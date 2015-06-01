@@ -1649,24 +1649,27 @@ ProjectLoader::loadPassTexture(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("texture").Element();
 	if (0 != pElem) {
-		const char *pName = pElem->Attribute ("name");
-		const char *pLib = pElem->Attribute("fromLibrary");
-		
-		if (!pName )
+		//const char *pName = pElem->Attribute ("name");
+		//const char *pLib = pElem->Attribute("fromLibrary");
+		//
+		//if (!pName )
+		//	NAU_THROW("File %s\nPass %s\nTexture without name", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		//if (!pLib) 
+		//	sprintf(s_pFullName, "%s", pName);
+		//else
+		//	sprintf(s_pFullName, "%s::%s", pLib, pName);
+
+		std::string fullName;
+		if (ITEM_NAME_NOT_SPECIFIED == readItemFromLib(pElem, "name", &fullName))
 			NAU_THROW("File %s\nPass %s\nTexture without name", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		if (!pLib) 
-			sprintf(s_pFullName, "%s", pName);
-		else
-			sprintf(s_pFullName, "%s::%s", pLib, pName);
 
-		if (!RESOURCEMANAGER->hasTexture(s_pFullName))
-				NAU_THROW("File %s\nPass %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), s_pFullName);
-
+		if (!RESOURCEMANAGER->hasTexture(fullName))
+			NAU_THROW("File %s\nPass %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), fullName.c_str());
 
 		Material *srcMat, *dstMat;
 		srcMat = MATERIALLIBMANAGER->getDefaultMaterial("__Quad");
 		dstMat = srcMat->clone();
-		dstMat->attachTexture(0,s_pFullName);
+		dstMat->attachTexture(0,fullName);
 		MATERIALLIBMANAGER->addMaterial(aPass->getName(),dstMat);
 		aPass->remapMaterial ("__Quad", aPass->getName(), "__Quad");
 	}
@@ -2310,16 +2313,18 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 		else 
 			NAU_THROW("File %s\nPass %s\nMaterial not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
-		int dimX, dimY, dimZ;
 		IBuffer * bX = NULL, *bY = NULL, *bZ = NULL;
 		unsigned int offX = 0, offY = 0, offZ = 0;
 		
 		// Read value or buffer id for dimX
-		int res = pElem->QueryIntAttribute("dimX", &dimX);
-		if (TIXML_SUCCESS != res && pAtX == NULL) {
+		AttribSet *attrs = aPass->getAttribSet();
+		Attribute attr = attrs->get(PassCompute::DIM_X, Enums::UINT);
+		unsigned int *res = (unsigned int *)readAttribute("dimX", attr, pElem);
+		//int res = pElem->QueryIntAttribute("dimX", &dimX);
+		if (!res && pAtX == NULL) {
 			NAU_THROW("File %s\nPass %s\ndimX or bufferX are not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
-		else if (TIXML_SUCCESS == res && pAtX != NULL) {
+		else if (res && pAtX != NULL) {
 			NAU_THROW("File %s\nPass %s\ndimX and bufferX are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		// 
@@ -2335,13 +2340,14 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 
 		// Read value or buffer id for dimY
-		res = pElem->QueryIntAttribute("dimY", &dimY);
-		if (TIXML_SUCCESS == res && pAtY != NULL) {
+		attr = attrs->get(PassCompute::DIM_Y, Enums::UINT);
+		unsigned int *res2 = (unsigned int *)readAttribute("dimY", attr, pElem);
+		if (res2 && pAtY != NULL) {
 			NAU_THROW("File %s\nPass %s\ndimY and bufferY are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 
-		if (TIXML_SUCCESS != res)
-			dimY = 1;
+		if (!res2)
+			*res2 = 1;
 		if (pAtY != NULL) {
 			bY = RESOURCEMANAGER->getBuffer(pAtY);
 			if (!bY) {
@@ -2353,13 +2359,14 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 			}
 		}
 		// Read value or buffer id for dimZ
-		res = pElem->QueryIntAttribute("dimZ", &dimZ);
-		if (TIXML_SUCCESS == res && pAtZ != NULL) {
+		attr = attrs->get(PassCompute::DIM_Y, Enums::UINT);
+		unsigned int *res3 = (unsigned int *)readAttribute("dimY", attr, pElem);
+		if (res3 && pAtZ != NULL) {
 			NAU_THROW("File %s\nPass %s\ndimZ and bufferZ are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 
-		if (TIXML_SUCCESS != res)
-			dimZ = 1;
+		if (!res3)
+			*res3 = 1;
 		if (pAtZ != NULL) {
 			bZ = RESOURCEMANAGER->getBuffer(pAtZ);
 			if (!bZ) {
@@ -2372,7 +2379,7 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 
 		p->setMaterialName (pLibName, pMatName);
-		p->setDimension( dimX, dimY, dimZ);	
+		p->setDimension( *res, *res2, *res3);	
 		p->setDimFromBuffer(bX, offX, bY, offY, bZ, offZ);
 	}
 	else
@@ -3273,7 +3280,7 @@ ProjectLoader::loadPassPreProcess(TiXmlHandle hPass, Pass *aPass)
 			readItemFromLib(pElem, "name", &s);
 			Texture *t = RESOURCEMANAGER->getTexture(s);
 			if (!t) {
-				NAU_THROW("File : %s\nElement: %s\nPost process texture %s does not exist", s_File.c_str(), aPass->getName().c_str(), s.c_str());
+				NAU_THROW("File : %s\nElement: Pass %s\nPre process texture %s does not exist", s_File.c_str(), aPass->getName().c_str(), s.c_str());
 			}
 
 			readAttributes(aPass->getName(), (AttributeValues *)pp, PassProcessTexture::Attribs, excluded, pElem);
@@ -3289,7 +3296,7 @@ ProjectLoader::loadPassPreProcess(TiXmlHandle hPass, Pass *aPass)
 			readItemFromLib(pElem, "name", &s);
 			IBuffer *b = RESOURCEMANAGER->getBuffer(s);
 			if (!b) {
-				NAU_THROW("File : %s\nElement: %s\nPost process buffer %s does not exist", s_File.c_str(), aPass->getName().c_str(), s.c_str());
+				NAU_THROW("File : %s\nElement: Pass %s\nPost process buffer %s does not exist", s_File.c_str(), aPass->getName().c_str(), s.c_str());
 			}
 
 			readAttributes(aPass->getName(), (AttributeValues *)pp, PassProcessBuffer::Attribs, excluded, pElem);

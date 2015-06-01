@@ -3,11 +3,12 @@
 	<assets>
 		<constants>
 			<constant name="GridSize" value = 512 />
-			<!--constant name="GridVolume" value = 134217728 /-->
+			<constant name="CompRO" value = 64 /> <!-- GridSize/8 -->
+			<constant name="GridLevels" value = 9 /> <!-- log2(GridSize) -->
 		</constants>
 		<attributes>
 			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
-			<attribute name="GridLevels" context="PASS" type="INT" value=9 />
+			<attribute name="GridLevels" context="PASS" type="INT" value="GridLevels" />
 			<attribute name="GridCurrentLevel" context="PASS" type="INT" value=0 />
 		</attributes>
 		<scenes>
@@ -23,12 +24,12 @@
 			<scene name="Sponza" param="UNITIZE">
 				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
 			</scene>
-			<scene name="Cube" param="UNITIZE">
+			<scene name="Cube" >
 				<file name="../../models/cube.obj"/>
 			</scene>
 			<scene name="Dummy" >
 				<buffers name="positions" primitive="POINTS" material="showRays">
-					<position name="position" fromLibrary="Voxels" />				
+					<position name="dummy" fromLibrary="Voxels" />				
 				</buffers>	
 			</scene>
 		</scenes>
@@ -108,28 +109,32 @@
 						<shader fromMaterial ="voxelization" fromLibrary="Voxels" />
 						<state name="voxelization" fromLibrary="Voxels" />
 						<imageTextures>
-							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 >
-							</imageTexture>
-							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 >
-							</imageTexture>
+							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 />
+
+							<!--imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 -->
+
 						</imageTextures>
 					</map>
 				</injectionMaps>
 				<preProcess>
 					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
-					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 />
+					<!--texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 /-->
 					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
 				</preProcess>	
-				<!--postProcess>
-					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
-					<texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true />
-				</postProcess-->	
+				<postProcess>
+					<!--texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  /-->
+					<!--texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true /-->
+				</postProcess>	
+			</pass>
+			
+			<pass class="compute" name="resetOpacity" >
+				<material name="resetOpacity"  fromLibrary="Voxels" dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
 			</pass>
 			
 			<pass class="compute" name="mipmap" >
 				<mode value="RUN_WHILE_TRUE" />
 				<testScript file="test.lua" script="test" />
-				<material name="mipmap" fromLibrary="Voxels" dimX=256, dimY=256 dimZ=256 />
+				<material name="mipmap" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
 			</pass>
 
 			<pass class="default" name="renderScene">

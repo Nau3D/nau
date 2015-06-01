@@ -105,13 +105,13 @@
 				<viewport name="SmallViewport4" />
 				<texture name="posMap" fromLibrary="Ambient Occlusion"/>
 			</pass> -->
-			<pass class="quad" name="pass6">
+			<!--pass class="quad" name="pass6">
 				<renderTarget name="shadows" fromLibrary="Ambient Occlusion"/>	
 				<materialMaps>
 					<map fromMaterial="__Quad" toLibrary="Ambient Occlusion" toMaterial="ambOcc" />
 				</materialMaps>
 			
-			</pass>
+			</pass-->
 			<pass class="quad" name="pass7">
 				<viewport name="SmallViewport3" />
 				<texture name="occMap" fromLibrary="Ambient Occlusion"/>	

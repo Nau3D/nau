@@ -19,7 +19,7 @@
 			</pass>
 			<pass class="quad" name="pass2" >
 				<viewport name="Main" />
-				<texture name="tex" fromLibrary="Compute" />
+				<texture name="Compute::tex" />
 			</pass>
 		</pipeline>
 	</pipelines>

@@ -7,7 +7,7 @@ out vec4 outColor;
 
 
 uniform sampler3D grid;
-uniform sampler3D gridN;
+//uniform sampler3D gridN;
 uniform int level = 0;
 
 void main()

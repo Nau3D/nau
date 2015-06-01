@@ -8,11 +8,27 @@
 				<color name="dummy" internalFormat="RGBA" />
 			</colors>
 		</renderTarget>
+		<renderTarget name ="RSM">
+			<SIZE width="4096" height="4096" />
+			<CLEAR_VALUES r=0.0 g=0.0 b=0.0 a=0.0/>
+			<colors>
+				<color name="RSM" internalFormat="RGBA" />
+				<color name="posRSM" internalFormat="RGBA32F" />
+			</colors>
+		</renderTarget>
+		<renderTarget name ="RSMTest">
+			<SIZE width="4096" height="4096" />
+			<CLEAR_VALUES r=0.0 g=0.0 b=0.0 a=0.0/>
+			<colors>
+				<color name="RSMTest" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
 		<renderTarget name ="scene">
 			<SIZE width="1024" height="1024" />
+			<CLEAR_VALUES r=0 g=0 b=0 a=0 />
 			<colors>
 				<color name="pos" internalFormat="RGBA32F" />
-				<color name="normal" internalFormat="RGBA" />
+				<color name="normal" internalFormat="RGBA32F" />
 				<color name="color" internalFormat="RGBA" />
 			</colors>
 		</renderTarget>
@@ -26,13 +42,13 @@
 			<INTERNAL_FORMAT value="RGBA" />
 			<MIPMAP value = true />
 		</texture>	
-		<texture name="gridNormal">
+		<!--texture name="gridNormal">
 			<WIDTH value="GridSize" />
 			<HEIGHT value="GridSize" />
 			<DEPTH value="GridSize" />
 			<INTERNAL_FORMAT value="RGBA" />
 			<MIPMAP value = true />
-		</texture>	
+		</texture-->	
 	</textures>
 
 	<buffers>
@@ -68,20 +84,28 @@
 										gs = "shaders/voxelization.geom"
 										ps = "shaders/voxelization.frag" /> 
 										
+		<shader name="voxelization2" 	vs = "shaders/voxelization2.vert" 
+										gs = "shaders/voxelization2.geom"
+										ps = "shaders/voxelization2.frag" /> 
+										
 		<shader name="showVoxels" 		vs = "shaders/showVoxels.vert" 
 										gs = "shaders/showVoxels.geom"
 										ps = "shaders/showVoxels.frag" /> 
 										
-		<shader name="lightInjection" 	vs = "shaders/showVoxels.vert" 
-										gs = "shaders/showVoxels.geom"
+		<shader name="lightInjection" 	vs = "shaders/lightInjection.vert" 
 										ps = "shaders/lightInjection.frag" /> 
 
 		<shader name="showVoxelCubes" 	vs = "shaders/showVoxels2.vert" 
 										ps = "shaders/showVoxels2.frag" /> 
 										
+		<shader name="RSM"			 	vs = "shaders/RSM.vert" 
+										ps = "shaders/RSM.frag" /> 
+										
 		<shader name="mipmap" 			cs = "shaders/mipmap.comp" /> 
 
 		<shader name="computeCubePos" 	cs = "shaders/computeCubePos.comp" /> 
+		
+		<shader name="resetOpacity" 	cs = "shaders/resetOpacity.comp" /> 
 
 		<shader name="renderToTexture" 	vs = "shaders/renderToTexture.vert" 
 										ps = "shaders/renderToTexture.frag" /> 
@@ -104,8 +128,8 @@
 				<values>
 					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
 														id=1 component="UNIT" />
-					<valueof uniform="imageUnitN"	type="CURRENT" context="IMAGE_TEXTURE"
-														id=2 component="UNIT" />
+					<!--valueof uniform="imageUnitN"	type="CURRENT" context="IMAGE_TEXTURE"
+														id=2 component="UNIT" /-->
 					<valueof uniform="camXPV"		type="CAMERA" context="xx"
 														component="PROJECTION_VIEW_MATRIX" />
 					<valueof uniform="camYPV"		type="CAMERA" context="yy"
@@ -131,15 +155,15 @@
 				<imageTexture UNIT=1 texture="gridColor" >
 					<ACCESS value="READ_WRITE" />
 					<LEVEL value=0 />
-					<CLEAR value=true/>
+					<CLEAR value="true"/>
 					<INTERNAL_FORMAT value="R32UI" />
 				</imageTexture>
-				<imageTexture UNIT=2 texture="gridNormal" >
+				<!--imageTexture UNIT=2 texture="gridNormal" >
 					<ACCESS value="READ_WRITE" />
 					<LEVEL value=0 />
-					<CLEAR value=true/>
+					<CLEAR value="true"/>
 					<INTERNAL_FORMAT value="R32UI" />
-				</imageTexture>
+				</imageTexture-->
 			</imageTextures>
 			
 			<state>
@@ -148,17 +172,35 @@
 			</state>	
 		</material>
 	
+		<material name ="voxelization2">
+			<shader name="voxelization2">
+				<values>
+					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+														id=1 component="UNIT" />
+					<valueof uniform="camXPV"		type="CAMERA" context="xx"
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="camYPV"		type="CAMERA" context="yy"
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="camZPV"		type="CAMERA" context="zz"
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
+														component="ABSOLUT_SIZE" />
+				
+				</values>
+			</shader>
+		</material>
+
 		<material name="mipmap" >
 			<shader name="mipmap">
 				<values>
 					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
 														id=1 component="UNIT" />
-					<valueof uniform="imageUnitN"	type="CURRENT" context="IMAGE_TEXTURE"
-														id=2 component="UNIT" />
+					<!--valueof uniform="imageUnitN"	type="CURRENT" context="IMAGE_TEXTURE"
+														id=2 component="UNIT" /-->
 					<valueof uniform="grid"			type="CURRENT" context="MATERIAL_TEXTURE"
 														id=1 component="UNIT" />
-					<valueof uniform="normal"		type="CURRENT" context="MATERIAL_TEXTURE"
-														id=2 component="UNIT" />
+					<!--valueof uniform="normal"		type="CURRENT" context="MATERIAL_TEXTURE"
+														id=2 component="UNIT" /-->
 					<valueof uniform="destMipLevel"	type="CURRENT" context="PASS"
 														component="GridCurrentLevel" />
 				</values>
@@ -167,13 +209,13 @@
 				<imageTexture UNIT=1 texture="gridColor" >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=1 />
-					<CLEAR value=true/>
+					<CLEAR value="true"/>
 				</imageTexture>
-				<imageTexture UNIT=2 texture="gridNormal" >
+				<!--imageTexture UNIT=2 texture="gridNormal" >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=1 />
-					<CLEAR value=true/>
-				</imageTexture>
+					<CLEAR value="true"/>
+				</imageTexture-->
 			</imageTextures>
 			<textures>
 				<texture UNIT=1 name="gridColor" >
@@ -183,16 +225,32 @@
 					<WRAP_T value="CLAMP_TO_BORDER" />
 					<WRAP_R value="CLAMP_TO_BORDER" />
 				</texture>
-				<texture UNIT=2 name="gridNormal" >
+				<!--texture UNIT=2 name="gridNormal" >
 					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
 					<MAG_FILTER value="NEAREST" />
 					<WRAP_S value="CLAMP_TO_BORDER" />
 					<WRAP_T value="CLAMP_TO_BORDER" />
 					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
+				</texture-->
 			</textures>
 		</material>
 		
+		<material name="resetOpacity" >
+			<shader name="resetOpacity">
+				<values>
+					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+														id=1 component="UNIT" />
+				</values>
+			</shader>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="gridColor" >
+					<ACCESS value="READ_WRITE" />
+					<LEVEL value=0 />
+					<CLEAR value="false"/>
+				</imageTexture>
+			</imageTextures>
+		</material>
+
 		<material name ="showVoxels">
 			<shader name="showVoxels">
 				<values>
@@ -231,10 +289,33 @@
 		<material name ="lightInjection">
 			<shader name="lightInjection">
 				<values>
-					<valueof uniform="RayDir"    	type="CURRENT" context="LIGHT" 
-														id=0 component="DIRECTION" />
+					<valueof uniform="CamPos"    type="CAMERA" context="voxels#RSM-LightCam" 
+														component="POSITION" />
+					<valueof uniform="RayDirection" type="CAMERA" context="voxels#RSM-LightCam" 
+														component="VIEW" />
+					<valueof uniform="upV" type="CAMERA" context="voxels#RSM-LightCam" 
+														component="NORMALIZED_UP" />
+					<valueof uniform="rightV" type="CAMERA" context="voxels#RSM-LightCam" 
+														component="NORMALIZED_RIGHT" />
+					<valueof uniform="near" type="CAMERA" context="voxels#RSM-LightCam" 
+														component="NEAR" />
+					<valueof uniform="right" type="CAMERA" context="voxels#RSM-LightCam" 
+														component="RIGHT" />
+					<valueof uniform="left" type="CAMERA" context="voxels#RSM-LightCam" 
+														component="LEFT" />
+					<valueof uniform="bottom" type="CAMERA" context="voxels#RSM-LightCam" 
+														component="BOTTOM" />
+					<valueof uniform="top" type="CAMERA" context="voxels#RSM-LightCam" 
+														component="TOP" />
+														
+					<valueof uniform="texRSM" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="1" />			
+					<valueof uniform="texPos" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="2" />
 					<valueof uniform="PVM"          type="CURRENT" context="RENDERER" 
 														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="VM"         	type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
 					<valueof uniform="grid"			type="CURRENT" context="IMAGE_TEXTURE"
 														id=1 component="UNIT" />
 					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
@@ -243,19 +324,51 @@
 														component="GridSize" />
 				</values>
 			</shader>
-			
+			<textures>
+				<texture UNIT=1 name="RSM" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=2 name="posRSM" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+					<WRAP_R value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
 			<imageTextures>
 				<imageTexture UNIT=1 texture="gridColor" >
 					<ACCESS value="READ_WRITE" />
-					<LEVEL value=1 />
-					<CLEAR value=true/>
+					<LEVEL value=0 />
+					<CLEAR value="false"/>
+					<INTERNAL_FORMAT value="R32UI" />
 				</imageTexture>
 			</imageTextures>
-			<state>
-				<CULL_FACE value=0 />
-			</state>	
-			
 		</material>
+
+		<material  name="RSM" >
+			<shader name="RSM">
+				<values>
+					<valueof uniform="PVM"  		type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="NormalMat"    type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+					<valueof uniform="diffuse" 		type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+					<valueof uniform="lightDir" 	type="LIGHT" context="Sun" 
+														component="DIRECTION" /> 
+					<valueof uniform="texCount"		type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />				
+				</values>
+			</shader>
+		</material>
+
 		
 		<material name ="computeCubePos">
 			<shader name="computeCubePos">
@@ -300,8 +413,8 @@
 														component="SHININESS" />
 					<valueof uniform="texCount"		type="CURRENT" context="RENDERER" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 	type="CURRENT" context="MATERIAL_TEXTURE" 
-													component="UNIT" id="0" />				
+					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />				
 				</values>
 			</shader>
 		</material>
@@ -317,8 +430,8 @@
 														component="UNIT" id="4" />				
 					<valueof uniform="grid" 		type="CURRENT" context="MATERIAL_TEXTURE" 
 														component="UNIT" id="1" />				
-					<valueof uniform="gridNormal" 	type="CURRENT" context="MATERIAL_TEXTURE" 
-														component="UNIT" id="2" />				
+					<!--valueof uniform="gridNormal" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="2" /-->				
 					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
 														component="GridSize" />
 				</values>
@@ -352,13 +465,13 @@
 					<WRAP_T value="CLAMP_TO_BORDER" />
 					<WRAP_R value="CLAMP_TO_BORDER" />
 				</texture>
-				<texture UNIT=2 name="gridNormal" >
+				<!--texture UNIT=2 name="gridNormal" >
 					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
 					<MAG_FILTER value="NEAREST" />
 					<WRAP_S value="CLAMP_TO_BORDER" />
 					<WRAP_T value="CLAMP_TO_BORDER" />
 					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
+				</texture-->
 				
 			</textures>
 		</material>
@@ -370,8 +483,8 @@
 														component="PROJECTION_VIEW_MODEL" />
 					<valueof uniform="grid"			type="CURRENT" context="MATERIAL_TEXTURE"
 														id=1 component="UNIT" />
-					<valueof uniform="gridN"		type="CURRENT" context="MATERIAL_TEXTURE"
-														id=2 component="UNIT" />
+					<!--valueof uniform="gridN"		type="CURRENT" context="MATERIAL_TEXTURE"
+														id=2 component="UNIT" /-->
 					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
 														component="GridSize" />
 				</values>
@@ -385,13 +498,13 @@
 					<WRAP_T value="CLAMP_TO_BORDER" />
 					<WRAP_R value="CLAMP_TO_BORDER" />
 				</texture>
-				<texture UNIT=2 name="gridNormal" >
+				<!--texture UNIT=2 name="gridNormal" >
 					<MIN_FILTER value="NEAREST" />
 					<MAG_FILTER value="NEAREST" />
 					<WRAP_S value="CLAMP_TO_BORDER" />
 					<WRAP_T value="CLAMP_TO_BORDER" />
 					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
+				</texture-->
 			</textures>		
 			<buffers>	
 				<buffer name="position">

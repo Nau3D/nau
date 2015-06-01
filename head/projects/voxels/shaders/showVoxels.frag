@@ -69,7 +69,7 @@ void main()
 		//density=vec4(1,0,0,0);
      }
 
-    FragColor.rgb = vec3(density);///density.w;
+    FragColor.rgb = vec3(density);
     FragColor.a = density.w;
 	
 	//FragColor = vec4(1.0);

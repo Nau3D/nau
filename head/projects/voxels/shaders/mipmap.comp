@@ -3,7 +3,7 @@ layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 uniform int destMipLevel = 0;
 layout(binding = 1, rgba8) writeonly uniform image3D imageUnit;
-layout(binding = 2, rgba8) writeonly uniform image3D imageUnitN;
+//layout(binding = 2, rgba8) writeonly uniform image3D imageUnitN;
 
 uniform sampler3D grid, normal;
 

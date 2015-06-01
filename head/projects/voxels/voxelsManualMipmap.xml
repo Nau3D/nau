@@ -22,12 +22,12 @@
 			<scene name="Sponza" param="UNITIZE">
 				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
 			</scene>
-			<scene name="Cube" param="UNITIZE">
+			<scene name="Cube" >
 				<file name="../../models/cube.obj"/>
 			</scene>
 			<scene name="Dummy" >
 				<buffers name="positions" primitive="POINTS" material="showRays">
-					<position name="position" fromLibrary="Voxels" />				
+					<position name="dummy" fromLibrary="Voxels" />				
 				</buffers>	
 			</scene>
 		</scenes>
@@ -114,16 +114,11 @@
 								<ACCESS value="WRITE_ONLY" />
 								<LEVEL value=0 />
 							</imageTexture>
-							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 >
-								<ACCESS value="WRITE_ONLY" />
-								<LEVEL value=0 />
-							</imageTexture>
 						</imageTextures>
 					</map>
 				</injectionMaps>
 				<preProcess>
 					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
-					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 />
 					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
 				</preProcess>	
 			</pass>

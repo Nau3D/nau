@@ -116,20 +116,18 @@
 								<ACCESS value="WRITE_ONLY" />
 								<LEVEL value=0 />
 							</imageTexture>
-							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 >
+							<!--imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 >
 								<ACCESS value="WRITE_ONLY" />
 								<LEVEL value=0 />
-							</imageTexture>
+							</imageTexture-->
 						</imageTextures>
 					</map>
 				</injectionMaps>
 				<preProcess>
 					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
-					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 />
 				</preProcess>	
 				<postProcess>
 					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
-					<texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true />
 				</postProcess>	
 			</pass>
 			

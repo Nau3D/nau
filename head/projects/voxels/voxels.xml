@@ -22,7 +22,7 @@
 			<scene name="Sponza" param="UNITIZE">
 				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
 			</scene>
-			<scene name="Cube" param="UNITIZE">
+			<scene name="Cube" >
 				<file name="../../models/cube.obj"/>
 			</scene>
 			<scene name="Dummy" >
@@ -107,18 +107,15 @@
 						<state name="voxelization" fromLibrary="Voxels" />
 						<imageTextures>
 							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 />
-							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 />
 						</imageTextures>
 					</map>
 				</injectionMaps>
 				<preProcess>
 					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
-					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0 />
 					<buffer name="atomic" fromLibrary="Voxels" CLEAR=true />
 				</preProcess>	
 				<postProcess>
-					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
-					<texture name="gridNormal" fromLibrary="Voxels" MIPMAP=true />
+					<!--texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  /-->
 				</postProcess>	
 			</pass>
 						

@@ -2,9 +2,9 @@
 
 #include "nau.h"
 #include "nau/slogger.h"
-#include "nau/event/eventFactory.h" 
 #include "nau/event/cameraMotion.h"
 #include "nau/event/cameraOrientation.h"
+#include "nau/event/eventFactory.h" 
 #include "nau/geometry/boundingbox.h"
 #include "nau/geometry/mesh.h"
 #include "nau/material/materialgroup.h"
@@ -152,14 +152,14 @@ Camera::Camera (const std::string &name) :
 }
 
 
-Camera::~Camera (void)
-{
+Camera::~Camera (void) {
+
 }
 
 
 void
-Camera::setOrtho(float left, float right, float bottom, float top, float nearp, float farp)
-{
+Camera::setOrtho(float left, float right, float bottom, float top, float nearp, float farp) {
+
 	m_EnumProps[PROJECTION_TYPE] = ORTHO;
 	m_FloatProps[LEFT] = left;
 	m_FloatProps[RIGHT] = right;
@@ -175,8 +175,8 @@ Camera::setOrtho(float left, float right, float bottom, float top, float nearp, 
 
 
 void 
-Camera::setPerspective (float fov, float nearp, float farp)
-{
+Camera::setPerspective (float fov, float nearp, float farp) {
+
 	m_EnumProps[PROJECTION_TYPE] = PERSPECTIVE;
 	m_FloatProps[FOV] = fov;
 	m_FloatProps[NEARP] = nearp;
@@ -190,23 +190,16 @@ Camera::setPerspective (float fov, float nearp, float farp)
 
 // to be called when viewport changes
 void 
-Camera::updateProjection ()
-{
+Camera::updateProjection () {
+
 	buildProjectionMatrix();
 	buildProjectionViewMatrix();
 	buildTS05PVMMatrix();
 }
 
 
-//void Camera::setPropm4(Mat4Property prop, mat4 &mat) 
-//{
-//	m_Mat4Props[prop] = mat;
-//}
-
-
 void 
-Camera::setPropf(FloatProperty prop, float f) 
-{
+Camera::setPropf(FloatProperty prop, float f) {
 	
 	vec3 v;
 
@@ -236,8 +229,8 @@ Camera::setPropf4(Float4Property prop, vec4& aVec) {
 
 
 void
-Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
-{
+Camera::setPropf4(Float4Property prop, float x, float y, float z, float w) {
+
 	vec4 v;
 	vec2 v2;
 
@@ -304,8 +297,8 @@ Camera::setPropf4(Float4Property prop, float x, float y, float z, float w)
 
 
 void 
-Camera::setPrope(EnumProperty prop, int value) 
-{
+Camera::setPrope(EnumProperty prop, int value) {
+
 	AttributeValues::setPrope(prop, value);
 
 	buildProjectionMatrix();
@@ -337,8 +330,8 @@ Camera::getProp(int prop, Enums::DataType type) {
 
 
 IRenderable& 
-Camera::getRenderable (void)
-{
+Camera::getRenderable (void) {
+
 	vec3 frustumPoints[8];
 
 	/// MARK - This can be done only when modifying the camera parameters
@@ -385,8 +378,8 @@ Camera::getRenderable (void)
 
 
 IBoundingVolume*
-Camera::getBoundingVolume ()
-{
+Camera::getBoundingVolume () {
+
 	calculateBoundingVolume();
 	m_BoundingVolume->setTransform (m_Mat4Props[VIEW_INVERSE_MATRIX]);
 	return (m_BoundingVolume);
@@ -394,8 +387,8 @@ Camera::getBoundingVolume ()
 
 
 void
-Camera::setCamera (vec3 position, vec3 view, vec3 up)
-{
+Camera::setCamera (vec3 position, vec3 view, vec3 up) {
+
 	if (m_IsDynamic) {
 		m_Float4Props[POSITION].set(position.x, position.y + 0.85f, position.z, 1.0f);
 	} else {
@@ -463,8 +456,8 @@ Camera::buildInverses(void) {
 
 
 void 
-Camera::setVectorsFromSpherical() 
-{
+Camera::setVectorsFromSpherical() {
+
 	// maybe only do this if there is no look at point?
 	m_FloatProps[ELEVATION_ANGLE] = Spherical::capBeta(m_FloatProps[ELEVATION_ANGLE]);
 
@@ -525,8 +518,8 @@ Camera::buildProjectionMatrix() {
 	
 
 void
-Camera::setViewport (Viewport* aViewport)
-{
+Camera::setViewport (Viewport* aViewport) {
+
 	m_pViewport = aViewport;
 
 	if (aViewport != NULL) {
@@ -541,16 +534,15 @@ Camera::setViewport (Viewport* aViewport)
 
 
 Viewport *
-Camera::getViewport (void)
-{
+Camera::getViewport (void) {
+
 	return (m_pViewport);
 }
 
 
-
 void
-Camera::buildTS05PVMMatrix(void) 
-{
+Camera::buildTS05PVMMatrix(void) {
+
 	m_Mat4Props[TS05_PVM_MATRIX].setIdentity();
 
 	m_Mat4Props[TS05_PVM_MATRIX].translate (0.5f, 0.5f, 0.5f);
@@ -559,17 +551,19 @@ Camera::buildTS05PVMMatrix(void)
 	m_Mat4Props[TS05_PVM_MATRIX] *= m_Mat4Props[PROJECTION_VIEW_MATRIX];
 }
 
+
 void
-Camera::buildProjectionViewMatrix (void)
-{
+Camera::buildProjectionViewMatrix (void) {
+
 	m_Mat4Props[PROJECTION_VIEW_MATRIX].setIdentity();
 	m_Mat4Props[PROJECTION_VIEW_MATRIX] *= m_Mat4Props[PROJECTION_MATRIX];
 	m_Mat4Props[PROJECTION_VIEW_MATRIX] *= m_Mat4Props[VIEW_MATRIX];
 }
 
+
 void
-Camera::buildViewMatrix (void)
-{
+Camera::buildViewMatrix (void) {
+
 	vec4 s,u,v;
 	u = m_Float4Props[NORMALIZED_UP_VEC];
 	s = m_Float4Props[NORMALIZED_RIGHT_VEC];
@@ -601,8 +595,8 @@ Camera::buildViewMatrix (void)
 
 
 void
-Camera::adjustMatrix(Camera* aCamera)
-{
+Camera::adjustMatrix(Camera* aCamera) {
+
 	float cNear = aCamera->getPropf(NEARP);
 	float cFar = aCamera->getPropf(FARP);
 	adjustMatrixPlus(cNear,cFar,aCamera);
@@ -611,17 +605,26 @@ Camera::adjustMatrix(Camera* aCamera)
 
 
 void
-Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera)
-{
-	float ratio = aCamera->getViewport()->getPropf(Viewport::RATIO);
+Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera) {
+
+	float ratio, fov, hNear, hFar, wNear, wFar;
+	int camType = aCamera->getPrope(Camera::PROJECTION_TYPE);
 	
-	float fov = aCamera->getPropf(FOV);
+	if (camType == Camera::PERSPECTIVE) {
+		ratio = aCamera->getViewport()->getPropf(Viewport::RATIO);
+		fov = aCamera->getPropf(FOV);
+		hNear = 2.0f * tan(DegToRad(fov * 0.5f)) * cNear;
+		wNear = hNear * ratio;
+		hFar = 2.0f * tan(DegToRad(fov * 0.5f)) * cFar;
+		wFar = hFar * ratio;
+	}
+	else if (camType == Camera::ORTHO) {
+		hNear = aCamera->getPropf(Camera::TOP) - aCamera->getPropf(Camera::BOTTOM);
+		hFar = hNear;
+		wNear = aCamera->getPropf(Camera::RIGHT) - aCamera->getPropf(Camera::LEFT);
+		wFar = wNear;
+	}
 
-	float hNear = 2.0f * tan (DegToRad(fov * 0.5f)) * cNear;
-	float wNear = hNear * ratio;
-
-	float hFar = 2.0f * tan (DegToRad(fov * 0.5f)) * cFar;
-	float wFar = hFar * ratio;
 
 	vec4 rightVector = aCamera->getPropf4(NORMALIZED_RIGHT_VEC);
 
@@ -740,8 +743,8 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera)
 
 
 void 
-Camera::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt)
-{
+Camera::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+
 	if (eventType == "VIEWPORT_CHANGED" && m_pViewport != NULL && m_pViewport->getName() == sender)
 		updateProjection();
 
@@ -830,20 +833,20 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType, n
 
 // Physics
 bool 
-Camera::isDynamic() 
-{
+Camera::isDynamic() {
+
 	return m_IsDynamic;
 }
 			
 void 
-Camera::setDynamic(bool value)
-{
+Camera::setDynamic(bool value) {
+
 	m_IsDynamic = value;
 }
 
 void 
-Camera::setPositionOffset (float value)
-{
+Camera::setPositionOffset (float value) {
+
 	m_PositionOffset = value;
 }
 

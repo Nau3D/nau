@@ -71,11 +71,11 @@
 			
 			<pass class="quad" name="showNormals">
 				<viewport name="normals" />
-				<texture name="normals" fromLibrary="Deferred Rendering" />
+				<texture name="Deferred Rendering::normals"  />
 			</pass>
 			<pass class="quad" name="showColors">
 				<viewport name="colors" />
-				<texture name="colors" fromLibrary="Deferred Rendering" />
+				<texture name="Deferred Rendering::colors" />
 			</pass>
 			<pass class="quad" name="deferred">
 				<viewport name="deferred" />

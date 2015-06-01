@@ -236,6 +236,28 @@ void DlgOGL::setupMIPanel(wxSizer *siz, wxWindow *parent) {
 	pgmi->AddPage(wxT("Standard Items"));
 
 	int d;
+
+	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &d);
+	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS"),wxPG_LABEL,d));
+
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &d);
+	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT X"),wxPG_LABEL,d));
+
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &d);
+	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT Y"),wxPG_LABEL,d));
+
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &d);
+	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT Z"),wxPG_LABEL,d));
+
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0,&d);
+	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE X"),wxPG_LABEL,d));
+
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1,&d);
+	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE Y"),wxPG_LABEL,d));
+
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2,&d);
+	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE Z"),wxPG_LABEL,d));
+
 	glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS,&d);
 	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS"),wxPG_LABEL,d));
 
