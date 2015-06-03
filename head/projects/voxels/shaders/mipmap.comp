@@ -24,11 +24,10 @@ void main()
 	float f = srcColor0.w + srcColor1.w + srcColor2.w + srcColor3.w +
 		srcColor4.w + srcColor5.w + srcColor6.w + srcColor7.w;
 		
-	vec4 outColor = 0.125 * (srcColor0 + srcColor1 + srcColor2 + srcColor3 + srcColor4 + srcColor5 + srcColor6 + srcColor7);
-	// if (f != 0)
-		// outColor.xyz /= f;
-	
-	// outColor.w = f/8.0;
+	vec4 outColor =  (srcColor0 + srcColor1 + srcColor2 + srcColor3 + srcColor4 + srcColor5 + srcColor6 + srcColor7);
+	 if (f != 0)
+		 outColor.xyz /= f;
+	 outColor.w = f/8.0;
 		
 	imageStore(imageUnit, dstPos, outColor);
 }

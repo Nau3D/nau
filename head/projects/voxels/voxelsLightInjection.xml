@@ -162,6 +162,12 @@
 						dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
 			</pass>
 
+			<pass class="compute" name="mipmap" >
+				<mode value="RUN_WHILE_TRUE" />
+				<testScript file="test.lua" script="test" />
+				<material name="mipmap" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
+			</pass>
+
 			<pass class="default" name="renderScene">
 				<scenes>
 					<scene name="Sponza" />
@@ -174,12 +180,23 @@
 				<renderTarget name="scene" fromLibrary="Voxels" />
 				<injectionMaps>
 					<map toMaterial="*">
-						<shader fromMaterial ="renderScene" fromLibrary="Voxels" />
+						<shader fromMaterial ="renderScene2" fromLibrary="Voxels" />
+						<textures>
+							<texture name="posRSM" fromLibrary="Voxels" toUnit="1" >
+								<MIN_FILTER value="LINEAR" />
+								<MAG_FILTER value="LINEAR" />					
+							</texture>
+						</textures>
 					</map>
 				</injectionMaps>
 			</pass>
 			
-			<pass class="default" name="showVoxels">
+			<!--pass class="quad" name="test">
+				<viewport name="MainViewport" />
+				<texture name="color" fromLibrary="Voxels" />
+			</pass-->
+
+			<!--pass class="default" name="showVoxels">
 				<scenes>
 					<scene name="Dummy" />
 				</scenes>	
@@ -189,6 +206,11 @@
 					<map fromMaterial="showRays" 
 						 toLibrary="Voxels" toMaterial="showVoxels" />
 				</materialMaps>				
+			</pass-->
+			
+			<pass class="quad" name="computeIndirectLight" >
+				<material name="computeIndirectLight" fromLibrary="Voxels" />
+				<viewport name="MainViewport" />
 			</pass>
 
 		</pipeline>
