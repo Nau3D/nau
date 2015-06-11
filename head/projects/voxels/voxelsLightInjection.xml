@@ -97,7 +97,7 @@
 		<pipeline name="voxels" default="true" defaultCamera = "MainCamera">
 		
 			<pass class="default" name="voxelization2">
-				<!--mode value="RUN_ONCE" /-->
+				<mode value="RUN_ONCE" />	
 				<viewport name="Grid"/>
 				<camera name="MainCamera" />
 				<scenes>
@@ -125,7 +125,7 @@
 			</pass>
 			
 			<pass class="depthmap" name="RSM">
-				<!--mode value="RUN_ONCE" /-->	
+				<mode value="RUN_ONCE" />	
 				<scenes>
 					<scene name="Sponza" />
 				</scenes>	
@@ -143,13 +143,13 @@
 			
 					
 			<pass class="quad" name="lightInjection">
-				<!--mode value="RUN_ONCE" /-->
+				<mode value="RUN_ONCE" />	
 				<materialMaps>			
 					<map fromMaterial="__Quad" 
 						 toLibrary="Voxels" toMaterial="lightInjection" />
 				</materialMaps>		
 				<renderTarget name="RSMTest" fromLibrary="Voxels" />
-			</pass >
+			</pass>
 			
 			<!--pass class="quad" name="test">
 				<viewport name="MainViewport" />
@@ -157,14 +157,15 @@
 			</pass-->
 			
 			<pass class="compute" name="resetOpacity" >
-				<!--mode value="RUN_ONCE" /-->
+				<mode value="RUN_ONCE" />	
 				<material name="resetOpacity" fromLibrary="Voxels" 
 						dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
 			</pass>
 
 			<pass class="compute" name="mipmap" >
-				<mode value="RUN_WHILE_TRUE" />
-				<testScript file="test.lua" script="test" />
+				<mode value="RUN_ONCE" />	
+				<!--mode value="RUN_WHILE_TRUE" /-->
+				<testScript file="test.lua" script="test" TEST_MODE="RUN_WHILE"/>
 				<material name="mipmap" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
 			</pass>
 

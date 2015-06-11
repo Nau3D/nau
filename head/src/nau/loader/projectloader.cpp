@@ -1432,7 +1432,9 @@ ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 		if (!pFile || !pFunction) {
 			NAU_THROW("File %s\nPass %s\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
-
+		Attribute a = aPass->getAttribSet()->get("TEST_MODE");
+		void *val = readAttribute("TEST_MODE", a, pElem);
+		aPass->setPrope(Pass::TEST_MODE, *(int *)val);
 		aPass->setTestScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
 	}
 }
@@ -2346,8 +2348,8 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("File %s\nPass %s\ndimY and bufferY are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 
-		if (!res2)
-			*res2 = 1;
+		//if (!res2)
+		//	*res2 = 1;
 		if (pAtY != NULL) {
 			bY = RESOURCEMANAGER->getBuffer(pAtY);
 			if (!bY) {
@@ -2365,8 +2367,8 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("File %s\nPass %s\ndimZ and bufferZ are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 
-		if (!res3)
-			*res3 = 1;
+		//if (!res3)
+		//	*res3 = 1;
 		if (pAtZ != NULL) {
 			bZ = RESOURCEMANAGER->getBuffer(pAtZ);
 			if (!bZ) {
@@ -2379,7 +2381,14 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 
 		p->setMaterialName (pLibName, pMatName);
-		p->setDimension( *res, *res2, *res3);	
+		unsigned int r1=0, r2=0, r3=0;
+		if (res)
+			r1 = *res;
+		if (res2)
+			r2 = *res2;
+		if (res3)
+			r3 = *res3;
+		p->setDimension( r1, r2, r3);	
 		p->setDimFromBuffer(bX, offX, bY, offY, bZ, offZ);
 	}
 	else

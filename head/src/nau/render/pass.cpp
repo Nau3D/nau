@@ -30,6 +30,10 @@ Pass::Init() {
 	Attribs.add(Attribute(STENCIL_ENABLE, "STENCIL_ENABLE", Enums::DataType::BOOL, false, new bool(false)));
 
 	// ENUM
+	Attribs.add(Attribute(TEST_MODE, "TEST_MODE", Enums::DataType::ENUM, true, new int(RUN_IF)));
+	Attribs.listAdd("TEST_MODE", "RUN_IF", RUN_IF);
+	Attribs.listAdd("TEST_MODE", "RUN_WHILE", RUN_WHILE);
+
 	Attribs.add(Attribute(RUN_MODE, "RUN_MODE", Enums::DataType::ENUM, true, new int(RUN_ALWAYS)));
 	Attribs.listAdd("RUN_MODE", "DONT_RUN", DONT_RUN);
 	Attribs.listAdd("RUN_MODE", "RUN_ALWAYS", RUN_ALWAYS);
@@ -37,7 +41,6 @@ Pass::Init() {
 	Attribs.listAdd("RUN_MODE", "RUN_ONCE", RUN_ONCE);
 	Attribs.listAdd("RUN_MODE", "RUN_EVEN", RUN_EVEN);
 	Attribs.listAdd("RUN_MODE", "RUN_ODD", RUN_ODD);
-	Attribs.listAdd("RUN_MODE", "RUN_WHILE_TRUE", RUN_WHILE_TRUE);
 
 	Attribs.add(Attribute(STENCIL_FUNC, "STENCIL_FUNC", Enums::DataType::ENUM, false, new int(ALWAYS)));
 	Attribs.listAdd("STENCIL_FUNC", "LESS", LESS);

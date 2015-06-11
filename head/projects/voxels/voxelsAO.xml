@@ -128,12 +128,13 @@
 			</pass>
 			
 			<pass class="compute" name="resetOpacity" >
+				<mode value="RUN_ONCE" />
 				<material name="resetOpacity"  fromLibrary="Voxels" dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
 			</pass>
 			
 			<pass class="compute" name="mipmap" >
-				<mode value="RUN_WHILE_TRUE" />
-				<testScript file="test.lua" script="test" />
+				<mode value="RUN_ONCE" />
+				<testScript file="test.lua" script="test" TEST_MODE="RUN_WHILE"/>
 				<material name="mipmap" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
 			</pass>
 

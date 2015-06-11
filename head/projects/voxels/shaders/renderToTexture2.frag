@@ -27,7 +27,7 @@ void main()
 	vec4 lightTexCoord = LSpaceMat * posV;
 	vec4 pos = texture(texPos, lightTexCoord.xy);
 	if (distance(pos, posV) > 0.0001)
-		outColor *= 0.5;
+		outColor *= 0.50;
 }
 
 //ADICIONAR SOMBRAS! -> fica luz directa

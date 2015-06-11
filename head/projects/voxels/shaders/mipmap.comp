@@ -27,6 +27,8 @@ void main()
 	vec4 outColor =  (srcColor0 + srcColor1 + srcColor2 + srcColor3 + srcColor4 + srcColor5 + srcColor6 + srcColor7);
 	 if (f != 0)
 		 outColor.xyz /= f;
+	 else
+		 outColor.xyz = vec3(0);
 	 outColor.w = f/8.0;
 		
 	imageStore(imageUnit, dstPos, outColor);

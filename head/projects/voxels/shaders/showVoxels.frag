@@ -8,7 +8,7 @@ uniform float FOV;
 uniform vec2 WindowSize;
 uniform vec3 RayOrigin;
 uniform int GridSize;
-uniform int level = 1;
+uniform int level = 0;
 
 struct Ray {
     vec3 Origin;

@@ -76,6 +76,7 @@ namespace nau
 			ENUM_PROP(STENCIL_DEPTH_PASS, 3);
 			ENUM_PROP(DEPTH_FUNC, 4);
 			ENUM_PROP(RUN_MODE, 5);
+			ENUM_PROP(TEST_MODE, 6);
 
 
 			typedef enum {
@@ -95,9 +96,13 @@ namespace nau
 				SKIP_FIRST_FRAME,
 				RUN_ONCE,
 				RUN_EVEN,
-				RUN_ODD,
-				RUN_WHILE_TRUE
+				RUN_ODD
 			} RunMode;
+
+			typedef enum {
+				RUN_IF,
+				RUN_WHILE
+			} TestMode;
 
 			typedef enum {
 				LESS, NEVER, ALWAYS, LEQUAL,

@@ -202,7 +202,7 @@ Pipeline::executePass(Pass *pass) {
 	m_CurrentPass = pass;
 	bool keepRunning = false;
 
-	if (pass->getPrope(Pass::RUN_MODE) == Pass::RUN_WHILE_TRUE)
+	if (pass->getPrope(Pass::TEST_MODE) == Pass::RUN_WHILE)
 		keepRunning = true;
 
 	do {
@@ -244,7 +244,7 @@ Pipeline::execute() {
 
 			int mode = pass->getPrope(Pass::RUN_MODE);
 			// most common case: run pass in all frames
-			if (mode == Pass::RUN_ALWAYS || mode == Pass::RUN_WHILE_TRUE)
+			if (mode == Pass::RUN_ALWAYS)// || mode == Pass::RUN_WHILE_TRUE)
 				executePass(pass);
 
 			else {
