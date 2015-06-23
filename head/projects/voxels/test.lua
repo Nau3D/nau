@@ -20,7 +20,8 @@ test = function()
 		setAttr("PASS", "voxels#mipmap", "DIM_Y", 0, g);
 		setAttr("PASS", "voxels#mipmap", "DIM_Z", 0, g);
 		
-		setAttr("IMAGE_TEXTURE", "Voxels::mipmap", "LEVEL", 1, f);
+		setAttr("IMAGE_TEXTURE", "Voxels::mipmap2", "LEVEL", 1, f);
+		setAttr("IMAGE_TEXTURE", "Voxels::mipmap2", "LEVEL", 2, f);
 		return true
 	end
 end

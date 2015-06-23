@@ -58,7 +58,6 @@
 				<scenes>
 					<scene name="bench" />
 				</scenes>
-				<!--viewport>LeftViewport</viewport-->
 				<camera name="MainCamera" />
 				<lights>
 					<light name="Sun" />

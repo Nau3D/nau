@@ -18,8 +18,8 @@
         <File name="voxels.xml" />
     </Project>
     <Project name="VoxelLightInjection">
-        <File name="voxels.mlib" />
         <File name="voxelsLightInjection.xml" />
+        <File name="voxelsLI.mlib" />
     </Project>
     <Project name="Shaders">
         <File name="shaders\computeAO.vert" />
@@ -30,6 +30,7 @@
         <File name="shaders\lightInjection.frag" />
         <File name="shaders\lightInjection.vert" />
         <File name="shaders\mipmap.comp" />
+        <File name="shaders\mipmap2.comp" />
         <File name="shaders\renderToTexture.vert" />
         <File name="shaders\renderToTexture.frag" />
         <File name="shaders\renderToTexture2.vert" />

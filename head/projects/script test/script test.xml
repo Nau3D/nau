@@ -48,7 +48,7 @@
 	
 	<pipelines>
 		<pipeline name="script test" default="true" defaultCamera="Master">
-			<preScript file="test.lua" name="syncCamera" />
+			<postScript file="test.lua" name="syncCamera" />
 			<pass class="default" name="master">
 				<scenes>
 					<scene name="MainScene" />

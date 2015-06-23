@@ -123,7 +123,8 @@ Pass::Pass (const std::string &passName) :
 	m_RestoreViewport (0),
 	m_RemapMode (REMAP_DISABLED),
 	m_TestScriptFile(""),
-	m_BufferDrawIndirect(NULL) {
+	m_BufferDrawIndirect(NULL),
+	m_ExplicitViewport(false) {
 
 	registerAndInitArrays(Attribs);
 
@@ -268,6 +269,13 @@ void
 Pass::prepare (void) {
 
 	if (0 != m_RenderTarget && true == m_UseRT) {
+
+		if (m_ExplicitViewport) {
+			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUT_SIZE);
+			m_RTSizeWidth = f2.x;
+			m_RTSizeHeight = f2.y;
+			m_RenderTarget->setPropui2(RenderTarget::SIZE, uivec2(f2.x, f2.y));
+		}
 		m_RenderTarget->bind();
 	}
 
@@ -361,6 +369,7 @@ void
 Pass::setViewport(nau::render::Viewport *aViewport) {
 
 	m_Viewport = aViewport;
+	m_ExplicitViewport = true;
 }
 
 

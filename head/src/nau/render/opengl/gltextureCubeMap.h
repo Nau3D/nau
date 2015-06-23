@@ -25,7 +25,7 @@ namespace nau
 			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts);
 			virtual void restore(unsigned int unit);
 
-			virtual void build();
+			virtual void build(int immutable = 0);
 
 			virtual void clear();
 			virtual void clearLevel(int l);
@@ -42,6 +42,9 @@ namespace nau
 
 			static bool InitGL();
 			static bool Inited;
+
+			virtual void resize(unsigned int x, unsigned int y, unsigned int z) {};
+
 
 		private:
 

@@ -253,6 +253,7 @@ namespace nau
 			std::vector<std::string> m_Lights;
 			std::vector<std::string> m_SceneVector;
 			nau::render::Viewport *m_Viewport;
+			bool m_ExplicitViewport;
 			// used to temporarily store the camera viewport when the pass has an explicit viewport
 			nau::render::Viewport *m_RestoreViewport;
 			nau::render::RenderTarget *m_RenderTarget;

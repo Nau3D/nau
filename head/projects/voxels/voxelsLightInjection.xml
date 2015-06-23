@@ -26,11 +26,6 @@
 			<scene name="Cube" param="UNITIZE">
 				<file name="../../models/cube.obj"/>
 			</scene>
-			<scene name="Dummy" >
-				<buffers name="positions" primitive="POINTS" material="showRays">
-					<position name="dummy" fromLibrary="Voxels" />				
-				</buffers>	
-			</scene>
 		</scenes>
 		
 		<viewports>
@@ -88,7 +83,7 @@
 		</lights>
 		
 		<materialLibs>
-			<materialLib filename="voxels.mlib"/>
+			<materialLib filename="voxelsLI.mlib"/>
 		</materialLibs>
 	</assets>
 	
@@ -96,9 +91,9 @@
 	<pipelines>
 		<pipeline name="voxels" default="true" defaultCamera = "MainCamera">
 		
-			<pass class="default" name="voxelization2">
+			<pass class="default" name="voxelization">
 				<mode value="RUN_ONCE" />	
-				<viewport name="Grid"/>
+				<!--viewport name="Grid"/-->
 				<camera name="MainCamera" />
 				<scenes>
 					<scene name="Sponza" />
@@ -108,20 +103,18 @@
 				<renderTarget name="dummy" fromLibrary="Voxels" />
 				<injectionMaps>
 					<map toMaterial="*" >
-						<shader fromMaterial ="voxelization2" fromLibrary="Voxels" />
+						<shader fromMaterial ="voxelization" fromLibrary="Voxels" />
 						<state name="voxelization" fromLibrary="Voxels" />
 						<imageTextures>
-							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 >
-							</imageTexture>
+							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 />
+							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 />
 						</imageTextures>
 					</map>
 				</injectionMaps>
 				<preProcess>
 					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0  />
 				</preProcess>	
-				<!--postProcess>
-					<texture name="gridColor" fromLibrary="Voxels" MIPMAP=true  />
-				</postProcess-->	
 			</pass>
 			
 			<pass class="depthmap" name="RSM">
@@ -166,7 +159,7 @@
 				<mode value="RUN_ONCE" />	
 				<!--mode value="RUN_WHILE_TRUE" /-->
 				<testScript file="test.lua" script="test" TEST_MODE="RUN_WHILE"/>
-				<material name="mipmap" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
+				<material name="mipmap2" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
 			</pass>
 
 			<pass class="default" name="renderScene">
@@ -177,7 +170,7 @@
 					<light name="Sun" />
 				</lights>	
 				<camera name="MainCamera" />
-				<viewport name="MainViewport" />
+				<!--viewport name="MainViewport" /-->
 				<renderTarget name="scene" fromLibrary="Voxels" />
 				<injectionMaps>
 					<map toMaterial="*">

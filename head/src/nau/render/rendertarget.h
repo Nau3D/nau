@@ -62,6 +62,8 @@ namespace nau
 
 			nau::render::Texture* getTexture(unsigned int i);
 
+			virtual void setPropui2(UInt2Property prop, uivec2 &value) = 0;
+
 			//void setClearValues(float r, float g, float b, float a);
 			//void setSampleCount(int samples);
 			//void setLayerCount(int layers);

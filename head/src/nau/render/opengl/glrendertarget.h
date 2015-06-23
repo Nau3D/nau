@@ -44,6 +44,8 @@ namespace nau
 			void addStencilTarget (std::string name);
 			void addDepthStencilTarget(std::string name);
 
+			void setPropui2(UInt2Property prop, uivec2 &value);
+
 			~GLRenderTarget(void);
 
 		protected:

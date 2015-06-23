@@ -110,7 +110,7 @@ GLTextureCubeMap::restore(unsigned int aUnit)
 
 
 void 
-GLTextureCubeMap::build() {}
+GLTextureCubeMap::build(int immutable) {}
 
 
 void

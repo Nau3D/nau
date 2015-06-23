@@ -200,7 +200,7 @@ namespace nau
 
 			bool
 				equals(const vector2 &v, float tolerance = -1.0f) const {
-				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance));
+				return (FloatEqual((float)x, (float)v.x, tolerance) && FloatEqual((float)y, (float)v.y, tolerance));
 			};
 
 			std::string 

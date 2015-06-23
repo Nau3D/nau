@@ -130,26 +130,6 @@ Texture::Create (std::string file, std::string label, bool mipmap) {
 }
 
 
-//Texture::Texture(std::string label, std::string aDimension, std::string anInternalFormat, 
-//				 std::string aFormat, std::string aType, int width, int height) : m_Label (label)
-//#ifdef __SLANGER__
-//				 , bitmap(0), m_Bitmap(0)
-//#endif
-//{
-//	initArrays(Attribs);
-//}
-
-
-//Texture::Texture(std::string label, std::string aDimension, std::string anInternalFormat, 
-//				 int width, int height) : m_Label (label)
-//#ifdef __SLANGER__
-//				 , bitmap(0), m_Bitmap(0)
-//#endif
-//{
-//	initArrays(Attribs);
-//}
-
-
 Texture::Texture(std::string label) :m_Label(label), bitmap(0), m_Bitmap(0) {
 
 	registerAndInitArrays(Attribs);
@@ -166,44 +146,6 @@ Texture::~Texture() {
 		free (m_Bitmap);
 #endif
 }
-
-
-//int 
-//Texture::addAtrib(std::string name, Enums::DataType dt, void *value) {
-//
-//	int id= Attribs.getNextFreeID();
-//	switch (dt) {
-//
-//		case Enums::ENUM:
-//			int *k = (int *)value;
-//			m_EnumProps[id] = *k;
-//			break;
-//	}
-//
-//	return id;
-//
-//}
-
-
-//void 
-//Texture::setProp(int prop, Enums::DataType type, void *value) {
-//
-//	switch (type) {
-//
-//		case Enums::FLOAT:
-//			assert(m_FloatProps.count(prop) != 0);
-//			m_FloatProps[prop] = *(float *)value;
-//			break;
-//		case Enums::VEC4:
-//			assert(m_Float4Props.count(prop) != 0);
-//			m_Float4Props[prop].set((vec4 *)value);
-//			break;
-//		case Enums::INT:
-//			assert(m_IntProps.count(prop) != 0);
-//			m_IntProps[prop] = *(int *)value;
-//			break;
-//	}
-//}		
 
 
 #ifdef __SLANGER__

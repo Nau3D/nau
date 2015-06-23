@@ -26,12 +26,13 @@ namespace nau
 			//! restore default texture in texture unit
 			virtual void restore(unsigned int unit);
 			//! builds a texture with the attribute parameters previously set
-			virtual void build();
+			virtual void build(int immutable = 0);
 
 			virtual void clear();
 			virtual void clearLevel(int l);
 
 			virtual void generateMipmaps();
+			virtual void resize(unsigned int x, unsigned int y, unsigned int z);
 
 			static int GetCompatibleFormat(int dim, int anInternalFormat);
 			static int GetCompatibleType(int dim, int anInternalFormat);

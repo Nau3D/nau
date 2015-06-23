@@ -9,6 +9,7 @@ uniform vec2 WindowSize;
 in vec3 normalV[3];
 in vec2 texCoordV[3];
 
+
 out vec4 worldPos;
 out vec4 bBox;
 out vec4 colorG;

@@ -76,6 +76,23 @@ GLRenderTarget::init() {
 }
 
 
+void 
+GLRenderTarget::setPropui2(UInt2Property prop, uivec2 &value) {
+
+	switch (prop) {
+
+	case RenderTarget::SIZE:
+		if (m_UInt2Props[SIZE] != value) {
+			m_UInt2Props[SIZE] = value;
+			resize();
+		}
+		break;
+
+	default: AttributeValues::setPropui2(prop, value);
+	}
+}
+
+
 bool
 GLRenderTarget::checkStatus() {
 
@@ -248,62 +265,65 @@ GLRenderTarget::resize() {
 	std::string texName;
 	std::string internalFormat;
 
+	bind();
 	if (m_Color > 0) {
 
 		for (unsigned int i = 0; i < m_Color; ++i) {
 
 			if (0 != m_TexId[i]) {
-				texName = m_TexId[i]->getLabel();
-				internalFormat = m_TexId[i]->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_TexId[i]->getPrope(Texture::INTERNAL_FORMAT));;
-				RESOURCEMANAGER->removeTexture (m_TexId[i]->getLabel());
-				m_TexId[i] = NULL;
+				m_TexId[i]->resize(m_UInt2Props[SIZE].x, m_UInt2Props[SIZE].y, 1);
+				//texName = m_TexId[i]->getLabel();
+				//internalFormat = m_TexId[i]->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_TexId[i]->getPrope(Texture::INTERNAL_FORMAT));;
+				//RESOURCEMANAGER->removeTexture (m_TexId[i]->getLabel());
+				//m_TexId[i] = NULL;
+				//attachColorTexture (m_TexId[i], i);
 			}
 
-			m_TexId[i] = RESOURCEMANAGER->createTexture 
-				(texName, internalFormat, m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-				m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
+			//m_TexId[i] = RESOURCEMANAGER->createTexture 
+			//	(texName, internalFormat, m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
+			//	m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
 
-			bind();
-			attachColorTexture (m_TexId[i], i);
-			unbind();
 		}
-		setDrawBuffers();
+		//setDrawBuffers();
 	}  
 	if (m_Depth) {
 
 		if (0 != m_DepthTexture) {
-			texName = m_DepthTexture->getLabel();
-			internalFormat = m_DepthTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_DepthTexture->getPrope(Texture::INTERNAL_FORMAT));;
-			RESOURCEMANAGER->removeTexture(m_DepthTexture->getLabel());
-			m_DepthTexture = 0;
+				m_DepthTexture->resize(m_UInt2Props[SIZE].x, m_UInt2Props[SIZE].y, 1);
+			//texName = m_DepthTexture->getLabel();
+			//internalFormat = m_DepthTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_DepthTexture->getPrope(Texture::INTERNAL_FORMAT));;
+			//RESOURCEMANAGER->removeTexture(m_DepthTexture->getLabel());
+			//m_DepthTexture = 0;
 		}
 
-		m_DepthTexture = RESOURCEMANAGER->createTexture
-				(texName, "DEPTH24_STENCIL8", m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-				m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
+		//m_DepthTexture = RESOURCEMANAGER->createTexture
+		//		(texName, "DEPTH24_STENCIL8", m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
+		//		m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
 
-		bind();
-		attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
-		unbind();
+		//bind();
+		//attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
+		//unbind();
 	}
 
 	if (m_Stencil) {
 
 		if (0 != m_StencilTexture) {
-			texName = m_StencilTexture->getLabel();
-			internalFormat = m_StencilTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_StencilTexture->getPrope(Texture::INTERNAL_FORMAT));;
-			RESOURCEMANAGER->removeTexture(m_StencilTexture->getLabel());
-			m_StencilTexture = 0;
+			m_StencilTexture->resize(m_UInt2Props[SIZE].x, m_UInt2Props[SIZE].y, 1);
+			//texName = m_StencilTexture->getLabel();
+			//internalFormat = m_StencilTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_StencilTexture->getPrope(Texture::INTERNAL_FORMAT));;
+			//RESOURCEMANAGER->removeTexture(m_StencilTexture->getLabel());
+			//m_StencilTexture = 0;
 		}
 
-		m_StencilTexture = RESOURCEMANAGER->createTexture
-			(texName, "STENCIL_INDEX8", m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-			m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
+		//m_StencilTexture = RESOURCEMANAGER->createTexture
+		//	(texName, "STENCIL_INDEX8", m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
+		//	m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
 
-		bind();
-		attachDepthStencilTexture(m_StencilTexture, GL_DEPTH_ATTACHMENT);
-		unbind();
+		//bind();
+		//attachDepthStencilTexture(m_StencilTexture, GL_DEPTH_ATTACHMENT);
+		//unbind();
 	}
+	unbind();
 
 }
 

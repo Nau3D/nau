@@ -73,6 +73,7 @@ void main()
 {
 	vec4 pos = texture(texPos, texCoordV);
 	vec4 color = texture(texRSM, texCoordV);
+	color.xyz *= color.w;
 	ivec3 coord = ivec3((pos*0.5 + 0.5)*GridSize);
 	if (color.xyz != vec3(0,0,0))
 		imageAtomicRGBA8Avg(coord, vec4(color.xyz,1));

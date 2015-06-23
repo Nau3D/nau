@@ -99,7 +99,6 @@
 		<pipeline name="voxels" default="true">
 			<pass class="default" name="voxelization">
 				<mode value="RUN_ONCE" />
-				<viewport name="Grid"/>
 				<camera name="MainCamera" />
 				<scenes>
 					<scene name="VoxelTest" />
