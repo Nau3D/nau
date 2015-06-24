@@ -148,7 +148,7 @@ void Profile::createNewSection(std::string &name, pTime w, bool profileGL) {
 	sLevels[sCurrLevel].cursor++;
 
 	if (profileGL) {
-		pair p;
+		queryPair p;
 		glGenQueries(2, p.queries);
 		glQueryCounter(p.queries[0], GL_TIMESTAMP);
 		s.queriesGL[sBackBuffer].push_back(p);
@@ -183,7 +183,7 @@ void Profile::updateSection(int cur, pTime w) {
 	sLevels[sCurrLevel].cursor = cur;
 
 	if (s->profileGL) {
-		pair p;
+		queryPair p;
 		glGenQueries(2, p.queries);
 		glQueryCounter(p.queries[0], GL_TIMESTAMP);
 		s->queriesGL[sBackBuffer].push_back(p);

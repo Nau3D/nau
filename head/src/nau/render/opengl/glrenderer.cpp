@@ -3,6 +3,7 @@
 #include "nau.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
+#include "nau/loader/textureloader.h"
 #include "nau/material/material.h" 
 #include "nau/material/materialgroup.h"
 #include "nau/math/matrix.h"
@@ -14,6 +15,7 @@
 #include "nau/render/opengl/gltexture.h"
 #include "nau/render/opengl/glvertexarray.h"
 #include "nau/render/opengl/glrendertarget.h"
+
 
 using namespace nau::math;
 using namespace nau::render;
@@ -784,6 +786,24 @@ GLRenderer::colorMask(bool r, bool g, bool b, bool a) {
 	bvec4 *bv = new bvec4(r, g, b, a);
 	m_glCurrState.setPropb4(IState::COLOR_MASK_B4, *bv);
 	m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, *bv);
+}
+
+
+void 
+GLRenderer::saveScreenShot() {
+
+	int w, h;
+	char *pixels;
+	w = NAU->getWindowWidth();
+	h = NAU->getWindowHeight();
+	pixels = (char *)malloc(w * h * 4);
+
+	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	
+	nau::loader::TextureLoader *loader = nau::loader::TextureLoader::create();
+	loader->save(w, h, pixels);
+	delete(loader);
+	free (pixels);
 }
 
 

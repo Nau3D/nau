@@ -3128,10 +3128,10 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 
 	memset (activePipeline, 0, 256);
 
+
 	pElem = hRoot.FirstChild ("pipelines").FirstChild ("pipeline").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char *pNamePip = pElem->Attribute ("name");
-		const char *pDefault = pElem->Attribute ("default");
 		const char *pDefaultCamera = pElem->Attribute("defaultCamera");
 
 		if (0 == pNamePip) 
@@ -3145,10 +3145,10 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 
 		Pipeline *aPipeline = RENDERMANAGER->getPipeline (pNamePip);
 		
-		// if no default pipeline is set, then the first pipeline will be the default
-		if (pDefault && 0 == strcmp (pDefault, "true")) {
-			strcpy (activePipeline, pNamePip);
-		}
+		unsigned int k = 0;
+		pElem->QueryUnsignedAttribute("frameCount", &k);
+
+		aPipeline->setFrameCount(k);
 
 		handle = TiXmlHandle (pElem);
 		TiXmlElement *pElemPass;
@@ -3251,11 +3251,24 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 
 	} //End of pipeline
 	
-	if (strlen (activePipeline) > 0) {
-		RENDERMANAGER->setActivePipeline (activePipeline);
-	} else {
-		NAU_THROW("No default pipeline");
+	pElem = hRoot.FirstChild("pipelines").Element();
+	const char *pDefault = pElem->Attribute("default");
+	const char *pMode = pElem->Attribute("mode");
+
+	if (pMode && strcmp(pMode, "RUN_DEFAULT"))
+		RENDERMANAGER->setRunMode(pMode);
+	if (pDefault) {
+		if (RENDERMANAGER->hasPipeline(pDefault)) {
+			RENDERMANAGER->setActivePipeline(pDefault);
+		}
+		else {
+			NAU_THROW("File : %s\nElement: Pipelines\nDefault pipeline %s is not defined", s_File.c_str(), pDefault);
+		}
 	}
+	else {
+		RENDERMANAGER->setActivePipeline(0);
+	}
+
 }
 
 

@@ -8,6 +8,8 @@
 #endif
 
 #include "nau/config.h"
+#include "nau/attribute.h"
+#include "nau/attributeValues.h"
 
 #include "nau/errors.h"
 #include "nau/event/eventManager.h"
@@ -53,10 +55,17 @@ namespace nau {
 	
 	const double NO_TIME = -1.0f;
 
-	class Nau : public IListener
+	class Nau : public IListener, public AttributeValues
 	{
 
 	public:		
+
+		FLOAT_PROP(TIMER, 0);
+
+		UINT_PROP(FRAME_COUNT, 0);
+
+		static AttribSet Attribs;
+		virtual float getPropf(FloatProperty prop);
 
 		typedef enum RenderFlags {
 						BOUNDING_BOX_RENDER_FLAG, 
@@ -188,7 +197,7 @@ namespace nau {
 #endif
 
 		std::string m_Name;
-		unsigned long int m_FrameCount;
+		//unsigned long int m_FrameCount;
 
 		/*
 		Attributes
@@ -225,7 +234,7 @@ namespace nau {
 		bool m_Inited;
 		bool m_Physics;
 		
-		double m_CurrentTime;
+		//double m_CurrentTime;
 		double m_LastFrameTime;
 
 		double CLOCKS_PER_MILISEC;
@@ -242,6 +251,10 @@ namespace nau {
 		// this vector allows returning string vectors safely without
 		// memory leaks
 		std::vector<std::string> m_DummyVector;
+
+		static bool Init();
+		static bool Inited;
+
 	};
 };
 

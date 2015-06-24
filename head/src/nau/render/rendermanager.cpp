@@ -20,7 +20,8 @@ RenderManager::RenderManager(void) :
 	m_Pipelines(),
 	m_Cameras(),
 	m_Lights(),
-	m_ActivePipeline (0) {
+//	m_ActivePipeline (0),
+	m_RunMode(RUN_DEFAULT) {
 
 	m_pRenderer = RenderFactory::create();
 	m_pRenderQueue = RenderQueueFactory::create ("MaterialSort");
@@ -52,7 +53,7 @@ RenderManager::clear() {
 	}
 
 	while (!m_Pipelines.empty()){
-		delete ((*m_Pipelines.begin()).second);
+		delete ((*m_Pipelines.begin()));
 		m_Pipelines.erase(m_Pipelines.begin());
 	}
 	while (!m_Viewports.empty()){
@@ -61,7 +62,7 @@ RenderManager::clear() {
 	}
 
 
-	m_ActivePipeline = 0;
+	m_ActivePipelineIndex = 0;
 
 	m_pRenderQueue->clearQueue();
 
@@ -150,46 +151,93 @@ RenderManager::getViewportNames() {
 bool 
 RenderManager::hasPipeline (const std::string &pipelineName) {
 
-	return (m_Pipelines.count (pipelineName) > 0);
+	for (auto p : m_Pipelines) {
+		if (p->getName() == pipelineName)
+			return true;
+	}
+	return false;
 }
 
 
 Pipeline*
 RenderManager::getPipeline(const std::string &pipelineName) {
 
-	if (m_Pipelines.find(pipelineName) == m_Pipelines.end()) {
-		m_Pipelines[pipelineName] = new Pipeline(pipelineName);
-		if (m_Pipelines.size() == 1)
-			m_ActivePipeline = m_Pipelines[pipelineName];
+	Pipeline *pip;
+	bool found = false;
+
+	for (auto p : m_Pipelines) {
+		if (p->getName() == pipelineName) {
+			pip = p;
+			found = true;
+			break;
+		}
 	}
-	return m_Pipelines[pipelineName];
+
+	if (!found) {
+		pip = new Pipeline(pipelineName);
+		m_Pipelines.push_back(pip);
+	}
+
+	return pip;
+}
+
+
+unsigned int
+RenderManager::getPipelineIndex(const std::string &pipelineName) {
+
+	int index = 0;
+	bool found = false;
+
+	for (auto p : m_Pipelines) {
+		if (p->getName() == pipelineName) {
+			found = true;
+			break;
+		}
+		index++;
+	}
+
+	if (!found) {
+		index = 0;
+	}
+
+	return index;
 }
 
 
 Pipeline*
 RenderManager::getActivePipeline() {
 
-	if (m_ActivePipeline){
-		return m_ActivePipeline;
-	}
-	return NULL;
+	if (m_Pipelines.size() > m_ActivePipelineIndex)
+		return m_Pipelines[m_ActivePipelineIndex];
+	else
+		return NULL;
 }
  
 
 std::string
 RenderManager::getActivePipelineName() {
 
-	if (m_ActivePipeline){
-		return m_ActivePipeline->GetName();
+	if (m_Pipelines.size() > m_ActivePipelineIndex) {
+		return m_Pipelines[m_ActivePipelineIndex]->getName();
 	}
-	return "";
+	else
+		return "";
 }
 
 
 void
 RenderManager::setActivePipeline (const std::string &pipelineName) {
 
-	m_ActivePipeline = m_Pipelines[pipelineName];
+	m_ActivePipelineIndex = getPipelineIndex(pipelineName);
+}
+
+
+void
+RenderManager::setActivePipeline (unsigned int index) {
+
+	if (index < m_Pipelines.size()) {
+		m_ActivePipelineIndex = index;
+	}
 }
 
 
@@ -205,10 +253,24 @@ RenderManager::getPipelineNames() {
 
 	std::vector<std::string> *names = new std::vector<std::string>; 
 
-	for( std::map<std::string, nau::render::Pipeline*>::iterator iter = m_Pipelines.begin(); iter != m_Pipelines.end(); ++iter ) {
-      names->push_back((*iter).first); 
-    }
+	for (auto p : m_Pipelines)
+		names->push_back(p->getName());
+
 	return names;
+}
+
+
+bool
+RenderManager::setRunMode(std::string mode) {
+
+	if (mode == "RUN_ALL")
+		m_RunMode = RUN_ALL;
+	else if (mode == "RUN_DEFAULT")
+		m_RunMode = RUN_DEFAULT;
+	else
+		return false;
+
+	return true;
 }
 
 
@@ -217,14 +279,13 @@ RenderManager::getPipelineNames() {
 bool
 RenderManager::hasPass(const std::string &pipeline, const std::string &pass) {
 
-	if (m_Pipelines.count(pipeline)) {
+	Pipeline *pip;
 
-		if (m_Pipelines[pipeline]->hasPass(pass))
-			return true;
-		else
-			return false;
+	if (hasPipeline(pipeline)) {
+		pip = getPipeline(pipeline);
+		return pip->hasPass(pass);
 	}
-	else
+	else 
 		return false;
 }
 
@@ -234,34 +295,39 @@ Pass *RenderManager::getPass(const std::string &pipeline, const std::string &pas
 	// Pipeline and pass must exist
 	assert(hasPass(pipeline,pass));
 
-	return m_Pipelines[pipeline]->getPass(pass);
+	Pipeline *pip = getPipeline(pipeline);
+	return pip->getPass(pass);
 }
 
 
 Pass *RenderManager::getPass(const std::string &pass) {
 
-	// Pipeline and pass must exist
-	assert(m_ActivePipeline->hasPass(pass));
+	assert(m_ActivePipelineIndex < m_Pipelines.size() && 
+		m_Pipelines[m_ActivePipelineIndex]->hasPass(pass));
 
-	return m_ActivePipeline->getPass(pass);
+	// Pipeline and pass must exist
+	Pipeline *active = m_Pipelines[m_ActivePipelineIndex];
+	return active->getPass(pass);
 }
 
 
 Pass *
 RenderManager::getCurrentPass() {
 
-	assert(m_ActivePipeline != NULL);
-	return m_ActivePipeline->getCurrentPass();
+	assert(m_ActivePipelineIndex < m_Pipelines.size());
+	return m_Pipelines[m_ActivePipelineIndex]->getCurrentPass();
 }
 
 
 Camera*
 RenderManager::getCurrentCamera() {
 
-	std::string cn = m_ActivePipeline->getCurrentCamera();
+	assert(m_ActivePipelineIndex < m_Pipelines.size());
 
+	std::string cn = m_Pipelines[m_ActivePipelineIndex]->getCurrentCamera();
 	return (m_Cameras[cn]);
 }
+
 
 void
 RenderManager::prepareTriangleIDs(bool ids) {
@@ -349,28 +415,45 @@ RenderManager::getVertexData(unsigned int sceneObjID, unsigned int triID) {
 void
 RenderManager::renderActivePipelineNextPass() {
 
-	if (m_ActivePipeline)
-		m_ActivePipeline->executeNextPass();
+	if (m_ActivePipelineIndex < m_Pipelines.size())
+		m_Pipelines[m_ActivePipelineIndex]->executeNextPass();
 }
 
 
 unsigned char
 RenderManager::renderActivePipeline () 
 {
-	if (m_ActivePipeline)
-		m_ActivePipeline->execute ();
+	Pipeline *pip;
+
+	if (!(m_ActivePipelineIndex < m_Pipelines.size()))
+		return 0;
+
+	pip = m_Pipelines[m_ActivePipelineIndex];
+
+	int n = NAU->getFrameCount();
+	int k = pip->getFrameCount();
+	if (m_RunMode == RUN_ALL && k > 0 && k == n) {
+		m_ActivePipelineIndex++;
+		m_ActivePipelineIndex = m_ActivePipelineIndex % m_Pipelines.size();
+		NAU->resetFrameCount();
+		if (m_ActivePipelineIndex == 0)
+			exit(0);
+	}
+
+	pip = m_Pipelines[m_ActivePipelineIndex];
+	pip->execute ();
+
 	return 0;
 }
-
-
-
 
 
 void *
 RenderManager::getCurrentPassAttribute(std::string name, Enums::DataType dt) {
 
+	assert(m_ActivePipelineIndex < m_Pipelines.size());
+
 	int id = Pass::Attribs.getID(name);
-	return m_ActivePipeline->getCurrentPass()->getProp(id, dt);
+	return m_Pipelines[m_ActivePipelineIndex]->getCurrentPass()->getProp(id, dt);
 }
 
 
@@ -392,7 +475,7 @@ void *
 RenderManager::getPassAttribute(std::string passName, std::string name, Enums::DataType dt) {
 
 	int id = Pass::Attribs.getID(name);
-	return m_ActivePipeline->getPass(passName)->getProp(id, dt);
+	return m_Pipelines[m_ActivePipelineIndex]->getPass(passName)->getProp(id, dt);
 }
 
 
@@ -484,9 +567,9 @@ const std::string&
 RenderManager::getDefaultCameraName() {
 
 	// there must be an active pipeline
-	assert(m_ActivePipeline != NULL);
+	assert(m_ActivePipelineIndex < m_Pipelines.size());
 
-	return(m_ActivePipeline->getDefaultCameraName());
+	return(m_Pipelines[m_ActivePipelineIndex]->getDefaultCameraName());
 }
 
 
@@ -596,8 +679,8 @@ RenderManager::getAllSceneNames() {
 
 
 void 
-RenderManager::buildOctrees()
-{
+RenderManager::buildOctrees() {
+
 	std::map<std::string, nau::scene::IScene*>::iterator iter;
 	for( iter = m_Scenes.begin(); iter != m_Scenes.end(); ++iter ) {
       ((*iter).second)->build(); 
@@ -606,8 +689,8 @@ RenderManager::buildOctrees()
 
 
 void 
-RenderManager::compile()
-{
+RenderManager::compile() {
+
 	std::map<std::string, nau::scene::IScene*>::iterator iter;
 	for( iter = m_Scenes.begin(); iter != m_Scenes.end(); ++iter ) {
       ((*iter).second)->compile(); 
@@ -616,8 +699,8 @@ RenderManager::compile()
 
 
 nau::scene::IScene* 
-RenderManager::createScene (const std::string &sceneName, const std::string &sceneType)
-{
+RenderManager::createScene (const std::string &sceneName, const std::string &sceneType) {
+
 	if (false == hasScene (sceneName)) {
 		IScene *s = SceneFactory::create (sceneType);
 		if (s) {
@@ -628,9 +711,10 @@ RenderManager::createScene (const std::string &sceneName, const std::string &sce
 	return m_Scenes[sceneName]; //Or should it return NULL if it exists a scene with that name already
 }
 
+
 nau::scene::IScene* 
-RenderManager::getScene (const std::string &sceneName)
-{
+RenderManager::getScene (const std::string &sceneName) {
+
 	if (false == hasScene (sceneName)) {
 		createScene (sceneName);
 	}
@@ -639,17 +723,15 @@ RenderManager::getScene (const std::string &sceneName)
 
 
 void 
-RenderManager::materialNamesFromLoadedScenes (std::vector<std::string> &materials)
-{
-	std::map<std::string, Pipeline*>::iterator pipIter;
+RenderManager::materialNamesFromLoadedScenes (std::vector<std::string> &materials) {
 
-	pipIter = m_Pipelines.begin();
+	for (auto p : m_Pipelines) {
 
-	for ( ; pipIter != m_Pipelines.end(); pipIter++) {
-		int passCount = (*pipIter).second->getNumberOfPasses();
+		int passCount = p->getNumberOfPasses();
 		for (int i = 0; i < passCount; i++) {
-			(*pipIter).second->getPass (i)->materialNamesFromLoadedScenes (materials);
+			p->getPass (i)->materialNamesFromLoadedScenes (materials);
 		}
+
 	}
 }
 

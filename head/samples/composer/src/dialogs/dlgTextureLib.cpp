@@ -2,6 +2,7 @@
 #include <nau/event/eventFactory.h>
 #include <nau/material/teximage.h>
 #include <nau/loader/textureloader.h>
+#include <nau/system/fileutil.h>
 
 #include "GL/glew.h"
 
@@ -331,11 +332,12 @@ void DlgTextureLib::OnSaveRaw(wxCommandEvent& event)
 	FILE *fp;
 	char name[256];
 	sprintf(name, "%s.raw", texture->getLabel().c_str());
-	for (int i = 0; name[i] != '\0'; i++)
-		if (name[i] == ':')
-			name[i] = '_';
+	std::string sname = nau::system::FileUtil::validate(name);
+	//for (int i = 0; name[i] != '\0'; i++)
+	//	if (name[i] == ':' || name[i] = '/' || )
+	//		name[i] = '_';
 
-	fp = fopen(name, "wt+");
+	fp = fopen(sname.c_str(), "wt+");
 
 	for (int g = 0; g < d; ++g) {
 
@@ -397,7 +399,9 @@ void DlgTextureLib::OnSavePNG( wxCommandEvent& event)
 	TexImage *ti = RESOURCEMANAGER->createTexImage(texture);
 
 	nau::loader::TextureLoader *loader = nau::loader::TextureLoader::create();
-	loader->save(ti,"bla.png");
+	std::string s = texture->getLabel() + ".png";
+	std::string sname = nau::system::FileUtil::validate(s);
+	loader->save(ti,sname);
 }
 
 

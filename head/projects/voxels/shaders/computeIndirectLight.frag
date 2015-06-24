@@ -55,9 +55,10 @@ vec4 voxelConeTrace(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 		// Either
 		//accum.rgb += sampleValue.rgb * (sampleValue.a) * (1.0 - accum.a);//* 		// if (level > 2.0)
 		//if (dot(sampleNormal, dir) < 0.0)
-			accum.rgb += sampleValue.rgb * sampleValue.a * (1-accum.a);		
+			 // accum.rgb += sampleValue.rgb * sampleValue.a * (1-accum.a);		
+			accum.rgb += sampleValue.rgb  * (1-accum.a);		
 		accum.a += sampleValue.a;//sampleValue.a;// * minDiameter/sampleDiameter ;
-//* 		// if (level > 2.0)
+	// if (level > 2.0)
 			// accum = 0.5;
 			
 		// else accum = 0.0;	
@@ -102,7 +103,7 @@ vec4 voxelConeTrace2(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 //		accum.rgb += sampleValue.rgb ;//* sampleValue.a;
 		//sampleValue.a = 1.0 - pow(1.0 - sampleValue.a, minDiameter/sampleDiameter);
 		//sampleValue.a /= minDiameter/sampleDiameter;
-		accum.rgb += sampleValue.rgb * sampleValue.a * (1- accum.a);//* 		
+		accum.rgb += sampleValue.rgb /** sampleValue.a*/ * (1- accum.a);//* 		
 		accum.a *= sampleValue.a;// * minDiameter/sampleDiameter ;
 		// if (level > 2.0)
 			// accum = 0.5;
@@ -168,19 +169,19 @@ void main()
 		outColor = color*1.5;
 		//outColor = 0.5* color * color.a + color * il * 0.5 * (1- il.a*.15);
 	else
-		outColor = 0.1 * color + color *  il * 0.5 * (1- il.a*.15);
+		outColor = 0.1 * color + color *  il * 0.25 * (1- il.a*0.15);
 	//outColor *= 1.5;	
 	// outColor = vec4(1-il.a*0.25);	
 	// outColor = vec4(1-il.a*0.25);
 	//outColor = color;//* color.a;	
-	 // outColor =   color *  vec4(1- il.a*0.10);
+	 // outColor =  il;// color *  vec4(1- il.a*0.10);
 	//outColor = vec4((color * il * 0.33 )*(1- il.a*0.33)) ;
 	//outColor = vec4((color * il*0.33)*(1- il.a*0.10)) ;
 	//outColor = vec4(1- il.a*0.10);
 	// outColor = re;
 	//outColor = il*0.5;//vec4(1-il.a*0.15);//vec4(normal*0.5 + 0.5,0);
-	float level = 0;
-	texel = texelFetch(gridN, coordi/int(pow(2,level)), int(level));
+	float level = 2;
+	texel = texelFetch(grid, coordi/int(pow(2,level)), int(level));
 	//float a = 1.0 - pow(1.0 - texel.a,255);
 	//outColor = texel;
 	 // outColor = vec4(texel*texel.a);

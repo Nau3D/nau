@@ -285,54 +285,58 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 		EVENTMANAGER->notifyEvent("NEXT_POSE", "MainCanvas", "", NULL);
 	}
 
-	if ('9' >= event.GetKeyCode() && '0' <= event.GetKeyCode()) {
-		//m_pEngine->sendKeyToEngine (event.GetKeyCode());
-		Camera *aCam = RENDERMANAGER->getCamera ("MainCamera");
+	//if ('9' >= event.GetKeyCode() && '0' <= event.GetKeyCode()) {
+	//	//m_pEngine->sendKeyToEngine (event.GetKeyCode());
+	//	Camera *aCam = RENDERMANAGER->getCamera ("MainCamera");
 
-		vec3 v;
+	//	vec3 v;
 
-		switch (event.GetKeyCode()) {
-			case '1':	
-				v.set (-14.486f * cos (DegToRad (-137.0)) - 59.256 * -sin (DegToRad (-137.0)), 
-					13.266f, 
-					-59.256 * cos (DegToRad(-137.0)) + -14.486f * sin (DegToRad (-137.0)));
+	//	switch (event.GetKeyCode()) {
+	//		case '1':	
+	//			v.set (-14.486f * cos (DegToRad (-137.0)) - 59.256 * -sin (DegToRad (-137.0)), 
+	//				13.266f, 
+	//				-59.256 * cos (DegToRad(-137.0)) + -14.486f * sin (DegToRad (-137.0)));
 
-				aCam->setCamera (vec3 (-14.486f, 13.266f, -59.256f), v, vec3 (0.0f, 1.0f, 0.0f));
-				break;
-			case '2':
-				v.set (0.0f, 0.0f, -1.0f * cos (DegToRad (-141.4f)));
+	//			aCam->setCamera (vec3 (-14.486f, 13.266f, -59.256f), v, vec3 (0.0f, 1.0f, 0.0f));
+	//			break;
+	//		case '2':
+	//			v.set (0.0f, 0.0f, -1.0f * cos (DegToRad (-141.4f)));
 
-				aCam->setCamera (vec3 (7.930f, 16.135f, -38.392f), v, vec3 (0.0f, 1.0f, 0.0f));
-				break;
+	//			aCam->setCamera (vec3 (7.930f, 16.135f, -38.392f), v, vec3 (0.0f, 1.0f, 0.0f));
+	//			break;
 
-			case '3':
-				v.set (0.0f, 0.0f, -1.0f * cos (DegToRad (-81.8f)));
+	//		case '3':
+	//			v.set (0.0f, 0.0f, -1.0f * cos (DegToRad (-81.8f)));
 
-				aCam->setCamera (vec3 (7.374f, 14.465f, -58.637f), v, vec3 (0.0f, 1.0f, 0.0f));
-				break;
+	//			aCam->setCamera (vec3 (7.374f, 14.465f, -58.637f), v, vec3 (0.0f, 1.0f, 0.0f));
+	//			break;
 
-			case '4':
-				v.set (0.0f, 0.0f, -1.0f * cos (DegToRad (-17.0f)));
+	//		case '4':
+	//			v.set (0.0f, 0.0f, -1.0f * cos (DegToRad (-17.0f)));
 
-				aCam->setCamera (vec3 (13.363f, 13.977f, -47.436f), v, vec3 (0.0f, 1.0f, 0.0f));
-				break;
+	//			aCam->setCamera (vec3 (13.363f, 13.977f, -47.436f), v, vec3 (0.0f, 1.0f, 0.0f));
+	//			break;
 
-			case '5':
-				v.set (0.0f, 0.0f, -1.0f * cos (DegToRad (135.58f)));
+	//		case '5':
+	//			v.set (0.0f, 0.0f, -1.0f * cos (DegToRad (135.58f)));
 
-				aCam->setCamera (vec3 (-131.176f, 9.555f, 188.927f), v, vec3 (0.0f, 1.0f, 0.0f));
-				break;
-		}
+	//			aCam->setCamera (vec3 (-131.176f, 9.555f, 188.927f), v, vec3 (0.0f, 1.0f, 0.0f));
+	//			break;
+	//	}
 
+	//}
+
+	if ('P' == event.GetKeyCode()) {
+		RENDERER->saveScreenShot();
 	}
 
 	if ('B' == event.GetKeyCode()) {
 		m_pEngine->resetFrameCount();
 	}
 
-	if ('P' == event.GetKeyCode()) {
-		m_pEngine->sendKeyToEngine (event.GetKeyCode());
-	}
+	//if ('P' == event.GetKeyCode()) {
+	//	m_pEngine->sendKeyToEngine (event.GetKeyCode());
+	//}
 
 	float direction;
 	if (true == m_pCamera->isDynamic()) {

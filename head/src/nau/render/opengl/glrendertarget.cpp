@@ -311,7 +311,7 @@ GLRenderTarget::resize() {
 			m_StencilTexture->resize(m_UInt2Props[SIZE].x, m_UInt2Props[SIZE].y, 1);
 			//texName = m_StencilTexture->getLabel();
 			//internalFormat = m_StencilTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_StencilTexture->getPrope(Texture::INTERNAL_FORMAT));;
-			//RESOURCEMANAGER->removeTexture(m_StencilTexture->getLabel());
+			//RESOURCEMANAGER->removeTexture(m_StencilTexture->getLabel(//*));
 			//m_StencilTexture = 0;
 		}
 

@@ -52,6 +52,24 @@ using namespace nau::material;
 
 static nau::Nau *gInstance = 0;
 
+bool
+Nau::Init() {
+
+	// UINT
+	Attribs.add(Attribute(FRAME_COUNT, "FRAME_COUNT", Enums::DataType::UINT, true, new unsigned int(0)));
+	// FLOAT
+	Attribs.add(Attribute(TIMER, "TIMER", Enums::DataType::FLOAT, false, new bool(false)));
+
+	NAU->registerAttributes("NAU", &Attribs);
+
+	return true;
+}
+
+
+AttribSet Nau::Attribs;
+bool Nau::Inited = Init();
+
+
 nau::Nau*
 Nau::create (void) {
 	if (0 == gInstance) {
@@ -92,6 +110,7 @@ Nau::Nau() :
 	m_pResourceManager(NULL),
 	m_pEventManager(NULL)
 {
+	registerAndInitArrays(Attribs);
 }
 
 
@@ -137,7 +156,7 @@ Nau::init (bool context, std::string aConfigFile) {
 	CLOCKS_PER_MILISEC = CLOCKS_PER_SEC / 1000.0;
 	INV_CLOCKS_PER_MILISEC = 1.0 / CLOCKS_PER_MILISEC;
 
-	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
+	m_FloatProps[TIMER] = clock() * INV_CLOCKS_PER_MILISEC;
 	m_LastFrameTime = NO_TIME;
 
 	m_Inited = true;
@@ -163,6 +182,22 @@ std::string&
 Nau::getName() {
 
 	return(m_Name);
+}
+
+
+float 
+Nau::getPropf(FloatProperty prop) {
+
+	switch (prop) {
+	case TIMER:
+		CLOCKS_PER_MILISEC = CLOCKS_PER_SEC / 1000.0;
+		INV_CLOCKS_PER_MILISEC = 1.0 / CLOCKS_PER_MILISEC;
+		m_FloatProps[TIMER] = clock() * INV_CLOCKS_PER_MILISEC;
+		return m_FloatProps[TIMER];
+
+	default:return(AttributeValues::getPropf(prop));
+	}
+
 }
 
 
@@ -440,6 +475,11 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 
 AttributeValues *
 Nau::getObjectAttributes(std::string type, std::string context, int number) {
+
+	// From Nau itself
+	if (type == "NAU") {
+		return(AttributeValues *)this;
+	}
 
 	// From Render Manager
 	if (type == "CAMERA") {
@@ -842,12 +882,12 @@ Nau::clear() {
 void Nau::step() {
 
 	IRenderer *renderer = RENDERER;
-	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
+	m_FloatProps[TIMER] = clock() * INV_CLOCKS_PER_MILISEC;
 	if (NO_TIME == m_LastFrameTime) {
-		m_LastFrameTime = m_CurrentTime;
+		m_LastFrameTime = m_FloatProps[TIMER];
 	}
-	double deltaT = m_CurrentTime - m_LastFrameTime;
-	m_LastFrameTime = m_CurrentTime;
+	double deltaT = m_FloatProps[TIMER] - m_LastFrameTime;
+	m_LastFrameTime = m_FloatProps[TIMER];
 
 #ifdef GLINTERCEPTDEBUG
 	addMessageToGLILog("\n#NAU(FRAME,START)");
@@ -868,26 +908,25 @@ void Nau::step() {
 
 	m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
 
-	if (m_FrameCount == ULONG_MAX)
+	if (m_UIntProps[FRAME_COUNT] == ULONG_MAX)
 		// 2 avoid issues with run_once and skip_first
 		// and allows a future implementation of odd and even frames for
 		// ping-pong rendering
-		m_FrameCount = 2;
+		m_UIntProps[FRAME_COUNT] = 2;
 	else
-		++m_FrameCount;
-
+		++m_UIntProps[FRAME_COUNT];
 }
 
 
 void Nau::stepPass() {
 
 	IRenderer *renderer = RENDERER;
-	m_CurrentTime = clock() * INV_CLOCKS_PER_MILISEC;
+	m_FloatProps[TIMER] = clock() * INV_CLOCKS_PER_MILISEC;
 	if (NO_TIME == m_LastFrameTime) {
-		m_LastFrameTime = m_CurrentTime;
+		m_LastFrameTime = m_FloatProps[TIMER];
 	}
-	double deltaT = m_CurrentTime - m_LastFrameTime;
-	m_LastFrameTime = m_CurrentTime;
+	double deltaT = m_FloatProps[TIMER] - m_LastFrameTime;
+	m_LastFrameTime = m_FloatProps[TIMER];
 
 	Pipeline *p;
 	p = RENDERMANAGER->getActivePipeline();
@@ -934,13 +973,13 @@ void Nau::stepPass() {
 	
 	}
 
-	if (m_FrameCount == ULONG_MAX)
+	if (m_UIntProps[FRAME_COUNT] == ULONG_MAX)
 		// 2 avoid issues with run_once and skip_first
 		// and allows a future implementation of odd and even frames for
 		// ping-pong rendering
-		m_FrameCount = 2;
+		m_UIntProps[FRAME_COUNT] = 2;
 	else
-		++m_FrameCount;
+		++m_UIntProps[FRAME_COUNT];
 }
 
 
@@ -969,14 +1008,14 @@ void Nau::stepPasses(int n) {
 void 
 Nau::resetFrameCount() {
 
-	m_FrameCount = 0;
+	m_UIntProps[FRAME_COUNT] = 0;
 }
 
 
 unsigned long
 Nau::getFrameCount() {
 
-	return m_FrameCount;
+	return m_UIntProps[FRAME_COUNT];
 
 }
 

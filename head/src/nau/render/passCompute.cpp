@@ -72,8 +72,14 @@ PassCompute::restore (void) {
 void
 PassCompute::doPass (void) {
 
+	for (auto pp : m_PreProcessList)
+		pp->process();
+
 	PROFILE_GL("Compute shader");
 	RENDERER->dispatchCompute(m_UIntProps[DIM_X], m_UIntProps[DIM_Y], m_UIntProps[DIM_Z]);
+
+	for (auto pp : m_PostProcessList)
+		pp->process();
 }
 
 

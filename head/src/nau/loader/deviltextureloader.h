@@ -34,6 +34,8 @@ namespace nau
 
 			void save(TexImage *ti, std::string filename);
 
+			void save(int width, int height, char *data);
+
 
 		private:
 			ILuint m_IlId;

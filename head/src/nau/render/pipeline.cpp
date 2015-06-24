@@ -33,7 +33,7 @@ Pipeline::Pipeline (std::string pipelineName) :
 
 
 std::string 
-Pipeline::GetName() {
+Pipeline::getName() {
 	return m_Name;
 }
 
@@ -67,6 +67,20 @@ Pipeline::setDefaultCamera(const std::string &defCam) {
 	assert(defCam == "" || RENDERMANAGER->hasCamera(defCam));
 
 	m_DefaultCamera = defCam;
+}
+
+
+void 
+Pipeline::setFrameCount(unsigned int k) {
+
+	m_FrameCount = k;
+}
+
+
+unsigned int 
+Pipeline::getFrameCount() {
+
+	return m_FrameCount;
 }
 
 
@@ -199,6 +213,7 @@ Pipeline::getPassCounter() {
 void 
 Pipeline::executePass(Pass *pass) {
 
+	pass->callPreScript();
 	m_CurrentPass = pass;
 	bool keepRunning = false;
 
@@ -228,6 +243,7 @@ Pipeline::executePass(Pass *pass) {
 
 		keepRunning = keepRunning && run;
 	} while (keepRunning);
+	pass->callPostScript();
 
 }
 
@@ -235,7 +251,10 @@ Pipeline::executePass(Pass *pass) {
 void
 Pipeline::execute() {
 
-	callScript(m_PreScriptName);
+	int n = NAU->getFrameCount();
+	if (m_FrameCount == 0 || n == 0)
+		callScript(m_PreScriptName);
+
 	try {
 		PROFILE("Pipeline execute");
 
@@ -265,7 +284,9 @@ Pipeline::execute() {
 	catch (Exception &e) {
 		SLOG(e.getException().c_str());
 	}
-	callScript(m_PostScriptName);
+
+	if (m_FrameCount == 0 || n == m_FrameCount-1)
+		callScript(m_PostScriptName);
 }
 
 

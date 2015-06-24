@@ -157,7 +157,6 @@
 
 			<pass class="compute" name="mipmap" >
 				<mode value="RUN_ONCE" />	
-				<!--mode value="RUN_WHILE_TRUE" /-->
 				<testScript file="test.lua" script="test" TEST_MODE="RUN_WHILE"/>
 				<material name="mipmap2" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
 			</pass>

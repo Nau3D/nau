@@ -26,11 +26,10 @@ namespace nau
 		class Pipeline {
 
 		public:
-			static const int MAXPASSEs = 16;
 
 			Pipeline (std::string pipelineName = "Default");
 			
-			std::string GetName();
+			std::string getName();
 			std::vector<std::string> *getPassNames();
 
 			int getNumberOfPasses();
@@ -50,6 +49,9 @@ namespace nau
 			Pass* getPass (const std::string &passName);
 			Pass* getPass (int n);
 			Pass *getCurrentPass();
+
+			void setFrameCount(unsigned int k);
+			unsigned int getFrameCount();
 
 			//! Gets the name of the camera from the current pass being executed
 			const std::string &getCurrentCamera();
@@ -91,6 +93,8 @@ namespace nau
 
 			std::string m_PreScriptFile, m_PreScriptName,
 				m_PostScriptFile, m_PostScriptName;
+
+			unsigned int m_FrameCount = 0;
 		};
 	};
 };

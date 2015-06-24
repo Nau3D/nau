@@ -33,6 +33,7 @@ namespace nau {
 			static bool IsRelative(const std::string &fn);
 			static std::string CleanFullPath(const std::string &fn);
 			static bool exists(const std::string &fn);
+			static std::string validate(std::string s);
 		};
 	};
 };

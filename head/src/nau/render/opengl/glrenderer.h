@@ -161,6 +161,7 @@ namespace nau
 			void clearFrameBuffer(unsigned int b);
 			void prepareBuffers(Pass *p);
 			void flush(void);
+			void saveScreenShot();
 
 			void setDepthClamping(bool b);
 			void colorMask (bool r, bool g, bool b, bool a);

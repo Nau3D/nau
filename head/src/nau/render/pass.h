@@ -217,12 +217,23 @@ namespace nau
 			//
 			void setBufferDrawIndirect(std::string s);
 
+			// -----------------------------------------------------------------
+			//		PRE POST SCRIPTS
+			// -----------------------------------------------------------------
+			void setPreScript(std::string file, std::string name);
+			void setPostScript(std::string file, std::string name);
+			void callPreScript();
+			void callPostScript();
+
 		protected:
 			// BUFFER DRAW INDIRECT
 			IBuffer *m_BufferDrawIndirect = NULL;
 
 			// LUA SCRIPTS
 			std::string m_TestScriptFile, m_TestScriptName;
+			std::string m_PreScriptFile, m_PreScriptName,
+				m_PostScriptFile, m_PostScriptName;
+			void callScript(std::string &name);
 
 			// PRE POST PROCESS
 			std::vector <PassProcessItem *> m_PreProcessList;

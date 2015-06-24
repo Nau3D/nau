@@ -26,6 +26,7 @@ namespace nau
 			virtual void freeImage (void) = 0;
 
 			virtual void save(TexImage *ti, std::string filename) = 0;
+			virtual void save(int width, int height, char *data) = 0;
 
 			virtual ~TextureLoader(void) {};
 

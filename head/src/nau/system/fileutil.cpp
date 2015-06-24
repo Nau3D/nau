@@ -125,6 +125,21 @@ FileUtil::CleanFullPath(const std::string &fn) {
 	return(resAux);
 }
 
+
+std::string 
+FileUtil::validate(std::string s1) {
+
+	std::string res = s1;
+	std::string s = s1;
+	for (unsigned int i = 0; i < s1.length(); ++i) {
+		if (s[i] == ':' || s[i] == '/' || s[i] == '\\' || s[i] == '*' || s[i] == '?' || s[i] == '<' ||
+			s[i] == '>' || s[i] == '|')
+			res[i] = '_';
+	}
+	return res;
+}
+
+
 bool
 FileUtil::IsRelative(const std::string &fn) {
 

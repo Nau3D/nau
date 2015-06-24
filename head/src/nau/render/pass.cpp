@@ -358,7 +358,54 @@ Pass::setTestScript(std::string file, std::string name) {
 		NAU->initLuaScript(file, name);
 }
 
+// -----------------------------------------------------------------
+//		PRE POST SCRIPTS
+// -----------------------------------------------------------------
 
+void 
+Pass::setPreScript(std::string file, std::string name) {
+
+	m_PreScriptFile = file;
+	m_PreScriptName = name;
+	if (file != "" && name != "")
+		NAU->initLuaScript(file, name);
+}
+
+
+void
+Pass::setPostScript(std::string file, std::string name) {
+
+	m_PostScriptFile = file;
+	m_PostScriptName = name;
+	if (file != "" && name != "")
+		NAU->initLuaScript(file, name);
+}
+
+
+void 
+Pass::callScript(std::string &name) {
+
+#ifdef NAU_LUA
+	if (name != "") {
+		NAU->callLuaScript(name);
+
+	}
+#endif
+}
+
+
+void 
+Pass::callPreScript() {
+
+	callScript(m_PreScriptName);
+}
+
+
+void 
+Pass::callPostScript() {
+
+	callScript(m_PostScriptName);
+}
 
 // --------------------------------------------------
 //		VIEWPORT

@@ -227,6 +227,7 @@ namespace nau
 
 			virtual void setDepthClamping(bool b) = 0;
 			virtual void colorMask(bool r, bool g, bool b, bool a) = 0;
+			virtual void saveScreenShot() = 0;
 
 
 			// RENDER

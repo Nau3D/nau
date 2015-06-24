@@ -2,9 +2,9 @@
 #define RENDERMANAGER_H
 
 
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
 #include "nau/render/pipeline.h"
 #include "nau/render/irenderer.h"
@@ -28,13 +28,22 @@ namespace nau
 		private:
 			IRenderer* m_pRenderer;
 			IRenderQueue* m_pRenderQueue;
-			std::map<std::string, Pipeline*> m_Pipelines;
+//			std::map<std::string, Pipeline*> m_Pipelines;
+			std::vector<Pipeline*> m_Pipelines;
 			std::map<std::string, nau::scene::Camera*> m_Cameras;
 			std::map<std::string, nau::scene::Light*> m_Lights;
 			std::map<std::string, nau::scene::IScene*> m_Scenes;
 			std::vector<nau::scene::SceneObject*> m_SceneObjects;
 			std::map <std::string, nau::render::Viewport*> m_Viewports; 
-			Pipeline *m_ActivePipeline;
+			//Pipeline *m_ActivePipeline;
+			unsigned int m_ActivePipelineIndex;
+			
+			typedef enum {
+				RUN_DEFAULT,
+				RUN_ALL
+			} RunMode;
+
+			RunMode m_RunMode;
 
 		public:
 
@@ -69,6 +78,7 @@ namespace nau
 			bool hasPipeline (const std::string &pipelineName);
 			//! Returns a pointer to the named pipeline
 			Pipeline* getPipeline (const std::string &pipelineName);
+			unsigned int getPipelineIndex (const std::string &pipelineName);
 			//! Returns a pointer to the active pipeline
 			Pipeline* getActivePipeline();
 
@@ -76,10 +86,14 @@ namespace nau
 			std::string getActivePipelineName();
 			//! Sets the named pipeline as the active pipeline for rendering purposes
 			void setActivePipeline (const std::string &pipelineName);
+			//! Sets the named pipeline as the active pipeline for rendering purposes
+			void setActivePipeline (unsigned int index);
 			//! Returns the number of pipelines
 			unsigned int getNumPipelines();
 			//! Returns a vector with the name of all the defined pipelines
 			std::vector<std::string> *getPipelineNames();
+
+			bool setRunMode(std::string s);
 
 			// PASSES
 			//! Checks if a given named pass exists in the named pipeline

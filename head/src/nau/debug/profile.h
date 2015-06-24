@@ -61,7 +61,7 @@ private:
 	/// Contains information about a profiler section
 	typedef struct {
 		unsigned int queries[2];
-	} pair;
+	} queryPair;
 	typedef struct s {
 		/** Index of the parent section 
 		  * in the previous level
@@ -73,7 +73,7 @@ private:
 		pTime startTime;
 		/// query indexes for the beginning 
 		/// and end of the section
-		std::vector<pair> queriesGL[2];
+		std::vector<queryPair> queriesGL[2];
 		/** wasted time running the 
 		  * profiler code for the section
 		*/

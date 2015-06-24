@@ -124,6 +124,9 @@ DepthMapPass::doPass (void)
 	
 	//RENDERMANAGER->getRenderer()->setDepthCompare();
 		
+	for (auto pp : m_PreProcessList)
+		pp->process();
+
 	Frustum frustum;
 	float cNear, cFar;
 
@@ -184,5 +187,9 @@ DepthMapPass::doPass (void)
 
 //	RENDERER->setCullFace (IRenderer::BACK);
 	//RENDERER->disableDepthTest();
+
+	for (auto pp : m_PostProcessList)
+		pp->process();
+
 }
 
