@@ -63,16 +63,23 @@ GLRenderTarget::init() {
 	m_Init = true;
 	m_RenderTargets.resize(IRenderer::MaxColorAttachments, -1);
 	m_TexId.resize(IRenderer::MaxColorAttachments, NULL);
-
-	glGenRenderbuffers (1, &m_DepthBuffer);
-	glBindRenderbuffer (GL_RENDERBUFFER, m_DepthBuffer);
-	glRenderbufferStorage (GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y);
+	m_Depth = 1;
+	std::string s = m_Name + "_depth";
+	m_DepthTexture = RESOURCEMANAGER->createTexture(s, "DEPTH_COMPONENT32F", m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
+		m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
 
 	bind();
-	glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
+	attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
 	unbind();
+	//glGenRenderbuffers (1, &m_DepthBuffer);
+	//glBindRenderbuffer (GL_RENDERBUFFER, m_DepthBuffer);
+	//glRenderbufferStorage (GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y);
 
-	glBindRenderbuffer (GL_RENDERBUFFER, 0);
+	//bind();
+	//glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
+	//unbind();
+
+	//glBindRenderbuffer (GL_RENDERBUFFER, 0);
 }
 
 
