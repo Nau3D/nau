@@ -877,16 +877,17 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 				IBuffer *b = RESOURCEMANAGER->getBufferByID(m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]); 
 				b->setSubData(0, 4, &size);
 				unsigned int aux[3] = { 0, 0, 0 };
-				b->setSubData(8, 12, &aux);
+				//b->setSubData(8, 12, &aux);
 				//aux[0] = 1000;
 				//b->setSubData(4, 4, &aux);
-				//b->bind(GL_DRAW_INDIRECT_BUFFER);
+				b->bind(GL_DRAW_INDIRECT_BUFFER);
 				unsigned int temp = 0;
-				//glDrawElementsInstancedBaseVertexBaseInstance(drawPrimitive, size, GL_UNSIGNED_INT, NULL, 1000, 0,0);
 				//glMultiDrawElementsIndirect(drawPrimitive, GL_UNSIGNED_INT, &temp,1,0);
 				unsigned int instCount;
 				b->getData(4, 4, &instCount);
-				glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, instCount);
+				//glDrawElementsInstancedBaseVertexBaseInstance(drawPrimitive, size, GL_UNSIGNED_INT, 0, instCount, 0,0);
+				glDrawElementsIndirect(drawPrimitive, GL_UNSIGNED_INT, 0);
+				//glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, instCount);
 			}
 			else if (m_UIntProps[IRenderer::INSTANCE_COUNT])
 				glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, m_UIntProps[IRenderer::INSTANCE_COUNT]);
