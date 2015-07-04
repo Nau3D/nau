@@ -15,6 +15,7 @@
 			<WIDTH value=512 />
 			<HEIGHT value=512 />
 			<INTERNAL_FORMAT value="RGBA" />
+			<!--MIPMAP value="true" /-->
 		</texture>	
 		<texture name="Grade_01_02_03" filename="../../Texturas/AL01_Grade1.tif" mipmap="1" />
 	</textures>

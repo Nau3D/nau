@@ -1,0 +1,229 @@
+<?xml version="1.0" ?>
+<materiallib name="Optix Ray Tracer Render Target">
+	<renderTargets>
+		<renderTarget name ="test">
+			<SIZE width="1024" height="1024" />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA32F"  />
+				<!--color name="offscreenrender2" format="RGBA" 
+												internalFormat="RGBA32F" 
+												type="FLOAT" /-->
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name ="test_ubyte">
+			<SIZE width="1024" height="1024" />
+			<colors>
+				<color name="offscreenrender_ubyte" internalFormat="R8" />
+				<!--color name="offscreenrender2" format="RGBA" 
+												internalFormat="RGBA32F" 
+												type="FLOAT" /-->
+			</colors>
+		</renderTarget>
+	</renderTargets>
+
+	<textures>
+		<texture name="dataBuffer">
+			<WIDTH value="2" />
+			<HEIGHT value="2" />
+			<INTERNAL_FORMAT value="RGBA32F" />
+		
+		</texture> 
+		<texture name="earth" filename="../../models/Texturas/earthDay.jpg" />
+	</textures>
+	
+	<states>
+		<state name ="Transparent">
+			<ORDER value="1" />
+			<BLEND_SRC value="SRC_ALPHA" />
+			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
+		</state>
+	</states>
+
+	<shaders>
+		<shader name="pointLight" 	ps="shaders/pixelpointdifambspec.frag" 
+									vs="shaders/pixelpointdifambspec.vert" />
+	</shaders>
+	
+	<materials>
+		<material name="pointLight">
+			<shader name="pointLight" >
+				<values>
+					<valueof uniform="lightPos" 		type="CURRENT" context="LIGHT" 
+														id=0 component="POSITION" /> 
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="CURRENT" context="COLOR" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="normalMatrix"   	type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />
+				</values>
+			</shader>
+		</material>		
+		<material name="Glass">
+			<color>
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="0.6" g="0.1" b="0.6" a="1.0" />
+				<SPECULAR r="0.5" g="0.5" b="0.5" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.3" />
+			</color>
+			<state>
+				<ORDER value="1" />
+				<BLEND_SRC value="SRC_ALPHA" />
+				<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
+			</state>	
+			<shader name="pointLight">
+				<values>
+					<valueof uniform="lightPos" 		type="CURRENT" context="LIGHT" 
+														id=0 component="POSITION" /> 
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="CURRENT" context="COLOR" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="normalMatrix"   	type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />
+				</values>
+			</shader>
+		</material>
+		<material name="Metal">
+			<color>
+				<AMBIENT r="0.3" g="0.3" b="0.3" a="1.0" />
+				<DIFFUSE r="0.43155" g="0.584887" b="0.685" a="0.41322" />
+				<SPECULAR r="0.5" g="0.5" b="0.5" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.3" />
+			</color>
+			<shader name="pointLight" >
+				<values>
+					<valueof uniform="lightPos" 		type="CURRENT" context="LIGHT" 
+														id=0 component="POSITION" /> 
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="CURRENT" context="COLOR" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="normalMatrix"   	type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+														
+				</values>
+			</shader>
+		</material>
+		<material name="Earth">
+			<color>
+				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR  r="0.5" g="0.5" b="0.5" a="1.0" />
+				<EMISSION  r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.3" />
+			</color>
+			<textures>
+				<texture UNIT="0" name="earth" />
+			</textures>
+			<shader name="pointLight" >
+				<values>
+					<valueof uniform="lightPos" 		type="CURRENT" context="LIGHT" 
+														id=0 component="POSITION" /> 
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="CURRENT" context="COLOR" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="normalMatrix"   	type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />
+				</values>
+			</shader>
+		</material>
+	</materials>
+</materiallib>

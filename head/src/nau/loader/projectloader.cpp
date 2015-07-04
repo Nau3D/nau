@@ -3453,11 +3453,16 @@ TEXTURES
 			filePosZ="../TextureCubeMaps/cubemaphouse/cm_front.jpg"
 			fileNegZ="../TextureCubeMaps/cubemaphouse/cm_back.jpg"	
 		/>
-		<texture name ="Bla"
-			width=512 height = 512 internalFormat="RGBA" layers = 2/>
+		<texture name="tex">
+			<WIDTH value=512 />
+			<HEIGHT value=512 />
+			<INTERNAL_FORMAT value="RGBA" />
+			<MIPMAP value="true" />
+		</texture>	
+		<texture name="source" filename="../../models/Textures/bla.tif" mipmap="0" />
 	</textures>
 
-Layers are an optional field. If specified a 2D texture array will be created.
+.
 The paths may be relative to the material lib file, or absolute.
 -----------------------------------------------------------------------------*/
 void 

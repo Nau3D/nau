@@ -408,7 +408,9 @@ GLTexture::build(int immutable) {
 
 	if (!immutable && m_BoolProps[MIPMAP])
 		glGenerateMipmap(m_EnumProps[DIMENSION]);
-
+	else {
+		glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, 0);
+	}
 	glBindTexture(m_EnumProps[DIMENSION], 0);
 }
 

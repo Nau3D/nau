@@ -128,7 +128,7 @@
 			</pass>	 
 			
 			<pass class="compute" name="computeLineRays">
-				<material name="computeLineRays" fromLibrary="Ambient Occlusion" dimX=1, dimY=1 dimZ=1 />
+				<material name="computeLineRays" fromLibrary="Ambient Occlusion" dimX=1 dimY=1 dimZ=1 />
 			</pass>
 			
 			<pass class="default" name="showRays">

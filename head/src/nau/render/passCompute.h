@@ -49,7 +49,6 @@ namespace nau
 			static bool Inited;
 
 			Material *m_Mat;
-			int m_DimX, m_DimY, m_DimZ;
 			IBuffer  *m_BufferX, *m_BufferY, *m_BufferZ;
 			unsigned int m_OffsetX, m_OffsetY, m_OffsetZ;
 

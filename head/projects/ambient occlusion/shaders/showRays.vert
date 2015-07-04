@@ -4,7 +4,7 @@ uniform mat4 PVM;
 
 in vec4 position;
 
-out int hit;
+out flat int hit;
 
 void main(void) {
 	hit = int(position.w);

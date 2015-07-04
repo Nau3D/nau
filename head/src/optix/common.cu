@@ -87,8 +87,8 @@ RT_PROGRAM void pinhole_camera()
 
 RT_PROGRAM void pinhole_camera_ms()
 {
-	float4 color;
-	int sqrt_num_samples = 4;
+	float4 color = make_float4(0.0);
+	int sqrt_num_samples = 1;
 	int samples = sqrt_num_samples * sqrt_num_samples;
 	unsigned int seedi, seedj;
 
@@ -101,7 +101,7 @@ RT_PROGRAM void pinhole_camera_ms()
 
 			seedi = tea<16>(launch_dim.x*launch_index.y+launch_index.x,2*(i*sqrt_num_samples+j));
 			seedj = tea<16>(launch_dim.x*launch_index.y+launch_index.x,2*(i*sqrt_num_samples+j)+1);
-			float2 sample = d + make_float2((i+1)*rnd(seedi), (j+1)*rnd(seedj)) * scale;
+			float2 sample = d +make_float2((i + 1)*rnd(seedi), (j + 1)*rnd(seedj)) * scale;
 
 			float3 ray_origin = eye;
 			float3 ray_direction = normalize(sample.x*U*fov + sample.y*V*fov + W);
@@ -117,6 +117,7 @@ RT_PROGRAM void pinhole_camera_ms()
 		}
 	}
 	output0[launch_index] = color / samples;
+	//output0[launch_index] = make_float4(1, 0, 0, 0);
 }
 
 
@@ -235,7 +236,8 @@ RT_PROGRAM void tracePathMetal()
 	}
 	else 
 		prdr.result = make_float4(0.0);
-
+//	prdr.result = make_float4(1, 0, 0, 0);
+//	prdr.result = make_float4(1, 0, 0, 0);
 //	prd.result = make_float4(1.0f);
 //	prdr.result *= make_float4(0.0, 0.0, 1.0, 1.0);
 }
@@ -286,7 +288,7 @@ RT_PROGRAM void tracePath()
 
 	random(hit_point,r);
 
-	if (prdr.depth < 8 && r < 0.7f) {
+	if (prdr.depth < 2 && r < 0.7f) {
 //	if (prdr.depth < 8) {
 		prdRec.depth = prdr.depth+1;
 		prdRec.result = make_float4(1.0);
@@ -297,13 +299,14 @@ RT_PROGRAM void tracePath()
 		rtTrace(top_object, newRay, prdRec);
 
 
-		shadow += prdRec.result/0.7f;// * dot(newDir,n);
+		shadow += prdRec.result * dot(newDir,n);
 //		shadow += prdRec.result;// * dot(newDir,n);
 	}
 	float4 color = diffuse;
 	if (texCount > 0)
 		color = color * tex2D( tex0, texCoord.x, texCoord.y );
 	prdr.result *= color * (shadow);
+	//prdr.result = color;
 }
 
 

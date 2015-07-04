@@ -15,7 +15,7 @@
 	<pipelines>
 		<pipeline name="fixedfunction" default="true">
 			<pass class="compute" name="pass1">
-				<material name="computeShader" fromLibrary="Compute" dimX=64, dimY=64 dimZ=1 />
+				<material name="computeShader" fromLibrary="Compute" dimX=64 dimY=64 dimZ=1 />
 			</pass>
 			<pass class="quad" name="pass2" >
 				<viewport name="Main" />

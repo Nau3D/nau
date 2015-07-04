@@ -180,7 +180,7 @@ void main()
 	//outColor = vec4(1- il.a*0.10);
 	// outColor = re;
 	//outColor = il*0.5;//vec4(1-il.a*0.15);//vec4(normal*0.5 + 0.5,0);
-	float level = 2;
+	float level = 0;
 	texel = texelFetch(grid, coordi/int(pow(2,level)), int(level));
 	//float a = 1.0 - pow(1.0 - texel.a,255);
 	//outColor = texel;

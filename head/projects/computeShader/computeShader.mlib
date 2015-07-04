@@ -6,8 +6,9 @@
 			<WIDTH value=512 />
 			<HEIGHT value=512 />
 			<INTERNAL_FORMAT value="RGBA" />
+			<!--MIPMAP value="true" /-->
 		</texture>	
-		<texture name="source" filename="../../models/Texturas/CuboEstrada.tif" mipmap="1" />
+		<texture name="source" filename="../../models/Texturas/CuboEstrada.tif" mipmap="0" />
 	</textures>
 
 	<shaders>
@@ -31,7 +32,7 @@
 				<imageTexture UNIT=1 texture="tex" >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
-					<CLEAR value=true />
+					<!--CLEAR value=true /-->
 				</imageTexture>
 			</imageTextures>
 		
