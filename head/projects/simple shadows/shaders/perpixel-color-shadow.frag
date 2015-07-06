@@ -32,5 +32,5 @@ void main()
 		
 	}
 	
-	outColor = color;	
+	outColor = vec4(vec3(color), 1);
 }

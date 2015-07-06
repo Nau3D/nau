@@ -1,5 +1,7 @@
 #include "nau/loader/deviltextureloader.h"
 
+#include "nau/slogger.h"
+
 #include <ctime>
 
 using namespace nau::loader;
@@ -120,14 +122,19 @@ DevILTextureLoader::save(TexImage *ti, std::string filename) {
 		}
 
 		ILuint image;
-		ilInit();
 		ilOriginFunc(IL_ORIGIN_LOWER_LEFT); 
 		ilGenImages(1,&image);
 		ilBindImage(image);
 		ilTexImage(w,h,1,n,ilFormat,ilType,data);
+		if (ilFormat == IL_LUMINANCE && (ilType == IL_FLOAT || ilType == IL_INT))
+			ilConvertImage(ilFormat, IL_UNSIGNED_SHORT);
+		else
+			ilConvertImage(ilFormat, IL_UNSIGNED_BYTE);
 		ilEnable(IL_FILE_OVERWRITE);
 
-		ilSave(IL_PNG, (ILstring)filename.c_str());
+		char res = ilSave(IL_PNG, (ILstring)filename.c_str());
+		if (res == 0)
+			SLOG("Can't save image %s - format not supported", filename.c_str());
 		ilDeleteImage(image);
 	}
 }
