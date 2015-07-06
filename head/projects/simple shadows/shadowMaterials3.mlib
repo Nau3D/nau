@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<materialLib name="Shadow Materials">
+
+	<renderTargets>
+		<renderTarget name = "depth">
+			<SIZE width=1024 height=1024 />
+			<depth name="shadowMap" internalFormat="DEPTH_COMPONENT32F" />
+		</renderTarget>
+		
+		<renderTarget name="simple">
+			<SIZE width=512 height=512 />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+	
+	<shaders>
+		<shader name="perpixel-color-shadow" 
+							ps="shaders/perpixel-color-shadow.frag" 
+							vs="shaders/perpixel-color-shadow.vert" />
+		
+		<shader name="depthOnly" 
+							ps="shaders/depthOnly.frag" 
+							vs="shaders/depthOnly.vert" />
+	</shaders>
+	
+	<states>
+		<state name="frontCull">
+			<CULL_TYPE value="FRONT" />
+		</state>
+	</states>
+	
+	<materials>
+		<material name="flat-with-shadow">
+			<shader name="perpixel-color-shadow">
+				<values>
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="V"          		type="CURRENT" context="RENDERER" 
+														component="VIEW" />
+														
+					<valueof uniform="M"          		type="CURRENT" context="RENDERER" 
+														component="MODEL" />
+														
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+																		
+					<valueof uniform="lightDirection" 	type="LIGHT" 
+														context="Sun" 
+														component="DIRECTION" /> 
+														
+					<valueof uniform="diffuse" 			type="CURRENT" 
+														context="COLOR" 
+														component="DIFFUSE" />
+														
+ 					<valueof uniform="lightSpaceMat" 	type="CAMERA"  context="shadow#getShadowMap-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="shadowMap" 		type="CURRENT"  context="MATERIAL_TEXTURE" id=1 
+														component="UNIT" />	
+														
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />		
+				</values>
+			</shader>		
+		</material>		
+		
+		<material  name="depthOnly" >
+			<shader name="depthOnly">
+				<values>
+					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
+											component="PROJECTION_VIEW_MODEL" />
+				</values>
+			</shader>
+			<state name="frontCull" />	
+		</material>
+		
+	</materials>
+</materialLib>

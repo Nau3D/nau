@@ -1,0 +1,105 @@
+<?xml version="1.0" ?>
+<project name="teste1-shadows" width=1024 height=512 >
+	<assets>
+		<scenes>
+			<scene name="MainScene">
+				<!--file name="..\3dsmodels\testGeomMaya.obj"/-->
+				<file name="..\..\models\ntg-bench\bench.obj"/>
+			</scene>
+		</scenes>
+		<viewports>
+			
+			<viewport name="LeftViewport" >
+				<ORIGIN  x="0.0" y="0.0" />
+				<SIZE width=".5"  height="1.0" />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.5" />
+			</viewport>
+			
+			<viewport name="RightViewport" >
+				<ORIGIN x="0.5" y="0.0" />
+				<SIZE width=".5"  height="1.0" />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera">
+				<viewport name="LeftViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="1.0" FAR="100.0" />
+				<POSITION x="-23.277" y="18.541" z="30.143" />
+				<VIEW x="0.397" y="-0.644774" z="-0.652" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" >
+				<POSITION x="-52" y="77.0" z="-27.0" />
+				<DIRECTION x="0.597" y="-0.390" z="0.700" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="shadowMaterials3.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="shadow" defaultCamera="MainCamera">
+		
+			<pass class="depthmap" name="getShadowMap">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="LeftViewport" />
+				<renderTarget name="depth" fromLibrary="Shadow Materials" />
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
+				</materialMaps>
+			</pass>
+			
+			<pass class="default" name="computeShadowsToRT">
+				<scenes>
+					<scene name="MainScene" />	
+				</scenes>
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<camera name="MainCamera" />
+				
+				<viewport name="LeftViewport" />
+				<renderTarget name="simple" fromLibrary="Shadow Materials" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="flat-with-shadow" fromLibrary="Shadow Materials" />
+						<textures>
+							<texture name="shadowMap" fromLibrary="Shadow Materials" toUnit=1>
+								<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+								<COMPARE_FUNC value="LEQUAL" />
+								<MIN_FILTER value="LINEAR" />
+								<MAG_FILTER value="LINEAR" />
+							</texture>
+						</textures>
+					</map>	
+				</injectionMaps>	
+			</pass>
+			
+			<pass class="quad" name="showShadowMap">
+				<viewport name="LeftViewport" />				
+				<texture name="shadowMap" fromLibrary="Shadow Materials"/>
+			</pass>
+			
+			
+			<pass class="quad" name="showComputedShadows">
+				<viewport name="RightViewport" />				
+				<texture name="offscreenrender" fromLibrary="Shadow Materials"/>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

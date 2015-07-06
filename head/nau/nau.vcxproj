@@ -446,13 +446,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\passoptixprime.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passoptixprime.cpp" />
     <ClCompile Include="..\src\nau\render\passProcessBuffer.cpp" />
     <ClCompile Include="..\src\nau\render\passProcessTexture.cpp" />
-    <ClCompile Include="..\src\nau\render\profilerpass.cpp" />
+    <ClCompile Include="..\src\nau\render\passProfiler.cpp" />
     <ClCompile Include="..\src\nau\resource\font.cpp" />
     <ClCompile Include="..\src\nau\resource\fontmanager.cpp" />
     <ClCompile Include="..\src\nau\scene\iscene.cpp" />
@@ -504,7 +501,7 @@
     <ClCompile Include="..\src\nau\math\plane.cpp" />
     <ClCompile Include="..\src\nau\math\randomgen.cpp" />
     <ClCompile Include="..\src\nau\math\spherical.cpp" />
-    <ClCompile Include="..\src\nau\render\depthmappass.cpp" />
+    <ClCompile Include="..\src\nau\render\passDepthMap.cpp" />
     <ClCompile Include="..\src\nau\render\indexdata.cpp" />
     <ClCompile Include="..\src\nau\render\iprogram.cpp" />
     <ClCompile Include="..\src\nau\render\irenderer.cpp" />
@@ -513,7 +510,7 @@
     <ClCompile Include="..\src\nau\render\pass.cpp" />
     <ClCompile Include="..\src\nau\render\passfactory.cpp" />
     <ClCompile Include="..\src\nau\render\pipeline.cpp" />
-    <ClCompile Include="..\src\nau\render\quadpass.cpp" />
+    <ClCompile Include="..\src\nau\render\passQuad.cpp" />
     <ClCompile Include="..\src\nau\render\renderfactory.cpp" />
     <ClCompile Include="..\src\nau\render\rendermanager.cpp" />
     <ClCompile Include="..\src\nau\render\renderqueuefactory.cpp" />
@@ -690,7 +687,7 @@
     <ClInclude Include="..\src\nau\render\passProcessBuffer.h" />
     <ClInclude Include="..\src\nau\render\passProcessItem.h" />
     <ClInclude Include="..\src\nau\render\passProcessTexture.h" />
-    <ClInclude Include="..\src\nau\render\profilerpass.h" />
+    <ClInclude Include="..\src\nau\render\passProfiler.h" />
     <ClInclude Include="..\src\nau\resource\font.h" />
     <ClInclude Include="..\src\nau\resource\fontmanager.h" />
     <ClInclude Include="..\src\nau\scene\octreeByMat.h" />
@@ -744,7 +741,7 @@
     <ClInclude Include="..\src\nau\math\randomgen.h" />
     <CustomBuildStep Include="..\src\nau\math\spherical.h" />
     <ClInclude Include="..\src\nau\math\utils.h" />
-    <ClInclude Include="..\src\nau\render\depthmappass.h" />
+    <ClInclude Include="..\src\nau\render\passDepthMap.h" />
     <ClInclude Include="..\src\nau\render\indexdata.h" />
     <ClInclude Include="..\src\nau\render\iprogram.h" />
     <ClInclude Include="..\src\nau\render\irenderable.h" />
@@ -755,7 +752,7 @@
     <ClInclude Include="..\src\nau\render\pass.h" />
     <ClInclude Include="..\src\nau\render\passfactory.h" />
     <ClInclude Include="..\src\nau\render\pipeline.h" />
-    <CustomBuildStep Include="..\src\nau\render\quadpass.h" />
+    <CustomBuildStep Include="..\src\nau\render\passQuad.h" />
     <ClInclude Include="..\src\nau\render\renderfactory.h" />
     <ClInclude Include="..\src\nau\render\rendermanager.h" />
     <ClInclude Include="..\src\nau\render\renderqueuefactory.h" />

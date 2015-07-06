@@ -172,9 +172,6 @@
     <ClCompile Include="..\src\nau\math\spherical.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\depthmappass.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\indexdata.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
@@ -197,9 +194,6 @@
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\pipeline.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\quadpass.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\renderfactory.cpp">
@@ -406,9 +400,6 @@
     <ClCompile Include="..\src\nau\loader\fontxmlloader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\profilerpass.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\geometry\distancemap.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
@@ -478,9 +469,6 @@
     <ClCompile Include="..\src\nau\scene\octreeunified.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\passoptixprime.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
@@ -518,6 +506,18 @@
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\passProcessBuffer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passDepthMap.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passoptixprime.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passQuad.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passProfiler.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
   </ItemGroup>
@@ -635,9 +635,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\math\utils.h">
       <Filter>Source Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\depthmappass.h">
-      <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\indexdata.h">
       <Filter>Source Files\render</Filter>
@@ -891,9 +888,6 @@
     <ClInclude Include="..\src\nau\loader\fontxmlloader.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\profilerpass.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\geometry\distancemap.h">
       <Filter>Source Files\geometry</Filter>
     </ClInclude>
@@ -1020,6 +1014,12 @@
     <ClInclude Include="..\src\nau\render\passProcessBuffer.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\nau\render\passDepthMap.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passProfiler.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -1037,11 +1037,11 @@
     <CustomBuildStep Include="..\src\nau\math\spherical.h">
       <Filter>Source Files\math</Filter>
     </CustomBuildStep>
-    <CustomBuildStep Include="..\src\nau\render\quadpass.h">
-      <Filter>Source Files\render</Filter>
-    </CustomBuildStep>
     <CustomBuildStep Include="..\src\nau\event\touchSensor.h">
       <Filter>Source Files\event</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\src\nau\render\passQuad.h">
+      <Filter>Source Files\render</Filter>
     </CustomBuildStep>
   </ItemGroup>
   <ItemGroup>

@@ -57,7 +57,7 @@ Enums::getType(std::string s) {
 			return (DataType)i;
 		}
 	}
-	NAU_THROW("Invalid Data Type: %s", s);
+	NAU_THROW("Invalid Data Type: %s", s.c_str());
 }
 
 

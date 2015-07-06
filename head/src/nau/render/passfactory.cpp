@@ -4,13 +4,13 @@
 
 #include "nau/render/pass.h"
 
-#include "nau/render/depthmappass.h"
+#include "nau/render/passDepthMap.h"
 //#include "nau/render/depthmap4depthtexturespass.h"
 //#include "nau/render/depthmaprgba32fpass.h"
 //#include "nau/render/fogwithcausticspass.h"
-#include "nau/render/quadpass.h"
+#include "nau/render/passQuad.h"
 //#include "nau/render/waterplanefogpass.h"
-#include "nau/render/profilerpass.h"
+#include "nau/render/passProfiler.h"
 #include "nau/render/passCompute.h"
 
 #ifdef NAU_OPTIX_PRIME 
@@ -34,13 +34,13 @@ PassFactory::create (const std::string &type, const std::string &name)
 		return new Pass (name);
 	}
 	if ("depthmap" == type) {
-		return new DepthMapPass (name);
+		return new PassDepthMap (name);
 	}
 	if ("quad" ==  type) {
-		return new QuadPass (name);
+		return new PassQuad (name);
 	}
 	if ("profiler" == type) {
-		return new ProfilerPass(name);
+		return new PassProfiler(name);
 	}
 	if ("compute" == type) {
 		return new PassCompute(name);
@@ -55,27 +55,6 @@ PassFactory::create (const std::string &type, const std::string &name)
 		return new PassOptixPrime(name);
 #endif
 #endif
-// DAVE
-	//if ("raytracer" ==  type) {
-	//	return new RayTracerPass (name);
-	//}
-	//////////////////////NOVO///////////
-	//if ("shadowmapraytracer" ==  type) {
-	//	return new ShadowMapRayTracerPass (name);
-	//}
-// END DAVE
-	//if ("fogwithcaustics" == type) {
-	//	return new FogWithCausticsPass (name);
-	//}
-//	if ("waterplanefog" == type) {
-//		return new WaterPlaneFogPass (name);
-//	}
-	//if ("depthmap4depthtextures" == type) {
-	//	return new DepthMap4DepthTexturesPass (name);
-	//}
-	//if ("depthmaprgba32f" == type) {
-	//	return new DepthMapRGBA32FPass (name);
-	//}
 
 	return 0;
 }
@@ -91,9 +70,6 @@ PassFactory::isClass(const std::string &name)
 #ifdef NAU_OPTIX_PRIME		
 		&& ("optixPrime" != name)
 #endif
-		// DAVE		
-		 //&& ("raytracer" != name) && ("shadowmapraytracer" != name)
-// END DAVE
 		)
 		return false;
 	else
@@ -112,9 +88,6 @@ PassFactory::getClassNames(){
 	names->push_back("profiler");
 	names->push_back("optix");
 	names->push_back("compute");
-// DAVE
-	//names->push_back("raytracer");
-	//names->push_back("shadowmapraytracer");
-// END DAVE
+
 	return names;
 }

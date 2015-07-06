@@ -24,7 +24,7 @@
 #ifdef NAU_OPTIX
 #include "nau/render/passOptix.h"
 #endif
-#include "nau/render/quadpass.h"
+#include "nau/render/passQuad.h"
 #include "nau/render/pipeline.h"
 #include "nau/render/rendertarget.h"
 
@@ -1707,7 +1707,7 @@ ProjectLoader::loadPassMaterial(TiXmlHandle hPass, Pass *aPass)
 		if (!MATERIALLIBMANAGER->hasMaterial(pLib, pName))
 				NAU_THROW("File %s\nPass %s\nMaterial %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), s_pFullName);
 
-		nau::render::QuadPass *p = (QuadPass *)aPass;
+		nau::render::PassQuad *p = (PassQuad *)aPass;
 		std::string lib = std::string(pLib);
 		std::string name = std::string(pName);
 		p->setMaterialName(lib, name);

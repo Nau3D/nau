@@ -1,5 +1,7 @@
 #include "nau/render/opengl/glrendertarget.h"
+
 #include "nau.h"
+#include "nau/slogger.h"
 
 #include <assert.h>
 
@@ -272,7 +274,7 @@ GLRenderTarget::resize() {
 	std::string texName;
 	std::string internalFormat;
 
-	bind();
+//	bind();
 	if (m_Color > 0) {
 
 		for (unsigned int i = 0; i < m_Color; ++i) {
@@ -330,7 +332,12 @@ GLRenderTarget::resize() {
 		//attachDepthStencilTexture(m_StencilTexture, GL_DEPTH_ATTACHMENT);
 		//unbind();
 	}
-	unbind();
-
+//	unbind()
+	if (m_Stencil || m_Depth || m_Stencil) {
+		bind();
+		if (!checkStatus())
+			SLOG("Error resizing viewport");
+		unbind();
+	}
 }
 

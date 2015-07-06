@@ -451,6 +451,8 @@ GLTexture::resize(unsigned int x, unsigned int y, unsigned int z) {
 	}
 	if (m_BoolProps[MIPMAP])
 			glGenerateMipmap(m_EnumProps[DIMENSION]);
+	else
+		glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, 0);
 
 	glBindTexture(m_EnumProps[DIMENSION], 0);
 }

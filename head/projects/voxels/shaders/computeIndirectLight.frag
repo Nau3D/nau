@@ -73,16 +73,17 @@ vec4 voxelConeTrace(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 vec4 voxelConeTrace2(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 
 	vec3 samplePos = origin;
-	vec4 accum = vec4(0.0,0,0,1);
-	
+	vec4 accum = vec4(0.0);
+	float ao = 0;
 	float minDiameter = 2.0/GridSize;
 	
-	float startDist = 1 * minDiameter;
+	float startDist = 2 * minDiameter;
 	float dist = startDist;
 	
 	while(dist < maxDist && accum.a < 1.0) {
 	
 		float sampleDiameter = max(minDiameter, coneRatio * dist);
+		//sampleDiameter += minDiameter;
 		
 		// convert diameter to LOD
 		// for example:
@@ -93,26 +94,38 @@ vec4 voxelConeTrace2(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 		
 		vec3 samplePos = origin + dir * (dist);
 		float level =  max(0, log2(GridSize) - sampleLOD  );
-		
+		//level = 0;
 		//if (sampleLOD >= 5 && sampleLOD < 6) 
 		{
 		vec4 sampleValue = textureLod(grid, samplePos , level);
-		float sampleWeight = (1.0 - accum.w);
+		vec3 sampleNormal = textureLod(gridN, samplePos, level).xyz * 2 - 1;
+		float sampleWeight = max(0.0, -dot(sampleNormal, dir))*(1- sampleValue.a);
+		// if (dot(sampleNormal, dir) > 0.0)
+			// sampleWeight = 0;
+		// else	
+			// sampleWeight = (1.0 - accum.a);
 		//accum.a += sampleValue.a * sampleWeight;
 //sampleValue.a ;
 //		accum.rgb += sampleValue.rgb ;//* sampleValue.a;
 		//sampleValue.a = 1.0 - pow(1.0 - sampleValue.a, minDiameter/sampleDiameter);
-		//sampleValue.a /= minDiameter/sampleDiameter;
-		accum.rgb += sampleValue.rgb /** sampleValue.a*/ * (1- accum.a);//* 		
-		accum.a *= sampleValue.a;// * minDiameter/sampleDiameter ;
-		// if (level > 2.0)
+		ao += sampleValue.a;
+		sampleValue.a /= minDiameter/sampleDiameter;
+		
+		// Either
+		//accum.rgb += sampleValue.rgb * (sampleValue.a) * (1.0 - accum.a);//* 		// if (level > 2.0)
+		//if (dot(sampleNormal, dir) < 0.0)
+			 // accum.rgb += sampleValue.rgb * sampleValue.a * (1-accum.a);		
+			accum.rgb += sampleValue.rgb  * (1-accum.a);		
+		accum.a += sampleValue.a;//sampleValue.a;// * minDiameter/sampleDiameter ;
+	// if (level > 2.0)
 			// accum = 0.5;
 			
 		// else accum = 0.0;	
 		}
-		dist += minDiameter;///2;
-		//dist += 1000;q
+		dist += sampleDiameter;
+		//dist += 0.5;
 	}
+	accum.a = ao;
 	return accum;
 }
 
@@ -141,7 +154,7 @@ void main()
 	
 	float coneRatio = tan(30*3.14159/180.9);
 	float maxDist = 1;
-	vec4 il=vec4(0), re=vec4(0);
+	vec4 il=vec4(0), re=vec4(0), shadow=vec4(0);
 	
 	float sbeta = sin(40);
 	float cbeta = cos(40);
@@ -162,9 +175,11 @@ void main()
 	//if (shininess > 80.0) 
 	//{
 		 vec3 camDir = normalize(coord*2-1 - camPos);//normalize(vec3(-2,2,2));
-		 //re += voxelConeTrace(coord, reflect(camDir, normal), 0.001, 1.0);
+		 re += voxelConeTrace(coord, reflect(camDir, normal), 0.001, 1.0);
 		//il += voxelConeTrace2(coord, normalize(camDir), 0.25, 1.0);
 	//}
+	// shadow = voxelConeTrace2(coord, normalize(vec3(0,2, -0.5)), 0.001, 1.0);
+	// shadow.a = max(0.20, shadow.a);
 	if (color.a != 0.0)
 		outColor = color*1.5;
 		//outColor = 0.5* color * color.a + color * il * 0.5 * (1- il.a*.15);
@@ -178,7 +193,8 @@ void main()
 	//outColor = vec4((color * il * 0.33 )*(1- il.a*0.33)) ;
 	//outColor = vec4((color * il*0.33)*(1- il.a*0.10)) ;
 	//outColor = vec4(1- il.a*0.10);
-	// outColor = re;
+	 // outColor = re;
+	 // outColor = vec4(1- shadow.a);
 	//outColor = il*0.5;//vec4(1-il.a*0.15);//vec4(normal*0.5 + 0.5,0);
 	float level = 0;
 	texel = texelFetch(grid, coordi/int(pow(2,level)), int(level));

@@ -76,7 +76,7 @@
 		
 		<lights>
 			<light name="Sun" >
-				<DIRECTION x="2.0" y="-2.5" z="0.5" />
+				<DIRECTION x="0.0" y="-2" z="0.5" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 				<AMBIENT r="0.5" g="0.0" b="0.0" />
 			</light>
