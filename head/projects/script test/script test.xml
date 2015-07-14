@@ -46,10 +46,10 @@
 		</lights>
 	</assets>
 	
-	<pipelines>
-		<pipeline name="script test" default="true" defaultCamera="Master">
-			<postScript file="test.lua" name="syncCamera" />
+	<pipelines default="script test">
+		<pipeline name="script test" defaultCamera="Master">
 			<pass class="default" name="master">
+				<preScript file="test.lua" script="enterPassMaster" />
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
@@ -57,9 +57,11 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
+				<postScript file="test.lua" script="leavingPassMaster" />
 			</pass>
 			
 			<pass class="default" name="slave">
+				<preScript file="test.lua" script="enterPassSlave" />
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
@@ -67,8 +69,9 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
+				<postScript file="test.lua" script="leavingPassSlave" />
 			</pass>
-			<!--postScript file="test2.lua" name="syncCamera2" /-->
+			<postScript file="test.lua" name="syncCamera" />
 		</pipeline>
 		<pipeline name="no script" defaultCamera="Master">
 			<pass class="default" name="master">
@@ -90,7 +93,6 @@
 					<light name="Sun" />
 				</lights>
 			</pass>
-			<!--postScript file="test2.lua" name="syncCamera2" /-->
 		</pipeline>
 	</pipelines>
 </project>	

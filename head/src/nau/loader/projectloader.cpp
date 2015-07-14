@@ -78,6 +78,22 @@ uivec2 ProjectLoader::s_Dummy_uivec2;
 
 
 std::string 
+ProjectLoader::readFile(TiXmlElement *p, std::string tag, std::string item) {
+
+	std::string file;
+	int res = p->QueryStringAttribute(tag.c_str(), &file);
+	if (TIXML_SUCCESS != res) {
+		NAU_THROW("File %s\n%s\nTag %s is required", ProjectLoader::s_File.c_str(), item.c_str(), tag.c_str());
+	}
+	std::string aux = FileUtil::GetFullPath(FileUtil::GetPath(ProjectLoader::s_File), file);
+	if (!FileUtil::exists(aux)) {
+		NAU_THROW("File %s\n%s\nFile not found: %s", ProjectLoader::s_File.c_str(), item.c_str(), aux.c_str());
+	}
+	return aux;
+}
+
+
+std::string 
 ProjectLoader::toLower(std::string strToConvert) {
 
 	s_Dummy = strToConvert;
@@ -1417,7 +1433,13 @@ testScript
 
 <testScript file="test.lua" script="testFunction" />
 
+
 Specifies a test script for the pass. The pass will only execute if the test returns true
+
+<preScript file="test.lua" script="function1" />
+<preScript file="test.lua" script="function2" />
+
+Specifies scripts to be executed before and after the pass
 -----------------------------------------------------------------------------*/
 
 void
@@ -1430,12 +1452,32 @@ ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 		const char *pFile = pElem->Attribute("file");
 		const char *pFunction = pElem->Attribute("script");
 		if (!pFile || !pFunction) {
-			NAU_THROW("File %s\nPass %s\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			NAU_THROW("File %s\nPass %s\nElement: testScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		Attribute a = aPass->getAttribSet()->get("TEST_MODE");
 		void *val = readAttribute("TEST_MODE", a, pElem);
 		aPass->setPrope(Pass::TEST_MODE, *(int *)val);
 		aPass->setTestScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+	}
+
+	pElem = hPass.FirstChild("preScript").Element();
+	if (pElem) {
+		const char *pFile = pElem->Attribute("file");
+		const char *pFunction = pElem->Attribute("script");
+		if (!pFile || !pFunction) {
+			NAU_THROW("File %s\nPass %s\nElement: preScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		}
+		aPass->setPreScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+	}
+
+	pElem = hPass.FirstChild("postScript").Element();
+	if (pElem) {
+		const char *pFile = pElem->Attribute("file");
+		const char *pFunction = pElem->Attribute("script");
+		if (!pFile || !pFunction) {
+			NAU_THROW("File %s\nPass %s\nElement: postScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		}
+		aPass->setPostScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
 	}
 }
 
@@ -1698,11 +1740,11 @@ ProjectLoader::loadPassMaterial(TiXmlHandle hPass, Pass *aPass)
 		const char *pLib = pElem->Attribute("fromLibrary");
 		
 		if (!pName )
-			NAU_THROW("File %s\nPass %s\nMaterial without name in pass: %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			NAU_THROW("File %s\nPass %s\nMaterial without name", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		if (!pLib) 
-			sprintf(s_pFullName, "%s", pName);
-		else
-			sprintf(s_pFullName, "%s::%s", pLib, pName);
+			NAU_THROW("File %s\nPass %s\nMissing \'fromLibrary' for material %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pName);
+
+		sprintf(s_pFullName, "%s::%s", pLib, pName);
 
 		if (!MATERIALLIBMANAGER->hasMaterial(pLib, pName))
 				NAU_THROW("File %s\nPass %s\nMaterial %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), s_pFullName);
@@ -1727,7 +1769,7 @@ ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 	std::vector<std::string> excluded = {"testScript", "preProcess", "postProcess", "mode", "scene", "scenes", "camera", "lights", "viewport", "renderTarget",
 		"materialMaps", "injectionMaps", "texture", "material", "depth", "stencil", "color", "rays", "hits",
 		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
-		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes"};
+		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes", "preScript", "postScript"};
 	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),true);
 }
 
@@ -1852,36 +1894,30 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
 		const char *pType = pElem->Attribute ("type");
-		const char *pFile = pElem->Attribute ("file");
 		const char *pProc = pElem->Attribute ("proc");
+		std::string message = "Pass " + aPass->getName() + "\nElement optixEntryPoint";
+		std::string file = readFile(pElem, "file", message);
 		
 		if (!pType || (0 != strcmp(pType, "RayGen") && 0 != strcmp(pType, "Exception")))
-			NAU_THROW("Invalid Optix Entry Point Type in pass %s", aPass->getName().c_str());
-
-		if (!pFile)
-			NAU_THROW("Missing Optix Entry Point File in pass %s", aPass->getName().c_str());
+			NAU_THROW("File: %s\nPass: %s\nInvalid Optix entry point type in pass %s\nValid Values are: RayGen and Exception", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
 		if (!pProc)
-			NAU_THROW("Missing Optix Entry Point Proc in pass %s", aPass->getName().c_str());
+			NAU_THROW("File: %s\nPass: %s\nMissing Optix entry point procedure. Tag	\'proc\' is required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
 		if (!strcmp(pType, "RayGen"))
-			p->setOptixEntryPointProcedure(nau::render::optixRender::OptixRenderer::RAY_GEN, pFile, pProc);
-		else
-			p->setOptixEntryPointProcedure(nau::render::optixRender::OptixRenderer::EXCEPTION, pFile, pProc);
+			p->setOptixEntryPointProcedure(nau::render::optixRender::OptixRenderer::RAY_GEN, file, pProc);
+		else 
+			p->setOptixEntryPointProcedure(nau::render::optixRender::OptixRenderer::EXCEPTION, file, pProc);
 	}
 	pElem = hPass.FirstChild("optixDefaultMaterial").FirstChildElement("optixProgram").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
 		const char *pType = pElem->Attribute ("type");
-		const char *pFile = pElem->Attribute ("file");
 		const char *pProc = pElem->Attribute ("proc");
 		const char *pRay  = pElem->Attribute ("ray");
 		
 		if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")  && 0 != strcmp(pType, "Miss")))
 			NAU_THROW("Invalid Optix Default Material Proc Type in pass %s", aPass->getName().c_str());
-
-		if (!pFile)
-			NAU_THROW("Missing Optix Default Material Proc File in pass %s", aPass->getName().c_str());
 
 		if (!pProc)
 			NAU_THROW("Missing Optix Default Material Proc in pass %s", aPass->getName().c_str());
@@ -1889,12 +1925,15 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (!pRay)
 			NAU_THROW("Missing Optix Default Material Ray in pass %s", aPass->getName().c_str());
 		
+		std::string message = "Pass " + aPass->getName() + "\nOptix default material - Procedure " + pProc;
+		std::string file = readFile(pElem, "file", message);
+
 		if (!strcmp("Closest_Hit", pType)) 
-			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, pFile, pProc);
+			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
 		else if (!strcmp("Any_Hit", pType)) 
-			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, pFile, pProc);
+			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
 		else if (!strcmp("Miss", pType)) 
-			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::MISS, pRay, pFile, pProc);
+			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::MISS, pRay, file, pProc);
 	}
 
 	pElem = hPass.FirstChild("optixMaterialMap").FirstChildElement("optixMap").Element();
@@ -1906,15 +1945,11 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		for ( ; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
 
 		const char *pType = pElemAux->Attribute ("type");
-		const char *pFile = pElemAux->Attribute ("file");
 		const char *pProc = pElemAux->Attribute ("proc");
 		const char *pRay  = pElemAux->Attribute ("ray");
 
 		if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")))
 			NAU_THROW("Invalid Optix Material Proc Type in pass %s", aPass->getName().c_str());
-
-		if (!pFile)
-			NAU_THROW("Missing Optix Material Proc File in pass %s", aPass->getName().c_str());
 
 		if (!pProc)
 			NAU_THROW("Missing Optix Material Proc in pass %s", aPass->getName().c_str());
@@ -1922,10 +1957,13 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (!pRay)
 			NAU_THROW("Missing Optix Material Ray in pass %s", aPass->getName().c_str());
 		
+		std::string message = "Pass " + aPass->getName() + "\nOptix material map - Procedure " + pProc;
+		std::string file = readFile(pElemAux, "file", message);
+
 		if (!strcmp("Closest_Hit", pType)) 
-			p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, pFile, pProc);
+			p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
 		else if (!strcmp("Any_Hit", pType)) 
-			p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, pFile, pProc);
+			p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
 		}
 	}
 
@@ -1969,22 +2007,21 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
 		const char *pType = pElem->Attribute ("type");
-		const char *pFile = pElem->Attribute ("file");
 		const char *pProc = pElem->Attribute ("proc");
 		
 		if (!pType || (0 != strcmp(pType, "Geometry_Intersection") && 0 != strcmp(pType, "Bounding_Box")))
 			NAU_THROW("Invalid Optix Geometry Program in pass %s", aPass->getName().c_str());
 
-		if (!pFile)
-			NAU_THROW("Missing Optix Geometry Program File in pass %s", aPass->getName().c_str());
-
 		if (!pProc)
 			NAU_THROW("Missing Optix Geometry Program Proc in pass %s", aPass->getName().c_str());
 
+		std::string message = "Pass " + aPass->getName() + "\nOptix geometry program";
+		std::string file = readFile(pElem, "file", message);
+
 		if (!strcmp(pType, "Geometry_Intersection"))
-			p->setGeometryIntersectProc(pFile, pProc);
+			p->setGeometryIntersectProc(file, pProc);
 		else
-			p->setBoundingBoxProc(pFile, pProc);
+			p->setBoundingBoxProc(file, pProc);
 	}
 
 	pElem = hPass.FirstChild("optixVertexAttributes").FirstChildElement("attribute").Element();

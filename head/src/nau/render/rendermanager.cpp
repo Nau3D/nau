@@ -430,7 +430,7 @@ RenderManager::renderActivePipeline ()
 
 	pip = m_Pipelines[m_ActivePipelineIndex];
 
-	int n = NAU->getFrameCount();
+	int n = RENDERER->getPropui(IRenderer::FRAME_COUNT);
 	int k = pip->getFrameCount();
 	if (m_RunMode == RUN_ALL && k > 0 && k == n) {
 		m_ActivePipelineIndex++;

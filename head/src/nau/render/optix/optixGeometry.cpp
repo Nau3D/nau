@@ -31,8 +31,8 @@ void
 OptixGeometry::setContext(optix::Context &c) {
 
 	m_Context = c;
-	m_GeomIntersect = m_Context->createProgramFromPTXFile("optix/common.ptx","geometryintersection");
-	m_BoundingBox = m_Context->createProgramFromPTXFile("optix/common.ptx","boundingbox");
+	//m_GeomIntersect = m_Context->createProgramFromPTXFile("optix/common.ptx","geometryintersection");
+	//m_BoundingBox = m_Context->createProgramFromPTXFile("optix/common.ptx","boundingbox");
 }
 
 

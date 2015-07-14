@@ -33,7 +33,8 @@ namespace nau
 
 			typedef enum {
 				OK,
-				ITEM_NAME_NOT_SPECIFIED
+				ITEM_NAME_NOT_SPECIFIED,
+				FILE_DOES_NOT_EXIST
 			};
 
 			ProjectLoader(void);
@@ -62,6 +63,11 @@ namespace nau
 											nau::AttribSet &attribs, 
 											std::vector<std::string> &excluded, 
 											TiXmlElement *pElem);
+			
+			// converts to lower caps
+			static std::string toLower(std::string strToConvert);
+			// read file and return full path relative to project
+			static std::string readFile(TiXmlElement *p, std::string tag, std::string item);
 			// get valid attribute values 
 			static std::string &getValidValuesString(Attribute &a, void *value);
 			// read a child tag 
@@ -155,7 +161,6 @@ namespace nau
 			// aux pre alocated variables
 			static char s_pFullName[256];
 			static string s_Dummy;
-			static std::string toLower(std::string);
 			static vec4 s_Dummy_vec4;
 			static vec2 s_Dummy_vec2;
 			static bvec4 s_Dummy_bvec4;

@@ -3,6 +3,8 @@
 #include "nau.h"
 #include "nau/math/matrix.h"
 
+#include <ctime>
+
 using namespace nau;
 using namespace nau::math;
 
@@ -50,9 +52,14 @@ IRenderer::Init() {
 	//UINT
 	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
 	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, false, new unsigned int(0)));
+	Attribs.add(Attribute(FRAME_COUNT, "FRAME_COUNT", Enums::DataType::UINT, true, new unsigned int(0)));
 
 	// BOOL
 	Attribs.add(Attribute(DEBUG_DRAW_CALL, "DEBUG_DRAW_CALL", Enums::DataType::BOOL, true, new bool(false)));
+
+	// FLOAT
+	Attribs.add(Attribute(TIMER, "TIMER", Enums::DataType::FLOAT, true, new float(0.0f)));
+
 
 	NAU->registerAttributes("RENDERER", &Attribs);
 	// MOVE TO irenderable.h
@@ -95,4 +102,19 @@ IRenderer::addAtomic(std::string buffer, unsigned int offset, std::string name) 
 
 
 #endif
+
+
+float 
+IRenderer::getPropf(FloatProperty prop) {
+
+	switch (prop) {
+	case TIMER:
+		m_FloatProps[TIMER] = clock();// *1000.0 / CLOCKS_PER_SEC;
+		return m_FloatProps[TIMER];
+
+	default:return(AttributeValues::getPropf(prop));
+	}
+
+}
+
 

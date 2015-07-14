@@ -60,12 +60,12 @@ namespace nau {
 
 	public:		
 
-		FLOAT_PROP(TIMER, 0);
+		//FLOAT_PROP(TIMER, 0);
 
-		UINT_PROP(FRAME_COUNT, 0);
+		//UINT_PROP(FRAME_COUNT, 0);
 
-		static AttribSet Attribs;
-		virtual float getPropf(FloatProperty prop);
+		//static AttribSet Attribs;
+		//virtual float getPropf(FloatProperty prop);
 
 		typedef enum RenderFlags {
 						BOUNDING_BOX_RENDER_FLAG, 
@@ -135,7 +135,7 @@ namespace nau {
 		void stepPasses(int n);
 
 		void resetFrameCount();
-		unsigned long int getFrameCount();
+//		unsigned long int getFrameCount();
 
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);
@@ -189,12 +189,16 @@ namespace nau {
 		std::vector<std::string> getStateEnumNames();
 		std::string getState(std::string enumName);
 
+
+
 	private:
 		Nau();
 
 #ifdef NAU_LUA
 		lua_State *m_LuaState;
 #endif
+
+		float m_StartTime;
 
 		std::string m_Name;
 		//unsigned long int m_FrameCount;
@@ -204,7 +208,7 @@ namespace nau {
 		*/
 		typedef AttribSet *AttribSetPointer;
 		AttribSetPointer a;
-		std::map<std::string, AttribSetPointer> m_Attributes;
+		std::map<std::string, AttribSet*> m_Attributes;
 		/*
 		 * Rendering Flags
 		 */
@@ -252,8 +256,8 @@ namespace nau {
 		// memory leaks
 		std::vector<std::string> m_DummyVector;
 
-		static bool Init();
-		static bool Inited;
+		//static bool Init();
+		//static bool Inited;
 
 	};
 };

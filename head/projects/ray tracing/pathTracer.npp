@@ -1,0 +1,19 @@
+<NotepadPlus>
+    <Project name="Optix Path Tracer">
+        <Folder name="shaders">
+            <File name="D:\Nau\head\projects\simple shadows\shaders\depthOnly.frag" />
+            <File name="D:\Nau\head\projects\simple shadows\shaders\depthOnly.vert" />
+            <File name="D:\Nau\head\projects\simple shadows\shaders\perpixel-color-shadow.frag" />
+            <File name="D:\Nau\head\projects\simple shadows\shaders\perpixel-color-shadow.vert" />
+        </Folder>
+        <Folder name="optix" />
+        <Folder name="Cornell Box">
+            <File name="OptixTest Cornell Box.xml" />
+            <File name="optixTestCornellBox.mlib" />
+        </Folder>
+        <Folder name="Sponza">
+            <File name="optixTest Sponza.mlib" />
+            <File name="OptixTest Sponza.xml" />
+        </Folder>
+    </Project>
+</NotepadPlus>

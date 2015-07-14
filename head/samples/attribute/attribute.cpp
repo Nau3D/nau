@@ -28,13 +28,13 @@ using namespace nau;
 
 int main(int argc, char **argv) {
 
-	_CrtDumpMemoryLeaks();	
-	_CrtMemState s1,s2,s3;
-	_CrtMemCheckpoint(&s1); 
-	
-	char *www = (char *)malloc(10);
-	_CrtDumpMemoryLeaks();
-	www = (char *)malloc(13);
+	//_CrtDumpMemoryLeaks();	
+	//_CrtMemState s1,s2,s3;
+	//_CrtMemCheckpoint(&s1); 
+	//
+	//char *www = (char *)malloc(10);
+	//_CrtDumpMemoryLeaks();
+	//www = (char *)malloc(13);
 
 
 	std::map<std::string, Attribute> attrs;
@@ -87,8 +87,8 @@ int main(int argc, char **argv) {
 	}
 
 	delete NAU;
-	_CrtMemCheckpoint(&s2);
-	if (_CrtMemDifference(&s3, &s1, &s2))
-		_CrtMemDumpStatistics(&s3);
+	//_CrtMemCheckpoint(&s2);
+	//if (_CrtMemDifference(&s3, &s1, &s2))
+	//	_CrtMemDumpStatistics(&s3);
 
 }

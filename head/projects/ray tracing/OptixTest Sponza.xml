@@ -1,24 +1,26 @@
 <?xml version="1.0" ?>
-<project name="Render Target Test" width=1024 height=1024>
+<project name="Render Target Test" width=2048 height=1024>
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<!--file>..\ntg-bench\bench.obj</file-->
-				<file name="../../models/cornellBox/CornellBox-Sphere2.obj" />
-				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
-				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
-				<!--ile>..\3dsmodels\al.obj</file-->
-
+				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
 			</scene>
 		</scenes>
 		<viewports>
-			<viewport name="MainViewport" >
+			<viewport name="RightViewport" >
+				<ORIGIN x="0.5" y="0" />
+				<SIZE width="0.5" height="1.0" />
 				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="LeftViewport" >
+				<ORIGIN x="0" y="0" />
+				<SIZE width="0.5" height="1.0" />
+				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
 			</viewport>
 		</viewports>
 		<cameras>
 			<camera name="MainCamera" >
-				<viewport name="MainViewport"/>
+				<viewport name="LeftViewport"/>
 				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=0.3 FAR=1000.0 />
 				<POSITION x="0.0" y="0.75" z="2.5" />
 				<VIEW x="0.0" y="0.0" z="-1.0"  />
@@ -124,10 +126,14 @@
 
 			</pass>
 			<pass class="quad" name="pass2">
-				<viewport name="MainViewport" />
+				<viewport name="RightViewport" />
 				<material name="combine" fromLibrary="Optix Ray Tracer Render Target" />
 				
 				<!--texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" /-->
+			</pass>
+			<pass class="quad" name="pass4">
+				<viewport name="LeftViewport" />
+				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
 			
 		</pipeline>

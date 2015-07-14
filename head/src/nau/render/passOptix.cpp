@@ -262,8 +262,13 @@ PassOptix::prepare (void)
 	iter = o_GlobalAttribute.begin();
 	for ( ; iter != o_GlobalAttribute.end(); ++iter) {
 		if (iter->second.getValues() != NULL) {
+			unsigned int *j;
 			switch (iter->second.getValueType()) {
-							
+					
+				case Enums::UINT:
+					j = (unsigned int *)iter->second.getValues();
+					o_Context[iter->first]->set1uiv((unsigned int *)iter->second.getValues());
+					break;
 				case Enums::INT:
 				case Enums::BOOL:
 				case Enums::ENUM:

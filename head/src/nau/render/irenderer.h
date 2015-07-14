@@ -57,6 +57,9 @@ namespace nau
 
 			UINT_PROP(INSTANCE_COUNT, 0);
 			UINT_PROP(BUFFER_DRAW_INDIRECT, 1);
+			UINT_PROP(FRAME_COUNT, 2);
+
+			FLOAT_PROP(TIMER, 0);
 
 			INT2_PROP(MOUSE_CLICK, 0);
 
@@ -90,6 +93,7 @@ namespace nau
 			virtual void *getProp(unsigned int prop, Enums::DataType dt) = 0;
 			virtual const mat4 &getPropm4(Mat4Property prop) = 0;
 			virtual const mat3 &getPropm3(Mat3Property prop) = 0;
+			virtual float getPropf(FloatProperty prop);
 			
 
 			// ATOMIC COUNTERS 
