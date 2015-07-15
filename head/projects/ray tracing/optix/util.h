@@ -1,30 +1,7 @@
 // This file contains some utility routines
 
 
-__device__ __inline__ void random2D(float3& seed, float2& r)
-{
-	unsigned int a, b;
-	// a = tea<16>(seed.x, seed.y);
-	// a = tea<16>(a,seed.z);
-	
-	// r.x = rnd(a);
-	// b = a * 25676789;
-	// r.y = rnd(b);
-	
-	a = length(seed) * 25676789;
-	b = rnd(a) ;
-	r.x = rnd(a);
-	r.y = rnd(a);
- }
 
-
-__device__ __inline__ void random(float3& seed, float& r)
-{
-	unsigned int a, b;
-	a = length(seed) * 25676789;
-	b = rnd(a) * 1027;
-	r = rnd(b);
-}
 
 
 // Create ONB from normalalized vector
@@ -39,7 +16,7 @@ __device__ __inline__ void createONB( const optix::float3& n,
 	if ( dot(U, U) < 1.e-3f )
 	  U = cross( n, make_float3( 1.0f, 0.0f, 0.0f ) );
 	U = normalize( U );
-	V = cross( n, U );
+	V = cross( U, n );
 }
 
 
@@ -59,12 +36,13 @@ __host__ __device__ __inline__ optix::float3 sample_phong_lobe( optix::float2 sa
 }
 
 
-__device__ void sampleUnitHemisphereCosLobe(float3& normal, float exponent, float3& seed, float3& point)
+__device__ void sampleUnitHemisphereCosLobe(float3& normal, float exponent, float3& point, unsigned int &seed)
 {
 	float2 r;
 	float3 U,V;
 
-	random2D(seed, r);
+	r.x = rnd(seed);
+	r.y = rnd(seed);
 
 	createONB(normal, U, V);
 	
@@ -125,15 +103,12 @@ __device__ __inline__ void sampleUnitHemisphere( const optix::float2& sample,
 }
 
 
-__device__ void sampleHemisphere(unsigned int seed, float3& n, float3& newDir) {
+__device__ void sampleHemisphere(float3& n, float3& newDir, unsigned int &seed) {
 
 	float alpha, beta;
 
-	unsigned int a;
-
-	alpha = rnd(seed) * 1.57;
-	a = alpha * 1027;
-	beta = rnd(a) * 6.28;
+	alpha = rnd(seed) * 1.57 ;
+	beta = rnd(seed) * 6.28;
 
 	float x,y,z;
 	x = sin(alpha) * sin(beta);
@@ -146,22 +121,21 @@ __device__ void sampleHemisphere(unsigned int seed, float3& n, float3& newDir) {
 }
 
 
-__device__ void sampleUnitHemisphereCosWeighted(float3& normal, unsigned int& seed, float3& point)
+__device__ void sampleUnitHemisphereCosWeighted(float3& normal, float3& newDir, unsigned int& seed)
 {
 	float2 r;
 	float3 U,V;
 
-	//random2D(seed, r);
 	r.x = rnd(seed);
-	r.y = rnd(seed)*0.47597;
-	//mapToDisk(r);
+	r.y = rnd(seed);
+	mapToDisk(r);
 	createONB(normal, U, V);
-	sampleUnitHemisphere(r, V, U, normal , point);
+	sampleUnitHemisphere(r, V, U, normal , newDir);
 }
 
 
 __device__ float4 sampleAreaLight(float3 surfaceNormal, float3 hitPoint, 
-				 float3 lightP, float3 lightN, float lightSizeX,  float lightSizeY,unsigned int seed)  
+				 float3 lightP, float3 lightN, float lightSizeX,  float lightSizeY,unsigned int &seed)  
 {
 	PerRayDataResult shadow_prd;
     shadow_prd.result = make_float4(0.0f);

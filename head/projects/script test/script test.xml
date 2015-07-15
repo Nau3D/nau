@@ -71,7 +71,7 @@
 				</lights>
 				<postScript file="test.lua" script="leavingPassSlave" />
 			</pass>
-			<postScript file="test.lua" name="syncCamera" />
+			<postScript file="test.lua" script="syncCamera" />
 		</pipeline>
 		<pipeline name="no script" defaultCamera="Master">
 			<pass class="default" name="master">

@@ -179,7 +179,7 @@ RT_PROGRAM void tracePathGlossy()
 		float exponent = 100;
 
 		
-		sampleUnitHemisphereCosLobe(r,exponent,hit_point,newDir);
+		sampleUnitHemisphereCosLobe(r,exponent, newDir, prdr.seed);
 		if (dot(newDir, n) <= 0.0)
 			newDir = r;
 		optix::Ray ray = optix::make_Ray(hit_point, newDir, Phong, 0.000002, RT_DEFAULT_MAX);
@@ -200,7 +200,6 @@ RT_PROGRAM void tracePathGlossy()
 
 RT_PROGRAM void tracePath()
 {
-	float r;
 	PerRayDataResult prdRec;
 	prdRec.result = make_float4(0.0);
 	float3 newDir;
@@ -213,18 +212,19 @@ RT_PROGRAM void tracePath()
 	float4 color = diffuse;
 	
 	float p = max(diffuse.x, max(diffuse.y, diffuse.z));
-	if (prdr.depth > 5 )//|| rnd(prdr.seed) < p)
-		color = color * 1.0/p;
+	if (prdr.depth == 4 )//|| rnd(prdr.seed) < p)
+		color = color;// * 1.0/p;
 	else {
 	//if (prdr.depth < 2 ) {//&& r < 0.7f) {
 //	if (prdr.depth < 8) {
 		prdRec.depth = prdr.depth+1;
 		prdRec.result = make_float4(1.0);
 		prdRec.seed = prdr.seed;
-		sampleUnitHemisphereCosWeighted(n,prdr.seed,newDir);
+		sampleUnitHemisphereCosWeighted(n,newDir,prdr.seed);
+		//sampleHemisphere(n,newDir,prdr.seed);
 		//float  seed = t_hit * 2789457;
 		//sampleHemisphere(seed, n,newDir);
-		optix::Ray newRay(hit_point, newDir, Phong, 0.000002, 500000);
+		optix::Ray newRay(hit_point, newDir, Phong, 0.002, 500000);
 		rtTrace(top_object, newRay, prdRec);
 
 

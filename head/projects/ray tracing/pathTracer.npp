@@ -6,7 +6,11 @@
             <File name="D:\Nau\head\projects\simple shadows\shaders\perpixel-color-shadow.frag" />
             <File name="D:\Nau\head\projects\simple shadows\shaders\perpixel-color-shadow.vert" />
         </Folder>
-        <Folder name="optix" />
+        <Folder name="optix">
+            <File name="optix\pathTracer.cu" />
+            <File name="optix\random.h" />
+            <File name="optix\util.h" />
+        </Folder>
         <Folder name="Cornell Box">
             <File name="OptixTest Cornell Box.xml" />
             <File name="optixTestCornellBox.mlib" />

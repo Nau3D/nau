@@ -3196,7 +3196,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 			
 
 			const char *pPreScriptFile = pElemPass->Attribute("file");
-			const char *pPreScriptName = pElemPass->Attribute("name");
+			const char *pPreScriptName = pElemPass->Attribute("script");
 			if (pPreScriptFile && pPreScriptName)
 				aPipeline->setPreScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pPreScriptFile), pPreScriptName);
 			else {
@@ -3208,7 +3208,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 		if (pElemPass != NULL) {
 
 			const char *pPostScriptFile = pElemPass->Attribute("file");
-			const char *pPostScriptName = pElemPass->Attribute("name");
+			const char *pPostScriptName = pElemPass->Attribute("script");
 			if (pPostScriptFile && pPostScriptName)
 				aPipeline->setPostScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pPostScriptFile), pPostScriptName);
 			else {
