@@ -98,14 +98,14 @@ GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts)
 
 
 void 
-GLTextureCubeMap::restore(unsigned int aUnit) 
+GLTextureCubeMap::restore(unsigned int aUnit, nau::material::TextureSampler *ts) 
 {
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,0);
 
-#if NAU_OPENGL_VERSION > 320
-	glBindSampler(aUnit, 0);
-#endif
+
+	ts->restore(aUnit, GL_TEXTURE_CUBE_MAP);
+
 }
 
 

@@ -1,4 +1,5 @@
-#include "../../src/nau.h"
+#include "nau.h"
+#include "nau/render/texture.h"
 
 #include <vector>
 #include <string>
@@ -21,13 +22,16 @@
 #endif  // _DEBUG
 
 #ifdef GLINTERCEPTDEBUG
-#include "..\..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+#include "../../../GLIntercept\Src\MainLib\ConfigDataExport.h"
 #endif
 
 using namespace nau;
 
+
+
 int main(int argc, char **argv) {
 
+	int v = 20;
 	//_CrtDumpMemoryLeaks();	
 	//_CrtMemState s1,s2,s3;
 	//_CrtMemCheckpoint(&s1); 
@@ -35,8 +39,11 @@ int main(int argc, char **argv) {
 	//char *www = (char *)malloc(10);
 	//_CrtDumpMemoryLeaks();
 	//www = (char *)malloc(13);
-
-
+	//NAU->init(true);
+	Texture *t = Texture::Create("bla");
+	//TextureSampler *ts = TextureSampler::create(t);
+	//nau::render::Texture *t = nau::render::Texture::Create("bla");
+	//nau::material::TextureSampler *ts;
 	std::map<std::string, Attribute> attrs;
 	AttribSet *a;
 	std::vector<std::string> contexts = NAU->getContextList();

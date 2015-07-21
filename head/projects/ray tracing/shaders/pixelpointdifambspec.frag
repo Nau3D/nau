@@ -27,7 +27,7 @@ void main() {
 		float intSpec = max(dot(h, n), 0.0);
 		spec = specular * pow(intSpec, 100);
 	}
-	dif = diffuse * intensity;
+	dif = max(diffuse*0.5, diffuse * intensity);
 	
 	if (texCount != 0)
 		dif *= texture(texUnit, texCoordV);

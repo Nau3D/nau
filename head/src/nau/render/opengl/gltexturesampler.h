@@ -4,7 +4,7 @@
 #include "nau/material/texturesampler.h"
 #include <map>
 
-#include <GL/glew.h>
+
 
 
 using namespace nau::material;
@@ -25,10 +25,10 @@ namespace nau
 			virtual void setPrope(EnumProperty prop, int value);
 
 			virtual void prepare(unsigned int aUnit, int aDim);
-			static void restore(unsigned int aUnit, int aDim);
+			virtual void restore(unsigned int aUnit, int aDim);
 
 		protected:
-			static bool Inited;
+			static bool InitedGL;
 			static bool InitGL();
 
 

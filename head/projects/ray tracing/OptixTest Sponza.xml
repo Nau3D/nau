@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
-<project name="Render Target Test" width=2048 height=1024>
+<project name="Render Target Test" width=1536 height=1024>
 	<assets>
+		<attributes>
+			<attribute context="PASS" name="EXPOSURE" type="FLOAT" value = "10" />
+		</attributes>
 		<scenes>
 			<scene name="MainScene">
 				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
@@ -8,22 +11,33 @@
 		</scenes>
 		<viewports>
 			<viewport name="RightViewport" >
-				<ORIGIN x="0.5" y="0" />
-				<SIZE width="0.5" height="1.0" />
+				<ORIGIN x="0.33" y="0" />
+				<SIZE width="1024" height="1024" />
 				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
 			</viewport>
-			<viewport name="LeftViewport" >
-				<ORIGIN x="0" y="0" />
-				<SIZE width="0.5" height="1.0" />
+			<viewport name="TopLeftViewport" >
+				<ORIGIN x="0" y="0.5" />
+				<SIZE width="0.33" height="0.5" />
+				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
+			</viewport>
+			<viewport name="BottomLeftViewport" >
+				<ORIGIN x="0.0" y="0" />
+				<SIZE width="0.33" height="0.5" />
 				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
 			</viewport>
 		</viewports>
 		<cameras>
 			<camera name="MainCamera" >
-				<viewport name="LeftViewport"/>
-				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=0.3 FAR=1000.0 />
+				<viewport name="RightViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=1 FAR=10000.0 />
 				<POSITION x="0.0" y="75" z="2.5" />
 				<VIEW x="-0.962954" y="0.129634" z="-0.236464"  />
+			</camera>
+			<camera name="Slave" >
+				<viewport name="RightViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=1 FAR=10000.0 />
+				<POSITION x="0.0" y="0.75" z="2.5" />
+				<VIEW x="0.0" y="0.0" z="-1.0"  />
 			</camera>
 		</cameras>
 		<lights>
@@ -35,12 +49,14 @@
 			</light>
 		</lights>
 		<materialLibs>
-			<materialLib filename="OptixTestCornellBox.mlib"/>
+			<materialLib filename="OptixTest Sponza.mlib"/>
 		</materialLibs>
 	</assets>
 	<pipelines>
 		<pipeline name="fixedfunction" defaultCamera="MainCamera">
-			<pass class="default" name="pass3">
+			<preScript file="test.lua" script="testCams" />
+			
+			<pass class="default" name="GL">
 				<mode value="RUN_ONCE" />
 				<scenes>
 					<scene name="MainScene" />
@@ -51,19 +67,14 @@
 					<light name="Sun" />
 				</lights>
 				<renderTarget name="gl" fromLibrary="Optix Ray Tracer Render Target" />
-				<materialMaps>
-					<map fromMaterial="leftSphere" 
-						 toLibrary="Optix Ray Tracer Render Target" toMaterial="Glass" />
-					<map fromMaterial="rightSphere" 
-						 toLibrary="Optix Ray Tracer Render Target" toMaterial="Metal" />
-				</materialMaps>
 				<injectionMaps>
 					<map toMaterial="*">
 						<shader fromMaterial ="pointLight" fromLibrary="Optix Ray Tracer Render Target" />
 					</map>
 				</injectionMaps>
 			</pass> 
-			<pass class="optix" name="pass1">
+			<pass class="optix" name="Path Trace">
+				<mode value="SKIP_FIRST_FRAME" />
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
@@ -72,12 +83,6 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<materialMaps>
-					<map fromMaterial="leftSphere" 
-						 toLibrary="Optix Ray Tracer Render Target" toMaterial="Metal" />
-					<map fromMaterial="rightSphere" 
-						 toLibrary="Optix Ray Tracer Render Target" toMaterial="Glass" />
-				</materialMaps>
 				<optixEntryPoint>
 					<optixProgram type="RayGen" file="optix/pathTracer.ptx" proc="pinhole_camera_ms"/> 
 					<optixProgram type="Exception" file="optix/pathTracer.ptx" proc="exception"/> 
@@ -119,21 +124,31 @@
 					<valueof optixVar="lightDir" type="CURRENT" context="LIGHT" id=0 component="DIRECTION" />
 					<valueof optixVar="lightPos" type="CURRENT" context="LIGHT" id=0 component="POSITION" />
 					<valueof optixVar="frameCount" type="CURRENT" context="RENDERER" component="FRAME_COUNT" />
+					<valueof optixVar="exposure" type="CURRENT" context="PASS" component="EXPOSURE" />
 				</optixGlobalAttributes>
 				<!--optixInput>
 					<buffer var="pos_buffer" texture="Deferred Render Targets::pos" />
 				</optixInput-->
 
 			</pass>
-			<pass class="quad" name="pass2">
+			<pass class="quad" name="combine">
 				<viewport name="RightViewport" />
+				<color enable="false" />
+				<mode value="SKIP_FIRST_FRAME" />
 				<material name="combine" fromLibrary="Optix Ray Tracer Render Target" />
 				
-				<!--texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" /-->
 			</pass>
-			<pass class="quad" name="pass4">
-				<viewport name="LeftViewport" />
-				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
+			<pass class="quad" name="showGL">
+				<viewport name="TopLeftViewport" />
+				<texture name="offscreenrenderGL2" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			<pass class="quad" name="showOptix">
+				<viewport name="BottomLeftViewport" />
+				<texture name="offscreenrenderOptix" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			<pass class="quad" name="showCombine">
+				<viewport name="RightViewport" />
+				<texture name="offscreenrenderGL" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
 			
 		</pipeline>

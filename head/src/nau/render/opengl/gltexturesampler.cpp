@@ -1,8 +1,8 @@
 #include "nau/render/opengl/gltexturesampler.h"
 
-//#include <GL/glew.h>
+#include <GL/glew.h>
 
-bool GLTextureSampler::Inited = GLTextureSampler::InitGL();
+bool GLTextureSampler::InitedGL = GLTextureSampler::InitGL();
 
 bool
 GLTextureSampler::InitGL() {

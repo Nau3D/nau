@@ -1350,9 +1350,9 @@ void DlgMaterials::updateShaderAux(Material *m) {
 
 void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 
-	const wxChar* vec4LightComp[] = {wxT("POSITION"), wxT("DIRECTION"), wxT("NORMALIZED_DIRECTION"), wxT("COLOR"), wxT("AMBIENT"), wxT("SPECULAR"), NULL};
+	const wxChar* vec4LightComp[] = {wxT("POSITION"), wxT("DIRECTION"), wxT("NORMALIZED_DIRECTION"), wxT("COLOR"), wxT("AMBIENT"), NULL};
 	const long vec4LightCompInd[] = {Light::POSITION, Light::DIRECTION, Light::NORMALIZED_DIRECTION, Light::COLOR,
-				Light::AMBIENT,Light::SPECULAR};
+				Light::AMBIENT};
 
 	const wxChar* floatLightComp[] = {wxT("SPOT_EXPONENT"), wxT("SPOT_CUTOFF"), wxT("CONSTANT_ATT"), wxT("LINEAR_ATT"), wxT("QUADRATIC_ATT"), NULL};
 	const long floatLightCompInd[] = {Light::SPOT_EXPONENT, Light::SPOT_CUTOFF, Light::CONSTANT_ATT, Light::LINEAR_ATT,

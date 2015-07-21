@@ -26,11 +26,16 @@ namespace nau
 			virtual void freeImage (void) = 0;
 
 			virtual void save(TexImage *ti, std::string filename) = 0;
-			virtual void save(int width, int height, char *data) = 0;
+			virtual void save(int width, int height, char *data, std::string filename) = 0;
 
 			virtual ~TextureLoader(void) {};
 
 			static const int BITMAP_SIZE = 96;
+
+			static void Save(Texture *t, std::string filename);
+			static void Save(int width, int height, char *data, std::string filename = "");
+
+			static void SaveRaw(Texture *t, std::string filename);
 		};
 	};
 };

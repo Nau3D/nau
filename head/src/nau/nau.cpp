@@ -6,6 +6,7 @@
 #include "nau/debug/state.h"
 #include "nau/event/eventFactory.h"
 #include "nau/loader/cboloader.h"
+#include "nau/loader/deviltextureloader.h"
 #include "nau/loader/objLoader.h"
 #include "nau/loader/ogremeshloader.h"
 #include "nau/loader/assimploader.h"
@@ -206,7 +207,8 @@ Nau::getName() {
 
 #ifdef NAU_LUA
 
-void luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
+void 
+luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
 
 	float *arrF;
 	int *arrI;
@@ -242,6 +244,7 @@ void luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
 	}
 }
 
+
 int
 luaGetBuffer(lua_State *l) {
 
@@ -255,7 +258,7 @@ luaGetBuffer(lua_State *l) {
 
 	IBuffer *buff = RESOURCEMANAGER->getBuffer(name);
 	if (buff == NULL) {
-		SLOG("Lua getBuffer: invalid buffer: %s", name);
+		NAU_THROW("Lua getBuffer: invalid buffer: %s", name);
 		return 0;
 	}
 
@@ -263,11 +266,72 @@ luaGetBuffer(lua_State *l) {
 	void *arr = malloc(size);
 	int count = buff->getData(offset, size , arr);
 	if (size != count) {
-		SLOG("Lua getBuffer: buffer %s offset %d, out of bounds", name, offset);
+		NAU_THROW("Lua getBuffer: buffer %s offset %d, out of bounds", name, offset);
 		return 0;
 	}
 
 	luaGetValues(l, arr, card, bdt);
+
+	return 0;
+}
+
+
+int 
+luaSetBuffer(lua_State *l) {
+
+	const char *name = lua_tostring(l, -4);
+	int offset = lua_tonumber(l, -3);
+	const char *dataType = lua_tostring(l, -2);
+
+	Enums::DataType dt = Enums::getType(dataType);
+	int card = Enums::getCardinality(dt);
+	Enums::DataType bdt = Enums::getBasicType(dt);
+	int size = Enums::getSize(dt);
+
+	IBuffer *buff = RESOURCEMANAGER->getBuffer(name);
+	if (buff == NULL) {
+		NAU_THROW("Lua getBuffer: invalid buffer: %s", name);
+		return 0;
+	}
+
+	void *arr;
+	float *arrF;
+	int *arrI; 
+	unsigned int *arrUI;
+
+	switch (bdt) {
+
+	case Enums::FLOAT:
+		arrF = (float *)malloc(sizeof(float) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l,-2) != 0; ++i) {
+			arrF[i] = lua_tonumber(l, -1);
+			lua_pop(l, 1);
+		}
+		arr = arrF;
+		break;
+	case Enums::INT:
+	case Enums::BOOL:
+		arrI = (int *)malloc(sizeof(int) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
+			arrI[i] = lua_tonumber(l, -1);
+			lua_pop(l, 1);
+		}
+		arr = arrI;
+		break;
+	case Enums::UINT :
+		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
+			arrUI[i] = lua_tounsigned(l, -1);
+			lua_pop(l, 1);
+		}
+		arr = arrUI;
+		break;
+	}
+
+	buff->setSubData(offset, size, arr);
 
 	return 0;
 }
@@ -281,10 +345,20 @@ luaGet(lua_State *l) {
 	const char *component = lua_tostring(l, -3);
 	int number = lua_tonumber(l, -2);
 	void *arr;
-	AttribSet *attr = NAU->getAttribs(tipo);
+	AttribSet *attr;
+
+	if (!strcmp(tipo, "CURRENT")) {
+		attr = NAU->getAttribs(context);
+		if (attr == NULL)
+			NAU_THROW("Lua set: Invalid context: %s", context);
+	}
+	else {
+		attr = NAU->getAttribs(tipo);
+		if (attr == NULL)
+			NAU_THROW("Lua set: Invalid type: %s", tipo);
+	}
 	if (attr == NULL) {
-		SLOG("Lua get: invalid type: %s", tipo);
-		return 0;
+		NAU_THROW("Lua get: invalid type: %s", tipo);
 	}
 
 	std::string s = component;
@@ -292,20 +366,17 @@ luaGet(lua_State *l) {
 	int id;
 	attr->getPropTypeAndId(s, &dt, &id);
 	if (id == -1) {
-		SLOG("Lua get: invalid attribute: %s", component);
-		return 0;
+		NAU_THROW("Lua get: invalid attribute: %s", component);
 	}
 
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
 	arr = NAU->getAttribute(tipo, context, component, number);
 	if (arr == NULL) {
-		SLOG("Lua get: Invalid context or number: %s %d", context, number);
-		return 0;
+		NAU_THROW("Lua get: Invalid context or number: %s %d", context, number);
 	}
 
 	luaGetValues(l, arr, card, bdt);
-
 
 	return 0;
 }
@@ -319,11 +390,24 @@ luaSet(lua_State *l) {
 	const char *component = lua_tostring(l, -3);
 	int number = lua_tonumber(l, - 2);
 	void *arr;
-	AttribSet *attr = NAU->getAttribs(tipo);
+	AttribSet *attr;
+
+	if (!strcmp(tipo, "CURRENT")) {
+		attr = NAU->getAttribs(context);
+		if (attr == NULL)
+			NAU_THROW("Lua set: Invalid context: %s", context);
+	}
+	else {
+		attr = NAU->getAttribs(tipo);
+		if (attr == NULL)
+			NAU_THROW("Lua set: Invalid type: %s", tipo);
+	}
 	std::string s = component;
 	Enums::DataType dt, bdt;
 	int id;
 	attr->getPropTypeAndId(s, &dt, &id);
+	if (id == -1)
+		NAU_THROW("Lua set: Invalid component: %s", component);
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
 	float *arrF;
@@ -362,7 +446,28 @@ luaSet(lua_State *l) {
 		break;
 	}
 
-	NAU->setAttribute(tipo, context, component, number, arr);
+	if (!NAU->setAttribute(tipo, context, component, number, arr))
+		NAU_THROW("Lua set: Invalid context: %s", context);
+
+	return 0;
+}
+
+
+int 
+luaSaveTexture(lua_State *l) {
+
+	const char *texName = lua_tostring(l, -1);
+
+	if (!RESOURCEMANAGER->hasTexture(texName))
+		NAU_THROW("Lua save texture: invalid texture name");
+
+	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(texName);
+
+	char s[200];
+	sprintf(s,"%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+	std::string sname = nau::system::FileUtil::validate(s);
+	TextureLoader::Save(texture,sname);
+
 	return 0;
 }
 
@@ -378,6 +483,10 @@ Nau::initLua() {
 	lua_setglobal(m_LuaState, "getAttr");
 	lua_pushcfunction(m_LuaState, luaGetBuffer);
 	lua_setglobal(m_LuaState, "getBuffer");
+	lua_pushcfunction(m_LuaState, luaSaveTexture);
+	lua_setglobal(m_LuaState, "saveTexture");
+	lua_pushcfunction(m_LuaState, luaSetBuffer);
+	lua_setglobal(m_LuaState, "setBuffer");
 }
 
 
@@ -467,8 +576,8 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 		return (AttributeValues *)renderer->getViewport();
 	}
 	// If we get here then we are trying to fetch something that does not exist
-	assert(false && "Getting an invalid attribute - Nau::getCurrentObjectAttributes");
-	return NULL;
+	NAU_THROW("Getting an invalid object\ncontext: %s", 
+			context.c_str());
 }
 
 
@@ -501,6 +610,9 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 	if (type == "VIEWPORT") {
 		if (m_pRenderManager->hasViewport(context))
 			return (AttributeValues *)m_pRenderManager->getViewport(context);
+	}
+	if (type == "RENDERER") {
+		return (AttributeValues *)RENDERER;
 	}
 
 	// From ResourceManager
@@ -555,8 +667,8 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 	}
 
 	// If we get here then we are trying to fetch something that does not exist
-	assert(false && "Getting an invalid attribute - Nau::getObjectAttributes");
-	return NULL;
+	NAU_THROW("Getting an invalid object\ntype: %s\ncontext: %s", 
+			type.c_str(), context.c_str());
 }
 
 
@@ -592,21 +704,31 @@ Nau::validateShaderAttribute(std::string type, std::string context, std::string 
 
 
 
-void 
+bool 
 Nau::setAttribute(std::string type, std::string context, std::string component, int number, void *values) {
 
 	int id;
 	Enums::DataType dt; 
 	AttributeValues *attrVal;
 
-	m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
-	attrVal = getObjectAttributes(type, context, number);
-
-	if (attrVal == NULL) {
-		assert(false && "Invalid parameters Nau::getAttribute");
+	if (type != "CURRENT") {
+		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
+		attrVal = NAU->getObjectAttributes(type, context, number);
 	}
-	else
+	else {
+		m_Attributes[context]->getPropTypeAndId(component, &dt, &id);
+		attrVal = NAU->getCurrentObjectAttributes(context, number);
+	}
+
+	//attrVal = getObjectAttributes(type, context, number);
+
+	if (attrVal == NULL || id == -1) {
+		return false;
+	}
+	else {
 		attrVal->setProp(id, dt, values);
+		return true;
+	}
 }
 
 
@@ -617,12 +739,18 @@ Nau::getAttribute(std::string type, std::string context, std::string component, 
 	Enums::DataType dt;
 	AttributeValues *attrVal;
 
-	m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
-	attrVal = getObjectAttributes(type, context, number);
+	if (type != "CURRENT") {
+		attrVal = NAU->getObjectAttributes(type, context, number);
+		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
+	}
+	else {
+		attrVal = NAU->getCurrentObjectAttributes(context, number);
+		m_Attributes[context]->getPropTypeAndId(component, &dt, &id);
+	}
 
-	if (attrVal == NULL) {
-		assert(false && "Invalid parameters Nau::getAttribute");
-		return NULL;
+	if (attrVal == NULL || id == -1) {
+		NAU_THROW("Getting an invalid Attribute\ntype: %s\ncontext: %s\ncomponent: %s", 
+			type.c_str(), context.c_str(), component.c_str());
 	}
 	else
 		return attrVal->getProp(id, dt);
@@ -908,7 +1036,7 @@ void Nau::step() {
 	m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
 
 	unsigned int k = RENDERER->getPropui(IRenderer::FRAME_COUNT);
-	if (k == ULONG_MAX)
+	if (k == UINT_MAX)
 		// 2 avoid issues with run_once and skip_first
 		// and allows a future implementation of odd and even frames for
 		// ping-pong rendering

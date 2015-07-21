@@ -4,7 +4,7 @@
 		<renderTarget name ="optix">
 			<SIZE width="1024" height="1024" />
 			<colors>
-				<color name="offscreenrender" internalFormat="RGBA32F"  />
+				<color name="offscreenrenderOptix" internalFormat="RGBA32F"  />
 			</colors>
 		</renderTarget>
 		
@@ -12,12 +12,6 @@
 			<SIZE width="1024" height="1024" />
 			<colors>
 				<color name="offscreenrenderGL" internalFormat="RGBA"  />
-			</colors>
-		</renderTarget>
-		<renderTarget name ="test_ubyte">
-			<SIZE width="1024" height="1024" />
-			<colors>
-				<color name="offscreenrender_ubyte" internalFormat="R8" />
 			</colors>
 		</renderTarget>
 	</renderTargets>
@@ -38,6 +32,15 @@
 			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
 		</state>
 	</states>
+
+	<buffers>
+		<buffer name="test">
+			<SIZE value=16 />
+			<structure>
+				<field value = "UINT" />
+			</structure>
+		</buffer>
+	</buffers>	
 
 	<shaders>
 		<shader name="pointLight" 	ps="shaders/pixelpointdifambspec.frag" 
@@ -190,7 +193,7 @@
 				</values>
 			</shader>
 			<textures>
-				<texture name="offscreenrender" UNIT = 0 />
+				<texture name="offscreenrenderOptix" UNIT = 0 />
 			</textures>
 			<imageTextures>
 				<imageTexture UNIT=0 texture="offscreenrenderGL" >

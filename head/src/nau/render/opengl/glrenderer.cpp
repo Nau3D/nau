@@ -800,9 +800,7 @@ GLRenderer::saveScreenShot() {
 
 	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	
-	nau::loader::TextureLoader *loader = nau::loader::TextureLoader::create();
-	loader->save(w, h, pixels);
-	delete(loader);
+	nau::loader::TextureLoader::Save(w, h, pixels);
 	free (pixels);
 }
 

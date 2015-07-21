@@ -2,8 +2,8 @@
 
 #include "dialogs/propertyManager.h"
 
-#include "nau/attribute.h"
-#include "nau/attributeValues.h"
+#include <nau/attribute.h>
+#include <nau/attributeValues.h>
 #include <nau/event/eventFactory.h>
 #include <nau/math/utils.h>
 
@@ -20,7 +20,8 @@ wxWindow *DlgCameras::Parent = NULL;
 DlgCameras *DlgCameras::Inst = NULL;
 
 
-void DlgCameras::SetParent(wxWindow *p) {
+void 
+DlgCameras::SetParent(wxWindow *p) {
 
 	Parent = p;
 }
@@ -33,7 +34,6 @@ DlgCameras* DlgCameras::Instance () {
 
 	return Inst;
 }
-
 
 
 DlgCameras::DlgCameras()
@@ -65,13 +65,6 @@ DlgCameras::eventReceived(const std::string &sender, const std::string &eventTyp
 }
 
 
-std::string &
-DlgCameras::getName() {
-
-	return m_Name;
-}
-
-
 void
 DlgCameras::notifyUpdate(Notification aNot, std::string camName, std::string value) {
 
@@ -89,7 +82,15 @@ DlgCameras::notifyUpdate(Notification aNot, std::string camName, std::string val
 }
 
 
-void DlgCameras::updateDlg() {
+std::string &
+DlgCameras::getName() {
+
+	return m_Name;
+}
+
+
+void 
+DlgCameras::updateDlg() {
 
 	setupGrid();
 	updateList();
@@ -100,7 +101,8 @@ void DlgCameras::updateDlg() {
 }
 
 
-void DlgCameras::updateViewportLabels() {
+void 
+DlgCameras::updateViewportLabels() {
 
 	m_ViewportLabels.RemoveAt(0, m_ViewportLabels.GetCount());
 	m_ViewportLabels.Add(wxT("None"), -1);
@@ -116,7 +118,8 @@ void DlgCameras::updateViewportLabels() {
 }
 
 
-void DlgCameras::setupPanel(wxSizer *siz, wxWindow *parent) {
+void 
+DlgCameras::setupPanel(wxSizer *siz, wxWindow *parent) {
 
 	/* TOP: COMBO with camera names */
 	wxBoxSizer *sizH1 = new wxBoxSizer(wxHORIZONTAL);
@@ -254,7 +257,7 @@ void DlgCameras::updateInfo(std::string name) {
 void DlgCameras::OnActivate(wxCommandEvent& event) {
 
 	NAU->setActiveCameraName(m_Active);
-}
+}    
 
 
 void DlgCameras::OnAdd(wxCommandEvent& event) {

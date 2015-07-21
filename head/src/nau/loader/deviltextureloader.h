@@ -34,7 +34,7 @@ namespace nau
 
 			void save(TexImage *ti, std::string filename);
 
-			void save(int width, int height, char *data);
+			void save(int width, int height, char *data, std::string filename);
 
 
 		private:

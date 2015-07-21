@@ -7,6 +7,7 @@
 			<attribute context="CAMERA" name="DIST" type="FLOAT" value="10" />
 			<attribute context="STATE" name="FOG_MIN_DIST" type="FLOAT" value = 0.0 />
 			<attribute context="STATE" name="FOG_MAX_DIST" type="FLOAT" value = 100.0 />
+			<attribute context="PASS" name="EXPOSURE" type="FLOAT" min = 0.0 max = 10.0 value = 10.0 />
 		</attributes>
 		
 		<scenes>

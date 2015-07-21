@@ -11,8 +11,8 @@ std::map<unsigned int, GLTexture::TexDataTypes> GLTexture::TexDataType;
 std::map<unsigned int, GLTexture::TexFormats> GLTexture::TexFormat;
 std::map<unsigned int, GLTexture::TexIntFormats> GLTexture::TexIntFormat;
 std::map<int, int> GLTexture::TextureBound;
-
 bool GLTexture::Inited = GLTexture::InitGL();
+
 
 bool
 GLTexture::InitGL() {
@@ -475,12 +475,12 @@ GLTexture::prepare(unsigned int aUnit, TextureSampler *ts) {
 
 
 void 
-GLTexture::restore(unsigned int aUnit) {
+GLTexture::restore(unsigned int aUnit, TextureSampler *ts) {
 
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(m_EnumProps[DIMENSION],0);
 
-	GLTextureSampler::restore(aUnit, m_EnumProps[DIMENSION]);
+	ts->restore(aUnit, m_EnumProps[DIMENSION]);
 }
 
 

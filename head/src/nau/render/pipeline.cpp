@@ -213,8 +213,8 @@ Pipeline::getPassCounter() {
 void 
 Pipeline::executePass(Pass *pass) {
 
-	pass->callPreScript();
 	m_CurrentPass = pass;
+	pass->callPreScript();
 	bool keepRunning = false;
 
 	if (pass->getPrope(Pass::TEST_MODE) == Pass::RUN_WHILE)
@@ -251,7 +251,7 @@ Pipeline::executePass(Pass *pass) {
 void
 Pipeline::execute() {
 
-	int n = RENDERER->getPropui(IRenderer::FRAME_COUNT);
+	unsigned int n = RENDERER->getPropui(IRenderer::FRAME_COUNT);
 	if (m_FrameCount == 0 || n == 0)
 		callScript(m_PreScriptName);
 
@@ -263,11 +263,11 @@ Pipeline::execute() {
 
 			int mode = pass->getPrope(Pass::RUN_MODE);
 			// most common case: run pass in all frames
-			if (mode == Pass::RUN_ALWAYS)// || mode == Pass::RUN_WHILE_TRUE)
+			if (mode == Pass::RUN_ALWAYS)
 				executePass(pass);
 
 			else {
-				unsigned long f = RENDERER->getPropui(IRenderer::FRAME_COUNT);
+				unsigned int f = RENDERER->getPropui(IRenderer::FRAME_COUNT);
 				bool even = (f % 2 == 0);
 				if (mode == Pass::RUN_EVEN && !even)
 					continue;

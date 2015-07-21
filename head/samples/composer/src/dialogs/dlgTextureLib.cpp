@@ -6,6 +6,7 @@
 
 #include "GL/glew.h"
 
+using namespace nau::loader;
 using namespace nau::render;
 using namespace nau::material;
 
@@ -76,6 +77,7 @@ DlgTextureLib::notifyUpdate(Notification aNot, std::string texName, std::string 
 	}
 }
 
+
 void 
 DlgTextureLib::updateDlg() {
 
@@ -83,6 +85,7 @@ DlgTextureLib::updateDlg() {
 	gridTextures->Refresh(true);
 	m_parent->Refresh();	
 }
+
 
 void 
 DlgTextureLib::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
@@ -182,12 +185,8 @@ DlgTextureLib::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 
 
 	siz->Add(sizH,0,wxALL |wxGROW |wxHORIZONTAL,5);
-
-	
-
-
-
 }
+
 
 void DlgTextureLib::updateTextures(int index) {
 
@@ -233,7 +232,7 @@ void DlgTextureLib::updateTextures(int index) {
 
 
 
-void DlgTextureLib::setTextureProps(int index){
+void DlgTextureLib::setTextureProps(int index) {
 
 	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(index);
 	m_activeTexture = index;
@@ -293,115 +292,22 @@ void DlgTextureLib::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 }
 
 
-void DlgTextureLib::OnSaveRaw(wxCommandEvent& event)
-{
+void DlgTextureLib::OnSaveRaw(wxCommandEvent& event) {
+
 	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_activeTexture);
-	TexImage *ti = RESOURCEMANAGER->createTexImage(texture);
-
-	void *data = ti->getData();
-
-	int w = ti->getWidth();
-	int h = ti->getHeight();
-	int d = ti->getDepth();
-	int n = ti->getNumComponents();
-	std::string type = ti->getType();
-
-	// WHEN ADDING MORE TYPES MAKE SURE THEY EXIST IN GLTEXIMAGE.CPP
-	float *fData;
-	unsigned int *uiData;
-	unsigned short *usData;
-	unsigned char *ubData;
-	short *sData;
-	char *cData;
-	int *iData;
-	if (type == "FLOAT")
-		fData = (float *)data;
-	else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")
-		ubData = (unsigned char *)data;
-	else if (type == "UNSIGNED_SHORT")
-		usData = (unsigned short *)data;
-	else if (type == "UNSIGNED_INT")
-		uiData = (unsigned int *)data;
-	else if (type == "SHORT")
-		sData = (short *)data;
-	else if (type == "BYTE")
-		cData = (char *)data;
-	else if (type == "INT")
-		iData = (int *)data;
-
-	FILE *fp;
 	char name[256];
 	sprintf(name, "%s.raw", texture->getLabel().c_str());
 	std::string sname = nau::system::FileUtil::validate(name);
-	//for (int i = 0; name[i] != '\0'; i++)
-	//	if (name[i] == ':' || name[i] = '/' || )
-	//		name[i] = '_';
-
-	fp = fopen(sname.c_str(), "wt+");
-
-	for (int g = 0; g < d; ++g) {
-
-		for (int i = 0; i < w; ++i) {
-
-			for (int j = 0; j < h; ++j) {
-
-				for (int k = 0; k < n; ++k) {
-
-					if (type == "FLOAT")
-						fprintf(fp, "%f ", fData[(g*w*h + i*h + j)*n + k]);
-					else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")
-						fprintf(fp, "%u ", ubData[(g*w*h + i*h + j)*n + k]);
-					else if (type == "UNSIGNED_SHORT")
-						fprintf(fp, "%u ", usData[(g*w*h + i*h + j)*n + k]);
-					else if (type == "UNSIGNED_INT")
-						fprintf(fp, "%u ", uiData[(g*w*h + i*h + j)*n + k]);
-					else if (type == "SHORT")
-						fprintf(fp, "%i ", sData[(g*w*h + i*h + j)*n + k]);
-					else if (type == "BYTE")
-						fprintf(fp, "%i ", cData[(g*w*h + i*h + j)*n + k]);
-					else if (type == "INT")
-						fprintf(fp, "%d ", iData[(g*w*h + i*h + j)*n + k]);
-
-				}
-				fprintf(fp, "; ");
-			}
-			fprintf(fp, "\n");
-		}
-	}
-	fclose(fp);
-
-/*	ILuint ilFormat, ilType;
-	if (n == 3 || n == 4) {
-		if (n == 3)
-			ilFormat = IL_RGB;
-		else
-			ilFormat = IL_RGBA;
-		if (type == "FLOAT")
-			ilType = IL_FLOAT;
-		else if (type == "UNSIGNED_BYTE")
-			ilType = IL_UNSIGNED_BYTE;
-		ILuint image;
-		ilInit();
-		ilOriginFunc(IL_ORIGIN_LOWER_LEFT); 
-		ilGenImages(1,&image);
-		ilBindImage(image);
-		ilTexImage(w,h,1,n,ilFormat,ilType,data);
-		ilEnable(IL_FILE_OVERWRITE);
-
-		ilSave(IL_JPG, "bla.jpg");
-	}
-*/
+	TextureLoader::SaveRaw(texture, sname);
 }
 
-void DlgTextureLib::OnSavePNG( wxCommandEvent& event) 
-{
-	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_activeTexture);
-	TexImage *ti = RESOURCEMANAGER->createTexImage(texture);
 
-	nau::loader::TextureLoader *loader = nau::loader::TextureLoader::create();
+void DlgTextureLib::OnSavePNG( wxCommandEvent& event) {
+
+	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_activeTexture);
 	std::string s = texture->getLabel() + ".png";
 	std::string sname = nau::system::FileUtil::validate(s);
-	loader->save(ti,sname);
+	TextureLoader::Save(texture, sname);
 }
 
 
@@ -415,43 +321,6 @@ void DlgTextureLib::updateTexInfo(int pos) {
 
 
 
-/*
-void DlgTextureLib::loadTextureDialog(wxGridEvent &e) {
-
-
-	int index = m_textureManager->getNumTextures();
-
-	wxString filter;
-
-	filter = "Texture Files (*.gif, *.jpg) | *.gif;*.jpg";
-
-    wxFileDialog dialog
-                 (
-                    this,
-                    _T("Open Texture Unit"),
-                    _T(""),
-                    _T(""),
-                    filter
-                 );
-
- //	dialog.SetDirectory(wxGetHomeDir());
-
-    if (dialog.ShowModal() == wxID_OK)
-    {
-		int id = m_textureManager->addTexture((char *)dialog.GetPath().c_str());
-		int c = gridTextures->GetNumberCols();
-		if (c < m_textureManager->getNumTextures())  {
-			gridTextures->SetReadOnly(0,c,true);
-			imagesGrid.push_back(new ImageGridCellRenderer(new wxBitmap(96,96)));
-			gridTextures->AppendCols();
-			gridTextures->SetCellRenderer(0, c, imagesGrid[c]);
-		}
-		updateTextures(index);
-		DlgMaterials::Instance()->updateTextureList();
-	}
-}
-*/
-
 void DlgTextureLib::OnprocessDClickGrid(wxGridEvent &e) {
 /*
 	switch(e.GetId()) {
@@ -459,6 +328,7 @@ void DlgTextureLib::OnprocessDClickGrid(wxGridEvent &e) {
 			break;
 	}
 */}
+
 
 void DlgTextureLib::OnprocessClickGrid(wxGridEvent &e) {
 
@@ -469,6 +339,7 @@ void DlgTextureLib::OnprocessClickGrid(wxGridEvent &e) {
 	setTextureProps(col);
 	
 }
+
 
 void DlgTextureLib::OnAddTex(wxCommandEvent& event) {
 

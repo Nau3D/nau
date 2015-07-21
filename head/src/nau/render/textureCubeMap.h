@@ -50,7 +50,7 @@ namespace nau
 			virtual void setFile (std::string file, TextureCubeMapFaces i);
 
 			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts) = 0;
-			virtual void restore(unsigned int unit) = 0;
+			virtual void restore(unsigned int unit, nau::material::TextureSampler *ts) = 0;
 
 			virtual void clear() = 0;
 			virtual void clearLevel(int l) = 0;

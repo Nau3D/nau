@@ -69,7 +69,7 @@ MaterialTexture::unbind() {
 	assert(m_IntProps[UNIT] >= 0);
 
 	RENDERER->removeTexture(m_IntProps[UNIT]);
-	m_Texture->restore(m_IntProps[UNIT]);
+	m_Texture->restore(m_IntProps[UNIT], m_Sampler);
 }
 
 

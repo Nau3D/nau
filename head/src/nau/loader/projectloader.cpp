@@ -1456,7 +1456,8 @@ ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 		}
 		Attribute a = aPass->getAttribSet()->get("TEST_MODE");
 		void *val = readAttribute("TEST_MODE", a, pElem);
-		aPass->setPrope(Pass::TEST_MODE, *(int *)val);
+		if (val != NULL)
+			aPass->setPrope(Pass::TEST_MODE, *(int *)val);
 		aPass->setTestScript(FileUtil::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
 	}
 

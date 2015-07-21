@@ -1,6 +1,8 @@
 #include "nau/loader/deviltextureloader.h"
 
+
 #include "nau/slogger.h"
+
 
 #include <ctime>
 
@@ -140,6 +142,9 @@ DevILTextureLoader::save(TexImage *ti, std::string filename) {
 }
 
 
+
+
+
 ILuint 
 DevILTextureLoader::convertType(std::string type) {
 
@@ -165,18 +170,8 @@ DevILTextureLoader::convertType(std::string type) {
 
 
 void
-DevILTextureLoader::save(int width, int height, char *data) {
+DevILTextureLoader::save(int width, int height, char *data, std::string filename) {
 
-	time_t rawtime;
-	struct tm * timeinfo;
-	char buffer [80];
-	char buffer2[80];
-	
-	time (&rawtime);
-	timeinfo = localtime (&rawtime);
-	float k = clock();
-	strftime (buffer,80,"%Y-%m-%d_%H-%M-%S",timeinfo);
-	sprintf(buffer2, "%s.%f.png", buffer, k);
 
 	ILuint image;
 	ilInit();
@@ -185,6 +180,6 @@ DevILTextureLoader::save(int width, int height, char *data) {
 	ilBindImage(image);
 	ilTexImage(width, height, 1, 4, IL_RGBA, IL_UNSIGNED_BYTE, data);
 	ilEnable(IL_FILE_OVERWRITE);
-	ilSave(IL_PNG, (ILstring)buffer2);
+	ilSave(IL_PNG, (ILstring)filename.c_str());
 	ilDeleteImage(image);
 }

@@ -21,6 +21,9 @@ rtDeclareVariable(float,         fov, , );
 rtDeclareVariable(float4, diffuse, , );
 rtDeclareVariable(int, texCount, , );
 
+// Pass
+rtDeclareVariable(float, exposure, , );
+
 // Light
 rtDeclareVariable(float4, lightDir, , );
 rtDeclareVariable(float4, lightPos, , );
@@ -64,7 +67,7 @@ rtDeclareVariable(int, Shadow, , );
 RT_PROGRAM void pinhole_camera_ms()
 {
 	float4 color = make_float4(0.0);
-	int sqrt_num_samples = 1;
+	int sqrt_num_samples = 2;
 	int samples = sqrt_num_samples * sqrt_num_samples;
 	unsigned int seedi, seedj;
 
@@ -106,7 +109,11 @@ RT_PROGRAM void pinhole_camera_ms()
 			color += prd.result;
 		}
 	}
-	output0[launch_index] = color / samples;
+	//color = color /0.8;
+	color = 1-expf(-color * exposure/ samples);
+	// color = color*8;
+	// color = color /(color + 1);
+	output0[launch_index] = make_float4(powf(color.x,1/2.2), powf(color.y,1/2.2), powf(color.z, 1/2.2), 1);
 	//output0[launch_index] = make_float4(rnd(seed), rnd(seed), rnd(seed), rnd(seed));
 }
 
@@ -155,8 +162,9 @@ RT_PROGRAM void tracePathMetal()
 		PerRayDataResult prd;
 		prd.result = make_float4(1.0, 1.0, 1.0,1.0);
 		prd.depth = prdr.depth+1;
+		prd.seed = prdr.seed;
 		rtTrace(top_object, ray, prd);
-		prdr.result = prd.result * dot(r,n);
+		prdr.result = prd.result;// * dot(r,n);
 	}
 	else 
 		prdr.result = make_float4(0.0);
@@ -212,8 +220,8 @@ RT_PROGRAM void tracePath()
 	float4 color = diffuse;
 	
 	float p = max(diffuse.x, max(diffuse.y, diffuse.z));
-	if (prdr.depth == 4 )//|| rnd(prdr.seed) < p)
-		color = color;// * 1.0/p;
+	if (prdr.depth > 4 || rnd(prdr.seed) > p)
+		color = color * 1.0/(1-p);
 	else {
 	//if (prdr.depth < 2 ) {//&& r < 0.7f) {
 //	if (prdr.depth < 8) {
@@ -224,7 +232,7 @@ RT_PROGRAM void tracePath()
 		//sampleHemisphere(n,newDir,prdr.seed);
 		//float  seed = t_hit * 2789457;
 		//sampleHemisphere(seed, n,newDir);
-		optix::Ray newRay(hit_point, newDir, Phong, 0.002, 500000);
+		optix::Ray newRay(hit_point, newDir, Phong, 0.002, 5000000);
 		rtTrace(top_object, newRay, prdRec);
 
 

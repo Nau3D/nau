@@ -94,7 +94,7 @@ namespace nau {
 		bool validateAttribute(std::string type, std::string context, std::string component);
 		// Only validates the existence of the component in a particular type/context of object
 		bool validateShaderAttribute(std::string type, std::string context, std::string component);
-		void setAttribute(std::string type, std::string context,
+		bool setAttribute(std::string type, std::string context,
 				 std::string component, int number,
 				 void *values);
 		void *getAttribute(std::string type, std::string context,

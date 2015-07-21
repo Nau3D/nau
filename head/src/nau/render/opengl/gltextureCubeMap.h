@@ -23,7 +23,7 @@ namespace nau
 			~GLTextureCubeMap(void);
 
 			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts);
-			virtual void restore(unsigned int unit);
+			virtual void restore(unsigned int unit, nau::material::TextureSampler *ts);
 
 			virtual void build(int immutable = 0);
 

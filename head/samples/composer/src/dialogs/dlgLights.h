@@ -34,7 +34,7 @@ public:
 	void updateDlg();
 	static DlgLights* Instance ();
 	static void SetParent(wxWindow *parent);
-	static wxWindow *parent;
+	static wxWindow *Parent;
 
 	void updateInfo(std::string name);
 
@@ -44,15 +44,15 @@ protected:
 	DlgLights();
 	DlgLights(const DlgLights&);
 	DlgLights& operator= (const DlgLights&);
-	static DlgLights *inst;
+	static DlgLights *Inst;
 
 	/* GLOBAL STUFF */
 	std::string m_active;
 
 	/* LIGHTS */
-	wxButton *bAdd;
-	wxPropertyGridManager *pg;
-	wxComboBox *list;
+	wxButton *m_BAdd;
+	wxPropertyGridManager *m_PG;
+	wxComboBox *m_List;
 
 
 	/* EVENTS */
@@ -63,6 +63,7 @@ protected:
 	void update();
 	void updateList();
 	void setupPanel(wxSizer *siz, wxWindow *parent);
+	void setupGrid();
 
 
 	enum {
@@ -71,13 +72,13 @@ protected:
 		DLG_PROPS
 
 	};
-	enum {
-		/* LIGHT TYPES */
-		DLG_MI_DIRECTIONAL=0,
-		DLG_MI_POINT,
-		DLG_MI_SPOT,
-		DLG_MI_OMNI
-	}lightTypes;
+	//enum {
+	//	/* LIGHT TYPES */
+	//	DLG_MI_DIRECTIONAL=0,
+	//	DLG_MI_POINT,
+	//	DLG_MI_SPOT,
+	//	DLG_MI_OMNI
+	//}lightTypes;
 
 	typedef enum {
 		NEW_LIGHT,

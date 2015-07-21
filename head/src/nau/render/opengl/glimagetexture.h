@@ -19,7 +19,7 @@ namespace nau
 	{
 		class GLImageTexture : public ImageTexture
 		{
-		friend class ImageTexture;
+			friend class ImageTexture;
 
 		public:
 

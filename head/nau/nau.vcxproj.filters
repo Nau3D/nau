@@ -930,9 +930,6 @@
     <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\loader\textureloader.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\bimap.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -1019,6 +1016,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passProfiler.h">
       <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\textureloader.h">
+      <Filter>Source Files\loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

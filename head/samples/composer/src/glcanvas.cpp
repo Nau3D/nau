@@ -186,9 +186,14 @@ void
 GlCanvas::Render ()
 {
 	PROFILE ("Main cicle");
-
-	if (0 != m_pEngine) {
-		m_pEngine->step();
+	try {
+		if (0 != m_pEngine) {
+			m_pEngine->step();
+		}
+	}
+	catch (std::string s) {
+			wxMessageBox(wxString (s.c_str()));
+			exit (1);
 	}
 
 	{

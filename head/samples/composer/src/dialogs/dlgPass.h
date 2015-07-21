@@ -61,17 +61,17 @@ class DlgPass : public wxDialog, IListener
 		void updateDlg();	
 
 	private:
-		static wxWindow *parent; 
-		static DlgPass *inst;
+		static wxWindow *Parent; 
+		static DlgPass *Inst;
 
-		wxWindow *m_parent;
+		wxWindow *m_Parent;
 		std::string m_Name;
 
 		// Data is presented in these
 		wxButton *m_BActivate;
 		wxComboBox *m_PipelineList, *m_PassList;
-		wxPropertyGridManager *m_pg;
-		wxPGProperty *pidScenes;
+		wxPropertyGridManager *m_PG;
+		//wxPGProperty *m_PidScenes;
 		wxStaticText *m_ActivePipText;
 
 		// These vars must be updated whenever stuff (assigned to current pass) is updated
@@ -89,6 +89,7 @@ class DlgPass : public wxDialog, IListener
 		void updateViewportList(Pass *p);
 		void updateRenderTargetList(Pass *p);
 		void updatePipelines();
+		void setupGrid();
 
 		// Event Processing
 		void OnClose(wxCloseEvent& events);

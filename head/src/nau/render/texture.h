@@ -87,7 +87,7 @@ namespace nau
 			//! prepare a texture for rendering
 			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts) = 0;
 			//! restore default texture in texture unit
-			virtual void restore(unsigned int unit) = 0;
+			virtual void restore(unsigned int unit, nau::material::TextureSampler *ts) = 0;
 			//! builds a texture with the attribute parameters previously set
 			virtual void build(int immutable = 0) = 0;
 

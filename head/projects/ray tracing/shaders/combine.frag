@@ -19,7 +19,4 @@ void main() {
 	
 	memoryBarrier();
 	imageStore(tex1, imageCoords, cFinal);
-	outColor = cFinal;
-	//outColor = c2;
-	
 }	

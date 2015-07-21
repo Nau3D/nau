@@ -1,7 +1,4 @@
 #include "nau/material/textureSampler.h"
-#ifdef NAU_OPENGL
-#include "nau/render/opengl/gltexturesampler.h"
-#endif
 #include "nau.h"
 #include "nau/config.h"
 
@@ -9,6 +6,9 @@
 
 using namespace nau::material;
 using namespace nau::render;
+
+AttribSet TextureSampler::Attribs;
+bool TextureSampler::Inited = TextureSampler::Init();
 
 bool
 TextureSampler::Init() {
@@ -31,8 +31,10 @@ TextureSampler::Init() {
 	return true;
 }
 
-AttribSet TextureSampler::Attribs;
-bool TextureSampler::Inited = TextureSampler::Init();
+#ifdef NAU_OPENGL
+#include "nau/render/opengl/gltexturesampler.h"
+#endif
+
 
 TextureSampler*
 TextureSampler::create(Texture *t) {

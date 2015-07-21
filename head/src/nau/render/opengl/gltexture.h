@@ -2,7 +2,7 @@
 #define GLTEXTURE_H
 
 #include "nau/render/texture.h"
-#include "nau/render/opengl/gltexturesampler.h"
+#include "nau/material/texturesampler.h"
 
 #include <GL/glew.h>
 
@@ -24,7 +24,7 @@ namespace nau
 			//! prepare a texture for rendering
 			virtual void prepare(unsigned int unit, TextureSampler *ts);
 			//! restore default texture in texture unit
-			virtual void restore(unsigned int unit);
+			virtual void restore(unsigned int unit, TextureSampler *ts);
 			//! builds a texture with the attribute parameters previously set
 			virtual void build(int immutable = 0);
 
