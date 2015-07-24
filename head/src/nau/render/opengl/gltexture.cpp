@@ -508,6 +508,9 @@ void
 GLTexture::generateMipmaps() {
 
 	glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
+	m_BoolProps[MIPMAP] = true;
+	int maxi = max(m_IntProps[WIDTH], max(m_IntProps[HEIGHT],m_IntProps[DEPTH]));
+	m_IntProps[LEVELS] = (int)log2(maxi);
+	glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, m_IntProps[LEVELS]);
 	glGenerateMipmap(m_EnumProps[DIMENSION]);
-
 }

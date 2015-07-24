@@ -167,7 +167,7 @@ __device__ float4 sampleAreaLight(float3 surfaceNormal, float3 hitPoint,
 			dot1 = max(0.0f,dot(lightN, -lDir));
 
 			shadow_prd.result = make_float4(1.0f);
- 			optix::Ray shadow_ray( hitPoint, lDir, Shadow, 0.05, lightDist+0.01 );
+ 			optix::Ray shadow_ray( hitPoint, lDir, Shadow, 0.1, lightDist+0.01 );
 			rtTrace(top_object, shadow_ray, shadow_prd);
 			result += shadow_prd.result * NdotL * dot1 ;
 		}

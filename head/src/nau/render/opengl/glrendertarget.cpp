@@ -144,7 +144,7 @@ GLRenderTarget::addColorTarget (std::string name, std::string internalFormat) {
 
 	m_TexId[m_Color] = RESOURCEMANAGER->createTexture
 		(name, internalFormat,m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-		m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
+		m_UIntProps[LAYERS], m_UIntProps[LEVELS], m_UIntProps[SAMPLES]);
 
 	bind();
 	attachColorTexture(m_TexId[m_Color], m_Color);

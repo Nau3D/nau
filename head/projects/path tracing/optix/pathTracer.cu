@@ -23,6 +23,7 @@ rtDeclareVariable(int, texCount, , );
 
 // Pass
 rtDeclareVariable(float, exposure, , );
+rtDeclareVariable(float, ambient, , );
 
 // Light
 rtDeclareVariable(float4, lightDir, , );
@@ -110,10 +111,10 @@ RT_PROGRAM void pinhole_camera_ms()
 		}
 	}
 	//color = color /0.8;
-	color = 1-expf(-color * exposure/ samples);
+	//color = 1-expf(-color * exposure/ samples);
 	// color = color*8;
 	// color = color /(color + 1);
-	output0[launch_index] = make_float4(powf(color.x,1/2.2), powf(color.y,1/2.2), powf(color.z, 1/2.2), 1);
+	output0[launch_index] = color;//make_float4(powf(color.x,1/2.2), powf(color.y,1/2.2), powf(color.z, 1/2.2), 1);
 	//output0[launch_index] = make_float4(rnd(seed), rnd(seed), rnd(seed), rnd(seed));
 }
 
@@ -232,7 +233,7 @@ RT_PROGRAM void tracePath()
 		//sampleHemisphere(n,newDir,prdr.seed);
 		//float  seed = t_hit * 2789457;
 		//sampleHemisphere(seed, n,newDir);
-		optix::Ray newRay(hit_point, newDir, Phong, 0.002, 5000000);
+		optix::Ray newRay(hit_point, newDir, Phong, 0.2, 5000000);
 		rtTrace(top_object, newRay, prdRec);
 
 
@@ -303,7 +304,7 @@ RT_PROGRAM void exception(void)
 
 RT_PROGRAM void miss(void)
 {
-	prdr.result = make_float4(0.0f);
+	prdr.result = make_float4(ambient);
 }
 
 RT_PROGRAM void geometryintersection(int primIdx)

@@ -1,8 +1,13 @@
 <?xml version="1.0" ?>
-<project name="Render Target Test" width=1536 height=1024>
+<project name="Path Tracer" width=1024 height=1024>
 	<assets>
+		<constants>
+			<constant name="RTSIZE" value = 512 />
+		</constants>
 		<attributes>
 			<attribute context="PASS" name="EXPOSURE" type="FLOAT" value = "10" />
+			<attribute name="Levels" context="PASS" type="INT" value=9 />
+			<attribute name="CurrentLevel" context="PASS" type="INT" value=0 />
 		</attributes>
 		<scenes>
 			<scene name="MainScene">
@@ -10,31 +15,36 @@
 			</scene>
 		</scenes>
 		<viewports>
-			<viewport name="RightViewport" >
-				<ORIGIN x="0.33" y="0" />
-				<SIZE width="1024" height="1024" />
+			<viewport name="TopRightViewport" >
+				<ORIGIN x="0.5" y="0.5" />
+				<SIZE width="512" height="512" />
+				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="BottomRightViewport" >
+				<ORIGIN x="0.5" y="0.0" />
+				<SIZE width="512" height="512" />
 				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="TopLeftViewport" >
 				<ORIGIN x="0" y="0.5" />
-				<SIZE width="0.33" height="0.5" />
+				<SIZE width="0.5" height="0.5" />
 				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
 			</viewport>
 			<viewport name="BottomLeftViewport" >
 				<ORIGIN x="0.0" y="0" />
-				<SIZE width="0.33" height="0.5" />
+				<SIZE width="0.5" height="0.5" />
 				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
 			</viewport>
 		</viewports>
 		<cameras>
 			<camera name="MainCamera" >
-				<viewport name="RightViewport"/>
+				<viewport name="BottomLeftViewport"/>
 				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=1 FAR=10000.0 />
 				<POSITION x="0.0" y="75" z="2.5" />
 				<VIEW x="-0.962954" y="0.129634" z="-0.236464"  />
 			</camera>
 			<camera name="Slave" >
-				<viewport name="RightViewport"/>
+				<viewport name="BottomLeftViewport"/>
 				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=1 FAR=10000.0 />
 				<POSITION x="0.0" y="0.75" z="2.5" />
 				<VIEW x="0.0" y="0.0" z="-1.0"  />
@@ -53,8 +63,9 @@
 		</materialLibs>
 	</assets>
 	<pipelines>
-		<pipeline name="fixedfunction" defaultCamera="MainCamera">
-			<preScript file="test.lua" script="testCams" />
+		<pipeline name="PathTracer" defaultCamera="MainCamera">
+
+		<preScript file="test.lua" script="testCams" />
 			
 			<pass class="default" name="GL">
 				<mode value="RUN_ONCE" />
@@ -62,7 +73,6 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<!--viewport name="LeftViewport" /-->
 				<lights>
 					<light name="Sun" />
 				</lights>
@@ -73,6 +83,7 @@
 					</map>
 				</injectionMaps>
 			</pass> 
+
 			<pass class="optix" name="Path Trace">
 				<mode value="SKIP_FIRST_FRAME" />
 				<scenes>
@@ -94,14 +105,6 @@
 					<optixProgram type="Any_Hit"  	 ray="Shadow" file="optix/pathTracer.ptx" proc="any_hit_shadow"/> 
 				</optixDefaultMaterial>
 				<optixMaterialMap>
-					<!--optixMap to="Optix Ray Tracer Render Target:Glass">
-						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="shadeGlass"/>
-						<optixProgram type="Any_Hit" ray="Shadow" file="optix/pathTracer.ptx" proc="keepGoingShadow"/> 
-					</optixMap-->	
-					<optixMap to="Optix Ray Tracer Render Target:Metal">
-						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="tracePathMetal"/>
-						<optixProgram type="Any_Hit"  	 ray="Shadow" file="optix/pathTracer.ptx" proc="any_hit_shadow"/> 
-					</optixMap>	
 					<optixMap to="nau_material_lib:light">
 						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="shadeLight"/>
 					</optixMap>	
@@ -115,7 +118,6 @@
 					<optixProgram type="Geometry_Intersection"   file="optix/pathTracer.ptx" proc="geometryintersection"/>
 					<optixProgram type="Bounding_Box"   file="optix/pathTracer.ptx" proc="boundingbox"/>
 				</optixGeometryProgram>
-
 				<optixMaterialAttributes>
 					<valueof optixVar="diffuse" type="CURRENT" context="COLOR" component="DIFFUSE" />
 					<valueof optixVar="texCount" type="CURRENT" context="RENDERER" component="TEXTURE_COUNT" />
@@ -126,29 +128,48 @@
 					<valueof optixVar="frameCount" type="CURRENT" context="RENDERER" component="FRAME_COUNT" />
 					<valueof optixVar="exposure" type="CURRENT" context="PASS" component="EXPOSURE" />
 				</optixGlobalAttributes>
-				<!--optixInput>
-					<buffer var="pos_buffer" texture="Deferred Render Targets::pos" />
-				</optixInput-->
-
 			</pass>
+			
 			<pass class="quad" name="combine">
-				<viewport name="RightViewport" />
-				<color enable="false" />
+				<viewport name="TopRightViewport" />
+				<color clear = "false" enable="false" />
 				<mode value="SKIP_FIRST_FRAME" />
 				<material name="combine" fromLibrary="Optix Ray Tracer Render Target" />
-				
 			</pass>
+			
+			<pass class="quad" name="computeLuminance">
+				<color clear = "false"/>
+				<renderTarget name="luminance" fromLibrary="Optix Ray Tracer Render Target" />
+				<material name="computeLuminance" fromLibrary="Optix Ray Tracer Render Target" />
+				<!--postProcess>
+					<texture name="luminance" fromLibrary="Optix Ray Tracer Render Target" MIPMAP="true"/>
+				</postProcess-->
+			</pass>
+			
+			<pass class="compute" name="mipmap">
+				<testScript file="test.lua" script="testMipmap" TEST_MODE="RUN_WHILE"/>
+				<material name="mipmap" fromLibrary="Optix Ray Tracer Render Target" 
+					dimX=256 dimY=256 dimZ=1/>
+			</pass>
+			
 			<pass class="quad" name="showGL">
 				<viewport name="TopLeftViewport" />
 				<texture name="offscreenrenderGL2" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
+			
 			<pass class="quad" name="showOptix">
 				<viewport name="BottomLeftViewport" />
 				<texture name="offscreenrenderOptix" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
+			
 			<pass class="quad" name="showCombine">
-				<viewport name="RightViewport" />
+				<viewport name="TopRightViewport" />
 				<texture name="offscreenrenderGL" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			
+			<pass class="quad" name="showtonemap">
+				<viewport name="BottomRightViewport" />
+				<material name="tonemap" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
 			
 		</pipeline>

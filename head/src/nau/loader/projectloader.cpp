@@ -2400,7 +2400,7 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 		// Read value or buffer id for dimZ
 		attr = attrs->get(PassCompute::DIM_Y, Enums::UINT);
-		unsigned int *res3 = (unsigned int *)readAttribute("dimY", attr, pElem);
+		unsigned int *res3 = (unsigned int *)readAttribute("dimZ", attr, pElem);
 		if (res3 && pAtZ != NULL) {
 			NAU_THROW("File %s\nPass %s\ndimZ and bufferZ are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
@@ -2419,7 +2419,7 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 
 		p->setMaterialName (pLibName, pMatName);
-		unsigned int r1=0, r2=0, r3=0;
+		unsigned int r1=1, r2=1, r3=1;
 		if (res)
 			r1 = *res;
 		if (res2)

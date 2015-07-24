@@ -25,6 +25,7 @@ RenderTarget::Init() {
 	// UINT
 	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::UINT, false, new unsigned int(0)));
 	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::UINT, false, new unsigned int(0)));
+	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::UINT, false, new unsigned int(1)));
 	// UINT2
 	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::UIVEC2, false, new uivec2(0)));
 	// VEC4

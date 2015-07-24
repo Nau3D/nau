@@ -19,6 +19,7 @@ namespace nau
 
 			UINT_PROP(SAMPLES, 0);
 			UINT_PROP(LAYERS, 1);
+			UINT_PROP(LEVELS, 2);
 
 			UINT2_PROP(SIZE, 0);
 
