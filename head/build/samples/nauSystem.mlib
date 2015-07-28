@@ -2,7 +2,7 @@
 <materiallib name="nau_material_lib">
 
 	<textures>
-		<texture name="__FontCourierNew10" filename="couriernew10.tga" />		
+		<texture name="__FontCourierNew10" filename="couriernew10.tga" mipmap=true />		
 	</textures>
 	
 	<shaders>

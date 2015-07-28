@@ -12,7 +12,7 @@ out vec4 outColor;
 
 void main() {
 	
-	ivec2 imageCoords = ivec2(texPos * vec2(512,512));
+	ivec2 imageCoords = ivec2(texPos * textureSize(tex2,0));
 	vec4 c1 = imageLoad(tex1, imageCoords);
 	vec3 c2 = texture(tex2, texPos).rgb;
 	// c2 *=16;
@@ -24,7 +24,7 @@ void main() {
 	// c2 = (c2 * (6.2 * c2 + 0.5))/(c2*(6.2*c2 + 1.7)+ 0.06);
 	
 	vec4 c3 = vec4(c2,1);
-	vec4 cFinal = (c1 * (frameCount+1) + c3) / (frameCount+2);
+	vec4 cFinal = (c1 * (frameCount-1) + c3) / (frameCount);
 	
 	memoryBarrier();
 	imageStore(tex1, imageCoords, cFinal);

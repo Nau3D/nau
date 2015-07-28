@@ -11,7 +11,8 @@
 		<renderTarget name ="gl">
 			<SIZE width="1024" height="1024" />
 			<colors>
-				<color name="offscreenrenderGL" internalFormat="RGBA"  />
+				<color name="offscreenrenderGL" internalFormat="RGBA32F"  />
+				<color name="offscreenrenderGL2" internalFormat="RGBA"  />
 			</colors>
 		</renderTarget>
 	</renderTargets>

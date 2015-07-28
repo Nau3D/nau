@@ -70,7 +70,7 @@ namespace nau
 			//	unsigned char* data );
 
 			static Texture* Create(std::string label, std::string internalFormat,
-				int width, int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
+				int width, int height, int depth = 1, int layers = 1, int levels = 0, int samples = 0);
 
 			//static Texture* CreateMS(std::string label, std::string internalFormat,
 			//	int width, int height, 

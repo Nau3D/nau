@@ -82,14 +82,15 @@ GlCanvas::~GlCanvas()
 }
 
 void
-GlCanvas::setEngine (nau::Nau* engine)
-{
+GlCanvas::setEngine (nau::Nau* engine) {
+
 	m_pEngine = engine;
 }
 
+
 void 
-GlCanvas::setCamera ()
-{
+GlCanvas::setCamera () {
+
 	m_pCamera = NAU->getActiveCamera();
 	if (m_pCamera) {
 		vec4 v = m_pCamera->getPropf4(Camera::VIEW_VEC);
@@ -98,17 +99,17 @@ GlCanvas::setCamera ()
 	}
 }
 
+
 void
 GlCanvas::_setCamera() {
 
 	m_pCamera = NAU->getActiveCamera();
-	
 }
 
 
 void 
-GlCanvas::OnPaint (wxPaintEvent &event)
-{
+GlCanvas::OnPaint (wxPaintEvent &event) {
+
 	PROFILE("Composer");
 	wxPaintDC dc(this);
 

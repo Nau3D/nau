@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
-<project name="Simple" width="512" height="512">
-	<assets>
+<project name="Simple" >
+	<assets><!-- width="512" height="512" -->
 		<scenes>
 			<scene name="Al" param="UNITIZE">
 				<file name="../../models/al.obj"/>

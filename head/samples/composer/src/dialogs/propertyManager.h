@@ -33,6 +33,7 @@ public:
 	static void createOrderedGrid(wxPropertyGridManager *pg, AttribSet &attribs, std::vector<std::string> &list);
 	static void updateGrid(wxPropertyGridManager *pg, AttribSet &attribs, AttributeValues *attribVal);
 	static void updateProp(wxPropertyGridManager *pg, std::string prop, AttribSet &attribs, AttributeValues *attribVal);
+	static void setAllReadOnly(wxPropertyGridManager *pg, AttribSet &attribs);
 protected:
 
 	static void addAttribute(wxPropertyGridManager *pg, Attribute &a);

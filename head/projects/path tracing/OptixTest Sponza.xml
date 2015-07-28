@@ -16,23 +16,23 @@
 		</scenes>
 		<viewports>
 			<viewport name="TopRightViewport" >
-				<ORIGIN x="0.5" y="0.5" />
+				<ORIGIN x="512" y="512" />
 				<SIZE width="512" height="512" />
 				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="BottomRightViewport" >
-				<ORIGIN x="0.5" y="0.0" />
+				<ORIGIN x="512" y="0.0" />
 				<SIZE width="512" height="512" />
 				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
 			</viewport>
 			<viewport name="TopLeftViewport" >
-				<ORIGIN x="0" y="0.5" />
-				<SIZE width="0.5" height="0.5" />
+				<ORIGIN x="0" y="512" />
+				<SIZE width="512" height="512" />
 				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
 			</viewport>
 			<viewport name="BottomLeftViewport" >
 				<ORIGIN x="0.0" y="0" />
-				<SIZE width="0.5" height="0.5" />
+				<SIZE width="512" height="512" />
 				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
 			</viewport>
 		</viewports>

@@ -466,7 +466,7 @@ luaSaveTexture(lua_State *l) {
 	char s[200];
 	sprintf(s,"%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
 	std::string sname = nau::system::FileUtil::validate(s);
-	TextureLoader::Save(texture,sname);
+	TextureLoader::Save(texture,TextureLoader::PNG);
 
 	return 0;
 }
@@ -1278,9 +1278,9 @@ Nau::writeAssets (std::string fileType, std::string aFilename, std::string scene
 void
 Nau::setWindowSize (float width, float height) {
 
-	m_Viewport->setPropf2(Viewport::SIZE, vec2(width,height));
 	m_WindowWidth = width;
 	m_WindowHeight = height;
+	m_Viewport->setPropf2(Viewport::SIZE, vec2(width,height));
 }
 
 

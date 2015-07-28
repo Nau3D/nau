@@ -15,6 +15,11 @@ namespace nau
 		class TextureLoader
 		{
 		public:
+
+			typedef enum {
+				HDR,
+				PNG
+			} FileType;
 			static TextureLoader* create (void);
 
 			virtual int loadImage (std::string file) = 0;
@@ -32,7 +37,7 @@ namespace nau
 
 			static const int BITMAP_SIZE = 96;
 
-			static void Save(Texture *t, std::string filename);
+			static void Save(Texture *t, FileType ft);
 			static void Save(int width, int height, char *data, std::string filename = "");
 
 			static void SaveRaw(Texture *t, std::string filename);

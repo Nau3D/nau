@@ -295,7 +295,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
 #if wxUSE_STATUSBAR
     // create a status bar with some information about the used wxWidgets version
-   CreateStatusBar(2);
+//   CreateStatusBar(2);
 #endif // wxUSE_STATUSBAR
 
 #ifdef FINAL
@@ -365,9 +365,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	 
 	m_Canvas->setEngine (m_pRoot);
 	m_Canvas->setCamera();
-
-	//SetClientSize (1024, 1024);
-
+  //  this->Show();
+//	SetClientSize(320, 160);
 // Dialogs //
 	DlgLog::SetParent(this);
 	DlgLog::Instance()->updateDlg();
@@ -631,7 +630,7 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 			m_pRoot->clear();
 			DlgLog::Instance()->updateDlg();
 			DlgLog::Instance()->clear();
-			int width, height;
+			int width=0, height=0;
 			std::string ProjectFile ((const char *) path.c_str());
 			m_pRoot->readProjectFile (ProjectFile, &width,&height);
 			if (width)

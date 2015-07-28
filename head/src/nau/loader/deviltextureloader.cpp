@@ -2,12 +2,14 @@
 
 
 #include "nau/slogger.h"
+#include "nau/system/fileutil.h"
 
 
 #include <ctime>
 
 using namespace nau::loader;
 using namespace nau::render;
+using namespace nau::system;
 
 bool DevILTextureLoader::inited = false;
 
@@ -101,7 +103,7 @@ void
 DevILTextureLoader::save(TexImage *ti, std::string filename) {
 
 	void *data = ti->getData();
-
+	char res;
 	int w = ti->getWidth();
 	int h = ti->getHeight();
 	int n = ti->getNumComponents();
@@ -111,9 +113,9 @@ DevILTextureLoader::save(TexImage *ti, std::string filename) {
 	if (n == 1 || n == 3 || n == 4) {
 
 		switch (n) {
-			case 1: ilFormat = IL_LUMINANCE; break;
-			case 3: ilFormat = IL_RGB; break;
-			case 4: ilFormat = IL_RGBA; break;
+		case 1: ilFormat = IL_LUMINANCE; break;
+		case 3: ilFormat = IL_RGB; break;
+		case 4: ilFormat = IL_RGBA; break;
 		}
 
 		ilType = convertType(type);
@@ -124,17 +126,26 @@ DevILTextureLoader::save(TexImage *ti, std::string filename) {
 		}
 
 		ILuint image;
-		ilOriginFunc(IL_ORIGIN_LOWER_LEFT); 
-		ilGenImages(1,&image);
+		ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+		ilGenImages(1, &image);
 		ilBindImage(image);
-		ilTexImage(w,h,1,n,ilFormat,ilType,data);
-		if (ilFormat == IL_LUMINANCE && (ilType == IL_FLOAT || ilType == IL_INT))
-			ilConvertImage(ilFormat, IL_UNSIGNED_SHORT);
-		else
-			ilConvertImage(ilFormat, IL_UNSIGNED_BYTE);
+		ilTexImage(w, h, 1, n, ilFormat, ilType, data);
 		ilEnable(IL_FILE_OVERWRITE);
 
-		char res = ilSave(IL_PNG, (ILstring)filename.c_str());
+		std::string ext = FileUtil::GetExtension(filename);
+		if (ext == "hdr") {
+			ilConvertImage(ilFormat, IL_FLOAT);
+			res = ilSave(IL_HDR, (ILstring)filename.c_str());
+		}
+		else {
+			if (ilFormat == IL_LUMINANCE && (ilType == IL_FLOAT || ilType == IL_INT))
+				ilConvertImage(ilFormat, IL_UNSIGNED_SHORT);
+			else
+				ilConvertImage(ilFormat, IL_UNSIGNED_BYTE);
+			res = ilSave(IL_PNG, (ILstring)filename.c_str());
+		}
+
+
 		if (res == 0)
 			SLOG("Can't save image %s - format not supported", filename.c_str());
 		ilDeleteImage(image);

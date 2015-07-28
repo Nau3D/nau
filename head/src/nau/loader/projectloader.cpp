@@ -603,13 +603,13 @@ ProjectLoader::load (std::string file, int *width, int *height)
 	hRoot = TiXmlHandle (pElem);
 
 	try {
-		*width = 0;
-		*height = 0;
+		*width = 512;
+		*height = 512;
 		if (TIXML_SUCCESS == pElem->QueryIntAttribute("width",width) &&
 			TIXML_SUCCESS == pElem->QueryIntAttribute("height",height)) {
 				if (*width <= 0 || *height <= 0) {
-					*width = 0;
-					*height = 0;
+					*width = 512;
+					*height = 512;
 				}
 				NAU->setWindowSize(*width, *height);
 		}

@@ -106,7 +106,10 @@ Viewport::getPropf(FloatProperty prop) {
 	switch(prop) {
 	
 		case RATIO:
-			return (m_Float2Props[ABSOLUT_SIZE].x / m_Float2Props[ABSOLUT_SIZE].y);
+			if (m_Float2Props[ABSOLUT_SIZE].y != 0)
+				return (m_Float2Props[ABSOLUT_SIZE].x / m_Float2Props[ABSOLUT_SIZE].y);
+			else
+				return 0;
 		default:
 			return AttributeValues::getPropf(prop);
 	}

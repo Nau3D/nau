@@ -39,7 +39,7 @@ GLTexture::InitGL() {
 	TexDataType[GL_UNSIGNED_INT    ] = TexDataTypes("UNSIGNED_INT"   , 32);
 	TexDataType[GL_INT             ] = TexDataTypes("INT"            , 32);
 	TexDataType[GL_FLOAT           ] = TexDataTypes("FLOAT"          , 32);
-	TexDataType[GL_UNSIGNED_INT_8_8_8_8_REV       ] = TexDataTypes("UNSIGNED_INT_8_8_8_8_REV"       , 32);
+	TexDataType[GL_UNSIGNED_INT_8_8_8_8_REV       ] = TexDataTypes("UNSIGNED_INT_8_8_8_8_REV"       , 8);
 	TexDataType[GL_UNSIGNED_INT_24_8              ] = TexDataTypes("UNSIGNED_INT_24_8"              , 32);
 	TexDataType[GL_FLOAT_32_UNSIGNED_INT_24_8_REV ] = TexDataTypes("FLOAT_32_UNSIGNED_INT_24_8_REV" , 32);
 
@@ -182,7 +182,7 @@ GLTexture::GLTexture(std::string label, std::string anInternalFormat, int width,
 	m_IntProps[LAYERS] = layers;
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
 	//TexIntFormat[m_EnumProps[INTERNAL_FORMAT]].type;
-	if (m_IntProps[LEVELS] > 1)
+	if (m_IntProps[LEVELS] > 0)
 		m_BoolProps[MIPMAP] = true;
 
 	build();
@@ -239,17 +239,16 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 
 		glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
 		glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
-
 		glTexImage2D(m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
-			m_EnumProps[FORMAT], m_EnumProps[TYPE], data);
+					m_EnumProps[FORMAT], m_EnumProps[TYPE], data);
 
 		m_BoolProps[MIPMAP] = mipmap;
-		//#ifndef NAU_OPTIX
-		if (mipmap)
-			glGenerateMipmap(GL_TEXTURE_2D);
-		//#else
-		//		m_BoolProps[MIPMAP] = false;
-		//#endif
+		if (m_BoolProps[MIPMAP]) {
+			generateMipmaps();
+		}
+		else {
+			glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, 0);
+		}
 		glBindTexture (m_EnumProps[DIMENSION], 0);
 	}
 
@@ -263,18 +262,14 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 void 
 GLTexture::build(int immutable) {
 
-	int levels = 1, max;
+	int max;
 	if (m_BoolProps[MIPMAP]) {
 		max = std::max(m_IntProps[HEIGHT], std::max(m_IntProps[WIDTH], m_IntProps[DEPTH]));
-		while (max != 1) {
-			max /= 2;
-			levels++;
-		}
-		m_IntProps[LEVELS] = levels;
+		m_IntProps[LEVELS] = log2(max);
 	}
 
 	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
-
+	
 	// 2D Texture
 	if (m_IntProps[HEIGHT] > 1 && m_IntProps[DEPTH] == 1) {
 
@@ -406,10 +401,13 @@ GLTexture::build(int immutable) {
 
 //	m_BoolProps[MIPMAP] = false;
 
-	if (!immutable && m_BoolProps[MIPMAP])
+	if (!immutable && m_BoolProps[MIPMAP]) {
 		glGenerateMipmap(m_EnumProps[DIMENSION]);
+		glTexParameteriv(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, &m_IntProps[LEVELS]);
+	}
 	else {
-		glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, 0);
+		glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, m_IntProps[LEVELS]);
+		//m_IntProps[LEVELS] = 0;
 	}
 	glBindTexture(m_EnumProps[DIMENSION], 0);
 }
@@ -449,10 +447,18 @@ GLTexture::resize(unsigned int x, unsigned int y, unsigned int z) {
 					m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 		break;
 	}
-	if (m_BoolProps[MIPMAP])
-			glGenerateMipmap(m_EnumProps[DIMENSION]);
-	else
-		glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, 0);
+	//if (m_BoolProps[MIPMAP])
+	//		glGenerateMipmap(m_EnumProps[DIMENSION]);
+	//else
+	//	glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, 0);
+	if (m_BoolProps[MIPMAP]) {
+		glGenerateMipmap(m_EnumProps[DIMENSION]);
+		glTexParameteriv(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, &m_IntProps[LEVELS]);
+	}
+	else {
+		glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, m_IntProps[LEVELS]);
+		//m_IntProps[LEVELS] = 0;
+	}
 
 	glBindTexture(m_EnumProps[DIMENSION], 0);
 }
@@ -513,4 +519,5 @@ GLTexture::generateMipmaps() {
 	m_IntProps[LEVELS] = (int)log2(maxi);
 	glTexParameteri(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, m_IntProps[LEVELS]);
 	glGenerateMipmap(m_EnumProps[DIMENSION]);
+	glGetTexParameteriv(m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, &m_IntProps[LEVELS]);
 }

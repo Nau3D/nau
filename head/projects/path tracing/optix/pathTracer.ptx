@@ -15,8 +15,6 @@
 .global .align 4 .f32 fov;
 .global .align 16 .b8 diffuse[16];
 .global .align 4 .u32 texCount;
-.global .align 4 .f32 exposure;
-.global .align 4 .f32 ambient;
 .global .align 16 .b8 lightDir[16];
 .global .align 16 .b8 lightPos[16];
 .global .align 4 .u32 frameCount;
@@ -68,8 +66,6 @@
 .global .align 4 .b8 _ZN21rti_internal_typeinfo3fovE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo7diffuseE[8] = {82, 97, 121, 0, 16, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo8texCountE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
-.global .align 4 .b8 _ZN21rti_internal_typeinfo8exposureE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
-.global .align 4 .b8 _ZN21rti_internal_typeinfo7ambientE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo8lightDirE[8] = {82, 97, 121, 0, 16, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo8lightPosE[8] = {82, 97, 121, 0, 16, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo10frameCountE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
@@ -91,8 +87,6 @@
 .global .align 1 .b8 _ZN21rti_internal_typename3fovE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename7diffuseE[7] = {102, 108, 111, 97, 116, 52, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename8texCountE[4] = {105, 110, 116, 0};
-.global .align 1 .b8 _ZN21rti_internal_typename8exposureE[6] = {102, 108, 111, 97, 116, 0};
-.global .align 1 .b8 _ZN21rti_internal_typename7ambientE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename8lightDirE[7] = {102, 108, 111, 97, 116, 52, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename8lightPosE[7] = {102, 108, 111, 97, 116, 52, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename10frameCountE[5] = {117, 105, 110, 116, 0};
@@ -114,8 +108,6 @@
 .global .align 4 .u32 _ZN21rti_internal_typeenum3fovE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum7diffuseE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum8texCountE = 4919;
-.global .align 4 .u32 _ZN21rti_internal_typeenum8exposureE = 4919;
-.global .align 4 .u32 _ZN21rti_internal_typeenum7ambientE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum8lightDirE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum8lightPosE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum10frameCountE = 4919;
@@ -137,8 +129,6 @@
 .global .align 1 .b8 _ZN21rti_internal_semantic3fovE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic7diffuseE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic8texCountE[1];
-.global .align 1 .b8 _ZN21rti_internal_semantic8exposureE[1];
-.global .align 1 .b8 _ZN21rti_internal_semantic7ambientE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic8lightDirE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic8lightPosE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic10frameCountE[1];
@@ -160,8 +150,6 @@
 .global .align 1 .b8 _ZN23rti_internal_annotation3fovE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation7diffuseE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation8texCountE[1];
-.global .align 1 .b8 _ZN23rti_internal_annotation8exposureE[1];
-.global .align 1 .b8 _ZN23rti_internal_annotation7ambientE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation8lightDirE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation8lightPosE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation10frameCountE[1];
@@ -982,7 +970,7 @@ BB5_5:
 	.reg .b32 	%SP;
 	.reg .b32 	%SPL;
 	.reg .s32 	%r<305>;
-	.reg .f32 	%f<257>;
+	.reg .f32 	%f<261>;
 
 
 	mov.u32 	%SPL, __local_depot7;
@@ -1498,15 +1486,19 @@ BB5_5:
 	call _rt_trace, (%r20, %f213, %f214, %f27, %f28, %f29, %f30, %r21, %f31, %f32, %r22, %r23);
 	// inline asm
 	ld.local.v4.f32 	{%f245, %f246, %f247, %f248}, [%r32];
+	add.ftz.f32 	%f250, %f198, %f245;
+	add.ftz.f32 	%f252, %f200, %f246;
+	add.ftz.f32 	%f254, %f202, %f247;
+	add.ftz.f32 	%f256, %f204, %f248;
 	ld.global.v2.u32 	{%r303, %r304}, [launch_index];
 	// inline asm
 	call (%r24), _rt_buffer_get, (%r25, %r26, %r27, %r303, %r304, %r31, %r31);
 	// inline asm
-	add.ftz.f32 	%f250, %f204, %f248;
-	add.ftz.f32 	%f252, %f202, %f247;
-	add.ftz.f32 	%f254, %f200, %f246;
-	add.ftz.f32 	%f256, %f198, %f245;
-	st.v4.f32 	[%r24], {%f256, %f254, %f252, %f250};
+	mul.ftz.f32 	%f257, %f256, 0f3E800000;
+	mul.ftz.f32 	%f258, %f254, 0f3E800000;
+	mul.ftz.f32 	%f259, %f252, 0f3E800000;
+	mul.ftz.f32 	%f260, %f250, 0f3E800000;
+	st.v4.f32 	[%r24], {%f260, %f259, %f258, %f257};
 	ret;
 }
 
@@ -2550,7 +2542,7 @@ BB15_18:
 	.reg .f32 	%f<2>;
 
 
-	ldu.global.f32 	%f1, [ambient];
+	mov.f32 	%f1, 0f00000000;
 	st.global.v4.f32 	[prdr], {%f1, %f1, %f1, %f1};
 	ret;
 }

@@ -37,7 +37,7 @@ public:
 	void updateDlg();
 	static DlgTextureLib* Instance ();
 	static void SetParent(wxWindow *parent);
-	static wxWindow *parent;
+	static wxWindow *Parent;
 
 	void updateTexInfo(int pos);
 	std::string &getName () {return m_Name;}; 
@@ -50,18 +50,18 @@ protected:
 	DlgTextureLib();
 	DlgTextureLib(const DlgTextureLib&);
 	DlgTextureLib& operator= (const DlgTextureLib&);
-	static DlgTextureLib *inst;
+	static DlgTextureLib *Inst;
 	std::string m_Name;
 
 	/* GLOBAL STUFF */
 //	CProject *m_project;
-	int m_activeTexture;
+	int m_ActiveTexture;
 
 	/* TEXTURES */
-	wxButton *bAddTex, *bSaveRaw, *bSavePNG;
-	wxGrid *gridTextures;
-	wxPropertyGridManager *pgTextureProps;
-	std::vector<ImageGridCellRenderer*> imagesGrid;
+	wxButton *m_BAddTex, *m_BSaveRaw, *m_BSavePNG, *m_BSaveHDR;
+	wxGrid *m_GridTextures;
+	wxPropertyGridManager *m_PGTextureProps;
+	std::vector<ImageGridCellRenderer*> m_ImagesGrid;
 
 	void setupTexturesPanel(wxSizer *siz, wxWindow *parent);
 	void updateTextures(int index);
@@ -73,6 +73,7 @@ protected:
 	void OnAddTex(wxCommandEvent& event);
 	void OnSaveRaw(wxCommandEvent& event);
 	void OnSavePNG(wxCommandEvent& event);
+	void OnSaveHDR(wxCommandEvent& event);
 
 	enum {
 		/* TEXTURES */
@@ -81,6 +82,7 @@ protected:
 		DLG_MI_BUTTON_ADD_TEX,
 		DLG_MI_BUTTON_SAVE_RAW,
 		DLG_MI_BUTTON_SAVE_PNG,
+		DLG_MI_BUTTON_SAVE_HDR,
 		PGTEXTURES,
 
 	};

@@ -51,6 +51,20 @@ PropertyManager::createOrderedGrid(wxPropertyGridManager *pg, nau::AttribSet &at
 }
 
 
+void
+PropertyManager::setAllReadOnly(wxPropertyGridManager *pg, nau::AttribSet &attribs) {
+
+	std::map<std::string, nau::Attribute> attributes;
+	attributes = attribs.getAttributes();
+	wxPGProperty *pid;
+	for (auto attrib:attributes) {
+		pid = pg->GetProperty(attrib.first);
+		pg->DisableProperty(pid);
+	}
+	pg->Refresh();
+}
+
+
 bool
 PropertyManager::inList(std::string attr, std::vector<std::string> &list) {
 
@@ -81,7 +95,6 @@ PropertyManager::addAttribute(wxPropertyGridManager *pg, Attribute &a) {
 	default: assert(false && "Missing datatype in property manager");
 
 	}
-
 }
 
 

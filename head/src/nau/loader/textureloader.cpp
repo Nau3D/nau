@@ -14,7 +14,7 @@ TextureLoader::create (void)
 
 
 void
-TextureLoader::Save(Texture *t, std::string file) {
+TextureLoader::Save(Texture *t, FileType ft) {
 
 	if (t == NULL)
 		return;
@@ -24,7 +24,11 @@ TextureLoader::Save(Texture *t, std::string file) {
 	nau::loader::TextureLoader *loader = nau::loader::TextureLoader::create();
 
 	char s[200];
-	sprintf(s,"%s.%d.png", t->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+	if (ft == PNG)
+		sprintf(s,"%s.%d.png", t->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+	else 
+		sprintf(s,"%s.%d.hdr", t->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+
 	std::string sname = nau::system::FileUtil::validate(s);
 	loader->save(ti,sname);
 	delete loader;

@@ -1,9 +1,6 @@
 <?xml version="1.0" ?>
 <project name="Render Target Test" width=1024 height=1024>
 	<assets>
-		<attributes>
-			<attribute context="PASS" name="EXPOSURE" type="FLOAT" value = "1.5" />
-		</attributes>
 		<scenes>
 			<scene name="MainScene">
 				<!--file>..\ntg-bench\bench.obj</file-->
@@ -76,7 +73,6 @@
 			
 			<pass class="optix" name="Path Trace">
 				<mode value="SKIP_FIRST_FRAME" />
-				<EXPOSURE value = 1.5 />
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
@@ -132,7 +128,6 @@
 					<valueof optixVar="lightDir" type="CURRENT" context="LIGHT" id=0 component="DIRECTION" />
 					<valueof optixVar="lightPos" type="CURRENT" context="LIGHT" id=0 component="POSITION" />
 					<valueof optixVar="frameCount" type="CURRENT" context="RENDERER" component="FRAME_COUNT" />
-					<valueof optixVar="exposure" type="CURRENT" context="PASS" component="EXPOSURE" />
 				</optixGlobalAttributes>
 				<!--optixInput>
 					<buffer var="pos_buffer" texture="Deferred Render Targets::pos" />
@@ -141,6 +136,7 @@
 			</pass>
 			<pass class="quad" name="pass2">
 				<mode value="SKIP_FIRST_FRAME" />
+				<color clear = "false" enable="false" />
 				<viewport name="MainViewport" />
 				<material name="combine" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>

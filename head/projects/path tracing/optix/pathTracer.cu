@@ -21,9 +21,6 @@ rtDeclareVariable(float,         fov, , );
 rtDeclareVariable(float4, diffuse, , );
 rtDeclareVariable(int, texCount, , );
 
-// Pass
-rtDeclareVariable(float, exposure, , );
-rtDeclareVariable(float, ambient, , );
 
 // Light
 rtDeclareVariable(float4, lightDir, , );
@@ -114,7 +111,7 @@ RT_PROGRAM void pinhole_camera_ms()
 	//color = 1-expf(-color * exposure/ samples);
 	// color = color*8;
 	// color = color /(color + 1);
-	output0[launch_index] = color;//make_float4(powf(color.x,1/2.2), powf(color.y,1/2.2), powf(color.z, 1/2.2), 1);
+	output0[launch_index] = color/samples;//make_float4(powf(color.x,1/2.2), powf(color.y,1/2.2), powf(color.z, 1/2.2), 1);
 	//output0[launch_index] = make_float4(rnd(seed), rnd(seed), rnd(seed), rnd(seed));
 }
 
@@ -304,7 +301,7 @@ RT_PROGRAM void exception(void)
 
 RT_PROGRAM void miss(void)
 {
-	prdr.result = make_float4(ambient);
+	prdr.result = make_float4(0.0, 0.0, 0.0, 0.0);
 }
 
 RT_PROGRAM void geometryintersection(int primIdx)

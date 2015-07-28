@@ -19,8 +19,8 @@ Texture::Init() {
 	Attribs.add(Attribute(WIDTH, "WIDTH", Enums::DataType::INT, false, new int (1)));
 	Attribs.add(Attribute(HEIGHT, "HEIGHT", Enums::DataType::INT, false, new int(1)));
 	Attribs.add(Attribute(DEPTH, "DEPTH", Enums::DataType::INT, false, new int(1)));
-	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::INT, false, new int(1)));
-	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::INT, false, new int(1)));
+	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::INT, false, new int(0)));
+	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::INT, false, new int(0)));
 	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::INT, false, new int(1)));
 	Attribs.add(Attribute(COMPONENT_COUNT, "COMPONENT_COUNT", Enums::DataType::INT, true, new int(0)));
 	Attribs.add(Attribute(ELEMENT_SIZE, "ELEMENT_SIZE", Enums::DataType::INT, true, new int(0)));

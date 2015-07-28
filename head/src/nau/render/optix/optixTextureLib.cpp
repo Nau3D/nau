@@ -89,7 +89,6 @@ OptixTextureLib::addTexture(unsigned int glID) {
  // glBindTexture( GL_TEXTURE_2D, 0 );
 	//if (m_TextureLib.count(glID))
 	//	return;
-
 	m_TextureLib[glID] = m_Context->createTextureSamplerFromGLImage(glID, RT_TARGET_GL_TEXTURE_2D);
 
 	m_TextureLib[glID]->setWrapMode( 0, RT_WRAP_REPEAT );
@@ -98,6 +97,9 @@ OptixTextureLib::addTexture(unsigned int glID) {
 	m_TextureLib[glID]->setFilteringModes( RT_FILTER_NEAREST, 
 										RT_FILTER_NEAREST, 
 										RT_FILTER_NONE );
+	//m_TextureLib[glID]->setFilteringModes( RT_FILTER_NEAREST, 
+	//									RT_FILTER_NEAREST, 
+	//									RT_FILTER_LINEAR );	
 	m_TextureLib[glID]->setIndexingMode(RT_TEXTURE_INDEX_NORMALIZED_COORDINATES);
 	m_TextureLib[glID]->setReadMode(RT_TEXTURE_READ_NORMALIZED_FLOAT);
 	m_TextureLib[glID]->setMaxAnisotropy(1.0f);

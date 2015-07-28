@@ -68,7 +68,7 @@ GLRenderTarget::init() {
 	m_Depth = 1;
 	std::string s = m_Name + "_depth";
 	m_DepthTexture = RESOURCEMANAGER->createTexture(s, "DEPTH_COMPONENT32F", m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-		m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
+		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
 
 	bind();
 	attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
@@ -171,7 +171,7 @@ GLRenderTarget::addDepthTarget (std::string name, std::string internalFormat) {
 
 	m_DepthTexture = RESOURCEMANAGER->createTexture
 		(name, internalFormat, m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-		m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
+		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
 
 	bind();
 	attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
@@ -194,7 +194,7 @@ GLRenderTarget::addStencilTarget (std::string name) {
 
 	m_StencilTexture = RESOURCEMANAGER->createTexture
 		(name, "STENCIL_INDEX8", m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-		m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
+		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
 
 	bind();
 	attachDepthStencilTexture(m_StencilTexture, GL_STENCIL_ATTACHMENT);
@@ -218,7 +218,7 @@ GLRenderTarget::addDepthStencilTarget (std::string name) {
 
 	m_DepthTexture = RESOURCEMANAGER->createTexture
 		(name, "DEPTH24_STENCIL8", m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-		m_UIntProps[LAYERS], 1, m_UIntProps[SAMPLES]);
+		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
 
 	bind();
 	dettachDepthStencilTexture(GL_DEPTH_ATTACHMENT);
