@@ -1,5 +1,5 @@
 //#pragma warning( disable: 4290)
-#include "nau/loader/ogremeshloader.h"
+#include "nau/loader/ogreMeshLoader.h"
 
 
 #include "nau/config.h"

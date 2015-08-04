@@ -369,7 +369,10 @@
     <ClCompile Include="..\src\nau\loader\assimpLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\cboLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\devilTextureLoader.cpp" />
-    <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp" />
+    <ClCompile Include="..\src\nau\loader\fontXmlLoader.cpp" />
+    <ClCompile Include="..\src\nau\loader\ogreMeshLoader.cpp" />
+    <ClCompile Include="..\src\nau\loader\projectLoader.cpp" />
+    <ClCompile Include="..\src\nau\loader\projectLoaderDebugLinker.cpp" />
     <ClCompile Include="..\src\nau\material\imaterialbuffer.cpp" />
     <ClCompile Include="..\src\nau\material\materialTexture.cpp" />
     <ClCompile Include="..\src\nau\nau.cpp">
@@ -382,7 +385,6 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\enums.cpp" />
     <ClCompile Include="..\src\nau\geometry\square.cpp" />
-    <ClCompile Include="..\src\nau\loader\fontxmlloader.cpp" />
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp" />
     <ClCompile Include="..\src\nau\material\textureSampler.cpp" />
     <ClCompile Include="..\src\nau\render\iBuffer.cpp" />
@@ -467,8 +469,6 @@
     <ClCompile Include="..\src\nau\geometry\quad.cpp" />
     <ClCompile Include="..\src\nau\geometry\sphere.cpp" />
     <ClCompile Include="..\src\nau\loader\objLoader.cpp" />
-    <ClCompile Include="..\src\nau\loader\ogremeshloader.cpp" />
-    <ClCompile Include="..\src\nau\loader\projectloader.cpp" />
     <ClCompile Include="..\src\nau\loader\iTextureLoader.cpp" />
     <ClCompile Include="..\src\nau\material\colormaterial.cpp" />
     <ClCompile Include="..\src\nau\material\material.cpp" />
@@ -591,9 +591,11 @@
     <ClInclude Include="..\src\nau\loader\assimpLoader.h" />
     <ClInclude Include="..\src\nau\loader\cboLoader.h" />
     <ClInclude Include="..\src\nau\loader\devilTextureLoader.h" />
-    <ClInclude Include="..\src\nau\loader\fontxmlloader.h" />
+    <ClInclude Include="..\src\nau\loader\fontXmlLoader.h" />
+    <ClInclude Include="..\src\nau\loader\ogreMeshLoader.h" />
     <ClInclude Include="..\src\nau\loader\patchLoader.h" />
-    <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h" />
+    <ClInclude Include="..\src\nau\loader\projectLoader.h" />
+    <ClInclude Include="..\src\nau\loader\projectLoaderDebugLinker.h" />
     <ClInclude Include="..\src\nau\material\imaterialbuffer.h" />
     <ClInclude Include="..\src\nau\material\materialTexture.h" />
     <ClInclude Include="..\src\nau\material\textureSampler.h" />
@@ -685,8 +687,6 @@
     <ClInclude Include="..\src\nau\geometry\quad.h" />
     <ClInclude Include="..\src\nau\geometry\sphere.h" />
     <ClInclude Include="..\src\nau\loader\objLoader.h" />
-    <CustomBuildStep Include="..\src\nau\loader\ogremeshloader.h" />
-    <ClInclude Include="..\src\nau\loader\projectloader.h" />
     <ClInclude Include="..\src\nau\loader\iTextureLoader.h" />
     <ClInclude Include="..\src\nau\material\colormaterial.h" />
     <ClInclude Include="..\src\nau\material\material.h" />

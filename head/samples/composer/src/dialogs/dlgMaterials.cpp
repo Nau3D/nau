@@ -2,7 +2,7 @@
 
 #include <nau.h>
 #include <nau/event/eventFactory.h>
-#include <nau/loader/projectloader.h>
+#include <nau/loader/projectLoader.h>
 
 
 BEGIN_EVENT_TABLE(DlgMaterials, wxDialog)

@@ -1,4 +1,4 @@
-#include "nau/loader/fontxmlloader.h"
+#include "nau/loader/fontXmlLoader.h"
 
 #include <tinyxml.h>
 

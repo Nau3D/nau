@@ -1,6 +1,6 @@
 #include <map>
 #include <string>
-#include "nau/loader/projectloaderdebuglinker.h"
+#include "nau/loader/projectLoaderDebugLinker.h"
 #include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
 
 using namespace std;

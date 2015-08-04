@@ -9,7 +9,7 @@
 #include "nau/render/rendermanager.h"
 
 #ifdef GLINTERCEPTDEBUG
-#include "nau/loader/projectloaderdebuglinker.h"
+#include "nau/loader/projectLoaderDebugLinker.h"
 #endif 
 
 #include <GL/glew.h>

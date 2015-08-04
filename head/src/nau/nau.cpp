@@ -8,12 +8,12 @@
 #include "nau/loader/cboLoader.h"
 #include "nau/loader/iTextureLoader.h"
 #include "nau/loader/objLoader.h"
-#include "nau/loader/ogremeshloader.h"
+#include "nau/loader/ogreMeshLoader.h"
 #include "nau/loader/assimpLoader.h"
 #include "nau/loader/patchLoader.h"
-#include "nau/loader/projectloader.h"
+#include "nau/loader/projectLoader.h"
 #ifdef GLINTERCEPTDEBUG
-#include "nau/loader/projectloaderdebuglinker.h"
+#include "nau/loader/projectLoaderDebugLinker.h"
 #endif //GLINTERCEPTDEBUG
 #include "nau/resource/fontmanager.h"
 #include "nau/scene/scenefactory.h"

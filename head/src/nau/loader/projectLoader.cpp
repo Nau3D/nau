@@ -1,4 +1,4 @@
-#include "nau/loader/projectloader.h"
+#include "nau/loader/projectLoader.h"
 
 #include "nau.h"
 
@@ -43,7 +43,7 @@
 #endif
 
 #ifdef GLINTERCEPTDEBUG
-#include "nau/loader/projectloaderdebuglinker.h"
+#include "nau/loader/projectLoaderDebugLinker.h"
 #endif
 
 

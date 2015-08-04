@@ -94,12 +94,6 @@
     <ClCompile Include="..\src\nau\loader\objLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\loader\ogremeshloader.cpp">
-      <Filter>Source Files\loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\loader\projectloader.cpp">
-      <Filter>Source Files\loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\material\colormaterial.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
@@ -355,9 +349,6 @@
     <ClCompile Include="..\src\nau\resource\fontmanager.cpp">
       <Filter>Source Files\resource</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\loader\fontxmlloader.cpp">
-      <Filter>Source Files\loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\scene\octreeByMat.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
@@ -420,9 +411,6 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\scene\octreeunified.cpp">
       <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\loader\projectloaderdebuglinker.cpp">
-      <Filter>Source Files\loader</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\debug\state.cpp">
       <Filter>Source Files\debug</Filter>
@@ -514,6 +502,18 @@
     <ClCompile Include="..\src\nau\loader\devilTextureLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\loader\fontXmlLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\ogreMeshLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\projectLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\projectLoaderDebugLinker.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -556,9 +556,6 @@
       <Filter>Source Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\objLoader.h">
-      <Filter>Source Files\loader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\loader\projectloader.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\material\colormaterial.h">
@@ -840,9 +837,6 @@
     <ClInclude Include="..\src\nau\resource\fontmanager.h">
       <Filter>Source Files\resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\loader\fontxmlloader.h">
-      <Filter>Source Files\loader</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\scene\octreeByMat.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
@@ -917,9 +911,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passoptixprime.h">
       <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\loader\projectloaderdebuglinker.h">
-      <Filter>Source Files\loader</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\debug\state.h">
       <Filter>Source Files\debug</Filter>
@@ -1011,14 +1002,23 @@
     <ClInclude Include="..\src\nau\loader\devilTextureLoader.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\nau\loader\fontXmlLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\ogreMeshLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\projectLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\projectLoaderDebugLinker.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuildStep Include="..\src\nau\loader\ogremeshloader.h">
-      <Filter>Source Files\loader</Filter>
-    </CustomBuildStep>
     <CustomBuildStep Include="..\src\nau\material\teximage.h">
       <Filter>Source Files\material</Filter>
     </CustomBuildStep>

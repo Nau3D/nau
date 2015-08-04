@@ -5,21 +5,21 @@
 #include <string>
 #include <stdio.h>
 
-#include <windows.h>
-#include <DbgHelp.h>
-#pragma comment(lib,"Dbghelp")
-
-#define _CRTDBG_MAP_ALLOC
-#define _CRTDBG_MAP_ALLOC_NEW
-#include <stdlib.h>
-#include <crtdbg.h>
-
-#ifdef _DEBUG
-#ifndef DBG_NEW
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#endif
-#endif  // _DEBUG
+//#include <windows.h>
+//#include <DbgHelp.h>
+//#pragma comment(lib,"Dbghelp")
+//
+//#define _CRTDBG_MAP_ALLOC
+//#define _CRTDBG_MAP_ALLOC_NEW
+//#include <stdlib.h>
+//#include <crtdbg.h>
+//
+//#ifdef _DEBUG
+//#ifndef DBG_NEW
+//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+//#define new DBG_NEW
+//#endif
+//#endif  // _DEBUG
 
 #ifdef GLINTERCEPTDEBUG
 #include "../../../GLIntercept\Src\MainLib\ConfigDataExport.h"
@@ -31,19 +31,6 @@ using namespace nau;
 
 int main(int argc, char **argv) {
 
-	int v = 20;
-	//_CrtDumpMemoryLeaks();	
-	//_CrtMemState s1,s2,s3;
-	//_CrtMemCheckpoint(&s1); 
-	//
-	//char *www = (char *)malloc(10);
-	//_CrtDumpMemoryLeaks();
-	//www = (char *)malloc(13);
-	//NAU->init(true);
-	//Texture *t = Texture::Create("bla");
-	//TextureSampler *ts = TextureSampler::create(t);
-	//nau::render::Texture *t = nau::render::Texture::Create("bla");
-	//nau::material::TextureSampler *ts;
 	std::map<std::string, Attribute> attrs;
 	AttribSet *a;
 	std::vector<std::string> contexts = NAU->getContextList();
@@ -94,8 +81,4 @@ int main(int argc, char **argv) {
 	}
 
 	delete NAU;
-	//_CrtMemCheckpoint(&s2);
-	//if (_CrtMemDifference(&s3, &s1, &s2))
-	//	_CrtMemDumpStatistics(&s3);
-
 }
