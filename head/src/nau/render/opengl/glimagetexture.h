@@ -6,11 +6,13 @@
 #if NAU_OPENGL_VERSION >=  420
 
 #include "nau/render/imageTexture.h"
+#include "nau/render/opengl/glTexture.h"
 
 #include <GL/glew.h>
 #include <string>
 
 using namespace nau::render;
+
 
 
 namespace nau
@@ -30,6 +32,7 @@ namespace nau
 			/// restore the sampler state
 			virtual void restore();
 
+			static std::map<unsigned int, GLTexture::TexIntFormats> TexIntFormat;
 		protected:
 			static bool InitGL();
 			static bool Inited;

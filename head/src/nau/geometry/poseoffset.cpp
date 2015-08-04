@@ -1,4 +1,4 @@
-#include "nau/geometry/poseoffset.h"
+#include "nau/geometry/poseOffset.h"
 
 using namespace nau::geometry;
 

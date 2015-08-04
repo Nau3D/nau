@@ -1,5 +1,5 @@
 
-#include "nau/geometry/meshwithpose.h"
+#include "nau/geometry/meshWithPose.h"
 #include "nau.h"
 #include "nau/slogger.h"
 

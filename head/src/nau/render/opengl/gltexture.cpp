@@ -7,80 +7,148 @@
 
 using namespace nau::render;
 
-std::map<unsigned int, GLTexture::TexDataTypes> GLTexture::TexDataType;
-std::map<unsigned int, GLTexture::TexFormats> GLTexture::TexFormat;
-std::map<unsigned int, GLTexture::TexIntFormats> GLTexture::TexIntFormat;
-std::map<int, int> GLTexture::TextureBound;
+std::map<unsigned int, GLTexture::TexDataTypes> GLTexture::TexDataType = {
+	{ GL_UNSIGNED_BYTE                 , TexDataTypes("UNSIGNED_BYTE"                  ,  8) },
+	{ GL_BYTE                          , TexDataTypes("BYTE"                           ,  8) },
+	{ GL_UNSIGNED_SHORT                , TexDataTypes("UNSIGNED_SHORT"                 , 16) },
+	{ GL_SHORT                         , TexDataTypes("SHORT"                          , 16) },
+	{ GL_UNSIGNED_INT                  , TexDataTypes("UNSIGNED_INT"                   , 32) },
+	{ GL_INT                           , TexDataTypes("INT"                            , 32) },
+	{ GL_FLOAT                         , TexDataTypes("FLOAT"                          , 32) },
+	{ GL_UNSIGNED_INT_8_8_8_8_REV      , TexDataTypes("UNSIGNED_INT_8_8_8_8_REV"       ,  8) },
+	{ GL_UNSIGNED_INT_24_8             , TexDataTypes("UNSIGNED_INT_24_8"              , 32) },
+	{ GL_FLOAT_32_UNSIGNED_INT_24_8_REV, TexDataTypes("FLOAT_32_UNSIGNED_INT_24_8_REV" , 32) },
+};
+
+std::map<unsigned int, GLTexture::TexFormats> GLTexture::TexFormat = {
+	{ GL_RED_INTEGER    , TexFormats("RED", 1) },
+	{ GL_RED            , TexFormats("RED",1) },
+	{ GL_RG             , TexFormats("RG", 2) },
+	{ GL_RGB            , TexFormats("RGB", 3) },
+	{ GL_RGBA           , TexFormats("RGBA",4) },
+	{ GL_DEPTH_COMPONENT, TexFormats("DEPTH_COMPONENT",1) },
+	{ GL_DEPTH_STENCIL  , TexFormats("DEPTH32F_STENCIL8",2) },
+};
+
+// Note: there is a duplicate of this map in GLImageTexture due to static initialization issues
+std::map<unsigned int, GLTexture::TexIntFormats> GLTexture::TexIntFormat = {
+	{ GL_R8                  , TexIntFormats("R8",   GL_RED, GL_UNSIGNED_BYTE) },
+	{ GL_R16                 , TexIntFormats("R16",  GL_RED, GL_UNSIGNED_SHORT) },
+	{ GL_R16F                , TexIntFormats("R16F", GL_RED, GL_FLOAT) },
+	{ GL_R32F                , TexIntFormats("R32F", GL_RED, GL_FLOAT) },
+	{ GL_R8I                 , TexIntFormats("R8I",  GL_RED_INTEGER, GL_BYTE) },
+	{ GL_R16I				 , TexIntFormats("R16I", GL_RED_INTEGER, GL_SHORT) },
+	{ GL_R32I                , TexIntFormats("R32I", GL_RED_INTEGER, GL_INT) },
+	{ GL_R8UI                , TexIntFormats("R8UI", GL_RED_INTEGER, GL_UNSIGNED_BYTE) },
+	{ GL_R16UI               , TexIntFormats("R16UI",GL_RED_INTEGER, GL_UNSIGNED_SHORT) },
+	{ GL_R32UI               , TexIntFormats("R32UI",GL_RED_INTEGER, GL_UNSIGNED_INT) },
+
+	{ GL_RG8                 , TexIntFormats("RG8",   GL_RG, GL_UNSIGNED_BYTE) },
+	{ GL_RG16                , TexIntFormats("RG16",  GL_RG, GL_UNSIGNED_SHORT) },
+	{ GL_RG16F               , TexIntFormats("RG16F", GL_RG, GL_FLOAT) },
+	{ GL_RG32F               , TexIntFormats("RG32F", GL_RG, GL_FLOAT) },
+	{ GL_RG8I                , TexIntFormats("RG8I",  GL_RG_INTEGER, GL_BYTE) },
+	{ GL_RG16I               , TexIntFormats("RG16I", GL_RG_INTEGER, GL_SHORT) },
+	{ GL_RG32I               , TexIntFormats("RG32I", GL_RG_INTEGER, GL_INT) },
+	{ GL_RG8UI               , TexIntFormats("RG8UI", GL_RG_INTEGER, GL_UNSIGNED_BYTE) },
+	{ GL_RG16UI              , TexIntFormats("RG16UI",GL_RG_INTEGER, GL_UNSIGNED_SHORT) },
+	{ GL_RG32UI              , TexIntFormats("RG32UI",GL_RG_INTEGER, GL_UNSIGNED_INT) },
+
+	{ GL_RGBA8               , TexIntFormats("RGBA",   GL_RGBA, GL_UNSIGNED_BYTE) },
+	{ GL_RGBA16              , TexIntFormats("RGBA16",  GL_RGBA, GL_UNSIGNED_SHORT) },
+	{ GL_RGBA16F             , TexIntFormats("RGBA16F", GL_RGBA, GL_FLOAT) },
+	{ GL_RGBA32F             , TexIntFormats("RGBA32F", GL_RGBA, GL_FLOAT) },
+	{ GL_RGBA8I              , TexIntFormats("RGBA8I",  GL_RGBA_INTEGER, GL_BYTE) },
+	{ GL_RGBA16I             , TexIntFormats("RGBA16I", GL_RGBA_INTEGER, GL_SHORT) },
+	{ GL_RGBA32I             , TexIntFormats("RGBA32I", GL_RGBA_INTEGER, GL_INT) },
+	{ GL_RGBA8UI             , TexIntFormats("RGBA8UI", GL_RGBA_INTEGER, GL_UNSIGNED_BYTE) },
+	{ GL_RGBA16UI            , TexIntFormats("RGBA16UI",GL_RGBA_INTEGER, GL_UNSIGNED_SHORT) },
+	{ GL_RGBA32UI            , TexIntFormats("RGBA32UI",GL_RGBA_INTEGER, GL_UNSIGNED_INT) },
+
+	{ GL_DEPTH_COMPONENT16   , TexIntFormats("DEPTH_COMPONENT16", GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT) },
+	{ GL_DEPTH_COMPONENT24   , TexIntFormats("DEPTH_COMPONENT24", GL_DEPTH_COMPONENT, GL_UNSIGNED_INT_24_8) },
+	{ GL_DEPTH_COMPONENT32F  , TexIntFormats("DEPTH_COMPONENT32F",GL_DEPTH_COMPONENT, GL_FLOAT) },
+	{ GL_DEPTH32F_STENCIL8   , TexIntFormats("DEPTH32F_STENCIL8", GL_DEPTH_STENCIL,GL_FLOAT_32_UNSIGNED_INT_24_8_REV) }
+};
+
+std::map<int, int> GLTexture::TextureBound = {
+	{ GL_TEXTURE_2D, GL_TEXTURE_BINDING_2D },
+	{ GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BINDING_2D_ARRAY },
+	{ GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_BINDING_2D_MULTISAMPLE },
+	{ GL_TEXTURE_2D_MULTISAMPLE_ARRAY, GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY },
+	{ GL_TEXTURE_3D, GL_TEXTURE_BINDING_3D },
+	{ GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BINDING_CUBE_MAP }
+};
 bool GLTexture::Inited = GLTexture::InitGL();
 
 
 bool
 GLTexture::InitGL() {
 
-	TextureBound[GL_TEXTURE_2D] = GL_TEXTURE_BINDING_2D;
-	TextureBound[GL_TEXTURE_2D_ARRAY] = GL_TEXTURE_BINDING_2D_ARRAY;
-	TextureBound[GL_TEXTURE_2D_MULTISAMPLE] = GL_TEXTURE_BINDING_2D_MULTISAMPLE;
-	TextureBound[GL_TEXTURE_2D_MULTISAMPLE_ARRAY] = GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY;
-	TextureBound[GL_TEXTURE_3D] = GL_TEXTURE_BINDING_3D;
-	TextureBound[GL_TEXTURE_CUBE_MAP] = GL_TEXTURE_BINDING_CUBE_MAP;
+	//TextureBound[GL_TEXTURE_2D] = GL_TEXTURE_BINDING_2D;
+	//TextureBound[GL_TEXTURE_2D_ARRAY] = GL_TEXTURE_BINDING_2D_ARRAY;
+	//TextureBound[GL_TEXTURE_2D_MULTISAMPLE] = GL_TEXTURE_BINDING_2D_MULTISAMPLE;
+	//TextureBound[GL_TEXTURE_2D_MULTISAMPLE_ARRAY] = GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY;
+	//TextureBound[GL_TEXTURE_3D] = GL_TEXTURE_BINDING_3D;
+	//TextureBound[GL_TEXTURE_CUBE_MAP] = GL_TEXTURE_BINDING_CUBE_MAP;
 
-	TexFormat[GL_RED_INTEGER       ] = TexFormats("RED", 1);
-	TexFormat[GL_RED               ] = TexFormats("RED",1);
-	TexFormat[GL_RG                ] = TexFormats("RG", 2);
-	TexFormat[GL_RGB               ] = TexFormats("RGB", 3);
-	TexFormat[GL_RGBA              ] = TexFormats("RGBA",4);
-	TexFormat[GL_DEPTH_COMPONENT ] = TexFormats("DEPTH_COMPONENT",1);
-	TexFormat[GL_DEPTH_STENCIL ] = TexFormats("DEPTH32F_STENCIL8",2);
+	//TexFormat[GL_RED_INTEGER       ] = TexFormats("RED", 1);
+	//TexFormat[GL_RED               ] = TexFormats("RED",1);
+	//TexFormat[GL_RG                ] = TexFormats("RG", 2);
+	//TexFormat[GL_RGB               ] = TexFormats("RGB", 3);
+	//TexFormat[GL_RGBA              ] = TexFormats("RGBA",4);
+	//TexFormat[GL_DEPTH_COMPONENT ] = TexFormats("DEPTH_COMPONENT",1);
+	//TexFormat[GL_DEPTH_STENCIL ] = TexFormats("DEPTH32F_STENCIL8",2);
 
-	TexDataType[GL_UNSIGNED_BYTE   ] = TexDataTypes("UNSIGNED_BYTE"  ,  8);
-	TexDataType[GL_BYTE            ] = TexDataTypes("BYTE"           ,  8);
-	TexDataType[GL_UNSIGNED_SHORT  ] = TexDataTypes("UNSIGNED_SHORT" , 16);
-	TexDataType[GL_SHORT           ] = TexDataTypes("SHORT"          , 16);
-	TexDataType[GL_UNSIGNED_INT    ] = TexDataTypes("UNSIGNED_INT"   , 32);
-	TexDataType[GL_INT             ] = TexDataTypes("INT"            , 32);
-	TexDataType[GL_FLOAT           ] = TexDataTypes("FLOAT"          , 32);
-	TexDataType[GL_UNSIGNED_INT_8_8_8_8_REV       ] = TexDataTypes("UNSIGNED_INT_8_8_8_8_REV"       , 8);
-	TexDataType[GL_UNSIGNED_INT_24_8              ] = TexDataTypes("UNSIGNED_INT_24_8"              , 32);
-	TexDataType[GL_FLOAT_32_UNSIGNED_INT_24_8_REV ] = TexDataTypes("FLOAT_32_UNSIGNED_INT_24_8_REV" , 32);
+	//TexDataType[GL_UNSIGNED_BYTE   ] = TexDataTypes("UNSIGNED_BYTE"  ,  8);
+	//TexDataType[GL_BYTE            ] = TexDataTypes("BYTE"           ,  8);
+	//TexDataType[GL_UNSIGNED_SHORT  ] = TexDataTypes("UNSIGNED_SHORT" , 16);
+	//TexDataType[GL_SHORT           ] = TexDataTypes("SHORT"          , 16);
+	//TexDataType[GL_UNSIGNED_INT    ] = TexDataTypes("UNSIGNED_INT"   , 32);
+	//TexDataType[GL_INT             ] = TexDataTypes("INT"            , 32);
+	//TexDataType[GL_FLOAT           ] = TexDataTypes("FLOAT"          , 32);
+	//TexDataType[GL_UNSIGNED_INT_8_8_8_8_REV       ] = TexDataTypes("UNSIGNED_INT_8_8_8_8_REV"       , 8);
+	//TexDataType[GL_UNSIGNED_INT_24_8              ] = TexDataTypes("UNSIGNED_INT_24_8"              , 32);
+	//TexDataType[GL_FLOAT_32_UNSIGNED_INT_24_8_REV ] = TexDataTypes("FLOAT_32_UNSIGNED_INT_24_8_REV" , 32);
 
-	TexIntFormat[GL_R8                   ] = TexIntFormats("R8",   GL_RED, GL_UNSIGNED_BYTE);
-	TexIntFormat[GL_R16                  ] = TexIntFormats("R16",  GL_RED, GL_UNSIGNED_SHORT);
-	TexIntFormat[GL_R16F                 ] = TexIntFormats("R16F", GL_RED, GL_FLOAT);
-	TexIntFormat[GL_R32F                 ] = TexIntFormats("R32F", GL_RED, GL_FLOAT);
-	TexIntFormat[GL_R8I                  ] = TexIntFormats("R8I",  GL_RED_INTEGER, GL_BYTE);
-	TexIntFormat[GL_R16I				 ] = TexIntFormats("R16I", GL_RED_INTEGER, GL_SHORT);
-	TexIntFormat[GL_R32I                 ] = TexIntFormats("R32I", GL_RED_INTEGER, GL_INT);
-	TexIntFormat[GL_R8UI                 ] = TexIntFormats("R8UI", GL_RED_INTEGER, GL_UNSIGNED_BYTE);
-	TexIntFormat[GL_R16UI                ] = TexIntFormats("R16UI",GL_RED_INTEGER, GL_UNSIGNED_SHORT);
-	TexIntFormat[GL_R32UI                ] = TexIntFormats("R32UI",GL_RED_INTEGER, GL_UNSIGNED_INT);
-						     						 
-	TexIntFormat[GL_RG8                  ] = TexIntFormats("RG8",   GL_RG, GL_UNSIGNED_BYTE);
-	TexIntFormat[GL_RG16                 ] = TexIntFormats("RG16",  GL_RG, GL_UNSIGNED_SHORT);
-	TexIntFormat[GL_RG16F                ] = TexIntFormats("RG16F", GL_RG, GL_FLOAT);
-	TexIntFormat[GL_RG32F                ] = TexIntFormats("RG32F", GL_RG, GL_FLOAT);
-	TexIntFormat[GL_RG8I                 ] = TexIntFormats("RG8I",  GL_RG_INTEGER, GL_BYTE);
-	TexIntFormat[GL_RG16I                ] = TexIntFormats("RG16I", GL_RG_INTEGER, GL_SHORT);
-	TexIntFormat[GL_RG32I                ] = TexIntFormats("RG32I", GL_RG_INTEGER, GL_INT);
-	TexIntFormat[GL_RG8UI                ] = TexIntFormats("RG8UI", GL_RG_INTEGER, GL_UNSIGNED_BYTE);
-	TexIntFormat[GL_RG16UI               ] = TexIntFormats("RG16UI",GL_RG_INTEGER, GL_UNSIGNED_SHORT);
-	TexIntFormat[GL_RG32UI               ] = TexIntFormats("RG32UI",GL_RG_INTEGER, GL_UNSIGNED_INT);
-													 
-//	TexIntFormat[GL_RGBA                 ] = TexIntFormats("RGBA",    GL_RGBA, GL_UNSIGNED_BYTE);
-	TexIntFormat[GL_RGBA8                ] = TexIntFormats("RGBA",   GL_RGBA, GL_UNSIGNED_BYTE);
-	TexIntFormat[GL_RGBA16               ] = TexIntFormats("RGBA16",  GL_RGBA, GL_UNSIGNED_SHORT);
-	TexIntFormat[GL_RGBA16F              ] = TexIntFormats("RGBA16F", GL_RGBA, GL_FLOAT);
-	TexIntFormat[GL_RGBA32F              ] = TexIntFormats("RGBA32F", GL_RGBA, GL_FLOAT);
-	TexIntFormat[GL_RGBA8I               ] = TexIntFormats("RGBA8I",  GL_RGBA_INTEGER, GL_BYTE);
-	TexIntFormat[GL_RGBA16I              ] = TexIntFormats("RGBA16I", GL_RGBA_INTEGER, GL_SHORT);
-	TexIntFormat[GL_RGBA32I              ] = TexIntFormats("RGBA32I", GL_RGBA_INTEGER, GL_INT);
-	TexIntFormat[GL_RGBA8UI              ] = TexIntFormats("RGBA8UI", GL_RGBA_INTEGER, GL_UNSIGNED_BYTE);
-	TexIntFormat[GL_RGBA16UI             ] = TexIntFormats("RGBA16UI",GL_RGBA_INTEGER, GL_UNSIGNED_SHORT);
-	TexIntFormat[GL_RGBA32UI             ] = TexIntFormats("RGBA32UI",GL_RGBA_INTEGER, GL_UNSIGNED_INT);
-														  
-	TexIntFormat[GL_DEPTH_COMPONENT16    ] = TexIntFormats("DEPTH_COMPONENT16", GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT);
-	TexIntFormat[GL_DEPTH_COMPONENT24    ] = TexIntFormats("DEPTH_COMPONENT24", GL_DEPTH_COMPONENT, GL_UNSIGNED_INT_24_8);
-	TexIntFormat[GL_DEPTH_COMPONENT32F   ] = TexIntFormats("DEPTH_COMPONENT32F",GL_DEPTH_COMPONENT, GL_FLOAT);
-	TexIntFormat[GL_DEPTH32F_STENCIL8    ] = TexIntFormats("DEPTH32F_STENCIL8", GL_DEPTH_STENCIL,GL_FLOAT_32_UNSIGNED_INT_24_8_REV);
+//	TexIntFormat[GL_R8                   ] = TexIntFormats("R8",   GL_RED, GL_UNSIGNED_BYTE);
+//	TexIntFormat[GL_R16                  ] = TexIntFormats("R16",  GL_RED, GL_UNSIGNED_SHORT);
+//	TexIntFormat[GL_R16F                 ] = TexIntFormats("R16F", GL_RED, GL_FLOAT);
+//	TexIntFormat[GL_R32F                 ] = TexIntFormats("R32F", GL_RED, GL_FLOAT);
+//	TexIntFormat[GL_R8I                  ] = TexIntFormats("R8I",  GL_RED_INTEGER, GL_BYTE);
+//	TexIntFormat[GL_R16I				 ] = TexIntFormats("R16I", GL_RED_INTEGER, GL_SHORT);
+//	TexIntFormat[GL_R32I                 ] = TexIntFormats("R32I", GL_RED_INTEGER, GL_INT);
+//	TexIntFormat[GL_R8UI                 ] = TexIntFormats("R8UI", GL_RED_INTEGER, GL_UNSIGNED_BYTE);
+//	TexIntFormat[GL_R16UI                ] = TexIntFormats("R16UI",GL_RED_INTEGER, GL_UNSIGNED_SHORT);
+//	TexIntFormat[GL_R32UI                ] = TexIntFormats("R32UI",GL_RED_INTEGER, GL_UNSIGNED_INT);
+//						     						 
+//	TexIntFormat[GL_RG8                  ] = TexIntFormats("RG8",   GL_RG, GL_UNSIGNED_BYTE);
+//	TexIntFormat[GL_RG16                 ] = TexIntFormats("RG16",  GL_RG, GL_UNSIGNED_SHORT);
+//	TexIntFormat[GL_RG16F                ] = TexIntFormats("RG16F", GL_RG, GL_FLOAT);
+//	TexIntFormat[GL_RG32F                ] = TexIntFormats("RG32F", GL_RG, GL_FLOAT);
+//	TexIntFormat[GL_RG8I                 ] = TexIntFormats("RG8I",  GL_RG_INTEGER, GL_BYTE);
+//	TexIntFormat[GL_RG16I                ] = TexIntFormats("RG16I", GL_RG_INTEGER, GL_SHORT);
+//	TexIntFormat[GL_RG32I                ] = TexIntFormats("RG32I", GL_RG_INTEGER, GL_INT);
+//	TexIntFormat[GL_RG8UI                ] = TexIntFormats("RG8UI", GL_RG_INTEGER, GL_UNSIGNED_BYTE);
+//	TexIntFormat[GL_RG16UI               ] = TexIntFormats("RG16UI",GL_RG_INTEGER, GL_UNSIGNED_SHORT);
+//	TexIntFormat[GL_RG32UI               ] = TexIntFormats("RG32UI",GL_RG_INTEGER, GL_UNSIGNED_INT);
+//													 
+////	TexIntFormat[GL_RGBA                 ] = TexIntFormats("RGBA",    GL_RGBA, GL_UNSIGNED_BYTE);
+//	TexIntFormat[GL_RGBA8                ] = TexIntFormats("RGBA",   GL_RGBA, GL_UNSIGNED_BYTE);
+//	TexIntFormat[GL_RGBA16               ] = TexIntFormats("RGBA16",  GL_RGBA, GL_UNSIGNED_SHORT);
+//	TexIntFormat[GL_RGBA16F              ] = TexIntFormats("RGBA16F", GL_RGBA, GL_FLOAT);
+//	TexIntFormat[GL_RGBA32F              ] = TexIntFormats("RGBA32F", GL_RGBA, GL_FLOAT);
+//	TexIntFormat[GL_RGBA8I               ] = TexIntFormats("RGBA8I",  GL_RGBA_INTEGER, GL_BYTE);
+//	TexIntFormat[GL_RGBA16I              ] = TexIntFormats("RGBA16I", GL_RGBA_INTEGER, GL_SHORT);
+//	TexIntFormat[GL_RGBA32I              ] = TexIntFormats("RGBA32I", GL_RGBA_INTEGER, GL_INT);
+//	TexIntFormat[GL_RGBA8UI              ] = TexIntFormats("RGBA8UI", GL_RGBA_INTEGER, GL_UNSIGNED_BYTE);
+//	TexIntFormat[GL_RGBA16UI             ] = TexIntFormats("RGBA16UI",GL_RGBA_INTEGER, GL_UNSIGNED_SHORT);
+//	TexIntFormat[GL_RGBA32UI             ] = TexIntFormats("RGBA32UI",GL_RGBA_INTEGER, GL_UNSIGNED_INT);
+//														  
+//	TexIntFormat[GL_DEPTH_COMPONENT16    ] = TexIntFormats("DEPTH_COMPONENT16", GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT);
+//	TexIntFormat[GL_DEPTH_COMPONENT24    ] = TexIntFormats("DEPTH_COMPONENT24", GL_DEPTH_COMPONENT, GL_UNSIGNED_INT_24_8);
+//	TexIntFormat[GL_DEPTH_COMPONENT32F   ] = TexIntFormats("DEPTH_COMPONENT32F",GL_DEPTH_COMPONENT, GL_FLOAT);
+//	TexIntFormat[GL_DEPTH32F_STENCIL8    ] = TexIntFormats("DEPTH32F_STENCIL8", GL_DEPTH_STENCIL,GL_FLOAT_32_UNSIGNED_INT_24_8_REV);
 
 	for (auto f:TexIntFormat) {
 	

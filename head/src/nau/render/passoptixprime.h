@@ -5,7 +5,7 @@
 #ifndef PASSOPTIXPRIME_H
 #define PASSOPTIXPRIME_H
 
-#include "nau/render/ibuffer.h"
+#include "nau/render/iBuffer.h"
 #include "nau/render/pass.h"
 
 #include <GL/glew.h>

@@ -8,7 +8,7 @@
 		</renderTarget>
 		
 		<renderTarget name="simple">
-			<SIZE width=512 height=512 />
+			<SIZE width=1024 height=512 />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>

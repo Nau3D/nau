@@ -13,7 +13,7 @@
 #include "nau/geometry/primitive.h"
 #include "nau/material/programvalue.h"
 
-#include "nau/render/ibuffer.h"
+#include "nau/render/iBuffer.h"
 #include "nau/render/passCompute.h"
 #include "nau/render/passfactory.h"
 #include "nau/render/passProcessTexture.h"
@@ -86,7 +86,7 @@ ProjectLoader::readFile(TiXmlElement *p, std::string tag, std::string item) {
 		NAU_THROW("File %s\n%s\nTag %s is required", ProjectLoader::s_File.c_str(), item.c_str(), tag.c_str());
 	}
 	std::string aux = FileUtil::GetFullPath(FileUtil::GetPath(ProjectLoader::s_File), file);
-	if (!FileUtil::exists(aux)) {
+	if (!FileUtil::Exists(aux)) {
 		NAU_THROW("File %s\n%s\nFile not found: %s", ProjectLoader::s_File.c_str(), item.c_str(), aux.c_str());
 	}
 	return aux;
@@ -818,7 +818,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 		// the filename should point to a scene
 		if (0 != pFilename) {
 
-			if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFilename)))
+			if (!FileUtil::Exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFilename)))
 				NAU_THROW("File %s\nScene %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFilename);
 
 			try {
@@ -951,7 +951,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (!pFileName)
 					NAU_THROW("File %s\nScene: %s\nFile is not specified", ProjectLoader::s_File.c_str(), pName);
 
-				if (!FileUtil::exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName))) {
+				if (!FileUtil::Exists(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName))) {
 					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFileName);
 				}
 				nau::Nau::getInstance()->loadAsset(FileUtil::GetFullPath(ProjectLoader::s_Path, pFileName), pName, s);
@@ -3709,7 +3709,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 #if (NAU_OPENGL_VERSION >= 430)
 			IProgram *aShader = RESOURCEMANAGER->getProgram (s_pFullName);		
 			std::string CSFileName(FileUtil::GetFullPath(path, pCSFile));
-			if (!FileUtil::exists(CSFileName))
+			if (!FileUtil::Exists(CSFileName))
 				NAU_THROW("Shader file %s in MatLib %s does not exist", pCSFile, aLib->getName().c_str());
 			SLOG("Program %s", pProgramName);
 
@@ -3726,13 +3726,13 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			std::string TEFileName, TCFileName;
 
 			std::string VSFileName(FileUtil::GetFullPath(path,pVSFile));
-			if (!FileUtil::exists(VSFileName))
+			if (!FileUtil::Exists(VSFileName))
 				NAU_THROW("Shader file %s in MatLib %s does not exist", pVSFile, aLib->getName().c_str());
 
 			if (pGSFile) {
 #if NAU_OPENGL_VERSION >= 320
 				GSFileName = FileUtil::GetFullPath(path,pGSFile);
-				if (!FileUtil::exists(GSFileName))
+				if (!FileUtil::Exists(GSFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", pGSFile, aLib->getName().c_str());
 #else
 				NAU_THROW("Mat Lib %s: Shader %s: Geometry Shader shader is not allowed with OpenGL < 3.2",aLib->getName().c_str(), pProgramName);
@@ -3740,13 +3740,13 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			}
 			if (pPSFile) {
 				FSFileName = FileUtil::GetFullPath(path,pPSFile);
-				if (!FileUtil::exists(FSFileName))
+				if (!FileUtil::Exists(FSFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", FSFileName.c_str(), aLib->getName().c_str());
 			}
 			if (pTEFile) {
 #if NAU_OPENGL_VERSION >= 400
 				TEFileName = FileUtil::GetFullPath(path,pTEFile);
-				if (!FileUtil::exists(TEFileName))
+				if (!FileUtil::Exists(TEFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", TEFileName.c_str(), aLib->getName().c_str());
 #else
 				NAU_THROW("Mat Lib %s: Shader %s: Tesselation shaders are not allowed with OpenGL < 4.0",aLib->getName().c_str(), pProgramName);
@@ -3755,7 +3755,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			if (pTCFile) {
 #if NAU_OPENGL_VERSION >= 400
 				TCFileName = FileUtil::GetFullPath(path,pTCFile);
-				if (!FileUtil::exists(TCFileName))
+				if (!FileUtil::Exists(TCFileName))
 					NAU_THROW("Shader file %s in MatLib %s does not exist", TCFileName.c_str(), aLib->getName().c_str());
 #else
 				NAU_THROW("Mat Lib %s: Shader %s: Tesselation shaders are not allowed with OpenGL < 4.0",aLib->getName().c_str(), pProgramName);

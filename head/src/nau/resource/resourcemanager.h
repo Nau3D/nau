@@ -2,7 +2,7 @@
 #define RESOURCEMANAGER_H
 
 #if NAU_OPENGL_VERSION >= 430
-#include "nau/render/ibuffer.h"
+#include "nau/render/iBuffer.h"
 #endif
 #include "nau/material/material.h"
 #include "nau/render/irenderable.h"

@@ -1,4 +1,4 @@
-#include "nau/loader/assimploader.h"
+#include "nau/loader/assimpLoader.h"
 
 #include "nau.h"
 #include "nau/config.h"

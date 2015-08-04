@@ -5,11 +5,11 @@
 #include "nau/debug/profile.h"
 #include "nau/debug/state.h"
 #include "nau/event/eventFactory.h"
-#include "nau/loader/cboloader.h"
-#include "nau/loader/deviltextureloader.h"
+#include "nau/loader/cboLoader.h"
+#include "nau/loader/iTextureLoader.h"
 #include "nau/loader/objLoader.h"
 #include "nau/loader/ogremeshloader.h"
-#include "nau/loader/assimploader.h"
+#include "nau/loader/assimpLoader.h"
 #include "nau/loader/patchLoader.h"
 #include "nau/loader/projectloader.h"
 #ifdef GLINTERCEPTDEBUG
@@ -33,13 +33,13 @@ extern "C" {
 
 #include <ctime>
 
-// added for directory loading
-#ifdef NAU_PLATFORM_WIN32
-#include <dirent.h>
-#else
-#include <dirent.h>
-#include <sys/types.h>
-#endif
+//// added for directory loading
+//#ifdef NAU_PLATFORM_WIN32
+//#include <dirent.h>
+//#else
+//#include <dirent.h>
+//#include <sys/types.h>
+//#endif
 
 using namespace nau;
 using namespace nau::system;
@@ -465,7 +465,7 @@ luaSaveTexture(lua_State *l) {
 
 	char s[200];
 	sprintf(s,"%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
-	std::string sname = nau::system::FileUtil::validate(s);
+	std::string sname = nau::system::FileUtil::Validate(s);
 	TextureLoader::Save(texture,TextureLoader::PNG);
 
 	return 0;
@@ -859,41 +859,60 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 }
 
 
+
+
 void
 Nau::readDirectory (std::string dirName) {
 
-	DIR *dir;
-	struct dirent *ent;
-	bool result = true;
-	char fileName [1024];
-	char sceneName[256];
+	std::vector<std::string> files;
 
-	clear();
-	sprintf(sceneName,"MainScene"); //,loadedScenes);
-	loadedScenes++;
-	RENDERMANAGER->createScene (sceneName);
-	dir = opendir (dirName.c_str());
+	FileUtil::RecurseDirectory(dirName, &files);
 
-	if (0 == dir) {
-		NAU_THROW("Can't open dir: %s",dirName);
+	if (files.size() == 0) {
+		NAU_THROW("Can't open dir %s or directory has no files", dirName);
 	}
-	while (0 != (ent = readdir (dir))) {
+	RENDERMANAGER->createScene (dirName);
 
-#ifdef NAU_PLATFORM_WIN32
-		sprintf (fileName, "%s\\%s", dirName.c_str(), ent->d_name);
-#else
-		sprintf (fileName, "%s/%s", dirName, ent->d_name);						
-#endif
+	for (auto f : files) {
 		try {
-			NAU->loadAsset (fileName, sceneName);
+			NAU->loadAsset (f, dirName);
 		}
 		catch(std::string &s) {
-			closedir(dir);
 			throw(s);
 		}
 	}
-	closedir (dir);
-	loadFilesAndFoldersAux(sceneName,false);	
+//	DIR *dir;
+//	struct dirent *ent;
+//	bool result = true;
+//	char fileName [1024];
+//	char sceneName[256];
+//
+//	clear();
+//	sprintf(sceneName,"MainScene"); //,loadedScenes);
+//	loadedScenes++;
+//	RENDERMANAGER->createScene (dirName);
+//	dir = opendir (dirName.c_str());
+//
+//	if (0 == dir) {
+//		NAU_THROW("Can't open dir: %s",dirName);
+//	}
+//	while (0 != (ent = readdir (dir))) {
+//
+//#ifdef NAU_PLATFORM_WIN32
+//		sprintf (fileName, "%s\\%s", dirName.c_str(), ent->d_name);
+//#else
+//		sprintf (fileName, "%s/%s", dirName, ent->d_name);						
+//#endif
+//		try {
+//			NAU->loadAsset (fileName, sceneName);
+//		}
+//		catch(std::string &s) {
+//			closedir(dir);
+//			throw(s);
+//		}
+//	}
+//	closedir (dir);
+	loadFilesAndFoldersAux(dirName, false);	
 }
 
 
@@ -940,7 +959,7 @@ Nau::appendModel(std::string fileName) {
 }
 
 
-void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize) {
+void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 
 	Camera *aNewCam = m_pRenderManager->getCamera ("MainCamera");
 	Viewport *v = m_pRenderManager->getViewport("defaultFixedVP");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -1245,12 +1264,12 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 				CBOLoader::loadScene(RENDERMANAGER->getScene(sceneName), file.getFullPath(), params);
 				break;
 			case File::THREEDS:
-				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);
+				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);
 				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);				
 				break;
 			case File::WAVEFRONTOBJ:
-				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
-				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);				
+				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
+				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);				
 				break;
 			case File::OGREXMLMESH:
 				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());				

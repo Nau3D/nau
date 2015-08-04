@@ -1,7 +1,7 @@
 #include "nau/render/textureCubeMap.h"
 #include "nau/config.h"
 
-#include "nau/loader/textureloader.h"
+#include "nau/loader/iTextureLoader.h"
 #ifdef NAU_OPENGL
 #include "nau/render/opengl/gltextureCubeMap.h"
 #endif

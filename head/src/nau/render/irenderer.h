@@ -8,7 +8,7 @@
 #include "nau/attributeValues.h"
 #include "nau/enums.h"
 #include "nau/geometry/frustum.h"
-#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/iBoundingVolume.h"
 #include "nau/material/materialgroup.h"
 #include "nau/material/material.h"
 #include "nau/material/colormaterial.h"

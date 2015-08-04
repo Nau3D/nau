@@ -1,5 +1,5 @@
 #include "nau/scene/sceneposes.h"
-#include "nau/geometry/meshwithpose.h"
+#include "nau/geometry/meshWithPose.h"
 #include "nau/slogger.h"
 
 using namespace nau::scene;

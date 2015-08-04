@@ -2,7 +2,7 @@
 
 #include "nau/geometry/box.h"
 #include "nau/geometry/axis.h"
-#include "nau/geometry/bbox.h"
+#include "nau/geometry/boundingBoxPrimitive.h"
 #include "nau/geometry/sphere.h"
 
 

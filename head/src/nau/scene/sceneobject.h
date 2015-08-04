@@ -4,7 +4,7 @@
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
 #include "nau/event/ilistener.h"
-#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/iBoundingVolume.h"
 #include "nau/math/matrix.h"
 #include "nau/render/irenderable.h"
 #include "nau/scene/sceneobjectfactory.h"

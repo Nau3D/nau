@@ -52,7 +52,6 @@
     <ClCompile Include="src\dialogs\dlgStateXML.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="src\NauGlBufferInfo.cpp" />
     <ClCompile Include="src\dialogs\dlgViewports.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
@@ -112,7 +111,6 @@
     <ClInclude Include="src\dialogs\dlgStateXML.h">
       <Filter>dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="src\NauGlBufferInfo.h" />
     <ClInclude Include="src\dialogs\dlgViewports.h">
       <Filter>dialogs</Filter>
     </ClInclude>

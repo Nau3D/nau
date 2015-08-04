@@ -4,7 +4,7 @@
 #include "nau/scene/iscenepartitioned.h"
 #include "nau/scene/octreeByMat.h"
 #include "nau/geometry/frustum.h"
-#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/boundingBox.h"
 
 
 namespace nau {

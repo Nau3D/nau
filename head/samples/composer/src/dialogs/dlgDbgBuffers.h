@@ -8,7 +8,7 @@
 #endif
 
 #include <nau/event/ilistener.h>
-#include <nau/render/ibuffer.h>
+#include <nau/render/iBuffer.h>
 #include <nau/enums.h>
 
 // For compilers that support precompilation, includes "wx/wx.h".

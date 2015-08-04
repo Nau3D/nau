@@ -1,4 +1,4 @@
-#include "nau/render/ibuffer.h"
+#include "nau/render/iBuffer.h"
 
 #ifdef NAU_OPENGL
 #include "nau/render/opengl/glbuffer.h"

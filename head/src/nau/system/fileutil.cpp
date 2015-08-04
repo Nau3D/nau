@@ -1,10 +1,54 @@
 #include "fileutil.h"
 
+
+
+#ifdef NAU_PLATFORM_WIN32
+#include <dirent.h>
+#else
+#include <dirent.h>
+#include <sys/types.h>
+#endif
+
 using namespace nau::system;
 
 
+std::string
+FileUtil::BuildFullFileName(std::string path, std::string filename) {
+
+	return path + SLASH + filename;
+}
+
+
+void 
+FileUtil::RecurseDirectory(std::string path, std::vector<std::string> *res) {
+
+	DIR *dir;
+	struct dirent *ent;
+	
+	if((dir = opendir (path.c_str())) != NULL) {
+
+		while ((ent = readdir(dir)) != NULL) {
+		
+			if (std::string(ent->d_name) == "." || std::string(ent->d_name) == "..") {
+		
+			}
+			else if (ent->d_type == DT_DIR) {
+				std::string nextDir = std::string(ent -> d_name);
+				//nextDir += "\\";
+				RecurseDirectory(path + "\\" + nextDir, res);
+			}
+			else {
+				res->push_back(FileUtil::BuildFullFileName(path, ent -> d_name));
+			}
+		}
+	}
+	
+	closedir (dir);
+}
+
+
 bool 
-FileUtil::exists(const std::string &fn) {
+FileUtil::Exists(const std::string &fn) {
 
 	bool b;
 
@@ -127,7 +171,7 @@ FileUtil::CleanFullPath(const std::string &fn) {
 
 
 std::string 
-FileUtil::validate(std::string s1) {
+FileUtil::Validate(std::string s1) {
 
 	std::string res = s1;
 	std::string s = s1;

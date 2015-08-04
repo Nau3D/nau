@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "nau/loader/textureloader.h"
+#include "nau/loader/iTextureLoader.h"
 #include "nau/material/teximage.h"
 
 

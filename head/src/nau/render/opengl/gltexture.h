@@ -20,6 +20,7 @@ namespace nau
 		public:
 
 			~GLTexture(void);
+			GLTexture(){};
 
 			//! prepare a texture for rendering
 			virtual void prepare(unsigned int unit, TextureSampler *ts);
@@ -91,7 +92,6 @@ namespace nau
 			// for empty textures with default parameters
 			GLTexture(std::string label);
 
-			GLTexture(){};
 		};
 	};
 };

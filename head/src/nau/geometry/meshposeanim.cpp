@@ -1,4 +1,4 @@
-#include "nau/geometry/meshposeanim.h"
+#include "nau/geometry/meshPoseAnim.h"
 
 using namespace nau::geometry;
 

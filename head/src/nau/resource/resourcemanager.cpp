@@ -4,9 +4,9 @@
 #include "nau/geometry/sphere.h"
 #include "nau/geometry/square.h"
 #include "nau/geometry/axis.h"
-#include "nau/geometry/bbox.h"
-#include "nau/geometry/meshwithpose.h"
-#include "nau/geometry/meshbones.h"
+#include "nau/geometry/boundingBoxPrimitive.h"
+#include "nau/geometry/meshWithPose.h"
+#include "nau/geometry/meshBones.h"
 
 #include <sstream>
 

@@ -1,4 +1,4 @@
-#include "nau/geometry/meshbones.h"
+#include "nau/geometry/meshBones.h"
 
 #include "nau/material/materialgroup.h"
 #include "nau/render/irenderable.h"

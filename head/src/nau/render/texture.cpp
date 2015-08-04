@@ -1,7 +1,7 @@
 #include "nau/render/texture.h"
 
 #include "nau.h"
-#include "nau/loader/textureloader.h"
+#include "nau/loader/iTextureLoader.h"
 #ifdef NAU_OPENGL
 #include "nau/render/opengl/gltexture.h"
 #endif

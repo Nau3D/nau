@@ -5,7 +5,7 @@
 #include "nau/event/cameraMotion.h"
 #include "nau/event/cameraOrientation.h"
 #include "nau/event/eventFactory.h" 
-#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/boundingBox.h"
 #include "nau/geometry/mesh.h"
 #include "nau/material/materialgroup.h"
 #include "nau/math/matrix.h"

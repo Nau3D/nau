@@ -3,7 +3,7 @@
 #include "nau.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
-#include "nau/loader/textureloader.h"
+#include "nau/loader/iTextureLoader.h"
 #include "nau/material/material.h" 
 #include "nau/material/materialgroup.h"
 #include "nau/math/matrix.h"

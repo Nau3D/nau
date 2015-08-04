@@ -4,7 +4,7 @@
 #include "dialogs/propertyManager.h"
 
 #include <nau/event/eventFactory.h>
-#include <nau/geometry/iboundingvolume.h>
+#include <nau/geometry/iBoundingVolume.h>
 #include <nau/math/utils.h>
 #include <nau/scene/iscenepartitioned.h>
 

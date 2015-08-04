@@ -246,7 +246,7 @@ namespace nau {
 
 		// different perspective and camera position depending on whether
 		// the model is unitized
-		void Nau::loadFilesAndFoldersAux(char *sceneName, bool unitize);
+		void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize);
 
 		int loadedScenes;
 

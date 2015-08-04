@@ -1,4 +1,4 @@
-#include "nau/loader/deviltextureloader.h"
+#include "nau/loader/devilTextureLoader.h"
 
 
 #include "nau/slogger.h"

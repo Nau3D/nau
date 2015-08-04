@@ -4,7 +4,7 @@
 #include "nau/math/vec3.h"
 #include "nau/math/plane.h"
 #include "nau/scene/camera.h"
-#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/iBoundingVolume.h"
 
 
 

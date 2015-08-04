@@ -1,7 +1,7 @@
 #ifndef BOUNDINGVOLUMEFACTORY_H
 #define BOUNDINGVOLUMEFACTORY_H
 
-#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/iBoundingVolume.h"
 
 namespace nau
 {

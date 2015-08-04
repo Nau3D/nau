@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="teste1-shadows" width=1024 height=512 >
+<project name="teste1-shadows" width=1536 height=512 >
 	<assets>
 		<scenes>
 			<scene name="MainScene">
@@ -11,20 +11,20 @@
 			
 			<viewport name="LeftViewport" >
 				<ORIGIN  x="0.0" y="0.0" />
-				<SIZE width=".5"  height="1.0" />
+				<SIZE width=".33"  height="1.0" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.5" />
 			</viewport>
 			
 			<viewport name="RightViewport" >
-				<ORIGIN x="0.5" y="0.0" />
-				<SIZE width=".5"  height="1.0" />
+				<ORIGIN x="0.33" y="0.0" />
+				<SIZE width="0.66"  height="1.0" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="1.0" />
 			</viewport>
 		</viewports>
 		
 		<cameras>
 			<camera name="MainCamera">
-				<viewport name="LeftViewport" />
+				<viewport name="RightViewport" />
 				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="1.0" FAR="100.0" />
 				<POSITION x="-23.277" y="18.541" z="30.143" />
 				<VIEW x="0.397" y="-0.644774" z="-0.652" />
@@ -72,7 +72,7 @@
 				</lights>
 				<camera name="MainCamera" />
 				
-				<viewport name="LeftViewport" />
+				<!--viewport name="RightViewport" /-->
 				<renderTarget name="simple" fromLibrary="Shadow Materials" />
 				<injectionMaps>
 					<map toMaterial="*">

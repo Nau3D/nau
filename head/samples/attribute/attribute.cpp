@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 	//_CrtDumpMemoryLeaks();
 	//www = (char *)malloc(13);
 	//NAU->init(true);
-	Texture *t = Texture::Create("bla");
+	//Texture *t = Texture::Create("bla");
 	//TextureSampler *ts = TextureSampler::create(t);
 	//nau::render::Texture *t = nau::render::Texture::Create("bla");
 	//nau::material::TextureSampler *ts;

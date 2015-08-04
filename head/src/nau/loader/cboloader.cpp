@@ -1,10 +1,10 @@
-#include "nau/loader/cboloader.h"
+#include "nau/loader/cboLoader.h"
 
 #include "nau.h"
 
 #include "nau/scene/sceneobject.h"
 #include "nau/scene/sceneobjectfactory.h"
-#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/iBoundingVolume.h"
 #include "nau/geometry/boundingvolumefactory.h"
 #include "nau/math/matrix.h"
 #include "nau/math/vec3.h"

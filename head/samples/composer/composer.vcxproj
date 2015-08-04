@@ -574,11 +574,6 @@
     <ClCompile Include="src\dialogs\dlgScenes.cpp" />
     <ClCompile Include="src\dialogs\dlgShaders.cpp" />
     <ClCompile Include="src\dialogs\dlgTextureLib.cpp" />
-    <ClCompile Include="src\NauGlBufferInfo.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\dialogs\dlgAtomics.h" />
@@ -596,11 +591,6 @@
     <ClInclude Include="src\glInfo.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\dialogs\dlgCameras.h" />
-    <ClInclude Include="src\NauGlBufferInfo.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
     <CustomBuildStep Include="src\dialogs\dlgLights.h" />
     <CustomBuildStep Include="src\dialogs\dlgLog.h" />
     <ClInclude Include="src\dialogs\dlgMaterials.h" />

@@ -5,7 +5,7 @@
 #include "nau/scene/camera.h"
 #include "nau/scene/light.h"
 #include "nau/geometry/frustum.h"
-#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/boundingBox.h"
 
 namespace nau {
 

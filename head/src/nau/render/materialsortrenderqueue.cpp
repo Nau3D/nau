@@ -2,7 +2,7 @@
 
 #include "nau.h"
 #include "nau/render/irenderable.h"
-#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/boundingBox.h"
 
 #include "nau/debug/profile.h"
 

@@ -1,7 +1,7 @@
 #include "nau/scene/sceneposeobject.h"
-#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/boundingBox.h"
 #include "nau/math/matrix.h"
-#include "nau/geometry/meshwithpose.h"
+#include "nau/geometry/meshWithPose.h"
 
 using namespace nau::scene;
 using namespace nau::render;

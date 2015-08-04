@@ -1,4 +1,4 @@
-#include "nau/geometry/skeletonanim.h"
+#include "nau/geometry/skeletonAnim.h"
 
 using namespace nau::geometry;
 

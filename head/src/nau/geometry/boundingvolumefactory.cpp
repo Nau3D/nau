@@ -1,6 +1,6 @@
 #include "nau/geometry/boundingvolumefactory.h"
 
-#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/boundingBox.h"
 
 using namespace nau::geometry;
 

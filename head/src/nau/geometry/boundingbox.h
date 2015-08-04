@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/iBoundingVolume.h"
 #include "nau/math/matrix.h"
 #include "nau/math/vec3.h"
-#include "nau/geometry/bbox.h"
+#include "nau/geometry/boundingBoxPrimitive.h"
 
 namespace nau
 {

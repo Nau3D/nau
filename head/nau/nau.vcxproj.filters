@@ -73,15 +73,6 @@
     <ClCompile Include="..\src\nau\geometry\axis.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\bbox.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\boundingbox.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\boundingvolumefactory.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\geometry\box.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
@@ -91,41 +82,14 @@
     <ClCompile Include="..\src\nau\geometry\mesh.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\meshbones.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\meshposeanim.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\meshposekeyframe.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\meshwithpose.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\poseoffset.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\geometry\primitive.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\geometry\quad.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\skeletonanim.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\skeletonbone.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\geometry\sphere.cpp">
       <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\loader\cboloader.cpp">
-      <Filter>Source Files\loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\loader\deviltextureloader.cpp">
-      <Filter>Source Files\loader</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\objLoader.cpp">
       <Filter>Source Files\loader</Filter>
@@ -134,9 +98,6 @@
       <Filter>Source Files\loader</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\projectloader.cpp">
-      <Filter>Source Files\loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\loader\textureloader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\material\colormaterial.cpp">
@@ -388,9 +349,6 @@
     <ClCompile Include="..\src\nau\event\touchSensor.cpp">
       <Filter>Source Files\event</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\loader\assimploader.cpp">
-      <Filter>Source Files\loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\resource\font.cpp">
       <Filter>Source Files\resource</Filter>
     </ClCompile>
@@ -399,9 +357,6 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\fontxmlloader.cpp">
       <Filter>Source Files\loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\distancemap.cpp">
-      <Filter>Source Files\geometry</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\scene\octreeByMat.cpp">
       <Filter>Source Files\scene</Filter>
@@ -463,9 +418,6 @@
     <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\ibuffer.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\scene\octreeunified.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
@@ -520,6 +472,48 @@
     <ClCompile Include="..\src\nau\render\passProfiler.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\iBuffer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\boundingBoxPrimitive.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\boundingBox.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\boundingVolumeFactory.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\meshBones.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\meshPoseAnim.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\meshWithPose.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\skeletonAnim.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\skeletonBone.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\poseOffset.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\iTextureLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\assimpLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\cboLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\devilTextureLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -543,37 +537,13 @@
     <ClInclude Include="..\src\nau\geometry\axis.h">
       <Filter>Source Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\bbox.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\boundingbox.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\boundingvolumefactory.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\geometry\box.h">
       <Filter>Source Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\geometry\frustum.h">
       <Filter>Source Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\iboundingvolume.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\geometry\mesh.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\meshbones.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\meshposeanim.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\meshwithpose.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\poseoffset.h">
       <Filter>Source Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\geometry\primitive.h">
@@ -582,20 +552,8 @@
     <ClInclude Include="..\src\nau\geometry\quad.h">
       <Filter>Source Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\skeletonanim.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\skeletonbone.h">
-      <Filter>Source Files\geometry</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\geometry\sphere.h">
       <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\loader\cboloader.h">
-      <Filter>Source Files\loader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\loader\deviltextureloader.h">
-      <Filter>Source Files\loader</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\objLoader.h">
       <Filter>Source Files\loader</Filter>
@@ -876,9 +834,6 @@
     <ClInclude Include="..\src\nau\event\timeSensor.h">
       <Filter>Source Files\event</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\loader\assimploader.h">
-      <Filter>Source Files\loader</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\resource\font.h">
       <Filter>Source Files\resource</Filter>
     </ClInclude>
@@ -887,9 +842,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\fontxmlloader.h">
       <Filter>Source Files\loader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\geometry\distancemap.h">
-      <Filter>Source Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\scene\octreeByMat.h">
       <Filter>Source Files\scene</Filter>
@@ -960,9 +912,6 @@
     <ClInclude Include="..\src\nau\render\opengl\glbuffer.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\ibuffer.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\scene\octreeunified.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
@@ -1017,7 +966,49 @@
     <ClInclude Include="..\src\nau\render\passProfiler.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\loader\textureloader.h">
+    <ClInclude Include="..\src\nau\render\iBuffer.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\boundingBoxPrimitive.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\boundingBox.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\boundingVolumeFactory.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\iBoundingVolume.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\meshBones.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\meshPoseAnim.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\meshWithPose.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\skeletonAnim.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\skeletonBone.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\poseOffset.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\iTextureLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\assimpLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\cboLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\devilTextureLoader.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1025,9 +1016,6 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuildStep Include="..\src\nau\geometry\meshposekeyframe.h">
-      <Filter>Source Files\geometry</Filter>
-    </CustomBuildStep>
     <CustomBuildStep Include="..\src\nau\loader\ogremeshloader.h">
       <Filter>Source Files\loader</Filter>
     </CustomBuildStep>

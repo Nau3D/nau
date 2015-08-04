@@ -10,7 +10,7 @@
 #include <nau/debug/profile.h>
 
 #include <nau/scene/sceneobject.h>
-#include <nau/geometry/iboundingvolume.h>
+#include <nau/geometry/iBoundingVolume.h>
 
 #include <nau/event/eventFactory.h>
 #include <nau/event/cameraMotion.h>

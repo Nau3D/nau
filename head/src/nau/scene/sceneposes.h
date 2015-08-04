@@ -2,7 +2,7 @@
 #define SCENEPOSES_H
 
 #include "nau/scene/scene.h"
-#include "nau/geometry/meshposeanim.h"
+#include "nau/geometry/meshPoseAnim.h"
 
 using namespace nau::geometry;
 

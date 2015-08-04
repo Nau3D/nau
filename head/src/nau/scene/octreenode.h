@@ -7,7 +7,7 @@
 #include "nau/scene/camera.h"
 #include "nau/material/materialgroup.h"
 #include "nau/render/irenderable.h"
-#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/boundingBox.h"
 #include "nau/geometry/mesh.h"
 #include "nau/geometry/frustum.h"
 #include "nau/math/vec3.h"

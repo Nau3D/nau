@@ -9,7 +9,7 @@
 #include "nau/debug/profile.h"
 #include "nau/scene/sceneobject.h"
 #include "nau/scene/sceneobjectfactory.h"
-#include "nau/geometry/iboundingvolume.h"
+#include "nau/geometry/iBoundingVolume.h"
 #include "nau/geometry/boundingvolumefactory.h"
 #include "nau/math/vec3.h"
 #include "nau/math/matrix.h"

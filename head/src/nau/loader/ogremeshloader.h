@@ -2,7 +2,7 @@
 #define OGREMESHLOADER_H
 
 #include "nau/system/fileutil.h"
-#include "nau/geometry/meshbones.h"
+#include "nau/geometry/meshBones.h"
 #include "nau/material/materialgroup.h"
 #include "nau/material/materialLib.h"
 #include "nau/math/vec3.h"

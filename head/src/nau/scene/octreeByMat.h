@@ -5,7 +5,7 @@
 #include "nau/scene/iscene.h"
 #include "nau/scene/camera.h"
 #include "nau/math/vec3.h"
-#include "nau/geometry/boundingbox.h"
+#include "nau/geometry/boundingBox.h"
 #include "nau/clogger.h" /***MARK***/
 
 #include <vector>

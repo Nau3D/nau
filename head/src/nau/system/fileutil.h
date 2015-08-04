@@ -1,7 +1,10 @@
 #ifndef __FILEUTIL__
 #define __FILEUTIL__
 
+#include "nau/config.h"
+
 #include <string>
+#include <vector>
 
 #define MAX_FILENAME_LEN 512
 
@@ -11,7 +14,12 @@
 #define ABSOLUTE_NAME_START 3
 
 // set this to '\\' for DOS or '/' for UNIX
-#define SLASH '\\'
+
+#ifdef NAU_PLATFORM_WIN32
+#define SLASH '\\'		
+#else
+#define SLASH '/'				
+#endif'
 
 namespace nau {
 
@@ -32,8 +40,10 @@ namespace nau {
 			static std::string GetFullPath(const std::string &currentDir, const std::string &relFileName);
 			static bool IsRelative(const std::string &fn);
 			static std::string CleanFullPath(const std::string &fn);
-			static bool exists(const std::string &fn);
-			static std::string validate(std::string s);
+			static bool Exists(const std::string &fn);
+			static std::string Validate(std::string s);
+			static std::string BuildFullFileName(std::string path, std::string filename);
+			static void RecurseDirectory(std::string path, std::vector<std::string> *res);
 		};
 	};
 };

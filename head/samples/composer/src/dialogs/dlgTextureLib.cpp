@@ -4,7 +4,7 @@
 
 #include <nau/event/eventFactory.h>
 #include <nau/material/teximage.h>
-#include <nau/loader/textureloader.h>
+#include <nau/loader/iTextureLoader.h>
 #include <nau/system/fileutil.h>
 
 #include "GL/glew.h"
@@ -313,7 +313,7 @@ void DlgTextureLib::OnSaveRaw(wxCommandEvent& event) {
 	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	char name[256];
 	sprintf(name, "%s.raw", texture->getLabel().c_str());
-	std::string sname = nau::system::FileUtil::validate(name);
+	std::string sname = nau::system::FileUtil::Validate(name);
 	TextureLoader::SaveRaw(texture, sname);
 }
 
@@ -322,7 +322,7 @@ void DlgTextureLib::OnSavePNG( wxCommandEvent& event) {
 
 	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	std::string s = texture->getLabel() + ".png";
-	std::string sname = nau::system::FileUtil::validate(s);
+	std::string sname = nau::system::FileUtil::Validate(s);
 	TextureLoader::Save(texture, TextureLoader::PNG);
 }
 
@@ -331,7 +331,7 @@ void DlgTextureLib::OnSaveHDR( wxCommandEvent& event) {
 
 	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	std::string s = texture->getLabel() + ".hdr";
-	std::string sname = nau::system::FileUtil::validate(s);
+	std::string sname = nau::system::FileUtil::Validate(s);
 	TextureLoader::Save(texture, TextureLoader::HDR);
 }
 
