@@ -3,8 +3,8 @@
 #include "nau.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
-#include "nau/material/materialgroup.h"
-#include "nau/render/rendermanager.h"
+#include "nau/material/materialGroup.h"
+#include "nau/render/renderManager.h"
 
 
 using namespace nau::scene;

@@ -11,22 +11,21 @@
 #include "nau/event/sensorfactory.h"
 
 #include "nau/geometry/primitive.h"
-#include "nau/material/programvalue.h"
-
-#include "nau/render/iBuffer.h"
+#include "nau/material/iBuffer.h"
+#include "nau/material/programValue.h"
 #include "nau/render/passCompute.h"
-#include "nau/render/passfactory.h"
+#include "nau/render/passFactory.h"
 #include "nau/render/passProcessTexture.h"
 #include "nau/render/passProcessBuffer.h"
 #ifdef NAU_OPTIX_PRIME
-#include "nau/render/passoptixprime.h"
+#include "nau/render/passOptixPrime.h"
 #endif
 #ifdef NAU_OPTIX
 #include "nau/render/passOptix.h"
 #endif
 #include "nau/render/passQuad.h"
 #include "nau/render/pipeline.h"
-#include "nau/render/rendertarget.h"
+#include "nau/render/renderTarget.h"
 
 #include "nau/scene/geometryobject.h"
 #include "nau/scene/sceneobjectfactory.h"

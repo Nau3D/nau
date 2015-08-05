@@ -25,12 +25,12 @@
 #include <wx/propgrid/advprops.h>
 #include <wx/propgrid/manager.h>
 
-class ImageGridCellRenderer;
+#include <nau.h>
 
-#include "nau.h"
-#include "nau/render/texture.h"
 #include <nau/event/ilistener.h>
+#include <nau/material/texture.h>
 
+class ImageGridCellRenderer;
 class DlgTextureLib : public wxDialog
 {
 public:

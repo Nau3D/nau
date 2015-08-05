@@ -5,8 +5,8 @@
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
 #include "nau/geometry/frustum.h"
-#include "nau/render/passfactory.h"
-#include "nau/render/rendermanager.h"
+#include "nau/render/passFactory.h"
+#include "nau/render/renderManager.h"
 
 #ifdef GLINTERCEPTDEBUG
 #include "nau/loader/projectLoaderDebugLinker.h"

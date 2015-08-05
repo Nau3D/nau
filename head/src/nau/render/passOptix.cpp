@@ -209,7 +209,7 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 
 	o_OutputPBO.resize(n);
 	glGenBuffers(n, (unsigned int *)&o_OutputPBO[0]);
-	nau::render::Texture* texID;
+	nau::material::Texture* texID;
 	
 	try {
 		for (unsigned int i = 0; i < n; ++i) {

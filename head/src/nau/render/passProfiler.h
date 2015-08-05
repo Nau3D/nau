@@ -4,7 +4,7 @@
 #include "nau/render/pass.h"
 #include "nau/resource/font.h"
 #include "nau/scene/camera.h"
-#include "nau/render/irenderable.h"
+#include "nau/render/iRenderable.h"
 
 namespace nau
 {

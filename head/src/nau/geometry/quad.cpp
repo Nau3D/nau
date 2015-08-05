@@ -2,8 +2,8 @@
 
 #include "nau/math/vec3.h"
 #include "nau/geometry/mesh.h"
-#include "nau/render/vertexdata.h"
-#include "nau/material/materialgroup.h"
+#include "nau/geometry/vertexData.h"
+#include "nau/material/materialGroup.h"
 #include "nau.h"
 
 using namespace nau::geometry;

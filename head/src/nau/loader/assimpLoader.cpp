@@ -5,9 +5,9 @@
 #include "nau/slogger.h"
 #include "nau/geometry/mesh.h"
 #include "nau/material/material.h"
-#include "nau/material/materialgroup.h"
-#include "nau/render/irenderable.h"
-#include "nau/render/vertexdata.h"
+#include "nau/material/materialGroup.h"
+#include "nau/render/iRenderable.h"
+#include "nau/geometry/vertexData.h"
 #include "nau/system/fileutil.h"
 
 #include <fstream>

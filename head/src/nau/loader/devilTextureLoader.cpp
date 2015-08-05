@@ -8,7 +8,6 @@
 #include <ctime>
 
 using namespace nau::loader;
-using namespace nau::render;
 using namespace nau::system;
 
 bool DevILTextureLoader::inited = false;

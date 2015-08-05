@@ -1,16 +1,14 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include <string>
+#include "nau/render/iRenderable.h"
+#include "nau/material/texture.h"
+#include "nau/material/texImage.h"
 
 #include <map>
+#include <string>
 
-#include "nau/render/irenderable.h"
-#include "nau/render/texture.h"
-#include "nau/material/teximage.h"
-
-
-
+using namespace nau::render;
 
 namespace nau 
 {

@@ -31,9 +31,9 @@
 
 class ImageGridCellRenderer;
 
-#include <nau/material/materiallibmanager.h>
+#include <nau/material/materialLibManager.h>
 #include <nau/material/material.h>
-#include <nau/render/opengl/GLProgram.h>
+#include <nau/render/opengl/glProgram.h>
 #include <nau.h>
 
 #include <nau/event/ilistener.h>

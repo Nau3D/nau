@@ -1,8 +1,8 @@
 #include "nau/geometry/meshBones.h"
 
-#include "nau/material/materialgroup.h"
-#include "nau/render/irenderable.h"
-#include "nau/render/vertexdata.h"
+#include "nau/material/materialGroup.h"
+#include "nau/render/iRenderable.h"
+#include "nau/geometry/vertexData.h"
 #include "nau/math/vec3.h"
 
 

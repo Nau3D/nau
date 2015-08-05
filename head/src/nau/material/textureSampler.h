@@ -2,7 +2,7 @@
 #define __TEXTURE_SAMPLER__
 
 #include "nau/math/vec4.h"
-#include "nau/render/texture.h"
+#include "nau/material/texture.h"
 #include "nau/attributeValues.h"
 #include "nau/attribute.h"
 
@@ -10,9 +10,10 @@
 
 using namespace nau::math;
 
+
 namespace nau {
 
-	namespace render {
+	namespace material {
 		class Texture;
 	}
 }
@@ -53,7 +54,7 @@ namespace nau {
 			// Note: no validation is performed!
 			//void setProp(int prop, Enums::DataType type, void *value);
 
-			static TextureSampler* create(nau::render::Texture *t);
+			static TextureSampler* create(Texture *t);
 
 			virtual void prepare(unsigned int aUnit, int aDim) = 0;
 			virtual void restore(unsigned int aUnit, int aDim) = 0;

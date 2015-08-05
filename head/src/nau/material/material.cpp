@@ -1,8 +1,8 @@
 #include "nau/material/material.h"
 
-#include "nau/debug/profile.h"
-#include "nau/slogger.h"
 #include "nau.h"
+#include "nau/slogger.h"
+#include "nau/debug/profile.h"
 
 using namespace nau::material;
 using namespace nau::render;
@@ -515,7 +515,7 @@ Material::getProgramName() {
 }
 
 
-nau::render::IProgram * 
+IProgram * 
 Material::getProgram() {
 
 	return m_Shader;
@@ -561,14 +561,14 @@ Material::addProgramValue (std::string name, nau::material::ProgramValue progVal
 }
 
 
-nau::render::IState*
+IState*
 Material::getState (void) {
 
    return m_State;
 }
 
 
-nau::material::ColorMaterial& 
+ColorMaterial& 
 Material::getColor (void) {
 
    return m_Color;

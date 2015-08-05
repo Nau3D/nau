@@ -2,10 +2,10 @@
 
 
 #include "nau.h"
-#include "nau/material/materialgroup.h"
+#include "nau/material/materialGroup.h"
 #include "nau/math/vec3.h"
-#include "nau/render/irenderable.h"
-#include "nau/render/vertexdata.h"
+#include "nau/render/iRenderable.h"
+#include "nau/geometry/vertexData.h"
 
 
 using namespace nau::geometry;
@@ -112,7 +112,7 @@ Mesh::getnumberOfVerticesPerPatch() {
 }
 
 
-nau::render::VertexData& 
+VertexData& 
 Mesh::getVertexData (void) {
 
 	if (0 == m_VertexData) {
@@ -122,7 +122,7 @@ Mesh::getVertexData (void) {
 }
 
 
-nau::render::IndexData&
+IndexData&
 Mesh::getIndexData() {
 
 	if (m_UnifiedIndex.size() == 0)

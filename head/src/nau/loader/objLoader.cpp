@@ -13,9 +13,9 @@
 #include "nau/geometry/boundingvolumefactory.h"
 #include "nau/math/vec3.h"
 #include "nau/math/matrix.h"
-#include "nau/render/vertexdata.h"
-#include "nau/render/irenderable.h"
-#include "nau/material/materialgroup.h"
+#include "nau/geometry/vertexData.h"
+#include "nau/render/iRenderable.h"
+#include "nau/material/materialGroup.h"
 #include "nau/clogger.h"
 #include "nau/material/material.h"
 

@@ -94,113 +94,20 @@
     <ClCompile Include="..\src\nau\loader\objLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\material\colormaterial.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\material\material.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\materialgroup.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\materialid.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\materiallib.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\materiallibmanager.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\programvalue.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\teximage.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\math\plane.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\math\randomgen.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\math\spherical.cpp">
       <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\indexdata.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\iprogram.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\irenderer.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\istate.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\materialsortrenderqueue.cpp">
-      <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\pass.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\passfactory.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\pipeline.cpp">
       <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\renderfactory.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\rendermanager.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\renderqueuefactory.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\rendertarget.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\texture.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\textureCubeMap.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\vertexdata.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\viewport.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glindexarray.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glprogram.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glrenderer.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glrendertarget.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glstate.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glteximage.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gltexture.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gltextureCubeMap.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glvertexarray.cpp">
-      <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\resource\resourcemanager.cpp">
       <Filter>Source Files\resource</Filter>
@@ -385,41 +292,17 @@
     <ClCompile Include="..\src\nau\material\textureSampler.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\imageTexture.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\passCompute.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\iprogramvalue.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\scene\octreeunified.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\debug\state.cpp">
       <Filter>Source Files\debug</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\imaterialbuffer.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp">
-      <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\attributeValues.cpp">
       <Filter>Source Files</Filter>
@@ -430,17 +313,11 @@
     <ClCompile Include="..\src\nau\scene\iscene.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\material\materialTexture.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glDebug.cpp">
       <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\irenderable.cpp">
-      <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\passProcessTexture.cpp">
       <Filter>Source Files\render</Filter>
@@ -451,16 +328,10 @@
     <ClCompile Include="..\src\nau\render\passDepthMap.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\passoptixprime.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\passQuad.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\passProfiler.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\iBuffer.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\geometry\boundingBoxPrimitive.cpp">
@@ -514,6 +385,135 @@
     <ClCompile Include="..\src\nau\loader\projectLoaderDebugLinker.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\material\colorMaterial.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iMaterialBuffer.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materialGroup.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materialId.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materialLib.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\materialLibManager.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\programValue.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\texImage.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\math\randomGen.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glBuffer.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glImageTexture.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glIndexArray.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glMaterialBuffer.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glMaterialGroup.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glProgram.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glProgramValue.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glRenderer.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glRenderTarget.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glState.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glTexImage.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glTexture.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glTextureCubeMap.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glTextureSampler.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glVertexArray.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\iRenderable.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\iRenderer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\texture.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\textureCubeMap.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iBuffer.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\imageTexture.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iProgram.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iState.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iUniform.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\indexData.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\vertexData.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\viewport.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\materialSortRenderQueue.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passFactory.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passOptixPrime.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\renderFactory.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\renderManager.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\renderQueueFactory.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\renderTarget.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -558,25 +558,7 @@
     <ClInclude Include="..\src\nau\loader\objLoader.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\material\colormaterial.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\material\material.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\material\materialgroup.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\material\materialid.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\material\materiallib.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\material\materiallibmanager.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\material\programvalue.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\math\mtrand.h">
@@ -585,92 +567,17 @@
     <ClInclude Include="..\src\nau\math\plane.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\math\randomgen.h">
-      <Filter>Source Files\math</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\math\utils.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\indexdata.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\iprogram.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\irenderable.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\irenderer.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\irenderqueue.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\istate.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\materialsortrenderqueue.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\render\pass.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\passfactory.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\pipeline.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\renderfactory.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\rendermanager.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\renderqueuefactory.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\rendertarget.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\texture.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\textureCubeMap.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\vertexdata.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\render\viewport.h">
       <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glindexarray.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glprogram.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glrenderer.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glrendertarget.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glstate.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glteximage.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gltexture.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gltextureCubeMap.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glvertexarray.h">
-      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\resource\resourcemanager.h">
       <Filter>Source Files\resource</Filter>
@@ -873,17 +780,8 @@
     <ClInclude Include="..\src\nau\material\textureSampler.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\bimap.hpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\imageTexture.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h">
-      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passCompute.h">
       <Filter>Source Files\render</Filter>
@@ -897,32 +795,11 @@
     <ClInclude Include="..\src\nau\attributeValues.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\iprogramvalue.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glbuffer.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\scene\octreeunified.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\passoptixprime.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\debug\state.h">
       <Filter>Source Files\debug</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\material\imaterialbuffer.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h">
-      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\math\vec2.h">
       <Filter>Source Files\math</Filter>
@@ -955,9 +832,6 @@
       <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passProfiler.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\iBuffer.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\geometry\boundingBoxPrimitive.h">
@@ -1014,14 +888,137 @@
     <ClInclude Include="..\src\nau\loader\projectLoaderDebugLinker.h">
       <Filter>Source Files\loader</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuildStep Include="..\src\nau\material\teximage.h">
+    <ClInclude Include="..\src\nau\material\colorMaterial.h">
       <Filter>Source Files\material</Filter>
-    </CustomBuildStep>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iMaterialBuffer.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materialGroup.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materialId.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materialLib.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\materialLibManager.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\programValue.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\texImage.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\randomGen.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glBuffer.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glImageTexture.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glIndexArray.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glMaterialBuffer.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glMaterialGroup.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glProgram.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glProgramValue.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glRenderer.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glRenderTarget.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glState.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glTexImage.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glTexture.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glTextureCubeMap.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glTextureSampler.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glVertexArray.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iRenderable.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iRenderer.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iRenderQueue.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\texture.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\textureCubeMap.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iBuffer.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\imageTexture.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iProgram.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iState.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iUniform.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\indexData.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\vertexData.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\materialSortRenderQueue.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passFactory.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passOptixPrime.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\renderFactory.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\renderManager.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\renderQueueFactory.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\renderTarget.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <CustomBuildStep Include="..\src\nau\math\spherical.h">
       <Filter>Source Files\math</Filter>
     </CustomBuildStep>

@@ -2,8 +2,8 @@
 
 #include "nau/geometry/iBoundingVolume.h"
 #include "nau/world/naubulletmotionstate.h"
-#include "nau/render/vertexdata.h"
-#include "nau/material/materialgroup.h"
+#include "nau/geometry/vertexData.h"
+#include "nau/material/materialGroup.h"
 
 using namespace nau::world;
 using namespace nau::geometry;

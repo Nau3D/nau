@@ -1,4 +1,4 @@
-#include "nau/render/optix/optixMaterialLib.h"
+#include "nau/render/optix/optixmaterialLib.h"
 #include "nau/render/optix/optixMaterial.h"
 
 #include <vector>

@@ -1,17 +1,18 @@
 #ifndef PIPELINE_H
 #define PIPELINE_H
 
+
+#include "nau/material/iState.h"
+#include "nau/scene/camera.h"
+#include "nau/scene/sceneobject.h"
+#include "nau/render/pass.h"
+
 #include <deque>
 #include <set>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <iostream>
-
-#include "nau/scene/camera.h"
-#include "nau/scene/sceneobject.h"
-#include "nau/render/pass.h"
-#include "nau/render/istate.h"
 
 #define PIPE_PASS_MIDDLE 0
 #define PIPE_PASS_START 1

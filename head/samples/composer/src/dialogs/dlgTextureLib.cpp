@@ -3,7 +3,7 @@
 #include "dialogs/propertyManager.h"
 
 #include <nau/event/eventFactory.h>
-#include <nau/material/teximage.h>
+#include <nau/material/texImage.h>
 #include <nau/loader/iTextureLoader.h>
 #include <nau/system/fileutil.h>
 
@@ -224,7 +224,7 @@ void DlgTextureLib::updateTextures(int index) {
 
 	
 
-	nau::render::Texture *texture;
+	nau::material::Texture *texture;
 		
 	for(j = 0 ; j < numTex ; j++) {
 		texture = RESOURCEMANAGER->getTexture(j);
@@ -249,7 +249,7 @@ void DlgTextureLib::updateTextures(int index) {
 
 void DlgTextureLib::setTextureProps(int index) {
 
-	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(index);
+	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(index);
 	m_ActiveTexture = index;
 
 	m_GridTextures->SelectBlock(0,index,0,index,false);
@@ -310,7 +310,7 @@ void DlgTextureLib::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 
 void DlgTextureLib::OnSaveRaw(wxCommandEvent& event) {
 
-	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
+	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	char name[256];
 	sprintf(name, "%s.raw", texture->getLabel().c_str());
 	std::string sname = nau::system::FileUtil::Validate(name);
@@ -320,7 +320,7 @@ void DlgTextureLib::OnSaveRaw(wxCommandEvent& event) {
 
 void DlgTextureLib::OnSavePNG( wxCommandEvent& event) {
 
-	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
+	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	std::string s = texture->getLabel() + ".png";
 	std::string sname = nau::system::FileUtil::Validate(s);
 	TextureLoader::Save(texture, TextureLoader::PNG);
@@ -329,7 +329,7 @@ void DlgTextureLib::OnSavePNG( wxCommandEvent& event) {
 
 void DlgTextureLib::OnSaveHDR( wxCommandEvent& event) {
 
-	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
+	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	std::string s = texture->getLabel() + ".hdr";
 	std::string sname = nau::system::FileUtil::Validate(s);
 	TextureLoader::Save(texture, TextureLoader::HDR);

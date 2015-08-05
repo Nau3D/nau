@@ -7,7 +7,7 @@
 #include "nau/slogger.h"
 #include "nau/geometry/meshWithPose.h"
 #include "nau/geometry/poseOffset.h"
-#include "nau/render/irenderable.h"
+#include "nau/render/iRenderable.h"
 #include "nau/scene/scenefactory.h"
 #include "nau/scene/sceneobjectfactory.h"
 #include "nau/system/textutil.h"

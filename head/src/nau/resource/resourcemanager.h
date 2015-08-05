@@ -2,12 +2,12 @@
 #define RESOURCEMANAGER_H
 
 #if NAU_OPENGL_VERSION >= 430
-#include "nau/render/iBuffer.h"
+#include "nau/material/iBuffer.h"
 #endif
 #include "nau/material/material.h"
-#include "nau/render/irenderable.h"
-#include "nau/render/rendertarget.h"
-#include "nau/render/texture.h"
+#include "nau/material/texture.h"
+#include "nau/render/iRenderable.h"
+#include "nau/render/renderTarget.h"
 #include "nau/resource/texturemanager.h"
 #include "nau/scene/sceneobject.h"
 
@@ -15,6 +15,8 @@
 #include <vector>
 #include <string>
 #include <map>
+
+using namespace nau::material; 
 
 namespace nau 
 {
@@ -28,10 +30,10 @@ namespace nau
 			
 			std::map<std::string, nau::render::RenderTarget*> m_RenderTargets; /***MARK***/ //Replace with a manager?
 			std::map<std::string, nau::render::IRenderable*> m_Meshes;
-			std::map<std::string, nau::render::IProgram*> m_Programs;
-			std::map<std::string, nau::render::IState*> m_States;
+			std::map<std::string, nau::material::IProgram*> m_Programs;
+			std::map<std::string, nau::material::IState*> m_States;
 
-			std::map<std::string, nau::render::IBuffer*> m_Buffers;
+			std::map<std::string, nau::material::IBuffer*> m_Buffers;
 			static int renderableCount;
 
 		public:
@@ -43,11 +45,11 @@ namespace nau
 			/***Textures***/
 			bool hasTexture(std::string name);
 			int getNumTextures();
-			nau::render::Texture* getTexture(unsigned int i);
-			nau::render::Texture* getTextureByID(unsigned int id);
-			nau::render::Texture* getTexture (std::string name);
-			nau::render::Texture* addTexture (std::string fn, std::string label = "", bool mipmap = 1);
-			nau::render::Texture* addTexture (std::vector<std::string> fn, std::string label, bool mipmap = 1);
+			Texture* getTexture(unsigned int i);
+			Texture* getTextureByID(unsigned int id);
+			Texture* getTexture (std::string name);
+			Texture* addTexture (std::string fn, std::string label = "", bool mipmap = 1);
+			Texture* addTexture (std::vector<std::string> fn, std::string label, bool mipmap = 1);
 			void removeTexture (std::string name);
 			
 			//nau::render::Texture* createTexture (std::string label, 
@@ -56,7 +58,7 @@ namespace nau
 			//	std::string aType, int width, int height,
 			//	unsigned char* data = NULL);
 
-			nau::render::Texture* createTexture (std::string label, 
+			Texture* createTexture (std::string label, 
 				std::string internalFormat, 
 				int width, int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
 
@@ -66,10 +68,10 @@ namespace nau
 			//	int samples);
 
 			/// create texture with default attributes, texture requires building prior to usage
-			nau::render::Texture * createTexture(std::string label);
+			Texture * createTexture(std::string label);
 
 			/***TexImage***/
-			nau::material::TexImage* createTexImage(nau::render::Texture *t);
+			nau::material::TexImage* createTexImage(Texture *t);
 			nau::material::TexImage* getTexImage(std::string aTextureName);
 
 
@@ -90,21 +92,21 @@ namespace nau
 
 			/***States***/
 			bool hasState (std::string stateName);
-			nau::render::IState* getState (std::string stateName);
-			void addState (nau::render::IState* aState);
+			nau::material::IState* getState (std::string stateName);
+			void addState (nau::material::IState* aState);
 
 			/***Shaders***/
 			bool hasProgram (std::string programName);
-			nau::render::IProgram* getProgram (std::string programName);
+			nau::material::IProgram* getProgram (std::string programName);
 			unsigned int getNumPrograms();
 			std::vector<std::string> *getProgramNames();
 
 
 			/***Buffers***/
-			nau::render::IBuffer* getBuffer(std::string name);
-			nau::render::IBuffer* createBuffer(std::string name);
+			nau::material::IBuffer* getBuffer(std::string name);
+			nau::material::IBuffer* createBuffer(std::string name);
 			bool hasBuffer(std::string name);
-			nau::render::IBuffer* getBufferByID(int id);
+			nau::material::IBuffer* getBufferByID(int id);
 			void getBufferNames(std::vector<std::string> &names);
 			void clearBuffers();
 		};

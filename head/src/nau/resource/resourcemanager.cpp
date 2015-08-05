@@ -102,7 +102,7 @@ ResourceManager::clear() {
 
 
 nau::material::TexImage* 
-ResourceManager::createTexImage(nau::render::Texture *t) {
+ResourceManager::createTexImage(nau::material::Texture *t) {
 
 	return m_pTextureManager->createTexImage(t);
 }
@@ -137,14 +137,14 @@ ResourceManager::hasTexture(std::string name) {
 //	return (m_pTextureManager->createTexture (label, internalFormat, aFormat, aType, width, height, data));
 //}
 
-nau::render::Texture * 
+nau::material::Texture * 
 ResourceManager::createTexture(std::string label) {
 
 	return (m_pTextureManager->createTexture(label));
 }
 
 
-nau::render::Texture*
+nau::material::Texture*
 ResourceManager::createTexture (std::string label, 
 				std::string internalFormat, 
 				int width, int height, int depth, int layers, int levels, int samples)
@@ -163,14 +163,14 @@ ResourceManager::createTexture (std::string label,
 //}
 
 
-nau::render::Texture* 
+nau::material::Texture* 
 ResourceManager::addTexture (std::string fn, std::string label, bool mipmap) {
 
 	return (m_pTextureManager->addTexture (fn, label, mipmap));
 }
 
 
-nau::render::Texture* 
+nau::material::Texture* 
 ResourceManager::addTexture (std::vector<std::string> fn, std::string label, bool mipmap) {
 
 	return (m_pTextureManager->addTexture (fn, label, mipmap));
@@ -413,7 +413,7 @@ ResourceManager::hasState (std::string stateName) {
 }
 
 
-nau::render::IState* 
+nau::material::IState* 
 ResourceManager::getState (std::string stateName) {
 
 	if (m_States.count (stateName) > 0) {
@@ -424,7 +424,7 @@ ResourceManager::getState (std::string stateName) {
 
 
 void 
-ResourceManager::addState (nau::render::IState* aState) {
+ResourceManager::addState (nau::material::IState* aState) {
 
 	m_States[aState->getName()] = aState;
 }
@@ -469,7 +469,7 @@ ResourceManager::getProgramNames() {
 
 	std::vector<std::string> *names = new std::vector<std::string>; 
 
-	for( std::map<std::string, nau::render::IProgram*>::iterator iter = m_Programs.begin(); iter != m_Programs.end(); ++iter ) {
+	for( std::map<std::string, nau::material::IProgram*>::iterator iter = m_Programs.begin(); iter != m_Programs.end(); ++iter ) {
       names->push_back((*iter).first); 
     }
 	return names;
@@ -495,7 +495,7 @@ ResourceManager::clearBuffers() {
 
 
 
-nau::render::IBuffer* 
+nau::material::IBuffer* 
 ResourceManager::getBuffer(std::string name) {
 
 	if (m_Buffers.count(name) != 0)
@@ -505,7 +505,7 @@ ResourceManager::getBuffer(std::string name) {
 }
 
 
-nau::render::IBuffer*
+nau::material::IBuffer*
 ResourceManager::createBuffer(std::string name) {
 
 	if (m_Buffers.count(name))
@@ -528,7 +528,7 @@ ResourceManager::hasBuffer(std::string name) {
 }
 
 
-nau::render::IBuffer* 
+nau::material::IBuffer* 
 ResourceManager::getBufferByID(int id) {
 
 	for (auto b : m_Buffers) {

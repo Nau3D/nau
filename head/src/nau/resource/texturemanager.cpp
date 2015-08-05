@@ -1,12 +1,12 @@
 #include "nau/resource/texturemanager.h"
-#include "nau/render/textureCubeMap.h"
 
-#include "nau/system/file.h"
 #include "nau/clogger.h"
+#include "nau/material/textureCubeMap.h"
+#include "nau/system/file.h"
 
 using namespace nau::resource;
-using namespace nau::render;
 using namespace nau::system;
+using namespace nau::material;
 
 
 TextureManager::TextureManager (std::string path) : m_Path (path), m_Lib() 
@@ -154,7 +154,7 @@ TextureManager::createTexture (std::string label,
 //}
 
 
-nau::render::Texture *
+nau::material::Texture *
 TextureManager::createTexture(std::string label) {
 
 	Texture *tex;

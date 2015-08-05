@@ -26,10 +26,9 @@
 #include <wx/propgrid/manager.h>
 
 #include <nau.h>
-#include <nau/render/iprogram.h>
-#include <nau/render/opengl/GLProgram.h>
-#include <nau/material/programvalue.h>
-//#include "dlgMaterials.h"
+#include <nau/material/iProgram.h>
+#include <nau/material/programValue.h>
+#include <nau/render/opengl/glProgram.h>
 
 using namespace nau::material;
 

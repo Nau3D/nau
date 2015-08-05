@@ -461,7 +461,7 @@ luaSaveTexture(lua_State *l) {
 	if (!RESOURCEMANAGER->hasTexture(texName))
 		NAU_THROW("Lua save texture: invalid texture name");
 
-	nau::render::Texture *texture = RESOURCEMANAGER->getTexture(texName);
+	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(texName);
 
 	char s[200];
 	sprintf(s,"%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));

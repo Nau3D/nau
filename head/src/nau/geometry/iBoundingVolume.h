@@ -5,10 +5,10 @@
 
 #include "nau/math/vec3.h"
 #include "nau/math/matrix.h"
-#include "nau/render/vertexdata.h"
+#include "nau/geometry/vertexData.h"
 
 
-using namespace nau::render;
+using namespace nau::geometry;
 using namespace nau::math;
 
 namespace nau

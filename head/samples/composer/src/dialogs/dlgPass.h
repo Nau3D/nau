@@ -35,7 +35,7 @@ class ImageGridCellRenderer;
 #include "nau.h"
 #include "nau/event/ilistener.h"
 #include "nau/render/pipeline.h"
-#include "nau/material/materiallibmanager.h"
+#include "nau/material/materialLibManager.h"
 #include "nau/render/pass.h"
 
 

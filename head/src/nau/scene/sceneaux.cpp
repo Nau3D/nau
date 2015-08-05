@@ -6,7 +6,7 @@ At the present moment they are being used to draw the camera's frustum
 */
 
 #include "nau/scene/sceneaux.h"
-#include "nau/render/rendermanager.h"
+#include "nau/render/renderManager.h"
 
 
 #include "nau/debug/profile.h"

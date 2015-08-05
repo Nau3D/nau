@@ -7,10 +7,10 @@
 #include "nau/event/eventFactory.h" 
 #include "nau/geometry/boundingBox.h"
 #include "nau/geometry/mesh.h"
-#include "nau/material/materialgroup.h"
+#include "nau/material/materialGroup.h"
 #include "nau/math/matrix.h"
 #include "nau/math/utils.h"
-#include "nau/render/irenderer.h"
+#include "nau/render/iRenderer.h"
 
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES

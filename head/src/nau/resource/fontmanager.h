@@ -6,7 +6,7 @@
 #include <map>
 
 #include "nau/resource/font.h"
-#include "nau/material/materialid.h"
+#include "nau/material/materialId.h"
 
 using namespace nau::material;
 using namespace nau::resource;

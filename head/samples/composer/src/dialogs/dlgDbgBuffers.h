@@ -8,7 +8,7 @@
 #endif
 
 #include <nau/event/ilistener.h>
-#include <nau/render/iBuffer.h>
+#include <nau/material/iBuffer.h>
 #include <nau/enums.h>
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -106,7 +106,7 @@ protected:
 		int size;
 		std::vector<Enums::DataType> types;
 		int lineSize;
-		nau::render::IBuffer *bufferPtr;
+		nau::material::IBuffer *bufferPtr;
 		std::string shortName;
 		std::string fullName;
 	};

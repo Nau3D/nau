@@ -3,7 +3,7 @@
 
 #include "nau/system/fileutil.h"
 #include "nau/geometry/meshBones.h"
-#include "nau/material/materialgroup.h"
+#include "nau/material/materialGroup.h"
 #include "nau/material/materialLib.h"
 #include "nau/math/vec3.h"
 #include "nau/scene/iscene.h"

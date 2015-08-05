@@ -1,5 +1,6 @@
 #include "dlgOGLPanels.h"
-#include <nau/render/istate.h>
+
+#include <nau/material/iState.h>
 #include <GL/glew.h>
 
 
@@ -16,7 +17,7 @@ DlgOGLPanels::~DlgOGLPanels(){
 }
 
 
-void DlgOGLPanels::setState(IState *aState) {
+void DlgOGLPanels::setState(nau::material::IState *aState) {
 
 	m_glState = aState;
 }
@@ -101,17 +102,17 @@ void DlgOGLPanels::setPanel(wxSizer *siz, wxWindow *parent){
 	const wxChar* blendEq[] =  {wxT("ADD"),wxT("SUBTRACT"),wxT("REVERSE_SUBTRACT"),wxT("MIN"),wxT("MAX"),NULL};
 	const long blendEqInd[] = {GL_FUNC_ADD,GL_FUNC_SUBTRACT,GL_FUNC_REVERSE_SUBTRACT,GL_MIN,GL_MAX,0};
 
-	pg->Append( new wxEnumProperty(wxT("BLEND"),wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::BLEND)));
+	pg->Append( new wxEnumProperty(wxT("BLEND"),wxPG_LABEL,enable,enableInd,m_glState->getPropb(nau::material::IState::BLEND)));
 
-	fColor = m_glState->getPropf4(IState::BLEND_COLOR);
+	fColor = m_glState->getPropf4(nau::material::IState::BLEND_COLOR);
 	pg->Append( new wxColourProperty(wxT("BLEND_COLOR"),wxPG_LABEL,
 				wxColour((unsigned char)fColor.x*255,(unsigned char)fColor.y*255,(unsigned char)fColor.z*255)) );
 
-	pg->Append( new wxEnumProperty(wxT("BLEND_EQUATION"),wxPG_LABEL,blendEq,blendEqInd,m_glState->getPrope(IState::BLEND_EQUATION)));
+	pg->Append( new wxEnumProperty(wxT("BLEND_EQUATION"),wxPG_LABEL,blendEq,blendEqInd,m_glState->getPrope(nau::material::IState::BLEND_EQUATION)));
 
-	pg->Append( new wxEnumProperty(wxT("BLEND_SRC"),wxPG_LABEL,blendF,blendFInd,m_glState->getPrope(IState::BLEND_SRC)));
+	pg->Append( new wxEnumProperty(wxT("BLEND_SRC"),wxPG_LABEL,blendF,blendFInd,m_glState->getPrope(nau::material::IState::BLEND_SRC)));
 
-	pg->Append(new wxEnumProperty(wxT("BLEND_DST"),wxPG_LABEL,blendF,blendFInd,m_glState->getPrope(IState::BLEND_DST)));
+	pg->Append(new wxEnumProperty(wxT("BLEND_DST"),wxPG_LABEL,blendF,blendFInd,m_glState->getPrope(nau::material::IState::BLEND_DST)));
 
 
 	//pg->Append( new wxPropertyCategory(wxT("Alpha"),wxPG_LABEL) );	
@@ -128,18 +129,18 @@ void DlgOGLPanels::setPanel(wxSizer *siz, wxWindow *parent){
 	//pg->Append(new  wxFloatProperty(wxT("ALPHA_REF"),wxPG_LABEL,m_glState->getPropf(IState::ALPHA_VALUE)));
 
 	pg->Append( new wxPropertyCategory(wxT("Cull"), wxPG_LABEL));
-	pg->Append( new wxEnumProperty(wxT("CULL"), wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::CULL_FACE)));
+	pg->Append( new wxEnumProperty(wxT("CULL"), wxPG_LABEL,enable,enableInd,m_glState->getPropb(nau::material::IState::CULL_FACE)));
 	const wxChar* cullFace[] =  {wxT("FRONT"),wxT("BACK"),NULL};
 	const long cullFaceInd[] =  {GL_FRONT, GL_BACK,NULL};
-	pg->Append( new wxEnumProperty(wxT("FACE"),wxPG_LABEL,cullFace,cullFaceInd,m_glState->getPrope(IState::CULL_TYPE)));
+	pg->Append( new wxEnumProperty(wxT("FACE"),wxPG_LABEL,cullFace,cullFaceInd,m_glState->getPrope(nau::material::IState::CULL_TYPE)));
 
 	pg->Append( new wxPropertyCategory(wxT("Depth Test"), wxPG_LABEL));
-		pg->Append( new wxEnumProperty(wxT("DEPTH TEST"), wxPG_LABEL,enable,enableInd,m_glState->getPropb(IState::DEPTH_TEST)));
+		pg->Append( new wxEnumProperty(wxT("DEPTH TEST"), wxPG_LABEL,enable,enableInd,m_glState->getPropb(nau::material::IState::DEPTH_TEST)));
 	const wxChar* depthFunc[] =  {wxT("ALWAYS"),wxT("NEVER"),  wxT("LESS"), wxT("LEQUAL"),
 				wxT("EQUAL"), wxT("GEQUAL"),wxT("GREATER"), wxT("NOT_EQUAL"), NULL};
 	const long depthFuncInd[] =  {GL_ALWAYS, GL_NEVER, GL_LESS, GL_LEQUAL,
 				GL_EQUAL, GL_GEQUAL, GL_GREATER, GL_NOTEQUAL,NULL};
-	pg->Append( new wxEnumProperty(wxT("FUNC"),wxPG_LABEL,depthFunc,depthFuncInd,m_glState->getPrope(IState::DEPTH_FUNC)));
+	pg->Append( new wxEnumProperty(wxT("FUNC"),wxPG_LABEL,depthFunc,depthFuncInd,m_glState->getPrope(nau::material::IState::DEPTH_FUNC)));
 
 	pg->SetSplitterLeft(true);
 
@@ -195,23 +196,23 @@ void DlgOGLPanels::OnProcessPanelChange(wxPropertyGridEvent& e){
 
 	// BLEND
 	if (name == wxT("BLEND")) {
-		m_glState->setPropb(IState::BLEND, 0 != pg->GetPropertyValueAsInt(name));
+		m_glState->setPropb(nau::material::IState::BLEND, 0 != pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("BLEND_COLOR")) {
 		variant = pg->GetPropertyValue(wxT("BLEND_COLOR"));
 		colour << variant;
 		//colour = (wxColour *)pg->GetPropertyValueAsWxObjectPtr("BLEND_COLOR");
 		f[0] = colour.Red()/255.0; f[1] = colour.Green()/255.0; f[2] = colour.Blue()/255.0; f[3] = 1.0;
-		m_glState->setPropf4(IState::BLEND_COLOR,f[0],f[1],f[2],1.0f);
+		m_glState->setPropf4(nau::material::IState::BLEND_COLOR,f[0],f[1],f[2],1.0f);
 	}
 	else if (name == wxT("BLEND_EQUATION")) {
-		m_glState->setPrope(IState::BLEND_EQUATION, pg->GetPropertyValueAsInt(name));
+		m_glState->setPrope(nau::material::IState::BLEND_EQUATION, pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("BLEND_SRC")) {
-		m_glState->setPrope(IState::BLEND_SRC, pg->GetPropertyValueAsInt(name));
+		m_glState->setPrope(nau::material::IState::BLEND_SRC, pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("BLEND_DST")) {
-		m_glState->setPrope(IState::BLEND_DST, pg->GetPropertyValueAsInt(name));
+		m_glState->setPrope(nau::material::IState::BLEND_DST, pg->GetPropertyValueAsInt(name));
 	}	
 
 
@@ -227,16 +228,16 @@ void DlgOGLPanels::OnProcessPanelChange(wxPropertyGridEvent& e){
 	//}
 
 	else if (name == wxT("CULL")) {
-		m_glState->setPropb(IState::CULL_FACE,  0 != pg->GetPropertyValueAsInt(name));
+		m_glState->setPropb(nau::material::IState::CULL_FACE,  0 != pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("FACE")) {
-		m_glState->setPrope(IState::CULL_TYPE, pg->GetPropertyValueAsInt(name));	
+		m_glState->setPrope(nau::material::IState::CULL_TYPE, pg->GetPropertyValueAsInt(name));	
 	}
 	else if (name == wxT("DEPTH TEST")) {
-		m_glState->setPropb(IState::DEPTH_TEST,  0 != pg->GetPropertyValueAsInt(name));
+		m_glState->setPropb(nau::material::IState::DEPTH_TEST,  0 != pg->GetPropertyValueAsInt(name));
 	}
 	else if (name == wxT("FUNC")) {
-		m_glState->setPrope(IState::DEPTH_FUNC, pg->GetPropertyValueAsInt(name));	
+		m_glState->setPrope(nau::material::IState::DEPTH_FUNC, pg->GetPropertyValueAsInt(name));	
 	}
 }
 
@@ -270,16 +271,16 @@ void DlgOGLPanels::updatePanel(){
 	//}
 
 	//BLEND
-	pg->SetPropertyValue(wxT("BLEND"),(int)m_glState->getPropb(IState::BLEND));
-	pg->SetPropertyValue(wxT("BLEND_EQUATION"),m_glState->getPrope(IState::BLEND_EQUATION));
-	v = m_glState->getPropf4(IState::BLEND_COLOR);
+	pg->SetPropertyValue(wxT("BLEND"),(int)m_glState->getPropb(nau::material::IState::BLEND));
+	pg->SetPropertyValue(wxT("BLEND_EQUATION"),m_glState->getPrope(nau::material::IState::BLEND_EQUATION));
+	v = m_glState->getPropf4(nau::material::IState::BLEND_COLOR);
 	pg->SetPropertyValue(wxT("BLEND_COLOR"),
 				wxColour(255*v.x,
 						 255*v.y,
 						 255*v.z));
 
-	pg->SetPropertyValue(wxT("BLEND_SRC"),m_glState->getPrope(IState::BLEND_SRC));
-	pg->SetPropertyValue(wxT("BLEND_DST"),m_glState->getPrope(IState::BLEND_DST));
+	pg->SetPropertyValue(wxT("BLEND_SRC"),m_glState->getPrope(nau::material::IState::BLEND_SRC));
+	pg->SetPropertyValue(wxT("BLEND_DST"),m_glState->getPrope(nau::material::IState::BLEND_DST));
 
 	//ALPHA
 	//pg->SetPropertyValue(wxT("ALPHA_TEST"),(int)m_glState->getPropb(IState::ALPHA_TEST));	
@@ -287,12 +288,12 @@ void DlgOGLPanels::updatePanel(){
 	//pg->SetPropertyValue(wxT("ALPHA_REF"),m_glState->getPropf(IState::ALPHA_VALUE));
 
 	//CULL
-	pg->SetPropertyValue(wxT("CULL"),(int)m_glState->getPropb(IState::CULL_FACE));	
-	pg->SetPropertyValue(wxT("FACE"),m_glState->getPrope(IState::CULL_TYPE));
+	pg->SetPropertyValue(wxT("CULL"),(int)m_glState->getPropb(nau::material::IState::CULL_FACE));	
+	pg->SetPropertyValue(wxT("FACE"),m_glState->getPrope(nau::material::IState::CULL_TYPE));
 
 	//DEPTH
-	pg->SetPropertyValue(wxT("DEPTH TEST"),(int)m_glState->getPropb(IState::DEPTH_TEST));	
-	pg->SetPropertyValue(wxT("FUNC"),m_glState->getPrope(IState::DEPTH_FUNC));
+	pg->SetPropertyValue(wxT("DEPTH TEST"),(int)m_glState->getPropb(nau::material::IState::DEPTH_TEST));	
+	pg->SetPropertyValue(wxT("FUNC"),m_glState->getPrope(nau::material::IState::DEPTH_FUNC));
 }
 
 

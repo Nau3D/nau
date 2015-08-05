@@ -1,8 +1,10 @@
 #ifndef PASS_PRE_PROCESS_TEXTURE_H
 #define PASS_PRE_PROCESS_TEXTURE_H
 
+#include "nau/material/texture.h"
 #include "nau/render/passProcessItem.h"
-#include "nau/render/texture.h"
+
+using namespace nau::material;
 
 namespace nau {
 	namespace render {

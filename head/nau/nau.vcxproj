@@ -360,12 +360,14 @@
     <ClCompile Include="..\src\nau\debug\state.cpp" />
     <ClCompile Include="..\src\nau\geometry\boundingBox.cpp" />
     <ClCompile Include="..\src\nau\geometry\boundingVolumeFactory.cpp" />
+    <ClCompile Include="..\src\nau\geometry\indexData.cpp" />
     <ClCompile Include="..\src\nau\geometry\meshBones.cpp" />
     <ClCompile Include="..\src\nau\geometry\meshPoseAnim.cpp" />
     <ClCompile Include="..\src\nau\geometry\meshWithPose.cpp" />
     <ClCompile Include="..\src\nau\geometry\poseOffset.cpp" />
     <ClCompile Include="..\src\nau\geometry\skeletonAnim.cpp" />
     <ClCompile Include="..\src\nau\geometry\skeletonBone.cpp" />
+    <ClCompile Include="..\src\nau\geometry\vertexData.cpp" />
     <ClCompile Include="..\src\nau\loader\assimpLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\cboLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\devilTextureLoader.cpp" />
@@ -373,8 +375,23 @@
     <ClCompile Include="..\src\nau\loader\ogreMeshLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\projectLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\projectLoaderDebugLinker.cpp" />
-    <ClCompile Include="..\src\nau\material\imaterialbuffer.cpp" />
+    <ClCompile Include="..\src\nau\material\colorMaterial.cpp" />
+    <ClCompile Include="..\src\nau\material\iBuffer.cpp" />
+    <ClCompile Include="..\src\nau\material\imageTexture.cpp" />
+    <ClCompile Include="..\src\nau\material\iMaterialBuffer.cpp" />
+    <ClCompile Include="..\src\nau\material\iProgram.cpp" />
+    <ClCompile Include="..\src\nau\material\iUniform.cpp" />
+    <ClCompile Include="..\src\nau\material\iState.cpp" />
+    <ClCompile Include="..\src\nau\material\materialGroup.cpp" />
+    <ClCompile Include="..\src\nau\material\materialId.cpp" />
+    <ClCompile Include="..\src\nau\material\materialLib.cpp" />
+    <ClCompile Include="..\src\nau\material\materialLibManager.cpp" />
     <ClCompile Include="..\src\nau\material\materialTexture.cpp" />
+    <ClCompile Include="..\src\nau\material\programValue.cpp" />
+    <ClCompile Include="..\src\nau\material\texImage.cpp" />
+    <ClCompile Include="..\src\nau\material\texture.cpp" />
+    <ClCompile Include="..\src\nau\material\textureCubeMap.cpp" />
+    <ClCompile Include="..\src\nau\math\randomGen.cpp" />
     <ClCompile Include="..\src\nau\nau.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -387,17 +404,25 @@
     <ClCompile Include="..\src\nau\geometry\square.cpp" />
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp" />
     <ClCompile Include="..\src\nau\material\textureSampler.cpp" />
-    <ClCompile Include="..\src\nau\render\iBuffer.cpp" />
-    <ClCompile Include="..\src\nau\render\imageTexture.cpp" />
-    <ClCompile Include="..\src\nau\render\iprogramvalue.cpp" />
-    <ClCompile Include="..\src\nau\render\irenderable.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glbuffer.cpp" />
+    <ClCompile Include="..\src\nau\render\iRenderable.cpp" />
+    <ClCompile Include="..\src\nau\render\iRenderer.cpp" />
+    <ClCompile Include="..\src\nau\render\materialSortRenderQueue.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glBuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glDebug.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glimagetexture.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glmaterialbuffer.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glmaterialgroup.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glprogramValue.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\gltexturesampler.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glImageTexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glIndexArray.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glMaterialBuffer.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glMaterialGroup.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glProgram.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glProgramValue.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glRenderer.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glRenderTarget.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glState.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glTexImage.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glTexture.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glTextureCubeMap.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glTextureSampler.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glVertexArray.cpp" />
     <ClCompile Include="..\src\nau\render\optix\optixBufferLib.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -444,14 +469,20 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\passFactory.cpp" />
     <ClCompile Include="..\src\nau\render\passOptix.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\passoptixprime.cpp" />
+    <ClCompile Include="..\src\nau\render\passOptixPrime.cpp" />
     <ClCompile Include="..\src\nau\render\passProcessBuffer.cpp" />
     <ClCompile Include="..\src\nau\render\passProcessTexture.cpp" />
     <ClCompile Include="..\src\nau\render\passProfiler.cpp" />
+    <ClCompile Include="..\src\nau\render\renderFactory.cpp" />
+    <ClCompile Include="..\src\nau\render\renderManager.cpp" />
+    <ClCompile Include="..\src\nau\render\renderQueueFactory.cpp" />
+    <ClCompile Include="..\src\nau\render\renderTarget.cpp" />
+    <ClCompile Include="..\src\nau\render\viewport.cpp" />
     <ClCompile Include="..\src\nau\resource\font.cpp" />
     <ClCompile Include="..\src\nau\resource\fontmanager.cpp" />
     <ClCompile Include="..\src\nau\scene\iscene.cpp" />
@@ -470,44 +501,13 @@
     <ClCompile Include="..\src\nau\geometry\sphere.cpp" />
     <ClCompile Include="..\src\nau\loader\objLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\iTextureLoader.cpp" />
-    <ClCompile Include="..\src\nau\material\colormaterial.cpp" />
     <ClCompile Include="..\src\nau\material\material.cpp" />
-    <ClCompile Include="..\src\nau\material\materialgroup.cpp" />
-    <ClCompile Include="..\src\nau\material\materialid.cpp" />
-    <ClCompile Include="..\src\nau\material\materiallib.cpp" />
-    <ClCompile Include="..\src\nau\material\materiallibmanager.cpp" />
-    <ClCompile Include="..\src\nau\material\programvalue.cpp" />
-    <ClCompile Include="..\src\nau\material\teximage.cpp" />
     <ClCompile Include="..\src\nau\math\plane.cpp" />
-    <ClCompile Include="..\src\nau\math\randomgen.cpp" />
     <ClCompile Include="..\src\nau\math\spherical.cpp" />
     <ClCompile Include="..\src\nau\render\passDepthMap.cpp" />
-    <ClCompile Include="..\src\nau\render\indexdata.cpp" />
-    <ClCompile Include="..\src\nau\render\iprogram.cpp" />
-    <ClCompile Include="..\src\nau\render\irenderer.cpp" />
-    <ClCompile Include="..\src\nau\render\istate.cpp" />
-    <ClCompile Include="..\src\nau\render\materialsortrenderqueue.cpp" />
     <ClCompile Include="..\src\nau\render\pass.cpp" />
-    <ClCompile Include="..\src\nau\render\passfactory.cpp" />
     <ClCompile Include="..\src\nau\render\pipeline.cpp" />
     <ClCompile Include="..\src\nau\render\passQuad.cpp" />
-    <ClCompile Include="..\src\nau\render\renderfactory.cpp" />
-    <ClCompile Include="..\src\nau\render\rendermanager.cpp" />
-    <ClCompile Include="..\src\nau\render\renderqueuefactory.cpp" />
-    <ClCompile Include="..\src\nau\render\rendertarget.cpp" />
-    <ClCompile Include="..\src\nau\render\texture.cpp" />
-    <ClCompile Include="..\src\nau\render\textureCubeMap.cpp" />
-    <ClCompile Include="..\src\nau\render\vertexdata.cpp" />
-    <ClCompile Include="..\src\nau\render\viewport.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glindexarray.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glprogram.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glrenderer.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glrendertarget.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glstate.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glteximage.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\gltexture.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\gltextureCubeMap.cpp" />
-    <ClCompile Include="..\src\nau\render\opengl\glvertexarray.cpp" />
     <ClCompile Include="..\src\nau\resource\resourcemanager.cpp" />
     <ClCompile Include="..\src\nau\resource\texturemanager.cpp" />
     <ClCompile Include="..\src\nau\scene\camera.cpp" />
@@ -581,6 +581,7 @@
     <ClInclude Include="..\src\nau\geometry\boundingBox.h" />
     <ClInclude Include="..\src\nau\geometry\boundingVolumeFactory.h" />
     <ClInclude Include="..\src\nau\geometry\iBoundingVolume.h" />
+    <ClInclude Include="..\src\nau\geometry\indexData.h" />
     <ClInclude Include="..\src\nau\geometry\meshBones.h" />
     <ClInclude Include="..\src\nau\geometry\meshPoseAnim.h" />
     <ClInclude Include="..\src\nau\geometry\meshWithPose.h" />
@@ -588,6 +589,7 @@
     <ClInclude Include="..\src\nau\geometry\skeletonAnim.h" />
     <ClInclude Include="..\src\nau\geometry\skeletonBone.h" />
     <ClInclude Include="..\src\nau\geometry\square.h" />
+    <ClInclude Include="..\src\nau\geometry\vertexData.h" />
     <ClInclude Include="..\src\nau\loader\assimpLoader.h" />
     <ClInclude Include="..\src\nau\loader\cboLoader.h" />
     <ClInclude Include="..\src\nau\loader\devilTextureLoader.h" />
@@ -596,23 +598,48 @@
     <ClInclude Include="..\src\nau\loader\patchLoader.h" />
     <ClInclude Include="..\src\nau\loader\projectLoader.h" />
     <ClInclude Include="..\src\nau\loader\projectLoaderDebugLinker.h" />
-    <ClInclude Include="..\src\nau\material\imaterialbuffer.h" />
+    <ClInclude Include="..\src\nau\material\colorMaterial.h" />
+    <ClInclude Include="..\src\nau\material\iBuffer.h" />
+    <ClInclude Include="..\src\nau\material\imageTexture.h" />
+    <ClInclude Include="..\src\nau\material\iMaterialBuffer.h" />
+    <ClInclude Include="..\src\nau\material\iProgram.h" />
+    <ClInclude Include="..\src\nau\material\iUniform.h" />
+    <ClInclude Include="..\src\nau\material\iState.h" />
+    <ClInclude Include="..\src\nau\material\materialGroup.h" />
+    <ClInclude Include="..\src\nau\material\materialId.h" />
+    <ClInclude Include="..\src\nau\material\materialLib.h" />
+    <ClInclude Include="..\src\nau\material\materialLibManager.h" />
     <ClInclude Include="..\src\nau\material\materialTexture.h" />
+    <ClInclude Include="..\src\nau\material\programValue.h" />
+    <ClInclude Include="..\src\nau\material\texImage.h" />
+    <ClInclude Include="..\src\nau\material\texture.h" />
+    <ClInclude Include="..\src\nau\material\textureCubeMap.h" />
     <ClInclude Include="..\src\nau\material\textureSampler.h" />
     <ClInclude Include="..\src\nau\math\matrix.h" />
+    <ClInclude Include="..\src\nau\math\randomGen.h" />
     <ClInclude Include="..\src\nau\math\vec2.h" />
     <ClInclude Include="..\src\nau\math\vec3.h" />
     <ClInclude Include="..\src\nau\math\vec4.h" />
-    <ClInclude Include="..\src\nau\render\iBuffer.h" />
-    <ClInclude Include="..\src\nau\render\imageTexture.h" />
-    <ClInclude Include="..\src\nau\render\iprogramvalue.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glbuffer.h" />
+    <ClInclude Include="..\src\nau\render\iRenderable.h" />
+    <ClInclude Include="..\src\nau\render\iRenderer.h" />
+    <ClInclude Include="..\src\nau\render\iRenderQueue.h" />
+    <ClInclude Include="..\src\nau\render\materialSortRenderQueue.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glBuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glDebug.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glimagetexture.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glmaterialbuffer.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glmaterialgroup.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glprogramValue.h" />
-    <ClInclude Include="..\src\nau\render\opengl\gltexturesampler.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glImageTexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glIndexArray.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glMaterialBuffer.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glMaterialGroup.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glProgram.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glProgramValue.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glRenderer.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glRenderTarget.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glState.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glTexImage.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glTexture.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glTextureCubeMap.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glTextureSampler.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glVertexArray.h" />
     <ClInclude Include="..\src\nau\render\optix\optixBufferLib.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -659,18 +686,20 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\src\nau\render\passFactory.h" />
     <ClInclude Include="..\src\nau\render\passOptix.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\passoptixprime.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passOptixPrime.h" />
     <ClInclude Include="..\src\nau\render\passProcessBuffer.h" />
     <ClInclude Include="..\src\nau\render\passProcessItem.h" />
     <ClInclude Include="..\src\nau\render\passProcessTexture.h" />
     <ClInclude Include="..\src\nau\render\passProfiler.h" />
+    <ClInclude Include="..\src\nau\render\renderFactory.h" />
+    <ClInclude Include="..\src\nau\render\renderManager.h" />
+    <ClInclude Include="..\src\nau\render\renderQueueFactory.h" />
+    <ClInclude Include="..\src\nau\render\renderTarget.h" />
     <ClInclude Include="..\src\nau\resource\font.h" />
     <ClInclude Include="..\src\nau\resource\fontmanager.h" />
     <ClInclude Include="..\src\nau\scene\octreeByMat.h" />
@@ -688,48 +717,16 @@
     <ClInclude Include="..\src\nau\geometry\sphere.h" />
     <ClInclude Include="..\src\nau\loader\objLoader.h" />
     <ClInclude Include="..\src\nau\loader\iTextureLoader.h" />
-    <ClInclude Include="..\src\nau\material\colormaterial.h" />
     <ClInclude Include="..\src\nau\material\material.h" />
-    <ClInclude Include="..\src\nau\material\materialgroup.h" />
-    <ClInclude Include="..\src\nau\material\materialid.h" />
-    <ClInclude Include="..\src\nau\material\materiallib.h" />
-    <ClInclude Include="..\src\nau\material\materiallibmanager.h" />
-    <ClInclude Include="..\src\nau\material\programvalue.h" />
-    <CustomBuildStep Include="..\src\nau\material\teximage.h" />
     <ClInclude Include="..\src\nau\math\mtrand.h" />
     <ClInclude Include="..\src\nau\math\plane.h" />
-    <ClInclude Include="..\src\nau\math\randomgen.h" />
     <CustomBuildStep Include="..\src\nau\math\spherical.h" />
     <ClInclude Include="..\src\nau\math\utils.h" />
     <ClInclude Include="..\src\nau\render\passDepthMap.h" />
-    <ClInclude Include="..\src\nau\render\indexdata.h" />
-    <ClInclude Include="..\src\nau\render\iprogram.h" />
-    <ClInclude Include="..\src\nau\render\irenderable.h" />
-    <ClInclude Include="..\src\nau\render\irenderer.h" />
-    <ClInclude Include="..\src\nau\render\irenderqueue.h" />
-    <ClInclude Include="..\src\nau\render\istate.h" />
-    <ClInclude Include="..\src\nau\render\materialsortrenderqueue.h" />
     <ClInclude Include="..\src\nau\render\pass.h" />
-    <ClInclude Include="..\src\nau\render\passfactory.h" />
     <ClInclude Include="..\src\nau\render\pipeline.h" />
     <CustomBuildStep Include="..\src\nau\render\passQuad.h" />
-    <ClInclude Include="..\src\nau\render\renderfactory.h" />
-    <ClInclude Include="..\src\nau\render\rendermanager.h" />
-    <ClInclude Include="..\src\nau\render\renderqueuefactory.h" />
-    <ClInclude Include="..\src\nau\render\rendertarget.h" />
-    <ClInclude Include="..\src\nau\render\texture.h" />
-    <ClInclude Include="..\src\nau\render\textureCubeMap.h" />
-    <ClInclude Include="..\src\nau\render\vertexdata.h" />
     <ClInclude Include="..\src\nau\render\viewport.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glindexarray.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glprogram.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glrenderer.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glrendertarget.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glstate.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glteximage.h" />
-    <ClInclude Include="..\src\nau\render\opengl\gltexture.h" />
-    <ClInclude Include="..\src\nau\render\opengl\gltextureCubeMap.h" />
-    <ClInclude Include="..\src\nau\render\opengl\glvertexarray.h" />
     <ClInclude Include="..\src\nau\resource\resourcemanager.h" />
     <ClInclude Include="..\src\nau\resource\texturemanager.h" />
     <ClInclude Include="..\src\nau\scene\camera.h" />
@@ -869,7 +866,6 @@ copy rtvssm.ptx ..\build\samples\optix</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
     </CustomBuild>
-    <None Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

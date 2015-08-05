@@ -8,9 +8,9 @@
 #include "nau/geometry/boundingvolumefactory.h"
 #include "nau/math/matrix.h"
 #include "nau/math/vec3.h"
-#include "nau/render/irenderable.h"
-#include "nau/material/materialgroup.h"
-#include "nau/material/materialgroup.h"
+#include "nau/render/iRenderable.h"
+#include "nau/material/materialGroup.h"
+#include "nau/material/iState.h"
 #include "nau/slogger.h"
 #include "nau/system/fileutil.h"
 
@@ -19,11 +19,10 @@
 #include <map>
 
 //#ifdef NAU_OPENGL
-//#include "nau/render/opengl/glstate.h"
+//#include "nau/render/opengl/glState.h"
 //#elif NAU_DIRECTX
 //#include "nau/render/dx/dxstate.h"
 //#endif
-#include "nau/render/istate.h"
 
 using namespace nau::loader;
 using namespace nau::scene;

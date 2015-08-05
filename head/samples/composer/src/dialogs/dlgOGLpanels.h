@@ -24,6 +24,7 @@
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
 #include <wx/propgrid/manager.h>
+
 #include <nau/material/material.h>
 
 //#include "ogl.h"
@@ -34,7 +35,7 @@ class DlgOGLPanels {
 
 public:
 
-	IState *m_glState;
+	nau::material::IState *m_glState;
 //	GLCanvas *m_glCanvas;
 
 	wxPropertyGridManager *pg;	
@@ -46,7 +47,7 @@ public:
 	DlgOGLPanels();
 	~DlgOGLPanels();
 
-	void setState(IState *aState);
+	void setState(nau::material::IState *aState);
 //	void setCanvas(GLCanvas *glCanvas);
 	void updatePanel();
 

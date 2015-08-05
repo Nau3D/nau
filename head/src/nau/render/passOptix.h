@@ -6,7 +6,7 @@
 #include <map>
 
 #include "nau/render/optix/optixGeometry.h"
-#include "nau/render/optix/optixMaterialLib.h"
+#include "nau/render/optix/optixmaterialLib.h"
 #include "nau/render/optix/optixRenderer.h"
 #include "nau/render/optix/optixTextureLib.h"
 

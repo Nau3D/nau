@@ -1,19 +1,19 @@
 /*
 
-This IRenderable contains only the attribute vectors. The index vectors are stored in the material groups.
+IRenderable contains only the vertex attribute vectors. The index vectors are stored in the material groups.
 
 */
 
 #ifndef MESH_H
 #define MESH_H
 
-#include <set>
-#include <string>
-
-#include "nau/render/irenderer.h"
-#include "nau/render/irenderable.h"
+#include "nau/render/iRenderer.h"
+#include "nau/render/iRenderable.h"
 #include "nau/material/materialgroup.h"
 #include "nau/resource/resourcemanager.h"
+
+#include <set>
+#include <string>
 
 
 namespace nau
@@ -23,8 +23,8 @@ namespace nau
 		class Mesh : public nau::render::IRenderable
 		{
 		protected:
-			nau::render::VertexData* m_VertexData;
-			nau::render::IndexData* m_IndexData;
+			nau::geometry::VertexData* m_VertexData;
+			nau::geometry::IndexData* m_IndexData;
 			std::vector<nau::material::MaterialGroup*> m_vMaterialGroups;
 			unsigned int m_DrawPrimitive;
 			unsigned int m_RealDrawPrimitive;
@@ -58,8 +58,8 @@ namespace nau
 				nau::render::IRenderable *aRenderable); 
 			std::vector<nau::material::MaterialGroup*>& getMaterialGroups (void);
 
-			nau::render::VertexData& getVertexData (void);
-			nau::render::IndexData& getIndexData(void);
+			nau::geometry::VertexData& getVertexData (void);
+			nau::geometry::IndexData& getIndexData(void);
 
 			int getNumberOfVertices (void);
 			void setNumberOfVerticesPerPatch(int i);

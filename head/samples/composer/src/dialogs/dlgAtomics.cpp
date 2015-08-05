@@ -1,5 +1,5 @@
 #include "dlgAtomics.h"
-#include <nau/render/irenderer.h>
+#include <nau/render/iRenderer.h>
 #include <nau.h>
 
 ///////////////////////////////////////////////////////////////////////////

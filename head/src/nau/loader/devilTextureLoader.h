@@ -4,12 +4,11 @@
 #include <string>
 
 #include "nau/loader/iTextureLoader.h"
-#include "nau/material/teximage.h"
-
-
-using namespace nau::material;
+#include "nau/material/texImage.h"
 
 #include <IL/il.h>
+
+using namespace nau::material;
 
 namespace nau
 {

@@ -6,7 +6,7 @@
 #include "nau/event/ilistener.h"
 #include "nau/geometry/iBoundingVolume.h"
 #include "nau/math/matrix.h"
-#include "nau/render/irenderable.h"
+#include "nau/render/iRenderable.h"
 #include "nau/scene/sceneobjectfactory.h"
 
 #include <string>

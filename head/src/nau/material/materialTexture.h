@@ -3,12 +3,11 @@
 
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
+#include "nau/material/texture.h"
 #include "nau/material/textureSampler.h"
-#include "nau/render/texture.h"
 
 #include <string>
 
-using namespace nau::render;
 using namespace nau;
 
 namespace nau {

@@ -2,7 +2,7 @@
 #define CBOLOADER_H
 
 #include "nau/scene/iscene.h"
-#include "nau/render/vertexdata.h"
+#include "nau/geometry/vertexData.h"
 #include "nau/material/material.h"
 #include "nau/scene/octreeByMatscene.h"
 

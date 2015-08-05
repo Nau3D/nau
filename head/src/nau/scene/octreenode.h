@@ -5,8 +5,8 @@
 
 #include "nau/scene/sceneobject.h"
 #include "nau/scene/camera.h"
-#include "nau/material/materialgroup.h"
-#include "nau/render/irenderable.h"
+#include "nau/material/materialGroup.h"
+#include "nau/render/iRenderable.h"
 #include "nau/geometry/boundingBox.h"
 #include "nau/geometry/mesh.h"
 #include "nau/geometry/frustum.h"

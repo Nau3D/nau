@@ -2,7 +2,7 @@
 #include "nau.h"
 #include "nau/scene/sceneobjectfactory.h"
 #include "nau/geometry/boundingvolumefactory.h"
-#include "nau/material/materialgroup.h"
+#include "nau/material/materialGroup.h"
 #include "nau/slogger.h"
 
 #include "nau/errors.h"

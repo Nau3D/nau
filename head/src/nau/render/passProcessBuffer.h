@@ -1,8 +1,8 @@
 #ifndef PASS_PRE_PROCESS_BUFFER_H
 #define PASS_PRE_PROCESS_BUFFER_H
 
+#include "nau/material/iBuffer.h"
 #include "nau/render/passProcessItem.h"
-#include "nau/render/iBuffer.h"
 
 namespace nau {
 	namespace render {
@@ -18,11 +18,11 @@ namespace nau {
 			static AttribSet Attribs;
 
 			virtual void process();
-			void setItem(IBuffer *buf);
+			void setItem(nau::material::IBuffer *buf);
 
 		protected:
 
-			IBuffer *m_Buffer;
+			nau::material::IBuffer *m_Buffer;
 
 			static bool Init();
 			static bool Inited;

@@ -2,15 +2,14 @@
 #define MATERIAL_H
 
 #include "nau/clogger.h"
-#include "nau/material/colormaterial.h"
+#include "nau/material/colorMaterial.h"
+#include "nau/material/imageTexture.h"
+#include "nau/material/iMaterialBuffer.h"
+#include "nau/material/iProgram.h"
+#include "nau/material/iState.h" 
 #include "nau/material/materialTexture.h"
-#include "nau/material/programvalue.h"
-//#include "nau/material/texturemat.h"
-#include "nau/material/imaterialbuffer.h"
-#include "nau/render/imageTexture.h"
-#include "nau/render/iprogram.h"
-#include "nau/render/istate.h" 
-#include "nau/render/texture.h"
+#include "nau/material/programValue.h"
+#include "nau/material/texture.h"
 
 #include <string>
 #include <iostream>
@@ -18,8 +17,6 @@
 #include <map>
 #include <string>
 #include <vector>
-
-using namespace nau::render;
 
 namespace nau
 {
@@ -48,8 +45,8 @@ namespace nau
 			std::map<int, MaterialTexture *> m_Textures;
 
 //			std::string m_Shader;
-			nau::render::IProgram *m_Shader;
-			nau::render::IState *m_State;
+			IProgram *m_Shader;
+			IState *m_State;
 
 			// These are values specified in the material library
 			std::map<std::string, nau::material::ProgramValue> m_ProgramValues;
@@ -104,7 +101,7 @@ namespace nau
 
 			void attachProgram (std::string shaderName);
 			void Material::cloneProgramFromMaterial(Material *mat);
-			nau::render::IProgram *getProgram();
+			IProgram *getProgram();
 			std::string getProgramName();
 			bool isInSpecML(std::string programValueName);
 			void addProgramValue (std::string name, nau::material::ProgramValue progVal);
@@ -121,7 +118,7 @@ namespace nau
 			void getUniformNames(std::vector<std::string> *vs);
 
 			nau::material::ColorMaterial& getColor (void);
-			nau::render::IState* getState (void);
+			IState* getState (void);
 
 			void setState(IState *s);
 		};

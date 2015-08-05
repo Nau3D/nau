@@ -1,6 +1,6 @@
 #include "nau/render/optix/optixMaterial.h"
 #include "nau/render/optix/optixRenderer.h"
-#include "nau/render/optix/optixMaterialLib.h"
+#include "nau/render/optix/optixmaterialLib.h"
 #include "nau.h"
 
 using namespace nau::render::optixRender;

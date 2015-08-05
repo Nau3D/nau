@@ -8,7 +8,7 @@
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_math_namespace.h>
 
-#include "nau/material/materialid.h"
+#include "nau/material/materialId.h"
 #include "nau/material/material.h"
 
 #include "nau/render/optix/optixTextureLib.h"

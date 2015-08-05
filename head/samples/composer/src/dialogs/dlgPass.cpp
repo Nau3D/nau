@@ -4,7 +4,7 @@
 
 #include <nau.h>
 #include <nau/event/eventFactory.h>
-#include <nau/render/passfactory.h>
+#include <nau/render/passFactory.h>
 #include <nau/event/eventString.h>
 
 
