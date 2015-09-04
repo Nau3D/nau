@@ -1,6 +1,4 @@
-#include "nau/config.h"
-
-#if NAU_OPENGL_VERSION >= 420
+#ifdef NAU_OPTIX 
 
 #ifndef PASSOPTIXPRIME_H
 #define PASSOPTIXPRIME_H
@@ -28,6 +26,8 @@ namespace nau
 			PassOptixPrime(const std::string &passName);
 			virtual ~PassOptixPrime();
 
+			static Pass *Create(const std::string &name);
+
 			virtual void prepare (void);
 			virtual void restore (void);
 
@@ -40,6 +40,9 @@ namespace nau
 			void addHitBuffer(IBuffer *b);
 		
 		protected:
+			static bool Init();
+			static bool Inited;
+
 			bool m_Init = false;
 			IBuffer *m_Rays = NULL, *m_Hits = NULL;
 			RTPcontext m_Context;
@@ -57,7 +60,6 @@ namespace nau
 
 
 #endif
-
 
 	
 	

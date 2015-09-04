@@ -1,8 +1,8 @@
 #ifndef GLTEXTURE_H
 #define GLTEXTURE_H
 
-#include "nau/material/texture.h"
-#include "nau/material/texturesampler.h"
+#include "nau/material/iTexture.h"
+#include "nau/material/iTextureSampler.h"
 
 #include <GL/glew.h>
 
@@ -13,9 +13,9 @@ namespace nau
 {
 	namespace render
 	{
-		class GLTexture : public Texture
+		class GLTexture : public ITexture
 		{
-		friend class Texture;
+		friend class ITexture;
 
 		public:
 
@@ -23,9 +23,9 @@ namespace nau
 			GLTexture(){};
 
 			//! prepare a texture for rendering
-			virtual void prepare(unsigned int unit, TextureSampler *ts);
+			virtual void prepare(unsigned int unit, ITextureSampler *ts);
 			//! restore default texture in texture unit
-			virtual void restore(unsigned int unit, TextureSampler *ts);
+			virtual void restore(unsigned int unit, ITextureSampler *ts);
 			//! builds a texture with the attribute parameters previously set
 			virtual void build(int immutable = 0);
 

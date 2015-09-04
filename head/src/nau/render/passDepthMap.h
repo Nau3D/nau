@@ -7,11 +7,9 @@ namespace nau
 {
 	namespace render
 	{
-		class PassDepthMap :
-			public Pass
+		class PassDepthMap : public Pass
 		{
 		protected:
-			//virtual void setupCamera (void);
 			nau::scene::Camera *m_LightCamera;
 
 			static bool Init();
@@ -21,6 +19,8 @@ namespace nau
 
 			PassDepthMap(const std::string &name);
 			~PassDepthMap(void);
+
+			static Pass *Create(const std::string &name);
 
 			virtual void prepare (void);
 			virtual void doPass (void);

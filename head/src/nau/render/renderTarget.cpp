@@ -85,7 +85,7 @@ RenderTarget::getNumberOfColorTargets() {
 }
 
 
-Texture *
+ITexture *
 RenderTarget::getTexture(unsigned int i) {
 
 	if (i <= m_TexId.size()) {

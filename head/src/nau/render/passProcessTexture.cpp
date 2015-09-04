@@ -1,6 +1,8 @@
 #include "nau/render/passProcessTexture.h"
 
 #include "nau.h"
+#include "nau/render/iAPISupport.h"
+
 
 using namespace nau::render;
 
@@ -8,11 +10,11 @@ bool
 PassProcessTexture::Init() {
 
 	// BOOL
-	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
+	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false), NULL,NULL, IAPISupport::CLEAR_TEXTURE));
 	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new bool(false)));
 
 	// INT
-	Attribs.add(Attribute(CLEAR_LEVEL, "CLEAR_LEVEL", Enums::DataType::INT, false, new int(-1)));
+	Attribs.add(Attribute(CLEAR_LEVEL, "CLEAR_LEVEL", Enums::DataType::INT, false, new int(-1), NULL,NULL, IAPISupport::CLEAR_TEXTURE_LEVEL));
 
 	NAU->registerAttributes("PASS_PROCESS_TEXTURE", &Attribs);
 	return true;
@@ -30,7 +32,7 @@ PassProcessTexture::PassProcessTexture() : m_Tex(NULL), PassProcessItem() {
 
 
 void 
-PassProcessTexture::setItem(Texture *tex) {
+PassProcessTexture::setItem(ITexture *tex) {
 
 	m_Tex = tex;
 }
@@ -42,12 +44,12 @@ PassProcessTexture::process() {
 	if (!m_Tex)
 		return;
 
-#if NAU_OPENGL_VERSION >= 440
-	if (m_BoolProps[CLEAR])
+	IAPISupport *sup = IAPISupport::GetInstance();
+
+	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE) && m_BoolProps[CLEAR])
 		m_Tex->clear();
-	if (m_IntProps[CLEAR_LEVEL] >= 0)
+	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) && m_IntProps[CLEAR_LEVEL] >= 0)
 		m_Tex->clearLevel(m_IntProps[CLEAR_LEVEL]);
-#endif
 	if (m_BoolProps[MIPMAP])
 		m_Tex->generateMipmaps();
 }

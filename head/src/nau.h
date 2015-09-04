@@ -21,11 +21,11 @@
 #include "nau/render/pass.h"
 #include "nau/render/viewport.h"
 #include "nau/render/renderManager.h"
-#include "nau/resource/resourcemanager.h"
-#include "nau/scene/iscene.h"
+#include "nau/resource/resourceManager.h"
+#include "nau/scene/iScene.h"
 #include "nau/scene/camera.h"
 #include "nau/scene/light.h"
-#include "nau/world/iworld.h"
+#include "nau/world/iWorld.h"
 
 #ifdef NAU_LUA
 extern "C" {
@@ -60,17 +60,10 @@ namespace nau {
 
 	public:		
 
-		//FLOAT_PROP(TIMER, 0);
-
-		//UINT_PROP(FRAME_COUNT, 0);
-
-		//static AttribSet Attribs;
-		//virtual float getPropf(FloatProperty prop);
-
 		typedef enum RenderFlags {
-						BOUNDING_BOX_RENDER_FLAG, 
-						PROFILE_RENDER_FLAG, 
-						COUNT_RENDER_FLAGS
+			BOUNDING_BOX_RENDER_FLAG, 
+			PROFILE_RENDER_FLAG, 
+			COUNT_RENDER_FLAGS
 		};
 
 		static nau::Nau* create (void);
@@ -140,9 +133,9 @@ namespace nau {
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);
 
-		void setWindowSize (float width, float height);
-		float getWindowHeight();
-		float getWindowWidth();
+		void setWindowSize (unsigned int width, unsigned int height);
+		unsigned int getWindowHeight();
+		unsigned int getWindowWidth();
 
 		// Viewports
 		//nau::render::Viewport* createViewport (const std::string &name, nau::math::vec4 &bgColor);
@@ -227,7 +220,7 @@ namespace nau {
 		 * Members
 		 */
 		std::string m_ActiveCameraName;
-		float m_WindowWidth, m_WindowHeight;
+		unsigned int m_WindowWidth, m_WindowHeight;
 		nau::world::IWorld *m_pWorld;
 		//std::map <std::string, nau::render::Viewport*> m_vViewports;
 		nau::render::Viewport *m_Viewport;

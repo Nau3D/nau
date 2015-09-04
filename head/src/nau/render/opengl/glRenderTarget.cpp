@@ -228,12 +228,12 @@ GLRenderTarget::addDepthStencilTarget (std::string name) {
 
 
 void
-GLRenderTarget::attachColorTexture (Texture* aTexture, unsigned int colorAttachment) {
+GLRenderTarget::attachColorTexture (ITexture* aTexture, unsigned int colorAttachment) {
 
 	  if (-1 == (int) m_RenderTargets[colorAttachment]) {
 			m_RenderTargets[m_Color] = GL_COLOR_ATTACHMENT0 + colorAttachment;
 		}
-		glFramebufferTexture  (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment, aTexture->getPropi(Texture::ID), 0);
+		glFramebufferTexture  (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment, aTexture->getPropi(ITexture::ID), 0);
 }
 
 
@@ -247,9 +247,9 @@ GLRenderTarget::dettachColorTexture (unsigned int colorAttachment) {
 
 
 void 
-GLRenderTarget::attachDepthStencilTexture (Texture* aTexture, GLuint type) {
+GLRenderTarget::attachDepthStencilTexture (ITexture* aTexture, GLuint type) {
 
-	glFramebufferTexture (GL_FRAMEBUFFER, type, aTexture->getPropi(Texture::ID), 0);
+	glFramebufferTexture (GL_FRAMEBUFFER, type, aTexture->getPropi(ITexture::ID), 0);
 }
 
 
@@ -282,7 +282,7 @@ GLRenderTarget::resize() {
 			if (0 != m_TexId[i]) {
 				m_TexId[i]->resize(m_UInt2Props[SIZE].x, m_UInt2Props[SIZE].y, 1);
 				//texName = m_TexId[i]->getLabel();
-				//internalFormat = m_TexId[i]->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_TexId[i]->getPrope(Texture::INTERNAL_FORMAT));;
+				//internalFormat = m_TexId[i]->Attribs.getListStringOp(ITexture::INTERNAL_FORMAT, m_TexId[i]->getPrope(ITexture::INTERNAL_FORMAT));;
 				//RESOURCEMANAGER->removeTexture (m_TexId[i]->getLabel());
 				//m_TexId[i] = NULL;
 				//attachColorTexture (m_TexId[i], i);
@@ -300,7 +300,7 @@ GLRenderTarget::resize() {
 		if (0 != m_DepthTexture) {
 				m_DepthTexture->resize(m_UInt2Props[SIZE].x, m_UInt2Props[SIZE].y, 1);
 			//texName = m_DepthTexture->getLabel();
-			//internalFormat = m_DepthTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_DepthTexture->getPrope(Texture::INTERNAL_FORMAT));;
+			//internalFormat = m_DepthTexture->Attribs.getListStringOp(ITexture::INTERNAL_FORMAT, m_DepthTexture->getPrope(ITexture::INTERNAL_FORMAT));;
 			//RESOURCEMANAGER->removeTexture(m_DepthTexture->getLabel());
 			//m_DepthTexture = 0;
 		}
@@ -319,7 +319,7 @@ GLRenderTarget::resize() {
 		if (0 != m_StencilTexture) {
 			m_StencilTexture->resize(m_UInt2Props[SIZE].x, m_UInt2Props[SIZE].y, 1);
 			//texName = m_StencilTexture->getLabel();
-			//internalFormat = m_StencilTexture->Attribs.getListStringOp(Texture::INTERNAL_FORMAT, m_StencilTexture->getPrope(Texture::INTERNAL_FORMAT));;
+			//internalFormat = m_StencilTexture->Attribs.getListStringOp(ITexture::INTERNAL_FORMAT, m_StencilTexture->getPrope(ITexture::INTERNAL_FORMAT));;
 			//RESOURCEMANAGER->removeTexture(m_StencilTexture->getLabel(//*));
 			//m_StencilTexture = 0;
 		}

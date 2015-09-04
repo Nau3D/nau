@@ -1,7 +1,7 @@
 #ifndef PASS_PRE_PROCESS_TEXTURE_H
 #define PASS_PRE_PROCESS_TEXTURE_H
 
-#include "nau/material/texture.h"
+#include "nau/material/iTexture.h"
 #include "nau/render/passProcessItem.h"
 
 using namespace nau::material;
@@ -24,11 +24,11 @@ namespace nau {
 			static AttribSet Attribs;
 
 			virtual void process();
-			void setItem(Texture *tex);
+			void setItem(ITexture *tex);
 
 		protected:
 
-			Texture *m_Tex;
+			ITexture *m_Tex;
 
 			static bool Init();
 			static bool Inited;

@@ -8,9 +8,11 @@
 
 #include <main.h>
 #include <glcanvas.h>
+
 #include <nau/errors.h>
 #include <nau/clogger.h>
 #include <nau/slogger.h>
+#include <nau/render/iAPISupport.h>
 
 #ifdef GLINTERCEPTDEBUG
 #include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
@@ -248,7 +250,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
     helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
     helpMenu->Append(idMenu_DLG_LOG, _("&Log\tF2"), _("Show Log"));
     helpMenu->Append(idMenu_DLG_OGL, _("&OpenGL Properties\tF3"), _("Show info about OpenGL Context"));
-    helpMenu->Append(idMenu_DLG_TEXTURES, _("&Texture Library\tF4"), _("Show Texture Library"));
+    helpMenu->Append(idMenu_DLG_TEXTURES, _("&Texture Library\tF4"), _("Show ITexture Library"));
     helpMenu->Append(idMenu_DLG_CAMERAS, _("&Camera Library\tF5"), _("Show Camera Library"));
     helpMenu->Append(idMenu_DLG_MATERIALS, _("&Material Library Manager\tF6"), _("Show Material Libraries"));
 	helpMenu->Append(idMenu_DLG_VIEWPORTS, _("&Viewports Library\tF11"), _("Show Viewport Library"));
@@ -260,7 +262,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	helpMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info\tF12"), _("Views Buffer information"));
     mbar->Append(helpMenu, _("&Help"));
 
-	helpMenu->Enable(idMenu_DLG_TEXTURES,false);
+	//helpMenu->Enable(idMenu_DLG_TEXTURES,false);
 	helpMenu->Enable(idMenu_DLG_CAMERAS,false);
 	helpMenu->Enable(idMenu_DLG_LIGHTS,false);
 	helpMenu->Enable(idMenu_DLG_SHADERS,false);
@@ -338,11 +340,11 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
 #define WGL_CONTEXT_CORE_PROFILE_BIT_ARB			0x00000001
 #define	WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB	0x00000002
-	int major = NAU_OPENGL_VERSION / 100;
-	int minor = (NAU_OPENGL_VERSION - major * 100 ) / 10;
+	//int major = NAU_OPENGL_VERSION / 100;
+	//int minor = (NAU_OPENGL_VERSION - major * 100 ) / 10;
 	int contextAttribList[] = {
-			WGL_CONTEXT_MAJOR_VERSION_ARB, major,
-            WGL_CONTEXT_MINOR_VERSION_ARB, minor, 
+			//WGL_CONTEXT_MAJOR_VERSION_ARB, major,
+            //WGL_CONTEXT_MINOR_VERSION_ARB, minor, 
             WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
             WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
  
@@ -497,7 +499,10 @@ FrmMainFrame::OnDlgPass(wxCommandEvent& event) {
 void 
 FrmMainFrame::updateDlgs()
 {
-	DlgAtomics::Instance()->updateDlg();
+	if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS)) {
+		DlgAtomics::Instance()->updateDlg();
+		helpMenu->Enable(idMenu_DLG_ATOMICS, true);
+	}
 	DlgCameras::Instance()->updateDlg();
 	DlgTextureLib::Instance()->updateDlg();
 	DlgMaterials::Instance()->updateDlg();
@@ -507,7 +512,6 @@ FrmMainFrame::updateDlgs()
 	DlgScenes::Instance()->updateDlg();
 	DlgPass::Instance()->updateDlg();
 	DlgViewports::Instance()->updateDlg();
-	//DlgDbgBuffers::Instance()->updateDlg();
 
 
 	//Update state dialog
@@ -518,11 +522,9 @@ FrmMainFrame::updateDlgs()
 	helpMenu->Enable(idMenu_DLG_LIGHTS,true);
 	helpMenu->Enable(idMenu_DLG_SHADERS,true);
 	helpMenu->Enable(idMenu_DLG_PASS,true);
-	helpMenu->Enable(idMenu_DLG_ATOMICS, true);
 	helpMenu->Enable(idMenu_DLG_SCENES, true);
 	helpMenu->Enable(idMenu_DLG_VIEWPORTS, true);
 	helpMenu->Enable(idMenu_DLG_DBGBUFFER, true);
-	//debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 }
 
 
@@ -551,6 +553,9 @@ FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event)
 		}
 		catch(std::string &s) {
 			wxMessageBox(wxString(s.c_str()));
+		}
+		catch (...) {
+			wxMessageBox("An exception has occured during folder load");
 		}
 	}
 }
@@ -1059,7 +1064,7 @@ FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event){
 	//p = pip->createPass ("depthmap");
 	//p->setDoColorClear (true);
 	//p->setDoDepthClear (true);
-	//p->setRTMode (nau::render::Texture::RGBA32F);
+	//p->setRTMode (nau::render::ITexture::RGBA32F);
 	//p->setFBOs (1);
 
 

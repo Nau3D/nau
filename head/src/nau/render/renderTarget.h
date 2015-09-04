@@ -3,7 +3,7 @@
 
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
-#include "nau/material/texture.h"
+#include "nau/material/iTexture.h"
 #include "nau/render/renderTarget.h"
 
 #include <string>
@@ -39,9 +39,9 @@ namespace nau
 			//unsigned int m_Width;
 			//unsigned int m_Height;
 			std::string m_Name;
-			std::vector<Texture*> m_TexId;
-			Texture *m_DepthTexture;
-			Texture *m_StencilTexture;
+			std::vector<ITexture*> m_TexId;
+			ITexture *m_DepthTexture;
+			ITexture *m_StencilTexture;
 
 			// clear values per channel
 			//nau::math::vec4 m_ClearValues;
@@ -63,7 +63,7 @@ namespace nau
 			virtual void addStencilTarget (std::string name) = 0;
 			virtual void addDepthStencilTarget(std::string name) = 0;
 
-			nau::material::Texture* getTexture(unsigned int i);
+			nau::material::ITexture* getTexture(unsigned int i);
 
 			virtual void setPropui2(UInt2Property prop, uivec2 &value) = 0;
 

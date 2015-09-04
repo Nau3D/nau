@@ -11,9 +11,9 @@
 #include "nau/render/iRenderQueue.h"
 #include "nau/render/viewport.h"
 #include "nau/scene/camera.h"
-#include "nau/scene/iscene.h"
+#include "nau/scene/iScene.h"
 #include "nau/scene/light.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 
 namespace nau 
 {

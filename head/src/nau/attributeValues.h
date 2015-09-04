@@ -14,6 +14,7 @@
 #define ENUM_PROP(A,B) static const EnumProperty A = (EnumProperty)B
 #define INT_PROP(A,B) static const IntProperty A = (IntProperty)B 
 #define INT2_PROP(A,B) static const Int2Property A = (Int2Property)B 
+#define INT3_PROP(A,B) static const Int3Property A = (Int3Property)B 
 #define UINT_PROP(A,B) static const UIntProperty A = (UIntProperty)B 
 #define UINT2_PROP(A,B) static const UInt2Property A = (UInt2Property)B 
 #define UINT3_PROP(A,B) static const UInt3Property A = (UInt3Property)B 
@@ -75,7 +76,18 @@ namespace nau {
 		virtual bool isValidi2(Int2Property prop, ivec2 &value);
 		virtual void setPropi2(Int2Property prop, ivec2 &value);
 
-		// UINT
+	// INT3
+	protected:
+		std::map<int, ivec3> m_Int3Props;
+
+	public:
+		typedef enum {} Int3Property;
+
+		virtual ivec3& getPropi3(Int3Property prop);
+		virtual bool isValidi3(Int3Property prop, ivec3 &value);
+		virtual void setPropi3(Int3Property prop, ivec3 &value);
+		
+	// UINT
 	protected:
 		std::map<int,unsigned int> m_UIntProps;
 

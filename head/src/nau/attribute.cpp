@@ -1,8 +1,10 @@
 #include "nau/attribute.h"
 
+#include "nau/render/iRenderer.h"
+
 #include <vector>
 
-using namespace nau;
+using namespace nau::render;
 
 std::vector<std::string> Attribute::m_DummyVS;
 
@@ -13,9 +15,10 @@ Attribute::Attribute() : m_Id(-1), m_Default(NULL), m_RangeDefined(false), m_Lis
 
 Attribute::Attribute(int id, std::string name, Enums::DataType type, 
 	bool readOnlyFlag, void *defaultV,
-	void *min, void *max) :
+	void *min, void *max, IAPISupport::APIFeatureSupport requires) :
 	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), m_Default(NULL), m_Min(NULL), m_Max(NULL),
-		m_ListDefined(false), m_RangeDefined(false)  {
+		m_ListDefined(false), m_RangeDefined(false),
+		m_Requires(requires){
 		
 	int s = Enums::getSize(m_Type);
 
@@ -85,6 +88,20 @@ Attribute::getDefault() {
 
 
 void 
+Attribute::setRequirement(IAPISupport::APIFeatureSupport req) {
+
+	m_Requires = req;
+}
+
+
+IAPISupport::APIFeatureSupport 
+Attribute::getRequirement() {
+
+	return m_Requires;
+}
+
+
+void 
 Attribute::setRange(void *min, void *max) {
 				
 	assert(m_Type != Enums::STRING);
@@ -132,11 +149,12 @@ Attribute::getId() {
 
 
 void 
-Attribute::listAdd(std::string name, int id) {
+Attribute::listAdd(std::string name, int id, IAPISupport::APIFeatureSupport requires) {
 		
 	m_ListDefined = true;
 	m_ListValues.push_back(id);
 	m_ListString.push_back(name);
+	m_ListRequire.push_back(requires);
 };
 
 		 
@@ -144,10 +162,12 @@ bool
 Attribute::isValid(std::string value) {
 		
 	if (m_ListDefined) {				
-		std::vector<std::string>::iterator it = m_ListString.begin();
-		for ( ; it != m_ListString.end(); ++it) {
-			if (*it == value)
-				return true;
+		for ( unsigned int i = 0; i < m_ListString.size(); ++i) {
+			if (m_ListString[i] == value) {
+				if (APISupport->apiSupport(m_ListRequire[i]))
+					return true;
+				else return false;
+			}
 		}
 		return false;
 	}
@@ -209,8 +229,11 @@ bool
 Attribute::isValid(int v) {
 
 	for (unsigned int i = 0; i < m_ListValues.size(); ++i) {
-		if (m_ListValues[i] == v)
-			return true;
+			if (m_ListValues[i] == v) {
+				if (APISupport->apiSupport(m_ListRequire[i]))
+					return true;
+				else return false;
+			}
 	}
 	return false;
 }
@@ -220,6 +243,19 @@ const std::vector<std::string> &
 Attribute::getOptionStringList() {
 
 	return m_ListString;
+}
+
+
+void 
+Attribute::getOptionStringListSupported(std::vector<std::string> *result) {
+
+	result->clear();
+	for (unsigned int i = 0; i < m_ListString.size(); ++i) {
+
+		if (APISupport->apiSupport(m_ListRequire[i]))
+			result->push_back(m_ListString[i]);
+	}
+
 }
 
 
@@ -427,14 +463,14 @@ AttribSet::getListValueOp(int id, std::string prop) {
 
 
 void 
-AttribSet::listAdd(std::string attrName, std::string elemS, int elem_Id) {
+AttribSet::listAdd(std::string attrName, std::string elemS, int elem_Id, IAPISupport::APIFeatureSupport requires) {
 
 	std::map<std::string, Attribute>::iterator it;
 	it = m_Attributes.begin();
 	for ( ; it != m_Attributes.end(); ++it) {
 
 		if (it->first == attrName) {
-			it->second.listAdd(elemS, elem_Id);
+			it->second.listAdd(elemS, elem_Id, requires);
 			return;
 		}
 	}

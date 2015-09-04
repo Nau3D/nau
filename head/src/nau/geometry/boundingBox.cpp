@@ -95,9 +95,9 @@ void BoundingBox::set(vec3 min, vec3 max) {
 	m_GeometryTransform.translate(m_vPoints[CENTER]);
 	//m_GeometryTransform.setTranslation();
 	m_GeometryTransform.scale(	
-						0.5 * (m_vPoints[MAX].x - m_vPoints[MIN].x),
-						0.5 * (m_vPoints[MAX].y - m_vPoints[MIN].y),
-						0.5 * (m_vPoints[MAX].z - m_vPoints[MIN].z));
+						0.5f * (m_vPoints[MAX].x - m_vPoints[MIN].x),
+						0.5f * (m_vPoints[MAX].y - m_vPoints[MIN].y),
+						0.5f * (m_vPoints[MAX].z - m_vPoints[MIN].z));
 }
 
 
@@ -143,9 +143,9 @@ BoundingBox::calculate (const std::vector<VertexData::Attr> &vertices)
 	m_GeometryTransform.setIdentity();
 	m_GeometryTransform.translate(m_vPoints[CENTER]);
 	m_GeometryTransform.scale(	
-						0.5 * (m_vPoints[MAX].x - m_vPoints[MIN].x),
-						0.5 * (m_vPoints[MAX].y - m_vPoints[MIN].y),
-						0.5 * (m_vPoints[MAX].z - m_vPoints[MIN].z));
+						0.5f * (m_vPoints[MAX].x - m_vPoints[MIN].x),
+						0.5f * (m_vPoints[MAX].y - m_vPoints[MIN].y),
+						0.5f * (m_vPoints[MAX].z - m_vPoints[MIN].z));
 
 }
 
@@ -287,9 +287,9 @@ BoundingBox::compound (const IBoundingVolume  *volume)
 	
 	m_GeometryTransform.setIdentity();
 	m_GeometryTransform.translate(m_vPoints[CENTER]);
-	m_GeometryTransform.scale(	0.5 * (m_vPoints[MAX].x - m_vPoints[MIN].x),
-						0.5 * (m_vPoints[MAX].y - m_vPoints[MIN].y),
-						0.5 * (m_vPoints[MAX].z - m_vPoints[MIN].z));
+	m_GeometryTransform.scale(	0.5f * (m_vPoints[MAX].x - m_vPoints[MIN].x),
+						0.5f * (m_vPoints[MAX].y - m_vPoints[MIN].y),
+						0.5f * (m_vPoints[MAX].z - m_vPoints[MIN].z));
 
 }
 

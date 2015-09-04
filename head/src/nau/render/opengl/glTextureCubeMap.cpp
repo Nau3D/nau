@@ -26,7 +26,7 @@ int GLTextureCubeMap::faces[6] = {
 GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> files, 
 									std::string anInternalFormat, std::string aFormat, 
 									std::string aType, int width, unsigned char** data, bool mipmap) :
-	TextureCubeMap (label,files, anInternalFormat, aFormat, aType, width)
+	ITextureCubeMap (label,files, anInternalFormat, aFormat, aType, width)
 {
 	m_IntProps[WIDTH] = width;
 	m_IntProps[HEIGHT] = width;
@@ -87,18 +87,18 @@ GLTextureCubeMap::getNumberOfComponents(void) {
 
 
 void 
-GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::TextureSampler *ts) {
+GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::ITextureSampler *ts) {
 
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,m_IntProps[ID]);
-	//glBindSampler(aUnit, ts->getPropi(TextureSampler::ID));
+	//glBindSampler(aUnit, ts->getPropi(ITextureSampler::ID));
 
 	ts->prepare(aUnit, GL_TEXTURE_CUBE_MAP);
 }
 
 
 void 
-GLTextureCubeMap::restore(unsigned int aUnit, nau::material::TextureSampler *ts) 
+GLTextureCubeMap::restore(unsigned int aUnit, nau::material::ITextureSampler *ts) 
 {
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP,0);
@@ -116,20 +116,18 @@ GLTextureCubeMap::build(int immutable) {}
 void
 GLTextureCubeMap::clear() {
 
-#if NAU_OPENGL_VERSION >= 440
+	assert(APISupport->apiSupport(IAPISupport::CLEAR_TEXTURE) && "Clear Cubemap texture not supported");
 	for (int i = 0; i < m_IntProps[LEVELS]; ++i)
 		glClearTexImage(m_UIntProps[ID], i, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
-#endif
 }
 
 
 void
 GLTextureCubeMap::clearLevel(int l) {
 
-#if NAU_OPENGL_VERSION >= 440
+	assert(APISupport->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) && "Clear Cubemap texture level not supported");
 	if (l < m_IntProps[LEVELS])
 		glClearTexImage(m_UIntProps[ID], l, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
-#endif
 }
 
 

@@ -2,17 +2,19 @@
 #define ATTRIBUTE_H
 
 
+#include "nau/enums.h"
+#include "nau/math/matrix.h"
+#include "nau/math/vec4.h"
+#include "nau/math/vec2.h"
+#include "nau/render/iAPISupport.h"
+
 #include <assert.h>
 #include <map>
 #include <string>
 #include <vector>
 
-#include "nau/enums.h"
-#include "nau/math/matrix.h"
-#include "nau/math/vec4.h"
-#include "nau/math/vec2.h"
-
 using namespace nau::math;
+using namespace nau::render;
 
 namespace nau {
 
@@ -33,7 +35,7 @@ namespace nau {
 		Attribute();
 		Attribute(int id, std::string name, Enums::DataType type, 
 			bool readOnlyFlag = false, void *defaultV = NULL,
-			void *min=NULL, void *max = NULL);
+			void *min=NULL, void *max = NULL, IAPISupport::APIFeatureSupport requires = IAPISupport::OK);
 		
 		~Attribute();
 
@@ -52,11 +54,15 @@ namespace nau {
 		int getOptionValue(std::string &s);
 		std::string &getOptionString(int v);
 		const std::vector<std::string> &getOptionStringList();
+		void getOptionStringListSupported(std::vector<std::string> *result);
 		void *getDefault();
 
 		void setRange(void *min, void *max);
 
-		void listAdd(std::string name, int id);
+		void setRequirement(IAPISupport::APIFeatureSupport req);
+		IAPISupport::APIFeatureSupport getRequirement();
+
+		void listAdd(std::string name, int id, IAPISupport::APIFeatureSupport requires = IAPISupport::OK);
 
 		// for enum types only. Checks if it is a valid option. 
 		bool isValid(std::string value);
@@ -73,7 +79,9 @@ namespace nau {
 		bool m_ListDefined;
 		bool m_RangeDefined;
 		void *m_Min, *m_Max;
+		IAPISupport::APIFeatureSupport m_Requires;
 		std::vector<int> m_ListValues;
+		std::vector<IAPISupport::APIFeatureSupport> m_ListRequire;
 		std::vector<std::string> m_ListString;
 		std::string m_DummyS;
 	};
@@ -116,7 +124,7 @@ namespace nau {
 		std::string getListStringOp(int id, int prop);
 		int getListValueOp(std::string s, std::string prop);
 		int getListValueOp(int id, std::string prop);
-		void listAdd(std::string attrName, std::string elemS, int elem_Id);
+		void listAdd(std::string attrName, std::string elemS, int elem_Id, IAPISupport::APIFeatureSupport requires = IAPISupport::OK);
 		bool isValid(std::string attr, std::string value);
 		void setDefault(std::string attr, void *value);
 		void *getDefault(int id, Enums::DataType type);

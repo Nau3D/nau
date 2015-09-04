@@ -4,7 +4,7 @@
 #include "nau/event/iEventData.h"
 #include "nau/event/sensor.h"
 #include "nau/math/vec3.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 
 
 using namespace nau::math;

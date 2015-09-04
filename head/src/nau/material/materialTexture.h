@@ -3,8 +3,8 @@
 
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
-#include "nau/material/texture.h"
-#include "nau/material/textureSampler.h"
+#include "nau/material/iTexture.h"
+#include "nau/material/iTextureSampler.h"
 
 #include <string>
 
@@ -33,10 +33,10 @@ namespace nau {
 
 			void bind();
 			void unbind();
-			void setTexture(Texture *b);
-			void setSampler(TextureSampler *b);
-			Texture *getTexture();
-			TextureSampler *getSampler();
+			void setTexture(ITexture *b);
+			void setSampler(ITextureSampler *b);
+			ITexture *getTexture();
+			ITextureSampler *getSampler();
 
 			~MaterialTexture(void) {};
 
@@ -48,8 +48,8 @@ namespace nau {
 			static bool Inited;
 
 			std::string m_Label;
-			Texture *m_Texture;
-			TextureSampler *m_Sampler;
+			ITexture *m_Texture;
+			ITextureSampler *m_Sampler;
 		};
 	};
 };

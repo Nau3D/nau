@@ -10,7 +10,7 @@ IRenderable contains only the vertex attribute vectors. The index vectors are st
 #include "nau/render/iRenderer.h"
 #include "nau/render/iRenderable.h"
 #include "nau/material/materialgroup.h"
-#include "nau/resource/resourcemanager.h"
+#include "nau/resource/resourceManager.h"
 
 #include <set>
 #include <string>

@@ -1,9 +1,22 @@
 #include "nau/render/passQuad.h"
 
 #include "nau.h"
+#include "nau/render/passFactory.h"
 
 using namespace nau::render;
 using namespace nau::geometry;
+
+
+bool PassQuad::Inited = PassQuad::Init();
+
+
+bool
+PassQuad::Init() {
+
+	PASSFACTORY->registerClass("quad", Create);
+	return true;
+}
+
 
 PassQuad::PassQuad (const std::string &name) :
 	Pass (name),
@@ -20,15 +33,22 @@ PassQuad::~PassQuad(void) {
 }
 
 
+Pass *
+PassQuad::Create(const std::string &passName) {
+
+	return new PassQuad(passName);
+}
+
+
 void
 PassQuad::prepare (void) {
 
 	if (0 != m_RenderTarget && true == m_UseRT) {
 		if (m_ExplicitViewport) {
 			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUT_SIZE);
-			m_RTSizeWidth = f2.x;
-			m_RTSizeHeight = f2.y;
-			m_RenderTarget->setPropui2(RenderTarget::SIZE, uivec2(f2.x, f2.y));
+			m_RTSizeWidth = (int)f2.x;
+			m_RTSizeHeight = (int)f2.y;
+			m_RenderTarget->setPropui2(RenderTarget::SIZE, uivec2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeWidth));
 		}
 		m_RenderTarget->bind();
 	}

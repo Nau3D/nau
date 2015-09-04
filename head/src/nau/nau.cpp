@@ -15,10 +15,11 @@
 #ifdef GLINTERCEPTDEBUG
 #include "nau/loader/projectLoaderDebugLinker.h"
 #endif //GLINTERCEPTDEBUG
-#include "nau/resource/fontmanager.h"
-#include "nau/scene/scenefactory.h"
+#include "nau/render/iAPISupport.h"
+#include "nau/resource/fontManager.h"
+#include "nau/scene/sceneFactory.h"
 #include "nau/system/file.h"
-#include "nau/world/worldfactory.h"
+#include "nau/world/worldFactory.h"
 
 #include <GL/glew.h>
 
@@ -94,8 +95,8 @@ Nau::getInstance (void) {
 
 
 Nau::Nau() :
-	m_WindowWidth (0.0f), 
-	m_WindowHeight (0.0f), 
+	m_WindowWidth (0), 
+	m_WindowHeight (0), 
 //	m_vViewports(),
 	m_Inited (false),
 	m_Physics (false),
@@ -137,6 +138,9 @@ Nau::init (bool context, std::string aConfigFile) {
 	//bool result;
 	if (true == context) {
 
+
+		IAPISupport *sup = IAPISupport::GetInstance();
+		sup->setAPISupport();
 		m_pRenderManager = new RenderManager;
 		m_pEventManager = new EventManager;
 	}	
@@ -156,7 +160,7 @@ Nau::init (bool context, std::string aConfigFile) {
 
 	m_pWorld = WorldFactory::create ("Bullet");
 
-	m_StartTime = clock();// *1000.0 / CLOCKS_PER_MILISEC;
+	m_StartTime = (float)clock();// *1000.0 / CLOCKS_PER_MILISEC;
 	m_LastFrameTime = NO_TIME;
 
 	m_Inited = true;
@@ -249,7 +253,7 @@ int
 luaGetBuffer(lua_State *l) {
 
 	const char *name = lua_tostring(l, -4);
-	int offset = lua_tonumber(l, -3);
+	int offset = lua_tointeger(l, -3);
 	const char *dataType = lua_tostring(l, -2);
 
 	Enums::DataType dt = Enums::getType(dataType);
@@ -280,7 +284,7 @@ int
 luaSetBuffer(lua_State *l) {
 
 	const char *name = lua_tostring(l, -4);
-	int offset = lua_tonumber(l, -3);
+	int offset = lua_tointeger(l, -3);
 	const char *dataType = lua_tostring(l, -2);
 
 	Enums::DataType dt = Enums::getType(dataType);
@@ -305,7 +309,7 @@ luaSetBuffer(lua_State *l) {
 		arrF = (float *)malloc(sizeof(float) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l,-2) != 0; ++i) {
-			arrF[i] = lua_tonumber(l, -1);
+			arrF[i] = (float)lua_tonumber(l, -1);
 			lua_pop(l, 1);
 		}
 		arr = arrF;
@@ -315,7 +319,7 @@ luaSetBuffer(lua_State *l) {
 		arrI = (int *)malloc(sizeof(int) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
-			arrI[i] = lua_tonumber(l, -1);
+			arrI[i] = lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
 		arr = arrI;
@@ -343,7 +347,7 @@ luaGet(lua_State *l) {
 	const char *tipo = lua_tostring(l, -5);
 	const char *context = lua_tostring(l, -4);
 	const char *component = lua_tostring(l, -3);
-	int number = lua_tonumber(l, -2);
+	int number = lua_tointeger(l, -2);
 	void *arr;
 	AttribSet *attr;
 
@@ -388,7 +392,7 @@ luaSet(lua_State *l) {
 	const char *tipo = lua_tostring(l, -5);
 	const char *context = lua_tostring(l, -4);
 	const char *component = lua_tostring(l, -3);
-	int number = lua_tonumber(l, - 2);
+	int number = lua_tointeger(l, - 2);
 	void *arr;
 	AttribSet *attr;
 
@@ -420,7 +424,7 @@ luaSet(lua_State *l) {
 		arrF = (float *)malloc(sizeof(float) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l,-2) != 0; ++i) {
-			arrF[i] = lua_tonumber(l, -1);
+			arrF[i] = (float)lua_tonumber(l, -1);
 			lua_pop(l, 1);
 		}
 		arr = arrF;
@@ -430,7 +434,7 @@ luaSet(lua_State *l) {
 		arrI = (int *)malloc(sizeof(int) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
-			arrI[i] = lua_tonumber(l, -1);
+			arrI[i] = lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
 		arr = arrI;
@@ -461,12 +465,12 @@ luaSaveTexture(lua_State *l) {
 	if (!RESOURCEMANAGER->hasTexture(texName))
 		NAU_THROW("Lua save texture: invalid texture name");
 
-	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(texName);
+	nau::material::ITexture *texture = RESOURCEMANAGER->getTexture(texName);
 
 	char s[200];
 	sprintf(s,"%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
-	std::string sname = nau::system::FileUtil::Validate(s);
-	TextureLoader::Save(texture,TextureLoader::PNG);
+	std::string sname = nau::system::File::Validate(s);
+	ITextureLoader::Save(texture,ITextureLoader::PNG);
 
 	return 0;
 }
@@ -539,6 +543,7 @@ AttributeValues *
 Nau::getCurrentObjectAttributes(std::string context, int number) {
 
 	IRenderer *renderer = m_pRenderManager->getRenderer();
+	IAPISupport *sup = IAPISupport::GetInstance();
 
 	if (context == "CAMERA") {
 		return (AttributeValues *)renderer->getCamera();
@@ -546,11 +551,11 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 	if (context == "COLOR") {
 		return (AttributeValues *)renderer->getMaterial();
 	}
-#if NAU_OPENGL_VERSION >= 420
-	if (context == "IMAGE_TEXTURE") {
+	
+	if (sup->apiSupport(IAPISupport::IMAGE_TEXTURE) && context == "IMAGE_TEXTURE") {
 		return (AttributeValues *)renderer->getImageTexture(number);
 	}
-#endif
+
 	if (context == "LIGHT") {
 		return (AttributeValues *)renderer->getLight(number);
 	}
@@ -589,6 +594,7 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 	//	return(AttributeValues *)this;
 	//}
 
+	IAPISupport *sup = IAPISupport::GetInstance();
 	// From Render Manager
 	if (type == "CAMERA") {
 		if (m_pRenderManager->hasCamera(context))
@@ -647,12 +653,10 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTexture(number);
 	}
-#if NAU_OPENGL_VERSION >= 420
-	if (type == "IMAGE_TEXTURE") {
+	if (sup->apiSupport(IAPISupport::IMAGE_TEXTURE) && type == "IMAGE_TEXTURE") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getImageTexture(number);
 	}
-#endif
 	if (type == "MATERIAL_BUFFER") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getBuffer(number);
@@ -838,7 +842,7 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType, IEve
 	if (eventType == "WINDOW_SIZE_CHANGED") {
 	
 		vec3 *evVec = (vec3 *)evtData->getData();
-		setWindowSize(evVec->x,evVec->y);
+		setWindowSize((unsigned int)evVec->x, (unsigned int)evVec->y);
 	}
 }
 
@@ -866,7 +870,7 @@ Nau::readDirectory (std::string dirName) {
 
 	std::vector<std::string> files;
 
-	FileUtil::RecurseDirectory(dirName, &files);
+	File::RecurseDirectory(dirName, &files);
 
 	if (files.size() == 0) {
 		NAU_THROW("Can't open dir %s or directory has no files", dirName);
@@ -1028,7 +1032,7 @@ Nau::clear() {
 void Nau::step() {
 
 	IRenderer *renderer = RENDERER;
-	float timer = clock() * INV_CLOCKS_PER_MILISEC;
+	float timer = (float)(clock() * INV_CLOCKS_PER_MILISEC);
 	if (NO_TIME == m_LastFrameTime) {
 		m_LastFrameTime = timer;
 	}
@@ -1068,7 +1072,7 @@ void Nau::step() {
 void Nau::stepPass() {
 
 	IRenderer *renderer = RENDERER;
-	float timer = clock() * INV_CLOCKS_PER_MILISEC;
+	float timer =(float)(clock() * INV_CLOCKS_PER_MILISEC);
 	if (NO_TIME == m_LastFrameTime) {
 		m_LastFrameTime = timer;
 	}
@@ -1205,10 +1209,10 @@ Nau::getDepthAtCenter() {
 	float a = cam->getPropm4(Camera::PROJECTION_MATRIX).at(2,2);
 	float b = cam->getPropm4(Camera::PROJECTION_MATRIX).at(3,2);
 	// This must move to glRenderer!!!!
-	f = RENDERER->getDepthAtPoint(v.x/2, v.y/2);
-	f = (f-0.5) * 2;
+	f = RENDERER->getDepthAtPoint((int)(v.x*0.5f), (int)(v.y*0.5f));
+	f = (f-0.5f) * 2.0f;
 	SLOG("Depth %f %f\n",b/(f+a), f); 
-	return (0.5 * (-a*f + b) / f + 0.5);
+	return (0.5f * (-a*f + b) / f + 0.5f);
 }
 
 
@@ -1264,7 +1268,7 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 				CBOLoader::loadScene(RENDERMANAGER->getScene(sceneName), file.getFullPath(), params);
 				break;
 			case File::THREEDS:
-				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);
 				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);				
 				break;
 			case File::WAVEFRONTOBJ:
@@ -1295,22 +1299,22 @@ Nau::writeAssets (std::string fileType, std::string aFilename, std::string scene
 }
 
 void
-Nau::setWindowSize (float width, float height) {
+Nau::setWindowSize (unsigned int width, unsigned int height) {
 
 	m_WindowWidth = width;
 	m_WindowHeight = height;
-	m_Viewport->setPropf2(Viewport::SIZE, vec2(width,height));
+	m_Viewport->setPropf2(Viewport::SIZE, vec2((float)m_WindowWidth, (float)m_WindowHeight));
 }
 
 
-float 
+unsigned int 
 Nau::getWindowHeight() {
 
 	return(m_WindowHeight);
 }
 
 
-float 
+unsigned int 
 Nau::getWindowWidth() {
 
 	return(m_WindowWidth);

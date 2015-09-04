@@ -8,7 +8,7 @@
 #include "nau/material/materialGroup.h"
 #include "nau/render/iRenderable.h"
 #include "nau/geometry/vertexData.h"
-#include "nau/system/fileutil.h"
+#include "nau/system/file.h"
 
 #include <fstream>
 
@@ -21,7 +21,7 @@ Assimp::Importer AssimpLoader::importer;
 void
 AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std::string &params) {
 
-	std::string path = FileUtil::GetPath(aFilename);
+	std::string path = File::GetPath(aFilename);
 	const aiScene *sc;
 	//check if file exists
 	std::ifstream fin(aFilename.c_str());
@@ -39,7 +39,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 	// If the import failed, report it
 	if( !sc)
 	{
-		SLOG ("Error opening file: %s\n%s\n", aFilename.c_str(),importer.GetErrorString());
+		SLOG ("Error reading file: %s\n%s\n", aFilename.c_str(),importer.GetErrorString());
 		return;
 	}
 
@@ -79,7 +79,10 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		 aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
 		aiString name;
 		mtl->Get(AI_MATKEY_NAME,name);
-		MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, name.data);
+		std::string matName = name.data;
+		if (matName == "")
+			matName = "Default";
+		MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, matName);
 		aMaterialGroup->setIndexList(indices);
 		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
 			aMaterialGroup->getIndexData().useAdjacency(true);
@@ -112,18 +115,18 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 			vertexData.setDataFor(VertexData::getAttribIndex("texCoord0"), texCoord); 
 		}
 
-		if (!MATERIALLIBMANAGER->hasMaterial (DEFAULTMATERIALLIBNAME, name.data)) {
+		if (!MATERIALLIBMANAGER->hasMaterial (DEFAULTMATERIALLIBNAME, matName)) {
 
-			Material *m = MATERIALLIBMANAGER->createMaterial(name.data);
+			Material *m = MATERIALLIBMANAGER->createMaterial(matName);
 			aiString texPath;	
 			if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
-				m->createTexture(0,FileUtil::GetFullPath(path,texPath.data));
+				m->createTexture(0,File::GetFullPath(path,texPath.data));
 			}
 			if (AI_SUCCESS == mtl->GetTexture(aiTextureType_HEIGHT, 0, &texPath)){
-				m->createTexture(1, FileUtil::GetFullPath(path, texPath.data));
+				m->createTexture(1, File::GetFullPath(path, texPath.data));
 			}
 			if (AI_SUCCESS == mtl->GetTexture(aiTextureType_NORMALS, 0, &texPath)){
-				m->createTexture(2, FileUtil::GetFullPath(path, texPath.data));
+				m->createTexture(2, File::GetFullPath(path, texPath.data));
 			}
 
 			aiColor4D color;

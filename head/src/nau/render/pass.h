@@ -26,13 +26,13 @@ https://github.com/Nau3D
 #include "nau/geometry/quad.h"
 #include "nau/material/iBuffer.h"
 #include "nau/material/materialId.h"
-#include "nau/material/texture.h"
+#include "nau/material/iTexture.h"
 #include "nau/render/passProcessItem.h"
 #include "nau/render/renderTarget.h"
 #include "nau/scene/camera.h"
-#include "nau/scene/geometryobject.h"
-#include "nau/scene/iscene.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/geometricObject.h"
+#include "nau/scene/iScene.h"
+#include "nau/scene/sceneObject.h"
 
 
 #include <map>
@@ -60,11 +60,11 @@ namespace nau
 			BOOL_PROP(STENCIL_ENABLE, 7);
 
 			FLOAT_PROP(DEPTH_CLEAR_VALUE, 0);
-			FLOAT_PROP(STENCIL_CLEAR_VALUE, 1);
 
 			FLOAT4_PROP(COLOR_CLEAR_VALUE, 0);
 
 			INT_PROP(STENCIL_OP_REF, 0);
+			INT_PROP(STENCIL_CLEAR_VALUE, 1);
 
 			UINT_PROP(STENCIL_OP_MASK, 0);
 			UINT_PROP(INSTANCE_COUNT, 1);
@@ -113,6 +113,8 @@ namespace nau
 
 			Pass (const std::string &passName);
 			virtual ~Pass();
+
+			static Pass *Create(const std::string &name);
 
 			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
 
@@ -193,7 +195,7 @@ namespace nau
 			//
 			// STENCIL
 			//
-			void setStencilClearValue(float value);
+			void setStencilClearValue(unsigned int value);
 			void setStencilFunc(Pass::StencilFunc f, int ref, unsigned int mask);
 			void setStencilOp(	Pass::StencilOp sfail, 
 							Pass::StencilOp dfail, 
@@ -226,6 +228,7 @@ namespace nau
 			void callPostScript();
 
 		protected:
+
 			// BUFFER DRAW INDIRECT
 			IBuffer *m_BufferDrawIndirect = NULL;
 

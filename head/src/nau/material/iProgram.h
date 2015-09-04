@@ -16,7 +16,7 @@ namespace nau
 		public:
 			static IProgram* create ();
 
-#if NAU_OPENGL_VERSION >=430
+//#if NAU_OPENGL_VERSION >=430
 			const static int SHADER_COUNT = 6;
 
 			enum ShaderType {
@@ -27,34 +27,35 @@ namespace nau
 				FRAGMENT_SHADER,
 				COMPUTE_SHADER
 			 };
-#elif NAU_OPENGL_VERSION >= 400
-			const static int SHADER_COUNT = 5;
-
-			enum ShaderType {
-				VERTEX_SHADER,
-				GEOMETRY_SHADER,
-				TESS_CONTROL_SHADER,
-				TESS_EVALUATION_SHADER,
-				FRAGMENT_SHADER,
-			 };
-#elif NAU_OPENGL_VERSION >= 320
-			const static int SHADER_COUNT = 3;
-
-			enum ShaderType {
-				VERTEX_SHADER,
-				GEOMETRY_SHADER,
-				FRAGMENT_SHADER,
-			 };
-#else
-			const static int SHADER_COUNT = 2;
-
-			enum ShaderType {
-				VERTEX_SHADER,
-				FRAGMENT_SHADER,
-			 };
-#endif
+//#elif NAU_OPENGL_VERSION >= 400
+//			const static int SHADER_COUNT = 5;
+//
+//			enum ShaderType {
+//				VERTEX_SHADER,
+//				GEOMETRY_SHADER,
+//				TESS_CONTROL_SHADER,
+//				TESS_EVALUATION_SHADER,
+//				FRAGMENT_SHADER,
+//			 };
+//#elif NAU_OPENGL_VERSION >= 320
+//			const static int SHADER_COUNT = 3;
+//
+//			enum ShaderType {
+//				VERTEX_SHADER,
+//				GEOMETRY_SHADER,
+//				FRAGMENT_SHADER,
+//			 };
+//#else
+//			const static int SHADER_COUNT = 2;
+//
+//			enum ShaderType {
+//				VERTEX_SHADER,
+//				FRAGMENT_SHADER,
+//			 };
+//#endif
 			static std::string ShaderNames[IProgram::SHADER_COUNT];
 
+			virtual bool isShaderSupported(IProgram::ShaderType);
 			virtual bool loadShader(IProgram::ShaderType type, const std::string &filename) = 0;
 			virtual bool reload (void) = 0;
 			
@@ -65,8 +66,8 @@ namespace nau
 			virtual char *getProgramInfoLog() = 0; 
 			virtual int programValidate() = 0;
 
-
 			virtual bool setValueOfUniform (const std::string &name, void *values) = 0; 
+			virtual void prepareBlocks() = 0;
 			//virtual bool setValueOfUniform(int loc, void *values) = 0;
 			//virtual bool setValueOfUniform (const std::string &name, int *values) = 0;
 
@@ -92,6 +93,8 @@ namespace nau
 			virtual bool compileShader (IProgram::ShaderType) = 0;
 			virtual bool linkProgram (void) = 0;
 			virtual void useProgram (void) = 0;
+
+			virtual unsigned int getProgramID() = 0;
 
 
 			virtual bool getPropertyb(int query) = 0;

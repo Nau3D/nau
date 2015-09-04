@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "nau/scene/iscene.h"
+#include "nau/scene/iScene.h"
 #include "nau/scene/camera.h"
 #include "nau/scene/light.h"
 #include "nau/geometry/frustum.h"

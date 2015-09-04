@@ -5,9 +5,9 @@
 #include "nau/render/iRenderer.h"
 #include "nau/render/renderFactory.h"
 #include "nau/render/renderQueueFactory.h"
-#include "nau/scene/iscene.h"
+#include "nau/scene/iScene.h"
 #include "nau/scene/lightFactory.h"
-#include "nau/scene/scenefactory.h"
+#include "nau/scene/sceneFactory.h"
 
 using namespace nau::render;
 using namespace nau::scene;
@@ -90,7 +90,7 @@ RenderManager::createViewport(const std::string &name, nau::math::vec4 &bgColor)
 
 	v->setName(name);
 	v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
-	v->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(), NAU->getWindowHeight()));
+	v->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight()));
 
 	v->setPropf4(Viewport::CLEAR_COLOR, bgColor);
 	v->setPropb(Viewport::FULL, true);
@@ -115,7 +115,7 @@ RenderManager::createViewport(const std::string &name) {
 
 	v->setName(name);
 	v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
-	v->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(), NAU->getWindowHeight()));
+	v->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight()));
 	v->setPropb(Viewport::FULL, true);
 
 	m_Viewports[name] = v;

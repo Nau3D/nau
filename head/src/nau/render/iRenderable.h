@@ -34,9 +34,9 @@ namespace nau
 				LINE_LOOP,
 				POINTS,
 				TRIANGLES_ADJACENCY
-#if NAU_OPENGL_VERSION >= 400
+//#if NAU_OPENGL_VERSION >= 400
 				, PATCHES
-#endif
+//#endif
 			} DrawPrimitive;
 
 			ENUM_PROP(PRIMITIVE_TYPE, 0);

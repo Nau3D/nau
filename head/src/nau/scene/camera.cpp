@@ -349,7 +349,7 @@ Camera::getRenderable (void) {
 		vertices->at (BOTTOM_LEFT_FAR).set   (m_FloatProps[LEFT],  m_FloatProps[BOTTOM],-m_FloatProps[FARP]);
 	}
 	else {
-		float hh = tan(DegToRad(m_FloatProps[FOV])/2.0);
+		float hh = tan(DegToRad(m_FloatProps[FOV])/2.0f);
 		float hw = hh * m_pViewport->getPropf(Viewport::RATIO);
 
 		vertices->at (TOP_LEFT_NEAR).set (-hw*m_FloatProps[NEARP], hh*m_FloatProps[NEARP], -m_FloatProps[NEARP]);

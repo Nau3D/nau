@@ -1,8 +1,8 @@
 #ifndef OCTREE_H
 #define OCTREE_H
 
-#include "nau/scene/octreenode.h"
-#include "nau/scene/iscene.h"
+#include "nau/scene/octreeNode.h"
+#include "nau/scene/iScene.h"
 #include "nau/scene/camera.h"
 #include "nau/math/vec3.h"
 #include "nau/geometry/boundingBox.h"

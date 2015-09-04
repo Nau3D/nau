@@ -5,7 +5,7 @@
 #include "nau/errors.h"
 
 using namespace nau::loader;
-using namespace nau::resource;
+using namespace nau::geometry;
 
 void
 FontXMLLoader::loadFont (Font *aFont, std::string &aFilename)

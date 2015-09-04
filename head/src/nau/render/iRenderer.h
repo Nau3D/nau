@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 
+
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
 #include "nau/enums.h"
@@ -16,11 +17,11 @@
 #include "nau/math/matrix.h"
 #include "nau/math/vec4.h"
 #include "nau/scene/camera.h"
-#include "nau/scene/iscene.h"
+#include "nau/scene/iScene.h"
 #include "nau/scene/light.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 
-
+using namespace nau;
 using namespace nau::material;
 using namespace nau::render;
 
@@ -35,6 +36,7 @@ namespace nau
 		protected:
 			static bool Init();
 			static bool Inited;
+
 
 		public:	
 			static std::map<std::string, IRenderable::DrawPrimitive> PrimitiveTypes;
@@ -68,19 +70,13 @@ namespace nau
 			static int MaxTextureUnits;
 			static int MaxColorAttachments;
 
-
 			typedef enum {
 				FRONT,
 				BACK,
 			} Face;
 
 
-#if NAU_OPENGL_VERSION >= 400
 			const static int PRIMITIVE_TYPE_COUNT = 8;
-#else
-			const static int PRIMITIVE_TYPE_COUNT = 7;
-#endif
-
 
 			typedef enum {
 				COLOR_BUFFER = 0x01,
@@ -95,10 +91,12 @@ namespace nau
 			virtual const mat3 &getPropm3(Mat3Property prop) = 0;
 			virtual float getPropf(FloatProperty prop);
 			
+			// API SUPPORT
+		public:
+			bool primitiveTypeSupport(std::string primitive);
 
 			// ATOMIC COUNTERS 
 
-#if NAU_OPENGL_VERSION >= 400
 		public:
 			/// Number of Atomic Counters and
 			unsigned int m_AtomicCount = 0;
@@ -115,7 +113,6 @@ namespace nau
 		protected:
 			/// flag indicating if Atomic Buffer is created
 			bool m_AtomicBufferPrepared = false;
-#endif
 
 		// LIGHTS
 
@@ -206,19 +203,17 @@ namespace nau
 			virtual int getAttribLocation(std::string name) = 0;
 
 			// image textures
-#if NAU_OPENGL_VERSION >=  420
-			virtual void addImageTexture(unsigned int aTexUnit, ImageTexture *t) = 0;
+			virtual void addImageTexture(unsigned int aTexUnit, IImageTexture *t) = 0;
 			virtual void removeImageTexture(unsigned int aTexUnit) = 0;
 			virtual int getImageTextureCount() = 0;
-			virtual ImageTexture* getImageTexture(unsigned int unit) = 0;
-#endif
+			virtual IImageTexture* getImageTexture(unsigned int unit) = 0;
 
 			// textures 
 			virtual void setActiveTextureUnit(unsigned int aTexUnit) = 0;
 			virtual void addTexture(MaterialTexture *t) = 0;
 			virtual void removeTexture(unsigned int aTexUnit) = 0;
 			virtual MaterialTexture *getMaterialTexture(int unit) = 0;
-			virtual Texture *getTexture(int unit) = 0;
+			virtual ITexture *getTexture(int unit) = 0;
 			virtual int getTextureCount() = 0;
 
 		

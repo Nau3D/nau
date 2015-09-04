@@ -3,12 +3,13 @@
 
 #include "nau/config.h"
 
-#if NAU_OPENGL_VERSION >=  420
+//#if NAU_OPENGL_VERSION >=  420
 
-#include "nau/material/imageTexture.h"
+#include "nau/material/iImageTexture.h"
 #include "nau/render/opengl/glTexture.h"
 
 #include <GL/glew.h>
+
 #include <string>
 
 using namespace nau::render;
@@ -19,9 +20,9 @@ namespace nau
 {
 	namespace render
 	{
-		class GLImageTexture : public ImageTexture
+		class GLImageTexture : public IImageTexture
 		{
-			friend class ImageTexture;
+			friend class IImageTexture;
 
 		public:
 
@@ -47,4 +48,4 @@ namespace nau
 	};
 };
 #endif
-#endif
+//#endif

@@ -54,14 +54,14 @@ GLDebug::DebugLog(GLenum source,
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 		return;
 
-	SLOG("OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
-		GetStringForType(type).c_str(),
-		GetStringForSource(source).c_str(), id,
-		GetStringForSeverity(severity).c_str(),
-		message);
-#ifdef _WIN32
-	PrintStack();
-#endif
+//	SLOG("OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
+//		GetStringForType(type).c_str(),
+//		GetStringForSource(source).c_str(), id,
+//		GetStringForSeverity(severity).c_str(),
+//		message);
+//#ifdef _WIN32
+//	PrintStack();
+//#endif
 }
 
 // aux function to translate source to string

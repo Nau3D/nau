@@ -21,9 +21,6 @@
     <ClCompile Include="src\dialogs\dlgOGL.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialogs\dlgOGLPanels.cpp">
-      <Filter>dialogs</Filter>
-    </ClCompile>
     <ClCompile Include="src\dialogs\dlgPass.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
@@ -58,6 +55,15 @@
     <ClCompile Include="src\dialogs\propertyManager.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="src\dialogs\dlgMatStatePanels.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgMatBufferPanels.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgMatITexPanels.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glcanvas.h" />
@@ -78,9 +84,6 @@
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\dialogs\dlgOGL.h">
-      <Filter>dialogs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialogs\dlgOGLpanels.h">
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\dialogs\dlgPass.h">
@@ -115,6 +118,15 @@
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\dialogs\propertyManager.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgMatStatePanels.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgMatBufferPanels.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgMatITexPanels.h">
       <Filter>dialogs</Filter>
     </ClInclude>
   </ItemGroup>

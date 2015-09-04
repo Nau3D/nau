@@ -175,8 +175,8 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 
 		int primitiveOffset = 3;//getPrimitiveOffset();
 		for (unsigned int i = 0; i < size; i++) {
-			idsArray->at(i).x = sceneObjectID;
-			idsArray->at(i).y = i / primitiveOffset;
+			idsArray->at(i).x = (float)sceneObjectID;
+			idsArray->at(i).y = (float)(i / primitiveOffset);
 		}
 		m_VertexData->setAttributeDataFor(VertexData::getAttribIndex("triangleID"), idsArray);		
 	}
@@ -187,7 +187,7 @@ void
 Mesh::prepareIndexData() {
 
 	unsigned int size = m_VertexData->getDataOf(VertexData::getAttribIndex("position")).size();
-	std::vector<int> idsArray = std::vector<int>(size, -1.0f);
+	std::vector<int> idsArray = std::vector<int>(size, -1);
 	std::vector<int> outlaws;
 
 	createUnifiedIndexVector();
@@ -371,6 +371,7 @@ Mesh::merge (nau::render::IRenderable *aRenderable) {
 
 		addMaterialGroup (aMaterialGroup);
 	}
+	delete aRenderable;
 }
 
 

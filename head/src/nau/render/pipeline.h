@@ -4,7 +4,7 @@
 
 #include "nau/material/iState.h"
 #include "nau/scene/camera.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 #include "nau/render/pass.h"
 
 #include <deque>

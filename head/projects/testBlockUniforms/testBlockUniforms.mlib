@@ -1,0 +1,116 @@
+<?xml version="1.0" ?>
+<materialLib name="testBlocks">
+
+	
+	<shaders>
+		<shader name="dirLightDifAmbPix" 
+								ps="shaders/dirlightdiffambpix.frag" 
+								vs="shaders/dirlightdiffambpix.vert" />
+		<shader name="dirLightDifAmbPixNoBlocks" 
+								ps="shaders/dirlightdiffambpixNoBlocks.frag" 
+								vs="shaders/dirlightdiffambpixNoBlocks.vert" />
+	</shaders>
+	
+	<buffers>
+		<buffer name="test">
+			<SIZE value=16 />
+			<CLEAR value="BY_FRAME" />
+			<structure>
+				<field value="UINT" />
+			</structure>	
+		</buffer>
+	</buffers>	
+		
+	<materials>
+		<material name="testBlocks">
+			<shader name="dirLightDifAmbPix">
+				<values>
+					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightColor"     	type="CURRENT" context="LIGHT" 
+														id=0 component="COLOR" />
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														block="Material" component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="CURRENT" context="COLOR" 
+														block="Material" component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+														block="Material" component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														block="Material" component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														block="Material" component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="V"          		type="CURRENT" context="RENDERER" 
+														component="VIEW" />
+
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														block="Material" component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />				
+				</values>
+			</shader>
+		</material>		
+
+		<material name="uniforms">
+			<shader name="dirLightDifAmbPixNoBlocks">
+				<values>
+					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightColor"     	type="CURRENT" context="LIGHT" 
+														id=0 component="COLOR" />
+														
+					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="CURRENT" context="COLOR" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="CURRENT" context="COLOR" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="CURRENT" context="RENDERER" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="V"          		type="CURRENT" context="RENDERER" 
+														component="VIEW" />
+
+					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+														component="UNIT" id="0" />				
+				</values>
+			</shader>
+		</material>		
+
+	</materials>
+</materialLib>

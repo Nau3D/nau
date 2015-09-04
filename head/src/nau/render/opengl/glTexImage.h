@@ -2,7 +2,7 @@
 #define GLTEXIMAGE_H
 
 #include "nau/render/opengl/glTexture.h"
-#include "nau/material/texImage.h"
+#include "nau/material/iTexImage.h"
 
 #include <GL/glew.h>
 
@@ -12,21 +12,20 @@ namespace nau
 {
 	namespace render
 	{
-		class GLTexImage : public nau::material::TexImage
+		class GLTexImage : public nau::material::ITexImage
 		{
-		friend class nau::material::TexImage;
+		friend class nau::material::ITexImage;
 
 		public:
 
 			void update(void);
 			void *getData();
 
+			unsigned char *getRGBData();
+
 		protected:
-			GLTexImage (Texture *t);
+			GLTexImage (ITexture *t);
 			~GLTexImage(void);
-
-
-
 
 		};
 	};

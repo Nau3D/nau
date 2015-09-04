@@ -1,5 +1,5 @@
 #include "nau/render/optix/optixGeometry.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 #include "nau.h"
 
 using namespace nau::render::optixRender;

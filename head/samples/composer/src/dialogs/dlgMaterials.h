@@ -39,7 +39,9 @@ class ImageGridCellRenderer;
 #include <nau/event/ilistener.h>
 
 //#ifndef _WX_OGL_H_
-#include "dlgOGLpanels.h"
+#include "dlgMatStatepanels.h"
+#include "dlgMatBufferPanels.h"
+#include "dlgMatITexPanels.h"
 
 using namespace nau::material;
 
@@ -62,7 +64,7 @@ public:
 	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 
 	void updateDlg();
-	void updateTexture(Texture *tex);
+	void updateTexture(ITexture *tex);
 	void updateTextureList();
 	void updateActiveTexture();
 
@@ -127,13 +129,23 @@ private:
 //	void OnProcessShowGlobalUniforms(wxCommandEvent& event);
 	void updateShaderAux(Material *m);
 	void addUniform(ProgramValue &u,int showGlobal);
+	void addBlockUniform(ProgramBlockValue &u,int showGlobal);
 	void updateUniforms(Material *m);
 
 	void auxSetMat4(wxPGProperty  *pid, wxPGProperty  *pid2, int edit, float *f);
 	void auxSetMat3(wxPGProperty *pid, wxPGProperty *pid2, int edit, float *f);
 	void auxSetVec4(wxPGProperty *pid, wxPGProperty *pid2, int edit, float *f);
-	DlgOGLPanels panels;
+
+	DlgMatStatePanels panels;
 	void OnProcessPanelChange( wxPropertyGridEvent& e);
+
+	DlgMatBufferPanels m_BufferPanel;
+	void OnProcessBufferPanelChange( wxPropertyGridEvent& e);
+	void OnProcessBufferPanelSelect( wxCommandEvent& e);
+
+	DlgMatImageTexturePanels m_ITexPanel;
+	void OnProcessITexPanelChange( wxPropertyGridEvent& e);
+	void OnProcessITexPanelSelect( wxCommandEvent& e);
 
 	void setPropf4Aux(std::string propName,  vec4 &values);
 	void setPropm4Aux(std::string propName,  mat4 &values);
@@ -189,23 +201,7 @@ private:
 	void toolbarMatCopy(wxCommandEvent& WXUNUSED(event) );
 	void toolbarMatPaste(wxCommandEvent& WXUNUSED(event) );
 
-
-	//typedef enum {CAMERA_POSITION, CAMERA_VIEW, CAMERA_UP, 
-	//	LIGHT_POSITION, LIGHT_DIRECTION, LIGHT_COLOR, VEC3} vec3Comp;
-
-	//typedef enum {LIGHT_ID, INT, TEXTURE_ID, TEXTURE_UNIT} intComp;
-
-	//typedef enum {PROJECTIONMATRIX, MODELVIEWPROJECTIONMATRIX, TS05_MVPMATRIX, MAT4} mat4Comp;
-
-	//typedef enum {
-	//	NEW_TEXTURE,
-	//} Notification;
-
-	//void notifyUpdate(Notification aNot, std::string name, std::string value);
-
-
-
-    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 #include "imagegridcellrenderer.h"

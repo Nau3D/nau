@@ -1,11 +1,12 @@
 #include "nau/loader/patchLoader.h"
+
 #include "nau.h"
-#include "nau/scene/sceneobjectfactory.h"
+#include "nau/errors.h"
+#include "nau/slogger.h"
+#include "nau/scene/sceneObjectFactory.h"
 #include "nau/geometry/boundingvolumefactory.h"
 #include "nau/material/materialGroup.h"
-#include "nau/slogger.h"
-
-#include "nau/errors.h"
+#include "nau/render/IAPISupport.h"
 
 #include <stdlib.h>
 
@@ -14,7 +15,10 @@ using namespace nau::geometry;
 
 void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) {
 
-#if NAU_OPENGL_VERSION >= 400		
+	IAPISupport *sup = IAPISupport::GetInstance();
+	if (sup->apiSupport(IAPISupport::TESSELATION_SHADERS))
+		NAU_THROW("Patches are not supported");
+
 	FILE *fp = fopen(aFilename.c_str(),"rt");
 
 	if (fp == NULL) {
@@ -108,7 +112,4 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	anObject->setRenderable(aRenderable);
 
 	aScene->add(anObject);
-#else
-	SLOG("Patches are not supported with this version of OpenGL");
-#endif
 }

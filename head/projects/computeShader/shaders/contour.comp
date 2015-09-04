@@ -54,7 +54,7 @@ void main()
 				f[i.x - 1][i.y] -
 				f[i.x - 1][i.y + 1]; 
 
-	imageStore(imageUnit, storeLoc,res);
+	imageStore(imageUnit, storeLoc, res);
 
 
 	

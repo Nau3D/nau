@@ -2,7 +2,7 @@
 #define IRENDERQUEUE_H
 
 #include "nau/material/materialId.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 
 namespace nau
 {

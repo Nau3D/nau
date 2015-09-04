@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "nau/material/texture.h"
-#include "nau/material/texImage.h"
+#include "nau/material/iTexture.h"
+#include "nau/material/iTexImage.h"
 
 using namespace nau::material;
 
@@ -12,7 +12,7 @@ namespace nau
 {
 	namespace loader
 	{
-		class TextureLoader
+		class ITextureLoader
 		{
 		public:
 
@@ -20,7 +20,7 @@ namespace nau
 				HDR,
 				PNG
 			} FileType;
-			static TextureLoader* create (void);
+			static ITextureLoader* create (void);
 
 			virtual int loadImage (std::string file) = 0;
 			virtual unsigned char* getData (void) = 0;
@@ -30,17 +30,17 @@ namespace nau
 			virtual std::string getType (void) = 0;
 			virtual void freeImage (void) = 0;
 
-			virtual void save(TexImage *ti, std::string filename) = 0;
+			virtual void save(ITexImage *ti, std::string filename) = 0;
 			virtual void save(int width, int height, char *data, std::string filename) = 0;
 
-			virtual ~TextureLoader(void) {};
+			virtual ~ITextureLoader(void) {};
 
 			static const int BITMAP_SIZE = 96;
 
-			static void Save(Texture *t, FileType ft);
+			static void Save(ITexture *t, FileType ft);
 			static void Save(int width, int height, char *data, std::string filename = "");
 
-			static void SaveRaw(Texture *t, std::string filename);
+			static void SaveRaw(ITexture *t, std::string filename);
 		};
 	};
 };

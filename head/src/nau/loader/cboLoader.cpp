@@ -2,8 +2,8 @@
 
 #include "nau.h"
 
-#include "nau/scene/sceneobject.h"
-#include "nau/scene/sceneobjectfactory.h"
+#include "nau/scene/sceneObject.h"
+#include "nau/scene/sceneObjectFactory.h"
 #include "nau/geometry/iBoundingVolume.h"
 #include "nau/geometry/boundingvolumefactory.h"
 #include "nau/math/matrix.h"
@@ -12,7 +12,7 @@
 #include "nau/material/materialGroup.h"
 #include "nau/material/iState.h"
 #include "nau/slogger.h"
-#include "nau/system/fileutil.h"
+#include "nau/system/file.h"
 
 #include <assert.h>
 #include <fstream>
@@ -249,7 +249,7 @@ void
 CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::string &params)
 {
 	m_FileName = aFilename;
-	std::string path = FileUtil::GetPath(aFilename);
+	std::string path = File::GetPath(aFilename);
 
 	std::fstream f (aFilename.c_str(), std::fstream::in | std::fstream::binary);
 
@@ -620,7 +620,7 @@ void
 CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 {
 
-	std::string path = FileUtil::GetPath(aFilename);
+	std::string path = File::GetPath(aFilename);
 
 	std::map<std::string, IRenderable*> renderables;
 	std::set<std::string> materials;
@@ -840,7 +840,7 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 	for (int i = 0; i < 8; i++) { /***MARK***/ //8!? Is it a magic number!?
 		if (NULL != aMaterial->getTexture(i)) {
 			std::string label = aMaterial->getTexture(i)->getLabel();
-			std::string k = FileUtil::GetRelativePathTo(path, label);
+			std::string k = File::GetRelativePathTo(path, label);
 			_writeString (k, f);
 		} else {
 			_writeString ("<no texture>", f);
@@ -969,7 +969,7 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 	for (int i = 0; i < 8; i++) { /***MARK***/ //8!? Is it a magic number!?
 		_readString (buffer, f);
 		if (0 != std::string(buffer).compare("<no texture>")) {
-			aMaterial->createTexture (i, FileUtil::GetFullPath(path,buffer));
+			aMaterial->createTexture (i, File::GetFullPath(path,buffer));
 		}
 	}
 

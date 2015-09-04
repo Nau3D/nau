@@ -35,6 +35,7 @@ namespace nau
 			void setPropui3(UInt3Property  prop, uivec3 &v);
 			void setData(unsigned int size, void *data);
 			void setSubData(unsigned int offset, unsigned int size, void*data);
+			void setSubDataNoBinding(unsigned int bufferType, unsigned int offset, unsigned int size, void*data);
 			int getData(unsigned int offset, unsigned int size, void *data);
 			void clear();
 			IBuffer * clone();

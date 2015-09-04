@@ -4,7 +4,7 @@
 #include <string>
 
 #include "nau/loader/iTextureLoader.h"
-#include "nau/material/texImage.h"
+#include "nau/material/iTexImage.h"
 
 #include <IL/il.h>
 
@@ -14,9 +14,9 @@ namespace nau
 {
 	namespace loader
 	{
-		class DevILTextureLoader : public TextureLoader
+		class DevILTextureLoader : public ITextureLoader
 		{
-		friend class TextureLoader;
+		friend class ITextureLoader;
 
 		protected:
 			DevILTextureLoader (void);
@@ -31,7 +31,7 @@ namespace nau
 			std::string getType (void);
 			void freeImage (void);
 
-			void save(TexImage *ti, std::string filename);
+			void save(ITexImage *ti, std::string filename);
 
 			void save(int width, int height, char *data, std::string filename);
 

@@ -20,27 +20,27 @@ OptixTextureLib::addTextures(Material *m) {
 
 	unsigned int s, count = 0;
 	unsigned int mode, mode1;
-	Texture *t;
+	ITexture *t;
 	int e = glGetError();
 	try {
 	  for (unsigned int i = 0; i < 8; ++i) {
 	
 		t = m->getTexture(i);
 
-		if (t != NULL && !m_TextureLib.count(t->getPropi(Texture::ID))) {
+		if (t != NULL && !m_TextureLib.count(t->getPropi(ITexture::ID))) {
 	
-			s = t->getPropi(Texture::ID);
+			s = t->getPropi(ITexture::ID);
 		
 			m_TextureLib[s] = m_Context->createTextureSamplerFromGLImage(s, RT_TARGET_GL_TEXTURE_2D);
-			mode = m->getTextureSampler(i)->getPrope(TextureSampler::WRAP_S);
+			mode = m->getTextureSampler(i)->getPrope(ITextureSampler::WRAP_S);
 		//	mode = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i),IState::TEXTURE_WRAP_S);
 			m_TextureLib[s]->setWrapMode( 0, (RTwrapmode)translateWrapModeToOptix(mode) );
-			mode = m->getTextureSampler(i)->getPrope(TextureSampler::WRAP_T);
+			mode = m->getTextureSampler(i)->getPrope(ITextureSampler::WRAP_T);
 		//	mode = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i),IState::TEXTURE_WRAP_T);
 			m_TextureLib[s]->setWrapMode( 1, (RTwrapmode)translateWrapModeToOptix(mode) );
 			
-			mode = m->getTextureSampler(i)->getPrope(TextureSampler::MAG_FILTER);
-			mode1 = m->getTextureSampler(i)->getPrope(TextureSampler::MIN_FILTER);
+			mode = m->getTextureSampler(i)->getPrope(ITextureSampler::MAG_FILTER);
+			mode1 = m->getTextureSampler(i)->getPrope(ITextureSampler::MIN_FILTER);
 		//	mode = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i), IState::TEXTURE_MAG_FILTER);
 		//	mode1 = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i), IState::TEXTURE_MIN_FILTER);
 			m_TextureLib[s]->setFilteringModes( (RTfiltermode)translateFilterModeToOptix(mode1), 
@@ -55,7 +55,7 @@ OptixTextureLib::addTextures(Material *m) {
 	  }
 	}
 	catch(optix::Exception& e) {
-		NAU_THROW("Optix Error: Texture Creation: texture %s [%s]", t->getLabel().c_str(), e.getErrorString().c_str());
+		NAU_THROW("Optix Error: ITexture Creation: texture %s [%s]", t->getLabel().c_str(), e.getErrorString().c_str());
 	}
 	return(count);
 }
@@ -117,15 +117,15 @@ void
 OptixTextureLib::applyTextures(optix::GeometryInstance gi, nau::material::Material *mat) {
 
 	std::string s;
-	Texture *t;
+	ITexture *t;
 	try {
 	  for (unsigned int i = 0; i < 8; ++i) {
 	
 		t = mat->getTexture(i);
 
-		if (t != NULL && m_TextureLib.count(t->getPropi(Texture::ID))) {
+		if (t != NULL && m_TextureLib.count(t->getPropi(ITexture::ID))) {
 			s = "texi";s[3] = i+48;
-			gi[s]->setTextureSampler(m_TextureLib[t->getPropi(Texture::ID)]);
+			gi[s]->setTextureSampler(m_TextureLib[t->getPropi(ITexture::ID)]);
 		}
 	  }
 	}

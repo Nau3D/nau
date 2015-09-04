@@ -74,26 +74,26 @@ MaterialTexture::unbind() {
 
 
 void 
-MaterialTexture::setTexture(Texture *t) {
+MaterialTexture::setTexture(ITexture *t) {
 
 	m_Texture = t;
 }
 
 
-void MaterialTexture::setSampler(TextureSampler *s) {
+void MaterialTexture::setSampler(ITextureSampler *s) {
 
 	m_Sampler = s;
 }
 
 
-Texture *
+ITexture *
 MaterialTexture::getTexture() {
 
 	return m_Texture;
 }
 
 
-TextureSampler *
+ITextureSampler *
 MaterialTexture::getSampler() {
 
 	return m_Sampler;

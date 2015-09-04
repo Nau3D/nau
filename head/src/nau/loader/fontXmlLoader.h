@@ -1,9 +1,9 @@
 #ifndef FONTXMLLOADER_H
 #define FONTXMLLOADER_H
 
-#include "nau/resource/font.h"
+#include "nau/geometry/font.h"
 
-using namespace nau::resource;
+using namespace nau::geometry;
 
 namespace nau 
 {

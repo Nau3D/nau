@@ -3,11 +3,11 @@
 #include "dialogs/propertyManager.h"
 
 #include <nau/event/eventFactory.h>
-#include <nau/material/texImage.h>
+#include <nau/material/iTexImage.h>
 #include <nau/loader/iTextureLoader.h>
-#include <nau/system/fileutil.h>
+#include <nau/system/file.h>
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 
 using namespace nau::loader;
 using namespace nau::render;
@@ -20,6 +20,7 @@ BEGIN_EVENT_TABLE(DlgTextureLib, wxDialog)
 	EVT_BUTTON(DLG_MI_BUTTON_SAVE_RAW, DlgTextureLib::OnSaveRaw)
 	EVT_BUTTON(DLG_MI_BUTTON_SAVE_PNG, DlgTextureLib::OnSavePNG)
 	EVT_BUTTON(DLG_MI_BUTTON_SAVE_HDR, DlgTextureLib::OnSaveHDR)
+	EVT_BUTTON(DLG_MI_BUTTON_UPDATE_ICONS, DlgTextureLib::OnUpdateIcons)
 
 	EVT_GRID_CELL_LEFT_DCLICK(DlgTextureLib::OnprocessDClickGrid)
 	EVT_GRID_CMD_CELL_LEFT_CLICK(DLG_MI_TEXTURE_GRID,DlgTextureLib::OnprocessClickGrid)
@@ -69,6 +70,15 @@ DlgTextureLib::DlgTextureLib()
 }
 
 
+DlgTextureLib::~DlgTextureLib() {
+
+	for (auto b : m_Bitmaps) {
+		delete b.second;
+	}
+	m_Bitmaps.clear();
+}
+
+
 void
 DlgTextureLib::notifyUpdate(Notification aNot, std::string texName, std::string value) {
 
@@ -79,11 +89,23 @@ DlgTextureLib::notifyUpdate(Notification aNot, std::string texName, std::string 
 		EVENTMANAGER->notifyEvent("NEW_TEXTURE", texName,"", e);
 		delete e;
 	}
+	else if (aNot == TEXTURE_ICON_UPDATE) {
+		nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
+		e->setData("");
+		EVENTMANAGER->notifyEvent("NEW_TEXTURE", "","", e);
+		delete e;
+	}
+
 }
 
 
 void 
 DlgTextureLib::updateDlg() {
+
+	for (auto b : m_Bitmaps) {
+		delete b.second;
+	}
+	m_Bitmaps.clear();
 
 	updateTextures(0);
 	m_GridTextures->Refresh(true);
@@ -117,7 +139,7 @@ DlgTextureLib::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	//}
 
 
-	//wxStaticBox *texProp = new wxStaticBox(parent,-1,"Texture Properties");
+	//wxStaticBox *texProp = new wxStaticBox(parent,-1,"ITexture Properties");
 	//wxSizer *sizerTP = new wxStaticBoxSizer(texProp,wxVERTICAL);
 
 	m_PGTextureProps = new wxPropertyGridManager(parent, DLG_MI_PGTEXTPROPS,
@@ -136,46 +158,9 @@ DlgTextureLib::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	std::vector<std::string> order = { "ID", "FORMAT", "TYPE", "INTERNAL_FORMAT", "WIDTH",
 		"HEIGHT", "DEPTH", "LAYERS", "SAMPLES", "LEVELS" };
 
-	PropertyManager::createOrderedGrid(m_PGTextureProps, Texture::Attribs, order);
-	PropertyManager::setAllReadOnly(m_PGTextureProps, Texture::Attribs);
+	PropertyManager::createOrderedGrid(m_PGTextureProps, ITexture::Attribs, order);
+	PropertyManager::setAllReadOnly(m_PGTextureProps, ITexture::Attribs);
 	m_PGTextureProps->SetSplitterLeft(true, true);
-	//wxPropertyGridPage* pgTexturePropsPage = pgTextureProps->GetPage("Texture");
-	//std::vector<int> dims = Texture::Attribs.getListValues(Texture::DIMENSION);
-	//std::vector<std::string> strDims = Texture::Attribs.getListString(Texture::DIMENSION);;
-
-	//int size = dims.size();
-
-	//wxPGChoices texType;
-	//for(int i = 0; i < size; i++) {
-	//	texType.Add(wxString::FromAscii(strDims[i].c_str()),dims[i]);
-	//}
-
-	//dims = Texture::Attribs.getListValues(Texture::INTERNAL_FORMAT);
-	//strDims = Texture::Attribs.getListString(Texture::INTERNAL_FORMAT);;
-
-	//size = dims.size();
-	//wxPGChoices texFormat;
-	//for(int i = 0; i < size; i++) {
-	//	texFormat.Add(wxString::FromAscii(strDims[i].c_str()),dims[i]);
-	//}
-
-
-	//m_PGTextureProps->Append(new wxStringProperty(wxT("Name"),wxPG_LABEL,wxT("")));
- //	m_PGTextureProps->DisableProperty(wxT("Name"));
-
-	//m_PGTextureProps->Append(new wxEnumProperty(wxT("Type"),wxPG_LABEL,texType));
-	//m_PGTextureProps->DisableProperty(wxT("Type"));
-
-	//m_PGTextureProps->Append(new wxEnumProperty(wxT("Internal Format"),wxPG_LABEL,texFormat));
-	//m_PGTextureProps->DisableProperty(wxT("Internal Format"));
-
-	//wxString texDim;
-	//texDim.Printf(wxT("%d x %d x %d"),0,0,0);
-	//m_PGTextureProps->Append(new wxStringProperty(wxT("Dimensions(WxHxD)"),wxPG_LABEL,texDim));
- //	m_PGTextureProps->DisableProperty(wxT("Dimensions(WxHxD)"));
-
-	//m_PGTextureProps->SetSplitterLeft(true);
-	//updateTextures(0);
 
 	siz->Add(m_GridTextures,0,wxALL|wxGROW|wxHORIZONTAL|wxALIGN_CENTER_HORIZONTAL,5);
 
@@ -183,20 +168,20 @@ DlgTextureLib::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	sizH2->Add(m_PGTextureProps,1,wxALIGN_CENTER_HORIZONTAL | wxGROW | wxALL  ,5);
 	siz->Add(sizH2,1,wxGROW|wxALL|wxEXPAND,5);
 
-	//sizerTP->Add(pgTextureProps,0,wxALL |wxGROW|wxHORIZONTAL|wxALIGN_CENTER_HORIZONTAL,15);
-	//siz->Add(sizerTP,0,wxALL |wxGROW|wxHORIZONTAL,5);
-
 	wxBoxSizer *sizH = new wxBoxSizer(wxHORIZONTAL);
 
 	m_BAddTex = new wxButton(this,DLG_MI_BUTTON_ADD_TEX,wxT("Add Texture"));
 	m_BSaveRaw = new wxButton(this, DLG_MI_BUTTON_SAVE_RAW,wxT("Save Raw"));
 	m_BSavePNG = new wxButton(this, DLG_MI_BUTTON_SAVE_PNG,wxT("Save PNG"));
 	m_BSaveHDR = new wxButton(this, DLG_MI_BUTTON_SAVE_HDR,wxT("Save HDR"));
+	m_BSaveHDR = new wxButton(this, DLG_MI_BUTTON_SAVE_HDR,wxT("Save HDR"));
+	m_BUpdateIcons = new wxButton(this, DLG_MI_BUTTON_UPDATE_ICONS,wxT("Update Icons"));
 
 	sizH-> Add(m_BAddTex,0,wxALL |wxGROW |wxHORIZONTAL|wxALIGN_CENTER_HORIZONTAL,5);
 	sizH-> Add(m_BSaveRaw,0,wxALL |wxGROW |wxHORIZONTAL|wxALIGN_CENTER_HORIZONTAL,5);
 	sizH-> Add(m_BSavePNG,0,wxALL |wxGROW |wxHORIZONTAL|wxALIGN_CENTER_HORIZONTAL,5);
 	sizH-> Add(m_BSaveHDR,0,wxALL |wxGROW |wxHORIZONTAL|wxALIGN_CENTER_HORIZONTAL,5);
+	sizH-> Add(m_BUpdateIcons,0,wxALL |wxGROW |wxHORIZONTAL|wxALIGN_CENTER_HORIZONTAL,5);
 
 
 	siz->Add(sizH,0,wxALL |wxGROW |wxHORIZONTAL,5);
@@ -222,19 +207,39 @@ void DlgTextureLib::updateTextures(int index) {
 			m_ImagesGrid.pop_back();
 	}
 
-	
-
-	nau::material::Texture *texture;
+	nau::material::ITexture *texture;
 		
+	ITexImage *ti;
+	wxBitmap *bm;
 	for(j = 0 ; j < numTex ; j++) {
 		texture = RESOURCEMANAGER->getTexture(j);
-		wxBitmap *bm = texture->getBitmap();
-		if (bm == NULL)
+		ti = ITexImage::create(texture);
+		unsigned char *data = ti->getRGBData();
+
+		if (data == NULL)
 			m_ImagesGrid[j]->setBitmap(new wxBitmap(96,96));
-		else
+		else {
+			wxImage *ima = new wxImage(ti->getWidth(), ti->getHeight(), data, true);
+			ima->Rescale(96, 96);
+			bm = new wxBitmap(ima->Mirror(false));
+			m_Bitmaps[texture->getPropi(ITexture::ID)] = bm;
 			m_ImagesGrid[j]->setBitmap(bm);
-		//gridTextures->SetCellRenderer(0, j, imagesGrid[j]);
+			free (data);
+			delete ima;
+		}
+		// have to free memory
+		delete ti;
 	}
+
+	//for(j = 0 ; j < numTex ; j++) {
+	//	texture = RESOURCEMANAGER->getTexture(j);
+	//	wxBitmap *bm = texture->getBitmap();
+	//	if (bm == NULL)
+	//		m_ImagesGrid[j]->setBitmap(new wxBitmap(96,96));
+	//	else
+	//		m_ImagesGrid[j]->setBitmap(bm);
+	//	//gridTextures->SetCellRenderer(0, j, imagesGrid[j]);
+	//}
 
 //	for (j = numTex; j < 4; j++) {
 //		imagesGrid[j]->setBitmap(new wxBitmap(96,96));
@@ -249,7 +254,7 @@ void DlgTextureLib::updateTextures(int index) {
 
 void DlgTextureLib::setTextureProps(int index) {
 
-	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(index);
+	nau::material::ITexture *texture = RESOURCEMANAGER->getTexture(index);
 	m_ActiveTexture = index;
 
 	m_GridTextures->SelectBlock(0,index,0,index,false);
@@ -262,77 +267,64 @@ void DlgTextureLib::setTextureProps(int index) {
 		return;
 	}
 
-	PropertyManager::updateGrid(m_PGTextureProps, Texture::Attribs, (AttributeValues *)texture);
+	PropertyManager::updateGrid(m_PGTextureProps, ITexture::Attribs, (AttributeValues *)texture);
 	
 	wxString s = wxString(texture->getLabel().c_str());
 	m_PGTextureProps->SetPropertyValue(wxT("Name"),s);
-	wxBitmap *bm = texture->getBitmap();
+	wxBitmap *bm = m_Bitmaps[ texture->getPropi(ITexture::ID)];
+	//wxBitmap *bm = texture->getBitmap();
 	//unsigned char *bm = texture->getBitmap();
 	m_PGTextureProps->SetPropertyImage(wxT("Name"), *bm);
-
-	//int v = texture->getPrope(Texture::INTERNAL_FORMAT);
-	//m_PGTextureProps->SetPropertyValue(wxT("Internal Format"),v);
-
-	//m_PGTextureProps->SetPropertyValue(wxT("Type"),texture->getPrope(Texture::DIMENSION));
-
-	//v = texture->getPropi(Texture::DEPTH);
-	////if (texture->getHeight() == 1 || texture->getWidth() == 1) 
-	////	pgTextureProps->SetPropertyValue(wxT("Type"),Texture::TEXTURE_1D);
-	////else if (texture->getDepth() == 0)
-	////	pgTextureProps->SetPropertyValue(wxT("Type"),Texture::TEXTURE_2D);
-	////else
-	////	pgTextureProps->SetPropertyValue(wxT("Type"),Texture::TEXTURE_3D);
-
-	//wxString texDim;
-	//texDim.Printf(wxT("%d x %d x %d"), texture->getPropi(Texture::WIDTH),
-	//	texture->getPropi(Texture::HEIGHT),
-	//							 v);
-
-	//m_PGTextureProps->SetPropertyValue(wxT("Dimensions(WxHxD)"),texDim);
-
 }
 
 
 
 void DlgTextureLib::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 
-
-	//const wxString& name = e.GetPropertyName();
-	//const int index = m_ActiveTexture;
-	//const int value = m_PGTextureProps->GetPropertyValueAsLong(name);
-
-	//nau::render::Texture *texture = RESOURCEMANAGER->getTexture(index);
-
-//	m_parent->Refresh();
-//	DlgMaterials::Instance()->updateTexture(texture);
 }
+
+
+void DlgTextureLib::OnUpdateIcons(wxCommandEvent& event) {
+
+	for (auto b : m_Bitmaps) {
+		delete b.second;
+	}
+	m_Bitmaps.clear();
+
+	updateTextures(0);
+
+	m_GridTextures->Refresh(true);
+	Parent->Refresh();
+	notifyUpdate(TEXTURE_ICON_UPDATE,"","");
+}
+
 
 
 void DlgTextureLib::OnSaveRaw(wxCommandEvent& event) {
 
-	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
+	nau::material::ITexture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	char name[256];
 	sprintf(name, "%s.raw", texture->getLabel().c_str());
-	std::string sname = nau::system::FileUtil::Validate(name);
-	TextureLoader::SaveRaw(texture, sname);
+	std::string sname = nau::system::File::Validate(name);
+	ITextureLoader::SaveRaw(texture, sname);
 }
 
 
 void DlgTextureLib::OnSavePNG( wxCommandEvent& event) {
 
-	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
+	nau::material::ITexture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	std::string s = texture->getLabel() + ".png";
-	std::string sname = nau::system::FileUtil::Validate(s);
-	TextureLoader::Save(texture, TextureLoader::PNG);
+	std::string sname = nau::system::File::Validate(s);
+	ITextureLoader::Save(texture, ITextureLoader::PNG);
 }
 
 
 void DlgTextureLib::OnSaveHDR( wxCommandEvent& event) {
 
-	nau::material::Texture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
+	nau::material::ITexture *texture = RESOURCEMANAGER->getTexture(m_ActiveTexture);
 	std::string s = texture->getLabel() + ".hdr";
-	std::string sname = nau::system::FileUtil::Validate(s);
-	TextureLoader::Save(texture, TextureLoader::HDR);
+	std::string sname = nau::system::File::Validate(s);
+	ITextureLoader::Save(texture, ITextureLoader::HDR);
 }
 
 

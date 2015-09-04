@@ -1,5 +1,7 @@
 #include "nau/render/opengl/glMaterialBuffer.h"
 
+#include "nau/render/iAPISupport.h"
+
 #include <GL/glew.h>
 
 using namespace nau::render;
@@ -8,16 +10,11 @@ using namespace nau::material;
 bool
 GLMaterialBuffer::Init() {
 
-	Attribs.setDefault("TYPE", new int(GL_SHADER_STORAGE_BUFFER));
-#if NAU_OPENGL_VERSION >= 420
-	Attribs.listAdd("TYPE", "ATOMIC_COUNTER", GL_ATOMIC_COUNTER_BUFFER);
-#endif
-#if NAU_OPENGL_VERSION >= 430
-	Attribs.listAdd("TYPE", "SHADER_STORAGE", GL_SHADER_STORAGE_BUFFER);
-#endif	
-//#if NAU_OPENGL_VERSION >= 400
-//	Attribs.listAdd("TYPE", "DRAW_INDIRECT", GL_DRAW_INDIRECT_BUFFER);
-//#endif	
+	//Attribs.setDefault("TYPE", new int(GL_ATOMIC_COUNTER_BUFFER));
+
+	Attribs.listAdd("TYPE", "ATOMIC_COUNTER", GL_ATOMIC_COUNTER_BUFFER, IAPISupport::BUFFER_ATOMICS);
+	Attribs.listAdd("TYPE", "SHADER_STORAGE", GL_SHADER_STORAGE_BUFFER, IAPISupport::BUFFER_SHADER_STORAGE);
+
 	return true;
 }
 

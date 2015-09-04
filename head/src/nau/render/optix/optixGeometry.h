@@ -10,7 +10,7 @@
 
 #include "nau/render/optix/optixmaterialLib.h"
 #include "nau/render/optix/optixBufferLib.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 
 namespace nau {
   namespace render {

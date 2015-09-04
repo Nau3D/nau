@@ -7,6 +7,7 @@
 
 using namespace nau::system;
 
+
 std::string
 TextUtil::TrimWhitespace (const std::string &input_string)
 {
@@ -24,9 +25,10 @@ TextUtil::TrimWhitespace (const std::string &input_string)
   return (input_string.substr (lindex, rindex-lindex));
 }
 
+
 std::string
-TextUtil::CreateRandomFilename (unsigned int Size, const std::string Extension)
-{
+TextUtil::CreateRandomFilename (unsigned int Size, const std::string Extension) {
+
   if (0 == Size) {
     Size = 4;
   }
@@ -42,10 +44,10 @@ TextUtil::CreateRandomFilename (unsigned int Size, const std::string Extension)
   return filename + "." + Extension;
 }
 
-// Parse and integer value from a string
+
 int 
-TextUtil::ParseInt (const std::string &InputString)
-{
+TextUtil::ParseInt (const std::string &InputString) {
+
   std::istringstream stream (InputString);
   int intval;
 
@@ -58,10 +60,10 @@ TextUtil::ParseInt (const std::string &InputString)
   return intval;
 }
 
-// Parse a float value from a string
+
 float 
-TextUtil::ParseFloat (const std::string &InputString)
-{
+TextUtil::ParseFloat (const std::string &InputString) {
+
   std::istringstream stream (InputString);
   float floatval;
 
@@ -74,10 +76,10 @@ TextUtil::ParseFloat (const std::string &InputString)
   return floatval;
 }
 
-// Create a string from an integer value
+
 std::string 
-TextUtil::ToString (int Value)
-{
+TextUtil::ToString (int Value) {
+
   std::ostringstream stream;
   
   stream << Value;
@@ -85,12 +87,12 @@ TextUtil::ToString (int Value)
   return (stream.str());
 }
 
-// Create a string from a float value
+
 std::string 
-nau::system::TextUtil::ToString (float Value)
-{
+nau::system::TextUtil::ToString (float Value) {
+
   std::ostringstream stream;
-  
+
   stream << Value;
   
   return (stream.str());
@@ -98,8 +100,8 @@ nau::system::TextUtil::ToString (float Value)
 
 
 int *
-TextUtil::ParseInts (const std::string &InputString, int count)
-{
+TextUtil::ParseInts (const std::string &InputString, int count) {
+
 	int i, n;
 	char s[32];
 	char *ptr = (char *)InputString.c_str();
@@ -123,9 +125,10 @@ TextUtil::ParseInts (const std::string &InputString, int count)
 	return result;
 }
 
+
 float *
-TextUtil::ParseFloats (const std::string &InputString, int count)
-{
+TextUtil::ParseFloats (const std::string &InputString, int count) {
+
 	int i, n;
 	char s[32];
 	char *ptr = (char *)InputString.c_str();
@@ -150,27 +153,14 @@ TextUtil::ParseFloats (const std::string &InputString, int count)
 }
 
 
-//void
-//TextUtil::Join(const std::vector<std::string>& vec, const char* delim, std::string *result)
-//{
-//	std::stringstream res;
-//	std::string s;
-//	copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(res, delim));
-//	s = res.str();
-//	*result = s.substr(0, s.length() - 2);
-//}
-
-
 void
-TextUtil::Join(const std::vector<std::string>& vec, std::string delim, std::string *result)
-{
+TextUtil::Join(const std::vector<std::string>& vec, std::string delim, std::string *result) {
+
 	std::stringstream res;
 	std::string s;
 	for (auto s1 : vec) {
 
 		s += s1 + delim;
 	}
-	//copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(res, delim));
-	//s = res.str();
 	*result = s.substr(0, s.length() - delim.length());
 }

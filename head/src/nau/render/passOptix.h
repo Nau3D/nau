@@ -29,6 +29,8 @@ namespace nau
 			//Pass(std::string path,std::string fname);
 			virtual ~PassOptix();
 
+			static Pass *Create(const std::string &name);
+
 			virtual void addScene (const std::string &sceneName);
 			virtual void setRenderTarget (nau::render::RenderTarget* rt);
 
@@ -59,8 +61,11 @@ namespace nau
 			void addGlobalAttribute(std::string name, ProgramValue &p);
 
 		protected:
+			static bool Init();
+			static bool Inited;
+
 			virtual void setupCamera (void);
-			RTformat getOptixFormat(Texture *texID);
+			RTformat getOptixFormat(ITexture *texID);
 
 			virtual void optixInit();
 			// Optix Stuff

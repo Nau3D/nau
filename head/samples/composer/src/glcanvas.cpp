@@ -2,27 +2,26 @@
 
 #include <main.h>
 
-#include <iostream>
 
 #include <nau.h>
-#include <nau/math/utils.h>
-
+#include <nau/slogger.h>
 #include <nau/debug/profile.h>
-
-#include <nau/scene/sceneobject.h>
-#include <nau/geometry/iBoundingVolume.h>
-
 #include <nau/event/eventFactory.h>
 #include <nau/event/cameraMotion.h>
 #include <nau/event/cameraOrientation.h>
+#include <nau/geometry/iBoundingVolume.h>
+#include <nau/math/utils.h>
+#include <nau/render/iAPISupport.h>
+#include <nau/scene/sceneObject.h>
 
-#include <nau/slogger.h>
+
 
 
 #ifdef GLINTERCEPTDEBUG
 #include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
 #endif
 
+#include <iostream>
 
 using namespace std;
 using namespace nau::math;
@@ -234,7 +233,8 @@ GlCanvas::OnIdle (wxIdleEvent& event)
 
 	if (!isPaused){
 		this->Render();
-		DlgAtomics::Instance()->update();
+		if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
+			DlgAtomics::Instance()->update();
    }
 	event.RequestMore();
 }

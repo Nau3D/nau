@@ -3,7 +3,8 @@
 
 
 #include "nau/material/iProgram.h"
-#include "nau/render/opengl/glProgramValue.h"
+
+#include "nau/render/opengl/glUniform.h"
 
 #include <GL/glew.h>
 
@@ -20,7 +21,6 @@ namespace nau
 		class GLProgram : public IProgram 
 		{
 		public:
-			static void FixedFunction (void);
 			static int ShaderGLId[SHADER_COUNT];
 
 		private:
@@ -33,8 +33,10 @@ namespace nau
 			int m_MaxLength;
 
 			std::string m_Name;
-			
-			std::vector<GLUniform> m_Uniforms; //list of uniforms
+			//list of uniforms
+			std::vector<GLUniform> m_Uniforms; 
+			//map from block name to location
+			std::map<std::string, unsigned int> m_Blocks; 
 			
 			bool m_PLinked;
 			bool m_ShowGlobalUniforms;
@@ -42,7 +44,6 @@ namespace nau
 		public:
 		
 			GLProgram();
-			//GLProgram (const std::string &vf, const std::string &gf, const std::string &ff); // filenames
 			~GLProgram();
 
 			virtual bool loadShader(IProgram::ShaderType type, const std::string &filename);
@@ -63,6 +64,7 @@ namespace nau
 
 			bool setValueOfUniform (const std::string &name, void *values);
 			bool setValueOfUniform(int loc, void *values);
+			void prepareBlocks();
 
 			int getAttributeLocation (const std::string &name);
 			int getUniformLocation(std::string uniformName);
@@ -97,6 +99,7 @@ namespace nau
 			bool reloadShaderFile(IProgram::ShaderType aType);
 
 			void setUniforms();
+			void setBlocks();
 			void setValueOfUniform (int i);
 			void showGlobalUniforms (void);
 

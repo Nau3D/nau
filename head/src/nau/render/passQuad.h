@@ -8,13 +8,13 @@ namespace nau
 {
 	namespace render
 	{
-		class PassQuad :
-			public Pass
+		class PassQuad : public Pass
 		{
-		private:
-			nau::geometry::Quad *m_QuadObject;
 		public:
 			PassQuad (const std::string &name);
+			~PassQuad(void);
+
+			static Pass *Create(const std::string &name);
 
 			void prepare (void);
 			void restore (void);
@@ -22,7 +22,11 @@ namespace nau
 
 			void setMaterialName(std::string &lib, std::string &mat);
 			
-			~PassQuad(void);
+
+		protected:
+			nau::geometry::Quad *m_QuadObject;
+			static bool Init();
+			static bool Inited;
 
 		};
 	};

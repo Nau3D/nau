@@ -2,7 +2,7 @@
 
 #include "nau.h"
 #include "nau/clogger.h" 
-#include "nau/scene/octreeByMatnode.h"
+#include "nau/scene/octreeByMatNode.h"
 
 
 #ifndef _USE_MATH_DEFINES

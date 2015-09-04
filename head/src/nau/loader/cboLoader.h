@@ -1,10 +1,10 @@
 #ifndef CBOLOADER_H
 #define CBOLOADER_H
 
-#include "nau/scene/iscene.h"
+#include "nau/scene/iScene.h"
 #include "nau/geometry/vertexData.h"
 #include "nau/material/material.h"
-#include "nau/scene/octreeByMatscene.h"
+#include "nau/scene/octreeByMatScene.h"
 
 using namespace nau::render;
 using namespace nau::material;

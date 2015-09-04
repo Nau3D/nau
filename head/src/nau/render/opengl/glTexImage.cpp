@@ -4,10 +4,10 @@ using namespace nau::render;
 
 
 
-GLTexImage::GLTexImage (Texture *t) :
-	TexImage (t)
+GLTexImage::GLTexImage (ITexture *t) :
+	ITexImage (t)
 {
-	m_DataType = t->getPrope(Texture::TYPE);
+	m_DataType = t->getPrope(ITexture::TYPE);
 	int len = m_Width * m_Height * m_Depth * m_NumComponents; 
 
 	switch (m_DataType) {
@@ -66,18 +66,15 @@ GLTexImage::update(void) {
 	glGenBuffers(1, &b);
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, b);
 	glBufferData(GL_PIXEL_PACK_BUFFER, m_DataSize, NULL, GL_STREAM_READ);
-	int k = glGetError();
-	int texType = m_Texture->getPrope(Texture::DIMENSION);
-	glBindTexture(texType,m_Texture->getPropi(Texture::ID));
+	int texType = m_Texture->getPrope(ITexture::DIMENSION);
+	glBindTexture(texType,m_Texture->getPropi(ITexture::ID));
 	if (texType == GL_TEXTURE_CUBE_MAP)
 		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-	k = glGetError();
-	glGetTexImage(texType, 0, m_Texture->getPrope(Texture::FORMAT), m_DataType, 0);
+	glGetTexImage(texType, 0, m_Texture->getPrope(ITexture::FORMAT), m_DataType, 0);
 	void *m_Data2 = glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
 	memcpy(m_Data, m_Data2, m_DataSize);
 	glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
 	glDeleteBuffers(1, &b);
-	k = glGetError();
 }
 
 
@@ -90,3 +87,32 @@ GLTexImage::getData()
 }
 
 
+unsigned char *
+GLTexImage::getRGBData() {
+
+	int texType = m_Texture->getPrope(ITexture::DIMENSION);
+
+	if (texType == GL_TEXTURE_CUBE_MAP)
+		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+	else if (texType != GL_TEXTURE_2D)
+		return NULL;
+
+	unsigned int dataSize = m_Width * m_Height * 3 * (sizeof(unsigned char));
+	glFinish();
+	glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+	unsigned int b;
+	glGenBuffers(1, &b);
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, b);
+	glBufferData(GL_PIXEL_PACK_BUFFER, dataSize, NULL, GL_STREAM_READ);
+
+	glBindTexture(texType,m_Texture->getPropi(ITexture::ID));
+
+	unsigned char *data = (unsigned char *)malloc(dataSize);
+	glGetTexImage(texType, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	void *data2 = glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
+
+	memcpy(data, data2, dataSize);
+	glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+	glDeleteBuffers(1, &b);
+	return data;
+}

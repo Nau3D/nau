@@ -3,13 +3,14 @@
 
 #include "nau/clogger.h"
 #include "nau/material/colorMaterial.h"
-#include "nau/material/imageTexture.h"
+#include "nau/material/iImageTexture.h"
 #include "nau/material/iMaterialBuffer.h"
 #include "nau/material/iProgram.h"
 #include "nau/material/iState.h" 
 #include "nau/material/materialTexture.h"
+#include "nau/material/programBlockValue.h"
 #include "nau/material/programValue.h"
-#include "nau/material/texture.h"
+#include "nau/material/iTexture.h"
 
 #include <string>
 #include <iostream>
@@ -35,9 +36,7 @@ namespace nau
 
 			nau::material::ColorMaterial m_Color;
 //			nau::material::TextureMat *m_Texmat;
-#if NAU_OPENGL_VERSION >=  420
-			std::map<int, ImageTexture*> m_ImageTextures;
-#endif
+			std::map<int, IImageTexture*> m_ImageTextures;
 
 			// ID -> (binding point, *buffer)
 			std::map<int, IMaterialBuffer *> m_Buffers;
@@ -50,8 +49,10 @@ namespace nau
 
 			// These are values specified in the material library
 			std::map<std::string, nau::material::ProgramValue> m_ProgramValues;
+			// These are the active program uniforms
 			std::map<std::string, nau::material::ProgramValue> m_UniformValues;
 			
+			std::map<std::pair<std::string, std::string>, nau::material::ProgramBlockValue> m_ProgramBlockValues;
 			bool m_Enabled;
 			bool m_useShader;
 			std::string m_Name;	
@@ -67,9 +68,11 @@ namespace nau
 
 			void prepare ();
 			void prepareNoShaders();
-			void setUniformValues();
 			void restore();
 			void restoreNoShaders();
+
+			void setUniformValues();
+			void setUniformBlockValues();
 
 			// Reset material to defaults
 			void clear();
@@ -77,10 +80,9 @@ namespace nau
 			void disable (void);
 			bool isEnabled (void);
 
-#if NAU_OPENGL_VERSION >=  420
 			void attachImageTexture(std::string label, unsigned int unit, unsigned int texID);
-			ImageTexture *getImageTexture(unsigned int unit);
-#endif
+			IImageTexture *getImageTexture(unsigned int unit);
+			void getImageTextureUnits(std::vector<unsigned int> *v);
 
 			void attachBuffer(IMaterialBuffer *b);
 			bool hasBuffer(int id);
@@ -92,9 +94,9 @@ namespace nau
 			MaterialTexture *getMaterialTexture(int unit);
 			bool createTexture (int unit, std::string fn);
 			void attachTexture (int unit, std::string label);
-			void attachTexture(int unit, Texture *t);
-			Texture *getTexture(int unit);
-			TextureSampler* getTextureSampler(unsigned int unit);
+			void attachTexture(int unit, ITexture *t);
+			ITexture *getTexture(int unit);
+			ITextureSampler* getTextureSampler(unsigned int unit);
 			void unsetTexture(int unit);
 			void getTextureNames(std::vector<std::string> *vs);
 			void getTextureUnits(std::vector<int> *vi);
@@ -105,6 +107,7 @@ namespace nau
 			std::string getProgramName();
 			bool isInSpecML(std::string programValueName);
 			void addProgramValue (std::string name, nau::material::ProgramValue progVal);
+			void addProgramBlockValue (std::string block, std::string name, nau::material::ProgramBlockValue progVal);
 			void enableShader(bool value);
 			bool isShaderEnabled();
 			void clearProgramValues(); 
@@ -112,6 +115,7 @@ namespace nau
 
 			std::map<std::string, nau::material::ProgramValue>& getProgramValues();
 			std::map<std::string, nau::material::ProgramValue>& getUniformValues();
+			std::map<std::pair<std::string, std::string>, nau::material::ProgramBlockValue>& getProgramBlockValues();
 			ProgramValue *getProgramValue(std::string name);
 			void setValueOfUniform(std::string name, void *values);
 			void getValidProgramValueNames(std::vector<std::string> *vs);

@@ -6,7 +6,7 @@
 #include <nau/event/eventFactory.h>
 #include <nau/geometry/iBoundingVolume.h>
 #include <nau/math/utils.h>
-#include <nau/scene/iscenepartitioned.h>
+#include <nau/scene/iScenePartitioned.h>
 
 #ifdef NAU_PLATFORM_WIN32
 #include <dirent.h>

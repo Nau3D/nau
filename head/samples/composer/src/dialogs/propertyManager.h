@@ -45,11 +45,20 @@ protected:
 	static void createBool(wxPropertyGridManager *pg, Attribute &a);
 	static void updateBool(wxPropertyGridManager *pg, std::string label, bool a);
 
+	static void createBVec4(wxPropertyGridManager *pg, Attribute &a);
+	static void updateBVec4(wxPropertyGridManager *pg, std::string label, bvec4 a);
+
 	static void createInt(wxPropertyGridManager *pg, Attribute &a);
 	static void updateInt(wxPropertyGridManager *pg, std::string label, int a);
 
+	static void createIVec3(wxPropertyGridManager *pg, Attribute &a);
+	static void updateIVec3(wxPropertyGridManager *pg, std::string label, ivec3 a);
+
 	static void createUInt(wxPropertyGridManager *pg, Attribute &a);
 	static void updateUInt(wxPropertyGridManager *pg, std::string label, unsigned int a);
+
+	static void createUIVec3(wxPropertyGridManager *pg, Attribute &a);
+	static void updateUIVec3(wxPropertyGridManager *pg, std::string label, uivec3 a);
 
 	static void createFloat(wxPropertyGridManager *pg, Attribute &a);
 	static void updateFloat(wxPropertyGridManager *pg, std::string label, float a);
@@ -68,6 +77,7 @@ protected:
 
 	static void createMat4(wxPropertyGridManager *pg, Attribute &a);
 	static void updateMat4(wxPropertyGridManager *pg, std::string label, mat4 a);
+
 };
 
 #endif

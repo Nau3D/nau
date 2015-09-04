@@ -1,7 +1,7 @@
 #ifndef GLTEXTURE_CUBEMAP_H
 #define GLTEXTURE_CUBEMAP_H
 
-#include "nau/material/textureCubeMap.h"
+#include "nau/material/iTextureCubeMap.h"
 #include "nau/scene/camera.h"
 
 #include "nau.h"
@@ -14,16 +14,16 @@ namespace nau
 {
 	namespace render
 	{
-		class GLTextureCubeMap : public TextureCubeMap
+		class GLTextureCubeMap : public ITextureCubeMap
 		{
-		friend class TextureCubeMap;
+		friend class ITextureCubeMap;
 
 		public:
 
 			~GLTextureCubeMap(void);
 
-			virtual void prepare(unsigned int unit, nau::material::TextureSampler *ts);
-			virtual void restore(unsigned int unit, nau::material::TextureSampler *ts);
+			virtual void prepare(unsigned int unit, nau::material::ITextureSampler *ts);
+			virtual void restore(unsigned int unit, nau::material::ITextureSampler *ts);
 
 			virtual void build(int immutable = 0);
 

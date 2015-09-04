@@ -6,7 +6,7 @@
 #include "assimp/PostProcess.h"
 #include "assimp/Scene.h"
 
-#include "nau/scene/iscene.h"
+#include "nau/scene/iScene.h"
 
 namespace nau 
 {

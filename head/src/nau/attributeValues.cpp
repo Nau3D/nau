@@ -21,6 +21,8 @@ AttributeValues::isValide(EnumProperty prop, int value) {
 	Attribute attr = m_Attribs->get(prop, Enums::ENUM);
 	if (attr.getName() == "NO_ATTR")
 		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
 	if (attr.isValid(value)) 
 		return true;
 	else
@@ -53,6 +55,8 @@ AttributeValues::isValidi(IntProperty prop, int value) {
 
 	Attribute attr = m_Attribs->get(prop, Enums::INT);
 	if (attr.getName() == "NO_ATTR")
+		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
 		return false;
 	int *max, *min;
 	if (attr.getRangeDefined()) {
@@ -94,6 +98,8 @@ AttributeValues::isValidi2(Int2Property prop, ivec2 &value) {
 	Attribute attr = m_Attribs->get(prop, Enums::IVEC2);
 	if (attr.getName() == "NO_ATTR")
 		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
 	ivec2 *max, *min;
 	if (attr.getRangeDefined()) {
 		max = (ivec2 *)attr.getMax();
@@ -115,6 +121,48 @@ AttributeValues::setPropi2(Int2Property prop, ivec2 &value) {
 	m_Int2Props[prop] = value;
 }
 
+
+// ----------------------------------------------
+//		INT3
+// ----------------------------------------------
+
+
+ivec3 &
+AttributeValues::getPropi3(Int3Property prop) {
+
+	return m_Int3Props[prop];
+}
+
+
+bool
+AttributeValues::isValidi3(Int3Property prop, ivec3 &value) {
+
+	Attribute attr = m_Attribs->get(prop, Enums::IVEC3);
+	if (attr.getName() == "NO_ATTR")
+		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
+	ivec3 *max, *min;
+	if (attr.getRangeDefined()) {
+		max = (ivec3 *)attr.getMax();
+		min = (ivec3 *)attr.getMin();
+
+		if (max != NULL && value > *max)
+			return false;
+		if (min != NULL && value < *min)
+			return false;
+	}
+	return true;
+}
+
+
+void
+AttributeValues::setPropi3(Int3Property prop, ivec3 &value) {
+
+	assert(isValidi3(prop, value));
+	m_Int3Props[prop] = value;
+}
+
 // ----------------------------------------------
 //		UINT
 // ----------------------------------------------
@@ -132,6 +180,8 @@ AttributeValues::isValidui(UIntProperty prop, unsigned int value) {
 
 	Attribute attr = m_Attribs->get(prop, Enums::UINT);
 	if (attr.getName() == "NO_ATTR")
+		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
 		return false;
 
 	unsigned int *max, *min;
@@ -173,6 +223,8 @@ AttributeValues::isValidui2(UInt2Property prop, uivec2 &value) {
 	Attribute attr = m_Attribs->get(prop, Enums::UIVEC2);
 	if (attr.getName() == "NO_ATTR")
 		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
 
 	uivec2 *max, *min;
 	if (attr.getRangeDefined()) {
@@ -212,6 +264,8 @@ AttributeValues::isValidui3(UInt3Property prop, uivec3 &value) {
 
 	Attribute attr = m_Attribs->get(prop, Enums::UIVEC3);
 	if (attr.getName() == "NO_ATTR")
+		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
 		return false;
 
 	uivec3 *max, *min;
@@ -253,6 +307,8 @@ AttributeValues::isValidb(BoolProperty prop, bool value) {
 	Attribute attr = m_Attribs->get(prop, Enums::BOOL);
 	if (attr.getName() == "NO_ATTR")
 		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
 	else
 		return true;
 }
@@ -283,6 +339,8 @@ AttributeValues::isValidb4(Bool4Property prop, bvec4 &value) {
 	Attribute attr = m_Attribs->get(prop, Enums::BVEC4);
 	if (attr.getName() == "NO_ATTR")
 		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
 	else
 		return true;
 }
@@ -312,6 +370,8 @@ AttributeValues::isValidf(FloatProperty prop, float f) {
 
 	Attribute attr = m_Attribs->get(prop, Enums::FLOAT);
 	if (attr.getName() == "NO_ATTR")
+		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
 		return false;
 	float *max, *min;
 	if (attr.getRangeDefined()) {
@@ -351,6 +411,8 @@ AttributeValues::isValidf4(Float4Property prop, vec4 &f) {
 
 	Attribute attr = m_Attribs->get(prop, Enums::VEC4);
 	if (attr.getName() == "NO_ATTR")
+		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
 		return false;
 	vec4 *max, *min;
 	if (attr.getRangeDefined()) {
@@ -400,6 +462,8 @@ AttributeValues::isValidf3(Float3Property prop, vec3 &f) {
 	Attribute attr = m_Attribs->get(prop, Enums::VEC3);
 	if (attr.getName() == "NO_ATTR")
 		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
 	vec3 *max, *min;
 	if (attr.getRangeDefined()) {
 		max = (vec3 *)attr.getMax();
@@ -447,6 +511,8 @@ AttributeValues::isValidf2(Float2Property prop, vec2 &f) {
 	Attribute attr = m_Attribs->get(prop, Enums::VEC2);
 	if (attr.getName() == "NO_ATTR")
 		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
 	vec2 *max, *min;
 	if (attr.getRangeDefined()) {
 		max = (vec2 *)attr.getMax();
@@ -486,6 +552,8 @@ AttributeValues::isValidm4(Mat4Property prop, mat4 &value) {
 	Attribute attr = m_Attribs->get(prop, Enums::MAT4);
 	if (attr.getName() == "NO_ATTR")
 		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
+		return false;
 	else
 		return true;
 }
@@ -515,6 +583,8 @@ AttributeValues::isValidm3(Mat3Property prop, mat3 &value) {
 
 	Attribute attr = m_Attribs->get(prop, Enums::MAT3);
 	if (attr.getName() == "NO_ATTR")
+		return false;
+	if (!APISupport->apiSupport(attr.m_Requires))
 		return false;
 	else
 		return true;

@@ -109,16 +109,7 @@
     <ClCompile Include="..\src\nau\render\pipeline.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\resource\resourcemanager.cpp">
-      <Filter>Source Files\resource</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\resource\texturemanager.cpp">
-      <Filter>Source Files\resource</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\scene\camera.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\geometryobject.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\scene\light.cpp">
@@ -133,59 +124,14 @@
     <ClCompile Include="..\src\nau\scene\octree.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\scene\octreenode.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\octreescene.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\scene\scene.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\sceneaux.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\scenefactory.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\sceneobject.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\sceneobjectfactory.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\sceneposeobject.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\sceneposes.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\sceneskeleton.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\system\file.cpp">
       <Filter>Source Files\system</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\system\fileutil.cpp">
-      <Filter>Source Files\system</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\system\textfile.cpp">
-      <Filter>Source Files\system</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\system\textutil.cpp">
       <Filter>Source Files\system</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\world\bulletworld.cpp">
-      <Filter>Source Files\world</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\world\naubulletmotionstate.cpp">
-      <Filter>Source Files\world</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\world\physicalobject.cpp">
-      <Filter>Source Files\world</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\world\worldfactory.cpp">
-      <Filter>Source Files\world</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\debug\profile.cpp">
       <Filter>Source Files\debug</Filter>
@@ -250,19 +196,7 @@
     <ClCompile Include="..\src\nau\event\touchSensor.cpp">
       <Filter>Source Files\event</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\resource\font.cpp">
-      <Filter>Source Files\resource</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\resource\fontmanager.cpp">
-      <Filter>Source Files\resource</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\scene\octreeByMat.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\octreeByMatnode.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\octreeByMatscene.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\passOptix.cpp">
@@ -289,17 +223,11 @@
     <ClCompile Include="..\src\nau\geometry\square.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\material\textureSampler.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\render\passCompute.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\octreeunified.cpp">
-      <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\debug\state.cpp">
       <Filter>Source Files\debug</Filter>
@@ -309,9 +237,6 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\attribute.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\scene\iscene.cpp">
-      <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\material\materialTexture.cpp">
       <Filter>Source Files\material</Filter>
@@ -323,9 +248,6 @@
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\passProcessBuffer.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\passDepthMap.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\passQuad.cpp">
@@ -406,9 +328,6 @@
     <ClCompile Include="..\src\nau\material\programValue.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\material\texImage.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\math\randomGen.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
@@ -428,9 +347,6 @@
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glProgram.cpp">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\render\opengl\glProgramValue.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glRenderer.cpp">
@@ -463,16 +379,7 @@
     <ClCompile Include="..\src\nau\render\iRenderer.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\material\texture.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\textureCubeMap.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\material\iBuffer.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\material\imageTexture.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\material\iProgram.cpp">
@@ -513,6 +420,108 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\render\renderTarget.cpp">
       <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\resource\fontManager.cpp">
+      <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\resource\resourceManager.cpp">
+      <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\font.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\geometricObject.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\iScene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeByMatNode.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeByMatScene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeNode.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeScene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\octreeUnified.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneAux.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneFactory.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneObject.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneObjectFactory.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\scenePoseObject.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\scenePoses.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\scene\sceneSkeleton.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\world\bulletMotionState.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\world\bulletWorld.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\world\physicalObject.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\world\worldFactory.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iTexImage.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iTexture.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iTextureCubeMap.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iTextureSampler.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iImageTexture.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\passDepthMap.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\iAPISupport.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glAPISupport.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iUniformBlock.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glUniformBlock.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\uniformBlockManager.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\programBlockValue.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glUniform.cpp">
+      <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -579,22 +588,7 @@
     <ClInclude Include="..\src\nau\render\viewport.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\resource\resourcemanager.h">
-      <Filter>Source Files\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\resource\texturemanager.h">
-      <Filter>Source Files\resource</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\scene\camera.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\geometryobject.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\iscene.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\iscenepartitioned.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\scene\light.h">
@@ -609,62 +603,14 @@
     <ClInclude Include="..\src\nau\scene\octree.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\scene\octreenode.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\octreescene.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\scene\scene.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\sceneaux.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\scenefactory.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\sceneobject.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\sceneobjectfactory.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\sceneposeobject.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\sceneposes.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\sceneskeleton.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\system\file.h">
       <Filter>Source Files\system</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\system\fileutil.h">
-      <Filter>Source Files\system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\system\textfile.h">
-      <Filter>Source Files\system</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\system\textutil.h">
       <Filter>Source Files\system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\bulletworld.h">
-      <Filter>Source Files\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\naubulletmotionstate.h">
-      <Filter>Source Files\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\iworld.h">
-      <Filter>Source Files\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\physicalobject.h">
-      <Filter>Source Files\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\worldfactory.h">
-      <Filter>Source Files\world</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\debug\profile.h">
       <Filter>Source Files\debug</Filter>
@@ -738,19 +684,7 @@
     <ClInclude Include="..\src\nau\event\timeSensor.h">
       <Filter>Source Files\event</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\resource\font.h">
-      <Filter>Source Files\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\resource\fontmanager.h">
-      <Filter>Source Files\resource</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\scene\octreeByMat.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\octreeByMatnode.h">
-      <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\octreeByMatscene.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passOptix.h">
@@ -777,9 +711,6 @@
     <ClInclude Include="..\src\nau\geometry\square.h">
       <Filter>Source Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\material\textureSampler.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\bimap.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -794,9 +725,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\attributeValues.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\scene\octreeunified.h">
-      <Filter>Source Files\scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\debug\state.h">
       <Filter>Source Files\debug</Filter>
@@ -826,9 +754,6 @@
       <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passProcessBuffer.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\passDepthMap.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passProfiler.h">
@@ -909,9 +834,6 @@
     <ClInclude Include="..\src\nau\material\programValue.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\material\texImage.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\math\randomGen.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
@@ -931,9 +853,6 @@
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glProgram.h">
-      <Filter>Source Files\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\render\opengl\glProgramValue.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glRenderer.h">
@@ -969,16 +888,7 @@
     <ClInclude Include="..\src\nau\render\iRenderQueue.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\material\texture.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\material\textureCubeMap.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\material\iBuffer.h">
-      <Filter>Source Files\material</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\material\imageTexture.h">
       <Filter>Source Files\material</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\material\iProgram.h">
@@ -1016,6 +926,114 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\renderTarget.h">
       <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\resource\fontManager.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\resource\resourceManager.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\font.h">
+      <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\geometricObject.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\iScene.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\iScenePartitioned.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeByMatNode.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeByMatScene.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeNode.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeScene.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\octreeUnified.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneAux.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneFactory.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneObject.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneObjectFactory.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\scenePoseObject.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\scenePoses.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\scene\sceneSkeleton.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\bulletMotionState.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\bulletWorld.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\iWorld.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\physicalObject.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\world\worldFactory.h">
+      <Filter>Source Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iTexImage.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iTexture.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iTextureCubeMap.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iTextureSampler.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iImageTexture.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\passDepthMap.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iAPISupport.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glAPISupport.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iUniformBlock.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glUniformBlock.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\uniformBlockManager.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\programBlockValue.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glUniform.h">
+      <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

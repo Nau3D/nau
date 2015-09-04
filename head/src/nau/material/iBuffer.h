@@ -53,6 +53,7 @@ namespace nau
 
 			virtual void setData(unsigned int size, void *data) = 0;
 			virtual void setSubData(unsigned int offset, unsigned int size, void*data) = 0;
+			virtual void setSubDataNoBinding(unsigned int bufferType, unsigned int offset, unsigned int size, void*data) = 0;
 			// returns the number of bytes read
 			virtual int getData(unsigned int offset, unsigned int size, void *data) = 0;
 

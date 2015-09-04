@@ -1,9 +1,10 @@
 #include "nau/render/pass.h"
 
+#include "nau.h"
+#include "nau/debug/profile.h"
 #include "nau/geometry/axis.h"
 #include "nau/geometry/frustum.h"
-#include "nau/debug/profile.h"
-#include "nau.h"
+#include "nau/render/passFactory.h"
 
 #include <sstream>
 
@@ -97,10 +98,10 @@ Pass::Init() {
 
 	// FLOAT
 	Attribs.add(Attribute(DEPTH_CLEAR_VALUE, "DEPTH_CLEAR_VALUE", Enums::DataType::FLOAT, false, new float(1.0f)));
-	Attribs.add(Attribute(STENCIL_CLEAR_VALUE, "STENCIL_CLEAR_VALUE", Enums::DataType::FLOAT, false, new float(0.0f)));
 
 	//INT
 	Attribs.add(Attribute(STENCIL_OP_REF, "STENCIL_OP_REF", Enums::DataType::INT, false, new int(0)));
+	Attribs.add(Attribute(STENCIL_CLEAR_VALUE, "STENCIL_CLEAR_VALUE", Enums::DataType::INT, false, new int(0)));
 
 	//UINT
 	Attribs.add(Attribute(STENCIL_OP_MASK, "STENCIL_OP_MASK", Enums::DataType::UINT, false, new unsigned int(255)));
@@ -108,6 +109,8 @@ Pass::Init() {
 	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, true, new unsigned int(0)));
 
 	NAU->registerAttributes("PASS", &Attribs);
+
+	PASSFACTORY->registerClass("default", Create);
 
 	return true;
 }
@@ -136,6 +139,13 @@ Pass::Pass (const std::string &passName) :
 Pass::~Pass() {
 
 	// must delete pre and post process lists
+}
+
+
+Pass *
+Pass::Create(const std::string &passName) {
+
+	return new Pass(passName);
 }
 
 
@@ -272,9 +282,9 @@ Pass::prepare (void) {
 
 		if (m_ExplicitViewport) {
 			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUT_SIZE);
-			m_RTSizeWidth = f2.x;
-			m_RTSizeHeight = f2.y;
-			m_RenderTarget->setPropui2(RenderTarget::SIZE, uivec2(f2.x, f2.y));
+			m_RTSizeWidth = (int)f2.x;
+			m_RTSizeHeight = (int)f2.y;
+			m_RenderTarget->setPropui2(RenderTarget::SIZE, uivec2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight));
 		}
 		m_RenderTarget->bind();
 	}
@@ -644,7 +654,7 @@ Pass::setRTSize(uivec2 &v) {
 
 	m_RTSizeWidth = v.x;
 	m_RTSizeHeight = v.y;
-	m_Viewport->setPropf2(Viewport::SIZE, vec2(v.x, v.y));
+	m_Viewport->setPropf2(Viewport::SIZE, vec2((float)v.x, (float)v.y));
 	m_Viewport->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
 	m_Viewport->setPropb(Viewport::FULL, false);
 }
@@ -736,9 +746,9 @@ Pass::setStencilOp(	StencilOp sfail, StencilOp dfail, StencilOp dpass) {
 
 
 void 
-Pass::setStencilClearValue(float v) {
+Pass::setStencilClearValue(unsigned int v) {
 
-	m_FloatProps[STENCIL_CLEAR_VALUE] = v;
+	m_IntProps[STENCIL_CLEAR_VALUE] = v;
 }
 
 // --------------------------------------------------

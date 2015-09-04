@@ -1,14 +1,12 @@
 #ifdef NAU_OPTIX 
 
-#include "nau/config.h"
-
-#if NAU_OPENGL_VERSION >= 420
 
 #include "nau.h"
+#include "nau/slogger.h"
 #include "nau/debug/profile.h"
 #include "nau/geometry/frustum.h"
+#include "nau/render/passFactory.h"
 #include "nau/render/passOptixPrime.h"
-#include "nau/slogger.h"
 
 #include <GL/glew.h>
 #include <cuda_runtime.h>
@@ -257,15 +255,33 @@ void check(T result, char const *const func, const char *const file, int const l
 #define checkCudaErrors(val)           check ( (val), #val, __FILE__, __LINE__ )
 
 
-PassOptixPrime::PassOptixPrime(const std::string &passName) : Pass(passName)
-{
+bool PassOptixPrime::Inited = PassOptixPrime::Init();
+
+
+bool
+PassOptixPrime::Init() {
+
+	PASSFACTORY->registerClass("optixPrime", Create);
+	return true;
+}
+
+
+PassOptixPrime::PassOptixPrime(const std::string &passName) : Pass(passName) {
+
 	m_ClassName = "optix prime";
 }
 
 
-PassOptixPrime::~PassOptixPrime()
-{
+PassOptixPrime::~PassOptixPrime() {
+
 	CHK_PRIME(rtpContextDestroy(m_Context));
+}
+
+
+Pass *
+PassOptixPrime::Create(const std::string &passName) {
+
+	return new PassOptixPrime(passName);
 }
 
 
@@ -443,7 +459,5 @@ PassOptixPrime::addRayBuffer(IBuffer *b) {
 
 	m_Rays = b;
 }
-
-#endif
 
 #endif

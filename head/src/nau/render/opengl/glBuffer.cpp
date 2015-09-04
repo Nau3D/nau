@@ -1,5 +1,7 @@
 #include "nau/render/opengl/glBuffer.h"
 
+#include "nau/render/iAPISupport.h"
+
 #include <GL/glew.h>
 
 using namespace nau::render;
@@ -16,13 +18,16 @@ bool GLBuffer::Inited = Init();
 
 GLBuffer::GLBuffer(std::string label): IBuffer(), m_LastBound(GL_ARRAY_BUFFER) {
 
+	IAPISupport *sup = IAPISupport::GetInstance();
+
 	m_Label = label;
 	glGenBuffers(1, (GLuint *)&m_IntProps[ID]);
-#if NAU_OPENGL_VERSION >= 430
-	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
-	glObjectLabel(GL_BUFFER, m_IntProps[ID], m_Label.size(), m_Label.c_str());
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-#endif
+	
+	if (sup->apiSupport(IAPISupport::OBJECT_LABELS)) {
+		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+		glObjectLabel(GL_BUFFER, m_IntProps[ID], m_Label.size(), m_Label.c_str());
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 }
 
 
@@ -61,11 +66,13 @@ GLBuffer::unbind() {
 void 
 GLBuffer::clear() {
 
-#if NAU_OPENGL_VERSION >= 430
-	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
-	glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-#endif
+	IAPISupport *sup = IAPISupport::GetInstance();
+	if (sup->apiSupport(IAPISupport::CLEAR_BUFFER)) {
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
+		glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 }
 
 
@@ -82,10 +89,16 @@ GLBuffer::setData(unsigned int size, void *data) {
 void
 GLBuffer::setSubData(unsigned int offset, unsigned int size, void *data) {
 
-	//m_UIntProps[SIZE] = size;
 	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+
+void
+GLBuffer::setSubDataNoBinding(unsigned int bufferType, unsigned int offset, unsigned int size, void *data) {
+
+	glBufferSubData(bufferType, offset, size, data);
 }
 
 
@@ -125,9 +138,11 @@ GLBuffer::setPropui(UIntProperty  prop, unsigned int value) {
 		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 		//glBufferStorage(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT);
 		glBufferData(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_STATIC_DRAW);
-#if NAU_OPENGL_VERSION >= 430
-		glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
-#endif
+
+		IAPISupport *sup = IAPISupport::GetInstance();
+		if (sup->apiSupport(IAPISupport::CLEAR_BUFFER)) {
+			glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
+		}		
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	else

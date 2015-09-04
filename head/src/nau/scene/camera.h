@@ -8,7 +8,7 @@
 #include "nau/math/matrix.h"
 #include "nau/math/spherical.h"
 #include "nau/math/vec4.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 #include "nau/render/viewport.h"
 
 #include <string>

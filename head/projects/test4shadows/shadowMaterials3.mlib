@@ -94,10 +94,10 @@
 					<valueof uniform="split2" type="PASS" context="shadow#pass2" component="TO" />
 					<valueof uniform="split3" type="PASS" context="shadow#pass3" component="TO" />
 					<valueof uniform="split4" type="PASS" context="shadow#pass4" component="TO" />
-					<!--valueof uniform="split" type="PASS" context="shadow#pass1" component="To" />
-					<valueof uniform="split[1]" type="PASS" context="shadow#pass2" component="To" />
-					<valueof uniform="split[2]" type="PASS" context="shadow#pass3" component="To" />
-					<valueof uniform="split[3]" type="PASS" context="shadow#pass4" component="To" /-->
+					<!--valueof uniform="split[0]" type="PASS" context="shadow#pass1" component="TO" />
+					<valueof uniform="split[1]" type="PASS" context="shadow#pass2" component="TO" />
+					<valueof uniform="split[2]" type="PASS" context="shadow#pass3" component="TO" />
+					<valueof uniform="split[3]" type="PASS" context="shadow#pass4" component="TO" /-->
 					<!--valueof uniform="split[1]" type="DATA" context="15" component="FLOAT" />
 					<valueof uniform="split[2]" type="DATA" context="50" component="FLOAT" />
 					<valueof uniform="split[3]" type="DATA" context="500" component="FLOAT" /-->

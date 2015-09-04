@@ -2,6 +2,7 @@
 
 #include "nau.h"
 #include "nau/debug/profile.h"
+#include "nau/render/passFactory.h"
 
 using namespace nau::material;
 using namespace nau::scene;
@@ -18,7 +19,8 @@ PassCompute::Init() {
 	Attribs.add(Attribute(DIM_Y, "DIM_Y", Enums::DataType::UINT, false, new unsigned int(1)));
 	Attribs.add(Attribute(DIM_Z, "DIM_Z", Enums::DataType::UINT, false, new unsigned int(1)));
 
-//	NAU->registerAttributes("PASS_COMPUTE", &Attribs);
+	PASSFACTORY->registerClass("compute", Create);
+
 	return true;
 }
 
@@ -34,13 +36,20 @@ m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0) {
 }
 
 
-void
-PassCompute::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) {
+PassCompute::~PassCompute(){
 
 }
 
 
-PassCompute::~PassCompute(){
+Pass *
+PassCompute::Create(const std::string &passName) {
+
+	return new PassCompute(passName);
+}
+
+
+void
+PassCompute::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) {
 
 }
 

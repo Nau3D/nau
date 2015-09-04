@@ -71,10 +71,10 @@ Viewport::setPropb(BoolProperty prop, bool value) {
 		m_BoolProps[prop] = value;
 
 		if (value == true) {
-			m_Float2Props[SIZE] = vec2(NAU->getWindowWidth(), NAU->getWindowHeight());
-			m_Float2Props[ABSOLUT_SIZE] = vec2(NAU->getWindowWidth(), NAU->getWindowHeight());
-			m_Float2Props[ORIGIN] = vec2(0, 0);
-			m_Float2Props[ABSOLUT_ORIGIN] = vec2(0, 0);
+			m_Float2Props[SIZE] = vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight());
+			m_Float2Props[ABSOLUT_SIZE] = vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight());
+			m_Float2Props[ORIGIN] = vec2(0.0f, 0.0f);
+			m_Float2Props[ABSOLUT_ORIGIN] = vec2(0.0f, 0.0f);
 			m_FloatProps[RATIO] = 0;
 		}
 	}

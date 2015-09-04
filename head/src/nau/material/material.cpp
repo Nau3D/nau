@@ -3,6 +3,7 @@
 #include "nau.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
+#include "nau/material/uniformBlockManager.h"
 
 using namespace nau::material;
 using namespace nau::render;
@@ -48,6 +49,7 @@ Material::clone() { // check clone Program Values
    mat->m_useShader = m_useShader;
 
    mat->m_ProgramValues = m_ProgramValues;
+   mat->m_ProgramBlockValues = m_ProgramBlockValues;
 
    mat->m_Color.clone(m_Color);
 
@@ -58,9 +60,7 @@ Material::clone() { // check clone Program Values
 	   mat->m_Textures[mt.first] = mt.second;
    }
 
-#if NAU_OPENGL_VERSION >=  420
    mat->m_ImageTextures = m_ImageTextures;
-#endif
 
    if (m_State != 0)
 		mat->m_State = m_State->clone();
@@ -94,6 +94,13 @@ std::map<std::string, nau::material::ProgramValue>&
 Material::getUniformValues() {
 
 	return m_UniformValues;
+}
+
+
+std::map<std::pair<std::string, std::string>, nau::material::ProgramBlockValue>& 
+Material::getProgramBlockValues() {
+
+	return m_ProgramBlockValues;
 }
 
 
@@ -173,7 +180,7 @@ Material::getTextureUnits(std::vector<int> *vi) {
 void 
 Material::setUniformValues() {
 
-	PROFILE("Set Uniforms");
+	PROFILE_GL("Set Uniforms");
 	std::map<std::string,ProgramValue>::iterator progValIter;
 
 	progValIter = m_ProgramValues.begin();
@@ -183,6 +190,25 @@ Material::setUniformValues() {
 		void *v = progValIter->second.getValues();
 		m_Shader->setValueOfUniform(progValIter->first, v);
 	}
+}
+
+
+void 
+Material::setUniformBlockValues() {
+
+	PROFILE_GL("Set Blocks");
+
+	std::set<std::string> blocks;
+	for (auto pbv:m_ProgramBlockValues) {
+			
+		void *v = pbv.second.getValues();
+		std::string block = pbv.first.first;
+		std::string uniform = pbv.first.second;
+		IUniformBlock *b = UNIFORMBLOCKMANAGER->getBlock(block);
+		b->setUniform(uniform, v);
+		blocks.insert(block);
+	}
+	m_Shader->prepareBlocks();
 }
 
 
@@ -231,10 +257,10 @@ Material::prepareNoShaders ()
 	for (auto t : m_Textures)
 		t.second->bind();
 
-#if NAU_OPENGL_VERSION >=  420
-	for (auto it: m_ImageTextures) 
-		it.second->prepare();
-#endif
+	if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
+		for (auto it : m_ImageTextures)
+			it.second->prepare();
+	}
 
 	for (auto b : m_Buffers) {
 		b.second->bind();
@@ -265,12 +291,14 @@ Material::prepare () {
 		}
 	}
 
-#if NAU_OPENGL_VERSION >=  420
 	{
-		for (auto it : m_ImageTextures)
-			it.second->prepare();
+		PROFILE("Image Textures");
+		if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
+			for (auto it : m_ImageTextures)
+				it.second->prepare();
+		}
 	}
-#endif
+
 	{
 		PROFILE("Shaders");
 		if (NULL != m_Shader && m_useShader) {
@@ -278,6 +306,7 @@ Material::prepare () {
 			m_Shader->prepare();
 			RENDERER->setShader(m_Shader);
 			setUniformValues();
+			setUniformBlockValues();
 		}
 		else
 			RENDERER->setShader(NULL);
@@ -289,23 +318,22 @@ Material::prepare () {
 void 
 Material::restore() {
 
-   m_Color.restore();
-
-   if (NULL != m_Shader && m_useShader) {
-	   m_Shader->restore();
-    }
-
-   for (auto t : m_Textures)
-	   t.second->unbind();
-
-   for (auto b : m_Buffers) 
-	   b.second->unbind();
-   
-#if NAU_OPENGL_VERSION >=  420
-   for (auto b : m_ImageTextures) 
-	   b.second->restore();
-#endif
-
+	m_Color.restore();
+	
+	if (NULL != m_Shader && m_useShader) {
+		m_Shader->restore();
+	}
+	
+	for (auto t : m_Textures)
+		t.second->unbind();
+	
+	for (auto b : m_Buffers) 
+		b.second->unbind();
+	
+	if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
+		for (auto b : m_ImageTextures)
+			b.second->restore();
+	}
 }
 
 
@@ -321,12 +349,11 @@ Material::restoreNoShaders() {
    for (auto b : m_Buffers)
 		b.second->unbind();
 
-#if NAU_OPENGL_VERSION >=  420
-	for (auto b : m_ImageTextures) 
-		b.second->restore();
-#endif
+	if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
+		for (auto b : m_ImageTextures)
+			b.second->restore();
+	}
 }
-
 
 
 void 
@@ -335,17 +362,17 @@ Material::setState(IState *s) {
 	m_State = s;
 }
 
-#if NAU_OPENGL_VERSION >=  420
 
 void
 Material::attachImageTexture(std::string label, unsigned int unit, unsigned int texID) {
 
-	ImageTexture *it = ImageTexture::Create(label, unit, texID);
+	assert(APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE) && "No image texture support");
+	IImageTexture *it = IImageTexture::Create(label, unit, texID);
 	m_ImageTextures[unit] = it;
 }
 
 
-ImageTexture *
+IImageTexture *
 Material::getImageTexture(unsigned int unit) {
 
 	if (m_ImageTextures.count(unit))
@@ -354,8 +381,14 @@ Material::getImageTexture(unsigned int unit) {
 		return NULL;
 }
 
-#endif // NAU_OPENGL_VERSION >=  420
 
+void 
+Material::getImageTextureUnits(std::vector<unsigned int> *v) {
+
+	for (auto i : m_ImageTextures) {
+		v->push_back(i.first);
+	}
+}
 
 
 void 
@@ -396,10 +429,10 @@ Material::getBufferBindings(std::vector<int> *vi) {
 bool
 Material::createTexture (int unit, std::string fn) {
 
-	Texture *tex = RESOURCEMANAGER->addTexture (fn);
+	ITexture *tex = RESOURCEMANAGER->addTexture (fn);
 	if (tex) {
 		MaterialTexture *t = new MaterialTexture(unit);
-		t->setSampler(TextureSampler::create(tex));
+		t->setSampler(ITextureSampler::create(tex));
 		t->setTexture(tex);
 		m_Textures[unit] = t;
 		return(true);
@@ -419,10 +452,10 @@ Material::unsetTexture(int unit) {
 
 
 void
-Material::attachTexture (int unit, Texture *tex) {
+Material::attachTexture (int unit, ITexture *tex) {
 
 	MaterialTexture *t = new MaterialTexture(unit);
-	t->setSampler(TextureSampler::create(tex));
+	t->setSampler(ITextureSampler::create(tex));
 	t->setTexture(tex);
 	m_Textures[unit] = t;
 }
@@ -431,18 +464,18 @@ Material::attachTexture (int unit, Texture *tex) {
 void
 Material::attachTexture (int unit, std::string label) {
 
-	Texture *tex = RESOURCEMANAGER->getTexture (label);
+	ITexture *tex = RESOURCEMANAGER->getTexture (label);
 
 	assert(tex != NULL);
 
 	MaterialTexture *t = new MaterialTexture(unit);
-	t->setSampler(TextureSampler::create(tex));
+	t->setSampler(ITextureSampler::create(tex));
 	t->setTexture(tex);
 	m_Textures[unit] = t;
 }
 
 
-Texture*
+ITexture*
 Material::getTexture(int unit) {
 
 	if (m_Textures.count(unit))
@@ -452,7 +485,7 @@ Material::getTexture(int unit) {
 }
 
 
-TextureSampler*
+ITextureSampler*
 Material::getTextureSampler(unsigned int unit) {
 
 	if (m_Textures.count(unit))
@@ -487,6 +520,7 @@ Material::cloneProgramFromMaterial(Material *mat) {
 	m_Shader = mat->getProgram();
 
 	m_ProgramValues.clear();
+	m_ProgramBlockValues.clear();
 	m_UniformValues.clear();
 
 	std::map<std::string, nau::material::ProgramValue>::iterator iter;
@@ -495,6 +529,11 @@ Material::cloneProgramFromMaterial(Material *mat) {
 	for( ; iter != mat->m_ProgramValues.end(); ++iter) {
 	
 		m_ProgramValues[(*iter).first] = (*iter).second;
+	}
+
+	for (auto pbv : mat->m_ProgramBlockValues) {
+
+		m_ProgramBlockValues[pbv.first] = pbv.second;
 	}
 
 	iter = mat->m_UniformValues.begin();
@@ -561,6 +600,13 @@ Material::addProgramValue (std::string name, nau::material::ProgramValue progVal
 }
 
 
+void 
+Material::addProgramBlockValue (std::string block, std::string name, nau::material::ProgramBlockValue progVal) {
+
+	m_ProgramBlockValues[std::pair<std::string, std::string>(block,name)] = progVal;
+}
+
+
 IState*
 Material::getState (void) {
 
@@ -589,9 +635,7 @@ Material::clear() {
    m_Buffers.clear();
    m_Textures.clear();
 
-#if NAU_OPENGL_VERSION >=  420
    m_ImageTextures.clear();
-#endif
 
    m_Shader = NULL; 
    m_ProgramValues.clear();

@@ -2,9 +2,11 @@
 
 #include "nau.h"
 #include "nau/config.h"
-#include "nau/geometry/vertexData.h"
 #include "nau/slogger.h"
-#include "nau/system/textfile.h"
+#include "nau/geometry/vertexData.h"
+#include "nau/material/uniformBlockManager.h"
+#include "nau/render/iRenderer.h"
+#include "nau/system/file.h"
 
 
 using namespace nau::render;
@@ -12,24 +14,20 @@ using namespace nau::system;
 
 // STATIC METHOD
 
-void GLProgram::FixedFunction() {
 
-	glUseProgram(0);
-}
-
-#if NAU_OPENGL_VERSION >= 430
+//#if NAU_OPENGL_VERSION >= 430
 int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
 	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER};
-#elif NAU_OPENGL_VERSION >= 400
-int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
-	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_FRAGMENT_SHADER};
-#elif NAU_OPENGL_VERSION >= 320
-int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
-	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER};
-#else
-int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
-	{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
-#endif
+//#elif NAU_OPENGL_VERSION >= 400
+//int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
+//	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_FRAGMENT_SHADER};
+//#elif NAU_OPENGL_VERSION >= 320
+//int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
+//	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER};
+//#else
+//int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
+//	{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
+//#endif
 
 // CONSTRUCTORS
 
@@ -105,6 +103,9 @@ GLProgram::getName() {
 bool
 GLProgram::loadShader (IProgram::ShaderType type, const std::string &filename) {
 
+	if (!isShaderSupported(type))
+		return false;
+
 	if (true == setShaderFile(type,filename)) {
 		m_Compiled[type] = compileShader(type);
 		return m_Compiled[type];
@@ -163,8 +164,11 @@ GLProgram::getUniformLocation(std::string name) {
 
 
 bool
-GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename)
-{
+GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename) {
+
+	if (!isShaderSupported(type))
+		return false;
+
 	// reset shader
 	if (filename == "" && m_ID[type] != 0) {
 		glDetachShader(m_P, ShaderGLId[type]);
@@ -184,7 +188,7 @@ GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename
 	m_Compiled[type] = false;
 	m_PLinked = false;
 	m_File[type] = filename;
-	m_Source[type] = nau::system::textFileRead(filename);
+	m_Source[type] = nau::system::File::TextRead(filename);
 	
 	// set shader source
 	const char * vv = m_Source[type].c_str();
@@ -195,12 +199,14 @@ GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename
 
 
 bool
-GLProgram::reloadShaderFile (IProgram::ShaderType type)
-{
+GLProgram::reloadShaderFile (IProgram::ShaderType type) {
+
+	if (!isShaderSupported(type))
+		return false;
 
 	m_Compiled[type] = false;
 	m_PLinked = false;
-	m_Source[type] = textFileRead (m_File[type]);
+	m_Source[type] = nau::system::File::TextRead (m_File[type]);
 	if (m_Source[type] != "") { // if read successfuly
 
 		// set shader source
@@ -275,12 +281,6 @@ GLProgram::linkProgram()
 		glBindAttribLocation(m_P, index , VertexData::Syntax[index].c_str());
 	}
 
-	//for (int i = 0; i < SHADER_COUNT; ++i) {
-	//	if (m_Compiled[i])
-	//		glAttachShader(m_P, m_ID[i]);
-	//	else
-	//		glDetachShader(m_P,m_ID[i]);
-	//}
 	for (int i = 0; i < SHADER_COUNT; ++i) {
 		if (m_ID[i] != 0)
 			glAttachShader(m_P, m_ID[i]);
@@ -295,6 +295,7 @@ GLProgram::linkProgram()
 	glGetProgramiv (m_P, GL_ACTIVE_UNIFORM_MAX_LENGTH, &m_MaxLength);
 
 	setUniforms();
+	setBlocks();
 
 	glUseProgram(0);
 
@@ -352,6 +353,19 @@ GLProgram::prepare (void) {
 	return true;
 }
 
+
+void 
+GLProgram::prepareBlocks(void) {
+
+	UniformBlockManager *blockMan = UNIFORMBLOCKMANAGER;
+	IUniformBlock *block;
+	std::string blockName;
+	for (auto b : m_Blocks)  {
+		blockName = b.first;
+		block = blockMan->getBlock(blockName);
+		block->useBlock();
+	}
+}
 
 bool
 GLProgram::restore (void) {
@@ -441,6 +455,115 @@ GLProgram::setValueOfUniform (int i) {
 }
 
 
+void
+GLProgram::setBlocks() {
+
+	int count, dataSize, actualLen, activeUnif, maxUniLength;
+	int uniType, uniSize, uniOffset, uniMatStride, uniArrayStride, auxSize;
+	char *name, *name2;
+
+	IUniformBlock *block;
+	UniformBlockManager *blockMan = UNIFORMBLOCKMANAGER;
+
+	glGetProgramiv(m_P, GL_ACTIVE_UNIFORM_BLOCKS, &count);
+
+	for (int i = 0; i < count; ++i) {
+		// Get buffers name
+		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_NAME_LENGTH, &actualLen);
+		name = (char *)malloc(sizeof(char) * actualLen);
+		glGetActiveUniformBlockName(m_P, i, actualLen, NULL, name);
+		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_DATA_SIZE, &dataSize);
+		bool newBlock = true;
+		std::string sName = name;
+		if (blockMan->hasBlock(sName)) {
+			newBlock = false;
+			block = blockMan->getBlock(sName);
+			if (block->getSize() != dataSize)
+				NAU_THROW("Block %s is already defined with a different size", name);
+		}
+
+		//	/*if (!spBlocks.count(name))*/ {
+		//		// Get buffers size
+		//		//block = spBlocks[name];
+		//		
+		//		//printf("DataSize:%d\n", dataSize);
+
+		if (newBlock) {
+			blockMan->addBlock(sName, dataSize);
+			block = blockMan->getBlock(sName);
+			block->setBindingIndex(blockMan->getCurrentBindingIndex());
+			IBuffer *b = block->getBuffer();
+			b->bind(GL_UNIFORM_BUFFER);
+			glBufferData(GL_UNIFORM_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
+			glUniformBlockBinding(m_P, i, blockMan->getCurrentBindingIndex());
+			glBindBufferRange(GL_UNIFORM_BUFFER, blockMan->getCurrentBindingIndex(), 
+								block->getBuffer()->getPropi(IBuffer::ID), 0, dataSize);
+		}
+		else {
+			block = blockMan->getBlock(sName);
+		}
+		m_Blocks[name] = i;
+		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &activeUnif);
+
+		unsigned int *indices;
+		indices = (unsigned int *)malloc(sizeof(unsigned int) * activeUnif);
+		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, (int *)indices);
+
+		glGetProgramiv(m_P, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniLength);
+		name2 = (char *)malloc(sizeof(char) * maxUniLength);
+
+		for (int k = 0; k < activeUnif; ++k) {
+
+			glGetActiveUniformName(m_P, indices[k], maxUniLength, &actualLen, name2);
+			glGetActiveUniformsiv(m_P, 1, &indices[k], GL_UNIFORM_TYPE, &uniType);
+			glGetActiveUniformsiv(m_P, 1, &indices[k], GL_UNIFORM_SIZE, &uniSize);
+			glGetActiveUniformsiv(m_P, 1, &indices[k], GL_UNIFORM_OFFSET, &uniOffset);
+			glGetActiveUniformsiv(m_P, 1, &indices[k], GL_UNIFORM_MATRIX_STRIDE, &uniMatStride);
+			glGetActiveUniformsiv(m_P, 1, &indices[k], GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
+
+			if (uniArrayStride > 0)
+				auxSize = uniArrayStride * uniSize;
+
+			else if (uniMatStride > 0) {
+
+				switch (uniType) {
+				case GL_FLOAT_MAT2:
+				case GL_FLOAT_MAT2x3:
+				case GL_FLOAT_MAT2x4:
+				case GL_DOUBLE_MAT2:
+				case GL_DOUBLE_MAT2x3:
+				case GL_DOUBLE_MAT2x4:
+					auxSize = 2 * uniMatStride;
+					break;
+				case GL_FLOAT_MAT3:
+				case GL_FLOAT_MAT3x2:
+				case GL_FLOAT_MAT3x4:
+				case GL_DOUBLE_MAT3:
+				case GL_DOUBLE_MAT3x2:
+				case GL_DOUBLE_MAT3x4:
+					auxSize = 3 * uniMatStride;
+					break;
+				case GL_FLOAT_MAT4:
+				case GL_FLOAT_MAT4x2:
+				case GL_FLOAT_MAT4x3:
+				case GL_DOUBLE_MAT4:
+				case GL_DOUBLE_MAT4x2:
+				case GL_DOUBLE_MAT4x3:
+					auxSize = 4 * uniMatStride;
+					break;
+				}
+			}
+			else
+				auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]) * uniSize;;
+
+			std::string uniName = name2;
+			block->addUniform(uniName, GLUniform::spSimpleType[uniType],
+				uniOffset, auxSize, uniArrayStride);
+			
+		}
+	}
+}
+
 
 void 
 GLProgram::setUniforms() {
@@ -479,13 +602,6 @@ GLProgram::setUniforms() {
 				uni.setLoc (loc);
 				m_Uniforms.push_back (uni);
 			}
-//#if NAU_OPENGL_VERSION >= 400 
-//			if (type == GL_UNSIGNED_INT_ATOMIC_COUNTER) {
-//				GLenum prop = GL_OFFSET; int len, params;
-//				glGetProgramResourceiv(m_P, GL_UNIFORM, i, 1, &prop, sizeof(int), &len, &params);
-//				RENDERER->addAtomic(params/4, name);
-//			}
-//#endif
 			if (size > 1) {
 
 				for (int i = 0; i < size; i++) {
@@ -513,33 +629,29 @@ GLProgram::setUniforms() {
 				}
 			}
 		}
-
 	}
 
 	// delete all uniforms where type is NOT_USED
 	for(it = m_Uniforms.begin(), i = 0; it != m_Uniforms.end(); i++ ) {
 		if (it->getGLType() == GLUniform::NOT_USED) {
 			it = m_Uniforms.erase(it);
-		} else {
+		} 
+		else {
 			++it;
 		}
 	}
 	m_NumUniforms = m_Uniforms.size();
-	//for (int i = 0; i < m_NumUniforms; i++) {
-	//	setValueOfUniform (i);
-	//}
 }
+
 
 void 
 GLProgram::updateUniforms() {
 
-//	glUseProgram (m_P);
 	for (int i = 0; i < m_NumUniforms; i++) { 
 		glGetUniformfv (m_P, m_Uniforms[i].getLoc(), (float *)m_Uniforms[i].getValues());
 	}
-
-//	glUseProgram(0);
 }
+
 
 const GLUniform& 
 GLProgram::getUniform (int i) {

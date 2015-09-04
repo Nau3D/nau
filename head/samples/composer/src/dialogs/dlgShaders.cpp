@@ -1,5 +1,7 @@
 #include "dialogs/dlgShaders.h"
+
 #include <nau/event/eventFactory.h>
+#include <nau/render/iAPISupport.h>
 
 BEGIN_EVENT_TABLE(DlgShaders, wxDialog)
 
@@ -116,7 +118,6 @@ void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 		//m_Shader[i]->SetAttribute(wxPG_FILE_WILDCARD,wxT("Vertex Shader Files (*.vert)|*.vert"));
 		pg->Append(m_Shader[i]);
 	}
-
 	pg->Append( new wxPropertyCategory(wxT("Program properties"),wxPG_LABEL) );	
 
     m_LinkStatus = new wxBoolProperty( wxT("Link Status"), wxPG_LABEL );
@@ -204,18 +205,24 @@ void DlgShaders::OnPropsChange( wxPropertyGridEvent& e) {
 	fn = std::string(filename.mb_str());
 	
 	IProgram *p = RESOURCEMANAGER->getProgram(m_active);
-	if (name == wxT("Vertex File"))
+	if (name == wxT("Vertex"))
 		p->setShaderFile(IProgram::VERTEX_SHADER,fn);
-#if NAU_OPENGL_VERSION >= 320
-	else if (name == wxT("GeometryFile"))
+//#if NAU_OPENGL_VERSION >= 320
+	else if (name == wxT("Geometry"))
 		p->setShaderFile(IProgram::GEOMETRY_SHADER, fn);
-#endif
-	else if (name == wxT("FragmentFile"))
+//#endif
+	else if (name == wxT("Fragment"))
 		p->setShaderFile(IProgram::FRAGMENT_SHADER,fn);
-#if (NAU_OPENGL_VERSION >= 430)
-	else if (name == wxT("ComputeFile"))
+//#if NAU_OPENGL_VERSION >= 400
+	else if (name == wxT("Tess Eval"))
+		p->setShaderFile(IProgram::TESS_EVALUATION_SHADER,fn);
+	else if (name == wxT("Tess Control"))
+		p->setShaderFile(IProgram::TESS_CONTROL_SHADER,fn);
+//#endif
+//#if (NAU_OPENGL_VERSION >= 430)
+	else if (name == wxT("Compute"))
 		p->setShaderFile(IProgram::COMPUTE_SHADER,fn);
-#endif
+//#endif
 
 	updateShaderAux();
 	notifyUpdate(PROPS_CHANGED, m_active,std::string(name.mb_str()));
@@ -263,23 +270,19 @@ DlgShaders::update(){
 			pg->SetPropertyValue(m_Shader[i],(char *)p->getShaderFile((IProgram::ShaderType)i).c_str());
 			pg->EnableProperty(m_Shader[i]);
 		}
-		//vfn = p->getShaderFile(IProgram::VERTEX_SHADER),
-		//			ffn = p->getShaderFile(IProgram::FRAGMENT_SHADER),
-		//			gfn = p->getShaderFile(IProgram::GEOMETRY_SHADER),
-		//			cfn = p->getShaderFile(IProgram::COMPUTE_SHADER);
 
-		//pg->SetPropertyValue(m_vf,(char *)vfn.c_str());
-		//pg->SetPropertyValue(m_ff,(char *)ffn.c_str());
-		//pg->SetPropertyValue(m_gf,(char *)gfn.c_str());
-		//pg->SetPropertyValue(m_cf,(char *)cfn.c_str());
+		if (!APISupport->apiSupport(IAPISupport::GEOMETRY_SHADER))
+			pg->DisableProperty(m_Shader[IProgram::GEOMETRY_SHADER]);
+
+		if (!APISupport->apiSupport(IAPISupport::COMPUTE_SHADER))
+			pg->DisableProperty(m_Shader[IProgram::COMPUTE_SHADER]);
+
+		if (!APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS)) {
+			pg->DisableProperty(m_Shader[IProgram::TESS_CONTROL_SHADER]);
+			pg->DisableProperty(m_Shader[IProgram::TESS_EVALUATION_SHADER]);
+		}
 
 		updateProgramProperties(p);
-			
-		//pg->EnableProperty(m_vf);
-		//pg->EnableProperty(m_ff);
-		//pg->EnableProperty(m_gf);
-		//pg->EnableProperty(m_cf);
-
 		updateShaderAux();
 	}
 }
@@ -290,23 +293,11 @@ DlgShaders::updateShaderAux() {
 
 	GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_active);
 	std::string vfn = p->getShaderFile(IProgram::VERTEX_SHADER),
-				ffn = p->getShaderFile(IProgram::FRAGMENT_SHADER)
-#if NAU_OPENGL_VERSION >= 320
-					,gfn = p->getShaderFile(IProgram::GEOMETRY_SHADER)
-#endif
-#if (NAU_OPENGL_VERSION >= 430)
-					,cfn = p->getShaderFile(IProgram::COMPUTE_SHADER)
-#endif
-					;
+				ffn = p->getShaderFile(IProgram::FRAGMENT_SHADER),
+				gfn = p->getShaderFile(IProgram::GEOMETRY_SHADER),
+				cfn = p->getShaderFile(IProgram::COMPUTE_SHADER);
 
-	if (vfn != "" || ffn != "" 
-#if NAU_OPENGL_VERSION >= 320
-		|| gfn != ""  
-#endif
-#if (NAU_OPENGL_VERSION >= 430)
-		|| cfn != ""
-#endif
-		) {
+	if (vfn != "" || ffn != "" || gfn != "" || cfn != "") {
 		m_bCompile->Enable();
 	}
 	else {
@@ -356,7 +347,6 @@ void
 DlgShaders::addUniform(wxString name, wxString type) {
 
 	wxPGProperty *pid;
-
 	pid = pg->Append(new wxStringProperty(name,wxPG_LABEL,type));
 	pg->DisableProperty(pid);
 }
@@ -441,21 +431,6 @@ DlgShaders::OnProcessCompileShaders(wxCommandEvent& event){
 			p->compileShader((IProgram::ShaderType)i);
 		}
 	}
-	//if (p->getShaderFile(IProgram::VERTEX_SHADER) != "" &&p->reloadShaderFile(IProgram::VERTEX_SHADER)) {
-	//	p->compileShader(IProgram::VERTEX_SHADER);
-	//}
-	//
-	//if (p->getShaderFile(IProgram::GEOMETRY_SHADER) != "" &&p->reloadShaderFile(IProgram::GEOMETRY_SHADER)) {
-	//	p->compileShader(IProgram::GEOMETRY_SHADER);
-	//}
-
-	//if (p->getShaderFile(IProgram::FRAGMENT_SHADER) != "" &&p->reloadShaderFile(IProgram::FRAGMENT_SHADER)) {
-	//	p->compileShader(IProgram::FRAGMENT_SHADER);
-	//}
-
-	//if (p->getShaderFile(IProgram::COMPUTE_SHADER) != "" &&p->reloadShaderFile(IProgram::COMPUTE_SHADER)) {
-	//	p->compileShader(IProgram::COMPUTE_SHADER);
-	//}
 
 	updateShaderAux();
 
@@ -466,17 +441,6 @@ DlgShaders::OnProcessCompileShaders(wxCommandEvent& event){
 		infoLog = p->getShaderInfoLog((IProgram::ShaderType)i);
 		updateLogAux(infoLog);
 	}
-	//infoLog = p->getShaderInfoLog(IProgram::VERTEX_SHADER);
-	//updateLogAux(infoLog);
-
-	//infoLog = p->getShaderInfoLog(IProgram::GEOMETRY_SHADER);
-	//updateLogAux(infoLog);
-
-	//infoLog = p->getShaderInfoLog(IProgram::FRAGMENT_SHADER);
-	//updateLogAux(infoLog);
-
-	//infoLog = p->getShaderInfoLog(IProgram::COMPUTE_SHADER);
-	//updateLogAux(infoLog);
 
 	notifyUpdate(PROPS_CHANGED,m_active,"Compiled");
 

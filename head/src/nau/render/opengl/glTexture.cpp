@@ -1,7 +1,7 @@
 #include "nau/render/opengl/glTexture.h"
 
 #include "nau.h"
-#include "nau/render/iRenderer.h"
+#include "nau/render/iAPISupport.h"
 
 #include <GL/glew.h>
 
@@ -180,11 +180,7 @@ GLTexture::GetCompatibleFormat(int dim, int internalFormat) {
 
 	GLint result;
 
-//#if NAU_OPENGL_VERSION >= 420
-//	glGetInternalformativ(dim, internalFormat, GL_TEXTURE_IMAGE_FORMAT, 1, &result);
-//#else
 	result = TexIntFormat[internalFormat].format;
-//#endif
 	return result;
 }
 
@@ -194,11 +190,11 @@ GLTexture::GetCompatibleType(int dim, int internalFormat) {
 
 	GLint result;
 
-#if NAU_OPENGL_VERSION >= 420
-	glGetInternalformativ(dim, internalFormat, GL_TEXTURE_IMAGE_TYPE, 1, &result);
-#else
+//#if NAU_OPENGL_VERSION >= 420
+//	glGetInternalformativ(dim, internalFormat, GL_TEXTURE_IMAGE_TYPE, 1, &result);
+//#else
 	result = TexIntFormat[internalFormat].type;
-#endif
+//#endif
 	return result;
 }
 
@@ -233,13 +229,13 @@ GLTexture::getElementSize() {
 }
 
 
-GLTexture::GLTexture(std::string label): Texture(label) {
+GLTexture::GLTexture(std::string label): ITexture(label) {
 
 }
 
 	
 GLTexture::GLTexture(std::string label, std::string anInternalFormat, int width, int height, int depth, int layers, int levels, int samples):
-	Texture(label)//, "TEXTURE_2D", anInternalFormat, width, height)
+	ITexture(label)//, "TEXTURE_2D", anInternalFormat, width, height)
 {
 
 	m_IntProps[WIDTH] = width;
@@ -254,38 +250,12 @@ GLTexture::GLTexture(std::string label, std::string anInternalFormat, int width,
 		m_BoolProps[MIPMAP] = true;
 
 	build();
-//	m_EnumProps[DIMENSION] = GL_TEXTURE_2D;
-//	if (levels > 0)
-//		m_BoolProps[MIPMAP] = true;
-//	else
-//		m_BoolProps[MIPMAP] = false;
-//	
-//
-//	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
-//	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
-//
-//	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
-//	glBindTexture (m_EnumProps[DIMENSION], m_IntProps[ID]);
-//
-//	//m_BoolProps[MIPMAP] = false;
-//
-//#if NAU_OPENGL_VERSION < 420 //|| NAU_OPTIX
-//	glTexImage2D(m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
-// 		m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
-//#else
-//	glTexStorage2D(GL_TEXTURE_2D, levels, m_EnumProps[INTERNAL_FORMAT], width, height);
-//#endif
-//
-//	m_IntProps[COMPONENT_COUNT] = getNumberOfComponents();
-//	m_IntProps[ELEMENT_SIZE] = getElementSize();
-//
-//	glBindTexture (m_EnumProps[DIMENSION], 0);
 }
 
 
 GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::string aFormat, 
 		std::string aType, int width, int height, void* data, bool mipmap) :
-	Texture (label)//, "TEXTURE_2D", anInternalFormat, aFormat, aType, width, height)
+	ITexture (label)//, "TEXTURE_2D", anInternalFormat, aFormat, aType, width, height)
 {
 	m_EnumProps[DIMENSION] = GL_TEXTURE_2D;
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
@@ -333,29 +303,24 @@ GLTexture::build(int immutable) {
 	int max;
 	if (m_BoolProps[MIPMAP]) {
 		max = std::max(m_IntProps[HEIGHT], std::max(m_IntProps[WIDTH], m_IntProps[DEPTH]));
-		m_IntProps[LEVELS] = log2(max);
+		m_IntProps[LEVELS] = (int)log2(max);
 	}
 
 	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
 	
-	// 2D Texture
+	// 2D ITexture
 	if (m_IntProps[HEIGHT] > 1 && m_IntProps[DEPTH] == 1) {
 
-		// 2D Texture Array 
+		// 2D ITexture Array 
 		if (m_IntProps[LAYERS] > 1) {
 
-			// 2D Texture Array MultiSample
+			// 2D ITexture Array MultiSample
 			if (m_IntProps[SAMPLES] > 1) {
 				m_EnumProps[DIMENSION] = GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
 				glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
-#if NAU_OPENGL_VERSION < 420 
-
-				glTexImage3DMultisample(m_EnumProps[DIMENSION], m_EnumProps[SAMPLES], m_EnumProps[INTERNAL_FORMAT],
-					m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS], false);
-#else
-				if (immutable) {
+				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
 					glTexStorage3DMultisample(m_EnumProps[DIMENSION], m_EnumProps[SAMPLES], m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS], false);
 				}
@@ -363,21 +328,14 @@ GLTexture::build(int immutable) {
 					glTexImage3DMultisample(m_EnumProps[DIMENSION], m_EnumProps[SAMPLES], m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS], false);
 				}
-#endif
 			}
-			// 2D Texture Array 
+			// 2D ITexture Array 
 			else {
 				m_EnumProps[DIMENSION] = GL_TEXTURE_2D_ARRAY;
 				glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
-#if NAU_OPENGL_VERSION < 420 
-
-				glTexImage3D(m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT],
-					m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS],0,
-					m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
-#else
-				if (immutable) {
+				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
 					glTexStorage3D(m_EnumProps[DIMENSION], m_IntProps[LEVELS], m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS]);
 				}
@@ -386,23 +344,17 @@ GLTexture::build(int immutable) {
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS], 0,
 						m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 				}
-#endif
 			}
 		}
-		// regular 2D Texture
+		// regular 2D ITexture
 		else {
-			// 2D Texture MultiSample
+			// 2D ITexture MultiSample
 			if (m_IntProps[SAMPLES] > 1) {
 				m_EnumProps[DIMENSION] = GL_TEXTURE_2D_MULTISAMPLE;
 				glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
-#if NAU_OPENGL_VERSION < 420 
-
-				glTexImage2DMultisample(m_EnumProps[DIMENSION], m_IntProps[SAMPLES], m_EnumProps[INTERNAL_FORMAT], 
-					m_IntProps[WIDTH], m_IntProps[HEIGHT], false);
-#else
-				if (immutable) {
+				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
 					glTexStorage2DMultisample(m_EnumProps[DIMENSION], m_IntProps[SAMPLES], m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], false);
 				}
@@ -410,21 +362,14 @@ GLTexture::build(int immutable) {
 					glTexImage2DMultisample(m_EnumProps[DIMENSION], m_IntProps[SAMPLES], m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], false);
 				}
-#endif
 			}
-			// 2D Texture 
+			// 2D ITexture 
 			else {
 				m_EnumProps[DIMENSION] = GL_TEXTURE_2D;
 				glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
-#if NAU_OPENGL_VERSION < 420 
-
-				glTexImage2D(m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT],
-					m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
-					m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
-#else
-				if (immutable) {
+				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
 					glTexStorage2D(m_EnumProps[DIMENSION], m_IntProps[LEVELS], m_EnumProps[INTERNAL_FORMAT], 
 						m_IntProps[WIDTH], m_IntProps[HEIGHT]);
 				}
@@ -433,24 +378,17 @@ GLTexture::build(int immutable) {
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
 						m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 				}
-#endif
 
 			}
 		}
 	}
-	// 3D Texture
+	// 3D ITexture
 	else if (m_IntProps[HEIGHT] > 1 && m_IntProps[DEPTH] > 1) {
 		m_EnumProps[DIMENSION] = GL_TEXTURE_3D;
 		glBindTexture(m_EnumProps[DIMENSION], m_IntProps[ID]);
 		m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 		m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
-#if NAU_OPENGL_VERSION < 420 
-
-		glTexImage3D(m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT],
-			m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH], 0,
-			m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
-#else
-		if (immutable) {
+		if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
 			glTexStorage3D(m_EnumProps[DIMENSION], m_IntProps[LEVELS], m_EnumProps[INTERNAL_FORMAT], 
 				m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH]);
 		}
@@ -459,8 +397,6 @@ GLTexture::build(int immutable) {
 				m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH], 0,
 				m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
 		}
-#endif
-
 	}				
 	//m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 	//m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
@@ -539,7 +475,7 @@ GLTexture::~GLTexture(void) {
 
 
 void 
-GLTexture::prepare(unsigned int aUnit, TextureSampler *ts) {
+GLTexture::prepare(unsigned int aUnit, ITextureSampler *ts) {
 
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(m_EnumProps[DIMENSION],m_IntProps[ID]);
@@ -549,7 +485,7 @@ GLTexture::prepare(unsigned int aUnit, TextureSampler *ts) {
 
 
 void 
-GLTexture::restore(unsigned int aUnit, TextureSampler *ts) {
+GLTexture::restore(unsigned int aUnit, ITextureSampler *ts) {
 
 	glActiveTexture (GL_TEXTURE0+aUnit);
 	glBindTexture(m_EnumProps[DIMENSION],0);
@@ -561,20 +497,22 @@ GLTexture::restore(unsigned int aUnit, TextureSampler *ts) {
 void
 GLTexture::clear() {
 
-#if NAU_OPENGL_VERSION >= 440
-	for (int i = 0; i < m_IntProps[LEVELS]; ++i)
-		glClearTexImage(m_IntProps[ID], i, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
-#endif
+	IAPISupport *sup = IAPISupport::GetInstance();
+
+	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE))
+		for (int i = 0; i < m_IntProps[LEVELS]; ++i)
+			glClearTexImage(m_IntProps[ID], i, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
+
 }
 
 
 void
 GLTexture::clearLevel(int l) {
 
-#if NAU_OPENGL_VERSION >= 440
-	if (l < m_IntProps[LEVELS])
+	IAPISupport *sup = IAPISupport::GetInstance();
+
+	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) &&l < m_IntProps[LEVELS])
 		glClearTexImage(m_IntProps[ID], l, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
-#endif
 }
 
 

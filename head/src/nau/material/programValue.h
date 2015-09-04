@@ -12,25 +12,6 @@ namespace nau {
 	 
 		public:
  
-			//enum SEMANTIC_TYPE {
-			//	CAMERA,
-			//	LIGHT,
-			//	TEXTURE,
-			//	DATA,
-			//	PASS,
-			//	CURRENT
-			//};
-
-			//enum SEMANTIC_VALUEOF {
-			////	ID=100,
-			//	UNIT=100, 
-			//	COUNT,
-			////	TYPE,
-			////	FLOATS,// place int values before this point SEE dlgmaterials.cpp(2178): if (semValueOf < ProgramValue::FLOATS) { // INT VALUES
-			////	ENABLED,
-			//	USERDATA
-			//};
-
 		private:
 			std::string m_TypeString;
 			//SEMANTIC_TYPE m_Type;
@@ -47,10 +28,6 @@ namespace nau {
 			bool m_InSpecML; // true for values specified in the material library, false for other uniforms
 			float m_fDummy;
 		public:
-
-			//static bool Validate(std::string type,std::string context,std::string component);
-			//static std::string getSemanticTypeString(SEMANTIC_TYPE s);
-			//static const std::string semanticTypeString[];
 
 			ProgramValue ();
 			ProgramValue (std::string name, std::string type,std::string context,std::string valueof, int id, bool inSpecML = true);

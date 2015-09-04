@@ -35,9 +35,7 @@ GLRenderer::Init() {
 
 unsigned int GLRenderer::GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT] = 
 	{GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_LINES, GL_LINE_LOOP, GL_POINTS, GL_TRIANGLES_ADJACENCY
-#if NAU_OPENGL_VERSION >= 400	
 	, GL_PATCHES
-#endif
 };
 
 
@@ -66,6 +64,9 @@ GLRenderer::~GLRenderer(void) {
 
 	m_Lights.clear();
 }
+
+
+
 
 
 bool 
@@ -191,8 +192,6 @@ GLRenderer::getProp(unsigned int prop, Enums::DataType dt) {
 //		ATOMICS
 // -----------------------------------------------------------------
 
-#if (NAU_OPENGL_VERSION >= 400)
-
 
 std::vector<unsigned int> &
 GLRenderer::getAtomicCounterValues() {
@@ -202,6 +201,11 @@ GLRenderer::getAtomicCounterValues() {
 	unsigned int value;
 	int i = 0;
 	IBuffer *b;
+
+	if (!APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS)) {
+		m_AtomicCounterValues.clear();
+		return m_AtomicCounterValues;
+	}
 
 	m_AtomicCounterValues.resize(m_AtomicLabels.size());
 
@@ -228,56 +232,7 @@ GLRenderer::getAtomicCounterValues() {
 
 }
 
-//void 
-//GLRenderer::prepareAtomicCounterBuffer() {
-//
-//	m_AtomicCounterValues = (unsigned int *)malloc(sizeof(unsigned int)*(m_AtomicMaxID+1));
-//	//IBuffer *b = RESOURCEMANAGER->createBuffer()
-//	glGenBuffers(1, &m_AtomicCountersBuffer);
-//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-//	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * (m_AtomicMaxID + 1), NULL, GL_DYNAMIC_DRAW);
-//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-//	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 1, m_AtomicCountersBuffer);
-//	m_AtomicBufferPrepared = true;
-//
-//}
 
-//void 
-//GLRenderer::resetAtomicCounters() {
-//
-//	if (!m_AtomicBufferPrepared)
-//		prepareAtomicCounterBuffer();
-//
-//	unsigned int *userCounters;
-//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-//	userCounters = (GLuint*)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * (m_AtomicMaxID + 1),
-//		GL_MAP_WRITE_BIT |
-//		GL_MAP_INVALIDATE_BUFFER_BIT |
-//		GL_MAP_UNSYNCHRONIZED_BIT);
-//
-//	memset(userCounters, 0, sizeof(GLuint) * (m_AtomicMaxID+1));
-//
-//	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-//}
-
-//void
-//GLRenderer::readAtomicCounters() {
-//
-//	unsigned int *userCounters;
-//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, m_AtomicCountersBuffer);
-//	userCounters = (GLuint *)glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * (m_AtomicMaxID + 1),
-//		GL_MAP_READ_BIT
-//		);
-//
-//	memcpy(m_AtomicCounterValues, userCounters, sizeof(GLuint) * (m_AtomicMaxID + 1));
-//
-//	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-//	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-//}
-
-
-#endif
 
 
 // -----------------------------------------------------------------
@@ -430,10 +385,9 @@ GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
 		return (indices - 1);
 	case GL_POINTS:
 		return indices;
-#if NAU_OPENGL_VERSION >= 400			
 	case GL_PATCHES:
+		assert(APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS) && "invalid primitive type");
 		return indices / m->getParent().getnumberOfVerticesPerPatch();
-#endif
 	default:
 		assert(false && "invalid primitive type");
 		return (0);
@@ -580,11 +534,11 @@ GLRenderer::getAttribLocation(std::string name) {
 // -----------------------------------------------------------------
 
 
-#if NAU_OPENGL_VERSION >=  420
 
 void
-GLRenderer::addImageTexture(unsigned int aTexUnit, ImageTexture *t) {
+GLRenderer::addImageTexture(unsigned int aTexUnit, IImageTexture *t) {
 
+	assert(APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE));
 	m_ImageTextures[aTexUnit] = t;
 }
 
@@ -604,7 +558,7 @@ GLRenderer::getImageTextureCount() {
 }
 
 
-ImageTexture*
+IImageTexture*
 GLRenderer::getImageTexture(unsigned int aTexUnit) {
 
 	if (m_ImageTextures.count(aTexUnit))
@@ -613,7 +567,6 @@ GLRenderer::getImageTexture(unsigned int aTexUnit) {
 		return NULL;
 }
 
-#endif
 
 
 // -----------------------------------------------------------------
@@ -656,7 +609,7 @@ GLRenderer::getMaterialTexture(int unit) {
 }
 
 
-Texture *
+ITexture *
 GLRenderer::getTexture(int unit) {
 
 	if (m_Textures.count(unit))
@@ -754,7 +707,7 @@ GLRenderer::prepareBuffers(Pass *p) {
 		clear |= IRenderer::COLOR_BUFFER;
 	}
 	if (p->getPropb(Pass::STENCIL_CLEAR)) {
-		glClearStencil(p->getPropf(Pass::STENCIL_CLEAR_VALUE));
+		glClearStencil(p->getPropi(Pass::STENCIL_CLEAR_VALUE));
 		clear |= IRenderer::STENCIL_BUFFER;
 	}
 
@@ -800,7 +753,7 @@ GLRenderer::saveScreenShot() {
 
 	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	
-	nau::loader::TextureLoader::Save(w, h, pixels);
+	nau::loader::ITextureLoader::Save(w, h, pixels);
 	free (pixels);
 }
 
@@ -845,12 +798,11 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 
 	unsigned int drawPrimitive = aRenderable.getRealDrawingPrimitive();
 
-#if NAU_OPENGL_VERSION >= 400
 	if (drawPrimitive == GL_PATCHES) {
+		assert(APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS));
 		int k = aRenderable.getnumberOfVerticesPerPatch();
 		glPatchParameteri(GL_PATCH_VERTICES, k);
 	}
-#endif
 	// this forces compilation for everything that is rendered!
 	// required for animated objects
 	if (!aMatGroup->isCompiled())
@@ -987,11 +939,11 @@ GLRenderer::showDrawDebugInfo(Material *mat) {
 	if (vi.size() > 0) {
 		SLOG("Textures");
 		for (unsigned int i = 0; i < vi.size(); ++i) {
-			Texture *t = mat->getTexture(vi[i]);
-			SLOG("\tUnit %d ID %d Name %s", vi[i], t->getPropi(Texture::ID), t->getLabel().c_str());
+			ITexture *t = mat->getTexture(vi[i]);
+			SLOG("\tUnit %d ID %d Name %s", vi[i], t->getPropi(ITexture::ID), t->getLabel().c_str());
 			int id;
 			glActiveTexture(GL_TEXTURE0+vi[i]);
-			glGetIntegerv(GLTexture::TextureBound[t->getPrope(Texture::DIMENSION)], &id);
+			glGetIntegerv(GLTexture::TextureBound[t->getPrope(ITexture::DIMENSION)], &id);
 			SLOG("\tActual texture bound to unit %d: %d", vi[i], id);
 		}
 	}
@@ -1006,15 +958,23 @@ GLRenderer::showDrawDebugInfo(Material *mat) {
 			SLOG("\tBinding point %d ID %d Name %s", vi[i], buff->getPropi(IBuffer::ID), buff->getLabel().c_str());
 			int k, pname;
 			switch (b->getPrope(IMaterialBuffer::TYPE)) {
-#if NAU_OPENGL_VERSION >= 430
-				case GL_SHADER_STORAGE_BUFFER: pname = GL_SHADER_STORAGE_BUFFER_BINDING; break;
-#endif
-#if NAU_OPENGL_VERSION >= 420
-				case GL_ATOMIC_COUNTER_BUFFER: pname = GL_ATOMIC_COUNTER_BUFFER_BINDING; break;
-#endif
-				case GL_TRANSFORM_FEEDBACK_BUFFER: pname = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING; break;
-				case GL_UNIFORM_BUFFER: pname = GL_UNIFORM_BUFFER_BINDING; break;
-				case GL_DRAW_INDIRECT_BUFFER: pname = GL_DRAW_INDIRECT_BUFFER_BINDING; break;
+				case GL_SHADER_STORAGE_BUFFER: 
+					assert(APISupport->apiSupport(IAPISupport::BUFFER_SHADER_STORAGE));
+					pname = GL_SHADER_STORAGE_BUFFER_BINDING; 
+					break;
+				case GL_ATOMIC_COUNTER_BUFFER: 
+					assert(APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS));
+					pname = GL_ATOMIC_COUNTER_BUFFER_BINDING; 
+					break;
+				case GL_TRANSFORM_FEEDBACK_BUFFER: 
+					pname = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING; 
+					break;
+				case GL_UNIFORM_BUFFER: 
+					pname = GL_UNIFORM_BUFFER_BINDING; 
+					break;
+				case GL_DRAW_INDIRECT_BUFFER: 
+					pname = GL_DRAW_INDIRECT_BUFFER_BINDING; 
+					break;
 			}
 			glGetIntegeri_v(pname, vi[i], &k);
 			SLOG("\tActual buffer for binding point %d: %d", vi[i], k);

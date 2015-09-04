@@ -558,6 +558,8 @@
     <ClCompile Include="src\dialogs\dlgDbgGLILogRead.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgStep.cpp" />
+    <ClCompile Include="src\dialogs\dlgMatBufferPanels.cpp" />
+    <ClCompile Include="src\dialogs\dlgMatITexPanels.cpp" />
     <ClCompile Include="src\dialogs\dlgStateXML.cpp" />
     <ClCompile Include="src\dialogs\dlgViewports.cpp" />
     <ClCompile Include="src\dialogs\propertyManager.cpp" />
@@ -569,7 +571,7 @@
     <ClCompile Include="src\dialogs\dlgLog.cpp" />
     <ClCompile Include="src\dialogs\dlgMaterials.cpp" />
     <ClCompile Include="src\dialogs\dlgOGL.cpp" />
-    <ClCompile Include="src\dialogs\dlgOGLPanels.cpp" />
+    <ClCompile Include="src\dialogs\dlgMatStatePanels.cpp" />
     <ClCompile Include="src\dialogs\dlgPass.cpp" />
     <ClCompile Include="src\dialogs\dlgScenes.cpp" />
     <ClCompile Include="src\dialogs\dlgShaders.cpp" />
@@ -583,6 +585,9 @@
     <ClInclude Include="src\dialogs\dlgDbgStep.h" />
     <ClInclude Include="src\dialogs\dlgLights.h" />
     <ClInclude Include="src\dialogs\dlgLog.h" />
+    <ClInclude Include="src\dialogs\dlgMatBufferPanels.h" />
+    <ClInclude Include="src\dialogs\dlgMatITexPanels.h" />
+    <ClInclude Include="src\dialogs\dlgMatStatePanels.h" />
     <ClInclude Include="src\dialogs\dlgPass.h" />
     <ClInclude Include="src\dialogs\dlgStateXML.h" />
     <ClInclude Include="src\dialogs\dlgViewports.h" />
@@ -595,7 +600,6 @@
     <CustomBuildStep Include="src\dialogs\dlgLog.h" />
     <ClInclude Include="src\dialogs\dlgMaterials.h" />
     <ClInclude Include="src\dialogs\dlgOGL.h" />
-    <ClInclude Include="src\dialogs\dlgOGLpanels.h" />
     <CustomBuildStep Include="src\dialogs\dlgPass.h" />
     <ClInclude Include="src\dialogs\dlgScenes.h" />
     <ClInclude Include="src\dialogs\dlgShaders.h" />

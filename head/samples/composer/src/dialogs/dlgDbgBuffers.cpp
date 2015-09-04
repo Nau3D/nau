@@ -6,7 +6,7 @@
 
 
 #include <nau.h>
-#include <nau/system/fileutil.h>
+#include <nau/system/file.h>
 
 using namespace nau::system;
 
@@ -288,7 +288,7 @@ DlgDbgBuffers::setVAOList(void) {
 				vao.first.second.first = id;
 				label = RESOURCEMANAGER->getBufferByID(id)->getLabel();
 				if (m_UseShortNames)
-					name = FileUtil::GetName(label);
+					name = File::GetName(label);
 				else
 					name = label;
 				vao.first.second.second = name;
@@ -309,7 +309,7 @@ DlgDbgBuffers::setVAOList(void) {
 					if (b) {
 						label = b->getLabel();
 						if (m_UseShortNames)
-							name = FileUtil::GetName(label);
+							name = File::GetName(label);
 						else
 							name = label;
 
@@ -373,7 +373,7 @@ void DlgDbgBuffers::setBufferList(){
 	for (auto name : names) {
 
 		fullName = name;
-		shortName = FileUtil::GetName(name);
+		shortName = File::GetName(name);
 		if (m_UseShortNames)
 			indexName = shortName;
 		else
@@ -424,7 +424,7 @@ void DlgDbgBuffers::setBufferList(){
 	}
 
 	if (bufferSettingsList.size() > 0)
-		currentBuffer = m_UseShortNames ? FileUtil::GetName(names[0]):indexName;
+		currentBuffer = m_UseShortNames ? File::GetName(names[0]):indexName;
 
 	pgBuffers->CollapseAll();
 }

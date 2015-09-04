@@ -28,7 +28,7 @@
 #include <nau.h>
 
 #include <nau/event/ilistener.h>
-#include <nau/material/texture.h>
+#include <nau/material/iTexture.h>
 
 class ImageGridCellRenderer;
 class DlgTextureLib : public wxDialog
@@ -44,10 +44,12 @@ public:
 
 	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 
+	std::map<unsigned int, wxBitmap *> m_Bitmaps;
 
 protected:
 
 	DlgTextureLib();
+	~DlgTextureLib();
 	DlgTextureLib(const DlgTextureLib&);
 	DlgTextureLib& operator= (const DlgTextureLib&);
 	static DlgTextureLib *Inst;
@@ -58,11 +60,10 @@ protected:
 	int m_ActiveTexture;
 
 	/* TEXTURES */
-	wxButton *m_BAddTex, *m_BSaveRaw, *m_BSavePNG, *m_BSaveHDR;
+	wxButton *m_BAddTex, *m_BSaveRaw, *m_BSavePNG, *m_BSaveHDR, *m_BUpdateIcons;
 	wxGrid *m_GridTextures;
 	wxPropertyGridManager *m_PGTextureProps;
 	std::vector<ImageGridCellRenderer*> m_ImagesGrid;
-
 	void setupTexturesPanel(wxSizer *siz, wxWindow *parent);
 	void updateTextures(int index);
 	void OnProcessTexturePropsChange( wxPropertyGridEvent& e);
@@ -74,6 +75,7 @@ protected:
 	void OnSaveRaw(wxCommandEvent& event);
 	void OnSavePNG(wxCommandEvent& event);
 	void OnSaveHDR(wxCommandEvent& event);
+	void OnUpdateIcons(wxCommandEvent &event);
 
 	enum {
 		/* TEXTURES */
@@ -83,12 +85,14 @@ protected:
 		DLG_MI_BUTTON_SAVE_RAW,
 		DLG_MI_BUTTON_SAVE_PNG,
 		DLG_MI_BUTTON_SAVE_HDR,
+		DLG_MI_BUTTON_UPDATE_ICONS,
 		PGTEXTURES,
 
 	};
 
 	typedef enum {
 		NEW_TEXTURE,
+		TEXTURE_ICON_UPDATE
 	} Notification;
 
 	void notifyUpdate(Notification aNot, std::string texName, std::string value);

@@ -1,6 +1,6 @@
 #include "nau.h"
 
-#include "nau/material/texture.h"
+#include "nau/material/iTexture.h"
 
 #include <vector>
 #include <string>

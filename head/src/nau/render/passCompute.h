@@ -27,6 +27,8 @@ namespace nau
 			PassCompute (const std::string &passName);
 			virtual ~PassCompute();
 
+			static Pass *Create(const std::string &name);
+
 			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
 
 			const std::string &getClassName();

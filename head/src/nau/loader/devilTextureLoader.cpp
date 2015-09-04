@@ -2,7 +2,7 @@
 
 
 #include "nau/slogger.h"
-#include "nau/system/fileutil.h"
+#include "nau/system/file.h"
 
 
 #include <ctime>
@@ -99,7 +99,7 @@ DevILTextureLoader::freeImage (void)
 
 
 void
-DevILTextureLoader::save(TexImage *ti, std::string filename) {
+DevILTextureLoader::save(ITexImage *ti, std::string filename) {
 
 	void *data = ti->getData();
 	char res;
@@ -131,7 +131,7 @@ DevILTextureLoader::save(TexImage *ti, std::string filename) {
 		ilTexImage(w, h, 1, n, ilFormat, ilType, data);
 		ilEnable(IL_FILE_OVERWRITE);
 
-		std::string ext = FileUtil::GetExtension(filename);
+		std::string ext = File::GetExtension(filename);
 		if (ext == "hdr") {
 			ilConvertImage(ilFormat, IL_FLOAT);
 			res = ilSave(IL_HDR, (ILstring)filename.c_str());

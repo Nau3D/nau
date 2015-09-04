@@ -3,7 +3,7 @@
 
 #include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
-#include "nau/scene/sceneobject.h"
+#include "nau/scene/sceneObject.h"
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
 

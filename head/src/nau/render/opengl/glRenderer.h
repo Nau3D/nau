@@ -9,7 +9,7 @@
 #include "nau/geometry/frustum.h"
 #include "nau/material/material.h"
 #include "nau/material/colorMaterial.h"
-#include "nau/material/imageTexture.h"
+#include "nau/material/iImageTexture.h"
 #include "nau/material/iProgram.h"
 #include "nau/math/matrix.h"
 #include "nau/render/iRenderer.h"
@@ -49,14 +49,12 @@ namespace nau
 
 			// ATOMIC COUNTERS
 
-#if (NAU_OPENGL_VERSION >= 400)
 		protected:
 			/// Array to store atomic counters
 			std::vector<unsigned int> m_AtomicCounterValues;
 
 		public:
 			std::vector<unsigned int> &getAtomicCounterValues();
-#endif
 
 			// LIGHTS
 
@@ -116,9 +114,7 @@ namespace nau
 
 		protected:
 			std::map<int, MaterialTexture *> m_Textures;
-#if NAU_OPENGL_VERSION >=  420
-			std::map<int, ImageTexture *> m_ImageTextures;
-#endif
+			std::map<int, IImageTexture *> m_ImageTextures;
 			nau::render::GlState m_glCurrState, m_glDefaultState;
 			nau::material::ColorMaterial m_Material;
 			IProgram *m_Shader;
@@ -139,18 +135,16 @@ namespace nau
 			int getAttribLocation(std::string name);
 
 			// IMAGE TEXTURE
-#if NAU_OPENGL_VERSION >=  420
-			void addImageTexture(unsigned int aTexUnit, ImageTexture *t);
+			void addImageTexture(unsigned int aTexUnit, IImageTexture *t);
 			void removeImageTexture(unsigned int aTexUnit);
 			int getImageTextureCount();
-			ImageTexture* getImageTexture(unsigned int unit);
-#endif
+			IImageTexture* getImageTexture(unsigned int unit);
 			// TEXTURING
 			void setActiveTextureUnit(unsigned int aTexUnit);
 			void addTexture(MaterialTexture *t);
 			void removeTexture(unsigned int aTexUnit);
 			MaterialTexture *getMaterialTexture(int unit);
-			Texture *getTexture(int unit);
+			ITexture *getTexture(int unit);
 			int getTextureCount();
 
 

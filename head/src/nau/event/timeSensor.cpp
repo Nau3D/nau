@@ -28,11 +28,11 @@ TimeSensor::TimeSensor(std::string aname, bool enabled, int secondsToStart, int 
 	BoolProps[ENABLED] = enabled;
 	BoolProps[LOOP] = loop;
 
-	FloatProps[SECONDS_TO_START] = secondsToStart;
-	FloatProps[CYCLE_INTERVAL] = cycleInterval;
+	FloatProps[SECONDS_TO_START] = (float)secondsToStart;
+	FloatProps[CYCLE_INTERVAL] = (float)cycleInterval;
 
 	this->startTime = t + secondsToStart;
-	this->stopTime = startTime+cycleInterval;
+	this->stopTime = startTime + cycleInterval;
 	this->fraction = 0;
 
 	this->addTimeListener();
@@ -89,7 +89,7 @@ TimeSensor::getEnabled(void){
 int 
 TimeSensor::getSecondsToStart(void){
 
-	return FloatProps[SECONDS_TO_START];
+	return (int)FloatProps[SECONDS_TO_START];
 }
 
 

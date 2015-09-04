@@ -2,6 +2,7 @@
 
 #include "nau.h"
 #include "nau/math/matrix.h"
+#include "nau/render/iAPISupport.h"
 
 #include <ctime>
 
@@ -15,10 +16,8 @@ std::map<std::string, IRenderable::DrawPrimitive> IRenderer::PrimitiveTypes = {
 	{ "LINES", IRenderable::LINES },
 	{ "LINE_LOOP", IRenderable::LINE_LOOP },
 	{ "POINTS", IRenderable::POINTS },
-	{ "TRIANGLES_ADJACENCY", IRenderable::TRIANGLES_ADJACENCY }
-#if NAU_OPENGL_VERSION >= 400	
-	, { "PATCHES", IRenderable::PATCHES }
-#endif
+	{ "TRIANGLES_ADJACENCY", IRenderable::TRIANGLES_ADJACENCY },
+	{ "PATCHES", IRenderable::PATCHES }
 };
 
 int IRenderer::MaxTextureUnits;
@@ -75,33 +74,44 @@ IRenderer::Init() {
 	return true;
 }
 
+// API SUPPORT
+
+bool
+IRenderer::primitiveTypeSupport(std::string primitive) {
+
+	IAPISupport *sup = IAPISupport::GetInstance();
+
+	if (primitive == "PATCHES" && !sup->apiSupport(IAPISupport::TESSELATION_SHADERS))
+		return false;
+	else if (PrimitiveTypes.count(primitive))
+		return true;
+	else
+		return false;
+}
 
 
 // ATOMIC COUNTERS
 
-#if NAU_OPENGL_VERSION >= 400
-
 void
 IRenderer::addAtomic(std::string buffer, unsigned int offset, std::string name) {
 
-	std::pair<std::string, unsigned int> p = std::pair<std::string, unsigned int>(buffer, offset);
+	if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS)) {
+		std::pair<std::string, unsigned int> p = std::pair<std::string, unsigned int>(buffer, offset);
 
-	if (m_AtomicLabels.count(p) == 0) {
+		if (m_AtomicLabels.count(p) == 0) {
 
-		++m_AtomicCount;
-		m_AtomicBufferPrepared = false;
-		m_AtomicLabels[p] = name;
+			++m_AtomicCount;
+			m_AtomicBufferPrepared = false;
+			m_AtomicLabels[p] = name;
+		}
+		else {
+
+			assert(false && "Adding an atomic that already exists");
+		}
 	}
-	else {
-
-		assert(false && "Adding an atomic that already exists");
-	}
-
+	else
+		assert(false && "atomics not supported");
 }
-
-
-
-#endif
 
 
 float 
@@ -109,7 +119,7 @@ IRenderer::getPropf(FloatProperty prop) {
 
 	switch (prop) {
 	case TIMER:
-		m_FloatProps[TIMER] = clock();// *1000.0 / CLOCKS_PER_SEC;
+		m_FloatProps[TIMER] = (float)clock();// *1000.0 / CLOCKS_PER_SEC;
 		return m_FloatProps[TIMER];
 
 	default:return(AttributeValues::getPropf(prop));

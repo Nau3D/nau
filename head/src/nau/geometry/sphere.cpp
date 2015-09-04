@@ -54,15 +54,15 @@ Sphere::build() {
 	std::vector<VertexData::Attr> *textureCoords = new std::vector<vec4>(total);
 	std::vector<VertexData::Attr> *normals = new std::vector<vec4>(total);
 
-	float stepSlice = 2.0f * M_PI / (slices-1);
-	float stepStack = M_PI / (stacks-1);
+	float stepSlice = 2.0f * (float)M_PI / (slices-1);
+	float stepStack = (float)M_PI / (stacks-1);
 
 	for (int i = 0; i < stacks; ++i) {
 		for (int j = 0; j < slices; ++j) {
 			float cosAlpha = cos(j * stepSlice);
 			float sinAlpha = sin(j * stepSlice);
-			float sinBeta = sin(i * stepStack - M_PI * 0.5);
-			float cosBeta = cos(i * stepStack - M_PI * 0.5);
+			float sinBeta = sin(i * stepStack - (float)M_PI * 0.5f);
+			float cosBeta = cos(i * stepStack - (float)M_PI * 0.5f);
 			vertices->at(i * (slices) + j).set(cosAlpha*cosBeta, sinBeta, sinAlpha*cosBeta);
 			tangents->at(i * (slices) + j).set(cosAlpha*sinBeta, cosBeta, sinAlpha*sinBeta);
 			normals->at(i * (slices) + j).set(cosAlpha*cosBeta, sinBeta, sinAlpha*cosBeta);

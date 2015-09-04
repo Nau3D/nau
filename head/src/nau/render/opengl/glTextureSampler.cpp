@@ -61,12 +61,12 @@ using namespace nau::render;
 
 
 
-GLTextureSampler::GLTextureSampler(Texture *t): TextureSampler() {
+GLTextureSampler::GLTextureSampler(ITexture *t): ITextureSampler() {
 
-#if NAU_OPENGL_VERSION > 320
-	glGenSamplers(1, (GLuint *)&(m_IntProps[ID]));
-#endif
-	m_BoolProps[MIPMAP] = t->getPropb(Texture::MIPMAP);	
+	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS))
+		glGenSamplers(1, (GLuint *)&(m_IntProps[ID]));
+
+	m_BoolProps[MIPMAP] = t->getPropb(ITexture::MIPMAP);	
 	if (m_BoolProps[MIPMAP]) {
 		m_EnumProps[MIN_FILTER] = GL_LINEAR_MIPMAP_LINEAR;
 	}
@@ -80,60 +80,64 @@ GLTextureSampler::GLTextureSampler(Texture *t): TextureSampler() {
 void 
 GLTextureSampler::update() {
 
-#if NAU_OPENGL_VERSION > 320
-	glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_MIN_FILTER, m_EnumProps[MIN_FILTER]);
-	glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_MAG_FILTER, m_EnumProps[MAG_FILTER]);
-	glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_S, 	m_EnumProps[WRAP_S]);
-	glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_T, 	m_EnumProps[WRAP_T]);
-	glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_R,		m_EnumProps[WRAP_R]);
-	glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_COMPARE_FUNC, m_EnumProps[COMPARE_FUNC]);
-	glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_COMPARE_MODE, m_EnumProps[COMPARE_MODE]);
-#endif
+	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS)) {
+		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_MIN_FILTER, m_EnumProps[MIN_FILTER]);
+		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_MAG_FILTER, m_EnumProps[MAG_FILTER]);
+		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_S, m_EnumProps[WRAP_S]);
+		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_T, m_EnumProps[WRAP_T]);
+		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_R, m_EnumProps[WRAP_R]);
+		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_COMPARE_FUNC, m_EnumProps[COMPARE_FUNC]);
+		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_COMPARE_MODE, m_EnumProps[COMPARE_MODE]);
+		glSamplerParameterfv(m_IntProps[ID], GL_TEXTURE_BORDER_COLOR, &m_Float4Props[BORDER_COLOR].x);
+	}
+
 }
 
 
 void 
 GLTextureSampler::prepare(unsigned int aUnit, int aDim) {
 
-#if (NAU_OPENGL_VERSION > 320)
-	glBindSampler(aUnit, m_IntProps[ID]);
-#else
-	glTexParameteri(aDim, GL_TEXTURE_WRAP_S, m_EnumProps[WRAP_S]);
-	glTexParameteri(aDim, GL_TEXTURE_WRAP_R, m_EnumProps[WRAP_R]);
-	glTexParameteri(aDim, GL_TEXTURE_WRAP_T, m_EnumProps[WRAP_R]);
+	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS)) {
+		glBindSampler(aUnit, m_IntProps[ID]);
+	}
+	else {
+		glTexParameteri(aDim, GL_TEXTURE_WRAP_S, m_EnumProps[WRAP_S]);
+		glTexParameteri(aDim, GL_TEXTURE_WRAP_R, m_EnumProps[WRAP_R]);
+		glTexParameteri(aDim, GL_TEXTURE_WRAP_T, m_EnumProps[WRAP_R]);
 
-	glTexParameteri(aDim, GL_TEXTURE_MIN_FILTER, m_EnumProps[MIN_FILTER]);
-	glTexParameteri(aDim, GL_TEXTURE_MAG_FILTER, m_EnumProps[MAG_FILTER]);
+		glTexParameteri(aDim, GL_TEXTURE_MIN_FILTER, m_EnumProps[MIN_FILTER]);
+		glTexParameteri(aDim, GL_TEXTURE_MAG_FILTER, m_EnumProps[MAG_FILTER]);
 
-	glTexParameteri(aDim, GL_TEXTURE_COMPARE_FUNC, m_EnumProps[COMPARE_FUNC]);
-	glTexParameteri(aDim, GL_TEXTURE_COMPARE_MODE, m_EnumProps[COMPARE_MODE]);
+		glTexParameteri(aDim, GL_TEXTURE_COMPARE_FUNC, m_EnumProps[COMPARE_FUNC]);
+		glTexParameteri(aDim, GL_TEXTURE_COMPARE_MODE, m_EnumProps[COMPARE_MODE]);
 
-	vec4 v = m_Float4Props[BORDER_COLOR];
-	glTexParameterfv(aDim, GL_TEXTURE_BORDER_COLOR,&(v.x));
-#endif
+		vec4 v = m_Float4Props[BORDER_COLOR];
+		glTexParameterfv(aDim, GL_TEXTURE_BORDER_COLOR, &(v.x));
+	}
 }
 
 
 void 
 GLTextureSampler::restore(unsigned int aUnit, int aDim) {
 
-#if (NAU_OPENGL_VERSION > 320)
-	glBindSampler(aUnit, 0);
-#else
+	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS)) {
+		glBindSampler(aUnit, 0);
+	}
+	else {
 
-	glTexParameteri(aDim, GL_TEXTURE_WRAP_S ,GL_REPEAT);
-	glTexParameteri(aDim, GL_TEXTURE_WRAP_R ,GL_REPEAT);
-	glTexParameteri(aDim, GL_TEXTURE_WRAP_T ,GL_REPEAT);
+		glTexParameteri(aDim, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(aDim, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(aDim, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glTexParameteri(aDim, GL_TEXTURE_MIN_FILTER ,GL_LINEAR);
-	glTexParameteri(aDim, GL_TEXTURE_MAG_FILTER ,GL_LINEAR);
+		glTexParameteri(aDim, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(aDim, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexParameteri(aDim, GL_TEXTURE_COMPARE_FUNC ,GL_LEQUAL);
-	glTexParameteri(aDim, GL_TEXTURE_COMPARE_MODE ,GL_NONE);
+		glTexParameteri(aDim, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+		glTexParameteri(aDim, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 
-	vec4 v(0.0, 0.0, 0.0, 0.0);
-	glTexParameterfv(aDim, GL_TEXTURE_BORDER_COLOR,&(v.x));
-#endif
+		vec4 v(0.0, 0.0, 0.0, 0.0);
+		glTexParameterfv(aDim, GL_TEXTURE_BORDER_COLOR, &(v.x));
+	}
 
 }
 
@@ -165,8 +169,8 @@ GLTextureSampler::setPrope(EnumProperty prop, int value) {
 
 	m_EnumProps[prop] = v2;
 
-#if NAU_OPENGL_VERSION > 320
-	switch(prop) {
+	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS)) {
+		switch (prop) {
 		case WRAP_S:
 			glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_S, m_EnumProps[prop]);
 			break;
@@ -188,8 +192,14 @@ GLTextureSampler::setPrope(EnumProperty prop, int value) {
 		case COMPARE_FUNC:
 			glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_COMPARE_FUNC, m_EnumProps[prop]);
 			break;
+		}
 	}
-#endif
 }
 
 
+void 
+GLTextureSampler::setPropf4(Float4Property prop, vec4 &value) {
+
+	m_Float4Props[prop] = value;
+	update();
+}

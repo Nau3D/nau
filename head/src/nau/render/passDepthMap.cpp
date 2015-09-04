@@ -1,19 +1,8 @@
 #include "nau/render/passDepthMap.h"
 
-#include "nau/geometry/frustum.h"
-
 #include "nau.h"
-
-/*
-
-The lightCam should not exist to the outside world. The pass should expose whaterver params it needs
-to control the camera, namely near and far (don't confuse with From and To which relate to the viewing 
-camera frustum.
-
-Do not add the lightCam to the RenderManager, and set the light viewing direction based on the lights 
-direction.
-
-*/
+#include "nau/geometry/frustum.h"
+#include "nau/render/passFactory.h"
 
 
 using namespace nau::geometry;
@@ -22,13 +11,12 @@ using namespace nau::render;
 using namespace nau::scene;
 
 
-bool PassDepthMap::Inited = Init();
+bool PassDepthMap::Inited = PassDepthMap::Init();
 
 bool
 PassDepthMap::Init() {
-	//// FLOAT
-	//Attribs.add(Attribute(FROM, "FROM", Enums::DataType::FLOAT, false, new float(-1)));
-	//Attribs.add(Attribute(TO, "TO", Enums::DataType::FLOAT, false, new float(-1)));
+
+	PASSFACTORY->registerClass("depthmap", Create);
 
 	return true;
 }
@@ -43,10 +31,19 @@ PassDepthMap::PassDepthMap (const std::string &passName) :
 	m_LightCamera = RENDERMANAGER->getCamera(camName);
 }
 
+
 PassDepthMap::~PassDepthMap(void)
 {
 	delete m_LightCamera;
 }
+
+
+Pass *
+PassDepthMap::Create(const std::string &passName) {
+
+	return new PassDepthMap(passName);
+}
+
 
 void
 PassDepthMap::addLight(const std::string &lightName)
@@ -56,7 +53,7 @@ PassDepthMap::addLight(const std::string &lightName)
 	Light *light = RENDERMANAGER->getLight (m_Lights[0]);
 	if (!m_ExplicitViewport) {
 		uivec2 uiv = uivec2(m_RenderTarget->getPropui2(RenderTarget::SIZE));
-		m_Viewport->setPropf2(Viewport::SIZE, vec2(uiv.x, uiv.y));
+		m_Viewport->setPropf2(Viewport::SIZE, vec2((float)uiv.x, (float)uiv.y));
 	}
 	m_LightCamera->setViewport (m_Viewport);
 	
@@ -92,9 +89,9 @@ PassDepthMap::prepare (void)
 
 		if (m_ExplicitViewport) {
 			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUT_SIZE);
-			m_RTSizeWidth = f2.x;
-			m_RTSizeHeight = f2.y;
-			m_RenderTarget->setPropui2(RenderTarget::SIZE, uivec2(f2.x, f2.y));
+			m_RTSizeWidth = (int)f2.x;
+			m_RTSizeHeight = (int)f2.y;
+			m_RenderTarget->setPropui2(RenderTarget::SIZE, uivec2(m_RTSizeWidth, m_RTSizeHeight));
 		}
 		m_RenderTarget->bind();
 	}

@@ -52,9 +52,9 @@ namespace nau
 			//GLRenderTarget (std::string name, unsigned int width, unsigned int height);
 			GLRenderTarget (std::string name);
 
-			void attachDepthStencilTexture (Texture* aTexture, GLuint type);
+			void attachDepthStencilTexture (ITexture* aTexture, GLuint type);
 			void dettachDepthStencilTexture(GLuint type);
-			void attachColorTexture(Texture* aTexture, unsigned int colorAttachment);
+			void attachColorTexture(ITexture* aTexture, unsigned int colorAttachment);
 			void dettachColorTexture(unsigned int  colorAttachment);
 
 			void setDrawBuffers (void);

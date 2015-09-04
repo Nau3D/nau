@@ -136,14 +136,14 @@ Pipeline::createPass (const std::string &name, const std::string &passType)
 	// name must not be empty
 	assert(name != "");
 	// type must also be a valid pass class
-	assert(PassFactory::isClass(passType));
+	assert(PASSFACTORY->isClass(passType));
 
 	std::stringstream s;
 
 	s << m_Name;
 	s << "#" << name;
 
-	Pass *pass = PassFactory::create (passType, s.str());
+	Pass *pass = PASSFACTORY->create (passType, s.str());
 	m_Passes.push_back(pass);
 
 	return pass;

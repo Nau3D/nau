@@ -1,11 +1,13 @@
 #include "nau/render/passProfiler.h"
-#include "nau/resource/fontmanager.h"
-#include "nau/scene/sceneobject.h"
+
 #include "nau/debug/profile.h"
 #include "nau/geometry/mesh.h"
+#include "nau/render/passFactory.h"
+#include "nau/resource/fontManager.h"
+#include "nau/scene/sceneObject.h"
 
 
-
+using namespace nau::resource;
 
 #include "nau.h"
 
@@ -21,6 +23,16 @@
 
 using namespace nau::render;
 
+bool PassProfiler::Inited = PassProfiler::Init();
+
+
+bool
+PassProfiler::Init() {
+
+	PASSFACTORY->registerClass("profiler", Create);
+	return true;
+}
+
 
 PassProfiler::PassProfiler (const std::string &name) :
 	Pass (name), m_pCam(0)
@@ -35,10 +47,10 @@ PassProfiler::PassProfiler (const std::string &name) :
 	m_Viewport = RENDERMANAGER->createViewport("__Profiler", vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	//m_pViewport = new nau::render::Viewport();
 	m_pCam->setViewport(m_Viewport);
-	m_Viewport->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowWidth()));
+	m_Viewport->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(),(float)NAU->getWindowWidth()));
 	m_Viewport->setPropf2(Viewport::ORIGIN, vec2(0,0));
 	m_pCam->setPrope(Camera::PROJECTION_TYPE, Camera::ORTHO);
-	m_pCam->setOrtho(0.0f ,NAU->getWindowWidth() , NAU->getWindowWidth(), 0.0f, -1.0f, 1.0f);
+	m_pCam->setOrtho(0.0f ,(float)NAU->getWindowWidth() , (float)NAU->getWindowWidth(), 0.0f, -1.0f, 1.0f);
 
 	m_pFont = FontManager::getFont("CourierNew10");
 
@@ -50,6 +62,13 @@ PassProfiler::PassProfiler (const std::string &name) :
 
 PassProfiler::~PassProfiler(void)
 {
+}
+
+
+Pass *
+PassProfiler::Create(const std::string &passName) {
+
+	return new PassProfiler(passName);
 }
 
 
@@ -78,8 +97,8 @@ PassProfiler::prepare (void)
 
 	prepareBuffers();
 
-	m_Viewport->setPropf2(Viewport::SIZE, vec2(NAU->getWindowWidth(),NAU->getWindowHeight()));
-	m_pCam->setOrtho(0.0f ,NAU->getWindowWidth() , NAU->getWindowHeight(), 0.0f, -1.0f, 1.0f);
+	m_Viewport->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(),(float)NAU->getWindowHeight()));
+	m_pCam->setOrtho(0.0f , (float)NAU->getWindowWidth() , (float)NAU->getWindowHeight(), 0.0f, -1.0f, 1.0f);
 
 	if (m_Viewport != NULL) {
 		RENDERER->setViewport(m_Viewport);

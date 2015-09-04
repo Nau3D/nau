@@ -3,7 +3,7 @@
 
 #include "nau/material/materialLib.h"
 #include "nau/render/pass.h"
-#include "nau/system/fileutil.h"
+#include "nau/system/file.h"
 
 #include <tinyxml.h>
 

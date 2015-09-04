@@ -28,7 +28,7 @@ namespace nau
 			} FileType;
 
 			static const std::string PATH_SEPARATOR;
-
+			
 		public:
 			File(std::string filepath, bool native = false);
 			
@@ -55,6 +55,21 @@ namespace nau
 			std::string getAbsolutePath ();
 
 			~File(void);
+
+			static std::string GetName(const std::string &fn);
+			static std::string GetExtension(const std::string &fn);
+			static std::string GetPath(const std::string &fn);
+			static std::string GetRelativePathTo(const std::string &currentDir, const std::string &absFileName);
+			static std::string GetFullPath(const std::string &currentDir, const std::string &relFileName);
+			static bool IsRelative(const std::string &fn);
+			static std::string CleanFullPath(const std::string &fn);
+			static bool Exists(const std::string &fn);
+			static std::string Validate(std::string s);
+			static std::string BuildFullFileName(std::string path, std::string filename);
+			static void RecurseDirectory(std::string path, std::vector<std::string> *res);
+
+			static std::string TextRead(const std::string &fn);
+			static int TextWrite(const std::string &fn, const std::string &s);
 
 		private:
 			void construct (std::string filepath);

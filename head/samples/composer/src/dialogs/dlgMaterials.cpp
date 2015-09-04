@@ -1,5 +1,8 @@
 #include "dlgMaterials.h"
 
+#include "propertyManager.h"
+#include "dlgTextureLib.h"
+
 #include <nau.h>
 #include <nau/event/eventFactory.h>
 #include <nau/loader/projectLoader.h>
@@ -22,7 +25,13 @@ BEGIN_EVENT_TABLE(DlgMaterials, wxDialog)
 	EVT_CHECKBOX(DLG_SHADER_USE,DlgMaterials::OnProcessUseShader)
 	EVT_PG_CHANGED( DLG_SHADER_UNIFORMS, DlgMaterials::OnProcessShaderUpdateUniforms )
 	
-	EVT_PG_CHANGED( DlgOGLPanels::PG, DlgMaterials::OnProcessPanelChange )
+	EVT_PG_CHANGED( DlgMatStatePanels::PG, DlgMaterials::OnProcessPanelChange )
+
+	EVT_PG_CHANGED( DlgMatImageTexturePanels::PG, DlgMaterials::OnProcessITexPanelChange )
+	EVT_COMBOBOX( DlgMatImageTexturePanels::DLG_ITEM_COMBO, DlgMaterials::OnProcessITexPanelSelect )
+
+	EVT_PG_CHANGED( DlgMatBufferPanels::PG, DlgMaterials::OnProcessBufferPanelChange )
+	EVT_COMBOBOX( DlgMatBufferPanels::DLG_ITEM_COMBO, DlgMaterials::OnProcessBufferPanelSelect )
 
     EVT_MENU(LIBMAT_NEW, DlgMaterials::toolbarLibMatNew)
     EVT_MENU(LIBMAT_SAVE, DlgMaterials::toolbarLibMatSave)
@@ -199,19 +208,41 @@ DlgMaterials::DlgMaterials()
 	pTextures->SetSizer(textures);
 
 
-	/* OGLPanels */
+	/* State */
 	wxPanel *pOGL = new wxPanel(notebook,-1);
-	notebook->AddPage(pOGL,wxT("OGL State"));
+	notebook->AddPage(pOGL,wxT("State"));
 
 	wxSizer *OGL = new wxBoxSizer(wxVERTICAL);
 
-//	panels.setCanvas(DlgMaterials::canvas);
 	panels.setState(getModelMaterial()->getState());
 	panels.setPanel(OGL,pOGL);
 
 	pOGL->SetAutoLayout(TRUE);
 	pOGL->SetSizer(OGL);
 
+	/* Buffers */
+	wxPanel *pBuffers = new wxPanel(notebook,-1);
+	notebook->AddPage(pBuffers,wxT("Buffers"));
+
+	wxSizer *Buffers = new wxBoxSizer(wxVERTICAL);
+
+	m_BufferPanel.setPanel(Buffers,pBuffers);
+	m_BufferPanel.setMaterial(getModelMaterial());
+
+	pBuffers->SetAutoLayout(TRUE);
+	pBuffers->SetSizer(Buffers);
+
+	/* Image Textures */
+	wxPanel *pITexs = new wxPanel(notebook,-1);
+	notebook->AddPage(pITexs,wxT("Image Textures"));
+
+	wxSizer *ITexs = new wxBoxSizer(wxVERTICAL);
+
+	m_ITexPanel.setPanel(ITexs,pITexs);
+	m_ITexPanel.setMaterial(getModelMaterial());
+
+	pITexs->SetAutoLayout(TRUE);
+	pITexs->SetSizer(ITexs);
 
 	/* -----------------------------------------------------------------
 								NoteBook End
@@ -279,6 +310,8 @@ void DlgMaterials::OnSelectMaterial(wxCommandEvent& event) {
 	updateShader(mm);
 	panels.setState(mm->getState());
 	panels.updatePanel();
+	m_BufferPanel.setMaterial(mm);
+	m_ITexPanel.setMaterial(mm);
 
 //	Refresh();
 
@@ -307,6 +340,8 @@ void DlgMaterials::OnSelectLibMaterial(wxCommandEvent& event) {
 	updateShader(mm);
 	panels.setState(mm->getState());
 	panels.updatePanel();
+	m_BufferPanel.setMaterial(mm);
+	m_ITexPanel.setMaterial(mm);
 
 	if (libs->at(sel).substr(0,1) == " ") {
 		m_toolbar->EnableTool(LIBMAT_SAVE, FALSE);
@@ -361,8 +396,8 @@ void DlgMaterials::updateMaterialList() {
 	updateShader(mm);
 	panels.setState(mm->getState());
 	panels.updatePanel();
-
-}
+	m_BufferPanel.setMaterial(mm);
+	m_ITexPanel.setMaterial(mm);}
 
 
 void DlgMaterials::OnProcessPanelChange( wxPropertyGridEvent& e) {
@@ -370,7 +405,33 @@ void DlgMaterials::OnProcessPanelChange( wxPropertyGridEvent& e) {
 	panels.OnProcessPanelChange(e);
 }
 
+/* ----------------- BUFFERS -----------------------------------*/
 
+void DlgMaterials::OnProcessBufferPanelChange( wxPropertyGridEvent& e) {
+
+	m_BufferPanel.onProcessPanelChange(e);
+}
+
+
+void DlgMaterials::OnProcessBufferPanelSelect( wxCommandEvent& e) {
+
+	m_BufferPanel.onItemListSelect(e);
+}
+
+
+/* ----------------- IMAGE TEXTURES ----------------------------*/
+
+
+void DlgMaterials::OnProcessITexPanelChange( wxPropertyGridEvent& e) {
+
+	m_ITexPanel.onProcessPanelChange(e);
+}
+
+
+void DlgMaterials::OnProcessITexPanelSelect( wxCommandEvent& e) {
+
+	m_ITexPanel.onItemListSelect(e);
+}
 
 /* ----------------------------------------------------------------
 
@@ -644,6 +705,14 @@ DlgMaterials::eventReceived(const std::string &sender, const std::string &eventT
 		updateTextureList();
 		updateTextures(m,0);
 	}
+	else if (eventType == "TEXTURE_ICON_UPDATE") {
+		for(int i = 0; i < 2; i++) { 
+			for(int j = 0 ; j < 4 ; j++){
+				ITexture *texture = m->getTexture(i*4+j);
+				imagesGrid[i * 4 + j]->setBitmap(DlgTextureLib::Instance()->m_Bitmaps[texture->getPropi(ITexture::ID)]);
+			}
+		}
+	}
 }
 
 
@@ -738,11 +807,11 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 		gridTextures->SetRowSize(i,100);
 		for(int j = 0 ; j < 4 ; j++){
 
-			Texture *texture = mm->getTexture(i*4+j);
+			ITexture *texture = mm->getTexture(i*4+j);
 	
 			gridTextures->SetReadOnly(i,j,true);
 			if (texture != NULL)
-				imagesGrid[i * 4 + j] = new ImageGridCellRenderer(texture->getBitmap());
+				imagesGrid[i * 4 + j] = new ImageGridCellRenderer(DlgTextureLib::Instance()->m_Bitmaps[texture->getPropi(ITexture::ID)]);
 			else
 				imagesGrid[i*4+j] = new ImageGridCellRenderer(new wxBitmap(96,96));
 			gridTextures->SetCellRenderer(i, j, imagesGrid[i*4+j]);
@@ -764,31 +833,31 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 
 	pgTextureProps->AddPage(wxT("Texture"));
 
-	const wxChar*  repeat[] =  {wxT("REPEAT"),wxT("CLAMP_TO_EDGE"),wxT("CLAMP_TO_BORDER"),wxT("MIRRORED_REPEAT"),NULL};
-	const long repeatInd[] = {GL_REPEAT,GL_CLAMP_TO_EDGE, 
-					GL_CLAMP_TO_BORDER, GL_MIRRORED_REPEAT}; 
+	//const wxChar*  repeat[] =  {wxT("REPEAT"),wxT("CLAMP_TO_EDGE"),wxT("CLAMP_TO_BORDER"),wxT("MIRRORED_REPEAT"),NULL};
+	//const long repeatInd[] = {GL_REPEAT,GL_CLAMP_TO_EDGE, 
+	//				GL_CLAMP_TO_BORDER, GL_MIRRORED_REPEAT}; 
 
-	const wxChar* filtersMag[] =  {wxT("NEAREST"),wxT("LINEAR"),NULL};
-	const long filtersIndMag[] =  {GL_NEAREST, GL_LINEAR};
-			
-	const wxChar* filtersMin[] =  {wxT("NEAREST"),wxT("LINEAR"),
-		wxT("NEAREST_MIPMAP_NEAREST"),wxT("NEAREST_MIPMAP_LINEAR"),
-		wxT("LINEAR_MIPMAP_NEAREST"),wxT("LINEAR_MIPMAP_LINEAR"),NULL};
-	const long filtersIndMin[] =  {GL_NEAREST, GL_LINEAR, 
-					GL_NEAREST_MIPMAP_NEAREST,
-					GL_NEAREST_MIPMAP_LINEAR,
-					GL_LINEAR_MIPMAP_NEAREST,
-					GL_LINEAR_MIPMAP_LINEAR};
+	//const wxChar* filtersMag[] =  {wxT("NEAREST"),wxT("LINEAR"),NULL};
+	//const long filtersIndMag[] =  {GL_NEAREST, GL_LINEAR};
+	//		
+	//const wxChar* filtersMin[] =  {wxT("NEAREST"),wxT("LINEAR"),
+	//	wxT("NEAREST_MIPMAP_NEAREST"),wxT("NEAREST_MIPMAP_LINEAR"),
+	//	wxT("LINEAR_MIPMAP_NEAREST"),wxT("LINEAR_MIPMAP_LINEAR"),NULL};
+	//const long filtersIndMin[] =  {GL_NEAREST, GL_LINEAR, 
+	//				GL_NEAREST_MIPMAP_NEAREST,
+	//				GL_NEAREST_MIPMAP_LINEAR,
+	//				GL_LINEAR_MIPMAP_NEAREST,
+	//				GL_LINEAR_MIPMAP_LINEAR};
 
-	const wxChar* compareFunc[] =  {wxT("LEQUAL"), wxT("GEQUAL"), wxT("LESS"),
-					wxT("GREATER"), wxT("EQUAL"), wxT("NOTEQUAL"),
-					wxT("ALWAYS"), wxT("NEVER"),NULL};
-	const long compareFuncInd[] =  {GL_LEQUAL, GL_GEQUAL, 
-					GL_LESS, GL_GREATER, GL_EQUAL, GL_NOTEQUAL,
-					GL_ALWAYS, GL_NEVER};
+	//const wxChar* compareFunc[] =  {wxT("LEQUAL"), wxT("GEQUAL"), wxT("LESS"),
+	//				wxT("GREATER"), wxT("EQUAL"), wxT("NOTEQUAL"),
+	//				wxT("ALWAYS"), wxT("NEVER"),NULL};
+	//const long compareFuncInd[] =  {GL_LEQUAL, GL_GEQUAL, 
+	//				GL_LESS, GL_GREATER, GL_EQUAL, GL_NOTEQUAL,
+	//				GL_ALWAYS, GL_NEVER};
 
-	const wxChar* compareMode[] =  {wxT("NONE"), wxT("COMPARE_REF_TO_TEXTURE"),NULL};
-	const long compareModeInd[] =  {GL_NONE, GL_COMPARE_REF_TO_TEXTURE};
+	//const wxChar* compareMode[] =  {wxT("NONE"), wxT("COMPARE_REF_TO_TEXTURE"),NULL};
+	//const long compareModeInd[] =  {GL_NONE, GL_COMPARE_REF_TO_TEXTURE};
 
 			
 	const wxChar* units[] = {wxT("0"),wxT("1"),wxT("2"),wxT("3"),wxT("4"),wxT("5"),wxT("6"),wxT("7"),NULL};
@@ -812,16 +881,20 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	texDim.Printf(wxT("%d x %d x %d"),0,0,0);
 	pgTextureProps->Append( new wxStringProperty(wxT("Dimensions(WxHxD)"),wxPG_LABEL,texDim));
  	pgTextureProps->DisableProperty(wxT("Dimensions(WxHxD)"));
+	std::vector<std::string> order = {"WRAP_S", "WRAP_T", "WRAP_R", "MIN_FILTER", "MAG_FILTER", "COMPARE_MODE",
+			"COMPARE_FUNC", "BORDER_COLOR"};
+	PropertyManager::createOrderedGrid(pgTextureProps, ITextureSampler::Attribs,order);
 
-	pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_S"),wxPG_LABEL,repeat,repeatInd,0));
-	pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_T"),wxPG_LABEL,repeat,repeatInd,0));
-	pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_R"),wxPG_LABEL,repeat,repeatInd,0));
 
-	pgTextureProps->Append( new wxEnumProperty(wxT("MAG_FILTER"),wxPG_LABEL,filtersMag,filtersIndMag,0));
-	pgTextureProps->Append( new wxEnumProperty(wxT("MIN_FILTER"),wxPG_LABEL,filtersMin,filtersIndMin,0));
+	//pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_S"),wxPG_LABEL,repeat,repeatInd,0));
+	//pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_T"),wxPG_LABEL,repeat,repeatInd,0));
+	//pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_R"),wxPG_LABEL,repeat,repeatInd,0));
 
-	pgTextureProps->Append( new wxEnumProperty(wxT("COMPARE_MODE"),wxPG_LABEL,compareMode,compareModeInd,0));
-	pgTextureProps->Append( new wxEnumProperty(wxT("COMPARE_FUNC"),wxPG_LABEL,compareFunc,compareFuncInd,0));
+	//pgTextureProps->Append( new wxEnumProperty(wxT("MAG_FILTER"),wxPG_LABEL,filtersMag,filtersIndMag,0));
+	//pgTextureProps->Append( new wxEnumProperty(wxT("MIN_FILTER"),wxPG_LABEL,filtersMin,filtersIndMin,0));
+
+	//pgTextureProps->Append( new wxEnumProperty(wxT("COMPARE_MODE"),wxPG_LABEL,compareMode,compareModeInd,0));
+	//pgTextureProps->Append( new wxEnumProperty(wxT("COMPARE_FUNC"),wxPG_LABEL,compareFunc,compareFuncInd,0));
 
 
 	sizerTP->Add(pgTextureProps,1,wxEXPAND,15);
@@ -838,8 +911,8 @@ void DlgMaterials::setTextureUnit(int index){
 
 	Material *mm = getModelMaterial();
 	IState *state = mm->getState();
-	Texture *texture = mm->getTexture(index);
-	TextureSampler *ts = mm->getTextureSampler(index);
+	ITexture *texture = mm->getTexture(index);
+	ITextureSampler *ts = mm->getTextureSampler(index);
 
 	pgTextureProps->SetPropertyValue(wxT("Texture Unit"),(long)index);
 
@@ -863,32 +936,37 @@ void DlgMaterials::setTextureUnit(int index){
 	 	pgTextureProps->DisableProperty(wxT("MIN_FILTER"));
 		pgTextureProps->DisableProperty(wxT("COMPARE_MODE"));
 		pgTextureProps->DisableProperty(wxT("COMPARE_FUNC"));
+		pgTextureProps->DisableProperty(wxT("BORDER_COLOR"));
+		pgTextureProps->DisableProperty(wxT("ID"));
+		pgTextureProps->DisableProperty(wxT("MIPMAP"));
 		return;
 	}
 	
-	pgTextureProps->SetPropertyValue(wxT("Texture Type"),wxString(Texture::Attribs.getListStringOp(Texture::DIMENSION, texture->getPrope(Texture::DIMENSION)).c_str()));
+	wxString texDim;
+	texDim.Printf(wxT("%d x %d x %d"),texture->getPropi(ITexture::WIDTH),
+		texture->getPropi(ITexture::HEIGHT),
+								texture->getPropi(ITexture::DEPTH));
+	pgTextureProps->SetPropertyValue(wxT("Dimensions(WxHxD)"),texDim);
+
+	pgTextureProps->SetPropertyValue(wxT("Texture Type"),wxString(ITexture::Attribs.getListStringOp(ITexture::DIMENSION, texture->getPrope(ITexture::DIMENSION)).c_str()));
+
 	pgTextureProps->EnableProperty(wxT("MAG_FILTER"));
 	pgTextureProps->EnableProperty(wxT("MIN_FILTER"));
 	pgTextureProps->EnableProperty(wxT("COMPARE_MODE"));
 	pgTextureProps->EnableProperty(wxT("COMPARE_FUNC"));
-	
-	wxString texDim;
-	texDim.Printf(wxT("%d x %d x %d"),texture->getPropi(Texture::WIDTH),
-		texture->getPropi(Texture::HEIGHT),
-								texture->getPropi(Texture::DEPTH));
-	pgTextureProps->SetPropertyValue(wxT("Dimensions(WxHxD)"),texDim);
+	pgTextureProps->EnableProperty(wxT("BORDER_COLOR"));	
 
-	pgTextureProps->SetPropertyValue(wxT("WRAP_S"),(long)ts->getPrope(TextureSampler::WRAP_S));
-	pgTextureProps->SetPropertyValue(wxT("WRAP_T"),(long)ts->getPrope(TextureSampler::WRAP_T));
-	pgTextureProps->SetPropertyValue(wxT("WRAP_R"),(long)ts->getPrope(TextureSampler::WRAP_R));
+	//pgTextureProps->SetPropertyValue(wxT("WRAP_S"),(long)ts->getPrope(ITextureSampler::WRAP_S));
+	//pgTextureProps->SetPropertyValue(wxT("WRAP_T"),(long)ts->getPrope(ITextureSampler::WRAP_T));
+	//pgTextureProps->SetPropertyValue(wxT("WRAP_R"),(long)ts->getPrope(ITextureSampler::WRAP_R));
 
-	if (texture->getPrope(Texture::DIMENSION) == GL_TEXTURE_1D) {
+	if (texture->getPrope(ITexture::DIMENSION) == GL_TEXTURE_1D) {
 
 		pgTextureProps->EnableProperty(wxT("WRAP_S"));
 	 	pgTextureProps->DisableProperty(wxT("WRAP_T"));
 	 	pgTextureProps->DisableProperty(wxT("WRAP_R"));
 	}
-	else if (texture->getPrope(Texture::DIMENSION) == GL_TEXTURE_2D || texture->getPrope(Texture::DIMENSION) == GL_TEXTURE_CUBE_MAP)  {
+	else if (texture->getPrope(ITexture::DIMENSION) == GL_TEXTURE_2D || texture->getPrope(ITexture::DIMENSION) == GL_TEXTURE_CUBE_MAP)  {
 		pgTextureProps->EnableProperty(wxT("WRAP_S"));
 		pgTextureProps->EnableProperty(wxT("WRAP_T"));
 	 	pgTextureProps->DisableProperty(wxT("WRAP_R"));
@@ -898,12 +976,12 @@ void DlgMaterials::setTextureUnit(int index){
 		pgTextureProps->EnableProperty(wxT("WRAP_T"));
 		pgTextureProps->EnableProperty(wxT("WRAP_R"));
 	}
+	PropertyManager::updateGrid(pgTextureProps, ITextureSampler::Attribs, (AttributeValues *)ts);
+	//pgTextureProps->SetPropertyValue(wxT("MAG_FILTER"),(long)ts->getPrope(ITextureSampler::MAG_FILTER));
+	//pgTextureProps->SetPropertyValue(wxT("MIN_FILTER"),(long)ts->getPrope(ITextureSampler::MIN_FILTER));
 
-	pgTextureProps->SetPropertyValue(wxT("MAG_FILTER"),(long)ts->getPrope(TextureSampler::MAG_FILTER));
-	pgTextureProps->SetPropertyValue(wxT("MIN_FILTER"),(long)ts->getPrope(TextureSampler::MIN_FILTER));
-
-	pgTextureProps->SetPropertyValue(wxT("COMPARE_MODE"),(long)ts->getPrope(TextureSampler::COMPARE_MODE));
-	pgTextureProps->SetPropertyValue(wxT("COMPARE_FUNC"),(long)ts->getPrope(TextureSampler::COMPARE_FUNC));
+	//pgTextureProps->SetPropertyValue(wxT("COMPARE_MODE"),(long)ts->getPrope(ITextureSampler::COMPARE_MODE));
+	//pgTextureProps->SetPropertyValue(wxT("COMPARE_FUNC"),(long)ts->getPrope(ITextureSampler::COMPARE_FUNC));
 }
 
 
@@ -913,44 +991,20 @@ void DlgMaterials::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 	Material *mm = getModelMaterial();
 	IState *state = mm->getState();
 
-	const wxString& name = e.GetPropertyName();
+	wxString& name = e.GetPropertyName();
+	wxPGProperty *topProp = e.GetProperty()->GetParent();
+	const wxString& topName = e.GetProperty()->GetParent()->GetName();
+	if (topName != "<Root>")
+		name = topName;
 	const int index = pgTextureProps->GetPropertyValueAsLong(wxT("Texture Unit"));
-	const int value = pgTextureProps->GetPropertyValueAsLong(name);
+	//const int value = pgTextureProps->GetPropertyValueAsLong(name);
 
-	Texture *texture = mm->getTexture(index);
-	TextureSampler *ts = mm->getTextureSampler(index);
+	ITexture *texture = mm->getTexture(index);
+	ITextureSampler *ts = mm->getTextureSampler(index);
 
 	if (name == wxT("Texture Unit")) {
 		
 		setTextureUnit(index);
-	}
-	else if (name == wxT("WRAP_S")) {
-		
-		ts->setPrope(TextureSampler::WRAP_S,value);
-	}
-	else if (name == wxT("WRAP_T")) {
-
-		ts->setPrope(TextureSampler::WRAP_T,value);
-	}
-	else if (name == wxT("WRAP_R")) {
-
-		ts->setPrope(TextureSampler::WRAP_R,value);
-	}
-	else if (name == wxT("MAG_FILTER")) {
-
-		ts->setPrope(TextureSampler::MAG_FILTER,value);
-	}
-	else if (name == wxT("MIN_FILTER")) {
-
-		ts->setPrope(TextureSampler::MIN_FILTER,value);
-	}
-	else if (name == wxT("COMPARE_MODE")) {
-
-		ts->setPrope(TextureSampler::COMPARE_MODE,value);
-	}
-	else if (name == wxT("COMPARE_FUNC")) {
-
-		ts->setPrope(TextureSampler::COMPARE_FUNC,value);
 	}
 	else if (name == wxT("Name")) {
 
@@ -958,33 +1012,35 @@ void DlgMaterials::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 		if (value == -1) {
 			if (samplerUnits[index] == 0) {
 				mm->unsetTexture(index);
-				imagesGrid[index]->setBitmap(new wxBitmap(96,96));
+				imagesGrid[index]->setBitmap(new wxBitmap(96, 96));
 			}
 			else {
 				wxMessageBox(wxT("Texture unit is assigned to a shader sampler and can't be unset"), wxT("Texture setting error"));
 				std::string s = mm->getTexture(index)->getLabel();
-				pgTextureProps->SetPropertyValueString(wxT("Name"),wxString(s.c_str()));
+				pgTextureProps->SetPropertyValueString(wxT("Name"), wxString(s.c_str()));
 			}
 		}
 		else {
-			Texture *t = RESOURCEMANAGER->getTexture(value);
-			mm->attachTexture(index,t);
-			imagesGrid[index]->setBitmap(t->getBitmap());
+			ITexture *t = RESOURCEMANAGER->getTexture(value);
+			mm->attachTexture(index, t);
+			imagesGrid[index]->setBitmap(DlgTextureLib::Instance()->m_Bitmaps[t->getPropi(ITexture::ID)]);
 
 		}
 		setTextureUnit(index);
 		updateShader(mm);
 	}
+	else
+		PropertyManager::updateProp(pgTextureProps, name.ToStdString(), ITextureSampler::Attribs, (AttributeValues *)ts);
 }
 
 
-void DlgMaterials::updateTexture(Texture *tex) {
+void DlgMaterials::updateTexture(ITexture *tex) {
 
 	Material *mm = getModelMaterial();
 
 	const int index = pgTextureProps->GetPropertyValueAsLong(wxT("Texture Unit"));
 
-	Texture *texture = mm->getTexture(index);
+	ITexture *texture = mm->getTexture(index);
 
 	if (texture == tex) {
 		updateTextures(mm,index);
@@ -1004,12 +1060,13 @@ void DlgMaterials::updateActiveTexture() {
 void DlgMaterials::updateTextures(Material *mm, int index) {
 
 	updateTextureList();
-	Texture *texture;
+	ITexture *texture;
 	for(int i = 0; i < 2; i++) { 
 		for(int j = 0 ; j < 4 ; j++) {
 			texture = mm->getTexture(i*4+j);
 			if (texture != NULL)
-				imagesGrid[i * 4 + j]->setBitmap(texture->getBitmap());
+				imagesGrid[i * 4 + j]->setBitmap(DlgTextureLib::Instance()->m_Bitmaps[texture->getPropi(ITexture::ID)]);
+//				imagesGrid[i * 4 + j]->setBitmap(texture->getBitmap());
 			else
 				imagesGrid[i*4+j]->setBitmap(new wxBitmap(96,96));
 		}
@@ -1392,7 +1449,7 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 										Camera::TOP, Camera::BOTTOM};
 
 	const wxChar* intTextureComp[] = {wxT("WIDTH"), wxT("HEIGHT"), wxT("DEPTH"), NULL};
-	const long intTextureCompInd[] = {Texture::WIDTH, Texture::HEIGHT, Texture::DEPTH};
+	const long intTextureCompInd[] = {ITexture::WIDTH, ITexture::HEIGHT, ITexture::DEPTH};
 
 	//const wxChar* vec3SemanticClass[] = {wxT("Camera"), wxT("Light"), wxT("Data"), NULL};
 	//const long vec3SemanticClassInd[] = {ProgramValue::CAMERA, ProgramValue::LIGHT, ProgramValue::DATA};
@@ -1529,7 +1586,7 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 	else if (u.getType() == "TEXTURE" || (u.getType() == "CURRENT" && "TEXTURE" == u.getContext())) {
 
 		if (u.getType() == "TEXTURE") {
-			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Texture"),wxPG_LABEL,textureLabels/*m_pgTextureList*/));
+			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("ITexture"),wxPG_LABEL,textureLabels/*m_pgTextureList*/));
 			pgShaderUniforms->SetPropertyValueString(pid2,wxString(u.getContext().c_str()));
 		}
 					
@@ -1744,13 +1801,19 @@ void DlgMaterials::updateUniforms(Material *m) {
 	}
 
 	std::map<std::string, nau::material::ProgramValue> progValues;
-	std::map<std::string, nau::material::ProgramValue>::iterator progValuesIter;
 	progValues = m->getProgramValues();
 	ProgramValue pv;
-	progValuesIter = progValues.begin();
-	for (; progValuesIter != progValues.end(); ++progValuesIter) {
-		pv = (*progValuesIter).second;
+	for (auto progVal: progValues) {
+		pv = progVal.second;
 		addUniform(pv,false);
+
+	}
+	std::map<std::pair<std::string, std::string>, nau::material::ProgramBlockValue> progBlockValues;
+	progBlockValues = m->getProgramBlockValues();
+	ProgramBlockValue pbv;
+	for (auto progVal: progBlockValues) {
+		pbv = progVal.second;
+//		addBlockUniform(pbv,false);
 
 	}
 	pgShaderUniforms->Refresh();

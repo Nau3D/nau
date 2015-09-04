@@ -2,26 +2,29 @@
 
 #include "nau.h"
 #include "nau/loader/devilTextureLoader.h"
-#include "nau/system/fileutil.h"
+#include "nau/system/file.h"
+
+#include <ctime>
 
 using namespace nau::loader;
 
-TextureLoader*
-TextureLoader::create (void)
+ITextureLoader*
+ITextureLoader::create (void)
 {
 	return new DevILTextureLoader();
 }
 
 
 void
-TextureLoader::Save(Texture *t, FileType ft) {
+ITextureLoader::Save(ITexture *t, FileType ft) {
 
 	if (t == NULL)
 		return;
 
-	TexImage *ti = RESOURCEMANAGER->createTexImage(t);
+	//ITexImage *ti = RESOURCEMANAGER->createTexImage(t);
+	ITexImage *ti = ITexImage::create(t);
 
-	nau::loader::TextureLoader *loader = nau::loader::TextureLoader::create();
+	nau::loader::ITextureLoader *loader = nau::loader::ITextureLoader::create();
 
 	char s[200];
 	if (ft == PNG)
@@ -29,14 +32,15 @@ TextureLoader::Save(Texture *t, FileType ft) {
 	else 
 		sprintf(s,"%s.%d.hdr", t->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
 
-	std::string sname = nau::system::FileUtil::Validate(s);
+	std::string sname = nau::system::File::Validate(s);
 	loader->save(ti,sname);
 	delete loader;
+	delete ti;
 }
 
 
 void
-TextureLoader::Save(int width, int height, char *data, std::string filename) {
+ITextureLoader::Save(int width, int height, char *data, std::string filename) {
 
 
 	if (filename == "") {
@@ -47,22 +51,23 @@ TextureLoader::Save(int width, int height, char *data, std::string filename) {
 	
 		time(&rawtime);
 		timeinfo = localtime(&rawtime);
-		float k = clock();
+		float k = (float)clock();
 		strftime(buffer, 80, "%Y-%m-%d_%H-%M-%S", timeinfo);
 		sprintf(buffer2, "%s.%f.png", buffer, k);
 		filename = std::string(buffer2);
 	}
 
-	nau::loader::TextureLoader *loader = nau::loader::TextureLoader::create();
+	nau::loader::ITextureLoader *loader = nau::loader::ITextureLoader::create();
 	loader->save(width, height, data, filename);
 
 }
 
 
 void 
-TextureLoader::SaveRaw(Texture *texture, std::string filename){
+ITextureLoader::SaveRaw(ITexture *texture, std::string filename){
 
-	TexImage *ti = RESOURCEMANAGER->createTexImage(texture);
+	//ITexImage *ti = RESOURCEMANAGER->createTexImage(texture);
+	ITexImage *ti = ITexImage::create(texture);
 
 	void *data = ti->getData();
 
@@ -96,7 +101,7 @@ TextureLoader::SaveRaw(Texture *texture, std::string filename){
 		iData = (int *)data;
 
 	FILE *fp;
-	std::string sname = nau::system::FileUtil::Validate(filename);
+	std::string sname = nau::system::File::Validate(filename);
 
 	fp = fopen(sname.c_str(), "wt+");
 
@@ -130,4 +135,5 @@ TextureLoader::SaveRaw(Texture *texture, std::string filename){
 		}
 	}
 	fclose(fp);
+	delete ti;
 }

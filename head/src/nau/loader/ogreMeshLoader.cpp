@@ -8,8 +8,8 @@
 #include "nau/geometry/meshWithPose.h"
 #include "nau/geometry/poseOffset.h"
 #include "nau/render/iRenderable.h"
-#include "nau/scene/scenefactory.h"
-#include "nau/scene/sceneobjectfactory.h"
+#include "nau/scene/sceneFactory.h"
+#include "nau/scene/sceneObjectFactory.h"
 #include "nau/system/textutil.h"
 
 #ifdef NAU_PLATFORM_WIN32
@@ -52,7 +52,7 @@ Project Specification
 void
 OgreMeshLoader::loadScene (IScene* scn, std::string file) throw (std::string)
 {
-	OgreMeshLoader::m_Path = FileUtil::GetPath(file);
+	OgreMeshLoader::m_Path = File::GetPath(file);
 	OgreMeshLoader::m_MeshFile = file;
 
 	TiXmlDocument doc (file.c_str());
@@ -132,7 +132,7 @@ OgreMeshLoader::loadSkeleton(TiXmlHandle hRoot, SceneSkeleton *sk)  throw (std::
 		char name[512];
 		sprintf(name,"%s.xml", pName);
 
-		OgreMeshLoader::m_SkeletonFile = FileUtil::GetFullPath(m_Path, name);
+		OgreMeshLoader::m_SkeletonFile = File::GetFullPath(m_Path, name);
 		TiXmlDocument doc (OgreMeshLoader::m_SkeletonFile.c_str());
 		bool loadOkay = doc.LoadFile();
 
@@ -385,7 +385,7 @@ OgreMeshLoader::loadPoseAnimations(TiXmlHandle hRoot, ScenePoses *scn)
 					if (!pPoseIndex || !pInfluence)
 						NAU_THROW("Invalid poseref element in animation %s. File: %s", pName, OgreMeshLoader::m_MeshFile.c_str());
 
-					poseIndex = nau::system::TextUtil::ParseFloat(pPoseIndex);
+					poseIndex = (int)nau::system::TextUtil::ParseFloat(pPoseIndex);
 					influence = nau::system::TextUtil::ParseFloat(pInfluence);
 
 					scn->getAnim(pName).addInfluence(meshIndex,poseIndex,time,influence);
