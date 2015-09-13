@@ -289,9 +289,6 @@
     <ClCompile Include="..\src\nau\loader\assimpLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\loader\cboLoader.cpp">
-      <Filter>Source Files\loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\loader\devilTextureLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
@@ -522,6 +519,9 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\render\opengl\glUniform.cpp">
       <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\loader\cboLoader.cpp">
+      <Filter>Source Files\loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

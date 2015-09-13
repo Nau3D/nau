@@ -280,9 +280,9 @@ File::GetRelativePathTo(const std::string &currentDir, const std::string &absFN)
 
 	// declarations - put here so this should work in a C compiler
 	int afMarker = 0, rfMarker = 0;
-	int cdLen = 0, afLen = 0;
-	int i = 0;
-	int levels = 0;
+	size_t cdLen = 0, afLen = 0;
+	unsigned int i = 0;
+	unsigned int levels = 0;
 	static char relativeFilename[PATH_MAX+1];
 	char *currentDirectory = (char *)currentDir.c_str();
 	char *absoluteFilename = (char *)absFN.c_str();

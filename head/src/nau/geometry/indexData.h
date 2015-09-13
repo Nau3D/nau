@@ -26,7 +26,7 @@ namespace nau
 
 			void offsetIndices (int amount);
 			virtual std::vector<unsigned int>& getIndexData (void);
-#ifdef NAU_OPTIX_PRIME
+#ifdef NAU_OPTIX
 			/// required for optixPrime: returns indices as ints
 			virtual std::vector<int>* getIndexDataAsInt(void);
 #endif

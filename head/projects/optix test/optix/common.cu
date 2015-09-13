@@ -66,7 +66,7 @@ rtDeclareVariable(int, Shadow, , );
 
 
 
-#include "util.h"
+
 
 RT_PROGRAM void pinhole_camera()
 {
@@ -217,111 +217,9 @@ RT_PROGRAM void shadePointLight()
 }
 
 
-RT_PROGRAM void tracePathMetal() 
-{
-	if (prdr.depth < 4) {
-	
-		float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
-		float3 hit_point = ray.origin + t_hit * ray.direction;
-		float3 i = ray.direction;
-		float3 r = optix::reflect(i, n);
-
-		optix::Ray ray = optix::make_Ray(hit_point, r, Phong, 0.002, RT_DEFAULT_MAX);
-	
-		PerRayDataResult prd;
-		prd.result = make_float4(1.0, 1.0, 1.0,1.0);
-		prd.depth = prdr.depth+1;
-		rtTrace(top_object, ray, prd);
-		prdr.result = prd.result * dot(r,n);
-	}
-	else 
-		prdr.result = make_float4(0.0);
-//	prdr.result = make_float4(1, 0, 0, 0);
-//	prdr.result = make_float4(1, 0, 0, 0);
-//	prd.result = make_float4(1.0f);
-//	prdr.result *= make_float4(0.0, 0.0, 1.0, 1.0);
-}
 
 
-RT_PROGRAM void tracePathGlossy() 
-{
-	if (prdr.depth < 4) {
-	
-		float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
-		float3 hit_point = ray.origin + t_hit * ray.direction;
-		float3 i = ray.direction;
-		float3 r = optix::reflect(i, n);
-		float3 newDir;
-		float exponent = 100;
 
-		
-		sampleUnitHemisphereCosLobe(r,exponent,hit_point,newDir);
-		if (dot(newDir, n) <= 0.0)
-			newDir = r;
-		optix::Ray ray = optix::make_Ray(hit_point, newDir, Phong, 0.002, RT_DEFAULT_MAX);
-	
-		PerRayDataResult prd;
-		prd.result = make_float4(1.0, 1.0, 1.0,1.0);
-		prd.depth = prdr.depth+1;
-		rtTrace(top_object, ray, prd);
-		prdr.result = prd.result * (exponent+2) / (exponent+1) * dot(newDir,n);
-	}
-	else 
-		prdr.result = make_float4(0.0);
-
-//	prd.result = make_float4(1.0f);
-//	prdr.result *= make_float4(0.0, 0.0, 1.0, 1.0);
-} 
-
-
-RT_PROGRAM void tracePath()
-{
-	float r;
-	PerRayDataResult prdRec;
-	prdRec.result = make_float4(0.0);
-	float3 newDir;
-
-	float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
-	float3 hit_point = ray.origin + t_hit * ray.direction;	
-
-	float4 shadow = sampleAreaLight(n, hit_point, make_float3(lightPos), make_float3(0,-1,0), 0.4, 0.45); 
-
-	random(hit_point,r);
-
-	if (prdr.depth < 3 && r < 0.7f) {
-//	if (prdr.depth < 8) {
-		prdRec.depth = prdr.depth+1;
-		prdRec.result = make_float4(1.0);
-		sampleUnitHemisphereCosWeighted(n,hit_point,newDir);
-		//float  seed = t_hit * 2789457;
-		//sampleHemisphere(seed, n,newDir);
-		optix::Ray newRay(hit_point, newDir, Phong, 0.00002, 5);
-		rtTrace(top_object, newRay, prdRec);
-
-
-		shadow += prdRec.result * dot(newDir,n);
-//		shadow += prdRec.result;// * dot(newDir,n);
-	}
-	float4 color = diffuse;
-	if (texCount > 0)
-		color = color * tex2D( tex0, texCoord.x, texCoord.y );
-	prdr.result *= color * (shadow);
-	//prdr.result = color;
-}
-
-
-RT_PROGRAM void shadeAreaLight()
-{
-	float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
-	float3 hit_point = ray.origin + t_hit * ray.direction;	
-
-	float4 shadow = sampleAreaLight(n, hit_point, make_float3(lightPos), make_float3(0,-1,0), 0.4, 0.45); 
-
-	float4 color = diffuse* 1.3f;
-	if (texCount > 0)
-		color = color * tex2D( tex0, texCoord.x, texCoord.y );
-	prdr.result *= color * (0.3 + shadow);
-}
 
 
 RT_PROGRAM void shadeLight()
@@ -330,57 +228,6 @@ RT_PROGRAM void shadeLight()
 }
 
 
-RT_PROGRAM void shadeMetal() 
-{
-
-	float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
-	float3 hit_point = ray.origin + t_hit * ray.direction;
-
-	float3 i = ray.direction;
-	float3 r = optix::reflect(i, n);
-
-	optix::Ray ray = optix::make_Ray(hit_point, r, Phong, 0.002, RT_DEFAULT_MAX);
-	
-	PerRayDataResult prd;
-	prd.result = make_float4(1.0, 1.0, 1.0,1.0);
-	prd.depth = prdr.depth++;
-	rtTrace(top_object, ray, prd);
-	prdr.result = prd.result;
-
-//	prd.result = make_float4(1.0f);
-//	prdr.result *= make_float4(0.0, 0.0, 1.0, 1.0);
-}
-
-
-RT_PROGRAM void shadeGlass() 
-{
-	float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
-	float3 hit_point = ray.origin + t_hit * ray.direction;
-	float3 i = ray.direction;
-	float3 t;
-	float atenuation = 1.0;
-
-	if (dot(n,i) < 0) // entrance ray
-	{
-		optix::refract(t, i, n, 1.5);
-	}
-	else // exiting ray
-	{
-		optix::refract(t, i, -n, 0.66);
-		atenuation = exp(log(0.84) * t_hit);
-	}
-
-	optix::Ray ray = optix::make_Ray(hit_point, t, Phong, 0.002, RT_DEFAULT_MAX);
-	
-	PerRayDataResult prd;
-	prd.result = make_float4(1.0, 1.0, 1.0,1.0);
-	prd.depth = prdr.depth++;
-	rtTrace(top_object, ray, prd);
-	prdr.result = prd.result * atenuation;
-
-//	prd.result = make_float4(1.0f);
-//	prdr.result *= make_float4(0.0, 0.0, 1.0, 1.0);
-}
 
 
 RT_PROGRAM void shadow()

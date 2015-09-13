@@ -35,7 +35,7 @@ namespace nau
 
 			virtual void appendVertex(unsigned int i);
 
-			virtual int getNumberOfVertices();
+			virtual unsigned int getNumberOfVertices();
 
 			virtual bool compile (void);
 			virtual unsigned int getBufferID(unsigned int vertexAttrib);

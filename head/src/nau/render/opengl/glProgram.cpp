@@ -640,7 +640,7 @@ GLProgram::setUniforms() {
 			++it;
 		}
 	}
-	m_NumUniforms = m_Uniforms.size();
+	m_NumUniforms = (int)m_Uniforms.size();
 }
 
 

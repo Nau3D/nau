@@ -62,7 +62,7 @@ namespace nau
 			std::vector<Light *> m_Lights;
 
 		public:
-			virtual int getLightCount();
+			virtual unsigned int getLightCount();
 			virtual Light *getLight(unsigned int id);
 			virtual bool addLight(nau::scene::Light& aLight);
 			virtual void removeLights();
@@ -90,7 +90,7 @@ namespace nau
 		public:
 			void resetCounters(void);
 			unsigned int getCounter(Counters c);
-			virtual int getNumberOfPrimitives(MaterialGroup *m);
+			virtual unsigned int getNumberOfPrimitives(MaterialGroup *m);
 
 
 			// MATRICES
@@ -137,7 +137,7 @@ namespace nau
 			// IMAGE TEXTURE
 			void addImageTexture(unsigned int aTexUnit, IImageTexture *t);
 			void removeImageTexture(unsigned int aTexUnit);
-			int getImageTextureCount();
+			unsigned int getImageTextureCount();
 			IImageTexture* getImageTexture(unsigned int unit);
 			// TEXTURING
 			void setActiveTextureUnit(unsigned int aTexUnit);
@@ -145,7 +145,6 @@ namespace nau
 			void removeTexture(unsigned int aTexUnit);
 			MaterialTexture *getMaterialTexture(int unit);
 			ITexture *getTexture(int unit);
-			int getTextureCount();
 
 
 			// FRAMEBUFFER OPS

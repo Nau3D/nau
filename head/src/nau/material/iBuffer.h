@@ -51,11 +51,11 @@ namespace nau
 
 			std::string& getLabel (void);
 
-			virtual void setData(unsigned int size, void *data) = 0;
-			virtual void setSubData(unsigned int offset, unsigned int size, void*data) = 0;
-			virtual void setSubDataNoBinding(unsigned int bufferType, unsigned int offset, unsigned int size, void*data) = 0;
+			virtual void setData(size_t size, void *data) = 0;
+			virtual void setSubData(size_t offset, size_t size, void*data) = 0;
+			virtual void setSubDataNoBinding(unsigned int bufferType, size_t offset, size_t size, void*data) = 0;
 			// returns the number of bytes read
-			virtual int getData(unsigned int offset, unsigned int size, void *data) = 0;
+			virtual size_t getData(size_t offset, size_t size, void *data) = 0;
 
 			virtual void bind(unsigned int type) = 0;
 			virtual void unbind() =0;

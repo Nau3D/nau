@@ -170,7 +170,7 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 		prepareIndexData();
 		createUnifiedIndexVector();
 
-		unsigned int size = m_VertexData->getDataOf(VertexData::getAttribIndex("position")).size();
+		size_t size = m_VertexData->getDataOf(VertexData::getAttribIndex("position")).size();
 		std::vector<VertexData::Attr>* idsArray = new std::vector<VertexData::Attr>(size);
 
 		int primitiveOffset = 3;//getPrimitiveOffset();
@@ -186,14 +186,14 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 void 
 Mesh::prepareIndexData() {
 
-	unsigned int size = m_VertexData->getDataOf(VertexData::getAttribIndex("position")).size();
+	size_t size = m_VertexData->getDataOf(VertexData::getAttribIndex("position")).size();
 	std::vector<int> idsArray = std::vector<int>(size, -1);
 	std::vector<int> outlaws;
 
 	createUnifiedIndexVector();
 
 	unsigned int index0, index1, index2, aux0, aux1, aux2;
-	for (int i = 0 ; i < getNumberOfVertices()/3; i++) {
+	for (unsigned int i = 0 ; i < getNumberOfVertices()/3; i++) {
 	
 		index0 = m_UnifiedIndex[ i * 3 ];
 		index1 = m_UnifiedIndex[ i * 3 + 1 ];
@@ -221,7 +221,7 @@ Mesh::prepareIndexData() {
 		}
 		else {
 			m_VertexData->appendVertex(index2);
-			m_UnifiedIndex[i * 3 + 2] = size;
+			m_UnifiedIndex[i * 3 + 2] = (unsigned int)size;
 			size++;
 		}
 	}
@@ -230,12 +230,12 @@ Mesh::prepareIndexData() {
 	std::vector<nau::material::MaterialGroup*>::iterator iter;
 
 	iter = m_vMaterialGroups.begin();
-	unsigned int base = 0;
+	size_t base = 0;
 	std::vector<unsigned int>::iterator indexIter;
 	indexIter = m_UnifiedIndex.begin();
 	for ( ; iter != m_vMaterialGroups.end(); iter ++) {
 
-		unsigned int size = (*iter)->getIndexData().getIndexData().size();
+		size_t size = (*iter)->getIndexData().getIndexData().size();
 		std::vector<unsigned int>* matGroupIndexes = new std::vector<unsigned int>(size);
 		matGroupIndexes->assign(indexIter+base, indexIter+(base+size));
 		(*iter)->getIndexData().setIndexData(matGroupIndexes);
@@ -244,7 +244,7 @@ Mesh::prepareIndexData() {
 }
 
 
-int 
+unsigned int 
 Mesh::getNumberOfVertices (void) {
 
 	return (int)(getVertexData().getDataOf (VertexData::getAttribIndex("position"))).size();

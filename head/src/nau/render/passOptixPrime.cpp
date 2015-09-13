@@ -363,7 +363,7 @@ PassOptixPrime::initOptixPrime() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, v->size() * sizeof(int), &(*v)[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	int numInd = v->size();
+	int numInd = (int)v->size();
 
 	void * devPtrInd;
 	k = cudaGraphicsGLRegisterBuffer(&cglInd, index, cudaGraphicsRegisterFlagsReadOnly);

@@ -33,10 +33,10 @@ namespace nau
 			void unbind();
 			void setPropui(UIntProperty  prop, unsigned int value);
 			void setPropui3(UInt3Property  prop, uivec3 &v);
-			void setData(unsigned int size, void *data);
-			void setSubData(unsigned int offset, unsigned int size, void*data);
-			void setSubDataNoBinding(unsigned int bufferType, unsigned int offset, unsigned int size, void*data);
-			int getData(unsigned int offset, unsigned int size, void *data);
+			void setData(size_t size, void *data);
+			void setSubData(size_t offset, size_t size, void*data);
+			void setSubDataNoBinding(unsigned int bufferType, size_t offset, size_t size, void*data);
+			size_t getData(size_t offset, size_t size, void *data);
 			void clear();
 			IBuffer * clone();
 

@@ -19,7 +19,7 @@
 #include "nau/render/passFactory.h"
 #include "nau/render/passProcessTexture.h"
 #include "nau/render/passProcessBuffer.h"
-#ifdef NAU_OPTIX_PRIME
+#ifdef NAU_OPTIX
 #include "nau/render/passOptixPrime.h"
 #endif
 #ifdef NAU_OPTIX
@@ -2259,7 +2259,7 @@ OPTIX PRIME SETTINGS
 	<hits buffer ="primeShadows::hits" />
 </pass>
 -------------------------------------------------------------------------------*/
-#ifdef NAU_OPTIX_PRIME 
+#ifdef NAU_OPTIX 
 
 void
 ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
@@ -3297,7 +3297,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 					NAU_THROW("Compute Shader is not supported");
 				}
 			}
-#ifdef NAU_OPTIX_PRIME
+#ifdef NAU_OPTIX
 			if (passClass == "optixPrime")
 				loadPassOptixPrimeSettings(hPass, aPass);
 #endif
@@ -3546,7 +3546,7 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 
 		sprintf(s_pFullName,"%s::%s", aLib->getName().c_str(), pTextureName);
 
-		SLOG("ITexture : %s", s_pFullName);
+		SLOG("Texture : %s", s_pFullName);
 
 		if (RESOURCEMANAGER->hasTexture(s_pFullName))
 			NAU_THROW("Mat Lib %s\nTexture %s is already defined", aLib->getName().c_str(), s_pFullName);

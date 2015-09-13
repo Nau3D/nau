@@ -53,7 +53,7 @@ BulletWorld::build (void) /***MARK***/ //I'm assuming all objects inside scene a
 		btBroadphaseInterface* broadphase = new btAxisSweep3 (worldAabbMin,worldAabbMax);//  new btMultiSapBroadphase();//new btAxisSweep3(worldAabbMin,worldAabbMax,maxProxies);
 		btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 
-		m_pDynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver);
+		//m_pDynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 		m_pDynamicsWorld->setGravity(btVector3(0,-10,0)); /***MARK***/ //Should be user definable
 
 		std::vector<SceneObject*> &sceneObjects = m_pScene->getAllObjects();

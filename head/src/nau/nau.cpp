@@ -253,7 +253,7 @@ int
 luaGetBuffer(lua_State *l) {
 
 	const char *name = lua_tostring(l, -4);
-	int offset = lua_tointeger(l, -3);
+	size_t offset = (size_t)lua_tointeger(l, -3);
 	const char *dataType = lua_tostring(l, -2);
 
 	Enums::DataType dt = Enums::getType(dataType);
@@ -268,7 +268,7 @@ luaGetBuffer(lua_State *l) {
 
 	int size = Enums::getSize(dt);
 	void *arr = malloc(size);
-	int count = buff->getData(offset, size , arr);
+	size_t count = buff->getData(offset, size , arr);
 	if (size != count) {
 		NAU_THROW("Lua getBuffer: buffer %s offset %d, out of bounds", name, offset);
 		return 0;
@@ -284,7 +284,7 @@ int
 luaSetBuffer(lua_State *l) {
 
 	const char *name = lua_tostring(l, -4);
-	int offset = lua_tointeger(l, -3);
+	size_t offset = (size_t)lua_tointeger(l, -3);
 	const char *dataType = lua_tostring(l, -2);
 
 	Enums::DataType dt = Enums::getType(dataType);
@@ -319,7 +319,7 @@ luaSetBuffer(lua_State *l) {
 		arrI = (int *)malloc(sizeof(int) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
-			arrI[i] = lua_tointeger(l, -1);
+			arrI[i] = (int)lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
 		arr = arrI;
@@ -328,7 +328,7 @@ luaSetBuffer(lua_State *l) {
 		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
-			arrUI[i] = lua_tounsigned(l, -1);
+			arrUI[i] = (unsigned int)lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
 		arr = arrUI;
@@ -347,7 +347,7 @@ luaGet(lua_State *l) {
 	const char *tipo = lua_tostring(l, -5);
 	const char *context = lua_tostring(l, -4);
 	const char *component = lua_tostring(l, -3);
-	int number = lua_tointeger(l, -2);
+	int number = (int)lua_tointeger(l, -2);
 	void *arr;
 	AttribSet *attr;
 
@@ -392,7 +392,7 @@ luaSet(lua_State *l) {
 	const char *tipo = lua_tostring(l, -5);
 	const char *context = lua_tostring(l, -4);
 	const char *component = lua_tostring(l, -3);
-	int number = lua_tointeger(l, - 2);
+	int number = (int)lua_tointeger(l, - 2);
 	void *arr;
 	AttribSet *attr;
 
@@ -434,7 +434,7 @@ luaSet(lua_State *l) {
 		arrI = (int *)malloc(sizeof(int) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
-			arrI[i] = lua_tointeger(l, -1);
+			arrI[i] = (int)lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
 		arr = arrI;
@@ -443,7 +443,7 @@ luaSet(lua_State *l) {
 		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
-			arrUI[i] = lua_tounsigned(l, -1);
+			arrUI[i] = (unsigned int)lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
 		arr = arrUI;

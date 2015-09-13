@@ -117,8 +117,6 @@ namespace nau
 
 #ifdef NAU_OPTIX
 			static void loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass);
-#endif
-#ifdef NAU_OPTIX_PRIME
 			static void loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass);
 #endif
 			static void loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass);

@@ -88,14 +88,14 @@ MaterialGroup::getIndexData (void)
 }
 
 
-unsigned int
+size_t
 MaterialGroup::getIndexOffset(void)
 {
 	return 0;
 }
 
 
-unsigned int
+size_t
 MaterialGroup::getIndexSize(void)
 {
 	if (0 == m_IndexData) {

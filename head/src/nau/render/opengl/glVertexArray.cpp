@@ -57,11 +57,11 @@ GLVertexArray::setBuffer(unsigned int type, int bufferID) {
 }
 
 
-int
+unsigned int
 GLVertexArray::getNumberOfVertices()
 {
 	if (m_InternalArrays[0] != NULL)
-		return m_InternalArrays[0]->size();
+		return (unsigned int)m_InternalArrays[0]->size();
 	else if (m_GLBuffers[0] != 0)
 		return RESOURCEMANAGER->getBufferByID(m_GLBuffers[0])->getPropui(IBuffer::SIZE)/16;
 	else
@@ -102,7 +102,7 @@ GLVertexArray::prepareTriangleIDs(unsigned int sceneObjID,
 	if (sceneObjID != 0 && 0 == m_InternalArrays[TriID_index] 
 						 && m_InternalArrays[0]) {
 
-		unsigned int size = m_InternalArrays[0]->size();
+		unsigned int size = (unsigned int)m_InternalArrays[0]->size();
 		m_InternalArrays[TriID_index] = new std::vector<VertexData::Attr>(size);
 
 		unsigned int begin;

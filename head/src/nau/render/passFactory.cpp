@@ -12,7 +12,7 @@
 
 //#include "nau/render/passCompute.h"
 //
-//#ifdef NAU_OPTIX_PRIME 
+//#ifdef NAU_OPTIX 
 //#include "nau/render/passOptixPrime.h"
 //#endif
 //#ifdef NAU_OPTIX
@@ -78,7 +78,7 @@ PassFactory::create (const std::string &type, const std::string &name) {
 //	if ("optix" == type)
 //		return new PassOptix(name);
 //#endif
-//#ifdef NAU_OPTIX_PRIME
+//#ifdef NAU_OPTIX
 //#if NAU_OPENGL_VERSION >= 420
 //	if ("optixPrime" == type)
 //		return new PassOptixPrime(name);

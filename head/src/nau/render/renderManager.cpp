@@ -244,7 +244,7 @@ RenderManager::setActivePipeline (unsigned int index) {
 unsigned int 
 RenderManager::getNumPipelines() {
 
-	return m_Pipelines.size();
+	return (unsigned int)m_Pipelines.size();
 }
 
 
@@ -547,7 +547,7 @@ RenderManager::hasCamera (const std::string &cameraName) {
 unsigned int 
 RenderManager::getNumCameras() {
 
-	return m_Cameras.size();
+	return (unsigned int)m_Cameras.size();
 }
 
 
@@ -589,7 +589,7 @@ RenderManager::getCamera (const std::string &cameraName) {
 unsigned int 
 RenderManager::getNumLights() {
 
-	return m_Lights.size();
+	return (unsigned int)m_Lights.size();
 }
 
 

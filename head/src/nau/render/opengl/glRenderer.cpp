@@ -239,10 +239,10 @@ GLRenderer::getAtomicCounterValues() {
 //		LIGHTS
 // -----------------------------------------------------------------
 
-int
+unsigned int
 GLRenderer::getLightCount() {
 
-	return m_Lights.size();
+	return (unsigned int)m_Lights.size();
 }
 
 
@@ -257,7 +257,7 @@ GLRenderer::getLight(unsigned int i) {
 bool
 GLRenderer::addLight(nau::scene::Light& aLight) {
 
-	int id = m_Lights.size();
+	int id = (unsigned int)m_Lights.size();
 
 	aLight.setPropi(Light::ID, id);
 	m_Lights.push_back(&aLight);
@@ -364,11 +364,11 @@ GLRenderer::getCounter(Counters c) {
 }
 
 
-int
+unsigned int
 GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
 
-	unsigned int indices = m->getIndexData().getIndexSize();
-	unsigned int primitive = m->getParent().getRealDrawingPrimitive();
+	unsigned int indices = (unsigned int)m->getIndexData().getIndexSize();
+	unsigned int primitive = (unsigned int)m->getParent().getRealDrawingPrimitive();
 
 	switch (primitive) {
 
@@ -551,10 +551,10 @@ GLRenderer::removeImageTexture(unsigned int aTexUnit) {
 }
 
 
-int
+unsigned int
 GLRenderer::getImageTextureCount() {
 
-	return m_ImageTextures.size();
+	return (unsigned int)m_ImageTextures.size();
 }
 
 
@@ -584,8 +584,10 @@ GLRenderer::setActiveTextureUnit(unsigned int aTexUnit) {
 void
 GLRenderer::addTexture(MaterialTexture *t) {
 
-	m_Textures[t->getPropi(MaterialTexture::UNIT)] = t;
-	m_IntProps[TEXTURE_COUNT]++;
+	unsigned int unit = t->getPropi(MaterialTexture::UNIT);
+	m_Textures[unit] = t;
+	m_IntProps[TEXTURE_COUNT] |= (1 << unit);
+//	m_IntProps[TEXTURE_COUNT]++;
 }
 
 
@@ -594,7 +596,8 @@ GLRenderer::removeTexture(unsigned int aTexUnit) {
 
 	if (m_Textures.count(aTexUnit)) {
 		m_Textures.erase(aTexUnit);
-		m_IntProps[TEXTURE_COUNT]--;
+		m_IntProps[TEXTURE_COUNT] &= ~(1 << aTexUnit) ;
+//		m_IntProps[TEXTURE_COUNT]--;
 	}
 }
 
@@ -616,13 +619,6 @@ GLRenderer::getTexture(int unit) {
 		return m_Textures[unit]->getTexture();
 	else
 		return NULL;
-}
-
-
-int
-GLRenderer::getTextureCount() {
-
-	return (int)m_IntProps[TEXTURE_COUNT];
 }
 
 
@@ -808,7 +804,7 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 	if (!aMatGroup->isCompiled())
 		aMatGroup->compile();
 
-	unsigned int size;
+	GLsizei size;
 
 	{
 		PROFILE("Bindings");
@@ -819,7 +815,7 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 	{
 		PROFILE_GL("Draw elements");
 
-		size = indexData.getIndexSize();
+		size = (GLsizei)indexData.getIndexSize();
 
 		if (size != 0) {
 			if (m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]) {

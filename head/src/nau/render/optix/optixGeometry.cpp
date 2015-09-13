@@ -65,7 +65,7 @@ OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::materia
 //	IRenderable &r = RENDERMANAGER->getSceneObject(id)->getRenderable();
 	IRenderable &r = s->getRenderable();
 	VertexData &v = r.getVertexData();
-	unsigned int size = v.getDataOf(0).size();;
+	size_t size = v.getDataOf(0).size();;
 
 	std::vector<MaterialGroup *> mg = r.getMaterialGroups();
 	for (unsigned int g = 0; g < mg.size(); ++g) {
@@ -103,7 +103,7 @@ OptixGeometry::buildGeometryGroup() {
 
 	m_GeomGroup = m_Context->createGeometryGroup();
 	try {
-		m_GeomGroup->setChildCount(m_GeomInstances.size());
+		m_GeomGroup->setChildCount((unsigned int)m_GeomInstances.size());
 		for (unsigned int i = 0; i < m_GeomInstances.size(); ++i) {
 			m_GeomGroup->setChild(i,m_GeomInstances[i]);
 		}

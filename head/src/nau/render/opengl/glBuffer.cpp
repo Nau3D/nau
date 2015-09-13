@@ -25,7 +25,7 @@ GLBuffer::GLBuffer(std::string label): IBuffer(), m_LastBound(GL_ARRAY_BUFFER) {
 	
 	if (sup->apiSupport(IAPISupport::OBJECT_LABELS)) {
 		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
-		glObjectLabel(GL_BUFFER, m_IntProps[ID], m_Label.size(), m_Label.c_str());
+		glObjectLabel(GL_BUFFER, m_IntProps[ID], (GLsizei)m_Label.size(), m_Label.c_str());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 }
@@ -77,9 +77,9 @@ GLBuffer::clear() {
 
 
 void 
-GLBuffer::setData(unsigned int size, void *data) {
+GLBuffer::setData(size_t size, void *data) {
 
-	m_UIntProps[SIZE] = size;
+	m_UIntProps[SIZE] = (unsigned int)size;
 	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 	glBufferData(GL_ARRAY_BUFFER, m_UIntProps[SIZE], data, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -87,7 +87,7 @@ GLBuffer::setData(unsigned int size, void *data) {
 
 
 void
-GLBuffer::setSubData(unsigned int offset, unsigned int size, void *data) {
+GLBuffer::setSubData(size_t offset, size_t size, void *data) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
@@ -96,22 +96,22 @@ GLBuffer::setSubData(unsigned int offset, unsigned int size, void *data) {
 
 
 void
-GLBuffer::setSubDataNoBinding(unsigned int bufferType, unsigned int offset, unsigned int size, void *data) {
+GLBuffer::setSubDataNoBinding(unsigned int bufferType, size_t offset, size_t size, void *data) {
 
 	glBufferSubData(bufferType, offset, size, data);
 }
 
 
-int
-GLBuffer::getData(unsigned int offset, unsigned int size, void *data) {
+size_t
+GLBuffer::getData(size_t offset, size_t size, void *data) {
 
-	int actualSize = size;
+	size_t actualSize = size;
 
 	if (offset >= m_UIntProps[SIZE])
 		return 0;
 	
 	if (offset + size > m_UIntProps[SIZE])
-		actualSize = m_UIntProps[SIZE] - offset;
+		actualSize = (size_t)m_UIntProps[SIZE] - offset;
 
 		//glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	int type = GL_ARRAY_BUFFER;// SHADER_STORAGE_BUFFER;

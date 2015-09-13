@@ -28,7 +28,7 @@
 #include <nau.h>
 #include <nau/config.h>
 #ifdef NAU_LUA
-#pragma comment(lib, "lua52.lib")
+#pragma comment(lib, "lua53.lib")
 #endif
 
 #ifdef __BORLANDC__

@@ -15,7 +15,7 @@ OptixBufferLib::setContext(optix::Context &c) {
 
 
 optix::Buffer & 
-OptixBufferLib::getBuffer(int glBufferID, unsigned int size) {
+OptixBufferLib::getBuffer(int glBufferID, size_t size) {
 
 	// check to see if a buffer has already been created
 	// if not then create it
@@ -31,7 +31,7 @@ OptixBufferLib::getBuffer(int glBufferID, unsigned int size) {
 
 
 optix::Buffer & 
-OptixBufferLib::getIndexBuffer(int glBufferID, unsigned int size) {
+OptixBufferLib::getIndexBuffer(int glBufferID, size_t size) {
 
 	// check to see if a buffer has already been created
 	// if not then create it

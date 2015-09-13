@@ -231,7 +231,7 @@ OctreeByMatNode::_split() {
 	MaterialGroup *pMaterialGroup;
 
 	// do the splitting for each material 
-	int countSplits = m_pLocalMeshes.size();
+	int countSplits = (unsigned int)m_pLocalMeshes.size();
 	matIter = m_pLocalMeshes.begin();
 	for ( ; matIter != m_pLocalMeshes.end(); matIter++) {
 

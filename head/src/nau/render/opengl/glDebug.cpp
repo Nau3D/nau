@@ -49,7 +49,7 @@ GLDebug::DebugLog(GLenum source,
                        GLenum severity,
                        GLsizei length,
                        const GLchar* message,
-					   void* userParam) {
+					   const void* userParam) {
 	
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 		return;

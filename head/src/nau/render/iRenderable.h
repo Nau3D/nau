@@ -62,7 +62,7 @@ namespace nau
 			virtual nau::geometry::IndexData& getIndexData(void) = 0;
 
 			virtual void merge(nau::render::IRenderable *aRenderable) = 0;
-			virtual int getNumberOfVertices(void) = 0;
+			virtual unsigned int getNumberOfVertices(void) = 0;
 			virtual void setNumberOfVerticesPerPatch(int i) = 0;
 			virtual int getnumberOfVerticesPerPatch(void) = 0;
 

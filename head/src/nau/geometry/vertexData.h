@@ -36,7 +36,7 @@ namespace nau
 
 			void setName(std::string &name);
 
-			virtual int getNumberOfVertices() = 0;
+			virtual unsigned int getNumberOfVertices() = 0;
 
 			//std::vector<Attr>& getDataOf (VertexDataType type);
 			std::vector<Attr>& getDataOf (unsigned int type);

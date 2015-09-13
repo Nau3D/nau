@@ -43,7 +43,7 @@ namespace nau {
                        GLenum severity,
                        GLsizei length,
                        const GLchar* message,
-					   void* userParam);
+					   const void* userParam);
 
 		};
 	};

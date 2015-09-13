@@ -139,6 +139,7 @@
     <IntDir>.\..\Intermediate\GLI\$(Configuration)$(Platform)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DotLib|x64'">
     <OutDir>.\..\Intermediate\GLI\$(Configuration)$(Platform)\</OutDir>

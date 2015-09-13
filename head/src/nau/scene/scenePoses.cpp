@@ -90,7 +90,7 @@ ScenePoses::setPose(int index) {
 
 	MeshPose *mp;
 
-	unsigned int numScenes = m_SceneObjects.size();
+	unsigned int numScenes = (unsigned int)m_SceneObjects.size();
 	for (unsigned int i = 0; i < numScenes; i++) {
 		
 		mp = (MeshPose *)m_SceneObjects[i];
@@ -104,7 +104,7 @@ ScenePoses::setPose(std::string name) {
 
 	MeshPose *mp;
 
-	unsigned int numScenes = m_SceneObjects.size();
+	unsigned int numScenes = (unsigned int)m_SceneObjects.size();
 	for (unsigned int i = 0; i < numScenes; i++) {
 		
 		mp = (MeshPose *)m_SceneObjects[i];

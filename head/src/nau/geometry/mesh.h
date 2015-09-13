@@ -61,7 +61,7 @@ namespace nau
 			nau::geometry::VertexData& getVertexData (void);
 			nau::geometry::IndexData& getIndexData(void);
 
-			int getNumberOfVertices (void);
+			unsigned int getNumberOfVertices (void);
 			void setNumberOfVerticesPerPatch(int i);
 			int getnumberOfVerticesPerPatch(void);
 

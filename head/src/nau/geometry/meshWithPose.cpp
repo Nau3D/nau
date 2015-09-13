@@ -107,7 +107,7 @@ MeshPose::setPose(unsigned int index)
 unsigned int
 MeshPose::getNumberOfPoses() 
 {
-	return m_vOffsets.size();
+	return (unsigned int)m_vOffsets.size();
 }
 
 

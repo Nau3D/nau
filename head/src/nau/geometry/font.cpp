@@ -86,10 +86,10 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence)
 {
 	assert(mMaterialName != "");
 
-	int aux = sentence.length();
+	size_t aux = sentence.length();
 	int size = 0;
 
-	for (int count = 0; count < aux; count++) {
+	for (unsigned int count = 0; count < aux; count++) {
 	
 		// if char exists in the font definition
 		if (mChars.count(sentence[count])) 
@@ -106,12 +106,10 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence)
 	std::vector<VertexData::Attr> *texCoords = new std::vector<VertexData::Attr>(size*6);
 	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(size*6);
 
-
-
 	int i = 0;
 	float hDisp = 0.0f, vDisp = 0.0f;
 
-	for (int count = 0; count < aux; count++) {
+	for (size_t count = 0; count < aux; count++) {
 	
 		// get char at position count
 		char c = sentence[count];

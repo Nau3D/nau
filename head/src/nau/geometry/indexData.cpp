@@ -66,7 +66,7 @@ IndexData::getIndexData (void)
 	return (*m_InternalIndexArray);
 }
 
-#ifdef NAU_OPTIX_PRIME
+#ifdef NAU_OPTIX
 std::vector<int>*
 IndexData::getIndexDataAsInt(void) {
 
@@ -89,9 +89,9 @@ unsigned int
 IndexData::getIndexSize (void) 
 {
 	if (m_InternalIndexArray != NULL && m_UseAdjacency == false)
-		return m_InternalIndexArray->size();
+		return (unsigned int)m_InternalIndexArray->size();
 	else 
-		return m_AdjIndexArray.size();
+		return (unsigned int)m_AdjIndexArray.size();
 	//else
 	//	return 0;
 }
@@ -153,9 +153,9 @@ IndexData::offsetIndices (int amount)
 void 
 IndexData::buildAdjacencyList() {
 	
-	unsigned int indC = m_InternalIndexArray->size();
+	size_t indC = m_InternalIndexArray->size();
 	unsigned int *faceArray = (unsigned int *)&(m_InternalIndexArray->at(0));
-	unsigned int triC =  indC / 3;
+	size_t triC =  indC / 3;
 
 	// Create the half edge structure
 	std::map<std::pair<unsigned int,unsigned int>, struct HalfEdge *> myEdges;

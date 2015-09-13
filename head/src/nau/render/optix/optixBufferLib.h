@@ -19,8 +19,8 @@ namespace nau {
 
 		OptixBufferLib();
 		void setContext(optix::Context &c);
-		optix::Buffer &getBuffer(int glBufferID, unsigned int size);
-		optix::Buffer &getIndexBuffer(int glBufferID, unsigned int size);
+		optix::Buffer &getBuffer(int glBufferID, size_t size);
+		optix::Buffer &getIndexBuffer(int glBufferID, size_t size);
 
 	private:
 

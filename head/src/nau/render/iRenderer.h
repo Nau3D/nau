@@ -118,7 +118,7 @@ namespace nau
 
 		public:
 			/// returns the number of active lights
-			virtual int getLightCount() = 0;
+			virtual unsigned int getLightCount() = 0;
 			/// returns light index i
 			virtual Light *getLight(unsigned int i) = 0;
 			/// adds a light at the next free index
@@ -151,7 +151,7 @@ namespace nau
 			virtual void resetCounters(void) = 0;
 			/// returns counter value
 			virtual unsigned int getCounter(Counters c) = 0;
-			virtual int getNumberOfPrimitives(MaterialGroup *m) = 0;
+			virtual unsigned int getNumberOfPrimitives(MaterialGroup *m) = 0;
 
 
 
@@ -205,7 +205,7 @@ namespace nau
 			// image textures
 			virtual void addImageTexture(unsigned int aTexUnit, IImageTexture *t) = 0;
 			virtual void removeImageTexture(unsigned int aTexUnit) = 0;
-			virtual int getImageTextureCount() = 0;
+			virtual unsigned int getImageTextureCount() = 0;
 			virtual IImageTexture* getImageTexture(unsigned int unit) = 0;
 
 			// textures 
@@ -214,9 +214,8 @@ namespace nau
 			virtual void removeTexture(unsigned int aTexUnit) = 0;
 			virtual MaterialTexture *getMaterialTexture(int unit) = 0;
 			virtual ITexture *getTexture(int unit) = 0;
-			virtual int getTextureCount() = 0;
 
-		
+
 			// FRAMEBUFFER OPS
 
 		public:

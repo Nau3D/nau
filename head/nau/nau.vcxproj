@@ -145,21 +145,21 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">D:\OptixSDK\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">D:\OptixSDK\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">d:\toolkits\includes64;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">D:\OptixSDK.3.7\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">D:\toolkits\includes64;D:\Optix SDK 3.8.0\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">D:\toolkits\libs64;$(LibraryPath)</LibraryPath>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">nau</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">nau</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">nau64</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nauOptix</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">nauOptix</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">nauOptix64</TargetName>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">D:\OptixSDK\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">D:\OptixSDK\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.0\include\;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">d:\toolkits\includes64;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">D:\OptixSDK.3.7\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">D:\OptixSDK\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(LibraryPath)</LibraryPath>
@@ -177,7 +177,7 @@
     <TargetName>nau_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>nau_d</TargetName>
+    <TargetName>nau64_d</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -216,11 +216,11 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Lib>
-      <OutputFile>$(OutDir)nau_d.lib</OutputFile>
+      <OutputFile>$(OutDir)nau64_d.lib</OutputFile>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Lib>
     <PostBuildEvent>
-      <Command>copy $(OutDir)nau_d.lib d:\toolkits\libs</Command>
+      <Command>copy $(OutDir)nau64_d.lib d:\toolkits\libs</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
@@ -292,29 +292,29 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;GLEW_STATIC;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../src;D:/NVIDIA/OptiX SDK 2.5.0/include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_LIB;NDEBUG;GLEW_STATIC;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;__SLANGER__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Lib>
-      <OutputFile>$(OutDir)nau.lib</OutputFile>
+      <OutputFile>$(OutDir)nau64.lib</OutputFile>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
-      <Command>copy $(OutDir)nau.lib d:\toolkits\libs</Command>
+      <Command>copy $(OutDir)nau64.lib d:\toolkits\libs</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;NDEBUG;_LIB;NAU_OPTIX;NAU_OPTIX_PRIME;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;NDEBUG;_LIB;NAU_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -346,11 +346,11 @@
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Lib>
-      <OutputFile>$(OutDir)nauOptix.lib</OutputFile>
+      <OutputFile>$(OutDir)nauOptix64.lib</OutputFile>
       <AdditionalDependencies>optix.1.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)nauOptix.lib" d:\toolkits\libs</Command>
+      <Command>copy "$(OutDir)nauOptix64.lib" d:\toolkits\libs64</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -819,10 +819,10 @@ copy common.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">common.ptx</Outputs>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
       <FastMath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</FastMath>
       <FastMath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</FastMath>
       <NvccCompilation Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">ptx</NvccCompilation>
@@ -847,9 +847,9 @@ copy deferredShadows.ptx ..\build\samples\optix</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
     </CustomBuild>
     <CustomBuild Include="..\src\optix\rtvssm.cu">
       <FileType>Document</FileType>
@@ -868,9 +868,9 @@ copy rtvssm.ptx ..\build\samples\optix</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

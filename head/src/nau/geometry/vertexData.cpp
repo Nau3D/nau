@@ -151,7 +151,7 @@ VertexData::add (VertexData &aVertexData) {
 			}
 			else if (newVec == VertexData::NoData && thisVec != VertexData::NoData) {
 
-				int size = aVertexData.getDataOf(getAttribIndex("position")).size();
+				size_t size = aVertexData.getDataOf(getAttribIndex("position")).size();
 				thisVec.resize(offset + size);
 			}
 		}

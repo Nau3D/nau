@@ -107,7 +107,8 @@ OBJLoader::readMTL(std::string &name)
 {
 	FILE* file;
 	char  buf[128];
-	
+	char buf2[1024];
+
 	file = fopen(File::BuildFullFileName(m_Dir, name).c_str(), "r");
 	if (!file) {
 		NAU_THROW("Failed to open OBJ material file: %s", name.c_str());
@@ -129,12 +130,35 @@ OBJLoader::readMTL(std::string &name)
 			mat = MATERIALLIBMANAGER->createMaterial(strdup(buf));
 			//model->materials[nummaterials].name = strdup(buf);
 			break;
-		case 'm' :				/* map_Kd */
-			char  buf2[1024];
+		case 'm' :		
 			fgetc(file);
 			fgets(buf2, sizeof(buf2), file);
 			sscanf(buf2, "%s", buf2);
-			mat->createTexture(0, File::BuildFullFileName(m_Dir, buf2));
+			if (buf[4] == 'K') { // map_K?
+				switch (buf[5]) {
+				case 'd':	// map_Kd
+					mat->createTexture(0, File::BuildFullFileName(m_Dir, buf2));
+					break;
+				case 'a':	// map_Ka
+					mat->createTexture(3, File::BuildFullFileName(m_Dir, buf2));
+					break;
+				case 's':	// map_Ks
+					mat->createTexture(4, File::BuildFullFileName(m_Dir, buf2));
+					break;
+				}
+			}
+			else if (buf[4] = 'N') { // map_Ns
+				mat->createTexture(5, File::BuildFullFileName(m_Dir, buf2));
+			}
+			else if (buf[4] == 'b') { // map_bump
+				mat->createTexture(1, File::BuildFullFileName(m_Dir, buf2));
+			}
+			break;
+		case 'b':
+			fgetc(file);
+			fgets(buf2, sizeof(buf2), file);
+			sscanf(buf2, "%s", buf2);
+			mat->createTexture(1, File::BuildFullFileName(m_Dir, buf2));
 			break;
 		case 'N':
 			fscanf(file, "%f", &val);
@@ -314,7 +338,7 @@ OBJLoader::firstPass(FILE* file)
 		m_Groups[g.first].indices.resize(m_Groups[g.first].numTriangles);
 		m_Groups[g.first].numTriangles = 0;
 	}
-	m_NumGroups = m_Groups.size();
+	m_NumGroups = (unsigned int)m_Groups.size();
 
 	m_Indices.resize(m_NumTriangles * 3);
 }
@@ -697,7 +721,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		std::vector<unsigned int> work;
 		unsigned int numNormals = 0;
 		for (unsigned int i = 1; i < obj.m_NumVertices + 1; ++i) {
-			count = triIndices[i].size();
+			count = (unsigned int)triIndices[i].size();
 			work = (triIndices[i]);
 			for (k = 0; k < work.size(); ++k) {
 				if (done.find(k) == done.end()) {

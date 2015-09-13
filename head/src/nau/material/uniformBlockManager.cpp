@@ -52,8 +52,8 @@ UniformBlockManager::hasBlock(std::string &name) {
 }
 
 
-unsigned int 
+unsigned int
 UniformBlockManager::getCurrentBindingIndex() {
 
-	return m_Blocks.size();
+	return (unsigned int)m_Blocks.size();
 }

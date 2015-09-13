@@ -23,8 +23,8 @@ namespace nau
 			unsigned int getNumberOfPrimitives(void);
 
 			nau::geometry::IndexData& getIndexData (void);
-			unsigned int getIndexOffset(void);
-			unsigned int getIndexSize(void);
+			size_t getIndexOffset(void);
+			size_t getIndexSize(void);
 
 			void setParent (nau::render::IRenderable* parent);
 			nau::render::IRenderable& getParent ();

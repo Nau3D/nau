@@ -33,6 +33,7 @@ DevILTextureLoader::loadImage (std::string file)
 	ilBindImage(m_IlId);
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_LOWER_LEFT); 
+	ILstring ils = (ILstring)(file.c_str());
 	int success = ilLoadImage((ILstring)(file.c_str()));
 	if (success)
 		ilConvertImage(IL_RGBA,IL_UNSIGNED_BYTE);

@@ -55,7 +55,7 @@ MaterialLib::getMaterial (std::string MaterialName)
 std::vector<std::string>* 
 MaterialLib::getMaterialNames(std::string aName) 
 {
-	int len = aName.size();
+	size_t len = aName.size();
 	if (aName[len-1] == '*')
 		len--;
 

@@ -344,7 +344,7 @@ ResourceManager::getTexture(unsigned int i) {
 int 
 ResourceManager::getNumTextures() {
 
-	return(m_Textures.size());
+	return (unsigned int)m_Textures.size();
 }
 
 //-------------------------------------	
@@ -376,7 +376,7 @@ ResourceManager::removeRenderTarget (std::string name) {
 int 
 ResourceManager::getNumRenderTargets() {
 
-	return m_RenderTargets.size();
+	return (unsigned int)m_RenderTargets.size();
 }
 
 
@@ -593,7 +593,7 @@ ResourceManager::getProgram (std::string programName) {
 unsigned int 
 ResourceManager::getNumPrograms() {
 
-	return m_Programs.size();
+	return (unsigned int)m_Programs.size();
 }
 
 
