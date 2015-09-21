@@ -95,6 +95,32 @@ File::TextWrite(const std::string &fn, const std::string &s) {
 
 
 std::string
+File::GetCurrentFolder() {
+
+	std::string s = "";
+	char folder[255];
+	if (getcwd(folder, 255))
+		s = std::string(folder);
+
+	return s;
+}
+
+
+std::string
+File::GetAppFolder() {
+
+	std::string folder;
+	char app[255];
+
+#if NAU_PLATFORM_WIN32
+	GetModuleFileNameA(NULL, app, 255);
+#endif
+	folder = GetPath(app);
+	return folder;
+}
+
+
+std::string
 File::BuildFullFileName(std::string path, std::string filename) {
 
 	return path + PATH_SEPARATOR + filename;

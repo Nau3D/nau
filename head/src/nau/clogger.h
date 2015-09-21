@@ -1,8 +1,9 @@
 #ifndef CLOGGER_H
 #define CLOGGER_H
 
-#include <stdio.h>
+#include "nau/config.h"
 
+#include <stdio.h>
 #include <string>
 #include <vector>
 
@@ -50,6 +51,18 @@ class CLogger
 	public:
 		~CLogger(void);
 };
+
+
+#if NAU_DEBUG == 1
+#define DEBUG_INFO(message, ...) \
+{\
+  char m[256];\
+  sprintf(m, message, ## __VA_ARGS__);\
+  (CLogger::getInstance()).log(LEVEL_INFO,__FILE__,__LINE__,m);\
+};
+#else
+#define DEBUG_INFO
+#endif
 
 #define LOG_CONFIG(message, ...) \
 {\

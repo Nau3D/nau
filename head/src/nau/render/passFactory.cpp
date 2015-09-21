@@ -61,7 +61,7 @@ PassFactory::create (const std::string &type, const std::string &name) {
 //	if ("default" == type) {
 //		return new Pass (name);
 //	}
-	if ("depthmap" == type) {
+	if ("depthmap2" == type) {
 		return new PassDepthMap (name);
 	}
 //	if ("quad" ==  type) {

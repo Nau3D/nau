@@ -11,13 +11,10 @@
 #	1-800-DATASET
 #
 #	(c) Copyright 1992 Viewpoint Animation Engineering Inc.
-usemtl Inc.
 #	Sun Microsystems has been authorized to freely distribute
 #	these Datasets.  They are provided for unlimited use in
 #	existing or modified form.  The actual Dataset (ie, geometry)
-usemtl or modified form.  The actual Dataset (ie, geometry)
 #	may not, however, be resold in existing or modified form.
-usemtl or modified form.
 #
 
 mtllib al.mtl

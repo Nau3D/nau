@@ -1,8 +1,6 @@
 #include "nau/scene/octreeNode.h"
 
-#define LOGGING_ON
 #include "nau/slogger.h"
-#undef LOGGING_ON
 #include "nau/geometry/vertexData.h"
 #include "nau/material/materialGroup.h"
 #include "nau/math/matrix.h"

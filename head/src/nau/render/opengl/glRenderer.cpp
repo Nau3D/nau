@@ -16,6 +16,7 @@
 #include "nau/render/opengl/glVertexArray.h"
 #include "nau/render/opengl/glRenderTarget.h"
 
+#include <GL/glew.h>
 
 using namespace nau::math;
 using namespace nau::render;
@@ -51,7 +52,7 @@ GLRenderer::GLRenderer(void) :
 	m_Shader (0)
 {
 	init();
-	GLDebug::Init();
+	//GLDebug::Init();
 	m_glCurrState.set();
 	m_Textures.clear();
 

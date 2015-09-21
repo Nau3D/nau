@@ -1,12 +1,12 @@
 #include "nau/scene/octreeByMatNode.h"
 
-#define LOGGING_ON
 #include "nau/clogger.h"
-#undef LOGGING_ON
 #include "nau/geometry/vertexData.h"
 #include "nau/material/materialGroup.h"
 #include "nau/math/matrix.h"
 #include "nau.h"
+
+
 
 #include <assert.h>
 #include <sstream>

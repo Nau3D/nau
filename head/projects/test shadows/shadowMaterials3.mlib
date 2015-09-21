@@ -45,16 +45,16 @@
 			
 			<shader name="perpixel-color-shadow">
 				<values>
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="V"          		type="CURRENT" context="RENDERER" 
+					<valueof uniform="V"          		type="RENDERER" context="CURRENT" 
 														component="VIEW" />
 														
-					<valueof uniform="M"          		type="CURRENT" context="RENDERER" 
+					<valueof uniform="M"          		type="RENDERER" context="CURRENT" 
 														component="MODEL" />
 														
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMatrix"   	type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
 					
 					<!--valueof uniform="lightDirection" 	type="CAMERA" 
@@ -65,20 +65,19 @@
 														context="Sun" 
 														component="DIRECTION" /> 
 														
-					<valueof uniform="diffuse" 			type="CURRENT" 
-														context="COLOR" 
+					<valueof uniform="diffuse" 			type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
 														
  					<valueof uniform="lightSpaceMat" 	type="CAMERA"  context="shadow#getShadowMap-LightCam" 
 														component="TS05_PVM_MATRIX" />
 														
-					<valueof uniform="shadowMap" 		type="CURRENT"  context="MATERIAL_TEXTURE" id=1 
+					<valueof uniform="shadowMap" 		type="MATERIAL_TEXTURE" context="CURRENT" id=1 
 														component="UNIT" />	
 														
-					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />		
 				</values>
 			</shader>
@@ -99,7 +98,7 @@
 		<material  name="depthOnly" >
 			<shader name="depthOnly">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"  type="RENDERER" context="CURRENT" 
 											component="PROJECTION_VIEW_MODEL" />
 				</values>
 			</shader>

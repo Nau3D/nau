@@ -10,7 +10,6 @@ using namespace nau::math;
 using namespace nau::render;
 using namespace nau::scene;
 
-
 bool PassDepthMap::Inited = PassDepthMap::Init();
 
 bool

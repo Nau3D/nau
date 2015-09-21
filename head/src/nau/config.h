@@ -20,4 +20,6 @@
 #define GLINTERCEPTDEBUG
 #define NAU_LUA
 
+#define NAU_DEBUG 0
+
 #endif // NAU_CONFIG_H

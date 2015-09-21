@@ -30,7 +30,7 @@
 		<material name="count">
 			<shader name="atomicCount">
 				<values>														
-					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />				
 				</values>
 			</shader>

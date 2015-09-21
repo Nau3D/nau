@@ -178,51 +178,7 @@ void DlgOGL::setupMIPanel(wxSizer *siz, wxWindow *parent) {
 
 
 	wxString s;
-//	int i[4];
-
-/*	wxStaticBox *sb2 = new wxStaticBox(parent,-1,wxT(" Buffers "));
-	wxSizer *sizer2 = new wxStaticBoxSizer(sb2,wxHORIZONTAL);
-
-		wxFlexGridSizer *gs2 = new wxFlexGridSizer(5,2,0,0);
-
-		wxStaticText *st27 = new wxStaticText(parent,-1,wxT("RGBA:"));
-		glGetIntegerv(GL_RED_BITS,i);glGetIntegerv(GL_GREEN_BITS,&i[1]);
-		glGetIntegerv(GL_BLUE_BITS,&i[2]);glGetIntegerv(GL_ALPHA_BITS,&i[3]);
-		s.Printf(wxT("%d,%d,%d,%d"),i[0],i[1],i[2],i[3]);
-		wxStaticText *st28 = new wxStaticText(parent,-1,s);
-
-		wxStaticText *st21 = new wxStaticText(parent,-1,wxT("GL_DEPTH_BITS:"));
-		glGetIntegerv(GL_DEPTH_BITS,i); s.Printf(wxT("%d"),i[0]);
-		wxStaticText *st22 = new wxStaticText(parent,-1,s);
-
-		wxStaticText *st23 = new wxStaticText(parent,-1,wxT("GL_STENCIL_BITS:"));
-		glGetIntegerv(GL_STENCIL_BITS,i); s.Printf(wxT("%d"),i[0]);
-		wxStaticText *st24 = new wxStaticText(parent,-1,s);
-
-		wxStaticText *st25 = new wxStaticText(parent,-1,wxT("GL_ACCUM_BITS:"));
-		glGetIntegerv(GL_ACCUM_RED_BITS,i); glGetIntegerv(GL_ACCUM_GREEN_BITS,&i[1]);
-		glGetIntegerv(GL_ACCUM_BLUE_BITS,&i[2]); glGetIntegerv(GL_ACCUM_ALPHA_BITS,&i[3]);
-		s.Printf(wxT("%d"),i[0]+i[1]+i[2]+i[3]);
-		wxStaticText *st26 = new wxStaticText(parent,-1,s);
-
-		wxStaticText *st29 = new wxStaticText(parent,-1,wxT("GL_AUX_BUFFERS:"));
-		glGetIntegerv(GL_ACCUM_RED_BITS,i); s.Printf(wxT("%d"),i[0]);
-		wxStaticText *st30 = new wxStaticText(parent,-1,s);
-
-		gs2 ->Add(st27,0,wxALL,3);
-		gs2 ->Add(st28,0,wxALL,3);
-		gs2 ->Add(st21,0,wxALL,3);
-		gs2 ->Add(st22,0,wxALL,3);
-		gs2 ->Add(st23,0,wxALL,3);
-		gs2 ->Add(st24,0,wxALL,3);
-		gs2 ->Add(st25,0,wxALL,3);
-		gs2 ->Add(st26,0,wxALL,3);
-		gs2 ->Add(st29,0,wxALL,3);
-		gs2 ->Add(st30,0,wxALL,3);
-	
-	sizer2->Add(gs2,0,wxGROW|wxALL,5);
-
-*/	wxStaticBox *sb3 = new wxStaticBox(parent,-1,wxT(" GL Limitations "));
+	wxStaticBox *sb3 = new wxStaticBox(parent,-1,wxT(" GL Limitations "));
 	wxSizer *sizer3 = new wxStaticBoxSizer(sb3,wxHORIZONTAL);
 
 	pgmi = new wxPropertyGridManager(parent, PGID,

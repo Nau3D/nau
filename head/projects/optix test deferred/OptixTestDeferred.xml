@@ -101,7 +101,7 @@
 					<attribute name="position"/>
 				</optixVertexAttributes>
 				<optixGlobalAttributes>
-					<valueof optixVar="lightDir" type="CURRENT" context="LIGHT" id=0 component="DIRECTION" />
+					<valueof optixVar="lightDir" type="LIGHT" context="CURRENT" id=0 component="DIRECTION" />
 				</optixGlobalAttributes>
 				<optixInput>
 					<buffer var="pos_buffer" texture="Deferred Render Targets::pos" />

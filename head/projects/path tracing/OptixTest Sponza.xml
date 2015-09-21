@@ -119,14 +119,14 @@
 					<optixProgram type="Bounding_Box"   file="optix/pathTracer.ptx" proc="boundingbox"/>
 				</optixGeometryProgram>
 				<optixMaterialAttributes>
-					<valueof optixVar="diffuse" type="CURRENT" context="COLOR" component="DIFFUSE" />
-					<valueof optixVar="texCount" type="CURRENT" context="RENDERER" component="TEXTURE_COUNT" />
+					<valueof optixVar="diffuse" type="COLOR" context="CURRENT" component="DIFFUSE" />
+					<valueof optixVar="texCount" type="RENDERER" context="CURRENT" component="TEXTURE_COUNT" />
 				</optixMaterialAttributes>
 				<optixGlobalAttributes>
-					<valueof optixVar="lightDir" type="CURRENT" context="LIGHT" id=0 component="DIRECTION" />
-					<valueof optixVar="lightPos" type="CURRENT" context="LIGHT" id=0 component="POSITION" />
-					<valueof optixVar="frameCount" type="CURRENT" context="RENDERER" component="FRAME_COUNT" />
-					<valueof optixVar="exposure" type="CURRENT" context="PASS" component="EXPOSURE" />
+					<valueof optixVar="lightDir" type="LIGHT" context="CURRENT" id=0 component="DIRECTION" />
+					<valueof optixVar="lightPos" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
+					<valueof optixVar="frameCount" type="RENDERER" context="CURRENT" component="FRAME_COUNT" />
+					<valueof optixVar="exposure" type="PASS" context="CURRENT" component="EXPOSURE" />
 				</optixGlobalAttributes>
 			</pass>
 			

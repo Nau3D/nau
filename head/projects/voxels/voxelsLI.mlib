@@ -127,9 +127,9 @@
 		<material name ="voxelization">
 			<shader name="voxelization">
 				<values>
-					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="imageUnitN"	type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="imageUnitN"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=2 component="UNIT" />
 					<valueof uniform="camXPV"		type="CAMERA" context="xx"
 														component="PROJECTION_VIEW_MATRIX" />
@@ -137,17 +137,17 @@
 														component="PROJECTION_VIEW_MATRIX" />
 					<valueof uniform="camZPV"		type="CAMERA" context="zz"
 														component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
+					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
 														component="ABSOLUT_SIZE" />
-					<valueof uniform="M"			type="CURRENT" context="RENDERER"
+					<valueof uniform="M"			type="RENDERER" context="CURRENT"
 														component="MODEL" />	
-					<valueof uniform="diffuse" 		type="CURRENT" context="COLOR" 
+					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
-					<valueof uniform="shininess" 	type="CURRENT" context="COLOR" 
+					<valueof uniform="shininess" 	type="COLOR" context="CURRENT" 
 														component="SHININESS" />
-					<valueof uniform="texCount"		type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />				
 				</values>
 			</shader>
@@ -176,7 +176,7 @@
 		<material name ="voxelization2">
 			<shader name="voxelization2">
 				<values>
-					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
 					<valueof uniform="camXPV"		type="CAMERA" context="xx"
 														component="PROJECTION_VIEW_MATRIX" />
@@ -184,7 +184,7 @@
 														component="PROJECTION_VIEW_MATRIX" />
 					<valueof uniform="camZPV"		type="CAMERA" context="zz"
 														component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
+					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
 														component="ABSOLUT_SIZE" />
 				
 				</values>
@@ -194,15 +194,15 @@
 		<material name="mipmap2" >
 			<shader name="mipmap2">
 				<values>
-					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="imageUnitN"	type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="imageUnitN"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=2 component="UNIT" />
-					<valueof uniform="grid"			type="CURRENT" context="MATERIAL_TEXTURE"
+					<valueof uniform="grid"			type="MATERIAL_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="normal"		type="CURRENT" context="MATERIAL_TEXTURE"
+					<valueof uniform="normal"		type="MATERIAL_TEXTURE" context="CURRENT"
 														id=2 component="UNIT" />
-					<valueof uniform="destMipLevel"	type="CURRENT" context="PASS"
+					<valueof uniform="destMipLevel"	type="PASS" context="CURRENT"
 														component="GridCurrentLevel" />
 				</values>
 			</shader>	
@@ -241,11 +241,11 @@
 		<material name="mipmap" >
 			<shader name="mipmap">
 				<values>
-					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="grid"			type="CURRENT" context="MATERIAL_TEXTURE"
+					<valueof uniform="grid"			type="MATERIAL_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="destMipLevel"	type="CURRENT" context="PASS"
+					<valueof uniform="destMipLevel"	type="PASS" context="CURRENT"
 														component="GridCurrentLevel" />
 				</values>
 			</shader>	
@@ -270,7 +270,7 @@
 		<material name="resetOpacity" >
 			<shader name="resetOpacity">
 				<values>
-					<valueof uniform="imageUnit"	type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
 				</values>
 			</shader>	
@@ -286,19 +286,19 @@
 		<material name ="showVoxels">
 			<shader name="showVoxels">
 				<values>
-					<valueof uniform="RayOrigin"    type="CURRENT" context="CAMERA" 
+					<valueof uniform="RayOrigin"    type="CAMERA" context="CURRENT" 
 														component="POSITION" />
-					<valueof uniform="FOV"			type="CURRENT" context="CAMERA"
+					<valueof uniform="FOV"			type="CAMERA" context="CURRENT"
 														component="FOV" />
-					<valueof uniform="PVM"          type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="VM"         	type="CURRENT" context="RENDERER" 
+					<valueof uniform="VM"         	type="RENDERER" context="CURRENT" 
 														component="VIEW_MODEL" />
-					<valueof uniform="grid"			type="CURRENT" context="MATERIAL_TEXTURE"
+					<valueof uniform="grid"			type="MATERIAL_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
+					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
 														component="ABSOLUT_SIZE" />
-					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
+					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
 														component="GridSize" />
 				</values>
 			</shader>
@@ -340,19 +340,19 @@
 					<valueof uniform="top" type="CAMERA" context="voxels#RSM-LightCam" 
 														component="TOP" />
 														
-					<valueof uniform="texRSM" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texRSM" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="1" />			
-					<valueof uniform="texPos" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texPos" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="2" />
-					<valueof uniform="PVM"          type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="VM"         	type="CURRENT" context="RENDERER" 
+					<valueof uniform="VM"         	type="RENDERER" context="CURRENT" 
 														component="VIEW_MODEL" />
-					<valueof uniform="grid"			type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="grid"			type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="WindowSize"	type="CURRENT" context="VIEWPORT"
+					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
 														component="ABSOLUT_SIZE" />
-					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
+					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
 														component="GridSize" />
 				</values>
 			</shader>
@@ -385,17 +385,17 @@
 		<material  name="RSM" >
 			<shader name="RSM">
 				<values>
-					<valueof uniform="PVM"  		type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"  		type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="NormalMat"    type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMat"    type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
-					<valueof uniform="diffuse" 		type="CURRENT" context="COLOR" 
+					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
 					<valueof uniform="lightDir" 	type="LIGHT" context="Sun" 
 														component="DIRECTION" /> 
-					<valueof uniform="texCount"		type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />				
 				</values>
 			</shader>
@@ -405,17 +405,17 @@
 		<material name ="renderScene">
 			<shader name="renderToTexture">
 				<values>
-					<valueof uniform="PVM"      	type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"      	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="NormalMat"    type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMat"    type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
-					<valueof uniform="diffuse" 		type="CURRENT" context="COLOR" 
+					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
-					<valueof uniform="shininess" 	type="CURRENT" context="COLOR" 
+					<valueof uniform="shininess" 	type="COLOR" context="CURRENT" 
 														component="SHININESS" />
-					<valueof uniform="texCount"		type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />				
 				</values>
 			</shader>
@@ -426,19 +426,19 @@
 				<values>
  					<valueof uniform="LSpaceMat" 	type="CAMERA"  context="voxels#RSM-LightCam" 
 														component="TS05_PVM_MATRIX" />
-					<valueof uniform="PVM"      	type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"      	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="NormalMat"    type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMat"    type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
-					<valueof uniform="diffuse" 		type="CURRENT" context="COLOR" 
+					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
-					<valueof uniform="shininess" 	type="CURRENT" context="COLOR" 
+					<valueof uniform="shininess" 	type="COLOR" context="CURRENT" 
 														component="SHININESS" />
-					<valueof uniform="texCount"		type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />	
-					<valueof uniform="texPos" 		type="CURRENT" context="MATERIAL_TEXTURE"
+					<valueof uniform="texPos" 		type="MATERIAL_TEXTURE" context="CURRENT"
 														component="UNIT" id="1" />
 				</values>
 			</shader>
@@ -447,17 +447,17 @@
 		<material name ="computeAO">
 			<shader name="computeAO">
 				<values>
-					<valueof uniform="texPos" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texPos" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />				
-					<valueof uniform="texNormal" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texNormal" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="3" />				
-					<valueof uniform="texColor" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texColor" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="4" />				
-					<valueof uniform="grid" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="grid" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="1" />				
-					<!--valueof uniform="gridNormal" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+					<!--valueof uniform="gridNormal" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="2" /-->				
-					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
+					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
 														component="GridSize" />
 				</values>
 			</shader>	
@@ -506,17 +506,17 @@
 				<values>
 					<valueof uniform="camPos"		type="CAMERA" context="MainCamera"
 														component="POSITION" />
-					<valueof uniform="texPos" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texPos" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />				
-					<valueof uniform="texNormal" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texNormal" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="3" />				
-					<valueof uniform="texColor" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texColor" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="4" />				
-					<valueof uniform="grid" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="grid" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="1" />				
-					<valueof uniform="gridN" 	type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="gridN" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="2" />				
-					<valueof uniform="GridSize" 	type="CURRENT" context="PASS"
+					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
 														component="GridSize" />
 				</values>
 			</shader>	

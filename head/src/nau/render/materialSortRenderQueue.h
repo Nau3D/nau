@@ -1,6 +1,12 @@
 #ifndef MATERIALSORTRENDERQUEUE_H
 #define MATERIALSORTRENDERQUEUE_H
 
+// long name warning
+#ifdef WIN32
+  #pragma warning(disable : 4503)
+#endif
+
+
 #include "nau/render/iRenderQueue.h"
 
 #include "nau/material/material.h"

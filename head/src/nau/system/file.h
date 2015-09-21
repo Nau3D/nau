@@ -67,6 +67,8 @@ namespace nau
 			static std::string Validate(std::string s);
 			static std::string BuildFullFileName(std::string path, std::string filename);
 			static void RecurseDirectory(std::string path, std::vector<std::string> *res);
+			static std::string GetCurrentFolder();
+			static std::string GetAppFolder();
 
 			static std::string TextRead(const std::string &fn);
 			static int TextWrite(const std::string &fn, const std::string &s);

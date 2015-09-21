@@ -4,7 +4,6 @@
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
 				<folder name="../../models/pl3dsecxiv" />
-				<!--<folder name="..\..\ntg-bin-terrain" />-->
 			</scene>
 		</scenes>
 		<viewports>
@@ -69,6 +68,9 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
 				<viewport name="SmallViewport2" />
 				<materialMaps>
 					<map fromMaterial="*" 
@@ -82,6 +84,9 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
 				<viewport name="SmallViewport3" />
 				<materialMaps>
 					<map fromMaterial="*" 

@@ -40,9 +40,9 @@ ProgramBlockValue::ProgramBlockValue (std::string name, std::string block, std::
 	m_Id = id;
 	std::string what;
 
-	if (type == "CURRENT")
-		what = context;
-	else
+	//if (type == "CURRENT")
+	//	what = context;
+	//else
 		what = type;
 
 	AttribSet *attrSet = NAU->getAttribs(what);
@@ -150,11 +150,12 @@ void*
 ProgramBlockValue::getValues (void) {
 
 	AttributeValues *attr = NULL;
-	if (m_TypeString != "CURRENT") {
+	if (m_Context != "CURRENT") {
+//	if (m_TypeString != "CURRENT") {
 		attr = NAU->getObjectAttributes(m_TypeString, m_Context, m_Id);
 	}
 	else {
-		attr = NAU->getCurrentObjectAttributes(m_Context, m_Id);
+		attr = NAU->getCurrentObjectAttributes(m_TypeString, m_Id);
 	}
 
 	if (attr != NULL) {

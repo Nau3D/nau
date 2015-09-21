@@ -58,16 +58,16 @@
 			</color>
 			<shader name="perpixel-color-shadow-4-depths">
 				<values>
-					<valueof uniform="PVM"          type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
 													component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="V"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="V"          	type="RENDERER" context="CURRENT" 
 													component="VIEW" />
 														
-					<valueof uniform="M"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="M"          	type="RENDERER" context="CURRENT" 
 													component="MODEL" />
 														
-					<valueof uniform="NormalMatrix" type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMatrix" type="RENDERER" context="CURRENT" 
 													component="NORMAL" />
 					
 					<valueof uniform="lightDirection" 	type="LIGHT" 
@@ -101,20 +101,16 @@
 					<!--valueof uniform="split[1]" type="DATA" context="15" component="FLOAT" />
 					<valueof uniform="split[2]" type="DATA" context="50" component="FLOAT" />
 					<valueof uniform="split[3]" type="DATA" context="500" component="FLOAT" /-->
-					<valueof uniform="shadowMap1" 	type="CURRENT" 
-														context="MATERIAL_TEXTURE" 
+					<valueof uniform="shadowMap1" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														id=0 component="UNIT" />
 														
-					<valueof uniform="shadowMap2" 	type="CURRENT" 
-														context="MATERIAL_TEXTURE" 
+					<valueof uniform="shadowMap2" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														id=1 component="UNIT" />
 														
-					<valueof uniform="shadowMap3" 	type="CURRENT" 
-														context="MATERIAL_TEXTURE" 
+					<valueof uniform="shadowMap3" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														id=2 component="UNIT" />
 														
-					<valueof uniform="shadowMap4" 	type="CURRENT" 
-														context="MATERIAL_TEXTURE" 
+					<valueof uniform="shadowMap4" 	type="MATERIAL_TEXTURE" context="CURRENT" 
 														id=3 component="UNIT" />
 				</values>
 			</shader>
@@ -149,7 +145,7 @@
 		<material  name="depthOnly" >
 			<shader name="depthOnly">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"  type="RENDERER" context="CURRENT" 
 											component="PROJECTION_VIEW_MODEL" />	
 				</values>
 			</shader>

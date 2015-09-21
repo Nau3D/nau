@@ -113,7 +113,6 @@ GlCanvas::OnPaint (wxPaintEvent &event) {
 	wxPaintDC dc(this);
 
 
-   //SetCurrent (*p_GLC);
 	if(!isPaused){
 
 		Render();
@@ -127,7 +126,6 @@ GlCanvas::OnPaint (wxPaintEvent &event) {
 			}
 
 			DlgDbgGLILogRead::Instance()->loadLog();
-
 			DlgDbgPrograms::Instance()->clear();
 			DlgDbgPrograms::Instance()->loadShaderInfo();
 

@@ -371,7 +371,7 @@ Mesh::merge (nau::render::IRenderable *aRenderable) {
 
 		addMaterialGroup (aMaterialGroup);
 	}
-	delete aRenderable;
+//	delete aRenderable;
 }
 
 

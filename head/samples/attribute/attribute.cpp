@@ -6,21 +6,6 @@
 #include <string>
 #include <stdio.h>
 
-//#include <windows.h>
-//#include <DbgHelp.h>
-//#pragma comment(lib,"Dbghelp")
-//
-//#define _CRTDBG_MAP_ALLOC
-//#define _CRTDBG_MAP_ALLOC_NEW
-//#include <stdlib.h>
-//#include <crtdbg.h>
-//
-//#ifdef _DEBUG
-//#ifndef DBG_NEW
-//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-//#define new DBG_NEW
-//#endif
-//#endif  // _DEBUG
 
 #ifdef GLINTERCEPTDEBUG
 #include "../../../GLIntercept\Src\MainLib\ConfigDataExport.h"

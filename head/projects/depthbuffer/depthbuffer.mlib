@@ -26,7 +26,7 @@
 			</color>
 			<shader name="depthOnly">
 				<values>
-					<valueof uniform="PVM"  type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"  type="RENDERER" context="CURRENT" 
 											component="PROJECTION_VIEW_MODEL" />		
 				</values>
 			</shader>

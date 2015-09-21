@@ -143,13 +143,7 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   //EVT_MENU(idMenuPhysicsBuild, FrmMainFrame::OnPhysicsBuild)
   //EVT_MENU_RANGE(idMenuPhysicsOn, idMenuPhysicsOff, FrmMainFrame::OnPhysicsMode)
   EVT_MENU(idMenuRenderFlagBoundingBox, FrmMainFrame::OnSetRenderFlags)
-  //EVT_MENU(idMenuRenderFlagProfile, FrmMainFrame::OnSetRenderFlags)
-  //EVT_MENU(idMenuProfMatWhite, FrmMainFrame::OnSetProfileMaterial)
-  //EVT_MENU(idMenuProfMatRed, FrmMainFrame::OnSetProfileMaterial)
-  //EVT_MENU(idMenuProfMatGreen, FrmMainFrame::OnSetProfileMaterial)
-  //EVT_MENU(idMenuProfMatBlue, FrmMainFrame::OnSetProfileMaterial)
-  //EVT_MENU(idMenuProfMatBlack, FrmMainFrame::OnSetProfileMaterial)
-  EVT_KEY_DOWN(FrmMainFrame::OnKeyDown)
+    EVT_KEY_DOWN(FrmMainFrame::OnKeyDown)
   //EVT_IDLE(FrmMainFrame::OnIdle)
 
   EVT_MENU(idMenu_DLG_OGL, FrmMainFrame::OnDlgOGL)
@@ -322,7 +316,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	int attribList[] = {
 		WX_GL_RGBA,
 		WX_GL_DOUBLEBUFFER,
-		WX_GL_DEPTH_SIZE, 32,
+		WX_GL_DEPTH_SIZE, 24,
 		WX_GL_STENCIL_SIZE, 8, 
 		WX_GL_SAMPLE_BUFFERS,1,
 		WX_GL_SAMPLES,1,
@@ -345,8 +339,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	int contextAttribList[] = {
 			//WGL_CONTEXT_MAJOR_VERSION_ARB, major,
             //WGL_CONTEXT_MINOR_VERSION_ARB, minor, 
-            WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
-            WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+           // WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
+            //WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
  
 			0};
 
@@ -623,7 +617,7 @@ void
 FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 {
 	static const wxChar *fileTypes = _T( "XML files|*.xml|All files|*.*");
-
+	DEBUG_INFO ("Open Dialog Box");
 	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
@@ -631,6 +625,7 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 		wxStopWatch aTimer;
 		aTimer.Start();
 
+		DEBUG_INFO ("On Project Load: %s", (const char *)path.c_str());
 		try {
 			m_pRoot->clear();
 			DlgLog::Instance()->updateDlg();

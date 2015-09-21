@@ -12,34 +12,34 @@
 		<material name="simpleTextured">
 			<shader name="simple">
 				<values>
-					<valueof uniform="fogMin" 	type="CURRENT" context="STATE" 
+					<valueof uniform="fogMin" 	type="STATE" context="CURRENT" 
 														component="FOG_MIN_DIST" /> 
 					
-					<valueof uniform="fogMax" 	type="CURRENT" context="STATE" 
+					<valueof uniform="fogMax" 	type="STATE" context="CURRENT" 
 														component="FOG_MAX_DIST" /> 
 					
-					<valueof uniform="fogColor" 	type="CURRENT" context="VIEWPORT" 
+					<valueof uniform="fogColor" 	type="VIEWPORT" context="CURRENT" 
 														component="CLEAR_COLOR" /> 
 														
-					<valueof uniform="lightDir" 	type="CURRENT" context="LIGHT" 
+					<valueof uniform="lightDir" 	type="LIGHT" context="CURRENT" 
 														id=0 component="DIR" /> 
 																
-					<valueof uniform="dist" 	type="CURRENT" context="CAMERA" 
+					<valueof uniform="dist" 	type="CAMERA" context="CURRENT" 
 														component="DIST" /> 
 
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="VM"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="VM"          	type="RENDERER" context="CURRENT" 
 														component="VIEW_MODEL" />
 														
-					<valueof uniform="V"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="V"          	type="RENDERER" context="CURRENT" 
 														component="VIEW" />
 														
-					<valueof uniform="NormalMat"   	type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMat"   	type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
 														
-					<valueof uniform="texUnit"		type="CURRENT" context="MATERIAL_TEXTURE"
+					<valueof uniform="texUnit"		type="MATERIAL_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
 														
 				</values>

@@ -219,6 +219,7 @@ namespace nau {
 		/*
 		 * Members
 		 */
+		std::string m_AppFolder;
 		std::string m_ActiveCameraName;
 		unsigned int m_WindowWidth, m_WindowHeight;
 		nau::world::IWorld *m_pWorld;

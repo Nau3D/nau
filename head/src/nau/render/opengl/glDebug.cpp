@@ -27,7 +27,8 @@ GLDebug::Init() {
 	} while (i < max && strcmp(s, "GL_ARB_debug_output") != 0);
 
 	// if we have the extension then ...
-	if (s != NULL) {
+	// ARF :: Check if this fixes the crash on Homer
+	if (i < max) {
 		// enable sync mode and set the callback
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
 		glDebugMessageCallbackARB(DebugLog, NULL);

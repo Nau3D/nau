@@ -1509,26 +1509,25 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 	float auxF[16] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,
 					  0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
 
-	//if (ProgramValue::CURRENT != u.getSemanticType()) {
-	if (u.getType() != "CURRENT") {
-			i = (int *)u.getValues();
+	if (u.getContext() != "CURRENT") {
+		i = (int *)u.getValues();
 		f = (float *)u.getValues();
 	}
 	else {
 					
-		pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Context"),wxPG_LABEL, wxString(u.getContext().c_str())));
+		pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Context"),wxPG_LABEL, wxString(u.getType().c_str())));
 		pgShaderUniforms->DisableProperty(pid2);
 
-		if (u.getContext() == "MATRIX" && u.getValueType() == Enums::MAT4) {
+		if (u.getType() == "MATRIX" && u.getValueType() == Enums::MAT4) {
 			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, mat4MatrixComp, mat4MatrixCompInd,u.getSemanticValueOf()));
 		}
-		else if (u.getContext() == "MATRIX" && u.getValueType() == Enums::MAT3) {
+		else if (u.getType() == "MATRIX" && u.getValueType() == Enums::MAT3) {
 			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, mat3MatrixComp, mat3MatrixCompInd,u.getSemanticValueOf()));
 		}
-		else if (u.getContext() == "COLOR" && u.getValueType() == Enums::VEC4){
+		else if (u.getType() == "COLOR" && u.getValueType() == Enums::VEC4){
 			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, vec4ColorComp, vec4ColorCompInd, u.getSemanticValueOf()));
 		}
-		else if (u.getContext() == "COLOR" && u.getValueType() == Enums::FLOAT){
+		else if (u.getType() == "COLOR" && u.getValueType() == Enums::FLOAT){
 			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, floatColorComp, floatColorCompInd, u.getSemanticValueOf()));	
 		}
 
@@ -1554,7 +1553,7 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 					break;
 			}
 	}
-	else if (u.getType() == "LIGHT" || (u.getType() == "CURRENT" && "LIGHT" == u.getContext())) {
+	else if (u.getType() == "LIGHT" || (u.getType() == "LIGHT" && "CURRENT" == u.getContext())) {
 
 		if (u.getType() == "LIGHT") {
 			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Light"),wxPG_LABEL,m_pgLightList));
@@ -1583,7 +1582,7 @@ void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 			//	break;
 		}
 	}
-	else if (u.getType() == "TEXTURE" || (u.getType() == "CURRENT" && "TEXTURE" == u.getContext())) {
+	else if (u.getType() == "TEXTURE" || (u.getType() == "TEXTURE" && "CURRENT" == u.getContext())) {
 
 		if (u.getType() == "TEXTURE") {
 			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("ITexture"),wxPG_LABEL,textureLabels/*m_pgTextureList*/));

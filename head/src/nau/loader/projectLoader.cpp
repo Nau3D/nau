@@ -601,6 +601,10 @@ Project Specification
 void
 ProjectLoader::load (std::string file, int *width, int *height)
 {
+#if NAU_DEBUG == 1
+	LOG_INFO ("Loading project: %s", file.c_str()); 
+#endif
+
 	ProjectLoader::s_Path = File::GetPath(file);
 	ProjectLoader::s_File = file;
 	s_Constants.clear();
@@ -650,6 +654,11 @@ ProjectLoader::load (std::string file, int *width, int *height)
 	std::vector<std::string> v;
 	v.push_back("assets"); v.push_back("pipelines");
 	checkForNonValidChildTags("project", v, pElem);
+
+#if NAU_DEBUG == 1
+	LOG_INFO ("Loading done"); 
+#endif
+
 }
 
 
@@ -972,10 +981,12 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (!pFileName)
 					NAU_THROW("File %s\nScene: %s\nFile is not specified", ProjectLoader::s_File.c_str(), pName);
 
-				if (!File::Exists(File::GetFullPath(ProjectLoader::s_Path, pFileName))) {
+				std::string fullName = File::GetFullPath(ProjectLoader::s_Path, pFileName);
+
+				if (!File::Exists(fullName)) {
 					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFileName);
 				}
-				nau::Nau::getInstance()->loadAsset(File::GetFullPath(ProjectLoader::s_Path, pFileName), pName, s);
+				nau::Nau::getInstance()->loadAsset(fullName, pName, s);
 			}
 
 			pElementAux = handle.FirstChild("folder").Element();
@@ -1903,7 +1914,7 @@ ProjectLoader::loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass,std::map<std
 
 	// For globl attributes, i.e. attributes that remain constant per frame
 	<optixGlobalAttributes>
-		<valueof optixVar="lightDir" type="CURRENT" context="LIGHT" id=0 component="DIRECTION" />
+		<valueof optixVar="lightDir" type="LIGHT" context="Sun" component="DIRECTION" />
 	</optixGlobalAttributes>
 
 
@@ -2215,7 +2226,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		std::string s(pType);
-		if (s == "TEXTURE") {
+		if (s == "TEXTURE" && strcmp(pContext, "CURRENT")) {
 			if (!RESOURCEMANAGER->hasTexture(pContext)) {
 				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			}
@@ -2223,13 +2234,13 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 				po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
 		}
 
-		else if (s == "CAMERA") {
+		else if (s == "CAMERA" && strcmp(pContext, "CURRENT")) {
 			// Must consider that a camera can be defined internally in a pass, example:lightcams
 			/*if (!RENDERMANAGER->hasCamera(pContext))
 				NAU_THROW("Camera %s is not defined in the project file", pContext);*/
 			po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
 		}
-		else if (s == "LIGHT") {
+		else if (s == "LIGHT" && strcmp(pContext, "CURRENT")) {
 			if (!RENDERMANAGER->hasLight(pContext))
 				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
@@ -3224,7 +3235,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 			if (pPreScriptFile && pPreScriptName)
 				aPipeline->setPreScript(File::GetFullPath(ProjectLoader::s_Path, pPreScriptFile), pPreScriptName);
 			else {
-				NAU_THROW("File %s\nPipeline %s\nPre script definition must have both file and name attributes", ProjectLoader::s_File.c_str(), pNamePip);
+				NAU_THROW("File %s\nPipeline %s\nPre script definition must have both file and script attributes", ProjectLoader::s_File.c_str(), pNamePip);
 			}
 		}
 
@@ -4065,11 +4076,17 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 				NAU_THROW("MatLib %s\nMaterial %s\nUniform %s is not valid", aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
 
 			int id = 0;
-			if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"MATERIAL_TEXTURE")) || (0 == strcmp(pContext,"IMAGE_TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
+			if ((strcmp(pContext,"CURRENT") == 0) && ((strcmp(pType,"LIGHT") == 0) || (0 == strcmp(pType,"MATERIAL_TEXTURE")) || (0 == strcmp(pType,"IMAGE_TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
 				if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
-					NAU_THROW("MatLib %s\nMaterial %s\nNo id found for uniform %s", pUniformName, aLib->getName().c_str(), aMat->getName().c_str());
+					NAU_THROW("MatLib %s\nMaterial %s\nUniform %s - id is required for type %s ", aLib->getName().c_str(), aMat->getName().c_str(), pUniformName, pType);
 				if (id < 0)
-					NAU_THROW("MatLib %s\nMaterial %s\nId must be non negative, in uniform %s", aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+					NAU_THROW("MatLib %s\nMaterial %s\nUniform %s - id must be non negative", aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+				if (0 == strcmp(pType, "MATERIAL_TEXTURE") && !aMat->getTexture(id)) {
+					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned texture unit", aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+				}
+				else if (0 == strcmp(pType, "IMAGE_TEXTURE") && !aMat->getImageTexture(id)) {
+					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned image texture unit", aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+				}
 			}
 			std::string s(pType);
 
@@ -4087,7 +4104,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 			//		NAU_THROW("Uniform Block %s, uniform %s - type does not match", sBlock.c_str(), uniName.c_str());
 			//}
 
-			if (s == "TEXTURE") {
+			if (s == "TEXTURE" && strcmp(pContext, "CURRENT")) {
 				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(),pContext);
 				if (!RESOURCEMANAGER->hasTexture(s_pFullName)) {
 					NAU_THROW("MatLib %s\nMaterial %s\nTexture %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), s_pFullName);
@@ -4100,7 +4117,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 				}
 			}
 
-			else if (s == "CAMERA") {
+			else if (s == "CAMERA" && strcmp(pContext, "CURRENT")) {
 				// Must consider that a camera can be defined internally in a pass, example:lightcams
 				/*if (!RENDERMANAGER->hasCamera(pContext))
 					NAU_THROW("Camera %s is not defined in the project file", pContext);*/
@@ -4109,7 +4126,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 					else
 						aMat->addProgramValue(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 			}
-			else if (s == "LIGHT") {
+			else if (s == "LIGHT" && strcmp(pContext, "CURRENT")) {
 				if (!RENDERMANAGER->hasLight(pContext))
 					NAU_THROW("MatLib %s\nMaterial %s\nUniform %s: Light %s is not defined in the project file", aLib->getName().c_str(), aMat->getName().c_str(), pUniformName, pContext);
 				if (pBlock)
@@ -4277,9 +4294,9 @@ ProjectLoader::loadMatLib (std::string file)
 
 		loadMaterialColor(handle,aLib,mat);
 		loadMaterialTextures(handle,aLib,mat);
+		loadMaterialImageTextures(handle, aLib, mat);
 		loadMaterialShader(handle,aLib,mat);
 		loadMaterialState(handle,aLib,mat);
-		loadMaterialImageTextures(handle, aLib, mat);
 		loadMaterialBuffers(handle, aLib, mat);
 
 		//aLib->addMaterial (mat);

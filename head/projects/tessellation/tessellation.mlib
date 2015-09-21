@@ -17,25 +17,25 @@
 		<material name="tessMat">
 			<shader name="tessShader">
 				<values>
-					<valueof uniform="lightDir" 	type="CURRENT" context="LIGHT" 
+					<valueof uniform="lightDir" 	type="LIGHT" context="CURRENT" 
 														id=0 component="DIRECTION" /> 
 														
-					<valueof uniform="viewMatrix" 	type="CURRENT" context="RENDERER" 
+					<valueof uniform="viewMatrix" 	type="RENDERER" context="CURRENT" 
 														component="VIEW" />
 					<valueof uniform="invViewMatrix" 		type="CAMERA" context="MainCamera"
 														component="VIEW_INVERSE_MATRIX" />
-					<valueof uniform="projMatrix" 	type="CURRENT" context="RENDERER" 
+					<valueof uniform="projMatrix" 	type="RENDERER" context="CURRENT" 
 														component="PROJECTION" />
 					<valueof uniform="invProjMatrix" 		type="CAMERA" context="MainCamera"
 														component="PROJECTION_INVERSE_MATRIX" />
-					<valueof uniform="normalMatrix" type="CURRENT" context="RENDERER" 
+					<valueof uniform="normalMatrix" type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
 					
 					<valueof uniform="projModelViewMatrix"          	
-													type="CURRENT" context="RENDERER" 
+													type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
 																									
-					<valueof uniform="texUnit" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />														
 				</values>
 			</shader>

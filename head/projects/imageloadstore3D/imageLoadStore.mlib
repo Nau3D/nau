@@ -30,16 +30,16 @@
 		<material name ="imageStore">
 			<shader name="testImageLS">
 				<values>
-					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+					<valueof uniform="lightDirection" 	type="LIGHT" context="CURRENT" 
 														id=0 component="DIRECTION" /> 
 																
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMatrix"   	type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
 														
-					<valueof uniform="imageUnit"		type="CURRENT" context="IMAGE_TEXTURE"
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
 														
 				</values>

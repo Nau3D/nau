@@ -24,35 +24,35 @@
 		<material name="deferred">
 			<shader name="deferred">
 				<values>
-					<valueof uniform="lightDirection" 	type="CURRENT" context="LIGHT" 
+					<valueof uniform="lightDirection" 	type="LIGHT" context="CURRENT" 
 														id=0 component="DIRECTION" /> 
 														
-					<valueof uniform="lightColor"     	type="CURRENT" context="LIGHT" 
+					<valueof uniform="lightColor"     	type="LIGHT" context="CURRENT" 
 														id=0 component="COLOR" />
 														
-					<valueof uniform="diffuse" 		  	type="CURRENT" context="COLOR" 
+					<valueof uniform="diffuse" 		  	type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
 														
-					<valueof uniform="emission" 		type="CURRENT" context="COLOR" 
+					<valueof uniform="emission" 		type="COLOR" context="CURRENT" 
 														component="EMISSION" />
 														
-					<valueof uniform="ambient" 		  	type="CURRENT" context="COLOR" 
+					<valueof uniform="ambient" 		  	type="COLOR" context="CURRENT" 
 														component="AMBIENT" />
 		
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="V"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="V"          	type="RENDERER" context="CURRENT" 
 														component="VIEW" />
-					<valueof uniform="M"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="M"          	type="RENDERER" context="CURRENT" 
 														component="MODEL" />
 														
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMatrix"   	type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
 					
-					<valueof uniform="texCount"			type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />														
 				</values>
 			</shader>
@@ -61,9 +61,9 @@
 		<material name="combine">
 			<shader name="combine">
 				<values>
-					<valueof uniform="color" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="color" 			type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />		
-					<valueof uniform="shadow" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="shadow" 			type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="1" />
 				</values>
 			</shader>

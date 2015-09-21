@@ -48,6 +48,7 @@ using namespace nau::material;
 #define M_PI 3.14159265
 #endif
 
+#undef SINGLE_STRING_GROUP_NAMES
 
 float
 OBJLoader::dot(float* u, float* v) {
@@ -212,12 +213,15 @@ OBJLoader::firstPass(FILE* file)
 {
 	unsigned int v, n, t;
 	char      buf[128];
+	std::string groupName, materialName;
 
 	Group *group;
 	/* make a default group */
 	std::string s = "default";
 	initGroup(s);
 	group = &m_Groups["default"];
+	groupName = "default";
+	materialName = "DefaultOBJMaterial";
 	
 	m_NumVertices = m_NumNormals = m_NumTexCoords = m_NumTriangles = 0;
 	m_NumMaterials = 0;
@@ -262,18 +266,27 @@ OBJLoader::firstPass(FILE* file)
 		case 'u':
 			/* eat up rest of line */
 			fgets(buf, sizeof(buf), file);
+			////
+			sscanf(buf, "%s %s", buf, buf);
+			s = groupName + "-" + buf;
+			initGroup(s);
+			group = &(m_Groups[s]);
+			group->material = buf;
+			materialName = buf;
 			break;
 		case 'g':				/* group */
 			/* eat up rest of line */
 			fgets(buf, sizeof(buf), file);
-#if SINGLE_STRING_GROUP_NAMES
+#ifdef SINGLE_STRING_GROUP_NAMES
 			sscanf(buf, "%s", buf);
 #else
 			buf[strlen(buf) - 1] = '\0';	/* nuke '\n' */
 #endif
-			s = buf;
+			s = std::string(buf);
 			initGroup(s);
 			group = &(m_Groups[s]);
+			group->material = materialName;
+			groupName = s;
 			break;
 
 		case 'f':				/* face */
@@ -371,9 +384,11 @@ OBJLoader::secondPass(FILE* file)
 	std::string    material;			/* current material */
 	unsigned int    v, n, t;
 	char      buf[128];
+	std::string s, groupName;
 
 	group        = &m_Groups["default"];
-	group->material = "DefaultOBJMaterial";
+	groupName = "default";
+	//group->material = "DefaultOBJMaterial";
 
 	/* on the second pass through the file, read all the data into the
      allocated arrays */
@@ -418,18 +433,23 @@ OBJLoader::secondPass(FILE* file)
 			fgets(buf, sizeof(buf), file);
 			sscanf(buf, "%s %s", buf, buf);
 			material = buf;
-			group->material = buf;
+			s = groupName + "-" + material;
+			group = &m_Groups[s];
+			//group->material = buf;
 			break;
 		case 'g':				/* group */
 			/* eat up rest of line */
 			fgets(buf, sizeof(buf), file);
-#if SINGLE_STRING_GROUP_NAMES
+#ifdef SINGLE_STRING_GROUP_NAMES
 			sscanf(buf, "%s", buf);
 #else
 			buf[strlen(buf)-1] = '\0';	/* nuke '\n' */
 #endif
-			group = &m_Groups[buf];
-			group->material = material;
+			s = std::string(buf);
+			group = &m_Groups[s];
+			groupName = s;
+//			group = &m_Groups[buf];
+//			group->material = material;
 			break;
 		case 'f':				/* face */
 			v = n = t = 0;
@@ -866,13 +886,13 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 
 	// ARE THERE ANY ACTUAL MATERIALS DEFINED?
-	if (obj.m_NumMaterials==0) {
+	//if (obj.m_NumMaterials==0) {
 
 		// There HAS to be a material
 		// Create material
-		if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME,"DefaultOBJMat"))
-			Material* aMaterial = MATERIALLIBMANAGER->createMaterial("DefaultOBJMat");
-	}
+		if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME,"DefaultOBJMaterial"))
+			Material* aMaterial = MATERIALLIBMANAGER->createMaterial("DefaultOBJMaterial");
+	//}
 
 
 
@@ -886,7 +906,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		std::string s;
 		if (obj.m_NumMaterials==0)
 			// NONE! Use default
-			s = "DefaultOBJMat";
+			s = "DefaultOBJMaterial";
 		else {
 			// Set material group name
 			s = currG->material;

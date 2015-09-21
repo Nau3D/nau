@@ -114,7 +114,6 @@ Nau::Nau() :
 	m_pResourceManager(NULL),
 	m_pEventManager(NULL)
 {
-	//registerAndInitArrays(Attribs);
 }
 
 
@@ -135,6 +134,11 @@ Nau::~Nau() {
 bool 
 Nau::init (bool context, std::string aConfigFile) {
 
+#if NAU_DEBUG == 1
+	CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
+#endif
+
+	m_AppFolder = File::GetAppFolder();
 	//bool result;
 	if (true == context) {
 
@@ -144,19 +148,18 @@ Nau::init (bool context, std::string aConfigFile) {
 		m_pRenderManager = new RenderManager;
 		m_pEventManager = new EventManager;
 	}	
-	
 	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
 	m_pMaterialLibManager = new MaterialLibManager();
 
 	try {
-		ProjectLoader::loadMatLib("./nauSystem.mlib");
+		ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
 	}
 	catch (std::string s) {
 		clear();
 		throw(s);
 	}
 
-	FontManager::addFont("CourierNew10", "./couriernew10.xml", "__FontCourierNew10");
+	FontManager::addFont("CourierNew10", m_AppFolder + File::PATH_SEPARATOR + "nauSettings/couriernew10.xml", "__FontCourierNew10");
 
 	m_pWorld = WorldFactory::create ("Bullet");
 
@@ -176,8 +179,6 @@ Nau::init (bool context, std::string aConfigFile) {
 #ifdef NAU_LUA
 	initLua();
 #endif
-
-
 	return true;
 }
 
@@ -351,19 +352,16 @@ luaGet(lua_State *l) {
 	void *arr;
 	AttribSet *attr;
 
-	if (!strcmp(tipo, "CURRENT")) {
-		attr = NAU->getAttribs(context);
-		if (attr == NULL)
-			NAU_THROW("Lua set: Invalid context: %s", context);
-	}
-	else {
+	//if (!strcmp(tipo, "CURRENT")) {
+	//	attr = NAU->getAttribs(context);
+	//	if (attr == NULL)
+	//		NAU_THROW("Lua set: Invalid context: %s", context);
+	//}
+	//else {
 		attr = NAU->getAttribs(tipo);
 		if (attr == NULL)
-			NAU_THROW("Lua set: Invalid type: %s", tipo);
-	}
-	if (attr == NULL) {
-		NAU_THROW("Lua get: invalid type: %s", tipo);
-	}
+			NAU_THROW("Lua get: invalid type: %s", tipo);
+	//}
 
 	std::string s = component;
 	Enums::DataType dt, bdt;
@@ -396,22 +394,22 @@ luaSet(lua_State *l) {
 	void *arr;
 	AttribSet *attr;
 
-	if (!strcmp(tipo, "CURRENT")) {
-		attr = NAU->getAttribs(context);
-		if (attr == NULL)
-			NAU_THROW("Lua set: Invalid context: %s", context);
-	}
-	else {
+	//if (!strcmp(tipo, "CURRENT")) {
+	//	attr = NAU->getAttribs(context);
+	//	if (attr == NULL)
+	//		NAU_THROW("Lua set: Invalid context: %s", context);
+	//}
+	//else {
 		attr = NAU->getAttribs(tipo);
 		if (attr == NULL)
-			NAU_THROW("Lua set: Invalid type: %s", tipo);
-	}
+			NAU_THROW("Lua set: invalid type: %s", tipo);
+	//}
 	std::string s = component;
 	Enums::DataType dt, bdt;
 	int id;
 	attr->getPropTypeAndId(s, &dt, &id);
 	if (id == -1)
-		NAU_THROW("Lua set: Invalid component: %s", component);
+		NAU_THROW("Lua set: invalid component: %s", component);
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
 	float *arrF;
@@ -448,6 +446,8 @@ luaSet(lua_State *l) {
 		}
 		arr = arrUI;
 		break;
+	default:
+		NAU_THROW("Lua set: Type not supported", Enums::DataTypeToString[bdt]);
 	}
 
 	if (!NAU->setAttribute(tipo, context, component, number, arr))
@@ -569,7 +569,8 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 		return (AttributeValues *)renderer;
 	}
 	if (context == "RENDER_TARGET") {
-		return (AttributeValues *)m_pResourceManager->getRenderTarget(context);
+		return (AttributeValues *)m_pRenderManager->getCurrentPass()->getRenderTarget();
+			//m_pResourceManager->getRenderTarget(context);
 	}
 	if (context == "STATE") {
 		return (AttributeValues *)renderer->getState();
@@ -694,9 +695,9 @@ Nau::validateShaderAttribute(std::string type, std::string context, std::string 
 	Enums::DataType dt;
 	std::string what;
 
-	if (type == "CURRENT")
-		what = context;
-	else
+	//if (type == "CURRENT")
+	//	what = context;
+	//else
 		what = type;
 
 	if (m_Attributes.count(what) == 0)
@@ -715,13 +716,16 @@ Nau::setAttribute(std::string type, std::string context, std::string component, 
 	Enums::DataType dt; 
 	AttributeValues *attrVal;
 
-	if (type != "CURRENT") {
+	if (context != "CURRENT") {
+//	if (type != "CURRENT") {
 		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
 		attrVal = NAU->getObjectAttributes(type, context, number);
 	}
 	else {
-		m_Attributes[context]->getPropTypeAndId(component, &dt, &id);
-		attrVal = NAU->getCurrentObjectAttributes(context, number);
+		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
+		attrVal = NAU->getCurrentObjectAttributes(type, number);
+//		m_Attributes[context]->getPropTypeAndId(component, &dt, &id);
+//		attrVal = NAU->getCurrentObjectAttributes(context, number);
 	}
 
 	//attrVal = getObjectAttributes(type, context, number);
@@ -743,13 +747,14 @@ Nau::getAttribute(std::string type, std::string context, std::string component, 
 	Enums::DataType dt;
 	AttributeValues *attrVal;
 
-	if (type != "CURRENT") {
+	if (context != "CURRENT") {
+//	if (type != "CURRENT") {
 		attrVal = NAU->getObjectAttributes(type, context, number);
 		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
 	}
 	else {
-		attrVal = NAU->getCurrentObjectAttributes(context, number);
-		m_Attributes[context]->getPropTypeAndId(component, &dt, &id);
+		attrVal = NAU->getCurrentObjectAttributes(type, number);
+		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
 	}
 
 	if (attrVal == NULL || id == -1) {
@@ -849,6 +854,8 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType, IEve
 
 void
 Nau::readProjectFile (std::string file, int *width, int *height) {
+
+	DEBUG_INFO ("Request to Load Project: %s", file.c_str()); 
 
 	try {
 		ProjectLoader::load (file, width, height);
@@ -1025,7 +1032,7 @@ Nau::clear() {
 
 	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
 
-	ProjectLoader::loadMatLib("./nauSystem.mlib");
+	ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
 }
 
 
@@ -1248,6 +1255,8 @@ Nau::getWorld (void) {
 
 void
 Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params) throw (std::string) {
+
+	DEBUG_INFO ("Loading Asset: %s", aFilename.c_str()); 
 
 	File file (aFilename);
 

@@ -19,6 +19,19 @@
 	</method>
 	<method>
 		<enums>
+			<enum value="0x0D33" name="GL_MAX_TEXTURE_SIZE" />
+			<enum value="0x8073" name="GL_MAX_3D_TEXTURE_SIZE" />
+			<enum value="0x0D3A" name="GL_MAX_VIEWPORT_DIMS" length=2/>
+			<enum value="0x8262" name="GL_MAX_COMPUTE_SHARED_MEMORY_SIZE" />
+			<enum value="0x8263" name="GL_MAX_COMPUTE_UNIFORM_COMPONENTS" />
+			<enum value="0x8264" name="GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS" />
+			<enum value="0x8265" name="GL_MAX_COMPUTE_ATOMIC_COUNTERS" />
+			<enum value="0x90EB" name="GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS" />
+			<enum value="0x91BB" name="GL_MAX_COMPUTE_UNIFORM_BLOCKS" />
+			<enum value="0x91BC" name="GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS" />
+			<enum value="0x91BD" name="GL_MAX_COMPUTE_IMAGE_UNIFORMS" />
+			<enum value="0x91BE" name="GL_MAX_COMPUTE_WORK_GROUP_COUNT" length="3"/>
+			<enum value="0x91BF" name="GL_MAX_COMPUTE_WORK_GROUP_SIZE" length="3" />
 			<enum value="0x8455" name="GL_FOG_COORD_ARRAY_STRIDE" alias="GL_FOG_COORDINATE_ARRAY_STRIDE"/>
 			<enum value="0x0B70" name="GL_DEPTH_RANGE" length="2"/>
 			<enum value="0x846D" name="GL_ALIASED_POINT_SIZE_RANGE" length="2"/>
@@ -29,4 +42,24 @@
 			<param type="GLint*"/>
 		</function>
 	</method>
+	<method>
+		<enums>
+			<enum value="0x0B70" name="GL_DEPTH_RANGE" length="2"/>
+		</enums>
+		<function name="glGetFloatv">
+			<param type="GLenum"/>
+			<param type="GLint*"/>
+		</function>
+	</method>
+	<method>
+		<enums>
+			<enum value="0x91BE" name="GL_MAX_COMPUTE_WORK_GROUP_COUNT" length="3"/>
+			<enum value="0x91BF" name="GL_MAX_COMPUTE_WORK_GROUP_SIZE" length="3" />
+		</enums>
+		<function name="glGetIntegeri_v">
+			<param type="GLenum"/>
+			<param type="GLint*"/>
+		</function>
+	</method>
+	
 </methods>

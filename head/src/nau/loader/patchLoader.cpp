@@ -16,7 +16,7 @@ using namespace nau::geometry;
 void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
-	if (sup->apiSupport(IAPISupport::TESSELATION_SHADERS))
+	if (!sup->apiSupport(IAPISupport::TESSELATION_SHADERS))
 		NAU_THROW("Patches are not supported");
 
 	FILE *fp = fopen(aFilename.c_str(),"rt");

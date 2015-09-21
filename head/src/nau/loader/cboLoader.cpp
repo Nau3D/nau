@@ -220,7 +220,6 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		
 		_readMaterial(path,f);
 	}
-		CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
 	LOG_INFO ("[Reading] Materials done");
 	//GEOMETRY
 	_readString (buffer, f);
@@ -549,7 +548,7 @@ CBOLoader::_writeOctreeByMat(OctreeByMatScene *aScene, std::fstream &f) {
 void 
 CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 {
-	CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
+//	CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
 
 	std::string path = File::GetPath(aFilename);
 

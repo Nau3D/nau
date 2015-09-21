@@ -3,7 +3,6 @@
 using namespace nau::render;
 
 
-
 GLTexImage::GLTexImage (ITexture *t) :
 	ITexImage (t)
 {
@@ -61,7 +60,8 @@ void
 GLTexImage::update(void) {
 	
 	glFinish();
-	glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+	if (APISupport->getVersion() >= 420)
+		glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
 	unsigned int b;
 	glGenBuffers(1, &b);
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, b);
@@ -99,7 +99,8 @@ GLTexImage::getRGBData() {
 
 	unsigned int dataSize = m_Width * m_Height * 3 * (sizeof(unsigned char));
 	glFinish();
-	glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+	if (APISupport->getVersion() >= 420)
+		glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
 	unsigned int b;
 	glGenBuffers(1, &b);
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, b);

@@ -24,17 +24,17 @@
 		<material name="fillGBuffers">
 			<shader name="fillGBuffers">
 				<values>
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="M"          		type="CURRENT" context="RENDERER" 
+					<valueof uniform="M"          		type="RENDERER" context="CURRENT" 
 														component="MODEL" />
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMatrix"   	type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
-					<valueof uniform="diffuse" 			type="CURRENT" context="COLOR" 
+					<valueof uniform="diffuse" 			type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
-					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />	
-					<valueof uniform="texCount" 		type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount" 		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT"  />	
 				</values>
 			</shader>
@@ -42,17 +42,17 @@
 		<material name="oneshot">
 			<shader name="oneshot">
 				<values>
-					<valueof uniform="PVM"          	type="CURRENT" context="RENDERER" 
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="M"          		type="CURRENT" context="RENDERER" 
+					<valueof uniform="M"          		type="RENDERER" context="CURRENT" 
 														component="MODEL" />
-					<valueof uniform="NormalMatrix"   	type="CURRENT" context="RENDERER" 
+					<valueof uniform="NormalMatrix"   	type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
-					<valueof uniform="diffuse" 			type="CURRENT" context="COLOR" 
+					<valueof uniform="diffuse" 			type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
-					<valueof uniform="texUnit" 			type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />	
-					<valueof uniform="texCount" 		type="CURRENT" context="RENDERER" 
+					<valueof uniform="texCount" 		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT"  />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
 														component="DIRECTION" /> 
@@ -65,9 +65,9 @@
 		<material name="compose">
 			<shader name="compose">
 				<values>
-					<valueof uniform="texColor" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texColor" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="0" />	
-					<valueof uniform="texNormal" 		type="CURRENT" context="MATERIAL_TEXTURE" 
+					<valueof uniform="texNormal" 		type="MATERIAL_TEXTURE" context="CURRENT" 
 														component="UNIT" id="1" />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
 														component="DIRECTION" /> 

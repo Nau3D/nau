@@ -32,7 +32,7 @@
 			<camera name="MainCamera">
 				<viewport name="oneshot" />
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
-				<POSITION x=0 y=0 z=75 />
+				<POSITION x=0 y=0 z=200 />
 				<VIEW x=0.0 y=0.0 z=-1.0 />
 				<UP x=0 y=1 z=0 />
 			</camera>

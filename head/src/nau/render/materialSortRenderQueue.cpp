@@ -6,8 +6,6 @@
 
 #include "nau/debug/profile.h"
 
-#pragma warning(disable : 4503)
-
 using namespace nau::render;
 using namespace nau::scene;
 using namespace nau::material;

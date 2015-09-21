@@ -40,7 +40,7 @@
 	
 	<pipelines default="Pip I" mode="RUN_ALL">
 		<pipeline name="Pip I" frameCount=1000>
-			<preScript file="test.lua" name="startI" />
+			<preScript file="test.lua" script="startI" />
 			<pass class="default" name="pass1">
 				<scenes>
 					<scene name="Al" />
@@ -50,10 +50,10 @@
 					<light name="Sun" />
 				</lights>
 			</pass>
-			<postScript file="test.lua" name="finish" />
+			<postScript file="test.lua" script="finish" />
 		</pipeline>
-		<pipeline name="Pip II"  frameCount=1000>
-			<preScript file="test.lua" name="startII" />
+		<pipeline name="Pip II"  frameCount=100000>
+			<preScript file="test.lua" script="startII" />
 			<pass class="default" name="pass1">
 				<scenes>
 					<scene name="Bench" />
@@ -63,7 +63,7 @@
 					<light name="Sun" />
 				</lights>
 			</pass>
-			<postScript file="test.lua" name="finish" />
+			<postScript file="test.lua" script="finish" />
 		</pipeline>
 	</pipelines>
 </project>

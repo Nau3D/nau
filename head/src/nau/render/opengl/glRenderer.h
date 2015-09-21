@@ -2,9 +2,7 @@
 #define GLRENDERER_H
 
 
-#define LOGGING_ON
 #include "nau/clogger.h"
-//#undef LOGGING_ON
 #include "nau/config.h"
 #include "nau/geometry/frustum.h"
 #include "nau/material/material.h"
@@ -18,7 +16,7 @@
 #include "nau/render/opengl/glState.h"
 #include "nau/scene/camera.h"
 
-#include <GL/glew.h>
+
 
 
 using namespace nau::scene;
@@ -196,7 +194,7 @@ namespace nau
 
 		protected:
 
-			GLenum translateFace (Face aFace);
+			unsigned int translateFace (Face aFace);
 			unsigned int translateDrawingPrimitive(unsigned int aDrawPrimitive);
 
 		};

@@ -4,7 +4,7 @@
 	<renderTargets>		
 		<renderTarget name="color">
 			<SIZE width=512 height=512 />
-			<clear r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
+			<CLEAR_VALUES r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
 				<color name="color1" 	internalFormat="RGBA" />
 			</colors>
@@ -31,12 +31,10 @@
 													component="VIEW_MATRIX" /> 
 													
 													
-					<valueof uniform="PV" 			type="CURRENT" 
-													context="RENDERER" 
+					<valueof uniform="PV" 			type="RENDERER" context="CURRENT" 
 													component="PROJECTION_VIEW" />
 
-					<valueof uniform="modelMatrix" 	type="CURRENT" 
-													context="RENDERER" 
+					<valueof uniform="modelMatrix" 	type="RENDERER" context="CURRENT" 
 													component="MODEL" />
 														
 														
@@ -44,16 +42,13 @@
 													context="Sun" 
 													component="DIRECTION" />
 
-					<valueof uniform="diffuse" 		type="CURRENT" 						
-													context="COLOR" 				
+					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 				
 													component="DIFFUSE" />
 
-					<valueof uniform="emission" 	type="CURRENT" 						
-													context="COLOR" 				
+					<valueof uniform="emission" 	type="COLOR" context="CURRENT" 				
 													component="EMISSION" />
 
-					<valueof uniform="ambient" 		type="CURRENT" 
-													context="COLOR" 
+					<valueof uniform="ambient" 		type="COLOR" context="CURRENT" 
 													component="AMBIENT" />
 													
 				</values>
