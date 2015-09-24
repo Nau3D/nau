@@ -122,6 +122,7 @@
     <IncludePath>d:\toolkits\includes64;D:\toolkits\includes;$(IncludePath)</IncludePath>
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>D:\toolkits\libs64;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">
     <TargetName>attribute64Optix</TargetName>

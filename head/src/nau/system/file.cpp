@@ -3,6 +3,14 @@
 #include "nau/config.h"
 
 #include <sstream>
+#include <direct.h>
+
+#ifdef WIN32
+#	define MKDIR _mkdir
+#else
+#	define MKDIR mkdir
+#endif
+
 
 using namespace nau::system;
 
@@ -99,7 +107,11 @@ File::GetCurrentFolder() {
 
 	std::string s = "";
 	char folder[255];
+#ifdef WIN32
+	if (_getcwd(folder, 255))
+#else
 	if (getcwd(folder, 255))
+#endif
 		s = std::string(folder);
 
 	return s;
@@ -117,6 +129,15 @@ File::GetAppFolder() {
 #endif
 	folder = GetPath(app);
 	return folder;
+}
+
+
+bool 
+File::CreateDir(std::string path) {
+
+	int res = MKDIR(path.c_str());
+
+	return (res == 0);
 }
 
 

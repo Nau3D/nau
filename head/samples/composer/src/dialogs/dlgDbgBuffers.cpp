@@ -10,7 +10,9 @@
 
 using namespace nau::system;
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 BEGIN_EVENT_TABLE(DlgDbgBuffers, wxDialog)
 	EVT_GRID_CELL_CHANGED(DlgDbgBuffers::OnGridCellChange)
@@ -276,7 +278,7 @@ DlgDbgBuffers::setVAOList(void) {
 	// ugly but practical :-)
 	for (int i = 0; i < 65536; ++i) {
 
-		if (glIsVertexArray(i)) {
+		if ((boolean)glIsVertexArray(i)) {
 
 			vao.first.first = i;
 			glBindVertexArray(i);

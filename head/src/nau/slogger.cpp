@@ -29,9 +29,10 @@ SLogger::getInstance()
 void 
 SLogger::log (std::string m)
 {
+
 	m_Evt->setData((void *)&m);
 	EVENTMANAGER->notifyEvent("LOG", "SLogger","",m_Evt);
-	
+
 
 }
 

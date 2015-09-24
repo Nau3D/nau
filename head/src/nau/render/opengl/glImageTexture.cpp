@@ -4,10 +4,14 @@
 #include "nau/render/iAPISupport.h"
 #include "nau/render/opengl/glTexture.h"
 
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
+
 using namespace nau::render;
 
 // Note: there is a duplicate of this map in GLTexture due to static initialization issues
-std::map<unsigned int, GLTexture::TexIntFormats> GLImageTexture::TexIntFormat = {
+std::map<GLenum, GLTexture::TexIntFormats> GLImageTexture::TexIntFormat = {
 	{ GL_R8                  , GLTexture::TexIntFormats("R8",   GL_RED, GL_UNSIGNED_BYTE) },
 	{ GL_R16                 , GLTexture::TexIntFormats("R16",  GL_RED, GL_UNSIGNED_SHORT) },
 	{ GL_R16F                , GLTexture::TexIntFormats("R16F", GL_RED, GL_FLOAT) },
@@ -52,19 +56,20 @@ bool GLImageTexture::Inited = GLImageTexture::InitGL();
 bool
 GLImageTexture::InitGL() {
 
-	Attribs.listAdd("ACCESS", "READ_ONLY", GL_READ_ONLY);
-	Attribs.listAdd("ACCESS", "WRITE_ONLY", GL_WRITE_ONLY);
-	Attribs.listAdd("ACCESS", "READ_WRITE", GL_READ_WRITE);
+	Attribs.listAdd("ACCESS", "READ_ONLY", (int)GL_READ_ONLY);
+	Attribs.listAdd("ACCESS", "WRITE_ONLY", (int)GL_WRITE_ONLY);
+	Attribs.listAdd("ACCESS", "READ_WRITE", (int)GL_READ_WRITE);
 
 	for (auto f: TexIntFormat) {
 	
-		Attribs.listAdd("INTERNAL_FORMAT", f.second.name,		f.first);
+		Attribs.listAdd("INTERNAL_FORMAT", f.second.name,		(int)f.first);
 	}
 	return(true);
 };
 
 
-GLImageTexture::GLImageTexture(std::string label, unsigned int unit, unsigned int texID, unsigned int level, unsigned int access) : IImageTexture() {
+GLImageTexture::GLImageTexture(std::string label, unsigned int unit, unsigned int texID, 
+	unsigned int level, unsigned int access) : IImageTexture() {
 
 	m_EnumProps[ACCESS] = access;
 	m_UIntProps[LEVEL] = level;
@@ -97,7 +102,8 @@ GLImageTexture::prepare() {
 	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) && m_BoolProps[CLEAR]) {
 		t->clearLevel(m_UIntProps[LEVEL]);
 	}
-	glBindImageTexture(m_IntProps[UNIT], m_UIntProps[TEX_ID], m_UIntProps[LEVEL],GL_TRUE,0, m_EnumProps[ACCESS], m_EnumProps[INTERNAL_FORMAT]);
+	glBindImageTexture(m_IntProps[UNIT], m_UIntProps[TEX_ID], m_UIntProps[LEVEL],
+		GL_TRUE,0, (GLenum)m_EnumProps[ACCESS], (GLenum)m_EnumProps[INTERNAL_FORMAT]);
 
 }
 
@@ -105,6 +111,7 @@ GLImageTexture::prepare() {
 void 
 GLImageTexture::restore() {
 
-	glBindImageTexture(m_IntProps[UNIT], 0, m_UIntProps[LEVEL], false, 0, m_EnumProps[ACCESS], m_EnumProps[INTERNAL_FORMAT]);
+	glBindImageTexture(m_IntProps[UNIT], 0, m_UIntProps[LEVEL], GL_FALSE, 0, 
+		(GLenum)m_EnumProps[ACCESS], (GLenum)m_EnumProps[INTERNAL_FORMAT]);
 	RENDERER->removeImageTexture(m_IntProps[UNIT]);
 }

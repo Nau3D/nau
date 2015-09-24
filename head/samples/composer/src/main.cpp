@@ -617,7 +617,6 @@ void
 FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 {
 	static const wxChar *fileTypes = _T( "XML files|*.xml|All files|*.*");
-	DEBUG_INFO ("Open Dialog Box");
 	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
@@ -625,7 +624,6 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 		wxStopWatch aTimer;
 		aTimer.Start();
 
-		DEBUG_INFO ("On Project Load: %s", (const char *)path.c_str());
 		try {
 			m_pRoot->clear();
 			DlgLog::Instance()->updateDlg();

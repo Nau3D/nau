@@ -4,7 +4,6 @@
 #include "nau/render/opengl/glTexture.h"
 #include "nau/material/iTexImage.h"
 
-#include <GL/glew.h>
 
 using namespace nau::render;
 

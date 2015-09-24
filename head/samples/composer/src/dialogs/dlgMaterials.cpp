@@ -864,7 +864,7 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	const long unitsInd[] = {0,1,2,3,4,5,6,7};
 
 	const wxChar* texType[] = { wxT("TEXTURE_1D"), wxT("TEXTURE_2D"), wxT("TEXTURE_3D"), wxT("TEXTURE_CUBE_MAP"),NULL};
-	const long texTypeInd[] = { GL_TEXTURE_1D,GL_TEXTURE_2D,GL_TEXTURE_3D, GL_TEXTURE_CUBE_MAP};
+	const long texTypeInd[] = { (long)GL_TEXTURE_1D,(long)GL_TEXTURE_2D,(long)GL_TEXTURE_3D, (long)GL_TEXTURE_CUBE_MAP};
 
 	pgTextureProps->Append( new wxEnumProperty(wxT("Texture Unit"),wxPG_LABEL,units,unitsInd,0));
 
@@ -874,7 +874,7 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	pgid = pgTextureProps->Append(m_pgPropTextureList);
 	updateTextureList();
 
-	pgTextureProps->Append( new wxEnumProperty(wxT("Texture Type"),wxPG_LABEL,texType,texTypeInd,GL_TEXTURE_2D));
+	pgTextureProps->Append( new wxEnumProperty(wxT("Texture Type"),wxPG_LABEL,texType,texTypeInd,(int)GL_TEXTURE_2D));
 	pgTextureProps->DisableProperty(wxT("Texture Type"));
 
 	wxString texDim;

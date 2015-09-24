@@ -8,6 +8,7 @@
 #include "nau/render/iRenderer.h"
 #include "nau/system/file.h"
 
+//#include <GL/glew.h>
 
 using namespace nau::render;
 using namespace nau::system;
@@ -16,7 +17,7 @@ using namespace nau::system;
 
 
 //#if NAU_OPENGL_VERSION >= 430
-int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
+GLenum GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
 	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER};
 //#elif NAU_OPENGL_VERSION >= 400
 //int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
@@ -171,8 +172,8 @@ GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename
 
 	// reset shader
 	if (filename == "" && m_ID[type] != 0) {
-		glDetachShader(m_P, ShaderGLId[type]);
-		glDeleteShader(ShaderGLId[type]);
+		glDetachShader(m_P, (GLuint)ShaderGLId[type]);
+		glDeleteShader((GLuint)ShaderGLId[type]);
 		m_File[type] = "";
 		m_ID[type] = 0;
 		m_Source[type] = "";
@@ -493,7 +494,7 @@ GLProgram::setBlocks() {
 			block = blockMan->getBlock(sName);
 			block->setBindingIndex(blockMan->getCurrentBindingIndex());
 			IBuffer *b = block->getBuffer();
-			b->bind(GL_UNIFORM_BUFFER);
+			b->bind((unsigned int)GL_UNIFORM_BUFFER);
 			glBufferData(GL_UNIFORM_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
 			glUniformBlockBinding(m_P, i, blockMan->getCurrentBindingIndex());
 			glBindBufferRange(GL_UNIFORM_BUFFER, blockMan->getCurrentBindingIndex(), 
@@ -527,37 +528,37 @@ GLProgram::setBlocks() {
 			else if (uniMatStride > 0) {
 
 				switch (uniType) {
-				case GL_FLOAT_MAT2:
-				case GL_FLOAT_MAT2x3:
-				case GL_FLOAT_MAT2x4:
-				case GL_DOUBLE_MAT2:
-				case GL_DOUBLE_MAT2x3:
-				case GL_DOUBLE_MAT2x4:
+				case (int)GL_FLOAT_MAT2:
+				case (int)GL_FLOAT_MAT2x3:
+				case (int)GL_FLOAT_MAT2x4:
+				case (int)GL_DOUBLE_MAT2:
+				case (int)GL_DOUBLE_MAT2x3:
+				case (int)GL_DOUBLE_MAT2x4:
 					auxSize = 2 * uniMatStride;
 					break;
-				case GL_FLOAT_MAT3:
-				case GL_FLOAT_MAT3x2:
-				case GL_FLOAT_MAT3x4:
-				case GL_DOUBLE_MAT3:
-				case GL_DOUBLE_MAT3x2:
-				case GL_DOUBLE_MAT3x4:
+				case (int)GL_FLOAT_MAT3:
+				case (int)GL_FLOAT_MAT3x2:
+				case (int)GL_FLOAT_MAT3x4:
+				case (int)GL_DOUBLE_MAT3:
+				case (int)GL_DOUBLE_MAT3x2:
+				case (int)GL_DOUBLE_MAT3x4:
 					auxSize = 3 * uniMatStride;
 					break;
-				case GL_FLOAT_MAT4:
-				case GL_FLOAT_MAT4x2:
-				case GL_FLOAT_MAT4x3:
-				case GL_DOUBLE_MAT4:
-				case GL_DOUBLE_MAT4x2:
-				case GL_DOUBLE_MAT4x3:
+				case (int)GL_FLOAT_MAT4:
+				case (int)GL_FLOAT_MAT4x2:
+				case (int)GL_FLOAT_MAT4x3:
+				case (int)GL_DOUBLE_MAT4:
+				case (int)GL_DOUBLE_MAT4x2:
+				case (int)GL_DOUBLE_MAT4x3:
 					auxSize = 4 * uniMatStride;
 					break;
 				}
 			}
 			else
-				auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]) * uniSize;;
+				auxSize = Enums::getSize(GLUniform::spSimpleType[(GLenum)uniType]) * uniSize;;
 
 			std::string uniName = name2;
-			block->addUniform(uniName, GLUniform::spSimpleType[uniType],
+			block->addUniform(uniName, GLUniform::spSimpleType[(GLenum)uniType],
 				uniOffset, auxSize, uniArrayStride);
 			
 		}
@@ -583,7 +584,7 @@ GLProgram::setUniforms() {
 	
 	for (i = 0; i < m_NumUniforms; i++) {
 
-		glGetActiveUniform (m_P, i, m_MaxLength, &len, &size, &type, name);
+		glGetActiveUniform (m_P, i, m_MaxLength, &len, &size, (GLenum *)&type, name);
 		int loc = glGetUniformLocation(m_P, name);
 		if (loc != -1) {
 
@@ -732,7 +733,7 @@ bool
 GLProgram::getPropertyb(int query) {
 
 	int res;
-	glGetProgramiv(m_P, query, &res);
+	glGetProgramiv(m_P, (GLenum)query, &res);
 	return (res != 0);
 }
 
@@ -741,7 +742,7 @@ int
 GLProgram::getPropertyi(int query) {
 
 	int res;
-	glGetProgramiv(m_P, query, &res);
+	glGetProgramiv(m_P, (GLenum)query, &res);
 	return (res);
 }
 

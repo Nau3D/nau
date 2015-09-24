@@ -8,7 +8,9 @@
 #include "nau/render/passFactory.h"
 #include "nau/render/passOptixPrime.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 

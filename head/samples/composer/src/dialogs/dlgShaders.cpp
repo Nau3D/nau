@@ -386,15 +386,15 @@ DlgShaders::getUniformType(int type) {
 void 
 DlgShaders::updateProgramProperties(GLProgram *p) {
 
-	pg->SetPropertyValue(m_LinkStatus, p->getPropertyb(GL_LINK_STATUS));
+	pg->SetPropertyValue(m_LinkStatus, p->getPropertyb((int)GL_LINK_STATUS));
 	pg->DisableProperty(m_LinkStatus);
-	pg->SetPropertyValue(m_ValidateStatus, p->getPropertyb(GL_VALIDATE_STATUS));
+	pg->SetPropertyValue(m_ValidateStatus, p->getPropertyb((int)GL_VALIDATE_STATUS));
 	pg->DisableProperty(m_ValidateStatus);
-	pg->SetPropertyValue(m_ActiveAtomicBuffers, p->getPropertyi(GL_ACTIVE_ATOMIC_COUNTER_BUFFERS));
+	pg->SetPropertyValue(m_ActiveAtomicBuffers, p->getPropertyi((int)GL_ACTIVE_ATOMIC_COUNTER_BUFFERS));
 	pg->DisableProperty(m_ActiveAtomicBuffers);
-	pg->SetPropertyValue(m_ActiveAttributes, p->getPropertyi(GL_ACTIVE_ATTRIBUTES));
+	pg->SetPropertyValue(m_ActiveAttributes, p->getPropertyi((int)GL_ACTIVE_ATTRIBUTES));
 	pg->DisableProperty(m_ActiveAttributes);
-	pg->SetPropertyValue(m_ActiveUniforms, p->getPropertyi(GL_ACTIVE_UNIFORMS));
+	pg->SetPropertyValue(m_ActiveUniforms, p->getPropertyi((int)GL_ACTIVE_UNIFORMS));
 	pg->DisableProperty(m_ActiveUniforms);
 
 

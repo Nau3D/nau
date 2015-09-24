@@ -1,6 +1,9 @@
 #include "nau/render/opengl/glDebug.h"
 
 #include "nau/slogger.h"
+#include "nau/clogger.h"
+
+#include <glbinding/Binding.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -10,35 +13,114 @@
 
 using namespace nau::render;
 
-bool GLDebug::Inited = false;;
+bool GLDebug::sInited = false;
+bool GLDebug::sCallBackOK = false;
 
 bool 
 GLDebug::Init() {
 
-	if (Inited)
+	if (sInited)
 		return true;
+
+	sInited = true;
 
 	// check if the extension is there
 	char *s;
 	int i = 0, max;
 	glGetIntegerv(GL_NUM_EXTENSIONS, &max);
 	do {
-		s = (char *)glGetStringi(GL_EXTENSIONS, ++i);
+		s = (char *)glGetStringi(GL_EXTENSIONS, i++);
 	} while (i < max && strcmp(s, "GL_ARB_debug_output") != 0);
 
 	// if we have the extension then ...
-	// ARF :: Check if this fixes the crash on Homer
 	if (i < max) {
 		// enable sync mode and set the callback
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-		glDebugMessageCallbackARB(DebugLog, NULL);
-		return true;
+		sCallBackOK = true;
+		SetCallback(true);
 	}
 	else {
 	// extension has not been loaded
 	// report it back
-		SLOG("OpenGL Debug Context not enabled\n");
+		SLOG("OpenGL Debug Context not enabled");
+		sCallBackOK = false;
+	}
+	SetTraceCallbacks();
+	SetTrace(0);
+	CLogger::GetInstance().addLog(CLogger::LEVEL_TRACE, "nau3Dtrace.txt");
+
+	return sCallBackOK;
+}
+
+
+bool
+GLDebug::SetCallback(bool flag) {
+
+	if (!sInited)
+		Init();
+
+	if (!sCallBackOK)
 		return false;
+
+	if (flag) {
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+		glDebugMessageCallbackARB(DebugLog, NULL);
+	}
+	else {
+		glDebugMessageCallbackARB(NULL, NULL);
+	}
+	return true;
+}
+
+
+void 
+GLDebug::SetTraceCallbacks() {
+
+	glbinding::setUnresolvedCallback([](const glbinding::AbstractFunction & call)
+	{
+		LOG_trace("NRESOLVED: %s", call.name());
+	});
+
+	// record name of function before calling it
+	glbinding::setBeforeCallback([](const glbinding::FunctionCall & call)
+	{
+		LOG_trace_nr("%s", call.function->name());
+	});
+
+	// record parameters and return value after
+	glbinding::setAfterCallback([](const glbinding::FunctionCall & call)
+	{
+		std::string s = "(";
+
+	  for (unsigned i = 0; i < call.parameters.size(); ++i)
+	  {
+		s += call.parameters[i]->asString();
+		if (i < call.parameters.size() - 1)
+		  s += ", ";
+	  }
+
+	  s += ")";
+
+	  if (call.returnValue)
+	  {
+		s += " -> " + call.returnValue->asString();
+	  }
+
+	  LOG_trace("%s", s.c_str());
+	});
+
+}
+
+
+void 
+GLDebug::SetTrace(int numberOfFrames) {
+
+	if (numberOfFrames == 0) {
+		glbinding::setCallbackMask(glbinding::CallbackMask::None);
+	}
+	else {
+		glbinding::setCallbackMask(glbinding::CallbackMask::BeforeAndAfter | 
+							glbinding::CallbackMask::Unresolved |
+							glbinding::CallbackMask::ParametersAndReturnValue);
 	}
 }
 
@@ -55,14 +137,14 @@ GLDebug::DebugLog(GLenum source,
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 		return;
 
-//	SLOG("OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
-//		GetStringForType(type).c_str(),
-//		GetStringForSource(source).c_str(), id,
-//		GetStringForSeverity(severity).c_str(),
-//		message);
-//#ifdef _WIN32
-//	PrintStack();
-//#endif
+	SLOG("OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
+		GetStringForType(type).c_str(),
+		GetStringForSource(source).c_str(), id,
+		GetStringForSeverity(severity).c_str(),
+		message);
+#ifdef _WIN32
+	PrintStack();
+#endif
 }
 
 // aux function to translate source to string
@@ -87,6 +169,7 @@ GLDebug::GetStringForSource(GLenum source) {
 	}
 }
 
+
 // aux function to translate severity to string
 std::string 
 GLDebug::GetStringForSeverity(GLenum severity) {
@@ -104,6 +187,7 @@ GLDebug::GetStringForSeverity(GLenum severity) {
 			return("");
 	}
 }
+
 
 // aux function to translate type to string
 std::string 
@@ -143,8 +227,8 @@ void GLDebug::PrintStack() {
 
     SymInitialize( process, NULL, TRUE );
 
-	frames               = CaptureStackBackTrace( 0, 200, stack, NULL );
-	symbol               = ( SYMBOL_INFO * )calloc( sizeof( SYMBOL_INFO ) + 256 * sizeof( char ), 1 );
+	frames = CaptureStackBackTrace( 0, 200, stack, NULL );
+	symbol = ( SYMBOL_INFO * )calloc( sizeof( SYMBOL_INFO ) + 256 * sizeof( char ), 1 );
 	symbol->MaxNameLen   = 255;
 	symbol->SizeOfStruct = sizeof( SYMBOL_INFO );
 
@@ -158,8 +242,7 @@ void GLDebug::PrintStack() {
 		if (!strstr(symbol->Name, "GLDebug::") && !strstr(symbol->Name, "wx") &&
 			SymGetLineFromAddr64(process, ( DWORD64 )( stack[ i ] ), &dwDisplacement, &line)) {
 			
-			SLOG("function: %s - line %d", symbol->Name, line.LineNumber);
-
+				SLOG("function: %s - line %d", symbol->Name, line.LineNumber);
 		}
 		//if (0 == strcmp(symbol->Name,"main"))
 		//	break;

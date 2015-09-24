@@ -6,7 +6,9 @@
 
 #include "nau.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+
 
 using namespace nau::render;
 
@@ -50,7 +52,7 @@ namespace nau
 
 			int getIndex(std::string StringArray[], int IntArray[], std::string aString);
 
-			static int faces[6];
+			static GLenum faces[6];
 
 			//GLenum translateCoord (TextureCoord aCoord);
 		};

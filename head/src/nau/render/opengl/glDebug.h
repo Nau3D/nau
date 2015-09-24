@@ -3,7 +3,9 @@
 #ifndef GLDEBUG_H
 #define GLDEBUG_H
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 #ifdef _WIN32
 #define STDCALL __stdcall
@@ -22,9 +24,19 @@ namespace nau {
 		public:
 			static bool Init();
 
+			/// returns true if th feature is supported
+			/// false otherwise
+			static bool SetCallback(bool flag);
+
+			/// if -1 keep tracing
+			/// if 0 stop tracing
+			/// if n > 0 trace for n frames then stop
+			static void SetTrace(int numberOfFrames);
+			
 		protected:
 
-			static bool Inited;
+			static bool sInited;
+			static bool sCallBackOK;
 
 			GLDebug(){};
 			~GLDebug(){};
@@ -32,6 +44,8 @@ namespace nau {
 			static std::string GetStringForSource(GLenum source);
 			static std::string GetStringForType(GLenum type);
 			static std::string GetStringForSeverity(GLenum type);
+
+			static void SetTraceCallbacks();
 
 			#ifdef _WIN32	
 				static void PrintStack();

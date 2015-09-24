@@ -95,6 +95,11 @@ namespace nau
 		public:
 			bool primitiveTypeSupport(std::string primitive);
 
+
+			// TRACE API
+		public:
+			virtual int setTrace(int) = 0;
+
 			// ATOMIC COUNTERS 
 
 		public:
@@ -260,8 +265,8 @@ namespace nau
 
 
 			virtual unsigned int translateDrawingPrimitive(unsigned int aDrawPrimitive) = 0;
-			virtual unsigned int translateStencilDepthFunc(int aFunc) = 0;
-			virtual unsigned int translateStencilOp(int aFunc) = 0;
+			//virtual unsigned int translateStencilDepthFunc(int aFunc) = 0;
+			//virtual unsigned int translateStencilOp(int aFunc) = 0;
 
 
 

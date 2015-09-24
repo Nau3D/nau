@@ -282,6 +282,15 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 	if ('K' == event.GetKeyCode()) {
 		m_pEngine->sendKeyToEngine (event.GetKeyCode());	
 	}
+	if ('T' == event.GetKeyCode()) {
+		if (true == event.ShiftDown())
+			m_pEngine->setTrace(1);
+		else
+			m_pEngine->setTrace(-1);
+	}
+	if ('Y' == event.GetKeyCode()) {
+		m_pEngine->setTrace(0);
+	}
 	if ('I' == event.GetKeyCode()) {
 		m_pEngine->sendKeyToEngine('I');
 	}

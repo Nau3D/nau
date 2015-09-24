@@ -26,10 +26,8 @@
 #include "glcanvas.h"
 
 #include <nau.h>
-#include <nau/config.h>
-#ifdef NAU_LUA
-#pragma comment(lib, "lua53.lib")
-#endif
+
+
 
 #ifdef __BORLANDC__
     #pragma hdrstop

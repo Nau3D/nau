@@ -32,7 +32,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Debug Optix|Win32.ActiveCfg = Debug Optix|Win32
-		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Debug Optix|Win32.Build.0 = Debug Optix|Win32
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Debug Optix|x64.ActiveCfg = Debug Optix|x64
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Debug Optix|x64.Build.0 = Debug Optix|x64
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -40,7 +39,6 @@ Global
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Debug|x64.ActiveCfg = Debug|x64
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Debug|x64.Build.0 = Debug|x64
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Release Optix|Win32.ActiveCfg = Release Optix|Win32
-		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Release Optix|Win32.Build.0 = Release Optix|Win32
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Release Optix|x64.ActiveCfg = Release Optix|x64
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Release Optix|x64.Build.0 = Release Optix|x64
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Release|Win32.ActiveCfg = Release|Win32
@@ -48,7 +46,6 @@ Global
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Release|x64.ActiveCfg = Release|x64
 		{8AFA88FD-951A-479D-A7F8-124919B6D19F}.Release|x64.Build.0 = Release|x64
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Debug Optix|Win32.ActiveCfg = Debug Optix|Win32
-		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Debug Optix|Win32.Build.0 = Debug Optix|Win32
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Debug Optix|x64.ActiveCfg = Debug Optix|x64
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Debug Optix|x64.Build.0 = Debug Optix|x64
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -56,7 +53,6 @@ Global
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Debug|x64.ActiveCfg = Debug|x64
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Debug|x64.Build.0 = Debug|x64
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Release Optix|Win32.ActiveCfg = Release Optix|Win32
-		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Release Optix|Win32.Build.0 = Release Optix|Win32
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Release Optix|x64.ActiveCfg = Release Optix|x64
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Release Optix|x64.Build.0 = Release Optix|x64
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Release|Win32.ActiveCfg = Release|Win32
@@ -64,30 +60,28 @@ Global
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Release|x64.ActiveCfg = Release|x64
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF}.Release|x64.Build.0 = Release|x64
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Debug Optix|Win32.ActiveCfg = Debug|Win32
-		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Debug Optix|Win32.Build.0 = Debug|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Debug Optix|x64.ActiveCfg = Debug|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Debug|Win32.ActiveCfg = Debug|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Debug|Win32.Build.0 = Debug|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Debug|x64.ActiveCfg = Debug|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release Optix|Win32.ActiveCfg = Release|Win32
-		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release Optix|Win32.Build.0 = Release|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release Optix|x64.ActiveCfg = Release Optix|x64
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release Optix|x64.Build.0 = Release Optix|x64
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release|Win32.ActiveCfg = Release|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release|Win32.Build.0 = Release|Win32
-		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release|x64.ActiveCfg = Release|Win32
+		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release|x64.ActiveCfg = Release|x64
 		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug Optix|Win32.ActiveCfg = Debug|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug Optix|Win32.Build.0 = Debug|Win32
 		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug Optix|x64.ActiveCfg = Debug|Win32
 		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|Win32.ActiveCfg = Debug|Win32
 		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|Win32.Build.0 = Debug|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|x64.ActiveCfg = Debug|Win32
+		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|x64.ActiveCfg = Debug|x64
+		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|x64.Build.0 = Debug|x64
 		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release Optix|Win32.ActiveCfg = Release|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release Optix|Win32.Build.0 = Release|Win32
 		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release Optix|x64.ActiveCfg = Release|Win32
 		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|Win32.ActiveCfg = Release|Win32
 		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|Win32.Build.0 = Release|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|x64.ActiveCfg = Release|Win32
+		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|x64.ActiveCfg = Release|x64
+		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

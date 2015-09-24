@@ -69,6 +69,7 @@ namespace nau
 			static void RecurseDirectory(std::string path, std::vector<std::string> *res);
 			static std::string GetCurrentFolder();
 			static std::string GetAppFolder();
+			static bool CreateDir(std::string path);
 
 			static std::string TextRead(const std::string &fn);
 			static int TextWrite(const std::string &fn, const std::string &s);

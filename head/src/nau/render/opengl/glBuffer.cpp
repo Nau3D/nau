@@ -2,7 +2,9 @@
 
 #include "nau/render/iAPISupport.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 using namespace nau::render;
 
@@ -16,7 +18,7 @@ GLBuffer::Init() {
 bool GLBuffer::Inited = Init();
 
 
-GLBuffer::GLBuffer(std::string label): IBuffer(), m_LastBound(GL_ARRAY_BUFFER) {
+GLBuffer::GLBuffer(std::string label): IBuffer(), m_LastBound((int)GL_ARRAY_BUFFER) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
 
@@ -52,14 +54,14 @@ void
 GLBuffer::bind(unsigned int target) {
 
 	m_LastBound = target;
-	glBindBuffer(target, m_IntProps[ID]);
+	glBindBuffer((GLenum)target, m_IntProps[ID]);
 }
 
 
 void
 GLBuffer::unbind() {
 
-	glBindBuffer(m_LastBound, 0);
+	glBindBuffer((GLenum)m_LastBound, 0);
 }
 
 
@@ -98,7 +100,7 @@ GLBuffer::setSubData(size_t offset, size_t size, void *data) {
 void
 GLBuffer::setSubDataNoBinding(unsigned int bufferType, size_t offset, size_t size, void *data) {
 
-	glBufferSubData(bufferType, offset, size, data);
+	glBufferSubData((GLenum)bufferType, offset, size, data);
 }
 
 
@@ -114,7 +116,7 @@ GLBuffer::getData(size_t offset, size_t size, void *data) {
 		actualSize = (size_t)m_UIntProps[SIZE] - offset;
 
 		//glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	int type = GL_ARRAY_BUFFER;// SHADER_STORAGE_BUFFER;
+	GLenum type = GL_ARRAY_BUFFER;// SHADER_STORAGE_BUFFER;
 	glBindBuffer(type, m_IntProps[ID]);
 	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	void *bufferData;

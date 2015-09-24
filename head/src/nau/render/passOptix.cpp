@@ -10,7 +10,9 @@
 #include "nau/render/passFactory.h"
 
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 #include <sstream>
 #include <algorithm>
@@ -370,8 +372,8 @@ PassOptix::doPass (void)
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 
 						vec2.x, vec2.y,
-						m_RenderTarget->getTexture(i)->getPrope(ITexture::FORMAT),
-						m_RenderTarget->getTexture(i)->getPrope(ITexture::TYPE), 0);
+						(GLenum)m_RenderTarget->getTexture(i)->getPrope(ITexture::FORMAT),
+						(GLenum)m_RenderTarget->getTexture(i)->getPrope(ITexture::TYPE), 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 	}

@@ -3,8 +3,6 @@
 
 #include "nau/geometry/indexData.h"
 
-#include <GL/glew.h>
-#include <GL/gl.h>
 
 using namespace nau::geometry;
 
@@ -16,7 +14,7 @@ namespace nau
 		{
 		protected:
 			bool m_IsCompiled;
-			GLuint m_GLBuffer;
+			unsigned int m_GLBuffer;
 			//bool compile (VertexData &v);
 			void resetCompilationFlag();
 			bool isCompiled();

@@ -2,7 +2,9 @@
 
 #include "nau/config.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 using namespace nau::render;
 
@@ -10,65 +12,65 @@ bool
 GlState::InitGL() {
 
 	// ENUM
-	Attribs.setDefault("DEPTH_FUNC", new int(GL_LESS));
-	Attribs.listAdd("DEPTH_FUNC", "LESS", GL_LESS);
-	Attribs.listAdd("DEPTH_FUNC", "NEVER", GL_NEVER);
-	Attribs.listAdd("DEPTH_FUNC", "ALWAYS", GL_ALWAYS);
-	Attribs.listAdd("DEPTH_FUNC", "LEQUAL", GL_LEQUAL);
-	Attribs.listAdd("DEPTH_FUNC", "EQUAL", GL_EQUAL);
-	Attribs.listAdd("DEPTH_FUNC", "GEQUAL", GL_GEQUAL);
-	Attribs.listAdd("DEPTH_FUNC", "GREATER", GL_GREATER);
-	Attribs.listAdd("DEPTH_FUNC", "NOT_EQUAL", GL_NOTEQUAL);
+	Attribs.setDefault("DEPTH_FUNC", new int((int)GL_LESS));
+	Attribs.listAdd("DEPTH_FUNC", "LESS", (int)GL_LESS);
+	Attribs.listAdd("DEPTH_FUNC", "NEVER", (int)GL_NEVER);
+	Attribs.listAdd("DEPTH_FUNC", "ALWAYS", (int)GL_ALWAYS);
+	Attribs.listAdd("DEPTH_FUNC", "LEQUAL", (int)GL_LEQUAL);
+	Attribs.listAdd("DEPTH_FUNC", "EQUAL", (int)GL_EQUAL);
+	Attribs.listAdd("DEPTH_FUNC", "GEQUAL", (int)GL_GEQUAL);
+	Attribs.listAdd("DEPTH_FUNC", "GREATER", (int)GL_GREATER);
+	Attribs.listAdd("DEPTH_FUNC", "NOT_EQUAL", (int)GL_NOTEQUAL);
 
-	Attribs.setDefault("CULL_TYPE", new int(GL_BACK));
-	Attribs.listAdd("CULL_TYPE", "FRONT", GL_FRONT);
-	Attribs.listAdd("CULL_TYPE", "BACK", GL_BACK);
-	Attribs.listAdd("CULL_TYPE", "FRONT_AND_BACK", GL_FRONT_AND_BACK);
+	Attribs.setDefault("CULL_TYPE", new int((int)GL_BACK));
+	Attribs.listAdd("CULL_TYPE", "FRONT", (int)GL_FRONT);
+	Attribs.listAdd("CULL_TYPE", "BACK", (int)GL_BACK);
+	Attribs.listAdd("CULL_TYPE", "FRONT_AND_BACK", (int)GL_FRONT_AND_BACK);
 	
 	Attribs.setDefault("ORDER_TYPE", new int(FRONT_TO_BACK));
 	Attribs.listAdd("ORDER_TYPE", "FRONT_TO_BACK", FRONT_TO_BACK);
 	Attribs.listAdd("ORDER_TYPE", "BACK_TO_FRONT", BACK_TO_FRONT);
 
-	Attribs.setDefault("BLEND_SRC", new int(GL_ONE));
-	Attribs.listAdd("BLEND_SRC", "ZERO", GL_ZERO);
-	Attribs.listAdd("BLEND_SRC", "ONE", GL_ONE);
-	Attribs.listAdd("BLEND_SRC", "SRC_COLOR", GL_SRC_COLOR);
-	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_SRC_COLOR", GL_ONE_MINUS_SRC_COLOR);
-	Attribs.listAdd("BLEND_SRC", "DST_COLOR", GL_DST_COLOR);
-	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_DST_COLOR", GL_ONE_MINUS_DST_COLOR);
-	Attribs.listAdd("BLEND_SRC", "SRC_ALPHA", GL_SRC_ALPHA);
-	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_SRC_ALPHA", GL_ONE_MINUS_SRC_ALPHA);
-	Attribs.listAdd("BLEND_SRC", "DST_ALPHA", GL_DST_ALPHA);
-	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_DST_ALPHA", GL_ONE_MINUS_DST_ALPHA);
-	Attribs.listAdd("BLEND_SRC", "SRC_ALPHA_SATURATE", GL_SRC_ALPHA_SATURATE);
-	Attribs.listAdd("BLEND_SRC", "CONSTANT_COLOR", GL_CONSTANT_COLOR);
-	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_CONSTANT_COLOR", GL_ONE_MINUS_CONSTANT_COLOR);
-	Attribs.listAdd("BLEND_SRC", "CONSTANT_ALPHA", GL_CONSTANT_ALPHA);
-	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_CONSTANT_ALPHA", GL_ONE_MINUS_CONSTANT_ALPHA);
+	Attribs.setDefault("BLEND_SRC", new int((int)GL_ONE));
+	Attribs.listAdd("BLEND_SRC", "ZERO", (int)GL_ZERO);
+	Attribs.listAdd("BLEND_SRC", "ONE", (int)GL_ONE);
+	Attribs.listAdd("BLEND_SRC", "SRC_COLOR", (int)GL_SRC_COLOR);
+	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_SRC_COLOR", (int)GL_ONE_MINUS_SRC_COLOR);
+	Attribs.listAdd("BLEND_SRC", "DST_COLOR", (int)GL_DST_COLOR);
+	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_DST_COLOR", (int)GL_ONE_MINUS_DST_COLOR);
+	Attribs.listAdd("BLEND_SRC", "SRC_ALPHA", (int)GL_SRC_ALPHA);
+	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_SRC_ALPHA", (int)GL_ONE_MINUS_SRC_ALPHA);
+	Attribs.listAdd("BLEND_SRC", "DST_ALPHA", (int)GL_DST_ALPHA);
+	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_DST_ALPHA", (int)GL_ONE_MINUS_DST_ALPHA);
+	Attribs.listAdd("BLEND_SRC", "SRC_ALPHA_SATURATE", (int)GL_SRC_ALPHA_SATURATE);
+	Attribs.listAdd("BLEND_SRC", "CONSTANT_COLOR", (int)GL_CONSTANT_COLOR);
+	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_CONSTANT_COLOR", (int)GL_ONE_MINUS_CONSTANT_COLOR);
+	Attribs.listAdd("BLEND_SRC", "CONSTANT_ALPHA", (int)GL_CONSTANT_ALPHA);
+	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_CONSTANT_ALPHA", (int)GL_ONE_MINUS_CONSTANT_ALPHA);
 
-	Attribs.setDefault("BLEND_DST", new int(GL_ZERO));
-	Attribs.listAdd("BLEND_DST", "ZERO", GL_ZERO);
-	Attribs.listAdd("BLEND_DST", "ONE", GL_ONE);
-	Attribs.listAdd("BLEND_DST", "SRC_COLOR", GL_SRC_COLOR);
-	Attribs.listAdd("BLEND_DST", "ONE_MINUS_SRC_COLOR", GL_ONE_MINUS_SRC_COLOR);
-	Attribs.listAdd("BLEND_DST", "DST_COLOR", GL_DST_COLOR);
-	Attribs.listAdd("BLEND_DST", "ONE_MINUS_DST_COLOR", GL_ONE_MINUS_DST_COLOR);
-	Attribs.listAdd("BLEND_DST", "SRC_ALPHA", GL_SRC_ALPHA);
-	Attribs.listAdd("BLEND_DST", "ONE_MINUS_SRC_ALPHA", GL_ONE_MINUS_SRC_ALPHA);
-	Attribs.listAdd("BLEND_DST", "DST_ALPHA", GL_DST_ALPHA);
-	Attribs.listAdd("BLEND_DST", "ONE_MINUS_DST_ALPHA", GL_ONE_MINUS_DST_ALPHA);
-	Attribs.listAdd("BLEND_DST", "SRC_ALPHA_SATURATE", GL_SRC_ALPHA_SATURATE);
-	Attribs.listAdd("BLEND_DST", "CONSTANT_COLOR", GL_CONSTANT_COLOR);
-	Attribs.listAdd("BLEND_DST", "ONE_MINUS_CONSTANT_COLOR", GL_ONE_MINUS_CONSTANT_COLOR);
-	Attribs.listAdd("BLEND_DST", "CONSTANT_ALPHA", GL_CONSTANT_ALPHA);
-	Attribs.listAdd("BLEND_DST", "ONE_MINUS_CONSTANT_ALPHA", GL_ONE_MINUS_CONSTANT_ALPHA);
+	Attribs.setDefault("BLEND_DST", new int((int)GL_ZERO));
+	Attribs.listAdd("BLEND_DST", "ZERO", (int)GL_ZERO);
+	Attribs.listAdd("BLEND_DST", "ONE", (int)GL_ONE);
+	Attribs.listAdd("BLEND_DST", "SRC_COLOR", (int)GL_SRC_COLOR);
+	Attribs.listAdd("BLEND_DST", "ONE_MINUS_SRC_COLOR", (int)GL_ONE_MINUS_SRC_COLOR);
+	Attribs.listAdd("BLEND_DST", "DST_COLOR", (int)GL_DST_COLOR);
+	Attribs.listAdd("BLEND_DST", "ONE_MINUS_DST_COLOR", (int)GL_ONE_MINUS_DST_COLOR);
+	Attribs.listAdd("BLEND_DST", "SRC_ALPHA", (int)GL_SRC_ALPHA);
+	Attribs.listAdd("BLEND_DST", "ONE_MINUS_SRC_ALPHA", (int)GL_ONE_MINUS_SRC_ALPHA);
+	Attribs.listAdd("BLEND_DST", "DST_ALPHA", (int)GL_DST_ALPHA);
+	Attribs.listAdd("BLEND_DST", "ONE_MINUS_DST_ALPHA", (int)GL_ONE_MINUS_DST_ALPHA);
+	Attribs.listAdd("BLEND_DST", "SRC_ALPHA_SATURATE", (int)GL_SRC_ALPHA_SATURATE);
+	Attribs.listAdd("BLEND_DST", "CONSTANT_COLOR", (int)GL_CONSTANT_COLOR);
+	Attribs.listAdd("BLEND_DST", "ONE_MINUS_CONSTANT_COLOR", (int)GL_ONE_MINUS_CONSTANT_COLOR);
+	Attribs.listAdd("BLEND_DST", "CONSTANT_ALPHA", (int)GL_CONSTANT_ALPHA);
+	Attribs.listAdd("BLEND_DST", "ONE_MINUS_CONSTANT_ALPHA", (int)GL_ONE_MINUS_CONSTANT_ALPHA);
 
-	Attribs.setDefault("BLEND_EQUATION", new int(GL_FUNC_ADD));
-	Attribs.listAdd("BLEND_EQUATION", "ADD", GL_FUNC_ADD);
-	Attribs.listAdd("BLEND_EQUATION", "SUBTRACT", GL_FUNC_SUBTRACT);
-	Attribs.listAdd("BLEND_EQUATION", "REVERSE_SUBTRACT", GL_FUNC_REVERSE_SUBTRACT);
-	Attribs.listAdd("BLEND_EQUATION", "MIN", GL_MIN);
-	Attribs.listAdd("BLEND_EQUATION", "MAX", GL_MAX);
+	Attribs.setDefault("BLEND_EQUATION", new int((int)GL_FUNC_ADD));
+	Attribs.listAdd("BLEND_EQUATION", "ADD", (int)GL_FUNC_ADD);
+	Attribs.listAdd("BLEND_EQUATION", "SUBTRACT", (int)GL_FUNC_SUBTRACT);
+	Attribs.listAdd("BLEND_EQUATION", "REVERSE_SUBTRACT", (int)GL_FUNC_REVERSE_SUBTRACT);
+	Attribs.listAdd("BLEND_EQUATION", "MIN", (int)GL_MIN);
+	Attribs.listAdd("BLEND_EQUATION", "MAX", (int)GL_MAX);
 
 	return true;
 }
@@ -123,7 +125,7 @@ GlState::set() {
 							glDisable(GL_DEPTH_TEST);
 					break;
 			case DEPTH_MASK:
-						glDepthMask(iterBool->second);
+						glDepthMask((GLboolean)iterBool->second);
 						break;
 			case CULL_FACE: 
 						if (iterBool->second)
@@ -157,10 +159,10 @@ GlState::set() {
 	
 		switch(iterBool4->first) {
 			case COLOR_MASK_B4:
-				glColorMask(iterBool4->second.x,
-					iterBool4->second.y,
-					iterBool4->second.z,
-					iterBool4->second.w);
+				glColorMask((GLboolean)iterBool4->second.x,
+					(GLboolean)iterBool4->second.y,
+					(GLboolean)iterBool4->second.z,
+					(GLboolean)iterBool4->second.w);
 				break;
 		}
 	}
@@ -170,31 +172,31 @@ GlState::set() {
 	
 		switch(iterInt->first) {
 			case DEPTH_FUNC: 
-				glDepthFunc(iterInt->second);
+				glDepthFunc((GLenum)iterInt->second);
 				break;
 			case CULL_TYPE: 
-				glCullFace(iterInt->second);
+				glCullFace((GLenum)iterInt->second);
 				break;
 			case ORDER_TYPE: 
 				break;
 			case BLEND_SRC: 
 			case BLEND_DST:
-				int s,d;
+				GLenum s,d;
 				if (!m_EnumProps.count(BLEND_SRC))
 					s = GL_ONE;
 				else
-					s =  m_EnumProps[BLEND_SRC];
+					s =  (GLenum)m_EnumProps[BLEND_SRC];
 				if (!m_EnumProps.count(BLEND_DST))
 					d = GL_ZERO;
 				else
-					d =  m_EnumProps[BLEND_DST];
+					d =  (GLenum)m_EnumProps[BLEND_DST];
 				
 				glBlendFunc(s,d);
 				break;
 			//case BLEND_DST: 
 			//	break;
 			case BLEND_EQUATION: 
-				glBlendEquation( iterInt->second);
+				glBlendEquation( (GLenum)iterInt->second);
 				break;
 			// done for the float props
 			//case ALPHA_FUNC: 

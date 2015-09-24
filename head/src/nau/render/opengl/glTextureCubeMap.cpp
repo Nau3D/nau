@@ -2,6 +2,7 @@
 #include "nau/render/opengl/glTexture.h"
 #include "nau/math/matrix.h"
 
+
 using namespace nau::render;
 
 bool GLTextureCubeMap::Inited = GLTextureCubeMap::InitGL();
@@ -9,11 +10,11 @@ bool GLTextureCubeMap::Inited = GLTextureCubeMap::InitGL();
 bool
 GLTextureCubeMap::InitGL() {
 
-	Attribs.listAdd("DIMENSION", "TEXTURE_CUBE_MAP", GL_TEXTURE_CUBE_MAP);
+	Attribs.listAdd("DIMENSION", "TEXTURE_CUBE_MAP", (int)GL_TEXTURE_CUBE_MAP);
 	return true;
 }
 
-int GLTextureCubeMap::faces[6] = {
+GLenum GLTextureCubeMap::faces[6] = {
 			GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
 			GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
 			GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 
@@ -34,10 +35,12 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 	m_IntProps[SAMPLES] = 0;
 	m_IntProps[LEVELS] = 0;
 
-	m_EnumProps[DIMENSION] = GL_TEXTURE_CUBE_MAP;
+	m_EnumProps[DIMENSION] = (int)GL_TEXTURE_CUBE_MAP;
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
-	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
-	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], 
+										m_EnumProps[INTERNAL_FORMAT]);
+	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], 
+										m_EnumProps[INTERNAL_FORMAT]);
 
 	m_IntProps[COMPONENT_COUNT] = GLTexture::GetNumberOfComponents(m_EnumProps[FORMAT]);
 	m_IntProps[ELEMENT_SIZE] = GLTexture::GetElementSize(m_EnumProps[FORMAT], m_EnumProps[TYPE]);
@@ -48,7 +51,8 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 	for(int i = 0 ; i < 6 ; i++) {
 		
 		glTexImage2D (GLTextureCubeMap::faces[i], 0, m_EnumProps[INTERNAL_FORMAT], 
-						m_IntProps[WIDTH], m_IntProps[HEIGHT], 0, m_EnumProps[FORMAT], m_EnumProps[TYPE], data[i]);
+						m_IntProps[WIDTH], m_IntProps[HEIGHT], 0, 
+						(GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], data[i]);
 	}
 	m_BoolProps[MIPMAP] = mipmap;
 	if (mipmap)
@@ -69,16 +73,16 @@ GLTextureCubeMap::getNumberOfComponents(void) {
 
 	switch(m_EnumProps[FORMAT]) {
 
-		case GL_LUMINANCE:
-		case GL_RED:
-		case GL_DEPTH_COMPONENT:
+		case (unsigned int)GL_LUMINANCE:
+		case (unsigned int)GL_RED:
+		case (unsigned int)GL_DEPTH_COMPONENT:
 			return 1;
-		case GL_RG:
-		case GL_DEPTH_STENCIL:
+		case (unsigned int)GL_RG:
+		case (unsigned int)GL_DEPTH_STENCIL:
 			return 2;
-		case GL_RGB:
+		case (unsigned int)GL_RGB:
 			return 3;
-		case GL_RGBA:
+		case (unsigned int)GL_RGBA:
 			return 4;
 		default:
 			return 0;
@@ -93,7 +97,7 @@ GLTextureCubeMap::prepare(unsigned int aUnit, nau::material::ITextureSampler *ts
 	glBindTexture(GL_TEXTURE_CUBE_MAP,m_IntProps[ID]);
 	//glBindSampler(aUnit, ts->getPropi(ITextureSampler::ID));
 
-	ts->prepare(aUnit, GL_TEXTURE_CUBE_MAP);
+	ts->prepare(aUnit, (int)GL_TEXTURE_CUBE_MAP);
 }
 
 
@@ -104,7 +108,7 @@ GLTextureCubeMap::restore(unsigned int aUnit, nau::material::ITextureSampler *ts
 	glBindTexture(GL_TEXTURE_CUBE_MAP,0);
 
 
-	ts->restore(aUnit, GL_TEXTURE_CUBE_MAP);
+	ts->restore(aUnit, (int)GL_TEXTURE_CUBE_MAP);
 
 }
 
@@ -118,7 +122,7 @@ GLTextureCubeMap::clear() {
 
 	assert(APISupport->apiSupport(IAPISupport::CLEAR_TEXTURE) && "Clear Cubemap texture not supported");
 	for (int i = 0; i < m_IntProps[LEVELS]; ++i)
-		glClearTexImage(m_UIntProps[ID], i, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
+		glClearTexImage(m_UIntProps[ID], i, (GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
 }
 
 
@@ -127,14 +131,14 @@ GLTextureCubeMap::clearLevel(int l) {
 
 	assert(APISupport->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) && "Clear Cubemap texture level not supported");
 	if (l < m_IntProps[LEVELS])
-		glClearTexImage(m_UIntProps[ID], l, m_EnumProps[FORMAT], m_EnumProps[TYPE], NULL);
+		glClearTexImage(m_UIntProps[ID], l, (GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
 }
 
 
 void 
 GLTextureCubeMap::generateMipmaps() {
 
-	glBindTexture(m_EnumProps[DIMENSION], m_UIntProps[ID]);
-	glGenerateMipmap(m_EnumProps[DIMENSION]);
+	glBindTexture((GLenum)m_EnumProps[DIMENSION], m_UIntProps[ID]);
+	glGenerateMipmap((GLenum)m_EnumProps[DIMENSION]);
 }
 

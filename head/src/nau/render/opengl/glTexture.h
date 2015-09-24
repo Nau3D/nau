@@ -4,8 +4,8 @@
 #include "nau/material/iTexture.h"
 #include "nau/material/iTextureSampler.h"
 
-#include <GL/glew.h>
-
+#include <glbinding/gl/gl.h>
+using namespace gl;
 
 using namespace nau::material;
 
@@ -40,17 +40,17 @@ namespace nau
 			static int GetNumberOfComponents(unsigned int format);
 			static int GetElementSize(unsigned int format, unsigned int type);
 
-			static std::map<int, int> GLTexture::TextureBound;
+			static std::map<GLenum, GLenum> GLTexture::TextureBound;
 			struct TexIntFormats{
-				unsigned int format;
-				unsigned int type;				
+				GLenum format;
+				GLenum type;				
 				char name[32];
 
-				TexIntFormats(char *n, int f, unsigned int t):
+				TexIntFormats(char *n, GLenum f, GLenum t):
 					format(f), type(t)   {memcpy(name,n,32);}
-				TexIntFormats(): format(0), type(0) {name[0]='\0';}
+				TexIntFormats(): format(GL_RGBA), type(GL_UNSIGNED_BYTE) {name[0]='\0';}
 			};
-			static std::map<unsigned int, GLTexture::TexIntFormats> TexIntFormat;
+			static std::map<GLenum, GLTexture::TexIntFormats> TexIntFormat;
 
 		protected:
 			static bool InitGL();
@@ -65,7 +65,7 @@ namespace nau
 					numComp(t)   {memcpy(name,n,32);}
 				TexFormats(): numComp(0) {name[0]='\0';}
 			};
-			static std::map<unsigned int, TexFormats> TexFormat;
+			static std::map<GLenum, TexFormats> TexFormat;
 
 			struct TexDataTypes{
 				unsigned int bitDepth;				
@@ -75,7 +75,7 @@ namespace nau
 					bitDepth(t)   {memcpy(name,n,32);}
 				TexDataTypes(): bitDepth(0) {name[0]='\0';}
 			};
-			static std::map<unsigned int, TexDataTypes> TexDataType;
+			static std::map<GLenum, TexDataTypes> TexDataType;
 
 			// returns the number of channels in the texture
 			virtual int getNumberOfComponents(void);

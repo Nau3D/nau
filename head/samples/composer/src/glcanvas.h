@@ -1,10 +1,13 @@
 #ifndef GlCanvas_H
 #define GlCanvas_H
 
-#include <GL/glew.h>
-#include <nau.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 #include <wx/wx.h>
 #include <wx/glcanvas.h>
+
+#include <nau.h>
 
 class GlCanvas : public wxGLCanvas
 {

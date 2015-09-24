@@ -27,7 +27,6 @@
 #include <string.h>
 #include <utility>
 
-#include <GL/glew.h>
 //#include "NauGlBufferInfo.h"
 
 

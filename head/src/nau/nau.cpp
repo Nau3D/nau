@@ -21,7 +21,7 @@
 #include "nau/system/file.h"
 #include "nau/world/worldFactory.h"
 
-#include <GL/glew.h>
+//#include <GL/glew.h>
 
 
 #ifdef NAU_LUA
@@ -112,7 +112,8 @@ Nau::Nau() :
 	m_pRenderManager(NULL),
 	m_pMaterialLibManager(NULL),
 	m_pResourceManager(NULL),
-	m_pEventManager(NULL)
+	m_pEventManager(NULL),
+	m_TraceFrames(0)
 {
 }
 
@@ -142,11 +143,10 @@ Nau::init (bool context, std::string aConfigFile) {
 	//bool result;
 	if (true == context) {
 
-
+		m_pEventManager = new EventManager;
+		m_pRenderManager = new RenderManager;
 		IAPISupport *sup = IAPISupport::GetInstance();
 		sup->setAPISupport();
-		m_pRenderManager = new RenderManager;
-		m_pEventManager = new EventManager;
 	}	
 	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
 	m_pMaterialLibManager = new MaterialLibManager();
@@ -855,8 +855,6 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType, IEve
 void
 Nau::readProjectFile (std::string file, int *width, int *height) {
 
-	DEBUG_INFO ("Request to Load Project: %s", file.c_str()); 
-
 	try {
 		ProjectLoader::load (file, width, height);
 		isFrameBegin = true;
@@ -1036,7 +1034,22 @@ Nau::clear() {
 }
 
 
-void Nau::step() {
+void 
+Nau::setTrace(int frames) {
+
+	m_TraceFrames = frames;
+}
+
+
+bool
+Nau::getTraceStatus() {
+
+	return m_TraceOn;
+}
+
+
+void 
+Nau::step() {
 
 	IRenderer *renderer = RENDERER;
 	float timer = (float)(clock() * INV_CLOCKS_PER_MILISEC);
@@ -1047,6 +1060,11 @@ void Nau::step() {
 	m_LastFrameTime = timer;
 
 #ifdef GLINTERCEPTDEBUG
+	m_TraceOn = m_TraceFrames != 0;
+	m_TraceFrames = RENDERER->setTrace(m_TraceFrames);
+	if (m_TraceOn) {
+		LOG_trace("\n#NAU(FRAME,START)");
+	}
 	addMessageToGLILog("\n#NAU(FRAME,START)");
 #endif //GLINTERCEPTDEBUG
 
@@ -1099,6 +1117,9 @@ void Nau::stepPass() {
 		m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
 
 #ifdef GLINTERCEPTDEBUG
+		if (m_TraceFrames) {
+			LOG_trace("#NAU(FRAME,START)");
+		}
 		addMessageToGLILog("\n#NAU(FRAME,START)");
 #endif //GLINTERCEPTDEBUG
 
@@ -1111,14 +1132,20 @@ void Nau::stepPass() {
 
 	}
 
-#ifdef GLINTERCEPTDEBUG
 	std::string s = RENDERMANAGER->getCurrentPass()->getName();
+#ifdef GLINTERCEPTDEBUG
+	if (m_TraceFrames) {
+		LOG_trace("\n#NAU(PASS START %s)", s.c_str());
+	}
 	addMessageToGLILog(("\n#NAU(PASS,START," + s + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
 	p->executeNextPass();
 
 #ifdef GLINTERCEPTDEBUG
+	if (m_TraceFrames) {
+		LOG_trace("#NAU(PASS END %s)", s.c_str());
+	}
 	addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
@@ -1255,8 +1282,6 @@ Nau::getWorld (void) {
 
 void
 Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params) throw (std::string) {
-
-	DEBUG_INFO ("Loading Asset: %s", aFilename.c_str()); 
 
 	File file (aFilename);
 

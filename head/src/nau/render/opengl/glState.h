@@ -3,8 +3,6 @@
 
 #include "nau/material/iState.h"
 
-#include <GL/glew.h>
-
 #include <string>
 
 

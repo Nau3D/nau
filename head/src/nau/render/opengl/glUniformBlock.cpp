@@ -2,7 +2,9 @@
 
 #include "nau.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 
 using namespace nau::render;
@@ -106,9 +108,9 @@ GLUniformBlock::sendBlockData() {
 void 
 GLUniformBlock::useBlock() {
 
-	m_Buffer->bind(GL_UNIFORM_BUFFER);
+	m_Buffer->bind((unsigned int)GL_UNIFORM_BUFFER);
 	if (m_BlockChanged) {
-		m_Buffer->setSubDataNoBinding(GL_UNIFORM_BUFFER, 0, m_Size, m_LocalData);
+		m_Buffer->setSubDataNoBinding((unsigned int)GL_UNIFORM_BUFFER, 0, m_Size, m_LocalData);
 		m_BlockChanged = false;
 	}
 }

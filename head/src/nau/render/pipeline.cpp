@@ -2,6 +2,7 @@
 
 #include "nau.h"
 #include "nau/config.h"
+#include "nau/clogger.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
 #include "nau/geometry/frustum.h"
@@ -12,7 +13,9 @@
 #include "nau/loader/projectLoaderDebugLinker.h"
 #endif 
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 using namespace nau::geometry;
 using namespace nau::render;
@@ -222,6 +225,9 @@ Pipeline::executePass(Pass *pass) {
 
 	do {
 #ifdef GLINTERCEPTDEBUG
+		if (NAU->getTraceStatus()) {
+			LOG_trace("#NAU(PASS START %s)", pass->getName().c_str());
+		}
 		addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
@@ -236,8 +242,10 @@ Pipeline::executePass(Pass *pass) {
 			pass->doPass();
 			pass->restore();
 		}
-
 #ifdef GLINTERCEPTDEBUG
+		if (NAU->getTraceStatus()) {
+			LOG_trace("#NAU(PASS END %s)", pass->getName().c_str());
+		}
 		addMessageToGLILog(("\n#NAU(PASS,END," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 

@@ -8,37 +8,10 @@
 using namespace nau::render;
 
 
-//GLRenderTarget::GLRenderTarget(std::string name, unsigned int width, unsigned int height) :
-//	RenderTarget (name, width, height),
-//	
-//	m_DepthBuffer (0),
-////	m_RTCount (0),
-//	m_NoDrawAndRead (false),
-//	m_RenderTargets(0)
-//{
-//	m_Samples = 0;
-//	//for (int i = 0; i < RenderTarget::MAXFBOs; ++i) {
-//	//	m_RenderTargets[i] = -1;
-//	//}
-//
-//	glGenFramebuffers (1, &m_Id);
-//	glGenRenderbuffers (1, &m_DepthBuffer);
-//	glBindRenderbuffer (GL_RENDERBUFFER, m_DepthBuffer);
-//	glRenderbufferStorage (GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, m_Width, m_Height);
-//
-//	bind();
-//	glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
-//	unbind();
-//
-//	glBindRenderbuffer (GL_RENDERBUFFER, 0);
-//}
 
 
 GLRenderTarget::GLRenderTarget (std::string name) :
 	RenderTarget (),
-//	m_DepthBuffer (0),
-//	m_RTCount (0),
-//	m_NoDrawAndRead (false),
 	m_RenderTargets(0)
 {
 	m_Name = name;
@@ -53,9 +26,6 @@ GLRenderTarget::GLRenderTarget (std::string name) :
 GLRenderTarget::~GLRenderTarget(void) {
 
 	glDeleteFramebuffers (1, &m_Id);
-	//glDeleteRenderbuffers(1, &m_DepthBuffer);
-	//if (m_Color)
-	//	glDeleteRenderbuffers(m_Color, (GLuint *)&m_RenderTargets[0]);
 }
 
 
@@ -71,7 +41,7 @@ GLRenderTarget::init() {
 		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
 
 	bind();
-	attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
+	attachDepthStencilTexture(m_DepthTexture, (GLuint)GL_DEPTH_ATTACHMENT);
 	unbind();
 	//glGenRenderbuffers (1, &m_DepthBuffer);
 	//glBindRenderbuffer (GL_RENDERBUFFER, m_DepthBuffer);
@@ -174,7 +144,7 @@ GLRenderTarget::addDepthTarget (std::string name, std::string internalFormat) {
 		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
 
 	bind();
-	attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_ATTACHMENT);
+	attachDepthStencilTexture(m_DepthTexture, (GLuint)GL_DEPTH_ATTACHMENT);
 	unbind();
 }
 
@@ -197,7 +167,7 @@ GLRenderTarget::addStencilTarget (std::string name) {
 		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
 
 	bind();
-	attachDepthStencilTexture(m_StencilTexture, GL_STENCIL_ATTACHMENT);
+	attachDepthStencilTexture(m_StencilTexture, (GLuint)GL_STENCIL_ATTACHMENT);
 	unbind();
 }
 
@@ -221,8 +191,8 @@ GLRenderTarget::addDepthStencilTarget (std::string name) {
 		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
 
 	bind();
-	dettachDepthStencilTexture(GL_DEPTH_ATTACHMENT);
-	attachDepthStencilTexture(m_DepthTexture, GL_DEPTH_STENCIL_ATTACHMENT);
+	dettachDepthStencilTexture((GLuint)GL_DEPTH_ATTACHMENT);
+	attachDepthStencilTexture(m_DepthTexture, (GLuint)GL_DEPTH_STENCIL_ATTACHMENT);
 	unbind();
 }
 
@@ -231,7 +201,7 @@ void
 GLRenderTarget::attachColorTexture (ITexture* aTexture, unsigned int colorAttachment) {
 
 	  if (-1 == (int) m_RenderTargets[colorAttachment]) {
-			m_RenderTargets[m_Color] = GL_COLOR_ATTACHMENT0 + colorAttachment;
+			m_RenderTargets[m_Color] = (int)GL_COLOR_ATTACHMENT0 + colorAttachment;
 		}
 		glFramebufferTexture  (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment, aTexture->getPropi(ITexture::ID), 0);
 }
@@ -249,14 +219,14 @@ GLRenderTarget::dettachColorTexture (unsigned int colorAttachment) {
 void 
 GLRenderTarget::attachDepthStencilTexture (ITexture* aTexture, GLuint type) {
 
-	glFramebufferTexture (GL_FRAMEBUFFER, type, aTexture->getPropi(ITexture::ID), 0);
+	glFramebufferTexture (GL_FRAMEBUFFER, (GLenum)type, aTexture->getPropi(ITexture::ID), 0);
 }
 
 
 void
 GLRenderTarget::dettachDepthStencilTexture (GLuint type) {
 
-	glFramebufferTexture (GL_FRAMEBUFFER, type, 0, 0);
+	glFramebufferTexture (GL_FRAMEBUFFER, (GLenum)type, 0, 0);
 }
 
 
@@ -264,7 +234,7 @@ void
 GLRenderTarget::setDrawBuffers (void) {
 
 	if (m_Color)
-		glDrawBuffers(m_Color, (unsigned int *)&m_RenderTargets[0]);
+		glDrawBuffers(m_Color, (GLenum *)&m_RenderTargets[0]);
 }
 
 

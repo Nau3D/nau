@@ -5,9 +5,9 @@
 
 using namespace nau::render;
 
-std::map<int, std::string> GLUniform::spGLSLType;
+std::map<GLenum, std::string> GLUniform::spGLSLType;
 //std::map<int, int> GLUniform::spGLSLTypeSize;
-std::map<int, Enums::DataType> GLUniform::spSimpleType;
+std::map<GLenum, Enums::DataType> GLUniform::spSimpleType;
 bool GLUniform::Inited = Init();
 
 
@@ -86,11 +86,11 @@ GLUniform::getArraySize(void)
 void 
 GLUniform::setGLType(int type, int arraySize) {
 
-	if (type != 0 && spSimpleType.count(type) == 0)
+	if (type != 0 && spSimpleType.count((GLenum)type) == 0)
 		SLOG("%d - gluniform.cpp - uniform type not supported in NAU", type);
 
 	m_GLType = type;
-	m_SimpleType = spSimpleType[type];
+	m_SimpleType = spSimpleType[(GLenum)type];
 	m_ArraySize = arraySize;
 	m_Size = Enums::getSize(m_SimpleType) * m_ArraySize;
 	m_Cardinality = Enums::getCardinality(m_SimpleType);
@@ -108,7 +108,7 @@ GLUniform::getGLType() {
 std::string
 GLUniform::getStringGLType() {
 
-	return spGLSLType[m_GLType];
+	return spGLSLType[(GLenum)m_GLType];
 }
 
 
@@ -181,60 +181,60 @@ GLUniform::setValueInProgram() {
 
 		// float matrices
 		case Enums::MAT2:
-			glUniformMatrix2fv(m_Loc, m_ArraySize, false, (GLfloat *)m_Values);
+			glUniformMatrix2fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
 			break;
 
 		case Enums::MAT3:
-			glUniformMatrix3fv(m_Loc, m_ArraySize, false, (GLfloat *)m_Values);
+			glUniformMatrix3fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
 			break;
 
 		case Enums::MAT4:
-			glUniformMatrix4fv(m_Loc, m_ArraySize, false, (GLfloat *)m_Values);
+			glUniformMatrix4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
 			break;
 
 		case Enums::MAT2x3:
-			glUniformMatrix2x3fv(m_Loc, m_ArraySize, false, (GLfloat *)m_Values);
+			glUniformMatrix2x3fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
 			break;
 
 		case Enums::MAT2x4:
-			glUniformMatrix2x4fv(m_Loc, m_ArraySize, false, (GLfloat *)m_Values);
+			glUniformMatrix2x4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
 			break;
 
 		case Enums::MAT3x2:
-			glUniformMatrix3x2fv(m_Loc, m_ArraySize, false, (GLfloat *)m_Values);
+			glUniformMatrix3x2fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
 			break;
 
 		case Enums::MAT3x4:
-			glUniformMatrix3x4fv(m_Loc, m_ArraySize, false, (GLfloat *)m_Values);
+			glUniformMatrix3x4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
 			break;
 
 			// double matrices
 		case Enums::DMAT2:
-			glUniformMatrix2dv(m_Loc, m_ArraySize, false, (GLdouble *)m_Values);
+			glUniformMatrix2dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
 			break;
 
 		case Enums::DMAT3:
-			glUniformMatrix3dv(m_Loc, m_ArraySize, false, (GLdouble *)m_Values);
+			glUniformMatrix3dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
 			break;
 
 		case Enums::DMAT4:
-			glUniformMatrix4dv(m_Loc, m_ArraySize, false, (GLdouble *)m_Values);
+			glUniformMatrix4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
 			break;
 
 		case Enums::DMAT2x3:
-			glUniformMatrix2x3dv(m_Loc, m_ArraySize, false, (GLdouble *)m_Values);
+			glUniformMatrix2x3dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
 			break;
 
 		case Enums::DMAT2x4:
-			glUniformMatrix2x4dv(m_Loc, m_ArraySize, false, (GLdouble *)m_Values);
+			glUniformMatrix2x4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
 			break;
 
 		case Enums::DMAT3x2:
-			glUniformMatrix3x2dv(m_Loc, m_ArraySize, false, (GLdouble *)m_Values);
+			glUniformMatrix3x2dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
 			break;
 
 		case Enums::DMAT3x4:
-			glUniformMatrix3x4dv(m_Loc, m_ArraySize, false, (GLdouble *)m_Values);
+			glUniformMatrix3x4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
 			break;
 		default:
 			assert(false && "missing data types in switch statement");

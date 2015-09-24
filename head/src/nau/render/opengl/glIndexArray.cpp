@@ -2,6 +2,11 @@
 
 #include "nau.h"
 
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
+//#include <GL/gl.h>
+
 #include <assert.h>
 
 using namespace nau::render;

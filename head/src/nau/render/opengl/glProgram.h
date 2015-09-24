@@ -6,7 +6,8 @@
 
 #include "nau/render/opengl/glUniform.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
 
 #include <vector>
 #include <string>
@@ -21,14 +22,14 @@ namespace nau
 		class GLProgram : public IProgram 
 		{
 		public:
-			static int ShaderGLId[SHADER_COUNT];
+			static GLenum ShaderGLId[SHADER_COUNT];
 
 		private:
 			std::vector<std::string> m_File; // filenames
 			std::vector<std::string> m_Source; // source code
 			std::vector<int> m_ID;
 			std::vector<bool> m_Compiled;
-			GLuint  m_P; // program id
+			unsigned int  m_P; // program id
 			int m_NumUniforms;
 			int m_MaxLength;
 

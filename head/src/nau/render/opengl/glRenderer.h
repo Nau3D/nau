@@ -17,7 +17,10 @@
 #include "nau/scene/camera.h"
 
 
-
+//#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+#include <glbinding/Binding.h>
+using namespace gl;
 
 using namespace nau::scene;
 using namespace nau::render;
@@ -34,7 +37,7 @@ namespace nau
 			static bool Inited;
 
 		public:
-			static unsigned int GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT];
+			static GLenum GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT];
 
 			GLRenderer();
 			~GLRenderer(void);
@@ -44,6 +47,11 @@ namespace nau
 			void *getProp(unsigned int prop, Enums::DataType dt);
 			const mat4 &getPropm4(Mat4Property prop);
 			const mat3 &getPropm3(Mat3Property prop);
+
+			// API TRACE
+
+		public:
+			int setTrace(int);
 
 			// ATOMIC COUNTERS
 
@@ -189,12 +197,12 @@ namespace nau
 			nau::math::vec3 readpixel (int x, int y);
 
 
-			unsigned int translateStencilDepthFunc(int aFunc);
-			unsigned int translateStencilOp(int aFunc);
+			GLenum translateStencilDepthFunc(int aFunc);
+			GLenum translateStencilOp(int aFunc);
 
 		protected:
 
-			unsigned int translateFace (Face aFace);
+			GLenum translateFace (Face aFace);
 			unsigned int translateDrawingPrimitive(unsigned int aDrawPrimitive);
 
 		};

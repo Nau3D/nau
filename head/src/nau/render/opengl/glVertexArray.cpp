@@ -3,7 +3,9 @@
 #include "nau.h"
 #include "nau/render/opengl/glBuffer.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 #include <assert.h>
 
@@ -207,7 +209,7 @@ GLVertexArray::bind (void) {
 				if (loc != -1) {
 					glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
 					glEnableVertexAttribArray (loc/*m_AttributesLocations[i]*/);
-					glVertexAttribPointer (loc/*m_AttributesLocations[i]*/, 4, GL_FLOAT, 0, 0, 0);
+					glVertexAttribPointer (loc/*m_AttributesLocations[i]*/, 4, GL_FLOAT, GL_FALSE, 0, 0);
 				}
 			}
 		}

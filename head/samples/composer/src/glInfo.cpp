@@ -20,6 +20,12 @@
 
 #include <nau/config.h>
 
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
+
+
+
 enum Types {
 		DONT_KNOW, INT, UNSIGNED_INT, FLOAT, DOUBLE};
 bool init();
@@ -34,30 +40,30 @@ void mapCurrentBufferNames();
 
 
 // local variables
-std::map<int, std::string> spInternalF;
-std::map<int, std::string> spDataF;
-std::map<int, std::string> spTextureDataType;
-std::map<int, std::string> spGLSLType;
-std::map<int, int> spGLSLTypeSize;
-std::map<int, std::string> spTextureFilter;
-std::map<int, std::string> spTextureWrap;
-std::map<int, std::string> spTextureCompFunc;
-std::map<int, std::string> spTextureCompMode;
-std::map<int, std::string> spTextureUnit;
-std::map<int, int> spTextureBound;
-std::map<int, std::string> spHint;
-std::map<int, std::string> spTextureTarget;
-std::map<int, std::string> spBufferAccess;
-std::map<int, std::string> spBufferUsage;
-std::map<int, std::string> spBufferBinding;
-std::map<int, int> spBufferBound;
-std::map<int, int> spBoundBuffer;
-std::map<int, std::string> spShaderType;
-std::map<int, std::string> spTransFeedBufferMode;
-std::map<int, std::string> spGLSLPrimitives;
-std::map<int, std::string> spTessGenSpacing;
-std::map<int, std::string> spVertexOrder;
-std::map<int, std::string> spShaderPrecision;
+std::map<GLenum, std::string> spInternalF;
+std::map<GLenum, std::string> spDataF;
+std::map<GLenum, std::string> spTextureDataType;
+std::map<GLenum, std::string> spGLSLType;
+std::map<GLenum, int> spGLSLTypeSize;
+std::map<GLenum, std::string> spTextureFilter;
+std::map<GLenum, std::string> spTextureWrap;
+std::map<GLenum, std::string> spTextureCompFunc;
+std::map<GLenum, std::string> spTextureCompMode;
+std::map<GLenum, std::string> spTextureUnit;
+std::map<GLenum, GLenum> spTextureBound;
+std::map<GLenum, std::string> spHint;
+std::map<GLenum, std::string> spTextureTarget;
+std::map<GLenum, std::string> spBufferAccess;
+std::map<GLenum, std::string> spBufferUsage;
+std::map<GLenum, std::string> spBufferBinding;
+std::map<GLenum, GLenum> spBufferBound;
+std::map<GLenum, GLenum> spBoundBuffer;
+std::map<GLenum, std::string> spShaderType;
+std::map<GLenum, std::string> spTransFeedBufferMode;
+std::map<GLenum, std::string> spGLSLPrimitives;
+std::map<GLenum, std::string> spTessGenSpacing;
+std::map<GLenum, std::string> spVertexOrder;
+std::map<GLenum, std::string> spShaderPrecision;
 
 std::vector<unsigned int> spResult;
 bool __spInit = init();
@@ -95,7 +101,7 @@ getBufferNames() {
 	spResult.clear();
 	for (unsigned int i = 0; i < 65535; ++i) {
 
-		if (glIsBuffer(i)) {
+		if (glIsBuffer(i) == GL_TRUE) {
 			spResult.push_back(i);
 
 
@@ -120,7 +126,7 @@ getProgramNames() {
 	spResult.clear();
 	for (unsigned int i = 0; i < 65535; ++i) {
 
-		if (glIsProgram(i))
+		if (glIsProgram(i) == GL_TRUE)
 		 spResult.push_back(i);
 	}
 	return spResult;
@@ -586,19 +592,19 @@ init() {
 	spInternalF[GL_R1UI_T2F_V3F_SUN] = "GL_R1UI_T2F_V3F_SUN";
 	spInternalF[GL_R1UI_T2F_N3F_V3F_SUN] = "GL_R1UI_T2F_N3F_V3F_SUN";
 	spInternalF[GL_R1UI_T2F_C4F_N3F_V3F_SUN] = "GL_R1UI_T2F_C4F_N3F_V3F_SUN";
-	spInternalF[GL_RGB_SIGNED_SGIX] = "GL_RGB_SIGNED_SGIX";
-	spInternalF[GL_RGBA_SIGNED_SGIX] = "GL_RGBA_SIGNED_SGIX";
-	spInternalF[GL_RGB16_SIGNED_SGIX] = "GL_RGB16_SIGNED_SGIX";
-	spInternalF[GL_RGBA16_SIGNED_SGIX] = "GL_RGBA16_SIGNED_SGIX";
-	spInternalF[GL_RGB_EXTENDED_RANGE_SGIX] = "GL_RGB_EXTENDED_RANGE_SGIX";
-	spInternalF[GL_RGBA_EXTENDED_RANGE_SGIX] = "GL_RGBA_EXTENDED_RANGE_SGIX";
-	spInternalF[GL_RGB16_EXTENDED_RANGE_SGIX] = "GL_RGB16_EXTENDED_RANGE_SGIX";
-	spInternalF[GL_RGBA16_EXTENDED_RANGE_SGIX] = "GL_RGBA16_EXTENDED_RANGE_SGIX";
+	//spInternalF[GL_RGB_SIGNED_SGIX] = "GL_RGB_SIGNED_SGIX";
+	//spInternalF[GL_RGBA_SIGNED_SGIX] = "GL_RGBA_SIGNED_SGIX";
+	//spInternalF[GL_RGB16_SIGNED_SGIX] = "GL_RGB16_SIGNED_SGIX";
+	//spInternalF[GL_RGBA16_SIGNED_SGIX] = "GL_RGBA16_SIGNED_SGIX";
+	//spInternalF[GL_RGB_EXTENDED_RANGE_SGIX] = "GL_RGB_EXTENDED_RANGE_SGIX";
+	//spInternalF[GL_RGBA_EXTENDED_RANGE_SGIX] = "GL_RGBA_EXTENDED_RANGE_SGIX";
+	//spInternalF[GL_RGB16_EXTENDED_RANGE_SGIX] = "GL_RGB16_EXTENDED_RANGE_SGIX";
+	//spInternalF[GL_RGBA16_EXTENDED_RANGE_SGIX] = "GL_RGBA16_EXTENDED_RANGE_SGIX";
 	spInternalF[GL_COMPRESSED_RGB_FXT1_3DFX] = "GL_COMPRESSED_RGB_FXT1_3DFX";
 	spInternalF[GL_COMPRESSED_RGBA_FXT1_3DFX] = "GL_COMPRESSED_RGBA_FXT1_3DFX";
 	spInternalF[GL_RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV] = "GL_RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV";
 	spInternalF[GL_RGBA_FLOAT_MODE_ARB] = "GL_RGBA_FLOAT_MODE_ARB";
-	spInternalF[GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI] = "GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI";
+	//spInternalF[GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI] = "GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI";
 	spInternalF[GL_RGB_422_APPLE] = "GL_RGB_422_APPLE";
 	spInternalF[GL_RGBA_SIGNED_COMPONENTS_EXT] = "GL_RGBA_SIGNED_COMPONENTS_EXT";
 	spInternalF[GL_COMPRESSED_SRGB_S3TC_DXT1_EXT] = "GL_COMPRESSED_SRGB_S3TC_DXT1_EXT";
@@ -822,34 +828,34 @@ getUniformByteSize(int uniSize,
 	else if (uniMatStride > 0) {
 
 		switch(uniType) {
-			case GL_FLOAT_MAT2:
-			case GL_FLOAT_MAT2x3:
-			case GL_FLOAT_MAT2x4:
-			case GL_DOUBLE_MAT2:
-			case GL_DOUBLE_MAT2x3:
-			case GL_DOUBLE_MAT2x4:
+			case (unsigned int)GL_FLOAT_MAT2:
+			case (unsigned int)GL_FLOAT_MAT2x3:
+			case (unsigned int)GL_FLOAT_MAT2x4:
+			case (unsigned int)GL_DOUBLE_MAT2:
+			case (unsigned int)GL_DOUBLE_MAT2x3:
+			case (unsigned int)GL_DOUBLE_MAT2x4:
 				auxSize = 2 * uniMatStride;
 				break;
-			case GL_FLOAT_MAT3:
-			case GL_FLOAT_MAT3x2:
-			case GL_FLOAT_MAT3x4:
-			case GL_DOUBLE_MAT3:
-			case GL_DOUBLE_MAT3x2:
-			case GL_DOUBLE_MAT3x4:
+			case (unsigned int)GL_FLOAT_MAT3:
+			case (unsigned int)GL_FLOAT_MAT3x2:
+			case (unsigned int)GL_FLOAT_MAT3x4:
+			case (unsigned int)GL_DOUBLE_MAT3:
+			case (unsigned int)GL_DOUBLE_MAT3x2:
+			case (unsigned int)GL_DOUBLE_MAT3x4:
 				auxSize = 3 * uniMatStride;
 				break;
-			case GL_FLOAT_MAT4:
-			case GL_FLOAT_MAT4x2:
-			case GL_FLOAT_MAT4x3:
-			case GL_DOUBLE_MAT4:
-			case GL_DOUBLE_MAT4x2:
-			case GL_DOUBLE_MAT4x3:
+			case (unsigned int)GL_FLOAT_MAT4:
+			case (unsigned int)GL_FLOAT_MAT4x2:
+			case (unsigned int)GL_FLOAT_MAT4x3:
+			case (unsigned int)GL_DOUBLE_MAT4:
+			case (unsigned int)GL_DOUBLE_MAT4x2:
+			case (unsigned int)GL_DOUBLE_MAT4x3:
 				auxSize = 4 * uniMatStride;
 				break;
 		}
 	}
 	else
-		auxSize = spGLSLTypeSize[uniType];
+		auxSize = spGLSLTypeSize[(GLenum)uniType];
 
 	return auxSize;
 }
@@ -865,7 +871,7 @@ void getUniformNames(unsigned int program, std::vector<std::string> &namelist){
 	namelist.clear();
 
 	// is it a program ?
-	if (glIsProgram(program)) {
+	if (glIsProgram(program) == GL_TRUE) {
 
 		// Get uniforms info (not in named blocks)
 		glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &activeUnif);
@@ -882,7 +888,7 @@ void getUniformNames(unsigned int program, std::vector<std::string> &namelist){
 
 //Additional Custom Functions
 std::string getDatatypeString(int datatype){
-	return spDataF[datatype];
+	return spDataF[(GLenum)datatype];
 }
 
 void getBlockNames(unsigned int program, std::vector<std::string> &namelist){
@@ -892,7 +898,7 @@ void getBlockNames(unsigned int program, std::vector<std::string> &namelist){
 	namelist.clear();
 
 	// is it a program ?
-	if (glIsProgram(program)) {
+	if (glIsProgram(program) == GL_TRUE) {
 		
 	glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, &count);
 
@@ -912,7 +918,7 @@ void getBlockData(unsigned int program, std::string blockName, int &datasize, in
 	uniformnamelist.clear();
 
 	// is it a program ?
-	if (glIsProgram(program)) {
+	if (glIsProgram(program) == GL_TRUE) {
 		
 		index = glGetUniformBlockIndex(program, blockName.c_str());
 		glGetActiveUniformBlockiv(program, index, GL_UNIFORM_BLOCK_DATA_SIZE, &datasize);
@@ -938,7 +944,7 @@ void getBlockData(unsigned int program, std::string blockName, int &datasize, in
 void getUniformData(unsigned int program, std::string uniformName, std::string &uniformType, int &uniformSize, int &uniformArrayStride, std::vector<std::string> &values){
 
 	// is it a program ?
-	if (!glIsProgram(program)) {
+	if (glIsProgram(program) == GL_FALSE) {
 		return;
 	}
 	
@@ -956,7 +962,7 @@ void getUniformData(unsigned int program, std::string uniformName, std::string &
 		int rows = getRows(type), columns = getColumns(type);
 
 		glGetActiveUniformsiv(program, 1, &loc, GL_UNIFORM_TYPE, &uniType);
-		uniformType = spGLSLType[uniType].c_str();
+		uniformType = spGLSLType[(GLenum)uniType].c_str();
 
 		glGetActiveUniformsiv(program, 1, &loc, GL_UNIFORM_SIZE, &uniSize);
 		glGetActiveUniformsiv(program, 1, &loc, GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
@@ -964,7 +970,7 @@ void getUniformData(unsigned int program, std::string uniformName, std::string &
 		if (uniArrayStride > 0)
 			auxSize = uniArrayStride * uniSize;
 		else
-			auxSize = spGLSLTypeSize[uniType];
+			auxSize = spGLSLTypeSize[(GLenum)uniType];
 
 		uniformSize = auxSize;
 		uniformArrayStride = uniArrayStride;
@@ -995,7 +1001,7 @@ void getUniformData(unsigned int program, std::string uniformName, std::string &
 void getUniformData(unsigned int program, std::string blockName, std::string uniformName, std::string &uniformType, int &uniformSize, int &uniformArrayStride, std::vector<std::string> &values){
 
 	// is it a program ?
-	if (!glIsProgram(program)) {
+	if (glIsProgram(program) == GL_FALSE) {
 		return;
 	}
 	
@@ -1023,10 +1029,10 @@ void getUniformData(unsigned int program, std::string blockName, std::string uni
 	
 	if (loc != -1) {
 		int auxSize;
-		int rows = getRows(type), columns = getColumns(type);
+		int rows = getRows((GLenum)type), columns = getColumns((GLenum)type);
 
 		glGetActiveUniformsiv(program, 1, &loc, GL_UNIFORM_TYPE, &uniType);
-		uniformType = spGLSLType[uniType].c_str();
+		uniformType = spGLSLType[(GLenum)uniType].c_str();
 
 		glGetActiveUniformsiv(program, 1, &loc, GL_UNIFORM_SIZE, &uniSize);
 		glGetActiveUniformsiv(program, 1, &loc, GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
@@ -1034,27 +1040,27 @@ void getUniformData(unsigned int program, std::string blockName, std::string uni
 		if (uniArrayStride > 0)
 			auxSize = uniArrayStride * uniSize;
 		else
-			auxSize = spGLSLTypeSize[uniType];
+			auxSize = spGLSLTypeSize[(GLenum)uniType];
 
 		uniformSize = auxSize;
 		uniformArrayStride = uniArrayStride;
 
-		if (getType(type) == FLOAT) {
+		if (getType((GLenum)type) == FLOAT) {
 			float f[16];
 			glGetUniformfv(program, loc, f);
 			getUniformValuef(f,rows,columns,values);
 		}
-		else if (getType(type) == INT) {
+		else if (getType((GLenum)type) == INT) {
 			int f[16];
 			glGetUniformiv(program, loc, f);
 			getUniformValuei(f,rows,columns,values);
 		}
-		else if (getType(type) == UNSIGNED_INT) {
+		else if (getType((GLenum)type) == UNSIGNED_INT) {
 			unsigned int f[16];
 			glGetUniformuiv(program, loc, f);
 			getUniformValueui(f,rows,columns,values);
 		}
-		else if (getType(type) == DOUBLE) {
+		else if (getType((GLenum)type) == DOUBLE) {
 			double f[16];
 			glGetUniformdv(program, loc, f);
 			getUniformValued(f,rows,columns,values);
@@ -1139,12 +1145,13 @@ getProgramInfoData(unsigned int program, std::vector<std::pair<std::string,char>
 
 
 	// check if name is really a program
-	if (!glIsProgram(program)) {
+	if (glIsProgram(program) == GL_FALSE) {
 		return;
 	}
 
 	unsigned int shaders[5];
-	int count, info, linked;
+	int count, linked;
+	GLenum info;
 	bool geom= false, tess = false;
 
 	shadersInfo.clear();
@@ -1156,7 +1163,7 @@ getProgramInfoData(unsigned int program, std::vector<std::pair<std::string,char>
 	glGetProgramiv(program, GL_ATTACHED_SHADERS,&count);
 	glGetAttachedShaders(program, count, NULL, shaders);
 	for (int i = 0;  i < count; ++i) {
-		glGetShaderiv(shaders[i], GL_SHADER_TYPE, &info);
+		glGetShaderiv(shaders[i], GL_SHADER_TYPE, (GLint *)&info);
 		if (info == GL_GEOMETRY_SHADER){
 			geom = true;
 			shadersInfo.push_back(std::pair<std::string,char>(spShaderType[info] + ": " + std::to_string(shaders[i]),'g'));
@@ -1171,71 +1178,71 @@ getProgramInfoData(unsigned int program, std::vector<std::pair<std::string,char>
 	}
 
 	// Get program info
-	glGetProgramiv(program, GL_PROGRAM_SEPARABLE, &info);
-	stdInfo.push_back("Program Separable: " + std::to_string(info));
+	glGetProgramiv(program, GL_PROGRAM_SEPARABLE, (GLint *)&info);
+	stdInfo.push_back("Program Separable: " + std::to_string((GLint)info));
 
-	glGetProgramiv(program, GL_PROGRAM_BINARY_RETRIEVABLE_HINT, &info);
-	stdInfo.push_back("Program Binary Retrievable Hint: " + std::to_string(info));
+	glGetProgramiv(program, GL_PROGRAM_BINARY_RETRIEVABLE_HINT, (GLint *)&info);
+	stdInfo.push_back("Program Binary Retrievable Hint: " + std::to_string((GLint)info));
 
 	glGetProgramiv(program, GL_LINK_STATUS, &linked);
 	stdInfo.push_back("Link Status: " + std::to_string(linked));
 
-	glGetProgramiv(program, GL_VALIDATE_STATUS, &info);
-	stdInfo.push_back("Validate_Status: " + std::to_string(info));
+	glGetProgramiv(program, GL_VALIDATE_STATUS, (GLint *)&info);
+	stdInfo.push_back("Validate_Status: " + std::to_string((GLint)info));
 
-	glGetProgramiv(program, GL_DELETE_STATUS, &info);
-	stdInfo.push_back("Delete_Status: " + std::to_string(info));
+	glGetProgramiv(program, GL_DELETE_STATUS, (GLint *)&info);
+	stdInfo.push_back("Delete_Status: " + std::to_string((GLint)info));
 
-	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &info);
-	stdInfo.push_back("Active_Attributes: " + std::to_string(info));
+	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, (GLint *)&info);
+	stdInfo.push_back("Active_Attributes: " + std::to_string((GLint)info));
 
-	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &info);
-	stdInfo.push_back("Active_Uniforms: " + std::to_string(info));
+	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, (GLint *)&info);
+	stdInfo.push_back("Active_Uniforms: " + std::to_string((GLint)info));
 
-	glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, &info);
-	stdInfo.push_back("Active_Uniform_Blocks: " + std::to_string(info));
+	glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, (GLint *)&info);
+	stdInfo.push_back("Active_Uniform_Blocks: " + std::to_string((GLint)info));
 
 #if (NAU_OPENGL_VERSION >= 420)
-	glGetProgramiv(program, GL_ACTIVE_ATOMIC_COUNTER_BUFFERS, &info);
-	stdInfo.push_back("Active_Atomic Counters: " + std::to_string(info));
+	glGetProgramiv(program, GL_ACTIVE_ATOMIC_COUNTER_BUFFERS, (GLint *)&info);
+	stdInfo.push_back("Active_Atomic Counters: " + std::to_string((GLint)info));
 #endif
 	// check if trans feed is active
-	glGetProgramiv(program, GL_TRANSFORM_FEEDBACK_BUFFER_MODE, &info);
+	glGetProgramiv(program, GL_TRANSFORM_FEEDBACK_BUFFER_MODE, (GLint *)&info);
 	stdInfo.push_back("Transform Feedback Buffer Mode: " + spTransFeedBufferMode[info]);
 
-	glGetProgramiv(program, GL_TRANSFORM_FEEDBACK_VARYINGS, &info);
-	stdInfo.push_back("Transform Feedback Varying: " + std::to_string(info));
+	glGetProgramiv(program, GL_TRANSFORM_FEEDBACK_VARYINGS,(GLint *)&info);
+	stdInfo.push_back("Transform Feedback Varying: " + std::to_string((GLint)info));
 
 	// Geometry shader info, if present
 	if (geom && linked) {
-		glGetProgramiv(program, GL_GEOMETRY_VERTICES_OUT, &info);
-	    geomInfo.push_back("Geometry Vertices Out: " + std::to_string(info));
+		glGetProgramiv(program, GL_GEOMETRY_VERTICES_OUT, (GLint *)&info);
+	    geomInfo.push_back("Geometry Vertices Out: " + std::to_string((GLint)info));
 
-		glGetProgramiv(program, GL_GEOMETRY_INPUT_TYPE, &info);
+		glGetProgramiv(program, GL_GEOMETRY_INPUT_TYPE, (GLint *)&info);
 	    geomInfo.push_back("Geometry Input Type: " + spGLSLPrimitives[info]);
 
-		glGetProgramiv(program, GL_GEOMETRY_OUTPUT_TYPE, &info);
+		glGetProgramiv(program, GL_GEOMETRY_OUTPUT_TYPE, (GLint *)&info);
 	    geomInfo.push_back("Geometry Output Type: " + spGLSLPrimitives[info]);
 
-		glGetProgramiv(program, GL_GEOMETRY_SHADER_INVOCATIONS, &info);
-	    geomInfo.push_back("Geometry Shader Invocations: " + std::to_string(info));
+		glGetProgramiv(program, GL_GEOMETRY_SHADER_INVOCATIONS, (GLint *)&info);
+	    geomInfo.push_back("Geometry Shader Invocations: " + std::to_string((GLint)info));
 	}
 	// tessellation shaders info, if present
 	if (tess && linked) {
-		glGetProgramiv(program, GL_TESS_CONTROL_OUTPUT_VERTICES, &info);
-	    tessInfo.push_back("Tess Control Output Vertices: " + std::to_string(info));
+		glGetProgramiv(program, GL_TESS_CONTROL_OUTPUT_VERTICES, (GLint *)&info);
+	    tessInfo.push_back("Tess Control Output Vertices: " + std::to_string((GLint)info));
 
-		glGetProgramiv(program, GL_TESS_GEN_MODE, &info);
+		glGetProgramiv(program, GL_TESS_GEN_MODE, (GLint *)&info);
 	    tessInfo.push_back("Tess Gen Mode: " + spGLSLPrimitives[info]);
 
-		glGetProgramiv(program, GL_TESS_GEN_SPACING, &info);
+		glGetProgramiv(program, GL_TESS_GEN_SPACING, (GLint *)&info);
 	    tessInfo.push_back("Tess Spacing: " + spTessGenSpacing[info]);
 
-		glGetProgramiv(program, GL_TESS_GEN_VERTEX_ORDER, &info);
+		glGetProgramiv(program, GL_TESS_GEN_VERTEX_ORDER, (GLint *)&info);
 	    tessInfo.push_back("Tess Vertex Order: " + spVertexOrder[info]);
 
-		glGetProgramiv(program, GL_TESS_GEN_POINT_MODE, &info);
-	    tessInfo.push_back("Tess Gen Point Mode: " + std::to_string(info));
+		glGetProgramiv(program, GL_TESS_GEN_POINT_MODE, (GLint *)&info);
+	    tessInfo.push_back("Tess Gen Point Mode: " + std::to_string((GLint)info));
 	}
 }
 
@@ -1249,7 +1256,7 @@ getAttributesData(unsigned int program, std::vector<std::pair<std::string, std::
 
 
 	// check if it is a program
-	if (!glIsProgram(program)) {
+	if (glIsProgram(program) == GL_FALSE) {
 		return;
 	}
 

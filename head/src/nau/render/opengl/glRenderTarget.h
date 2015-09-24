@@ -3,7 +3,9 @@
 
 #include "nau/render/renderTarget.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 #include <assert.h>
 

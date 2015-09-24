@@ -115,6 +115,8 @@ namespace nau {
 
 		nau::world::IWorld& getWorld (void);
 
+		void setTrace(int frames);
+		bool getTraceStatus();
 		// Executes the whole pipeline
 		void step ();
 		// Executes the next pass
@@ -192,6 +194,8 @@ namespace nau {
 #endif
 
 		float m_StartTime;
+		int m_TraceFrames;
+		bool m_TraceOn;
 
 		std::string m_Name;
 		//unsigned long int m_FrameCount;

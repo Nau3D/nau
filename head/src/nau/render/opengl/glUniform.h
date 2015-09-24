@@ -4,7 +4,8 @@
 #include "nau/enums.h"
 #include "nau/material/iUniform.h"
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
 
 #include <string>
 #include <map>
@@ -20,7 +21,7 @@ namespace nau
 		private:
 			int m_Program;
 
-			GLenum m_GLType;
+			unsigned int m_GLType;
 			int m_Cardinality;
 			int m_Size;
 			int m_ArraySize;
@@ -34,9 +35,9 @@ namespace nau
 		public:
 		
 			/// converts GLTypes to string
-			static std::map<int, std::string> spGLSLType;
+			static std::map<GLenum, std::string> spGLSLType;
 			/// converts GLTypes to Enums::DataType, simpler basic types
-			static std::map<int, Enums::DataType>   spSimpleType;
+			static std::map<GLenum, Enums::DataType>   spSimpleType;
 			//static std::map<int, int> 	spGLSLTypeSize;
 
 			enum { // values for semantics

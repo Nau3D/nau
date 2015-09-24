@@ -3,8 +3,8 @@
 
 #include "nau/geometry/vertexData.h"
 
-#include <GL/glew.h>
-#include <GL/gl.h>
+//#include <GL/glew.h>
+//#include <GL/gl.h>
 
 using namespace nau::geometry;
 
@@ -15,8 +15,8 @@ namespace nau
 		class GLVertexArray : public VertexData
 		{
 		private:
-			GLuint m_GLBuffers[VertexData::MaxAttribs+1];
-			GLuint m_AttributesLocations[VertexData::MaxAttribs];
+			unsigned int m_GLBuffers[VertexData::MaxAttribs+1];
+			unsigned int m_AttributesLocations[VertexData::MaxAttribs];
 			bool m_IsCompiled;
 			//static unsigned int m_OpenGLOwnAttribs;
 

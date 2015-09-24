@@ -4,7 +4,9 @@
 #include "nau/render/opengl/glVertexArray.h"
 
 
-#include <GL/glew.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
 
 using namespace nau::render::opengl;
 

@@ -6,9 +6,9 @@
 #include "nau/material/iBuffer.h"
 #include "nau/render/pass.h"
 
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <cuda_runtime.h>
-#include <cuda_gl_interop.h>
+//#include <cuda_gl_interop.h>
 #include <optix_prime/optix_prime.h>
 
 #include <sstream>

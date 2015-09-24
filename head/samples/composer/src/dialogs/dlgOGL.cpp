@@ -1,6 +1,10 @@
 #pragma warning(disable:4018)
-#include <GL/glew.h>
 #include "dlgOGL.h"
+
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
+
 #include <stdio.h>
 #include <string.h>
 

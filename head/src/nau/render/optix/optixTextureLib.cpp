@@ -3,7 +3,11 @@
 #include <vector>
 
 #include "nau.h"
-#include <GL/glew.h>
+
+#include <glbinding/gl/gl.h>
+using namespace gl;
+//#include <GL/glew.h>
+
 
 using namespace nau::render::optixRender;
 
@@ -21,7 +25,7 @@ OptixTextureLib::addTextures(Material *m) {
 	unsigned int s, count = 0;
 	unsigned int mode, mode1;
 	ITexture *t;
-	int e = glGetError();
+	GLenum e = glGetError();
 	try {
 	  for (unsigned int i = 0; i < 8; ++i) {
 	

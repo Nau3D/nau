@@ -15,8 +15,9 @@
 #include "nau/render/opengl/glTexture.h"
 #include "nau/render/opengl/glVertexArray.h"
 #include "nau/render/opengl/glRenderTarget.h"
+#include "nau/system/file.h"
 
-#include <GL/glew.h>
+
 
 using namespace nau::math;
 using namespace nau::render;
@@ -34,7 +35,7 @@ GLRenderer::Init() {
 }
 
 
-unsigned int GLRenderer::GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT] = 
+GLenum GLRenderer::GLPrimitiveTypes[PRIMITIVE_TYPE_COUNT] = 
 	{GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_LINES, GL_LINE_LOOP, GL_POINTS, GL_TRIANGLES_ADJACENCY
 	, GL_PATCHES
 };
@@ -52,7 +53,7 @@ GLRenderer::GLRenderer(void) :
 	m_Shader (0)
 {
 	init();
-	//GLDebug::Init();
+	GLDebug::Init();
 	m_glCurrState.set();
 	m_Textures.clear();
 
@@ -67,23 +68,46 @@ GLRenderer::~GLRenderer(void) {
 }
 
 
-
-
-
 bool 
 GLRenderer::init() {
 
-	glewExperimental = true;
-	GLenum error = glewInit();
-	if (GLEW_OK != error){
-		std::cout << "GLEW init error: " << glewGetErrorString(error) << std::endl;
-		return false;
-	}
-	else {
+	glbinding::Binding::initialize(false);
+
+//	glbinding::setCallbackMask(glbinding::CallbackMask::BeforeAndAfter | glbinding::CallbackMask::ParametersAndReturnValue);
+
+	//glewExperimental = true;
+	//GLenum error = glewInit();
+	//if (GLEW_OK != error){
+	//	std::cout << "GLEW init error: " << glewGetErrorString(error) << std::endl;
+	//	return false;
+	//}
+	//else {
 		glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &MaxTextureUnits);
 		glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &MaxColorAttachments);
 		return true;
+	//}
+}
+
+
+int 
+GLRenderer::setTrace(int frames) {
+
+	GLDebug::SetTrace(frames);
+	// just to be on the safe side
+	if (frames != 0) {
+		std::string name = nau::system::File::GetCurrentFolder() + "/__nau3Dtrace";
+		nau::system::File::CreateDir(name);
+		name += "/Frame_" + std::to_string(RENDERER->getPropui(FRAME_COUNT)) + ".txt";
+		CLogger::GetInstance().addLog(CLogger::LEVEL_TRACE, name);
+		CLogger::GetInstance().reset(CLogger::LEVEL_TRACE);
 	}
+	if (frames > 0)
+		return --frames;
+	else 
+		return frames;
+	
+
+
 }
 
 
@@ -632,7 +656,7 @@ GLRenderer::getTexture(int unit) {
 void
 GLRenderer::clearFrameBuffer(unsigned int b) {
 
-	GLenum c = 0;
+	gl::ClearBufferMask c = (gl::ClearBufferMask)0;
 
 	if (b & COLOR_BUFFER) {
 		c |= GL_COLOR_BUFFER_BIT;
@@ -660,13 +684,13 @@ GLRenderer::prepareBuffers(Pass *p) {
 	if (value) {
 		glEnable(GL_DEPTH_TEST);
 		bool dm = p->getPropb(Pass::DEPTH_MASK);
-		glDepthMask(dm);
+		glDepthMask((GLboolean)dm);
 		m_glDefaultState.setPropb(IState::DEPTH_MASK, dm);
 		m_glCurrState.setPropb(IState::DEPTH_MASK, dm);
-		int df = translateStencilDepthFunc(p->getPrope(Pass::DEPTH_FUNC));
+		GLenum df = translateStencilDepthFunc(p->getPrope(Pass::DEPTH_FUNC));
 		glDepthFunc(df);
-		m_glDefaultState.setPrope(IState::DEPTH_FUNC, df);
-		m_glCurrState.setPrope(IState::DEPTH_FUNC, df);
+		m_glDefaultState.setPrope(IState::DEPTH_FUNC, (unsigned int)df);
+		m_glCurrState.setPrope(IState::DEPTH_FUNC, (unsigned int)df);
 	}
 	else
 		glDisable(GL_DEPTH_TEST);
@@ -732,7 +756,7 @@ GLRenderer::setDepthClamping(bool b) {
 void
 GLRenderer::colorMask(bool r, bool g, bool b, bool a) {
 
-	glColorMask(r, g, b, a);
+	glColorMask((GLboolean)r, (GLboolean)g, (GLboolean)b, (GLboolean)a);
 	bvec4 *bv = new bvec4(r, g, b, a);
 	m_glCurrState.setPropb4(IState::COLOR_MASK_B4, *bv);
 	m_glDefaultState.setPropb4(IState::COLOR_MASK_B4, *bv);
@@ -827,19 +851,19 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 				//b->setSubData(8, 12, &aux);
 				//aux[0] = 1000;
 				//b->setSubData(4, 4, &aux);
-				b->bind(GL_DRAW_INDIRECT_BUFFER);
+				b->bind((unsigned int)GL_DRAW_INDIRECT_BUFFER);
 				unsigned int temp = 0;
 				//glMultiDrawElementsIndirect(drawPrimitive, GL_UNSIGNED_INT, &temp,1,0);
 				unsigned int instCount;
 				b->getData(4, 4, &instCount);
 				//glDrawElementsInstancedBaseVertexBaseInstance(drawPrimitive, size, GL_UNSIGNED_INT, 0, instCount, 0,0);
-				glDrawElementsIndirect(drawPrimitive, GL_UNSIGNED_INT, 0);
+				glDrawElementsIndirect((GLenum)drawPrimitive, GL_UNSIGNED_INT, 0);
 				//glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, instCount);
 			}
 			else if (m_UIntProps[IRenderer::INSTANCE_COUNT])
-				glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, m_UIntProps[IRenderer::INSTANCE_COUNT]);
+				glDrawElementsInstanced((GLenum)drawPrimitive, size, GL_UNSIGNED_INT, 0, m_UIntProps[IRenderer::INSTANCE_COUNT]);
 			else
-				glDrawElements(drawPrimitive, size, GL_UNSIGNED_INT, 0);
+				glDrawElements((GLenum)drawPrimitive, size, GL_UNSIGNED_INT, 0);
 		}
 		else {
 			size = aRenderable.getVertexData().getNumberOfVertices();
@@ -848,14 +872,14 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 
 				IBuffer *b = RESOURCEMANAGER->getBufferByID(m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]); 
 				b->setSubData(0, 4, &size);
-				b->bind(GL_DRAW_INDIRECT_BUFFER);
+				b->bind((unsigned int)GL_DRAW_INDIRECT_BUFFER);
 				unsigned int temp = 0;
-				glDrawArraysIndirect(drawPrimitive, &temp);
+				glDrawArraysIndirect((GLenum)drawPrimitive, &temp);
 			}
 			else if (m_UIntProps[IRenderer::INSTANCE_COUNT])
-				glDrawArraysInstanced(drawPrimitive, 0, size, m_UIntProps[IRenderer::INSTANCE_COUNT]);
+				glDrawArraysInstanced((GLenum)drawPrimitive, 0, size, m_UIntProps[IRenderer::INSTANCE_COUNT]);
 			else
-				glDrawArrays(drawPrimitive, 0, size);
+				glDrawArrays((GLenum)drawPrimitive, 0, size);
 		}
 	}
 
@@ -939,8 +963,8 @@ GLRenderer::showDrawDebugInfo(Material *mat) {
 			ITexture *t = mat->getTexture(vi[i]);
 			SLOG("\tUnit %d ID %d Name %s", vi[i], t->getPropi(ITexture::ID), t->getLabel().c_str());
 			int id;
-			glActiveTexture(GL_TEXTURE0+vi[i]);
-			glGetIntegerv(GLTexture::TextureBound[t->getPrope(ITexture::DIMENSION)], &id);
+			glActiveTexture((GLenum)((int)GL_TEXTURE0+vi[i]));
+			glGetIntegerv((GLenum)GLTexture::TextureBound[(GLenum)t->getPrope(ITexture::DIMENSION)], &id);
 			SLOG("\tActual texture bound to unit %d: %d", vi[i], id);
 		}
 	}
@@ -953,23 +977,24 @@ GLRenderer::showDrawDebugInfo(Material *mat) {
 			IMaterialBuffer *b = mat->getBuffer(vi[i]);
 			IBuffer *buff = b->getBuffer();
 			SLOG("\tBinding point %d ID %d Name %s", vi[i], buff->getPropi(IBuffer::ID), buff->getLabel().c_str());
-			int k, pname;
+			GLint k;
+			GLenum pname;
 			switch (b->getPrope(IMaterialBuffer::TYPE)) {
-				case GL_SHADER_STORAGE_BUFFER: 
+				case (unsigned int)GL_SHADER_STORAGE_BUFFER: 
 					assert(APISupport->apiSupport(IAPISupport::BUFFER_SHADER_STORAGE));
 					pname = GL_SHADER_STORAGE_BUFFER_BINDING; 
 					break;
-				case GL_ATOMIC_COUNTER_BUFFER: 
+				case (unsigned int)GL_ATOMIC_COUNTER_BUFFER: 
 					assert(APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS));
 					pname = GL_ATOMIC_COUNTER_BUFFER_BINDING; 
 					break;
-				case GL_TRANSFORM_FEEDBACK_BUFFER: 
+				case (unsigned int)GL_TRANSFORM_FEEDBACK_BUFFER: 
 					pname = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING; 
 					break;
-				case GL_UNIFORM_BUFFER: 
+				case (unsigned int)GL_UNIFORM_BUFFER: 
 					pname = GL_UNIFORM_BUFFER_BINDING; 
 					break;
-				case GL_DRAW_INDIRECT_BUFFER: 
+				case (unsigned int)GL_DRAW_INDIRECT_BUFFER: 
 					pname = GL_DRAW_INDIRECT_BUFFER_BINDING; 
 					break;
 			}
@@ -994,34 +1019,34 @@ int getUniformByteSize2(int uniSize,
 	else if (uniMatStride > 0) {
 
 		switch(uniType) {
-			case GL_FLOAT_MAT2:
-			case GL_FLOAT_MAT2x3:
-			case GL_FLOAT_MAT2x4:
-			case GL_DOUBLE_MAT2:
-			case GL_DOUBLE_MAT2x3:
-			case GL_DOUBLE_MAT2x4:
+			case (int)GL_FLOAT_MAT2:
+			case (int)GL_FLOAT_MAT2x3:
+			case (int)GL_FLOAT_MAT2x4:
+			case (int)GL_DOUBLE_MAT2:
+			case (int)GL_DOUBLE_MAT2x3:
+			case (int)GL_DOUBLE_MAT2x4:
 				auxSize = 2 * uniMatStride;
 				break;
-			case GL_FLOAT_MAT3:
-			case GL_FLOAT_MAT3x2:
-			case GL_FLOAT_MAT3x4:
-			case GL_DOUBLE_MAT3:
-			case GL_DOUBLE_MAT3x2:
-			case GL_DOUBLE_MAT3x4:
+			case (int)GL_FLOAT_MAT3:
+			case (int)GL_FLOAT_MAT3x2:
+			case (int)GL_FLOAT_MAT3x4:
+			case (int)GL_DOUBLE_MAT3:
+			case (int)GL_DOUBLE_MAT3x2:
+			case (int)GL_DOUBLE_MAT3x4:
 				auxSize = 3 * uniMatStride;
 				break;
-			case GL_FLOAT_MAT4:
-			case GL_FLOAT_MAT4x2:
-			case GL_FLOAT_MAT4x3:
-			case GL_DOUBLE_MAT4:
-			case GL_DOUBLE_MAT4x2:
-			case GL_DOUBLE_MAT4x3:
+			case (int)GL_FLOAT_MAT4:
+			case (int)GL_FLOAT_MAT4x2:
+			case (int)GL_FLOAT_MAT4x3:
+			case (int)GL_DOUBLE_MAT4:
+			case (int)GL_DOUBLE_MAT4x2:
+			case (int)GL_DOUBLE_MAT4x3:
 				auxSize = 4 * uniMatStride;
 				break;
 		}
 	}
 	else
-		auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]);
+		auxSize = Enums::getSize(GLUniform::spSimpleType[(GLenum)uniType]);
 
 	return auxSize;
 }
@@ -1030,7 +1055,8 @@ int getUniformByteSize2(int uniSize,
 void
 GLRenderer::showDrawDebugInfo(IProgram *pp) {
 
-	int activeUnif, actualLen, index, uniType, 
+	int uniType;
+	int activeUnif, actualLen, index, 
 		uniSize, uniMatStride, uniArrayStride, uniOffset;
 	char name[256];
 	char values[256];
@@ -1050,8 +1076,8 @@ GLRenderer::showDrawDebugInfo(IProgram *pp) {
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_SIZE, &uniSize);
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
 			std::string s;
-			if (uniType != GL_UNSIGNED_INT_ATOMIC_COUNTER) {
-				switch (Enums::getBasicType(GLUniform::spSimpleType[uniType])) {
+			if (uniType != (int)GL_UNSIGNED_INT_ATOMIC_COUNTER) {
+				switch (Enums::getBasicType(GLUniform::spSimpleType[(GLenum)uniType])) {
 
 				case Enums::BOOL:
 				case Enums::INT:
@@ -1067,15 +1093,15 @@ GLRenderer::showDrawDebugInfo(IProgram *pp) {
 					glGetUniformdv(program, i, (GLdouble *)values);
 					break;
 				}
-				s = Enums::valueToString(GLUniform::spSimpleType[uniType], values);
+				s = Enums::valueToString(GLUniform::spSimpleType[(GLenum)uniType], values);
 			}
 			else s = "";
 			int auxSize;
 			if (uniArrayStride > 0)
 				auxSize = uniArrayStride * uniSize;
 			else
-				auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]) * uniSize;
-			SLOG("%s (%s) location: %d size: %d values: %s", name, GLUniform::spGLSLType[uniType].c_str(), i,
+				auxSize = Enums::getSize(GLUniform::spSimpleType[(GLenum)uniType]) * uniSize;
+			SLOG("%s (%s) location: %d size: %d values: %s", name, GLUniform::spGLSLType[(GLenum)uniType].c_str(), i,
 				auxSize, s.c_str());
 		}
 	}
@@ -1105,7 +1131,7 @@ GLRenderer::showDrawDebugInfo(IProgram *pp) {
 		
 			glGetActiveUniformName(program, indices[k], 256, &actualLen, name);
 			glGetActiveUniformsiv(program, 1, &indices[k], GL_UNIFORM_TYPE, &uniType);
-			SLOG("\t%s\n\t    %s", name, GLUniform::spGLSLType[uniType].c_str());
+			SLOG("\t%s\n\t    %s", name, GLUniform::spGLSLType[(GLenum)uniType].c_str());
 
 			glGetActiveUniformsiv(program, 1, &indices[k], GL_UNIFORM_OFFSET, &uniOffset);
 			SLOG("\t    offset: %d", uniOffset);
@@ -1123,34 +1149,34 @@ GLRenderer::showDrawDebugInfo(IProgram *pp) {
 			else if (uniMatStride > 0) {
 
 				switch(uniType) {
-					case GL_FLOAT_MAT2:
-					case GL_FLOAT_MAT2x3:
-					case GL_FLOAT_MAT2x4:
-					case GL_DOUBLE_MAT2:
-					case GL_DOUBLE_MAT2x3:
-					case GL_DOUBLE_MAT2x4:
+					case (int)GL_FLOAT_MAT2:
+					case (int)GL_FLOAT_MAT2x3:
+					case (int)GL_FLOAT_MAT2x4:
+					case (int)GL_DOUBLE_MAT2:
+					case (int)GL_DOUBLE_MAT2x3:
+					case (int)GL_DOUBLE_MAT2x4:
 						auxSize = 2 * uniMatStride;
 						break;
-					case GL_FLOAT_MAT3:
-					case GL_FLOAT_MAT3x2:
-					case GL_FLOAT_MAT3x4:
-					case GL_DOUBLE_MAT3:
-					case GL_DOUBLE_MAT3x2:
-					case GL_DOUBLE_MAT3x4:
+					case (int)GL_FLOAT_MAT3:
+					case (int)GL_FLOAT_MAT3x2:
+					case (int)GL_FLOAT_MAT3x4:
+					case (int)GL_DOUBLE_MAT3:
+					case (int)GL_DOUBLE_MAT3x2:
+					case (int)GL_DOUBLE_MAT3x4:
 						auxSize = 3 * uniMatStride;
 						break;
-					case GL_FLOAT_MAT4:
-					case GL_FLOAT_MAT4x2:
-					case GL_FLOAT_MAT4x3:
-					case GL_DOUBLE_MAT4:
-					case GL_DOUBLE_MAT4x2:
-					case GL_DOUBLE_MAT4x3:
+					case (int)GL_FLOAT_MAT4:
+					case (int)GL_FLOAT_MAT4x2:
+					case (int)GL_FLOAT_MAT4x3:
+					case (int)GL_DOUBLE_MAT4:
+					case (int)GL_DOUBLE_MAT4x2:
+					case (int)GL_DOUBLE_MAT4x3:
 						auxSize = 4 * uniMatStride;
 						break;
 				}
 			}
 			else
-				auxSize = Enums::getSize(GLUniform::spSimpleType[uniType]);
+				auxSize = Enums::getSize(GLUniform::spSimpleType[(GLenum)uniType]);
 
 			auxSize = getUniformByteSize2(uniSize, uniType, uniArrayStride, uniMatStride);
 			SLOG("\t    size: %d", auxSize);
@@ -1213,10 +1239,10 @@ GLRenderer::readpixel(int x, int y) {
 }
 
 
-unsigned int
+GLenum
 GLRenderer::translateStencilDepthFunc(int anOp) {
 
-	unsigned int res;
+	GLenum res;
 
 	switch (anOp){
 	case Pass::NEVER:
@@ -1249,28 +1275,28 @@ GLRenderer::translateStencilDepthFunc(int anOp) {
 }
 
 
-unsigned int
+GLenum
 GLRenderer::translateStencilOp(int aFunc) {
 
 	switch (aFunc) {
 	case Pass::KEEP:
-		return(GL_KEEP);
+		return GL_KEEP;
 	case Pass::ZERO:
-		return (GL_ZERO);
+		return GL_ZERO;
 	case Pass::REPLACE:
-		return (GL_REPLACE);
+		return GL_REPLACE;
 	case Pass::INCR:
-		return(GL_INCR);
+		return GL_INCR;
 	case Pass::INCR_WRAP:
-		return(GL_INCR_WRAP);
+		return GL_INCR_WRAP;
 	case Pass::DECR:
-		return(GL_DECR);
+		return GL_DECR;
 	case Pass::DECR_WRAP:
-		return(GL_DECR_WRAP);
+		return GL_DECR_WRAP;
 	case Pass::INVERT:
-		return(GL_INVERT);
+		return GL_INVERT;
 	default:
-		return(GL_KEEP);
+		return GL_KEEP;
 	}
 }
 
@@ -1298,8 +1324,8 @@ unsigned int
 GLRenderer::translateDrawingPrimitive (unsigned int aDrawPrimitive) {
 
 	if (IRenderer::PRIMITIVE_TYPE_COUNT > aDrawPrimitive)
-		return GLPrimitiveTypes[aDrawPrimitive];
+		return (unsigned int)GLPrimitiveTypes[aDrawPrimitive];
 	else
-		return GL_INVALID_ENUM;	
+		return (unsigned int)GL_INVALID_ENUM;	
 }
 
