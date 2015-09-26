@@ -40,13 +40,7 @@
     <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialogs\dlgDbgBuffers.cpp">
-      <Filter>dialogs</Filter>
-    </ClCompile>
     <ClCompile Include="src\dialogs\dlgDbgStep.cpp">
-      <Filter>dialogs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialogs\dlgStateXML.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
     <ClCompile Include="src\dialogs\dlgViewports.cpp">
@@ -62,6 +56,9 @@
       <Filter>dialogs</Filter>
     </ClCompile>
     <ClCompile Include="src\dialogs\dlgMatITexPanels.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialogs\dlgBuffers.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
   </ItemGroup>
@@ -105,13 +102,7 @@
     <ClInclude Include="src\dialogs\dlgDbgPrograms.h">
       <Filter>dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="src\dialogs\dlgDbgBuffers.h">
-      <Filter>dialogs</Filter>
-    </ClInclude>
     <ClInclude Include="src\dialogs\dlgDbgStep.h">
-      <Filter>dialogs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialogs\dlgStateXML.h">
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\dialogs\dlgViewports.h">
@@ -127,6 +118,9 @@
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\dialogs\dlgMatITexPanels.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgBuffers.h">
       <Filter>dialogs</Filter>
     </ClInclude>
   </ItemGroup>

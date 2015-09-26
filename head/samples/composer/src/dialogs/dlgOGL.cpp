@@ -1,5 +1,9 @@
 #pragma warning(disable:4018)
+
 #include "dlgOGL.h"
+
+#include <nau/loader/stateLoader.h>
+#include <nau/render/iGlobalState.h>
 
 #include <glbinding/gl/gl.h>
 using namespace gl;
@@ -139,35 +143,19 @@ void DlgOGL::setupInfoPanel(wxSizer *siz, wxWindow *parent) {
 
 		wxArrayString *li = new wxArrayString();
 		
-		//wschar *tmp,*text,*token;
-		//tmp = (char *)glGetString(GL_EXTENSIONS);
-
-		//if(tmp){
-
-		//	text=_strdup(tmp);
-		//	token=strtok(text," ");
-		//	while(token!=NULL){
-		//		s.Printf(wxT("%s"),token);
-		//	  li->Add(s);
-		//	  token=strtok(NULL," ");
-		//	  }
-		//}
-
 		for (int i = 0; i < n ; ++i) {
 		
 			s.Printf(wxT("%s"), (char *)glGetStringi(GL_EXTENSIONS, i));
 			li->Add(s);
 		}
-		//free(tmp);
 		li->Sort();
-		wxListBox *lb = new wxListBox(parent,-1);//,wxDefaultPosition,wxDefaultSize,li);
+		wxListBox *lb = new wxListBox(parent,-1);
 		lb->InsertItems(*li,0);
 
 
 	sizer3->Add(lb,1,wxGROW|wxEXPAND|wxALL,5);
 
 	siz->Add(sizer,0,wxGROW|wxALL,5);
-//	siz->Add(sizer2,0,wxGROW|wxALL,5);
 	siz->Add(sizer3,1,wxGROW|wxALL,5);
 }
 
@@ -195,88 +183,109 @@ void DlgOGL::setupMIPanel(wxSizer *siz, wxWindow *parent) {
            );
 	pgmi->AddPage(wxT("Standard Items"));
 
-	int d;
+	nau::render::IGlobalState *gs = IGlobalState::Create();
+	nau::loader::StateLoader::LoadStateXMLFile("./nauSettings/state.xml", gs);
 
-	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS"),wxPG_LABEL,d));
+	std::vector<std::string> enumNames;
+	gs->getStateEnumNames(&enumNames);
+	std::string value;
+	wxPGProperty *enumProperty;
+	wxPGProperty *root = pgmi->GetCurrentPage()->GetRoot();
+	for (std::string enumName : enumNames){
+		value = gs->getState(enumName);
+		enumProperty = root->GetPropertyByName(enumName);
+		if (!enumProperty){
+			enumProperty = pgmi->Append(new wxStringProperty(enumName, wxPG_LABEL, value));
+			enumProperty->Enable(false);
+		}
+		else{
+			enumProperty->SetValue(wxVariant(value));
+		}
+	}
 
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT X"),wxPG_LABEL,d));
 
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT Y"),wxPG_LABEL,d));
+	//int d;
 
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT Z"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS"),wxPG_LABEL,d));
 
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE X"),wxPG_LABEL,d));
+	//glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT X"),wxPG_LABEL,d));
 
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE Y"),wxPG_LABEL,d));
+	//glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT Y"),wxPG_LABEL,d));
 
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE Z"),wxPG_LABEL,d));
+	//glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_COUNT Z"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS"),wxPG_LABEL,d));
+	//glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE X"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_DRAW_BUFFERS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_DRAW_BUFFERS"),wxPG_LABEL,d));
+	//glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE Y"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_FRAGMENT_UNIFORM_COMPONENTS"),wxPG_LABEL,d));
+	//glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMPUTE_WORK_GROUP_SIZE Z"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_TEXTURE_COORDS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TEXTURE_COORDS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TEXTURE_IMAGE_UNITS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_DRAW_BUFFERS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_DRAW_BUFFERS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_VARYING_FLOATS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VARYING_FLOATS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_FRAGMENT_UNIFORM_COMPONENTS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VERTEX_ATTRIBS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_TEXTURE_COORDS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TEXTURE_COORDS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TEXTURE_IMAGE_UNITS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VERTEX_UNIFORM_COMPONENTS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_VARYING_FLOATS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VARYING_FLOATS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_TEXTURE_UNITS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TEXTURE_UNITS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_VERTEX_ATTRIBS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VERTEX_ATTRIBS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_LIGHTS,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_LIGHTS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COLOR_ATTACHMENTS_EXT"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VERTEX_UNIFORM_COMPONENTS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE_EXT,&d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_RENDERBUFFER_SIZE_EXT"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_TEXTURE_UNITS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TEXTURE_UNITS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_COMBINED_ATOMIC_COUNTERS, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMBINED_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_LIGHTS,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_LIGHTS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_VERTEX_ATOMIC_COUNTERS, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VERTEX_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COLOR_ATTACHMENTS_EXT"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE_EXT,&d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_RENDERBUFFER_SIZE_EXT"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_COMBINED_ATOMIC_COUNTERS, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_COMBINED_ATOMIC_COUNTERS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_GEOMETRY_ATOMIC_COUNTERS, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_GEOMETRY_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_VERTEX_ATOMIC_COUNTERS, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_VERTEX_ATOMIC_COUNTERS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_FRAGMENT_ATOMIC_COUNTERS, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_FRAGMENT_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS"),wxPG_LABEL,d));
 
-	glGetIntegerv(GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE, &d);
-	pgmi->Append(new  wxIntProperty(wxT("GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE"),wxPG_LABEL,d));
+	//glGetIntegerv(GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+
+	//glGetIntegerv(GL_MAX_GEOMETRY_ATOMIC_COUNTERS, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_GEOMETRY_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+
+	//glGetIntegerv(GL_MAX_FRAGMENT_ATOMIC_COUNTERS, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_FRAGMENT_ATOMIC_COUNTERS"),wxPG_LABEL,d));
+
+	//glGetIntegerv(GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE, &d);
+	//pgmi->Append(new  wxIntProperty(wxT("GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE"),wxPG_LABEL,d));
 
 	//	pgmi->SetSplitterPosition(300);
 

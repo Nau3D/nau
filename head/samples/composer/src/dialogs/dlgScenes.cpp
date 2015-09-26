@@ -417,7 +417,7 @@ void DlgScenes::OnAddDir(wxCommandEvent& event)
 			while (0 != (ent = readdir (dir))) {
 
 		#ifdef NAU_PLATFORM_WIN32
-				sprintf (fileName, "%s\\%s", directory.GetName().c_str(), ent->d_name);
+				sprintf (fileName, "%s\\%s", (const char *)directory.GetName().c_str(), ent->d_name);
 		#else
 				sprintf (fileName, "%s/%s", dirName, ent->d_name);						
 		#endif

@@ -5,31 +5,32 @@
 
 #include <stdio.h>
 #include <string>
+#include <vector>
 #include <map>
 
 
-static const char logLevelNames[][9] = {
-	"CONFIG", "INFO", "WARN", "ERROR", "CRITICAL", "ALL", "TRACE"
-};
+
 
 class CLogHandler
 {
 	private:
 		std::string m_FileName;
+		FILE *m_FileHandler;
 
 	public:
 		CLogHandler();
+		~CLogHandler();
 		CLogHandler (std::string file);
 		void log(std::string& message);
-		void reset();
+		void setFile(std::string &fileName);
+		void close();
+		//void reset();
 };
 
 class CLogger
 {
-
 	public:
 		typedef enum {
-			LEVEL_NONE,
 			LEVEL_CONFIG,
 			LEVEL_INFO,
 			LEVEL_WARN,
@@ -37,19 +38,21 @@ class CLogger
 			LEVEL_CRITICAL,
 			LEVEL_TRACE
 		} LogLevel;
-		static CLogger& GetInstance();
-		void addLog (LogLevel level, std::string file = "");
-		void log (LogLevel logLevel, std::string sourceFile, int line, std::string message);
-		void logSimple (LogLevel logLevel, std::string message);
-		void logSimpleNR (LogLevel logLevel, std::string message);
-		bool hasLog(LogLevel logLevel);
-		void reset(LogLevel logLevel);
+
+		static void AddLog (LogLevel level, std::string file = "");
+		static void Log (LogLevel logLevel, std::string sourceFile, int line, std::string message);
+		static void LogSimple (LogLevel logLevel, std::string message);
+		static void LogSimpleNR (LogLevel logLevel, std::string message);
+		static bool HasLog(LogLevel logLevel);
+		static void CloseLog(LogLevel level);
+		//static void Reset(LogLevel logLevel);
 
 		~CLogger(void);
 
 	private:
 		CLogger(void);
-		std::map <LogLevel, CLogHandler> m_Logs;
+		static std::map <LogLevel, CLogHandler> Logs;
+		static const std::vector<std::string> LogNames;
 };
 
 
@@ -58,7 +61,7 @@ class CLogger
 {\
   char m[256];\
   sprintf(m, message, ## __VA_ARGS__);\
-  (CLogger::GetInstance()).log(LEVEL_INFO,__FILE__,__LINE__,m);\
+  CLogger::Log(LEVEL_INFO,__FILE__,__LINE__,m);\
 };
 #else
 #define LOG_DEBUG
@@ -69,7 +72,7 @@ class CLogger
 {\
 	char m[256];\
 	sprintf(m, message, ## __VA_ARGS__);\
-	(CLogger::GetInstance()).log(CLogger::LEVEL_TRACE,__FILE__,__LINE__,m);\
+	CLogger::Log(CLogger::LEVEL_TRACE,__FILE__,__LINE__,m);\
 };
 
 
@@ -77,7 +80,7 @@ class CLogger
 {\
 	char m[256];\
 	sprintf(m, message, ## __VA_ARGS__);\
-	(CLogger::GetInstance()).logSimple(CLogger::LEVEL_TRACE,m);\
+	CLogger::LogSimple(CLogger::LEVEL_TRACE,m);\
 };
 
 
@@ -85,7 +88,7 @@ class CLogger
 {\
 	char m[256];\
 	sprintf(m, message, ## __VA_ARGS__);\
-	(CLogger::GetInstance()).logSimpleNR(CLogger::LEVEL_TRACE,m);\
+	CLogger::LogSimpleNR(CLogger::LEVEL_TRACE,m);\
 };
 
 
@@ -93,7 +96,7 @@ class CLogger
 {\
 	char m[256];\
 	sprintf(m, message, ## __VA_ARGS__);\
-	(CLogger::GetInstance()).log(CLogger::LEVEL_CONFIG,__FILE__,__LINE__,m);\
+	CLogger::Log(CLogger::LEVEL_CONFIG,__FILE__,__LINE__,m);\
 };
 
 
@@ -101,7 +104,7 @@ class CLogger
 {\
   char m[256];\
   sprintf(m, message, ## __VA_ARGS__);\
-  (CLogger::GetInstance()).log(CLogger::LEVEL_INFO,__FILE__,__LINE__,m);\
+  CLogger::Log(CLogger::LEVEL_INFO,__FILE__,__LINE__,m);\
 };
 
 
@@ -109,7 +112,7 @@ class CLogger
 {\
   char m[256];\
   sprintf(m, message, ## __VA_ARGS__);\
-  (CLogger::GetInstance()).log(CLogger::LEVEL_WARN,__FILE__,__LINE__,m);\
+  CLogger::Log(CLogger::LEVEL_WARN,__FILE__,__LINE__,m);\
 };
 
 
@@ -117,7 +120,7 @@ class CLogger
 {\
   char m[256];\
   sprintf(m, message, ## __VA_ARGS__);\
-  (CLogger::GetInstance()).log(CLogger::LEVEL_ERROR,__FILE__,__LINE__,m);\
+  CLogger::Log(CLogger::LEVEL_ERROR,__FILE__,__LINE__,m);\
 };
 
 
@@ -125,7 +128,7 @@ class CLogger
 {\
   char m[256];\
   sprintf(m, message, ## __VA_ARGS__);\
-  (CLogger::GetInstance()).log(CLogger::LEVEL_CRITICAL,__FILE__,__LINE__,m);\
+  CLogger::Log(CLogger::LEVEL_CRITICAL,__FILE__,__LINE__,m);\
 };
 
 

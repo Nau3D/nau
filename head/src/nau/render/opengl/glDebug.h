@@ -30,13 +30,14 @@ namespace nau {
 
 			/// if -1 keep tracing
 			/// if 0 stop tracing
-			/// if n > 0 trace for n frames then stop
-			static void SetTrace(int numberOfFrames);
+			/// if n > 0 trace frame and return n-1
+			static int SetTrace(int numberOfFrames);
 			
 		protected:
 
 			static bool sInited;
 			static bool sCallBackOK;
+			static bool sTracing;
 
 			GLDebug(){};
 			~GLDebug(){};

@@ -65,7 +65,7 @@ IState*
 IState::create() {
 
 #ifdef NAU_OPENGL
-	return new GlState ;
+	return new GLState ;
 #elif NAU_DIRECTX
 	return new DXState;
 #endif

@@ -224,10 +224,10 @@ Pipeline::executePass(Pass *pass) {
 		keepRunning = true;
 
 	do {
-#ifdef GLINTERCEPTDEBUG
 		if (NAU->getTraceStatus()) {
 			LOG_trace("#NAU(PASS START %s)", pass->getName().c_str());
 		}
+#ifdef GLINTERCEPTDEBUG
 		addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
@@ -242,10 +242,10 @@ Pipeline::executePass(Pass *pass) {
 			pass->doPass();
 			pass->restore();
 		}
-#ifdef GLINTERCEPTDEBUG
 		if (NAU->getTraceStatus()) {
 			LOG_trace("#NAU(PASS END %s)", pass->getName().c_str());
 		}
+#ifdef GLINTERCEPTDEBUG
 		addMessageToGLILog(("\n#NAU(PASS,END," + pass->getName() + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 

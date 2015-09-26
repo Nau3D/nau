@@ -18,22 +18,11 @@
 
 #define NAU_RENDER_FLAGS
 
+
 //#define GLINTERCEPTDEBUG
 #define NAU_LUA
 
 #define NAU_DEBUG 0
-
-#ifdef NAU_LUA
-#pragma comment(lib, "lua53.lib")
-#endif
-
-#ifdef _WIN32
-#ifdef _DEBUG
-#pragma comment(lib, "glbindingd.lib")
-#else
-#pragma comment(lib, "glbinding.lib")
-#endif
-#endif
 
 #define GLBINDING_STATIC
 #endif // NAU_CONFIG_H

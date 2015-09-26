@@ -24,6 +24,7 @@
 using namespace gl;
 //#include <GL/glew.h>
 
+#include <assert.h>
 
 
 enum Types {
@@ -851,6 +852,10 @@ getUniformByteSize(int uniSize,
 			case (unsigned int)GL_DOUBLE_MAT4x2:
 			case (unsigned int)GL_DOUBLE_MAT4x3:
 				auxSize = 4 * uniMatStride;
+				break;
+			default:
+				auxSize = 0;
+				assert("shouldn't be here");
 				break;
 		}
 	}

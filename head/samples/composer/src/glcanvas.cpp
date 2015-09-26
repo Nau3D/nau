@@ -118,6 +118,7 @@ GlCanvas::OnPaint (wxPaintEvent &event) {
 		Render();
 
 		if (step != 0){
+			DlgDbgGLILogRead::Instance()->loadLog();
 
 #ifdef GLINTERCEPTDEBUG
 			gliSetIsGLIActive(false);
@@ -125,17 +126,13 @@ GlCanvas::OnPaint (wxPaintEvent &event) {
 				DlgDbgGLILogRead::Instance()->clear();
 			}
 
-			DlgDbgGLILogRead::Instance()->loadLog();
 			DlgDbgPrograms::Instance()->clear();
 			DlgDbgPrograms::Instance()->loadShaderInfo();
-
-			//DlgDbgBuffers::Instance()->clear();
-			//DlgDbgBuffers::Instance()->loadBufferInfo();
 
 			DlgDbgStep::Instance()->updateDlg();
 #endif
 
-			DlgStateXML::Instance()->updateDlg();
+			//DlgStateXML::Instance()->updateDlg();
 			step = 0;
 		}
 	}
@@ -212,7 +209,7 @@ GlCanvas::Render ()
 		if (m_pCamera)
 			v = m_pCamera->getPropf4(Camera::VIEW_VEC);
 
-		sprintf(fps, "FPS: %d - Triangles: %d", m_CounterFps, RENDERER->getCounter(nau::render::IRenderer::TRIANGLE_COUNTER));
+		sprintf(fps, "FPS: %d - Triangles: %u", m_CounterFps, RENDERER->getCounter(nau::render::IRenderer::TRIANGLE_COUNTER));
 		wxTopLevelWindow *tlw = (wxTopLevelWindow *)(this->GetParent());
 
 		tlw->SetTitle(wxString::FromAscii(fps));

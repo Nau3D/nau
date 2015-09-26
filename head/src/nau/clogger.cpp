@@ -3,8 +3,8 @@
 #include <sys/timeb.h>
 #include <ctime>
 
-static CLogger *instance = 0;
-
+const std::vector<std::string> CLogger::LogNames = { "CONFIG", "INFO", "WARN", "ERROR", "CRITICAL", "TRACE" };
+std::map <CLogger::LogLevel, CLogHandler> CLogger::Logs;
 
 CLogger::CLogger(void) {
 
@@ -16,44 +16,36 @@ CLogger::~CLogger(void) {
 }
 
 
-CLogger& 
-CLogger::GetInstance() {
-
-	if (0 == instance){
-		instance = new CLogger;
-	}
-	return *instance;
-}
-
-
 void 
-CLogger::addLog (LogLevel level, std::string file) {
+CLogger::AddLog (LogLevel level, std::string file) {
 
-	if (level != LEVEL_NONE)
-		m_Logs[level] = CLogHandler (file);
+	if (Logs.count(level) == 0) 
+		Logs[level] = CLogHandler();
+	
+	Logs[level].setFile(file);
 }
 
 
 bool
-CLogger::hasLog(LogLevel ll) {
+CLogger::HasLog(LogLevel ll) {
 
-	return 0 != m_Logs.count(ll);
+	return 0 != Logs.count(ll);
 }
 
 
 void 
-CLogger::log (LogLevel logLevel, std::string sourceFile, int line, std::string message) {
+CLogger::Log (LogLevel logLevel, std::string sourceFile, int line, std::string message) {
 	
-	// log exists?
-	if (m_Logs.count(logLevel) == 0)
-		return;
+	// log exists? If not create 
+	if (Logs.count(logLevel) == 0)
+		Logs[logLevel] = CLogHandler();
 
 	timeb time;
 	std::string result;
 	char tempBuffer[256];
 
 	result += "[";
-	result += logLevelNames[logLevel];
+	result += LogNames[logLevel];
 	result += "]";
 
 	ftime(&time);
@@ -80,43 +72,43 @@ CLogger::log (LogLevel logLevel, std::string sourceFile, int line, std::string m
 
 	result += "\n";
 
-	m_Logs[logLevel].log(result);
+	Logs[logLevel].log(result);
 }
 
 
 void 
-CLogger::logSimple (LogLevel logLevel, std::string message) {
+CLogger::LogSimple (LogLevel logLevel, std::string message) {
 	
 	// log exists?
-	if (m_Logs.count(logLevel) == 0)
-		return;
+	if (Logs.count(logLevel) == 0)
+		Logs[logLevel] = CLogHandler();
 
 	std::string result = message;
 
 	result += "\n";
 
-	m_Logs[logLevel].log(result);
+	Logs[logLevel].log(result);
 }
 
 
 void 
-CLogger::logSimpleNR (LogLevel logLevel, std::string message) {
+CLogger::LogSimpleNR (LogLevel logLevel, std::string message) {
 	
 	// log exists?
-	if (m_Logs.count(logLevel) == 0)
-		return;
+	if (Logs.count(logLevel) == 0)
+		Logs[logLevel] = CLogHandler();
 
-	m_Logs[logLevel].log(message);
+	Logs[logLevel].log(message);
 }
 
 
 void 
-CLogger::reset(LogLevel ll) {
+CLogger::CloseLog(LogLevel ll) {
 
-	if (m_Logs.count(ll) == 0)
+	if (Logs.count(ll) == 0)
 		return;
 
-	m_Logs[ll].reset();
+	Logs[ll].close();
 }
 
 
@@ -128,49 +120,84 @@ CLogger::reset(LogLevel ll) {
 CLogHandler::CLogHandler() {
 
 	m_FileName = "";
+	m_FileHandler = stdout;
 }
 
-CLogHandler::CLogHandler (std::string file) {
+
+CLogHandler::~CLogHandler() {
+
+	if (m_FileHandler != stdout)
+		fclose(m_FileHandler);
+}
+
+
+CLogHandler::CLogHandler(std::string file) {
 
 	m_FileName = file;
+	m_FileHandler = fopen (m_FileName.c_str (), "w");
+	if (0 == m_FileHandler)
+		m_FileHandler = stdout;
 }
 
 
 void 
 CLogHandler::log(std::string& message) {
 
-	FILE* fileHandler;
+	//FILE* fileHandler;
 
-	fileHandler = m_FileName == "" ? stdout : 0;
+	//fileHandler = m_FileName == "" ? stdout : 0;
 
-	if (0 == fileHandler){
-		
-		fileHandler = fopen (m_FileName.c_str (), "a");
-		if (0 == fileHandler){
-			return;
-		}
-	} 
+	//if (0 == fileHandler){
+	//	
+	//	fileHandler = fopen (m_FileName.c_str (), "a");
+	//	if (0 == fileHandler){
+	//		return;
+	//	}
+	//} 
 
-	fwrite (message.c_str(), message.size (), 1, fileHandler);
-	if (fileHandler != stdout){
-		fclose (fileHandler);
-	}
+	fwrite (message.c_str(), message.size (), 1, m_FileHandler);
+	//if (fileHandler != stdout){
+	//	fclose (fileHandler);
+	//}
 }
 
 
-void 
-CLogHandler::reset() {
+//void 
+//CLogHandler::reset() {
+//
+//	if (m_FileHandler != stdout) 
+//		m_FileHandler = fopen (m_FileName.c_str (), "w");
+//	//FILE* fileHandler;
+//
+//	//fileHandler = m_FileName == "" ? stdout : 0;
+//
+//	//if (0 == fileHandler){
+//	//	
+//	//	fileHandler = fopen (m_FileName.c_str (), "w");
+//	//	if (!fileHandler)
+//	//		m_FileName = "";
+//	//	else
+//	//		fclose (fileHandler);
+//	//} 
+//}
 
-	FILE* fileHandler;
 
-	fileHandler = m_FileName == "" ? stdout : 0;
+void
+CLogHandler::setFile(std::string &fileName) {
 
-	if (0 == fileHandler){
-		
-		fileHandler = fopen (m_FileName.c_str (), "w");
-		if (!fileHandler)
-			m_FileName = "";
-		else
-			fclose (fileHandler);
-	} 
+	if (m_FileHandler != stdout)
+		fclose(m_FileHandler);
+
+	m_FileName = fileName;
+	m_FileHandler = fopen (m_FileName.c_str(), "w");
+	if (0 == m_FileHandler)
+		m_FileHandler = stdout;
+}
+
+
+void
+CLogHandler::close() {
+
+	if (m_FileHandler != stdout)
+		fclose(m_FileHandler);
 }

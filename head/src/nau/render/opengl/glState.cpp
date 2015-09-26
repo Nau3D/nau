@@ -8,8 +8,9 @@ using namespace gl;
 
 using namespace nau::render;
 
+
 bool
-GlState::InitGL() {
+GLState::InitGL() {
 
 	// ENUM
 	Attribs.setDefault("DEPTH_FUNC", new int((int)GL_LESS));
@@ -75,18 +76,23 @@ GlState::InitGL() {
 	return true;
 }
 
-bool GlState::Inited = InitGL();
+bool GLState::Inited = InitGL();
+
+
+
+
+
 
 
 //
 //Constructor & Destructor
 //
-GlState::GlState(): IState()   {
+GLState::GLState(): IState()   {
 
 }
 
 
-GlState::~GlState() {
+GLState::~GLState() {
 
 }
 
@@ -94,7 +100,7 @@ GlState::~GlState() {
  //Set Full States
 
 void
-GlState::set() {
+GLState::set() {
 
 	std::map< int, int>::iterator iterInt;
 	iterInt = m_IntProps.begin();
@@ -207,11 +213,11 @@ GlState::set() {
 
 
 void 
-GlState::setDiff(IState *def, IState *aState) {
+GLState::setDiff(IState *def, IState *aState) {
 
-	GlState s;
-	GlState *d = (GlState *)def;
-	GlState *a = (GlState *)aState;
+	GLState s;
+	GLState *d = (GLState *)def;
+	GLState *a = (GLState *)aState;
 
 	s.clearArrays();
 	std::map< int, int>::iterator iterInt;
@@ -229,8 +235,10 @@ GlState::setDiff(IState *def, IState *aState) {
 			}
 		}
 
-		// if a is not setting this property and the default value is different from the current value
-		else if (d->m_IntProps.count(iterInt->first) && d->m_IntProps[iterInt->first] != iterInt->second) {
+		// if a is not setting this property and 
+		// the default value is different from the current value
+		else if (d->m_IntProps.count(iterInt->first) 
+				&& d->m_IntProps[iterInt->first] != iterInt->second) {
 			// add the default value to the new state
 			s.m_IntProps[iterInt->first] = d->m_IntProps[iterInt->first];
 			// change the current state accordingly
@@ -251,7 +259,8 @@ GlState::setDiff(IState *def, IState *aState) {
 			}
 		}
 
-		else if (d->m_BoolProps.count(iterBool->first) && d->m_BoolProps[iterBool->first] != iterBool->second) {
+		else if (d->m_BoolProps.count(iterBool->first) && 
+				d->m_BoolProps[iterBool->first] != iterBool->second) {
 
 			s.m_BoolProps[iterBool->first] = d->m_BoolProps[iterBool->first];
 			m_BoolProps[iterBool->first] = d->m_BoolProps[iterBool->first];
@@ -271,7 +280,8 @@ GlState::setDiff(IState *def, IState *aState) {
 			}
 		}
 
-		else if (d->m_FloatProps.count(iterFloat->first) && d->m_FloatProps[iterFloat->first] != iterFloat->second) {
+		else if (d->m_FloatProps.count(iterFloat->first) && 
+				d->m_FloatProps[iterFloat->first] != iterFloat->second) {
 
 			s.m_FloatProps[iterFloat->first] = d->m_FloatProps[iterFloat->first];
 			m_FloatProps[iterFloat->first] = d->m_FloatProps[iterFloat->first];
@@ -291,7 +301,8 @@ GlState::setDiff(IState *def, IState *aState) {
 			}
 		}
 
-		else if (d->m_Float4Props.count(iterVec4->first) && d->m_Float4Props[iterVec4->first] != iterVec4->second) {
+		else if (d->m_Float4Props.count(iterVec4->first) && 
+				d->m_Float4Props[iterVec4->first] != iterVec4->second) {
 
 			s.m_Float4Props[iterVec4->first] = d->m_Float4Props[iterVec4->first];
 			m_Float4Props[iterVec4->first] = d->m_Float4Props[iterVec4->first];
@@ -311,7 +322,8 @@ GlState::setDiff(IState *def, IState *aState) {
 			}
 		}
 
-		else if (d->m_Bool4Props.count(iterBool4->first) && d->m_Bool4Props[iterBool4->first] != iterBool4->second) {
+		else if (d->m_Bool4Props.count(iterBool4->first) && 
+				d->m_Bool4Props[iterBool4->first] != iterBool4->second) {
 
 			s.m_Bool4Props[iterBool4->first] = d->m_Bool4Props[iterBool4->first];
 			m_Bool4Props[iterBool4->first] = d->m_Bool4Props[iterBool4->first];
@@ -330,7 +342,8 @@ GlState::setDiff(IState *def, IState *aState) {
 			}
 		}
 
-		else if (d->m_EnumProps.count(iterInt->first) && d->m_EnumProps[iterInt->first] != iterInt->second) {
+		else if (d->m_EnumProps.count(iterInt->first) && 
+				d->m_EnumProps[iterInt->first] != iterInt->second) {
 
 			s.m_EnumProps[iterInt->first] = d->m_EnumProps[iterInt->first];
 			m_EnumProps[iterInt->first] = d->m_EnumProps[iterInt->first];
@@ -342,7 +355,7 @@ GlState::setDiff(IState *def, IState *aState) {
 
 
 float *
-GlState::toFloatPtr(vec4& v) {
+GLState::toFloatPtr(vec4& v) {
 
 	float *res = (float *)malloc(sizeof(float) * 4);
 
@@ -356,7 +369,7 @@ GlState::toFloatPtr(vec4& v) {
 
 
 bool 
-GlState::difColor(vec4& a, vec4& b) {
+GLState::difColor(vec4& a, vec4& b) {
 
 	if (a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w) {
 		a.x = b.x;
@@ -371,7 +384,7 @@ GlState::difColor(vec4& a, vec4& b) {
 
 
 bool 
-GlState::difBoolVector(bool* a, bool* b) {
+GLState::difBoolVector(bool* a, bool* b) {
 
 	if (a[0] != b[0] || a[1] != b[1] || a[2] != b[2] || a[3] != b[3]) {
 		a[0] = b[0];

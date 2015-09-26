@@ -439,7 +439,7 @@ void DlgLights::updateInfo(std::string name) {
 void DlgLights::OnAdd(wxCommandEvent& event) {
 
 	int result;
-	bool nameUnique,exit;
+	bool nameUnique,exit = false;
 	std::string name;
 
 	do {

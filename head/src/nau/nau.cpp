@@ -1059,12 +1059,13 @@ Nau::step() {
 	double deltaT = timer - m_LastFrameTime;
 	m_LastFrameTime = timer;
 
-#ifdef GLINTERCEPTDEBUG
 	m_TraceOn = m_TraceFrames != 0;
 	m_TraceFrames = RENDERER->setTrace(m_TraceFrames);
 	if (m_TraceOn) {
-		LOG_trace("\n#NAU(FRAME,START)");
+		LOG_trace("#NAU(FRAME,START)");
 	}
+
+#ifdef GLINTERCEPTDEBUG
 	addMessageToGLILog("\n#NAU(FRAME,START)");
 #endif //GLINTERCEPTDEBUG
 
@@ -1116,10 +1117,10 @@ void Nau::stepPass() {
 
 		m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
 
-#ifdef GLINTERCEPTDEBUG
 		if (m_TraceFrames) {
 			LOG_trace("#NAU(FRAME,START)");
 		}
+#ifdef GLINTERCEPTDEBUG
 		addMessageToGLILog("\n#NAU(FRAME,START)");
 #endif //GLINTERCEPTDEBUG
 
@@ -1133,19 +1134,19 @@ void Nau::stepPass() {
 	}
 
 	std::string s = RENDERMANAGER->getCurrentPass()->getName();
-#ifdef GLINTERCEPTDEBUG
 	if (m_TraceFrames) {
 		LOG_trace("\n#NAU(PASS START %s)", s.c_str());
 	}
+#ifdef GLINTERCEPTDEBUG
 	addMessageToGLILog(("\n#NAU(PASS,START," + s + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 
 	p->executeNextPass();
 
-#ifdef GLINTERCEPTDEBUG
 	if (m_TraceFrames) {
 		LOG_trace("#NAU(PASS END %s)", s.c_str());
 	}
+#ifdef GLINTERCEPTDEBUG
 	addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
 #endif //GLINTERCEPTDEBUG
 

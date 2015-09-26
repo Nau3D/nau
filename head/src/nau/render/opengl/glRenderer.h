@@ -121,7 +121,7 @@ namespace nau
 		protected:
 			std::map<int, MaterialTexture *> m_Textures;
 			std::map<int, IImageTexture *> m_ImageTextures;
-			nau::render::GlState m_glCurrState, m_glDefaultState;
+			nau::render::GLState m_glCurrState, m_glDefaultState;
 			nau::material::ColorMaterial m_Material;
 			IProgram *m_Shader;
 

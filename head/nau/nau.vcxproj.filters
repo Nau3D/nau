@@ -229,9 +229,6 @@
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\debug\state.cpp">
-      <Filter>Source Files\debug</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\attributeValues.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -523,6 +520,18 @@
     <ClCompile Include="..\src\nau\loader\cboLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\loader\stateLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\iGlobalState.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glGlobalState.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\debug\state.cpp">
+      <Filter>Source Files\debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -725,9 +734,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\attributeValues.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\debug\state.h">
-      <Filter>Source Files\debug</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\math\vec2.h">
       <Filter>Source Files\math</Filter>
@@ -1034,6 +1040,18 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\render\opengl\glUniform.h">
       <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\stateLoader.h">
+      <Filter>Source Files\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iGlobalState.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glGlobalState.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\debug\state.h">
+      <Filter>Source Files\debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

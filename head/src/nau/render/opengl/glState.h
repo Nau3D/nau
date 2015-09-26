@@ -12,17 +12,18 @@ namespace nau
 {
 	namespace render
 	{
-		class GlState: public IState {
+		class GLState: public IState {
 
 		public:
 
-			GlState();
-			~GlState();
+			GLState();
+			~GLState();
 
 			virtual void set();
 			void setDiff(IState *defState, IState *pState);
 
 		private:
+
 			static bool Inited;
 			static bool InitGL();
 

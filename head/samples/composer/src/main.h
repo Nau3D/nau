@@ -18,9 +18,9 @@
 #include "dialogs/dlgPass.h"
 #include "dialogs/dlgDbgGLILogRead.h"
 #include "dialogs/dlgDbgPrograms.h"
-#include "dialogs/dlgDbgBuffers.h"
+#include "dialogs/dlgBuffers.h"
 #include "dialogs/dlgDbgStep.h"
-#include "dialogs/DlgStateXML.h"
+//#include "dialogs/DlgStateXML.h"
 #include "dialogs/dlgViewports.h"
 
 #include "glcanvas.h"
@@ -102,7 +102,7 @@ private:
 	void OnDlgDbgProgram(wxCommandEvent& event);
 	void OnDlgDbgBuffer(wxCommandEvent& event);
 	void OnDlgDbgStep(wxCommandEvent& event);
-	void OnDlgStateXML(wxCommandEvent& event);
+	//void OnDlgStateXML(wxCommandEvent& event);
 	//void OnNextFrame(wxCommandEvent& event);
 
 	void OnClose(wxCloseEvent& event);

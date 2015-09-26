@@ -101,9 +101,9 @@ int idMenuReload = wxNewId();
 
 int idMenuDbgBreak = wxNewId();
 int idMenuDbgStep = wxNewId();
-#ifdef GLINTERCEPTDEBUG
-//int idMenuDbgGLILogRead = wxNewId();
-#endif
+//#ifdef GLINTERCEPTDEBUG
+int idMenuDbgGLILogRead = wxNewId();
+//#endif
 // dialogs //
 
 int idMenu_DLG_OGL = wxNewId();
@@ -118,10 +118,10 @@ int idMenu_DLG_PASS = wxNewId();
 int idMenu_DLG_ATOMICS = wxNewId();
 int idMenu_DLG_VIEWPORTS = wxNewId();
 
-int idMenu_DLG_STATEXML = wxNewId();
-#ifdef GLINTERCEPTDEBUG
+//int idMenu_DLG_STATEXML = wxNewId();
+//#ifdef GLINTERCEPTDEBUG
 int idMenu_DLG_DBGGLILOGREAD = wxNewId();
-#endif
+//#endif
 int idMenu_DLG_DBGPROGRAM = wxNewId();
 int idMenu_DLG_DBGBUFFER = wxNewId();
 int idMenu_DLG_DBGSTEP = wxNewId();
@@ -158,11 +158,11 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
   EVT_MENU(idMenu_DLG_PASS, FrmMainFrame::OnDlgPass)
   EVT_MENU(idMenu_DLG_VIEWPORTS, FrmMainFrame::OnDlgViewports)
 
-#ifdef GLINTERCEPTDEBUG
+//#ifdef GLINTERCEPTDEBUG
   EVT_MENU(idMenu_DLG_DBGGLILOGREAD, FrmMainFrame::OnDlgDbgGLILogRead)
-#endif
+//#endif
   EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
-  EVT_MENU(idMenu_DLG_STATEXML, FrmMainFrame::OnDlgStateXML)
+ // EVT_MENU(idMenu_DLG_STATEXML, FrmMainFrame::OnDlgStateXML)
   EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
   EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
   EVT_MENU(idMenu_DLG_DBGSTEP, FrmMainFrame::OnDlgDbgStep)
@@ -193,8 +193,6 @@ END_EVENT_TABLE()
 FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
     : wxFrame(frame, -1, title), m_Canvas (0), materialsMenu (0), /*m_CurrentProject (0),*/ m_Width (0.0f), m_Height (0.0f), m_Inited (false)
 {
-
-
 
 
 #if wxUSE_MENUS
@@ -269,7 +267,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	debugMenu = new wxMenu(_T(""));
 	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
 	debugMenu->Append(idMenuDbgStep, _("Next Pass"), _("Renders next pass"));
-	debugMenu->Append(idMenu_DLG_STATEXML, _("State"), _("Shows OpenGL state variables"));
+	//debugMenu->Append(idMenu_DLG_STATEXML, _("State"), _("Shows OpenGL state variables"));
 	debugMenu->Append(idMenu_DLG_DBGSTEP, _("Advanced Pass Controller"), _("Aditional Pass control options"));
 	debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info"), _("Views Program information"));
 	//debugMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info"), _("Views Buffer information"));
@@ -376,13 +374,11 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgPass::SetParent(this);
 	DlgAtomics::SetParent(this);
 	DlgViewports::SetParent(this);
-#ifdef GLINTERCEPTDEBUG
 	DlgDbgGLILogRead::SetParent(this);
-#endif
 	DlgDbgPrograms::SetParent(this);
 	DlgDbgBuffers::SetParent(this);
 	DlgDbgStep::SetParent(this);
-	DlgStateXML::SetParent(this);
+	//DlgStateXML::SetParent(this);
 	DlgDbgStep::SetCanvas(m_Canvas);
 
 #ifdef GLINTERCEPTDEBUG
@@ -396,8 +392,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 }
 
 
-FrmMainFrame::~FrmMainFrame()
-{
+FrmMainFrame::~FrmMainFrame() {
+
 #ifdef GLINTERCEPTDEBUG
 	gliSetIsGLIActive(true);
 #endif
@@ -405,11 +401,10 @@ FrmMainFrame::~FrmMainFrame()
 
 
 void 
-FrmMainFrame::OnClose(wxCloseEvent& event)
-{
+FrmMainFrame::OnClose(wxCloseEvent& event) {
+
 	delete m_pRoot;
-	Destroy();  // you may also do:  event.Skip();
-	// since the default event handler does call Destroy(), too
+	Destroy();  
 }
 
 
@@ -491,8 +486,8 @@ FrmMainFrame::OnDlgPass(wxCommandEvent& event) {
 
 
 void 
-FrmMainFrame::updateDlgs()
-{
+FrmMainFrame::updateDlgs() {
+
 	if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS)) {
 		DlgAtomics::Instance()->updateDlg();
 		helpMenu->Enable(idMenu_DLG_ATOMICS, true);
@@ -507,10 +502,6 @@ FrmMainFrame::updateDlgs()
 	DlgPass::Instance()->updateDlg();
 	DlgViewports::Instance()->updateDlg();
 
-
-	//Update state dialog
-	DlgStateXML::Instance()->updateDlg();
-
 	helpMenu->Enable(idMenu_DLG_TEXTURES,true);
 	helpMenu->Enable(idMenu_DLG_CAMERAS,true);
 	helpMenu->Enable(idMenu_DLG_LIGHTS,true);
@@ -523,8 +514,8 @@ FrmMainFrame::updateDlgs()
 
 
 void
-FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event)
-{
+FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event) {
+
 	wxDirDialog *openDirDlg = new wxDirDialog (this);
 
 	wxStopWatch aTimer;
@@ -556,8 +547,8 @@ FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event)
 
 
 void
-FrmMainFrame::OnModelLoad (wxCommandEvent& event)
-{
+FrmMainFrame::OnModelLoad (wxCommandEvent& event) {
+
 	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
 	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
@@ -585,8 +576,8 @@ FrmMainFrame::OnModelLoad (wxCommandEvent& event)
 
 
 void
-FrmMainFrame::OnModelAppend (wxCommandEvent& event)
-{
+FrmMainFrame::OnModelAppend (wxCommandEvent& event) {
+
 	static const wxChar *fileTypes = _T("3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.cbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
 	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
@@ -614,8 +605,8 @@ FrmMainFrame::OnModelAppend (wxCommandEvent& event)
 
 
 void 
-FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
-{
+FrmMainFrame::OnProjectLoad(wxCommandEvent& event) {
+
 	static const wxChar *fileTypes = _T( "XML files|*.xml|All files|*.*");
 	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
@@ -657,8 +648,8 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event)
 
 
 void 
-FrmMainFrame::OnProcess (wxCommandEvent& event)
-{
+FrmMainFrame::OnProcess (wxCommandEvent& event) {
+
 	wxDirDialog *openDirDlg = new wxDirDialog (this);
 
 	if (wxID_OK == openDirDlg->ShowModal()) {
@@ -687,22 +678,22 @@ FrmMainFrame::OnProcess (wxCommandEvent& event)
 }
 
 
-void FrmMainFrame::OnQuit(wxCommandEvent& event)
-{
+void FrmMainFrame::OnQuit(wxCommandEvent& event) {
+
 	Close();
 }
 
 
-void FrmMainFrame::OnAbout(wxCommandEvent& event)
-{
+void FrmMainFrame::OnAbout(wxCommandEvent& event) {
+
     wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(_("Welcome to Composer - Nau3D's GUI\nhttps://github.com/Nau3D"), _("About Composer"));
+    wxMessageBox(_("Welcome to Composer - Nau3D's GUI\nhttps://github.com/Nau3D\nhttp://nau3d.di.uminho.pt"), _("About Composer"));
 }
 
 
 void
-FrmMainFrame::OnRenderMode(wxCommandEvent& event)
-{
+FrmMainFrame::OnRenderMode(wxCommandEvent& event) {
+
 	if (event.GetId() == idMenuWireframe){
 		RENDERMANAGER->setRenderMode (nau::render::IRenderer::WIREFRAME_MODE);
 	}
@@ -717,31 +708,10 @@ FrmMainFrame::OnRenderMode(wxCommandEvent& event)
 	}
 }
 
-	
-//void
-//FrmMainFrame::OnSetProfileMaterial(wxCommandEvent& event)
-//{
-//	if (event.GetId() == idMenuProfMatWhite){
-//		//NAU->setProfileMaterial ("__Emission White");
-//	}
-//	if (event.GetId() == idMenuProfMatRed) {
-//		//NAU->setProfileMaterial ("__Emission Red");
-//	}
-//	if (event.GetId() == idMenuProfMatGreen){
-//		//NAU->setProfileMaterial ("__Emission Green");
-//	}
-//	if (event.GetId() == idMenuProfMatBlue){
-//		//NAU->setProfileMaterial ("__Emission Blue");
-//	}
-//	if (event.GetId() == idMenuProfMatBlack){
-//		//NAU->setProfileMaterial ("Black");
-//	}
-//}
-
 
 void 
-FrmMainFrame::OnSetRenderFlags(wxCommandEvent& event)
-{
+FrmMainFrame::OnSetRenderFlags(wxCommandEvent& event) {
+
 	if (event.GetId() == idMenuRenderFlagBoundingBox) {
 		NAU->setRenderFlag(nau::Nau::BOUNDING_BOX_RENDER_FLAG,event.IsChecked());
 	}
@@ -752,30 +722,30 @@ FrmMainFrame::OnSetRenderFlags(wxCommandEvent& event)
 
 
 void
-FrmMainFrame::OnOctreeBuild (wxCommandEvent& event)
-{
+FrmMainFrame::OnOctreeBuild (wxCommandEvent& event) {
+
 	if (0 != m_pRoot) 
 		RENDERMANAGER->buildOctrees();
 }
 
 
 void
-FrmMainFrame::OnOctreeCompile (wxCommandEvent& event)
-{
+FrmMainFrame::OnOctreeCompile (wxCommandEvent& event) {
+
 	if (0 != m_pRoot) 
 		RENDERMANAGER->compile();
 }
 
 
-void FrmMainFrame::compile(IScene *scene) 
-{
+void FrmMainFrame::compile(IScene *scene) {
+
 	scene->compile();
 }
 
 
 void
-FrmMainFrame::OnOctreeWrite (wxCommandEvent& event) 
-{
+FrmMainFrame::OnOctreeWrite (wxCommandEvent& event) {
+
 	if (0 != m_pRoot) {
 		wxFileDialog *saveOctDlg = 
 			new wxFileDialog (this, _("Save octree"), _(""), _(""), _(""), wxFD_SAVE, wxDefaultPosition);
@@ -812,8 +782,8 @@ FrmMainFrame::OnOctreeWrite (wxCommandEvent& event)
 
 
 void
-FrmMainFrame::startStandAlone (void)
-{
+FrmMainFrame::startStandAlone (void) {
+
 	char *cwd;
 
 	cwd = _getcwd (0, 0);
@@ -852,8 +822,8 @@ FrmMainFrame::startStandAlone (void)
 
 
 void
-FrmMainFrame::buildPhysics (void)
-{
+FrmMainFrame::buildPhysics (void) {
+
 	nau::scene::Camera *cam = RENDERMANAGER->getCamera ("testCamera");
 
 	if (0 != m_pRoot) {
@@ -865,21 +835,22 @@ FrmMainFrame::buildPhysics (void)
 
 
 void 
-FrmMainFrame::OnKeyDown(wxKeyEvent & event) 
-{
+FrmMainFrame::OnKeyDown(wxKeyEvent & event) {
+
 	event.Skip();
 }
 
 
 void 
-FrmMainFrame::OnKeyUp(wxKeyEvent & event) 
-{
+FrmMainFrame::OnKeyUp(wxKeyEvent & event) {
+
 	event.Skip();
 }
 
+
 void 
-FrmMainFrame::OnBreakResume(wxCommandEvent& event)
-{
+FrmMainFrame::OnBreakResume(wxCommandEvent& event) {
+
 	m_Canvas->BreakResume();
 	if (m_Canvas->IsPaused()){
 		
@@ -888,13 +859,8 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 #endif
 		LoadDebugData();
 
-
-#ifdef GLINTERCEPTDEBUG		
 		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,true);
-#endif
-		debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);
-		
-		//debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+		debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);		
 		debugMenu->Enable(idMenu_DLG_DBGSTEP, true);
 		debugMenu->Enable(idMenuDbgStep, true);
 
@@ -904,32 +870,16 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event)
 
 #ifdef GLINTERCEPTDEBUG		
 		gliSetIsGLIActive(true);
-		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
 #endif
-
+		debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
 		debugMenu->Enable(idMenu_DLG_DBGPROGRAM,false);
-		//debugMenu->Enable(idMenu_DLG_DBGBUFFER, false);
 		debugMenu->Enable(idMenuDbgStep, false);
 		debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
-
 	}
-
-
 }
 
-//void
-//FrmMainFrame::OnNextFrame(wxCommandEvent& event)
-//{
-//	if (m_Canvas->IsPaused()){
-//#ifdef GLINTERCEPTDEBUG
-//		gliSetIsGLIActive(true);
-//#endif
-//		m_Canvas->MultiStep();
-//	}
-//
-//}
 
 void
 FrmMainFrame::FreezeGLI(){
@@ -938,52 +888,42 @@ FrmMainFrame::FreezeGLI(){
 #endif
 }
 
+
 void
-FrmMainFrame::LoadDebugData(){
-#ifdef GLINTERCEPTDEBUG
+FrmMainFrame::LoadDebugData() {
+
 	DlgDbgGLILogRead::Instance()->loadLog();
-#endif
 	DlgDbgPrograms::Instance()->clear();
 	DlgDbgPrograms::Instance()->loadShaderInfo();
-
 	DlgDbgStep::Instance()->updateDlg();
-
-
-}
-
-
-
-void
-FrmMainFrame::OnDlgStateXML(wxCommandEvent& event){
-	DlgStateXML::Instance()->Show(TRUE);
 }
 
 
 void
-FrmMainFrame::OnDlgDbgGLILogRead(wxCommandEvent& event){
-#ifdef GLINTERCEPTDEBUG
+FrmMainFrame::OnDlgDbgGLILogRead(wxCommandEvent& event) {
+
 	DlgDbgGLILogRead::Instance()->Show(TRUE);
-#endif
 }
 
 
-
 void
-FrmMainFrame::OnDlgDbgProgram(wxCommandEvent& event){
+FrmMainFrame::OnDlgDbgProgram(wxCommandEvent& event) {
+
 	DlgDbgPrograms::Instance()->Show(TRUE);
 }
 
 
-
 void
-FrmMainFrame::OnDlgDbgBuffer(wxCommandEvent& event){
+FrmMainFrame::OnDlgDbgBuffer(wxCommandEvent& event) {
+
 	DlgDbgBuffers::Instance()->updateDlg();
 	DlgDbgBuffers::Instance()->Show(TRUE);
 }
 
 
 void
-FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event){
+FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event) {
+
 	DlgDbgStep::Instance()->Show(TRUE);
 }
 

@@ -5,16 +5,21 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerWorkingDirectory>d:\Nau\head\build\samples</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerDebuggerType>Auto</LocalDebuggerDebuggerType>
+    <RemoteDebuggerWorkingDirectory>..\..\build\samples</RemoteDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
-    <LocalDebuggerWorkingDirectory>d:\Nau\head\build\samples</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">
-    <LocalDebuggerWorkingDirectory>d:\Nau\head\build\samples</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <RemoteDebuggerWorkingDirectory>..\..\build\samples</RemoteDebuggerWorkingDirectory>
+    <LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand>
+    <RemoteDebuggerCommand>$(TargetPath)</RemoteDebuggerCommand>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>

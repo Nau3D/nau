@@ -1,7 +1,9 @@
 #include "nau/render/opengl/glDebug.h"
 
+#include "nau.h"
 #include "nau/slogger.h"
 #include "nau/clogger.h"
+#include "nau/system/file.h"
 
 #include <glbinding/Binding.h>
 
@@ -15,6 +17,7 @@ using namespace nau::render;
 
 bool GLDebug::sInited = false;
 bool GLDebug::sCallBackOK = false;
+bool GLDebug::sTracing = false;
 
 bool 
 GLDebug::Init() {
@@ -46,7 +49,7 @@ GLDebug::Init() {
 	}
 	SetTraceCallbacks();
 	SetTrace(0);
-	CLogger::GetInstance().addLog(CLogger::LEVEL_TRACE, "nau3Dtrace.txt");
+	//CLogger::GetInstance().addLog(CLogger::LEVEL_TRACE, "nau3Dtrace.txt");
 
 	return sCallBackOK;
 }
@@ -77,7 +80,7 @@ GLDebug::SetTraceCallbacks() {
 
 	glbinding::setUnresolvedCallback([](const glbinding::AbstractFunction & call)
 	{
-		LOG_trace("NRESOLVED: %s", call.name());
+		LOG_trace("UNRESOLVED: %s", call.name());
 	});
 
 	// record name of function before calling it
@@ -105,23 +108,40 @@ GLDebug::SetTraceCallbacks() {
 		s += " -> " + call.returnValue->asString();
 	  }
 
-	  LOG_trace("%s", s.c_str());
+	  LOG_trace("%s%s", call.function->name() ,s.c_str());
 	});
 
 }
 
 
-void 
+int 
 GLDebug::SetTrace(int numberOfFrames) {
 
 	if (numberOfFrames == 0) {
 		glbinding::setCallbackMask(glbinding::CallbackMask::None);
+		// if we we're tracing close the log
+		if (sTracing)
+			CLogger::CloseLog(CLogger::LEVEL_TRACE);
+		sTracing = false;
+		return 0;
 	}
 	else {
-		glbinding::setCallbackMask(glbinding::CallbackMask::BeforeAndAfter | 
+		glbinding::setCallbackMask(glbinding::CallbackMask::After | 
 							glbinding::CallbackMask::Unresolved |
 							glbinding::CallbackMask::ParametersAndReturnValue);
+
+		std::string name = nau::system::File::GetCurrentFolder() + "/__nau3Dtrace";
+		nau::system::File::CreateDir(name);
+		name += "/Frame_" + std::to_string(RENDERER->getPropui(IRenderer::FRAME_COUNT)) + ".txt";
+		CLogger::AddLog(CLogger::LEVEL_TRACE, name);
+		sTracing = true;
 	}
+
+	if (numberOfFrames > 0)
+		return --numberOfFrames;
+	else 
+		return numberOfFrames;
+
 }
 
 

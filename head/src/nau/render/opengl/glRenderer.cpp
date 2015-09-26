@@ -92,19 +92,15 @@ GLRenderer::init() {
 int 
 GLRenderer::setTrace(int frames) {
 
-	GLDebug::SetTrace(frames);
+	return GLDebug::SetTrace(frames);
 	// just to be on the safe side
-	if (frames != 0) {
-		std::string name = nau::system::File::GetCurrentFolder() + "/__nau3Dtrace";
-		nau::system::File::CreateDir(name);
-		name += "/Frame_" + std::to_string(RENDERER->getPropui(FRAME_COUNT)) + ".txt";
-		CLogger::GetInstance().addLog(CLogger::LEVEL_TRACE, name);
-		CLogger::GetInstance().reset(CLogger::LEVEL_TRACE);
-	}
-	if (frames > 0)
-		return --frames;
-	else 
-		return frames;
+	//if (frames != 0) {
+	//	std::string name = nau::system::File::GetCurrentFolder() + "/__nau3Dtrace";
+	//	nau::system::File::CreateDir(name);
+	//	name += "/Frame_" + std::to_string(RENDERER->getPropui(FRAME_COUNT)) + ".txt";
+	//	CLogger::AddLog(CLogger::LEVEL_TRACE, name);
+	//	//CLogger::Reset(CLogger::LEVEL_TRACE);
+	//}
 	
 
 
@@ -358,14 +354,14 @@ void
 GLRenderer::accumTriCounter(unsigned int drawPrimitive, unsigned int size) {
 
 	switch (drawPrimitive) {
-	case GL_TRIANGLES:
+	case (unsigned int)GL_TRIANGLES:
 		m_TriCounter += size / 3;
 		break;
-	case GL_TRIANGLE_STRIP:
-	case GL_TRIANGLE_FAN:
+	case (unsigned int)GL_TRIANGLE_STRIP:
+	case (unsigned int)GL_TRIANGLE_FAN:
 		m_TriCounter += size - 1;
 		break;
-	case GL_LINES:
+	case (unsigned int)GL_LINES:
 		m_TriCounter += size / 2;
 		break;
 	}

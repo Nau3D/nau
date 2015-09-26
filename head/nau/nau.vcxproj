@@ -157,11 +157,12 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">nauOptix</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">nauOptix64</TargetName>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">d:\toolkits\includes64;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">D:\OptixSDK.3.7\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">D:\Optix SDK 3.8.0\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;d:\toolkits\includes64;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    </LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">$(LibraryPath)</LibraryPath>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(ExecutablePath)</ExecutablePath>
@@ -205,7 +206,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -214,6 +215,8 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessToFile>false</PreprocessToFile>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
@@ -302,8 +305,10 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BrowseInformation>true</BrowseInformation>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
@@ -387,6 +392,7 @@
     <ClCompile Include="..\src\nau\loader\ogreMeshLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\projectLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\projectLoaderDebugLinker.cpp" />
+    <ClCompile Include="..\src\nau\loader\stateLoader.cpp" />
     <ClCompile Include="..\src\nau\material\colorMaterial.cpp" />
     <ClCompile Include="..\src\nau\material\iBuffer.cpp" />
     <ClCompile Include="..\src\nau\material\iImageTexture.cpp" />
@@ -420,12 +426,14 @@
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp" />
     <ClCompile Include="..\src\nau\material\iTextureSampler.cpp" />
     <ClCompile Include="..\src\nau\render\iAPISupport.cpp" />
+    <ClCompile Include="..\src\nau\render\iGlobalState.cpp" />
     <ClCompile Include="..\src\nau\render\iRenderable.cpp" />
     <ClCompile Include="..\src\nau\render\iRenderer.cpp" />
     <ClCompile Include="..\src\nau\render\materialSortRenderQueue.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glAPISupport.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glBuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glDebug.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glGlobalState.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glImageTexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glIndexArray.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glMaterialBuffer.cpp" />
@@ -613,6 +621,7 @@
     <ClInclude Include="..\src\nau\loader\patchLoader.h" />
     <ClInclude Include="..\src\nau\loader\projectLoader.h" />
     <ClInclude Include="..\src\nau\loader\projectLoaderDebugLinker.h" />
+    <ClInclude Include="..\src\nau\loader\stateLoader.h" />
     <ClInclude Include="..\src\nau\material\colorMaterial.h" />
     <ClInclude Include="..\src\nau\material\iBuffer.h" />
     <ClInclude Include="..\src\nau\material\iImageTexture.h" />
@@ -639,6 +648,7 @@
     <ClInclude Include="..\src\nau\math\vec3.h" />
     <ClInclude Include="..\src\nau\math\vec4.h" />
     <ClInclude Include="..\src\nau\render\iAPISupport.h" />
+    <ClInclude Include="..\src\nau\render\iGlobalState.h" />
     <ClInclude Include="..\src\nau\render\iRenderable.h" />
     <ClInclude Include="..\src\nau\render\iRenderer.h" />
     <ClInclude Include="..\src\nau\render\iRenderQueue.h" />
@@ -646,6 +656,7 @@
     <ClInclude Include="..\src\nau\render\opengl\glAPISupport.h" />
     <ClInclude Include="..\src\nau\render\opengl\glBuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glDebug.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glGlobalState.h" />
     <ClInclude Include="..\src\nau\render\opengl\glImageTexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\glIndexArray.h" />
     <ClInclude Include="..\src\nau\render\opengl\glMaterialBuffer.h" />
