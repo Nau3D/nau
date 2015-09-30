@@ -92,6 +92,8 @@ DlgCameras::getName() {
 void 
 DlgCameras::updateDlg() {
 
+	EVENTMANAGER->addListener("NEW_VIEWPORT", this);
+	EVENTMANAGER->addListener("VIEWPORT_CHANGED", this);
 	setupGrid();
 	updateList();
 	updateViewportLabels();

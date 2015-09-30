@@ -16,7 +16,7 @@
 #include "dialogs/dlgShaders.h"
 #include "dialogs/dlgScenes.h"
 #include "dialogs/dlgPass.h"
-#include "dialogs/dlgDbgGLILogRead.h"
+#include "dialogs/dlgTrace.h"
 #include "dialogs/dlgDbgPrograms.h"
 #include "dialogs/dlgBuffers.h"
 #include "dialogs/dlgDbgStep.h"

@@ -60,7 +60,7 @@ protected:
 	/* SPECIFIC */
 	wxPropertyGridManager *pg;
 	wxCheckBox *m_cbUseShader; //,*m_cbShowGlobalU;
-	wxListBox *m_log;
+	wxListBox *m_Log;
 	wxPGProperty *m_Shader[IProgram::SHADER_COUNT];
 	wxPGProperty *m_LinkStatus, *m_ValidateStatus,
 		*m_ActiveAtomicBuffers,*m_ActiveAttributes, *m_ActiveUniforms ;

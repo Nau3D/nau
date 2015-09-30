@@ -46,8 +46,8 @@ DlgLog::DlgLog(): wxDialog(DlgLog::m_Parent, -1, wxT("Nau - LOG"),wxDefaultPosit
 	wxStaticBoxSizer * sbSizer1;
 	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxEmptyString ), wxVERTICAL );
 
-	m_log = new wxListBox(this,NULL,wxDefaultPosition,wxDefaultSize,0,NULL,wxLB_SINGLE | wxLB_HSCROLL | wxEXPAND);
-	sbSizer1->Add(m_log, 1, wxALL|wxEXPAND, 5);
+	m_Log = new wxListBox(this,NULL,wxDefaultPosition,wxDefaultSize,0,NULL,wxLB_SINGLE | wxLB_HSCROLL | wxEXPAND);
+	sbSizer1->Add(m_Log, 1, wxALL|wxEXPAND, 5);
 
 	bSizer1->Add(sbSizer1, 1, wxEXPAND, 5);
 
@@ -109,18 +109,18 @@ void DlgLog::append(std::string s) {
 	int loc0 = 0;
 	int loc = aux.find(10);
 	while (loc != aux.npos) {
-		m_log->AppendAndEnsureVisible(wxString(aux.substr(0,loc).c_str()));
+		m_Log->AppendAndEnsureVisible(wxString(aux.substr(0,loc).c_str()));
 		aux = aux.substr(loc+1);
 		loc = aux.find(10);
 	}
 	//aux = s.su;
-	m_log->AppendAndEnsureVisible(wxString(aux.c_str()));
+	m_Log->AppendAndEnsureVisible(wxString(aux.c_str()));
 }
 
 
 void DlgLog::clear() {
 
-	m_log->Clear();
+	m_Log->Clear();
 }
 
 
@@ -133,7 +133,7 @@ void DlgLog::OnClearLog(wxCommandEvent& event) {
 void DlgLog::OnProfilerLog(wxCommandEvent& event) {
 
 	wxFont f = wxSystemSettings::GetFont(wxSYS_OEM_FIXED_FONT);
-	m_log->SetFont(f);
+	m_Log->SetFont(f);
 
 	std::string s = Profile::DumpLevels();
 	unsigned int i = 0, j;
@@ -141,7 +141,7 @@ void DlgLog::OnProfilerLog(wxCommandEvent& event) {
 		j = i;
 		for (; s[i] != '\n'; ++i);
 		std::string aux = s.substr(j, i-j);
-		m_log->AppendAndEnsureVisible(wxString(s.substr(j, i-j).c_str()));
+		m_Log->AppendAndEnsureVisible(wxString(s.substr(j, i-j).c_str()));
 		i++;
 	}
 }
@@ -162,11 +162,11 @@ void DlgLog::OnSaveLog(wxCommandEvent& event) {
 	
 		fstream s;
 		s.open(path.mb_str(), fstream::out);
-		unsigned int lines = m_log->GetCount();
+		unsigned int lines = m_Log->GetCount();
 	
 		for (unsigned int i = 0; i < lines; ++i) {
 	
-			s << m_log->GetString(i) << "\n"; 
+			s << m_Log->GetString(i) << "\n"; 
 		}
 		s.close();
 	}

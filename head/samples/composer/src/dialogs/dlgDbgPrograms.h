@@ -28,6 +28,7 @@
 #include <sstream>
 #include <nau/event/ilistener.h>
 
+#include <nau/util/tree.h>
 
 class DlgDbgPrograms : public wxDialog, nau::event_::IListener
 {
@@ -40,21 +41,21 @@ protected:
 	static DlgDbgPrograms *m_Inst;
 
 	
-	wxTreeCtrl *m_log;
-	wxButton *m_bSave;
-	std::string name;
-	bool isLogClear;
-	wxTreeItemId rootnode;
+	wxTreeCtrl *m_Log;
+	wxButton *m_bSave, *m_bRefresh;
+	std::string m_Name;
+	bool m_IsLogClear;
+	wxTreeItemId m_Rootnode;
 
-	//unsigned int frameNumber;
-	//bool isRecording;
+	void updateDlgTree();
+	void updateTree(nau::util::Tree *t, wxTreeItemId);
 
-	void loadProgramInfo(wxTreeItemId basenode, unsigned int program);
-	void loadProgramUniformsInfo(wxTreeItemId basenode, unsigned int program);
-	void loadUniformInfo(wxTreeItemId basenode, unsigned int program, std::string blockName, std::string uniformName);
-	void loadBlockInfo(wxTreeItemId basenode, unsigned int program, std::string blockName);
-	void loadStandardProgramInfo(wxTreeItemId basenode, unsigned int program);
-	void loadProgramAttributesInfo(wxTreeItemId basenode, unsigned int program);
+	//void loadProgramInfo(wxTreeItemId basenode, unsigned int program);
+	//void loadProgramUniformsInfo(wxTreeItemId basenode, unsigned int program);
+	//void loadUniformInfo(wxTreeItemId basenode, unsigned int program, std::string blockName, std::string uniformName);
+	//void loadBlockInfo(wxTreeItemId basenode, unsigned int program, std::string blockName);
+	//void loadStandardProgramInfo(wxTreeItemId basenode, unsigned int program);
+	//void loadProgramAttributesInfo(wxTreeItemId basenode, unsigned int program);
 public:
 	static wxWindow *m_Parent; 
 
@@ -63,13 +64,14 @@ public:
 	virtual std::string &getName ();
 	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 	void updateDlg();
-	void append(std::string s);
 	void clear();
 	void loadShaderInfo();
+
+	void OnRefreshLog(wxCommandEvent& event);
 	void OnSaveInfo(wxCommandEvent& event);
 	void OnSaveInfoAux(std::fstream &s, wxTreeItemId parent, int nodelevel);
-	//void startRecording();
-	enum { DLG_BTN_SAVELOG};
+
+	enum { DLG_BTN_SAVELOG, DLG_BTN_REFRESH};
 
 
     DECLARE_EVENT_TABLE();

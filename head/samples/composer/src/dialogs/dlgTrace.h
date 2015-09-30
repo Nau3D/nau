@@ -70,7 +70,7 @@ protected:
 	void loadNewLogFile(std::string logfile, int fNumber, bool tellg = false, bool appendCount = false);
 	void finishReadLogFile();
 	
-	wxTreeCtrl *m_log;
+	wxTreeCtrl *m_Log;
 	wxButton *m_bClear, *m_bProfiler, *m_bSave;
 	wxTreeItemId rootnode, lognode, statsnode, statsnamenode, statscountnode;
 	wxTreeItemId frame, pass;

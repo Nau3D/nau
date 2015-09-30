@@ -373,7 +373,6 @@
     <ClCompile Include="..\src\nau\attribute.cpp" />
     <ClCompile Include="..\src\nau\attributeValues.cpp" />
     <ClCompile Include="..\src\nau\clogger.cpp" />
-    <ClCompile Include="..\src\nau\debug\state.cpp" />
     <ClCompile Include="..\src\nau\geometry\boundingBox.cpp" />
     <ClCompile Include="..\src\nau\geometry\boundingVolumeFactory.cpp" />
     <ClCompile Include="..\src\nau\geometry\font.cpp" />
@@ -582,6 +581,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\src\nau\util\tree.cpp" />
     <ClCompile Include="..\src\nau\world\bulletMotionState.cpp" />
     <ClCompile Include="..\src\nau\world\bulletWorld.cpp" />
     <ClCompile Include="..\src\nau\world\physicalObject.cpp" />
@@ -593,11 +593,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\src\nau\bimap.hpp" />
+    <ClInclude Include="..\src\nau\bimap.h" />
     <ClInclude Include="..\src\nau\clogger.h" />
     <ClInclude Include="..\src\nau\config.h" />
     <ClInclude Include="..\src\nau.h" />
-    <ClInclude Include="..\src\nau\debug\state.h" />
     <ClInclude Include="..\src\nau\enums.h" />
     <ClInclude Include="..\src\nau\errors.h" />
     <ClInclude Include="..\src\nau\geometry\boundingBox.h" />
@@ -764,6 +763,7 @@
     <ClInclude Include="..\src\nau\material\material.h" />
     <ClInclude Include="..\src\nau\math\mtrand.h" />
     <ClInclude Include="..\src\nau\math\plane.h" />
+    <ClInclude Include="..\src\nau\util\tree.h" />
     <ClInclude Include="..\src\nau\world\bulletMotionState.h" />
     <ClInclude Include="..\src\nau\world\bulletWorld.h" />
     <ClInclude Include="..\src\nau\world\iWorld.h" />

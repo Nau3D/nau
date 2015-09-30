@@ -56,6 +56,9 @@
       <UniqueIdentifier>{14c68e0a-3c69-4513-bdd2-1b86bdc8d583}</UniqueIdentifier>
       <ParseFiles>true</ParseFiles>
     </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{becfe7e4-fd9d-41ae-88a4-5d2810dffd16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\nau\clogger.cpp">
@@ -529,8 +532,8 @@
     <ClCompile Include="..\src\nau\render\opengl\glGlobalState.cpp">
       <Filter>Source Files\render\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\debug\state.cpp">
-      <Filter>Source Files\debug</Filter>
+    <ClCompile Include="..\src\nau\util\tree.cpp">
+      <Filter>Source Files\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -719,9 +722,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\geometry\square.h">
       <Filter>Source Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\bimap.hpp">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passCompute.h">
       <Filter>Source Files\render</Filter>
@@ -1050,8 +1050,11 @@
     <ClInclude Include="..\src\nau\render\opengl\glGlobalState.h">
       <Filter>Source Files\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\debug\state.h">
-      <Filter>Source Files\debug</Filter>
+    <ClInclude Include="..\src\nau\util\tree.h">
+      <Filter>Source Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\bimap.h">
+      <Filter>Source Files\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

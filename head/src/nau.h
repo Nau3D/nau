@@ -180,9 +180,9 @@ namespace nau {
 		void clear();
 
 		//State
-		void loadStateXMLFile(std::string file);
-		std::vector<std::string> getStateEnumNames();
-		std::string getState(std::string enumName);
+		//void loadStateXMLFile(std::string file);
+		//std::vector<std::string> getStateEnumNames();
+		//std::string getState(std::string enumName);
 
 
 

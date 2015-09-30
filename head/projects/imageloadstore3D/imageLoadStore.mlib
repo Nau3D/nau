@@ -16,11 +16,11 @@
 	</shaders>
 	
 	<buffers>
-		<buffer name="atomic">
+		<buffer name="test">
 			<SIZE value=32 />
 			<CLEAR value="BY_FRAME" />
 		</buffer>
-		<buffer name="test">
+		<buffer name="atomic">
 			<SIZE value=32 />
 			<CLEAR value="BY_FRAME" />
 		</buffer>

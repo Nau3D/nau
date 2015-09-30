@@ -8,6 +8,9 @@
 #include "nau/config.h"
 #include "nau/material/iBuffer.h"
 
+#include <glbinding/gl/gl.h>
+using namespace gl;
+
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
@@ -25,6 +28,8 @@ namespace nau
 		class GLBuffer : public IBuffer
 		{
 		public:
+
+			static std::map<GLenum, GLenum> BufferBound;
 
 			GLBuffer(std::string label);
 			~GLBuffer(void) ;

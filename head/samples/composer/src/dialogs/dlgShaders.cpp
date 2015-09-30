@@ -155,10 +155,10 @@ void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 
 	wxBoxSizer *sizerL = new wxBoxSizer(wxHORIZONTAL);
 
-	m_log = new wxListBox(this,DLG_SHADER_LOG,wxDefaultPosition,wxDefaultSize,0,NULL,0);
-	m_log->SetMinSize( wxSize( -1,25 ) );
+	m_Log = new wxListBox(this,DLG_SHADER_LOG,wxDefaultPosition,wxDefaultSize,0,NULL,0);
+	m_Log->SetMinSize( wxSize( -1,25 ) );
 
-	sizerL->Add(m_log,1, wxALL|wxEXPAND, 5);
+	sizerL->Add(m_Log,1, wxALL|wxEXPAND, 5);
 	siz->Add(sizerL,1,wxALL|wxEXPAND,5);
 
 
@@ -250,15 +250,15 @@ DlgShaders::update(){
 		m_bCompile->Disable();
 		m_bLink->Disable();
 		m_bValidate->Disable();
-		m_log->Disable();
-		m_log->Clear();
+		m_Log->Disable();
+		m_Log->Clear();
 	}
 
 	else {
 
 		list->Enable();
-		m_log->Enable();
-		m_log->Clear();
+		m_Log->Enable();
+		m_Log->Clear();
 
 		GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_active);
 		std::string f[IProgram::SHADER_COUNT];
@@ -338,7 +338,7 @@ DlgShaders::updateShaderAux() {
 		}
 	}
 	pg->Refresh();
-	m_log->Clear();
+	m_Log->Clear();
 	//DlgMaterials::Instance()->updateDlg();
 }
 
@@ -409,12 +409,12 @@ DlgShaders::updateLogAux(std::string s) {
 		int loc0 = 0;
 		int loc = aux.find(10);
 		while (loc != aux.npos) {
-			m_log->AppendAndEnsureVisible(wxString(aux.substr(0,loc).c_str()));
+			m_Log->AppendAndEnsureVisible(wxString(aux.substr(0,loc).c_str()));
 			aux = aux.substr(loc+1);
 			loc = aux.find(10);
 		}
 		//aux = s.su;
-		m_log->AppendAndEnsureVisible(wxString(aux.c_str()));
+		m_Log->AppendAndEnsureVisible(wxString(aux.c_str()));
 	}
 }
 
@@ -434,7 +434,7 @@ DlgShaders::OnProcessCompileShaders(wxCommandEvent& event){
 
 	updateShaderAux();
 
-	m_log->Clear();
+	m_Log->Clear();
 
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 
@@ -457,7 +457,7 @@ void DlgShaders::OnProcessLinkShaders(wxCommandEvent& event){
 
 	updateShaderAux();
 
-	m_log->Clear();
+	m_Log->Clear();
 	infoLog = p->getProgramInfoLog();
 	updateLogAux(infoLog);
 //	free(infoLog);
@@ -478,8 +478,8 @@ void DlgShaders::OnProcessValidateShaders(wxCommandEvent& event){
 		s = wxT("Validate: OK");
 	else
 		s = wxT("Not a Valid Program");
-	m_log->Clear();
-	m_log->Append(s);
+	m_Log->Clear();
+	m_Log->Append(s);
 	infoLog = p->getProgramInfoLog();
 	updateLogAux(infoLog);
 //	free(infoLog);

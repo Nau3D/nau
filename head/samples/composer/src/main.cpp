@@ -277,11 +277,10 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	//debugMenu->Enable(idMenu_DLG_DBGBUFFER, true);
 	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 
-#ifdef GLINTERCEPTDEBUG
-    debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("GLI Log"),_("Reads GLIntercept Log file"));
+    debugMenu->Append(idMenu_DLG_DBGGLILOGREAD, _("Trace Log"),_("Displays Trace Info"));
 	debugMenu->Enable(idMenu_DLG_DBGGLILOGREAD,false);
-#endif
-    mbar->Append(debugMenu, _("&Debug"));
+
+	mbar->Append(debugMenu, _("&Debug"));
 
     SetMenuBar(mbar);
 
@@ -501,6 +500,7 @@ FrmMainFrame::updateDlgs() {
 	DlgScenes::Instance()->updateDlg();
 	DlgPass::Instance()->updateDlg();
 	DlgViewports::Instance()->updateDlg();
+	DlgDbgPrograms::Instance()->updateDlg();
 
 	helpMenu->Enable(idMenu_DLG_TEXTURES,true);
 	helpMenu->Enable(idMenu_DLG_CAMERAS,true);
@@ -510,6 +510,7 @@ FrmMainFrame::updateDlgs() {
 	helpMenu->Enable(idMenu_DLG_SCENES, true);
 	helpMenu->Enable(idMenu_DLG_VIEWPORTS, true);
 	helpMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+	debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);
 }
 
 
@@ -894,7 +895,6 @@ FrmMainFrame::LoadDebugData() {
 
 	DlgDbgGLILogRead::Instance()->loadLog();
 	DlgDbgPrograms::Instance()->clear();
-	DlgDbgPrograms::Instance()->loadShaderInfo();
 	DlgDbgStep::Instance()->updateDlg();
 }
 

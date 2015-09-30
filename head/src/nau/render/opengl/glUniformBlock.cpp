@@ -18,6 +18,7 @@ GLUniformBlock::GLUniformBlock():
 GLUniformBlock::GLUniformBlock(std::string &name, unsigned int size) {
 
 	m_Buffer = RESOURCEMANAGER->createBuffer(name);
+	m_Buffer->setData(size, NULL);
 	m_Size = size;
 	m_LocalData = (void *)malloc(size);
 	m_BindingIndex = 0;

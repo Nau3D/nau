@@ -36,7 +36,7 @@ protected:
 	DlgLog& operator= (const DlgLog&);
 	static DlgLog *m_Inst;
 
-	wxListBox *m_log;
+	wxListBox *m_Log;
 	wxButton *m_bClear, *m_bProfiler, *m_bSave;
 	std::string name;
 

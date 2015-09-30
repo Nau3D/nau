@@ -168,8 +168,8 @@ namespace nau
 		protected:
 			void showDrawDebugInfo(MaterialGroup *aMatGroup);
 			void showDrawDebugInfo(PassCompute *aPass);
-			void showDrawDebugInfo(Material *mat);
-			void showDrawDebugInfo(IProgram *p);
+			void showDrawDebugInfo(Material *mat, nau::util::Tree *t);
+			void showDrawDebugInfo(IProgram *p, nau::util::Tree *t);
 
 
 			// RENDER

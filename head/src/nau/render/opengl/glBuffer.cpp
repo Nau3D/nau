@@ -2,11 +2,19 @@
 
 #include "nau/render/iAPISupport.h"
 
-#include <glbinding/gl/gl.h>
-using namespace gl;
-//#include <GL/glew.h>
-
 using namespace nau::render;
+
+std::map<GLenum, GLenum> GLBuffer::BufferBound = {
+	{ GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING },
+	{ GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING },
+	{ GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING },
+	{ GL_ATOMIC_COUNTER_BUFFER, GL_ATOMIC_COUNTER_BUFFER_BINDING },
+	{ GL_TRANSFORM_FEEDBACK_BUFFER, GL_TRANSFORM_FEEDBACK_BUFFER_BINDING },
+	{ GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING },
+	{ GL_SHADER_STORAGE_BUFFER, GL_SHADER_STORAGE_BUFFER_BINDING },
+	{ GL_ATOMIC_COUNTER_BUFFER, GL_ATOMIC_COUNTER_BUFFER_BINDING }
+};
+
 
 bool
 GLBuffer::Init() {
@@ -115,12 +123,13 @@ GLBuffer::getData(size_t offset, size_t size, void *data) {
 	if (offset + size > m_UIntProps[SIZE])
 		actualSize = (size_t)m_UIntProps[SIZE] - offset;
 
-		//glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	GLenum type = GL_ARRAY_BUFFER;// SHADER_STORAGE_BUFFER;
+	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	GLenum type = GL_UNIFORM_BUFFER;// SHADER_STORAGE_BUFFER;
 	glBindBuffer(type, m_IntProps[ID]);
 	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	void *bufferData;
 	bufferData = glMapBufferRange(type, offset, actualSize, GL_MAP_READ_BIT);
+	assert(bufferData != NULL);
 	memcpy(data, bufferData, actualSize);
 	glUnmapBuffer(type);
 	//glGetBufferSubData(type, offset, actualSize, data);

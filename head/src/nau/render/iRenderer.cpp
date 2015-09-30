@@ -74,6 +74,15 @@ IRenderer::Init() {
 	return true;
 }
 
+
+// SHADER DEBUG INFO
+
+nau::util::Tree *
+IRenderer::getShaderDebugTree() {
+
+	return &m_ShaderDebugTree;
+}
+
 // API SUPPORT
 
 bool
@@ -128,3 +137,20 @@ IRenderer::getPropf(FloatProperty prop) {
 }
 
 
+void 
+IRenderer::setPropb(BoolProperty prop, bool value) {
+
+	switch (prop) {
+
+		case IRenderer::DEBUG_DRAW_CALL:
+			if (value == true && m_BoolProps[prop] == false) {
+				m_BoolProps[prop] = value;
+				m_ShaderDebugTree.clear();
+			}
+			else if (value == false)
+				m_BoolProps[prop] = false;
+			break;
+		default:
+			AttributeValues::setPropb(prop, value);
+	}
+}

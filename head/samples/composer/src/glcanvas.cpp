@@ -126,13 +126,8 @@ GlCanvas::OnPaint (wxPaintEvent &event) {
 				DlgDbgGLILogRead::Instance()->clear();
 			}
 
-			DlgDbgPrograms::Instance()->clear();
-			DlgDbgPrograms::Instance()->loadShaderInfo();
-
 			DlgDbgStep::Instance()->updateDlg();
 #endif
-
-			//DlgStateXML::Instance()->updateDlg();
 			step = 0;
 		}
 	}
@@ -216,8 +211,10 @@ GlCanvas::Render ()
 
 		m_CounterFps = 0;
 	}
-	if (RENDERER->getPropb(IRenderer::DEBUG_DRAW_CALL))
+	if (RENDERER->getPropb(IRenderer::DEBUG_DRAW_CALL)) {
 		RENDERER->setPropb(IRenderer::DEBUG_DRAW_CALL, false);
+		EVENTMANAGER->notifyEvent("SHADER_DEBUG_INFO_AVAILABLE", "Renderer", "", NULL);
+	}
 }
 
 

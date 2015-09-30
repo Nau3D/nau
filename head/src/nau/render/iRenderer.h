@@ -20,6 +20,7 @@
 #include "nau/scene/iScene.h"
 #include "nau/scene/light.h"
 #include "nau/scene/sceneObject.h"
+#include "nau/util/tree.h"
 
 using namespace nau;
 using namespace nau::material;
@@ -90,7 +91,14 @@ namespace nau
 			virtual const mat4 &getPropm4(Mat4Property prop) = 0;
 			virtual const mat3 &getPropm3(Mat3Property prop) = 0;
 			virtual float getPropf(FloatProperty prop);
+			void setPropb(BoolProperty prop, bool value);
 			
+			// SHADER DEBUG INFO
+		protected:
+			nau::util::Tree m_ShaderDebugTree;
+		public:
+			nau::util::Tree *getShaderDebugTree();
+
 			// API SUPPORT
 		public:
 			bool primitiveTypeSupport(std::string primitive);
@@ -262,59 +270,11 @@ namespace nau
 			// MISC
 
 			virtual float getDepthAtPoint(int x, int y) = 0;
-
-
 			virtual unsigned int translateDrawingPrimitive(unsigned int aDrawPrimitive) = 0;
-			//virtual unsigned int translateStencilDepthFunc(int aFunc) = 0;
-			//virtual unsigned int translateStencilOp(int aFunc) = 0;
-
-
-
-
-			//virtual void loadIdentityAndSetCamera(nau::scene::Camera& aCamera) = 0;
-
-
-			/*Matrix Operations*/
-
-
-			//virtual void unproject (nau::render::IRenderable &aRenderable, nau::scene::Camera& aCamera) = 0;
-
-
-
-			//virtual void setFixedFunction (bool fixed) = 0;
-
-
 			virtual void flush (void) = 0;
-
-
-
-			/* Debug Operations */
-			
-			//virtual void renderBoundingVolume (const nau::geometry::IBoundingVolume* aBoundingVolume) = 0;
-
-
-
-
-
-			
-
 			virtual nau::math::vec3 readpixel (int x, int y) = 0;
-	
-			/* Frustum Operation */ 
-			
-			//virtual void activateUserClipPlane (unsigned int aClipPlane) = 0;
-			//virtual void setUserClipPlane(unsigned int aClipPlane, double *plane) = 0;
-			//virtual void deactivateUserClipPlane(unsigned int  aClipPlane) = 0;
-
-			/* Picking Operations */
-
-			/* Material Operations */
-
-			//! Set all color properties
 			
 			virtual ~IRenderer() {}
-
-			/*  Shaders */
 
 		};
 	};

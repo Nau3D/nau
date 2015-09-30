@@ -3,7 +3,7 @@
 #include "nau/config.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
-#include "nau/debug/state.h"
+//#include "nau/debug/state.h"
 #include "nau/event/eventFactory.h"
 #include "nau/loader/cboLoader.h"
 #include "nau/loader/iTextureLoader.h"
@@ -173,7 +173,7 @@ Nau::init (bool context, std::string aConfigFile) {
 	m_DefaultState = IState::create();
 	m_Viewport = m_pRenderManager->createViewport("defaultFixedVP");
 
-	State::init();
+//	State::init();
 
 	// Init LUA
 #ifdef NAU_LUA
@@ -1460,23 +1460,23 @@ Nau::picking (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau:
 	return -1;//	RenderManager->pick (x, y, objects, aCamera);
 }
 
-//StateList functions:
-void 
-Nau::loadStateXMLFile(std::string file){
-	State::loadStateXMLFile(file);
-}
-
-
-std::vector<std::string> 
-Nau::getStateEnumNames() {
-	return State::getStateEnumNames();
-}
-
-
-std::string 
-Nau::getState(std::string enumName) {
-	return State::getState(enumName);
-}
+////StateList functions:
+//void 
+//Nau::loadStateXMLFile(std::string file){
+//	State::loadStateXMLFile(file);
+//}
+//
+//
+//std::vector<std::string> 
+//Nau::getStateEnumNames() {
+//	return State::getStateEnumNames();
+//}
+//
+//
+//std::string 
+//Nau::getState(std::string enumName) {
+//	return State::getState(enumName);
+//}
 
 
 
