@@ -5,7 +5,7 @@
 			<scene name="MainScene">
 				<!--file>..\ntg-bench\bench.obj</file-->
 				<file name="../../models/cornellBox/CornellBox-Sphere2.obj" />
-				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
+				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.nbo</file-->
 				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
 				<!--ile>..\3dsmodels\al.obj</file-->
 

@@ -15,7 +15,7 @@
 				<file name="../../models/cube.obj"/>
 			</scene>
 			<scene name="VoxelTest" param="UNITIZE">
-				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
+				<file name="../../models/sponza/crytek-sponza/sponza.nbo"/>
 			</scene>
 			<scene name="Bench" param="UNITIZE">
 				<file name="../../models/bench.obj"/>

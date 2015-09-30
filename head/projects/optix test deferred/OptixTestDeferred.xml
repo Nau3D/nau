@@ -5,8 +5,8 @@
 			<scene name="MainScene" type="OctreeByMat">
 				<!--file>..\3dsmodels\cow.obj</file-->
 				<!--file>..\ntg-bench\bench.obj</file-->
-				<file name="..\..\models\LargoCamoes\largoCamoes.cbo"/>
-				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.cbo</file-->
+				<file name="..\..\models\LargoCamoes\largoCamoes.nbo"/>
+				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.nbo</file-->
 				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
 				<!--file>..\3dsmodels\jeep1.3ds</file-->
 			</scene>

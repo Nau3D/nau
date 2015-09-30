@@ -6,7 +6,7 @@
 			<!--scene name="bench" type="OctreeUnified" 
 				   filename="../../models/ntg-bench/bench.obj" /--> 
 			<scene name="bench" type="OctreeUnified" 
-				   filename="../../models/ntg-bin-pl3d-secxxi/pl3d-secxxi.cbo" />
+				   filename="../../models/ntg-bin-pl3d-secxxi/pl3d-secxxi.nbo" />
 			<!--scene name="bench" type="OctreeUnified" 
 				   filename="../../models/cow.obj" /--> 
 		</scenes>

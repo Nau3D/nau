@@ -113,7 +113,8 @@ Nau::Nau() :
 	m_pMaterialLibManager(NULL),
 	m_pResourceManager(NULL),
 	m_pEventManager(NULL),
-	m_TraceFrames(0)
+	m_TraceFrames(0),
+	m_ProjectName("")
 {
 }
 
@@ -173,13 +174,26 @@ Nau::init (bool context, std::string aConfigFile) {
 	m_DefaultState = IState::create();
 	m_Viewport = m_pRenderManager->createViewport("defaultFixedVP");
 
-//	State::init();
-
 	// Init LUA
 #ifdef NAU_LUA
 	initLua();
 #endif
+
 	return true;
+}
+
+
+const std::string &
+Nau::getProjectName() {
+
+	return m_ProjectName;
+}
+
+
+void
+Nau::setProjectName(std::string name) {
+
+	m_ProjectName = name;
 }
 
 
@@ -1328,7 +1342,7 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 void
 Nau::writeAssets (std::string fileType, std::string aFilename, std::string sceneName) {
 
-	if (0 == fileType.compare ("CBO")) {
+	if (0 == fileType.compare ("NBO")) {
 		CBOLoader::writeScene (RENDERMANAGER->getScene (sceneName), aFilename);
 	}
 }

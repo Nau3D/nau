@@ -77,7 +77,7 @@ DlgScenes::DlgScenes()
 	m_toolbar->SetWindowStyle(tstyle);
 
     m_toolbar->AddTool(NEW_SCENE, _("New"), newImage, _("New Scene"));
-    m_toolbar->AddTool(SAVE_SCENE, _("Save"), newImage, _("Save Scene as CBO"));
+    m_toolbar->AddTool(SAVE_SCENE, _("Save"), newImage, _("Save Scene as NBO"));
 
  	m_toolbar->AddSeparator();
     m_toolbar->AddTool(ADD_FILE, _("Model"), cutImage, _("Add Model"));
@@ -274,10 +274,10 @@ void
 DlgScenes::OnSaveScene( wxCommandEvent& event)
 {
 	wxFileDialog *saveOctDlg = 
-		new wxFileDialog (this, _("Save As CBO"), _(""), _(""), _(""), wxFD_SAVE, wxDefaultPosition);
+		new wxFileDialog (this, _("Save As NBO"), _(""), _(""), _(""), wxFD_SAVE, wxDefaultPosition);
 
 	if (wxID_OK == saveOctDlg->ShowModal ()) {
-		nau::NAU->writeAssets("CBO", (const char *)(saveOctDlg->GetPath()).c_str(), m_Active);
+		nau::NAU->writeAssets("NBO", (const char *)(saveOctDlg->GetPath()).c_str(), m_Active);
 	}		
 
 }
@@ -361,7 +361,7 @@ void DlgScenes::OnNewScene(wxCommandEvent& event)
 
 void DlgScenes::OnAddFile(wxCommandEvent& event) 
 {
-	static const wxChar *fileTypes = _T( "3D Files (*.cbo, *.3ds, *.dae, *.obj, *.xml)|*.cbo;*.3ds;*.dae;*.obj; *.xml|CBO files (*.cbo)|*.cbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml");
+	static const wxChar *fileTypes = _T( "3D Files (*.nbo, *.3ds, *.dae, *.obj, *.xml)|*.nbo;*.3ds;*.dae;*.obj; *.xml|NBO files (*.nbo)|*.nbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml");
 	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {

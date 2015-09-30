@@ -7,9 +7,9 @@
 				<file name="..\..\models\al.obj"/>
 			</scene>
 			<scene name="Arvores" 
-				   filename="..\..\models\ntg-bin-pl3d-secxxi\arvores.cbo" />
+				   filename="..\..\models\ntg-bin-pl3d-secxxi\arvores.nbo" />
 			<scene name="Main" type="OctreeUnified" 
-				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3d-secxxi.cbo" />
+				   filename="..\..\models\ntg-bin-pl3d-secxxi\pl3d-secxxi.nbo" />
 		</scenes>
 		<viewports>
 			<viewport name="MainViewport">

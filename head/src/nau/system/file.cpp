@@ -758,7 +758,7 @@ File::getType (void) {
 	else if ("3ds" == m_FileExtension) {
 		return File::THREEDS;
 	}
-	else if ("cbo" == m_FileExtension) {
+	else if ("nbo" == m_FileExtension) {
 		return File::NAUBINARYOBJECT;
 	}
 	else if ("obj" == m_FileExtension) {

@@ -46,14 +46,13 @@ GlCanvas::GlCanvas (wxWindow *parent,
 	m_Alpha (3.14159f), m_AlphaAux (0.0f), m_Beta (0.0f), m_BetaAux (0.0f), OldX(0),OldY(0),
 	m_tracking(0), /*m_RiverAnimation (0), */m_WaterState (true), m_Stereo (false)
 {
-	//ctor
 	init = true;
 	m_Timer.Start();
 	p_GLC = new wxGLContext(this);
 	SetCurrent(*p_GLC);
-
 	step = 0;
 }
+
 
 GlCanvas::GlCanvas (wxWindow *parent,
                      const GlCanvas &other,
@@ -66,17 +65,13 @@ GlCanvas::GlCanvas (wxWindow *parent,
                      const wxString &name)
    : wxGLCanvas (parent, id, attribList , contextAttribs, pos, size, style, name), init (false)
 {
-  p_GLC = new wxGLContext(this);
-  
-  SetCurrent(*p_GLC);
-
-  step = 0;
+	p_GLC = new wxGLContext(this);
+	SetCurrent(*p_GLC);
+	step = 0;
 }
 
 
-GlCanvas::~GlCanvas()
-{
-  //dtor
+GlCanvas::~GlCanvas() {
 
 }
 
@@ -136,45 +131,37 @@ GlCanvas::OnPaint (wxPaintEvent &event) {
 
 
 void 
-GlCanvas::OnSize (wxSizeEvent &event)
-{
-//   wxGLCanvas::OnSize(event);
+GlCanvas::OnSize (wxSizeEvent &event) {
 
-   int width;
-   int height;
+	int width;
+	int height;
 
-   GetClientSize (&width, &height);
+	GetClientSize (&width, &height);
 
-//#ifndef __WXMOTIF__
-//   if (GetContext ())
-//#endif
-//   {
-//		SetCurrent ();
-		if (0 != m_pEngine) {
-			EVENTMANAGER->notifyEvent("WINDOW_SIZE_CHANGED","Canvas","",new EventVec3(vec3(width,height,0)));
-			//m_pEngine->setWindowSize (width, height);
-		}
-   //}
+	if (0 != m_pEngine) {
+		EVENTMANAGER->notifyEvent("WINDOW_SIZE_CHANGED","Canvas","",new EventVec3(vec3(width,height,0)));
+	}
 }
 
+
 void 
-GlCanvas::OnEraseBackground (wxEraseEvent &event)
-{
+GlCanvas::OnEraseBackground (wxEraseEvent &event) {
+
    event.Skip ();
 }
 
 
 void 
-GlCanvas::OnEnterWindow (wxMouseEvent &event)
-{
+GlCanvas::OnEnterWindow (wxMouseEvent &event) {
+
    SetFocus ();
    event.Skip ();
 }
 
 
 void 
-GlCanvas::Render ()
-{
+GlCanvas::Render () {
+
 	PROFILE ("Main cicle");
 	try {
 		if (0 != m_pEngine) {
@@ -204,7 +191,7 @@ GlCanvas::Render ()
 		if (m_pCamera)
 			v = m_pCamera->getPropf4(Camera::VIEW_VEC);
 
-		sprintf(fps, "FPS: %d - Triangles: %u", m_CounterFps, RENDERER->getCounter(nau::render::IRenderer::TRIANGLE_COUNTER));
+		sprintf(fps, "FPS: %d - Triangles: %u - %s", m_CounterFps, RENDERER->getCounter(nau::render::IRenderer::TRIANGLE_COUNTER), NAU->getProjectName());
 		wxTopLevelWindow *tlw = (wxTopLevelWindow *)(this->GetParent());
 
 		tlw->SetTitle(wxString::FromAscii(fps));
@@ -219,9 +206,9 @@ GlCanvas::Render ()
 
 
 void
-GlCanvas::OnIdle (wxIdleEvent& event)
-{
-	PROFILE("Composer");
+GlCanvas::OnIdle (wxIdleEvent& event) {
+
+	PROFILE("Nau");
 
 	if (!isPaused){
 		this->Render();
@@ -231,24 +218,10 @@ GlCanvas::OnIdle (wxIdleEvent& event)
 	event.RequestMore();
 }
 
-/*void 
- GlCanvas::InitGL () 
-{
-   SetCurrent ();
-   
-   glClearColor (0.8f, 0.8f, 0.8f, 0.0f);
-   
-   //glEnable (GL_LIGHT0);
-	//glEnable (GL_LIGHTING); 
-   glShadeModel (GL_SMOOTH);
-   glEnable (GL_DEPTH_TEST);
-   glEnable (GL_CULL_FACE);
-}*/ 
-
 
 void 
-GlCanvas::OnKeyUp(wxKeyEvent & event)
-{
+GlCanvas::OnKeyUp(wxKeyEvent & event) {
+
 	if (m_pCamera && true == m_pCamera->isDynamic()) {
 		vec3 v3;
 		v3.set(0.0f, 0.0f, 0.0f);
@@ -256,9 +229,9 @@ GlCanvas::OnKeyUp(wxKeyEvent & event)
 	}
 }
 
+
 void 
-GlCanvas::OnKeyDown(wxKeyEvent & event) 
-{
+GlCanvas::OnKeyDown(wxKeyEvent & event) {
 
 	static bool physics = true;
 
@@ -267,11 +240,9 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 		return;
 	}
 
-
 	vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
 	vec4 camUp = m_pCamera->getPropf4(Camera::UP_VEC);
 	vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
-//	vec3& camLookAt = m_pCamera->getLookAtPoint();
 
 	if ('K' == event.GetKeyCode()) {
 		m_pEngine->sendKeyToEngine (event.GetKeyCode());	
@@ -341,10 +312,6 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 		m_pEngine->resetFrameCount();
 	}
 
-	//if ('P' == event.GetKeyCode()) {
-	//	m_pEngine->sendKeyToEngine (event.GetKeyCode());
-	//}
-
 	float direction;
 	if (true == m_pCamera->isDynamic()) {
 		direction = VELOCITY;
@@ -363,13 +330,6 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 	if ('S' == event.GetKeyCode()) {
 		if (true == m_pCamera->isDynamic()) {
 			vec4 vel (camView);
-
-			//vel *= 2.0f;
-
-			//vel -= m_OldCamView;
-
-			//m_OldCamView.set (vel.x, vel.y, vel.z);
-
 
 			vel.y = 0.0f;
 			vel.normalize();
@@ -391,12 +351,6 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 	if ('W' == event.GetKeyCode()) {
 		if (true == m_pCamera->isDynamic()) {
 			vec4 vel (camView);
-			
-			//vel *= 2.0f;
-
-			//vel -= m_OldCamView;
-
-			//m_OldCamView.set (camView.x, camView.y, camView.z);
 			
 			vel.y = 0.0f;
 			vel.normalize();
@@ -546,26 +500,12 @@ GlCanvas::OnKeyDown(wxKeyEvent & event)
 		}
 		physics = !physics;
 	}
-
-	//if ('Y' == event.GetKeyCode()){
-	//	
-	//	m_Stereo = !m_Stereo;
-
-	//	if (true == m_Stereo) {
-	//		m_pEngine->enableStereo();
-	//	} else {
-	//		m_pEngine->disableStereo();
-	//	}
-	//}
 	event.Skip();
 }
 
 
-
-
 void 
-GlCanvas::OnMouseMove (wxMouseEvent& event)
-{
+GlCanvas::OnMouseMove (wxMouseEvent& event) {
 
 	static bool first = true; // Can't be here!
 
@@ -595,29 +535,18 @@ GlCanvas::OnMouseMove (wxMouseEvent& event)
 
 	m_Alpha = m_AlphaAux - (float)(newX - OldX) * m_ScaleFactor;
 	m_Beta = m_BetaAux + (float)(OldY - newY) * m_ScaleFactor;
-/*	if (m_Beta > 1.5f) 
-		m_Beta = 1.5f;
-	else if (m_Beta < -1.5f)
-		m_Beta = -1.5f;
-*/
+
 	nau::event_::CameraOrientation c(m_Alpha, m_Beta);
 	nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Orientation");
 	e->setData(&c);
 	EVENTMANAGER->notifyEvent("CAMERA_ORIENTATION", "MainCanvas", "", e);
 	delete e;
 
-	/*
-	camView.x = cos(m_Beta) * sin(m_Alpha);
-	camView.z = cos(m_Beta) * cos(m_Alpha);
-	camView.y = sin(m_Beta);
-	*/
-
 	camV.x = cos(m_Beta) * sin(m_Alpha);;
 	camV.y = sin(m_Beta);
 	camV.z = cos(m_Beta) * cos(m_Alpha);
 
 	if (!(true == m_tracking)) {
-//		m_OldCamView.set (camView.x, camView.y, camView.z);
 		m_tracking = true;
 	}
 	DlgCameras::Instance()->updateInfo(m_pCamera->getName());
@@ -634,8 +563,7 @@ GlCanvas::OnRightUp(wxMouseEvent &event) {
 
 
 void
-GlCanvas::OnLeftDown (wxMouseEvent& event)
-{
+GlCanvas::OnLeftDown (wxMouseEvent& event) {
 
 	_setCamera();
 	if (m_pCamera) {
@@ -652,6 +580,7 @@ GlCanvas::OnLeftDown (wxMouseEvent& event)
 	}
 	event.Skip ();
 }
+
 
 void
 GlCanvas::OnLeftUp (wxMouseEvent &event) {
@@ -739,6 +668,7 @@ GlCanvas::OnLeftUp (wxMouseEvent &event) {
 	//}
 }
 
+
 void
 GlCanvas::BreakResume ()
 {
@@ -760,6 +690,7 @@ GlCanvas::StepPass() {
 	}
 }
 
+
 void 
 GlCanvas::StepToEndOfFrame() {
 
@@ -769,6 +700,7 @@ GlCanvas::StepToEndOfFrame() {
 	}
 }
 
+
 void
 GlCanvas::StepUntilSamePassNextFrame() {
 
@@ -777,20 +709,20 @@ GlCanvas::StepUntilSamePassNextFrame() {
 		m_pEngine->stepCompleteFrame();
 		SwapBuffers();
 		m_pEngine->stepPasses(n);
-
 	}
 }
 
 
 bool
-GlCanvas::IsPaused()
-{
+GlCanvas::IsPaused() {
+
 	return isPaused;
 }
 
+
 void
-GlCanvas::MultiStep(int stepSize)
-{
+GlCanvas::MultiStep(int stepSize) {
+
 	step = stepSize;
 }
 

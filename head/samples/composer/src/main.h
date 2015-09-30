@@ -60,7 +60,7 @@ public:
 
 private:
    GlCanvas *m_Canvas;
-	wxMenu *materialsMenu, *helpMenu, *debugMenu;
+	wxMenu *fileMenu, *renderMenu, *assetsMenu, *materialsMenu, *debugMenu, *aboutMenu;
 	bool m_Inited;
 
 	void updateDlgs();
@@ -98,7 +98,7 @@ private:
 	
 	//Debugger begin
 	void OnBreakResume(wxCommandEvent& event);
-	void OnDlgDbgGLILogRead(wxCommandEvent& event);
+	void OnDlgDbgTraceRead(wxCommandEvent& event);
 	void OnDlgDbgProgram(wxCommandEvent& event);
 	void OnDlgDbgBuffer(wxCommandEvent& event);
 	void OnDlgDbgStep(wxCommandEvent& event);

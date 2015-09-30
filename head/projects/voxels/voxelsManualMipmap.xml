@@ -21,7 +21,7 @@
 				<file name="../../models/ntg-bench/bench.obj"/>
 			</scene>
 			<scene name="Sponza" param="UNITIZE">
-				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
+				<file name="../../models/sponza/crytek-sponza/sponza.nbo"/>
 			</scene>
 			<scene name="Cube" >
 				<file name="../../models/cube.obj"/>

@@ -11,7 +11,7 @@
 		</attributes>
 		<scenes>
 			<scene name="MainScene">
-				<file name="../../models/sponza/crytek-sponza/sponza.cbo"/>
+				<file name="../../models/sponza/crytek-sponza/sponza.nbo"/>
 			</scene>
 		</scenes>
 		<viewports>

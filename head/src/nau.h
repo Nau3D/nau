@@ -70,6 +70,10 @@ namespace nau {
 		static nau::Nau* getInstance (void);
 		bool init(bool context, std::string aConfigFile = "");
 
+		void setProjectName(std::string name);
+		const std::string &getProjectName();
+
+
 		// Lua Stuff
 #ifdef NAU_LUA
 		void initLua();
@@ -140,12 +144,7 @@ namespace nau {
 		unsigned int getWindowWidth();
 
 		// Viewports
-		//nau::render::Viewport* createViewport (const std::string &name, nau::math::vec4 &bgColor);
-		//nau::render::Viewport* createViewport (const std::string &name);
-		//nau::render::Viewport* getViewport (const std::string &name);
 		nau::render::Viewport* getDefaultViewport ();
-		//std::vector<std::string> *getViewportNames();
-		//bool hasViewport(const std::string &name);
 
 		bool reload (void);
 
@@ -157,9 +156,6 @@ namespace nau {
 
 		int picking (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera);
 
-		//void addAnimation (std::string animationName, nau::animation::IAnimation *anAnimation);
-		//nau::animation::IAnimation *getAnimation (std::string animationName);
-		
 		/* Readers */
 		void readModel (std::string fileName) throw (std::string);
 		void appendModel(std::string fileName);
@@ -179,12 +175,6 @@ namespace nau {
 		~Nau(void);
 		void clear();
 
-		//State
-		//void loadStateXMLFile(std::string file);
-		//std::vector<std::string> getStateEnumNames();
-		//std::string getState(std::string enumName);
-
-
 
 	private:
 		Nau();
@@ -193,12 +183,12 @@ namespace nau {
 		lua_State *m_LuaState;
 #endif
 
+		std::string m_ProjectName;
 		float m_StartTime;
 		int m_TraceFrames;
 		bool m_TraceOn;
 
 		std::string m_Name;
-		//unsigned long int m_FrameCount;
 
 		/*
 		Attributes
@@ -210,7 +200,6 @@ namespace nau {
 		 * Rendering Flags
 		 */
 		std::vector<bool> m_RenderFlags;
-		//nau::material::Material *m_ProfileMaterial; 
 		bool m_UseTangents, m_UseTriangleIDs, m_CoreProfile;
 		/*
 		 * Managers
@@ -227,10 +216,8 @@ namespace nau {
 		std::string m_ActiveCameraName;
 		unsigned int m_WindowWidth, m_WindowHeight;
 		nau::world::IWorld *m_pWorld;
-		//std::map <std::string, nau::render::Viewport*> m_vViewports;
 		nau::render::Viewport *m_Viewport;
 		int m_ClickX = 0, m_ClickY = 0;
-		//std::map <std::string, nau::animation::IAnimation*> m_Animations;
 		IState *m_DefaultState;
 
 		bool m_Inited;
@@ -253,9 +240,6 @@ namespace nau {
 		// this vector allows returning string vectors safely without
 		// memory leaks
 		std::vector<std::string> m_DummyVector;
-
-		//static bool Init();
-		//static bool Inited;
 
 	};
 };

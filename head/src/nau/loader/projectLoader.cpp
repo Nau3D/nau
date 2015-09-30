@@ -627,9 +627,15 @@ ProjectLoader::load (std::string file, int *width, int *height)
 	}
 	hRoot = TiXmlHandle (pElem);
 
+	std::string name;
+
 	try {
 		*width = 512;
 		*height = 512;
+
+		if (TIXML_SUCCESS != pElem->QueryStringAttribute("name", &name))
+			NAU_THROW("Project without a name!");
+
 		if (TIXML_SUCCESS == pElem->QueryIntAttribute("width",width) &&
 			TIXML_SUCCESS == pElem->QueryIntAttribute("height",height)) {
 				if (*width <= 0 || *height <= 0) {
@@ -658,7 +664,7 @@ ProjectLoader::load (std::string file, int *width, int *height)
 #if NAU_DEBUG == 1
 	LOG_INFO ("Loading done"); 
 #endif
-
+	NAU->setProjectName(name);
 }
 
 
