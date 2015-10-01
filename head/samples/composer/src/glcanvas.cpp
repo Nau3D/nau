@@ -191,7 +191,7 @@ GlCanvas::Render () {
 		if (m_pCamera)
 			v = m_pCamera->getPropf4(Camera::VIEW_VEC);
 
-		sprintf(fps, "FPS: %d - Triangles: %u - %s", m_CounterFps, RENDERER->getCounter(nau::render::IRenderer::TRIANGLE_COUNTER), NAU->getProjectName());
+		sprintf(fps, "%s (FPS: %d - Triangles: %u)", NAU->getProjectName().c_str(), m_CounterFps, RENDERER->getCounter(nau::render::IRenderer::TRIANGLE_COUNTER));
 		wxTopLevelWindow *tlw = (wxTopLevelWindow *)(this->GetParent());
 
 		tlw->SetTitle(wxString::FromAscii(fps));

@@ -508,11 +508,11 @@ FrmMainFrame::updateDlgs() {
 	debugMenu->Enable(idMenu_DLG_DBGTRACEREAD, true);
 	debugMenu->Enable(idMenuDbgBreak, true);
 
-	m_Canvas->BreakResume();
-
-#ifdef GLINTERCEPTDEBUG		
-	gliSetIsGLIActive(true);
-#endif
+//	m_Canvas->BreakResume();
+//
+//#ifdef GLINTERCEPTDEBUG		
+//	gliSetIsGLIActive(true);
+//#endif
 	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
 	debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 }
