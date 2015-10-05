@@ -393,7 +393,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <AdditionalIncludeDirectories>src;../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;WINDOWS;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;__SLANGER__;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -455,11 +455,11 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <CompileAsManaged>false</CompileAsManaged>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>src;../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -467,12 +467,12 @@
     <ProjectReference />
     <Link>
       <AdditionalOptions> /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:LIBCMTD /ignore:4049 /ignore:4217 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>libcpmt.lib;lua53.lib;glbinding.lib;assimp.lib;wxmsw30u_adv.lib;wxmsw30u_core.lib;wxbase30u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw30u_propgrid.lib;wxmsw30u_gl.lib;nau64.lib;BulletDynamics.lib;BulletCollision.lib;Bullet3Common.lib;BulletSoftBody.lib;LinearMath.lib;ConvexDecomposition.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcpmt.lib;lua53.lib;glbinding.lib;assimp64.lib;wxmsw30u_adv.lib;wxmsw30u_core.lib;wxbase30u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw30u_propgrid.lib;wxmsw30u_gl.lib;nau64.lib;BulletDynamics.lib;BulletCollision.lib;Bullet3Common.lib;BulletSoftBody.lib;LinearMath.lib;ConvexDecomposition.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>msvcprt.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>msvcprt.lib;msvcp.lib</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
@@ -563,7 +563,7 @@
     <ProjectReference />
     <Link>
       <AdditionalOptions> /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:LIBCMTD /ignore:4049 /ignore:4217 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;lua53.lib;glbinding.lib;libcpmt.lib;assimp.lib;wxmsw30u_adv.lib;wxmsw30u_core.lib;wxbase30u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw30u_propgrid.lib;wxmsw30u_gl.lib;nauOptix64.lib;BulletDynamics.lib;BulletCollision.lib;Bullet3Common.lib;BulletSoftBody.lib;LinearMath.lib;ConvexDecomposition.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;lua53.lib;glbinding.lib;libcpmt.lib;assimp64.lib;wxmsw30u_adv.lib;wxmsw30u_core.lib;wxbase30u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw30u_propgrid.lib;wxmsw30u_gl.lib;nauOptix64.lib;BulletDynamics.lib;BulletCollision.lib;Bullet3Common.lib;BulletSoftBody.lib;LinearMath.lib;ConvexDecomposition.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>msvcprt.lib</IgnoreSpecificDefaultLibraries>
