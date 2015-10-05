@@ -642,7 +642,7 @@ OBJLoader::readOBJ(std::string &filename)
 	file = fopen(filename.c_str(), "r");
 	if (!file) {
 		fprintf(stderr, "ReadOBJ() failed: can't open data file \"%s\".\n",
-			filename);
+			filename.c_str());
 		exit(1);
 	}
 

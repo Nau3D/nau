@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug Optix|Win32">
       <Configuration>Debug Optix</Configuration>
@@ -43,42 +43,42 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -276,11 +276,11 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>  /ignore:4049 /ignore:4217 /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>nau64_d.lib;lua53.lib;glbindingd.lib;assimp.lib;wxmsw30ud_adv.lib;wxmsw30ud_core.lib;wxbase30ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw30ud_propgrid.lib;wxmsw30ud_gl.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;Bullet3Common_Debug.lib;BulletSoftBody_Debug.lib;LinearMath_Debug.lib;ConvexDecomposition_Debug.lib;tinyxmlSTLd.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcmtd.lib;nau64_d.lib;luad.lib;glbindingd.lib;assimpd.lib;wxmsw30ud_adv.lib;wxmsw30ud_core.lib;wxbase30ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw30ud_propgrid.lib;wxmsw30ud_gl.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;Bullet3Common_Debug.lib;BulletSoftBody_Debug.lib;LinearMath_Debug.lib;tinyxmlSTLd.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>msvcrtd.lib;msvcprtd.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>msvcrtd.lib;msvcprtd.lib;libcmt.lib;</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
@@ -467,7 +467,7 @@
     <ProjectReference />
     <Link>
       <AdditionalOptions> /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:LIBCMTD /ignore:4049 /ignore:4217 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>libcpmt.lib;lua53.lib;glbinding.lib;assimp64.lib;wxmsw30u_adv.lib;wxmsw30u_core.lib;wxbase30u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw30u_propgrid.lib;wxmsw30u_gl.lib;nau64.lib;BulletDynamics.lib;BulletCollision.lib;Bullet3Common.lib;BulletSoftBody.lib;LinearMath.lib;ConvexDecomposition.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcpmt.lib;lua.lib;glbinding.lib;assimp64.lib;wxmsw30u_adv.lib;wxmsw30u_core.lib;wxbase30u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiff.lib;wxmsw30u_propgrid.lib;wxmsw30u_gl.lib;nau64.lib;BulletDynamics.lib;BulletCollision.lib;Bullet3Common.lib;BulletSoftBody.lib;LinearMath.lib;ConvexDecomposition.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

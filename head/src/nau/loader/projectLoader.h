@@ -31,7 +31,7 @@ namespace nau
 
 		private:
 
-			typedef enum {
+			enum {
 				OK,
 				ITEM_NAME_NOT_SPECIFIED,
 				FILE_DOES_NOT_EXIST

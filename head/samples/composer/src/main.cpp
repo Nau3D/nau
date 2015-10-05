@@ -537,7 +537,7 @@ FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event) {
 			updateDlgs();
 			SLOG("done reading");
 #ifndef FINAL
-			long t =  aTimer.Time()/1000.0;
+			double t =  aTimer.Time()/1000.0;
 			SLOG("Elapsed time: %f", t);
 #endif		
 		}
@@ -670,7 +670,7 @@ FrmMainFrame::OnProcess (wxCommandEvent& event) {
 			while (cont){
 
 				wxFileName fn (openDirDlg->GetPath() + wxT("/") + aFile);
-				LOG_INFO ("Loading: %s", (fn.GetFullPath()).c_str());
+				LOG_INFO ("Loading: %s", (fn.GetFullPath()).ToStdString().c_str());
                 m_pRoot->loadAsset (std::string(fn.GetFullPath().mb_str()), "MainScene");
 				fn.SetPath (openDirDlgDst->GetPath());
 				fn.SetExt(wxT("nbo"));

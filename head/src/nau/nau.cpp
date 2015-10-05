@@ -285,7 +285,7 @@ luaGetBuffer(lua_State *l) {
 	void *arr = malloc(size);
 	size_t count = buff->getData(offset, size , arr);
 	if (size != count) {
-		NAU_THROW("Lua getBuffer: buffer %s offset %d, out of bounds", name, offset);
+		NAU_THROW("Lua getBuffer: buffer %s offset %d, out of bounds", name, (unsigned int)offset);
 		return 0;
 	}
 
@@ -461,7 +461,7 @@ luaSet(lua_State *l) {
 		arr = arrUI;
 		break;
 	default:
-		NAU_THROW("Lua set: Type not supported", Enums::DataTypeToString[bdt]);
+		NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[bdt].c_str());
 	}
 
 	if (!NAU->setAttribute(tipo, context, component, number, arr))
@@ -892,7 +892,7 @@ Nau::readDirectory (std::string dirName) {
 	File::RecurseDirectory(dirName, &files);
 
 	if (files.size() == 0) {
-		NAU_THROW("Can't open dir %s or directory has no files", dirName);
+		NAU_THROW("Can't open dir %s or directory has no files", dirName.c_str());
 	}
 	RENDERMANAGER->createScene (dirName);
 

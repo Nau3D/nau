@@ -13,7 +13,7 @@ namespace nau {
 		
 		public:
 
-			typedef struct Keyframe {
+			struct Keyframe {
 				vec3 m_Position;
 				vec3 m_Axis;
 				float m_Angle;

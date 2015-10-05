@@ -10,7 +10,7 @@ namespace nau {
 
 	public:
 
-		typedef enum DataType {
+		enum DataType {
 						INT, IVEC2, IVEC3, IVEC4,
 						UINT, UIVEC2, UIVEC3, UIVEC4,
 						BOOL, BVEC2, BVEC3, BVEC4,

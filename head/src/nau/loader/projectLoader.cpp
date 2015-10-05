@@ -2516,7 +2516,7 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 		const char *pRTName = pElem->Attribute ("name");
 
 		if (!pRTName)
-			NAU_THROW("File %s\nLibrary %s\nRender Target has no name", ProjectLoader::s_File.c_str(), aLib->getName());
+			NAU_THROW("File %s\nLibrary %s\nRender Target has no name", ProjectLoader::s_File.c_str(), aLib->getName().c_str());
 
 		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pRTName);
 		rt = RESOURCEMANAGER->createRenderTarget (s_pFullName);
@@ -2869,30 +2869,35 @@ ProjectLoader::loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass)
 		const char *pToMaterial = pElem->Attribute ("toMaterial");
 
 		if ((pToMaterial == 0)) {
-		    NAU_THROW("File %s\nPass%s\nMaterial map error: Missing destination material", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		    NAU_THROW("File %s\nPass%s\nMaterial map error: Missing destination material", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 
 		if (0 == pFromMaterial && 0 != pToMaterial) {
 		  
-		    NAU_THROW("File %s\nPass%s\nMaterial map error: Missing origin material", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		    NAU_THROW("File %s\nPass%s\nMaterial map error: Missing origin material", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		else if (0 == pFromMaterial) {
 			if (MATERIALLIBMANAGER->hasLibrary(library))
 				aPass->remapAll (library);
 			else
-				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination library %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str());
+				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination library %s is not defined", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str());
 		}
 		else if (0 == strcmp (pFromMaterial, "*")) {
 			if (MATERIALLIBMANAGER->hasMaterial(library, pToMaterial))
 				aPass->remapAll (library, pToMaterial);
 			else
-				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination material (%s,%s) is not defined, in  pass: %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str(), pToMaterial);
+				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination material (%s,%s) is not defined", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str(), pToMaterial);
 		}
 		else {
 			if (MATERIALLIBMANAGER->hasMaterial(library, pToMaterial))
 				aPass->remapMaterial (pFromMaterial, library, pToMaterial);
 			else
-				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination material (%s,%s) is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str(), pToMaterial);
+				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination material (%s,%s) is not defined", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str(), pToMaterial);
 		}
 	} //End of map
 
@@ -3004,11 +3009,13 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 			const char *pLib = pElemAux->Attribute ("fromLibrary");
 
 			if (0 == pMat || 0 == pLib) {
-			  NAU_THROW("File %s\nPass%s\nInjection map error: Shader name and library are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			  NAU_THROW("File %s\nPass%s\nInjection map error: Shader name and library are required", 
+				  ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 			}
 
 			if (!MATERIALLIBMANAGER->hasMaterial(pLib,pMat))
-				NAU_THROW("File %s\nPass%s\nInjection map error: Shader material %s is not defined in lib %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pMat, pLib,aPass->getName().c_str());
+				NAU_THROW("File %s\nPass%s\nInjection map error: Shader material %s is not defined in lib %s", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pLib, aPass->getName().c_str());
 
 			std::vector<std::string>::iterator iter;
 			for(iter = names->begin(); iter != names->end(); ++iter) {
@@ -3147,11 +3154,13 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 			const char *pShininess = pElemAux->Attribute("shininess");
 
 			if (0 == pMat || 0 == pLib) {
-			  NAU_THROW("File %s\nPass%s\nInjection map error: Color material name and library are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			  NAU_THROW("File %s\nPass%s\nInjection map error: Color material name and library are required", 
+				  ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 			}
 
 			if (!MATERIALLIBMANAGER->hasMaterial(pLib,pMat))
-				NAU_THROW("File %s\nPass%s\nInjection map error: Material %s is not defined in lib %s, in pass: %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pMat, pLib);
+				NAU_THROW("File %s\nPass%s\nInjection map error: Material %s is not defined in lib %s", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pMat, pLib);
 
 			srcMat = MATERIALLIBMANAGER->getMaterial(pLib,pMat);
 			std::vector<std::string>::iterator iter;

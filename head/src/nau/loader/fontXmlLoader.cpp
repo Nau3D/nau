@@ -25,14 +25,14 @@ FontXMLLoader::loadFont (Font *aFont, std::string &aFilename)
 
 	pElem = hDoc.FirstChildElement().Element();
 	if (0 == pElem)
-		NAU_THROW("Not a XML file: %s", doc.ErrorDesc(), doc.ErrorRow(), doc.ErrorCol(),aFilename.c_str());
+		NAU_THROW("Not a XML file: %s", aFilename.c_str());
 
 	hRoot = TiXmlHandle(pElem);
 	
 	pElem->QueryIntAttribute("numchars",&numChars);
 
 	if (numChars == 0)
-		NAU_THROW("Zero chars in file: %s", doc.ErrorDesc(), doc.ErrorRow(), doc.ErrorCol(),aFilename.c_str());
+		NAU_THROW("Zero chars in file: %s", aFilename.c_str());
 
 	hRoot = hRoot.FirstChild("characters");
 	pElem = hRoot.FirstChild("chardata").Element();

@@ -14,7 +14,7 @@ namespace nau
 		{
 		public:	
 
-			typedef enum APIFeatureSupport {
+			enum APIFeatureSupport {
 				OK, // this is required for attribute setting
 				BUFFER_ATOMICS,
 				BUFFER_SHADER_STORAGE,

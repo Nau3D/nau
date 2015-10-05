@@ -127,7 +127,7 @@ OgreMeshLoader::loadSkeleton(TiXmlHandle hRoot, SceneSkeleton *sk)  throw (std::
 		const char *pName = pElem->Attribute("name");
 
 		if (!pName)
-			NAU_THROW("Skeleton Link misses file name. File: %s", pName, OgreMeshLoader::m_MeshFile.c_str());
+			NAU_THROW("Skeleton Link misses file name. File: %s", OgreMeshLoader::m_MeshFile.c_str());
 
 		char name[512];
 		sprintf(name,"%s.xml", pName);

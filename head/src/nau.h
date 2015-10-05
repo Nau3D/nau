@@ -60,7 +60,7 @@ namespace nau {
 
 	public:		
 
-		typedef enum RenderFlags {
+		enum RenderFlags {
 			BOUNDING_BOX_RENDER_FLAG, 
 			PROFILE_RENDER_FLAG, 
 			COUNT_RENDER_FLAGS

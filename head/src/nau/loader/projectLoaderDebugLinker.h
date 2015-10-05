@@ -11,7 +11,7 @@ class GLIEnums
 
 public:
 
-	typedef enum FunctionType {
+	enum FunctionType {
 					INT,
 					UINT,
 					BOOL,
