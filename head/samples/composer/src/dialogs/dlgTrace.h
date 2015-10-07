@@ -29,7 +29,7 @@
 #include <nau/event/ilistener.h>
 #include <fstream> 
 
-class DlgDbgGLILogRead : public wxDialog, nau::event_::IListener
+class DlgTrace : public wxDialog, nau::event_::IListener
 {
 
 private:
@@ -62,18 +62,23 @@ private:
 	void PrintFunctionCount();
 
 protected:
-	DlgDbgGLILogRead();
-	DlgDbgGLILogRead(const DlgDbgGLILogRead&);
-	DlgDbgGLILogRead& operator= (const DlgDbgGLILogRead&);
-	static DlgDbgGLILogRead *m_Inst;
+
+	unsigned long long m_LastTime;
+	std::map<unsigned long long, std::pair<std::string, int>> m_FileTimes;
+
+
+	DlgTrace();
+	DlgTrace(const DlgTrace&);
+	DlgTrace& operator= (const DlgTrace&);
+	static DlgTrace *m_Inst;
 
 	void loadNewLogFile(std::string logfile, int fNumber, bool tellg = false, bool appendCount = false);
 	void finishReadLogFile();
 	
 	wxTreeCtrl *m_Log;
 	wxButton *m_bClear, *m_bProfiler, *m_bSave;
-	wxTreeItemId rootnode, lognode, statsnode, statsnamenode, statscountnode;
-	wxTreeItemId frame, pass;
+	wxTreeItemId m_Rootnode, m_Lognode, m_Statsnode, m_Statsnamenode, m_Statscountnode;
+	wxTreeItemId m_Frame, m_Pass;
 	std::string name;
 	bool isLogClear;
 	bool isNewFrame;
@@ -86,7 +91,7 @@ protected:
 public:
 	static wxWindow *m_Parent; 
 
-	static DlgDbgGLILogRead* Instance () ;
+	static DlgTrace* Instance () ;
 	static void SetParent(wxWindow *parent);
 	virtual std::string &getName ();
 	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);

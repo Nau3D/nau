@@ -113,12 +113,12 @@ GlCanvas::OnPaint (wxPaintEvent &event) {
 		Render();
 
 		if (step != 0){
-			DlgDbgGLILogRead::Instance()->loadLog();
+			DlgTrace::Instance()->loadLog();
 
 #ifdef GLINTERCEPTDEBUG
 			gliSetIsGLIActive(false);
 			if (gliIsLogPerFrame()){
-				DlgDbgGLILogRead::Instance()->clear();
+				DlgTrace::Instance()->clear();
 			}
 
 			DlgDbgStep::Instance()->updateDlg();
@@ -244,6 +244,10 @@ GlCanvas::OnKeyDown(wxKeyEvent & event) {
 	vec4 camUp = m_pCamera->getPropf4(Camera::UP_VEC);
 	vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
 
+	if ('.' == event.GetKeyCode()) {
+
+		DlgTrace::Instance()->loadLog();
+	}
 	if ('K' == event.GetKeyCode()) {
 		m_pEngine->sendKeyToEngine (event.GetKeyCode());	
 	}

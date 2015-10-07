@@ -40,7 +40,7 @@ PassOptix::PassOptix(const std::string &passName) :
 	Pass(passName), o_OutputBuffer(0), o_OutputPBO(0)
 {
 	try {
-		o_EntryPoint = OptixRenderer::getNextAvailableEntryPoint();
+		o_EntryPoint = OptixRenderer::GetNextAvailableEntryPoint();
 
 	//#if (TEST == 1)
 	////	OptixRenderer::setProgram(OptixRenderer::RAY_GEN, o_EntryPoint, "optix/common.ptx", "buffer_camera" );
@@ -48,7 +48,7 @@ PassOptix::PassOptix(const std::string &passName) :
 	//	OptixRenderer::setProgram(OptixRenderer::RAY_GEN, o_EntryPoint, "optix/common.ptx", "buffer_camera" );
 	//#endif
 		//OptixRenderer::setProgram(OptixRenderer::EXCEPTION, o_EntryPoint, "optix/common.ptx", "exception" );
-		o_Context = OptixRenderer::getContext();
+		o_Context = OptixRenderer::GetContext();
 		o_Context->setStackSize(2048);
 		o_Context->setExceptionEnabled(RT_EXCEPTION_ALL,false);
 		o_BufferLib.setContext(o_Context);
@@ -139,7 +139,7 @@ PassOptix::setBoundingBoxProc(std::string file, std::string proc) {
 void 
 PassOptix::setOptixEntryPointProcedure(OptixRenderer::ProgramTypes type, std::string file, std::string proc) {
 
-	OptixRenderer::setProgram(type, o_EntryPoint, file, proc );
+	OptixRenderer::SetProgram(type, o_EntryPoint, file, proc );
 }
 
 
@@ -147,7 +147,7 @@ void
 PassOptix::setDefaultMaterialProc(OptixMaterialLib::MaterialPrograms type, std::string rayType, std::string file, std::string proc) {
 
 	if (o_RayType.count(rayType) == 0)
-		o_RayType[rayType] = OptixRenderer::getNextAvailableRayType();
+		o_RayType[rayType] = OptixRenderer::GetNextAvailableRayType();
 	o_Context[rayType]->setInt(o_RayType[rayType]);
 
 	o_MatLib.setMaterialProgram(type, o_RayType[rayType],  file, proc );
@@ -158,7 +158,7 @@ void
 PassOptix::setMaterialProc(std::string name, OptixMaterialLib::MaterialPrograms type, std::string rayType, std::string file, std::string proc) {
 
 	if (o_RayType.count(rayType) == 0)
-		o_RayType[rayType] = OptixRenderer::getNextAvailableRayType();
+		o_RayType[rayType] = OptixRenderer::GetNextAvailableRayType();
 	o_Context[rayType]->setInt(o_RayType[rayType]);
 
 	o_MatLib.setMaterialProgram(name, type, o_RayType[rayType],  file, proc );

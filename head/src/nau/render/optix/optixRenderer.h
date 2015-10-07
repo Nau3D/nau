@@ -22,20 +22,20 @@ namespace nau {
 			EXCEPTION, 
 		} ;
 
-		static void setProgram(ProgramTypes aType, int rayType, 
+		static void SetProgram(ProgramTypes aType, int rayType, 
 						std::string fileName, std::string proc);
-		static optix::Context &getContext();
-		static int getNextAvailableRayType();
-		static int getNextAvailableEntryPoint();
+		static optix::Context &GetContext();
+		static int GetNextAvailableRayType();
+		static int GetNextAvailableEntryPoint();
 
 	private:
 		OptixRenderer();
 
-		static int init();
-		static optix::Context p_Context;
-		static unsigned int p_RayTypeCount;
-		static unsigned int p_EntryPointCount;
-		static std::map<ProgramTypes, optix::Program>  p_Program;
+		static int Init();
+		static optix::Context s_Context;
+		static unsigned int s_RayTypeCount;
+		static unsigned int s_EntryPointCount;
+		static std::map<ProgramTypes, optix::Program>  s_Program;
 
 	};
    };

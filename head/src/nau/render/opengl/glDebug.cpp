@@ -7,7 +7,7 @@
 
 #include <glbinding/Binding.h>
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(_DEBUG)
 #include <windows.h>
 #include <DbgHelp.h>
 #pragma comment(lib,"Dbghelp")
@@ -162,7 +162,7 @@ GLDebug::DebugLog(GLenum source,
 		GetStringForSource(source).c_str(), id,
 		GetStringForSeverity(severity).c_str(),
 		message);
-#ifdef _WIN32
+#if defined(_WIN32) && defined(_DEBUG)
 	PrintStack();
 #endif
 }
@@ -232,7 +232,7 @@ GLDebug::GetStringForType(GLenum type) {
 }
 
 // output the call stack
-#ifdef _WIN32
+#if defined(_WIN32) && defined(_DEBUG)
 void GLDebug::PrintStack() {
 
 	unsigned int   i;

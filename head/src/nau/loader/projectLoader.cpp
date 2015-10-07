@@ -1942,7 +1942,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		std::string file = readFile(pElem, "file", message);
 		
 		if (!pType || (0 != strcmp(pType, "RayGen") && 0 != strcmp(pType, "Exception")))
-			NAU_THROW("File: %s\nPass: %s\nInvalid Optix entry point type in pass %s\nValid Values are: RayGen and Exception", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			NAU_THROW("File: %s\nPass: %s\nInvalid Optix entry point type\nValid Values are: RayGen and Exception", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
 		if (!pProc)
 			NAU_THROW("File: %s\nPass: %s\nMissing Optix entry point procedure. Tag	\'proc\' is required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
@@ -2041,7 +2041,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("File: %s\nPass: %s\nMissing texture in Optix Input Definitiont", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
 		if (!RESOURCEMANAGER->hasTexture(pTexture))
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pTexture,aPass->getName().c_str());
+				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pTexture);
 
 		p->setOutputBuffer(pVar, pTexture);
 	}
@@ -2073,7 +2073,8 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		const char *pType = pElem->Attribute ("name");
 		unsigned int vi = VertexData::getAttribIndex(pType);
 		if (!pType || (VertexData::MaxAttribs == vi ))
-			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Vertex Attribute", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Vertex Attribute", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	
 		p->addVertexAttribute(vi);
 	}
@@ -2090,31 +2091,39 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		//const char *pId = pElemAux2->Attribute("id");
 
 		if (0 == pUniformName) {
-			NAU_THROW("File: %s\nPass: %s\nNo optix variable name, in pass %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		if (0 == pType) {
-			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s, in pass %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pContext) {
-			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s, in pass %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pComponent) {
-			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s, in pass %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid, in pass %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 
 		int id = 0;
 		if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
 			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
-				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s, in pass %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 			if (id < 0)
-				NAU_THROW("File: %s\nPass: %s\nid must be non negative, in optix variable %s, in pass %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+				NAU_THROW("File: %s\nPass: %s\nid must be non negative, in optix variable %s", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		std::string s(pType);
 		if (s == "TEXTURE") {
 			if (!RESOURCEMANAGER->hasTexture(pContext)) {
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined, in pass %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			}
 			else
 				po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
@@ -2128,7 +2137,8 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 		else if (s == "LIGHT") {
 			if (!RENDERMANAGER->hasLight(pContext))
-				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
 
 		}
@@ -2150,31 +2160,39 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		//const char *pId = pElemAux2->Attribute("id");
 
 		if (0 == pUniformName) {
-			NAU_THROW("File: %s\nPass: %s\nNo optix variable name", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		if (0 == pType) {
-			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pContext) {
-			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pComponent) {
-			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 
 		int id = 0;
 		if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
 			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
-				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 			if (id < 0)
-				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		std::string s(pType);
 		if (s == "TEXTURE") {
 			if (!RESOURCEMANAGER->hasTexture(pContext)) {
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			}
 			else
 				po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
@@ -2188,7 +2206,8 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 		else if (s == "LIGHT") {
 			if (!RENDERMANAGER->hasLight(pContext))
-				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
 
 		}
@@ -2210,31 +2229,39 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		//const char *pId = pElemAux2->Attribute("id");
 
 		if (0 == pUniformName) {
-			NAU_THROW("File: %s\nPass: %s\nNo optix variable name", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		if (0 == pType) {
-			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pContext) {
-			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pComponent) {
-			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 
 		int id = 0;
 		if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
 			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
-				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 			if (id < 0)
-				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		std::string s(pType);
 		if (s == "TEXTURE" && strcmp(pContext, "CURRENT")) {
 			if (!RESOURCEMANAGER->hasTexture(pContext)) {
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			}
 			else
 				po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
@@ -2248,7 +2275,8 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 		else if (s == "LIGHT" && strcmp(pContext, "CURRENT")) {
 			if (!RENDERMANAGER->hasLight(pContext))
-				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
 
 		}
@@ -2329,7 +2357,8 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 	}
 	else {
-		NAU_THROW("File %s\nPass %s\nRay buffer is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		NAU_THROW("File %s\nPass %s\nRay buffer is not defined", 
+			ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
 	pElem = hPass.FirstChildElement("hits").Element();
@@ -2339,17 +2368,20 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 		if (res == OK) {
 
 			if (!RESOURCEMANAGER->hasBuffer(bufferName)) {
-				NAU_THROW("File %s\nPass %s\nHit Buffer %s has not been defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
+				NAU_THROW("File %s\nPass %s\nHit Buffer %s has not been defined", 
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
 			}
 			else
 				p->addHitBuffer(RESOURCEMANAGER->getBuffer(bufferName));
 		}
 		else {
-			NAU_THROW("File %s\nPass %s\nHit buffer has no name", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), bufferName.c_str());
+			NAU_THROW("File %s\nPass %s\nHit buffer has no name", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 	}
 	else {
-		NAU_THROW("File %s\nPass %s\nHit buffer is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		NAU_THROW("File %s\nPass %s\nHit buffer is not defined", 
+			ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
 

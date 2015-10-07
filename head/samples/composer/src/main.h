@@ -108,7 +108,7 @@ private:
 	void OnClose(wxCloseEvent& event);
 
 	void FreezeGLI();
-	void LoadDebugData();
+	//void LoadDebugData();
 	//Debugger end
 
 

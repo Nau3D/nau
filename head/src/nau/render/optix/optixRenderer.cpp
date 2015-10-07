@@ -3,21 +3,21 @@
 
 using namespace nau::render::optixRender;
 
-optix::Context OptixRenderer::p_Context; //= optix::Context::create();
-unsigned int OptixRenderer::p_EntryPointCount; //= 1;
-std::map<OptixRenderer::ProgramTypes, optix::Program> OptixRenderer::p_Program;
-unsigned int OptixRenderer::p_RayTypeCount = OptixRenderer::init();
+optix::Context OptixRenderer::s_Context; //= optix::Context::create();
+unsigned int OptixRenderer::s_EntryPointCount; //= 1;
+std::map<OptixRenderer::ProgramTypes, optix::Program> OptixRenderer::s_Program;
+unsigned int OptixRenderer::s_RayTypeCount = OptixRenderer::Init();
 
 
 int
-OptixRenderer::init() {
+OptixRenderer::Init() {
 
-//	p_RayTypeCount = 0;
-	p_EntryPointCount = 0;
+//	s_RayTypeCount = 0;
+	s_EntryPointCount = 0;
 	try {
-		p_Context = optix::Context::create();
-//		p_Context->setRayTypeCount(1);
-//		p_Context->setEntryPointCount(1);
+		s_Context = optix::Context::create();
+//		s_Context->setRayTypeCount(1);
+//		s_Context->setEntryPointCount(1);
 	}
 	catch(optix::Exception& e) {
 	
@@ -28,37 +28,37 @@ OptixRenderer::init() {
 
 
 int 
-OptixRenderer::getNextAvailableRayType() {
+OptixRenderer::GetNextAvailableRayType() {
 
-	++p_RayTypeCount;
-	p_Context->setRayTypeCount(p_RayTypeCount);
-	return (p_RayTypeCount-1);
+	++s_RayTypeCount;
+	s_Context->setRayTypeCount(s_RayTypeCount);
+	return (s_RayTypeCount-1);
 }
 
 
 int 
-OptixRenderer::getNextAvailableEntryPoint() {
+OptixRenderer::GetNextAvailableEntryPoint() {
 
-	++p_EntryPointCount;
-	p_Context->setEntryPointCount(p_EntryPointCount);
-	return(p_EntryPointCount-1);
+	++s_EntryPointCount;
+	s_Context->setEntryPointCount(s_EntryPointCount);
+	return(s_EntryPointCount-1);
 }
 
 
 
 
 optix::Context &
-OptixRenderer::getContext() {
+OptixRenderer::GetContext() {
 
-	return p_Context;
+	return s_Context;
 }
 
 
 void
-OptixRenderer::setProgram(ProgramTypes aType, int rayType, std::string fileName, std::string proc) {
+OptixRenderer::SetProgram(ProgramTypes aType, int rayType, std::string fileName, std::string proc) {
 
 	try {
-		p_Program[aType] = p_Context->createProgramFromPTXFile( fileName, proc);
+		s_Program[aType] = s_Context->createProgramFromPTXFile( fileName, proc);
 	}
 	catch(optix::Exception& e) {
 	
@@ -68,9 +68,9 @@ OptixRenderer::setProgram(ProgramTypes aType, int rayType, std::string fileName,
 	try {
 		switch(aType) {
 	
-			case RAY_GEN: p_Context->setRayGenerationProgram(rayType, p_Program[aType] );
+			case RAY_GEN: s_Context->setRayGenerationProgram(rayType, s_Program[aType] );
 				break;
-			case EXCEPTION: p_Context->setExceptionProgram( rayType, p_Program[aType] );
+			case EXCEPTION: s_Context->setExceptionProgram( rayType, s_Program[aType] );
 				break;
 		}
 	}

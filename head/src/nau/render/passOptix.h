@@ -90,7 +90,7 @@ namespace nau
 			std::map<std::string, nau::material::ProgramValue> o_GlobalAttribute;
 
 			// optix name > (gl tex name, PixelBufferID)
-			typedef struct databuffer{
+			struct databuffer{
 			
 				std::string texName;
 				unsigned int pbo;

@@ -6,13 +6,13 @@
 #include <dirent.h>
 #include <algorithm>
 
-BEGIN_EVENT_TABLE(DlgDbgGLILogRead, wxDialog)
+BEGIN_EVENT_TABLE(DlgTrace, wxDialog)
 
 END_EVENT_TABLE()
 
 
-wxWindow *DlgDbgGLILogRead::m_Parent = NULL;
-DlgDbgGLILogRead *DlgDbgGLILogRead::m_Inst = NULL;
+wxWindow *DlgTrace::m_Parent = NULL;
+DlgTrace *DlgTrace::m_Inst = NULL;
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
 	std::stringstream ss(s);
@@ -32,23 +32,23 @@ std::vector<std::string> split(const std::string &s, char delim) {
 
 
 void 
-DlgDbgGLILogRead::SetParent(wxWindow *p) {
+DlgTrace::SetParent(wxWindow *p) {
 
 	m_Parent = p;
 }
 
 
-DlgDbgGLILogRead* 
-DlgDbgGLILogRead::Instance () {
+DlgTrace* 
+DlgTrace::Instance () {
 
 	if (m_Inst == NULL)
-		m_Inst = new DlgDbgGLILogRead();
+		m_Inst = new DlgTrace();
 
 	return m_Inst;
 }
  
 
-DlgDbgGLILogRead::DlgDbgGLILogRead(): wxDialog(DlgDbgGLILogRead::m_Parent, -1, wxT("Nau - Trace Log"),wxDefaultPosition,
+DlgTrace::DlgTrace(): wxDialog(DlgTrace::m_Parent, -1, wxT("Nau - Trace Log"),wxDefaultPosition,
 						   wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE)
 {
 
@@ -73,18 +73,25 @@ DlgDbgGLILogRead::DlgDbgGLILogRead(): wxDialog(DlgDbgGLILogRead::m_Parent, -1, w
 	isLogClear=true;
 	nextFunctionIndex = 0;
 	numGLFunctionCalls = 0;
-	statsnode = NULL;
+	m_Statsnode = NULL;
 }
 
 
 void
-DlgDbgGLILogRead::updateDlg() {
+DlgTrace::updateDlg() {
 
+	FILETIME lt;
+	GetSystemTimeAsFileTime(&lt);
+	ULARGE_INTEGER uLargeIntegerTime1;
+	uLargeIntegerTime1.LowPart = lt.dwLowDateTime;
+	uLargeIntegerTime1.HighPart = lt.dwHighDateTime;
+	m_LastTime = uLargeIntegerTime1.QuadPart;
+	m_Log->DeleteAllItems();
 }
 
 
 std::string &
-DlgDbgGLILogRead::getName () {
+DlgTrace::getName () {
 
 	name = "DlgTraceRead";
 	return(name);
@@ -92,24 +99,24 @@ DlgDbgGLILogRead::getName () {
 
 
 void
-DlgDbgGLILogRead::eventReceived(const std::string &sender, const std::string &eventType, 
+DlgTrace::eventReceived(const std::string &sender, const std::string &eventType, 
 	nau::event_::IEventData *evt) {
 
 }
 
 
 void 
-DlgDbgGLILogRead::append(std::string s) {
+DlgTrace::append(std::string s) {
 
 }
 
 
 void 
-DlgDbgGLILogRead::clear() {
+DlgTrace::clear() {
 
 	m_Log->DeleteAllItems();
 	isLogClear = true;
-	statsnode = NULL;
+	m_Statsnode = NULL;
 	nextFunctionIndex = 0;
 	numGLFunctionCalls = 0;
 	functionDataArray.clear();
@@ -118,7 +125,7 @@ DlgDbgGLILogRead::clear() {
 
 
 void 
-DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, bool appendCount) {
+DlgTrace::loadNewLogFile(string logfile, int fNumber, bool tellg, bool appendCount) {
 
 	string line;
 	isNewFrame = false;
@@ -139,10 +146,10 @@ DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, bool a
 						PrintFunctionCount();
 						ZeroStatsHeaders();
 						frameStatNumber = frameNumber;
-						frame = m_Log->AppendItem(lognode, "Frame " + to_string(frameNumber) + " >");
-						statsnode = m_Log->AppendItem(frame, "Statistics Log >");
-						frame = m_Log->AppendItem(frame, "Call Log >");
-						pass = frame;
+						m_Frame = m_Log->AppendItem(m_Lognode, "Frame " + to_string(frameNumber) + " >");
+						m_Statsnode = m_Log->AppendItem(m_Frame, "Statistics Log >");
+						m_Frame = m_Log->AppendItem(m_Frame, "Call Log >");
+						m_Pass = m_Frame;
 						frameNumber++;
 						isNewFrame = false;
 					}
@@ -163,45 +170,45 @@ DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, bool a
 			if (strcmp(line.substr(0, 4).c_str(), "#NAU") == 0){
 				if (strcmp(line.substr(5, 5).c_str(), "FRAME") == 0){
 					if (strcmp(line.substr(11, 5).c_str(), "START") == 0){
-						if (frame){
-							m_Log->Expand(frame);
+						if (m_Frame){
+							m_Log->Expand(m_Frame);
 						}
 						PrintFunctionCount();
 						ZeroStatsHeaders();
 						frameStatNumber = frameNumber;
-						frame = m_Log->AppendItem(lognode, "Frame " + to_string(frameNumber) + " >");
-						statsnode = m_Log->AppendItem(frame, "Statistics Log >");
-						frame = m_Log->AppendItem(frame, "Call Log >");
-						pass = frame;
+						m_Frame = m_Log->AppendItem(m_Lognode, "Frame " + to_string(frameNumber) + " >");
+						m_Statsnode = m_Log->AppendItem(m_Frame, "Statistics Log >");
+						m_Frame = m_Log->AppendItem(m_Frame, "Call Log >");
+						m_Pass = m_Frame;
 						frameNumber++;
 						isNewFrame = false;
 					}
 				}
 				else if (strcmp(line.substr(5, 4).c_str(), "PASS") == 0){
 					if (strcmp(line.substr(10, 5).c_str(), "START") == 0){
-						pass = m_Log->AppendItem(frame, "NAUPASS(" + line.substr(16, line.length() - 17) + ") >");
+						m_Pass = m_Log->AppendItem(m_Frame, "NAUPASS(" + line.substr(16, line.length() - 17) + ") >");
 					}
 					else if (strcmp(line.substr(10, 3).c_str(), "END") == 0){
-						pass = frame;
+						m_Pass = m_Frame;
 					}
 				}
 			}
 			else{
 				if (isNewFrame){
-					if (frame){
-						m_Log->Expand(frame);
+					if (m_Frame){
+						m_Log->Expand(m_Frame);
 					}
 					PrintFunctionCount();
 					ZeroStatsHeaders();
 					frameStatNumber = frameNumber;
-					frame = m_Log->AppendItem(lognode, "Frame " + to_string(frameNumber) + " >");
-					statsnode = m_Log->AppendItem(frame, "Statistics Log >");
-					frame = m_Log->AppendItem(frame, "Call Log >");
-					pass = frame;
+					m_Frame = m_Log->AppendItem(m_Lognode, "Frame " + to_string(frameNumber) + " >");
+					m_Statsnode = m_Log->AppendItem(m_Frame, "Statistics Log >");
+					m_Frame = m_Log->AppendItem(m_Frame, "Call Log >");
+					m_Pass = m_Frame;
 					frameNumber++;
 					isNewFrame = false;
 				}
-				m_Log->AppendItem(pass, line);
+				m_Log->AppendItem(m_Pass, line);
 				if (appendCount){
 					CountFunction(split(line, '(')[0]);
 				}
@@ -218,24 +225,29 @@ DlgDbgGLILogRead::loadNewLogFile(string logfile, int fNumber, bool tellg, bool a
 }
 
 void 
-DlgDbgGLILogRead::finishReadLogFile() {
+DlgTrace::finishReadLogFile() {
 	filestream.close();
 }
 
 
 void 
-DlgDbgGLILogRead::loadLog() {
+DlgTrace::loadLog() {
 
 	string logname = gliGetLogName();
 	string logfile;
+	HANDLE hFile;
+
+
 	
 	if (isLogClear) {
-
+		m_Rootnode = m_Log->AddRoot(string("./__nau3Dtrace/") + string("Frame_*.txt"));
+		m_Lognode = m_Log->AppendItem(m_Rootnode, "Frame Log >");
+	}
 		//if (!gliIsLogPerFrame()){
 		//	// Corresponding logfile
 		//	logfile = gliGetLogPath()+logname+".txt";
 		//	rootnode = m_Log->AddRoot(logfile);
-		//	lognode = m_Log->AppendItem(rootnode, "Frame Log>");
+		//	m_Lognode = m_Log->AppendItem(rootnode, "Frame Log>");
 
 		//	//Reads logfile
 		//	loadNewLogFile(logfile, 0, false, true);
@@ -247,118 +259,134 @@ DlgDbgGLILogRead::loadLog() {
 		//	
 		//}
 		//else
-		{
-			rootnode = m_Log->AddRoot(string("./__nau3Dtrace/") + string("Frame_*.txt"));
-			lognode = m_Log->AppendItem(rootnode, "Frame Log >");
 			//Directory searching algorithm source:
 			//dirent.h
-			DIR *dir;
-			struct dirent *ent;
-			if ((dir = opendir ("./__nau3Dtrace")) != NULL) {
-				// Read all files and directories in the directory
-				while ((ent = readdir (dir)) != NULL) {
-					// Filters directories starting with Frame_* only
-					if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")){
-						// Corresponding logfile
-						logfile = string("./__nau3Dtrace/")+string(ent->d_name);
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir("./__nau3Dtrace")) != NULL) {
+		m_FileTimes.clear();
+		unsigned long long tempLastTime = m_LastTime;
+		// Read all files and directories in the directory
+		while ((ent = readdir(dir)) != NULL) {
+			// Filters directories starting with Frame_* only
+			if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")) {
+				// Corresponding logfile
+				logfile = string("./__nau3Dtrace/") + string(ent->d_name);
+				wxString ws = wxString(logfile);
+				hFile = CreateFile(ws.c_str(),               // file to open
+					GENERIC_READ,          // open for reading
+					FILE_SHARE_READ,       // share for reading
+					NULL,                  // default security
+					OPEN_EXISTING,         // existing file only
+					FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, // normal file
+					NULL);                 // no attr. template
 
-						//Reads logfile
-						loadNewLogFile(logfile, atoi(ent->d_name + 6), false, true);
+				if (hFile != INVALID_HANDLE_VALUE) {
+					FILETIME ft1, ft2, ftlw;
+					GetFileTime(hFile, &ft1, &ft2, &ftlw);
+					ULARGE_INTEGER uLargeIntegerTime1;
+					uLargeIntegerTime1.LowPart = ft1.dwLowDateTime;
+					uLargeIntegerTime1.HighPart = ft1.dwHighDateTime;
+					if (uLargeIntegerTime1.QuadPart > m_LastTime) {
+						m_FileTimes[uLargeIntegerTime1.QuadPart] = std::pair<std::string, int>(logfile, atoi(ent->d_name + 6));
+						tempLastTime = tempLastTime > uLargeIntegerTime1.QuadPart ? tempLastTime : uLargeIntegerTime1.QuadPart;
 					}
 				}
-				closedir (dir);
-			}
-
-			//If no logfile was found then leave a message
-			if (m_Log->GetChildrenCount(lognode, false) == 0){
-				m_Log->AppendItem(rootnode, "no related logfiles were found");
+				//Reads logfile
+				//loadNewLogFile(logfile, atoi(ent->d_name + 6), false, true);
 			}
 		}
-		m_Log->Expand(rootnode);
-		m_Log->Expand(lognode);
-		isLogClear=false;
+		closedir(dir);
+		for (auto files : m_FileTimes) {
+			loadNewLogFile(files.second.first, files.second.second, false, true);
+		}
+		m_LastTime = tempLastTime;
+
+		m_Log->Expand(m_Rootnode);
+		m_Log->Expand(m_Lognode);
+		isLogClear = false;
 	}
-	else {
-/*		if (!gliIsLogPerFrame()){
-			logfile = gliGetLogPath() + logname + ".txt";
-			loadNewLogFile(logfile, frameNumber, true, true);
-		}
-		else*/{
-			clear();
-			rootnode = m_Log->AddRoot(string("./__nau3Dtrace") + string("Frame_*\\") + logname + ".txt");
-			lognode = rootnode;
-			//Directory searching algorithm source:
-			//dirent.h
-			DIR *dir;
-			struct dirent *ent;
-			if ((dir = opendir(gliGetLogPath())) != NULL) {
-				// Read all files and directories in the directory
-				while ((ent = readdir(dir)) != NULL) {
-					// Filters directories starting with Frame_* only
-
-
-					if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")){
-//					if (ent->d_type == S_IFDIR && strstr(ent->d_name, "Frame_")){
-						// Corresponding logfile
-						logfile = gliGetLogPath() + string(ent->d_name) + "/" + logname + ".txt";
-
-						//Reads logfile
-						loadNewLogFile(logfile, atoi(ent->d_name + 6), false, true);
-					}
-				}
-				closedir(dir);
-			}
-
-			//If no logfile was found then leave a message
-			if (m_Log->GetChildrenCount(lognode, false) == 0){
-				m_Log->AppendItem(rootnode, "no related logfiles were found");
-			}
-			m_Log->Expand(rootnode);
-			m_Log->Expand(lognode);
-			isLogClear = false;
-		
-		}
-	}
+//	else {
+///*		if (!gliIsLogPerFrame()){
+//			logfile = gliGetLogPath() + logname + ".txt";
+//			loadNewLogFile(logfile, frameNumber, true, true);
+//		}
+//		else*/{
+//			clear();
+//			m_Rootnode = m_Log->AddRoot(string("./__nau3Dtrace") + string("Frame_*\\") + logname + ".txt");
+//			m_Lognode = m_Rootnode;
+//			//Directory searching algorithm source:
+//			//dirent.h
+//			DIR *dir;
+//			struct dirent *ent;
+//			if ((dir = opendir(gliGetLogPath())) != NULL) {
+//				// Read all files and directories in the directory
+//				while ((ent = readdir(dir)) != NULL) {
+//					// Filters directories starting with Frame_* only
+//
+//
+//					if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")){
+////					if (ent->d_type == S_IFDIR && strstr(ent->d_name, "Frame_")){
+//						// Corresponding logfile
+//						logfile = gliGetLogPath() + string(ent->d_name) + "/" + logname + ".txt";
+//
+//						//Reads logfile
+//						loadNewLogFile(logfile, atoi(ent->d_name + 6), false, true);
+//					}
+//				}
+//				closedir(dir);
+//			}
+//
+//			//If no logfile was found then leave a message
+//			if (m_Log->GetChildrenCount(m_Lognode, false) == 0){
+//				m_Log->AppendItem(m_Rootnode, "no related logfiles were found");
+//			}
+//			m_Log->Expand(m_Rootnode);
+//			m_Log->Expand(m_Lognode);
+//			isLogClear = false;
+//		
+//		}
+//	}
 	PrintFunctionCount();
 }
 
 
-DlgDbgGLILogRead::FunctionCallData::FunctionCallData() :
+DlgTrace::FunctionCallData::FunctionCallData() :
 	funcCallCount(0) {
 
 }
 
 bool
-DlgDbgGLILogRead::FunctionCallData::SortByName(const FunctionCallData &a, const FunctionCallData &b) {
+DlgTrace::FunctionCallData::SortByName(const FunctionCallData &a, const FunctionCallData &b) {
 
 	return a.functionName < b.functionName;
 }
 
 
 bool 
-DlgDbgGLILogRead::FunctionCallData::SortByCount(const FunctionCallData &a, const FunctionCallData &b) {
+DlgTrace::FunctionCallData::SortByCount(const FunctionCallData &a, const FunctionCallData &b) {
 
 	return a.funcCallCount > b.funcCallCount;
 }
 
 
 void 
-DlgDbgGLILogRead::CleanStatsHeaders(){
-	m_Log->DeleteChildren(statsnode);
-	statsnamenode = m_Log->AppendItem(statsnode, "Ordered by Name >");
-	statscountnode = m_Log->AppendItem(statsnode, "Ordered by Count >");
+DlgTrace::CleanStatsHeaders(){
+	m_Log->DeleteChildren(m_Statsnode);
+	m_Statsnamenode = m_Log->AppendItem(m_Statsnode, "Ordered by Name >");
+	m_Statscountnode = m_Log->AppendItem(m_Statsnode, "Ordered by Count >");
 }
 
 
 void 
-DlgDbgGLILogRead::ZeroStatsHeaders(){
+DlgTrace::ZeroStatsHeaders(){
 	functionDataArray.clear();
 	numGLFunctionCalls = 0;
 }
 
 
 void 
-DlgDbgGLILogRead::CountFunction(std::string funcName)
+DlgTrace::CountFunction(std::string funcName)
 {
 	unsigned int funcIndex;
 	if (functionIndexList.find(funcName) == functionIndexList.end()) {
@@ -392,13 +420,13 @@ DlgDbgGLILogRead::CountFunction(std::string funcName)
 
 
 void 
-DlgDbgGLILogRead::PrintFunctionCount()
+DlgTrace::PrintFunctionCount()
 { 
-	if (statsnode){
+	if (m_Statsnode){
 		CleanStatsHeaders();
 		std::vector<FunctionCallData> functionDataArrayClone = functionDataArray;
 		//Dump the total call count and average per frame (excluding first frame of xxx calls)
-		m_Log->AppendItem(statsnode, "Total GL Calls: " + std::to_string(numGLFunctionCalls));
+		m_Log->AppendItem(m_Statsnode, "Total GL Calls: " + std::to_string(numGLFunctionCalls));
 		//m_Log->AppendItem(statsnode, "Frame Number: " + std::to_string(frameStatNumber));
 
 		//Sort the array based on function call count
@@ -411,7 +439,7 @@ DlgDbgGLILogRead::PrintFunctionCount()
 			//Only dump functions that have been called
 			if (functionDataArrayClone[i].funcCallCount > 0)
 			{
-				m_Log->AppendItem(statscountnode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
+				m_Log->AppendItem(m_Statscountnode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
 			}
 		}
 
@@ -424,7 +452,7 @@ DlgDbgGLILogRead::PrintFunctionCount()
 			//Only dump functions that have been called
 			if (functionDataArrayClone[i].funcCallCount > 0)
 			{
-				m_Log->AppendItem(statsnamenode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
+				m_Log->AppendItem(m_Statsnamenode, functionDataArrayClone[i].functionName + ": " + std::to_string(functionDataArrayClone[i].funcCallCount));
 			}
 		}
 	}

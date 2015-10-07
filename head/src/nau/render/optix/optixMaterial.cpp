@@ -8,7 +8,7 @@ using namespace nau::render::optixRender;
 
 OptixMaterial::OptixMaterial() {
 
-		m_Context = OptixRenderer::getContext();
+		m_Context = OptixRenderer::GetContext();
 }
 
 

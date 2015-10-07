@@ -358,7 +358,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgPass::SetParent(this);
 	DlgAtomics::SetParent(this);
 	DlgViewports::SetParent(this);
-	DlgDbgGLILogRead::SetParent(this);
+	DlgTrace::SetParent(this);
 	DlgDbgPrograms::SetParent(this);
 	DlgDbgBuffers::SetParent(this);
 	DlgDbgStep::SetParent(this);
@@ -486,6 +486,7 @@ FrmMainFrame::updateDlgs() {
 	DlgPass::Instance()->updateDlg();
 	DlgViewports::Instance()->updateDlg();
 	DlgDbgPrograms::Instance()->updateDlg();
+	DlgTrace::Instance()->updateDlg();
 
 	renderMenu->Enable(idMenu_DLG_PASS, true);
 	renderMenu->Enable(idMenuWireframe, true);
@@ -637,9 +638,7 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event) {
 			SLOG("Elapsed time: %f", t);
 #endif
 
-#ifdef GLINTERCEPTDEBUG
-			DlgDbgGLILogRead::Instance()->clear();
-#endif
+			DlgTrace::Instance()->clear();
 
 		} catch (nau::ProjectLoaderError &e) {
 		  wxMessageBox (wxString (e.getException().c_str()));
@@ -881,19 +880,19 @@ FrmMainFrame::FreezeGLI(){
 }
 
 
-void
-FrmMainFrame::LoadDebugData() {
-
-	DlgDbgGLILogRead::Instance()->loadLog();
-	DlgDbgPrograms::Instance()->clear();
-	DlgDbgStep::Instance()->updateDlg();
-}
+//void
+//FrmMainFrame::LoadDebugData() {
+//
+//	DlgTrace::Instance()->loadLog();
+//	DlgDbgPrograms::Instance()->clear();
+//	DlgDbgStep::Instance()->updateDlg();
+//}
 
 
 void
 FrmMainFrame::OnDlgDbgTraceRead(wxCommandEvent& event) {
 
-	DlgDbgGLILogRead::Instance()->Show(TRUE);
+	DlgTrace::Instance()->Show(TRUE);
 }
 
 

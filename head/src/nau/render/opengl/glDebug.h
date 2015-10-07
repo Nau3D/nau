@@ -5,7 +5,6 @@
 
 #include <glbinding/gl/gl.h>
 using namespace gl;
-//#include <GL/glew.h>
 
 #ifdef _WIN32
 #define STDCALL __stdcall
@@ -48,7 +47,7 @@ namespace nau {
 
 			static void SetTraceCallbacks();
 
-			#ifdef _WIN32	
+			#if defined(_WIN32) && defined(_DEBUG)	
 				static void PrintStack();
 			#endif
 
