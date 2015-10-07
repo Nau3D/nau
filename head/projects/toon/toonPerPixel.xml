@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="Diffuse Light Per Vertex" >
+<project name="Toon Per Pixel" >
 	<assets><!-- width="512" height="512" -->
 		<scenes>
 			<scene name="MyScene" param="UNITIZE ">
@@ -32,7 +32,7 @@
 		</lights>
 		
 		<materialLibs>
-			<materialLib filename="lighting.mlib" />
+			<materialLib filename="toon.mlib" />
 		</materialLibs>
 	</assets>
 	
@@ -48,7 +48,7 @@
 				</lights>
 				<injectionMaps>
 					<map toMaterial="*">
-						<shader fromMaterial ="diffPerVertex" fromLibrary="Lighting" />
+						<shader fromMaterial ="toonPerPixel" fromLibrary="Toon" />
 					</map>
 				</injectionMaps>
 			</pass>

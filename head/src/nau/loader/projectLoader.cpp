@@ -3047,7 +3047,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 
 			if (!MATERIALLIBMANAGER->hasMaterial(pLib,pMat))
 				NAU_THROW("File %s\nPass%s\nInjection map error: Shader material %s is not defined in lib %s", 
-					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pLib, aPass->getName().c_str());
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pMat, pLib);
 
 			std::vector<std::string>::iterator iter;
 			for(iter = names->begin(); iter != names->end(); ++iter) {
