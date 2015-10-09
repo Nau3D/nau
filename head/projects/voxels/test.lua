@@ -3,6 +3,7 @@ test = function()
 	local f = {}
 	local g = {}
 	local h = {}
+	local k = {}
 	getAttr("PASS", "voxels#mipmap", "GridLevels", 0, h);
 	getAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
 	
@@ -14,7 +15,7 @@ test = function()
 		f[1] = f[1] + 1
 		setAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
 
-		k = h[1] - f[1];
+		k[1] = h[1] - f[1];
 		if k[1] == 0 then
 			g[1] = 1;
 		else g[1] = 2;	
