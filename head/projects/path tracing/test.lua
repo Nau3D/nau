@@ -26,9 +26,10 @@ end
 
 testMipmap = function() 
 
-	local f = {}
-	local g = {}
-	local h = {}
+	local f = {0}
+	local g = {0}
+	local h = {0}
+	local k = {0}
 	getAttr("PASS", "PathTracer#mipmap", "Levels", 0, h);
 	getAttr("PASS", "PathTracer#mipmap", "CurrentLevel",0,f)
 	
@@ -38,10 +39,16 @@ testMipmap = function()
 		return false
 	else
 		f[1] = f[1] + 1
+		k[1] = h[1] - f[1];
+		if k[1] == 0 then
+			g[1] = 1;
+		else g[1] = 2;	
+			for i=2,k[1] do
+				g[1] = g[1] * 2
+			end	
+		end
+		
 		setAttr("PASS", "PathTracer#mipmap", "CurrentLevel",0,f)
-
-		k = h[1] - f[1];
-		g[1] = math.pow(2,k);
 		setAttr("PASS", "PathTracer#mipmap", "DIM_X", 0, g);
 		setAttr("PASS", "PathTracer#mipmap", "DIM_Y", 0, g);
 		

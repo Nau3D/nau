@@ -165,7 +165,7 @@ namespace nau
 					if (i != DIMENSION -1)
 						s = s + "\n";
 				}
-				return "[" + s + "]";
+				return "[ " + s + " ]";
 			}
 		};
 
@@ -613,7 +613,7 @@ namespace nau
 						s = s + ", " + std::to_string(m_Matrix[i*COLUMNS + j]);
 					}
 					if (i != LINES - 1)
-						s = s + "\n";
+						s = s + " \n";
 				}
 				return "[" + s + "]";
 			}

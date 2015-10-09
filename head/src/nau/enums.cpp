@@ -412,6 +412,47 @@ Enums::valueToString(DataType p, void *v) {
 }
 
 
+// Outputs similar to what is expected in std140 from OpenGL
+std::string &
+Enums::valueToStringAligned(DataType p, void *v) {
+
+	m_Result = "[ ";
+	switch (p) {
+	case MAT3: {
+		float *m = ((float *)v);
+		for (unsigned int i = 0; i < 3; ++i) {
+			for (unsigned int j = 0; j < 3; ++j) {
+				m_Result += std::to_string(m[i * 4 + j]) + ", ";
+			}
+			m_Result += std::to_string(m[i * 4 + 3]) + " \n";
+		}
+		m_Result += " ]";
+		return m_Result;
+	}
+	case DMAT3:
+		m_Result = ((dmat3 *)v)->toString();
+		return m_Result;
+
+	case MAT2x3:
+		m_Result = ((mat2x3 *)v)->toString();
+		return m_Result;
+
+	case MAT4x3:
+		m_Result = ((mat4x3 *)v)->toString();
+		return m_Result;
+
+	case DMAT2x3:
+		m_Result = ((dmat2x3 *)v)->toString();
+		return m_Result;
+	case DMAT4x3:
+		m_Result = ((dmat4x3 *)v)->toString();
+		return m_Result;
+	default:
+		return valueToString(p, v);
+	}
+}
+
+
 Enums::DataType
 Enums::getBasicType(Enums::DataType p) {
 

@@ -1268,7 +1268,7 @@ GLRenderer::showDrawDebugInfo(IProgram *pp, nau::util::Tree *tree) {
 				SLOG("\t    mat stride: %d", uniMatStride);
 			}
 			buff->getData(uniOffset, auxSize, values);
-			s = Enums::valueToString(GLUniform::spSimpleType[(GLenum)uniType], values);
+			s = Enums::valueToStringAligned(GLUniform::spSimpleType[(GLenum)uniType], values);
 			uniTree->appendItem("Values", s);
 		}
 	}

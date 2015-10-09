@@ -15,7 +15,13 @@ test = function()
 		setAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
 
 		k = h[1] - f[1];
-		g[1] = math.pow(2,k);
+		if k[1] == 0 then
+			g[1] = 1;
+		else g[1] = 2;	
+			for i=2,k[1] do
+				g[1] = g[1] * 2
+			end	
+		end
 		setAttr("PASS", "voxels#mipmap", "DIM_X", 0, g);
 		setAttr("PASS", "voxels#mipmap", "DIM_Y", 0, g);
 		setAttr("PASS", "voxels#mipmap", "DIM_Z", 0, g);
