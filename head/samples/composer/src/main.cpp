@@ -71,7 +71,7 @@ bool WndComposer::OnInit()
 int idMenuProject = wxNewId();
 int idMenuDir = wxNewId();
 int idMenuModel = wxNewId();
-int idMenuModelAppend = wxNewId();
+//int idMenuModelAppend = wxNewId();
 int idMenuProcess = wxNewId();
 int idMenuQuit = wxNewId();
 // Render Menu
@@ -112,7 +112,7 @@ BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
 	EVT_MENU(idMenuProject, FrmMainFrame::OnProjectLoad)
 	EVT_MENU(idMenuDir, FrmMainFrame::OnDirectoryLoad)
 	EVT_MENU(idMenuModel, FrmMainFrame::OnModelLoad)
-	EVT_MENU(idMenuModelAppend, FrmMainFrame::OnModelAppend)
+	//EVT_MENU(idMenuModelAppend, FrmMainFrame::OnModelAppend)
 	EVT_MENU(idMenuProcess, FrmMainFrame::OnProcess)
 	EVT_MENU(idMenuQuit, FrmMainFrame::OnQuit)
 	// Render Menu
@@ -182,8 +182,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	fileMenu->Append(idMenuProject, _("&Open Project\tCtrl-O"), _("Open a project file"));
 	fileMenu->Append(idMenuDir, _("&Open Folder\tCtrl-F"), _("Loads all files in a folder"));
 	fileMenu->Append(idMenuModel, _("&Open Model\tCtrl-M"), _("Reset and Loads a 3D Model"));
-	fileMenu->Append(idMenuModelAppend, _("&Append Model\tCtrl-A"), _("Appends a 3D Model to the scene"));
-	fileMenu->Append(idMenuProcess, _("&Process Queue\tCtrl-Q"), _("Process queue"));
+	//fileMenu->Append(idMenuModelAppend, _("&Append Model\tCtrl-+"), _("Appends a 3D Model to the scene"));
+	fileMenu->Append(idMenuProcess, _("&Process Folder\tCtrl-F"), _("Process folder"));
 	fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
 	mbar->Append(fileMenu, _("&File"));
 
@@ -581,33 +581,33 @@ FrmMainFrame::OnModelLoad (wxCommandEvent& event) {
 }
 
 
-void
-FrmMainFrame::OnModelAppend (wxCommandEvent& event) {
-
-	static const wxChar *fileTypes = _T("3D Files (*.nbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.nbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.nbo)|*.nbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
-	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
-
-	if (wxID_OK == openFileDlg->ShowModal ()) {
-		wxStopWatch aTimer;
-		aTimer.Start();
-		wxString path = openFileDlg->GetPath ();
-
-		try {
-			DlgLog::Instance()->updateDlg();
-			DlgLog::Instance()->clear();
-			m_pRoot->appendModel (std::string(path.mb_str()));
-			m_Canvas->setCamera();
-			updateDlgs();
-#ifndef FINAL
-			float t =  aTimer.Time()/1000.0;
-			SLOG("Elapsed time: %f", t);
-#endif		
-		}
-		catch (std::string &s) {
-			wxMessageBox((wxChar *)s.c_str());
-		}
-	}
-}
+//void
+//FrmMainFrame::OnModelAppend (wxCommandEvent& event) {
+//
+//	static const wxChar *fileTypes = _T("3D Files (*.nbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.nbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.nbo)|*.nbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
+//	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
+//
+//	if (wxID_OK == openFileDlg->ShowModal ()) {
+//		wxStopWatch aTimer;
+//		aTimer.Start();
+//		wxString path = openFileDlg->GetPath ();
+//
+//		try {
+//			DlgLog::Instance()->updateDlg();
+//			DlgLog::Instance()->clear();
+//			m_pRoot->appendModel (std::string(path.mb_str()));
+//			m_Canvas->setCamera();
+//			updateDlgs();
+//#ifndef FINAL
+//			float t =  aTimer.Time()/1000.0;
+//			SLOG("Elapsed time: %f", t);
+//#endif		
+//		}
+//		catch (std::string &s) {
+//			wxMessageBox((wxChar *)s.c_str());
+//		}
+//	}
+//}
 
 
 void 

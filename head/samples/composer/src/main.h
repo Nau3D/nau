@@ -79,7 +79,7 @@ private:
 	void OnProjectLoad(wxCommandEvent& event);
 	void OnDirectoryLoad (wxCommandEvent& event);
 	void OnModelLoad (wxCommandEvent& event);
-	void OnModelAppend (wxCommandEvent& event);
+	//void OnModelAppend (wxCommandEvent& event);
 
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
