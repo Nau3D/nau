@@ -397,7 +397,8 @@ void DlgMaterials::updateMaterialList() {
 	panels.setState(mm->getState());
 	panels.updatePanel();
 	m_BufferPanel.setMaterial(mm);
-	m_ITexPanel.setMaterial(mm);}
+	m_ITexPanel.setMaterial(mm);
+}
 
 
 void DlgMaterials::OnProcessPanelChange( wxPropertyGridEvent& e) {

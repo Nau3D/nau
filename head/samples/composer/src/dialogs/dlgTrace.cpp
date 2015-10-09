@@ -77,6 +77,21 @@ DlgTrace::DlgTrace(): wxDialog(DlgTrace::m_Parent, -1, wxT("Nau - Trace Log"),wx
 }
 
 
+/* ----------------------------------------------------------------
+
+EVENTS FROM OTHER DIALOGS AND NAU
+
+-----------------------------------------------------------------*/
+
+void
+DlgTrace::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+
+	if (eventType == "TRACE_FILE_READY") {
+		loadLog();
+	}
+}
+
+
 void
 DlgTrace::updateDlg() {
 
@@ -87,6 +102,8 @@ DlgTrace::updateDlg() {
 	uLargeIntegerTime1.HighPart = lt.dwHighDateTime;
 	m_LastTime = uLargeIntegerTime1.QuadPart;
 	m_Log->DeleteAllItems();
+	EVENTMANAGER->addListener("TRACE_FILE_READY", this);
+
 }
 
 
@@ -95,13 +112,6 @@ DlgTrace::getName () {
 
 	name = "DlgTraceRead";
 	return(name);
-}
-
-
-void
-DlgTrace::eventReceived(const std::string &sender, const std::string &eventType, 
-	nau::event_::IEventData *evt) {
-
 }
 
 

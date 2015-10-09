@@ -94,12 +94,12 @@ public:
 	static DlgTrace* Instance () ;
 	static void SetParent(wxWindow *parent);
 	virtual std::string &getName ();
-	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 	void updateDlg();
 	void append(std::string s);
 	void clear();
 	void loadLog();
 
+	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 
     DECLARE_EVENT_TABLE();
 

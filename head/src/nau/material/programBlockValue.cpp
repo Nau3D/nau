@@ -147,7 +147,7 @@ ProgramBlockValue::getCardinality (void) {
 
 
 void*
-ProgramBlockValue::getValues (void) {
+ProgramBlockValue:: getValues (void) {
 
 	AttributeValues *attr = NULL;
 	if (m_Context != "CURRENT") {

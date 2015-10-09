@@ -42,6 +42,9 @@ namespace nau
 
 			std::string m_Name;
 
+			// largest possible value for a GLSL data type
+			char m_Std140Value[128];
+
 			GLUniformBlock();
 
 		public:

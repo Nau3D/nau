@@ -1,0 +1,42 @@
+<NotepadPlus>
+    <Project name="diffusePerVertex">
+        <File name="diffusePerVertex.xml" />
+        <File name="lighting.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\dirdif.frag" />
+            <File name="shaders\dirdif.vert" />
+        </Folder>
+    </Project>
+    <Project name="diffuseAmbientPerVertex">
+        <File name="diffuseAmbientPerVertex.xml" />
+        <File name="lighting.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\dirdifamb.frag" />
+            <File name="shaders\dirdifamb.vert" />
+        </Folder>
+    </Project>
+    <Project name="diffAmbSpecPerVertex">
+        <File name="diffuseAmbientSpecularPerVertex.xml" />
+        <File name="lighting.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\dirdifambspec.frag" />
+            <File name="shaders\dirdifambspec.vert" />
+        </Folder>
+    </Project>
+    <Project name="diffuseAmbientPerPixel">
+        <File name="diffuseAmbientPerPixel.xml" />
+        <File name="lighting.npp" />
+        <Folder name="shaders">
+            <File name="shaders\dirdifambpix.frag" />
+            <File name="shaders\dirdifambpix.vert" />
+        </Folder>
+    </Project>
+    <Project name="diffAmbSpecPerPixel">
+        <File name="diffuseAmbientSpecularPerPixel.xml" />
+        <File name="lighting.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\dirdifambspecpix.frag" />
+            <File name="shaders\dirdifambspecpix.vert" />
+        </Folder>
+    </Project>
+</NotepadPlus>

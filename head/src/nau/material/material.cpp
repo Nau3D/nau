@@ -205,8 +205,10 @@ Material::setUniformBlockValues() {
 		std::string block = pbv.first.first;
 		std::string uniform = pbv.first.second;
 		IUniformBlock *b = UNIFORMBLOCKMANAGER->getBlock(block);
-		b->setUniform(uniform, v);
-		blocks.insert(block);
+		if (b) {
+			b->setUniform(uniform, v);
+			blocks.insert(block);
+		}
 	}
 	m_Shader->prepareBlocks();
 }

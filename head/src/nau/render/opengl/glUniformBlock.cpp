@@ -78,12 +78,80 @@ GLUniformBlock::addUniform(std::string &name, Enums::DataType type, unsigned int
 void 
 GLUniformBlock::setUniform(std::string &name, void *value) {
 
-	assert(m_Uniforms.count(name));
+	if (m_Uniforms.count(name)) {
 
-	blockUniform b = m_Uniforms[name];
-	if (memcmp((char *)m_LocalData + b.offset, value, b.size)) {
-		memcpy((char *)m_LocalData + b.offset, value, b.size);
-		m_BlockChanged = true;
+		blockUniform b = m_Uniforms[name];
+
+		// convert to std140
+		void *v;
+		switch (b.type) {
+		case Enums::MAT3:
+			if (b.size == 48) {
+				memcpy(m_Std140Value, value, 12);
+				memcpy(m_Std140Value + 16, (char *)value + 12, 12);
+				memcpy(m_Std140Value + 32, (char *)value + 24, 12);
+				v = m_Std140Value;
+			}
+			else
+				v = value;
+			break;
+		case Enums::MAT2x3:
+			if (b.size == 32) {
+				memcpy(m_Std140Value, value, 12);
+				memcpy(m_Std140Value + 16, (char *)value + 12, 12);
+				v = m_Std140Value;
+			}
+			else
+				v = value;
+			break;
+		case Enums::MAT4x3:
+			if (b.size == 64) {
+				memcpy(m_Std140Value, value, 12);
+				memcpy(m_Std140Value + 16, (char *)value + 12, 12);
+				memcpy(m_Std140Value + 32, (char *)value + 24, 12);
+				memcpy(m_Std140Value + 48, (char *)value + 36, 12);
+				v = m_Std140Value;
+			}
+			else
+				v = value;
+			break;
+		case Enums::DMAT3:
+			if (b.size == 96) {
+				memcpy(m_Std140Value, value, 24);
+				memcpy(m_Std140Value + 32, (char *)value + 24, 24);
+				memcpy(m_Std140Value + 64, (char *)value + 48, 24);
+				v = m_Std140Value;
+			}
+			else
+				v = value;
+			break;
+		case Enums::DMAT2x3:
+			if (b.size == 64) {
+				memcpy(m_Std140Value, value, 24);
+				memcpy(m_Std140Value + 32, (char *)value + 24, 24);
+				v = m_Std140Value;
+			}
+			else
+				v = value;
+			break;
+		case Enums::DMAT4x3:
+			if (b.size == 128) {
+				memcpy(m_Std140Value, value, 24);
+				memcpy(m_Std140Value + 32, (char *)value + 24, 24);
+				memcpy(m_Std140Value + 64, (char *)value + 48, 24);
+				memcpy(m_Std140Value + 96, (char *)value + 72, 24);
+				v = m_Std140Value;
+			}
+			else
+				v = value;
+			break;
+		default:
+			v = value;
+		}
+		if (memcmp((char *)m_LocalData + b.offset, v, b.size)) {
+			memcpy((char *)m_LocalData + b.offset, v, b.size);
+			m_BlockChanged = true;
+		}
 	}
 }
 
