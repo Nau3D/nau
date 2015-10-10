@@ -168,7 +168,7 @@ Material::getTextureNames(std::vector<std::string> *vs) {
 
 
 void
-Material::getTextureUnits(std::vector<int> *vi) {
+Material::getTextureUnits(std::vector<unsigned int> *vi) {
 
 	for (auto t : m_Textures) {
 
@@ -419,7 +419,7 @@ Material::hasBuffer(int id) {
 
 
 void
-Material::getBufferBindings(std::vector<int> *vi) {
+Material::getBufferBindings(std::vector<unsigned int> *vi) {
 
 	for (auto t : m_Buffers) {
 

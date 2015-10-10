@@ -1371,9 +1371,9 @@ void DlgMaterials::updateShader(Material *m){
 		std::vector<std::string> textureNames;
 		m->getTextureNames(&textureNames);
 		if (textureNames.size() != 0) {
-			std::vector<int> textureUnits;
+			std::vector<unsigned int> textureUnits;
 			m->getTextureUnits(&textureUnits);
-			std::vector<int>::iterator itUnits;
+			std::vector<unsigned int>::iterator itUnits;
 			it = textureNames.begin();
 			for ( itUnits = textureUnits.begin(); it != textureNames.end(); it++, itUnits++) {
 			
@@ -1382,10 +1382,10 @@ void DlgMaterials::updateShader(Material *m){
 		}
 
 		m_pgTextUnitsList.Clear();
-		std::vector<int> textureUnits;
+		std::vector<unsigned int> textureUnits;
 		m->getTextureUnits(&textureUnits);
 		if (textureUnits.size()) {
-			std::vector<int>::iterator itUnits;
+			std::vector<unsigned int>::iterator itUnits;
 			itUnits = textureUnits.begin();
 			for ( ; itUnits != textureUnits.end(); itUnits++) {
 				wxString s;

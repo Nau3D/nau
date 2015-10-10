@@ -11,6 +11,7 @@
 #include "nau/geometry/vertexData.h"
 #include "nau/render/opengl/glBuffer.h"
 #include "nau/render/opengl/glDebug.h"
+#include "nau/render/opengl/glImageTexture.h"
 #include "nau/render/opengl/glMaterialGroup.h"
 #include "nau/render/opengl/glProgram.h"
 #include "nau/render/opengl/glTexture.h"
@@ -922,6 +923,7 @@ GLRenderer::showDrawDebugInfo(PassCompute *p) {
 	t->appendItem("Class", "Compute");
 	Material *mat = p->getMaterial();
 	showDrawDebugInfo(mat,t);
+	showDrawDebugInfo(mat->getProgram(), t);
 }
 
 
@@ -989,7 +991,6 @@ GLRenderer::showDrawDebugInfo(MaterialGroup *mg) {
 			SLOG("\tAttribute %s Buffer: %d", VertexData::Syntax[i].c_str(), buffID);
 		}
 	}
-
 	showDrawDebugInfo(mat->getProgram(), tVAO);
 }
 
@@ -1001,7 +1002,7 @@ GLRenderer::showDrawDebugInfo(Material *mat, nau::util::Tree *tree) {
 	if (!tree->hasElement("Program", programName))
 		tree->appendItem("Program", programName);
 
-	std::vector<int> vi;
+	std::vector<unsigned int> vi;
 	nau::util::Tree *textureTree, *textureUnitTree;
 	mat->getTextureUnits(&vi);
 	if (vi.size() > 0) {
@@ -1010,13 +1011,40 @@ GLRenderer::showDrawDebugInfo(Material *mat, nau::util::Tree *tree) {
 		for (unsigned int i = 0; i < vi.size(); ++i) {
 			ITexture *t = mat->getTexture(vi[i]);
 			textureUnitTree = textureTree->appendBranch("Unit", to_string(vi[i]));
-			textureUnitTree->appendItem("Name", t->getLabel() + " (" + std::to_string(t->getPropi(ITexture::ID)) + ")");
+			textureUnitTree->appendItem("Label", t->getLabel() + " (" + std::to_string(t->getPropi(ITexture::ID)) + ")");
 			SLOG("\tUnit %d ID %d Name %s", vi[i], t->getPropi(ITexture::ID), t->getLabel().c_str());
 			int id;
 			glActiveTexture((GLenum)((int)GL_TEXTURE0+vi[i]));
 			glGetIntegerv((GLenum)GLTexture::TextureBound[(GLenum)t->getPrope(ITexture::DIMENSION)], &id);
 			textureUnitTree->appendItem("Actual texture bound to unit " + std::to_string(vi[i]), std::to_string(id));
 			SLOG("\tActual texture bound to unit %d: %d", vi[i], id);
+		}
+	}
+
+	vi.clear();
+	nau::util::Tree *itTree, *itIDTree;
+	mat->getImageTextureUnits(&vi);
+	if (vi.size() > 0 && !tree->hasKey("Image Textures")) {
+		itTree = tree->appendBranch("Image Textures");
+		SLOG("Image Textures");
+		for (unsigned int i = 0; i < vi.size(); ++i) {
+			GLImageTexture *it = (GLImageTexture *)mat->getImageTexture(vi[i]);
+			itIDTree = itTree->appendBranch("Unit", std::to_string(vi[i]));
+			GLint k;
+			glGetIntegeri_v(GL_IMAGE_BINDING_NAME, (GLuint)vi[i], &k);
+			itIDTree->appendItem("Texture ID", std::to_string(k));
+			itIDTree->appendItem("Texture Label", RESOURCEMANAGER->getTextureByID(k)->getLabel());
+			glGetIntegeri_v(GL_IMAGE_BINDING_LEVEL, (GLuint)vi[i], &k);
+			itIDTree->appendItem("Binding level", std::to_string(k));
+			glGetIntegeri_v(GL_IMAGE_BINDING_FORMAT, (GLuint)vi[i], &k);
+			itIDTree->appendItem("Binding format", GLImageTexture::TexIntFormat[(GLenum)k].name);
+			glGetIntegeri_v(GL_IMAGE_BINDING_LAYERED, (GLuint)vi[i], &k);
+			if (k) {
+				glGetIntegeri_v(GL_IMAGE_BINDING_LAYER, (GLuint)vi[i], &k);
+				itIDTree->appendItem("Binding Layer", std::to_string(k));
+			}
+			glGetIntegeri_v(GL_IMAGE_BINDING_ACCESS, (GLuint)vi[i], &k);
+			itIDTree->appendItem("Access", it->Attribs.getListStringOp(GLImageTexture::ACCESS, k));
 		}
 	}
 
@@ -1030,33 +1058,12 @@ GLRenderer::showDrawDebugInfo(Material *mat, nau::util::Tree *tree) {
 			IMaterialBuffer *b = mat->getBuffer(vi[i]);
 			IBuffer *buff = b->getBuffer();
 			bufferIDTree = bufferTree->appendBranch("Binding Point", std::to_string(vi[i]));
-			bufferIDTree->appendItem("Name", buff->getLabel());
+			bufferIDTree->appendItem("Label", buff->getLabel());
 			bufferIDTree->appendItem("ID", std::to_string(buff->getPropi(IBuffer::ID)));
 			SLOG("\tBinding point %d ID %d Name %s", vi[i], buff->getPropi(IBuffer::ID), buff->getLabel().c_str());
 			GLint k;
-			//GLenum pname;
-			//switch (b->getPrope(IMaterialBuffer::TYPE)) {
-			//	case (unsigned int)GL_SHADER_STORAGE_BUFFER: 
-			//		assert(APISupport->apiSupport(IAPISupport::BUFFER_SHADER_STORAGE));
-			//		pname = GL_SHADER_STORAGE_BUFFER_BINDING; 
-			//		break;
-			//	case (unsigned int)GL_ATOMIC_COUNTER_BUFFER: 
-			//		assert(APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS));
-			//		pname = GL_ATOMIC_COUNTER_BUFFER_BINDING; 
-			//		break;
-			//	case (unsigned int)GL_TRANSFORM_FEEDBACK_BUFFER: 
-			//		pname = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING; 
-			//		break;
-			//	case (unsigned int)GL_UNIFORM_BUFFER: 
-			//		pname = GL_UNIFORM_BUFFER_BINDING; 
-			//		break;
-			//	case (unsigned int)GL_DRAW_INDIRECT_BUFFER: 
-			//		pname = GL_DRAW_INDIRECT_BUFFER_BINDING; 
-			//		break;
-			//}
 			glGetIntegeri_v((GLenum)GLBuffer::BufferBound[(GLenum)b->getPrope(IMaterialBuffer::TYPE)], (GLuint)vi[i], &k);
 			bufferIDTree->appendItem("Type", b->getAttribSet()->getListStringOp("TYPE", b->getPrope(IMaterialBuffer::TYPE)));
-			//glGetIntegeri_v(pname, (GLuint)vi[i], &k);
 			bufferIDTree->appendItem("Actual buffer bound to unit " + std::to_string(vi[i]), std::to_string(k));
 			SLOG("\tActual buffer for binding point %d: %d", vi[i], k);
 		}
@@ -1142,6 +1149,7 @@ GLRenderer::showDrawDebugInfo(IProgram *pp, nau::util::Tree *tree) {
 
 				case Enums::BOOL:
 				case Enums::INT:
+				case Enums::SAMPLER:
 					glGetUniformiv(program, i, (GLint *)values);
 					break;
 				case Enums::FLOAT:

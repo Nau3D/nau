@@ -46,8 +46,11 @@ GLVertexArray::getBufferID(unsigned int vertexAttrib) {
 
 	if (vertexAttrib > VertexData::MaxAttribs)
 		return 0;
-	else
+	else {
+		if (m_GLBuffers[vertexAttrib] == 0)
+			compile();
 		return m_GLBuffers[vertexAttrib];
+	}
 }
 
 

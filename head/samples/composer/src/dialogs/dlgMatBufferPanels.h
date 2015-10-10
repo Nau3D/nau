@@ -54,7 +54,7 @@ public:
 private:
 	nau::material::Material *m_Material;
 	int m_CurrentBinding;
-	std::vector<int> m_MaterialBindings;
+	std::vector<unsigned int> m_MaterialBindings;
 
 	void updatePanel();
 };

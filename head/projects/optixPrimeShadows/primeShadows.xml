@@ -54,7 +54,7 @@
 	
 	<pipelines>
 		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
-			<!--pass class="default" name="GBuffer" >
+			<pass class="default" name="GBuffer" >
 				<scenes>
 					<scene name="bench" />
 				</scenes>
@@ -68,7 +68,7 @@
 						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
 					</map>
 				</injectionMaps>
-			</pass-->
+			</pass>
 			<pass class="quad" name="fillRayBuffer" >
 				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
 				<materialMaps>			

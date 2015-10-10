@@ -87,7 +87,7 @@ namespace nau
 			void attachBuffer(IMaterialBuffer *b);
 			bool hasBuffer(int id);
 			IMaterialBuffer *getBuffer(int id);
-			void getBufferBindings(std::vector<int> *vi);
+			void getBufferBindings(std::vector<unsigned int> *vi);
 			//int getBufferBindingPoint(int id);
 
 //			nau::material::TextureMat* getTextures (void);
@@ -99,7 +99,7 @@ namespace nau
 			ITextureSampler* getTextureSampler(unsigned int unit);
 			void unsetTexture(int unit);
 			void getTextureNames(std::vector<std::string> *vs);
-			void getTextureUnits(std::vector<int> *vi);
+			void getTextureUnits(std::vector<unsigned int> *vi);
 
 			void attachProgram (std::string shaderName);
 			void Material::cloneProgramFromMaterial(Material *mat);
