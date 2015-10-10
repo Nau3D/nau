@@ -45,78 +45,88 @@ class WndComposer : public wxApp
 
 class FrmMainFrame: public wxFrame
 {
-private:
-
-	nau::Nau *m_pRoot; 
-
-	float m_Width, m_Height;
-
 public:
 	FrmMainFrame (wxFrame *frame, const wxString& title);
 	~FrmMainFrame ();
 
-	void compile(IScene *scene); 
 
 
 private:
    GlCanvas *m_Canvas;
 	wxMenu *fileMenu, *renderMenu, *assetsMenu, *materialsMenu, *debugMenu, *aboutMenu;
-	bool m_Inited;
+	bool m_Inited, m_Tracing;
+
+	nau::Nau *m_pRoot; 
+
+	float m_Width, m_Height;
 
 	void updateDlgs();
 
-	void OnDlgLog(wxCommandEvent& event);
-	void OnDlgOGL(wxCommandEvent& event);
-	void OnDlgAtomics(wxCommandEvent& event);
-	void OnDlgTextures(wxCommandEvent& event);
-	void OnDlgCameras(wxCommandEvent& event);
-	void OnDlgMaterials(wxCommandEvent& event);
-	void OnDlgLights(wxCommandEvent& event);
-	void OnDlgShaders(wxCommandEvent& event);
-	void OnDlgScenes(wxCommandEvent& event);
-	void OnDlgPass(wxCommandEvent& event);
-	void OnDlgViewports(wxCommandEvent& event);
 	void OnProjectLoad(wxCommandEvent& event);
-	void OnDirectoryLoad (wxCommandEvent& event);
 	void OnModelLoad (wxCommandEvent& event);
-	//void OnModelAppend (wxCommandEvent& event);
-
-    void OnQuit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-
+	void OnDirectoryLoad (wxCommandEvent& event);
     void OnProcess (wxCommandEvent& event);
+    void OnQuit(wxCommandEvent& event);
+
+	void OnDlgPass(wxCommandEvent& event);
+	void OnResetFrameCount(wxCommandEvent& event);
 	void OnRenderMode(wxCommandEvent& event);
 	void OnSetRenderFlags(wxCommandEvent& event);
-	//void OnSetProfileMaterial(wxCommandEvent& event);
-	void OnOctreeBuild (wxCommandEvent& event);
-	void OnOctreeCompile (wxCommandEvent& event);
-	void OnOctreeWrite (wxCommandEvent& event);
-	//void OnPhysicsBuild (wxCommandEvent &event);
-	//void OnPhysicsMode (wxCommandEvent &event);
-	void OnKeyDown(wxKeyEvent & event);
-	void OnKeyUp(wxKeyEvent & event);
-	
-	//Debugger begin
+
+	void OnDlgScenes(wxCommandEvent& event);
+	void OnDlgViewports(wxCommandEvent& event);
+	void OnDlgCameras(wxCommandEvent& event);
+	void OnDlgLights(wxCommandEvent& event);
+
+	void OnDlgMaterials(wxCommandEvent& event);
+	void OnDlgTextures(wxCommandEvent& event);
+	void OnDlgAtomics(wxCommandEvent& event);
+	void OnDlgShaders(wxCommandEvent& event);
+	void OnDlgBuffers(wxCommandEvent& event);
+
+	void OnDlgLog(wxCommandEvent& event);
 	void OnBreakResume(wxCommandEvent& event);
+	void OnDlgDbgStep(wxCommandEvent& event);
 	void OnDlgDbgTraceRead(wxCommandEvent& event);
 	void OnDlgDbgProgram(wxCommandEvent& event);
-	void OnDlgDbgBuffer(wxCommandEvent& event);
-	void OnDlgDbgStep(wxCommandEvent& event);
-	//void OnDlgStateXML(wxCommandEvent& event);
-	//void OnNextFrame(wxCommandEvent& event);
+	void OnScreenShot(wxCommandEvent& event);
+	void OnTraceSingleFrame(wxCommandEvent& event);
+	void OnTrace(wxCommandEvent& event);
+	void OnProfileReset(wxCommandEvent& event);
+
+
+	void OnDlgOGL(wxCommandEvent& event);
+    void OnAbout(wxCommandEvent& event);
+
+	void OnKeyDown(wxKeyEvent & event);
+	void OnKeyUp(wxKeyEvent & event);
 
 	void OnClose(wxCloseEvent& event);
 
 	void FreezeGLI();
-	//void LoadDebugData();
-	//Debugger end
-
 
 	void startStandAlone (void);
-	void buildPhysics (void);
 
    DECLARE_EVENT_TABLE();
+
+	//void compile(IScene *scene); 
 	//void initScene (void);
+	//void LoadDebugData();
+	//Debugger end
+	//void OnModelAppend (wxCommandEvent& event);
+
+
+	//void OnSetProfileMaterial(wxCommandEvent& event);
+	//void OnOctreeBuild (wxCommandEvent& event);
+	//void OnOctreeCompile (wxCommandEvent& event);
+	//void OnOctreeWrite (wxCommandEvent& event);
+	//void buildPhysics (void);
+	//void OnPhysicsBuild (wxCommandEvent &event);
+	//void OnPhysicsMode (wxCommandEvent &event);
+	
+	//Debugger begin
+	//void OnDlgStateXML(wxCommandEvent& event);
+	//void OnNextFrame(wxCommandEvent& event);
 };
 
 #endif // MAIN_H

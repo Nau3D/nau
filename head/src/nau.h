@@ -107,8 +107,9 @@ namespace nau {
 		void deleteUserAttributes();
 		std::vector<std::string> &getContextList();
 
-
+		// Events
 		void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt);
+
 
 		void setActiveCameraName(const std::string &aCamName);
 		nau::scene::Camera *getActiveCamera();

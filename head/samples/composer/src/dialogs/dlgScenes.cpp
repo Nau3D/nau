@@ -287,8 +287,8 @@ void
 DlgScenes::OnCompile( wxCommandEvent& event)
 {
 	IScene *scene = RENDERMANAGER->getScene(m_Active);
-	((FrmMainFrame *)Parent)->compile(scene);
-	//scene->compile();
+	scene->compile();
+	//((FrmMainFrame *)Parent)->compile(scene);
 
 	m_toolbar->EnableTool(COMPILE, FALSE);
 	m_toolbar->EnableTool(BUILD, FALSE);

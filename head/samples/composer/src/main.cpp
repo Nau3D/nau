@@ -12,6 +12,7 @@
 #include <nau/errors.h>
 #include <nau/clogger.h>
 #include <nau/slogger.h>
+#include <nau/debug/profile.h>
 #include <nau/render/iAPISupport.h>
 
 #ifdef GLINTERCEPTDEBUG
@@ -75,32 +76,37 @@ int idMenuModel = wxNewId();
 int idMenuProcess = wxNewId();
 int idMenuQuit = wxNewId();
 // Render Menu
-int idMenu_DLG_PASS = wxNewId();
+int idMenuDlgPass = wxNewId();
+int idMenuResetFrameCount = wxNewId();
 int idMenuWireframe = wxNewId();
 int idMenuPoint = wxNewId();
 int idMenuSolid = wxNewId();
 int idMenuMaterial = wxNewId();
 int idMenuRenderFlagBoundingBox = wxNewId();
 // Assets Menu
-int idMenu_DLG_CAMERAS = wxNewId();
-int idMenu_DLG_VIEWPORTS = wxNewId();
-int idMenu_DLG_SCENES = wxNewId();
-int idMenu_DLG_LIGHTS = wxNewId();
+int idMenuDlgCameras = wxNewId();
+int idMenuDlgViewports = wxNewId();
+int idMenuDlgScenes = wxNewId();
+int idMenuDlgLights = wxNewId();
 // Materials Menu
-int idMenu_DLG_TEXTURES = wxNewId();
-int idMenu_DLG_MATERIALS = wxNewId();
-int idMenu_DLG_SHADERS = wxNewId();
-int idMenu_DLG_ATOMICS = wxNewId();
-int idMenu_DLG_DBGBUFFER = wxNewId();
+int idMenuDlgTextures = wxNewId();
+int idMenuDlgMaterials = wxNewId();
+int idMenuDlgShaders = wxNewId();
+int idMenuDlgAtomics = wxNewId();
+int idMenuDlgBuffers = wxNewId();
 // Debug Menu
 int idMenuDbgBreak = wxNewId();
-int idMenu_DLG_DBGSTEP = wxNewId();
-int idMenu_DLG_LOG = wxNewId();
-int idMenu_DLG_DBGTRACEREAD = wxNewId();
-int idMenu_DLG_DBGPROGRAM = wxNewId();
+int idMenuDlgStep = wxNewId();
+int idMenuDlgLog = wxNewId();
+int idMenuDlgTrace = wxNewId();
+int idMenuDlgProgramInfo = wxNewId();
+int idMenuScreenShot = wxNewId();
+int idMenuTraceSingle = wxNewId();
+int idMenuTracing = wxNewId();
+int idMenuProfileReset = wxNewId();
 // About Menu
 int idMenuAbout = wxNewId();
-int idMenu_DLG_OGL = wxNewId();
+int idMenuDlgOGL = wxNewId();
 
 //int idMenuPhysicsBuild = wxNewId();
 //int idMenuPhysicsOn = wxNewId();
@@ -108,44 +114,49 @@ int idMenu_DLG_OGL = wxNewId();
 
 
 BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
-	// File Menu
-	EVT_MENU(idMenuProject, FrmMainFrame::OnProjectLoad)
-	EVT_MENU(idMenuDir, FrmMainFrame::OnDirectoryLoad)
-	EVT_MENU(idMenuModel, FrmMainFrame::OnModelLoad)
-	//EVT_MENU(idMenuModelAppend, FrmMainFrame::OnModelAppend)
-	EVT_MENU(idMenuProcess, FrmMainFrame::OnProcess)
-	EVT_MENU(idMenuQuit, FrmMainFrame::OnQuit)
-	// Render Menu
-	EVT_MENU(idMenu_DLG_PASS, FrmMainFrame::OnDlgPass)
-	EVT_MENU_RANGE(idMenuWireframe, idMenuMaterial, FrmMainFrame::OnRenderMode)
-	EVT_MENU(idMenuRenderFlagBoundingBox, FrmMainFrame::OnSetRenderFlags)
-	// Assets Menu
-	EVT_MENU(idMenu_DLG_SCENES, FrmMainFrame::OnDlgScenes)
-	EVT_MENU(idMenu_DLG_VIEWPORTS, FrmMainFrame::OnDlgViewports)
-	EVT_MENU(idMenu_DLG_CAMERAS, FrmMainFrame::OnDlgCameras)
-	EVT_MENU(idMenu_DLG_LIGHTS, FrmMainFrame::OnDlgLights)
-	// Materials Menu
-	EVT_MENU(idMenu_DLG_TEXTURES, FrmMainFrame::OnDlgTextures)
-	EVT_MENU(idMenu_DLG_MATERIALS, FrmMainFrame::OnDlgMaterials)
-	EVT_MENU(idMenu_DLG_ATOMICS, FrmMainFrame::OnDlgAtomics)
-	EVT_MENU(idMenu_DLG_SHADERS, FrmMainFrame::OnDlgShaders)
-	EVT_MENU(idMenu_DLG_DBGBUFFER, FrmMainFrame::OnDlgDbgBuffer)
-	// Debug Menu
-	EVT_MENU(idMenu_DLG_LOG, FrmMainFrame::OnDlgLog)
-	EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
-	EVT_MENU(idMenu_DLG_DBGSTEP, FrmMainFrame::OnDlgDbgStep)
-	EVT_MENU(idMenu_DLG_DBGTRACEREAD, FrmMainFrame::OnDlgDbgTraceRead)
-	EVT_MENU(idMenu_DLG_DBGPROGRAM, FrmMainFrame::OnDlgDbgProgram)
-	// About Menu
-	EVT_MENU(idMenu_DLG_OGL, FrmMainFrame::OnDlgOGL)
-	EVT_MENU(idMenuAbout, FrmMainFrame::OnAbout)
+// File Menu
+EVT_MENU(idMenuProject, FrmMainFrame::OnProjectLoad)
+EVT_MENU(idMenuDir, FrmMainFrame::OnDirectoryLoad)
+EVT_MENU(idMenuModel, FrmMainFrame::OnModelLoad)
+//EVT_MENU(idMenuModelAppend, FrmMainFrame::OnModelAppend)
+EVT_MENU(idMenuProcess, FrmMainFrame::OnProcess)
+EVT_MENU(idMenuQuit, FrmMainFrame::OnQuit)
+// Render Menu
+EVT_MENU(idMenuDlgPass, FrmMainFrame::OnDlgPass)
+EVT_MENU(idMenuResetFrameCount, FrmMainFrame::OnResetFrameCount)
+EVT_MENU_RANGE(idMenuWireframe, idMenuMaterial, FrmMainFrame::OnRenderMode)
+EVT_MENU(idMenuRenderFlagBoundingBox, FrmMainFrame::OnSetRenderFlags)
+// Assets Menu
+EVT_MENU(idMenuDlgScenes, FrmMainFrame::OnDlgScenes)
+EVT_MENU(idMenuDlgViewports, FrmMainFrame::OnDlgViewports)
+EVT_MENU(idMenuDlgCameras, FrmMainFrame::OnDlgCameras)
+EVT_MENU(idMenuDlgLights, FrmMainFrame::OnDlgLights)
+// Materials Menu
+EVT_MENU(idMenuDlgMaterials, FrmMainFrame::OnDlgMaterials)
+EVT_MENU(idMenuDlgTextures, FrmMainFrame::OnDlgTextures)
+EVT_MENU(idMenuDlgAtomics, FrmMainFrame::OnDlgAtomics)
+EVT_MENU(idMenuDlgShaders, FrmMainFrame::OnDlgShaders)
+EVT_MENU(idMenuDlgBuffers, FrmMainFrame::OnDlgBuffers)
+// Debug Menu
+EVT_MENU(idMenuDlgLog, FrmMainFrame::OnDlgLog)
+EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
+EVT_MENU(idMenuDlgStep, FrmMainFrame::OnDlgDbgStep)
+EVT_MENU(idMenuDlgTrace, FrmMainFrame::OnDlgDbgTraceRead)
+EVT_MENU(idMenuDlgProgramInfo, FrmMainFrame::OnDlgDbgProgram)
+EVT_MENU(idMenuScreenShot, FrmMainFrame::OnScreenShot)
+EVT_MENU(idMenuTraceSingle, FrmMainFrame::OnTraceSingleFrame)
+EVT_MENU(idMenuTracing, FrmMainFrame::OnTrace)
+EVT_MENU(idMenuProfileReset, FrmMainFrame::OnProfileReset)
+// About Menu
+EVT_MENU(idMenuDlgOGL, FrmMainFrame::OnDlgOGL)
+EVT_MENU(idMenuAbout, FrmMainFrame::OnAbout)
 
-	EVT_KEY_DOWN(FrmMainFrame::OnKeyDown)
+EVT_KEY_DOWN(FrmMainFrame::OnKeyDown)
 	
-	//EVT_MENU_RANGE(idMenuPhysicsOn, idMenuPhysicsOff, FrmMainFrame::OnPhysicsMode)
-	//EVT_MENU(idMenuPhysicsBuild, FrmMainFrame::OnPhysicsBuild)
+//EVT_MENU_RANGE(idMenuPhysicsOn, idMenuPhysicsOff, FrmMainFrame::OnPhysicsMode)
+//EVT_MENU(idMenuPhysicsBuild, FrmMainFrame::OnPhysicsBuild)
 	
-	EVT_CLOSE(FrmMainFrame::OnClose)
+EVT_CLOSE(FrmMainFrame::OnClose)
 	
  END_EVENT_TABLE()
 
@@ -169,7 +180,8 @@ END_EVENT_TABLE()
 //#define FINAL
 
 FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
-    : wxFrame(frame, -1, title), m_Canvas (0), materialsMenu (0), m_Width (0.0f), m_Height (0.0f), m_Inited (false)
+    : wxFrame(frame, -1, title), m_Canvas (0), materialsMenu (0), m_Width (0.0f), m_Height (0.0f), 
+	m_Inited (false), m_Tracing(false)
 {
 
 #if wxUSE_MENUS
@@ -183,15 +195,17 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	fileMenu->Append(idMenuDir, _("&Open Folder\tCtrl-F"), _("Loads all files in a folder"));
 	fileMenu->Append(idMenuModel, _("&Open Model\tCtrl-M"), _("Reset and Loads a 3D Model"));
 	//fileMenu->Append(idMenuModelAppend, _("&Append Model\tCtrl-+"), _("Appends a 3D Model to the scene"));
-	fileMenu->Append(idMenuProcess, _("&Process Folder\tCtrl-F"), _("Process folder"));
+	fileMenu->Append(idMenuProcess, _("&Process Folder\tCtrl-P"), _("Convert all models in a folder to NBO format"));
 	fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
 	mbar->Append(fileMenu, _("&File"));
 
 	// Render Menu
 
 	renderMenu = new wxMenu(_T(""));
-    renderMenu->Append(idMenu_DLG_PASS, _("&Pass Library\tF2"), _("Show Pass Library"));
+    renderMenu->Append(idMenuDlgPass, _("&Pass Library\tF2"), _("Show Pass Library"));
 	renderMenu->AppendSeparator ();
+	renderMenu->Append(idMenuResetFrameCount, _("&Reset Frame Count\tB"), _(""));
+	renderMenu->AppendSeparator();
 	renderMenu->AppendRadioItem (idMenuWireframe, _("&Wireframe"), _("Render in wireframe mode"));
 	renderMenu->AppendRadioItem (idMenuSolid, _("&Solid"), _("Render in solid mode"));
 	renderMenu->AppendRadioItem (idMenuMaterial, _("&Material"), _("Render with materials"));
@@ -199,7 +213,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	renderMenu->AppendSeparator ();
 	renderMenu->AppendCheckItem(idMenuRenderFlagBoundingBox, _("Show &Bounding Boxes\tCtrl-B"));
 
-	renderMenu->Enable(idMenu_DLG_PASS, false);
+	renderMenu->Enable(idMenuDlgPass, false);
+	renderMenu->Enable(idMenuResetFrameCount, false);
 	renderMenu->Enable(idMenuWireframe, false);
 	renderMenu->Enable(idMenuSolid, false);
 	renderMenu->Enable(idMenuMaterial, false);
@@ -210,55 +225,64 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	// Assets Menu
 
 	assetsMenu = new wxMenu(_T(""));
-	assetsMenu->Append(idMenu_DLG_CAMERAS, _("&Camera Library\tF3"), _("Show Camera Library"));
-	assetsMenu->Append(idMenu_DLG_LIGHTS, _("&Light Library\tF4"), _("Show Light Library"));
-	assetsMenu->Append(idMenu_DLG_VIEWPORTS, _("&Viewports Library\tF5"), _("Show Viewport Library"));
-    assetsMenu->Append(idMenu_DLG_SCENES, _("&Scene Library\tF6"), _("Show Scene Library"));
+	assetsMenu->Append(idMenuDlgCameras, _("&Camera Library\tF3"), _("Show Camera Library"));
+	assetsMenu->Append(idMenuDlgLights, _("&Light Library\tF4"), _("Show Light Library"));
+	assetsMenu->Append(idMenuDlgViewports, _("&Viewports Library\tF5"), _("Show Viewport Library"));
+    assetsMenu->Append(idMenuDlgScenes, _("&Scene Library\tF6"), _("Show Scene Library"));
 
-	assetsMenu->Enable(idMenu_DLG_CAMERAS, false);
-	assetsMenu->Enable(idMenu_DLG_VIEWPORTS, false);
-	assetsMenu->Enable(idMenu_DLG_LIGHTS, false);
-	assetsMenu->Enable(idMenu_DLG_SCENES, false);
+	assetsMenu->Enable(idMenuDlgCameras, false);
+	assetsMenu->Enable(idMenuDlgViewports, false);
+	assetsMenu->Enable(idMenuDlgLights, false);
+	assetsMenu->Enable(idMenuDlgScenes, false);
 
 	mbar->Append (assetsMenu, _("&Assets"));
 
 	// Materials Menu
 
 	materialsMenu = new wxMenu(_T(""));
-	materialsMenu->Append(idMenu_DLG_MATERIALS, _("&Material Library Manager\tF7"), _("Show Material Libraries"));
-    materialsMenu->Append(idMenu_DLG_TEXTURES, _("&Texture Library\tF8"), _("Show ITexture Library"));
-    materialsMenu->Append(idMenu_DLG_SHADERS, _("&Shader Library\tF9"), _("Show Shader Library"));
-	materialsMenu->Append(idMenu_DLG_ATOMICS, _("&Atomics\tF10"), _("Show Atomics Info"));
-	materialsMenu->Append(idMenu_DLG_DBGBUFFER, _("Buffer Info\tF11"), _("Views Buffer information"));
+	materialsMenu->Append(idMenuDlgMaterials, _("Material Library Manager\tF7"), _("Show Material Libraries"));
+    materialsMenu->Append(idMenuDlgTextures, _("Texture Library\tF8"), _("Show ITexture Library"));
+    materialsMenu->Append(idMenuDlgShaders, _("Shader Library\tF9"), _("Show Shader Library"));
+	materialsMenu->Append(idMenuDlgAtomics,  _("Atomics\tF10"), _("Show Atomics Info"));
+	materialsMenu->Append(idMenuDlgBuffers, _("Buffer Info\tF11"), _("Views Buffer information"));
 
-	materialsMenu->Enable(idMenu_DLG_MATERIALS, false);
-	materialsMenu->Enable(idMenu_DLG_TEXTURES, false);
-	materialsMenu->Enable(idMenu_DLG_SHADERS, false);
-	materialsMenu->Enable(idMenu_DLG_ATOMICS, false);
-	materialsMenu->Enable(idMenu_DLG_DBGBUFFER, false);
+	materialsMenu->Enable(idMenuDlgMaterials, false);
+	materialsMenu->Enable(idMenuDlgTextures, false);
+	materialsMenu->Enable(idMenuDlgShaders, false);
+	materialsMenu->Enable(idMenuDlgAtomics, false);
+	materialsMenu->Enable(idMenuDlgBuffers, false);
 
 	mbar->Append (materialsMenu, _("&Materials"));
 
 	// Debug Menu
 
 	debugMenu = new wxMenu(_T(""));
-    debugMenu->Append(idMenu_DLG_LOG, _("&Log\tF12"), _("Show Log"));
-	debugMenu->Append(idMenuDbgBreak, _("Pause"), _("Pauses or resumes rendering"));
-	debugMenu->Append(idMenu_DLG_DBGSTEP, _("Advanced Pass Controller"), _("Aditional Pass control options"));
-	debugMenu->Append(idMenu_DLG_DBGPROGRAM, _("Program Info\tCtrl-F1"), _("Shows Program information"));
-    debugMenu->Append(idMenu_DLG_DBGTRACEREAD, _("Trace Log\tCtrl-F2"),_("Displays Trace Info"));
-	
+    debugMenu->Append(idMenuDlgLog, _("&Log\tF12"), _("Show Log"));
+	debugMenu->Append(idMenuProfileReset, _("&Reset Profiler"), _(""));
+	debugMenu->AppendSeparator();
+	debugMenu->Append(idMenuDbgBreak, _("&Pause"), _("Pauses or resumes rendering"));
+	debugMenu->Append(idMenuDlgStep, _("&Advanced Pass Controller"), _("Aditional Pass control options"));
+	debugMenu->AppendSeparator();
+	debugMenu->Append(idMenuDlgProgramInfo, _("&Program Info\tCtrl-F1"), _("Shows Program information"));
+	debugMenu->AppendSeparator();
+	debugMenu->Append(idMenuDlgTrace, _("&Trace Log Window\tCtrl-T"), _("Displays Trace Info"));
+	debugMenu->Append(idMenuTraceSingle, _("Trace Single Frame\tShift+T"), _("Trace 3D API calls for a single frame"));
+	debugMenu->Append(idMenuTracing, _("Trace Start\tT"), _("Start/Stop tracing 3D API calls"));
+
 	debugMenu->Enable(idMenuDbgBreak, false);
-	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
-	debugMenu->Enable(idMenu_DLG_DBGPROGRAM, false);
-	debugMenu->Enable(idMenu_DLG_DBGTRACEREAD,false);
+	debugMenu->Enable(idMenuDlgStep, false);
+	debugMenu->Enable(idMenuDlgProgramInfo, false);
+	debugMenu->Enable(idMenuDlgTrace,false);
+	debugMenu->Enable(idMenuTraceSingle, false);
+	debugMenu->Enable(idMenuTracing, false);
+	debugMenu->Enable(idMenuProfileReset, false);
 
 	mbar->Append(debugMenu, _("&Debug"));
 
 	// About Menu
 
 	aboutMenu = new wxMenu(_T(""));
-    aboutMenu->Append(idMenu_DLG_OGL, _("&OpenGL Properties\tCtrl-P"), _("Show info about OpenGL Context"));
+    aboutMenu->Append(idMenuDlgOGL, _("&OpenGL Properties\tCtrl-P"), _("Show info about OpenGL Context"));
     aboutMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
 
     mbar->Append(aboutMenu, _("&Help"));
@@ -473,7 +497,7 @@ FrmMainFrame::updateDlgs() {
 
 	if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS)) {
 		DlgAtomics::Instance()->updateDlg();
-		materialsMenu->Enable(idMenu_DLG_ATOMICS, true);
+		materialsMenu->Enable(idMenuDlgAtomics, true);
 	}
 
 	DlgCameras::Instance()->updateDlg();
@@ -488,34 +512,82 @@ FrmMainFrame::updateDlgs() {
 	DlgDbgPrograms::Instance()->updateDlg();
 	DlgTrace::Instance()->updateDlg();
 
-	renderMenu->Enable(idMenu_DLG_PASS, true);
+	renderMenu->Enable(idMenuDlgPass, true);
 	renderMenu->Enable(idMenuWireframe, true);
 	renderMenu->Enable(idMenuSolid, true);
 	renderMenu->Enable(idMenuMaterial, true);
 	renderMenu->Enable(idMenuRenderFlagBoundingBox, true);
+	renderMenu->Enable(idMenuResetFrameCount, true);
 
-	assetsMenu->Enable(idMenu_DLG_CAMERAS,true);
-	assetsMenu->Enable(idMenu_DLG_LIGHTS,true);
-	assetsMenu->Enable(idMenu_DLG_SCENES, true);
-	assetsMenu->Enable(idMenu_DLG_VIEWPORTS, true);
+	assetsMenu->Enable(idMenuDlgCameras,true);
+	assetsMenu->Enable(idMenuDlgLights,true);
+	assetsMenu->Enable(idMenuDlgScenes, true);
+	assetsMenu->Enable(idMenuDlgViewports, true);
 
-	materialsMenu->Enable(idMenu_DLG_MATERIALS, true);
-	materialsMenu->Enable(idMenu_DLG_TEXTURES, true);
-	materialsMenu->Enable(idMenu_DLG_SHADERS, true);
-	materialsMenu->Enable(idMenu_DLG_ATOMICS, true);
-	materialsMenu->Enable(idMenu_DLG_DBGBUFFER, true);
+	materialsMenu->Enable(idMenuDlgMaterials, true);
+	materialsMenu->Enable(idMenuDlgTextures, true);
+	materialsMenu->Enable(idMenuDlgShaders, true);
+	materialsMenu->Enable(idMenuDlgAtomics, true);
+	materialsMenu->Enable(idMenuDlgBuffers, true);
 
-	debugMenu->Enable(idMenu_DLG_DBGPROGRAM, true);
-	debugMenu->Enable(idMenu_DLG_DBGTRACEREAD, true);
+	debugMenu->Enable(idMenuDlgProgramInfo, true);
+	debugMenu->Enable(idMenuDlgTrace, true);
+	debugMenu->Enable(idMenuTraceSingle, true);
+	debugMenu->Enable(idMenuTracing, true);
+	debugMenu->Enable(idMenuProfileReset, true);
 	debugMenu->Enable(idMenuDbgBreak, true);
+	debugMenu->Enable(idMenuDlgStep, false);
+	debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 
-//	m_Canvas->BreakResume();
-//
+	debugMenu->SetLabel(idMenuTracing, "Trace Start\tT");
+	m_pRoot->setTrace(0);
+
 //#ifdef GLINTERCEPTDEBUG		
 //	gliSetIsGLIActive(true);
 //#endif
-	debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
-	debugMenu->SetLabel(idMenuDbgBreak, "Pause");
+}
+
+
+void 
+FrmMainFrame::OnResetFrameCount(wxCommandEvent& event) {
+
+	m_pRoot->resetFrameCount();
+}
+
+
+void
+FrmMainFrame::OnScreenShot(wxCommandEvent& event) {
+
+	RENDERER->saveScreenShot();
+}
+
+
+void
+FrmMainFrame::OnTraceSingleFrame(wxCommandEvent& event) {
+
+	m_pRoot->setTrace(1);
+}
+
+
+void
+FrmMainFrame::OnTrace(wxCommandEvent& event) {
+
+	if (m_Tracing) {
+		m_pRoot->setTrace(0);
+		debugMenu->SetLabel(idMenuTracing, "Trace Start\tT");
+	}
+	else {
+		m_pRoot->setTrace(-1);
+		debugMenu->SetLabel(idMenuTracing, "Trace Stop\tT");
+	}
+	m_Tracing = !m_Tracing;
+}
+
+
+void
+FrmMainFrame::OnProfileReset(wxCommandEvent& event) {
+
+	Profile::Reset();
 }
 
 
@@ -581,35 +653,6 @@ FrmMainFrame::OnModelLoad (wxCommandEvent& event) {
 }
 
 
-//void
-//FrmMainFrame::OnModelAppend (wxCommandEvent& event) {
-//
-//	static const wxChar *fileTypes = _T("3D Files (*.nbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.nbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.nbo)|*.nbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
-//	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
-//
-//	if (wxID_OK == openFileDlg->ShowModal ()) {
-//		wxStopWatch aTimer;
-//		aTimer.Start();
-//		wxString path = openFileDlg->GetPath ();
-//
-//		try {
-//			DlgLog::Instance()->updateDlg();
-//			DlgLog::Instance()->clear();
-//			m_pRoot->appendModel (std::string(path.mb_str()));
-//			m_Canvas->setCamera();
-//			updateDlgs();
-//#ifndef FINAL
-//			float t =  aTimer.Time()/1000.0;
-//			SLOG("Elapsed time: %f", t);
-//#endif		
-//		}
-//		catch (std::string &s) {
-//			wxMessageBox((wxChar *)s.c_str());
-//		}
-//	}
-//}
-
-
 void 
 FrmMainFrame::OnProjectLoad(wxCommandEvent& event) {
 
@@ -646,7 +689,6 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event) {
 		catch (std::string s) {
 			wxMessageBox(wxString (s.c_str()));
 		}
-
 	}
 }
 
@@ -723,66 +765,6 @@ FrmMainFrame::OnSetRenderFlags(wxCommandEvent& event) {
 
 
 void
-FrmMainFrame::OnOctreeBuild (wxCommandEvent& event) {
-
-	if (0 != m_pRoot) 
-		RENDERMANAGER->buildOctrees();
-}
-
-
-void
-FrmMainFrame::OnOctreeCompile (wxCommandEvent& event) {
-
-	if (0 != m_pRoot) 
-		RENDERMANAGER->compile();
-}
-
-
-void FrmMainFrame::compile(IScene *scene) {
-
-	scene->compile();
-}
-
-
-void
-FrmMainFrame::OnOctreeWrite (wxCommandEvent& event) {
-
-	if (0 != m_pRoot) {
-		wxFileDialog *saveOctDlg = 
-			new wxFileDialog (this, _("Save as NBO"), _(""), _(""), _(""), wxFD_SAVE, wxDefaultPosition);
-
-		if (wxID_OK == saveOctDlg->ShowModal ()) {
-			m_pRoot->writeAssets("NBO", (const char *)(saveOctDlg->GetPath()).c_str(), "MainScene");
-		}		
-	}
-}
-
-
-//void
-//FrmMainFrame::OnPhysicsBuild (wxCommandEvent &event)
-//{
-//	buildPhysics();
-//}
-
-
-//void
-//FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
-//{
-//	nau::scene::Camera *cam = NAU->getActiveCamera ();
-//
-//	if (idMenuPhysicsOn == event.GetId()) {
-//		m_pRoot->enablePhysics();		
-//		cam->setDynamic(true);
-//	}
-//	
-//	if (idMenuPhysicsOff == event.GetId()) {
-//		m_pRoot->disablePhysics();	
-//		cam->setDynamic(false);
-//	}
-//}
-
-
-void
 FrmMainFrame::startStandAlone (void) {
 
 	char *cwd;
@@ -810,7 +792,7 @@ FrmMainFrame::startStandAlone (void) {
 	}
 
 	//initScene();
-	buildPhysics();
+	//buildPhysics();
 
 	RENDERMANAGER->getScene ("MainScene")->compile();
 
@@ -819,19 +801,6 @@ FrmMainFrame::startStandAlone (void) {
 	nau::scene::Camera *cam = NAU->getActiveCamera ();
 	cam->setDynamic(true);			
 	m_Canvas->setCamera();
-}
-
-
-void
-FrmMainFrame::buildPhysics (void) {
-
-	nau::scene::Camera *cam = RENDERMANAGER->getCamera ("testCamera");
-
-	if (0 != m_pRoot) {
-		m_pRoot->getWorld().build();
-		EVENTMANAGER->addListener("DYNAMIC_CAMERA",cam);
-		m_pRoot->getWorld()._add (60.1f, cam, cam->getName(), vec3 (0.3f, 0.3f, 0.5f));
-	}
 }
 
 
@@ -858,7 +827,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event) {
 #ifdef GLINTERCEPTDEBUG
 		FreezeGLI();
 #endif
-		debugMenu->Enable(idMenu_DLG_DBGSTEP, true);
+		debugMenu->Enable(idMenuDlgStep, true);
 		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
 	}
 	else{
@@ -866,7 +835,7 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event) {
 #ifdef GLINTERCEPTDEBUG		
 		gliSetIsGLIActive(true);
 #endif
-		debugMenu->Enable(idMenu_DLG_DBGSTEP, false);
+		debugMenu->Enable(idMenuDlgStep, false);
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 	}
 }
@@ -878,15 +847,6 @@ FrmMainFrame::FreezeGLI(){
 	gliSetIsGLIActive(false);
 #endif
 }
-
-
-//void
-//FrmMainFrame::LoadDebugData() {
-//
-//	DlgTrace::Instance()->loadLog();
-//	DlgDbgPrograms::Instance()->clear();
-//	DlgDbgStep::Instance()->updateDlg();
-//}
 
 
 void
@@ -904,7 +864,7 @@ FrmMainFrame::OnDlgDbgProgram(wxCommandEvent& event) {
 
 
 void
-FrmMainFrame::OnDlgDbgBuffer(wxCommandEvent& event) {
+FrmMainFrame::OnDlgBuffers(wxCommandEvent& event) {
 
 	DlgDbgBuffers::Instance()->updateDlg();
 	DlgDbgBuffers::Instance()->Show(TRUE);
@@ -918,12 +878,122 @@ FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event) {
 }
 
 
+//void
+//FrmMainFrame::OnPhysicsBuild (wxCommandEvent &event)
+//{
+//	buildPhysics();
+//}
+
+//void
+//FrmMainFrame::buildPhysics(void) {
+//
+//	nau::scene::Camera *cam = RENDERMANAGER->getCamera("testCamera");
+//
+//	if (0 != m_pRoot) {
+//		m_pRoot->getWorld().build();
+//		EVENTMANAGER->addListener("DYNAMIC_CAMERA", cam);
+//		m_pRoot->getWorld()._add(60.1f, cam, cam->getName(), vec3(0.3f, 0.3f, 0.5f));
+//	}
+//}
+//
+//
+//
+
+
+//void
+//FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
+//{
+//	nau::scene::Camera *cam = NAU->getActiveCamera ();
+//
+//	if (idMenuPhysicsOn == event.GetId()) {
+//		m_pRoot->enablePhysics();		
+//		cam->setDynamic(true);
+//	}
+//	
+//	if (idMenuPhysicsOff == event.GetId()) {
+//		m_pRoot->disablePhysics();	
+//		cam->setDynamic(false);
+//	}
+//}
+
+
+
+//FrmMainFrame::OnOctreeBuild(wxCommandEvent& event) {
+//
+//	if (0 != m_pRoot)
+//		RENDERMANAGER->buildOctrees();
+//}
+//
+//
+//void
+//FrmMainFrame::OnOctreeCompile(wxCommandEvent& event) {
+//
+//	if (0 != m_pRoot)
+//		RENDERMANAGER->compile();
+//}
+//
+//
+//void FrmMainFrame::compile(IScene *scene) {
+//
+//	scene->compile();
+//}
+//
+//
+//void
+//FrmMainFrame::OnOctreeWrite(wxCommandEvent& event) {
+//
+//	if (0 != m_pRoot) {
+//		wxFileDialog *saveOctDlg =
+//			new wxFileDialog(this, _("Save as NBO"), _(""), _(""), _(""), wxFD_SAVE, wxDefaultPosition);
+//
+//		if (wxID_OK == saveOctDlg->ShowModal()) {
+//			m_pRoot->writeAssets("NBO", (const char *)(saveOctDlg->GetPath()).c_str(), "MainScene");
+//		}
+//	}
+//}
 
 
 
 
 
 
+//void
+//FrmMainFrame::LoadDebugData() {
+//
+//	DlgTrace::Instance()->loadLog();
+//	DlgDbgPrograms::Instance()->clear();
+//	DlgDbgStep::Instance()->updateDlg();
+//}
+
+
+
+//void
+//FrmMainFrame::OnModelAppend (wxCommandEvent& event) {
+//
+//	static const wxChar *fileTypes = _T("3D Files (*.nbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.nbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|CBO files (*.nbo)|*.nbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
+//	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
+//
+//	if (wxID_OK == openFileDlg->ShowModal ()) {
+//		wxStopWatch aTimer;
+//		aTimer.Start();
+//		wxString path = openFileDlg->GetPath ();
+//
+//		try {
+//			DlgLog::Instance()->updateDlg();
+//			DlgLog::Instance()->clear();
+//			m_pRoot->appendModel (std::string(path.mb_str()));
+//			m_Canvas->setCamera();
+//			updateDlgs();
+//#ifndef FINAL
+//			float t =  aTimer.Time()/1000.0;
+//			SLOG("Elapsed time: %f", t);
+//#endif		
+//		}
+//		catch (std::string &s) {
+//			wxMessageBox((wxChar *)s.c_str());
+//		}
+//	}
+//}
 
 
 

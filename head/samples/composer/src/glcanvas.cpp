@@ -244,21 +244,21 @@ GlCanvas::OnKeyDown(wxKeyEvent & event) {
 	vec4 camUp = m_pCamera->getPropf4(Camera::UP_VEC);
 	vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
 
-	if ('K' == event.GetKeyCode()) {
-		m_pEngine->sendKeyToEngine (event.GetKeyCode());	
-	}
-	if ('T' == event.GetKeyCode()) {
-		if (true == event.ShiftDown())
-			m_pEngine->setTrace(1);
-		else
-			m_pEngine->setTrace(-1);
-	}
-	if ('Y' == event.GetKeyCode()) {
-		m_pEngine->setTrace(0);
-	}
-	if ('I' == event.GetKeyCode()) {
-		m_pEngine->sendKeyToEngine('I');
-	}
+	//if ('K' == event.GetKeyCode()) {
+	//	m_pEngine->sendKeyToEngine (event.GetKeyCode());	
+	//}
+	//if ('T' == event.GetKeyCode()) {
+	//	if (true == event.ShiftDown())
+	//		m_pEngine->setTrace(1);
+	//	else
+	//		m_pEngine->setTrace(-1);
+	//}
+	//if ('Y' == event.GetKeyCode()) {
+	//	m_pEngine->setTrace(0);
+	//}
+	//if ('I' == event.GetKeyCode()) {
+	//	m_pEngine->sendKeyToEngine('I');
+	//}
 	if ('M' == event.GetKeyCode()) {
 		EVENTMANAGER->notifyEvent("NEXT_POSE", "MainCanvas", "", NULL);
 	}
@@ -304,13 +304,13 @@ GlCanvas::OnKeyDown(wxKeyEvent & event) {
 
 	//}
 
-	if ('O' == event.GetKeyCode()) {
-		RENDERER->saveScreenShot();
-	}
+	//if ('O' == event.GetKeyCode()) {
+	//	RENDERER->saveScreenShot();
+	//}
 
-	if ('B' == event.GetKeyCode()) {
-		m_pEngine->resetFrameCount();
-	}
+	//if ('B' == event.GetKeyCode()) {
+	//	m_pEngine->resetFrameCount();
+	//}
 
 	float direction;
 	if (true == m_pCamera->isDynamic()) {
