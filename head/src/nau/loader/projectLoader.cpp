@@ -630,8 +630,8 @@ ProjectLoader::load (std::string file, int *width, int *height)
 	std::string name;
 
 	try {
-		*width = 512;
-		*height = 512;
+		*width = 0;
+		*height = 0;
 
 		if (TIXML_SUCCESS != pElem->QueryStringAttribute("name", &name))
 			NAU_THROW("Project without a name!");
