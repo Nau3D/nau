@@ -95,7 +95,7 @@ Viewport::setPropf(FloatProperty prop, float value) {
 		}
 		break;
 	default:
-		m_FloatProps[prop] = value;
+		AttributeValues::setPropf(prop, value);
 	}
 }
 

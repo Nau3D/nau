@@ -313,7 +313,6 @@ Material::prepare () {
 		else
 			RENDERER->setShader(NULL);
 	}
-
 }
 
 
@@ -326,9 +325,10 @@ Material::restore() {
 		m_Shader->restore();
 	}
 	
-	for (auto t : m_Textures)
-		t.second->unbind();
-	
+	RENDERER->resetTextures(m_Textures);
+	//for (auto t : m_Textures)
+	//	t.second->unbind();
+
 	for (auto b : m_Buffers) 
 		b.second->unbind();
 	

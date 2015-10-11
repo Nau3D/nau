@@ -9,22 +9,28 @@
 		</scenes>
 		<viewports>
 			
-			<viewport name="LeftViewport" >
+			<viewport name="Left" >
 				<ORIGIN  x="0.0" y="0.0" />
 				<SIZE width=".33"  height="1.0" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="0.5" />
 			</viewport>
 			
-			<viewport name="RightViewport" >
+			<viewport name="Dummy" >
+				<ORIGIN  x="0.0" y="0.0" />
+				<SIZE width=".66"  height="1.0" />
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.5" />
+			</viewport>
+			
+			<viewport name="Right" >
 				<ORIGIN x="0.33" y="0.0" />
-				<SIZE width="0.66"  height="1.0" />
+				<SIZE width="0.67"  height="1.0" />
 				<CLEAR_COLOR  r="0.0" g="0.0" b="1.0" />
 			</viewport>
 		</viewports>
 		
 		<cameras>
 			<camera name="MainCamera">
-				<viewport name="RightViewport" />
+				<viewport name="Right" />
 				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="1.0" FAR="100.0" />
 				<POSITION x="-23.277" y="18.541" z="30.143" />
 				<VIEW x="0.397" y="-0.644774" z="-0.652" />
@@ -56,7 +62,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-				<viewport name="LeftViewport" />
+				<viewport name="Dummy" />
 				<renderTarget name="depth" fromLibrary="Shadow Materials" />
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="depthOnly" />
@@ -72,7 +78,7 @@
 				</lights>
 				<camera name="MainCamera" />
 				
-				<!--viewport name="RightViewport" /-->
+				<viewport name="Dummy" />
 				<renderTarget name="simple" fromLibrary="Shadow Materials" />
 				<injectionMaps>
 					<map toMaterial="*">
@@ -90,13 +96,13 @@
 			</pass>
 			
 			<pass class="quad" name="showShadowMap">
-				<viewport name="LeftViewport" />				
+				<viewport name="Left" />				
 				<texture name="shadowMap" fromLibrary="Shadow Materials"/>
 			</pass>
 			
 			
 			<pass class="quad" name="showComputedShadows">
-				<viewport name="RightViewport" />				
+				<viewport name="Right" />				
 				<texture name="offscreenrender" fromLibrary="Shadow Materials"/>
 			</pass>
 			

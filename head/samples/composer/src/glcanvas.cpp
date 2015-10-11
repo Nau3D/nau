@@ -104,29 +104,49 @@ GlCanvas::_setCamera() {
 void 
 GlCanvas::OnPaint (wxPaintEvent &event) {
 
-	PROFILE("Composer");
+	PROFILE("Nau");
 	wxPaintDC dc(this);
 
 
-	if(!isPaused){
-
-		Render();
-
-		if (step != 0){
-			DlgTrace::Instance()->loadLog();
-
-#ifdef GLINTERCEPTDEBUG
-			gliSetIsGLIActive(false);
-			if (gliIsLogPerFrame()){
-				DlgTrace::Instance()->clear();
-			}
-
-			DlgDbgStep::Instance()->updateDlg();
-#endif
-			step = 0;
-		}
+	if (!isPaused) {
+		this->Render();
+		if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
+			DlgAtomics::Instance()->update();
 	}
+//	if(!isPaused){
+//
+//		Render();
+//
+//		if (step != 0){
+//			DlgTrace::Instance()->loadLog();
+//
+//#ifdef GLINTERCEPTDEBUG
+//			gliSetIsGLIActive(false);
+//			if (gliIsLogPerFrame()){
+//				DlgTrace::Instance()->clear();
+//			}
+//
+//			DlgDbgStep::Instance()->updateDlg();
+//#endif
+//			step = 0;
+//		}
+//	}
 	event.Skip ();
+}
+
+
+void
+GlCanvas::OnIdle(wxIdleEvent& event) {
+
+	//Refresh();
+	PROFILE("Nau");
+
+	if (!isPaused) {
+		this->Render();
+		if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
+			DlgAtomics::Instance()->update();
+	}
+	event.RequestMore();
 }
 
 
@@ -202,20 +222,6 @@ GlCanvas::Render () {
 		RENDERER->setPropb(IRenderer::DEBUG_DRAW_CALL, false);
 		EVENTMANAGER->notifyEvent("SHADER_DEBUG_INFO_AVAILABLE", "Renderer", "", NULL);
 	}
-}
-
-
-void
-GlCanvas::OnIdle (wxIdleEvent& event) {
-
-	PROFILE("Nau");
-
-	if (!isPaused){
-		this->Render();
-		if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
-			DlgAtomics::Instance()->update();
-   }
-	event.RequestMore();
 }
 
 

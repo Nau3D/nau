@@ -42,6 +42,7 @@ GLAPISupport::setAPISupport() {
 	if (m_Version >= 440) {
 		m_APISupport[APIFeatureSupport::CLEAR_TEXTURE] = true;
 		m_APISupport[APIFeatureSupport::CLEAR_TEXTURE_LEVEL] = true;
+		m_APISupport[APIFeatureSupport::RESET_TEXTURES] = true;
 	}
 }
 

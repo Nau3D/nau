@@ -15,7 +15,7 @@ void main()
 {
 	vec4 color, diff;
 
-	if (texCount > 1)
+	if (texCount  != 2)
 		diff = /* diffuse * */ texture(texUnit, texCoordV) ; // ambient term
 	else 
 		diff = diffuse;

@@ -416,8 +416,8 @@ Camera::setCamera (vec3 position, vec3 view, vec3 up) {
 	m_Float4Props[LOOK_AT_POINT].set(v4.x, v4.y, v4.z, 1.0f);
 
 	buildViewMatrix();
-	buildInverses();
 	buildProjectionViewMatrix();
+	buildInverses();
 	buildTS05PVMMatrix();
 
 }
@@ -524,6 +524,7 @@ Camera::setViewport (Viewport* aViewport) {
 
 	if (aViewport != NULL) {
 
+		buildViewMatrix();
 		buildProjectionMatrix();
 		buildProjectionViewMatrix();
 		buildTS05PVMMatrix();

@@ -296,6 +296,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
     SetMenuBar(mbar);
 
+
 #endif // wxUSE_MENUS
 
 #if wxUSE_STATUSBAR
@@ -396,6 +397,9 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	startStandAlone();
 	//delete splash;
 #endif
+	int w, h;
+	GetClientSize(&w, &h);
+	SetClientSize(w+1, h+1);
 }
 
 
@@ -542,7 +546,7 @@ FrmMainFrame::updateDlgs() {
 	debugMenu->SetLabel(idMenuTracing, "Trace Start\tT");
 	m_pRoot->setTrace(0);
 
-//#ifdef GLINTERCEPTDEBUG		
+	//#ifdef GLINTERCEPTDEBUG		
 //	gliSetIsGLIActive(true);
 //#endif
 }

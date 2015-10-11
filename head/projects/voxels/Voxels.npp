@@ -20,6 +20,7 @@
     <Project name="VoxelLightInjection">
         <File name="voxelsLightInjection.xml" />
         <File name="voxelsLI.mlib" />
+        <File name="test.lua" />
     </Project>
     <Project name="Shaders">
         <File name="shaders\computeAO.vert" />

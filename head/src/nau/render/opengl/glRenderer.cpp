@@ -645,6 +645,23 @@ GLRenderer::getTexture(int unit) {
 }
 
 
+void 
+GLRenderer::resetTextures(const std::map<int, MaterialTexture *> &textures)
+{
+	if (APISupport->getVersion() > 440) {
+		glBindTextures(0, MaxTextureUnits, NULL);
+		glBindSamplers(0, MaxTextureUnits, NULL);
+	}
+	else {
+		for (auto t : textures) {
+			t.second->unbind();
+		}
+	}
+	m_Textures.clear();
+	m_IntProps[TEXTURE_COUNT] = 0;
+}
+
+
 
 // -----------------------------------------------------------------
 //		FRAMEBUFFER OPS

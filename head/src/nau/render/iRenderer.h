@@ -227,7 +227,7 @@ namespace nau
 			virtual void removeTexture(unsigned int aTexUnit) = 0;
 			virtual MaterialTexture *getMaterialTexture(int unit) = 0;
 			virtual ITexture *getTexture(int unit) = 0;
-
+			virtual void resetTextures(const std::map<int, MaterialTexture *> &textures) = 0;
 
 			// FRAMEBUFFER OPS
 

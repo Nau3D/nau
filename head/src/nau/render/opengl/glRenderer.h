@@ -151,7 +151,7 @@ namespace nau
 			void removeTexture(unsigned int aTexUnit);
 			MaterialTexture *getMaterialTexture(int unit);
 			ITexture *getTexture(int unit);
-
+			void resetTextures(const std::map<int, MaterialTexture *> &textures);
 
 			// FRAMEBUFFER OPS
 
