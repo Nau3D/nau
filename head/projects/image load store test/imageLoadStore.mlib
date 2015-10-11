@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<materialLib name="Image Load Store">
+
+	<renderTargets>
+		<renderTarget name ="test">
+			<SIZE width=512 height=512 />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+	
+	<textures>
+		<texture name="tex">
+			<WIDTH value=512 />
+			<HEIGHT value=512 />
+			<INTERNAL_FORMAT value="RGBA" />
+			<!--MIPMAP value="true" /-->
+		</texture>	
+		<texture name="Grade_01_02_03" filename="../../Texturas/AL01_Grade1.tif" mipmap="1" />
+	</textures>
+
+	<shaders>
+		<shader name="testImageLS" 	vs="shaders/testImageLS.vert" 
+									ps="shaders/testImageLS.frag" /> 
+		
+	</shaders>
+	
+	<materials>
+		<material name ="imageStore">
+			<shader name="testImageLS">
+				<values>
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="texUnit"		type="MATERIAL_TEXTURE" context="CURRENT"
+														id=0 component="UNIT" />														
+				</values>
+			</shader>
+			<textures>
+				<texture name="offscreenrender" UNIT=0 />
+			</textures>
+			<imageTextures>
+				<imageTexture UNIT=1 texture="tex" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+					<CLEAR value=true />
+				</imageTexture>
+			</imageTextures>
+		
+		</material>
+	
+	</materials>
+
+</materialLib>

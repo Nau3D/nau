@@ -1,0 +1,192 @@
+<?xml version="1.0" ?>
+<materiallib name="Optix Ray Tracer Render Target">
+	<renderTargets>
+		<renderTarget name ="optix">
+			<SIZE width="RTSIZE" height="RTSIZE" />
+			<colors>
+				<color name="offscreenrenderOptix" internalFormat="RGBA32F"  />
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name ="gl">
+			<SIZE width="RTSIZE" height="RTSIZE" />
+			<colors>
+				<color name="offscreenrenderGL" internalFormat="RGBA32F"  />
+				<color name="offscreenrenderGL2" internalFormat="RGBA"  />
+			</colors>
+		</renderTarget>
+		<renderTarget name="luminance" >
+			<SIZE width="RTSIZE" height="RTSIZE" />
+			<LEVELS value=9 />
+			<colors>
+				<color name="luminance" internalFormat="RG32F"  />
+			</colors>		
+		</renderTarget>
+	</renderTargets>
+
+	<textures>
+		<texture name="dataBuffer">
+			<WIDTH value="2" />
+			<HEIGHT value="2" />
+			<INTERNAL_FORMAT value="RGBA32F" />
+		
+		</texture> 
+	</textures>
+	
+	<buffers>
+		<buffer name="test">
+			<DIM x=2 y=2 z=1 />
+			<structure>
+				<field value = "UINT" />
+			</structure>
+		</buffer>
+	</buffers>	
+
+	<states>
+		<state name ="Transparent">
+			<ORDER value="1" />
+			<BLEND_SRC value="SRC_ALPHA" />
+			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
+		</state>
+	</states>
+
+	<shaders>
+		<shader name="pointLight" 		ps="shaders/pixelpointdifambspec.frag" 
+										vs="shaders/pixelpointdifambspec.vert" />
+		<shader name="combine"	 		ps="shaders/combine.frag" 
+										vs="shaders/combine.vert" />
+		<shader name="computeLuminance"	ps="shaders/computeLuminance.frag" 
+										vs="shaders/combine.vert" />
+		<shader name="tonemap"			ps="shaders/tonemap.frag" 
+										vs="shaders/combine.vert" />
+		<shader name="mipmap"	        cs="shaders/mipmap.comp" /> 
+	</shaders>
+	
+	<materials>
+		<material name="pointLight">
+			<shader name="pointLight" >
+				<values>
+					<valueof uniform="lightPos" 		type="LIGHT" context="CURRENT" 
+														id=0 component="POSITION" /> 
+														
+					<valueof uniform="diffuse" 		  	type="COLOR" context="CURRENT" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="COLOR" context="CURRENT" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="COLOR" context="CURRENT" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="COLOR" context="CURRENT" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="COLOR" context="CURRENT" 
+														component="AMBIENT" />
+		
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="VM"          		type="RENDERER" context="CURRENT" 
+														component="VIEW_MODEL" />
+														
+					<valueof uniform="normalMatrix"   	type="RENDERER" context="CURRENT" 
+														component="NORMAL" />
+					
+					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+														component="UNIT" id="0" />
+				</values>
+			</shader>
+		</material>	
+		
+		<material name="combine" >
+			<shader name="combine">
+				<values>
+					<valueof uniform="tex1"			type="IMAGE_TEXTURE" context="CURRENT" 
+														id=0 component="UNIT" />
+					<valueof uniform="tex2"			type="MATERIAL_TEXTURE" context="CURRENT" id=0 
+														component="UNIT" />
+					<valueof uniform="frameCount" 	type="RENDERER" context="CURRENT"
+														component="FRAME_COUNT" />
+				</values>
+			</shader>
+			<textures>
+				<texture name="offscreenrenderOptix" UNIT = 0 />
+			</textures>
+			<imageTextures>
+				<imageTexture UNIT=0 texture="offscreenrenderGL" >
+					<ACCESS value="READ_WRITE" />
+					<LEVEL value=0 />
+					<CLEAR value="false" />
+				</imageTexture>
+			</imageTextures>
+		</material>
+		
+		<material name="computeLuminance" >
+			<shader name="computeLuminance">
+				<values>
+					<valueof uniform="input"		type="MATERIAL_TEXTURE" context="CURRENT" 
+														id=0 component="UNIT" />
+				</values>
+			</shader>
+			<textures>
+				<texture name="offscreenrenderGL" UNIT = 0 />
+			</textures>
+		</material>
+		
+		<material name="mipmap" >
+			<shader name="mipmap">
+				<values>
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="tex"			type="MATERIAL_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="destMipLevel"	type="PASS" context="CURRENT"
+														component="CurrentLevel" />
+				</values>
+			</shader>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="luminance" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=1 />
+				</imageTexture>
+			</imageTextures>
+			<textures>
+				<texture UNIT=1 name="luminance" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		</material>
+		
+		<material name="tonemap" >
+			<shader name="tonemap">
+				<values>
+					<valueof uniform="lumiTex"	type="MATERIAL_TEXTURE" context="CURRENT"
+														id=2 component="UNIT" />
+					<valueof uniform="origTex"	type="MATERIAL_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+				</values>
+			</shader>	
+			<textures>
+				<texture UNIT=1 name="offscreenrenderGL2" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=2 name="luminance" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		</material>
+	</materials>
+</materiallib>

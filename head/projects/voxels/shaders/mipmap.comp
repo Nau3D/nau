@@ -1,0 +1,35 @@
+#version 430
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+uniform int destMipLevel = 0;
+layout(binding = 1, rgba8) writeonly uniform image3D imageUnit;
+//layout(binding = 2, rgba8) writeonly uniform image3D imageUnitN;
+
+uniform sampler3D grid, normal;
+
+void main()
+{
+	int srcMipLevel = destMipLevel - 1;
+	ivec3 dstPos = ivec3(gl_GlobalInvocationID);
+	ivec3 srcPos = dstPos * 2;
+	vec4 srcColor0 = texelFetch(grid, srcPos + ivec3(0, 0, 0), srcMipLevel);
+	vec4 srcColor1 = texelFetch(grid, srcPos + ivec3(1, 0, 0), srcMipLevel);
+	vec4 srcColor2 = texelFetch(grid, srcPos + ivec3(0, 1, 0), srcMipLevel);
+	vec4 srcColor3 = texelFetch(grid, srcPos + ivec3(1, 1, 0), srcMipLevel);
+	vec4 srcColor4 = texelFetch(grid, srcPos + ivec3(0, 0, 1), srcMipLevel);
+	vec4 srcColor5 = texelFetch(grid, srcPos + ivec3(1, 0, 1), srcMipLevel);
+	vec4 srcColor6 = texelFetch(grid, srcPos + ivec3(0, 1, 1), srcMipLevel);
+	vec4 srcColor7 = texelFetch(grid, srcPos + ivec3(1, 1, 1), srcMipLevel);
+	
+	float f = srcColor0.w + srcColor1.w + srcColor2.w + srcColor3.w +
+		srcColor4.w + srcColor5.w + srcColor6.w + srcColor7.w;
+		
+	vec4 outColor =  (srcColor0 + srcColor1 + srcColor2 + srcColor3 + srcColor4 + srcColor5 + srcColor6 + srcColor7);
+	 if (f != 0)
+		 outColor.xyz /= f;
+	 else
+		 outColor.xyz = vec3(0);
+	 outColor.w = f/8.0;
+		
+	imageStore(imageUnit, dstPos, outColor);
+}

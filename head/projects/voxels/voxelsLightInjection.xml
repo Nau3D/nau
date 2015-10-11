@@ -1,0 +1,210 @@
+<?xml version="1.0" ?>
+<project name="Voxels" width=1024 height=1024>
+	<assets>
+		<constants>
+			<constant name="GridSize" value = 512 />
+			<constant name="CompRO" value = 64 /> <!-- GridSize/8 -->
+		</constants>
+		<attributes>
+			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
+			<attribute name="GridLevels" context="PASS" type="INT" value=9 />
+			<attribute name="GridCurrentLevel" context="PASS" type="INT" value=0 />
+		</attributes>
+		<scenes>
+			<scene name="MainScene" param="UNITIZE">
+				<file name="../../models/cube.obj"/>
+			</scene>
+			<scene name="VoxelTest" param="UNITIZE">
+				<file name="../../models/voxeltest.obj"/>
+			</scene>
+			<scene name="Bench" param="UNITIZE">
+				<file name="../../models/ntg-bench/bench.obj"/>
+			</scene>
+			<scene name="Sponza" param="UNITIZE">
+				<file name="../../models/sponza/crytek-sponza/sponza.obj"/>
+			</scene>
+			<scene name="Cube" param="UNITIZE">
+				<file name="../../models/cube.obj"/>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0"  a="1.0"/>
+			</viewport>
+			<viewport name="Grid">
+				<CLEAR_COLOR r="0.0" g="1.0" b="0.0"/>
+				<SIZE x="GridSize" y="GridSize" />
+			</viewport>
+			<viewport name="RSM">
+				<CLEAR_COLOR r="0.0" g="1.0" b="0.0" />
+				<SIZE x=4096 y=4096 />
+			</viewport>
+		</viewports>
+
+		<cameras>
+			<camera name="MainCamera">
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=0.001 FAR=4.0 />
+				<POSITION x=-0.086625 y=-0.232029 z=-0.005232 />
+				<VIEW x=0.999476 y=-0.01 z=-0.03079 />
+				<UP x=0 y=1 z=0 />
+			</camera>
+			
+			<camera name="zz">
+				<viewport name="Grid" />
+				<projection TYPE="ORTHO"  NEAR=-1 FAR=1 LEFT=-1 RIGHT=1 BOTTOM=-1 TOP=1 />
+				<POSITION x=0 y=0.0 z=0.0 />
+				<VIEW x=0.0 y=0.0 z=1.0 />
+				<UP x=0 y=1 z=0 />
+			</camera>
+			<camera name="xx">
+				<viewport name="Grid" />
+				<projection TYPE="ORTHO"  NEAR=-1 FAR=1 LEFT=-1 RIGHT=1 BOTTOM=-1 TOP=1 />
+				<POSITION x=0 y=0.0 z=0.0 />
+				<VIEW x=1.0 y=0.0 z=0.0 />
+				<UP x=0 y=1 z=0 />
+			</camera>
+			<camera name="yy">
+				<viewport name="Grid" />
+				<projection TYPE="ORTHO"  NEAR=-1 FAR=1 LEFT=-1 RIGHT=1 BOTTOM=-1 TOP=1 />
+				<POSITION x=0 y=0.0 z=0.0 />
+				<VIEW x=0.0 y=1.0 z=0.0 />
+				<UP x=0 y=0 z=1 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" >
+				<DIRECTION x="0.0" y="-2" z="0.5" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.0" b="0.0" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="voxelsLI.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	
+	<pipelines>
+		<pipeline name="voxels" default="true" defaultCamera = "MainCamera">
+		
+			<pass class="default" name="voxelization">
+				<mode value="RUN_ONCE" />	
+				<camera name="MainCamera" />
+				<scenes>
+					<scene name="Sponza" />
+				</scenes>
+				<color clear=false enable=false />
+				<depth test=false write=false />
+				<renderTarget name="dummy" fromLibrary="Voxels" />
+				<injectionMaps>
+					<map toMaterial="*" >
+						<shader fromMaterial ="voxelization" fromLibrary="Voxels" />
+						<state name="voxelization" fromLibrary="Voxels" />
+						<imageTextures>
+							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 />
+							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 />
+						</imageTextures>
+					</map>
+				</injectionMaps>
+				<preProcess>
+					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+				</preProcess>	
+			</pass>
+			
+			<pass class="depthmap" name="RSM">
+				<mode value="RUN_ONCE" />	
+				<scenes>
+					<scene name="Sponza" />
+				</scenes>	
+				<lights>
+					<light name="Sun" />
+				</lights>	
+				<camera name="xx" />
+				<renderTarget name="RSM" fromLibrary="Voxels" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="RSM" fromLibrary="Voxels" />
+					</map>
+				</injectionMaps>
+			</pass>
+			
+					
+			<pass class="quad" name="lightInjection">
+				<mode value="RUN_ONCE" />	
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="Voxels" toMaterial="lightInjection" />
+				</materialMaps>		
+				<renderTarget name="RSMTest" fromLibrary="Voxels" />
+			</pass>
+			
+			<!--pass class="quad" name="test">
+				<viewport name="MainViewport" />
+				<texture name="RSMTest" fromLibrary="Voxels" />
+			</pass-->
+			
+			<pass class="compute" name="resetOpacity" >
+				<mode value="RUN_ONCE" />	
+				<material name="resetOpacity" fromLibrary="Voxels" 
+						dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
+			</pass>
+
+			<pass class="compute" name="mipmap" >
+				<mode value="RUN_ONCE" />	
+				<testScript file="test.lua" script="test" TEST_MODE="RUN_WHILE"/>
+				<material name="mipmap2" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
+			</pass>
+
+			<pass class="default" name="renderScene">
+				<scenes>
+					<scene name="Sponza" />
+				</scenes>	
+				<lights>
+					<light name="Sun" />
+				</lights>	
+				<camera name="MainCamera" />
+				<!--viewport name="MainViewport" /-->
+				<renderTarget name="scene" fromLibrary="Voxels" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="renderScene2" fromLibrary="Voxels" />
+						<textures>
+							<texture name="posRSM" fromLibrary="Voxels" toUnit="1" >
+								<MIN_FILTER value="LINEAR" />
+								<MAG_FILTER value="LINEAR" />					
+							</texture>
+						</textures>
+					</map>
+				</injectionMaps>
+			</pass>
+			
+			<!--pass class="quad" name="test">
+				<viewport name="MainViewport" />
+				<texture name="color" fromLibrary="Voxels" />
+			</pass-->
+
+			<!--pass class="default" name="showVoxels">
+				<scenes>
+					<scene name="Dummy" />
+				</scenes>	
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
+				<materialMaps>			
+					<map fromMaterial="showRays" 
+						 toLibrary="Voxels" toMaterial="showVoxels" />
+				</materialMaps>				
+			</pass-->
+			
+			<pass class="quad" name="computeIndirectLight" >
+				<material name="computeIndirectLight" fromLibrary="Voxels" />
+				<viewport name="MainViewport" />
+			</pass>
+
+		</pipeline>
+	</pipelines>
+</project>

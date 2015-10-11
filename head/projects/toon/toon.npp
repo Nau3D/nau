@@ -1,0 +1,26 @@
+<NotepadPlus>
+    <Project name="toonPerVertex">
+        <File name="toonPerVertex.xml" />
+        <File name="toon.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\toonV.frag" />
+            <File name="shaders\toonV.vert" />
+        </Folder>
+    </Project>
+    <Project name="toonPerPixel">
+        <File name="toonPerPixel.xml" />
+        <File name="toon.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\toonP.frag" />
+            <File name="shaders\toonP.vert" />
+        </Folder>
+    </Project>
+    <Project name="ToonPerPixelWithBlocks">
+        <File name="toonPerPixelBlocks.xml" />
+        <File name="toonBlocks.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\toonPB.frag" />
+            <File name="shaders\toonPB.vert" />
+        </Folder>
+    </Project>
+</NotepadPlus>

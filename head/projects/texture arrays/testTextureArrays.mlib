@@ -1,0 +1,96 @@
+<?xml version="1.0" ?>
+<materialLib name="testTextureArrays">
+
+	<renderTargets>
+		<renderTarget name="test">
+			<SIZE width=1024 height=1024 />
+			<LAYERS value=2/>
+			<CLEAR_VALUES r=1 g=1 b=1.0 />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+			<depth name="depth" internalFormat="DEPTH_COMPONENT32F" />
+		</renderTarget>
+	</renderTargets>
+
+	<shaders>
+		<shader name="fillArrays" 		ps="shaders/dirlightdiffambpix.frag" 
+										vs="shaders/dirlightdiffambpix.vert"
+										gs="shaders/fillArrays.geom"/>
+										
+		<shader name="showArrays" 		ps="shaders/showArrays.frag" 
+										vs="shaders/showArrays.vert" />
+	</shaders>
+	
+	<states>
+		<state name="no_cull">
+			<CULL_FACE value="0" />
+		</state>
+	</states>
+
+	<materials>
+		<material name="showArrays">
+			<shader name="showArrays">
+				<values>
+					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+														component="UNIT" id="0" />		
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="offscreenrender" />
+			</textures>	
+		</material>
+		
+		<material name="fillArrays">
+		
+			<shader name="fillArrays">
+				<values>
+					<valueof uniform="lightDirection" 	type="LIGHT" context="CURRENT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightColor"     	type="LIGHT" context="CURRENT" 
+														id=0 component="COLOR" />
+														
+					<valueof uniform="diffuse" 		  	type="COLOR" context="CURRENT" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="COLOR" context="CURRENT" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="COLOR" context="CURRENT" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="COLOR" context="CURRENT" 
+														component="EMISSION" />
+														
+					<valueof uniform="ambient" 		  	type="COLOR" context="CURRENT" 
+														component="AMBIENT" />
+		
+					<valueof uniform="M"          		type="RENDERER" context="CURRENT" 
+														component="MODEL" />
+														
+					<valueof uniform="P"          		type="RENDERER" context="CURRENT" 
+														component="PROJECTION" />
+														
+					<valueof uniform="V"          		type="RENDERER" context="CURRENT" 
+														component="VIEW" />
+
+					<valueof uniform="camUp"   			type="CAMERA" context="CURRENT" 
+														component="NORMALIZED_UP" />
+					
+					<valueof uniform="camView"   		type="CAMERA" context="CURRENT" 
+														component="VIEW" />
+					
+					<valueof uniform="camPos"   		type="CAMERA" context="CURRENT" 
+														component="POSITION" />
+					
+					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+														component="UNIT" id="0" />			
+				</values>
+			</shader>
+		</material>
+	</materials>
+</materialLib>

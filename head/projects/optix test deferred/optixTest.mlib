@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<materialLib name="Optix Ray Tracer Render Target">
+	<renderTargets>
+		<renderTarget name ="test">
+			<SIZE width=1024 height=1024 />
+			<colors>
+				<color name="offscreenrender" format="RGBA" 
+												internalFormat="RGBA32F" 
+												type="FLOAT" />
+				<!--color name="offscreenrender2" format="RGBA" 
+												internalFormat="RGBA32F" 
+												type="FLOAT" /-->
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name ="test_ubyte">
+			<SIZE width=1024 height=1024 />
+			<colors>
+				<color name="offscreenrender_ubyte" format="RED" 
+												internalFormat="R8" 
+												type="UNSIGNED_BYTE" />
+				<!--color name="offscreenrender2" format="RGBA" 
+												internalFormat="RGBA32F" 
+												type="FLOAT" /-->
+			</colors>
+		</renderTarget>
+	</renderTargets>
+
+	<textures>
+		<texture name="dataBuffer">
+			<WIDTH value=2 />
+			<HEIGHT value=2 />
+			<INTERNAL_FORMAT value="RGBA32F" />
+		</texture>	
+	</textures>
+</materialLib>

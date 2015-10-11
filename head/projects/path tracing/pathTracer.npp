@@ -1,0 +1,27 @@
+<NotepadPlus>
+    <Project name="Optix Path Tracer">
+        <Folder name="shaders">
+            <File name="shaders\combine.vert" />
+            <File name="shaders\combine.frag" />
+            <File name="shaders\pixelpointdifambspec.vert" />
+            <File name="shaders\pixelpointdifambspec.frag" />
+            <File name="shaders\computeLuminance.frag" />
+            <File name="shaders\mipmap.comp" />
+            <File name="shaders\tonemap.frag" />
+        </Folder>
+        <Folder name="optix">
+            <File name="optix\pathTracer.cu" />
+            <File name="optix\random.h" />
+            <File name="optix\util.h" />
+        </Folder>
+        <Folder name="Cornell Box">
+            <File name="OptixTest Cornell Box.xml" />
+            <File name="optixTestCornellBox.mlib" />
+        </Folder>
+        <Folder name="Sponza">
+            <File name="optixTest Sponza.mlib" />
+            <File name="OptixTest Sponza.xml" />
+        </Folder>
+        <File name="test.lua" />
+    </Project>
+</NotepadPlus>

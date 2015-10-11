@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+<project name="Path Tracer" width=1024 height=1024>
+	<assets>
+		<constants>
+			<constant name="RTSIZE" value = 512 />
+		</constants>
+		<attributes>
+			<attribute context="PASS" name="EXPOSURE" type="FLOAT" value = "10" />
+			<attribute name="Levels" context="PASS" type="INT" value=9 />
+			<attribute name="CurrentLevel" context="PASS" type="INT" value=0 />
+		</attributes>
+		<scenes>
+			<scene name="MainScene">
+				<file name="../../models/sponza/crytek-sponza/sponza.nbo"/>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="TopRightViewport" >
+				<ORIGIN x="512" y="512" />
+				<SIZE width="512" height="512" />
+				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="BottomRightViewport" >
+				<ORIGIN x="512" y="0.0" />
+				<SIZE width="512" height="512" />
+				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="TopLeftViewport" >
+				<ORIGIN x="0" y="512" />
+				<SIZE width="512" height="512" />
+				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
+			</viewport>
+			<viewport name="BottomLeftViewport" >
+				<ORIGIN x="0.0" y="0" />
+				<SIZE width="512" height="512" />
+				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="BottomLeftViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=1 FAR=10000.0 />
+				<POSITION x="0.0" y="75" z="2.5" />
+				<VIEW x="-0.962954" y="0.129634" z="-0.236464"  />
+			</camera>
+			<camera name="Slave" >
+				<viewport name="BottomLeftViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60 NEAR=1 FAR=10000.0 />
+				<POSITION x="0.0" y="0.75" z="2.5" />
+				<VIEW x="0.0" y="0.0" z="-1.0"  />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun">
+				<POSITION x="3000" y="10000" z="2000" />
+				<DIRECTION x="0.0" y="1.4" z="0" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.5" b="0.5" />
+			</light>
+		</lights>
+		<materialLibs>
+			<materialLib filename="OptixTest Sponza.mlib"/>
+		</materialLibs>
+	</assets>
+	<pipelines>
+		<pipeline name="PathTracer" defaultCamera="MainCamera">
+
+		<preScript file="test.lua" script="testCams" />
+			
+			<pass class="default" name="GL">
+				<mode value="RUN_ONCE" />
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gl" fromLibrary="Optix Ray Tracer Render Target" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="pointLight" fromLibrary="Optix Ray Tracer Render Target" />
+					</map>
+				</injectionMaps>
+			</pass> 
+
+			<pass class="optix" name="Path Trace">
+				<mode value="SKIP_FIRST_FRAME" />
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<renderTarget name="optix" fromLibrary="Optix Ray Tracer Render Target" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<optixEntryPoint>
+					<optixProgram type="RayGen" file="optix/pathTracer.ptx" proc="pinhole_camera_ms"/> 
+					<optixProgram type="Exception" file="optix/pathTracer.ptx" proc="exception"/> 
+				</optixEntryPoint>
+				<optixDefaultMaterial>
+					<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="tracePath"/> 
+					<optixProgram type="Miss" 		 ray="Phong" file="optix/pathTracer.ptx" proc="miss"/> 
+					<optixProgram type="Miss" 		 ray="Shadow" file="optix/pathTracer.ptx" proc="missShadow"/>
+					<optixProgram type="Any_Hit"  	 ray="Shadow" file="optix/pathTracer.ptx" proc="any_hit_shadow"/> 
+				</optixDefaultMaterial>
+				<optixMaterialMap>
+					<optixMap to="nau_material_lib:light">
+						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="shadeLight"/>
+					</optixMap>	
+				</optixMaterialMap>
+				<optixVertexAttributes>
+					<attribute name="position"/>
+					<attribute name="normal"/>
+					<attribute name="texCoord0"/>
+				</optixVertexAttributes>
+				<optixGeometryProgram>
+					<optixProgram type="Geometry_Intersection"   file="optix/pathTracer.ptx" proc="geometryintersection"/>
+					<optixProgram type="Bounding_Box"   file="optix/pathTracer.ptx" proc="boundingbox"/>
+				</optixGeometryProgram>
+				<optixMaterialAttributes>
+					<valueof optixVar="diffuse" type="COLOR" context="CURRENT" component="DIFFUSE" />
+					<valueof optixVar="texCount" type="RENDERER" context="CURRENT" component="TEXTURE_COUNT" />
+				</optixMaterialAttributes>
+				<optixGlobalAttributes>
+					<valueof optixVar="lightDir" type="LIGHT" context="CURRENT" id=0 component="DIRECTION" />
+					<valueof optixVar="lightPos" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
+					<valueof optixVar="frameCount" type="RENDERER" context="CURRENT" component="FRAME_COUNT" />
+					<valueof optixVar="exposure" type="PASS" context="CURRENT" component="EXPOSURE" />
+				</optixGlobalAttributes>
+			</pass>
+			
+			<pass class="quad" name="combine">
+				<viewport name="TopRightViewport" />
+				<color clear = "false" enable="false" />
+				<mode value="SKIP_FIRST_FRAME" />
+				<material name="combine" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			
+			<pass class="quad" name="computeLuminance">
+				<color clear = "false"/>
+				<renderTarget name="luminance" fromLibrary="Optix Ray Tracer Render Target" />
+				<material name="computeLuminance" fromLibrary="Optix Ray Tracer Render Target" />
+				<!--postProcess>
+					<texture name="luminance" fromLibrary="Optix Ray Tracer Render Target" MIPMAP="true"/>
+				</postProcess-->
+			</pass>
+			
+			<pass class="compute" name="mipmap">
+				<testScript file="test.lua" script="testMipmap" TEST_MODE="RUN_WHILE"/>
+				<material name="mipmap" fromLibrary="Optix Ray Tracer Render Target" 
+					dimX=256 dimY=256 dimZ=1/>
+			</pass>
+			
+			<pass class="quad" name="showGL">
+				<viewport name="TopLeftViewport" />
+				<texture name="offscreenrenderGL2" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			
+			<pass class="quad" name="showOptix">
+				<viewport name="BottomLeftViewport" />
+				<texture name="offscreenrenderOptix" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			
+			<pass class="quad" name="showCombine">
+				<viewport name="TopRightViewport" />
+				<texture name="offscreenrenderGL" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			
+			<pass class="quad" name="showtonemap">
+				<viewport name="BottomRightViewport" />
+				<material name="tonemap" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

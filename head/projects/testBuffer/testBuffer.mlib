@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<materialLib name="Buffer">
+
+	<renderTargets>
+		<renderTarget name="test">
+			<SIZE width=512 height="512" />
+			<colors>
+				<color name="color" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+
+	<shaders>
+		<shader name="fillBuffer" 		ps="shaders/fillBuffer.frag" 
+										vs="shaders/quadShader.vert" />
+												
+		<shader name="showBuffer" 		ps="shaders/showBuffer.frag" 
+										vs="shaders/quadShader.vert" />
+	</shaders>
+
+	<buffers>
+		<buffer name="test" >
+			<SIZE value=4194304 />
+		</buffer>
+	</buffers>	
+	
+	<materials>
+
+		<material name="fillBuffer">
+			<shader name="fillBuffer">
+			</shader>
+			<buffers>	
+				<buffer name="test" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+		</material>
+		
+		<material name="showBuffer">
+			<shader name="showBuffer">
+			</shader>
+			<buffers>	
+				<buffer name="test" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+
+		</material>		
+	</materials>
+		
+</materialLib>		
