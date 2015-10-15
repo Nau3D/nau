@@ -54,6 +54,7 @@ namespace nau
 			GLUniformBlock(std::string &name, unsigned int size);
 			void init(std::string &name, unsigned int size);
 			void setBindingIndex(unsigned int i);
+			unsigned int getBindingIndex();
 			void addUniform(std::string &name, Enums::DataType type, unsigned int offset, unsigned int size = 0, unsigned int arrayStride = 0);
 			void setUniform(std::string &name, void *value);
 			void setBlock(void *value);

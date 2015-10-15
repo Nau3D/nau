@@ -52,7 +52,7 @@ public:
 
 
 private:
-   GlCanvas *m_Canvas;
+   GLCanvas *m_Canvas;
 	wxMenu *fileMenu, *renderMenu, *assetsMenu, *materialsMenu, *debugMenu, *aboutMenu;
 	bool m_Inited, m_Tracing;
 

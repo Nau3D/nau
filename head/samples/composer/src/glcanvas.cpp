@@ -33,7 +33,7 @@ using namespace nau::geometry;
 
 bool isPaused = false;
 
-GlCanvas::GlCanvas (wxWindow *parent,
+GLCanvas::GLCanvas (wxWindow *parent,
                      const wxWindowID id,
 					 const int * 	attribList,
 					 const int * contextAttribs,
@@ -43,7 +43,7 @@ GlCanvas::GlCanvas (wxWindow *parent,
                      const wxString &name)
    : wxGLCanvas (parent, id, attribList, contextAttribs, pos, size, style, name), 
 	init (false), m_pEngine (0), m_pCamera (0), m_CounterFps (0),
-	m_Alpha (3.14159f), m_AlphaAux (0.0f), m_Beta (0.0f), m_BetaAux (0.0f), OldX(0),OldY(0),
+	m_Alpha (3.14159f), m_AlphaAux (0.0f), m_Beta (0.0f), m_BetaAux (0.0f), m_OldX(0), m_OldY(0),
 	m_tracking(0), /*m_RiverAnimation (0), */m_WaterState (true), m_Stereo (false)
 {
 	init = true;
@@ -54,8 +54,8 @@ GlCanvas::GlCanvas (wxWindow *parent,
 }
 
 
-GlCanvas::GlCanvas (wxWindow *parent,
-                     const GlCanvas &other,
+GLCanvas::GLCanvas (wxWindow *parent,
+                     const GLCanvas &other,
                      const wxWindowID id,
 					 const int * 	attribList,
 					 const int * contextAttribs,
@@ -71,19 +71,19 @@ GlCanvas::GlCanvas (wxWindow *parent,
 }
 
 
-GlCanvas::~GlCanvas() {
+GLCanvas::~GLCanvas() {
 
 }
 
 void
-GlCanvas::setEngine (nau::Nau* engine) {
+GLCanvas::setEngine (nau::Nau* engine) {
 
 	m_pEngine = engine;
 }
 
 
 void 
-GlCanvas::setCamera () {
+GLCanvas::setCamera () {
 
 	m_pCamera = NAU->getActiveCamera();
 	if (m_pCamera) {
@@ -95,14 +95,14 @@ GlCanvas::setCamera () {
 
 
 void
-GlCanvas::_setCamera() {
+GLCanvas::_setCamera() {
 
 	m_pCamera = NAU->getActiveCamera();
 }
 
 
 void 
-GlCanvas::OnPaint (wxPaintEvent &event) {
+GLCanvas::OnPaint (wxPaintEvent &event) {
 
 	PROFILE("Nau");
 	wxPaintDC dc(this);
@@ -136,7 +136,7 @@ GlCanvas::OnPaint (wxPaintEvent &event) {
 
 
 void
-GlCanvas::OnIdle(wxIdleEvent& event) {
+GLCanvas::OnIdle(wxIdleEvent& event) {
 
 	//Refresh();
 	PROFILE("Nau");
@@ -151,7 +151,7 @@ GlCanvas::OnIdle(wxIdleEvent& event) {
 
 
 void 
-GlCanvas::OnSize (wxSizeEvent &event) {
+GLCanvas::OnSize (wxSizeEvent &event) {
 
 	int width;
 	int height;
@@ -165,14 +165,14 @@ GlCanvas::OnSize (wxSizeEvent &event) {
 
 
 void 
-GlCanvas::OnEraseBackground (wxEraseEvent &event) {
+GLCanvas::OnEraseBackground (wxEraseEvent &event) {
 
    event.Skip ();
 }
 
 
 void 
-GlCanvas::OnEnterWindow (wxMouseEvent &event) {
+GLCanvas::OnEnterWindow (wxMouseEvent &event) {
 
    SetFocus ();
    event.Skip ();
@@ -180,7 +180,7 @@ GlCanvas::OnEnterWindow (wxMouseEvent &event) {
 
 
 void 
-GlCanvas::Render () {
+GLCanvas::Render () {
 
 	PROFILE ("Main cicle");
 	try {
@@ -226,7 +226,7 @@ GlCanvas::Render () {
 
 
 void 
-GlCanvas::OnKeyUp(wxKeyEvent & event) {
+GLCanvas::OnKeyUp(wxKeyEvent & event) {
 
 	if (m_pCamera && true == m_pCamera->isDynamic()) {
 		vec3 v3;
@@ -237,7 +237,7 @@ GlCanvas::OnKeyUp(wxKeyEvent & event) {
 
 
 void 
-GlCanvas::OnKeyDown(wxKeyEvent & event) {
+GLCanvas::OnKeyDown(wxKeyEvent & event) {
 
 	static bool physics = true;
 
@@ -511,70 +511,117 @@ GlCanvas::OnKeyDown(wxKeyEvent & event) {
 
 
 void 
-GlCanvas::OnMouseMove (wxMouseEvent& event) {
+GLCanvas::OnMouseMove (wxMouseEvent& event) {
 
 	static bool first = true; // Can't be here!
 
-	if (!event.ButtonIsDown (wxMOUSE_BTN_LEFT)) {
-		return;
-	}
+	if (event.ButtonIsDown (wxMOUSE_BTN_LEFT)) {
+		if (!m_tracking)
+			return;
 
-	if (!m_tracking)
-		return;
-
-	_setCamera();
-	if (0 == m_pCamera) {
-		return;
-	}
+		_setCamera();
+		if (0 == m_pCamera) {
+			return;
+		}
 	
-	vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
-	vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
+		vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
+		vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
 
-	if (true == m_tracking) {
-		m_OldCamView.set(camView.x, camView.y, camView.z);
+		if (true == m_tracking) {
+			m_OldCamView.set(camView.x, camView.y, camView.z);
+		}
+
+		newX = event.GetX();
+		newY = event.GetY();
+
+		float m_ScaleFactor = 1.0f / 100.0f;
+
+		m_Alpha = m_AlphaAux - (float)(newX - m_OldX) * m_ScaleFactor;
+		m_Beta = m_BetaAux + (float)(m_OldY - newY) * m_ScaleFactor;
+
+		nau::event_::CameraOrientation c(m_Alpha, m_Beta);
+		nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Orientation");
+		e->setData(&c);
+		EVENTMANAGER->notifyEvent("CAMERA_ORIENTATION", "MainCanvas", "", e);
+		delete e;
+
+		camV.x = cos(m_Beta) * sin(m_Alpha);;
+		camV.y = sin(m_Beta);
+		camV.z = cos(m_Beta) * cos(m_Alpha);
+
+		if (!(true == m_tracking)) {
+			m_tracking = true;
+		}
+		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
+
+		event.Skip ();
+	}
+	else if (event.ButtonIsDown(wxMOUSE_BTN_RIGHT)) {
+		if (!m_tracking)
+			return;
+
+		_setCamera();
+		if (0 == m_pCamera) {
+			return;
+		}
+		newX = event.GetX();
+		newY = event.GetY();
+
+		m_AlphaAux = newX - m_OldX;
+		m_BetaAux = m_OldY - newY;
+
 	}
 
-	newX = event.GetX();
-	newY = event.GetY();
-
-	float m_ScaleFactor = 1.0f / 100.0f;
-
-	m_Alpha = m_AlphaAux - (float)(newX - OldX) * m_ScaleFactor;
-	m_Beta = m_BetaAux + (float)(OldY - newY) * m_ScaleFactor;
-
-	nau::event_::CameraOrientation c(m_Alpha, m_Beta);
-	nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Orientation");
-	e->setData(&c);
-	EVENTMANAGER->notifyEvent("CAMERA_ORIENTATION", "MainCanvas", "", e);
-	delete e;
-
-	camV.x = cos(m_Beta) * sin(m_Alpha);;
-	camV.y = sin(m_Beta);
-	camV.z = cos(m_Beta) * cos(m_Alpha);
-
-	if (!(true == m_tracking)) {
-		m_tracking = true;
-	}
-	DlgCameras::Instance()->updateInfo(m_pCamera->getName());
-
-	event.Skip ();
 }
 
 
 void
-GlCanvas::OnRightUp(wxMouseEvent &event) {
+GLCanvas::OnMiddleUp(wxMouseEvent &event) {
 
 	m_pEngine->setClickPosition(event.GetX(), event.GetY());
+	event.Skip();
 }
 
 
 void
-GlCanvas::OnLeftDown (wxMouseEvent& event) {
+GLCanvas::OnRightUp(wxMouseEvent &event) {
+
+	m_tracking = false;
+	event.Skip();
+}
+
+
+void
+GLCanvas::OnRightDown(wxMouseEvent &event) {
 
 	_setCamera();
 	if (m_pCamera) {
-		OldX = event.GetX();
-		OldY = event.GetY();
+		m_OldX = event.GetX();
+		m_OldY = event.GetY();
+
+		m_AlphaAux = 0.0f;
+		m_BetaAux = 0.0f;
+		m_tracking = true;
+
+		m_Radius = NAU->getDepthAtCenter();
+		vec4 camPos = m_pCamera->getPropf4(Camera::POSITION);
+		vec4 camDir = m_pCamera->getPropf4(Camera::VIEW_VEC);
+		vec4 aux = camDir;
+		aux.scale(m_Radius);
+		m_Center = camPos;
+		m_Center += aux;
+	}
+	event.Skip();
+}
+
+
+void
+GLCanvas::OnLeftDown (wxMouseEvent& event) {
+
+	_setCamera();
+	if (m_pCamera) {
+		m_OldX = event.GetX();
+		m_OldY = event.GetY();
 
 		m_Beta = m_pCamera->getPropf(Camera::ELEVATION_ANGLE);//getElevationAngle();
 		m_Alpha = m_pCamera->getPropf(Camera::ZX_ANGLE);//getZXAngle();
@@ -589,7 +636,7 @@ GlCanvas::OnLeftDown (wxMouseEvent& event) {
 
 
 void
-GlCanvas::OnLeftUp (wxMouseEvent &event) {
+GLCanvas::OnLeftUp (wxMouseEvent &event) {
 	
 	m_tracking = false;
 
@@ -676,7 +723,7 @@ GlCanvas::OnLeftUp (wxMouseEvent &event) {
 
 
 void
-GlCanvas::BreakResume ()
+GLCanvas::BreakResume ()
 {
 	if (isPaused)
 		m_pEngine->stepCompleteFrame();
@@ -686,7 +733,7 @@ GlCanvas::BreakResume ()
 
 
 void 
-GlCanvas::StepPass() {
+GLCanvas::StepPass() {
 
 	if (isPaused) {
 		m_pEngine->stepPass();
@@ -698,7 +745,7 @@ GlCanvas::StepPass() {
 
 
 void 
-GlCanvas::StepToEndOfFrame() {
+GLCanvas::StepToEndOfFrame() {
 
 	if (isPaused) {
 		m_pEngine->stepCompleteFrame();
@@ -708,7 +755,7 @@ GlCanvas::StepToEndOfFrame() {
 
 
 void
-GlCanvas::StepUntilSamePassNextFrame() {
+GLCanvas::StepUntilSamePassNextFrame() {
 
 	if (isPaused) {
 		int n = RENDERMANAGER->getActivePipeline()->getPassCounter();
@@ -720,14 +767,14 @@ GlCanvas::StepUntilSamePassNextFrame() {
 
 
 bool
-GlCanvas::IsPaused() {
+GLCanvas::IsPaused() {
 
 	return isPaused;
 }
 
 
 void
-GlCanvas::MultiStep(int stepSize) {
+GLCanvas::MultiStep(int stepSize) {
 
 	step = stepSize;
 }
@@ -735,7 +782,7 @@ GlCanvas::MultiStep(int stepSize) {
 
 
 //bool
-//GlCanvas::changeWaterState (bool state)
+//GLCanvas::changeWaterState (bool state)
 //{
 //	Camera *cam = RENDERMANAGER->getCamera ("MainCamera");
 //	ISceneObject *river = RENDERMANAGER->getScene ("MainScene")->getSceneObject ("pPlane1");	

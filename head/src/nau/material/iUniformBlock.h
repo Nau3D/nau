@@ -28,6 +28,7 @@ namespace nau
 
 			virtual void init(std::string &name, unsigned int size) = 0;
 			virtual void setBindingIndex(unsigned int i) = 0;
+			virtual unsigned int getBindingIndex() = 0;
 			virtual void addUniform(std::string &name, Enums::DataType type, 
 				unsigned int offset, unsigned int size = 0, 
 				unsigned int arrayStride = 0) = 0;

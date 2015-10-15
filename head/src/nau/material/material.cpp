@@ -202,7 +202,7 @@ Material::setUniformBlockValues() {
 	for (auto pbv:m_ProgramBlockValues) {
 			
 		void *v = pbv.second.getValues();
-		std::string block = pbv.first.first;
+ 		std::string block = pbv.first.first;
 		std::string uniform = pbv.first.second;
 		IUniformBlock *b = UNIFORMBLOCKMANAGER->getBlock(block);
 		if (b) {

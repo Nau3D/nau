@@ -10,6 +10,7 @@ Light::Init() {
 	// VEC4
 	Attribs.add(Attribute(POSITION, "POSITION", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 1.0f)));
 	Attribs.add(Attribute(DIRECTION, "DIRECTION", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+	Attribs.add(Attribute(SPOT_DIRECTION, "SPOT_DIRECTION", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	Attribs.add(Attribute(NORMALIZED_DIRECTION, "NORMALIZED_DIRECTION", Enums::DataType::VEC4,true, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	Attribs.add(Attribute(COLOR, "COLOR", Enums::DataType::VEC4, false, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
 	Attribs.add(Attribute(AMBIENT, "AMBIENT", Enums::DataType::VEC4, false, new vec4(0.2f, 0.2f, 0.2f, 1.0f)));
@@ -60,22 +61,16 @@ Light::setPropf(FloatProperty prop, float value) {
 	float final = value;
 
 	switch (prop) {
-		case SPOT_EXPONENT:
-			if (value < 0.0f || value > 128.0f)
-				final = 0.0f;
-			break;
-		case SPOT_CUTOFF:
-			if (value != 180.0f || value < 0.0f || value > 90.0f)
-				final = 180.0f;
-			break;
 		case CONSTANT_ATT:
 		case LINEAR_ATT:
 		case QUADRATIC_ATT:
 			if (value < 0)
 				final = 0;
+			m_FloatProps[prop] = final;
 			break;
+		default:
+			AttributeValues::setPropf(prop, value);
 	}
-	m_FloatProps[prop] = final;
 }
 
 
@@ -102,6 +97,9 @@ Light::setPropf4(Float4Property prop, float x, float y, float z, float w){
 			m_Float4Props[DIRECTION].set(v);
 			m_Float4Props[NORMALIZED_DIRECTION].set(v);
 			break;
+		default:
+			AttributeValues::setPropf4(prop, v);
+
 	}
 	m_Float4Props[prop].set(v);
 }

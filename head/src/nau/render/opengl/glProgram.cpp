@@ -502,6 +502,11 @@ GLProgram::setBlocks() {
 		}
 		else {
 			block = blockMan->getBlock(sName);
+			IBuffer *b = block->getBuffer();
+			b->bind((unsigned int)GL_UNIFORM_BUFFER);
+			glUniformBlockBinding(m_P, i, block->getBindingIndex());
+			glBindBufferRange(GL_UNIFORM_BUFFER, block->getBindingIndex(),
+				block->getBuffer()->getPropi(IBuffer::ID), 0, dataSize);
 		}
 		m_Blocks[name] = i;
 		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &activeUnif);

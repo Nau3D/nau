@@ -160,18 +160,21 @@ EVT_CLOSE(FrmMainFrame::OnClose)
 	
  END_EVENT_TABLE()
 
-BEGIN_EVENT_TABLE(GlCanvas, wxGLCanvas)
-  EVT_SIZE(GlCanvas::OnSize)
-  EVT_PAINT(GlCanvas::OnPaint)
-  EVT_ERASE_BACKGROUND(GlCanvas::OnEraseBackground)
-  EVT_ENTER_WINDOW(GlCanvas::OnEnterWindow)
-  EVT_KEY_UP(GlCanvas::OnKeyUp)
-  EVT_KEY_DOWN(GlCanvas::OnKeyDown)
-  EVT_MOTION(GlCanvas::OnMouseMove)
-  EVT_LEFT_DOWN (GlCanvas::OnLeftDown)
-  EVT_LEFT_UP (GlCanvas::OnLeftUp)
-  EVT_IDLE(GlCanvas::OnIdle)
-  EVT_RIGHT_UP(GlCanvas::OnRightUp)
+BEGIN_EVENT_TABLE(GLCanvas, wxGLCanvas)
+  EVT_SIZE(GLCanvas::OnSize)
+  EVT_PAINT(GLCanvas::OnPaint)
+  EVT_ERASE_BACKGROUND(GLCanvas::OnEraseBackground)
+  EVT_ENTER_WINDOW(GLCanvas::OnEnterWindow)
+  EVT_KEY_UP(GLCanvas::OnKeyUp)
+  EVT_KEY_DOWN(GLCanvas::OnKeyDown)
+  EVT_MOTION(GLCanvas::OnMouseMove)
+  EVT_LEFT_DOWN (GLCanvas::OnLeftDown)
+  EVT_LEFT_UP (GLCanvas::OnLeftUp)
+  EVT_IDLE(GLCanvas::OnIdle)
+  EVT_MIDDLE_UP(GLCanvas::OnMiddleUp)
+  EVT_RIGHT_UP(GLCanvas::OnRightUp)
+  EVT_RIGHT_DOWN(GLCanvas::OnRightDown)
+
 END_EVENT_TABLE()
 
 
@@ -353,7 +356,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
  
 			0};
 
-	m_Canvas = new GlCanvas (this , -1, attribList, contextAttribList);
+	m_Canvas = new GLCanvas (this , -1, attribList, contextAttribList);
                 
 	try {
 		nauInit = m_pRoot->init(true);

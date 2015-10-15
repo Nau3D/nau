@@ -1251,14 +1251,20 @@ Nau::getActiveCamera() {
 float
 Nau::getDepthAtCenter() {
 
-	float f;
+	float wz;
 	vec2 v = m_Viewport->getPropf2(Viewport::ORIGIN);
 	v += m_Viewport->getPropf2(Viewport::SIZE);
 	Camera *cam = RENDERMANAGER->getCamera(m_ActiveCameraName);
+	float f = cam->getPropf(Camera::FARP);
+	float n = cam->getPropf(Camera::NEARP);
 	float a = cam->getPropm4(Camera::PROJECTION_MATRIX).at(2,2);
 	float b = cam->getPropm4(Camera::PROJECTION_MATRIX).at(3,2);
+	float c = cam->getPropm4(Camera::PROJECTION_MATRIX).at(2, 3);
 	// This must move to glRenderer!!!!
-	f = RENDERER->getDepthAtPoint((int)(v.x*0.5f), (int)(v.y*0.5f));
+	wz = RENDERER->getDepthAtPoint((int)(v.x*0.5f), (int)(v.y*0.5f));
+	float nz = ((2 * wz - f -n)/(f - n)) ;
+	float pz = b / ( nz - a);
+	pz = b / (1 + a / nz);
 	f = (f-0.5f) * 2.0f;
 	SLOG("Depth %f %f\n",b/(f+a), f); 
 	return (0.5f * (-a*f + b) / f + 0.5f);

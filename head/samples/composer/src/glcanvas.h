@@ -9,26 +9,26 @@ using namespace gl;
 
 #include <nau.h>
 
-class GlCanvas : public wxGLCanvas
+class GLCanvas : public wxGLCanvas
 {
 public:
-   GlCanvas (wxWindow * parent,
+	GLCanvas(wxWindow * parent,
                const wxWindowID id = -1,
 			   const int * 	attribList = NULL,
 			   const int *contextAttribs = NULL,
                 const wxPoint &pos = wxDefaultPosition,
                const wxSize &size = wxDefaultSize,
                long style = 0,
-               const wxString &name = _("GlCanvas"));
-   GlCanvas (wxWindow * parent,
-               const GlCanvas &other,
+               const wxString &name = _("GLCanvas"));
+	GLCanvas(wxWindow * parent,
+               const GLCanvas &other,
                const wxWindowID id = -1,
 			   const int * 	attribList = NULL,
 			   const int *contextAttribs = NULL,
                 const wxPoint &pos = wxDefaultPosition,
                const wxSize &size = wxDefaultSize,
                long style = 0,
-               const wxString &name = _("GlCanvas"));
+               const wxString &name = _("GLCanvas"));
 
 	void OnPaint(wxPaintEvent & event);
 	void BreakResume ();
@@ -45,6 +45,8 @@ public:
 	void OnLeftDown (wxMouseEvent& event);
 	void OnLeftUp (wxMouseEvent& event);
 	void OnRightUp(wxMouseEvent& event);
+	void OnRightDown(wxMouseEvent& event);
+	void OnMiddleUp(wxMouseEvent& event);
 
 	bool IsPaused ();
 	void MultiStep(int stepSize = -1);
@@ -55,7 +57,7 @@ public:
 	void setEngine (nau::Nau* engine);
 	void setCamera ();
 
-	virtual ~GlCanvas();
+	virtual ~GLCanvas();
 
    DECLARE_EVENT_TABLE()
 protected:
@@ -76,15 +78,17 @@ private:
 	nau::Nau* m_pEngine;
 	nau::scene::Camera* m_pCamera;
 
-	long int OldX;
-	long int OldY;
+	long int m_OldX;
+	long int m_OldY;
 
 
 	float m_BetaAux;
 	float m_Beta;
 	float m_AlphaAux;
 	float m_Alpha;
+	float m_Radius;
 	bool m_tracking;
+	vec4 m_Center;
 
 	bool m_WaterState;
 

@@ -1214,11 +1214,15 @@ GLRenderer::showDrawDebugInfo(IProgram *pp, nau::util::Tree *tree) {
 		glGetActiveUniformBlockiv(program, i,  GL_UNIFORM_BLOCK_BINDING, &index);
 		uniformTree->appendItem("Binding Point", std::to_string(index));
 		SLOG("  Block binding point: %d", index);
-		glGetIntegeri_v(GL_UNIFORM_BUFFER_BINDING, index, &info);
 
+		glGetIntegeri_v(GL_UNIFORM_BUFFER_BINDING, index, &info);
 		IBuffer *buff = RESOURCEMANAGER->getBufferByID(info);
-		uniformTree->appendItem("Buffer", buff->getLabel() + " (" + std::to_string(info) + ")");
-		SLOG("  Buffer bound to binding point: %d {", info);
+		if (buff != NULL) {
+			uniformTree->appendItem("Buffer", buff->getLabel() + " (" + std::to_string(info) + ")");
+			SLOG("  Buffer bound to binding point: %d {", info);
+		}
+		else
+			uniformTree->appendItem("Buffer", "Not Set");
 
 
 		glGetActiveUniformBlockiv(program, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &activeUnif);
@@ -1292,9 +1296,11 @@ GLRenderer::showDrawDebugInfo(IProgram *pp, nau::util::Tree *tree) {
 				uniTree->appendItem("Matrix Stride", std::to_string(uniMatStride));
 				SLOG("\t    mat stride: %d", uniMatStride);
 			}
-			buff->getData(uniOffset, auxSize, values);
-			s = Enums::valueToStringAligned(GLUniform::spSimpleType[(GLenum)uniType], values);
-			uniTree->appendItem("Values", s);
+			if (buff != NULL) {
+				buff->getData(uniOffset, auxSize, values);
+				s = Enums::valueToStringAligned(GLUniform::spSimpleType[(GLenum)uniType], values);
+				uniTree->appendItem("Values", s);
+			}
 		}
 	}
 }

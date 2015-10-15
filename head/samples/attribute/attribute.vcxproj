@@ -184,7 +184,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;lua52.lib;wxmsw29u_core.lib;wxmsw29u_adv.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiffd.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;opengl32.lib;tinyxmlSTL.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;lua.lib;wxmsw29u_core.lib;wxmsw29u_adv.lib;wxbase29u.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;wxpng.lib;wxjpeg.lib;wxtiffd.lib;wxmsw29u_propgrid.lib;wxmsw29u_gl.lib;nauOptix.lib;bulletdynamics.lib;bulletcollision.lib;bulletmath.lib;glew32.lib;opengl32.lib;tinyxmlSTL.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -247,7 +247,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;lua53.lib;libcpmt.lib;assimp.lib;nauOptix64.lib;BulletDynamics.lib;BulletCollision.lib;Bullet3Common.lib;BulletSoftBody.lib;LinearMath.lib;ConvexDecomposition.lib;glew32.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glbinding.lib;wxzlib.lib;cudart_static.lib;optix_prime.1.lib;optix.1.lib;lua.lib;libcpmt.lib;assimp.lib;nauOptix64.lib;BulletDynamics.lib;BulletCollision.lib;Bullet3Common.lib;BulletSoftBody.lib;LinearMath.lib;tinyxmlSTL.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

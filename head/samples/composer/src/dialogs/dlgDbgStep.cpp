@@ -15,7 +15,7 @@ END_EVENT_TABLE()
 
 
 wxWindow *DlgDbgStep::m_Parent = NULL;
-GlCanvas *DlgDbgStep::m_Canvas = NULL;
+GLCanvas *DlgDbgStep::m_Canvas = NULL;
 DlgDbgStep *DlgDbgStep::m_Inst = NULL;
 
 
@@ -27,7 +27,7 @@ DlgDbgStep::SetParent(wxWindow *p) {
 
 
 void
-DlgDbgStep::SetCanvas(GlCanvas *c) {
+DlgDbgStep::SetCanvas(GLCanvas *c) {
 
 	m_Canvas = c;
 }

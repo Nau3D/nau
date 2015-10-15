@@ -42,7 +42,7 @@ public:
 	static wxWindow *parent;
 
 
-    DlgOGL(wxWindow *parent,GlCanvas *gls);
+    DlgOGL(wxWindow *parent,GLCanvas *gls);
 	~DlgOGL() {};
 
 	void setupInfoPanel(wxSizer *siz, wxWindow *parent);
@@ -59,7 +59,7 @@ protected:
 private:
 
 	wxPropertyGridManager *pgmi,*pg;
-//	GlCanvas *gls;
+//	GLCanvas *gls;
 
 	
 

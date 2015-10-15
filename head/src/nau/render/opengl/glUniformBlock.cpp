@@ -49,7 +49,14 @@ GLUniformBlock::setBindingIndex(unsigned int i) {
 }
 
 
-void 
+unsigned int
+GLUniformBlock::getBindingIndex() {
+
+	return m_BindingIndex;
+}
+
+
+void
 GLUniformBlock::addUniform(std::string &name, Enums::DataType type, unsigned int offset, 
 							unsigned int size, unsigned int arrayStride) {
 

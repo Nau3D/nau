@@ -55,11 +55,11 @@ protected:
 
 public:
 	static wxWindow *m_Parent;
-	static GlCanvas *m_Canvas;
+	static GLCanvas *m_Canvas;
 
 	static DlgDbgStep* Instance();
 	static void SetParent(wxWindow *parent);
-	static void SetCanvas(GlCanvas *c);
+	static void SetCanvas(GLCanvas *c);
 	virtual std::string &getName ();
 	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 	void updateDlg();
