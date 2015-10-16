@@ -6,6 +6,7 @@
 #include "nau/material/iUniform.h"
 
 #include <string>
+#include <vector>
 
 namespace nau
 {
@@ -73,6 +74,7 @@ namespace nau
 
 			virtual int getNumberOfUniforms (void) = 0;
 			virtual int getNumberOfUserUniforms (void) = 0;
+			virtual void getUniformBlockNames(std::vector<std::string> *s) = 0;
 
 			virtual int getAttributeLocation (const std::string &name) = 0;
 			virtual int getUniformLocation(std::string uniformName) = 0;

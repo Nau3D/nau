@@ -886,18 +886,6 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 			"COMPARE_FUNC", "BORDER_COLOR"};
 	PropertyManager::createOrderedGrid(pgTextureProps, ITextureSampler::Attribs,order);
 
-
-	//pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_S"),wxPG_LABEL,repeat,repeatInd,0));
-	//pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_T"),wxPG_LABEL,repeat,repeatInd,0));
-	//pgTextureProps->Append( new wxEnumProperty(wxT("WRAP_R"),wxPG_LABEL,repeat,repeatInd,0));
-
-	//pgTextureProps->Append( new wxEnumProperty(wxT("MAG_FILTER"),wxPG_LABEL,filtersMag,filtersIndMag,0));
-	//pgTextureProps->Append( new wxEnumProperty(wxT("MIN_FILTER"),wxPG_LABEL,filtersMin,filtersIndMin,0));
-
-	//pgTextureProps->Append( new wxEnumProperty(wxT("COMPARE_MODE"),wxPG_LABEL,compareMode,compareModeInd,0));
-	//pgTextureProps->Append( new wxEnumProperty(wxT("COMPARE_FUNC"),wxPG_LABEL,compareFunc,compareFuncInd,0));
-
-
 	sizerTP->Add(pgTextureProps,1,wxEXPAND,15);
 
 	siz->Add(gridTextures,0,wxALL|wxALIGN_CENTER,5);
@@ -1406,299 +1394,68 @@ void DlgMaterials::updateShaderAux(Material *m) {
 }
 
 
-void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
+void DlgMaterials::addUniform(wxPGProperty *pdefaultBlock, ProgramValue  &u, int showGlobal) {
 
-	const wxChar* vec4LightComp[] = {wxT("POSITION"), wxT("DIRECTION"), wxT("NORMALIZED_DIRECTION"), wxT("COLOR"), wxT("AMBIENT"), NULL};
-	const long vec4LightCompInd[] = {Light::POSITION, Light::DIRECTION, Light::NORMALIZED_DIRECTION, Light::COLOR,
-				Light::AMBIENT};
-
-	const wxChar* floatLightComp[] = {wxT("SPOT_EXPONENT"), wxT("SPOT_CUTOFF"), wxT("CONSTANT_ATT"), wxT("LINEAR_ATT"), wxT("QUADRATIC_ATT"), NULL};
-	const long floatLightCompInd[] = {Light::SPOT_EXPONENT, Light::SPOT_CUTOFF, Light::CONSTANT_ATT, Light::LINEAR_ATT,
-				Light::QUADRATIC_ATT};
-
-	const wxChar* boolLightComp[] = {wxT("ENABLED"), NULL};
-	const long boolLightCompInd[] = {Light::ENABLED};
-
-	//const wxChar* enumLightComp[] = {wxT("TYPE"), NULL};
-	//const long enumLightCompInd[] = {Light::TYPE};
-
-	int edit = strncmp("gl_",u.getName().c_str(),3);
+	int edit = strncmp("gl_", u.getName().c_str(), 3);
 	if ((!showGlobal) && (edit == 0))
-			return;
+		return;
 
-	wxPGProperty *pid,*pid2;
-	const wxChar* units[] = {wxT("0"),wxT("1"),wxT("2"),wxT("3"),wxT("4"),wxT("5"),wxT("6"),wxT("7"),NULL};
-	const long unitsInd[] = {0,1,2,3,4,5,6,7};
-
-	const wxChar* vec4CamComp[] = {wxT("POSITION"), wxT("VIEW"),  
-										wxT("UP"), wxT("NORMALIZED_UP"), 
-										wxT("NORMALIZED_RIGHT"), wxT("LOOK_AT_POINT"), NULL};
-	const long vec4CamCompInd[] = {Camera::POSITION, Camera::VIEW_VEC, 
-										Camera::UP_VEC, Camera::NORMALIZED_UP_VEC,
-										Camera::NORMALIZED_RIGHT_VEC, Camera::LOOK_AT_POINT};
-
-
-	const wxChar* mat4CamComp[] = {wxT("VIEW_MATRIX"), wxT("PROJECTION_MATRIX"), 
-										wxT("VIEW_INVERSE_MATRIX"), wxT("PROJECTION_VIEW_MATRIX"), wxT("TS05_PVM_MATRIX"),NULL};
-	const long mat4CamCompInd[] = {Camera::VIEW_MATRIX, Camera::PROJECTION_MATRIX, 
-										Camera::VIEW_INVERSE_MATRIX, Camera::PROJECTION_VIEW_MATRIX, Camera::TS05_PVM_MATRIX};
-
-
-	const wxChar* floatCamComp[] = {wxT("FOV"), wxT("NEARP"), wxT("FARP"), wxT("LEFT"), wxT("RIGHT"), wxT("TOP"), wxT("BOTTOM"),NULL};
-	const long floatCamCompInd[] = {Camera::FOV, Camera::NEARP, 
-										Camera::FARP, Camera::LEFT, Camera::RIGHT, 
-										Camera::TOP, Camera::BOTTOM};
-
-	const wxChar* intTextureComp[] = {wxT("WIDTH"), wxT("HEIGHT"), wxT("DEPTH"), NULL};
-	const long intTextureCompInd[] = {ITexture::WIDTH, ITexture::HEIGHT, ITexture::DEPTH};
-
-	//const wxChar* vec3SemanticClass[] = {wxT("Camera"), wxT("Light"), wxT("Data"), NULL};
-	//const long vec3SemanticClassInd[] = {ProgramValue::CAMERA, ProgramValue::LIGHT, ProgramValue::DATA};
-
-	//const wxChar* mat4SemanticClass[] = {wxT("Camera"), wxT("Data"), NULL};
-	//const long mat4SemanticClassInd[] = {ProgramValue::CAMERA, ProgramValue::DATA};
-
-	//const wxChar* intSemanticClass[] = {wxT("Light"), wxT("Data"), NULL};
-	//const long intSemanticClassInd[] = {ProgramValue::TEXTURE, ProgramValue::LIGHT, ProgramValue::DATA};
-
-	const wxChar* vec4ColorComp[] = {wxT("AMBIENT"),wxT("SPECULAR"),wxT("EMISSION"),wxT("DIFFUSE"), NULL};
-	const long vec4ColorCompInd[] = {ColorMaterial::AMBIENT,
-								  ColorMaterial::SPECULAR,
-								  ColorMaterial::EMISSION,
-								  ColorMaterial::DIFFUSE};
-
-	const wxChar* floatColorComp[] = {wxT("SHININESS"), NULL};
-	const long floatColorCompInd[] = {ColorMaterial::SHININESS};
-
-	const wxChar* mat4MatrixComp[] = {wxT("PROJECTION"),
-									wxT("MODEL"),
-									wxT("VIEW"),
-									wxT("TEXTURE"),
-									wxT("VIEW_MODEL"),
-									wxT("PROJECTION_VIEW_MODEL"),
-									wxT("PROJECTION_VIEW"),
-									wxT("TS05_PVM"), NULL};
-
-	const long mat4MatrixCompInd[] = {IRenderer::PROJECTION,
-				IRenderer::MODEL,
-				IRenderer::VIEW,
-				IRenderer::TEXTURE,
-				IRenderer::VIEW_MODEL,
-				IRenderer::PROJECTION_VIEW_MODEL,
-				IRenderer::PROJECTION_VIEW,
-				IRenderer::TS05_PVM};
-
-	const wxChar* mat3MatrixComp[] = {wxT("NORMAL"), NULL};
-	const long mat3MatrixCompInd[] = {IRenderer::NORMAL};
-
-	pid = pgShaderUniforms->Append(new wxPGProperty(wxString((u.getName().c_str())),wxPG_LABEL));
-	if (u.getLoc() == -1)
-		pgShaderUniforms->DisableProperty(pid);
-	else
-		pgShaderUniforms->LimitPropertyEditing(pid);
-	pid2 = pgShaderUniforms->AppendIn(pid,new wxStringProperty(wxT("Type"),wxPG_LABEL,wxString(Enums::DataTypeToString[u.getValueType()].c_str())));
+	wxPGProperty *pid, *pid2;
+	pid = pgShaderUniforms->AppendIn(pdefaultBlock, new wxPGProperty(wxString((u.getName().c_str())), wxPG_LABEL));
+	//if (u.getLoc() == -1)
+	//	pgShaderUniforms->DisableProperty(pid);
+	//else
+	//	pgShaderUniforms->LimitPropertyEditing(pid);
+	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Data Type"), wxPG_LABEL, wxString(Enums::DataTypeToString[u.getValueType()].c_str())));
 	pgShaderUniforms->DisableProperty(pid2);
 
 	Enums::DataType vt = u.getValueType();
-//	pid2 = pgShaderUniforms->AppendIn(pid,new wxStringProperty(wxT("Semantic Class"),wxPG_LABEL,wxString(ProgramValue::getSemanticTypeString(u.getSemanticType()).c_str())));	
-	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Semantic Class"), wxPG_LABEL, wxString(u.getType().c_str())));
+	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Type"), wxPG_LABEL, wxString(u.getType().c_str())));
 	pgShaderUniforms->DisableProperty(pid2);
 
-	int *i;
-	int auxI[4] = {0,0,0,0};
-	float *f;
-	float auxF[16] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,
-					  0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Context"), wxPG_LABEL, wxString(u.getContext().c_str())));
+	pgShaderUniforms->DisableProperty(pid2);
 
-	if (u.getContext() != "CURRENT") {
-		i = (int *)u.getValues();
-		f = (float *)u.getValues();
-	}
-	else {
-					
-		pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Context"),wxPG_LABEL, wxString(u.getType().c_str())));
+	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Component"), wxPG_LABEL, wxString(u.getValueOf().c_str())));
+	pgShaderUniforms->DisableProperty(pid2);
+
+	std::string s = u.getType();
+	if ((s == "TEXTURE" || s == "IMAGE_TEXTURE" || s == "MATERIAL_BUFFER" || s == "TEXTURE_SAMPLER" || s == "MATERIAL_TEXTURES") ||
+		(s == "LIGHT" && u.getContext() == "CURRENT")) {
+		pid2 = pgShaderUniforms->AppendIn(pid, new wxIntProperty(wxT("id"), wxPG_LABEL, u.getId()));
 		pgShaderUniforms->DisableProperty(pid2);
-
-		if (u.getType() == "MATRIX" && u.getValueType() == Enums::MAT4) {
-			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, mat4MatrixComp, mat4MatrixCompInd,u.getSemanticValueOf()));
-		}
-		else if (u.getType() == "MATRIX" && u.getValueType() == Enums::MAT3) {
-			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, mat3MatrixComp, mat3MatrixCompInd,u.getSemanticValueOf()));
-		}
-		else if (u.getType() == "COLOR" && u.getValueType() == Enums::VEC4){
-			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, vec4ColorComp, vec4ColorCompInd, u.getSemanticValueOf()));
-		}
-		else if (u.getType() == "COLOR" && u.getValueType() == Enums::FLOAT){
-			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, floatColorComp, floatColorCompInd, u.getSemanticValueOf()));	
-		}
-
-		i = auxI;
-		f = auxF;
 	}
-
-//	if (ProgramValue::CAMERA == u.getSemanticType()) {
-	if (u.getType() == "CAMERA") {
-
-			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Camera"),wxPG_LABEL,m_pgCamList));
-			pgShaderUniforms->SetPropertyValueString(pid2,wxString(u.getContext().c_str()));
-
-			switch(u.getValueType()) {
-				case Enums::FLOAT:
-					pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,floatCamComp,floatCamCompInd,u.getSemanticValueOf()));
-					break;
-				case Enums::VEC4:
-					pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,vec4CamComp,vec4CamCompInd,u.getSemanticValueOf()));
-					break;
-				case Enums::MAT4:
-					pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,mat4CamComp,mat4CamCompInd,u.getSemanticValueOf()));
-					break;
-			}
-	}
-	else if (u.getType() == "LIGHT" || (u.getType() == "LIGHT" && "CURRENT" == u.getContext())) {
-
-		if (u.getType() == "LIGHT") {
-			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Light"),wxPG_LABEL,m_pgLightList));
-			pgShaderUniforms->SetPropertyValueString(pid2,wxString(u.getContext().c_str()));
-		}
-		else {
-			pid2 = pgShaderUniforms->AppendIn(pid,new wxIntProperty(wxT("ID"),wxPG_LABEL, u.getId()));
-		}
-		
-		switch(u.getValueType()) {
-			
-			case Enums::VEC4:
-				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,vec4LightComp,vec4LightCompInd,u.getSemanticValueOf()));
-				break;
-
-			case Enums::FLOAT:
-				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,floatLightComp,floatLightCompInd,u.getSemanticValueOf()));
-				break;
-
-			case Enums::BOOL:
-				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,boolLightComp,boolLightCompInd,u.getSemanticValueOf()));
-				break;
-
-			//case Enums::ENUM:
-			//	pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,enumLightComp,enumLightCompInd,u.getSemanticValueOf()));
-			//	break;
-		}
-	}
-	else if (u.getType() == "TEXTURE" || (u.getType() == "TEXTURE" && "CURRENT" == u.getContext())) {
-
-		if (u.getType() == "TEXTURE") {
-			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("ITexture"),wxPG_LABEL,textureLabels/*m_pgTextureList*/));
-			pgShaderUniforms->SetPropertyValueString(pid2,wxString(u.getContext().c_str()));
-		}
-					
-		switch (u.getValueType()) {
-
-			case Enums::SAMPLER:
-				pid2 = pgShaderUniforms->AppendIn(pid,new wxStringProperty(wxT("Semantics"),wxPG_LABEL,wxT("UNIT")));
-				pgShaderUniforms->DisableProperty(pid2);
-				pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("ivalue"), wxPG_LABEL, m_pgTextUnitsList));
-				pgShaderUniforms->SetPropertyValue(pid2, u.getId());
-				break;
-			case Enums::INT:
-				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,intTextureComp,intTextureCompInd,u.getSemanticValueOf()));
-				break;
-		}
-	}
-
-	//else if (ProgramValue::DATA == u.getSemanticType()) {
-	//		switch(u.getSemanticValueOf()) {
-	//
-	//			case ProgramValue::USERDATA: {
-	//				
-	//				switch(u.getValueType()) {
-	//					
-	//					case Enums::FLOAT:
-	//						pgShaderUniforms->AppendIn(pid,new wxFloatProperty(wxT("fvalue"),wxPG_LABEL,f[0]));
-	//						if (!edit)
-	//							pgShaderUniforms->DisableProperty(pid2);
-	//						break;
-	//					case Enums::VEC2:
-	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("fvalues"),wxPG_LABEL));
-	//						pgShaderUniforms->LimitPropertyEditing(pid2);
-	//						if (!edit)
-	//							pgShaderUniforms->DisableProperty(pid2);
-	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[0]"),wxPG_LABEL,f[0]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[1]"),wxPG_LABEL,f[1]));
-	//						break;
-	//					case Enums::VEC3:
-	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("fvalues"),wxPG_LABEL));
-	//						pgShaderUniforms->LimitPropertyEditing(pid2);
-	//						if (!edit)
-	//							pgShaderUniforms->DisableProperty(pid2);
-	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[0]"),wxPG_LABEL,f[0]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[1]"),wxPG_LABEL,f[1]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[2]"),wxPG_LABEL,f[2]));
-	//						break;
-	//					case Enums::VEC4:
-	//						auxSetVec4(pid,pid2,edit,f);
-	//						break;
-
-	//					case Enums::INT: 
-	//					case Enums::BOOL:
-	//						pgShaderUniforms->AppendIn(pid,new wxIntProperty(wxT("ivalue"),wxPG_LABEL,i[0]));
-	//						break;
-	//					case Enums::IVEC2:
-	//					case Enums::BVEC2:
-	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("ivalues"),wxPG_LABEL));
-	//						pgShaderUniforms->LimitPropertyEditing(pid2);
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[0]"),wxPG_LABEL,i[0]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[1]"),wxPG_LABEL,i[1]));
-	//						break;
-	//					case Enums::IVEC3:
-	//					case Enums::BVEC3:
-	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("ivalues"),wxPG_LABEL));
-	//						pgShaderUniforms->LimitPropertyEditing(pid2);
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[0]"),wxPG_LABEL,i[0]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[1]"),wxPG_LABEL,i[1]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[2]"),wxPG_LABEL,i[2]));
-	//						break;
-	//					case Enums::IVEC4:
-	//					case Enums::BVEC4:
-	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("ivalues"),wxPG_LABEL));
-	//						pgShaderUniforms->LimitPropertyEditing(pid2);
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[0]"),wxPG_LABEL,i[0]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[1]"),wxPG_LABEL,i[1]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[2]"),wxPG_LABEL,i[2]));
-	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[3]"),wxPG_LABEL,i[3]));
-	//						break;
-
- //						case Enums::SAMPLER:
-	//						pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("texture unit"),wxPG_LABEL,m_pgTextUnitsList,i[0]));
-	//						break;
-
-	//					case Enums::MAT4:
-	//						auxSetMat4(pid,pid2,edit,f);
-	//						break;
-	//					case Enums::MAT3:
-	//						auxSetMat3(pid,pid2,edit,f);
-	//						break;
-	//					case Enums::MAT2:
-	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("fvalues"),wxPG_LABEL));
-	//						pgShaderUniforms->LimitPropertyEditing(pid2);
-	//						if (!edit)
-	//							pgShaderUniforms->DisableProperty(pid2);
-	//						pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Row 1"), wxPG_LABEL, wxT("<composed>")));
-	//							pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("m11"),wxPG_LABEL,f[0]));
-	//							pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("m12"),wxPG_LABEL,f[1]));
-	//							pgShaderUniforms->LimitPropertyEditing(pid2);
-	//							pgShaderUniforms->Collapse(pid2);
-	//						pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Row 2"), wxPG_LABEL, wxT("<composed>")));
-	//							pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("m21"),wxPG_LABEL,f[4]));
-	//							pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("m22"),wxPG_LABEL,f[5]));
-	//							pgShaderUniforms->LimitPropertyEditing(pid2);
-	//							pgShaderUniforms->Collapse(pid2);
-	//						break;
-	//				}
-	//			}
-	//		}	
-	//}
 }
 
+void 
+DlgMaterials::addBlockUniform(wxPGProperty * pblock, ProgramBlockValue & u, int showGlobal) {
 
+	wxPGProperty *pid, *pid2;
+	pid = pgShaderUniforms->AppendIn(pblock, new wxPGProperty(wxString(u.getName().c_str()), wxPG_LABEL));
+	//if (u.getLoc() == -1)
+	//	pgShaderUniforms->DisableProperty(pid);
+	//else
+	//	pgShaderUniforms->LimitPropertyEditing(pid);
+	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Data Type"), wxPG_LABEL, wxString(Enums::DataTypeToString[u.getValueType()].c_str())));
+	pgShaderUniforms->DisableProperty(pid2);
+
+	Enums::DataType vt = u.getValueType();
+	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Type"), wxPG_LABEL, wxString(u.getType().c_str())));
+	pgShaderUniforms->DisableProperty(pid2);
+
+	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Context"), wxPG_LABEL, wxString(u.getContext().c_str())));
+	pgShaderUniforms->DisableProperty(pid2);
+
+	pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Component"), wxPG_LABEL, wxString(u.getValueOf().c_str())));
+	pgShaderUniforms->DisableProperty(pid2);
+
+	std::string s = u.getType();
+	if ((s == "TEXTURE" || s == "IMAGE_TEXTURE" || s == "MATERIAL_BUFFER" || s == "TEXTURE_SAMPLER" || s == "MATERIAL_TEXTURES") ||
+		(s == "LIGHT" && u.getContext() == "CURRENT")) {
+		pid2 = pgShaderUniforms->AppendIn(pid, new wxIntProperty(wxT("id"), wxPG_LABEL, u.getId()));
+		pgShaderUniforms->DisableProperty(pid2);
+	}
+}
 
 
 void
@@ -1800,25 +1557,70 @@ void DlgMaterials::updateUniforms(Material *m) {
 		return;
 	}
 
+	wxPGProperty *pid = new wxPGProperty(wxT("Default Block"), wxPG_LABEL);
+	pgShaderUniforms->Append(pid);
 	std::map<std::string, nau::material::ProgramValue> progValues;
 	progValues = m->getProgramValues();
 	ProgramValue pv;
 	for (auto progVal: progValues) {
 		pv = progVal.second;
-		addUniform(pv,false);
+		addUniform(pid, pv, false);
 
 	}
 	std::map<std::pair<std::string, std::string>, nau::material::ProgramBlockValue> progBlockValues;
 	progBlockValues = m->getProgramBlockValues();
 	ProgramBlockValue pbv;
+	std::string blockName = "";
 	for (auto progVal: progBlockValues) {
 		pbv = progVal.second;
-//		addBlockUniform(pbv,false);
+		if (progVal.first.first != blockName) {
+			blockName = progVal.first.first;
+			pid = new wxPGProperty(wxString(blockName.c_str()), wxPG_LABEL);
+			pgShaderUniforms->Append(pid);
+		}
+		addBlockUniform(pid, pbv, false);
 
 	}
 	pgShaderUniforms->Refresh();
 }
 
+
+
+// this has no effect since m_Values is updated when getting the uniform value
+void 
+DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
+
+	const wxString& name = e.GetPropertyName();
+	unsigned int dotLocation = name.find_first_of(wxT("."),0);
+	std::string topProp = std::string(name.substr(0,dotLocation).mb_str());
+	std::string prop = std::string(name.substr(dotLocation+1,name.size()-dotLocation-1).mb_str());
+
+	Material *m = getModelMaterial();
+
+	if ("Type" == prop) {
+
+	} 
+	else if ("Semantic Class" == prop) {
+	
+	}
+	else if ("Context" == prop) {
+
+	}
+	else if ("Semantics" == prop) {
+		
+	}
+	else if ("ivalue" == prop) {
+		int i = e.GetPropertyValue().GetInteger();
+		m->setValueOfUniform(topProp, &i);
+	}
+	else if ("fvalue" == prop) {
+		float f = e.GetPropertyValue().GetDouble();
+		m->setValueOfUniform(topProp, &f);
+	}
+}
+
+
+//---------------------------- OLD CODE CUT HERE --------------------------------------------------------
 
 //void DlgMaterials::updateUniforms(Material *m) {
 //
@@ -1881,35 +1683,306 @@ void DlgMaterials::updateUniforms(Material *m) {
 //	pgShaderUniforms->Refresh();
 //}
 
-// this has no effect since m_Values is updated when getting the uniform value
-void 
-DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
 
-	const wxString& name = e.GetPropertyName();
-	unsigned int dotLocation = name.find_first_of(wxT("."),0);
-	std::string topProp = std::string(name.substr(0,dotLocation).mb_str());
-	std::string prop = std::string(name.substr(dotLocation+1,name.size()-dotLocation-1).mb_str());
+//void DlgMaterials::addUniform(ProgramValue  &u, int showGlobal) {
 
-	Material *m = getModelMaterial();
+	//const wxChar* vec4LightComp[] = {wxT("POSITION"), wxT("DIRECTION"), wxT("NORMALIZED_DIRECTION"), wxT("COLOR"), wxT("AMBIENT"), NULL};
+	//const long vec4LightCompInd[] = {Light::POSITION, Light::DIRECTION, Light::NORMALIZED_DIRECTION, Light::COLOR,
+	//			Light::AMBIENT};
 
-	if ("Type" == prop) {
+	//const wxChar* floatLightComp[] = {wxT("SPOT_EXPONENT"), wxT("SPOT_CUTOFF"), wxT("CONSTANT_ATT"), wxT("LINEAR_ATT"), wxT("QUADRATIC_ATT"), NULL};
+	//const long floatLightCompInd[] = {Light::SPOT_EXPONENT, Light::SPOT_CUTOFF, Light::CONSTANT_ATT, Light::LINEAR_ATT,
+	//			Light::QUADRATIC_ATT};
 
-	} 
-	else if ("Semantic Class" == prop) {
-	
-	}
-	else if ("Context" == prop) {
+	//const wxChar* boolLightComp[] = {wxT("ENABLED"), NULL};
+	//const long boolLightCompInd[] = {Light::ENABLED};
 
-	}
-	else if ("Semantics" == prop) {
-		
-	}
-	else if ("ivalue" == prop) {
-		int i = e.GetPropertyValue().GetInteger();
-		m->setValueOfUniform(topProp, &i);
-	}
-	else if ("fvalue" == prop) {
-		float f = e.GetPropertyValue().GetDouble();
-		m->setValueOfUniform(topProp, &f);
-	}
-}
+	////const wxChar* enumLightComp[] = {wxT("TYPE"), NULL};
+	////const long enumLightCompInd[] = {Light::TYPE};
+
+	//int edit = strncmp("gl_", u.getName().c_str(), 3);
+	//if ((!showGlobal) && (edit == 0))
+	//	return;
+
+	//wxPGProperty *pid, *pid2;
+	//const wxChar* units[] = {wxT("0"),wxT("1"),wxT("2"),wxT("3"),wxT("4"),wxT("5"),wxT("6"),wxT("7"),NULL};
+	//const long unitsInd[] = {0,1,2,3,4,5,6,7};
+
+	//const wxChar* vec4CamComp[] = {wxT("POSITION"), wxT("VIEW"),  
+	//									wxT("UP"), wxT("NORMALIZED_UP"), 
+	//									wxT("NORMALIZED_RIGHT"), wxT("LOOK_AT_POINT"), NULL};
+	//const long vec4CamCompInd[] = {Camera::POSITION, Camera::VIEW_VEC, 
+	//									Camera::UP_VEC, Camera::NORMALIZED_UP_VEC,
+	//									Camera::NORMALIZED_RIGHT_VEC, Camera::LOOK_AT_POINT};
+
+
+	//const wxChar* mat4CamComp[] = {wxT("VIEW_MATRIX"), wxT("PROJECTION_MATRIX"), 
+	//									wxT("VIEW_INVERSE_MATRIX"), wxT("PROJECTION_VIEW_MATRIX"), wxT("TS05_PVM_MATRIX"),NULL};
+	//const long mat4CamCompInd[] = {Camera::VIEW_MATRIX, Camera::PROJECTION_MATRIX, 
+	//									Camera::VIEW_INVERSE_MATRIX, Camera::PROJECTION_VIEW_MATRIX, Camera::TS05_PVM_MATRIX};
+
+
+	//const wxChar* floatCamComp[] = {wxT("FOV"), wxT("NEARP"), wxT("FARP"), wxT("LEFT"), wxT("RIGHT"), wxT("TOP"), wxT("BOTTOM"),NULL};
+	//const long floatCamCompInd[] = {Camera::FOV, Camera::NEARP, 
+	//									Camera::FARP, Camera::LEFT, Camera::RIGHT, 
+	//									Camera::TOP, Camera::BOTTOM};
+
+	//const wxChar* intTextureComp[] = {wxT("WIDTH"), wxT("HEIGHT"), wxT("DEPTH"), NULL};
+	//const long intTextureCompInd[] = {ITexture::WIDTH, ITexture::HEIGHT, ITexture::DEPTH};
+
+	//const wxChar* vec3SemanticClass[] = {wxT("Camera"), wxT("Light"), wxT("Data"), NULL};
+	//const long vec3SemanticClassInd[] = {ProgramValue::CAMERA, ProgramValue::LIGHT, ProgramValue::DATA};
+
+	//const wxChar* mat4SemanticClass[] = {wxT("Camera"), wxT("Data"), NULL};
+	//const long mat4SemanticClassInd[] = {ProgramValue::CAMERA, ProgramValue::DATA};
+
+	//const wxChar* intSemanticClass[] = {wxT("Light"), wxT("Data"), NULL};
+	//const long intSemanticClassInd[] = {ProgramValue::TEXTURE, ProgramValue::LIGHT, ProgramValue::DATA};
+
+	//const wxChar* vec4ColorComp[] = {wxT("AMBIENT"),wxT("SPECULAR"),wxT("EMISSION"),wxT("DIFFUSE"), NULL};
+	//const long vec4ColorCompInd[] = {ColorMaterial::AMBIENT,
+	//							  ColorMaterial::SPECULAR,
+	//							  ColorMaterial::EMISSION,
+	//							  ColorMaterial::DIFFUSE};
+
+	//const wxChar* floatColorComp[] = {wxT("SHININESS"), NULL};
+	//const long floatColorCompInd[] = {ColorMaterial::SHININESS};
+
+	//const wxChar* mat4MatrixComp[] = {wxT("PROJECTION"),
+	//								wxT("MODEL"),
+	//								wxT("VIEW"),
+	//								wxT("TEXTURE"),
+	//								wxT("VIEW_MODEL"),
+	//								wxT("PROJECTION_VIEW_MODEL"),
+	//								wxT("PROJECTION_VIEW"),
+	//								wxT("TS05_PVM"), NULL};
+
+	//const long mat4MatrixCompInd[] = {IRenderer::PROJECTION,
+	//			IRenderer::MODEL,
+	//			IRenderer::VIEW,
+	//			IRenderer::TEXTURE,
+	//			IRenderer::VIEW_MODEL,
+	//			IRenderer::PROJECTION_VIEW_MODEL,
+	//			IRenderer::PROJECTION_VIEW,
+	//			IRenderer::TS05_PVM};
+
+	//const wxChar* mat3MatrixComp[] = {wxT("NORMAL"), NULL};
+	//const long mat3MatrixCompInd[] = {IRenderer::NORMAL};
+
+	//pid = pgShaderUniforms->Append(new wxPGProperty(wxString((u.getName().c_str())), wxPG_LABEL));
+	//if (u.getLoc() == -1)
+	//	pgShaderUniforms->DisableProperty(pid);
+	//else
+	//	pgShaderUniforms->LimitPropertyEditing(pid);
+	//pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Data Type"), wxPG_LABEL, wxString(Enums::DataTypeToString[u.getValueType()].c_str())));
+	//pgShaderUniforms->DisableProperty(pid2);
+
+	//Enums::DataType vt = u.getValueType();
+	////	pid2 = pgShaderUniforms->AppendIn(pid,new wxStringProperty(wxT("Semantic Class"),wxPG_LABEL,wxString(ProgramValue::getSemanticTypeString(u.getSemanticType()).c_str())));	
+	//pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Type"), wxPG_LABEL, wxString(u.getType().c_str())));
+	//pgShaderUniforms->DisableProperty(pid2);
+
+	//pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Context"), wxPG_LABEL, wxString(u.getContext().c_str())));
+	//pgShaderUniforms->DisableProperty(pid2);
+
+	//pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Component"), wxPG_LABEL, wxString(u.getValueOf().c_str())));
+	//pgShaderUniforms->DisableProperty(pid2);
+
+	//std::string s = u.getType();
+	//if ((s == "TEXTURE" || s == "IMAGE_TEXTURE" || s == "MATERIAL_BUFFER" || s == "TEXTURE_SAMPLER" || s == "MATERIAL_TEXTURES") ||
+	//	(s == "LIGHT" && u.getContext() == "CURRENT")) {
+	//	pid2 = pgShaderUniforms->AppendIn(pid, new wxIntProperty(wxT("id"), wxPG_LABEL, u.getId()));
+	//	pgShaderUniforms->DisableProperty(pid2);
+	//}
+
+	//	int *i;
+	//	int auxI[4] = {0,0,0,0};
+	//	float *f;
+	//	float auxF[16] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,
+	//					  0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+	//
+	//	if (u.getContext() != "CURRENT") {
+	//		i = (int *)u.getValues();
+	//		f = (float *)u.getValues();
+	//	}
+	//	else {
+	//					
+	//
+	//		if (u.getType() == "MATRIX" && u.getValueType() == Enums::MAT4) {
+	//			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, mat4MatrixComp, mat4MatrixCompInd,u.getSemanticValueOf()));
+	//		}
+	//		else if (u.getType() == "MATRIX" && u.getValueType() == Enums::MAT3) {
+	//			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, mat3MatrixComp, mat3MatrixCompInd,u.getSemanticValueOf()));
+	//		}
+	//		else if (u.getType() == "COLOR" && u.getValueType() == Enums::VEC4){
+	//			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, vec4ColorComp, vec4ColorCompInd, u.getSemanticValueOf()));
+	//		}
+	//		else if (u.getType() == "COLOR" && u.getValueType() == Enums::FLOAT){
+	//			pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("Semantics"),wxPG_LABEL, floatColorComp, floatColorCompInd, u.getSemanticValueOf()));	
+	//		}
+	//
+	//		i = auxI;
+	//		f = auxF;
+	//	}
+	//
+	////	if (ProgramValue::CAMERA == u.getSemanticType()) {
+	//	if (u.getType() == "CAMERA") {
+	//
+	//			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Camera"),wxPG_LABEL,m_pgCamList));
+	//			pgShaderUniforms->SetPropertyValueString(pid2,wxString(u.getContext().c_str()));
+	//
+	//			switch(u.getValueType()) {
+	//				case Enums::FLOAT:
+	//					pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,floatCamComp,floatCamCompInd,u.getSemanticValueOf()));
+	//					break;
+	//				case Enums::VEC4:
+	//					pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,vec4CamComp,vec4CamCompInd,u.getSemanticValueOf()));
+	//					break;
+	//				case Enums::MAT4:
+	//					pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,mat4CamComp,mat4CamCompInd,u.getSemanticValueOf()));
+	//					break;
+	//			}
+	//	}
+	//	else if (u.getType() == "LIGHT" || (u.getType() == "LIGHT" && "CURRENT" == u.getContext())) {
+	//
+	//		if (u.getType() == "LIGHT") {
+	//			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Light"),wxPG_LABEL,m_pgLightList));
+	//			pgShaderUniforms->SetPropertyValueString(pid2,wxString(u.getContext().c_str()));
+	//		}
+	//		else {
+	//			pid2 = pgShaderUniforms->AppendIn(pid,new wxIntProperty(wxT("ID"),wxPG_LABEL, u.getId()));
+	//		}
+	//		
+	//		switch(u.getValueType()) {
+	//			
+	//			case Enums::VEC4:
+	//				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,vec4LightComp,vec4LightCompInd,u.getSemanticValueOf()));
+	//				break;
+	//
+	//			case Enums::FLOAT:
+	//				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,floatLightComp,floatLightCompInd,u.getSemanticValueOf()));
+	//				break;
+	//
+	//			case Enums::BOOL:
+	//				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,boolLightComp,boolLightCompInd,u.getSemanticValueOf()));
+	//				break;
+	//
+	//			//case Enums::ENUM:
+	//			//	pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,enumLightComp,enumLightCompInd,u.getSemanticValueOf()));
+	//			//	break;
+	//		}
+	//	}
+	//	else if (u.getType() == "TEXTURE" || (u.getType() == "TEXTURE" && "CURRENT" == u.getContext())) {
+	//
+	//		if (u.getType() == "TEXTURE") {
+	//			pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("ITexture"),wxPG_LABEL,textureLabels/*m_pgTextureList*/));
+	//			pgShaderUniforms->SetPropertyValueString(pid2,wxString(u.getContext().c_str()));
+	//		}
+	//					
+	//		switch (u.getValueType()) {
+	//
+	//			case Enums::SAMPLER:
+	//				pid2 = pgShaderUniforms->AppendIn(pid,new wxStringProperty(wxT("Semantics"),wxPG_LABEL,wxT("UNIT")));
+	//				pgShaderUniforms->DisableProperty(pid2);
+	//				pid2 = pgShaderUniforms->AppendIn(pid, new wxEnumProperty(wxT("ivalue"), wxPG_LABEL, m_pgTextUnitsList));
+	//				pgShaderUniforms->SetPropertyValue(pid2, u.getId());
+	//				break;
+	//			case Enums::INT:
+	//				pid2 = pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("Semantics"),wxPG_LABEL,intTextureComp,intTextureCompInd,u.getSemanticValueOf()));
+	//				break;
+	//		}
+	//	}
+
+	//else if (ProgramValue::DATA == u.getSemanticType()) {
+	//		switch(u.getSemanticValueOf()) {
+	//
+	//			case ProgramValue::USERDATA: {
+	//				
+	//				switch(u.getValueType()) {
+	//					
+	//					case Enums::FLOAT:
+	//						pgShaderUniforms->AppendIn(pid,new wxFloatProperty(wxT("fvalue"),wxPG_LABEL,f[0]));
+	//						if (!edit)
+	//							pgShaderUniforms->DisableProperty(pid2);
+	//						break;
+	//					case Enums::VEC2:
+	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("fvalues"),wxPG_LABEL));
+	//						pgShaderUniforms->LimitPropertyEditing(pid2);
+	//						if (!edit)
+	//							pgShaderUniforms->DisableProperty(pid2);
+	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[0]"),wxPG_LABEL,f[0]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[1]"),wxPG_LABEL,f[1]));
+	//						break;
+	//					case Enums::VEC3:
+	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("fvalues"),wxPG_LABEL));
+	//						pgShaderUniforms->LimitPropertyEditing(pid2);
+	//						if (!edit)
+	//							pgShaderUniforms->DisableProperty(pid2);
+	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[0]"),wxPG_LABEL,f[0]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[1]"),wxPG_LABEL,f[1]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("v[2]"),wxPG_LABEL,f[2]));
+	//						break;
+	//					case Enums::VEC4:
+	//						auxSetVec4(pid,pid2,edit,f);
+	//						break;
+
+	//					case Enums::INT: 
+	//					case Enums::BOOL:
+	//						pgShaderUniforms->AppendIn(pid,new wxIntProperty(wxT("ivalue"),wxPG_LABEL,i[0]));
+	//						break;
+	//					case Enums::IVEC2:
+	//					case Enums::BVEC2:
+	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("ivalues"),wxPG_LABEL));
+	//						pgShaderUniforms->LimitPropertyEditing(pid2);
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[0]"),wxPG_LABEL,i[0]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[1]"),wxPG_LABEL,i[1]));
+	//						break;
+	//					case Enums::IVEC3:
+	//					case Enums::BVEC3:
+	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("ivalues"),wxPG_LABEL));
+	//						pgShaderUniforms->LimitPropertyEditing(pid2);
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[0]"),wxPG_LABEL,i[0]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[1]"),wxPG_LABEL,i[1]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[2]"),wxPG_LABEL,i[2]));
+	//						break;
+	//					case Enums::IVEC4:
+	//					case Enums::BVEC4:
+	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("ivalues"),wxPG_LABEL));
+	//						pgShaderUniforms->LimitPropertyEditing(pid2);
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[0]"),wxPG_LABEL,i[0]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[1]"),wxPG_LABEL,i[1]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[2]"),wxPG_LABEL,i[2]));
+	//						pgShaderUniforms->AppendIn(pid2,new wxIntProperty(wxT("v[3]"),wxPG_LABEL,i[3]));
+	//						break;
+
+	//						case Enums::SAMPLER:
+	//						pgShaderUniforms->AppendIn(pid,new wxEnumProperty(wxT("texture unit"),wxPG_LABEL,m_pgTextUnitsList,i[0]));
+	//						break;
+
+	//					case Enums::MAT4:
+	//						auxSetMat4(pid,pid2,edit,f);
+	//						break;
+	//					case Enums::MAT3:
+	//						auxSetMat3(pid,pid2,edit,f);
+	//						break;
+	//					case Enums::MAT2:
+	//						pid2 = pgShaderUniforms->AppendIn(pid,new wxPGProperty(wxT("fvalues"),wxPG_LABEL));
+	//						pgShaderUniforms->LimitPropertyEditing(pid2);
+	//						if (!edit)
+	//							pgShaderUniforms->DisableProperty(pid2);
+	//						pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Row 1"), wxPG_LABEL, wxT("<composed>")));
+	//							pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("m11"),wxPG_LABEL,f[0]));
+	//							pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("m12"),wxPG_LABEL,f[1]));
+	//							pgShaderUniforms->LimitPropertyEditing(pid2);
+	//							pgShaderUniforms->Collapse(pid2);
+	//						pid2 = pgShaderUniforms->AppendIn(pid, new wxStringProperty(wxT("Row 2"), wxPG_LABEL, wxT("<composed>")));
+	//							pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("m21"),wxPG_LABEL,f[4]));
+	//							pgShaderUniforms->AppendIn(pid2,new wxFloatProperty(wxT("m22"),wxPG_LABEL,f[5]));
+	//							pgShaderUniforms->LimitPropertyEditing(pid2);
+	//							pgShaderUniforms->Collapse(pid2);
+	//						break;
+	//				}
+	//			}
+	//		}	
+	//}
+//}

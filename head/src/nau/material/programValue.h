@@ -16,6 +16,7 @@ namespace nau {
 			std::string m_TypeString;
 			//SEMANTIC_TYPE m_Type;
 			int m_ValueOf;
+			std::string m_ValueOfString;
 			nau::Enums::DataType m_ValueType;
 			std::string m_Context, m_Name;
 			std::string m_Param;
@@ -35,9 +36,10 @@ namespace nau {
 
 			void clone(ProgramValue &pv);
 
-			std::string getName();
-			std::string getType();
-			std::string getContext();
+			const std::string &getName();
+			const std::string &getType();
+			const std::string &getContext();
+			const std::string &getValueOf();
 			void setContext(std::string s);
 
 			int getCardinality ();

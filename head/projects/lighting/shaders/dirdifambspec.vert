@@ -10,7 +10,7 @@ uniform	vec4 ambient;
 uniform	vec4 specular;
 uniform	float shininess;
 
-uniform	vec4 l_dir;	   // camera space
+uniform	vec4 l_dir;	   // global space
 
 in vec4 position;	// local space
 in vec3 normal;		// local space

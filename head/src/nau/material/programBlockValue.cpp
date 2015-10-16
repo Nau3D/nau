@@ -33,6 +33,7 @@ ProgramBlockValue::ProgramBlockValue (std::string name, std::string block, std::
 	nau::Enums::DataType dt;
 	m_InSpecML = inSpecML;
 	m_TypeString = type;
+	m_ValueOfString = valueof;
 
 	m_Name = name;
 	m_Block = block;
@@ -91,7 +92,7 @@ ProgramBlockValue::clone(ProgramBlockValue &pv)
 }
 
 
-std::string 
+const std::string &
 ProgramBlockValue::getType() {
 
 	return m_TypeString;
@@ -111,10 +112,16 @@ ProgramBlockValue::setId(int id) {
 }
 
 
-std::string 
+const std::string &
 ProgramBlockValue::getContext() {
 
 	return(m_Context);
+}
+
+const std::string &
+ProgramBlockValue::getValueOf() {
+
+	return m_ValueOfString;
 }
 
 
@@ -132,7 +139,7 @@ ProgramBlockValue::setContext(std::string s) {
 }
 
 
-std::string 
+const std::string &
 ProgramBlockValue::getName() {
 
 	return(m_Name);

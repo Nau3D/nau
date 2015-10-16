@@ -15,8 +15,10 @@ ProgramValue::ProgramValue () {
 }
 
 
-ProgramValue::ProgramValue (std::string name, std::string type,std::string context,std::string valueof, int id, bool inSpecML) : m_Cardinality (0)
-{
+ProgramValue::ProgramValue (std::string name, std::string type,
+		std::string context,std::string valueof, int id, bool inSpecML) : 
+		m_Cardinality (0) {
+
 	int attr;
 	nau::Enums::DataType dt;
 	m_Values = NULL;
@@ -26,6 +28,7 @@ ProgramValue::ProgramValue (std::string name, std::string type,std::string conte
 
 	m_Name = name;
 	m_Context = context;
+	m_ValueOfString = valueof;
 	m_Id = id;
 	std::string what;
 
@@ -70,6 +73,7 @@ ProgramValue::clone(ProgramValue &pv)
 	m_Name = pv.m_Name;
 	m_Id = pv.m_Id;
 	m_ValueOf = pv.m_ValueOf;
+	m_ValueOfString = pv.m_ValueOfString;
 	m_ValueType = pv.m_ValueType;
 	m_Context = pv.m_Context;
 	m_Cardinality = pv.m_Cardinality;
@@ -79,11 +83,12 @@ ProgramValue::clone(ProgramValue &pv)
 }
 
 
-std::string 
+const std::string &
 ProgramValue::getType() {
 
 	return m_TypeString;
 }
+
 
 int 
 ProgramValue::getId() {
@@ -99,10 +104,17 @@ ProgramValue::setId(int id) {
 }
 
 
-std::string 
+const std::string &
 ProgramValue::getContext() {
 
 	return(m_Context);
+}
+
+
+const std::string &
+ProgramValue::getValueOf() {
+
+	return m_ValueOfString;
 }
 
 
@@ -120,7 +132,7 @@ ProgramValue::setContext(std::string s) {
 }
 
 
-std::string 
+const std::string &
 ProgramValue::getName() {
 
 	return(m_Name);
@@ -151,7 +163,6 @@ ProgramValue::getValues (void) {
 	}
 	// otherwise m_Values will have the default value
 	return m_Values;
-
 }
 
 

@@ -6,7 +6,7 @@
 				<file name="../../models/Teapot.3ds"/>
 			</scene>
 			<scene name="MySceneC" param="UNITIZE">
-				<file name="../../models/cow.obj"/>
+				<file name="../../models/geom.obj"/>
 			</scene>
 		</scenes>
 		

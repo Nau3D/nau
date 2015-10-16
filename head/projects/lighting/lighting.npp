@@ -25,11 +25,11 @@
     </Project>
     <Project name="diffuseAmbientPerPixel">
         <File name="diffuseAmbientPerPixel.xml" />
+        <File name="lighting.mlib" />
         <Folder name="shaders">
             <File name="shaders\dirdifambpix.frag" />
             <File name="shaders\dirdifambpix.vert" />
         </Folder>
-        <File name="lighting.mlib" />
     </Project>
     <Project name="diffAmbSpecPerPixel">
         <File name="diffuseAmbientSpecularPerPixel.xml" />
@@ -48,8 +48,8 @@
         </Folder>
     </Project>
     <Project name="soptLight">
-        <File name="lighting.mlib" />
         <File name="spotLight.xml" />
+        <File name="lighting.mlib" />
         <Folder name="shaders">
             <File name="shaders\spotlight.frag" />
             <File name="shaders\spotlight.vert" />

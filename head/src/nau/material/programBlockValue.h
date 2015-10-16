@@ -14,6 +14,7 @@ namespace nau {
  
 		private:
 			std::string m_TypeString;
+			std::string m_ValueOfString;
 			int m_ValueOf;
 			int m_Id;
 			nau::Enums::DataType m_ValueType;
@@ -32,9 +33,10 @@ namespace nau {
 
 			void clone(ProgramBlockValue &pv);
 
-			std::string getName();
-			std::string getType();
-			std::string getContext();
+			const std::string &getName();
+			const std::string &getType();
+			const std::string &getContext();
+			const std::string &getValueOf();
 			void setContext(std::string s);
 
 			int getCardinality ();

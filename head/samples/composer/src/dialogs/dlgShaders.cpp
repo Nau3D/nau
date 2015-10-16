@@ -1,6 +1,7 @@
 #include "dialogs/dlgShaders.h"
 
 #include <nau/event/eventFactory.h>
+#include <nau/material/uniformBlockManager.h>
 #include <nau/render/iAPISupport.h>
 
 BEGIN_EVENT_TABLE(DlgShaders, wxDialog)
@@ -156,7 +157,7 @@ void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 	wxBoxSizer *sizerL = new wxBoxSizer(wxHORIZONTAL);
 
 	m_Log = new wxListBox(this,DLG_SHADER_LOG,wxDefaultPosition,wxDefaultSize,0,NULL,0);
-	m_Log->SetMinSize( wxSize( -1,25 ) );
+	//m_Log->SetMinSize( wxSize( -1,25 ) );
 
 	sizerL->Add(m_Log,1, wxALL|wxEXPAND, 5);
 	siz->Add(sizerL,1,wxALL|wxEXPAND,5);
@@ -327,14 +328,33 @@ DlgShaders::updateShaderAux() {
 		pg->DeleteProperty(wxT("Uniform Variables"));
 
 	if (p->isLinked()) {
+		std::vector<std::string> blockNames, uniformNames;
+		p->getUniformBlockNames(&blockNames);
 		int uni = p->getNumberOfUniforms();
-		if (uni){
+		if (uni + blockNames.size() != 0){
 			pg->Append( new wxPropertyCategory(wxT("Uniform Variables"),wxPG_LABEL));
 		}
 		//p->updateUniforms();
+
+		wxPGProperty *pid = new wxStringProperty(wxT("Default Block"), wxPG_LABEL);
+		pg->Append(pid);
 		for (int i = 0; i < uni; i++) {
 			u = p->getUniform(i);
-			addUniform(wxString(u.getName().c_str()),wxString(u.getStringSimpleType().c_str()));
+			addUniform(pid, wxString(u.getName().c_str()),
+				wxString(u.getStringSimpleType().c_str()));
+		}
+
+		IUniformBlock *ub;
+		for (auto b : blockNames) {
+			pid = new wxStringProperty(wxString(b.c_str()), wxPG_LABEL);
+			pg->Append(pid);
+			ub = UNIFORMBLOCKMANAGER->getBlock(b);
+			ub->getUniformNames(&uniformNames);
+			for (auto n : uniformNames) {
+				addUniform(pid, wxString(n.c_str()), 
+					wxString(Enums::DataTypeToString[ub->getUniformType(n)].c_str()));
+			}
+			uniformNames.clear();
 		}
 	}
 	pg->Refresh();
@@ -344,11 +364,11 @@ DlgShaders::updateShaderAux() {
 
 
 void 
-DlgShaders::addUniform(wxString name, wxString type) {
+DlgShaders::addUniform(wxPGProperty *pid, wxString name, wxString type) {
 
-	wxPGProperty *pid;
-	pid = pg->Append(new wxStringProperty(name,wxPG_LABEL,type));
-	pg->DisableProperty(pid);
+	wxPGProperty *pid2;
+	pid2 = pg->AppendIn(pid, new wxStringProperty(name,wxPG_LABEL,type));
+	pg->DisableProperty(pid2);
 }
 
 

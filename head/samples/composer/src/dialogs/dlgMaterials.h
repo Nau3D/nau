@@ -128,8 +128,8 @@ private:
 	void OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e);
 //	void OnProcessShowGlobalUniforms(wxCommandEvent& event);
 	void updateShaderAux(Material *m);
-	void addUniform(ProgramValue &u,int showGlobal);
-	void addBlockUniform(ProgramBlockValue &u,int showGlobal);
+	void addUniform(wxPGProperty *pid, ProgramValue &u,int showGlobal);
+	void addBlockUniform(wxPGProperty *pid, ProgramBlockValue &u,int showGlobal);
 	void updateUniforms(Material *m);
 
 	void auxSetMat4(wxPGProperty  *pid, wxPGProperty  *pid2, int edit, float *f);

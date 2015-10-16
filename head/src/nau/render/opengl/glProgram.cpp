@@ -439,6 +439,16 @@ GLProgram::getUniform(const std::string &name) {
 }
 
 
+void 
+GLProgram::getUniformBlockNames(std::vector<std::string>* s) {
+
+	for (auto b : m_Blocks) {
+
+		s->push_back(b.first);
+	}
+}
+
+
 const IUniform&
 GLProgram::getIUniform(int i) {
 

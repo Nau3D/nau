@@ -87,6 +87,7 @@ namespace nau
 			int getNumberOfUniforms (void);
 			int getNumberOfUserUniforms (void);
 
+			void getUniformBlockNames(std::vector<std::string> *s);
 			const IUniform &getIUniform(int i);
 			const GLUniform  &getUniform (int i);
 			const GLUniform& getUniform (const std::string &name);
@@ -104,7 +105,7 @@ namespace nau
 			void setValueOfUniform (int i);
 			void showGlobalUniforms (void);
 
-			void getAttribsLoc();
+			//void getAttribsLoc();
 		};
 	};
 };

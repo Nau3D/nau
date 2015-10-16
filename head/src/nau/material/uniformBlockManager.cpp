@@ -14,13 +14,17 @@ UniformBlockManager::GetInstance() {
 	return Instance;
 }
 
-
-UniformBlockManager::UniformBlockManager() {
+UniformBlockManager::~UniformBlockManager() {
 
 	while (!m_Blocks.empty()){
 		delete((*m_Blocks.begin()).second);
 		m_Blocks.erase(m_Blocks.begin());
 	}
+}
+
+
+UniformBlockManager::UniformBlockManager() {
+
 }
 
 

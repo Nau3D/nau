@@ -596,18 +596,12 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 		return (AttributeValues *)renderer->getViewport();
 	}
 	// If we get here then we are trying to fetch something that does not exist
-	NAU_THROW("Getting an invalid object\ncontext: %s", 
-			context.c_str());
+	NAU_THROW("Getting an invalid object\ntype: %s", context.c_str());
 }
 
 
 AttributeValues *
 Nau::getObjectAttributes(std::string type, std::string context, int number) {
-
-	//// From Nau itself
-	//if (type == "NAU") {
-	//	return(AttributeValues *)this;
-	//}
 
 	IAPISupport *sup = IAPISupport::GetInstance();
 	// From Render Manager

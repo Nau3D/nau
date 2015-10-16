@@ -7,7 +7,7 @@ uniform	mat3 m_normal;
 uniform	vec4 diffuse;
 uniform	vec4 ambient;
 
-uniform	vec4 l_dir;	   // camera space
+uniform	vec4 l_dir;	   // global space
 
 in vec4 position;	// local space
 in vec3 normal;		// local space

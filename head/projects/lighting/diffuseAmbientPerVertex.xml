@@ -3,7 +3,7 @@
 	<assets><!-- width="512" height="512" -->
 		<scenes>
 			<scene name="MyScene" param="UNITIZE ">
-				<file name="../../models/cow.obj"/>
+				<file name="../../models/geom.obj"/>
 			</scene>
 		</scenes>
 		

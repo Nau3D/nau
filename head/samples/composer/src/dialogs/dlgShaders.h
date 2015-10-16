@@ -82,7 +82,7 @@ protected:
 	void OnProcessLinkShaders(wxCommandEvent& event);
 	void updateShaderAux();
 	void updateLogAux(std::string aux);
-	void addUniform(wxString name, wxString type);
+	void addUniform(wxPGProperty *pid, wxString name, wxString type);
 	wxString getUniformType(int type);
 //	void updateUniforms();
 

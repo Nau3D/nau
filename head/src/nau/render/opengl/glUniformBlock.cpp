@@ -192,6 +192,15 @@ GLUniformBlock::useBlock() {
 }
 
 
+void 
+GLUniformBlock::getUniformNames(std::vector<std::string>* s) {
+
+	for (auto b : m_Uniforms) {
+
+		s->push_back(b.first);
+	}
+}
+
 unsigned int
 GLUniformBlock::getSize() {
 

@@ -61,6 +61,7 @@ namespace nau
 			void sendBlockData();
 			void useBlock();
 
+			void getUniformNames(std::vector<std::string> *s);
 			unsigned int getSize();
 			bool hasUniform(std::string &name);
 			Enums::DataType getUniformType(std::string name);

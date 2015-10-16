@@ -36,6 +36,7 @@ namespace nau
 			virtual void setBlock(void *value) = 0;
 			virtual void sendBlockData() = 0;
 			virtual void useBlock() = 0;
+			virtual void getUniformNames(std::vector<std::string> *s) = 0;
 
 			virtual unsigned int getSize() = 0;
 			virtual bool hasUniform(std::string &name) = 0;
