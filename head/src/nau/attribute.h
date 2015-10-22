@@ -28,14 +28,14 @@ namespace nau {
 		typedef enum {
 			NONE,
 			NORMALIZED,
-			COLOUR
+			COLOR
 		} Semantics;
 
 
 		Attribute();
 		Attribute(int id, std::string name, Enums::DataType type, 
 			bool readOnlyFlag = false, void *defaultV = NULL,
-			void *min=NULL, void *max = NULL, IAPISupport::APIFeatureSupport requires = IAPISupport::OK);
+			void *min=NULL, void *max = NULL, IAPISupport::APIFeatureSupport requires = IAPISupport::OK, Semantics sem=NONE);
 		
 		~Attribute();
 
@@ -51,6 +51,7 @@ namespace nau {
 		void *getMax();
 		void *getMin();
 		bool getReadOnlyFlag();
+		Semantics getSemantics();
 		int getOptionValue(std::string &s);
 		std::string &getOptionString(int v);
 		const std::vector<std::string> &getOptionStringList();
@@ -79,6 +80,7 @@ namespace nau {
 		bool m_ListDefined;
 		bool m_RangeDefined;
 		void *m_Min, *m_Max;
+		Semantics m_Semantics;
 		IAPISupport::APIFeatureSupport m_Requires;
 		std::vector<int> m_ListValues;
 		std::vector<IAPISupport::APIFeatureSupport> m_ListRequire;

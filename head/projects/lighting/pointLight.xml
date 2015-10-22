@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<project name="Point Light" >
+	<assets><!-- width="512" height="512" -->
+		<scenes>
+			<scene name="MySceneC" param="UNITIZE">
+				<file name="../../models/geom.obj"/>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+				<FOV value=60/>
+				<NEAR value= 0.001/>
+				<FAR value= 10/>
+				<POSITION x=1.838063 y=0.680145 z=-0.313062 />
+				<VIEW x=-0.866216 y=-0.488177 z=0.106548 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<POSITION x=0 y=0.5 z=0 />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="lighting.mlib" />
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="lighting" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="MySceneC" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="pointLight" fromLibrary="Lighting" />
+					</map>
+				</injectionMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

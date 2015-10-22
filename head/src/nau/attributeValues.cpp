@@ -11,7 +11,16 @@ int AttributeValues::NextAttrib = 0;
 int 
 AttributeValues::getPrope(EnumProperty prop) {
 
-	return m_EnumProps[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_EnumProps[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_EnumProps.count(prop))
+		return m_EnumProps[prop];
+	else {
+		m_EnumProps[prop] = *(int *)m_Attribs->getDefault(prop, Enums::ENUM);
+		return m_EnumProps[prop];
+	}
 }
 
 
@@ -46,7 +55,16 @@ AttributeValues::setPrope(EnumProperty prop, int value) {
 int 
 AttributeValues::getPropi(IntProperty prop) {
 
-	return m_IntProps[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_IntProps[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_IntProps.count(prop))
+		return m_IntProps[prop];
+	else {
+		m_IntProps[prop] = *(int *)m_Attribs->getDefault(prop, Enums::INT);
+		return m_IntProps[prop];
+	}
 }
 
 
@@ -88,7 +106,16 @@ AttributeValues::setPropi(IntProperty prop, int value) {
 ivec2 &
 AttributeValues::getPropi2(Int2Property prop) {
 
-	return m_Int2Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_Int2Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_Int2Props.count(prop))
+		return m_Int2Props[prop];
+	else {
+		m_Int2Props[prop] = *(ivec2 *)m_Attribs->getDefault(prop, Enums::IVEC2);
+		return m_Int2Props[prop];
+	}
 }
 
 
@@ -130,7 +157,16 @@ AttributeValues::setPropi2(Int2Property prop, ivec2 &value) {
 ivec3 &
 AttributeValues::getPropi3(Int3Property prop) {
 
-	return m_Int3Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_Int3Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_Int3Props.count(prop))
+		return m_Int3Props[prop];
+	else {
+		m_Int3Props[prop] = *(ivec3 *)m_Attribs->getDefault(prop, Enums::IVEC3);
+		return m_Int3Props[prop];
+	}
 }
 
 
@@ -171,7 +207,16 @@ AttributeValues::setPropi3(Int3Property prop, ivec3 &value) {
 unsigned int 
 AttributeValues::getPropui(UIntProperty prop) {
 
-	return m_UIntProps[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_UIntProps[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_UIntProps.count(prop))
+		return m_UIntProps[prop];
+	else {
+		m_UIntProps[prop] = *(unsigned int *)m_Attribs->getDefault(prop, Enums::UINT);
+		return m_UIntProps[prop];
+	}
 }
 
 
@@ -213,7 +258,16 @@ AttributeValues::setPropui(UIntProperty prop, int unsigned value) {
 uivec2 &
 AttributeValues::getPropui2(UInt2Property prop) {
 
-	return m_UInt2Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_UInt2Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_UInt2Props.count(prop))
+		return m_UInt2Props[prop];
+	else {
+		m_UInt2Props[prop] = *(uivec2 *)m_Attribs->getDefault(prop, Enums::UIVEC2);
+		return m_UInt2Props[prop];
+	}
 }
 
 
@@ -255,7 +309,16 @@ AttributeValues::setPropui2(UInt2Property prop, uivec2 &value) {
 uivec3 &
 AttributeValues::getPropui3(UInt3Property prop) {
 
-	return m_UInt3Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_UInt3Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_UInt3Props.count(prop))
+		return m_UInt3Props[prop];
+	else {
+		m_UInt3Props[prop] = *(uivec3 *)m_Attribs->getDefault(prop, Enums::UIVEC3);
+		return m_UInt3Props[prop];
+	}
 }
 
 
@@ -297,7 +360,16 @@ AttributeValues::setPropui3(UInt3Property prop, uivec3 &value) {
 bool 
 AttributeValues::getPropb(BoolProperty prop) {
 
-	return m_BoolProps[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_BoolProps[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_BoolProps.count(prop))
+		return m_BoolProps[prop];
+	else {
+		m_BoolProps[prop] = *(bool *)m_Attribs->getDefault(prop, Enums::BOOL);
+		return m_BoolProps[prop];
+	}
 }
 
 
@@ -329,7 +401,16 @@ AttributeValues::setPropb(BoolProperty prop, bool value) {
 bvec4 &
 AttributeValues::getPropb4(Bool4Property prop) {
 
-	return m_Bool4Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_Bool4Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_Bool4Props.count(prop))
+		return m_Bool4Props[prop];
+	else {
+		m_Bool4Props[prop] = *(bvec4 *)m_Attribs->getDefault(prop, Enums::BVEC4);
+		return m_Bool4Props[prop];
+	}
 }
 
 
@@ -361,6 +442,16 @@ AttributeValues::setPropb4(Bool4Property prop, bvec4 &value) {
 float 
 AttributeValues::getPropf(FloatProperty prop) {
 
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_FloatProps[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_FloatProps.count(prop))
+		return m_FloatProps[prop];
+	else {
+		m_FloatProps[prop] = *(float *)m_Attribs->getDefault(prop, Enums::FLOAT);
+		return m_FloatProps[prop];
+	}
 	return m_FloatProps[prop];
 }
 
@@ -402,7 +493,16 @@ AttributeValues::setPropf(FloatProperty prop, float value) {
 vec4 &
 AttributeValues::getPropf4(Float4Property prop) {
 
-	return m_Float4Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_Float4Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_Float4Props.count(prop))
+		return m_Float4Props[prop];
+	else {
+		m_Float4Props[prop] = *(vec4 *)m_Attribs->getDefault(prop, Enums::VEC4);
+		return m_Float4Props[prop];
+	}
 }
 
 
@@ -452,7 +552,16 @@ AttributeValues::setPropf4(Float4Property prop, float x, float y, float z, float
 vec3 &
 AttributeValues::getPropf3(Float3Property prop) {
 
-	return m_Float3Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_Float3Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_Float3Props.count(prop))
+		return m_Float3Props[prop];
+	else {
+		m_Float3Props[prop] = *(vec3 *)m_Attribs->getDefault(prop, Enums::VEC3);
+		return m_Float3Props[prop];
+	}
 }
 
 
@@ -501,7 +610,16 @@ AttributeValues::setPropf3(Float3Property prop, float x, float y, float z) {
 vec2 &
 AttributeValues::getPropf2(Float2Property prop) {
 
-	return m_Float2Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_Float2Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_Float2Props.count(prop))
+		return m_Float2Props[prop];
+	else {
+		m_Float2Props[prop] = *(vec2 *)m_Attribs->getDefault(prop, Enums::VEC2);
+		return m_Float2Props[prop];
+	}
 }
 
 
@@ -542,7 +660,16 @@ AttributeValues::setPropf2(Float2Property prop, vec2 &value) {
 const mat4 &
 AttributeValues::getPropm4(Mat4Property prop) {
 
-	return m_Mat4Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_Mat4Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_Mat4Props.count(prop))
+		return m_Mat4Props[prop];
+	else {
+		m_Mat4Props[prop] = *(mat4 *)m_Attribs->getDefault(prop, Enums::MAT4);
+		return m_Mat4Props[prop];
+	}
 }
 
 
@@ -574,8 +701,18 @@ AttributeValues::setPropm4(Mat4Property prop, mat4 &value) {
 const mat3 &
 AttributeValues::getPropm3(Mat3Property prop) {
 
-	return m_Mat3Props[prop];
+	// if not a user attrib
+	if (prop < AttribSet::USER_ATTRIBS)
+		return m_Mat3Props[prop];
+	// if prop is a user attrib and has already been set
+	else if (m_Mat3Props.count(prop))
+		return m_Mat3Props[prop];
+	else {
+		m_Mat3Props[prop] = *(mat3 *)m_Attribs->getDefault(prop, Enums::MAT3);
+		return m_Mat3Props[prop];
+	}
 }
+
 
 
 bool 

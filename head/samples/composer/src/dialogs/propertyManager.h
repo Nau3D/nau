@@ -71,6 +71,7 @@ protected:
 
 	static void createVec4(wxPropertyGridManager *pg, Attribute &a);
 	static void updateVec4(wxPropertyGridManager *pg, std::string label, vec4 a);
+	static void updateVec4Color(wxPropertyGridManager *pg, std::string label, vec4 a);
 
 	static void createMat3(wxPropertyGridManager *pg, Attribute &a);
 	static void updateMat3(wxPropertyGridManager *pg, std::string label, mat3 a);

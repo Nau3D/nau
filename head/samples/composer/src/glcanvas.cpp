@@ -526,10 +526,8 @@ GLCanvas::OnMouseMove (wxMouseEvent& event) {
 	
 		vec4 camView = m_pCamera->getPropf4(Camera::VIEW_VEC);
 		vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
-
-		if (true == m_tracking) {
-			m_OldCamView.set(camView.x, camView.y, camView.z);
-		}
+		vec4 camRight = m_pCamera->getPropf4(Camera::NORMALIZED_RIGHT_VEC);
+		vec4 camUp = m_pCamera->getPropf4(Camera::NORMALIZED_UP_VEC);
 
 		newX = event.GetX();
 		newY = event.GetY();
@@ -539,19 +537,26 @@ GLCanvas::OnMouseMove (wxMouseEvent& event) {
 		m_Alpha = m_AlphaAux - (float)(newX - m_OldX) * m_ScaleFactor;
 		m_Beta = m_BetaAux + (float)(m_OldY - newY) * m_ScaleFactor;
 
-		nau::event_::CameraOrientation c(m_Alpha, m_Beta);
-		nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Orientation");
-		e->setData(&c);
-		EVENTMANAGER->notifyEvent("CAMERA_ORIENTATION", "MainCanvas", "", e);
-		delete e;
+		//nau::event_::CameraOrientation c(m_Alpha, m_Beta);
+		//nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Orientation");
+		//e->setData(&c);
+		//EVENTMANAGER->notifyEvent("CAMERA_ORIENTATION", "MainCanvas", "", e);
+		//delete e;
+		//vec4 camView;
 
-		camV.x = cos(m_Beta) * sin(m_Alpha);;
-		camV.y = sin(m_Beta);
-		camV.z = cos(m_Beta) * cos(m_Alpha);
+		if (m_Beta > M_PI * 0.48)
+			m_Beta = (float)M_PI * 0.48f;
+		else if (m_Beta < -M_PI * 0.48)
+			m_Beta =  -(float)M_PI * 0.48f;
+		camView.x = cos(m_Beta) * sin(m_Alpha);;
+		camView.y = sin(m_Beta);
+		camView.z = cos(m_Beta) * cos(m_Alpha);
+		camView.w = 0;
+//		vec4 up = camRight.cross(camView);
+		m_pCamera->setCamera(vec3(camPosition.x, camPosition.y, camPosition.z),
+							vec3(camView.x, camView.y, camView.z),
+							vec3(0,1,0));
 
-		if (!(true == m_tracking)) {
-			m_tracking = true;
-		}
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 
 		event.Skip ();
@@ -567,8 +572,37 @@ GLCanvas::OnMouseMove (wxMouseEvent& event) {
 		newX = event.GetX();
 		newY = event.GetY();
 
-		m_AlphaAux = newX - m_OldX;
-		m_BetaAux = m_OldY - newY;
+		float m_ScaleFactor = 1.0f / 100.0f;
+
+		m_Alpha = m_AlphaAux + (float)(newX - m_OldX) * m_ScaleFactor;
+		m_Beta = m_BetaAux - (float)(m_OldY - newY) * m_ScaleFactor;
+
+		//nau::event_::CameraOrientation c(m_Alpha, m_Beta);
+		//nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Orientation");
+		//e->setData(&c);
+		//EVENTMANAGER->notifyEvent("CAMERA_ORIENTATION", "MainCanvas", "", e);
+		//delete e;
+		//vec4 camView;
+
+		vec4 dir;
+		if (m_Beta > M_PI * 0.48)
+			m_Beta = (float)M_PI * 0.48f;
+		else if (m_Beta < -M_PI * 0.48)
+			m_Beta = -(float)M_PI * 0.48f;
+		dir.x = cos(m_Beta) * sin(m_Alpha);;
+		dir.y = sin(m_Beta);
+		dir.z = cos(m_Beta) * cos(m_Alpha);
+		dir.scale(-m_Radius);
+		vec4 camPos = m_Center;
+		camPos += dir;
+		//		vec4 up = camRight.cross(camView);
+		m_pCamera->setCamera(vec3(camPos.x, camPos.y, camPos.z),
+			vec3(m_Center.x - camPos.x, m_Center.y - camPos.y, m_Center.z - camPos.z),
+			vec3(0, 1, 0));
+
+		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
+
+		event.Skip();
 
 	}
 
@@ -609,7 +643,10 @@ GLCanvas::OnRightDown(wxMouseEvent &event) {
 		vec4 aux = camDir;
 		aux.scale(m_Radius);
 		m_Center = camPos;
-		m_Center += aux;
+		m_Center -= aux;
+
+		m_AlphaAux = m_pCamera->getPropf(Camera::ZX_ANGLE)- M_PI;
+		m_BetaAux = -m_pCamera->getPropf(Camera::ELEVATION_ANGLE);
 	}
 	event.Skip();
 }
@@ -623,8 +660,8 @@ GLCanvas::OnLeftDown (wxMouseEvent& event) {
 		m_OldX = event.GetX();
 		m_OldY = event.GetY();
 
-		m_Beta = m_pCamera->getPropf(Camera::ELEVATION_ANGLE);//getElevationAngle();
-		m_Alpha = m_pCamera->getPropf(Camera::ZX_ANGLE);//getZXAngle();
+		m_Beta = m_pCamera->getPropf(Camera::ELEVATION_ANGLE);
+		m_Alpha = m_pCamera->getPropf(Camera::ZX_ANGLE);
 
 
 		m_AlphaAux = m_Alpha;

@@ -400,7 +400,9 @@ Camera::setCamera (vec3 position, vec3 view, vec3 up) {
 //	m_Float4Props[NORMALIZED_VIEW_VEC].normalize();
 
 	vec2 vs = Spherical::toSpherical(view.x, view.y, view.z);
-
+	m_FloatProps[ELEVATION_ANGLE] = vs.y;
+	m_FloatProps[ZX_ANGLE] = vs.x;
+	m_FloatProps[ELEVATION_ANGLE] = Spherical::capBeta(m_FloatProps[ELEVATION_ANGLE]);
 	up.normalize();
 	m_Float4Props[UP_VEC].set(up.x, up.y, up.z, 0.0f);
 

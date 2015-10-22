@@ -26,6 +26,7 @@ namespace nau
 			static UniformBlockManager *GetInstance();
 			~UniformBlockManager();
 
+			void clear();
 			void addBlock(std::string &name, unsigned int size);
 			IUniformBlock *getBlock(std::string &name);
 			bool hasBlock(std::string &name);

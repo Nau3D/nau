@@ -1119,77 +1119,88 @@ void DlgMaterials::setupColorPanel(wxSizer *siz, wxWindow *parent) {
 
 	pgMaterial->AddPage(wxT("Colours"));
 
-	wxPGProperty *pid = pgMaterial->Append(new wxPGProperty(wxT("DIFFUSE"),wxPG_LABEL));
-	pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-					wxColour(255,255,255)));
-	pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
-	pgMaterial->Expand(pid);
+	//wxPGProperty *pid = pgMaterial->Append(new wxPGProperty(wxT("DIFFUSE"),wxPG_LABEL));
+	//pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
+	//				wxColour(255,255,255)));
+	//pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
+	//pgMaterial->Expand(pid);
 
-	pid = pgMaterial->Append(new wxPGProperty(wxT("AMBIENT"),wxPG_LABEL));
-	pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-					wxColour(255,255,255)));
-	pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
-	pgMaterial->Expand(pid);
+	//pid = pgMaterial->Append(new wxPGProperty(wxT("AMBIENT"),wxPG_LABEL));
+	//pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
+	//				wxColour(255,255,255)));
+	//pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
+	//pgMaterial->Expand(pid);
 
-	pid = pgMaterial->Append(new wxPGProperty(wxT("SPECULAR"),wxPG_LABEL));
-	pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-					wxColour(255,255,255)));
-	pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
-	pgMaterial->Expand(pid);
+	//pid = pgMaterial->Append(new wxPGProperty(wxT("SPECULAR"),wxPG_LABEL));
+	//pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
+	//				wxColour(255,255,255)));
+	//pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
+	//pgMaterial->Expand(pid);
 
-	pid = pgMaterial->Append(new wxPGProperty(wxT("EMISSION"),wxPG_LABEL));
-	pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-					wxColour(255,255,255)));
-	pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
-	pgMaterial->Expand(pid);
+	//pid = pgMaterial->Append(new wxPGProperty(wxT("EMISSION"),wxPG_LABEL));
+	//pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
+	//				wxColour(255,255,255)));
+	//pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
+	//pgMaterial->Expand(pid);
 
-	pgMaterial->Append(new wxFloatProperty(wxT("SHININESS"),wxPG_LABEL,0));
+	//pgMaterial->Append(new wxFloatProperty(wxT("SHININESS"),wxPG_LABEL,0));
+	//
+
+	std::vector<std::string> order = {"DIFFUSE", "AMBIENT", "EMISSION", "SPECULAR", "SHININESS" };
+	PropertyManager::createOrderedGrid(pgMaterial, ColorMaterial::Attribs, order);
+
 	pgMaterial->SetSplitterLeft(true);
 
 	siz->Add(pgMaterial,1,wxEXPAND);
-
 	updateColors(getModelMaterial()); // what is default material?
 }
 
 
 void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 
-	Material *mm;
-	wxColour col;
-	double f;
-	wxArrayInt a;
-	wxVariant variant;
+	ColorMaterial *cm;
+	//wxColour col;
+	//double f;
+	//wxArrayInt a;
+	//wxVariant variant;
+	wxString& name = e.GetPropertyName();
+	wxPGProperty *topProp = e.GetProperty()->GetParent();
+	const wxString& topName = e.GetProperty()->GetParent()->GetName();
+	if (topName != "<Root>")
+		name = topName;
 
-	mm = getModelMaterial();
+	cm = &getModelMaterial()->getColor();
+	PropertyManager::updateProp(pgMaterial, name.ToStdString(), ColorMaterial::Attribs, (AttributeValues *)cm);
 
-	variant = pgMaterial->GetPropertyValue(wxT("DIFFUSE.RGB"));
-	col << variant;
-	f = pgMaterial->GetPropertyValueAsDouble(wxT("DIFFUSE.Alpha"));
 
-	mm->getColor().setPropf4(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	//variant = pgMaterial->GetPropertyValue(wxT("DIFFUSE.RGB"));
+	//col << variant;
+	//f = pgMaterial->GetPropertyValueAsDouble(wxT("DIFFUSE.Alpha"));
 
-	//col = pgMaterial->GetPropertyColour("AMBIENT.RGB");
-	variant = pgMaterial->GetPropertyValue(wxT("AMBIENT.RGB"));
-	col << variant;
-	f = pgMaterial->GetPropertyValueAsDouble(wxT("AMBIENT.Alpha"));
+	//mm->getColor().setPropf4(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
-	mm->getColor().setPropf4(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	////col = pgMaterial->GetPropertyColour("AMBIENT.RGB");
+	//variant = pgMaterial->GetPropertyValue(wxT("AMBIENT.RGB"));
+	//col << variant;
+	//f = pgMaterial->GetPropertyValueAsDouble(wxT("AMBIENT.Alpha"));
 
-	//col = pgMaterial->GetPropertyColour("SPECULAR.RGB");
-	variant = pgMaterial->GetPropertyValue(wxT("SPECULAR.RGB"));
-	col << variant;
-	f = pgMaterial->GetPropertyValueAsDouble(wxT("SPECULAR.Alpha"));
+	//mm->getColor().setPropf4(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
-	mm->getColor().setPropf4(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	////col = pgMaterial->GetPropertyColour("SPECULAR.RGB");
+	//variant = pgMaterial->GetPropertyValue(wxT("SPECULAR.RGB"));
+	//col << variant;
+	//f = pgMaterial->GetPropertyValueAsDouble(wxT("SPECULAR.Alpha"));
 
-	//col = pgMaterial->GetPropertyColour("EMISSION.RGB");
-	variant = pgMaterial->GetPropertyValue(wxT("EMISSION.RGB"));
-	col << variant;
-	f = pgMaterial->GetPropertyValueAsDouble(wxT("EMISSION.Alpha"));
+	//mm->getColor().setPropf4(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
 
-	mm->getColor().setPropf4(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+	////col = pgMaterial->GetPropertyColour("EMISSION.RGB");
+	//variant = pgMaterial->GetPropertyValue(wxT("EMISSION.RGB"));
+	//col << variant;
+	//f = pgMaterial->GetPropertyValueAsDouble(wxT("EMISSION.Alpha"));
 
-	mm->getColor().setPropf(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
+	//mm->getColor().setPropf4(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
+
+	//mm->getColor().setPropf(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
 }
 
 
@@ -1197,31 +1208,33 @@ void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 
 void DlgMaterials::updateColors(Material *mm) {
 
-	const float *f;
+	PropertyManager::updateGrid(pgMaterial, ColorMaterial::Attribs, (AttributeValues *)mm);
 
-	pgMaterial->ClearSelection();
-	
-	f = &(mm->getColor().getPropf4(ColorMaterial::DIFFUSE).x);
-	pgMaterial->SetPropertyValue(wxT("DIFFUSE.RGB"),
-					wxColour(255*f[0],255*f[1],255*f[2]));
-	pgMaterial->SetPropertyValue(wxT("DIFFUSE.Alpha"),f[3]);
+	//const float *f;
 
-	f = &(mm->getColor().getPropf4(ColorMaterial::AMBIENT).x);
-	pgMaterial->SetPropertyValue(wxT("AMBIENT.RGB"),
-					wxColour(255*f[0],255*f[1],255*f[2]));
-	pgMaterial->SetPropertyValue(wxT("AMBIENT.Alpha"),f[3]);
+	//pgMaterial->ClearSelection();
+	//
+	//f = &(mm->getColor().getPropf4(ColorMaterial::DIFFUSE).x);
+	//pgMaterial->SetPropertyValue(wxT("DIFFUSE.RGB"),
+	//				wxColour(255*f[0],255*f[1],255*f[2]));
+	//pgMaterial->SetPropertyValue(wxT("DIFFUSE.Alpha"),f[3]);
 
-	f = &(mm->getColor().getPropf4(ColorMaterial::SPECULAR).x);
-	pgMaterial->SetPropertyValue(wxT("SPECULAR.RGB"),
-					wxColour(255*f[0],255*f[1],255*f[2]));
-	pgMaterial->SetPropertyValue(wxT("SPECULAR.Alpha"),f[3]);
+	//f = &(mm->getColor().getPropf4(ColorMaterial::AMBIENT).x);
+	//pgMaterial->SetPropertyValue(wxT("AMBIENT.RGB"),
+	//				wxColour(255*f[0],255*f[1],255*f[2]));
+	//pgMaterial->SetPropertyValue(wxT("AMBIENT.Alpha"),f[3]);
 
-	f = &(mm->getColor().getPropf4(ColorMaterial::EMISSION).x);
-	pgMaterial->SetPropertyValue(wxT("EMISSION.RGB"),
-					wxColour(255*f[0],255*f[1],255*f[2]));
-	pgMaterial->SetPropertyValue(wxT("EMISSION.Alpha"),f[3]);
+	//f = &(mm->getColor().getPropf4(ColorMaterial::SPECULAR).x);
+	//pgMaterial->SetPropertyValue(wxT("SPECULAR.RGB"),
+	//				wxColour(255*f[0],255*f[1],255*f[2]));
+	//pgMaterial->SetPropertyValue(wxT("SPECULAR.Alpha"),f[3]);
 
-	pgMaterial->SetPropertyValue(wxT("SHININESS"),mm->getColor().getPropf(ColorMaterial::SHININESS));
+	//f = &(mm->getColor().getPropf4(ColorMaterial::EMISSION).x);
+	//pgMaterial->SetPropertyValue(wxT("EMISSION.RGB"),
+	//				wxColour(255*f[0],255*f[1],255*f[2]));
+	//pgMaterial->SetPropertyValue(wxT("EMISSION.Alpha"),f[3]);
+
+	//pgMaterial->SetPropertyValue(wxT("SHININESS"),mm->getColor().getPropf(ColorMaterial::SHININESS));
 }
 
 

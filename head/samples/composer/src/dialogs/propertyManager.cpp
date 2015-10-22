@@ -80,6 +80,9 @@ PropertyManager::inList(std::string attr, std::vector<std::string> &list) {
 void 
 PropertyManager::addAttribute(wxPropertyGridManager *pg, Attribute &a) {
 
+	//if (pg->GetProperty(wxString(a.getName().c_str())) == NULL)
+	//	return;
+
 	switch (a.getType()) {
 
 	case Enums::ENUM: createEnum(pg, a); break;
@@ -124,7 +127,12 @@ PropertyManager::updateGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs, 
 		case Enums::FLOAT: updateFloat(pg, a.getName(), attribVal->getPropf((AttributeValues::FloatProperty)a.getId())); break;
 		case Enums::VEC2: updateVec2(pg, a.getName(), attribVal->getPropf2((AttributeValues::Float2Property)a.getId())); break;
 		case Enums::VEC3: updateVec3(pg, a.getName(), attribVal->getPropf3((AttributeValues::Float3Property)a.getId())); break;
-		case Enums::VEC4: updateVec4(pg, a.getName(), attribVal->getPropf4((AttributeValues::Float4Property)a.getId())); break;
+		case Enums::VEC4: 
+			if (attrib.second.getSemantics() == Attribute::Semantics::COLOR)
+				updateVec4Color(pg, a.getName(), attribVal->getPropf4((AttributeValues::Float4Property)a.getId()));
+			else
+				updateVec4(pg, a.getName(), attribVal->getPropf4((AttributeValues::Float4Property)a.getId())); 
+			break;
 		case Enums::MAT3: updateMat3(pg, a.getName(), attribVal->getPropm3((AttributeValues::Mat3Property)a.getId())); break;
 		case Enums::MAT4: updateMat4(pg, a.getName(), attribVal->getPropm4((AttributeValues::Mat4Property)a.getId())); break;
 		default: assert(false && "Missing datatype in property manager");
@@ -147,7 +155,10 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 	vec2 v; vec3 v3; vec4 v4;
 	bvec4 b4;
 	mat3 m3; mat4 m4;
-
+	Attribute::Semantics sem = a.getSemantics();
+	wxColour col;
+	wxVariant variant;
+	
 	switch (dt) {
 
 	case Enums::ENUM:
@@ -232,19 +243,29 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 		break;
 
 	case Enums::VEC4:
-
-		s = prop + "." + "x";
-		pgProp = pg->GetProperty(wxString(s));
-		v4.x = pgProp->GetValue().GetDouble();
-		s = prop + "." + "y";
-		pgProp = pg->GetProperty(wxString(s));
-		v4.y = pgProp->GetValue().GetDouble();
-		s = prop + "." + "z";
-		pgProp = pg->GetProperty(wxString(s));
-		v4.z = pgProp->GetValue().GetDouble();
-		s = prop + "." + "w";
-		pgProp = pg->GetProperty(wxString(s));
-		v4.w = pgProp->GetValue().GetDouble();
+		if (sem == Attribute::COLOR) {
+			s = prop + ".RGB";
+			variant = pg->GetPropertyValue(wxString(s));
+			col << variant;
+			v4.x = col.Red()/255.0; v4.y = col.Green() / 255.0; v4.z = col.Blue() / 255.0;
+			s = prop + ".Alpha" ;
+			pgProp = pg->GetProperty(wxString(s));
+			v4.w = pgProp->GetValue().GetDouble();
+		}
+		else {
+			s = prop + "." + "x";
+			pgProp = pg->GetProperty(wxString(s));
+			v4.x = pgProp->GetValue().GetDouble();
+			s = prop + "." + "y";
+			pgProp = pg->GetProperty(wxString(s));
+			v4.y = pgProp->GetValue().GetDouble();
+			s = prop + "." + "z";
+			pgProp = pg->GetProperty(wxString(s));
+			v4.z = pgProp->GetValue().GetDouble();
+			s = prop + "." + "w";
+			pgProp = pg->GetProperty(wxString(s));
+			v4.w = pgProp->GetValue().GetDouble();
+		}
 		attribVal->setPropf4((AttributeValues::Float4Property)id, v4);
 		break;
 
@@ -612,16 +633,34 @@ void
 PropertyManager::createVec4(wxPropertyGridManager *pg, nau::Attribute &a) {
 
 	wxPGProperty* topId;
+	Attribute::Semantics sem = a.getSemantics();
 
 	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
-	pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
-
+	if (sem == Attribute::Semantics::COLOR) {
+		pg->AppendIn(topId, new wxColourProperty(wxT("RGB"), wxPG_LABEL,
+			wxColour(255, 255, 255)));
+		pg->AppendIn(topId, new wxFloatProperty(wxT("Alpha"), wxPG_LABEL, 1.0));
+		pg->Expand(topId);
+	}
+	else {
+		pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
+		pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
+		pg->AppendIn(topId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+		pg->AppendIn(topId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	}
 	if (a.getReadOnlyFlag())
 		pg->DisableProperty(topId);
+}
+
+
+void
+PropertyManager::updateVec4Color(wxPropertyGridManager *pg, std::string label, vec4 a) {
+
+	wxString rgb = wxString(label.c_str()) + wxString(".RGB");
+	wxString alpha = wxString(label.c_str()) + wxString(".Alpha");
+	pg->SetPropertyValue(rgb, wxColour(255 * a.x, 255 * a.y, 255 * a.z));
+	pg->SetPropertyValue(alpha, a.w);
 }
 
 

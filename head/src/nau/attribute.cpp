@@ -15,9 +15,11 @@ Attribute::Attribute() : m_Id(-1), m_Default(NULL), m_RangeDefined(false), m_Lis
 
 Attribute::Attribute(int id, std::string name, Enums::DataType type, 
 	bool readOnlyFlag, void *defaultV,
-	void *min, void *max, IAPISupport::APIFeatureSupport requires) :
+	void *min, void *max, 
+	IAPISupport::APIFeatureSupport requires, 
+	Semantics sem) :
 	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), m_Default(NULL), m_Min(NULL), m_Max(NULL),
-		m_ListDefined(false), m_RangeDefined(false),
+		m_ListDefined(false), m_RangeDefined(false), m_Semantics(sem),
 		m_Requires(requires){
 		
 	int s = Enums::getSize(m_Type);
@@ -138,6 +140,13 @@ bool
 Attribute::getReadOnlyFlag() {
 
 	return m_ReadOnlyFlag;
+}
+
+
+Attribute::Semantics
+Attribute::getSemantics() {
+
+	return m_Semantics;
 }
 
 

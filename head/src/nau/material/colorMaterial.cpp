@@ -13,10 +13,10 @@ bool
 ColorMaterial::Init() {
 
 	// VEC4
-	Attribs.add(Attribute(AMBIENT, "AMBIENT", Enums::DataType::VEC4, false, new vec4 (0.2f, 0.2f, 0.2f, 1.0f)));
-	Attribs.add(Attribute(DIFFUSE, "DIFFUSE", Enums::DataType::VEC4, false, new vec4 (0.8f, 0.8f, 0.8f, 1.0f)));
-	Attribs.add(Attribute(SPECULAR, "SPECULAR", Enums::DataType::VEC4, false, new vec4 (0.0f, 0.0f, 0.0f, 1.0f)));
-	Attribs.add(Attribute(EMISSION, "EMISSION", Enums::DataType::VEC4, false, new vec4 (0.0f, 0.0f, 0.0f, 1.0f)));
+	Attribs.add(Attribute(AMBIENT, "AMBIENT", Enums::DataType::VEC4, false, new vec4 (0.2f, 0.2f, 0.2f, 1.0f), NULL, NULL, IAPISupport::OK, Attribute::Semantics::COLOR));
+	Attribs.add(Attribute(DIFFUSE, "DIFFUSE", Enums::DataType::VEC4, false, new vec4 (0.8f, 0.8f, 0.8f, 1.0f), NULL, NULL, IAPISupport::OK, Attribute::Semantics::COLOR));
+	Attribs.add(Attribute(SPECULAR, "SPECULAR", Enums::DataType::VEC4, false, new vec4 (0.0f, 0.0f, 0.0f, 1.0f), NULL, NULL, IAPISupport::OK, Attribute::Semantics::COLOR));
+	Attribs.add(Attribute(EMISSION, "EMISSION", Enums::DataType::VEC4, false, new vec4 (0.0f, 0.0f, 0.0f, 1.0f), NULL, NULL, IAPISupport::OK, Attribute::Semantics::COLOR));
 	// FLOAT
 	Attribs.add(Attribute(SHININESS, "SHININESS", Enums::DataType::FLOAT, false, new float(0)));
 

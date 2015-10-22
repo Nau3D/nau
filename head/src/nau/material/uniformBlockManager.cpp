@@ -16,6 +16,12 @@ UniformBlockManager::GetInstance() {
 
 UniformBlockManager::~UniformBlockManager() {
 
+	clear();
+}
+
+
+UniformBlockManager::UniformBlockManager() {
+
 	while (!m_Blocks.empty()){
 		delete((*m_Blocks.begin()).second);
 		m_Blocks.erase(m_Blocks.begin());
@@ -23,10 +29,11 @@ UniformBlockManager::~UniformBlockManager() {
 }
 
 
-UniformBlockManager::UniformBlockManager() {
+void 
+UniformBlockManager::clear() {
+
 
 }
-
 
 void
 UniformBlockManager::addBlock(std::string &name, unsigned int size) {
