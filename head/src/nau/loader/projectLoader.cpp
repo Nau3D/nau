@@ -960,7 +960,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 					IBuffer * b;
 					b = RESOURCEMANAGER->createBuffer(bufferName);
-					int attribIndex = VertexData::getAttribIndex(p->Value());
+					int attribIndex = VertexData::GetAttribIndex(p->Value());
 
 					if (attribIndex != VertexData::MaxAttribs) {
 						v.setBuffer(attribIndex, b->getPropi(IBuffer::ID));
@@ -2071,7 +2071,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
 		const char *pType = pElem->Attribute ("name");
-		unsigned int vi = VertexData::getAttribIndex(pType);
+		unsigned int vi = VertexData::GetAttribIndex(pType);
 		if (!pType || (VertexData::MaxAttribs == vi ))
 			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Vertex Attribute", 
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());

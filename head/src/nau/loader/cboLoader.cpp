@@ -117,7 +117,7 @@ CBOLoader::_readVertexData (VertexData& aVertexData, std::fstream &f)
 		// read attrib data
 		f.read (reinterpret_cast<char *> (&(*aVector)[0]), siz * sizeof (vec4));
 
-		unsigned int index = VertexData::getAttribIndex(buffer);
+		unsigned int index = VertexData::GetAttribIndex(buffer);
 		aVertexData.setDataFor (index, aVector);
 	}
 	

@@ -84,6 +84,8 @@ namespace nau
 			bool areCompiled();
 			bool isLinked();
 
+			void getAttributeNames(std::vector<std::string> *s);
+
 			int getNumberOfUniforms (void);
 			int getNumberOfUserUniforms (void);
 

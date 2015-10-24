@@ -1562,7 +1562,7 @@ void DlgMaterials::OnProcessUseShader(wxCommandEvent& event){
 
 void DlgMaterials::updateUniforms(Material *m) {
 
-	m->checkProgramValuesAndUniforms();
+	//m->checkProgramValuesAndUniforms();
 	pgShaderUniforms->ClearPage(0);
 
 	if (m->getProgram() == NULL) {

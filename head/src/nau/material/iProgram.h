@@ -67,6 +67,8 @@ namespace nau
 			virtual char *getProgramInfoLog() = 0; 
 			virtual int programValidate() = 0;
 
+			virtual void getAttributeNames(std::vector<std::string> *s) = 0;
+
 			virtual bool setValueOfUniform (const std::string &name, void *values) = 0; 
 			virtual void prepareBlocks() = 0;
 			//virtual bool setValueOfUniform(int loc, void *values) = 0;

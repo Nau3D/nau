@@ -879,10 +879,10 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	// Import VERTEX/NORMAL/TEXTURE data into Renderable
 	VertexData *vdata = &(aRenderable->getVertexData()); //VertexData::create();
 
-	vdata->setDataFor(VertexData::getAttribIndex("position"), v);
-	vdata->setDataFor(VertexData::getAttribIndex("normal"), n);
+	vdata->setDataFor(VertexData::GetAttribIndex("position"), v);
+	vdata->setDataFor(VertexData::GetAttribIndex("normal"), n);
 	if (obj.m_NumTexCoords)
-		vdata->setDataFor(VertexData::getAttribIndex("texCoord0"), t);
+		vdata->setDataFor(VertexData::GetAttribIndex("texCoord0"), t);
 
 
 	// ARE THERE ANY ACTUAL MATERIALS DEFINED?

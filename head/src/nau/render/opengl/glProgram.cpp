@@ -86,6 +86,20 @@ GLProgram::isLinked() {
 	return(m_PLinked);
 }
 
+void 
+GLProgram::getAttributeNames(std::vector<std::string>* s) {
+
+	int k;
+	GLsizei len, siz;
+	GLenum typ;
+	char name[256];
+	glGetProgramiv(m_P, GL_ACTIVE_ATTRIBUTES, &k);
+	for (unsigned int i = 0; i < k; ++i) {
+		glGetActiveAttrib(m_P, i, 256, &len, &siz, &typ, name);
+		s->push_back(name);
+	}
+}
+
 
 void 
 GLProgram::setName(const std::string &name) {
@@ -367,6 +381,7 @@ GLProgram::prepareBlocks(void) {
 		block->useBlock();
 	}
 }
+
 
 bool
 GLProgram::restore (void) {

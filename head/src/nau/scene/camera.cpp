@@ -106,7 +106,7 @@ Camera::Camera (const std::string &name) :
 	renderable->setDrawingPrimitive(nau::render::IRenderable::LINES);
 	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(8);
 	VertexData &vertexData = renderable->getVertexData();
-	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Green");
 	
@@ -363,7 +363,7 @@ Camera::getRenderable (void) {
 	}
 
 	VertexData &vertexData = m_Renderable->getVertexData();
-	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
 
 	//std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(8);
 	//for (int i = 0; i < 8 ; ++i) 

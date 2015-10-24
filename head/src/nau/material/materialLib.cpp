@@ -1,21 +1,40 @@
 #include "nau/material/materialLib.h"
 
+#include "nau.h"
+
 using namespace nau::material;
 
 MaterialLib::MaterialLib (std::string libName) : 
   m_MaterialLib(),
   m_LibName (libName) 
 {
+	EVENTMANAGER->addListener("SHADER_CHANGED", this);
 }
 
 MaterialLib::~MaterialLib()
 {
    //dtor
-	
+	EVENTMANAGER->removeListener("SHADER_CHANGED", this);
 }
 
 
-std::string 
+void
+MaterialLib::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+
+	std::string *str;
+		str = (std::string *)evt->getData();
+
+	if (*str == "Linked" && eventType == "SHADER_CHANGED") {
+
+		for (auto m : m_MaterialLib) {
+
+			if (m.second->getProgramName() == sender)
+				m.second->checkProgramValuesAndUniforms();
+		}
+	}
+}
+
+std::string &
 MaterialLib::getName()
 {
 	return(m_LibName);

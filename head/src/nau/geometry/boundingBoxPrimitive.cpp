@@ -33,8 +33,8 @@ BBox::BBox(void) : Primitive(),
 	vertices->at (7).set(-n,  n, -n);
 
 	VertexData &vertexData = getVertexData();
-	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
-	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
+	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex("normal"), normals);
 
 	//FRONT
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(4);

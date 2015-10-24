@@ -14,14 +14,11 @@
 			<scene name="MainScene" param="UNITIZE">
 				<file name="../../models/cube.obj"/>
 			</scene>
-			<scene name="VoxelTest" param="UNITIZE">
-				<file name="../../models/voxeltest.obj"/>
-			</scene>
 			<scene name="Bench" param="UNITIZE">
 				<file name="../../models/ntg-bench/bench.obj"/>
 			</scene>
 			<scene name="Sponza" param="UNITIZE">
-				<file name="../../models/sponza/crytek-sponza/sponza.obj"/>
+				<file name="../../models/sponza/crytek-sponza/sponza.nbo"/>
 			</scene>
 			<scene name="Cube" param="UNITIZE">
 				<file name="../../models/cube.obj"/>

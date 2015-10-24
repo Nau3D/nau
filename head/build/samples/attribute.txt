@@ -108,7 +108,6 @@ PASS_PROCESS_TEXTURE
 	CLEAR	BOOL 	default: false
 	CLEAR_LEVEL	INT 	default: -1
 	MIPMAP	BOOL 	default: false
-RENDERABLE
 RENDERER
 	BUFFER_DRAW_INDIRECT	UINT 	default: 0
 	DEBUG_DRAW_CALL	(read only)	BOOL 	default: false

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "nau/event/ilistener.h"
 #include "nau/material/material.h"
 
 //include "filenames.h"
@@ -15,7 +16,7 @@ namespace nau
 	namespace material
 	{
 
-		class MaterialLib {
+		class MaterialLib: public nau::event_::IListener {
 
 		private:
 		   
@@ -30,8 +31,10 @@ namespace nau
 			MaterialLib (std::string libName);
 			~MaterialLib();
 
+			void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+
 			void clear();
-			std::string getName();
+			std::string &getName();
 			
 			bool hasMaterial (std::string materialName);
 			void addMaterial (nau::material::Material* aMaterial); /***MARK***/ //To be removed, probably

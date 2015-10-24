@@ -80,8 +80,8 @@ BulletWorld::build (void) /***MARK***/ //I'm assuming all objects inside scene a
 							static_cast<int> (indexes.size() / 3), 
 							reinterpret_cast<int *>(&indexes[0]),
 							3 * sizeof(unsigned int),
-							static_cast<int> (vd.getDataOf(VertexData::getAttribIndex("position")).size()),
-							reinterpret_cast<btScalar*>(&(vd.getDataOf(VertexData::getAttribIndex("position"))[0])),
+							static_cast<int> (vd.getDataOf(VertexData::GetAttribIndex("position")).size()),
+							reinterpret_cast<btScalar*>(&(vd.getDataOf(VertexData::GetAttribIndex("position"))[0])),
 							/*3*/4 * sizeof (float)
 						);
 

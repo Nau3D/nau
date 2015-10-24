@@ -102,7 +102,7 @@ GLVertexArray::prepareTriangleIDs(unsigned int sceneObjID,
 											 unsigned int primitiveOffset, 
 											 std::vector<unsigned int> *index) 
 {
-	unsigned int TriID_index = VertexData::getAttribIndex("triangleID");
+	unsigned int TriID_index = VertexData::GetAttribIndex("triangleID");
 
 	if (sceneObjID != 0 && 0 == m_InternalArrays[TriID_index] 
 						 && m_InternalArrays[0]) {

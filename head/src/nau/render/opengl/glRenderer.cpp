@@ -548,7 +548,7 @@ GLRenderer::setShader(IProgram *aShader)
 int
 GLRenderer::getAttribLocation(std::string name) {
 
-	return VertexData::getAttribIndex(name);
+	return VertexData::GetAttribIndex(name);
 }
 
 

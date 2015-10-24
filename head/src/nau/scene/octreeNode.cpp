@@ -226,7 +226,7 @@ void OctreeNode::tightBoundingVolume() {
 
 	m_BoundingVolume = new BoundingBox; /***MARK***/
 	if (0 != m_pLocalMesh)
-		m_BoundingVolume->calculate (m_pLocalMesh->getVertexData().getDataOf (VertexData::getAttribIndex("position")));
+		m_BoundingVolume->calculate (m_pLocalMesh->getVertexData().getDataOf (VertexData::GetAttribIndex("position")));
 
 	for (int i = TOPFRONTLEFT; i < ROOT; i++) {
 	
@@ -272,7 +272,7 @@ void OctreeNode::unitize(vec3 &center, vec3 &min, vec3 &max) {
 void 
 OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 {
-	int vertexArrayPos = VertexData::getAttribIndex("position");
+	int vertexArrayPos = VertexData::GetAttribIndex("position");
 	int offSet;
 
 	if (m_pLocalMesh) {

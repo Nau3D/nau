@@ -34,9 +34,9 @@ Quad::Quad(void) :
 
 	VertexData &vertexData = renderable->getVertexData();
 
-	vertexData.setDataFor (VertexData::getAttribIndex("position"), vertices);
-	vertexData.setDataFor (VertexData::getAttribIndex("texCoord0"), textureCoords);
-	vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
+	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex("texCoord0"), textureCoords);
+	vertexData.setDataFor (VertexData::GetAttribIndex("normal"), normals);
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Quad");
 	
