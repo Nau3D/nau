@@ -1,4 +1,4 @@
-#include "nau/render/renderTarget.h"
+#include "nau/render/iRenderTarget.h"
 
 #include "nau.h"
 #include "nau/config.h"
@@ -20,7 +20,7 @@ using namespace nau::render;
 //}
 
 bool
-RenderTarget::Init() {
+IRenderTarget::Init() {
 
 	// UINT
 	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::UINT, false, new unsigned int(0)));
@@ -38,13 +38,13 @@ RenderTarget::Init() {
 }
 
 
-AttribSet RenderTarget::Attribs;
-bool RenderTarget::Inited = Init();
+AttribSet IRenderTarget::Attribs;
+bool IRenderTarget::Inited = Init();
 
 
 
-RenderTarget* 
-RenderTarget::Create (std::string name) {
+IRenderTarget*
+IRenderTarget::Create (std::string name) {
 
 #ifdef NAU_OPENGL
 	return new GLRenderTarget (name);
@@ -54,43 +54,59 @@ RenderTarget::Create (std::string name) {
 }
 
 
-RenderTarget::RenderTarget () {
+IRenderTarget::IRenderTarget () {
 	
 	registerAndInitArrays(Attribs);
 	m_Color = 0;
 	m_Depth = 0;
 	m_Stencil = 0;
+	m_DepthTexture = NULL;
+	m_StencilTexture = NULL;
 	m_Id = 0;
 }
 
 
 int
-RenderTarget::getId (void) {
+IRenderTarget::getId (void) {
 
 	return m_Id;
 }
 
 
 std::string &
-RenderTarget::getName (void) {
+IRenderTarget::getName (void) {
 
 	return m_Name;
 }
 
 
 unsigned int 
-RenderTarget::getNumberOfColorTargets() {
+IRenderTarget::getNumberOfColorTargets() {
 
 	return m_Color;
 }
 
 
 ITexture *
-RenderTarget::getTexture(unsigned int i) {
+IRenderTarget::getTexture(unsigned int i) {
 
 	if (i <= m_TexId.size()) {
 		return m_TexId[i];
 	} 
 	else return 0;
+}
+
+
+ITexture * 
+IRenderTarget::getDepthTexture() {
+
+	return m_DepthTexture;
+}
+
+
+ITexture *
+IRenderTarget::getStencilTexture() {
+
+	return m_StencilTexture;
 }
 

@@ -28,7 +28,7 @@ https://github.com/Nau3D
 #include "nau/material/materialId.h"
 #include "nau/material/iTexture.h"
 #include "nau/render/passProcessItem.h"
-#include "nau/render/renderTarget.h"
+#include "nau/render/iRenderTarget.h"
 #include "nau/scene/camera.h"
 #include "nau/scene/geometricObject.h"
 #include "nau/scene/iScene.h"
@@ -180,8 +180,8 @@ namespace nau
 			//
 			// RENDER TARGETS
 			//
-			nau::render::RenderTarget* getRenderTarget (void);
-			virtual void setRenderTarget (nau::render::RenderTarget* rt);
+			nau::render::IRenderTarget* getRenderTarget (void);
+			virtual void setRenderTarget (nau::render::IRenderTarget* rt);
 			void enableRenderTarget(bool b);
 			bool isRenderTargetEnabled();
 			bool hasRenderTarget();
@@ -270,7 +270,7 @@ namespace nau
 			bool m_ExplicitViewport;
 			// used to temporarily store the camera viewport when the pass has an explicit viewport
 			nau::render::Viewport *m_RestoreViewport;
-			nau::render::RenderTarget *m_RenderTarget;
+			nau::render::IRenderTarget *m_RenderTarget;
 			// size of render targets
 			int m_RTSizeWidth;
 			int m_RTSizeHeight;

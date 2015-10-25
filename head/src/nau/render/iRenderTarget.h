@@ -4,7 +4,7 @@
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
 #include "nau/material/iTexture.h"
-#include "nau/render/renderTarget.h"
+#include "nau/render/iRenderTarget.h"
 
 #include <string>
 #include <vector>
@@ -15,7 +15,7 @@ namespace nau
 {
 	namespace render
 	{
-		class RenderTarget: public AttributeValues
+		class IRenderTarget: public AttributeValues
 		{
 		public:
 
@@ -49,8 +49,8 @@ namespace nau
 
 		public:
 
-			static RenderTarget* Create (std::string name, unsigned int width, unsigned int height);
-			static RenderTarget* Create (std::string name);
+			static IRenderTarget* Create (std::string name, unsigned int width, unsigned int height);
+			static IRenderTarget* Create (std::string name);
 
 			virtual bool checkStatus() = 0;
 			virtual void resize() = 0;
@@ -64,24 +64,19 @@ namespace nau
 			virtual void addDepthStencilTarget(std::string name) = 0;
 
 			nau::material::ITexture* getTexture(unsigned int i);
+			nau::material::ITexture* getDepthTexture();
+			nau::material::ITexture* getStencilTexture();
 
 			virtual void setPropui2(UInt2Property prop, uivec2 &value) = 0;
 
-			//void setClearValues(float r, float g, float b, float a);
-			//void setSampleCount(int samples);
-			//void setLayerCount(int layers);
-			//nau::math::vec4 & getClearValues(); 
 			virtual unsigned int getNumberOfColorTargets();
 			virtual int getId (void);
 			virtual std::string &getName (void);
-			//unsigned int getWidth (void);
-			//unsigned int getHeight (void);
 
-			virtual ~RenderTarget(void) {};
+			virtual ~IRenderTarget(void) {};
 
 		protected:
-			RenderTarget ();
-			//RenderTarget (std::string name, unsigned int width, unsigned int height);
+			IRenderTarget();
 			static bool Init();
 			static bool Inited;
 

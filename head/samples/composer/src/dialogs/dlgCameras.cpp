@@ -242,9 +242,10 @@ void DlgCameras::OnPropsChange( wxPropertyGridEvent& e) {
 			cam->setViewport(NULL);
 	}
 	else
-		PropertyManager::updateProp(m_PG, name.ToStdString(), Camera::Attribs, (AttributeValues *)cam);
+		PropertyManager::updateProp(m_PG, topProp, Camera::Attribs, (AttributeValues *)cam);
 
 	notifyUpdate(PROPS_CHANGED,m_Active,topProp);
+	update();
 }
 
 

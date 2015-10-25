@@ -3,7 +3,7 @@
 
 #include "nau/material/material.h"
 #include "nau/render/iRenderable.h"
-#include "nau/render/renderTarget.h"
+#include "nau/render/iRenderTarget.h"
 #include "nau/scene/sceneObject.h"
 
 #include <vector>
@@ -22,7 +22,7 @@ namespace nau
 			//TextureManager* m_pTextureManager;
 			std::string m_Path;
 			
-			std::map<std::string, nau::render::RenderTarget*> m_RenderTargets;
+			std::map<std::string, nau::render::IRenderTarget*> m_RenderTargets;
 			std::map<std::string, nau::render::IRenderable*> m_Meshes;
 			std::map<std::string, nau::material::IProgram*> m_Programs;
 			std::map<std::string, nau::material::IState*> m_States;
@@ -71,10 +71,10 @@ namespace nau
 
 
 			/***Rendertargets***/
-			nau::render::RenderTarget* createRenderTarget (std::string name);
+			nau::render::IRenderTarget* createRenderTarget (std::string name);
 			void removeRenderTarget (std::string name);
 			bool hasRenderTarget(const std::string &name);
-			nau::render::RenderTarget *getRenderTarget(const std::string &name);
+			nau::render::IRenderTarget *getRenderTarget(const std::string &name);
 			int getNumRenderTargets();
 			std::vector<std::string>* ResourceManager::getRenderTargetNames();
 

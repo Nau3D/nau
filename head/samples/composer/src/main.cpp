@@ -94,6 +94,7 @@ int idMenuDlgMaterials = wxNewId();
 int idMenuDlgShaders = wxNewId();
 int idMenuDlgAtomics = wxNewId();
 int idMenuDlgBuffers = wxNewId();
+int idMenuDlgRT = wxNewId();
 // Debug Menu
 int idMenuDbgBreak = wxNewId();
 int idMenuDlgStep = wxNewId();
@@ -137,6 +138,7 @@ EVT_MENU(idMenuDlgTextures, FrmMainFrame::OnDlgTextures)
 EVT_MENU(idMenuDlgAtomics, FrmMainFrame::OnDlgAtomics)
 EVT_MENU(idMenuDlgShaders, FrmMainFrame::OnDlgShaders)
 EVT_MENU(idMenuDlgBuffers, FrmMainFrame::OnDlgBuffers)
+EVT_MENU(idMenuDlgRT, FrmMainFrame::OnDlgRenderTargets)
 // Debug Menu
 EVT_MENU(idMenuDlgLog, FrmMainFrame::OnDlgLog)
 EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
@@ -247,20 +249,22 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
     materialsMenu->Append(idMenuDlgTextures, _("Texture Library\tF8"), _("Show ITexture Library"));
     materialsMenu->Append(idMenuDlgShaders, _("Shader Library\tF9"), _("Show Shader Library"));
 	materialsMenu->Append(idMenuDlgAtomics,  _("Atomics\tF10"), _("Show Atomics Info"));
-	materialsMenu->Append(idMenuDlgBuffers, _("Buffer Info\tF11"), _("Views Buffer information"));
+	materialsMenu->Append(idMenuDlgBuffers, _("Buffer Info\tF11"), _("View Buffer information"));
+	materialsMenu->Append(idMenuDlgRT, _("Render Targets\tF12"), _("View Render Target information"));
 
 	materialsMenu->Enable(idMenuDlgMaterials, false);
 	materialsMenu->Enable(idMenuDlgTextures, false);
 	materialsMenu->Enable(idMenuDlgShaders, false);
 	materialsMenu->Enable(idMenuDlgAtomics, false);
 	materialsMenu->Enable(idMenuDlgBuffers, false);
-
+	materialsMenu->Enable(idMenuDlgRT, false);
+	
 	mbar->Append (materialsMenu, _("&Materials"));
 
 	// Debug Menu
 
 	debugMenu = new wxMenu(_T(""));
-    debugMenu->Append(idMenuDlgLog, _("&Log\tF12"), _("Show Log"));
+    debugMenu->Append(idMenuDlgLog, _("&Log\tCtrl-L"), _("Show Log"));
 	debugMenu->Append(idMenuProfileReset, _("&Reset Profiler"), _(""));
 	debugMenu->AppendSeparator();
 	debugMenu->Append(idMenuDbgBreak, _("&Pause"), _("Pauses or resumes rendering"));
@@ -391,7 +395,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgDbgBuffers::SetParent(this);
 	DlgDbgStep::SetParent(this);
 	DlgDbgStep::SetCanvas(m_Canvas);
-
+	DlgRenderTargets::SetParent(this);
 #ifdef GLINTERCEPTDEBUG
 	gliSetIsGLIActive(true);
 #endif
@@ -518,6 +522,7 @@ FrmMainFrame::updateDlgs() {
 	DlgViewports::Instance()->updateDlg();
 	DlgDbgPrograms::Instance()->updateDlg();
 	DlgTrace::Instance()->updateDlg();
+	DlgRenderTargets::Instance()->updateDlg();
 
 	renderMenu->Enable(idMenuDlgPass, true);
 	renderMenu->Enable(idMenuWireframe, true);
@@ -536,6 +541,7 @@ FrmMainFrame::updateDlgs() {
 	materialsMenu->Enable(idMenuDlgShaders, true);
 	materialsMenu->Enable(idMenuDlgAtomics, true);
 	materialsMenu->Enable(idMenuDlgBuffers, true);
+	materialsMenu->Enable(idMenuDlgRT, true);
 
 	debugMenu->Enable(idMenuDlgProgramInfo, true);
 	debugMenu->Enable(idMenuDlgTrace, true);
@@ -875,6 +881,13 @@ FrmMainFrame::OnDlgBuffers(wxCommandEvent& event) {
 
 	DlgDbgBuffers::Instance()->updateDlg();
 	DlgDbgBuffers::Instance()->Show(TRUE);
+}
+
+
+void 
+FrmMainFrame::OnDlgRenderTargets(wxCommandEvent & event) {
+
+	DlgRenderTargets::Instance()->Show(TRUE);
 }
 
 

@@ -210,7 +210,7 @@ PassOptix::~PassOptix()
 
 
 void 
-PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
+PassOptix::setRenderTarget (nau::render::IRenderTarget* rt)
 {
 	glGetError();
 	if (rt == NULL) {
@@ -223,8 +223,8 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 			m_Viewport = new Viewport();
 			m_UseRT = true;
 		}
-		setRTSize(rt->getPropui2(RenderTarget::SIZE));
-		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(RenderTarget::CLEAR_VALUES));
+		setRTSize(rt->getPropui2(IRenderTarget::SIZE));
+		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(IRenderTarget::CLEAR_VALUES));
 	}
 	m_RenderTarget = rt;
 
@@ -243,7 +243,7 @@ PassOptix::setRenderTarget (nau::render::RenderTarget* rt)
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, o_OutputPBO[i]);
 			// need to allow different types
 			nau::math::uivec2 vec2;
-			vec2 = rt->getPropui2(RenderTarget::SIZE);
+			vec2 = rt->getPropui2(IRenderTarget::SIZE);
 			glBufferData(GL_PIXEL_UNPACK_BUFFER, vec2.x * vec2.y * rt->getTexture(i)->getPropi(ITexture::ELEMENT_SIZE), 0, GL_STREAM_READ);
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
@@ -353,7 +353,7 @@ PassOptix::doPass (void)
 	glGetError();
 	glFinish();
 
-	nau::math::uivec2 vec2 = m_RenderTarget->getPropui2(RenderTarget::SIZE);
+	nau::math::uivec2 vec2 = m_RenderTarget->getPropui2(IRenderTarget::SIZE);
 	try {
 		PROFILE("Optix");
 

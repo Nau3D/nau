@@ -32,7 +32,7 @@ namespace nau
 			static Pass *Create(const std::string &name);
 
 			virtual void addScene (const std::string &sceneName);
-			virtual void setRenderTarget (nau::render::RenderTarget* rt);
+			virtual void setRenderTarget (nau::render::IRenderTarget* rt);
 
 			virtual void prepare (void);
 			virtual void restore (void);

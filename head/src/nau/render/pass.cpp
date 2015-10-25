@@ -284,7 +284,7 @@ Pass::prepare (void) {
 			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUT_SIZE);
 			m_RTSizeWidth = (int)f2.x;
 			m_RTSizeHeight = (int)f2.y;
-			m_RenderTarget->setPropui2(RenderTarget::SIZE, uivec2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight));
+			m_RenderTarget->setPropui2(IRenderTarget::SIZE, uivec2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight));
 		}
 		m_RenderTarget->bind();
 	}
@@ -606,7 +606,7 @@ Pass::hasRenderTarget() {
 }
 
  
-nau::render::RenderTarget* 
+nau::render::IRenderTarget* 
 Pass::getRenderTarget (void) {
 
 	return m_RenderTarget;
@@ -628,7 +628,7 @@ Pass::enableRenderTarget(bool b) {
 
 
 void 
-Pass::setRenderTarget (nau::render::RenderTarget* rt) {
+Pass::setRenderTarget (nau::render::IRenderTarget* rt) {
 	
 	if (rt == NULL) {
 		if (m_RenderTarget != NULL) 
@@ -640,8 +640,8 @@ Pass::setRenderTarget (nau::render::RenderTarget* rt) {
 			m_Viewport = new Viewport();
 			m_UseRT = true;
 		}
-		setRTSize(rt->getPropui2(RenderTarget::SIZE));
-		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(RenderTarget::CLEAR_VALUES));
+		setRTSize(rt->getPropui2(IRenderTarget::SIZE));
+		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(IRenderTarget::CLEAR_VALUES));
 	}
 	m_RenderTarget = rt;
 }

@@ -507,7 +507,7 @@
     <ClCompile Include="..\src\nau\render\renderFactory.cpp" />
     <ClCompile Include="..\src\nau\render\renderManager.cpp" />
     <ClCompile Include="..\src\nau\render\renderQueueFactory.cpp" />
-    <ClCompile Include="..\src\nau\render\renderTarget.cpp" />
+    <ClCompile Include="..\src\nau\render\iRenderTarget.cpp" />
     <ClCompile Include="..\src\nau\render\viewport.cpp" />
     <ClCompile Include="..\src\nau\resource\fontManager.cpp" />
     <ClCompile Include="..\src\nau\resource\resourceManager.cpp" />
@@ -731,7 +731,7 @@
     <ClInclude Include="..\src\nau\render\renderFactory.h" />
     <ClInclude Include="..\src\nau\render\renderManager.h" />
     <ClInclude Include="..\src\nau\render\renderQueueFactory.h" />
-    <ClInclude Include="..\src\nau\render\renderTarget.h" />
+    <ClInclude Include="..\src\nau\render\iRenderTarget.h" />
     <ClInclude Include="..\src\nau\resource\fontManager.h" />
     <ClInclude Include="..\src\nau\resource\resourceManager.h" />
     <ClInclude Include="..\src\nau\scene\iScene.h" />

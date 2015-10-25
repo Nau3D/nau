@@ -61,6 +61,9 @@
     <ClCompile Include="src\dialogs\dlgTrace.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="src\dialogs\dlgRenderTarget.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glcanvas.h" />
@@ -121,6 +124,9 @@
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\dialogs\dlgTrace.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\dlgRenderTarget.h">
       <Filter>dialogs</Filter>
     </ClInclude>
   </ItemGroup>

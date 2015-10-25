@@ -1,7 +1,7 @@
 #ifndef GLRENDERTARGET_H
 #define GLRENDERTARGET_H
 
-#include "nau/render/renderTarget.h"
+#include "nau/render/iRenderTarget.h"
 
 #include <glbinding/gl/gl.h>
 using namespace gl;
@@ -28,9 +28,9 @@ namespace nau
 	namespace render
 	{
 
-		class GLRenderTarget : public RenderTarget
+		class GLRenderTarget : public IRenderTarget
 		{
-		friend class RenderTarget;
+		friend class IRenderTarget;
 
 		public:
 			void init();

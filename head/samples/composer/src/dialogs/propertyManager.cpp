@@ -91,6 +91,7 @@ PropertyManager::addAttribute(wxPropertyGridManager *pg, Attribute &a) {
 	case Enums::INT: createInt(pg, a); break;
 	case Enums::IVEC3: createIVec3(pg, a); break;
 	case Enums::UINT: createUInt(pg, a); break;
+	case Enums::UIVEC2: createUIVec2(pg, a); break;
 	case Enums::UIVEC3: createUIVec3(pg, a); break;
 	case Enums::FLOAT: createFloat(pg, a); break;
 	case Enums::VEC2: createVec2(pg, a); break;
@@ -123,6 +124,7 @@ PropertyManager::updateGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs, 
 		case Enums::INT: updateInt(pg, a.getName(), attribVal->getPropi((AttributeValues::IntProperty)a.getId())); break;
 		case Enums::IVEC3: updateIVec3(pg, a.getName(), attribVal->getPropi3((AttributeValues::Int3Property)a.getId())); break;
 		case Enums::UINT: updateInt(pg, a.getName(), attribVal->getPropui((AttributeValues::UIntProperty)a.getId())); break;		
+		case Enums::UIVEC2: updateUIVec2(pg, a.getName(), attribVal->getPropui2((AttributeValues::UInt2Property)a.getId())); break;
 		case Enums::UIVEC3: updateUIVec3(pg, a.getName(), attribVal->getPropui3((AttributeValues::UInt3Property)a.getId())); break;
 		case Enums::FLOAT: updateFloat(pg, a.getName(), attribVal->getPropf((AttributeValues::FloatProperty)a.getId())); break;
 		case Enums::VEC2: updateVec2(pg, a.getName(), attribVal->getPropf2((AttributeValues::Float2Property)a.getId())); break;
@@ -148,6 +150,7 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 	Enums::DataType dt;
 	wxPGProperty *pgProp;
 	int id,i;
+	unsigned int ui; uivec2 uiv2; uivec3 uiv3;
 	bool b;
 	std::string s;
 	attribs.getPropTypeAndId(prop, &dt, &id);
@@ -206,8 +209,33 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 	case Enums::UINT:
 
 		pgProp = pg->GetProperty(wxString(prop));
-		i = pgProp->GetValue().GetInteger();
-		attribVal->setPropui((AttributeValues::UIntProperty)id, i);
+		ui = pgProp->GetValue().GetInteger();
+		attribVal->setPropui((AttributeValues::UIntProperty)id, ui);
+		break;
+
+	case Enums::UIVEC2:
+
+		s = prop + "." + "x";
+		pgProp = pg->GetProperty(wxString(s));
+		uiv2.x = pgProp->GetValue().GetDouble();
+		s = prop + "." + "y";
+		pgProp = pg->GetProperty(wxString(s));
+		uiv2.y = pgProp->GetValue().GetDouble();
+		attribVal->setPropui2((AttributeValues::UInt2Property)id, uiv2);
+		break;
+
+	case Enums::UIVEC3:
+
+		s = prop + "." + "x";
+		pgProp = pg->GetProperty(wxString(s));
+		uiv3.x = pgProp->GetValue().GetDouble();
+		s = prop + "." + "y";
+		pgProp = pg->GetProperty(wxString(s));
+		uiv3.y = pgProp->GetValue().GetDouble();
+		s = prop + "." + "w";
+		pgProp = pg->GetProperty(wxString(s));
+		uiv3.z = pgProp->GetValue().GetDouble();
+		attribVal->setPropui3((AttributeValues::UInt3Property)id, uiv3);
 		break;
 
 	case Enums::FLOAT:
@@ -360,6 +388,8 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 
 		attribVal->setPropm4((AttributeValues::Mat4Property)id, m4);
 		break;
+	default:
+		assert(false && "Missing data type on property manager: updateProp");
 	}
 }
 
@@ -513,6 +543,35 @@ void
 PropertyManager::updateUInt(wxPropertyGridManager *pg, std::string label, unsigned int a) {
 
 	pg->SetPropertyValue(wxString(label.c_str()), (int)a);
+}
+
+
+//		 IVEC2
+
+void
+PropertyManager::createUIVec2(wxPropertyGridManager *pg, nau::Attribute &a) {
+
+	wxPGProperty* topId;
+
+	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+
+	pg->AppendIn(topId, new wxUIntProperty(wxT("x"), wxPG_LABEL));
+	pg->AppendIn(topId, new wxUIntProperty(wxT("y"), wxPG_LABEL));
+
+	if (a.getReadOnlyFlag())
+		pg->DisableProperty(topId);
+}
+
+
+void
+PropertyManager::updateUIVec2(wxPropertyGridManager *pg, std::string label, uivec2 a) {
+
+	std::string s = label + '.' + "x";
+	pg->SetPropertyValue(wxString(s.c_str()), (int)a.x);
+	s.clear();
+	s = label + '.' + "y";
+	pg->SetPropertyValue(wxString(s.c_str()), (int)a.y);
+	s.clear();
 }
 
 

@@ -27,7 +27,7 @@
 #endif
 #include "nau/render/passQuad.h"
 #include "nau/render/pipeline.h"
-#include "nau/render/renderTarget.h"
+#include "nau/render/iRenderTarget.h"
 
 #include "nau/scene/geometricObject.h"
 #include "nau/scene/sceneObjectFactory.h"
@@ -1851,7 +1851,7 @@ ProjectLoader::loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass,std::map<std
 		else if (0 != pName && 0 != pLib) {
 	
 			sprintf(s_pFullName, "%s::%s", pLib, pName);
-			RenderTarget *rt = RESOURCEMANAGER->getRenderTarget(s_pFullName);
+			IRenderTarget *rt = RESOURCEMANAGER->getRenderTarget(s_pFullName);
 			if (rt != NULL)
 				aPass->setRenderTarget(rt);
 			else
@@ -2540,7 +2540,7 @@ void
 ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
 {
 	TiXmlElement *pElem;
-	RenderTarget *rt;
+	IRenderTarget *rt;
 	//int rtWidth, rtHeight, rtSamples = 0, rtLayers = 0; 
 
 	pElem = hRoot.FirstChild ("renderTargets").FirstChild ("renderTarget").Element();
@@ -2554,7 +2554,7 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 		rt = RESOURCEMANAGER->createRenderTarget (s_pFullName);
 		std::vector<std::string> excluded;
 		excluded.push_back("depth"); excluded.push_back("colors");excluded.push_back("depthStencil");
-		readChildTags(pRTName, (AttributeValues *)rt, RenderTarget::Attribs, excluded, pElem);
+		readChildTags(pRTName, (AttributeValues *)rt, IRenderTarget::Attribs, excluded, pElem);
 		//// Render Target size
 		//TiXmlElement *pElemSize;
 		//pElemSize = pElem->FirstChildElement ("size");
@@ -2575,9 +2575,9 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 		//	}
 		//	sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pRTName);
 		//	m_RT = RESOURCEMANAGER->createRenderTarget (s_pFullName);	
-		//	m_RT->setPropui(RenderTarget::SAMPLES, rtSamples);
-		//	m_RT->setPropui(RenderTarget::LAYERS, rtLayers);
-		//	m_RT->setPropui2(RenderTarget::SIZE, uivec2(rtWidth, rtHeight));
+		//	m_RT->setPropui(IRenderTarget::SAMPLES, rtSamples);
+		//	m_RT->setPropui(IRenderTarget::LAYERS, rtLayers);
+		//	m_RT->setPropui2(IRenderTarget::SIZE, uivec2(rtWidth, rtHeight));
 		//} 
 		//else {
 		//	NAU_THROW("Library %s: Render Target %s: No size element found", aLib->getName().c_str(), pRTName);
@@ -2596,7 +2596,7 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 		//	pElemClear->QueryFloatAttribute ("b", &b);
 		//	pElemClear->QueryFloatAttribute ("a", &a);
 
-		//	m_RT->setPropf4(RenderTarget::CLEAR_VALUES, vec4(r,g,b,a));
+		//	m_RT->setPropf4(IRenderTarget::CLEAR_VALUES, vec4(r,g,b,a));
 		//} //End of  rendertargets clear
 
 		TiXmlElement *pElemColor;	
@@ -2663,10 +2663,10 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 		}
 
 		SLOG("Render Target : %s width:%d height:%d samples:%d layers:%d", pRTName, 
-			rt->getPropui2(RenderTarget::SIZE).x,
-			rt->getPropui2(RenderTarget::SIZE).y, 
-			rt->getPropui(RenderTarget::SAMPLES),
-			rt->getPropui(RenderTarget::LAYERS));
+			rt->getPropui2(IRenderTarget::SIZE).x,
+			rt->getPropui2(IRenderTarget::SIZE).y, 
+			rt->getPropui(IRenderTarget::SAMPLES),
+			rt->getPropui(IRenderTarget::LAYERS));
 		if (!rt->checkStatus()) {
 			NAU_THROW("File %s\nLibrary %s\nRender target %s is not OK", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);							
 

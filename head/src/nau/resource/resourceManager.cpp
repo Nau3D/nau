@@ -353,13 +353,13 @@ ResourceManager::getNumTextures() {
 
 //-------------------------------------
 
-nau::render::RenderTarget* 
+nau::render::IRenderTarget* 
 ResourceManager::createRenderTarget (std::string name) {
 
 	if (m_RenderTargets.count (name) > 0) {
 		return 0;
 	}
-	m_RenderTargets[name] = RenderTarget::Create (name);
+	m_RenderTargets[name] = IRenderTarget::Create (name);
 	return m_RenderTargets[name];
 }
 
@@ -380,7 +380,7 @@ ResourceManager::getNumRenderTargets() {
 }
 
 
-nau::render::RenderTarget *
+nau::render::IRenderTarget *
 ResourceManager::getRenderTarget(const std::string &name) {
 
 	if (m_RenderTargets.count (name) > 0)
@@ -403,7 +403,7 @@ ResourceManager::hasRenderTarget(const std::string &name) {
 std::vector<std::string>* 
 ResourceManager::getRenderTargetNames() {
 
-  std::map<std::string, nau::render::RenderTarget*>::iterator iter;
+  std::map<std::string, nau::render::IRenderTarget*>::iterator iter;
   std::vector<std::string> *names = new std::vector<std::string>;
 
   for(iter = m_RenderTargets.begin(); iter != m_RenderTargets.end(); ++iter) {

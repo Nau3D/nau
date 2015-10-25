@@ -11,7 +11,7 @@ using namespace nau::render;
 
 
 GLRenderTarget::GLRenderTarget (std::string name) :
-	RenderTarget (),
+	IRenderTarget (),
 	m_RenderTargets(0)
 {
 	m_Name = name;
@@ -60,7 +60,7 @@ GLRenderTarget::setPropui2(UInt2Property prop, uivec2 &value) {
 
 	switch (prop) {
 
-	case RenderTarget::SIZE:
+	case IRenderTarget::SIZE:
 		if (m_UInt2Props[SIZE] != value) {
 			m_UInt2Props[SIZE] = value;
 			resize();

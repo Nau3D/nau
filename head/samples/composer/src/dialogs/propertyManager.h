@@ -57,6 +57,9 @@ protected:
 	static void createUInt(wxPropertyGridManager *pg, Attribute &a);
 	static void updateUInt(wxPropertyGridManager *pg, std::string label, unsigned int a);
 
+	static void createUIVec2(wxPropertyGridManager *pg, Attribute &a);
+	static void updateUIVec2(wxPropertyGridManager *pg, std::string label, uivec2 a);
+
 	static void createUIVec3(wxPropertyGridManager *pg, Attribute &a);
 	static void updateUIVec3(wxPropertyGridManager *pg, std::string label, uivec3 a);
 

@@ -415,9 +415,6 @@
     <ClCompile Include="..\src\nau\render\renderQueueFactory.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\render\renderTarget.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\resource\fontManager.cpp">
       <Filter>Source Files\resource</Filter>
     </ClCompile>
@@ -534,6 +531,9 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\util\tree.cpp">
       <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\iRenderTarget.cpp">
+      <Filter>Source Files\render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -930,9 +930,6 @@
     <ClInclude Include="..\src\nau\render\renderQueueFactory.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\render\renderTarget.h">
-      <Filter>Source Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\resource\fontManager.h">
       <Filter>Source Files\resource</Filter>
     </ClInclude>
@@ -1055,6 +1052,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\bimap.h">
       <Filter>Source Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\iRenderTarget.h">
+      <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

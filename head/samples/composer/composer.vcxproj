@@ -609,6 +609,7 @@
       </PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\dialogs\dlgBuffers.cpp" />
+    <ClCompile Include="src\dialogs\dlgRenderTarget.cpp" />
     <ClCompile Include="src\dialogs\dlgTrace.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgStep.cpp" />
@@ -633,6 +634,7 @@
   <ItemGroup>
     <ClInclude Include="src\dialogs\dlgAtomics.h" />
     <ClInclude Include="src\dialogs\dlgBuffers.h" />
+    <ClInclude Include="src\dialogs\dlgRenderTarget.h" />
     <ClInclude Include="src\dialogs\dlgTrace.h" />
     <ClInclude Include="src\dialogs\dlgDbgPrograms.h" />
     <ClInclude Include="src\dialogs\dlgDbgStep.h" />

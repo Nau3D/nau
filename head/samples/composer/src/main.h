@@ -2,7 +2,6 @@
 #define MAIN_H
 
 
-
 #include <wx/wxprec.h>
 
 #include <wx/string.h>
@@ -20,13 +19,12 @@
 #include "dialogs/dlgDbgPrograms.h"
 #include "dialogs/dlgBuffers.h"
 #include "dialogs/dlgDbgStep.h"
-//#include "dialogs/DlgStateXML.h"
+#include "dialogs/dlgRenderTarget.h"
 #include "dialogs/dlgViewports.h"
 
 #include "glcanvas.h"
 
 #include <nau.h>
-
 
 
 #ifdef __BORLANDC__
@@ -53,7 +51,8 @@ public:
 
 private:
    GLCanvas *m_Canvas;
-	wxMenu *fileMenu, *renderMenu, *assetsMenu, *materialsMenu, *debugMenu, *aboutMenu;
+	wxMenu *fileMenu, *renderMenu, *assetsMenu, *materialsMenu, 
+		*debugMenu, *aboutMenu;
 	bool m_Inited, m_Tracing;
 
 	nau::Nau *m_pRoot; 
@@ -83,6 +82,7 @@ private:
 	void OnDlgAtomics(wxCommandEvent& event);
 	void OnDlgShaders(wxCommandEvent& event);
 	void OnDlgBuffers(wxCommandEvent& event);
+	void OnDlgRenderTargets(wxCommandEvent& event);
 
 	void OnDlgLog(wxCommandEvent& event);
 	void OnBreakResume(wxCommandEvent& event);
@@ -109,24 +109,10 @@ private:
 
    DECLARE_EVENT_TABLE();
 
-	//void compile(IScene *scene); 
-	//void initScene (void);
-	//void LoadDebugData();
-	//Debugger end
-	//void OnModelAppend (wxCommandEvent& event);
-
-
-	//void OnSetProfileMaterial(wxCommandEvent& event);
-	//void OnOctreeBuild (wxCommandEvent& event);
-	//void OnOctreeCompile (wxCommandEvent& event);
-	//void OnOctreeWrite (wxCommandEvent& event);
 	//void buildPhysics (void);
 	//void OnPhysicsBuild (wxCommandEvent &event);
 	//void OnPhysicsMode (wxCommandEvent &event);
 	
-	//Debugger begin
-	//void OnDlgStateXML(wxCommandEvent& event);
-	//void OnNextFrame(wxCommandEvent& event);
 };
 
 #endif // MAIN_H

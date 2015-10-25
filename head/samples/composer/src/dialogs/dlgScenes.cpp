@@ -124,7 +124,7 @@ DlgScenes::setupPanel(wxSizer *siz, wxWindow *Parent) {
 	/* TOP: COMBO with scene names */
 	wxBoxSizer *sizH1 = new wxBoxSizer(wxHORIZONTAL);
 
-	wxStaticText *stg1 =  new wxStaticText(this,-1,wxT("Scene: "));
+	wxStaticText *stg1 =  new wxStaticText(this,-1, wxT("Scene: "));
 	m_List = new wxComboBox(this,DLG_COMBO,wxT(""),wxDefaultPosition,wxDefaultSize,0,NULL,wxCB_READONLY );
 
 	updateList();
