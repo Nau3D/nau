@@ -20,7 +20,9 @@ ColorMaterial::Init() {
 	// FLOAT
 	Attribs.add(Attribute(SHININESS, "SHININESS", Enums::DataType::FLOAT, false, new float(0)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("COLOR", &Attribs);
+#endif
 
 	return true;
 }
@@ -28,7 +30,6 @@ ColorMaterial::Init() {
 
 AttribSet ColorMaterial::Attribs;
 bool ColorMaterial::Inited = Init();
-
 
 //void
 //ColorMaterial::initArrays() {

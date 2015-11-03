@@ -22,10 +22,9 @@ void
 PropertyManager::createOrderedGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs, std::vector<std::string> &list) {
 
 	// First add the attributes in the list
-	Attribute attr;
 	for (auto name : list) {
 
-		attr = attribs.get(name);
+		Attribute &attr = attribs.get(name);
 		addAttribute(pg, attr);
 	}
 
@@ -146,7 +145,7 @@ PropertyManager::updateGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs, 
 void
 PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribSet &attribs, AttributeValues *attribVal) {
 
-	Attribute a = attribs.get(prop);
+	Attribute &a = attribs.get(prop);
 	Enums::DataType dt;
 	wxPGProperty *pgProp;
 	int id,i;

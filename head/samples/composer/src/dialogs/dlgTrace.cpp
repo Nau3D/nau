@@ -243,7 +243,7 @@ DlgTrace::finishReadLogFile() {
 void 
 DlgTrace::loadLog() {
 
-	string logname = gliGetLogName();
+	//string logname = gliGetLogName();
 	string logfile;
 	HANDLE hFile;
 

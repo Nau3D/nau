@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Optix Dynamic|Win32">
+      <Configuration>Debug Optix Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug Optix Dynamic|x64">
+      <Configuration>Debug Optix Dynamic</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug Optix|Win32">
       <Configuration>Debug Optix</Configuration>
       <Platform>Win32</Platform>
@@ -38,6 +46,7 @@
     <ProjectGuid>{B2A55A68-A417-4C52-BFE7-8193BA388ABF}</ProjectGuid>
     <RootNamespace>nau_new</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -79,7 +88,17 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
@@ -106,7 +125,13 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -114,8 +139,10 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
@@ -123,15 +150,21 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'" />
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -159,20 +192,30 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">D:\OptixSDK.3.7\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">D:\OptixSDK.3.7\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">D:\Optix SDK 3.8.0\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;d:\toolkits\includes64;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">D:\Optix SDK 3.8.0\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include\;d:\toolkits\includes64;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     </LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">$(LibraryPath)</LibraryPath>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">$(ExecutablePath)</ExecutablePath>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
     <TargetName>nauOptix_d</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">
+    <TargetName>nauOptix_d</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">
     <TargetName>nauOptix64_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">
+    <TargetName>nauOptix64_d_dl</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>nau_d</TargetName>
@@ -249,6 +292,29 @@
       <Command>copy "$(OutDir)nauOptix_d.lib" d:\toolkits\libs</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../src;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;WIN32;_DEBUG;_LIB;NAU_OPTIX;NAU_OPTIX_PRIME;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <UndefinePreprocessorDefinitions>ENUM_PROP(A,B)</UndefinePreprocessorDefinitions>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)nauOptix_d.lib</OutputFile>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)nauOptix_d.lib" d:\toolkits\libs</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -263,6 +329,30 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile />
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)$(TargetName).lib" $(TOOLKITS)\libs64</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NAU_OPTIX;NOMINMAX;TIXML_USE_STL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
@@ -492,7 +582,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\src\nau\render\passDepthMap.cpp" />
     <ClCompile Include="..\src\nau\render\passFactory.cpp" />
@@ -575,7 +667,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
@@ -588,6 +682,7 @@
     <ClCompile Include="..\src\nau\world\worldFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\iNau.h" />
     <ClInclude Include="..\src\nau\attribute.h" />
     <ClInclude Include="..\src\nau\attributeValues.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
@@ -641,7 +736,9 @@
     <ClInclude Include="..\src\nau\material\iTexture.h" />
     <ClInclude Include="..\src\nau\material\iTextureCubeMap.h" />
     <ClInclude Include="..\src\nau\material\iTextureSampler.h" />
+    <ClInclude Include="..\src\nau\math\data.h" />
     <ClInclude Include="..\src\nau\math\matrix.h" />
+    <ClInclude Include="..\src\nau\math\number.h" />
     <ClInclude Include="..\src\nau\math\randomGen.h" />
     <ClInclude Include="..\src\nau\math\vec2.h" />
     <ClInclude Include="..\src\nau\math\vec3.h" />
@@ -715,13 +812,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passDepthMap.h" />
     <ClInclude Include="..\src\nau\render\passFactory.h" />
     <ClInclude Include="..\src\nau\render\passOptix.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\src\nau\render\passOptixPrime.h" />
     <ClInclude Include="..\src\nau\render\passProcessBuffer.h" />
@@ -812,7 +912,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
@@ -826,12 +928,18 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">nvcc -ptx -I "D:\NVIDIA\OptiX SDK 2.5.0\include" D:/nau/head/src/optix/common.cu</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc" -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:\nau\head\src\optix\common.cu
 copy common.ptx ..\build\samples\optix</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc" -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:\nau\head\src\optix\common.cu
+copy common.ptx ..\build\samples\optix</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin" D:/nau/head/src/optix/common.cu
+copy common.ptx ..\build\samples\optix</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin" D:/nau/head/src/optix/common.cu
 copy common.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common.cu.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">common.cu.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">common.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">common.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">common.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">common.ptx</Outputs>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc" -ptx --use_fast_math  --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:\nau\head\src\optix\common.cu
@@ -844,7 +952,9 @@ copy common.ptx ..\build\samples\optix</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">true</ExcludedFromBuild>
       <FastMath Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</FastMath>
       <FastMath Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</FastMath>
       <NvccCompilation Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">ptx</NvccCompilation>
@@ -862,14 +972,22 @@ copy deferredShadows.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">deferredShadows.ptx</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:/nau/head/src/optix/deferredShadows.cu
 copy deferredShadows.ptx ..\build\samples\optix</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:/nau/head/src/optix/deferredShadows.cu
+copy deferredShadows.ptx ..\build\samples\optix</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin" D:/nau/head/src/optix/deferredShadows.cu
 copy deferredShadows.ptx ..\build\samples\optix</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin" D:/nau/head/src/optix/deferredShadows.cu
+copy deferredShadows.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">deferredShadows.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">deferredShadows.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">deferredShadows.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">deferredShadows.ptx</Outputs>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
     </CustomBuild>
@@ -882,15 +1000,23 @@ copy rtvssm.ptx ..\build\samples\optix</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">rtvssm.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">rtvssm.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">rtvssm.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">rtvssm.ptx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">rtvssm.ptx</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">rtvssm.ptx</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:/nau/head/src/optix/rtvssm.cu
 copy rtvssm.ptx ..\build\samples\optix</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin" D:/nau/head/src/optix/rtvssm.cu
+copy rtvssm.ptx ..\build\samples\optix</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin" D:/nau/head/src/optix/rtvssm.cu
+copy rtvssm.ptx ..\build\samples\optix</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">nvcc -ptx --machine 32  -I "D:\OptixSDK\include" --compiler-bindir "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin" D:/nau/head/src/optix/rtvssm.cu
 copy rtvssm.ptx ..\build\samples\optix</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
     </CustomBuild>

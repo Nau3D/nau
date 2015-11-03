@@ -47,6 +47,8 @@ namespace nau
 			//ITransform *m_Transform;
 			mat4 m_Transform;
 			bool m_Visible;
+			std::set<std::string> m_MaterialNames;
+			std::string m_Type;
 
 			void updateTransform();
 
@@ -81,7 +83,7 @@ namespace nau
 			virtual SceneObject* getSceneObject (std::string name) = 0; 
 			virtual SceneObject* getSceneObject (int index) = 0;
 
-			virtual void getMaterialNames(std::set<std::string> *nameList) = 0;
+			virtual const std::set<std::string> &getMaterialNames() = 0;
 
 			virtual void build (void) = 0;
 
@@ -96,7 +98,7 @@ namespace nau
 
 			virtual nau::geometry::IBoundingVolume& getBoundingVolume (void) = 0;
 
-			virtual std::string getType (void) = 0;
+			virtual const std::string &getType (void);
 
 			virtual ~IScene(void) {};
 			IScene(void) : m_Compiled(false), m_Visible(true) {

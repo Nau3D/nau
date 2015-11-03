@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#define APISupport IAPISupport::GetInstance()
+
 
 namespace nau
 {
@@ -41,7 +41,8 @@ namespace nau
 			std::map<APIFeatureSupport, bool> m_APISupport;
 			unsigned int m_Version;
 			static IAPISupport *Instance;
-			IAPISupport() {};
+			IAPISupport();
+			~IAPISupport();
 		};
 	};
 };

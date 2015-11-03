@@ -57,22 +57,15 @@ Camera::Init() {
 	Attribs.listAdd("TYPE", "PERSPECTIVE", PERSPECTIVE);
 	Attribs.listAdd("TYPE", "ORTHO", ORTHO);
 
+#ifndef _WINDLL
 	NAU->registerAttributes("CAMERA", &Attribs);
+#endif
 
 	return true;
 }
 
-
 AttribSet Camera::Attribs;
 bool Camera::Inited = Init();
-
-//void
-//Camera::setDefault()
-//{
-//	Attribs.initAttribInstanceFloatArray(m_FloatProps);
-//	Attribs.initAttribInstanceVec4Array(m_Float4Props);
-//	Attribs.initAttribInstanceEnumArray(m_EnumProps);
-//}
 
 
 Camera::Camera (const std::string &name) :
@@ -106,7 +99,7 @@ Camera::Camera (const std::string &name) :
 	renderable->setDrawingPrimitive(nau::render::IRenderable::LINES);
 	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(8);
 	VertexData &vertexData = renderable->getVertexData();
-	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Green");
 	
@@ -363,7 +356,7 @@ Camera::getRenderable (void) {
 	}
 
 	VertexData &vertexData = m_Renderable->getVertexData();
-	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 
 	//std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(8);
 	//for (int i = 0; i < 8 ; ++i) 

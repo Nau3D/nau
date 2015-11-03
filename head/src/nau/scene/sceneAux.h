@@ -27,9 +27,6 @@ namespace nau {
 			virtual void unitize();
 			virtual void compile();
 
-			virtual std::string getType (void);
-
-
 		public:
 			~SceneAux (void);
 		};

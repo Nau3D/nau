@@ -1,5 +1,6 @@
 #include "nau/attributeValues.h"
 
+#include "nau.h"
 #include "nau/slogger.h"
 
 
@@ -27,7 +28,7 @@ AttributeValues::getPrope(EnumProperty prop) {
 bool 
 AttributeValues::isValide(EnumProperty prop, int value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::ENUM);
+	Attribute &attr = m_Attribs->get(prop, Enums::ENUM);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -71,7 +72,7 @@ AttributeValues::getPropi(IntProperty prop) {
 bool
 AttributeValues::isValidi(IntProperty prop, int value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::INT);
+	Attribute &attr = m_Attribs->get(prop, Enums::INT);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -122,7 +123,7 @@ AttributeValues::getPropi2(Int2Property prop) {
 bool
 AttributeValues::isValidi2(Int2Property prop, ivec2 &value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::IVEC2);
+	Attribute &attr = m_Attribs->get(prop, Enums::IVEC2);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -173,7 +174,7 @@ AttributeValues::getPropi3(Int3Property prop) {
 bool
 AttributeValues::isValidi3(Int3Property prop, ivec3 &value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::IVEC3);
+	Attribute &attr = m_Attribs->get(prop, Enums::IVEC3);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -223,7 +224,7 @@ AttributeValues::getPropui(UIntProperty prop) {
 bool 
 AttributeValues::isValidui(UIntProperty prop, unsigned int value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::UINT);
+	Attribute &attr = m_Attribs->get(prop, Enums::UINT);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -274,7 +275,7 @@ AttributeValues::getPropui2(UInt2Property prop) {
 bool
 AttributeValues::isValidui2(UInt2Property prop, uivec2 &value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::UIVEC2);
+	Attribute &attr = m_Attribs->get(prop, Enums::UIVEC2);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -325,7 +326,7 @@ AttributeValues::getPropui3(UInt3Property prop) {
 bool
 AttributeValues::isValidui3(UInt3Property prop, uivec3 &value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::UIVEC3);
+	Attribute &attr = m_Attribs->get(prop, Enums::UIVEC3);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -376,7 +377,7 @@ AttributeValues::getPropb(BoolProperty prop) {
 bool 
 AttributeValues::isValidb(BoolProperty prop, bool value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::BOOL);
+	Attribute &attr = m_Attribs->get(prop, Enums::BOOL);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -417,7 +418,7 @@ AttributeValues::getPropb4(Bool4Property prop) {
 bool 
 AttributeValues::isValidb4(Bool4Property prop, bvec4 &value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::BVEC4);
+	Attribute &attr = m_Attribs->get(prop, Enums::BVEC4);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -459,7 +460,7 @@ AttributeValues::getPropf(FloatProperty prop) {
 bool 
 AttributeValues::isValidf(FloatProperty prop, float f) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::FLOAT);
+	Attribute &attr = m_Attribs->get(prop, Enums::FLOAT);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -509,7 +510,7 @@ AttributeValues::getPropf4(Float4Property prop) {
 bool 
 AttributeValues::isValidf4(Float4Property prop, vec4 &f) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::VEC4);
+	Attribute &attr = m_Attribs->get(prop, Enums::VEC4);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -568,7 +569,7 @@ AttributeValues::getPropf3(Float3Property prop) {
 bool
 AttributeValues::isValidf3(Float3Property prop, vec3 &f) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::VEC3);
+	Attribute &attr = m_Attribs->get(prop, Enums::VEC3);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -626,7 +627,7 @@ AttributeValues::getPropf2(Float2Property prop) {
 bool 
 AttributeValues::isValidf2(Float2Property prop, vec2 &f) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::VEC2);
+	Attribute &attr = m_Attribs->get(prop, Enums::VEC2);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -676,7 +677,7 @@ AttributeValues::getPropm4(Mat4Property prop) {
 bool 
 AttributeValues::isValidm4(Mat4Property prop, mat4 &value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::MAT4);
+	Attribute &attr = m_Attribs->get(prop, Enums::MAT4);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))
@@ -718,7 +719,7 @@ AttributeValues::getPropm3(Mat3Property prop) {
 bool 
 AttributeValues::isValidm3(Mat3Property prop, mat3 &value) {
 
-	Attribute attr = m_Attribs->get(prop, Enums::MAT3);
+	Attribute &attr = m_Attribs->get(prop, Enums::MAT3);
 	if (attr.getName() == "NO_ATTR")
 		return false;
 	if (!APISupport->apiSupport(attr.m_Requires))

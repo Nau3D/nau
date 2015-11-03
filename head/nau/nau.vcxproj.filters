@@ -1056,6 +1056,15 @@
     <ClInclude Include="..\src\nau\render\iRenderTarget.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\iNau.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\number.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\math\data.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="..\src\nau\math\spherical.h">

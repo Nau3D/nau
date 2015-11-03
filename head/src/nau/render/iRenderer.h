@@ -213,7 +213,7 @@ namespace nau
 			/// shaders
 			virtual void setShader(IProgram *aShader) = 0;
 			/// returns the attribute location of a uniform var
-			virtual int getAttribLocation(std::string name) = 0;
+			virtual int getAttribLocation(std::string &name) = 0;
 
 			// image textures
 			virtual void addImageTexture(unsigned int aTexUnit, IImageTexture *t) = 0;

@@ -159,7 +159,9 @@ GLCanvas::OnSize (wxSizeEvent &event) {
 	GetClientSize (&width, &height);
 
 	if (0 != m_pEngine) {
-		EVENTMANAGER->notifyEvent("WINDOW_SIZE_CHANGED","Canvas","",new EventVec3(vec3(width,height,0)));
+		EventVec3 *e3 = new EventVec3(vec3(width, height, 0));
+		EVENTMANAGER->notifyEvent("WINDOW_SIZE_CHANGED","Canvas","",e3);
+		delete e3;
 	}
 }
 

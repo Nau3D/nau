@@ -33,7 +33,7 @@ const std::string VertexData::Syntax[] = {
 
 
 unsigned int 
-VertexData::GetAttribIndex(std::string attribName) {
+VertexData::GetAttribIndex(std::string &attribName) {
 
 	unsigned int index;
 
@@ -116,8 +116,8 @@ int
 VertexData::add (VertexData &aVertexData) {
 
 	size_t offset = 0;
-
-	std::vector<Attr> &vertices = getDataOf (GetAttribIndex("position"));
+	std::string s = "position";
+	std::vector<Attr> &vertices = getDataOf (GetAttribIndex(s));
 
 	offset = vertices.size();
 
@@ -151,7 +151,7 @@ VertexData::add (VertexData &aVertexData) {
 			}
 			else if (newVec == VertexData::NoData && thisVec != VertexData::NoData) {
 
-				size_t size = aVertexData.getDataOf(GetAttribIndex("position")).size();
+				size_t size = aVertexData.getDataOf(GetAttribIndex(std::string("position"))).size();
 				thisVec.resize(offset + size);
 			}
 		}
@@ -164,7 +164,7 @@ VertexData::add (VertexData &aVertexData) {
 void 
 VertexData::unitize(vec3 &vCenter, vec3 &vMin, vec3 &vMax) {
 
-	std::vector<Attr> &vertices = getDataOf (GetAttribIndex("position"));
+	std::vector<Attr> &vertices = getDataOf (GetAttribIndex(std::string("position")));
 
 	if (vertices == VertexData::NoData) 
 		return;

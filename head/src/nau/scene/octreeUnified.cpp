@@ -20,6 +20,7 @@ OctreeUnified::OctreeUnified(void) : IScenePartitioned(),
 {
 	EVENTMANAGER->addListener("SET_POSITION", this);
 	EVENTMANAGER->addListener("SET_ROTATION", this);
+	m_Type = "OctreeUnified";
 }
 
 
@@ -166,11 +167,14 @@ OctreeUnified::getAllObjects()
 }
 
 
-void
-OctreeUnified::getMaterialNames(std::set<std::string> *nameList)
+const std::set<std::string> &
+OctreeUnified::getMaterialNames()
 {
+	m_MaterialNames.clear();
 	if (m_SceneObject)
-		m_SceneObject->getRenderable().getMaterialNames(nameList);
+		m_SceneObject->getRenderable().getMaterialNames(&m_MaterialNames);
+
+	return m_MaterialNames;
 }
 
 
@@ -191,14 +195,6 @@ OctreeUnified::getSceneObject(int index)
 		return NULL;
 	else
 		return m_SceneObject;
-}
-
-
-
-
-std::string
-OctreeUnified::getType(void) {
-	return "OctreeUnified";
 }
 
 

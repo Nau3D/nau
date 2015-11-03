@@ -57,6 +57,7 @@ GLProgram::~GLProgram() {
 		if (m_ID[i] != 0)
 			glDeleteShader(m_ID[i]);
 	}
+
 }
 
 
@@ -94,7 +95,7 @@ GLProgram::getAttributeNames(std::vector<std::string>* s) {
 	GLenum typ;
 	char name[256];
 	glGetProgramiv(m_P, GL_ACTIVE_ATTRIBUTES, &k);
-	for (unsigned int i = 0; i < k; ++i) {
+	for (unsigned int i = 0; i < (unsigned int)k; ++i) {
 		glGetActiveAttrib(m_P, i, 256, &len, &siz, &typ, name);
 		s->push_back(name);
 	}
@@ -203,7 +204,7 @@ GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename
 	m_Compiled[type] = false;
 	m_PLinked = false;
 	m_File[type] = filename;
-	m_Source[type] = nau::system::File::TextRead(filename);
+	m_Source[type] = nau::system::File::TextRead(m_File[type]);
 	
 	// set shader source
 	const char * vv = m_Source[type].c_str();

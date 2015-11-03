@@ -40,7 +40,7 @@ namespace nau
 			void setMaterialName(const std::string &lName,const std::string &mName);
 			Material *getMaterial();
 
-			void setDimension(int dimX, int dimY, int dimZ);
+			void setDimension(unsigned int dimX, unsigned int dimY, unsigned int dimZ);
 			void setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX,
 				IBuffer  *buffNameY, unsigned int offY,
 				IBuffer  *buffNameZ, unsigned int offZ);

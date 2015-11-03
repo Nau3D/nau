@@ -4,7 +4,7 @@
 #pragma warning( disable: 4299)
 #pragma warning( disable: 4099)
 
-//#include <vld.h>
+#include <vld.h>
 
 #include <main.h>
 #include <glcanvas.h>
@@ -324,7 +324,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	//}
 #endif
 
-	m_pRoot = nau::Nau::create();
+
+	m_pRoot = nau::Nau::Create();
 
 	bool nauInit (false);
         

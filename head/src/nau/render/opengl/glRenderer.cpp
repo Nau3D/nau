@@ -546,7 +546,7 @@ GLRenderer::setShader(IProgram *aShader)
 
 
 int
-GLRenderer::getAttribLocation(std::string name) {
+GLRenderer::getAttribLocation(std::string &name) {
 
 	return VertexData::GetAttribIndex(name);
 }
@@ -829,6 +829,8 @@ GLRenderer::setRenderMode(TRenderMode mode) {
 void
 GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 
+	if (aMatGroup->getMaterialName() == "__Emission Green" || aMatGroup->getMaterialName() == "__Emission Red")
+		int x = 3;
 	IRenderable& aRenderable = aMatGroup->getParent();
 	IndexData &indexData = aMatGroup->getIndexData();
 

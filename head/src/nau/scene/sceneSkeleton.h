@@ -19,7 +19,6 @@ namespace nau {
 
 				virtual void compile();
 			
-				virtual std::string getType (void);
 				virtual void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt);
 
 				void addAnim(std::string aName, float aLength);

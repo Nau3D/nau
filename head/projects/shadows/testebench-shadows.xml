@@ -67,7 +67,7 @@
 	<pipelines>
 		<pipeline name="shadow" defaultCamera="testCamera">
 		
-			<pass class="depthmap" name="getShadowMap">
+			<pass class="depthmap2" name="getShadowMap">
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>

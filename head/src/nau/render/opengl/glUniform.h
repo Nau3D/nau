@@ -3,6 +3,7 @@
 
 #include "nau/enums.h"
 #include "nau/material/iUniform.h"
+#include "nau/math/data.h"
 
 #include <glbinding/gl/gl.h>
 using namespace gl;
@@ -27,6 +28,7 @@ namespace nau
 			int m_ArraySize;
 			
 			int m_Loc;
+			//nau::math::Data *m_Values;
 			void *m_Values;	
 
 			static bool Init();
@@ -64,6 +66,9 @@ namespace nau
 			int getCardinality();
 			
 			void setArrayValue(int index, void *v);
+
+			//void setValues(nau::math::Data *v);
+			//nau::math::Data *getValues();
 			void setValues (void *v);
 			void *getValues(void);
 

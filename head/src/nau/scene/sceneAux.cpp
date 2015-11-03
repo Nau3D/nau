@@ -16,28 +16,25 @@ using namespace nau::geometry;
 using namespace nau::render;
 using namespace nau::material;
 
-SceneAux::SceneAux(void) : Scene()
-{
+
+SceneAux::SceneAux(void) : Scene() {
+
+	m_Type = "SceneAux";
 }
 
 
-SceneAux::~SceneAux(void)
-{
+SceneAux::~SceneAux(void) {
+
 }
 
 
 void
-SceneAux::compile()
-{
-}
+SceneAux::compile() {
 
-
-std::string 
-SceneAux::getType (void) {
-	return "SceneAux";
 }
 
 
 void SceneAux::unitize() {
+
 }
 

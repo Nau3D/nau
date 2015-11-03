@@ -10,7 +10,9 @@ MaterialTexture::Init() {
 	// INT
 	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, false, new int(0)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("MATERIAL_TEXTURE", &Attribs);
+#endif
 
 	return true;
 }

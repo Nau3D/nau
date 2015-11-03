@@ -28,7 +28,7 @@ Axis::Axis(void) : Primitive()
 
 	VertexData &vertexData = getVertexData();
 
-	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");

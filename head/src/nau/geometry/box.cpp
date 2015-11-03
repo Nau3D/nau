@@ -150,10 +150,10 @@ Box::Box(void) : Primitive(),
 
 	VertexData &vertexData = getVertexData();
 
-	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
-	vertexData.setDataFor (VertexData::GetAttribIndex("texCoord0"), textureCoords);
-	vertexData.setDataFor (VertexData::GetAttribIndex("tangent"), tangent);
-	vertexData.setDataFor (VertexData::GetAttribIndex("normal"), normals);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("tangent")), tangent);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "Light Grey");

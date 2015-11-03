@@ -21,6 +21,8 @@ OctreeScene::OctreeScene(void) : IScenePartitioned(),
 {
 	EVENTMANAGER->addListener("SET_POSITION", this);
 	EVENTMANAGER->addListener("SET_ROTATION", this);
+
+	m_Type = "Octree";
 }
 
 
@@ -228,18 +230,19 @@ OctreeScene::getAllObjects ()
 }
 
 
-void
-OctreeScene::getMaterialNames(std::set<std::string> *nameList)
+const std::set<std::string> &
+OctreeScene::getMaterialNames()
 {
-	std::vector<SceneObject*>::iterator objIter;
-	objIter = m_SceneObjects.begin();
-	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		(*objIter)->getRenderable().getMaterialNames(nameList);
+	m_MaterialNames.clear();
+
+	for (auto objIter : m_SceneObjects) {
+		objIter->getRenderable().getMaterialNames(&m_MaterialNames);
 	}
 
 	if (0 != m_pGeometry) {
-		m_pGeometry->getMaterialNames(nameList);
+		m_pGeometry->getMaterialNames(&m_MaterialNames);
 	}
+	return m_MaterialNames;
 }
 
 
@@ -264,14 +267,6 @@ OctreeScene::getSceneObject( int index)
 		return NULL;
 
 	return m_SceneObjects.at(index);
-}
-
-
-
-
-std::string 
-OctreeScene::getType (void) {
-	return "Octree";
 }
 
 

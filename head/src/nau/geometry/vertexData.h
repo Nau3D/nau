@@ -22,7 +22,7 @@ namespace nau
 			static const int MaxAttribs = 16;
 
 			static  const std::string Syntax[]; 
-			static unsigned int GetAttribIndex(std::string);
+			static unsigned int GetAttribIndex(std::string &);
 
 			// A vertex attribute is a vec4
 			typedef nau::math::vec4 Attr ;

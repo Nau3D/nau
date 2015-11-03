@@ -156,9 +156,9 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence)
 	}
 
 	VertexData &vertexData = renderable.getVertexData();
-	vertexData.setDataFor (VertexData::GetAttribIndex("position"), vertices);
-	vertexData.setDataFor (VertexData::GetAttribIndex("normal"), normals);
-	vertexData.setDataFor (VertexData::GetAttribIndex("texCoord0"), texCoords);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
+	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), texCoords);
 
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>(size*6);
 	for (int j = 0; j < size*6 ; j++)

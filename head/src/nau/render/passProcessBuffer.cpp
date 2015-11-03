@@ -11,7 +11,9 @@ PassProcessBuffer::Init() {
 	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
 
 
+#ifndef _WINDLL
 	NAU->registerAttributes("PASS_PROCESS_BUFFER", &Attribs);
+#endif
 	return true;
 }
 

@@ -30,19 +30,22 @@
 		</viewports>
 		<cameras>
 			<camera name="MainCamera" >
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
+				<POSITION x="-4.0" y="20.0" z="-29.0" />
+				<VIEW x="0.91" y="-0.29" z="0.26" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+			<!--camera name="MainCamera" >
 				<viewport name="LeftViewport" />
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
 				<POSITION x="7.42" y="18.61" z="-38.62" />
 				<VIEW x="0.31" y="-0.36" z="0.87" />
 				<UP x="0.0" y="1.0" z="0.0" />
-			</camera>
+			</camera-->
 		</cameras>
 		<lights>
 			<light name="Sun">
-				<POSITION x="-52" y="77.0" z="-27.0" />
-				<DIRECTION x="0.597" y="-0.390" z="0.700" />
-				<COLOR r="0.9" g="0.9" b="0.9" />
-				<AMBIENT r="0.5" g="0.5" b="0.5" />
+				<DIRECTION x="1" y="-1" z="-1" />
 			</light>
 		</lights>
 		<materialLibs>

@@ -20,6 +20,7 @@ GLUniform::GLUniform() :
 }
 
 GLUniform::~GLUniform() {
+
 	//if (m_Values != NULL)
 	//	free(m_Values);
 }
@@ -39,13 +40,18 @@ GLUniform::getCardinality() {
 }
 
 
-
-
 void 
 GLUniform::setValues(void *v) {
 
 	memcpy(m_Values, v, m_Size);
 }
+
+
+//void
+//GLUniform::setValues(nau::math::Data *v) {
+//
+//	m_Values = v;
+//}
 
 
 void
@@ -55,11 +61,19 @@ GLUniform::setArrayValue(int index, void *v) {
 }
 
 
+//nau::math::Data *
+//GLUniform::getValues(void)
+//{
+//	return m_Values;
+//}
+
+
 void*
 GLUniform::getValues(void)
 {
 	return m_Values;
 }
+
 
 
 int

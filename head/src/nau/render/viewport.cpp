@@ -21,15 +21,15 @@ Viewport::Init() {
 	Attribs.add(Attribute(FULL, "FULL", Enums::DataType::BOOL, false, new bool(true)));
 
 	// FLOAT
-	Attribute r = Attribute(RATIO, "RATIO", Enums::DataType::FLOAT, false, new float(0.0f), new float(0.0f));
-	//float *min = new float(0.0f);
-	//r.setRange(&min, NULL);
-	Attribs.add(r);
+	Attribs.add(Attribute(RATIO, "RATIO", Enums::DataType::FLOAT, false, new float(0.0f), new float(0.0f)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("VIEWPORT", &Attribs);
+#endif
 
 	return true;
 }
+
 
 
 AttribSet Viewport::Attribs;

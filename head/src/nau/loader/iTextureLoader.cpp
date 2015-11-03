@@ -78,13 +78,13 @@ ITextureLoader::SaveRaw(ITexture *texture, std::string filename){
 	std::string type = ti->getType();
 
 	// WHEN ADDING MORE TYPES MAKE SURE THEY EXIST IN GLTEXIMAGE.CPP
-	float *fData;
-	unsigned int *uiData;
-	unsigned short *usData;
-	unsigned char *ubData;
-	short *sData;
-	char *cData;
-	int *iData;
+	float *fData = NULL;
+	unsigned int *uiData = NULL;
+	unsigned short *usData = NULL;
+	unsigned char *ubData = NULL;
+	short *sData = NULL;
+	char *cData = NULL;
+	int *iData = NULL;
 	if (type == "FLOAT")
 		fData = (float *)data;
 	else if (type == "UNSIGNED_BYTE" || type == "UNSIGNED_INT_8_8_8_8_REV")

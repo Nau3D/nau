@@ -7,6 +7,7 @@
 #define _USE_MATH_DEFINES
 #endif
 
+#include "iNau.h"
 #include "nau/config.h"
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
@@ -44,30 +45,30 @@ extern "C" {
 using namespace nau;
 
 //I know Peter, but you'll see that this may come in handy ;)
-#define NAU Nau::getInstance()
-#define RENDERER NAU->getRenderManager()->getRenderer()
-#define RENDERMANAGER NAU->getRenderManager()
-#define MATERIALLIBMANAGER NAU->getMaterialLibManager()
-#define RESOURCEMANAGER NAU->getResourceManager()
-#define EVENTMANAGER NAU->getEventManager()
+//#define NAU Nau::GetInstance()
+//#define RENDERER NAU->getRenderManager()->getRenderer()
+//#define RENDERMANAGER NAU->getRenderManager()
+//#define MATERIALLIBMANAGER NAU->getMaterialLibManager()
+//#define RESOURCEMANAGER NAU->getResourceManager()
+//#define EVENTMANAGER NAU->getEventManager()
+//#define APISupport NAU->getAPISupport()
+
 
 namespace nau {
 	
 	const double NO_TIME = -1.0f;
 
-	class Nau : public IListener, public AttributeValues
+	class Nau : public INau // , public IListener, public AttributeValues
 	{
 
 	public:		
 
-		enum RenderFlags {
-			BOUNDING_BOX_RENDER_FLAG, 
-			PROFILE_RENDER_FLAG, 
-			COUNT_RENDER_FLAGS
-		};
 
-		static nau::Nau* create (void);
-		static nau::Nau* getInstance (void);
+		static nau::Nau* Create (void);
+		static nau::Nau* GetInstance (void);
+#ifdef _WINDLL
+		static void SetInstance(Nau *inst);
+#endif
 		bool init(bool context, std::string aConfigFile = "");
 
 		void setProjectName(std::string name);
@@ -168,6 +169,9 @@ namespace nau {
 		nau::resource::ResourceManager* getResourceManager (void);
 		nau::material::MaterialLibManager* getMaterialLibManager (void);
 		nau::event_::EventManager* getEventManager (void);
+		nau::render::IRenderer *getRenderer(void);
+		IAPISupport * getAPISupport(void);
+
 
 		/* Render Flags */
 		void setRenderFlag(RenderFlags aFlag, bool aState);
@@ -209,6 +213,7 @@ namespace nau {
 		nau::resource::ResourceManager *m_pResourceManager;
 		nau::material::MaterialLibManager *m_pMaterialLibManager;
 		nau::event_::EventManager *m_pEventManager;
+		nau::render::IAPISupport *m_pAPISupport;
 
 		/*
 		 * Members

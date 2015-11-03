@@ -153,8 +153,8 @@ Mesh::getMaterialNames(std::set<std::string> *nameList) {
 	iter = m_vMaterialGroups.begin();
 
 	for ( ; iter != m_vMaterialGroups.end(); ++iter) {
-
-		nameList->insert((*iter)->getMaterialName());
+		const std::string& s = (*iter)->getMaterialName();
+		nameList->insert(s);
 	}
 }
 
@@ -170,7 +170,7 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 		prepareIndexData();
 		createUnifiedIndexVector();
 
-		size_t size = m_VertexData->getDataOf(VertexData::GetAttribIndex("position")).size();
+		size_t size = m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position"))).size();
 		std::vector<VertexData::Attr>* idsArray = new std::vector<VertexData::Attr>(size);
 
 		int primitiveOffset = 3;//getPrimitiveOffset();
@@ -178,7 +178,7 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 			idsArray->at(i).x = (float)sceneObjectID;
 			idsArray->at(i).y = (float)(i / primitiveOffset);
 		}
-		m_VertexData->setAttributeDataFor(VertexData::GetAttribIndex("triangleID"), idsArray);		
+		m_VertexData->setAttributeDataFor(VertexData::GetAttribIndex(std::string("triangleID")), idsArray);
 	}
 }
 
@@ -186,7 +186,7 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 void 
 Mesh::prepareIndexData() {
 
-	size_t size = m_VertexData->getDataOf(VertexData::GetAttribIndex("position")).size();
+	size_t size = m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position"))).size();
 	std::vector<int> idsArray = std::vector<int>(size, -1);
 	std::vector<int> outlaws;
 
@@ -247,7 +247,7 @@ Mesh::prepareIndexData() {
 unsigned int 
 Mesh::getNumberOfVertices (void) {
 
-	return (int)(getVertexData().getDataOf (VertexData::GetAttribIndex("position"))).size();
+	return (int)(getVertexData().getDataOf (VertexData::GetAttribIndex(std::string("position")))).size();
 }
 
 

@@ -19,7 +19,7 @@
 #define NAU_RENDER_FLAGS
 
 
-#define GLINTERCEPTDEBUG
+//#define GLINTERCEPTDEBUG
 #define NAU_LUA
 
 #define NAU_DEBUG 0

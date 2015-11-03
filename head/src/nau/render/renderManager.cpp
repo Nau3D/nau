@@ -57,7 +57,7 @@ RenderManager::clear() {
 		m_Pipelines.erase(m_Pipelines.begin());
 	}
 	while (!m_Viewports.empty()){
-
+		delete ((*m_Viewports.begin()).second);
 		m_Viewports.erase(m_Viewports.begin());
 	}
 
@@ -162,7 +162,7 @@ RenderManager::hasPipeline (const std::string &pipelineName) {
 Pipeline*
 RenderManager::getPipeline(const std::string &pipelineName) {
 
-	Pipeline *pip;
+	Pipeline *pip = NULL;
 	bool found = false;
 
 	for (auto p : m_Pipelines) {
@@ -460,7 +460,7 @@ RenderManager::getCurrentPassAttribute(std::string name, Enums::DataType dt) {
 Enums::DataType
 RenderManager::getPassAttributeType(std::string name) {
 
-	Attribute a = Pass::Attribs.get(name);
+	Attribute &a = Pass::Attribs.get(name);
 	Enums::DataType dt = a.getType();
 	return dt;
 }

@@ -74,6 +74,8 @@ namespace nau
 			static std::string TextRead(const std::string &fn);
 			static int TextWrite(const std::string &fn, const std::string &s);
 
+			static void GetFilesInFolder(std::string path, std::string extension, std::vector<std::string>* files);
+
 		private:
 			void construct (std::string filepath);
 			void checkURI (std::string &filepath);

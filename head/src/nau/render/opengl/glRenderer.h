@@ -138,7 +138,7 @@ namespace nau
 
 			// SHADER
 			void setShader(IProgram *aShader);
-			int getAttribLocation(std::string name);
+			int getAttribLocation(std::string &name);
 
 			// IMAGE TEXTURE
 			void addImageTexture(unsigned int aTexUnit, IImageTexture *t);

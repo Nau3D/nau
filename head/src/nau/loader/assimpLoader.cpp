@@ -93,12 +93,12 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 
 		if (mesh->HasPositions()) {
 			std::vector<nau::math::vec4>* vertex = readGL3FArray((float *)mesh->mVertices,mesh->mNumVertices, order, 1.0f);
-			vertexData.setDataFor(VertexData::GetAttribIndex("position"), vertex); 
+			vertexData.setDataFor(VertexData::GetAttribIndex(std::string("position")), vertex);
 		}
 
 		if (mesh->HasNormals()) {
 			std::vector<nau::math::vec4>* normal = readGL3FArray((float *)mesh->mNormals,mesh->mNumVertices, order, 0.0f);
-			vertexData.setDataFor(VertexData::GetAttribIndex("normal"), normal);  
+			vertexData.setDataFor(VertexData::GetAttribIndex(std::string("normal")), normal);
 		}
 
 		// buffer for vertex texture coordinates
@@ -112,7 +112,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 				//texCoord->at(k).z = 0.0;
 				texCoord->at(k).w = 1.0;
 			}
-			vertexData.setDataFor(VertexData::GetAttribIndex("texCoord0"), texCoord); 
+			vertexData.setDataFor(VertexData::GetAttribIndex(std::string("texCoord0")), texCoord);
 		}
 
 		if (!MATERIALLIBMANAGER->hasMaterial (DEFAULTMATERIALLIBNAME, matName)) {

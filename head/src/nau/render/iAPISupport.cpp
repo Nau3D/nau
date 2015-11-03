@@ -37,3 +37,12 @@ IAPISupport::getVersion() {
 
 	return m_Version;
 }
+
+IAPISupport::IAPISupport() {
+
+}
+
+IAPISupport::~IAPISupport() {
+
+	m_APISupport.clear();
+}

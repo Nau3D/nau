@@ -15,7 +15,8 @@ using namespace nau::geometry;
 
 
 AttribSet Pass::Attribs;
-bool Pass::Inited = Pass::Init();
+bool Pass::Inited = Init();
+
 
 bool
 Pass::Init() {
@@ -108,7 +109,9 @@ Pass::Init() {
 	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
 	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, true, new unsigned int(0)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("PASS", &Attribs);
+#endif
 
 	PASSFACTORY->registerClass("default", Create);
 
@@ -132,7 +135,9 @@ Pass::Pass (const std::string &passName) :
 	registerAndInitArrays(Attribs);
 
 	initVars();
+#ifndef _WINDLL
 	EVENTMANAGER->addListener("SCENE_CHANGED",this);
+#endif
 }
 
 
@@ -202,6 +207,21 @@ Pass::addPostProcessItem(PassProcessItem *pp) {
 }
 
 
+void
+Pass::executePreProcessList() {
+
+	for (auto pp : m_PreProcessList)
+		pp->process();
+}
+
+
+void 
+Pass::executePostProcessList() {
+
+	for (auto pp : m_PostProcessList)
+		pp->process();
+}
+
 // --------------------------------------------------
 //		BUFFER DRAW INDIRECT
 // --------------------------------------------------
@@ -236,28 +256,6 @@ Pass::renderTest(void) {
 			return false;
 	}
 #endif
-
-	//// most common case: run pass in all frames
-	//if (m_EnumProps[RUN_MODE] == RUN_ALWAYS)
-	//	return true;
-
-	//// pass disabled
-	//else if (m_EnumProps[RUN_MODE] == DONT_RUN)
-	//	return false;
-
-	//else {
-	//	unsigned long f = NAU->getFrameCount();
-	//	bool even = (f % 2 == 0);
-	//	if (m_EnumProps[RUN_MODE] == RUN_EVEN && !even)
-	//		return false;
-	//	else if (m_EnumProps[RUN_MODE] == RUN_ODD && even)
-	//		return false;
-	//	// check for skip_first and run_once cases
-	//	else if ((m_EnumProps[RUN_MODE] == SKIP_FIRST_FRAME && (f == 0)) || (m_EnumProps[RUN_MODE] == RUN_ONCE && (f > 0)))
-	//		return false;
-	//	else
-	//		return true;
-	//}
 
 	return true;
 }
@@ -310,9 +308,6 @@ Pass::doPass (void) {
 
 	prepareBuffers();
 
-	for (auto pp : m_PreProcessList)
-		pp->process();
-
 	const float *a = (float *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4);
 	camFrustum.setFromMatrix (a);
 	aCam = RENDERMANAGER->getCamera (m_CameraName);
@@ -334,11 +329,6 @@ Pass::doPass (void) {
 		}
 	}
 	RENDERMANAGER->processQueue();	
-
-	for (auto pp : m_PostProcessList)
-		pp->process();
-
-
 }
 
 
@@ -355,7 +345,7 @@ Pass::restore(void) {
 
 
 // --------------------------------------------------
-//		LUA SCRIPTS
+//		TEST SCRIPTS
 // --------------------------------------------------
 
 
@@ -416,6 +406,8 @@ Pass::callPostScript() {
 
 	callScript(m_PostScriptName);
 }
+
+
 
 // --------------------------------------------------
 //		VIEWPORT
@@ -578,17 +570,14 @@ void
 Pass::updateMaterialMaps(const std::string &sceneName) {
 
 	if (this->hasScene(sceneName)) {
-		std::set<std::string> *materialNames = new std::set<std::string>;
-		RENDERMANAGER->getScene(sceneName)->getMaterialNames(materialNames);
+		const std::set<std::string> &materialNames = 
+			RENDERMANAGER->getScene(sceneName)->getMaterialNames();
 
-		std::set<std::string>::iterator iter;
-		iter = materialNames->begin();
-		for (; iter != materialNames->end(); ++iter) {
+		for (auto iter : materialNames) {
 
-			if (m_MaterialMap.count((*iter)) == 0)
-				m_MaterialMap[(*iter)] = MaterialID(DEFAULTMATERIALLIBNAME, (*iter));
+			if (m_MaterialMap.count(iter) == 0)
+				m_MaterialMap[iter] = MaterialID(DEFAULTMATERIALLIBNAME, iter);
 		}
-		delete materialNames;
 	}
 }
 
@@ -784,19 +773,16 @@ Pass::addScene (const std::string &sceneName) {
 	
 		m_SceneVector.push_back (sceneName);
 	
-		std::set<std::string> *materialNames = new std::set<std::string>;
-		RENDERMANAGER->getScene(sceneName)->getMaterialNames(materialNames);
+		const std::set<std::string> &materialNames =
+			RENDERMANAGER->getScene(sceneName)->getMaterialNames();
 		
-		std::set<std::string>::iterator iter;
-		iter = materialNames->begin();
-		for ( ; iter != materialNames->end(); ++iter) {
+		for (auto name: materialNames) {
 			if (m_MaterialMap.count("*") != 0) {
-				m_MaterialMap[(*iter)] = MaterialID(m_MaterialMap["*"].getLibName(), m_MaterialMap["*"].getMaterialName());
+				m_MaterialMap[name] = MaterialID(m_MaterialMap["*"].getLibName(), m_MaterialMap["*"].getMaterialName());
 			}
-			else if (m_MaterialMap.count((*iter)) == 0)
-				m_MaterialMap[(*iter)] = MaterialID(DEFAULTMATERIALLIBNAME, (*iter));
+			else if (m_MaterialMap.count(name) == 0)
+				m_MaterialMap[name] = MaterialID(DEFAULTMATERIALLIBNAME, name);
 		}
-		delete materialNames;
 	}
 //	RENDERMANAGER->getScene(sceneName)->compile();
 }

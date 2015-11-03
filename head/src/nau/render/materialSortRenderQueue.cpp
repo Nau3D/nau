@@ -14,17 +14,19 @@ using namespace nau;
 
 typedef std::pair<MaterialGroup*, mat4*> pair_MatGroup_Transform;
 
-MaterialSortRenderQueue::MaterialSortRenderQueue(void)
-{
+#pragma warning( disable : 4503)
+
+MaterialSortRenderQueue::MaterialSortRenderQueue(void) {
+
 }
 
-MaterialSortRenderQueue::~MaterialSortRenderQueue(void)
-{
+MaterialSortRenderQueue::~MaterialSortRenderQueue(void) {
+
 }
 
 void 
-MaterialSortRenderQueue::clearQueue (void)
-{
+MaterialSortRenderQueue::clearQueue (void) {
+
 	std::map<int, std::map<Material*, std::vector<pair_MatGroup_Transform >* >* >::iterator mapIter;
 
 	mapIter = m_RenderQueue.begin();
@@ -49,8 +51,8 @@ MaterialSortRenderQueue::clearQueue (void)
 
 void 
 MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
-									 std::map<std::string, MaterialID> &materialMap)
-{
+									 std::map<std::string, MaterialID> &materialMap) {
+
 	PROFILE ("Queue add");
 
 	int order;
@@ -116,8 +118,8 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 
 
 void
-MaterialSortRenderQueue::processQueue (void)
-{
+MaterialSortRenderQueue::processQueue (void) {
+
 	PROFILE ("Process queue");
 
 	IRenderer *renderer = RENDERER;

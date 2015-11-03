@@ -23,13 +23,12 @@ Material::Material() :
 }
 
 
-Material::~Material()
-{
-   if (0 != m_State) {
-		delete m_State;
-		m_State = 0;
-   }
-   // Must delete textures
+Material::~Material() {
+
+	while (!m_ImageTextures.empty()) {
+		delete((*m_ImageTextures.begin()).second);
+		m_ImageTextures.erase(m_ImageTextures.begin());
+	}
 
 }
 

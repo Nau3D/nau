@@ -78,8 +78,10 @@ File::TextRead (const std::string &fn) {
 	}
 	if (content == NULL)
 		s = "";
-	else 
+	else {
 		s = content;
+		free(content);
+	}
 	return s;
 }
 
@@ -99,6 +101,24 @@ File::TextWrite(const std::string &fn, const std::string &s) {
 		fclose(fp);
 	}
 	return(status);
+}
+
+
+void 
+File::GetFilesInFolder(std::string path, std::string extension, std::vector<std::string> *files) {
+
+	DIR *dir;
+	struct dirent *ent;
+
+	if ((dir = opendir(path.c_str())) != NULL) {
+		while ((ent = readdir(dir)) != NULL) {
+			// Filters directories starting with Frame_* only
+			if (ent->d_type == S_IFREG && GetExtension(ent->d_name) == "dll") {
+				files->push_back(path + std::string(ent->d_name));
+			}
+		}
+		closedir(dir);
+	}
 }
 
 

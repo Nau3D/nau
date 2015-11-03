@@ -1,6 +1,7 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef NAU_MATRIX_H
+#define NAU_MATRIX_H
 
+#include "nau/math/data.h"
 #include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
 #include "nau/math/utils.h"
@@ -18,7 +19,7 @@ namespace nau
 		//----------------------------------------------------------
 
 		template <typename T, int DIMENSION>
-		class matrix{
+		class matrix: public Data{
 
 		protected:
 			T m_Matrix[DIMENSION*DIMENSION];
@@ -551,7 +552,7 @@ namespace nau
 
 
 		template <typename T, int COLUMNS, int LINES >
-		class matrixNS{
+		class matrixNS: public Data{
 
 		protected:
 			T m_Matrix[LINES * COLUMNS];

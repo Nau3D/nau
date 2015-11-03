@@ -77,7 +77,7 @@ OctreeByMatNode::tightBoundingVolume() {
 
 	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
 	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 
-		m_TightBoundingVolume.calculate ((iter->second)->getRenderable().getVertexData().getDataOf (VertexData::GetAttribIndex("position")));
+		m_TightBoundingVolume.calculate ((iter->second)->getRenderable().getVertexData().getDataOf (VertexData::GetAttribIndex(std::string("position"))));
 
 	for (int i = TOPFRONTLEFT; i < ROOT; i++) {
 	
@@ -223,7 +223,7 @@ void
 OctreeByMatNode::_split() {
 
 
-	int vertexArrayPos = VertexData::GetAttribIndex("position");
+	int vertexArrayPos = VertexData::GetAttribIndex(std::string("position"));
 	int offSet;
 	std::map<std::string, nau::scene::SceneObject *>::iterator matIter;
 	SceneObject *s;

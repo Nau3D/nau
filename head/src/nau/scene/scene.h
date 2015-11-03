@@ -46,13 +46,12 @@ namespace nau {
 			virtual nau::scene::SceneObject* getSceneObject (std::string name);
 			virtual nau::scene::SceneObject* getSceneObject (int index);
 
-			virtual void getMaterialNames(std::set<std::string> *nameList);
+			virtual const std::set<std::string> &getMaterialNames();
 
 			virtual nau::math::mat4 &getTransform();
 			virtual void setTransform(nau::math::mat4 &t);
 			virtual void transform(nau::math::mat4 &t);
 
-			virtual std::string getType (void);
 		};
 	};
 };

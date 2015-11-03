@@ -239,7 +239,9 @@ Pipeline::executePass(Pass *pass) {
 		bool run = pass->renderTest();
 		if (run) {
 			pass->prepare();
+			pass->executePreProcessList();
 			pass->doPass();
+			pass->executePostProcessList();
 			pass->restore();
 		}
 		if (NAU->getTraceStatus()) {

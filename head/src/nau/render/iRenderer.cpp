@@ -1,6 +1,7 @@
 #include "nau/render/iRenderer.h"
 
 #include "nau.h"
+#include "nau/math/number.h"
 #include "nau/math/matrix.h"
 #include "nau/render/iAPISupport.h"
 
@@ -25,6 +26,7 @@ int IRenderer::MaxColorAttachments;
 
 AttribSet IRenderer::Attribs;
 bool IRenderer::Inited = Init();
+
 
 bool
 IRenderer::Init() {
@@ -59,18 +61,10 @@ IRenderer::Init() {
 	// FLOAT
 	Attribs.add(Attribute(TIMER, "TIMER", Enums::DataType::FLOAT, true, new float(0.0f)));
 
-
+#ifndef _WINDLL
 	NAU->registerAttributes("RENDERER", &Attribs);
-	// MOVE TO iRenderable.h
-	//Attribs.add(Attribute(DRAW_PRIMITIVE, "DRAW_PRIMITIVE", Enums::DataType::ENUM, true));
-	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLES", TRIANGLES);
-	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLE_STRIP", TRIANGLE_STRIP);
-	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLE_FAN", TRIANGLE_FAN);
-	//Attribs.listAdd("DRAW_PRIMITIVE", "LINES", LINES);
-	//Attribs.listAdd("DRAW_PRIMITIVE", "LINE_LOOP", LINE_LOOP);
-	//Attribs.listAdd("DRAW_PRIMITIVE", "POINTS", POINTS);
-	//Attribs.listAdd("DRAW_PRIMITIVE", "TRIANGLES_ADJACENCY", TRIANGLES_ADJACENCY);
-	//Attribs.listAdd("DRAW_PRIMITIVE", "PATCHES", PATCH);
+#endif
+
 	return true;
 }
 

@@ -25,7 +25,9 @@ IImageTexture::Init() {
 	// INT
 	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, true, new int(-1)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("IMAGE_TEXTURE", &Attribs);
+#endif
 
 	return true;
 }

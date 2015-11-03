@@ -452,7 +452,7 @@ PassOptix::optixInit() {
 	o_TexLib.addTexture(1);
 	o_Context["tex0"]->set(o_TexLib.getTexture(1));
 
-	std::set<std::string> *materialNames = new std::set<std::string>;
+	/*std::set<std::string> *materialNames = new std::set<std::string>;*/
 	
 	std::vector<std::string>::iterator scenesIter;
 	scenesIter = m_SceneVector.begin();
@@ -462,16 +462,11 @@ PassOptix::optixInit() {
 		aScene->compile();
 
 		// Adding Materials to optix lib
-		aScene->getMaterialNames(materialNames);
-		std::set<std::string>::iterator matIter;
-		matIter = materialNames->begin();
-		for( ; matIter != materialNames->end(); ++matIter) {
+		const std::set<std::string> &materialNames = aScene->getMaterialNames();
 		
-			o_MatLib.addMaterial(m_MaterialMap[*matIter]);
+		for( auto matIter : materialNames) {
+			o_MatLib.addMaterial(m_MaterialMap[matIter]);
 		}
-
-		materialNames->clear();
-
 
 		std::vector<SceneObject *> objs = aScene->getAllObjects();
 		std::vector<nau::scene::SceneObject*>::iterator objsIter;
@@ -564,18 +559,14 @@ PassOptix::addScene (const std::string &sceneName)
 	
 		m_SceneVector.push_back (sceneName);
 	
-		std::set<std::string> *materialNames = new std::set<std::string>;
-		RENDERMANAGER->getScene(sceneName)->getMaterialNames(materialNames);
+		const std::set<std::string> &materialNames = 
+			RENDERMANAGER->getScene(sceneName)->getMaterialNames();
 		
-		std::set<std::string>::iterator iter;
-		iter = materialNames->begin();
-		for ( ; iter != materialNames->end(); ++iter) {
+		for (auto iter : materialNames) {
 			
-			if (m_MaterialMap.count((*iter)) == 0)
-				m_MaterialMap[(*iter)] = MaterialID(DEFAULTMATERIALLIBNAME, (*iter));
+			if (m_MaterialMap.count(iter) == 0)
+				m_MaterialMap[iter] = MaterialID(DEFAULTMATERIALLIBNAME, iter);
 		}
-		delete materialNames;
-
 
 		IScene *sc = RENDERMANAGER->getScene(sceneName);
 		sc->compile();

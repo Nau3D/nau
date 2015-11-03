@@ -15,6 +15,11 @@ MaterialLib::~MaterialLib()
 {
    //dtor
 	EVENTMANAGER->removeListener("SHADER_CHANGED", this);
+	while (!m_MaterialLib.empty()) {
+		delete ((*m_MaterialLib.begin()).second);
+		m_MaterialLib.erase(m_MaterialLib.begin());
+	}
+
 }
 
 
@@ -44,8 +49,9 @@ MaterialLib::getName()
 void
 MaterialLib::clear()
 {
-	while (!m_MaterialLib.empty()){
-	
+	while (!m_MaterialLib.empty()) {
+
+		delete m_MaterialLib.begin()->second;
 		m_MaterialLib.erase(m_MaterialLib.begin());
 	}
 }

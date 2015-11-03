@@ -1,5 +1,7 @@
 #include "nau/render/opengl/glTexImage.h"
 
+#include "nau.h"
+
 #include <glbinding/gl/gl.h>
 using namespace gl;
 //#include <GL/glew.h>

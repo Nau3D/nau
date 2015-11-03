@@ -227,6 +227,9 @@ namespace nau
 			void callPreScript();
 			void callPostScript();
 
+			void executePreProcessList();
+			void executePostProcessList();
+
 		protected:
 
 			// BUFFER DRAW INDIRECT

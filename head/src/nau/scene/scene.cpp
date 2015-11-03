@@ -20,7 +20,7 @@ Scene::Scene(void) :
 {
 	EVENTMANAGER->addListener("SET_POSITION", this);
 	EVENTMANAGER->addListener("SET_ROTATION", this);
-
+	m_Type = "Scene";
 }
 
 
@@ -190,24 +190,16 @@ Scene::getSceneObject( int index)
 }
 
 
-void
-Scene::getMaterialNames(std::set<std::string> *nameList) 
+const std::set<std::string> &
+Scene::getMaterialNames() 
 {
-	std::vector<SceneObject*>::iterator objIter;
-	objIter = m_SceneObjects.begin();
-	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-
-		(*objIter)->getRenderable().getMaterialNames(nameList);
-	}
+	m_MaterialNames.clear();
 	
-}
+	for ( auto so: m_SceneObjects) {
 
-
-
-
-std::string 
-Scene::getType (void) {
-	return "Scene";
+		so->getRenderable().getMaterialNames(&m_MaterialNames);
+	}
+	return m_MaterialNames;
 }
 
 

@@ -26,8 +26,9 @@ IBuffer::Init() {
 	// UIVEC3
 	Attribs.add(Attribute(DIM, "DIM", Enums::DataType::UIVEC3, false, new uivec3(1)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("BUFFER", &Attribs);
-
+#endif
 	return true;
 }
 

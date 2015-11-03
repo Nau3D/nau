@@ -3,6 +3,7 @@
 
 
 #include "nau/enums.h"
+#include "nau/math/data.h"
 #include "nau/math/matrix.h"
 #include "nau/math/vec4.h"
 #include "nau/math/vec2.h"
@@ -39,6 +40,7 @@ namespace nau {
 		
 		~Attribute();
 
+		Attribute & operator=(const Attribute &rhs);
 
 		static bool isValidUserAttrType(std::string s);
 		static std::vector<std::string> &getValidUserAttrTypes();
@@ -79,7 +81,9 @@ namespace nau {
 		void *m_Default;
 		bool m_ListDefined;
 		bool m_RangeDefined;
-		void *m_Min, *m_Max;
+		void *m_Min;
+		void *m_Max;
+
 		Semantics m_Semantics;
 		IAPISupport::APIFeatureSupport m_Requires;
 		std::vector<int> m_ListValues;
@@ -109,11 +113,11 @@ namespace nau {
 
 		void add(Attribute a);
 
-		const std::map<std::string, Attribute> &getAttributes();
+		std::map<std::string, Attribute> &getAttributes();
 
 		int getDataTypeCount(Enums::DataType dt);
-		const Attribute &get(std::string name);
-		const Attribute &get(int id, Enums::DataType dt);
+		Attribute &get(std::string name);
+		Attribute &get(int id, Enums::DataType dt);
 		// returns the ID of the attribute
 		// -1 if attribute does not exist
 		int getID(std::string name);

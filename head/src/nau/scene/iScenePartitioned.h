@@ -23,8 +23,6 @@ namespace nau {
 			virtual void build (void) = 0;
 			virtual bool isBuilt(void) {return m_Built;};
 
-			virtual std::string getType (void) = 0;
-
 			~IScenePartitioned (void) { }
 		};
 	};

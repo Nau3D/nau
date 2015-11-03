@@ -87,19 +87,11 @@ ResourceManager::~ResourceManager(void) {
 void
 ResourceManager::clear() {
 
-	//m_pTextureManager->clear();
-
 	while(!m_Textures.empty()) {
 
 		delete(*m_Textures.begin());
 		m_Textures.erase(m_Textures.begin());
 	}
-
-	//while (!m_TexImages.empty()){
-	//	
-	//	delete((*m_TexImages.begin()).second);
-	//	m_TexImages.erase(m_TexImages.begin());
-	//}
 
 	while (!m_States.empty()){
 		delete((*m_States.begin()).second);
@@ -563,6 +555,12 @@ ResourceManager::addState (nau::material::IState* aState) {
 }
 
 
+//-------------------------------------	
+
+//			SHADERS
+
+//-------------------------------------
+
 bool 
 ResourceManager::hasProgram (std::string programName) {
 
@@ -572,12 +570,6 @@ ResourceManager::hasProgram (std::string programName) {
 	return false;
 }
 
-
-//-------------------------------------	
-
-//			SHADERS
-
-//-------------------------------------
 
 IProgram* 
 ResourceManager::getProgram (std::string programName) {

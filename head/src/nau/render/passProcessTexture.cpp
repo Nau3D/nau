@@ -16,7 +16,9 @@ PassProcessTexture::Init() {
 	// INT
 	Attribs.add(Attribute(CLEAR_LEVEL, "CLEAR_LEVEL", Enums::DataType::INT, false, new int(-1), NULL,NULL, IAPISupport::CLEAR_TEXTURE_LEVEL));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("PASS_PROCESS_TEXTURE", &Attribs);
+#endif
 	return true;
 }
 

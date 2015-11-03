@@ -484,7 +484,7 @@ void
 ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem, bool showOnlyExcluded) {
 
 	TiXmlElement *p = pElem->FirstChildElement();
-	std::map<std::string, nau::Attribute> attributes = attribs.getAttributes();
+	std::map<std::string, nau::Attribute> &attributes = attribs.getAttributes();
 	void *value;
 
 	while (p) {
@@ -505,7 +505,7 @@ ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::At
 				NAU_THROW("File %s\nElement %s\nInvalid child tag \"%s\"\nValid tags are: %s", 
 					ProjectLoader::s_File.c_str(), parent.c_str(), p->Value(), result.c_str());
 			}
-			Attribute a = attributes[p->Value()];
+			Attribute &a = attributes[p->Value()];
 			// trying to set the value of a read only attribute?
 			if (a.getReadOnlyFlag())
 				NAU_THROW("File %s\nElement %s\nRead-only tag\"%s\"", ProjectLoader::s_File.c_str(), parent.c_str(), p->Value());
@@ -858,7 +858,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				NAU_THROW("File %s\nScene %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFilename);
 
 			try {
-				nau::Nau::getInstance()->loadAsset(File::GetFullPath(ProjectLoader::s_Path, pFilename), pName, s);
+				NAU->loadAsset(File::GetFullPath(ProjectLoader::s_Path, pFilename), pName, s);
 			}
 			catch (std::string &s) {
 				throw(s);
@@ -960,7 +960,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 					IBuffer * b;
 					b = RESOURCEMANAGER->createBuffer(bufferName);
-					int attribIndex = VertexData::GetAttribIndex(p->Value());
+					int attribIndex = VertexData::GetAttribIndex(std::string(p->Value()));
 
 					if (attribIndex != VertexData::MaxAttribs) {
 						v.setBuffer(attribIndex, b->getPropi(IBuffer::ID));
@@ -992,7 +992,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (!File::Exists(fullName)) {
 					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFileName);
 				}
-				nau::Nau::getInstance()->loadAsset(fullName, pName, s);
+				NAU->loadAsset(fullName, pName, s);
 			}
 
 			pElementAux = handle.FirstChild("folder").Element();
@@ -1019,7 +1019,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 						sprintf (file, "%s/%s", pDirName, ent->d_name);						
 #endif
 						try {
-							nau::Nau::getInstance()->loadAsset(file, pName, s);
+							NAU->loadAsset(file, pName, s);
 						}
 						catch (std::string &s) {
 							closedir(dir);
@@ -1209,7 +1209,7 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 		pElemAux = pElem->FirstChildElement ("viewport");
 		Viewport *v = 0;
 		if (0 == pElemAux) {
-			v = nau::Nau::getInstance()->getDefaultViewport ();
+			v = NAU->getDefaultViewport ();
 		} else {
 			if (TIXML_SUCCESS != pElemAux->QueryStringAttribute("name", &s))
 				NAU_THROW("File %s\nElement %s\nviewport name is required", ProjectLoader::s_File.c_str(), pName);
@@ -1455,7 +1455,7 @@ ProjectLoader::loadPassMode(TiXmlHandle hPass, Pass *aPass)
 		const char *pMode = pElem->Attribute("value");
 		bool valid = Pass::Attribs.isValid("RUN_MODE", pMode);
 		if (!valid) {
-			Attribute a = aPass->getAttribSet()->get("RUN_MODE");
+			Attribute &a = aPass->getAttribSet()->get("RUN_MODE");
 			std::string s = getValidValuesString(a, (void *)pMode);
 			if (s != "") {
 				NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), a.getName().c_str(), s.c_str());
@@ -1496,7 +1496,7 @@ ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 		if (!pFile || !pFunction) {
 			NAU_THROW("File %s\nPass %s\nElement: testScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
-		Attribute a = aPass->getAttribSet()->get("TEST_MODE");
+		Attribute &a = aPass->getAttribSet()->get("TEST_MODE");
 		void *val = readAttribute("TEST_MODE", a, pElem);
 		if (val != NULL)
 			aPass->setPrope(Pass::TEST_MODE, *(int *)val);
@@ -2071,7 +2071,7 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
 		const char *pType = pElem->Attribute ("name");
-		unsigned int vi = VertexData::GetAttribIndex(pType);
+		unsigned int vi = VertexData::GetAttribIndex(std::string(pType));
 		if (!pType || (VertexData::MaxAttribs == vi ))
 			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Vertex Attribute", 
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
@@ -2901,34 +2901,34 @@ ProjectLoader::loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass)
 		const char *pToMaterial = pElem->Attribute ("toMaterial");
 
 		if ((pToMaterial == 0)) {
-		    NAU_THROW("File %s\nPass%s\nMaterial map error: Missing destination material", 
+		    NAU_THROW("File %s\nPass %s\nMaterial map error: Missing destination material", 
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 
 		if (0 == pFromMaterial && 0 != pToMaterial) {
 		  
-		    NAU_THROW("File %s\nPass%s\nMaterial map error: Missing origin material", 
+		    NAU_THROW("File %s\nPass %s\nMaterial map error: Missing origin material", 
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		else if (0 == pFromMaterial) {
 			if (MATERIALLIBMANAGER->hasLibrary(library))
 				aPass->remapAll (library);
 			else
-				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination library %s is not defined", 
+				NAU_THROW("File %s\nPass %s\nMaterial map error: Destination library %s is not defined", 
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str());
 		}
 		else if (0 == strcmp (pFromMaterial, "*")) {
 			if (MATERIALLIBMANAGER->hasMaterial(library, pToMaterial))
 				aPass->remapAll (library, pToMaterial);
 			else
-				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination material (%s,%s) is not defined", 
+				NAU_THROW("File %s\nPass %s\nMaterial map error: Destination material (%s,%s) is not defined", 
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str(), pToMaterial);
 		}
 		else {
 			if (MATERIALLIBMANAGER->hasMaterial(library, pToMaterial))
 				aPass->remapMaterial (pFromMaterial, library, pToMaterial);
 			else
-				NAU_THROW("File %s\nPass%s\nMaterial map error: Destination material (%s,%s) is not defined", 
+				NAU_THROW("File %s\nPass %s\nMaterial map error: Destination material (%s,%s) is not defined", 
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str(), pToMaterial);
 		}
 	} //End of map

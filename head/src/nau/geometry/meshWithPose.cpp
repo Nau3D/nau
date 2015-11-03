@@ -71,7 +71,8 @@ MeshPose::setPose(unsigned int index)
 	
 		// add Pose offsets to the Reference pose
 		// and set the result in the vertexdata
-		std::vector<VertexData::Attr>& vertexData = m_VertexData->getDataOf(VertexData::GetAttribIndex("position"));
+		std::vector<VertexData::Attr>& vertexData = 
+			m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")));
 		std::vector<vec3> offsets = m_vOffsets[index]->getOffsets();
 
 		vec3 v;
@@ -89,7 +90,8 @@ MeshPose::setPose(unsigned int index)
 	else {
 		
 		// similar to above, but without adding the offsets
-		std::vector<VertexData::Attr>& vertexData = m_VertexData->getDataOf(VertexData::GetAttribIndex("position"));
+		std::vector<VertexData::Attr>& vertexData = 
+			m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")));
 		vec3 v;
 
 		for (unsigned int i = 0 ; i < vertexData.size(); i++) 
@@ -131,7 +133,8 @@ MeshPose::setPose(std::string aName)
 void 
 MeshPose::setReferencePose() 
 {
-	std::vector<VertexData::Attr>& vertexData = m_VertexData->getDataOf(VertexData::GetAttribIndex("position"));
+	std::vector<VertexData::Attr>& vertexData = 
+		m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")));
 
 	vec3 v;
 
@@ -157,7 +160,8 @@ MeshPose::setPose(std::map<unsigned int , float > *influences)
 {
 	// THIS IS WHERE THE MESH IS SET BASED ON THE POSE INFLUENCES
 
-	std::vector<VertexData::Attr>& vertexData = m_VertexData->getDataOf(VertexData::GetAttribIndex("position"));
+	std::vector<VertexData::Attr>& vertexData = 
+		m_VertexData->getDataOf(VertexData::GetAttribIndex((std::string("position"))));
 
 	vec3 v;
 

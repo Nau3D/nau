@@ -323,7 +323,7 @@ void
 PassOptixPrime::doPass(void) {
 
 	CHK_PRIME(rtpQueryExecute(m_Query, 0 /* hints */));
-	CHK_PRIME(rtpQueryFinish(m_Query));
+	//CHK_PRIME(rtpQueryFinish(m_Query));
 }
 
 
@@ -337,7 +337,7 @@ PassOptixPrime::initOptixPrime() {
 	IRenderable * renderable = &RENDERMANAGER->getScene(m_SceneVector[0])->getSceneObject(0)->getRenderable();
 	int vbo = renderable->getVertexData().getBufferID(0);
 	int numVert = renderable->getVertexData().getNumberOfVertices();
-	std::vector<vec4> vertex = renderable->getVertexData().getDataOf(0);
+	std::vector<vec4> &vertex = renderable->getVertexData().getDataOf(0);
 
 	size_t size;
 	void * devPtr;

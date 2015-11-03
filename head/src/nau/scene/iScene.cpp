@@ -28,7 +28,9 @@ IScene::Init() {
 	Attribs.listAdd("TRANSFORM_ORDER", "S_R_T", S_R_T);
 	Attribs.listAdd("TRANSFORM_ORDER", "S_T_R", S_T_R);
 
+#ifndef _WINDLL
 	NAU->registerAttributes("SCENE", &Attribs);
+#endif
 
 	return true;
 }
@@ -99,7 +101,6 @@ IScene::setPropf4(Float4Property prop, vec4& aVec) {
 	default:
 		AttributeValues::setPropf4(prop, aVec);
 	}
-
 }
 
 
@@ -149,4 +150,11 @@ IScene::getPropf3(Float3Property prop) {
 		return m_Float3Props[BB_CENTER];
 	default: return AttributeValues::getPropf3(prop);
 	}
+}
+
+
+const std::string &
+IScene::getType() {
+
+	return m_Type;
 }

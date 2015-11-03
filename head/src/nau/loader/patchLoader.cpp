@@ -97,7 +97,7 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	aRenderable = RESOURCEMANAGER->createRenderable("Mesh", "patch", aFilename);
 
 	VertexData *vData = &(aRenderable->getVertexData());
-	vData->setDataFor(VertexData::GetAttribIndex("position"), vertices);
+	vData->setDataFor(VertexData::GetAttribIndex(std::string("position")), vertices);
 
 	MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, "dirLightDifAmbPix");
 	//aMatGroup->setParent(aRenderable);

@@ -85,16 +85,9 @@ PassQuad::restore(void) {
 void 
 PassQuad::doPass (void) {
 
-	for (auto pp : m_PreProcessList)
-		pp->process();
-
 	RENDERMANAGER->clearQueue();
 	RENDERMANAGER->addToQueue (m_QuadObject, m_MaterialMap);
 	RENDERMANAGER->processQueue();
-
-	for (auto pp : m_PostProcessList)
-		pp->process();
-
 }
 
 

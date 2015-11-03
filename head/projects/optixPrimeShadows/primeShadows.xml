@@ -5,8 +5,8 @@
 		<scenes>
 			<!--scene name="bench" type="OctreeUnified" 
 				   filename="../../models/ntg-bench/bench.obj" /--> 
-			<scene name="bench" type="OctreeUnified" 
-				   filename="../../models/ntg-bin-pl3d-secxxi/pl3d-secxxi.nbo" />
+			<scene name="pl3d" type="OctreeUnified" 
+				   filename="../../models/LargoCamoes/largoCamoes.nbo" />
 			<!--scene name="bench" type="OctreeUnified" 
 				   filename="../../models/cow.obj" /--> 
 		</scenes>
@@ -40,10 +40,7 @@
 		
 		<lights>
 			<light name="Sun">
-				<POSITION x="-150.0" y="150.0" z="0.0" />
 				<DIRECTION x="1.0" y="-1.0" z="-1" />
-				<COLOR r="0.9" g="0.9" b="0.9" />
-				<AMBIENT r="0.3" g="0.3" b="0.3" />
 			</light>
 		</lights>
 		
@@ -56,7 +53,7 @@
 		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="GBuffer" >
 				<scenes>
-					<scene name="bench" />
+					<scene name="pl3d" />
 				</scenes>
 				<camera name="MainCamera" />
 				<lights>
@@ -77,7 +74,7 @@
 				</materialMaps>				
 			</pass>
 			<pass name="Optix Prime" class="optixPrime">
-				<scene name="bench" />
+				<scene name="pl3d" />
 				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
 				<hits buffer ="PrimeShadows::hits" />
 			</pass>		

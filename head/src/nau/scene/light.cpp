@@ -25,7 +25,9 @@ Light::Init() {
 	//INT
 	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT,true, new int(-1)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("LIGHT", &Attribs);
+#endif
 
 	return true;
 }

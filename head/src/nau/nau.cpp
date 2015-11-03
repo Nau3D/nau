@@ -16,6 +16,7 @@
 #include "nau/loader/projectLoaderDebugLinker.h"
 #endif //GLINTERCEPTDEBUG
 #include "nau/render/iAPISupport.h"
+#include "nau/render/passFactory.h"
 #include "nau/resource/fontManager.h"
 #include "nau/scene/sceneFactory.h"
 #include "nau/system/file.h"
@@ -74,24 +75,32 @@ static nau::Nau *gInstance = 0;
 
 
 nau::Nau*
-Nau::create (void) {
+Nau::Create (void) {
 	if (0 == gInstance) {
 		gInstance = new Nau;
-	}
-	
+	}	
 	return gInstance;
 }
 
 
 nau::Nau*
-Nau::getInstance (void) {
+Nau::GetInstance (void) {
 
 	if (0 == gInstance) {
-		create();
+		Create();
 	}
 
 	return gInstance;
 }
+
+
+#ifdef _WINDLL
+void 
+Nau::SetInstance(Nau * inst) {
+
+	gInstance = inst;
+}
+#endif
 
 
 Nau::Nau() :
@@ -116,6 +125,7 @@ Nau::Nau() :
 	m_TraceFrames(0),
 	m_ProjectName("")
 {
+
 }
 
 
@@ -123,13 +133,17 @@ Nau::~Nau() {
 
 	if (m_pMaterialLibManager)
 		delete MATERIALLIBMANAGER;
-	if (m_pEventManager)
+	if (m_pEventManager) {
 		EVENTMANAGER->clear();
+	}
 	if (m_pRenderManager)
 		RENDERMANAGER->clear();
 	if (m_pResourceManager)
 		RESOURCEMANAGER->clear();
 
+#ifdef NAU_LUA
+	lua_close(m_LuaState);
+#endif
 }
 
 
@@ -139,15 +153,14 @@ Nau::init (bool context, std::string aConfigFile) {
 #if NAU_DEBUG == 1
 	CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
 #endif
-
 	m_AppFolder = File::GetAppFolder();
 	//bool result;
 	if (true == context) {
 
 		m_pEventManager = new EventManager;
 		m_pRenderManager = new RenderManager;
-		IAPISupport *sup = IAPISupport::GetInstance();
-		sup->setAPISupport();
+		m_pAPISupport = IAPISupport::GetInstance();
+		m_pAPISupport->setAPISupport();
 	}	
 	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
 	m_pMaterialLibManager = new MaterialLibManager();
@@ -178,6 +191,7 @@ Nau::init (bool context, std::string aConfigFile) {
 #ifdef NAU_LUA
 	initLua();
 #endif
+	PASSFACTORY->loadPlugins();
 
 	return true;
 }
@@ -815,7 +829,7 @@ Nau::validateUserAttribName(std::string context, std::string name) {
 	if (attribs == NULL)
 		return false;
 
-	Attribute a = attribs->get(name);
+	Attribute &a = attribs->get(name);
 	if (a.getName() == "NO_ATTR")
 		return true;
 	else
@@ -1521,4 +1535,15 @@ Nau::getEventManager (void) {
 	return m_pEventManager;
 }
 
+nau::render::IRenderer * 
+Nau::getRenderer(void)
+{
+	return getRenderManager()->getRenderer();
+}
 
+
+IAPISupport *
+Nau::getAPISupport(void) {
+
+	return m_pAPISupport;
+}

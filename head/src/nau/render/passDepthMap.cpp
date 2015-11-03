@@ -22,8 +22,8 @@ PassDepthMap::Init() {
 
 
 PassDepthMap::PassDepthMap (const std::string &passName) :
-	Pass (passName)
-{
+	Pass (passName) {
+
 	m_ClassName = "depthmap";
 	m_Viewport = new Viewport;
 	std::string camName = passName + "-LightCam";
@@ -31,8 +31,8 @@ PassDepthMap::PassDepthMap (const std::string &passName) :
 }
 
 
-PassDepthMap::~PassDepthMap(void)
-{
+PassDepthMap::~PassDepthMap(void) {
+
 	delete m_LightCamera;
 }
 
@@ -45,8 +45,8 @@ PassDepthMap::Create(const std::string &passName) {
 
 
 void
-PassDepthMap::addLight(const std::string &lightName)
-{
+PassDepthMap::addLight(const std::string &lightName) {
+
 	m_Lights.push_back (lightName);
 
 	Light *light = RENDERMANAGER->getLight (m_Lights[0]);
@@ -77,12 +77,9 @@ PassDepthMap::addLight(const std::string &lightName)
 	}
 }
 
+
 void
-PassDepthMap::prepare (void)
-{
-	//if (0 != m_RenderTarget && true == m_UseRT) {
-	//	m_RenderTarget->bind();
-	//}
+PassDepthMap::prepare (void) {
 
 	if (0 != m_RenderTarget && true == m_UseRT) {
 
@@ -111,39 +108,19 @@ PassDepthMap::prepare (void)
 
 
 void
-PassDepthMap::restore (void)
-{
+PassDepthMap::restore (void) {
+
 	if (0 != m_RenderTarget && true == m_UseRT) {
 		m_RenderTarget->unbind();
 	}
 }
 
 
-
-//void
-//PassDepthMap::setupCamera() {
-//
-//	RENDERER->setMatrix (IRenderer::PROJECTION);
-//	RENDERER->loadIdentity();
-//
-//	RENDERER->setMatrix (IRenderer::MODELVIEW);
-//	RENDERER->loadIdentity();
-//
-//	RENDERER->setCamera (*m_LightCamera);
-//}
-
-
 void 
-PassDepthMap::doPass (void)
-{
+PassDepthMap::doPass (void) {
 
 	// THIS ONLY WORKS WITH ONE DIRECTIONAL LIGHT, MULTIPLE LIGHTS REQUIRE MULTIPLE PASSES //
 	
-	//RENDERMANAGER->getRenderer()->setDepthCompare();
-		
-	for (auto pp : m_PreProcessList)
-		pp->process();
-
 	Frustum frustum;
 	float cNear, cFar;
 
@@ -163,11 +140,6 @@ PassDepthMap::doPass (void)
 	if (idTo != -1)
 		cFar = m_FloatProps[idTo];
 
-	//if (m_Paramf.count("From"))
-	//	cNear = m_Paramf["From"];
-	//if (m_Paramf.count("To"))
-	//	cFar = m_Paramf["To"];
-		
 	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
 
 	RENDERER->setCamera(m_LightCamera);
@@ -182,31 +154,18 @@ PassDepthMap::doPass (void)
 		IScene *aScene = RENDERMANAGER->getScene (*scenesIter);
 
 		std::vector<SceneObject*> &sceneObjects = aScene->findVisibleSceneObjects (frustum, *m_LightCamera,true);
-		//std::vector<SceneObject*> &sceneObjects = aScene->getAllObjects();
 		std::vector<SceneObject*>::iterator objIter;
 
-		//m_LightCamera->setNearAndFarPlanes (-aScene->getBoundingVolume().getMax().y, -aScene->getBoundingVolume().getMin().y);
-		
 		objIter = sceneObjects.begin();
 		for (; objIter != sceneObjects.end(); ++objIter) {
 			RENDERMANAGER->addToQueue (*objIter, m_MaterialMap);
 		}
 	}
 
-//	RENDERER->setCullFace( IRenderer::FRONT);
-//	RENDERER->enableDepthTest();
-
 	RENDERER->setDepthClamping(true);
 
 	RENDERMANAGER->processQueue();
 
 	RENDERER->setDepthClamping(false);
-
-//	RENDERER->setCullFace (IRenderer::BACK);
-	//RENDERER->disableDepthTest();
-
-	for (auto pp : m_PostProcessList)
-		pp->process();
-
 }
 

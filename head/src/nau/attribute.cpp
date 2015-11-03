@@ -1,5 +1,6 @@
 #include "nau/attribute.h"
 
+#include "nau.h"
 #include "nau/render/iRenderer.h"
 
 #include <vector>
@@ -8,7 +9,8 @@ using namespace nau::render;
 
 std::vector<std::string> Attribute::m_DummyVS;
 
-Attribute::Attribute() : m_Id(-1), m_Default(NULL), m_RangeDefined(false), m_ListDefined(false) {
+Attribute::Attribute() : m_Id(-1), m_Default(NULL), m_Min(NULL), m_Max(NULL), 
+			m_RangeDefined(false), m_ListDefined(false) {
 
 }
 
@@ -18,7 +20,8 @@ Attribute::Attribute(int id, std::string name, Enums::DataType type,
 	void *min, void *max, 
 	IAPISupport::APIFeatureSupport requires, 
 	Semantics sem) :
-	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), m_Default(NULL), m_Min(NULL), m_Max(NULL),
+	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), 
+		m_Default(NULL), m_Min(NULL), m_Max(NULL),
 		m_ListDefined(false), m_RangeDefined(false), m_Semantics(sem),
 		m_Requires(requires){
 		
@@ -27,13 +30,13 @@ Attribute::Attribute(int id, std::string name, Enums::DataType type,
 	if (min != NULL) {
 		m_RangeDefined = true;
 		m_Min = malloc(s);
-		memcpy(m_Min, min, Enums::getSize(m_Type));
+		memcpy(m_Min, min, s);
 	}
 
 	if (max != NULL) {
 		m_RangeDefined = true;
 		m_Max = malloc(s);
-		memcpy(m_Max, max, Enums::getSize(m_Type));
+		memcpy(m_Max, max, s);
 	}
 
 	if (defaultV) {
@@ -49,8 +52,73 @@ Attribute::Attribute(int id, std::string name, Enums::DataType type,
 
 
 Attribute::~Attribute() {
+
 	// can't free this memory because it may be in use in other attribute ?
+	//if (m_Min != NULL) {
+	//	free(m_Min);
+	//	m_Min = NULL;
+	//}
+	//if (m_Max != NULL) {
+	//	free(m_Max);
+	//	m_Max = NULL;
+	//}
+	//if (m_Default != NULL) {
+	//	free(m_Default);
+	//	m_Default = NULL;
+	//}
 };
+
+
+Attribute & 
+Attribute::operator=(const Attribute &rhs) {
+
+	if (this == &rhs)
+		return *this;
+
+	m_Id = rhs.m_Id;
+	m_Name = rhs.m_Name;
+	m_Type = rhs.m_Type;
+	m_ReadOnlyFlag = rhs.m_ReadOnlyFlag;
+	m_Requires = rhs.m_Requires;
+	m_Semantics = rhs.m_Semantics;
+
+	// dealocate previous values
+	if (m_Min != NULL) {
+		free(m_Min);
+		m_Min = NULL;
+	}
+	if (m_Max != NULL) {
+		free(m_Max);
+		m_Max = NULL;
+	}
+	if (m_Default != NULL) {
+		free(m_Default);
+		m_Default = NULL;
+	}
+
+	// copy pointer values
+	int s = Enums::getSize(m_Type);
+
+	if (rhs.m_Min != NULL) {
+		m_RangeDefined = true;
+		m_Min = malloc(s);
+		memcpy(m_Min, rhs.m_Min, s);
+	}
+
+	if (rhs.m_Max != NULL) {
+		m_RangeDefined = true;
+		m_Max = malloc(s);
+		memcpy(m_Max, rhs.m_Max, s);
+	}
+
+	if (rhs.m_Default) {
+		m_Default = malloc(s);
+		memcpy(m_Default, rhs.m_Default, s);
+	}
+
+	return *this;
+
+}
 
 
 std::vector<std::string> &
@@ -327,7 +395,7 @@ AttribSet::getDataTypeCount(Enums::DataType dt) {
 }
 
 		
-const Attribute &
+Attribute &
 AttribSet::get(std::string name) {
 
 	if (m_Attributes.find(name) != m_Attributes.end()) 
@@ -339,7 +407,7 @@ AttribSet::get(std::string name) {
 }
 
 
-const Attribute &
+Attribute &
 AttribSet::get(int id, Enums::DataType dt) {
 
 	std::map<std::string, Attribute>::iterator it;
@@ -365,7 +433,7 @@ AttribSet::getID(std::string name) {
 }
 
 
-const std::map<std::string, Attribute> &
+std::map<std::string, Attribute> &
 AttribSet::getAttributes() {
 
 	return (m_Attributes);
@@ -389,7 +457,7 @@ AttribSet::getName(int id, Enums::DataType dt) {
 void 
 AttribSet::getPropTypeAndId(std::string &s, nau::Enums::DataType *dt, int *id) {
 			
-	Attribute a = get(s);
+	Attribute &a = get(s);
 	*id = a.m_Id;
 
 	if (a.m_Id != -1) {
@@ -430,7 +498,7 @@ AttribSet::getListValues(int id) {
 std::string 
 AttribSet::getListStringOp(std::string s, int prop) {
 		
-	Attribute a = get(s);
+	Attribute &a = get(s);
 	return (a.getOptionString(prop));
 }
 
@@ -452,7 +520,7 @@ AttribSet::getListStringOp(int id, int prop) {
 int 
 AttribSet::getListValueOp(std::string s, std::string prop) {
 		
-	Attribute a = get(s);
+	Attribute &a = get(s);
 	return (a.getOptionValue(prop));
 }
 
@@ -489,7 +557,7 @@ AttribSet::listAdd(std::string attrName, std::string elemS, int elem_Id, IAPISup
 bool 
 AttribSet::isValid(std::string attr, std::string value) {
 
-	Attribute a = get(attr);
+	Attribute &a = get(attr);
 	return a.isValid(value);
 }
 

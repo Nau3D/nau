@@ -102,7 +102,7 @@ GLVertexArray::prepareTriangleIDs(unsigned int sceneObjID,
 											 unsigned int primitiveOffset, 
 											 std::vector<unsigned int> *index) 
 {
-	unsigned int TriID_index = VertexData::GetAttribIndex("triangleID");
+	unsigned int TriID_index = VertexData::GetAttribIndex(std::string("triangleID"));
 
 	if (sceneObjID != 0 && 0 == m_InternalArrays[TriID_index] 
 						 && m_InternalArrays[0]) {
@@ -208,7 +208,8 @@ GLVertexArray::bind (void) {
 	if (true == m_IsCompiled) {
 		for (i = 0; i < VertexData::MaxAttribs; ++i) {
 			if (0 != m_GLBuffers[i]){
-				int loc = RENDERER->getAttribLocation(VertexData::Syntax[i]);
+
+				int loc = RENDERER->getAttribLocation(std::string(VertexData::Syntax[i]));
 				if (loc != -1) {
 					glBindBuffer (GL_ARRAY_BUFFER, m_GLBuffers[i]);
 					glEnableVertexAttribArray (loc/*m_AttributesLocations[i]*/);

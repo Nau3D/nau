@@ -19,14 +19,16 @@ OctreeByMatScene::OctreeByMatScene(void) : IScenePartitioned(),
 	m_pGeometry (0),
 	m_BoundingBox()
 {
-//	m_Transform = TransformFactory::create("SimpleTransform");
 	EVENTMANAGER->addListener("SET_POSITION", this);
 	EVENTMANAGER->addListener("SET_ROTATION", this);
+
+	m_Type = "OctreeByMatScene";
+
 }
 
 
-OctreeByMatScene::~OctreeByMatScene(void)
-{
+OctreeByMatScene::~OctreeByMatScene(void) {
+
 	delete m_pGeometry;
 
 	m_SceneObjects.clear();
@@ -35,21 +37,17 @@ OctreeByMatScene::~OctreeByMatScene(void)
 
 
 void
-OctreeByMatScene::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt)
-{	
+OctreeByMatScene::eventReceived(const std::string &sender, 
+	const std::string &eventType, nau::event_::IEventData *evt) {	
 	vec4 *p = (vec4 *)evt->getData();
-//	SLOG("Scene %s %s %s %f %f %f", m_Name.c_str(), sender.c_str(), eventType.c_str(), p->x, p->y, p->z);
 
 	if (eventType == "SET_POSITION") {
-
 		mat4 t;
 		t.setIdentity();
 		t.translate(p->x, p->y, p->z);
 		this->setTransform(t);
 	}
 	if (eventType == "SET_ROTATION") {
-
-		//nau::math::mat4 m = m_Transform->getMat44();
 		m_Transform.setIdentity();
 		m_Transform.rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();	
@@ -58,31 +56,31 @@ OctreeByMatScene::eventReceived(const std::string &sender, const std::string &ev
 
 
 mat4 &
-OctreeByMatScene::getTransform() 
-{
+OctreeByMatScene::getTransform() {
+
 	return m_Transform;
 }
 
 
 void
-OctreeByMatScene::setTransform(nau::math::mat4 &t)
-{
+OctreeByMatScene::setTransform(nau::math::mat4 &t) {
+
 	m_Transform = t;
 	updateSceneObjectTransforms();
 }
 
 
 void
-OctreeByMatScene::transform(nau::math::mat4 &t)
-{
+OctreeByMatScene::transform(nau::math::mat4 &t) {
+
 	m_Transform*= t;
 	updateSceneObjectTransforms();
 }
 
 
 void 
-OctreeByMatScene::updateSceneObjectTransforms()
-{
+OctreeByMatScene::updateSceneObjectTransforms() {
+
 	std::vector<SceneObject*>::iterator iter; 
 	iter = m_SceneObjects.begin();
     for( ; iter != m_SceneObjects.end(); ++iter)
@@ -96,8 +94,8 @@ OctreeByMatScene::updateSceneObjectTransforms()
 
 
 void 
-OctreeByMatScene::build (void)
-{
+OctreeByMatScene::build (void) {
+
 	if (true == m_Built) {
 		return ;
 	}
@@ -138,15 +136,15 @@ OctreeByMatScene::build (void)
 
 
 IBoundingVolume& 
-OctreeByMatScene::getBoundingVolume (void)
-{
+OctreeByMatScene::getBoundingVolume (void) {
+
 	return m_BoundingBox;
 }
 
 
 void
-OctreeByMatScene::compile (void)
-{
+OctreeByMatScene::compile (void) {
+
 	if (true == m_Compiled) {
 		return;
 	}
@@ -166,14 +164,13 @@ OctreeByMatScene::compile (void)
 		for ( ; matGroupsIter != matGroups.end(); ++matGroupsIter){
 			(*matGroupsIter)->compile();
 		}
-
 	}
 }
 
 
 void 
-OctreeByMatScene::add (SceneObject *aSceneObject)
-{
+OctreeByMatScene::add (SceneObject *aSceneObject) {
+
 	if (0 == aSceneObject->getType().compare ("OctreeNode")) {
 		m_Built = true;
 		if (0 == m_pGeometry) {
@@ -189,8 +186,9 @@ OctreeByMatScene::add (SceneObject *aSceneObject)
 
 
 std::vector <SceneObject*>& 
-OctreeByMatScene::findVisibleSceneObjects (Frustum &aFrustum, Camera &aCamera, bool conservative)
-{
+OctreeByMatScene::findVisibleSceneObjects (Frustum &aFrustum, 
+				Camera &aCamera, bool conservative) {
+
 	m_vReturnVector.clear();
 
 	if (0 != m_pGeometry) {
@@ -215,8 +213,8 @@ OctreeByMatScene::findVisibleSceneObjects (Frustum &aFrustum, Camera &aCamera, b
 
 
 std::vector<SceneObject*>& 
-OctreeByMatScene::getAllObjects ()
-{
+OctreeByMatScene::getAllObjects () {
+
 	m_vReturnVector.clear();
 
 	std::vector<SceneObject*>::iterator objIter;
@@ -232,24 +230,25 @@ OctreeByMatScene::getAllObjects ()
 }
 
 
-void
-OctreeByMatScene::getMaterialNames(std::set<std::string> *nameList)
-{
-	std::vector<SceneObject*>::iterator objIter;
-	objIter = m_SceneObjects.begin();
-	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		(*objIter)->getRenderable().getMaterialNames(nameList);
+const std::set<std::string> &
+OctreeByMatScene::getMaterialNames() {
+
+	m_MaterialNames.clear();
+
+	for ( auto objIter : m_SceneObjects) {
+		objIter->getRenderable().getMaterialNames(&m_MaterialNames);
 	}
 
 	if (0 != m_pGeometry) {
-		m_pGeometry->getMaterialNames(nameList);
+		m_pGeometry->getMaterialNames(&m_MaterialNames);
 	}
+	return m_MaterialNames;
 }
 
 
 SceneObject* 
-OctreeByMatScene::getSceneObject (std::string name)
-{
+OctreeByMatScene::getSceneObject (std::string name) {
+
 	std::vector<SceneObject*>::iterator objIter;
 	objIter = m_SceneObjects.begin();
 	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
@@ -262,21 +261,12 @@ OctreeByMatScene::getSceneObject (std::string name)
 
 
 SceneObject*
-OctreeByMatScene::getSceneObject( int index) 
-{
+OctreeByMatScene::getSceneObject( int index) {
+
 	if (index < 0 || (unsigned int)index >= m_SceneObjects.size())
 		return NULL;
 
 	return m_SceneObjects.at(index);
-}
-
-
-
-
-
-std::string 
-OctreeByMatScene::getType (void) {
-	return "OctreeByMatScene";
 }
 
 
@@ -310,29 +300,3 @@ void OctreeByMatScene::unitize() {
 
 }
 
-//void 
-//OctreeByMatScene::show (void)
-//{
-//	m_Visible = true;
-//}
-//	
-//
-//void 
-//OctreeByMatScene::hide (void)
-//{
-//	m_Visible = false;
-//}
-//	
-//
-//bool 
-//OctreeByMatScene::isVisible (void)
-//{
-//	return m_Visible;
-//}
-
-//void 
-//OctreeByMatScene::translate(float x, float y, float z) 
-//{
-//	m_Transform->translate(x,y,z);
-//	updateSceneObjectTransforms();
-//}

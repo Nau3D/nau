@@ -1,6 +1,7 @@
-#ifndef VECTOR3_H
-#define VECTOR3_H
+#ifndef NAU_VECTOR3_H
+#define NAU_VECTOR3_H
 
+#include "nau/math/data.h"
 #include "nau/math/utils.h"
 
 #include <string>
@@ -10,7 +11,7 @@ namespace nau
 	namespace math
 	{
 		template <typename T>
-		class vector3 {
+		class vector3: public Data {
 
 		public:
 

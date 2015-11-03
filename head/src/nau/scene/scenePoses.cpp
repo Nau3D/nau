@@ -10,6 +10,8 @@ ScenePoses::ScenePoses(void): Scene(), m_ActiveAnim("")
 	EVENTMANAGER->addListener("SET_POSE_BY_INDEX",(nau::event_::IListener *)this);
 	EVENTMANAGER->addListener("SET_POSE_BY_NAME",(nau::event_::IListener *)this);
 	EVENTMANAGER->addListener("ANIMATE",(nau::event_::IListener *)this);
+
+	m_Type = "ScenePoses";
 }
 
 
@@ -23,16 +25,10 @@ ScenePoses::~ScenePoses(void) {
 }
 
 
-std::string
-ScenePoses::getType() {
-
-	return("ScenePoses");
-}
-
-
 void
-ScenePoses::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt) 
-{
+ScenePoses::eventReceived(const std::string &sender, const std::string &eventType, 
+			IEventData *evt) {
+
 	if (eventType == "SET_POSE_BY_INDEX")
 		setPose(*(int *)evt->getData());
 	else if (eventType == "SET_POSE_BY_NAME")
@@ -43,14 +39,14 @@ ScenePoses::eventReceived(const std::string &sender, const std::string &eventTyp
 
 
 void 
-ScenePoses::compile()
-{
+ScenePoses::compile() {
+
 }
 
 
 void 
-ScenePoses::setActiveAnim(std::string aName) 
-{
+ScenePoses::setActiveAnim(std::string aName) {
+
 	if (m_Anims.count(aName) != 0)
 		m_ActiveAnim = aName;
 	else
@@ -59,15 +55,15 @@ ScenePoses::setActiveAnim(std::string aName)
 
 
 std::string
-ScenePoses::getActiveAnim() 
-{
+ScenePoses::getActiveAnim() {
+
 	return m_ActiveAnim;
 }
 
 
 void 
-ScenePoses::addAnim(std::string aName, float aLength)
-{
+ScenePoses::addAnim(std::string aName, float aLength) {
+
 	m_Anims[aName] = MeshPoseAnim();
 	m_Anims[aName].setLength(aLength);
 
@@ -78,8 +74,8 @@ ScenePoses::addAnim(std::string aName, float aLength)
 
 
 void 
-ScenePoses::addAnimTrack(std::string aName, unsigned int meshIndex) 
-{
+ScenePoses::addAnimTrack(std::string aName, unsigned int meshIndex) {
+
 	if (m_Anims.count (aName) > 0)
 		m_Anims[aName].addTrack(meshIndex);
 }
@@ -115,15 +111,15 @@ ScenePoses::setPose(std::string name) {
 
 // must exist, otherwise ...
 MeshPoseAnim &
-ScenePoses::getAnim(std::string aName)
-{
+ScenePoses::getAnim(std::string aName) {
+
 	return m_Anims[aName];
 }
 
 
 void 
-ScenePoses::setRelativeTime(std::string aAnim, float time) 
-{
+ScenePoses::setRelativeTime(std::string aAnim, float time) {
+
 	SLOG("time = %f\n", time);
 	if (m_Anims.count (aAnim) > 0) {
 

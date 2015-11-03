@@ -32,7 +32,9 @@ ITexture::Init() {
 	Attribs.add(Attribute(TYPE, "TYPE", Enums::DataType::ENUM, true));
 	Attribs.add(Attribute(INTERNAL_FORMAT, "INTERNAL_FORMAT", Enums::DataType::ENUM, false));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("TEXTURE", &Attribs);
+#endif
 
 	return true;
 }
@@ -40,7 +42,6 @@ ITexture::Init() {
 
 AttribSet ITexture::Attribs;
 bool ITexture::Inited = Init();
-
 
 
 ITexture*

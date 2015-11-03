@@ -21,7 +21,9 @@ IRenderable::Init() {
 //	Attribs.listAdd("PRIMITIVE_TYPE", "PATCHES", PATCHES);
 //#endif
 
-	NAU->registerAttributes("RENDERABLE", &Attribs);
+//#ifndef _WINDLL
+//	NAU->registerAttributes("RENDERABLE", &Attribs);
+//#endif
 
 	return true;
 }
@@ -29,6 +31,7 @@ IRenderable::Init() {
 
 AttribSet IRenderable::Attribs;
 bool IRenderable::Inited = Init();
+
 
 IRenderable::IRenderable() {
 

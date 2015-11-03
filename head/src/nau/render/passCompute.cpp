@@ -19,6 +19,9 @@ PassCompute::Init() {
 	Attribs.add(Attribute(DIM_Y, "DIM_Y", Enums::DataType::UINT, false, new unsigned int(1)));
 	Attribs.add(Attribute(DIM_Z, "DIM_Z", Enums::DataType::UINT, false, new unsigned int(1)));
 
+#ifndef _WINDLL
+	NAU->registerAttributes("PASS", &Attribs);
+#endif
 	PASSFACTORY->registerClass("compute", Create);
 
 	return true;
@@ -81,14 +84,8 @@ PassCompute::restore (void) {
 void
 PassCompute::doPass (void) {
 
-	for (auto pp : m_PreProcessList)
-		pp->process();
-
 	PROFILE_GL("Compute shader");
 	RENDERER->dispatchCompute(m_UIntProps[DIM_X], m_UIntProps[DIM_Y], m_UIntProps[DIM_Z]);
-
-	for (auto pp : m_PostProcessList)
-		pp->process();
 }
 
 
@@ -108,7 +105,7 @@ PassCompute::getMaterial() {
 
 
 void
-PassCompute::setDimension(int dimX, int dimY, int dimZ) {
+PassCompute::setDimension(unsigned int dimX, unsigned int dimY, unsigned int dimZ) {
 
 	m_UIntProps[DIM_X] = dimX;
 	m_UIntProps[DIM_Y] = dimY;
