@@ -10,6 +10,7 @@ using namespace gl;
 
 #include <string>
 #include <map>
+#include <memory>
 
 
 
@@ -29,7 +30,7 @@ namespace nau
 			
 			int m_Loc;
 			//nau::math::Data *m_Values;
-			void *m_Values;	
+			std::shared_ptr<char> m_Values;	
 
 			static bool Init();
 			static bool Inited;

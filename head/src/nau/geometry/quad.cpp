@@ -15,9 +15,9 @@ Quad::Quad(void) :
 	SceneObject()
 {
 	Mesh *renderable = (Mesh *)RESOURCEMANAGER->createRenderable("Mesh");//new Mesh;
-	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(4);
-	std::vector<VertexData::Attr> *textureCoords = new std::vector<vec4>(4);
-	std::vector<VertexData::Attr> *normals = new std::vector<vec4>(4);
+	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(4);
+	std::vector<VertexData::Attr> *textureCoords = new std::vector<VertexData::Attr>(4);
+	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(4);
 
 	for (int i = 0; i < 4; ++i)
 		normals->at(i).set(0.0f, 0.0f, 0.0f);
@@ -57,7 +57,6 @@ Quad::Quad(void) :
 	setRenderable (renderable);
 }
 
-Quad::~Quad(void)
-{
-	delete m_Renderable;
+Quad::~Quad(void) {
+
 }

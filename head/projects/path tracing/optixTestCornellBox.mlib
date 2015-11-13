@@ -29,6 +29,7 @@
 	<states>
 		<state name ="Transparent">
 			<ORDER value="1" />
+			<BLEND value=true />
 			<BLEND_SRC value="SRC_ALPHA" />
 			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
 		</state>
@@ -88,7 +89,8 @@
 														component="UNIT" id="0" />
 				</values>
 			</shader>
-		</material>		
+		</material>	
+		
 		<material name="Glass">
 			<color>
 				<AMBIENT r="0.0" g="0.0" b="0.0" a="1.0" />
@@ -97,11 +99,7 @@
 				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.3" />
 			</color>
-			<state>
-				<ORDER value="1" />
-				<BLEND_SRC value="SRC_ALPHA" />
-				<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
-			</state>	
+			<state name="Transparent" />
 			<shader name="pointLight">
 				<values>
 					<valueof uniform="lightPos" 		type="LIGHT" context="CURRENT" 

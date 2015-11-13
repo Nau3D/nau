@@ -15,7 +15,7 @@ Axis::Axis(void) : Primitive()
 	
 {
 	setDrawingPrimitive(nau::render::IRenderable::LINES);
-	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(6);
+	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(6);
 	//std::vector<VertexData::Attr> *normals = new std::vector<vec4>(6);
 
 	// FRONT

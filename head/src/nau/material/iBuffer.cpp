@@ -14,13 +14,13 @@ bool
 IBuffer::Init() {
 
 	// UINT
-	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::UINT, false, new unsigned int(0)));
-	Attribs.add(Attribute(STRUCT_SIZE, "STRUCT_SIZE", Enums::DataType::UINT, true, new unsigned int(0)));
+	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::UINT, false, new NauUInt(0)));
+	Attribs.add(Attribute(STRUCT_SIZE, "STRUCT_SIZE", Enums::DataType::UINT, true, new NauUInt(0)));
 	// INT
-	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(-1)));
+	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new NauInt(-1)));
 	// ENUM
-	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::ENUM, false, new int(NEVER)));
-	Attribs.setDefault("CLEAR", new int(NEVER));
+	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::ENUM, false, new NauInt(NEVER)));
+	Attribs.setDefault("CLEAR", NauInt(NEVER));
 	Attribs.listAdd("CLEAR", "NEVER", NEVER);
 	Attribs.listAdd("CLEAR", "BY_FRAME", BY_FRAME);
 	// UIVEC3

@@ -94,8 +94,12 @@
 				<scenes>
 					<scene name="Sponza" />
 				</scenes>
-				<color clear=false enable=false />
-				<depth test=false write=false />
+				<COLOR_CLEAR value=false />
+				<COLOR_ENABLE value = false />
+				<DEPTH_MASK value = false />
+				<DEPTH_ENABLE value = false />
+				<!--color clear=false enable=false />
+				<depth test=false write=false /-->
 				<renderTarget name="dummy" fromLibrary="Voxels" />
 				<injectionMaps>
 					<map toMaterial="*" >

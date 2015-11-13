@@ -28,7 +28,7 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	int numPatches, numVert;
 	unsigned int verticesPerPatch;
 	std::vector<unsigned int> *indices = new std::vector<unsigned int>;
-	std::vector<nau::math::vec4>* vertices = new std::vector<nau::math::vec4>;
+	std::vector<VertexData::Attr>* vertices = new std::vector<VertexData::Attr>;
 
 
 	fscanf(fp, "%d\n", &verticesPerPatch);
@@ -53,7 +53,7 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	float maxX = -FLT_MAX, maxY = -FLT_MAX, maxZ = -FLT_MAX;
 	float minX =  FLT_MAX, minY =  FLT_MAX, minZ =  FLT_MAX; 
 
-	vec4 v;
+	VertexData::Attr v;
 	for (int i = 0; i < numVert; ++i) {
 		fscanf(fp, "%f, %f, %f\n", &v.x, &v.y, &v.z);
 		v.w = 1.0;

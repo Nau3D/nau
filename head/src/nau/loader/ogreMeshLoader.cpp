@@ -492,7 +492,7 @@ OgreMeshLoader::loadSubMeshNames(TiXmlHandle hRoot, IScene *scn, bool meshShared
 
 
 void 
-OgreMeshLoader::loadVertexElement(TiXmlElement *pElemVertexAttrib, vec4 *vertexElem) 
+OgreMeshLoader::loadVertexElement(TiXmlElement *pElemVertexAttrib, VertexData::Attr *vertexElem)
 {
 	float fx,fy,fz;
 
@@ -512,7 +512,7 @@ OgreMeshLoader::loadVertexElement(TiXmlElement *pElemVertexAttrib, vec4 *vertexE
 }
 
 void 
-OgreMeshLoader::loadTextureCoordElement(TiXmlElement *pElemVertexAttrib, vec4 *vertexElem) 
+OgreMeshLoader::loadTextureCoordElement(TiXmlElement *pElemVertexAttrib, VertexData::Attr *vertexElem)
 {
 	float fx,fy,fz;
 

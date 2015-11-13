@@ -59,7 +59,7 @@ namespace nau
 
 			virtual void setPropf4(Float4Property prop, vec4& aVec);
 			virtual void setPrope(EnumProperty prop, int v);
-			void *getProp(unsigned int prop, Enums::DataType type);
+			//void *getProp(unsigned int prop, Enums::DataType type);
 			vec3 &getPropf3(Float3Property prop);
 
 			virtual void setName(std::string name) {

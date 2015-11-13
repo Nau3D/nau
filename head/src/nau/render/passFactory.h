@@ -18,6 +18,7 @@ namespace nau
 		{
 		public:
 			static PassFactory* GetInstance (void);
+			static void DeleteInstance();
 
 			Pass* create (const std::string &type, const std::string &name);
 			bool isClass(const std::string &name);
@@ -25,10 +26,10 @@ namespace nau
 			void registerClass(const std::string &type, Pass * (*callback)(const std::string &));
 			void registerClassFromPlugIn(char *, void * (*callback)(const char *));
 			unsigned int loadPlugins();
+			~PassFactory(void) {};
 
 		protected:
 			PassFactory(void) ;
-			~PassFactory(void);
 
 			std::map<std::string, void *> m_Creator;
 			std::map<std::string, void *> m_PluginCreator;

@@ -44,9 +44,9 @@ namespace nau
 
 			bool init();
 
-			void *getProp(unsigned int prop, Enums::DataType dt);
-			const mat4 &getPropm4(Mat4Property prop);
-			const mat3 &getPropm3(Mat3Property prop);
+			//void *getProp(unsigned int prop, Enums::DataType dt);
+			virtual const mat4 &getPropm4(Mat4Property prop);
+			virtual const mat3 &getPropm3(Mat3Property prop);
 
 			// API TRACE
 
@@ -70,7 +70,7 @@ namespace nau
 		public:
 			virtual unsigned int getLightCount();
 			virtual Light *getLight(unsigned int id);
-			virtual bool addLight(nau::scene::Light& aLight);
+			virtual bool addLight(nau::scene::Light *aLight);
 			virtual void removeLights();
 
 
@@ -128,7 +128,7 @@ namespace nau
 		public:
 			// COLOR
 			virtual void setMaterial(nau::material::ColorMaterial &mat);
-			virtual void setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess);
+			virtual void setMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess);
 			virtual ColorMaterial *getMaterial();
 
 			// STATE

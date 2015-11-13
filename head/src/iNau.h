@@ -75,7 +75,7 @@ namespace nau {
 		virtual bool validateShaderAttribute(std::string type, std::string context, std::string component) = 0;
 		virtual bool setAttribute(std::string type, std::string context,
 				 std::string component, int number,
-				 void *values) = 0;
+				 Data *values) = 0;
 		virtual void *getAttribute(std::string type, std::string context,
 			std::string component, int number) = 0;
 		virtual AttributeValues *getObjectAttributes(std::string type, std::string context, int number=0) = 0;

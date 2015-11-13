@@ -36,13 +36,13 @@ namespace nau
 			virtual void setAPISupport() = 0;
 			bool apiSupport(APIFeatureSupport feature);
 			unsigned int getVersion();
+			~IAPISupport();
 
 		protected:
 			std::map<APIFeatureSupport, bool> m_APISupport;
 			unsigned int m_Version;
 			static IAPISupport *Instance;
 			IAPISupport();
-			~IAPISupport();
 		};
 	};
 };

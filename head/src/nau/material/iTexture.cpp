@@ -15,17 +15,17 @@ bool
 ITexture::Init() {
 
 	// INT
-	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(-1)));
-	Attribs.add(Attribute(WIDTH, "WIDTH", Enums::DataType::INT, false, new int (1)));
-	Attribs.add(Attribute(HEIGHT, "HEIGHT", Enums::DataType::INT, false, new int(1)));
-	Attribs.add(Attribute(DEPTH, "DEPTH", Enums::DataType::INT, false, new int(1)));
-	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::INT, false, new int(0)));
-	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::INT, false, new int(0)));
-	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::INT, false, new int(1)));
-	Attribs.add(Attribute(COMPONENT_COUNT, "COMPONENT_COUNT", Enums::DataType::INT, true, new int(0)));
-	Attribs.add(Attribute(ELEMENT_SIZE, "ELEMENT_SIZE", Enums::DataType::INT, true, new int(0)));
+	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new NauInt(-1)));
+	Attribs.add(Attribute(WIDTH, "WIDTH", Enums::DataType::INT, false, new NauInt(1)));
+	Attribs.add(Attribute(HEIGHT, "HEIGHT", Enums::DataType::INT, false, new NauInt(1)));
+	Attribs.add(Attribute(DEPTH, "DEPTH", Enums::DataType::INT, false, new NauInt(1)));
+	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::INT, false, new NauInt(0)));
+	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::INT, false, new NauInt(0)));
+	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::INT, false, new NauInt(1)));
+	Attribs.add(Attribute(COMPONENT_COUNT, "COMPONENT_COUNT", Enums::DataType::INT, true, new NauInt(0)));
+	Attribs.add(Attribute(ELEMENT_SIZE, "ELEMENT_SIZE", Enums::DataType::INT, true, new NauInt(0)));
 	// BOOL
-	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new bool(false)));
+	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new NauInt(false)));
 	// ENUM
 	Attribs.add(Attribute(DIMENSION, "DIMENSION", Enums::DataType::ENUM, true));
 	Attribs.add(Attribute(FORMAT, "FORMAT", Enums::DataType::ENUM, true));

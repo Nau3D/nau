@@ -29,7 +29,8 @@ namespace nau
 		public:
 
 			Pipeline (std::string pipelineName = "Default");
-			
+			~Pipeline();
+
 			std::string getName();
 			std::vector<std::string> *getPassNames();
 

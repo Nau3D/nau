@@ -21,6 +21,12 @@ namespace nau
 			vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
 			vector4(const vector4 &v) : x(v.x), y(v.y), z(v.z), w(v.w) {};
 			vector4(T v) : x(v), y(v), z(v), w(v) {};
+			vector4(const T* values) {
+				x = values[0];
+				y = values[1];
+				z = values[2];
+				w = values[3];
+			}
 			~vector4() {};
 
 			const vector4&
@@ -34,6 +40,14 @@ namespace nau
 				}
 				return *this;
 			};
+
+			Data *clone() {
+				return new vector4(*this);
+			}
+
+			void *getPtr() {
+				return &x;
+			}
 
 			void
 			copy(const vector4 &v) {

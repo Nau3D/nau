@@ -122,50 +122,65 @@ OptixMaterialLib::addMaterial(nau::material::MaterialID aMat) {
 
 		iter = o_MatAttribute.begin();
 		for ( ; iter != o_MatAttribute.end(); ++iter) {
-			if (iter->second.getValues() != NULL) {
-				switch (iter->second.getValueType()) {
+			void *k = iter->second.getValues();
+			if (k != NULL) {
+
+				Enums::DataType dt = iter->second.getValueType();
+				switch (dt) {
+				case Enums::INT:
+				case Enums::BOOL:
+				case Enums::FLOAT:
+				case Enums::UINT:
+				case Enums::SAMPLER:
+				case Enums::DOUBLE:
+					break;
+				default:
+					k = ((Data *)k)->getPtr();
+				}
+
+				switch (dt) {
 							
 					case Enums::UINT:
-						omat[iter->first]->set1uiv((unsigned int *)iter->second.getValues());
+						omat[iter->first]->set1uiv((unsigned int *)k);
 						break;
 					case Enums::INT:
 					case Enums::BOOL:
 					case Enums::ENUM:
-						omat[iter->first]->set1iv((int *)iter->second.getValues());
+						omat[iter->first]->set1iv((int *)k);
 						break;
 					case Enums::IVEC2:
 					case Enums::BVEC2:
-						omat[iter->first]->set2iv((int *)iter->second.getValues());
+						omat[iter->first]->set2iv((int *)k);
 						break;
 					case Enums::IVEC3:
 					case Enums::BVEC3:
-						omat[iter->first]->set3iv((int *)iter->second.getValues());
+						omat[iter->first]->set3iv((int *)k);
 						break;
 					case Enums::IVEC4:
 					case Enums::BVEC4:
-						omat[iter->first]->set4iv((int *)iter->second.getValues());
+						omat[iter->first]->set4iv((int *)k);
 						break;
 
 					case Enums::FLOAT:
-						omat[iter->first]->set1fv((float *)iter->second.getValues());
+						omat[iter->first]->set1fv((float *)k);
 						break;
 					case Enums::VEC2:
-						omat[iter->first]->set2fv((float *)iter->second.getValues());
+						omat[iter->first]->set2fv((float *)k);
 						break;
 					case Enums::VEC3:
-						omat[iter->first]->set3fv((float *)iter->second.getValues());
+						omat[iter->first]->set3fv((float *)k);
 						break;
 					case Enums::VEC4:
-						omat[iter->first]->set4fv((float *)iter->second.getValues());
+						omat[iter->first]->set4fv((float *)k);
 						break;
 					case Enums::MAT2:
-						omat[iter->first]->setMatrix2x2fv(false,(float *)iter->second.getValues());
+						omat[iter->first]->setMatrix2x2fv(false,(float *)k);
 						break;
 					case Enums::MAT3:
-						omat[iter->first]->setMatrix3x3fv(false,(float *)iter->second.getValues());
+						omat[iter->first]->setMatrix3x3fv(false,(float *)k);
 						break;
 					case Enums::MAT4:
-						omat[iter->first]->setMatrix4x4fv(false,(float *)iter->second.getValues());
+						omat[iter->first]->setMatrix4x4fv(false,(float *)k);
 						break;
 					default:
 						assert(false && "Missing type in OptixMaterialLib.cpp");

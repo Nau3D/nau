@@ -6,10 +6,9 @@
 void
 PropertyManager::createGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs) {
 
-	std::map<std::string, nau::Attribute> attributes;
-	attributes = attribs.getAttributes();
+	std::map<std::string, std::unique_ptr<Attribute>> & attributes = attribs.getAttributes();
 
-	for (auto attrib:attributes) {
+	for (auto& attrib:attributes) {
 
 		addAttribute(pg, attrib.second);
 	}
@@ -19,29 +18,29 @@ PropertyManager::createGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs) 
 
 
 void
-PropertyManager::createOrderedGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs, std::vector<std::string> &list) {
+PropertyManager::createOrderedGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs, 
+					std::vector<std::string> &list) {
 
 	// First add the attributes in the list
 	for (auto name : list) {
 
-		Attribute &attr = attribs.get(name);
+		std::unique_ptr<Attribute> &attr = attribs.get(name);
 		addAttribute(pg, attr);
 	}
 
 	// Add editable attributes
-	std::map<std::string, nau::Attribute> attributes;
-	attributes = attribs.getAttributes();
+	std::map<std::string, std::unique_ptr<Attribute>> & attributes = attribs.getAttributes();
 
-	for (auto attrib : attributes) {
+	for (auto & attrib : attributes) {
 
-		if (!inList(attrib.second.getName(), list) && attrib.second.getReadOnlyFlag() == false)
+		if (!inList(attrib.second->getName(), list) && attrib.second->getReadOnlyFlag() == false)
 		addAttribute(pg, attrib.second);
 	}
 
 	// Add the editable attributes
-	for (auto attrib : attributes) {
+	for (auto& attrib : attributes) {
 
-		if (!inList(attrib.second.getName(), list) && attrib.second.getReadOnlyFlag() == true)
+		if (!inList(attrib.second->getName(), list) && attrib.second->getReadOnlyFlag() == true)
 			addAttribute(pg, attrib.second);
 	}
 
@@ -53,10 +52,10 @@ PropertyManager::createOrderedGrid(wxPropertyGridManager *pg, nau::AttribSet &at
 void
 PropertyManager::setAllReadOnly(wxPropertyGridManager *pg, nau::AttribSet &attribs) {
 
-	std::map<std::string, nau::Attribute> attributes;
-	attributes = attribs.getAttributes();
+	std::map<std::string, std::unique_ptr<Attribute>> & attributes = attribs.getAttributes();
+
 	wxPGProperty *pid;
-	for (auto attrib:attributes) {
+	for (auto& attrib:attributes) {
 		pid = pg->GetProperty(attrib.first);
 		pg->DisableProperty(pid);
 	}
@@ -77,12 +76,9 @@ PropertyManager::inList(std::string attr, std::vector<std::string> &list) {
 
 
 void 
-PropertyManager::addAttribute(wxPropertyGridManager *pg, Attribute &a) {
+PropertyManager::addAttribute(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
-	//if (pg->GetProperty(wxString(a.getName().c_str())) == NULL)
-	//	return;
-
-	switch (a.getType()) {
+	switch (a->getType()) {
 
 	case Enums::ENUM: createEnum(pg, a); break;
 	case Enums::BOOL: createBool(pg, a); break;
@@ -107,35 +103,34 @@ PropertyManager::addAttribute(wxPropertyGridManager *pg, Attribute &a) {
 void 
 PropertyManager::updateGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs, AttributeValues *attribVal) {
 
-	std::map<std::string, nau::Attribute> attributes;
-	attributes = attribs.getAttributes();
+	std::map<std::string, std::unique_ptr<Attribute>> & attributes = attribs.getAttributes();
 
 	pg->ClearSelection();
 
-	for (auto attrib : attributes) {
+	for (auto &attrib : attributes) {
 
-		Attribute a = attrib.second;
-		switch (attrib.second.getType()) {
+		std::unique_ptr<Attribute> &a = attrib.second;
+		switch (a->getType()) {
 
-		case Enums::ENUM: updateEnum(pg, a.getName(), attribVal->getPrope((AttributeValues::EnumProperty)a.getId())); break;
-		case Enums::BOOL: updateBool(pg, a.getName(), attribVal->getPropb((AttributeValues::BoolProperty)a.getId())); break;
-		case Enums::BVEC4: updateBVec4(pg, a.getName(), attribVal->getPropb4((AttributeValues::Bool4Property)a.getId())); break;
-		case Enums::INT: updateInt(pg, a.getName(), attribVal->getPropi((AttributeValues::IntProperty)a.getId())); break;
-		case Enums::IVEC3: updateIVec3(pg, a.getName(), attribVal->getPropi3((AttributeValues::Int3Property)a.getId())); break;
-		case Enums::UINT: updateInt(pg, a.getName(), attribVal->getPropui((AttributeValues::UIntProperty)a.getId())); break;		
-		case Enums::UIVEC2: updateUIVec2(pg, a.getName(), attribVal->getPropui2((AttributeValues::UInt2Property)a.getId())); break;
-		case Enums::UIVEC3: updateUIVec3(pg, a.getName(), attribVal->getPropui3((AttributeValues::UInt3Property)a.getId())); break;
-		case Enums::FLOAT: updateFloat(pg, a.getName(), attribVal->getPropf((AttributeValues::FloatProperty)a.getId())); break;
-		case Enums::VEC2: updateVec2(pg, a.getName(), attribVal->getPropf2((AttributeValues::Float2Property)a.getId())); break;
-		case Enums::VEC3: updateVec3(pg, a.getName(), attribVal->getPropf3((AttributeValues::Float3Property)a.getId())); break;
+		case Enums::ENUM: updateEnum(pg, a->getName(), attribVal->getPrope((AttributeValues::EnumProperty)a->getId())); break;
+		case Enums::BOOL: updateBool(pg, a->getName(), attribVal->getPropb((AttributeValues::BoolProperty)a->getId())); break;
+		case Enums::BVEC4: updateBVec4(pg, a->getName(), attribVal->getPropb4((AttributeValues::Bool4Property)a->getId())); break;
+		case Enums::INT: updateInt(pg, a->getName(), attribVal->getPropi((AttributeValues::IntProperty)a->getId())); break;
+		case Enums::IVEC3: updateIVec3(pg, a->getName(), attribVal->getPropi3((AttributeValues::Int3Property)a->getId())); break;
+		case Enums::UINT: updateInt(pg, a->getName(), attribVal->getPropui((AttributeValues::UIntProperty)a->getId())); break;
+		case Enums::UIVEC2: updateUIVec2(pg, a->getName(), attribVal->getPropui2((AttributeValues::UInt2Property)a->getId())); break;
+		case Enums::UIVEC3: updateUIVec3(pg, a->getName(), attribVal->getPropui3((AttributeValues::UInt3Property)a->getId())); break;
+		case Enums::FLOAT: updateFloat(pg, a->getName(), attribVal->getPropf((AttributeValues::FloatProperty)a->getId())); break;
+		case Enums::VEC2: updateVec2(pg, a->getName(), attribVal->getPropf2((AttributeValues::Float2Property)a->getId())); break;
+		case Enums::VEC3: updateVec3(pg, a->getName(), attribVal->getPropf3((AttributeValues::Float3Property)a->getId())); break;
 		case Enums::VEC4: 
-			if (attrib.second.getSemantics() == Attribute::Semantics::COLOR)
-				updateVec4Color(pg, a.getName(), attribVal->getPropf4((AttributeValues::Float4Property)a.getId()));
+			if (a->getSemantics() == Attribute::Semantics::COLOR)
+				updateVec4Color(pg, a->getName(), attribVal->getPropf4((AttributeValues::Float4Property)a->getId()));
 			else
-				updateVec4(pg, a.getName(), attribVal->getPropf4((AttributeValues::Float4Property)a.getId())); 
+				updateVec4(pg, a->getName(), attribVal->getPropf4((AttributeValues::Float4Property)a->getId()));
 			break;
-		case Enums::MAT3: updateMat3(pg, a.getName(), attribVal->getPropm3((AttributeValues::Mat3Property)a.getId())); break;
-		case Enums::MAT4: updateMat4(pg, a.getName(), attribVal->getPropm4((AttributeValues::Mat4Property)a.getId())); break;
+		case Enums::MAT3: updateMat3(pg, a->getName(), attribVal->getPropm3((AttributeValues::Mat3Property)a->getId())); break;
+		case Enums::MAT4: updateMat4(pg, a->getName(), attribVal->getPropm4((AttributeValues::Mat4Property)a->getId())); break;
 		default: assert(false && "Missing datatype in property manager");
 		}
 	}
@@ -145,7 +140,7 @@ PropertyManager::updateGrid(wxPropertyGridManager *pg, nau::AttribSet &attribs, 
 void
 PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribSet &attribs, AttributeValues *attribVal) {
 
-	Attribute &a = attribs.get(prop);
+	std::unique_ptr<Attribute> &a = attribs.get(prop);
 	Enums::DataType dt;
 	wxPGProperty *pgProp;
 	int id,i;
@@ -157,7 +152,7 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 	vec2 v; vec3 v3; vec4 v4;
 	bvec4 b4;
 	mat3 m3; mat4 m4;
-	Attribute::Semantics sem = a.getSemantics();
+	Attribute::Semantics sem = a->getSemantics();
 	wxColour col;
 	wxVariant variant;
 	
@@ -395,12 +390,14 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 //		ENUM
 
 void
-PropertyManager::createEnum(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createEnum(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty *pid;
 
-	std::vector<std::string> strs = a.m_ListString;
-	std::vector<int> inds = a.m_ListValues;
+	std::vector<std::string> strs;
+	a->getOptionStringListSupported( &strs);
+	std::vector<int> inds;
+	a->getOptionListSupported(&inds);
 	wxArrayString arr;
 	wxArrayInt ind;
 	for (unsigned int i = 0; i < inds.size(); ++i) {
@@ -408,9 +405,9 @@ PropertyManager::createEnum(wxPropertyGridManager *pg, nau::Attribute &a) {
 		ind.Add(inds[i]);
 	}
 
-	pid = pg->Append(new wxEnumProperty(wxString(a.getName().c_str()), wxPG_LABEL, arr, ind, inds[0]));
+	pid = pg->Append(new wxEnumProperty(wxString(a->getName().c_str()), wxPG_LABEL, arr, ind, inds[0]));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);
 }
 
@@ -425,11 +422,11 @@ PropertyManager::updateEnum(wxPropertyGridManager *pg, std::string label, int a)
 //		BOOL
 
 void
-PropertyManager::createBool(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createBool(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty *pid;
-	pid = pg->Append(new wxBoolProperty(wxString(a.getName().c_str()), wxPG_LABEL));
-	if (a.getReadOnlyFlag())
+	pid = pg->Append(new wxBoolProperty(wxString(a->getName().c_str()), wxPG_LABEL));
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);
 }
 
@@ -444,18 +441,18 @@ PropertyManager::updateBool(wxPropertyGridManager *pg, std::string label, bool a
 //		 BVEC4
 
 void
-PropertyManager::createBVec4(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createBVec4(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId;
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	pg->AppendIn(topId, new wxBoolProperty(wxT("x"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxBoolProperty(wxT("y"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxBoolProperty(wxT("z"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxBoolProperty(wxT("w"), wxPG_LABEL));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 
@@ -479,11 +476,11 @@ PropertyManager::updateBVec4(wxPropertyGridManager *pg, std::string label, bvec4
 //		INT
 
 void
-PropertyManager::createInt(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createInt(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty *pid;
-	pid = pg->Append(new wxIntProperty(wxString(a.getName().c_str()), wxPG_LABEL));
-	if (a.getReadOnlyFlag())
+	pid = pg->Append(new wxIntProperty(wxString(a->getName().c_str()), wxPG_LABEL));
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);	
 }
 
@@ -498,17 +495,17 @@ PropertyManager::updateInt(wxPropertyGridManager *pg, std::string label, int a) 
 //		 IVEC3
 
 void
-PropertyManager::createIVec3(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createIVec3(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId;
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	pg->AppendIn(topId, new wxIntProperty(wxT("x"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxIntProperty(wxT("y"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxIntProperty(wxT("z"), wxPG_LABEL));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 
@@ -529,11 +526,11 @@ PropertyManager::updateIVec3(wxPropertyGridManager *pg, std::string label, ivec3
 //		UINT
 
 void
-PropertyManager::createUInt(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createUInt(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty *pid;
-	pid = pg->Append(new wxUIntProperty(wxString(a.getName().c_str()), wxPG_LABEL));
-	if (a.getReadOnlyFlag())
+	pid = pg->Append(new wxUIntProperty(wxString(a->getName().c_str()), wxPG_LABEL));
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);
 }
 
@@ -548,16 +545,16 @@ PropertyManager::updateUInt(wxPropertyGridManager *pg, std::string label, unsign
 //		 IVEC2
 
 void
-PropertyManager::createUIVec2(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createUIVec2(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId;
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	pg->AppendIn(topId, new wxUIntProperty(wxT("x"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxUIntProperty(wxT("y"), wxPG_LABEL));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 
@@ -577,17 +574,17 @@ PropertyManager::updateUIVec2(wxPropertyGridManager *pg, std::string label, uive
 //		 IVEC3
 
 void
-PropertyManager::createUIVec3(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createUIVec3(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId;
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	pg->AppendIn(topId, new wxUIntProperty(wxT("x"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxUIntProperty(wxT("y"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxUIntProperty(wxT("z"), wxPG_LABEL));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 
@@ -609,11 +606,11 @@ PropertyManager::updateUIVec3(wxPropertyGridManager *pg, std::string label, uive
 //		FLOAT
 
 void
-PropertyManager::createFloat(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createFloat(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty *pid;
-	pid = pg->Append(new wxFloatProperty(wxString(a.getName().c_str()), wxPG_LABEL));
-	if (a.getReadOnlyFlag())
+	pid = pg->Append(new wxFloatProperty(wxString(a->getName().c_str()), wxPG_LABEL));
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);
 }
 
@@ -628,16 +625,16 @@ PropertyManager::updateFloat(wxPropertyGridManager *pg, std::string label, float
 //		 VEC2
 
 void
-PropertyManager::createVec2(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createVec2(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId;
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 
@@ -656,17 +653,17 @@ PropertyManager::updateVec2(wxPropertyGridManager *pg, std::string label, vec2 a
 //		 VEC3
 
 void
-PropertyManager::createVec3(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createVec3(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId;
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
 	pg->AppendIn(topId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 
@@ -688,12 +685,12 @@ PropertyManager::updateVec3(wxPropertyGridManager *pg, std::string label, vec3 a
 //		 VEC4
 
 void
-PropertyManager::createVec4(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createVec4(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId;
-	Attribute::Semantics sem = a.getSemantics();
+	Attribute::Semantics sem = a->getSemantics();
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	if (sem == Attribute::Semantics::COLOR) {
 		pg->AppendIn(topId, new wxColourProperty(wxT("RGB"), wxPG_LABEL,
@@ -707,7 +704,7 @@ PropertyManager::createVec4(wxPropertyGridManager *pg, nau::Attribute &a) {
 		pg->AppendIn(topId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
 		pg->AppendIn(topId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
 	}
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 
@@ -742,11 +739,11 @@ PropertyManager::updateVec4(wxPropertyGridManager *pg, std::string label, vec4 a
 //		MAT3
 
 void
-PropertyManager::createMat3(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createMat3(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId, *rowId;
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	rowId = pg->AppendIn(topId,new wxStringProperty(wxT("Row0"), wxPG_LABEL, wxT("<composed>")));
 	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
@@ -763,7 +760,7 @@ PropertyManager::createMat3(wxPropertyGridManager *pg, nau::Attribute &a) {
 	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
 	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 
@@ -805,11 +802,11 @@ PropertyManager::updateMat3(wxPropertyGridManager *pg, std::string label, mat3 a
 //		MAT4
 
 void
-PropertyManager::createMat4(wxPropertyGridManager *pg, nau::Attribute &a) {
+PropertyManager::createMat4(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty* topId, *rowId;
 
-	topId = pg->Append(new wxStringProperty(wxString(a.getName().c_str()), wxPG_LABEL, wxT("<composed>")));
+	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row0"), wxPG_LABEL, wxT("<composed>")));
 	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
@@ -835,7 +832,7 @@ PropertyManager::createMat4(wxPropertyGridManager *pg, nau::Attribute &a) {
 	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
 	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
 
-	if (a.getReadOnlyFlag())
+	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
 

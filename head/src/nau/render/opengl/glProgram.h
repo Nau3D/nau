@@ -71,7 +71,7 @@ namespace nau
 			int getUniformLocation(std::string uniformName);
 
 			std::string getShaderInfoLog(ShaderType type);
-			char *getProgramInfoLog(); 
+			const std::string &getProgramInfoLog();
 			int programValidate();
 	
 			bool compileShader (IProgram::ShaderType);
@@ -107,6 +107,7 @@ namespace nau
 			void setValueOfUniform (int i);
 			void showGlobalUniforms (void);
 
+			std::string m_ReturnString;
 			//void getAttribsLoc();
 		};
 	};

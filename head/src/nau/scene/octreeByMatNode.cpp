@@ -345,7 +345,7 @@ OctreeByMatNode::getType (void)
 
 
 int
-OctreeByMatNode::_octantFor (vec4& v) 
+OctreeByMatNode::_octantFor (VertexAttrib& v)
 {
 	int octant = 8;
 

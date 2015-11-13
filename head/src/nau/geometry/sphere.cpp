@@ -19,8 +19,8 @@ bool
 Sphere::InitSphere() {
 
 	//UINT
-	Attribs.add(Attribute(STACKS, "STACKS", Enums::UINT, false, new unsigned int(10), new unsigned int(2), NULL));
-	Attribs.add(Attribute(SLICES, "SLICES", Enums::UINT, false, new unsigned int(10), new unsigned int(3), NULL));
+	Attribs.add(Attribute(STACKS, "STACKS", Enums::UINT, false, new NauUInt(10), new NauUInt(2), NULL));
+	Attribs.add(Attribute(SLICES, "SLICES", Enums::UINT, false, new NauUInt(10), new NauUInt(3), NULL));
 
 	return true;
 }
@@ -49,10 +49,10 @@ Sphere::build() {
 	int slices = m_UIntProps[SLICES] + 1;// (int)m_Floats[SLICES] + 1;
 	int stacks = m_UIntProps[STACKS] + 1;//(int)m_Floats[STACKS] + 1;
 	int total = (slices) * (stacks);
-	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(total);
-	std::vector<VertexData::Attr> *tangents = new std::vector<vec4>(total);
-	std::vector<VertexData::Attr> *textureCoords = new std::vector<vec4>(total);
-	std::vector<VertexData::Attr> *normals = new std::vector<vec4>(total);
+	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(total);
+	std::vector<VertexData::Attr> *tangents = new std::vector<VertexData::Attr>(total);
+	std::vector<VertexData::Attr> *textureCoords = new std::vector<VertexData::Attr>(total);
+	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(total);
 
 	float stepSlice = 2.0f * (float)M_PI / (slices-1);
 	float stepStack = (float)M_PI / (stacks-1);

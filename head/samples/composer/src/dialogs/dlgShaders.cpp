@@ -470,7 +470,7 @@ DlgShaders::OnProcessCompileShaders(wxCommandEvent& event){
 
 void DlgShaders::OnProcessLinkShaders(wxCommandEvent& event){
 
-	char *infoLog;
+	std::string infoLog;
 	IProgram *p = RESOURCEMANAGER->getProgram(m_active);
 
 	p->linkProgram();
@@ -490,7 +490,7 @@ void DlgShaders::OnProcessLinkShaders(wxCommandEvent& event){
 
 void DlgShaders::OnProcessValidateShaders(wxCommandEvent& event){
 
-	char *infoLog;
+	std::string infoLog;
 	IProgram *p = RESOURCEMANAGER->getProgram(m_active);
 	wxString s;
 

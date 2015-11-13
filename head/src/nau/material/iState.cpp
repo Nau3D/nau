@@ -16,37 +16,24 @@ bool
 IState::Init() {
 
 	// BOOL
-	Attribs.add(Attribute(BLEND, "BLEND", Enums::DataType::BOOL, false, new bool(false)));
-	//Attribs.add(Attribute(FOG, "FOG", Enums::DataType::BOOL, false, new bool(false)));
-	//Attribs.add(Attribute(ALPHA_TEST, "ALPHA_TEST", Enums::DataType::BOOL, false, new bool(false)));
-	Attribs.add(Attribute(DEPTH_TEST, "DEPTH_TEST", Enums::DataType::BOOL, false, new bool(true)));
-	Attribs.add(Attribute(CULL_FACE, "CULL_FACE", Enums::DataType::BOOL, false, new bool(true)));
-	//Attribs.add(Attribute(COLOR_MASK, "COLOR_MASK", Enums::DataType::BOOL, false, new bool(false)));
-	Attribs.add(Attribute(DEPTH_MASK, "DEPTH_MASK", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(BLEND, "BLEND", Enums::DataType::BOOL, false, new NauInt(false)));
+	Attribs.add(Attribute(DEPTH_TEST, "DEPTH_TEST", Enums::DataType::BOOL, false, new NauInt(true)));
+	Attribs.add(Attribute(CULL_FACE, "CULL_FACE", Enums::DataType::BOOL, false, new NauInt(true)));
+	Attribs.add(Attribute(DEPTH_MASK, "DEPTH_MASK", Enums::DataType::BOOL, false, new NauInt(true)));
 
 	// ENUM
-	//Attribs.add(Attribute(FOG_MODE, "FOG_MODE", Enums::DataType::ENUM, false));
-	//Attribs.add(Attribute(FOG_COORD_SRC, "FOG_COORD_SRC", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(DEPTH_FUNC, "DEPTH_FUNC", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(CULL_TYPE, "CULL_TYPE", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(ORDER_TYPE, "ORDER_TYPE", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(BLEND_SRC, "BLEND_SRC", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(BLEND_DST, "BLEND_DST", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(BLEND_EQUATION, "BLEND_EQUATION", Enums::DataType::ENUM, false));
-	//Attribs.add(Attribute(ALPHA_FUNC, "ALPHA_FUNC", Enums::DataType::ENUM, false));
-
-	// FLOAT
-	//Attribs.add(Attribute(FOG_START, "FOG_START", Enums::DataType::FLOAT, false, new float(0)));
-	//Attribs.add(Attribute(FOG_END, "FOG_END", Enums::DataType::FLOAT, false, new float(1)));
-	//Attribs.add(Attribute(FOG_DENSITY, "FOG_DENSITY", Enums::DataType::FLOAT, false, new float(1)));
-	//Attribs.add(Attribute(ALPHA_VALUE, "ALPHA_VALUE", Enums::DataType::FLOAT, false, new float(0)));
 
 	// INT
-	Attribs.add(Attribute(ORDER, "ORDER", Enums::DataType::INT, false, new int(0)));
+	Attribs.add(Attribute(ORDER, "ORDER", Enums::DataType::INT, false, new NauInt(0)));
 
 	// FLOAT4
 	Attribs.add(Attribute(BLEND_COLOR, "BLEND_COLOR", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));
-	//Attribs.add(Attribute(FOG_COLOR, "FOG_COLOR", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));
 
 	// BOOL4
 	Attribs.add(Attribute(COLOR_MASK_B4, "COLOR_MASK_B4", Enums::DataType::BVEC4, false, new bvec4(true, true, true, true)));

@@ -15,6 +15,64 @@ namespace nau
 {
 	namespace geometry
 	{
+
+		class VertexAttrib {
+
+		public:
+			float x,y,z,w;
+
+			VertexAttrib() : x(0), y(0), z(0), w(0) {};
+			VertexAttrib(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {};
+			VertexAttrib(const VertexAttrib &v) : x(v.x), y(v.y), z(v.z), w(v.w) {};
+
+			void
+			set(float xx, float yy, float zz, float ww = 1) {
+
+				this->x = xx;
+				this->y = yy;
+				this->z = zz;
+				this->w = ww;
+			}
+
+			void 
+			add(const VertexAttrib &v) {
+				x += v.x;
+				y += v.y;
+				z += v.z;
+				w += v.w;
+			};
+
+			bool
+			operator == (const VertexAttrib &v) const {
+				float tolerance = -1.0f;
+				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance) && \
+						FloatEqual(z, v.z, tolerance) && FloatEqual(w, v.w, tolerance));
+			};
+
+			void
+			copy(const VertexAttrib &v) {
+
+				x = v.x;
+				y = v.y;
+				z = v.z;
+				w = v.w;
+			};
+
+			void
+			normalize() {
+
+				float m = sqrtf(x*x + y*y + z*z);
+				if (m <= FLT_EPSILON) {
+					m = 1;
+				}
+				x /= m;
+				y /= m;
+				z /= m;
+			};
+
+		};
+
+
 		class VertexData
 		{
 		public:
@@ -25,7 +83,7 @@ namespace nau
 			static unsigned int GetAttribIndex(std::string &);
 
 			// A vertex attribute is a vec4
-			typedef nau::math::vec4 Attr ;
+			typedef VertexAttrib Attr ;
 			static std::vector<Attr> NoData;
 		
 			static unsigned int const NOLOC = 0;

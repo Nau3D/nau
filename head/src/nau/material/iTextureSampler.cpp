@@ -14,9 +14,9 @@ bool
 ITextureSampler::Init() {
 
 	// INT
-	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new int(0)));
+	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT, true, new NauInt(0)));
 	// BOOL
-	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, true, new bool(false)));
+	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, true, new NauInt(false)));
 	// ENUM
 	Attribs.add(Attribute(WRAP_S, "WRAP_S", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(WRAP_T, "WRAP_T", Enums::DataType::ENUM, false));

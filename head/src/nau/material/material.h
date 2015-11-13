@@ -36,7 +36,7 @@ namespace nau
 
 			nau::material::ColorMaterial m_Color;
 //			nau::material::TextureMat *m_Texmat;
-			std::map<int, IImageTexture*> m_ImageTextures;
+			std::map<int, IImageTexture *> m_ImageTextures;
 
 			// ID -> (binding point, *buffer)
 			std::map<int, IMaterialBuffer *> m_Buffers;
@@ -75,7 +75,7 @@ namespace nau
 			void setUniformBlockValues();
 
 			// Reset material to defaults
-			void clear();
+			//void clear();
 			void enable (void);
 			void disable (void);
 			bool isEnabled (void);

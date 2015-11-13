@@ -1,6 +1,7 @@
 #include "nau/enums.h"
 
 #include "nau/errors.h"
+#include "nau/math/number.h"
 #include "nau/math/vec2.h"
 #include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
@@ -61,15 +62,114 @@ Enums::getType(std::string s) {
 }
 
 
-void *
+//void *
+//Enums::getDefaultValue(DataType p) {
+//
+//	int s = getSize(p);
+//	void *m = malloc(s);
+//	memset(m, 0, s);
+//	return m;
+//}
+
+
+Data *
 Enums::getDefaultValue(DataType p) {
 
-	int s = getSize(p);
-	void *m = malloc(s);
-	memset(m, 0, s);
-	return m;
-}
+	switch (p) {
 
+	case BYTE:
+		return new NauByte();
+	case UBYTE:
+		return new NauUByte();
+	case SHORT:
+		return new NauShort();
+	case USHORT:
+		return new NauUShort();
+	case INT:
+		return new NauInt();
+	case IVEC2:
+		return new ivec2();
+	case IVEC3:
+		return new ivec3();
+	case IVEC4:
+		return new ivec4();
+	case BOOL:
+		return new NauInt();
+	case BVEC2:
+		return new bvec2();
+	case BVEC3:
+		return new bvec3();
+	case BVEC4:
+		return new bvec4();
+	case SAMPLER:
+		return new NauInt();
+	case ENUM:
+		return new NauInt();
+	case UINT:
+		return new NauUInt();
+	case UIVEC2:
+		return new uivec2();
+	case UIVEC3:
+		return new uivec3();
+	case UIVEC4:
+		return new uivec4();
+	case FLOAT:
+		return new NauFloat();
+	case VEC2:
+		return new vec2();
+	case VEC3:
+		return new vec3();
+	case VEC4:
+		return new vec4();
+	case MAT2:
+		return new mat2();
+	case MAT3:
+		return new mat3();
+	case MAT4:
+		return new mat4();
+	case MAT2x3:
+		return new mat2x3();
+	case MAT2x4:
+		return new mat2x4();
+	case MAT3x2:
+		return new mat3x2();
+	case MAT3x4:
+		return new mat3x4();
+	case MAT4x2:
+		return new mat4x2();
+	case MAT4x3:
+		return new mat4x3();
+	case DOUBLE:
+		return new NauDouble();
+	case DVEC2:
+		return new dvec2();
+	case DVEC3:
+		return new dvec3();
+	case DVEC4:
+		return new dvec4();
+	case DMAT2:
+		return new dmat2();
+	case DMAT3:
+		return new dmat3();
+	case DMAT4:
+		return new dmat4();
+	case DMAT2x3:
+		return new dmat2x3();
+	case DMAT2x4:
+		return new dmat2x4();
+	case DMAT3x2:
+		return new dmat3x2();
+	case DMAT3x4:
+		return new dmat3x4();
+	case DMAT4x2:
+		return new dmat4x2();
+	case DMAT4x3:
+		return new dmat4x3();
+	default:
+		assert(false && "Missing data type in enums - getDefaultValue");
+		return 0;
+	}
+}
 
 int
 Enums::getSize(DataType p) {
@@ -404,6 +504,160 @@ Enums::valueToString(DataType p, void *v) {
 		return m_Result;
 	case DMAT4x3:
 		m_Result = ((dmat4x3 *)v)->toString();
+		return m_Result;
+	default:
+		assert(false && "Missing data type in enums");
+		return m_Result;
+	}
+}
+
+
+std::string &
+Enums::pointerToString(DataType p, void *v) {
+
+	int intconverter;
+	unsigned int uintconverter;
+	bool boolconverter;
+
+	switch (p) {
+	case BYTE:
+		intconverter = *((char *)v);
+		m_Result = std::to_string(intconverter);
+		return m_Result;
+	case SHORT:
+		intconverter = *((short *)v);
+		m_Result = std::to_string(intconverter);
+		return m_Result;
+	case BOOL:
+		boolconverter = *((bool *)v);
+		m_Result = boolconverter == false ? "false" : "true";
+		return m_Result;
+	case SAMPLER:
+	case ENUM:
+	case INT:
+		intconverter = *((int *)v);
+		m_Result = std::to_string(intconverter);
+		return m_Result;
+	case UBYTE:
+		uintconverter = *((unsigned char *)v);
+		m_Result = std::to_string(uintconverter);
+		return m_Result;
+	case USHORT:
+		uintconverter = *((unsigned short *)v);
+		m_Result = std::to_string(uintconverter);
+		return m_Result;
+	case UINT:
+		uintconverter = *((unsigned int *)v);
+		m_Result = std::to_string(uintconverter);
+		return m_Result;
+	case FLOAT:
+		m_Result = std::to_string(*((float *)v));
+		return m_Result;
+
+	case DOUBLE:
+		m_Result = std::to_string(*((double *)v));
+		return m_Result;
+
+	case IVEC2:
+		m_Result = ivec2((int *)v).toString();
+		return m_Result;
+	case IVEC3:
+		m_Result = ivec3((int *)v).toString();
+		return m_Result;
+	case IVEC4:
+		m_Result = ivec4((int *)v).toString();
+		return m_Result;
+	case BVEC2:
+		m_Result = bvec2((bool *)v).toString();
+		return m_Result;
+	case BVEC3:
+		m_Result = bvec3((bool *)v).toString();
+		return m_Result;
+	case BVEC4:
+		m_Result = bvec4((bool *)v).toString();
+		return m_Result;
+	case UIVEC2:
+		m_Result = uivec2((unsigned int *)v).toString();
+		return m_Result;
+	case UIVEC3:
+		m_Result = uivec3((unsigned int *)v).toString();
+		return m_Result;
+	case UIVEC4:
+		m_Result = uivec4((unsigned int *)v).toString();
+		return m_Result;
+	case VEC2:
+		m_Result = vec2((float *)v).toString();
+		return m_Result;
+	case VEC3:
+		m_Result = vec3((float *)v).toString();
+		return m_Result;
+	case VEC4:
+		m_Result = vec4((float *)v).toString();
+		return m_Result;
+	case DVEC2:
+		m_Result = dvec2((double *)v).toString();
+		return m_Result;
+	case DVEC3:
+		m_Result = dvec3((double *)v).toString();
+		return m_Result;
+	case DVEC4:
+		m_Result = dvec4((double *)v).toString();
+		return m_Result;
+
+	case MAT2:
+		m_Result = mat2((float *)v).toString();
+		return m_Result;
+	case MAT3:
+		m_Result = mat3((float *)v).toString();
+		return m_Result;
+	case MAT4:
+		m_Result = mat4((float *)v).toString();
+		return m_Result;
+	case DMAT2:
+		m_Result = dmat2((double *)v).toString();
+		return m_Result;
+	case DMAT3:
+		m_Result = dmat3((double *)v).toString();
+		return m_Result;
+	case DMAT4:
+		m_Result = dmat4((double *)v).toString();
+		return m_Result;
+
+	case MAT2x3:
+		m_Result = mat2x3((float *)v).toString();
+		return m_Result;
+	case MAT2x4:
+		m_Result = mat2x4((float *)v).toString();
+		return m_Result;
+	case MAT3x2:
+		m_Result = mat3x2((float *)v).toString();
+		return m_Result;
+	case MAT3x4:
+		m_Result = mat3x4((float *)v).toString();
+		return m_Result;
+	case MAT4x2:
+		m_Result = mat4x2((float *)v).toString();
+		return m_Result;
+	case MAT4x3:
+		m_Result = mat4x3((float *)v).toString();
+		return m_Result;
+	case DMAT2x3:
+		m_Result = dmat2x3((double *)v).toString();
+		return m_Result;
+	case DMAT2x4:
+		m_Result = dmat2x4((double *)v).toString();
+		return m_Result;
+	case DMAT3x2:
+		m_Result = dmat3x2((double *)v).toString();
+		return m_Result;
+	case DMAT3x4:
+		m_Result = dmat3x4((double *)v).toString();
+		return m_Result;
+	case DMAT4x2:
+		m_Result = dmat4x2((double *)v).toString();
+		return m_Result;
+	case DMAT4x3:
+		m_Result = dmat4x3((double *)v).toString();
 		return m_Result;
 	default:
 		assert(false && "Missing data type in enums");

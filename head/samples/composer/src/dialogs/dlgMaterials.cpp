@@ -72,46 +72,53 @@ DlgMaterials* DlgMaterials::Instance () {
 }
 
 
+DlgMaterials::~DlgMaterials() {
+
+	delete empty;
+}
+
+
 DlgMaterials::DlgMaterials()
-                : wxDialog(DlgMaterials::parent, -1, wxT("Nau - Materials"),wxDefaultPosition,wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE),
-				samplerUnits(8),m_Name("Materials Dialog")
+	: wxDialog(DlgMaterials::parent, -1, wxT("Nau - Materials"), wxDefaultPosition, wxDefaultSize, wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE),
+	samplerUnits(8), m_Name("Materials Dialog")
 {
 
 	m_parent = DlgMaterials::parent;
 
 	m_copyMat = NULL;
+	empty = new wxBitmap(96, 96);
 
 	/* ----------------------------------------------------------------
-	                             Toolbar
+								 Toolbar
 	-----------------------------------------------------------------*/
 
-    // load the image wanted on the toolbar
-    wxBitmap openImage(wxT("bitmaps/open.bmp"), wxBITMAP_TYPE_BMP);
-    wxBitmap newImage(wxT("bitmaps/new.bmp"), wxBITMAP_TYPE_BMP);
-    wxBitmap saveImage(wxT("bitmaps/save.bmp"), wxBITMAP_TYPE_BMP);
+	// load the image wanted on the toolbar
+	wxBitmap openImage(wxT("bitmaps/open.bmp"), wxBITMAP_TYPE_BMP);
+	wxBitmap newImage(wxT("bitmaps/new.bmp"), wxBITMAP_TYPE_BMP);
+	wxBitmap saveImage(wxT("bitmaps/save.bmp"), wxBITMAP_TYPE_BMP);
 
 
-    wxBitmap newMImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
-    wxBitmap cloneImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
-    wxBitmap cutImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
-    wxBitmap copyImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
-    wxBitmap pasteImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
+	wxBitmap newMImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
+	wxBitmap cloneImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
+	wxBitmap cutImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
+	wxBitmap copyImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
+	wxBitmap pasteImage(wxT("bitmaps/project.bmp"), wxBITMAP_TYPE_BMP);
 
-    // create the toolbar and add our 1 tool to it
-    m_toolbar = new wxToolBar(this,TOOLBAR_ID);
+	// create the toolbar and add our 1 tool to it
+	m_toolbar = new wxToolBar(this, TOOLBAR_ID);
 	long tstyle = m_toolbar->GetWindowStyle();
 	tstyle |= wxTB_TEXT;
 	m_toolbar->SetWindowStyle(tstyle);
-    m_toolbar->AddTool(LIBMAT_NEW, _("New"), newImage, _("New Material Lib"));
-    m_toolbar->AddTool(LIBMAT_OPEN, _("Open"), openImage, _("Open Material Lib"));
-    m_toolbar->AddTool(LIBMAT_SAVE, _("Save"), saveImage, _("Save Material Lib"));
-    m_toolbar->AddTool(LIBMAT_SAVEALL, _("Save All"), newImage, _("Save All Libs"));
- 	m_toolbar->AddSeparator();
-    m_toolbar->AddTool(MAT_NEW, _("New"), newImage, _("New Material"));
-    m_toolbar->AddTool(MAT_CLONE, _("Clone"), cloneImage, _("Clone Material"));
-    m_toolbar->AddTool(MAT_REMOVE, _("Remove"), cutImage, _("Remove Material"));
-    m_toolbar->AddTool(MAT_COPY, _("Copy"), copyImage, _("Copy Material"));
-    m_toolbar->AddTool(MAT_PASTE, _("Paste"), pasteImage, _("Paste Material"));
+	m_toolbar->AddTool(LIBMAT_NEW, _("New"), newImage, _("New Material Lib"));
+	m_toolbar->AddTool(LIBMAT_OPEN, _("Open"), openImage, _("Open Material Lib"));
+	m_toolbar->AddTool(LIBMAT_SAVE, _("Save"), saveImage, _("Save Material Lib"));
+	m_toolbar->AddTool(LIBMAT_SAVEALL, _("Save All"), newImage, _("Save All Libs"));
+	m_toolbar->AddSeparator();
+	m_toolbar->AddTool(MAT_NEW, _("New"), newImage, _("New Material"));
+	m_toolbar->AddTool(MAT_CLONE, _("Clone"), cloneImage, _("Clone Material"));
+	m_toolbar->AddTool(MAT_REMOVE, _("Remove"), cutImage, _("Remove Material"));
+	m_toolbar->AddTool(MAT_COPY, _("Copy"), copyImage, _("Copy Material"));
+	m_toolbar->AddTool(MAT_PASTE, _("Paste"), pasteImage, _("Paste Material"));
 
 	m_toolbar->EnableTool(LIBMAT_SAVE, FALSE);
 	m_toolbar->EnableTool(LIBMAT_SAVEALL, FALSE);
@@ -124,31 +131,32 @@ DlgMaterials::DlgMaterials()
 
 
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-	sizer->Add(m_toolbar,0,wxGROW |wxALL, 1);
+	sizer->Add(m_toolbar, 0, wxGROW | wxALL, 1);
 
 	/* ----------------------------------------------------------------
-	                             Materials
+								 Materials
 	-----------------------------------------------------------------*/
 
 
 	/* --- Material List ----------------------------------------------*/
 
-	libList = new wxComboBox(this,DLG_MI_COMBO_LIBMATERIAL,wxT(""),wxDefaultPosition,wxDefaultSize,0,NULL,wxCB_READONLY );
+	libList = new wxComboBox(this, DLG_MI_COMBO_LIBMATERIAL, wxT(""), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
 
-	std::vector<std::string> *libs = MATERIALLIBMANAGER->getLibNames();
-	std::vector<std::string>::iterator iter;
+	std::vector<std::string> libs;
+	MATERIALLIBMANAGER->getLibNames(&libs);
 
-	for (iter = libs->begin(); iter != libs->end(); ++iter)
-		libList->Append(wxString(iter->c_str()));
+	for (auto& lib : libs)
+		libList->Append(wxString(lib.c_str()));
 
 	libList->SetSelection(0);
 
-	materialList = new wxComboBox(this,DLG_MI_COMBO_MATERIAL,wxT(""),wxDefaultPosition,wxDefaultSize,0,NULL,wxCB_READONLY );
+	materialList = new wxComboBox(this, DLG_MI_COMBO_MATERIAL, wxT(""), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
 
-	std::vector<std::string> *mats = MATERIALLIBMANAGER->getMaterialNames(libs->at(0));
+	std::vector<std::string> mats;
+	MATERIALLIBMANAGER->getMaterialNames(libs[0], &mats);
 
-	for (iter = mats->begin(); iter != mats->end(); ++iter)
-		materialList->Append(wxString(iter->c_str()));
+	for (auto& mat : mats)
+		materialList->Append(wxString(mat.c_str()));
 
 	materialList->SetSelection(0);
 
@@ -324,13 +332,14 @@ void DlgMaterials::OnSelectLibMaterial(wxCommandEvent& event) {
 	int sel;
 	sel = event.GetSelection();
 
-	std::vector<std::string> *libs = MATERIALLIBMANAGER->getLibNames();
-	std::vector<std::string> *mats = MATERIALLIBMANAGER->getMaterialNames(libs->at(sel));
+	std::vector<std::string> libs;
+	MATERIALLIBMANAGER->getLibNames(&libs);
+	std::vector<std::string> mats;
+	MATERIALLIBMANAGER->getMaterialNames(libs.at(sel), &mats);
 
 	materialList->Clear();
-	std::vector<std::string>::iterator iter;
-	for (iter = mats->begin(); iter != mats->end(); ++iter)
-		materialList->Append(wxString(iter->c_str()));
+	for (auto& mat:mats)
+		materialList->Append(wxString(mat.c_str()));
 
 	materialList->SetSelection(0);
 		
@@ -343,7 +352,7 @@ void DlgMaterials::OnSelectLibMaterial(wxCommandEvent& event) {
 	m_BufferPanel.setMaterial(mm);
 	m_ITexPanel.setMaterial(mm);
 
-	if (libs->at(sel).substr(0,1) == " ") {
+	if (libs.at(sel).substr(0,1) == " ") {
 		m_toolbar->EnableTool(LIBMAT_SAVE, FALSE);
 		m_toolbar->EnableTool(MAT_NEW,FALSE);
 		m_toolbar->EnableTool(MAT_CLONE,FALSE);
@@ -369,23 +378,24 @@ void DlgMaterials::OnSelectLibMaterial(wxCommandEvent& event) {
 
 void DlgMaterials::updateMaterialList() {
 
-	std::vector<std::string> *libs = MATERIALLIBMANAGER->getLibNames();
-	std::vector<std::string>::iterator iter;
+	std::vector<std::string> libs;
+	MATERIALLIBMANAGER->getLibNames(&libs);
 
 	wxString sel = libList->GetStringSelection();
 	libList->Clear();
-	for (iter = libs->begin(); iter != libs->end(); ++iter)
-		libList->Append(wxString(iter->c_str()));
+	for (auto& lib:libs)
+		libList->Append(wxString(lib.c_str()));
 
 	if (! libList->SetStringSelection(sel))
 		libList->SetSelection(0);
 
-	std::vector<std::string> *mats = MATERIALLIBMANAGER->getMaterialNames(libs->at(libList->GetCurrentSelection()));
+	std::vector<std::string> mats;
+	MATERIALLIBMANAGER->getMaterialNames(libs.at(libList->GetCurrentSelection()), &mats);
 
 	sel = materialList->GetStringSelection();
 	materialList->Clear();
-	for (iter = mats->begin(); iter != mats->end(); ++iter)
-		materialList->Append(wxString(iter->c_str()));
+	for (auto &mat:mats)
+		materialList->Append(wxString(mat.c_str()));
 	if (! materialList->SetStringSelection(sel))
 		materialList->SetSelection(0);
 
@@ -1057,7 +1067,7 @@ void DlgMaterials::updateTextures(Material *mm, int index) {
 				imagesGrid[i * 4 + j]->setBitmap(DlgTextureLib::Instance()->m_Bitmaps[texture->getPropi(ITexture::ID)]);
 //				imagesGrid[i * 4 + j]->setBitmap(texture->getBitmap());
 			else
-				imagesGrid[i*4+j]->setBitmap(new wxBitmap(96,96));
+				imagesGrid[i*4+j]->setBitmap(empty);
 		}
 	}
 	setTextureUnit(index);

@@ -83,12 +83,26 @@ GLUniformBlock::addUniform(std::string &name, Enums::DataType type, unsigned int
 
 
 void 
-GLUniformBlock::setUniform(std::string &name, void *value) {
+GLUniformBlock::setUniform(std::string &name, void *v) {
+
+	void *value;
 
 	if (m_Uniforms.count(name)) {
 
 		blockUniform b = m_Uniforms[name];
 
+		switch (b.type) {
+		case Enums::INT:
+		case Enums::BOOL:
+		case Enums::FLOAT:
+		case Enums::UINT:
+		case Enums::SAMPLER:
+		case Enums::DOUBLE:
+			value = v;
+			break;
+		default:
+			value = ((Data *)v)->getPtr();
+		}
 		// convert to std140
 		void *v;
 		switch (b.type) {

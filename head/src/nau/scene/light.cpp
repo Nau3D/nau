@@ -15,15 +15,15 @@ Light::Init() {
 	Attribs.add(Attribute(COLOR, "COLOR", Enums::DataType::VEC4, false, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
 	Attribs.add(Attribute(AMBIENT, "AMBIENT", Enums::DataType::VEC4, false, new vec4(0.2f, 0.2f, 0.2f, 1.0f)));
 	// FLOAT
-	Attribs.add(Attribute(SPOT_EXPONENT, "SPOT_EXPONENT", Enums::DataType::FLOAT, false, new float(0.0f)));
-	Attribs.add(Attribute(SPOT_CUTOFF, "SPOT_CUTOFF", Enums::DataType::FLOAT, false, new float (180.0f)));
-	Attribs.add(Attribute(CONSTANT_ATT, "CONSTANT_ATT", Enums::DataType::FLOAT, false, new float(1.0f)));
-	Attribs.add(Attribute(LINEAR_ATT, "LINEAR_ATT", Enums::DataType::FLOAT,false, new float(0.0f)));
-	Attribs.add(Attribute(QUADRATIC_ATT, "QUADRATIC_ATT", Enums::DataType::FLOAT,false, new float (0.0)));
+	Attribs.add(Attribute(SPOT_EXPONENT, "SPOT_EXPONENT", Enums::DataType::FLOAT, false, new NauFloat(0.0f)));
+	Attribs.add(Attribute(SPOT_CUTOFF, "SPOT_CUTOFF", Enums::DataType::FLOAT, false, new NauFloat(180.0f)));
+	Attribs.add(Attribute(CONSTANT_ATT, "CONSTANT_ATT", Enums::DataType::FLOAT, false, new NauFloat(1.0f)));
+	Attribs.add(Attribute(LINEAR_ATT, "LINEAR_ATT", Enums::DataType::FLOAT,false, new NauFloat(0.0f)));
+	Attribs.add(Attribute(QUADRATIC_ATT, "QUADRATIC_ATT", Enums::DataType::FLOAT,false, new NauFloat(0.0)));
 	// BOOL
-	Attribs.add(Attribute(ENABLED, "ENABLED", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(ENABLED, "ENABLED", Enums::DataType::BOOL, false, new NauInt(true)));
 	//INT
-	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT,true, new int(-1)));
+	Attribs.add(Attribute(ID, "ID", Enums::DataType::INT,true, new NauInt(-1)));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("LIGHT", &Attribs);

@@ -13,7 +13,7 @@ bool
 GLState::InitGL() {
 
 	// ENUM
-	Attribs.setDefault("DEPTH_FUNC", new int((int)GL_LESS));
+	Attribs.setDefault("DEPTH_FUNC", NauInt((int)GL_LESS));
 	Attribs.listAdd("DEPTH_FUNC", "LESS", (int)GL_LESS);
 	Attribs.listAdd("DEPTH_FUNC", "NEVER", (int)GL_NEVER);
 	Attribs.listAdd("DEPTH_FUNC", "ALWAYS", (int)GL_ALWAYS);
@@ -23,16 +23,16 @@ GLState::InitGL() {
 	Attribs.listAdd("DEPTH_FUNC", "GREATER", (int)GL_GREATER);
 	Attribs.listAdd("DEPTH_FUNC", "NOT_EQUAL", (int)GL_NOTEQUAL);
 
-	Attribs.setDefault("CULL_TYPE", new int((int)GL_BACK));
+	Attribs.setDefault("CULL_TYPE", NauInt((int)GL_BACK));
 	Attribs.listAdd("CULL_TYPE", "FRONT", (int)GL_FRONT);
 	Attribs.listAdd("CULL_TYPE", "BACK", (int)GL_BACK);
 	Attribs.listAdd("CULL_TYPE", "FRONT_AND_BACK", (int)GL_FRONT_AND_BACK);
 	
-	Attribs.setDefault("ORDER_TYPE", new int(FRONT_TO_BACK));
+	Attribs.setDefault("ORDER_TYPE", NauInt(FRONT_TO_BACK));
 	Attribs.listAdd("ORDER_TYPE", "FRONT_TO_BACK", FRONT_TO_BACK);
 	Attribs.listAdd("ORDER_TYPE", "BACK_TO_FRONT", BACK_TO_FRONT);
 
-	Attribs.setDefault("BLEND_SRC", new int((int)GL_ONE));
+	Attribs.setDefault("BLEND_SRC", NauInt((int)GL_ONE));
 	Attribs.listAdd("BLEND_SRC", "ZERO", (int)GL_ZERO);
 	Attribs.listAdd("BLEND_SRC", "ONE", (int)GL_ONE);
 	Attribs.listAdd("BLEND_SRC", "SRC_COLOR", (int)GL_SRC_COLOR);
@@ -49,7 +49,7 @@ GLState::InitGL() {
 	Attribs.listAdd("BLEND_SRC", "CONSTANT_ALPHA", (int)GL_CONSTANT_ALPHA);
 	Attribs.listAdd("BLEND_SRC", "ONE_MINUS_CONSTANT_ALPHA", (int)GL_ONE_MINUS_CONSTANT_ALPHA);
 
-	Attribs.setDefault("BLEND_DST", new int((int)GL_ZERO));
+	Attribs.setDefault("BLEND_DST", NauInt((int)GL_ZERO));
 	Attribs.listAdd("BLEND_DST", "ZERO", (int)GL_ZERO);
 	Attribs.listAdd("BLEND_DST", "ONE", (int)GL_ONE);
 	Attribs.listAdd("BLEND_DST", "SRC_COLOR", (int)GL_SRC_COLOR);
@@ -66,7 +66,7 @@ GLState::InitGL() {
 	Attribs.listAdd("BLEND_DST", "CONSTANT_ALPHA", (int)GL_CONSTANT_ALPHA);
 	Attribs.listAdd("BLEND_DST", "ONE_MINUS_CONSTANT_ALPHA", (int)GL_ONE_MINUS_CONSTANT_ALPHA);
 
-	Attribs.setDefault("BLEND_EQUATION", new int((int)GL_FUNC_ADD));
+	Attribs.setDefault("BLEND_EQUATION", NauInt((int)GL_FUNC_ADD));
 	Attribs.listAdd("BLEND_EQUATION", "ADD", (int)GL_FUNC_ADD);
 	Attribs.listAdd("BLEND_EQUATION", "SUBTRACT", (int)GL_FUNC_SUBTRACT);
 	Attribs.listAdd("BLEND_EQUATION", "REVERSE_SUBTRACT", (int)GL_FUNC_REVERSE_SUBTRACT);

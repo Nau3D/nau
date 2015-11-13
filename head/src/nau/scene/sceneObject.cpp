@@ -20,7 +20,7 @@ SceneObject::Init() {
 	Attribs.add(Attribute(ROTATE, "ROTATE", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 1.0f, 0.0f)));
 
 	// ENUM
-	Attribs.add(Attribute(TRANSFORM_ORDER, "TRANSFORM_ORDER", Enums::ENUM, false, new int(T_R_S)));
+	Attribs.add(Attribute(TRANSFORM_ORDER, "TRANSFORM_ORDER", Enums::ENUM, false, new NauInt(T_R_S)));
 	Attribs.listAdd("TRANSFORM_ORDER", "T_R_S", T_R_S);
 	Attribs.listAdd("TRANSFORM_ORDER", "T_S_R", T_S_R);
 	Attribs.listAdd("TRANSFORM_ORDER", "R_T_S", R_T_S);
@@ -212,13 +212,13 @@ SceneObject::burnTransform(void)
 	if (normals.size() > 0) {
 		normalIter = normals.begin();
 		for (; normalIter != normals.end(); ++normalIter) {
-			normalMatrix.transform3(*normalIter);
+			normalMatrix.transform3((&(*normalIter).x));
 			normalIter->normalize();
 		}
 	}
 	verticesIter = vertices.begin();
 	for (; verticesIter != vertices.end(); ++verticesIter) {
-		m_ResultTransform.transform(*verticesIter);
+		m_ResultTransform.transform((&(*verticesIter).x));
 	}
 
 	//Reset transform to the identity

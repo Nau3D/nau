@@ -11,9 +11,11 @@ class SLogger
 {
 private:
 	nau::event_::EventString *m_Evt;
+	static SLogger *Instance;
 
 public:
-	static SLogger& getInstance();
+	static SLogger* GetInstance();
+	static void DeleteInstance();
 	void log (std::string message);
 
 private:
@@ -28,14 +30,14 @@ public:
 {\
   char m[32768];\
   sprintf(m, message, ## __VA_ARGS__);\
-  (SLogger::getInstance()).log(m);\
+  (SLogger::GetInstance())->log(m);\
 };
 
 #define SLOG_INFO(message, ...) \
 {\
   char m[32768];\
   sprintf(m, message, ## __VA_ARGS__);\
-  (SLogger::getInstance()).log(m);\
+  (SLogger::GetInstance())->log(m);\
 };
 
 #endif // SLOGGER_H

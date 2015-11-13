@@ -10,11 +10,11 @@ bool
 PassProcessTexture::Init() {
 
 	// BOOL
-	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false), NULL,NULL, IAPISupport::CLEAR_TEXTURE));
-	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new bool(false)));
+	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new NauInt(false), NULL,NULL, IAPISupport::CLEAR_TEXTURE));
+	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new NauInt(false)));
 
 	// INT
-	Attribs.add(Attribute(CLEAR_LEVEL, "CLEAR_LEVEL", Enums::DataType::INT, false, new int(-1), NULL,NULL, IAPISupport::CLEAR_TEXTURE_LEVEL));
+	Attribs.add(Attribute(CLEAR_LEVEL, "CLEAR_LEVEL", Enums::DataType::INT, false, new NauInt(-1), NULL,NULL, IAPISupport::CLEAR_TEXTURE_LEVEL));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("PASS_PROCESS_TEXTURE", &Attribs);

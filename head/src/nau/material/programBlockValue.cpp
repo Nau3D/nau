@@ -54,7 +54,7 @@ ProgramBlockValue::ProgramBlockValue (std::string name, std::string block, std::
 	m_ValueOf = attr;
 	m_ValueType = dt;
 	m_Cardinality = Enums::getCardinality(dt);
-	void *def = attrSet->getDefault(attr, dt);
+	void *def = (void *)attrSet->get(attr, dt)->getDefault().get();
 	if (def != NULL)
 		m_Values = def;
 	else

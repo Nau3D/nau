@@ -43,13 +43,13 @@ namespace nau
 			std::string    m_MtlLibName;			/* name of the material library */
 			
 			unsigned int   m_NumVertices;			/* number of vertices in model */
-			std::vector<vec4> m_Vertices;			/* array of vertices  */
+			std::vector<VertexData::Attr> m_Vertices;			/* array of vertices  */
 			
 			unsigned int   m_NumNormals;			/* number of normals in model */
-			std::vector<vec4> m_Normals;			/* array of normals */
+			std::vector<VertexData::Attr> m_Normals;			/* array of normals */
 			
 			unsigned int   m_NumTexCoords;		/* number of texcoords in model */
-			std::vector<vec4> m_TexCoords;			/* array of texture coordinates */
+			std::vector<VertexData::Attr> m_TexCoords;			/* array of texture coordinates */
 			
 			unsigned int   m_NumFacetNorms;		/* number of facetnorms in model */
 			std::vector<vec3> m_FacetNorms;			/* array of facetnorms */

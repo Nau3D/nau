@@ -107,13 +107,13 @@ BoundingBox::calculate (const std::vector<VertexData::Attr> &vertices)
 	m_vPoints[MIN].set ((float)MAXFLOAT, (float)MAXFLOAT, (float)MAXFLOAT);
 	m_vPoints[MAX].set ((float)-MAXFLOAT, (float)-MAXFLOAT, (float)-MAXFLOAT);
 
-	std::vector<vec4>::const_iterator verticesIter;
+	std::vector<VertexData::Attr>::const_iterator verticesIter;
 
 	verticesIter = vertices.begin();
 
 	for ( ; verticesIter != vertices.end(); ++verticesIter) {
 
-		const vec4 &aVec = (*verticesIter);
+		const VertexAttrib &aVec = (*verticesIter);
 
 		if (m_vPoints[MIN].x > aVec.x) {
 			m_vPoints[MIN].x = aVec.x;
@@ -155,7 +155,7 @@ BoundingBox::setTransform (mat4 &m)
 {
 	m_GeometryTransform.copy(m);
 
-	std::vector<vec4> vertices (8);
+	std::vector<VertexAttrib> vertices (8);
 
 	vertices[0].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MIN].z);
 	vertices[1].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MIN].z);
@@ -178,7 +178,7 @@ BoundingBox::setTransform (mat4 &m)
 	//vertices[7].set (m_vPoints[MIN].x, m_vPoints[MAX].y, m_vPoints[MAX].z);
 
 	for (int i = 0; i < 8; i++) {
-		m.transform (vertices[i]);
+		m.transform (&(vertices[i].x));
 	}
 
 	//aTransform.getMat44().transform (m_vPoints[MIN]);

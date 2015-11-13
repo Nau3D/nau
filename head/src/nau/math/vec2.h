@@ -21,6 +21,11 @@ namespace nau
 			vector2(T x, T y) : x(x), y(y) {};
 			vector2(T v) : x(v), y(v) {};
 			vector2(const vector2 &v) : x(v.x), y(v.y) {};
+			vector2(const T* values) {
+				x = values[0];
+				y = values[1];
+			}
+			
 			~vector2() {};
 
 			const vector2&
@@ -32,6 +37,15 @@ namespace nau
 				}
 				return *this;
 			};
+
+
+			Data *clone() {
+				return new vector2(*this);
+			}
+
+			void *getPtr() {
+				return &x;
+			}
 
 			void
 				copy(const vector2 &v) {
@@ -182,8 +196,8 @@ namespace nau
 
 				vector2 result;
 
-				result.x = (this->y * v.z) - (v.y * this->z);
-				result.y = (this->z * v.x) - (v.z * this->x);
+				result.x = 0.0f;
+				result.y = 0.0f;
 
 				return result;
 			};

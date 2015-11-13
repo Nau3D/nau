@@ -38,6 +38,8 @@ namespace nau {
 		AttribSet *m_Attribs;
 
 
+	public:
+		bool isValid(Enums::DataType dt, unsigned int prop, Data *value);
 	// ENUM
 	protected:
 		std::map<int, int> m_EnumProps;
@@ -218,8 +220,8 @@ namespace nau {
 		void clearArrays();
 
 		virtual void *getProp(unsigned int prop, Enums::DataType type);
-		virtual void setProp(unsigned int prop, Enums::DataType type, void *value);
-		virtual bool isValid(unsigned int prop, Enums::DataType type, void *value);
+		virtual void setProp(unsigned int prop, Enums::DataType type, Data *value);
+		virtual bool isValid(unsigned int prop, Enums::DataType type, Data *value);
 		void registerAndInitArrays(AttribSet  &attribs);
 		void initArrays();
 		AttribSet *getAttribSet();

@@ -31,6 +31,8 @@ RenderManager::RenderManager(void) :
 RenderManager::~RenderManager(void) {
 
 	clear();
+	delete m_pRenderer;
+	delete m_pRenderQueue;
 }
 
 
@@ -460,8 +462,7 @@ RenderManager::getCurrentPassAttribute(std::string name, Enums::DataType dt) {
 Enums::DataType
 RenderManager::getPassAttributeType(std::string name) {
 
-	Attribute &a = Pass::Attribs.get(name);
-	Enums::DataType dt = a.getType();
+	Enums::DataType dt = Pass::Attribs.get(name)->getType();
 	return dt;
 }
 

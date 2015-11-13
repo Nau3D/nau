@@ -58,7 +58,7 @@ CBOLoader::_writeVertexData (VertexData& aVertexData, std::fstream &f)
 			f.write (reinterpret_cast<char *> (&sizeVec), sizeof (sizeVec));
 			// write attribute data
 			f.write (reinterpret_cast<char *> (&(aVec[0])), 
-					 sizeVec * sizeof(vec4));
+					 sizeVec * sizeof(VertexData::Attr));
 		}
 	}
 
@@ -112,10 +112,10 @@ CBOLoader::_readVertexData (VertexData& aVertexData, std::fstream &f)
 		// read size of array
 		f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
 
-		std::vector<vec4> *aVector = new std::vector<vec4>(siz);
+		std::vector<VertexData::Attr> *aVector = new std::vector<VertexData::Attr>(siz);
 
 		// read attrib data
-		f.read (reinterpret_cast<char *> (&(*aVector)[0]), siz * sizeof (vec4));
+		f.read (reinterpret_cast<char *> (&(*aVector)[0]), siz * sizeof (VertexData::Attr));
 
 		unsigned int index = VertexData::GetAttribIndex(std::string(buffer));
 		aVertexData.setDataFor (index, aVector);
@@ -143,25 +143,25 @@ CBOLoader::_readIndexData (IndexData& aVertexData, std::fstream &f)
 	}
 }
 
-void
-CBOLoader::_ignoreVertexData (std::fstream &f)
-{
-	unsigned int siz;
-
-	for (int i = 0; i <= VertexData::MaxAttribs; i++) {
-		f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
-
-		if (siz > 0) {
-			f.ignore (siz * sizeof (vec3));
-		}
-	}
-	
-	f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
-	if (siz > 0) {
-		f.ignore (siz * sizeof (unsigned int));
-	}
-
-}
+//void
+//CBOLoader::_ignoreVertexData (std::fstream &f)
+//{
+//	unsigned int siz;
+//
+//	for (int i = 0; i <= VertexData::MaxAttribs; i++) {
+//		f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
+//
+//		if (siz > 0) {
+//			f.ignore (siz * sizeof (vec3));
+//		}
+//	}
+//	
+//	f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
+//	if (siz > 0) {
+//		f.ignore (siz * sizeof (unsigned int));
+//	}
+//
+//}
 
 void
 CBOLoader::_writeString (const std::string& aString, std::fstream &f)
@@ -254,7 +254,11 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		unsigned int nPoints;
 		f.read (reinterpret_cast<char *> (&nPoints), sizeof (nPoints));
 		//LOG_INFO ("[Reading] Number of points [%d]", nPoints);
-		f.read (reinterpret_cast<char *> (&(points[0])), nPoints * sizeof (vec3));
+		float *flo = new float[nPoints*3];
+		f.read (reinterpret_cast<char *> (flo), nPoints * 3 * sizeof(float));
+		for (unsigned int k = 0; k < nPoints; ++k)
+			points[k] = vec3(flo[k * 3], flo[k * 3 + 1], flo[k * 3 + 2]);
+		delete flo;
 
 		mat4 mat; 
 		f.read (reinterpret_cast<char *> (const_cast<float*>(mat.getMatrix())), sizeof(float)*16);
@@ -344,16 +348,11 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	//LOG_INFO ("[Reading] Type of BoundingVolume: [%s]", buffer);
 	BoundingBox *aBoundingVolume = (BoundingBox *)BoundingVolumeFactory::create ("BoundingBox");
 
-	std::vector<vec3> points(2); 
+	float *flo = new float[6];
+	f.read(reinterpret_cast<char *> (flo), 6 * sizeof(float));
 
 	//LOG_INFO ("[Reading] Number of points [%d]", nPoints);
-	f.read (reinterpret_cast<char *> (&(points[0])), 2 * sizeof (vec3));
-	//for (int j = 0; j < points.size(); ++j) {
-	//		points[j].x /= 100.0;
-	//		points[j].y /= 100.0;
-	//		points[j].z /= 100.0;
-	//	}
-	aBoundingVolume->set(points[0], points[1]);
+	aBoundingVolume->set(vec3(flo[0], flo[1], flo[2]), vec3(flo[3], flo[4], flo[5]));
 	so->setBoundingVolume (aBoundingVolume);
 
 	mat4 mat; 
@@ -401,8 +400,14 @@ CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	BoundingBox *b = (BoundingBox *)aBoundingVolume;
 
 	std::vector<vec3> &points = b->getNonTransformedPoints();
-
-	f.write(reinterpret_cast<char*> (&(points[0])), 2 * sizeof (vec3));
+	float flo[6];
+	flo[0] = points[0].x;
+	flo[1] = points[0].y;
+	flo[2] = points[0].z;
+	flo[3] = points[1].x;
+	flo[4] = points[1].y;
+	flo[5] = points[1].z;
+	f.write(reinterpret_cast<char*> (flo), 6 * sizeof (float));
 
 	/* Write the transform */
 	 mat4 aTransform = so->getTransform();
@@ -435,13 +440,11 @@ CBOLoader::_readOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 
 	char buffer[1024];
 
-	std::vector<vec3> points(2); 
-	f.read (reinterpret_cast<char *> (&(points[0])), 2 * sizeof (vec3));
-
-	n->m_BoundingVolume.set(points[0], points[1]);
-	f.read (reinterpret_cast<char *> (&(points[0])), 2 * sizeof (vec3));
-
-	n->m_TightBoundingVolume.set(points[0], points[1]);
+	float flo[12];
+	f.read (reinterpret_cast<char *> (flo), 12 * sizeof(float));
+	n->m_BoundingVolume.set(vec3(flo[0], flo[1], flo[2]), vec3(flo[3], flo[4], flo[5]));
+	
+	n->m_TightBoundingVolume.set(vec3(flo[6], flo[7], flo[8]), vec3(flo[9], flo[10], flo[11]));
 
 	unsigned int siz;
 	f.read (reinterpret_cast<char *> (&siz), sizeof(siz));
@@ -476,10 +479,24 @@ CBOLoader::_writeOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 
 	BoundingBox& aBoundingVolume = (BoundingBox &)n->m_BoundingVolume;
 	std::vector<vec3>& points = aBoundingVolume.getNonTransformedPoints();
-	f.write(reinterpret_cast<char*> (&(points[0])), 2 * sizeof (vec3));
+	float flo[6];
+	flo[0] = points[0].x;
+	flo[1] = points[0].y;
+	flo[2] = points[0].z;
+	flo[3] = points[1].x;
+	flo[4] = points[1].y;
+	flo[5] = points[1].z;
+	f.write(reinterpret_cast<char*> (flo), 6 * sizeof(float));
+
 	aBoundingVolume = (BoundingBox &)n->m_TightBoundingVolume;
 	points = aBoundingVolume.getNonTransformedPoints();
-	f.write(reinterpret_cast<char*> (&(points[0])), 2 * sizeof (vec3));
+	flo[0] = points[0].x;
+	flo[1] = points[0].y;
+	flo[2] = points[0].z;
+	flo[3] = points[1].x;
+	flo[4] = points[1].y;
+	flo[5] = points[1].z;
+	f.write(reinterpret_cast<char*> (flo), 6 * sizeof(float));
 
 
 	siz = (unsigned int)n->m_pLocalMeshes.size();
@@ -510,10 +527,10 @@ CBOLoader::_readOctreeByMat(OctreeByMatScene *aScene, std::fstream &f) {
 
 	char buffer[1024];
 	/* Read bounding box */
-	std::vector<vec3> points(2); 
-	f.read (reinterpret_cast<char *> (&(points[0])), 2 * sizeof (vec3));
+	float flo[6];
+	f.read (reinterpret_cast<char *> (flo), 6 * sizeof (float));
 
-	aScene->m_BoundingBox.set(points[0], points[1]);
+	aScene->m_BoundingBox.set(vec3(flo[0], flo[1], flo[2]), vec3(flo[3], flo[4], flo[5]));
 
 	OctreeByMat *o = new OctreeByMat();
 	aScene->m_pGeometry = o;
@@ -534,7 +551,14 @@ CBOLoader::_writeOctreeByMat(OctreeByMatScene *aScene, std::fstream &f) {
 	/* Write the bounding box */
 	BoundingBox& aBoundingVolume = (BoundingBox &)aScene->getBoundingVolume();
 	std::vector<vec3> &points = aBoundingVolume.getNonTransformedPoints();
-	f.write(reinterpret_cast<char*> (&(points[0])), 2 * sizeof (vec3));
+	float flo[6];
+	flo[0] = points[0].x;
+	flo[1] = points[0].y;
+	flo[2] = points[0].z;
+	flo[3] = points[1].x;
+	flo[4] = points[1].y;
+	flo[5] = points[1].z;
+	f.write(reinterpret_cast<char*> (flo), 6 * sizeof(float));
 
 	OctreeByMat *o = aScene->m_pGeometry;
 	_writeString(o->getName(),f);
@@ -638,36 +662,41 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 	objIter = sceneObjects.begin();
 
 	/* For each object in the scene */
-	for ( ; objIter != sceneObjects.end(); objIter++) {
+	for (; objIter != sceneObjects.end(); objIter++) {
 		/* Write the object type */
 
-		_writeString ((*objIter)->getType(), f);
+		_writeString((*objIter)->getType(), f);
 
-		LOG_INFO ("[Writing] object type: [%s]", (*objIter)->getType().c_str()); 
+		LOG_INFO("[Writing] object type: [%s]", (*objIter)->getType().c_str());
 
 
 		/* Write the object's name */
-		_writeString ((*objIter)->getName(), f); //Misses getId()
+		_writeString((*objIter)->getName(), f); //Misses getId()
 
-		LOG_INFO ("[Writing] object name: [%s]", (*objIter)->getName().c_str()); 
+		LOG_INFO("[Writing] object name: [%s]", (*objIter)->getName().c_str());
 
-		/* Write the specific data */		
-		(*objIter)->writeSpecificData (f);
-		
+		/* Write the specific data */
+		(*objIter)->writeSpecificData(f);
+
 		/* Write the bounding volume */
 		IBoundingVolume *aBoundingVolume = (*objIter)->getBoundingVolume();
 
 		/* Bounding volume type */
 
-		_writeString (aBoundingVolume->getType(), f);
+		_writeString(aBoundingVolume->getType(), f);
 
 		/* Bounding volume points */
 		std::vector<vec3> points = aBoundingVolume->getPoints();
-
 		siz = (unsigned int)points.size();
+		float *flo = new float[siz * 3];
+		for (unsigned int k = 0; k < siz; ++k) {
+			flo[k * 3] = points[k].x;
+			flo[k * 3 + 1] = points[k].y;
+			flo[k * 3 + 2] = points[k].z;
+		}
 		f.write (reinterpret_cast<char*> (&siz), sizeof(siz));
-
-		f.write(reinterpret_cast<char*> (&(points[0])), siz * sizeof (vec3));
+		f.write(reinterpret_cast<char*> (flo), siz * 3 * sizeof(float));
+		delete flo;
 
 		/* Write the transform */
 		mat4 aTransform = (*objIter)->getTransform();

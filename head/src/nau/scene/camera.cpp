@@ -43,17 +43,17 @@ Camera::Init() {
 	Attribs.add(Attribute(PROJECTION_VIEW_MATRIX, "PROJECTION_VIEW_MATRIX",Enums::DataType::MAT4, true));
 	Attribs.add(Attribute(TS05_PVM_MATRIX, "TS05_PVM_MATRIX",Enums::DataType::MAT4, true));
 	// FLOAT
-	Attribs.add(Attribute(FOV, "FOV",Enums::DataType::FLOAT, false, new float(60.0f)));
-	Attribs.add(Attribute(NEARP, "NEAR",Enums::DataType::FLOAT, false, new float(1.0f)));
-	Attribs.add(Attribute(FARP, "FAR",Enums::DataType::FLOAT, false, new float(10000.0f)));
-	Attribs.add(Attribute(LEFT, "LEFT",Enums::DataType::FLOAT, false, new float(-1.0f)));
-	Attribs.add(Attribute(RIGHT, "RIGHT",Enums::DataType::FLOAT, false, new float(1.0f)));
-	Attribs.add(Attribute(TOP, "TOP",Enums::DataType::FLOAT, false, new float(1.0f)));
-	Attribs.add(Attribute(BOTTOM, "BOTTOM",Enums::DataType::FLOAT, false, new float(-1.0f)));
-	Attribs.add(Attribute(ZX_ANGLE, "ZX_ANGLE", Enums::DataType::FLOAT, false, new float((float)M_PI)));
-	Attribs.add(Attribute(ELEVATION_ANGLE, "ELEVATION_ANGLE", Enums::DataType::FLOAT, false, new float(0.0f)));
+	Attribs.add(Attribute(FOV, "FOV",Enums::DataType::FLOAT, false, new NauFloat(60.0f)));
+	Attribs.add(Attribute(NEARP, "NEAR",Enums::DataType::FLOAT, false, new NauFloat(1.0f)));
+	Attribs.add(Attribute(FARP, "FAR",Enums::DataType::FLOAT, false, new NauFloat(10000.0f)));
+	Attribs.add(Attribute(LEFT, "LEFT",Enums::DataType::FLOAT, false, new NauFloat(-1.0f)));
+	Attribs.add(Attribute(RIGHT, "RIGHT",Enums::DataType::FLOAT, false, new NauFloat(1.0f)));
+	Attribs.add(Attribute(TOP, "TOP",Enums::DataType::FLOAT, false, new NauFloat(1.0f)));
+	Attribs.add(Attribute(BOTTOM, "BOTTOM",Enums::DataType::FLOAT, false, new NauFloat(-1.0f)));
+	Attribs.add(Attribute(ZX_ANGLE, "ZX_ANGLE", Enums::DataType::FLOAT, false, new NauFloat((float)M_PI)));
+	Attribs.add(Attribute(ELEVATION_ANGLE, "ELEVATION_ANGLE", Enums::DataType::FLOAT, false, new NauFloat(0.0f)));
 	// ENUM
-	Attribs.add(Attribute(PROJECTION_TYPE, "TYPE", Enums::DataType::ENUM, false, new int(PERSPECTIVE)));
+	Attribs.add(Attribute(PROJECTION_TYPE, "TYPE", Enums::DataType::ENUM, false, new NauInt(PERSPECTIVE)));
 	Attribs.listAdd("TYPE", "PERSPECTIVE", PERSPECTIVE);
 	Attribs.listAdd("TYPE", "ORTHO", ORTHO);
 
@@ -300,19 +300,19 @@ Camera::setPrope(EnumProperty prop, int value) {
 }
 
 
-void *
-Camera::getProp(int prop, Enums::DataType type) {
-
-	switch (type) {
-
-// ARF: Check who calls this
-		case Enums::MAT4:
-			assert(m_Mat4Props.count(prop) > 0);
-			return((void *)m_Mat4Props[prop].getMatrix());
-		default:
-			return AttributeValues::getProp(prop, type);
-		}
-}
+//void *
+//Camera::getProp(int prop, Enums::DataType type) {
+//
+//	switch (type) {
+//
+//// ARF: Check who calls this
+//		case Enums::MAT4:
+//			assert(m_Mat4Props.count(prop) > 0);
+//			return((void *)m_Mat4Props[prop].getMatrix());
+//		default:
+//			return AttributeValues::getProp(prop, type);
+//		}
+//}
 
 
 //const mat4&
@@ -620,7 +620,6 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera) {
 		wNear = aCamera->getPropf(Camera::RIGHT) - aCamera->getPropf(Camera::LEFT);
 		wFar = wNear;
 	}
-
 
 	vec4 rightVector = aCamera->getPropf4(NORMALIZED_RIGHT_VEC);
 

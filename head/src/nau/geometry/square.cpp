@@ -17,10 +17,10 @@ Square::Square(void) : Primitive(),
 {
 	float n = 1.0f;
 
-	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(4);
-	std::vector<VertexData::Attr> *tangent = new std::vector<vec4>(4);
-	std::vector<VertexData::Attr> *textureCoords = new std::vector<vec4>(4);
-	std::vector<VertexData::Attr> *normals = new std::vector<vec4>(4);	
+	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(4);
+	std::vector<VertexData::Attr> *tangent = new std::vector<VertexData::Attr>(4);
+	std::vector<VertexData::Attr> *textureCoords = new std::vector<VertexData::Attr>(4);
+	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(4);
 
 	//BOTTOM
 	vertices->at (Square::TOP_LEFT).set		(-n, 0.0f,  n);

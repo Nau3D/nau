@@ -64,7 +64,7 @@ namespace nau
 			virtual  bool restore (void) = 0;
 
 			virtual std::string getShaderInfoLog(ShaderType type) = 0;
-			virtual char *getProgramInfoLog() = 0; 
+			virtual const std::string &getProgramInfoLog() = 0; 
 			virtual int programValidate() = 0;
 
 			virtual void getAttributeNames(std::vector<std::string> *s) = 0;

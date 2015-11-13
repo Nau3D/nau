@@ -79,12 +79,18 @@
 				<scenes>
 					<scene name="Ground" />
 				</scenes>
-				<color clear=false />
-				<depth clear=false write=false />
-				<stencil clear=true clearValue=0 test=true >
-					<stencilFunc  func=NEVER ref=1 mask=255 />
-					<stencilOp sfail=REPLACE dfail=REPLACE dpass=REPLACE />
-				</stencil>
+				<COLOR_CLEAR value=false />
+				<DEPTH_CLEAR value=false />
+				<DEPTH_MASK value=false />
+				<STENCIL_CLEAR value=true />
+				<STENCIL_CLEAR_VALUE value=0 />
+				<STENCIL_ENABLE value = true />
+				<STENCIL_FUNC value="NEVER" />
+				<STENCIL_OP_REF value=1 />
+				<STENCIL_OP_MASK value=255 />
+				<STENCIL_FAIL value="REPLACE" />
+				<STENCIL_DEPTH_FAIL value="REPLACE" />
+				<STENCIL_DEPTH_PASS value="REPLACE" />
 				<camera name="MainCamera" />
 				<viewport name="MainViewport" />
 				<lights>
@@ -99,12 +105,16 @@
 				<scenes>
 					<scene name="CubeLandReflected" />
 				</scenes>
-				<color clear=false />
-				<depth clear=false />
-				<stencil clear=false test=true >
-					<stencilFunc  func=EQUAL ref=1 mask=255 />
-					<stencilOp sfail=KEEP dfail=KEEP dpass=KEEP/>
-				</stencil>
+				<COLOR_CLEAR value=false />
+				<DEPTH_CLEAR value=false />
+				<STENCIL_CLEAR value=false />
+				<STENCIL_ENABLE value = true />
+				<STENCIL_FUNC value="EQUAL" />
+				<STENCIL_OP_REF value=1 />
+				<STENCIL_OP_MASK value=255 />
+				<STENCIL_FAIL value="KEEP" />
+				<STENCIL_DEPTH_FAIL value="KEEP" />
+				<STENCIL_DEPTH_PASS value="KEEP" />
 				<camera name="MainCamera" />
 				<viewport name="MainViewport" />
 				<lights>
@@ -119,8 +129,8 @@
 				<scenes>
 					<scene name="Ground" />
 				</scenes>
-				<color clear=false />
-				<depth clear=false />
+				<COLOR_CLEAR value=false />
+				<DEPTH_CLEAR value=false />
 				<camera name="MainCamera" />
 				<viewport name="MainViewport" />
 				<lights>

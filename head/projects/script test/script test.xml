@@ -4,7 +4,7 @@
 		<scenes>
 			<scene name="MainScene" >
 				<ROTATE x=1 y=0 z=0 w=90 />
-				<file name="../../models/Teapot.3ds"/>
+				<file name="../../models/teapot.3ds"/>
 			</scene>
 		</scenes>
 		

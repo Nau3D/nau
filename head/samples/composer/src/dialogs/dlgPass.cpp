@@ -736,8 +736,6 @@ void DlgPass::updateLights(Pass *p)
 
 void DlgPass::updateMaterialList() {
 
-	std::vector<std::string>::iterator iterLib, iterMat;
-	std::vector<std::string> *matList;
 	std::string libmat;
 
 	if (m_pgMaterialList.GetCount())
@@ -748,36 +746,32 @@ void DlgPass::updateMaterialList() {
 
 	m_pgMaterialListPlus.Add(wxT("None"));
 
-	std::vector<std::string> *libList = MATERIALLIBMANAGER->getLibNames();
-	iterLib = libList->begin();
+	std::vector<std::string> libList; 
+	MATERIALLIBMANAGER->getLibNames(&libList);
 
 	wxString libname;
-	for ( ; iterLib != libList->end(); ++iterLib) {
+	for (auto& lib:libList) {
 
-		libname = wxString((*iterLib).c_str());
+		libname = wxString(lib.c_str());
 		libname.append(wxT("::*"));
 		m_pgMaterialListPlus.Add(libname);
 	}
 
-	iterLib = libList->begin();
+	std::vector<std::string> matList;
 
+	for (auto& lib : libList) {
 
-	for ( ; iterLib != libList->end(); ++iterLib) {
+		 MATERIALLIBMANAGER->getMaterialNames(lib, &matList);
 
-		matList = MATERIALLIBMANAGER->getMaterialNames(*iterLib);
-		iterMat = matList->begin();
+		for(auto& mat: matList) {
 
-		for( ; iterMat != matList->end(); ++iterMat) {
-
-			libmat = *iterLib;
+			libmat = lib;
 			libmat.append("::");
-			libmat.append(*iterMat);
+			libmat.append(mat);
 			m_pgMaterialList.Add(wxString(libmat.c_str()));
 			m_pgMaterialListPlus.Add(wxString(libmat.c_str()));
 		}
-		delete matList;
 	}
-	delete libList;
 }
 
 

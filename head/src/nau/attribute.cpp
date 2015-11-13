@@ -9,19 +9,18 @@ using namespace nau::render;
 
 std::vector<std::string> Attribute::m_DummyVS;
 
-Attribute::Attribute() : m_Id(-1), m_Default(NULL), m_Min(NULL), m_Max(NULL), 
+Attribute::Attribute() : m_Id(-1), 
 			m_RangeDefined(false), m_ListDefined(false) {
 
 }
 
 
-Attribute::Attribute(int id, std::string name, Enums::DataType type, 
-	bool readOnlyFlag, void *defaultV,
-	void *min, void *max, 
+Attribute::Attribute(unsigned int id, std::string name, Enums::DataType type, 
+	bool readOnlyFlag, Data *defaultV,
+	Data *min, Data *max,
 	IAPISupport::APIFeatureSupport requires, 
 	Semantics sem) :
 	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), 
-		m_Default(NULL), m_Min(NULL), m_Max(NULL),
 		m_ListDefined(false), m_RangeDefined(false), m_Semantics(sem),
 		m_Requires(requires){
 		
@@ -29,95 +28,42 @@ Attribute::Attribute(int id, std::string name, Enums::DataType type,
 
 	if (min != NULL) {
 		m_RangeDefined = true;
-		m_Min = malloc(s);
-		memcpy(m_Min, min, s);
+		m_Min = std::shared_ptr<Data>(min);
 	}
 
 	if (max != NULL) {
 		m_RangeDefined = true;
-		m_Max = malloc(s);
-		memcpy(m_Max, max, s);
+		m_Max = std::shared_ptr<Data>(max);
 	}
 
-	if (defaultV) {
-		m_Default = malloc(s);
-		memcpy(m_Default, defaultV, s);
+	if (defaultV != NULL) {
+		m_Default = std::shared_ptr<Data>(defaultV);
 	}
 	else {
-		m_Default = Enums::getDefaultValue(m_Type);
-				
+		m_Default = std::shared_ptr<Data>(Enums::getDefaultValue(m_Type));
 	}
 }
 
 
-
 Attribute::~Attribute() {
 
-	// can't free this memory because it may be in use in other attribute ?
-	//if (m_Min != NULL) {
-	//	free(m_Min);
-	//	m_Min = NULL;
-	//}
-	//if (m_Max != NULL) {
-	//	free(m_Max);
-	//	m_Max = NULL;
-	//}
-	//if (m_Default != NULL) {
-	//	free(m_Default);
-	//	m_Default = NULL;
-	//}
-};
+}
 
 
-Attribute & 
-Attribute::operator=(const Attribute &rhs) {
+Attribute::Attribute(const Attribute & source):
+	m_Id(source.m_Id), m_Name(source.m_Name), m_Type(source.m_Type),
+	m_ReadOnlyFlag(source.m_ReadOnlyFlag), m_Requires(source.m_Requires),
+	m_Semantics(source.m_Semantics), m_RangeDefined(source.m_RangeDefined) {
 
-	if (this == &rhs)
-		return *this;
-
-	m_Id = rhs.m_Id;
-	m_Name = rhs.m_Name;
-	m_Type = rhs.m_Type;
-	m_ReadOnlyFlag = rhs.m_ReadOnlyFlag;
-	m_Requires = rhs.m_Requires;
-	m_Semantics = rhs.m_Semantics;
-
-	// dealocate previous values
-	if (m_Min != NULL) {
-		free(m_Min);
-		m_Min = NULL;
+	if (source.m_Max != NULL) {
+		m_Max = std::shared_ptr<Data>(source.m_Max->clone());
 	}
-	if (m_Max != NULL) {
-		free(m_Max);
-		m_Max = NULL;
+	if (source.m_Min != NULL) {
+		m_Min = std::shared_ptr<Data>(source.m_Min->clone());
 	}
-	if (m_Default != NULL) {
-		free(m_Default);
-		m_Default = NULL;
+	if (source.m_Default != NULL) {
+		m_Default = std::shared_ptr<Data>(source.m_Default->clone());
 	}
-
-	// copy pointer values
-	int s = Enums::getSize(m_Type);
-
-	if (rhs.m_Min != NULL) {
-		m_RangeDefined = true;
-		m_Min = malloc(s);
-		memcpy(m_Min, rhs.m_Min, s);
-	}
-
-	if (rhs.m_Max != NULL) {
-		m_RangeDefined = true;
-		m_Max = malloc(s);
-		memcpy(m_Max, rhs.m_Max, s);
-	}
-
-	if (rhs.m_Default) {
-		m_Default = malloc(s);
-		memcpy(m_Default, rhs.m_Default, s);
-	}
-
-	return *this;
-
 }
 
 
@@ -143,6 +89,13 @@ Attribute::isValidUserAttrType(std::string s) {
 }
 
 
+void
+Attribute::setDefault(Data &d) {
+
+	m_Default.reset(d.clone());
+}
+
+
 std::string &
 Attribute::getName() {
 
@@ -150,7 +103,7 @@ Attribute::getName() {
 }
 
 
-void *
+shared_ptr<Data> &
 Attribute::getDefault() {
 
 	return m_Default;
@@ -169,32 +122,6 @@ Attribute::getRequirement() {
 
 	return m_Requires;
 }
-
-
-void 
-Attribute::setRange(void *min, void *max) {
-				
-	assert(m_Type != Enums::STRING);
-
-	if (min == NULL && max == NULL)
-		return;
-			
-	m_RangeDefined = true;
-
-	if (min != NULL) {
-		m_Min = malloc(Enums::getSize(m_Type));
-		memcpy(m_Min, min, Enums::getSize(m_Type));
-	}
-	else
-		m_Min = NULL;
-
-	if (max != NULL) {
-		m_Max = malloc(Enums::getSize(m_Type));
-		memcpy(m_Max, max, Enums::getSize(m_Type));
-	}
-	else
-		m_Max = NULL;
-};
 
 
 Enums::DataType 
@@ -266,14 +193,14 @@ Attribute::getListDefined() {
 };
 
 
-void *
+std::shared_ptr<Data> &
 Attribute::getMax() {
 		
 	return m_Max;
 }
 
 
-void *
+std::shared_ptr<Data> &
 Attribute::getMin() {
 
 	return m_Min;
@@ -323,6 +250,18 @@ Attribute::getOptionStringList() {
 }
 
 
+void
+Attribute::getOptionListSupported(std::vector<int> *result) {
+
+	result->clear();
+	for (unsigned int i = 0; i < m_ListValues.size(); ++i) {
+
+		if (APISupport->apiSupport(m_ListRequire[i]))
+			result->push_back(m_ListValues[i]);
+	}
+}
+
+
 void 
 Attribute::getOptionStringListSupported(std::vector<std::string> *result) {
 
@@ -342,15 +281,16 @@ Attribute::getOptionStringListSupported(std::vector<std::string> *result) {
 
 
 
-AttribSet::AttribSet() : m_NextFreeID(USER_ATTRIBS), m_DummyS("") { 
+AttribSet::AttribSet() : m_NextFreeID(USER_ATTRIBS) { 
 	
-	m_Dummy.m_Name = "NO_ATTR"; 
+	m_Dummy = std::unique_ptr<Attribute>(new Attribute);
+	m_Dummy->m_Name = "NO_ATTR"; 
 };
 
 
 AttribSet::~AttribSet() {};
 
-int 
+unsigned int 
 AttribSet::getNextFreeID() {
 		
 	return m_NextFreeID++;
@@ -360,11 +300,11 @@ AttribSet::getNextFreeID() {
 void 
 AttribSet::deleteUserAttributes() {
 
-	std::map<std::string, Attribute>::iterator iter;
+	std::map<std::string, std::unique_ptr<Attribute>>::iterator iter;
 	iter = m_Attributes.begin();
 	while (iter != m_Attributes.end()) {
 
-		if (iter->second.m_Id >= USER_ATTRIBS)
+		if (iter->second->m_Id >= USER_ATTRIBS)
 			m_Attributes.erase(iter++);
 		else
 			++iter;
@@ -372,10 +312,10 @@ AttribSet::deleteUserAttributes() {
 }
 
 void 
-AttribSet::add(Attribute a) {
+AttribSet::add(Attribute &a) {
 			
 	if (a.m_Id != -1) {
-		m_Attributes[a.m_Name] = a;
+		m_Attributes[a.m_Name] = std::unique_ptr<Attribute>(new Attribute(a));
 	}
 	Enums::DataType dt = a.getType();
 	if (mDataTypeCounter.count(dt))
@@ -395,7 +335,7 @@ AttribSet::getDataTypeCount(Enums::DataType dt) {
 }
 
 		
-Attribute &
+std::unique_ptr<Attribute> &
 AttribSet::get(std::string name) {
 
 	if (m_Attributes.find(name) != m_Attributes.end()) 
@@ -407,16 +347,17 @@ AttribSet::get(std::string name) {
 }
 
 
-Attribute &
+std::unique_ptr<Attribute> &
 AttribSet::get(int id, Enums::DataType dt) {
 
-	std::map<std::string, Attribute>::iterator it;
+	std::map<std::string, std::unique_ptr<Attribute>>::iterator it;
 	it = m_Attributes.begin();
 	for (; it != m_Attributes.end(); ++it) {
 
-		if (it->second.m_Id == id && it->second.m_Type == dt)
+		if (it->second->m_Id == id && it->second->m_Type == dt)
 			return (it->second);
 	}
+	
 	return m_Dummy;
 }
 
@@ -426,14 +367,14 @@ AttribSet::getID(std::string name) {
 
 	if (m_Attributes.find(name) != m_Attributes.end()) 
 
-		return(m_Attributes[name].m_Id);
+		return(m_Attributes[name]->m_Id);
 	else
 		return -1;
 
 }
 
 
-std::map<std::string, Attribute> &
+std::map<std::string, std::unique_ptr<Attribute>> &
 AttribSet::getAttributes() {
 
 	return (m_Attributes);
@@ -443,11 +384,11 @@ AttribSet::getAttributes() {
 const std::string &
 AttribSet::getName(int id, Enums::DataType dt) {
 
-	std::map<std::string, Attribute>::iterator it;
+	std::map<std::string, std::unique_ptr<Attribute>>::iterator it;
 	it = m_Attributes.begin();
 	for ( ; it != m_Attributes.end(); ++it) {
 
-		if (it->second.m_Id == id && it->second.m_Type == dt)
+		if (it->second->m_Id == id && it->second->m_Type == dt)
 			return (it->first);
 	}
 	return m_DummyS;
@@ -457,12 +398,12 @@ AttribSet::getName(int id, Enums::DataType dt) {
 void 
 AttribSet::getPropTypeAndId(std::string &s, nau::Enums::DataType *dt, int *id) {
 			
-	Attribute &a = get(s);
-	*id = a.m_Id;
+	std::unique_ptr<Attribute> &a = get(s);
+	*id = a->m_Id;
 
-	if (a.m_Id != -1) {
+	if (a->m_Id != -1) {
 
-		*dt = a.m_Type;
+		*dt = a->m_Type;
 	}
 }
 
@@ -470,12 +411,12 @@ AttribSet::getPropTypeAndId(std::string &s, nau::Enums::DataType *dt, int *id) {
 const std::vector<std::string> &
 AttribSet::getListString(int id) {
 		
-	std::map<std::string, Attribute>::iterator it;
+	std::map<std::string, std::unique_ptr<Attribute>>::iterator it;
 	it = m_Attributes.begin();
 	for ( ; it != m_Attributes.end(); ++it) {
 
-		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
-			return (it->second.m_ListString);
+		if (it->second->m_Id == id && it->second->m_Type == Enums::DataType::ENUM)
+			return (it->second->m_ListString);
 	}
 	return m_DummyVS;
 }
@@ -484,12 +425,12 @@ AttribSet::getListString(int id) {
 const std::vector<int> &
 AttribSet::getListValues(int id) {
 		
-	std::map<std::string, Attribute>::iterator it;
+	std::map<std::string, std::unique_ptr<Attribute>>::iterator it;
 	it = m_Attributes.begin();
 	for ( ; it != m_Attributes.end(); ++it) {
 
-		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
-			return (it->second.m_ListValues);
+		if (it->second->m_Id == id && it->second->m_Type == Enums::DataType::ENUM)
+			return (it->second->m_ListValues);
 	}
 	return m_DummyVI;
 }
@@ -498,20 +439,20 @@ AttribSet::getListValues(int id) {
 std::string 
 AttribSet::getListStringOp(std::string s, int prop) {
 		
-	Attribute &a = get(s);
-	return (a.getOptionString(prop));
+	std::unique_ptr<Attribute> &a = get(s);
+	return (a->getOptionString(prop));
 }
 
 
 std::string 
 AttribSet::getListStringOp(int id, int prop) {
 		
-	std::map<std::string, Attribute>::iterator it;
+	std::map<std::string, std::unique_ptr<Attribute>>::iterator it;
 	it = m_Attributes.begin();
 	for ( ; it != m_Attributes.end(); ++it) {
 
-		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
-			return (it->second.getOptionString(prop));
+		if (it->second->m_Id == id && it->second->m_Type == Enums::DataType::ENUM)
+			return (it->second->getOptionString(prop));
 	}
 	return m_DummyS;
 }
@@ -520,20 +461,20 @@ AttribSet::getListStringOp(int id, int prop) {
 int 
 AttribSet::getListValueOp(std::string s, std::string prop) {
 		
-	Attribute &a = get(s);
-	return (a.getOptionValue(prop));
+	std::unique_ptr<Attribute> &a = get(s);
+	return (a->getOptionValue(prop));
 }
 
 
 int 
 AttribSet::getListValueOp(int id, std::string prop) {
 		
-	std::map<std::string, Attribute>::iterator it;
+	std::map<std::string, std::unique_ptr<Attribute>>::iterator it;
 	it = m_Attributes.begin();
 	for ( ; it != m_Attributes.end(); ++it) {
 
-		if (it->second.m_Id == id && it->second.m_Type == Enums::DataType::ENUM)
-			return (it->second.getOptionValue(prop));
+		if (it->second->m_Id == id && it->second->m_Type == Enums::DataType::ENUM)
+			return (it->second->getOptionValue(prop));
 	}
 	return -1;
 }
@@ -542,12 +483,12 @@ AttribSet::getListValueOp(int id, std::string prop) {
 void 
 AttribSet::listAdd(std::string attrName, std::string elemS, int elem_Id, IAPISupport::APIFeatureSupport requires) {
 
-	std::map<std::string, Attribute>::iterator it;
+	std::map<std::string, std::unique_ptr<Attribute>>::iterator it;
 	it = m_Attributes.begin();
 	for ( ; it != m_Attributes.end(); ++it) {
 
 		if (it->first == attrName) {
-			it->second.listAdd(elemS, elem_Id, requires);
+			it->second->listAdd(elemS, elem_Id, requires);
 			return;
 		}
 	}
@@ -557,48 +498,56 @@ AttribSet::listAdd(std::string attrName, std::string elemS, int elem_Id, IAPISup
 bool 
 AttribSet::isValid(std::string attr, std::string value) {
 
-	Attribute &a = get(attr);
-	return a.isValid(value);
+	std::unique_ptr<Attribute> &a = get(attr);
+	return a->isValid(value);
 }
 
 
 void 
-AttribSet::setDefault(std::string attr, void *value) {
+AttribSet::setDefault(std::string attr, Data &value) {
 		
 	if (m_Attributes.find(attr) != m_Attributes.end()) {
-		assert(m_Attributes[attr].m_Type != Enums::STRING);
-		if (m_Attributes[attr].m_Type != Enums::STRING) {
-			int s = Enums::getSize(m_Attributes[attr].m_Type);
-			m_Attributes[attr].m_Default = malloc(s);
-			memcpy(m_Attributes[attr].m_Default, value, s);
+		assert(m_Attributes[attr]->getType() != Enums::STRING);
+		if (m_Attributes[attr]->getType() != Enums::STRING) {
+			m_Attributes[attr]->setDefault(value);
+			//m_Attributes[attr]->getDefault().reset(Enums::getDefaultValue(m_Attributes[attr]->m_Type));
 		}
 	}
 }
 
 
-void *
-AttribSet::getDefault(int id, Enums::DataType type) {
+//std::unique_ptr<Data> &
+//AttribSet::getDefault(int id, Enums::DataType type) {
+//
+//	std::map<std::string, std::unique_ptr<Attribute>>::iterator it;
+//	it = m_Attributes.begin();
+//	for ( ; it != m_Attributes.end(); ++it) {
+//
+//		if (it->second->m_Id == id && it->second->m_Type == type)
+//			return (it->second->m_Default);
+//	}
+//	return std::unique_ptr<Data>(Enums::get;
+//}
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for ( ; it != m_Attributes.end(); ++it) {
-
-		if (it->second.m_Id == id && it->second.m_Type == type)
-			return (it->second.m_Default);
-	}
-	return NULL;
-}
-
+//template <typename T>
+//void
+//AttribSet::initAttribInstanceArray(Enums::DataType dt, std::map<int, T> &m) {
+//
+//	for (auto& attr : m_Attributes) {
+//		if (attr.second->m_Type == dt) {
+//
+//			m[attr.second->m_Id] = T(it->second->m_Default);
+//		}
+//	}
+//}
 
 void 
 AttribSet::initAttribInstanceIntArray(std::map<int, int> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for (; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::INT) {
-
-			m[it->second.m_Id] = *(int *)(it->second.m_Default);
+	for (auto & attr: m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::INT) {
+			std::shared_ptr<NauInt> &ni = std::dynamic_pointer_cast<NauInt>(attr.second->getDefault());
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -607,12 +556,11 @@ AttribSet::initAttribInstanceIntArray(std::map<int, int> &m) {
 void
 AttribSet::initAttribInstanceInt2Array(std::map<int, ivec2> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for (; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::IVEC2) {
-
-			m[it->second.m_Id] = *(ivec2 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::IVEC2) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<ivec2> &ni = std::dynamic_pointer_cast<ivec2>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -621,12 +569,11 @@ AttribSet::initAttribInstanceInt2Array(std::map<int, ivec2> &m) {
 void 
 AttribSet::initAttribInstanceEnumArray(std::map<int, int> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for ( ; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::ENUM) {
-
-				m[it->second.m_Id] = *(int *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::ENUM) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<NauInt> &ni = std::dynamic_pointer_cast<NauInt>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -635,12 +582,11 @@ AttribSet::initAttribInstanceEnumArray(std::map<int, int> &m) {
 void 
 AttribSet::initAttribInstanceUIntArray(std::map<int, unsigned int> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for ( ; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::UINT) {
-
-				m[it->second.m_Id] = *(unsigned int *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::UINT) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<NauUInt> &ni = std::dynamic_pointer_cast<NauUInt>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -649,12 +595,11 @@ AttribSet::initAttribInstanceUIntArray(std::map<int, unsigned int> &m) {
 void 
 AttribSet::initAttribInstanceUInt2Array(std::map<int, uivec2> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for ( ; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::UIVEC2) {
-
-				m[it->second.m_Id] = *(uivec2 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::UIVEC2) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<uivec2> &ni = std::dynamic_pointer_cast<uivec2>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -663,12 +608,11 @@ AttribSet::initAttribInstanceUInt2Array(std::map<int, uivec2> &m) {
 void
 AttribSet::initAttribInstanceUInt3Array(std::map<int, uivec3> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for (; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::UIVEC3) {
-
-			m[it->second.m_Id] = *(uivec3 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::UIVEC3) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<uivec3> &ni = std::dynamic_pointer_cast<uivec3>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -677,12 +621,11 @@ AttribSet::initAttribInstanceUInt3Array(std::map<int, uivec3> &m) {
 void 
 AttribSet::initAttribInstanceFloatArray(std::map<int, float> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for ( ; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::FLOAT) {
-
-				m[it->second.m_Id] = *(float *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::FLOAT) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<NauFloat> &ni = std::dynamic_pointer_cast<NauFloat>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -691,12 +634,11 @@ AttribSet::initAttribInstanceFloatArray(std::map<int, float> &m) {
 void 
 AttribSet::initAttribInstanceVec4Array(std::map<int, vec4> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for ( ; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::VEC4) {
-
-				m[it->second.m_Id] = *(vec4 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::VEC4) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<vec4> &ni = std::dynamic_pointer_cast<vec4>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -705,12 +647,11 @@ AttribSet::initAttribInstanceVec4Array(std::map<int, vec4> &m) {
 void
 AttribSet::initAttribInstanceVec3Array(std::map<int, vec3> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for (; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::VEC3) {
-
-			m[it->second.m_Id] = *(vec3 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::VEC3) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<vec3> &ni = std::dynamic_pointer_cast<vec3>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -718,12 +659,11 @@ AttribSet::initAttribInstanceVec3Array(std::map<int, vec3> &m) {
 void 
 AttribSet::initAttribInstanceVec2Array(std::map<int, vec2> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for (; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::VEC2) {
-
-			m[it->second.m_Id] = *(vec2 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::VEC2) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<vec2> &ni = std::dynamic_pointer_cast<vec2>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -731,11 +671,11 @@ AttribSet::initAttribInstanceVec2Array(std::map<int, vec2> &m) {
 void 
 AttribSet::initAttribInstanceMat4Array(std::map<int, mat4> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for (; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::MAT4) {
-			m[it->second.m_Id] = *(mat4 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::MAT4) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<mat4> &ni = std::dynamic_pointer_cast<mat4>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -743,11 +683,11 @@ AttribSet::initAttribInstanceMat4Array(std::map<int, mat4> &m) {
 void 
 AttribSet::initAttribInstanceMat3Array(std::map<int, mat3> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for (; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::MAT3) {
-			m[it->second.m_Id] = *(mat3 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::MAT3) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<mat3> &ni = std::dynamic_pointer_cast<mat3>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -756,12 +696,11 @@ AttribSet::initAttribInstanceMat3Array(std::map<int, mat3> &m) {
 void 
 AttribSet::initAttribInstanceBvec4Array(std::map<int, bvec4> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for ( ; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::BVEC4) {
-
-				m[it->second.m_Id] = *(bvec4 *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::BVEC4) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<bvec4> &ni = std::dynamic_pointer_cast<bvec4>(d);
+			m[attr.second->m_Id] = *ni;
 		}
 	}
 }
@@ -770,12 +709,11 @@ AttribSet::initAttribInstanceBvec4Array(std::map<int, bvec4> &m) {
 void 
 AttribSet::initAttribInstanceBoolArray(std::map<int, bool> &m) {
 
-	std::map<std::string, Attribute>::iterator it;
-	it = m_Attributes.begin();
-	for ( ; it != m_Attributes.end(); ++it) {
-		if (it->second.m_Type == Enums::DataType::BOOL) {
-
-				m[it->second.m_Id] = *(bool *)(it->second.m_Default);
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::BOOL) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<NauInt> &ni = std::dynamic_pointer_cast<NauInt>(d);
+			m[attr.second->m_Id] = (*ni != 0);
 		}
 	}
 }

@@ -76,7 +76,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 			indices->push_back(face->mIndices[2]);
 		}
 
-		 aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
+		aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
 		aiString name;
 		mtl->Get(AI_MATKEY_NAME,name);
 		std::string matName = name.data;
@@ -92,18 +92,18 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		VertexData &vertexData = renderable->getVertexData();
 
 		if (mesh->HasPositions()) {
-			std::vector<nau::math::vec4>* vertex = readGL3FArray((float *)mesh->mVertices,mesh->mNumVertices, order, 1.0f);
+			std::vector<VertexData::Attr>* vertex = readGL3FArray((float *)mesh->mVertices,mesh->mNumVertices, order, 1.0f);
 			vertexData.setDataFor(VertexData::GetAttribIndex(std::string("position")), vertex);
 		}
 
 		if (mesh->HasNormals()) {
-			std::vector<nau::math::vec4>* normal = readGL3FArray((float *)mesh->mNormals,mesh->mNumVertices, order, 0.0f);
+			std::vector<VertexData::Attr>* normal = readGL3FArray((float *)mesh->mNormals,mesh->mNumVertices, order, 0.0f);
 			vertexData.setDataFor(VertexData::GetAttribIndex(std::string("normal")), normal);
 		}
 
 		// buffer for vertex texture coordinates
 		if (mesh->HasTextureCoords(0)) {
-			std::vector<nau::math::vec4>* texCoord = new std::vector<nau::math::vec4>(mesh->mNumVertices);
+			std::vector<VertexData::Attr>* texCoord = new std::vector<VertexData::Attr>(mesh->mNumVertices);
 			for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
 
 				texCoord->at(k).x   = mesh->mTextureCoords[0][k].x;
@@ -200,28 +200,28 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 }
 
 
-std::vector<nau::math::vec4>* 
+std::vector<VertexData::Attr>*
 AssimpLoader::readGL3FArray(float* a, unsigned int arraysize, unsigned int order, float w) {
 
-	std::vector<nau::math::vec4> *v = new std::vector<nau::math::vec4>(arraysize);
+	std::vector<VertexData::Attr> *v = new std::vector<VertexData::Attr>(arraysize);
 
 	for(unsigned int i=0;i<arraysize;i++)
 		if (order == XYZ)
-			(*v)[i] = nau::math::vec4((float)a[(i)*3], (float)a[((i)*3)+1], (float)a[((i)*3)+2], w);
+			(*v)[i] = VertexData::Attr((float)a[(i)*3], (float)a[((i)*3)+1], (float)a[((i)*3)+2], w);
 		else 
-			(*v)[i] = nau::math::vec4((float)a[(i)*3], -(float)a[((i)*3)+2], (float)a[((i)*3)+1], w);
+			(*v)[i] = VertexData::Attr((float)a[(i)*3], -(float)a[((i)*3)+2], (float)a[((i)*3)+1], w);
 
 	return v;
 }
 
 
-std::vector<nau::math::vec4>* 
+std::vector<VertexData::Attr>*
 AssimpLoader::readGL2FArray(float* a, unsigned int arraysize) {
 
-	std::vector<vec4> *v = new std::vector<nau::math::vec4>(arraysize);
+	std::vector<VertexData::Attr> *v = new std::vector<VertexData::Attr>(arraysize);
 
 	for(unsigned int i=0;i<arraysize;i++)
-		(*v)[i] = nau::math::vec4((float)a[(i)*2], (float)a[((i)*2)+1], 0.0f, 1.0f);
+		(*v)[i] = VertexData::Attr((float)a[(i)*2], (float)a[((i)*2)+1], 0.0f, 1.0f);
 
 	return v;
 }

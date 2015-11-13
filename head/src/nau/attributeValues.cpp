@@ -1,10 +1,12 @@
 #include "nau/attributeValues.h"
 
 #include "nau.h"
+#include "nau/math/number.h"
 #include "nau/slogger.h"
 
 
 int AttributeValues::NextAttrib = 0;
+
 // ----------------------------------------------
 //		ENUM
 // ----------------------------------------------
@@ -19,7 +21,9 @@ AttributeValues::getPrope(EnumProperty prop) {
 	else if (m_EnumProps.count(prop))
 		return m_EnumProps[prop];
 	else {
-		m_EnumProps[prop] = *(int *)m_Attribs->getDefault(prop, Enums::ENUM);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::ENUM)->getDefault();
+		std::shared_ptr<NauInt> &ni = std::dynamic_pointer_cast<NauInt>(d);
+		m_EnumProps[prop] = ni->getNumber();
 		return m_EnumProps[prop];
 	}
 }
@@ -28,12 +32,12 @@ AttributeValues::getPrope(EnumProperty prop) {
 bool 
 AttributeValues::isValide(EnumProperty prop, int value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::ENUM);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::ENUM);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
-	if (attr.isValid(value)) 
+	if (attr->isValid(value)) 
 		return true;
 	else
 		return false;
@@ -43,7 +47,7 @@ AttributeValues::isValide(EnumProperty prop, int value) {
 void 
 AttributeValues::setPrope(EnumProperty prop, int value) {
 		
-	assert(isValide(prop,value));
+	assert(isValide(prop, value));
 	m_EnumProps[prop] = value;
 }
 
@@ -63,7 +67,9 @@ AttributeValues::getPropi(IntProperty prop) {
 	else if (m_IntProps.count(prop))
 		return m_IntProps[prop];
 	else {
-		m_IntProps[prop] = *(int *)m_Attribs->getDefault(prop, Enums::INT);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::INT)->getDefault();
+		std::shared_ptr<NauInt> &ni = std::dynamic_pointer_cast<NauInt>(d);
+		m_IntProps[prop] = ni->getNumber();
 		return m_IntProps[prop];
 	}
 }
@@ -72,15 +78,15 @@ AttributeValues::getPropi(IntProperty prop) {
 bool
 AttributeValues::isValidi(IntProperty prop, int value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::INT);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::INT);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
-	int *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (int *)attr.getMax();
-		min = (int *)attr.getMin();
+
+	if (attr->getRangeDefined()) {
+		std::shared_ptr<NauInt> &max = std::dynamic_pointer_cast<NauInt>(attr->getMax());
+		std::shared_ptr<NauInt> &min = std::dynamic_pointer_cast<NauInt>(attr->getMin());
 
 		if (max != NULL && value > *max)
 			return false;
@@ -114,7 +120,9 @@ AttributeValues::getPropi2(Int2Property prop) {
 	else if (m_Int2Props.count(prop))
 		return m_Int2Props[prop];
 	else {
-		m_Int2Props[prop] = *(ivec2 *)m_Attribs->getDefault(prop, Enums::IVEC2);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::IVEC2)->getDefault();
+		std::shared_ptr<ivec2> &ni = std::dynamic_pointer_cast<ivec2>(d);
+		m_Int2Props[prop] = *ni;
 		return m_Int2Props[prop];
 	}
 }
@@ -123,19 +131,19 @@ AttributeValues::getPropi2(Int2Property prop) {
 bool
 AttributeValues::isValidi2(Int2Property prop, ivec2 &value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::IVEC2);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::IVEC2);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
-	ivec2 *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (ivec2 *)attr.getMax();
-		min = (ivec2 *)attr.getMin();
 
-		if (max != NULL && value > *max)
+	if (attr->getRangeDefined()) {
+		ivec2 &max = *(std::dynamic_pointer_cast<ivec2>(attr->getMax()));
+		ivec2 &min = *(std::dynamic_pointer_cast<ivec2>(attr->getMin()));
+
+		if (max != NULL && value > max)
 			return false;
-		if (min != NULL && value < *min)
+		if (min != NULL && value < min)
 			return false;
 	}
 	return true;
@@ -165,7 +173,9 @@ AttributeValues::getPropi3(Int3Property prop) {
 	else if (m_Int3Props.count(prop))
 		return m_Int3Props[prop];
 	else {
-		m_Int3Props[prop] = *(ivec3 *)m_Attribs->getDefault(prop, Enums::IVEC3);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::IVEC3)->getDefault();
+		std::shared_ptr<ivec3> &ni = std::dynamic_pointer_cast<ivec3>(d);
+		m_Int3Props[prop] = *ni;
 		return m_Int3Props[prop];
 	}
 }
@@ -174,19 +184,19 @@ AttributeValues::getPropi3(Int3Property prop) {
 bool
 AttributeValues::isValidi3(Int3Property prop, ivec3 &value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::IVEC3);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::IVEC3);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
-	ivec3 *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (ivec3 *)attr.getMax();
-		min = (ivec3 *)attr.getMin();
 
-		if (max != NULL && value > *max)
+	if (attr->getRangeDefined()) {
+		ivec3 &max = *(std::dynamic_pointer_cast<ivec3>(attr->getMax()));
+		ivec3 &min = *(std::dynamic_pointer_cast<ivec3>(attr->getMin()));
+
+		if (max != NULL && value > max)
 			return false;
-		if (min != NULL && value < *min)
+		if (min != NULL && value < min)
 			return false;
 	}
 	return true;
@@ -215,7 +225,9 @@ AttributeValues::getPropui(UIntProperty prop) {
 	else if (m_UIntProps.count(prop))
 		return m_UIntProps[prop];
 	else {
-		m_UIntProps[prop] = *(unsigned int *)m_Attribs->getDefault(prop, Enums::UINT);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::UINT)->getDefault();
+		std::shared_ptr<NauUInt> &ni = std::dynamic_pointer_cast<NauUInt>(d);
+		m_UIntProps[prop] = ni->getNumber();
 		return m_UIntProps[prop];
 	}
 }
@@ -224,16 +236,15 @@ AttributeValues::getPropui(UIntProperty prop) {
 bool 
 AttributeValues::isValidui(UIntProperty prop, unsigned int value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::UINT);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::UINT);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
 
-	unsigned int *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (unsigned int *)attr.getMax();
-		min = (unsigned int *)attr.getMin();
+	if (attr->getRangeDefined()) {
+		std::shared_ptr<NauUInt> &max = std::dynamic_pointer_cast<NauUInt>(attr->getMax());
+		std::shared_ptr<NauUInt> &min = std::dynamic_pointer_cast<NauUInt>(attr->getMin());
 
 		if (max != NULL && value > *max)
 			return false;
@@ -266,7 +277,9 @@ AttributeValues::getPropui2(UInt2Property prop) {
 	else if (m_UInt2Props.count(prop))
 		return m_UInt2Props[prop];
 	else {
-		m_UInt2Props[prop] = *(uivec2 *)m_Attribs->getDefault(prop, Enums::UIVEC2);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::UIVEC2)->getDefault();
+		std::shared_ptr<uivec2> &ni = std::dynamic_pointer_cast<uivec2>(d);
+		m_UInt2Props[prop] = *ni;
 		return m_UInt2Props[prop];
 	}
 }
@@ -275,16 +288,15 @@ AttributeValues::getPropui2(UInt2Property prop) {
 bool
 AttributeValues::isValidui2(UInt2Property prop, uivec2 &value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::UIVEC2);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::UIVEC2);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
 
-	uivec2 *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (uivec2 *)attr.getMax();
-		min = (uivec2 *)attr.getMin();
+	if (attr->getRangeDefined()) {
+		std::shared_ptr<uivec2> &max = std::dynamic_pointer_cast<uivec2>(attr->getMax());
+		std::shared_ptr<uivec2> &min = std::dynamic_pointer_cast<uivec2>(attr->getMin());
 
 		if (max != NULL && value > *max)
 			return false;
@@ -317,7 +329,9 @@ AttributeValues::getPropui3(UInt3Property prop) {
 	else if (m_UInt3Props.count(prop))
 		return m_UInt3Props[prop];
 	else {
-		m_UInt3Props[prop] = *(uivec3 *)m_Attribs->getDefault(prop, Enums::UIVEC3);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::UIVEC3)->getDefault();
+		std::shared_ptr<uivec3> &ni = std::dynamic_pointer_cast<uivec3>(d);
+		m_UInt3Props[prop] = *ni;
 		return m_UInt3Props[prop];
 	}
 }
@@ -326,16 +340,15 @@ AttributeValues::getPropui3(UInt3Property prop) {
 bool
 AttributeValues::isValidui3(UInt3Property prop, uivec3 &value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::UIVEC3);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::UIVEC3);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
 
-	uivec3 *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (uivec3 *)attr.getMax();
-		min = (uivec3 *)attr.getMin();
+	if (attr->getRangeDefined()) {
+		std::shared_ptr<uivec3> &max = std::dynamic_pointer_cast<uivec3>(attr->getMax());
+		std::shared_ptr<uivec3> &min = std::dynamic_pointer_cast<uivec3>(attr->getMin());
 
 		if (max != NULL && value > *max)
 			return false;
@@ -368,7 +381,9 @@ AttributeValues::getPropb(BoolProperty prop) {
 	else if (m_BoolProps.count(prop))
 		return m_BoolProps[prop];
 	else {
-		m_BoolProps[prop] = *(bool *)m_Attribs->getDefault(prop, Enums::BOOL);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::BOOL)->getDefault();
+		std::shared_ptr<NauInt> &ni = std::dynamic_pointer_cast<NauInt>(d);
+		m_BoolProps[prop] = (ni->getNumber() != 0);
 		return m_BoolProps[prop];
 	}
 }
@@ -377,10 +392,10 @@ AttributeValues::getPropb(BoolProperty prop) {
 bool 
 AttributeValues::isValidb(BoolProperty prop, bool value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::BOOL);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::BOOL);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
 	else
 		return true;
@@ -409,7 +424,9 @@ AttributeValues::getPropb4(Bool4Property prop) {
 	else if (m_Bool4Props.count(prop))
 		return m_Bool4Props[prop];
 	else {
-		m_Bool4Props[prop] = *(bvec4 *)m_Attribs->getDefault(prop, Enums::BVEC4);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::BVEC4)->getDefault();
+		std::shared_ptr<bvec4> &ni = std::dynamic_pointer_cast<bvec4>(d);
+		m_Bool4Props[prop] = *ni;
 		return m_Bool4Props[prop];
 	}
 }
@@ -418,10 +435,10 @@ AttributeValues::getPropb4(Bool4Property prop) {
 bool 
 AttributeValues::isValidb4(Bool4Property prop, bvec4 &value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::BVEC4);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::BVEC4);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
 	else
 		return true;
@@ -450,7 +467,9 @@ AttributeValues::getPropf(FloatProperty prop) {
 	else if (m_FloatProps.count(prop))
 		return m_FloatProps[prop];
 	else {
-		m_FloatProps[prop] = *(float *)m_Attribs->getDefault(prop, Enums::FLOAT);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::FLOAT)->getDefault();
+		std::shared_ptr<NauFloat> &ni = std::dynamic_pointer_cast<NauFloat>(d);
+		m_FloatProps[prop] = ni->getNumber();
 		return m_FloatProps[prop];
 	}
 	return m_FloatProps[prop];
@@ -460,15 +479,15 @@ AttributeValues::getPropf(FloatProperty prop) {
 bool 
 AttributeValues::isValidf(FloatProperty prop, float f) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::FLOAT);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::FLOAT);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
-	float *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (float *)attr.getMax();
-		min = (float *)attr.getMin();
+
+	if (attr->getRangeDefined()) {
+		std::shared_ptr<NauFloat> &max = std::dynamic_pointer_cast<NauFloat>(attr->getMax());
+		std::shared_ptr<NauFloat> &min = std::dynamic_pointer_cast<NauFloat>(attr->getMin());
 
 		if (max != NULL && f > *max)
 			return false;
@@ -501,7 +520,9 @@ AttributeValues::getPropf4(Float4Property prop) {
 	else if (m_Float4Props.count(prop))
 		return m_Float4Props[prop];
 	else {
-		m_Float4Props[prop] = *(vec4 *)m_Attribs->getDefault(prop, Enums::VEC4);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::VEC4)->getDefault();
+		std::shared_ptr<vec4> &ni = std::dynamic_pointer_cast<vec4>(d);
+		m_Float4Props[prop] = *ni;
 		return m_Float4Props[prop];
 	}
 }
@@ -510,19 +531,19 @@ AttributeValues::getPropf4(Float4Property prop) {
 bool 
 AttributeValues::isValidf4(Float4Property prop, vec4 &f) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::VEC4);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::VEC4);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
-	vec4 *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (vec4 *)attr.getMax();
-		min = (vec4 *)attr.getMin();
 
-		if (max != NULL && (f.x > max->x || f.y > max->y || f.z > max->z || f.w > max->w))
+	if (attr->getRangeDefined()) {
+		std::shared_ptr<vec4> &max = std::dynamic_pointer_cast<vec4>(attr->getMax());
+		std::shared_ptr<vec4> &min = std::dynamic_pointer_cast<vec4>(attr->getMin());
+
+		if (max != NULL && f > *max)
 			return false;
-		if (min != NULL && (f.x < min->x || f.y < min->y || f.z < min->z || f.w < min->w))
+		if (min != NULL && f < *min)
 			return false;
 	}
 	return true;
@@ -560,7 +581,9 @@ AttributeValues::getPropf3(Float3Property prop) {
 	else if (m_Float3Props.count(prop))
 		return m_Float3Props[prop];
 	else {
-		m_Float3Props[prop] = *(vec3 *)m_Attribs->getDefault(prop, Enums::VEC3);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::VEC3)->getDefault();
+		std::shared_ptr<vec3> &ni = std::dynamic_pointer_cast<vec3>(d);
+		m_Float3Props[prop] = *ni;
 		return m_Float3Props[prop];
 	}
 }
@@ -569,19 +592,19 @@ AttributeValues::getPropf3(Float3Property prop) {
 bool
 AttributeValues::isValidf3(Float3Property prop, vec3 &f) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::VEC3);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::VEC3);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
-	vec3 *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (vec3 *)attr.getMax();
-		min = (vec3 *)attr.getMin();
 
-		if (max != NULL && (f.x > max->x || f.y > max->y || f.z > max->z ))
+	if (attr->getRangeDefined()) {
+		std::shared_ptr<vec3> &max = std::dynamic_pointer_cast<vec3>(attr->getMax());
+		std::shared_ptr<vec3> &min = std::dynamic_pointer_cast<vec3>(attr->getMin());
+
+		if (max != NULL && f > *max)
 			return false;
-		if (min != NULL && (f.x < min->x || f.y < min->y || f.z < min->z ))
+		if (min != NULL && f < *min)
 			return false;
 	}
 	return true;
@@ -618,7 +641,9 @@ AttributeValues::getPropf2(Float2Property prop) {
 	else if (m_Float2Props.count(prop))
 		return m_Float2Props[prop];
 	else {
-		m_Float2Props[prop] = *(vec2 *)m_Attribs->getDefault(prop, Enums::VEC2);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::VEC2)->getDefault();
+		std::shared_ptr<vec2> &ni = std::dynamic_pointer_cast<vec2>(d);
+		m_Float2Props[prop] = *ni;
 		return m_Float2Props[prop];
 	}
 }
@@ -627,19 +652,19 @@ AttributeValues::getPropf2(Float2Property prop) {
 bool 
 AttributeValues::isValidf2(Float2Property prop, vec2 &f) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::VEC2);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::VEC2);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
-	vec2 *max, *min;
-	if (attr.getRangeDefined()) {
-		max = (vec2 *)attr.getMax();
-		min = (vec2 *)attr.getMin();
 
-		if (max != NULL && (f.x > max->x || f.y > max->y ))
+	if (attr->getRangeDefined()) {
+		std::shared_ptr<vec2> &max = std::dynamic_pointer_cast<vec2>(attr->getMax());
+		std::shared_ptr<vec2> &min = std::dynamic_pointer_cast<vec2>(attr->getMin());
+
+		if (max != NULL && f > *max)
 			return false;
-		if (min != NULL && (f.x < min->x || f.y < min->y ))
+		if (min != NULL && f < *min)
 			return false;
 	}
 	return true;
@@ -668,7 +693,9 @@ AttributeValues::getPropm4(Mat4Property prop) {
 	else if (m_Mat4Props.count(prop))
 		return m_Mat4Props[prop];
 	else {
-		m_Mat4Props[prop] = *(mat4 *)m_Attribs->getDefault(prop, Enums::MAT4);
+		std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::MAT4)->getDefault();
+		std::shared_ptr<mat4> &ni = std::dynamic_pointer_cast<mat4>(d);
+		m_Mat4Props[prop] = *ni;
 		return m_Mat4Props[prop];
 	}
 }
@@ -677,10 +704,10 @@ AttributeValues::getPropm4(Mat4Property prop) {
 bool 
 AttributeValues::isValidm4(Mat4Property prop, mat4 &value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::MAT4);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::MAT4);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
 	else
 		return true;
@@ -709,7 +736,19 @@ AttributeValues::getPropm3(Mat3Property prop) {
 	else if (m_Mat3Props.count(prop))
 		return m_Mat3Props[prop];
 	else {
-		m_Mat3Props[prop] = *(mat3 *)m_Attribs->getDefault(prop, Enums::MAT3);
+		std::unique_ptr<Attribute> &a = m_Attribs->get(prop, Enums::MAT3);
+		if (a->getId() == -1) {
+			assert(false && "Attribute Values getProp - invalid MAT3 prop");
+			SLOG("Attribute MAT3 with id %d does not exist", prop);
+			Data *m = Enums::getDefaultValue(Enums::MAT3);
+			m_Mat3Props[prop] = *(mat3 *)m;
+			delete m;
+		}
+		else {
+			std::shared_ptr<Data> &d = a->getDefault();
+			std::shared_ptr<mat3> &ni = std::dynamic_pointer_cast<mat3>(d);
+			m_Mat3Props[prop] = *ni;
+		}
 		return m_Mat3Props[prop];
 	}
 }
@@ -719,10 +758,10 @@ AttributeValues::getPropm3(Mat3Property prop) {
 bool 
 AttributeValues::isValidm3(Mat3Property prop, mat3 &value) {
 
-	Attribute &attr = m_Attribs->get(prop, Enums::MAT3);
-	if (attr.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, Enums::MAT3);
+	if (attr->getName() == "NO_ATTR")
 		return false;
-	if (!APISupport->apiSupport(attr.m_Requires))
+	if (!APISupport->apiSupport(attr->getRequirement()))
 		return false;
 	else
 		return true;
@@ -810,190 +849,209 @@ AttributeValues::clearArrays() {
 void *
 AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 
-	void *val;
+	std::unique_ptr<Attribute> &attr = m_Attribs->get(prop, type);
+	
+	// if attrib does not exist
+	if (attr->getId() == -1) {
+		assert(false && "Accessing undefined attribute of type ENUM");
+		SLOG("Accessing undefined attribute of type ENUM - This should never occur");
+		return NULL;
+
+	}
 
 	switch (type) {
 
 		case Enums::ENUM:
-			if (m_EnumProps.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_EnumProps[prop] = *(int *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined attribute of type ENUM");
-					SLOG("Accessing undefined attribute of type ENUM - This should never occur");
-					m_EnumProps[prop] = 0;
-				}
-			}
+		//	if (m_EnumProps.count(prop) == 0) {
+				getPrope((AttributeValues::EnumProperty)prop);
+				//std::shared_ptr<Data> &d = m_Attribs->get(prop, Enums::INT)->getDefault();
+				//std::shared_ptr<NauInt> ni = std::dynamic_pointer_cast<NauInt>(d);
+
+				//std::shared_ptr<Data> &val = attr->getDefault();
+				//m_EnumProps[prop] = std::dynamic_pointer_cast<NauInt>(val)->getNumber();
+		//	}
 			return(&(m_EnumProps[prop]));
 			break;
 		case Enums::INT:
-			if (m_IntProps.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_IntProps[prop] = *(int *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined attribute of type INT");
-					SLOG("Accessing undefined attribute of type INT - This should never occur");
-					m_IntProps[prop] = 0;
-				}
-			}
+		//	if (m_IntProps.count(prop) == 0) {
+				getPropi((AttributeValues::IntProperty)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_IntProps[prop] = *(int *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined attribute of type INT");
+				//	SLOG("Accessing undefined attribute of type INT - This should never occur");
+				//	m_IntProps[prop] = 0;
+				//}
+		//	}
 			return(&(m_IntProps[prop]));
 			break;
 		case Enums::IVEC2:
-			if (m_Int2Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)	
-					m_Int2Props[prop] = *(ivec2 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined attribute of type IVEC2");
-					SLOG("Accessing undefined attribute of type IVEC2 - This should never occur");
-					m_Int2Props[prop] = 0;
-				}
-			}
+		//	if (m_Int2Props.count(prop) == 0) {
+				getPropi2((AttributeValues::Int2Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)	
+				//	m_Int2Props[prop] = *(ivec2 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined attribute of type IVEC2");
+				//	SLOG("Accessing undefined attribute of type IVEC2 - This should never occur");
+				//	m_Int2Props[prop] = 0;
+				//}
+		//	}
 			return(&(m_Int2Props[prop]));
 			break;
 		case Enums::UINT:
-			if (m_UIntProps.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_UIntProps[prop] = *(unsigned int *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined attribute of type UINT");
-					SLOG("Accessing undefined attribute of type UINT - This should never occur");
-					m_UIntProps[prop] = 0;
-				}
-			}
+		//	if (m_UIntProps.count(prop) == 0) {
+				getPropui((AttributeValues::UIntProperty)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_UIntProps[prop] = *(unsigned int *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined attribute of type UINT");
+				//	SLOG("Accessing undefined attribute of type UINT - This should never occur");
+				//	m_UIntProps[prop] = 0;
+				//}
+		//	}
 			return(&(m_UIntProps[prop]));
 			break;
 		case Enums::UIVEC2:
-			if (m_UInt2Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_UInt2Props[prop] = *(uivec2 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined attribute of type UINT2");
-					SLOG("Accessing undefined attribute of type UINT2 - This should never occur");
-					m_UInt2Props[prop] = uivec2(0);
-				}
-			}
+		//	if (m_UInt2Props.count(prop) == 0) {
+				getPropui2((AttributeValues::UInt2Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_UInt2Props[prop] = *(uivec2 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined attribute of type UINT2");
+				//	SLOG("Accessing undefined attribute of type UINT2 - This should never occur");
+				//	m_UInt2Props[prop] = uivec2(0);
+				//}
+		//	}
 			return(&(m_UInt3Props[prop]));
 			break;
 		case Enums::UIVEC3:
-			if (m_UInt3Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_UInt3Props[prop] = *(uivec3 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined attribute of type UINT3");
-					SLOG("Accessing undefined attribute of type UINT3 - This should never occur");
-					m_UInt3Props[prop] = uivec3(0);
-				}
-			}
+		//	if (m_UInt3Props.count(prop) == 0) {
+				getPropui3((AttributeValues::UInt3Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_UInt3Props[prop] = *(uivec3 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined attribute of type UINT3");
+				//	SLOG("Accessing undefined attribute of type UINT3 - This should never occur");
+				//	m_UInt3Props[prop] = uivec3(0);
+				//}
+		//	}
 			return(&(m_UInt3Props[prop]));
 			break;
 		case Enums::BOOL:
-			if (m_BoolProps.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_BoolProps[prop] = *(bool *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined attribute of type BOOL");
-					SLOG("Accessing undefined attribute of type BOOL - This should never occur");
-					m_BoolProps[prop] = 0;
-				}
-			}
+		//	if (m_BoolProps.count(prop) == 0) {
+				getPropb((AttributeValues::BoolProperty)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_BoolProps[prop] = *(bool *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined attribute of type BOOL");
+				//	SLOG("Accessing undefined attribute of type BOOL - This should never occur");
+				//	m_BoolProps[prop] = 0;
+				//}
+		//	}
 			return(&(m_BoolProps[prop]));
 			break;
 		case Enums::BVEC4:
-			if (m_Bool4Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_Bool4Props[prop] = *(bvec4 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined attribute of type BVEC4");
-					SLOG("Accessing undefined attribute of type BVEC4 - This should never occur");
-					m_Bool4Props[prop] = 0;
-				}
-			}
+			//if (m_Bool4Props.count(prop) == 0) {
+				getPropb4((AttributeValues::Bool4Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_Bool4Props[prop] = *(bvec4 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined attribute of type BVEC4");
+				//	SLOG("Accessing undefined attribute of type BVEC4 - This should never occur");
+				//	m_Bool4Props[prop] = 0;
+				//}
+			//}
 			return(&(m_Bool4Props[prop]));
 			break;
 		case Enums::FLOAT:
-			if (m_FloatProps.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_FloatProps[prop] = *(float *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined user attribute of type FLOAT");
-					SLOG("Accessing undefined user attribute of type FLOAT - This should never occur");
-					m_FloatProps[prop] = 0;
-				}
-			}
+			//if (m_FloatProps.count(prop) == 0) {
+				getPropf((AttributeValues::FloatProperty)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_FloatProps[prop] = *(float *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined user attribute of type FLOAT");
+				//	SLOG("Accessing undefined user attribute of type FLOAT - This should never occur");
+				//	m_FloatProps[prop] = 0;
+				//}
+			//}
 			return(&(m_FloatProps[prop]));
 			break;
 		case Enums::VEC4:
-			if (m_Float4Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_Float4Props[prop] = *(vec4 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined user attribute of type VEC4");
-					SLOG("Accessing undefined user attribute of type VEC4 - This should never occur");
-					m_Float4Props[prop] = vec4(0.0f);
-				}
-			}
+			//if (m_Float4Props.count(prop) == 0) {
+				getPropf4((AttributeValues::Float4Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_Float4Props[prop] = *(vec4 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined user attribute of type VEC4");
+				//	SLOG("Accessing undefined user attribute of type VEC4 - This should never occur");
+				//	m_Float4Props[prop] = vec4(0.0f);
+				//}
+		//	}
 			return(&(m_Float4Props[prop]));
 			break;
 		case Enums::VEC3:
 			if (m_Float3Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_Float3Props[prop] = *(vec3 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined user attribute of type VEC3");
-					SLOG("Accessing undefined user attribute of type VEC3 - This should never occur");
-					m_Float3Props[prop] = vec3(0.0f);
-				}
+				getPropf3((AttributeValues::Float3Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_Float3Props[prop] = *(vec3 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined user attribute of type VEC3");
+				//	SLOG("Accessing undefined user attribute of type VEC3 - This should never occur");
+				//	m_Float3Props[prop] = vec3(0.0f);
+				//}
 			}
 			return(&(m_Float3Props[prop]));
 			break;
 		case Enums::VEC2:
-			if (m_Float2Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_Float2Props[prop] = *(vec2 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined user attribute of type VEC2");
-					SLOG("Accessing undefined user attribute of type VEC2 - This should never occur");
-					m_Float2Props[prop] = vec2(0.0f);
-				}
-			}
+		//	if (m_Float2Props.count(prop) == 0) {
+				getPropf2((AttributeValues::Float2Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_Float2Props[prop] = *(vec2 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined user attribute of type VEC2");
+				//	SLOG("Accessing undefined user attribute of type VEC2 - This should never occur");
+				//	m_Float2Props[prop] = vec2(0.0f);
+				//}
+		//	}
 			return(&(m_Float2Props[prop]));
 			break;
 		case Enums::MAT4:
-			if (m_Mat4Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_Mat4Props[prop] = *(mat4 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined user attribute of type MAT4");
-					SLOG("Accessing undefined user attribute of type MAT4 - This should never occur");
-					m_Mat4Props[prop] = mat4();
-				}
-			}
+//			if (m_Mat4Props.count(prop) == 0) {
+				getPropm4((AttributeValues::Mat4Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_Mat4Props[prop] = *(mat4 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined user attribute of type MAT4");
+				//	SLOG("Accessing undefined user attribute of type MAT4 - This should never occur");
+				//	m_Mat4Props[prop] = mat4();
+				//}
+	//		}
 			return(&(m_Mat4Props[prop]));
 			break;
 		case Enums::MAT3:
-			if (m_Mat3Props.count(prop) == 0) {
-				val = m_Attribs->getDefault(prop, type);
-				if (val != NULL)
-					m_Mat3Props[prop] = *(mat3 *)val;
-				else { // life goes on ... except in debug mode
-					assert(false && "Accessing undefined user attribute of type MAT3");
-					SLOG("Accessing undefined user attribute of type MAT3 - This should never occur");
-					m_Mat3Props[prop] = mat3();
-				}
-			}
+			//if (m_Mat3Props.count(prop) == 0) {
+				getPropm3((AttributeValues::Mat3Property)prop);
+				//val = m_Attribs->getDefault(prop, type);
+				//if (val != NULL)
+				//	m_Mat3Props[prop] = *(mat3 *)val;
+				//else { // life goes on ... except in debug mode
+				//	assert(false && "Accessing undefined user attribute of type MAT3");
+				//	SLOG("Accessing undefined user attribute of type MAT3 - This should never occur");
+				//	m_Mat3Props[prop] = mat3();
+				//}
+			//}
 			return(&(m_Mat3Props[prop]));
 			break;
 		default:
@@ -1004,51 +1062,51 @@ AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 
 
 void 
-AttributeValues::setProp(unsigned int prop, Enums::DataType type, void *value) {
+AttributeValues::setProp(unsigned int prop, Enums::DataType type, Data *value) {
 
 	switch (type) {
 
 	case Enums::ENUM:
-		setPrope((EnumProperty)prop, *(int *)value);
+		setPrope((EnumProperty)prop, dynamic_cast<NauInt *>(value)->getNumber());
 		break;
 	case Enums::INT:
-		setPropi((IntProperty)prop, *(int *)value);
+		setPropi((IntProperty)prop, dynamic_cast<NauInt *>(value)->getNumber());
 		break;
 	case Enums::IVEC2:
-		setPropi2((Int2Property)prop, *(ivec2 *)value);
+		setPropi2((Int2Property)prop, *(dynamic_cast<ivec2 *>(value)));
 		break;
 	case Enums::UINT:
-		setPropui((UIntProperty)prop, *(unsigned int *)value);
+		setPropui((UIntProperty)prop, dynamic_cast<NauUInt *>(value)->getNumber());
 		break;
 	case Enums::UIVEC2:
-		setPropui2((UInt2Property)prop, *(uivec2 *)value);
+		setPropui2((UInt2Property)prop, *(dynamic_cast<uivec2 *>(value)));
 		break;
 	case Enums::UIVEC3:
-		setPropui3((UInt3Property)prop, *(uivec3 *)value);
+		setPropui3((UInt3Property)prop, *(dynamic_cast<uivec3 *>(value)));
 		break;
 	case Enums::BOOL:
-		setPropb((BoolProperty)prop, *(bool *)value);
+		setPropb((BoolProperty)prop, dynamic_cast<NauInt *>(value)->getNumber() != 0);
 		break;
 	case Enums::BVEC4:
-		setPropb4((Bool4Property)prop, *(bvec4 *)value);
+		setPropb4((Bool4Property)prop, *(dynamic_cast<bvec4 *>(value)));
 		break;
 	case Enums::FLOAT:
-		setPropf((FloatProperty)prop, *(float *)value);
+		setPropf((FloatProperty)prop, dynamic_cast<NauFloat *>(value)->getNumber());
 		break;
 	case Enums::VEC2:
-		setPropf2((Float2Property)prop, *(vec2 *)value);
+		setPropf2((Float2Property)prop, *(dynamic_cast<vec2 *>(value)));
 		break;
 	case Enums::VEC3:
-		setPropf3((Float3Property)prop, *(vec3 *)value);
+		setPropf3((Float3Property)prop, *(dynamic_cast<vec3 *>(value)));
 		break;
 	case Enums::VEC4:
-		setPropf4((Float4Property)prop, *(vec4 *)value);
+		setPropf4((Float4Property)prop, *(dynamic_cast<vec4 *>(value)));
 		break;
 	case Enums::MAT4:
-		setPropm4((Mat4Property)prop, *(mat4 *)value);
+		setPropm4((Mat4Property)prop, *(dynamic_cast<mat4 *>(value)));
 		break;
 	case Enums::MAT3:
-		setPropm3((Mat3Property)prop, *(mat3 *)value);
+		setPropm3((Mat3Property)prop, *(dynamic_cast<mat3 *>(value)));
 		break;
 	default:
 		assert(false && "Missing Data Type in class attributeValues or Invalid prop");
@@ -1057,51 +1115,51 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, void *value) {
 
 
 bool
-AttributeValues::isValid(unsigned int prop, Enums::DataType type, void *value) {
+AttributeValues::isValid(unsigned int prop, Enums::DataType type, Data *value) {
 
 	switch (type) {
 
 	case Enums::ENUM:
-		return isValide((EnumProperty)prop, *(int *)value);
+		return isValide((EnumProperty)prop, dynamic_cast<NauInt *>(value)->getNumber());
 		break;
 	case Enums::INT:
-		return isValidi((IntProperty)prop, *(int *)value);
+		return isValidi((IntProperty)prop, dynamic_cast<NauInt *>(value)->getNumber());
 		break;
 	case Enums::IVEC2:
-		return isValidi2((Int2Property)prop, *(ivec2 *)value);
+		return isValidi2((Int2Property)prop, *(dynamic_cast<ivec2 *>(value)));
 		break;
 	case Enums::UINT:
-		return isValidui((UIntProperty)prop, *(unsigned int *)value);
+		return isValidui((UIntProperty)prop, dynamic_cast<NauUInt *>(value)->getNumber());
 		break;
 	case Enums::UIVEC2:
-		return isValidui2((UInt2Property)prop, *(uivec2 *)value);
+		return isValidui2((UInt2Property)prop, *(dynamic_cast<uivec2 *>(value)));
 		break;
 	case Enums::UIVEC3:
-		return isValidui3((UInt3Property)prop, *(uivec3 *)value);
+		return isValidui3((UInt3Property)prop, *(dynamic_cast<uivec3 *>(value)));
 		break;
 	case Enums::BOOL:
-		return isValidb((BoolProperty)prop, *(bool *)value);
+		return isValidb((BoolProperty)prop, dynamic_cast<NauInt *>(value)->getNumber() != 0);
 		break;
 	case Enums::BVEC4:
-		return isValidb4((Bool4Property)prop, *(bvec4 *)value);
+		return isValidb4((Bool4Property)prop, *(dynamic_cast<bvec4 *>(value)));
 		break;
 	case Enums::FLOAT:
-		return isValidf((FloatProperty)prop, *(float *)value);
+		return isValidf((FloatProperty)prop, dynamic_cast<NauFloat *>(value)->getNumber());
 		break;
 	case Enums::VEC2:
-		return isValidf2((Float2Property)prop, *(vec2 *)value);
+		return isValidf2((Float2Property)prop, *(dynamic_cast<vec2 *>(value)));
 		break;
 	case Enums::VEC3:
-		return isValidf3((Float3Property)prop, *(vec3 *)value);
+		return isValidf3((Float3Property)prop, *(dynamic_cast<vec3 *>(value)));
 		break;
 	case Enums::VEC4:
-		return isValidf4((Float4Property)prop, *(vec4 *)value);
+		return isValidf4((Float4Property)prop, *(dynamic_cast<vec4 *>(value)));
 		break;
 	case Enums::MAT4:
-		return isValidm4((Mat4Property)prop, *(mat4 *)value);
+		return isValidm4((Mat4Property)prop, *(dynamic_cast<mat4 *>(value)));
 		break;
 	case Enums::MAT3:
-		return isValidm3((Mat3Property)prop, *(mat3 *)value);
+		return isValidm3((Mat3Property)prop, *(dynamic_cast<mat3 *>(value)));
 		break;
 	default:
 		assert(false && "Missing Data Type in class attributeValues or Invalid prop");

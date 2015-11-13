@@ -73,6 +73,7 @@ GLCanvas::GLCanvas (wxWindow *parent,
 
 GLCanvas::~GLCanvas() {
 
+	delete 	p_GLC;
 }
 
 void

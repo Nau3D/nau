@@ -19,7 +19,7 @@ Material::Material() :
    m_Name ("__Default"),
    m_useShader(true)
 {
-	m_State = IState::create(); 
+	m_State = NULL; 
 }
 
 
@@ -29,7 +29,10 @@ Material::~Material() {
 		delete((*m_ImageTextures.begin()).second);
 		m_ImageTextures.erase(m_ImageTextures.begin());
 	}
-
+	while (!m_Textures.empty()) {
+		delete((*m_Textures.begin()).second);
+		m_Textures.erase(m_Textures.begin());
+	}
 }
 
 
@@ -50,19 +53,20 @@ Material::clone() { // check clone Program Values
    mat->m_ProgramValues = m_ProgramValues;
    mat->m_ProgramBlockValues = m_ProgramBlockValues;
 
-   mat->m_Color.clone(m_Color);
-
+   mat->m_Color = m_Color;
    mat->m_Buffers = m_Buffers;
+   mat->m_Textures = m_Textures;
 
-   for (auto mt : m_Textures) {
-
-	   mat->m_Textures[mt.first] = mt.second;
+   for (auto &it : m_ImageTextures) {
+	   mat->attachImageTexture(it.second->getLabel(), it.second->getPropi(IImageTexture::UNIT),
+		   it.second->getPropui(IImageTexture::TEX_ID));
    }
 
-   mat->m_ImageTextures = m_ImageTextures;
+   for (auto &it : m_Textures) {
+	   mat->attachTexture(it.first, it.second->getTexture());
+   }
 
-   if (m_State != 0)
-		mat->m_State = m_State->clone();
+ 	mat->m_State = m_State;
 
    return mat;
 }
@@ -306,7 +310,8 @@ Material::checkProgramValuesAndUniforms() {
 void 
 Material::prepareNoShaders ()
 {
-	RENDERER->setState (m_State);
+
+	RENDERER->setState (getState());
 
 	m_Color.prepare();
 
@@ -335,7 +340,7 @@ Material::prepare () {
 	}
 	{
 		PROFILE("State");
-		RENDERER->setState (m_State);
+		RENDERER->setState (getState());
 	}
 	{
 		PROFILE("Color");
@@ -416,6 +421,7 @@ void
 Material::setState(IState *s) {
 
 	m_State = s;
+
 }
 
 
@@ -488,8 +494,8 @@ Material::createTexture (int unit, std::string fn) {
 	ITexture *tex = RESOURCEMANAGER->addTexture (fn);
 	if (tex) {
 		MaterialTexture *t = new MaterialTexture(unit);
-		t->setSampler(ITextureSampler::create(tex));
 		t->setTexture(tex);
+//		t->setSampler(ITextureSampler::create(tex));
 		m_Textures[unit] = t;
 		return(true);
    }
@@ -511,8 +517,8 @@ void
 Material::attachTexture (int unit, ITexture *tex) {
 
 	MaterialTexture *t = new MaterialTexture(unit);
-	t->setSampler(ITextureSampler::create(tex));
 	t->setTexture(tex);
+//	t->setSampler(ITextureSampler::create(tex));
 	m_Textures[unit] = t;
 }
 
@@ -525,8 +531,8 @@ Material::attachTexture (int unit, std::string label) {
 	assert(tex != NULL);
 
 	MaterialTexture *t = new MaterialTexture(unit);
-	t->setSampler(ITextureSampler::create(tex));
 	t->setTexture(tex);
+//	t->setSampler(ITextureSampler::create(tex));
 	m_Textures[unit] = t;
 }
 
@@ -666,6 +672,10 @@ Material::addProgramBlockValue (std::string block, std::string name, nau::materi
 IState*
 Material::getState (void) {
 
+	if (m_State == NULL) {
+		std::string name = "__" + m_Name;
+		m_State = RESOURCEMANAGER->createState(name);
+	}
    return m_State;
 }
 
@@ -684,22 +694,22 @@ Material::getColor (void) {
 //}
 
 
-void 
-Material::clear() {
-
-   m_Color.clear();
-   m_Buffers.clear();
-   m_Textures.clear();
-
-   m_ImageTextures.clear();
-
-   m_Shader = NULL; 
-   m_ProgramValues.clear();
-   m_Enabled = true;
-   //m_State->clear();
-   m_State->setDefault();
-   m_Name = "Default";
-}
+//void 
+//Material::clear() {
+//
+//   m_Color.clear();
+//   m_Buffers.clear();
+//   m_Textures.clear();
+//
+//   m_ImageTextures.clear();
+//
+//   m_Shader = NULL; 
+//   m_ProgramValues.clear();
+//   m_Enabled = true;
+//   //m_State->clear();
+//   m_State->setDefault();
+//   m_Name = "Default";
+//}
 
 
 void

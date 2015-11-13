@@ -24,6 +24,7 @@ namespace nau
 
 		public:
 			static UniformBlockManager *GetInstance();
+			static void DeleteInstance();
 			~UniformBlockManager();
 
 			void clear();

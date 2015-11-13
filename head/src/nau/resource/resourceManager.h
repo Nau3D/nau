@@ -85,9 +85,11 @@ namespace nau
 			nau::render::IRenderable* addRenderable (nau::render::IRenderable* aMesh, std::string filename);
 			void removeRenderable(std::string name);
 
+
 			/***States***/
-			bool hasState (std::string stateName);
-			nau::material::IState* getState (std::string stateName);
+			IState * createState(std::string &stateName);
+			bool hasState (std::string &stateName);
+			nau::material::IState* getState (std::string &stateName);
 			void addState (nau::material::IState* aState);
 
 			/***Shaders***/

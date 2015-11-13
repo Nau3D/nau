@@ -33,7 +33,7 @@ namespace nau
 			static void _readVertexData (VertexData& aVertexData, std::fstream &f);
 			static void _writeIndexData (IndexData& aVertexData, std::fstream &f) ;
 			static void _readIndexData (IndexData& aVertexData, std::fstream &f);
-			static void _ignoreVertexData (std::fstream &f);
+			//static void _ignoreVertexData (std::fstream &f);
 			static void _writeString (const std::string& aString, std::fstream &f);
 			static void _readString ( char *buffer, std::fstream &f);
 			static void _ignoreString (std::fstream &f);

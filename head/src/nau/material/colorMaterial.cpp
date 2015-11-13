@@ -18,7 +18,7 @@ ColorMaterial::Init() {
 	Attribs.add(Attribute(SPECULAR, "SPECULAR", Enums::DataType::VEC4, false, new vec4 (0.0f, 0.0f, 0.0f, 1.0f), NULL, NULL, IAPISupport::OK, Attribute::Semantics::COLOR));
 	Attribs.add(Attribute(EMISSION, "EMISSION", Enums::DataType::VEC4, false, new vec4 (0.0f, 0.0f, 0.0f, 1.0f), NULL, NULL, IAPISupport::OK, Attribute::Semantics::COLOR));
 	// FLOAT
-	Attribs.add(Attribute(SHININESS, "SHININESS", Enums::DataType::FLOAT, false, new float(0)));
+	Attribs.add(Attribute(SHININESS, "SHININESS", Enums::DataType::FLOAT, false, new NauFloat(0)));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("COLOR", &Attribs);
@@ -62,15 +62,19 @@ ColorMaterial::prepare () {
 void 
 ColorMaterial::restore() {
 
-	float *ambient,*specular,*diffuse,*emission,*shininess;
+
+	vec4 diffuse = *(std::dynamic_pointer_cast<vec4>
+		(ColorMaterial::Attribs.get((AttributeValues::Float4Property)DIFFUSE, Enums::VEC4)->getDefault()));
+	vec4 ambient = *(std::dynamic_pointer_cast<vec4>
+		(ColorMaterial::Attribs.get((AttributeValues::Float4Property)AMBIENT, Enums::VEC4)->getDefault()));
+	vec4 emission = *(std::dynamic_pointer_cast<vec4>
+		(ColorMaterial::Attribs.get((AttributeValues::Float4Property)EMISSION, Enums::VEC4)->getDefault()));
+	vec4 specular = *(std::dynamic_pointer_cast<vec4>
+		(ColorMaterial::Attribs.get((AttributeValues::Float4Property)SPECULAR, Enums::VEC4)->getDefault()));
+	float shininess = (std::dynamic_pointer_cast<NauFloat>
+		(ColorMaterial::Attribs.get((AttributeValues::FloatProperty)SHININESS, Enums::FLOAT)->getDefault()))->getNumber();
 	
-	diffuse = (float *)ColorMaterial::Attribs.getDefault(DIFFUSE, Enums::DataType::VEC4);
-	ambient = (float *)ColorMaterial::Attribs.getDefault(AMBIENT, Enums::DataType::VEC4);
-	emission = (float *)ColorMaterial::Attribs.getDefault(EMISSION, Enums::DataType::VEC4);
-	specular = (float *)ColorMaterial::Attribs.getDefault(SPECULAR, Enums::DataType::VEC4);
-	shininess = (float *)ColorMaterial::Attribs.getDefault(SHININESS, Enums::DataType::FLOAT);
-	
-	RENDERER->setMaterial(diffuse, ambient, emission, specular, *shininess);
+	RENDERER->setMaterial(diffuse, ambient, emission, specular, shininess);
 }
 
 

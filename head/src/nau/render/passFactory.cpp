@@ -6,22 +6,10 @@
 #include "nau/render/iAPISupport.h"
 #include "nau/render/pass.h"
 #include "nau/render/passDepthMap.h"
-////#include "nau/render/depthmap4depthtexturespass.h"
-////#include "nau/render/depthmaprgba32fpass.h"
-////#include "nau/render/fogwithcausticspass.h"
-//#include "nau/render/passQuad.h"
 #include "nau/render/passProfiler.h"
 
 #include "nau/system/file.h"
 
-//#include "nau/render/passCompute.h"
-//
-//#ifdef NAU_OPTIX 
-//#include "nau/render/passOptixPrime.h"
-//#endif
-//#ifdef NAU_OPTIX
-//#include "nau/render/passOptix.h"
-//#endif
 
 
 using namespace nau::render;
@@ -38,6 +26,18 @@ PassFactory::GetInstance (void) {
 
 	return Instance;
 }
+
+
+void 
+PassFactory::DeleteInstance() {
+
+	if (0 != Instance) {
+
+		delete Instance;
+		Instance = NULL;
+	}
+}
+
 
 
 #include <iostream>

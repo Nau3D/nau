@@ -13,16 +13,14 @@ bool GLUniform::Inited = Init();
 
 GLUniform::GLUniform() : 
 	m_Loc(-1), 
-	m_Values(NULL), 
 	m_Size(0),
 	m_Cardinality(0)
 {
 }
 
+
 GLUniform::~GLUniform() {
 
-	//if (m_Values != NULL)
-	//	free(m_Values);
 }
 
 
@@ -43,15 +41,19 @@ GLUniform::getCardinality() {
 void 
 GLUniform::setValues(void *v) {
 
-	memcpy(m_Values, v, m_Size);
+	switch (m_SimpleType) {
+	case Enums::INT :
+	case Enums::BOOL:
+	case Enums::FLOAT:
+	case Enums::UINT:
+	case Enums::SAMPLER:
+	case Enums::DOUBLE:
+		memcpy(m_Values.get(), v, m_Size);
+		break;
+	default:
+		memcpy(m_Values.get(), ((Data *)v)->getPtr(), m_Size);
+	}
 }
-
-
-//void
-//GLUniform::setValues(nau::math::Data *v) {
-//
-//	m_Values = v;
-//}
 
 
 void
@@ -61,38 +63,31 @@ GLUniform::setArrayValue(int index, void *v) {
 }
 
 
-//nau::math::Data *
-//GLUniform::getValues(void)
-//{
-//	return m_Values;
-//}
-
-
 void*
-GLUniform::getValues(void)
-{
-	return m_Values;
+GLUniform::getValues(void) {
+
+	return m_Values.get();
 }
 
 
 
 int
-GLUniform::getLoc(void)
-{
+GLUniform::getLoc(void) {
+
 	return m_Loc;
 }
 
 
 void
-GLUniform::setLoc(int loc)
-{
+GLUniform::setLoc(int loc) {
+
 	m_Loc = loc;
 }
 
 
 int
-GLUniform::getArraySize(void)
-{
+GLUniform::getArraySize(void) {
+
 	return m_ArraySize;
 }
 
@@ -108,7 +103,9 @@ GLUniform::setGLType(int type, int arraySize) {
 	m_ArraySize = arraySize;
 	m_Size = Enums::getSize(m_SimpleType) * m_ArraySize;
 	m_Cardinality = Enums::getCardinality(m_SimpleType);
-	m_Values = (void *)malloc(m_Size);
+	char *c = (char *)malloc(m_Size);
+	m_Values.reset(c);
+	//m_Values = (void *)malloc(m_Size);
 }
 		
 
@@ -126,8 +123,6 @@ GLUniform::getStringGLType() {
 }
 
 
-
-
 void
 GLUniform::setValueInProgram() {
 
@@ -136,119 +131,119 @@ GLUniform::setValueInProgram() {
 		case Enums::INT:
 		case Enums::BOOL:
 		case Enums::SAMPLER:
-			glUniform1iv(m_Loc, m_ArraySize, (GLint *)m_Values);
+			glUniform1iv(m_Loc, m_ArraySize, (GLint *)m_Values.get());
 			break;
 		case Enums::IVEC2:
 		case Enums::BVEC2:
-			glUniform2iv(m_Loc, m_ArraySize, (GLint *)m_Values);
+			glUniform2iv(m_Loc, m_ArraySize, (GLint *)m_Values.get());
 			break;
 		case Enums::IVEC3:
 		case Enums::BVEC3:
-			glUniform3iv(m_Loc, m_ArraySize, (GLint *)m_Values);
+			glUniform3iv(m_Loc, m_ArraySize, (GLint *)m_Values.get());
 			break;
 		case Enums::IVEC4:
 		case Enums::BVEC4:
-			glUniform4iv(m_Loc, m_ArraySize, (GLint *)m_Values);
+			glUniform4iv(m_Loc, m_ArraySize, (GLint *)m_Values.get());
 			break;
 
 		// unsigned ints
 		case Enums::UINT:
-			glUniform1uiv(m_Loc, m_ArraySize, (GLuint *)m_Values);
+			glUniform1uiv(m_Loc, m_ArraySize, (GLuint *)m_Values.get());
 			break;
 		case Enums::UIVEC2:
-			glUniform2uiv(m_Loc, m_ArraySize, (GLuint *)m_Values);
+			glUniform2uiv(m_Loc, m_ArraySize, (GLuint *)m_Values.get());
 			break;
 		case Enums::UIVEC3:
-			glUniform3uiv(m_Loc, m_ArraySize, (GLuint *)m_Values);
+			glUniform3uiv(m_Loc, m_ArraySize, (GLuint *)m_Values.get());
 			break;
 		case Enums::UIVEC4:
-			glUniform4uiv(m_Loc, m_ArraySize, (GLuint *)m_Values);
+			glUniform4uiv(m_Loc, m_ArraySize, (GLuint *)m_Values.get());
 			break;
 
 		// floats
 		case Enums::FLOAT:
-			glUniform1fv(m_Loc, m_ArraySize, (GLfloat *)m_Values);
+			glUniform1fv(m_Loc, m_ArraySize, (GLfloat *)m_Values.get());
 			break;
 		case Enums::VEC2:
-			glUniform2fv(m_Loc, m_ArraySize, (GLfloat *)m_Values);
+			glUniform2fv(m_Loc, m_ArraySize, (GLfloat *)m_Values.get());
 			break;
 		case Enums::VEC3:
-			glUniform3fv(m_Loc, m_ArraySize, (GLfloat *)m_Values);
+			glUniform3fv(m_Loc, m_ArraySize, (GLfloat *)m_Values.get());
 			break;
 		case Enums::VEC4:
-			glUniform4fv(m_Loc, m_ArraySize, (GLfloat *)m_Values);
+			glUniform4fv(m_Loc, m_ArraySize, (GLfloat *)m_Values.get());
 			break;
 
 		// doubles
 		case Enums::DOUBLE:
-			glUniform1dv(m_Loc, m_ArraySize, (GLdouble *)m_Values);
+			glUniform1dv(m_Loc, m_ArraySize, (GLdouble *)m_Values.get());
 			break;
 		case Enums::DVEC2:
-			glUniform2dv(m_Loc, m_ArraySize, (GLdouble *)m_Values);
+			glUniform2dv(m_Loc, m_ArraySize, (GLdouble *)m_Values.get());
 			break;
 		case Enums::DVEC3:
-			glUniform3dv(m_Loc, m_ArraySize, (GLdouble *)m_Values);
+			glUniform3dv(m_Loc, m_ArraySize, (GLdouble *)m_Values.get());
 			break;
 		case Enums::DVEC4:
-			glUniform4dv(m_Loc, m_ArraySize, (GLdouble *)m_Values);
+			glUniform4dv(m_Loc, m_ArraySize, (GLdouble *)m_Values.get());
 			break;
 
 		// float matrices
 		case Enums::MAT2:
-			glUniformMatrix2fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
+			glUniformMatrix2fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values.get());
 			break;
 
 		case Enums::MAT3:
-			glUniformMatrix3fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
+			glUniformMatrix3fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values.get());
 			break;
 
 		case Enums::MAT4:
-			glUniformMatrix4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
+			glUniformMatrix4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values.get());
 			break;
 
 		case Enums::MAT2x3:
-			glUniformMatrix2x3fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
+			glUniformMatrix2x3fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values.get());
 			break;
 
 		case Enums::MAT2x4:
-			glUniformMatrix2x4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
+			glUniformMatrix2x4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values.get());
 			break;
 
 		case Enums::MAT3x2:
-			glUniformMatrix3x2fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
+			glUniformMatrix3x2fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values.get());
 			break;
 
 		case Enums::MAT3x4:
-			glUniformMatrix3x4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values);
+			glUniformMatrix3x4fv(m_Loc, m_ArraySize, GL_FALSE, (GLfloat *)m_Values.get());
 			break;
 
 			// double matrices
 		case Enums::DMAT2:
-			glUniformMatrix2dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
+			glUniformMatrix2dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values.get());
 			break;
 
 		case Enums::DMAT3:
-			glUniformMatrix3dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
+			glUniformMatrix3dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values.get());
 			break;
 
 		case Enums::DMAT4:
-			glUniformMatrix4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
+			glUniformMatrix4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values.get());
 			break;
 
 		case Enums::DMAT2x3:
-			glUniformMatrix2x3dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
+			glUniformMatrix2x3dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values.get());
 			break;
 
 		case Enums::DMAT2x4:
-			glUniformMatrix2x4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
+			glUniformMatrix2x4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values.get());
 			break;
 
 		case Enums::DMAT3x2:
-			glUniformMatrix3x2dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
+			glUniformMatrix3x2dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values.get());
 			break;
 
 		case Enums::DMAT3x4:
-			glUniformMatrix3x4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values);
+			glUniformMatrix3x4dv(m_Loc, m_ArraySize, GL_FALSE, (GLdouble *)m_Values.get());
 			break;
 		default:
 			assert(false && "missing data types in switch statement");

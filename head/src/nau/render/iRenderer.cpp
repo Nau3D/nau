@@ -44,22 +44,22 @@ IRenderer::Init() {
 	Attribs.add(Attribute(NORMAL, "NORMAL", Enums::DataType::MAT3, true, new mat3()));
 
 	// INT
-	Attribs.add(Attribute(TEXTURE_COUNT, "TEXTURE_COUNT", Enums::DataType::INT, true, new int(0)));
-	Attribs.add(Attribute(LIGHT_COUNT, "LIGHT_COUNT", Enums::DataType::INT, true, new int(0)));
+	Attribs.add(Attribute(TEXTURE_COUNT, "TEXTURE_COUNT", Enums::DataType::INT, true, new NauInt(0)));
+	Attribs.add(Attribute(LIGHT_COUNT, "LIGHT_COUNT", Enums::DataType::INT, true, new NauInt(0)));
 
 	// VEC2
 	Attribs.add(Attribute(MOUSE_CLICK, "MOUSE_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
 
-	//UINT
-	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
-	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, false, new unsigned int(0)));
-	Attribs.add(Attribute(FRAME_COUNT, "FRAME_COUNT", Enums::DataType::UINT, true, new unsigned int(0)));
+	//UINT		
+	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new NauUInt(0)));
+	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, false, new NauUInt(0)));
+	Attribs.add(Attribute(FRAME_COUNT, "FRAME_COUNT", Enums::DataType::UINT, true, new NauUInt(0)));
 
 	// BOOL
-	Attribs.add(Attribute(DEBUG_DRAW_CALL, "DEBUG_DRAW_CALL", Enums::DataType::BOOL, true, new bool(false)));
+	Attribs.add(Attribute(DEBUG_DRAW_CALL, "DEBUG_DRAW_CALL", Enums::DataType::BOOL, true, new NauInt(false)));
 
 	// FLOAT
-	Attribs.add(Attribute(TIMER, "TIMER", Enums::DataType::FLOAT, true, new float(0.0f)));
+	Attribs.add(Attribute(TIMER, "TIMER", Enums::DataType::FLOAT, true, new NauFloat(0.0f)));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("RENDERER", &Attribs);

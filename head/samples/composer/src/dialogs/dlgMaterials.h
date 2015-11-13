@@ -60,6 +60,7 @@ public:
 	static DlgMaterials* Instance () ;
 	static void SetParent(wxWindow *parent);
 
+	~DlgMaterials();
 	std::string &getName () {return m_Name;}; 
 	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
 
@@ -72,6 +73,8 @@ private:
 	static wxWindow *parent; 
 //	static OGLCanvas *canvas;
 	static DlgMaterials *inst;
+
+	wxBitmap *empty;
 
 	/* GLOBAL STUFF */
 	wxWindow *m_parent;

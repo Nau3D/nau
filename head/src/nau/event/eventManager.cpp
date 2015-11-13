@@ -20,8 +20,9 @@ EventManager::EventManager(void)
 	 listeners.clear();
 }
 
-EventManager::~EventManager(void)
-{
+EventManager::~EventManager(void) {
+
+	clear();
 }
 
 void EventManager::setListeners(vector<ListenerType *> *listeners)
@@ -94,13 +95,17 @@ void EventManager::eraseAllListenersType(std::string eventType)
 
 void EventManager::eraseAllListeners(void)
 {
-	listeners.clear();
+	clear();
 }
 
 
 void EventManager::clear(void)
 {
-	listeners.clear();
+	while (!listeners.empty()) {
+
+		delete(*listeners.begin());
+		listeners.erase(listeners.begin());
+	}
 }
 
 

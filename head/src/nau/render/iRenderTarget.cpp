@@ -23,14 +23,14 @@ bool
 IRenderTarget::Init() {
 
 	// UINT
-	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::UINT, false, new unsigned int(0)));
-	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::UINT, false, new unsigned int(1)));
-	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::UINT, false, new unsigned int(0)));
+	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::UINT, false, new NauUInt(0)));
+	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::UINT, false, new NauUInt(1)));
+	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::UINT, false, new NauUInt(0)));
 	// UINT2
-	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::UIVEC2, false, new uivec2(0)));
+	Attribs.add(Attribute(SIZE, "SIZE", Enums::DataType::UIVEC2, false, new uivec2(0,0)));
 	// VEC4
 	//Attribute a = Attribute(CLEAR_VALUES, "CLEAR_VALUES", Enums::DataType::VEC4, false, new vec4(0), new vec4(0), new vec4(1));
-	Attribs.add(Attribute(CLEAR_VALUES, "CLEAR_VALUES", Enums::DataType::VEC4, false, new vec4(0), new vec4(0), new vec4(1)));
+	Attribs.add(Attribute(CLEAR_VALUES, "CLEAR_VALUES", Enums::DataType::VEC4, false, new vec4(0.0f), new vec4(0.0f), new vec4(1)));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("RENDER_TARGET", &Attribs);

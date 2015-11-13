@@ -18,10 +18,10 @@ Viewport::Init() {
 	Attribs.add(Attribute(CLEAR_COLOR, "CLEAR_COLOR", Enums::DataType::VEC4, false, new vec4(), new vec4(), new vec4(1.0f),IAPISupport::OK, Attribute::COLOR));
 
 	// BOOL
-	Attribs.add(Attribute(FULL, "FULL", Enums::DataType::BOOL, false, new bool(true)));
+	Attribs.add(Attribute(FULL, "FULL", Enums::DataType::BOOL, false, new NauInt(true)));
 
 	// FLOAT
-	Attribs.add(Attribute(RATIO, "RATIO", Enums::DataType::FLOAT, false, new float(0.0f), new float(0.0f)));
+	Attribs.add(Attribute(RATIO, "RATIO", Enums::DataType::FLOAT, false, new NauFloat(0.0f), new NauFloat(0.0f)));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("VIEWPORT", &Attribs);

@@ -284,52 +284,69 @@ PassOptix::prepare (void)
 
 	iter = o_GlobalAttribute.begin();
 	for ( ; iter != o_GlobalAttribute.end(); ++iter) {
-		if (iter->second.getValues() != NULL) {
+		void *k = iter->second.getValues();
+		if (k != NULL) {
+
+			Enums::DataType dt = iter->second.getValueType();
+			switch (dt) {
+			case Enums::INT:
+			case Enums::BOOL:
+			case Enums::FLOAT:
+			case Enums::UINT:
+			case Enums::SAMPLER:
+			case Enums::DOUBLE:
+				break;
+			default:
+				k = ((Data *)k)->getPtr();
+			}
+
+
 			unsigned int *j;
-			switch (iter->second.getValueType()) {
+
+			switch (dt) {
 					
 				case Enums::UINT:
 					j = (unsigned int *)iter->second.getValues();
-					o_Context[iter->first]->set1uiv((unsigned int *)iter->second.getValues());
+					o_Context[iter->first]->set1uiv((unsigned int *)k);
 					break;
 				case Enums::INT:
 				case Enums::BOOL:
 				case Enums::ENUM:
-					o_Context[iter->first]->set1iv((int *)iter->second.getValues());
+					o_Context[iter->first]->set1iv((int *)k);
 					break;
 				case Enums::IVEC2:
 				case Enums::BVEC2:
-					o_Context[iter->first]->set2iv((int *)iter->second.getValues());
+					o_Context[iter->first]->set2iv((int *)k);
 					break;
 				case Enums::IVEC3:
 				case Enums::BVEC3:
-					o_Context[iter->first]->set3iv((int *)iter->second.getValues());
+					o_Context[iter->first]->set3iv((int *)k);
 					break;
 				case Enums::IVEC4:
 				case Enums::BVEC4:
-					o_Context[iter->first]->set4iv((int *)iter->second.getValues());
+					o_Context[iter->first]->set4iv((int *)k);
 					break;
 
 				case Enums::FLOAT:
-					o_Context[iter->first]->set1fv((float *)iter->second.getValues());
+					o_Context[iter->first]->set1fv((float *)k);
 					break;
 				case Enums::VEC2:
-					o_Context[iter->first]->set2fv((float *)iter->second.getValues());
+					o_Context[iter->first]->set2fv((float *)k);
 					break;
 				case Enums::VEC3:
-					o_Context[iter->first]->set3fv((float *)iter->second.getValues());
+					o_Context[iter->first]->set3fv((float *)k);
 					break;
 				case Enums::VEC4:
-					o_Context[iter->first]->set4fv((float *)iter->second.getValues());
+					o_Context[iter->first]->set4fv((float *)k);
 					break;
 				case Enums::MAT2:
-					o_Context[iter->first]->setMatrix2x2fv(false,(float *)iter->second.getValues());
+					o_Context[iter->first]->setMatrix2x2fv(false,(float *)k);
 					break;
 				case Enums::MAT3:
-					o_Context[iter->first]->setMatrix3x3fv(false,(float *)iter->second.getValues());
+					o_Context[iter->first]->setMatrix3x3fv(false,(float *)k);
 					break;
 				case Enums::MAT4:
-					o_Context[iter->first]->setMatrix4x4fv(false,(float *)iter->second.getValues());
+					o_Context[iter->first]->setMatrix4x4fv(false,(float *)k);
 					break;
 				default:
 					continue;

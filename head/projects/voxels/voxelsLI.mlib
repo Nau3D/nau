@@ -117,9 +117,13 @@
 	
 	<states>
 		<state name="voxelization">
-				<CULL_FACE value=0 />
-				<DEPTH_TEST value=0 />
+			<CULL_FACE value=0 />
+			<DEPTH_TEST value=0 />
+		</state>
+		<state name="NoCull">
+			<CULL_FACE value=0 />
 		</state>	
+		
 	</states>
 	
 	<materials>
@@ -167,10 +171,7 @@
 				</imageTexture>
 			</imageTextures>
 			
-			<state>
-				<CULL_FACE value=0 />
-				<DEPTH_TEST value=0 />
-			</state>	
+			<state name="voxelization"/>
 		</material>
 	
 		<material name ="voxelization2">
@@ -313,9 +314,7 @@
 				</texture>
 			</textures>
 			
-			<state>
-				<CULL_FACE value=0 />
-			</state>	
+			<state name="NoCull" />
 		</material>
 
 		<material name ="lightInjection">

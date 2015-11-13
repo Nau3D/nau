@@ -8,7 +8,7 @@ bool
 PassProcessBuffer::Init() {
 
 	// BOOL
-	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
+	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new NauInt(false)));
 
 
 #ifndef _WINDLL

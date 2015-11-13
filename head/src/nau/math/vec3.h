@@ -21,6 +21,11 @@ namespace nau
 			vector3(T x, T y, T z) : x(x), y(y), z(z) {};
 			vector3(T v) : x(v), y(v), z(v) {};
 			vector3(const vector3 &v) : x(v.x), y(v.y), z(v.z) {};
+			vector3(const T* values) {
+				x = values[0];
+				y = values[1];
+				z = values[2];
+			}
 			~vector3() {};
 
 			const vector3&
@@ -33,6 +38,14 @@ namespace nau
 				}
 				return *this;
 			};
+
+			Data *clone() {
+				return new vector3(*this);
+			}
+
+			void *getPtr() {
+				return &x;
+			}
 
 			void
 				copy(const vector3 &v) {
@@ -219,8 +232,9 @@ namespace nau
 
 			bool
 				equals(const vector3 &v, float tolerance = -1.0f) const {
-				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance) && \
-					FloatEqual(z, v.z, tolerance));
+				return (FloatEqual((float)x, (float)v.x, tolerance) && 
+					FloatEqual((float)y, (float)v.y, tolerance) && \
+					FloatEqual((float)z, (float)v.z, tolerance));
 			};
 
 			std::string 

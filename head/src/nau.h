@@ -94,7 +94,7 @@ namespace nau {
 		bool validateShaderAttribute(std::string type, std::string context, std::string component);
 		bool setAttribute(std::string type, std::string context,
 				 std::string component, int number,
-				 void *values);
+				 Data *values);
 		void *getAttribute(std::string type, std::string context,
 			std::string component, int number);
 		AttributeValues *getObjectAttributes(std::string type, std::string context, int number=0);

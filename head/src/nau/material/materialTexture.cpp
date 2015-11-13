@@ -8,7 +8,7 @@ bool
 MaterialTexture::Init() {
 
 	// INT
-	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, false, new int(0)));
+	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, false, new NauInt(0)));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("MATERIAL_TEXTURE", &Attribs);
@@ -40,6 +40,15 @@ MaterialTexture::MaterialTexture(const MaterialTexture &mt) {
 	m_Texture = mt.m_Texture;
 	m_Sampler = mt.m_Sampler;
 	copy(&(AttributeValues)mt);
+}
+
+
+MaterialTexture::~MaterialTexture(void) {
+
+	if (m_Sampler != NULL) {
+		delete m_Sampler;
+		m_Sampler = NULL;
+	}
 }
 
 
@@ -79,13 +88,14 @@ void
 MaterialTexture::setTexture(ITexture *t) {
 
 	m_Texture = t;
+	m_Sampler = ITextureSampler::create(t);
 }
 
 
-void MaterialTexture::setSampler(ITextureSampler *s) {
-
-	m_Sampler = s;
-}
+//void MaterialTexture::setSampler(ITextureSampler *s) {
+//
+//	m_Sampler = s;
+//}
 
 
 ITexture *

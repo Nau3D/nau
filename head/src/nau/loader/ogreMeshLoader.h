@@ -45,8 +45,8 @@ namespace nau
 
 			OgreMeshLoader(void);
 
-			static void loadVertexElement(TiXmlElement *pElemVertexAttrib, vec4 *vertexElem) ;
-			static void loadTextureCoordElement(TiXmlElement *pElemVertexAttrib, vec4 *vertexElem); 
+			static void loadVertexElement(TiXmlElement *pElemVertexAttrib, VertexData::Attr *vertexElem) ;
+			static void loadTextureCoordElement(TiXmlElement *pElemVertexAttrib, VertexData::Attr *vertexElem);
 			static void loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &vertexData);
 			static void loadSubMeshes (TiXmlHandle hRoot, IScene *scn, IRenderable *m, std::string meshType);
 			static void loadGeometry(TiXmlElement *pElem, VertexData &vertexData);

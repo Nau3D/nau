@@ -44,7 +44,7 @@ namespace nau
 			virtual void prepare() = 0;
 			virtual void restore() = 0;
 		
-			virtual ~IImageTexture(void){};
+			virtual ~IImageTexture(void) {};
 
 			virtual std::string& getLabel (void);
 			virtual void setLabel (std::string label);
@@ -58,7 +58,7 @@ namespace nau
 			std::string m_Label;
 			unsigned int m_Format, m_Type, m_Dimension;
 
-			float m_Data[4];
+			//float m_Data[4];
 
 		};
 	};

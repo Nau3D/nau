@@ -43,10 +43,10 @@ namespace nau
 			Material* createMaterial(std::string material);
 
 
-			std::vector<std::string>* getLibNames ();
-			std::vector<std::string>* getMaterialNames (const std::string &lib);
+			void getLibNames (std::vector<std::string>* );
+			void getMaterialNames (const std::string &lib, std::vector<std::string> *ret);
 			
-			int getNumLibs();
+			unsigned int getNumLibs();
 
 		private:
 			MaterialLibManager(const MaterialLibManager&);

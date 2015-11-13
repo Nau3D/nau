@@ -14,23 +14,23 @@ GLTextureSampler::InitGL() {
 	Attribs.listAdd("WRAP_S", "CLAMP_TO_EDGE", (int)GL_CLAMP_TO_EDGE);
 	Attribs.listAdd("WRAP_S", "CLAMP_TO_BORDER", (int)GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_S", "MIRRORED_REPEAT", (int)GL_MIRRORED_REPEAT);
-	Attribs.setDefault("WRAP_S", new int((int)GL_REPEAT));
+	Attribs.setDefault("WRAP_S", NauInt((int)GL_REPEAT));
 
 	Attribs.listAdd("WRAP_T", "REPEAT", (int)GL_REPEAT);
 	Attribs.listAdd("WRAP_T", "CLAMP_TO_EDGE", (int)GL_CLAMP_TO_EDGE);
 	Attribs.listAdd("WRAP_T", "CLAMP_TO_BORDER", (int)GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_T", "MIRRORED_REPEAT", (int)GL_MIRRORED_REPEAT);
-	Attribs.setDefault("WRAP_T", new int((int)GL_REPEAT));
+	Attribs.setDefault("WRAP_T", NauInt((int)GL_REPEAT));
 
 	Attribs.listAdd("WRAP_R", "REPEAT", (int)GL_REPEAT);
 	Attribs.listAdd("WRAP_R", "CLAMP_TO_EDGE", (int)GL_CLAMP_TO_EDGE);
 	Attribs.listAdd("WRAP_R", "CLAMP_TO_BORDER", (int)GL_CLAMP_TO_BORDER);
 	Attribs.listAdd("WRAP_R", "MIRRORED_REPEAT", (int)GL_MIRRORED_REPEAT);
-	Attribs.setDefault("WRAP_R", new int((int)GL_REPEAT));
+	Attribs.setDefault("WRAP_R", NauInt((int)GL_REPEAT));
 
 	Attribs.listAdd("MAG_FILTER", "NEAREST", (int)GL_NEAREST);
 	Attribs.listAdd("MAG_FILTER", "LINEAR", (int)GL_LINEAR);
-	Attribs.setDefault("MAG_FILTER", new int((int)GL_LINEAR));
+	Attribs.setDefault("MAG_FILTER", NauInt((int)GL_LINEAR));
 
 	Attribs.listAdd("MIN_FILTER", "NEAREST", (int)GL_NEAREST);
 	Attribs.listAdd("MIN_FILTER", "LINEAR", (int)GL_LINEAR);
@@ -38,7 +38,7 @@ GLTextureSampler::InitGL() {
 	Attribs.listAdd("MIN_FILTER", "LINEAR_MIPMAP_NEAREST", (int)GL_LINEAR_MIPMAP_NEAREST);
 	Attribs.listAdd("MIN_FILTER", "NEAREST_MIPMAP_LINEAR", (int)GL_NEAREST_MIPMAP_LINEAR);
 	Attribs.listAdd("MIN_FILTER", "NEAREST_MIPMAP_NEAREST", (int)GL_NEAREST_MIPMAP_NEAREST);
-	Attribs.setDefault("MIN_FILTER", new int((int)GL_LINEAR));
+	Attribs.setDefault("MIN_FILTER", NauInt((int)GL_LINEAR));
 
 	Attribs.listAdd("COMPARE_FUNC", "LEQUAL", (int)GL_LEQUAL);
 	Attribs.listAdd("COMPARE_FUNC", "GEQUAL", (int)GL_GEQUAL);
@@ -48,11 +48,11 @@ GLTextureSampler::InitGL() {
 	Attribs.listAdd("COMPARE_FUNC", "NOTEQUAL", (int)GL_NOTEQUAL);
 	Attribs.listAdd("COMPARE_FUNC", "ALWAYS", (int)GL_ALWAYS);
 	Attribs.listAdd("COMPARE_FUNC", "NEVER", (int)GL_NEVER);
-	Attribs.setDefault("COMPARE_FUNC", new int((int)GL_LEQUAL));
+	Attribs.setDefault("COMPARE_FUNC", NauInt((int)GL_LEQUAL));
 
 	Attribs.listAdd("COMPARE_MODE", "NONE", (int)GL_NONE);
 	Attribs.listAdd("COMPARE_MODE", "COMPARE_REF_TO_TEXTURE", (int)GL_COMPARE_REF_TO_TEXTURE);
-	Attribs.setDefault("COMPARE_MODE", new int((int)GL_NONE));
+	Attribs.setDefault("COMPARE_MODE", NauInt((int)GL_NONE));
 
 
 	return true;

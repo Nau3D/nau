@@ -15,6 +15,7 @@
 #ifdef GLINTERCEPTDEBUG
 #include "nau/loader/projectLoaderDebugLinker.h"
 #endif //GLINTERCEPTDEBUG
+#include "nau/material/uniformBlockManager.h"
 #include "nau/render/iAPISupport.h"
 #include "nau/render/passFactory.h"
 #include "nau/resource/fontManager.h"
@@ -134,12 +135,24 @@ Nau::~Nau() {
 	if (m_pMaterialLibManager)
 		delete MATERIALLIBMANAGER;
 	if (m_pEventManager) {
-		EVENTMANAGER->clear();
+		delete EVENTMANAGER;
 	}
-	if (m_pRenderManager)
-		RENDERMANAGER->clear();
+	//if (m_pRenderManager)
+	//	RENDERMANAGER->clear();
+	delete RENDERMANAGER;
+
 	if (m_pResourceManager)
-		RESOURCEMANAGER->clear();
+		delete RESOURCEMANAGER;
+
+	delete m_DefaultState; 
+	delete m_pAPISupport;
+
+	nau::material::UniformBlockManager::DeleteInstance();
+	SLogger::DeleteInstance();
+
+	delete m_pWorld;
+
+	PassFactory::DeleteInstance();
 
 #ifdef NAU_LUA
 	lua_close(m_LuaState);
@@ -164,6 +177,9 @@ Nau::init (bool context, std::string aConfigFile) {
 	}	
 	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
 	m_pMaterialLibManager = new MaterialLibManager();
+
+	// reset shader block information
+	UniformBlockManager::DeleteInstance();
 
 	try {
 		ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
@@ -405,7 +421,9 @@ luaGet(lua_State *l) {
 	if (arr == NULL) {
 		NAU_THROW("Lua get: Invalid context or number: %s %d", context, number);
 	}
-
+	if (!Enums::isBasicType(dt)) {
+		arr = ((Data *)(arr))->getPtr();
+	}
 	luaGetValues(l, arr, card, bdt);
 
 	return 0;
@@ -419,7 +437,7 @@ luaSet(lua_State *l) {
 	const char *context = lua_tostring(l, -4);
 	const char *component = lua_tostring(l, -3);
 	int number = (int)lua_tointeger(l, - 2);
-	void *arr;
+	Data *arr = NULL;
 	AttribSet *attr;
 
 	//if (!strcmp(tipo, "CURRENT")) {
@@ -453,7 +471,21 @@ luaSet(lua_State *l) {
 			arrF[i] = (float)lua_tonumber(l, -1);
 			lua_pop(l, 1);
 		}
-		arr = arrF;
+		switch (dt) {
+		case Enums::FLOAT:
+			arr = new NauFloat(*arrF); break;
+		case Enums::VEC2:
+			arr = new vec2(arrF[0], arrF[1]); break;
+		case Enums::VEC3:
+			arr = new vec3(arrF[0], arrF[1], arrF[2]); break;
+		case Enums::VEC4:
+			arr = new vec4(arrF[0], arrF[1], arrF[2], arrF[3]); break;
+		case Enums::MAT4:
+		case Enums::MAT3:
+			arr = new mat4(arrF); break;
+		default:
+			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+		}
 		break;
 	case Enums::INT:
 	case Enums::BOOL:
@@ -463,7 +495,22 @@ luaSet(lua_State *l) {
 			arrI[i] = (int)lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
-		arr = arrI;
+		switch (dt) {
+		case Enums::BOOL:
+		case Enums::INT:
+			arr = new NauInt(arrI[0]); break;
+		case Enums::IVEC2:
+		case Enums::BVEC2:
+			arr = new ivec2(arrI[0], arrI[1]); break;
+		case Enums::IVEC3:
+		case Enums::BVEC3:
+			arr = new ivec3(arrI[0], arrI[1], arrI[2]); break;
+		case Enums::IVEC4:
+		case Enums::BVEC4:
+			arr = new ivec4(arrI[0], arrI[1], arrI[2], arrI[3]); break;
+		default:
+			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+		}
 		break;
 	case Enums::UINT :
 		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
@@ -472,7 +519,18 @@ luaSet(lua_State *l) {
 			arrUI[i] = (unsigned int)lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
-		arr = arrUI;
+		switch (dt) {
+		case Enums::UINT:
+			arr = new NauUInt(arrUI[0]); break;
+		case Enums::UIVEC2:
+			arr = new uivec2(arrUI[0], arrUI[1]); break;
+		case Enums::UIVEC3:
+			arr = new uivec3(arrUI[0], arrUI[1], arrUI[2]); break;
+		case Enums::UIVEC4:
+			arr = new uivec4(arrUI[0], arrUI[1], arrUI[2], arrUI[3]); break;
+		default:
+			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+		}
 		break;
 	default:
 		NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[bdt].c_str());
@@ -481,6 +539,7 @@ luaSet(lua_State *l) {
 	if (!NAU->setAttribute(tipo, context, component, number, arr))
 		NAU_THROW("Lua set: Invalid context: %s", context);
 
+	delete arr;
 	return 0;
 }
 
@@ -732,7 +791,7 @@ Nau::validateShaderAttribute(std::string type, std::string context, std::string 
 
 
 bool 
-Nau::setAttribute(std::string type, std::string context, std::string component, int number, void *values) {
+Nau::setAttribute(std::string type, std::string context, std::string component, int number, Data *values) {
 
 	int id;
 	Enums::DataType dt; 
@@ -829,8 +888,8 @@ Nau::validateUserAttribName(std::string context, std::string name) {
 	if (attribs == NULL)
 		return false;
 
-	Attribute &a = attribs->get(name);
-	if (a.getName() == "NO_ATTR")
+	std::unique_ptr<Attribute> &a = attribs->get(name);
+	if (a->getName() == "NO_ATTR")
 		return true;
 	else
 		return false;
@@ -1295,9 +1354,7 @@ Nau::sendKeyToEngine (char keyCode) {
 void 
 Nau::setClickPosition(int x, int y) {
 
-	ivec2 *v = new ivec2(x, y);
-	RENDERER->setProp(IRenderer::MOUSE_CLICK, Enums::IVEC2, v);
-	delete v;
+	RENDERER->setPropi2(IRenderer::MOUSE_CLICK, ivec2(x, y));
 }
 
 

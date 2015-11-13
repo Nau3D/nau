@@ -85,7 +85,7 @@
 					<map fromMaterial="leftSphere" 
 						 toLibrary="Optix Ray Tracer Render Target" toMaterial="Metal" />
 					<map fromMaterial="rightSphere" 
-						 toLibrary="Optix Ray Tracer Render Target" toMaterial="Glass" />
+						 toLibrary="Optix Ray Tracer Render Target" toMaterial="Metal" />
 				</materialMaps>
 				<optixEntryPoint>
 					<optixProgram type="RayGen" file="optix/pathTracer.ptx" proc="pinhole_camera_ms"/> 
@@ -136,7 +136,9 @@
 			</pass>
 			<pass class="quad" name="pass2">
 				<mode value="SKIP_FIRST_FRAME" />
-				<color clear = "false" enable="false" />
+				<COLOR_CLEAR value=false />
+				<COLOR_ENABLE value=false />
+				<!--color clear = "false" enable="false" /-->
 				<viewport name="MainViewport" />
 				<material name="combine" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>

@@ -20,7 +20,7 @@ IScene::Init() {
 	Attribs.add(Attribute(BB_CENTER, "BB_CENTER", Enums::DataType::VEC3, true, new vec3(0.0f, 0.0f, 0.0f)));
 
 	// ENUM
-	Attribs.add(Attribute(TRANSFORM_ORDER, "TRANSFORM_ORDER", Enums::ENUM, false, new int(T_R_S)));
+	Attribs.add(Attribute(TRANSFORM_ORDER, "TRANSFORM_ORDER", Enums::ENUM, false, new NauInt(T_R_S)));
 	Attribs.listAdd("TRANSFORM_ORDER", "T_R_S", T_R_S);
 	Attribs.listAdd("TRANSFORM_ORDER", "T_S_R", T_S_R);
 	Attribs.listAdd("TRANSFORM_ORDER", "R_T_S", R_T_S);
@@ -118,24 +118,24 @@ IScene::setPrope(EnumProperty prop, int v) {
 }
 
 
-void *
-IScene::getProp(unsigned int prop, Enums::DataType type) {
-
-	if (type == Enums::VEC3) {
-
-		switch (prop) {
-		case BB_MIN: m_Float3Props[BB_MIN] = getBoundingVolume().getMin();
-			return &m_Float3Props[BB_MIN];
-		case BB_MAX: m_Float3Props[BB_MAX] = getBoundingVolume().getMax();
-			return &m_Float3Props[BB_MAX];
-		case BB_CENTER: m_Float3Props[BB_CENTER] = getBoundingVolume().getCenter();
-			return &m_Float3Props[BB_CENTER];
-		default: return AttributeValues::getProp(prop, type);
-		}
-	}
-	else
-		return AttributeValues::getProp(prop, type);
-}
+//void *
+//IScene::getProp(unsigned int prop, Enums::DataType type) {
+//
+//	if (type == Enums::VEC3) {
+//
+//		switch (prop) {
+//		case BB_MIN: m_Float3Props[BB_MIN] = getBoundingVolume().getMin();
+//			return &m_Float3Props[BB_MIN];
+//		case BB_MAX: m_Float3Props[BB_MAX] = getBoundingVolume().getMax();
+//			return &m_Float3Props[BB_MAX];
+//		case BB_CENTER: m_Float3Props[BB_CENTER] = getBoundingVolume().getCenter();
+//			return &m_Float3Props[BB_CENTER];
+//		default: return AttributeValues::getProp(prop, type);
+//		}
+//	}
+//	else
+//		return AttributeValues::getProp(prop, type);
+//}
 
 
 vec3 &

@@ -87,7 +87,7 @@ namespace nau
 
 			virtual bool init() = 0;
 
-			virtual void *getProp(unsigned int prop, Enums::DataType dt) = 0;
+			//virtual void *getProp(unsigned int prop, Enums::DataType dt) = 0;
 			virtual const mat4 &getPropm4(Mat4Property prop) = 0;
 			virtual const mat3 &getPropm3(Mat3Property prop) = 0;
 			virtual float getPropf(FloatProperty prop);
@@ -135,7 +135,7 @@ namespace nau
 			/// returns light index i
 			virtual Light *getLight(unsigned int i) = 0;
 			/// adds a light at the next free index
-			virtual bool addLight(nau::scene::Light& aLight) = 0;
+			virtual bool addLight(nau::scene::Light* aLight) = 0;
 			/// removes all lights
 			virtual void removeLights() = 0;
 
@@ -202,7 +202,7 @@ namespace nau
 		public:
 			// color
 			virtual void setMaterial(nau::material::ColorMaterial &mat) = 0;
-			virtual void setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) = 0;
+			virtual void setMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess) = 0;
 			virtual ColorMaterial *getMaterial() = 0;
 
 			// state

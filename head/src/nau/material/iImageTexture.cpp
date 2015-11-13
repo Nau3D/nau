@@ -15,15 +15,15 @@ bool
 IImageTexture::Init() {
 
 	// UINT
-	Attribs.add(Attribute(TEX_ID, "TEX_ID", Enums::DataType::UINT, false, new int(0)));
-	Attribs.add(Attribute(LEVEL, "LEVEL", Enums::DataType::UINT, false, new int(0)));
+	Attribs.add(Attribute(TEX_ID, "TEX_ID", Enums::DataType::UINT, false, new NauUInt(0)));
+	Attribs.add(Attribute(LEVEL, "LEVEL", Enums::DataType::UINT, false, new NauUInt(0)));
 	// ENUM
 	Attribs.add(Attribute(ACCESS, "ACCESS", Enums::DataType::ENUM, false));
 	Attribs.add(Attribute(INTERNAL_FORMAT, "INTERNAL_FORMAT", Enums::DataType::ENUM, false));
 	// BOOL
-	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new bool(false)));
+	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new NauInt(false)));
 	// INT
-	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, true, new int(-1)));
+	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, true, new NauInt(-1)));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("IMAGE_TEXTURE", &Attribs);

@@ -710,7 +710,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	// Read OBJ file
 	obj.readOBJ(aFilename);
 
-	std::vector<nau::math::vec4> *v,*t,*n;
+	std::vector<VertexData::Attr> *v,*t,*n;
 	unsigned int verts;
 
 	if (!obj.m_NumNormals) {
@@ -793,7 +793,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 				}
 				if (avg)
 					obj.normalize(average);
-				obj.m_Normals[normalIndex] = vec4(average[0], average[1], average[2], 0.0f);
+				obj.m_Normals[normalIndex] = VertexData::Attr(average[0], average[1], average[2], 0.0f);
 				normalIndex++;
 			}
 		}
@@ -825,10 +825,10 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		}
 
 	}
-	v = new std::vector<nau::math::vec4>; v->reserve(verts);
-	n = new std::vector<nau::math::vec4>; n->reserve(verts);
+	v = new std::vector<VertexData::Attr>; v->reserve(verts);
+	n = new std::vector<VertexData::Attr>; n->reserve(verts);
 	if (obj.m_NumTexCoords) {
-		t = new std::vector<nau::math::vec4>;
+		t = new std::vector<VertexData::Attr>;
 		t->reserve(verts);
 	}	
 	verts = 0;

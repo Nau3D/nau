@@ -35,6 +35,14 @@ Pipeline::Pipeline (std::string pipelineName) :
 }
 
 
+Pipeline::~Pipeline() {
+
+	for (auto pass : m_Passes) {
+		delete pass;
+	}
+}
+
+
 std::string 
 Pipeline::getName() {
 	return m_Name;

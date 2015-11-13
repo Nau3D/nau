@@ -132,13 +132,14 @@
 			
 			<pass class="quad" name="combine">
 				<viewport name="TopRightViewport" />
-				<color clear = "false" enable="false" />
+				<COLOR_CLEAR value=false />
+				<COLOR_ENABLE value=false />
 				<mode value="SKIP_FIRST_FRAME" />
 				<material name="combine" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
 			
 			<pass class="quad" name="computeLuminance">
-				<color clear = "false"/>
+				<COLOR_CLEAR value=false />
 				<renderTarget name="luminance" fromLibrary="Optix Ray Tracer Render Target" />
 				<material name="computeLuminance" fromLibrary="Optix Ray Tracer Render Target" />
 				<!--postProcess>

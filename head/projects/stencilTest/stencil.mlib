@@ -5,6 +5,17 @@
 		<texture name="Caustic" filename="../../models/Texturas/caustic.jpg" />
 		<texture name="Marble"  filename="../../models/Texturas/water01.jpg" />
 	</textures>
+	<states>
+		<state name="CullFront">
+			<CULL_TYPE value ="FRONT"  />
+		</state>
+		<state name="Transparent" >
+			<ORDER value="2" />
+			<BLEND value="TRUE" />
+			<BLEND_SRC value="SRC_ALPHA" />
+			<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
+		</state>
+	</states>
 	
 	<materials>
 		
@@ -44,9 +55,7 @@
 			<textures>
 				<texture UNIT="0" name="Crate" />
 			</textures>
-			<state >
-				<CULL_TYPE value ="FRONT"  />
-			</state>
+			<state name="CullFront"/>
 		</material>
 		
 		<material name="simpleTexturedBlend">
@@ -60,12 +69,7 @@
 			<textures>
 				<texture UNIT="0" name="Marble" />	
 			</textures>
-			<state >
-				<ORDER value="2" />
-				<BLEND value="TRUE" />
-				<BLEND_SRC value="SRC_ALPHA" />
-				<BLEND_DST value="ONE_MINUS_SRC_ALPHA" />
-			</state>
+			<state name="Transparent" />
 		</material>
 	</materials>
 </materialLib>

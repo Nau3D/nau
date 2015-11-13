@@ -38,49 +38,7 @@ ResourceManager::ResourceManager(std::string path) :
 
 ResourceManager::~ResourceManager(void) {
 
-	/***DESTROY ALL ALOCATED RESOURCES***/
-
-	while(!m_Textures.empty()) {
-
-		delete(*m_Textures.begin());
-		m_Textures.erase(m_Textures.begin());
-	}
-
-	//while (!m_TexImages.empty()){
-	//	
-	//	delete((*m_TexImages.begin()).second);
-	//	m_TexImages.erase(m_TexImages.begin());
-	//}
-
-	while (!m_States.empty()) {
-	
-		m_States.erase(m_States.begin());
-	}
-
-	//if (0 != m_pTextureManager) {
-	//	delete m_pTextureManager;
-	//}
-
-	while (!m_Meshes.empty()) {
-	
-		m_Meshes.erase(m_Meshes.begin());
-	}
-	ResourceManager::renderableCount = 0;
-
-	while (!m_RenderTargets.empty()) {
-	
-		m_RenderTargets.erase(m_RenderTargets.begin());
-	}
-
-	while (!m_Programs.empty()) {
-	
-		m_Programs.erase(m_Programs.begin());
-	}
-
-	while (!m_Buffers.empty()) {
-
-		m_Buffers.erase(m_Buffers.begin());
-	}
+	clear();
 }
 
 
@@ -528,8 +486,20 @@ ResourceManager::removeRenderable(std::string name) {
 
 //-------------------------------------
 
+
+IState *
+ResourceManager::createState(std::string &stateName) {
+
+	if (!m_States.count(stateName)) {
+		m_States[stateName] = IState::create();
+		m_States[stateName]->setName(stateName);
+	}
+	return m_States[stateName];
+}
+
+
 bool 
-ResourceManager::hasState (std::string stateName) {
+ResourceManager::hasState (std::string &stateName) {
 
 	if (m_States.count (stateName) > 0) {
 		return true;
@@ -539,7 +509,7 @@ ResourceManager::hasState (std::string stateName) {
 
 
 nau::material::IState* 
-ResourceManager::getState (std::string stateName) {
+ResourceManager::getState (std::string &stateName) {
 
 	if (m_States.count (stateName) > 0) {
 		return m_States[stateName];
@@ -602,9 +572,7 @@ ResourceManager::getProgramNames() {
 
 
 //-------------------------------------	
-
 //			BUFFERS
-
 //-------------------------------------
 
 

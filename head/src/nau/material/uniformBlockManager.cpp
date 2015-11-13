@@ -14,6 +14,16 @@ UniformBlockManager::GetInstance() {
 	return Instance;
 }
 
+void 
+UniformBlockManager::DeleteInstance() {
+
+	if (Instance) {
+		delete Instance;
+		Instance = NULL;
+	}
+}
+
+
 UniformBlockManager::~UniformBlockManager() {
 
 	clear();
@@ -32,8 +42,8 @@ UniformBlockManager::UniformBlockManager() {
 void 
 UniformBlockManager::clear() {
 
-
 }
+
 
 void
 UniformBlockManager::addBlock(std::string &name, unsigned int size) {

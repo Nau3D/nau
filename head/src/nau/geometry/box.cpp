@@ -17,10 +17,10 @@ Box::Box(void) : Primitive(),
 {
 	float n = 1.0f;
 
-	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(24);
-	std::vector<VertexData::Attr> *tangent = new std::vector<vec4>(24);
-	std::vector<VertexData::Attr> *textureCoords = new std::vector<vec4>(24);
-	std::vector<VertexData::Attr> *normals = new std::vector<vec4>(24);
+	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(24);
+	std::vector<VertexData::Attr> *tangent = new std::vector<VertexData::Attr>(24);
+	std::vector<VertexData::Attr> *textureCoords = new std::vector<VertexData::Attr>(24);
+	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(24);
 
 	// FRONT
 	vertices->at (Box::FACE_FRONT + Box::TOP_LEFT).set		(-n,  n, n);

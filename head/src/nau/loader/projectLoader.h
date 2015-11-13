@@ -47,39 +47,56 @@ namespace nau
 			static void loadPipelines (TiXmlHandle &hRoots);
 
 			// check for tags that are not allowed
-			static void checkForNonValidChildTags(std::string parent, std::vector<std::string> &excluded, TiXmlElement *pElem);
-			static void checkForNonValidAttributes(std::string parent, std::vector<std::string> &excluded, TiXmlElement *pElem);
+			static void checkForNonValidChildTags(std::string parent, std::vector<std::string> &excluded, 
+											TiXmlElement *pElem);
+			static void checkForNonValidAttributes(std::string parent, std::vector<std::string> &excluded, 
+											TiXmlElement *pElem);
 
 			// read an item from a library
 			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *lib, std::string *item);
 			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *fullName);
 
 			// read child tags
-			static void readChildTags(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem, bool showOnlyExcluded=false);
-			static void readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem);
-			static void readAttributeList(std::string parent, 
+			static void readChildTags(std::string parent, 
 											AttributeValues *anObj, 
-											std::map<std::string, nau::Attribute> attributes, 
+											nau::AttribSet &attribs, 
+											std::vector<std::string> &excluded, 
+											TiXmlElement *pElem, 
+											bool showOnlyExcluded=false);
+
+			static void readAttributes(std::string parent, 
+											AttributeValues *anObj, 
 											nau::AttribSet &attribs, 
 											std::vector<std::string> &excluded, 
 											TiXmlElement *pElem);
+
+			//static void readAttributeList(std::string parent, 
+			//								AttributeValues *anObj, 
+			//								std::map<std::string, std::unique_ptr<nau::Attribute>> &attributes, 
+			//								nau::AttribSet &attribs, 
+			//								std::vector<std::string> &excluded, 
+			//								TiXmlElement *pElem);
 			
 			// converts to lower caps
 			static std::string toLower(std::string strToConvert);
 			// read file and return full path relative to project
 			static std::string readFile(TiXmlElement *p, std::string tag, std::string item);
 			// get valid attribute values 
-			static std::string &getValidValuesString(Attribute &a, void *value);
+			static std::string &getValidValuesString(std::unique_ptr<Attribute> &a);
 			// read a child tag 
-			static void *readChildTag(std::string parent, TiXmlElement *pElem, Enums::DataType type, AttribSet &attribs);
+			static Data *readChildTag(std::string parent, TiXmlElement *pElem, Enums::DataType type, 
+				AttribSet &attribs);
 			// read an attribute 
 			//static void *readAttribute(const char *name, TiXmlElement *p, Enums::DataType type, AttribSet &attribs);
-			static void *readAttribute(std::string tag, Attribute &attr, TiXmlElement *p);
+			static Data *readAttribute(std::string tag, std::unique_ptr<Attribute> &attr, TiXmlElement *p);
 			// check if a tring is in a vector
 			static bool isExcluded(std::string what, std::vector<std::string> &excluded);
 			// get all keys in a vector
-			static void getKeystoVector(std::map<std::string, Attribute >, std::vector<std::string> *result);
-
+			static void getKeystoVector(std::map<std::string, std::unique_ptr<Attribute> > &, 
+				std::vector<std::string> *result);
+			// build excluded vector
+			static void buildExcludedVector(std::map<std::string, std::unique_ptr<Attribute> > &, 
+				std::set<std::string> &included, std::vector<std::string> *excluded);
 			// checks if a constant has been defined
 			static bool isConstantDefined(std::string s);
 
@@ -106,10 +123,11 @@ namespace nau
 			static void loadPassPostProcess(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassLights(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassScenes(TiXmlHandle hPass, Pass *aPass);
-			static void loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass);
+//			static void loadPassClearDepthAndColor(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassViewport(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassParams(TiXmlHandle hPass, Pass *aPass);
-			static void loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass, std::map<std::string, Pass*> passMapper);
+			static void loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass, 
+				std::map<std::string, Pass*> passMapper);
 			static void loadPassTexture(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassMaterial(TiXmlHandle hPass, Pass *aPass);
 			static void loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass);

@@ -143,7 +143,7 @@ PassDepthMap::doPass (void) {
 	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
 
 	RENDERER->setCamera(m_LightCamera);
-	frustum.setFromMatrix ((float *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4));
+	frustum.setFromMatrix ((float *)((mat4 *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4))->getMatrix());
 
 	RENDERMANAGER->clearQueue();
 

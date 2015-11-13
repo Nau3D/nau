@@ -29,16 +29,18 @@ namespace nau {
 			MaterialTexture(int unit);
 			MaterialTexture();
 			MaterialTexture(const MaterialTexture &mt);
+
+			~MaterialTexture(void);
+
 			const MaterialTexture& operator =(const MaterialTexture &mt);
 
 			void bind();
 			void unbind();
 			void setTexture(ITexture *b);
-			void setSampler(ITextureSampler *b);
+			//void setSampler(ITextureSampler *b);
 			ITexture *getTexture();
 			ITextureSampler *getSampler();
 
-			~MaterialTexture(void) {};
 
 			void clone(MaterialTexture &mt);
 

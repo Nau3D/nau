@@ -476,9 +476,7 @@ GLProgram::getIUniform(int i) {
 void 
 GLProgram::setValueOfUniform (int i) {
 
-	GLUniform uni;
-	uni = m_Uniforms[i];
-	uni.setValueInProgram();
+	m_Uniforms[i].setValueInProgram();
 }
 
 
@@ -673,6 +671,7 @@ GLProgram::setUniforms() {
 		}
 	}
 	m_NumUniforms = (int)m_Uniforms.size();
+	delete name;
 }
 
 
@@ -716,31 +715,30 @@ GLProgram::getShaderInfoLog(ShaderType type) {
         infoLog = new char[infologLength]; 
         glGetShaderInfoLog (m_ID[type], infologLength, &charsWritten, infoLog);	
 		res.assign(infoLog);
-		free(infoLog);
-	} 
+		delete infoLog;
+	}
     return (res);
 }
 
 
-char* 
+const std::string &
 GLProgram::getProgramInfoLog() {
 
     int infologLength = 0;
     int charsWritten  = 0;
-	std::string ok = "Program: OK";
-    char *infoLog;
 
 	glGetProgramiv (m_P, GL_INFO_LOG_LENGTH, &infologLength);
 
     if (infologLength > 1) {
-        infoLog = new char[infologLength]; 
+        char *infoLog = new char[infologLength]; 
         glGetProgramInfoLog (m_P, infologLength, &charsWritten, infoLog);
-		return (infoLog);
+		m_ReturnString = infoLog;
+		delete infoLog;
+
 	} else {
-		infoLog = new char[ok.size()];
-		strcpy(infoLog,(char *)ok.c_str());
+		m_ReturnString = "Program: OK";
 	}
-	return(infoLog);
+	return(m_ReturnString);
 }
 
 

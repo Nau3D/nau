@@ -22,21 +22,21 @@ bool
 Pass::Init() {
 
 	// BOOL
-	Attribs.add(Attribute(COLOR_CLEAR, "COLOR_CLEAR", Enums::DataType::BOOL, false, new bool(true)));
-	Attribs.add(Attribute(COLOR_ENABLE, "COLOR_ENABLE", Enums::DataType::BOOL, false, new bool(true)));
-	Attribs.add(Attribute(DEPTH_CLEAR, "DEPTH_CLEAR", Enums::DataType::BOOL, false, new bool(true)));
-	Attribs.add(Attribute(DEPTH_ENABLE, "DEPTH_ENABLE", Enums::DataType::BOOL, false, new bool(true)));
-	Attribs.add(Attribute(DEPTH_MASK, "DEPTH_MASK", Enums::DataType::BOOL, false, new bool(true)));
-	Attribs.add(Attribute(DEPTH_CLAMPING, "DEPTH_CLAMPING", Enums::DataType::BOOL, false, new bool(false)));
-	Attribs.add(Attribute(STENCIL_CLEAR, "STENCIL_CLEAR", Enums::DataType::BOOL, false, new bool(true)));
-	Attribs.add(Attribute(STENCIL_ENABLE, "STENCIL_ENABLE", Enums::DataType::BOOL, false, new bool(false)));
+	Attribs.add(Attribute(COLOR_CLEAR, "COLOR_CLEAR", Enums::DataType::BOOL, false, new NauInt(1)));
+	Attribs.add(Attribute(COLOR_ENABLE, "COLOR_ENABLE", Enums::DataType::BOOL, false, new NauInt(1)));
+	Attribs.add(Attribute(DEPTH_CLEAR, "DEPTH_CLEAR", Enums::DataType::BOOL, false, new NauInt(1)));
+	Attribs.add(Attribute(DEPTH_ENABLE, "DEPTH_ENABLE", Enums::DataType::BOOL, false, new NauInt(1)));
+	Attribs.add(Attribute(DEPTH_MASK, "DEPTH_MASK", Enums::DataType::BOOL, false, new NauInt(1)));
+	Attribs.add(Attribute(DEPTH_CLAMPING, "DEPTH_CLAMPING", Enums::DataType::BOOL, false, new NauInt(0)));
+	Attribs.add(Attribute(STENCIL_CLEAR, "STENCIL_CLEAR", Enums::DataType::BOOL, false, new NauInt(1)));
+	Attribs.add(Attribute(STENCIL_ENABLE, "STENCIL_ENABLE", Enums::DataType::BOOL, false, new NauInt(0)));
 
 	// ENUM
-	Attribs.add(Attribute(TEST_MODE, "TEST_MODE", Enums::DataType::ENUM, true, new int(RUN_IF)));
+	Attribs.add(Attribute(TEST_MODE, "TEST_MODE", Enums::DataType::ENUM, true, new NauInt(RUN_IF)));
 	Attribs.listAdd("TEST_MODE", "RUN_IF", RUN_IF);
 	Attribs.listAdd("TEST_MODE", "RUN_WHILE", RUN_WHILE);
 
-	Attribs.add(Attribute(RUN_MODE, "RUN_MODE", Enums::DataType::ENUM, true, new int(RUN_ALWAYS)));
+	Attribs.add(Attribute(RUN_MODE, "RUN_MODE", Enums::DataType::ENUM, true, new NauInt(RUN_ALWAYS)));
 	Attribs.listAdd("RUN_MODE", "DONT_RUN", DONT_RUN);
 	Attribs.listAdd("RUN_MODE", "RUN_ALWAYS", RUN_ALWAYS);
 	Attribs.listAdd("RUN_MODE", "SKIP_FIRST_FRAME", SKIP_FIRST_FRAME);
@@ -44,7 +44,7 @@ Pass::Init() {
 	Attribs.listAdd("RUN_MODE", "RUN_EVEN", RUN_EVEN);
 	Attribs.listAdd("RUN_MODE", "RUN_ODD", RUN_ODD);
 
-	Attribs.add(Attribute(STENCIL_FUNC, "STENCIL_FUNC", Enums::DataType::ENUM, false, new int(ALWAYS)));
+	Attribs.add(Attribute(STENCIL_FUNC, "STENCIL_FUNC", Enums::DataType::ENUM, false, new NauInt(ALWAYS)));
 	Attribs.listAdd("STENCIL_FUNC", "LESS", LESS);
 	Attribs.listAdd("STENCIL_FUNC", "NEVER", NEVER);
 	Attribs.listAdd("STENCIL_FUNC", "ALWAYS", ALWAYS);
@@ -54,7 +54,7 @@ Pass::Init() {
 	Attribs.listAdd("STENCIL_FUNC", "GREATER", GREATER);
 	Attribs.listAdd("STENCIL_FUNC", "NOT_EQUAL", NOT_EQUAL);
 
-	Attribs.add(Attribute(STENCIL_FAIL, "STENCIL_FAIL", Enums::DataType::ENUM, false, new int(KEEP)));
+	Attribs.add(Attribute(STENCIL_FAIL, "STENCIL_FAIL", Enums::DataType::ENUM, false, new NauInt(KEEP)));
 	Attribs.listAdd("STENCIL_FAIL", "KEEP", KEEP);
 	Attribs.listAdd("STENCIL_FAIL", "ZERO", ZERO);
 	Attribs.listAdd("STENCIL_FAIL", "REPLACE", REPLACE);
@@ -64,7 +64,7 @@ Pass::Init() {
 	Attribs.listAdd("STENCIL_FAIL", "DECR_WRAP", DECR_WRAP);
 	Attribs.listAdd("STENCIL_FAIL", "INVERT", INVERT);
 
-	Attribs.add(Attribute(STENCIL_DEPTH_FAIL, "STENCIL_DEPTH_FAIL", Enums::DataType::ENUM, false, new int(KEEP)));
+	Attribs.add(Attribute(STENCIL_DEPTH_FAIL, "STENCIL_DEPTH_FAIL", Enums::DataType::ENUM, false, new NauInt(KEEP)));
 	Attribs.listAdd("STENCIL_DEPTH_FAIL", "KEEP", KEEP);
 	Attribs.listAdd("STENCIL_DEPTH_FAIL", "ZERO", ZERO);
 	Attribs.listAdd("STENCIL_DEPTH_FAIL", "REPLACE", REPLACE);
@@ -74,7 +74,7 @@ Pass::Init() {
 	Attribs.listAdd("STENCIL_DEPTH_FAIL", "DECR_WRAP", DECR_WRAP);
 	Attribs.listAdd("STENCIL_DEPTH_FAIL", "INVERT", INVERT);
 
-	Attribs.add(Attribute(STENCIL_DEPTH_PASS, "STENCIL_DEPTH_PASS", Enums::DataType::ENUM, false, new int(KEEP)));
+	Attribs.add(Attribute(STENCIL_DEPTH_PASS, "STENCIL_DEPTH_PASS", Enums::DataType::ENUM, false, new NauInt(KEEP)));
 	Attribs.listAdd("STENCIL_DEPTH_PASS", "KEEP", KEEP);
 	Attribs.listAdd("STENCIL_DEPTH_PASS", "ZERO", ZERO);
 	Attribs.listAdd("STENCIL_DEPTH_PASS", "REPLACE", REPLACE);
@@ -84,7 +84,7 @@ Pass::Init() {
 	Attribs.listAdd("STENCIL_DEPTH_PASS", "DECR_WRAP", DECR_WRAP);
 	Attribs.listAdd("STENCIL_DEPTH_PASS", "INVERT", INVERT);
 
-	Attribs.add(Attribute(DEPTH_FUNC, "DEPTH_FUNC", Enums::DataType::ENUM, false, new int(LESS)));
+	Attribs.add(Attribute(DEPTH_FUNC, "DEPTH_FUNC", Enums::DataType::ENUM, false, new NauInt(LESS)));
 	Attribs.listAdd("DEPTH_FUNC", "LESS", LESS);
 	Attribs.listAdd("DEPTH_FUNC", "NEVER", NEVER);
 	Attribs.listAdd("DEPTH_FUNC", "ALWAYS", ALWAYS);
@@ -98,16 +98,16 @@ Pass::Init() {
 	Attribs.add(Attribute(COLOR_CLEAR_VALUE, "COLOR_CLEAR_VALUE", Enums::DataType::VEC4, false, new vec4()));
 
 	// FLOAT
-	Attribs.add(Attribute(DEPTH_CLEAR_VALUE, "DEPTH_CLEAR_VALUE", Enums::DataType::FLOAT, false, new float(1.0f)));
+	Attribs.add(Attribute(DEPTH_CLEAR_VALUE, "DEPTH_CLEAR_VALUE", Enums::DataType::FLOAT, false, new NauFloat(1.0f)));
 
 	//INT
-	Attribs.add(Attribute(STENCIL_OP_REF, "STENCIL_OP_REF", Enums::DataType::INT, false, new int(0)));
-	Attribs.add(Attribute(STENCIL_CLEAR_VALUE, "STENCIL_CLEAR_VALUE", Enums::DataType::INT, false, new int(0)));
+	Attribs.add(Attribute(STENCIL_OP_REF, "STENCIL_OP_REF", Enums::DataType::INT, false, new NauInt(0)));
+	Attribs.add(Attribute(STENCIL_CLEAR_VALUE, "STENCIL_CLEAR_VALUE", Enums::DataType::INT, false, new NauInt(0)));
 
 	//UINT
-	Attribs.add(Attribute(STENCIL_OP_MASK, "STENCIL_OP_MASK", Enums::DataType::UINT, false, new unsigned int(255)));
-	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new unsigned int(0)));
-	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, true, new unsigned int(0)));
+	Attribs.add(Attribute(STENCIL_OP_MASK, "STENCIL_OP_MASK", Enums::DataType::UINT, false, new NauUInt(255)));
+	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new NauUInt(0)));
+	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, true, new NauUInt(0)));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("PASS", &Attribs);
@@ -308,7 +308,7 @@ Pass::doPass (void) {
 
 	prepareBuffers();
 
-	const float *a = (float *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4);
+	const float *a = (float *)((mat4 *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4))->getMatrix();
 	camFrustum.setFromMatrix (a);
 	aCam = RENDERMANAGER->getCamera (m_CameraName);
 	RENDERMANAGER->clearQueue();
@@ -480,7 +480,7 @@ Pass::setupLights(void) {
 
 	for (; lightsIter != m_Lights.end(); ++lightsIter) {
 		Light *l = RENDERMANAGER->getLight(*lightsIter);
-		RENDERER->addLight(*l);
+		RENDERER->addLight(l);
 	}
 }
 

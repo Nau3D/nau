@@ -17,8 +17,8 @@ BBox::BBox(void) : Primitive(),
 {
 	float n = 1.0f;
 
-	std::vector<VertexData::Attr> *vertices = new std::vector<vec4>(8);
-	std::vector<VertexData::Attr> *normals = new std::vector<vec4>(8);
+	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(8);
+	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(8);
 
 	//BOTTOM
 	vertices->at (0).set(-n, -n,  n);

@@ -704,6 +704,7 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event) {
 			wxMessageBox(wxString (s.c_str()));
 		}
 	}
+	delete openFileDlg;
 }
 
 
@@ -735,6 +736,7 @@ FrmMainFrame::OnProcess (wxCommandEvent& event) {
 			wxMessageBox (_("Process done..."), _("Composer"));
 		}
 	}
+	delete openDirDlg;
 }
 
 

@@ -1,9 +1,10 @@
-#ifndef ATTRIBUTE_H
-#define ATTRIBUTE_H
+#ifndef NAU_ATTRIBUTE_H
+#define NAU_ATTRIBUTE_H
 
 
 #include "nau/enums.h"
 #include "nau/math/data.h"
+#include "nau/math/number.h"
 #include "nau/math/matrix.h"
 #include "nau/math/vec4.h"
 #include "nau/math/vec2.h"
@@ -11,6 +12,7 @@
 
 #include <assert.h>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -34,13 +36,16 @@ namespace nau {
 
 
 		Attribute();
-		Attribute(int id, std::string name, Enums::DataType type, 
-			bool readOnlyFlag = false, void *defaultV = NULL,
-			void *min=NULL, void *max = NULL, IAPISupport::APIFeatureSupport requires = IAPISupport::OK, Semantics sem=NONE);
+		Attribute(unsigned int id, std::string name, Enums::DataType type, 
+			bool readOnlyFlag = false, Data *defaultV = NULL,
+			Data *min=NULL, Data *max = NULL, 
+			IAPISupport::APIFeatureSupport requires = IAPISupport::OK, Semantics sem=NONE);
 		
 		~Attribute();
 
-		Attribute & operator=(const Attribute &rhs);
+		Attribute(const Attribute & source);
+
+		//Attribute & operator=(const Attribute &rhs);
 
 		static bool isValidUserAttrType(std::string s);
 		static std::vector<std::string> &getValidUserAttrTypes();
@@ -49,18 +54,21 @@ namespace nau {
 		Enums::DataType getType();
 		int getId();
 		bool getRangeDefined();
-		bool getListDefined();
-		void *getMax();
-		void *getMin();
 		bool getReadOnlyFlag();
 		Semantics getSemantics();
+
+		std::shared_ptr<Data> &getMax();
+		std::shared_ptr<Data> &getMin();
+		std::shared_ptr<Data> &getDefault();
+
+		bool getListDefined();
 		int getOptionValue(std::string &s);
 		std::string &getOptionString(int v);
 		const std::vector<std::string> &getOptionStringList();
+		void getOptionListSupported(std::vector<int>* result);
 		void getOptionStringListSupported(std::vector<std::string> *result);
-		void *getDefault();
 
-		void setRange(void *min, void *max);
+		void setDefault(Data &);
 
 		void setRequirement(IAPISupport::APIFeatureSupport req);
 		IAPISupport::APIFeatureSupport getRequirement();
@@ -71,18 +79,18 @@ namespace nau {
 		bool isValid(std::string value);
 		bool isValid(int v);
 
-
+	protected:
 		static std::vector<std::string> m_DummyVS;
 
 		int m_Id;
 		std::string m_Name;
 		Enums::DataType m_Type;
 		bool m_ReadOnlyFlag;
-		void *m_Default;
+		std::shared_ptr<Data> m_Default;
 		bool m_ListDefined;
 		bool m_RangeDefined;
-		void *m_Min;
-		void *m_Max;
+		std::shared_ptr<Data> m_Min;
+		std::shared_ptr<Data> m_Max;
 
 		Semantics m_Semantics;
 		IAPISupport::APIFeatureSupport m_Requires;
@@ -107,17 +115,17 @@ namespace nau {
 		AttribSet();
 		~AttribSet() ;
 
-		int getNextFreeID();
+		unsigned int getNextFreeID();
 
 		void deleteUserAttributes();
 
-		void add(Attribute a);
+		void add(Attribute &a);
 
-		std::map<std::string, Attribute> &getAttributes();
+		std::map<std::string, std::unique_ptr<Attribute>> &getAttributes();
 
 		int getDataTypeCount(Enums::DataType dt);
-		Attribute &get(std::string name);
-		Attribute &get(int id, Enums::DataType dt);
+		std::unique_ptr<Attribute> &get(std::string name);
+		std::unique_ptr<Attribute> &get(int id, Enums::DataType dt);
 		// returns the ID of the attribute
 		// -1 if attribute does not exist
 		int getID(std::string name);
@@ -132,8 +140,11 @@ namespace nau {
 		int getListValueOp(int id, std::string prop);
 		void listAdd(std::string attrName, std::string elemS, int elem_Id, IAPISupport::APIFeatureSupport requires = IAPISupport::OK);
 		bool isValid(std::string attr, std::string value);
-		void setDefault(std::string attr, void *value);
-		void *getDefault(int id, Enums::DataType type);
+		void setDefault(std::string attr, Data &value);
+		//std::unique_ptr<Data> &getDefault(int id, Enums::DataType type);
+
+		//template <typename T>
+		//void initAttribInstanceArray(Enums::DataType, std::map<int, T> &m);
 
 		void initAttribInstanceIntArray(std::map<int, int> &m);
 		void initAttribInstanceInt2Array(std::map<int, ivec2> &m);
@@ -152,8 +163,8 @@ namespace nau {
 
 
 	protected:
-		std::map<std::string, Attribute> m_Attributes;
-		Attribute m_Dummy;
+		std::map<std::string, std::unique_ptr<Attribute>> m_Attributes;
+		std::unique_ptr<Attribute> m_Dummy;
 		std::string m_DummyS;
 		std::vector<std::string> m_DummyVS;
 		std::vector<int> m_DummyVI;

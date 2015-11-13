@@ -408,7 +408,7 @@ OctreeNode::getType (void)
 }
 
 int
-OctreeNode::_octantFor (vec4& v) 
+OctreeNode::_octantFor (VertexAttrib& v)
 {
 	int octant = 8;
 

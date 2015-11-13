@@ -40,8 +40,8 @@ namespace nau
 			void addMaterial (nau::material::Material* aMaterial); /***MARK***/ //To be removed, probably
 			nau::material::Material* getMaterial(std::string s);
 			
-			std::vector<std::string>* getMaterialNames();
-			std::vector<std::string>* getMaterialNames(std::string aName);
+			void getMaterialNames(std::vector<std::string>* ret);
+			void getMaterialNames(const std::string &aName, std::vector<std::string>* ret);
 
 			//void load(std::string &filename);
 			//void save(std::string path);

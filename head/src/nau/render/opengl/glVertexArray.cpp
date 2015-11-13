@@ -137,7 +137,7 @@ GLVertexArray::appendVertex(unsigned int index) {
 
 		if (m_InternalArrays[i] != 0) {
 
-			vec4 v;
+			VertexData::Attr v;
 			v.copy(m_InternalArrays[i]->at(index));
 			m_InternalArrays[i]->push_back(v);
 		}

@@ -34,7 +34,7 @@ MeshPose::eventReceived(const std::string &sender, const std::string &eventType,
 }
 
 void
-MeshPose::setReferencePose(std::vector<vec4> vertexData)
+MeshPose::setReferencePose(std::vector<VertexData::Attr> vertexData)
 {
 	m_ReferencePose.resize(vertexData.size());
 
@@ -178,7 +178,7 @@ MeshPose::setPose(std::map<unsigned int , float > *influences)
 	}
 
 	// for each pose
-	vec4 v2; 
+	VertexData::Attr v2; 
 	for (iter = influences->begin(); iter != influences->end(); ++iter) {
 	//SLOG("Pose %d Influence %f", (*iter).first,(*iter).second);
 		std::vector<vec3> offsets = m_vOffsets[(*iter).first]->getOffsets();

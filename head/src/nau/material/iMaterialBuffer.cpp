@@ -12,7 +12,7 @@ bool
 IMaterialBuffer::Init() {
 
 	// INT
-	Attribs.add(Attribute(BINDING_POINT, "BINDING_POINT", Enums::DataType::INT, false, new int(-1)));
+	Attribs.add(Attribute(BINDING_POINT, "BINDING_POINT", Enums::DataType::INT, false, new NauInt(-1)));
 	// ENUM
 	Attribs.add(Attribute(TYPE, "TYPE", Enums::DataType::ENUM, false));
 

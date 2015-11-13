@@ -118,25 +118,25 @@ GLRenderer::getPropm4(Mat4Property prop) {
 
 	switch (prop) {
 	case VIEW_MODEL:
-		m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
-		m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
-		return m_pReturnMatrix;
+		m_Mat4Props[IRenderer::VIEW_MODEL] = m_Mat4Props[IRenderer::VIEW_MATRIX];
+		m_Mat4Props[IRenderer::VIEW_MODEL] *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+		return m_Mat4Props[IRenderer::VIEW_MODEL];
 	case PROJECTION_VIEW_MODEL:
-		m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
-		m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
-		m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
-		return m_pReturnMatrix;
+		m_Mat4Props[IRenderer::PROJECTION_VIEW_MODEL] = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+		m_Mat4Props[IRenderer::PROJECTION_VIEW_MODEL] *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+		m_Mat4Props[IRenderer::PROJECTION_VIEW_MODEL] *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+		return m_Mat4Props[IRenderer::PROJECTION_VIEW_MODEL];
 	case PROJECTION_VIEW:
-		m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
-		m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
-		return m_pReturnMatrix;
+		m_Mat4Props[IRenderer::PROJECTION_VIEW] = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+		m_Mat4Props[IRenderer::PROJECTION_VIEW] *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+		return m_Mat4Props[IRenderer::PROJECTION_VIEW];
 	case TS05_PVM:
-		m_pReturnMatrix.setIdentity();
-		m_pReturnMatrix.translate(0.5f, 0.5f, 0.5f);
-		m_pReturnMatrix.scale(0.5f);
-		m_pReturnMatrix *= m_Mat4Props[IRenderer::PROJECTION_MATRIX];
-		m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
-		return m_pReturnMatrix;
+		m_Mat4Props[IRenderer::TS05_PVM].setIdentity();
+		m_Mat4Props[IRenderer::TS05_PVM].translate(0.5f, 0.5f, 0.5f);
+		m_Mat4Props[IRenderer::TS05_PVM].scale(0.5f);
+		m_Mat4Props[IRenderer::TS05_PVM] *= m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+		m_Mat4Props[IRenderer::TS05_PVM] *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+		return m_Mat4Props[IRenderer::TS05_PVM];
 	default:
 		return AttributeValues::getPropm4(prop);
 	};
@@ -150,64 +150,64 @@ GLRenderer::getPropm3(Mat3Property prop) {
 	case NORMAL:
 		m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
 		m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
-		m_pReturnMat3.setMatrix(m_pReturnMatrix.getSubMat3());
-		m_pReturnMat3.invert();
-		m_pReturnMat3.transpose();
-		return m_pReturnMat3;
+		m_Mat3Props[IRenderer::NORMAL].setMatrix(m_pReturnMatrix.getSubMat3());
+		m_Mat3Props[IRenderer::NORMAL].invert();
+		m_Mat3Props[IRenderer::NORMAL].transpose();
+		return m_Mat3Props[IRenderer::NORMAL];
 	default:
 		return AttributeValues::getPropm3(prop);
 	}
 }
 
 
-void *
-GLRenderer::getProp(unsigned int prop, Enums::DataType dt) {
-
-	switch (dt) {
-
-	case Enums::MAT4:
-		switch (prop) {
-		case VIEW_MODEL:
-			m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
-			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
-			return (void *)m_pReturnMatrix.getMatrix();
-		case PROJECTION_VIEW_MODEL:
-			m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
-			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
-			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
-			return (void *)m_pReturnMatrix.getMatrix();
-		case PROJECTION_VIEW:
-			m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
-			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
-			return (void *)m_pReturnMatrix.getMatrix();
-		case TS05_PVM:
-			m_pReturnMatrix.setIdentity();
-			m_pReturnMatrix.translate(0.5f, 0.5f, 0.5f);
-			m_pReturnMatrix.scale(0.5f);
-			m_pReturnMatrix *= m_Mat4Props[IRenderer::PROJECTION_MATRIX];
-			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
-			return (void *)m_pReturnMatrix.getMatrix();
-		default:
-			return AttributeValues::getProp(prop, dt);
-		};
-		break;
-	case Enums::MAT3:
-		switch (prop) {
-		case NORMAL:
-			m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
-			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
-			m_pReturnMat3.setMatrix(m_pReturnMatrix.getSubMat3());
-			m_pReturnMat3.invert();
-			m_pReturnMat3.transpose();
-			return (void *)m_pReturnMat3.getMatrix();
-		default:
-			return AttributeValues::getProp(prop, dt);
-		}
-		break;
-	default:
-		return AttributeValues::getProp(prop, dt);
-	}
-}
+//void *
+//GLRenderer::getProp(unsigned int prop, Enums::DataType dt) {
+//
+//	switch (dt) {
+//
+//	case Enums::MAT4:
+//		switch (prop) {
+//		case VIEW_MODEL:
+//			m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
+//			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+//			return (void *)m_pReturnMatrix.getMatrix();
+//		case PROJECTION_VIEW_MODEL:
+//			m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+//			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+//			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+//			return (void *)m_pReturnMatrix.getMatrix();
+//		case PROJECTION_VIEW:
+//			m_pReturnMatrix = m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+//			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+//			return (void *)m_pReturnMatrix.getMatrix();
+//		case TS05_PVM:
+//			m_pReturnMatrix.setIdentity();
+//			m_pReturnMatrix.translate(0.5f, 0.5f, 0.5f);
+//			m_pReturnMatrix.scale(0.5f);
+//			m_pReturnMatrix *= m_Mat4Props[IRenderer::PROJECTION_MATRIX];
+//			m_pReturnMatrix *= m_Mat4Props[IRenderer::VIEW_MATRIX];
+//			return (void *)m_pReturnMatrix.getMatrix();
+//		default:
+//			return AttributeValues::getProp(prop, dt);
+//		};
+//		break;
+//	case Enums::MAT3:
+//		switch (prop) {
+//		case NORMAL:
+//			m_pReturnMatrix = m_Mat4Props[IRenderer::VIEW_MATRIX];
+//			m_pReturnMatrix *= m_Mat4Props[IRenderer::MODEL_MATRIX];
+//			m_pReturnMat3.setMatrix(m_pReturnMatrix.getSubMat3());
+//			m_pReturnMat3.invert();
+//			m_pReturnMat3.transpose();
+//			return (void *)m_pReturnMat3.getMatrix();
+//		default:
+//			return AttributeValues::getProp(prop, dt);
+//		}
+//		break;
+//	default:
+//		return AttributeValues::getProp(prop, dt);
+//	}
+//}
 
 
 
@@ -278,12 +278,12 @@ GLRenderer::getLight(unsigned int i) {
 
 
 bool
-GLRenderer::addLight(nau::scene::Light& aLight) {
+GLRenderer::addLight(nau::scene::Light *aLight) {
 
 	int id = (unsigned int)m_Lights.size();
 
-	aLight.setPropi(Light::ID, id);
-	m_Lights.push_back(&aLight);
+	aLight->setPropi(Light::ID, id);
+	m_Lights.push_back(aLight);
 	m_IntProps[LIGHT_COUNT]++;
 
 	return true;
@@ -481,20 +481,21 @@ GLRenderer::rotate(MatrixMode mode, float angle, nau::math::vec3 &axis) {
 
 
 void
-GLRenderer::setMaterial(float *diffuse, float *ambient, float *emission, float *specular, float shininess) {
+GLRenderer::setMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess) {
 
 	m_Material.setPropf(ColorMaterial::SHININESS, shininess);
-	m_Material.setPropf4(ColorMaterial::DIFFUSE, diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
-	m_Material.setPropf4(ColorMaterial::AMBIENT, ambient[0], ambient[1], ambient[2], ambient[3]);
-	m_Material.setPropf4(ColorMaterial::EMISSION, emission[0], emission[1], emission[2], emission[3]);
-	m_Material.setPropf4(ColorMaterial::SPECULAR, specular[0], specular[1], specular[2], specular[3]);
+	m_Material.setPropf4(ColorMaterial::DIFFUSE, diffuse);
+	m_Material.setPropf4(ColorMaterial::AMBIENT, ambient);
+	m_Material.setPropf4(ColorMaterial::EMISSION, emission);
+	m_Material.setPropf4(ColorMaterial::SPECULAR, specular);
 }
 
 
 void
 GLRenderer::setMaterial(ColorMaterial &mat) {
 
-	m_Material.clone(mat);
+	m_Material = mat;
+	//m_Material.clone(mat);
 }
 
 
@@ -1181,7 +1182,7 @@ GLRenderer::showDrawDebugInfo(IProgram *pp, nau::util::Tree *tree) {
 					glGetUniformdv(program, i, (GLdouble *)values);
 					break;
 				}
-				s = Enums::valueToString(GLUniform::spSimpleType[(GLenum)uniType], values);
+				s = Enums::pointerToString(GLUniform::spSimpleType[(GLenum)uniType], values);
 			}
 			else s = "";
 			int auxSize;

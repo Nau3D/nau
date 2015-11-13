@@ -82,7 +82,7 @@ GLImageTexture::GLImageTexture(std::string label, unsigned int unit, unsigned in
 	m_Type = t->getPrope(ITexture::TYPE);
 	m_Dimension = t->getPrope(ITexture::DIMENSION);
 	m_EnumProps[INTERNAL_FORMAT] = t->getPrope(ITexture::INTERNAL_FORMAT);
-	memset(m_Data, 0, sizeof(m_Data));
+	//memset(m_Data, 0, sizeof(m_Data));
 	m_Label = label;
 }
 

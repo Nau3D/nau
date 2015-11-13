@@ -1,6 +1,8 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
+#include "nau/math/data.h"
+
 #include <string>
 
 namespace nau {
@@ -36,7 +38,8 @@ namespace nau {
 		static Enums::DataType getType(std::string s);
 		static bool isValidType(std::string s);
 		static int getSize(DataType p);
-		static void* getDefaultValue(DataType p);
+		static nau::math::Data *getDefaultValue(DataType p);
+		//static void* getDefaultValue(DataType p);
 		/// returns true if p1 is compatible with p2 
 		static bool isCompatible(DataType p1, DataType p2);
 		static bool isBasicType(DataType t);
@@ -45,6 +48,7 @@ namespace nau {
 		static std::string &valueToString(DataType p, void *v);
 		static std::string &valueToStringAligned(DataType p, void *v);
 		static DataType getBasicType(DataType dt);
+		static std::string &pointerToString(DataType p, void *v);
 
 	private:
 		static std::string m_Result;

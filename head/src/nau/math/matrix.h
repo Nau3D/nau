@@ -22,9 +22,9 @@ namespace nau
 		class matrix: public Data{
 
 		protected:
-			T m_Matrix[DIMENSION*DIMENSION];
 
 		public:
+			T m_Matrix[DIMENSION*DIMENSION];
 
 			matrix() {
 				setIdentity();
@@ -36,6 +36,17 @@ namespace nau
 			}
 
 			~matrix() {};
+
+			Data *clone() {
+				matrix<T, DIMENSION> *m = new(matrix<T, DIMENSION>);
+				memcpy(m->m_Matrix, m_Matrix, DIMENSION*DIMENSION*sizeof(T));
+				return m;
+			}
+
+
+			void *getPtr() {
+				return m_Matrix;
+			}
 
 			T at(unsigned int i, unsigned int j) const {
 				assert(i < DIMENSION && j < DIMENSION);
@@ -181,7 +192,7 @@ namespace nau
 		public:
 			matrix3() : matrix() {}
 
-			matrix3(const float *mat) : matrix(mat) {}
+			matrix3(const T *mat) : matrix(mat) {}
 
 			matrix3 *clone() {
 
@@ -232,7 +243,7 @@ namespace nau
 		public:
 			matrix2() : matrix() {}
 
-			matrix2(const float *mat) : matrix(mat) {}
+			matrix2(const T *mat) : matrix(mat) {}
 
 			matrix2 *clone() {
 
@@ -272,7 +283,7 @@ namespace nau
 		public:
 			matrix4() : matrix() {}
 
-			matrix4(const float *mat) : matrix(mat) {}
+			matrix4(const T *mat) : matrix(mat) {}
 
 			matrix4 *clone() {
 
@@ -314,6 +325,25 @@ namespace nau
 				v.copy(aux);
 			}
 
+			void transform(float *v) const {
+
+				float aux[4];
+				const T *m = m_Matrix;
+
+				aux[0] = (v[0] * m[0]) + (v[1] * m[4]) + (v[2] * m[8])  + (v[3] * m[12]);
+				aux[1] = (v[0] * m[1]) + (v[1] * m[5]) + (v[2] * m[9])  + (v[3] * m[13]);
+				aux[2] = (v[0] * m[2]) + (v[1] * m[6]) + (v[2] * m[10]) + (v[3] * m[14]);
+				aux[3] = (v[0] * m[3]) + (v[1] * m[7]) + (v[2] * m[11]) + (v[3] * m[15]);
+				if (!FloatEqual(aux[3], 0.0)) {
+					float k = 1 / aux[3];
+					for (int i = 0; i < 4; ++i)
+						aux[i] *= k;
+				}
+
+				for (int i = 0; i < 4; ++i)
+					v[i] = aux[i];
+			}
+
 			// Transform (i.e. multiply) a vector (w=1) by this matrix.
 			void transform3(vec4 &v) const {
 
@@ -326,6 +356,20 @@ namespace nau
 				aux.w = v.w;
 				v.copy(aux);
 
+				return;
+			}
+
+			void transform3(float *v) const {
+
+				float aux[3];
+				const T *m = this->m_Matrix;
+
+				aux[0] = (v[0] * m[0]) + (v[1] * m[4]) + (v[2] * m[8]);
+				aux[1] = (v[0] * m[1]) + (v[1] * m[5]) + (v[2] * m[9]);
+				aux[2] = (v[0] * m[2]) + (v[1] * m[6]) + (v[2] * m[10]);
+
+				for (int i = 0; i < 3; ++i)
+					v[i] = aux[i];
 				return;
 			}
 
@@ -551,13 +595,14 @@ namespace nau
 		//----------------------------------------------------------
 
 
-		template <typename T, int COLUMNS, int LINES >
+		template <typename T, int LINES, int COLUMNS >
 		class matrixNS: public Data{
 
 		protected:
-			T m_Matrix[LINES * COLUMNS];
 
 		public:
+
+			T m_Matrix[LINES * COLUMNS];
 
 			matrixNS() {
 				for (int i = 0; i < LINES*COLUMNS; ++i) {
@@ -571,6 +616,16 @@ namespace nau
 			}
 
 			~matrixNS() {};
+
+			Data *clone() {
+				matrixNS<T, LINES, COLUMNS> *m = new(matrixNS<T, LINES, COLUMNS>);
+				memcpy(m->m_Matrix, m_Matrix, LINES*COLUMNS*sizeof(T));
+				return m;
+			}
+
+			void *getPtr() {
+				return m_Matrix;
+			}
 
 			T at(unsigned int i, unsigned int j) const {
 				assert(i < LINES && j < COLUMNS);

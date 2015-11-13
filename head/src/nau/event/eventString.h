@@ -11,9 +11,9 @@ namespace nau
 		class EventString : public IEventData
 		{
 		public:
-			std::string *str;
+			std::string m_Str;
 
-			EventString(std::string *str);
+			//EventString(std::string *str);
 			EventString(const EventString &s);
 			EventString(void);
 			~EventString(void);
