@@ -65,12 +65,12 @@ namespace nau
 			// LIGHTS
 
 		protected:
-			std::vector<Light *> m_Lights;
+			std::vector<std::shared_ptr<Light>> m_Lights;
 
 		public:
 			virtual unsigned int getLightCount();
-			virtual Light *getLight(unsigned int id);
-			virtual bool addLight(nau::scene::Light *aLight);
+			virtual std::shared_ptr<Light> &getLight(unsigned int id);
+			virtual bool addLight(std::shared_ptr<Light> &l);
 			virtual void removeLights();
 
 

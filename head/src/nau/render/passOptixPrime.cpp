@@ -271,12 +271,14 @@ PassOptixPrime::Init() {
 PassOptixPrime::PassOptixPrime(const std::string &passName) : Pass(passName) {
 
 	m_ClassName = "optix prime";
+	m_Context = NULL;
 }
 
 
 PassOptixPrime::~PassOptixPrime() {
 
-	CHK_PRIME(rtpContextDestroy(m_Context));
+	if (m_Context)
+		CHK_PRIME(rtpContextDestroy(m_Context));
 }
 
 
@@ -366,6 +368,8 @@ PassOptixPrime::initOptixPrime() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, v->size() * sizeof(int), &(*v)[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	int numInd = (int)v->size();
+
+	delete v;
 
 	void * devPtrInd;
 	k = cudaGraphicsGLRegisterBuffer(&cglInd, index, cudaGraphicsRegisterFlagsReadOnly);

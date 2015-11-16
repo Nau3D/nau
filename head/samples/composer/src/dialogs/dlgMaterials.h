@@ -74,7 +74,7 @@ private:
 //	static OGLCanvas *canvas;
 	static DlgMaterials *inst;
 
-	wxBitmap *empty;
+	wxBitmap *m_EmptyBitmap;
 
 	/* GLOBAL STUFF */
 	wxWindow *m_parent;

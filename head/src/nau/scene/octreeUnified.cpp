@@ -26,8 +26,7 @@ OctreeUnified::OctreeUnified(void) : IScenePartitioned(),
 
 OctreeUnified::~OctreeUnified(void)
 {
-	if (m_SceneObject)
-		delete m_SceneObject;
+	delete m_SceneObject;
 
 	m_vReturnVector.clear();
 }

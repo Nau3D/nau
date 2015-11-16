@@ -64,11 +64,14 @@ protected:
 	wxGrid *m_GridTextures;
 	wxPropertyGridManager *m_PGTextureProps;
 	std::vector<ImageGridCellRenderer*> m_ImagesGrid;
+
+	wxBitmap *m_EmptyBitmap;
+
 	void setupTexturesPanel(wxSizer *siz, wxWindow *parent);
 	void updateTextures(int index);
 	void OnProcessTexturePropsChange( wxPropertyGridEvent& e);
 	void setTextureProps(int index);
-	void loadTextureDialog(wxGridEvent &e);
+	//void loadTextureDialog(wxGridEvent &e);
 	void OnprocessDClickGrid(wxGridEvent &e);
 	void OnprocessClickGrid(wxGridEvent &e);
 	void OnAddTex(wxCommandEvent& event);

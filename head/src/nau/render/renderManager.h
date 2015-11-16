@@ -31,7 +31,7 @@ namespace nau
 //			std::map<std::string, Pipeline*> m_Pipelines;
 			std::vector<Pipeline*> m_Pipelines;
 			std::map<std::string, nau::scene::Camera*> m_Cameras;
-			std::map<std::string, nau::scene::Light*> m_Lights;
+			std::map<std::string, std::shared_ptr<nau::scene::Light>> m_Lights;
 			std::map<std::string, nau::scene::IScene*> m_Scenes;
 			std::vector<nau::scene::SceneObject*> m_SceneObjects;
 			std::map <std::string, nau::render::Viewport*> m_Viewports; 
@@ -156,9 +156,9 @@ namespace nau
 			//! Checks to see if the given named light exists
 			bool hasLight (const std::string &lightName);
 			//! Returns a pointer to the given named light. If the light does not exist it creates one
-			nau::scene::Light* getLight (const std::string &lightName);
+			std::shared_ptr<Light> &getLight (const std::string &lightName);
 			//! Returns the named light. If it does not exist, it creates a light of the given class
-			nau::scene::Light* getLight (const std::string &lightName, const std::string &lightClass);
+			std::shared_ptr<Light> &createLight (const std::string &lightName, const std::string &lightClass);
 			//! Returns the number of lights
 			unsigned int getNumLights();
 			//! Returns a vector with the name of all the lights

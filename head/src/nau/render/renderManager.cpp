@@ -44,10 +44,10 @@ RenderManager::clear() {
 		m_Cameras.erase(m_Cameras.begin());
 	}
 
-	while (!m_Lights.empty()){
-		delete ((*m_Lights.begin()).second);
-		m_Lights.erase(m_Lights.begin());
-	}
+	//while (!m_Lights.empty()){
+	//	delete ((*m_Lights.begin()).second);
+	//	m_Lights.erase(m_Lights.begin());
+	//}
 
 	while (!m_Scenes.empty()){
 		delete ((*m_Scenes.begin()).second);
@@ -88,18 +88,23 @@ RenderManager::init() {
 Viewport*
 RenderManager::createViewport(const std::string &name, nau::math::vec4 &bgColor) {
 
-	Viewport* v = new Viewport;
+	if (m_Viewports.count(name) == 0) {
 
-	v->setName(name);
-	v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
-	v->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight()));
+		Viewport* v = new Viewport;
 
-	v->setPropf4(Viewport::CLEAR_COLOR, bgColor);
-	v->setPropb(Viewport::FULL, true);
+		v->setName(name);
+		v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
+		v->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight()));
 
-	m_Viewports[name] = v;
+		v->setPropf4(Viewport::CLEAR_COLOR, bgColor);
+		v->setPropb(Viewport::FULL, true);
 
-	return v;
+		m_Viewports[name] = v;
+		return v;
+	}
+	else
+		return m_Viewports[name];
+
 }
 
 
@@ -113,16 +118,20 @@ RenderManager::hasViewport(const std::string &name) {
 Viewport*
 RenderManager::createViewport(const std::string &name) {
 
-	Viewport* v = new Viewport;
+	if (m_Viewports.count(name) == 0) {
+		Viewport* v = new Viewport;
 
-	v->setName(name);
-	v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
-	v->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight()));
-	v->setPropb(Viewport::FULL, true);
+		v->setName(name);
+		v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
+		v->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight()));
+		v->setPropb(Viewport::FULL, true);
 
-	m_Viewports[name] = v;
+		m_Viewports[name] = v;
 
-	return v;
+		return v;
+	}
+	else
+		return m_Viewports[name];
 }
 
 
@@ -576,6 +585,7 @@ RenderManager::getDefaultCameraName() {
 
 Camera* 
 RenderManager::getCamera (const std::string &cameraName) {
+
 	if (false == hasCamera (cameraName)) {
 		m_Cameras[cameraName] = new Camera (cameraName);
 	}
@@ -599,8 +609,8 @@ RenderManager::getLightNames() {
 
 	std::vector<std::string> *names = new std::vector<std::string>; 
 
-	for( std::map<std::string, nau::scene::Light*>::iterator iter = m_Lights.begin(); iter != m_Lights.end(); ++iter ) {
-      names->push_back((*iter).first); 
+	for( auto &light: m_Lights) {
+      names->push_back(light.first); 
     }
 	return names;
 }
@@ -616,21 +626,21 @@ RenderManager::hasLight (const std::string &lightName) {
 }
 
 
-Light* 
+std::shared_ptr<Light> &
 RenderManager::getLight (const std::string &lightName) {
 
 	if (false == hasLight (lightName)) {
-		m_Lights[lightName] = nau::scene::LightFactory::create(lightName,"Light");
+		m_Lights[lightName] = std::shared_ptr<nau::scene::Light>(nau::scene::LightFactory::create(lightName, "Light"));
 	}
 	return m_Lights[lightName];
 }
 
 
-Light* 
-RenderManager::getLight (const std::string &lightName, const std::string &lightClass) {
+std::shared_ptr<Light> &
+RenderManager::createLight (const std::string &lightName, const std::string &lightClass) {
 
 	if (false == hasLight (lightName)) {
-		m_Lights[lightName] = nau::scene::LightFactory::create(lightName,lightClass);
+		m_Lights[lightName] = std::shared_ptr<nau::scene::Light>(nau::scene::LightFactory::create(lightName, lightClass));
 	}
 	return m_Lights[lightName];
 }
@@ -708,8 +718,10 @@ RenderManager::createScene (const std::string &sceneName, const std::string &sce
 			m_Scenes[sceneName] = s;
 			s->setName(sceneName);
 		}
+		return s;
 	} 
-	return m_Scenes[sceneName]; //Or should it return NULL if it exists a scene with that name already
+	else
+		return m_Scenes[sceneName]; //Or should it return NULL if it exists a scene with that name already
 }
 
 

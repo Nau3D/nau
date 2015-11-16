@@ -33,6 +33,10 @@ Material::~Material() {
 		delete((*m_Textures.begin()).second);
 		m_Textures.erase(m_Textures.begin());
 	}
+	while (!m_Buffers.empty()) {
+		delete((*m_Buffers.begin()).second);
+		m_Buffers.erase(m_Buffers.begin());
+	}
 }
 
 

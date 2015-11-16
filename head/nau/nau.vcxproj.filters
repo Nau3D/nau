@@ -196,9 +196,6 @@
     <ClCompile Include="..\src\nau\event\timeSensor.cpp">
       <Filter>Source Files\event</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\event\touchSensor.cpp">
-      <Filter>Source Files\event</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\scene\octreeByMat.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
@@ -1069,9 +1066,6 @@
   <ItemGroup>
     <CustomBuildStep Include="..\src\nau\math\spherical.h">
       <Filter>Source Files\math</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="..\src\nau\event\touchSensor.h">
-      <Filter>Source Files\event</Filter>
     </CustomBuildStep>
     <CustomBuildStep Include="..\src\nau\render\passQuad.h">
       <Filter>Source Files\render</Filter>

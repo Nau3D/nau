@@ -30,8 +30,10 @@ OctreeScene::~OctreeScene(void)
 {
 	delete m_pGeometry;
 
-	m_SceneObjects.clear();
-	m_vReturnVector.clear();
+	while (!m_SceneObjects.empty()) {
+		delete(*m_SceneObjects.begin());
+		m_SceneObjects.erase(m_SceneObjects.begin());
+	}
 }
 
 

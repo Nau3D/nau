@@ -212,5 +212,6 @@ IndexData::buildAdjacencyList() {
 		m_AdjIndexArray[i*6+4] = edge[3*i + 2].next->vertex;
 		m_AdjIndexArray[i*6+5] = edge[3*i + 2].twin?edge[3*i + 2].twin->vertex:edge[3*i + 2].next->vertex;
 
-	}	
+	}
+	free(edge);
 }

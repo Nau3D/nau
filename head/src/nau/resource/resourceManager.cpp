@@ -46,7 +46,6 @@ void
 ResourceManager::clear() {
 
 	while(!m_Textures.empty()) {
-
 		delete(*m_Textures.begin());
 		m_Textures.erase(m_Textures.begin());
 	}

@@ -229,7 +229,7 @@ DlgLights::update() {
 
 
 	nau::scene::Light *light;		
-	light = RENDERMANAGER->getLight(m_active);
+	light = RENDERMANAGER->getLight(m_active).get();
 //	unsigned int type = light->getPrope(Light::TYPE);
 
 	m_PG->ClearSelection();
@@ -242,7 +242,7 @@ DlgLights::update() {
 
 void DlgLights::OnPropsChange( wxPropertyGridEvent& e) {
 
-	nau::scene::Light *light = RENDERMANAGER->getLight(m_active);
+	nau::scene::Light *light = RENDERMANAGER->getLight(m_active).get();
 	const wxString& name = e.GetPropertyName();
 	unsigned int dotLocation = name.find_first_of(wxT("."),0);
 	std::string topProp = std::string(name.substr(0,dotLocation).mb_str());
@@ -302,7 +302,7 @@ void DlgLights::OnAdd(wxCommandEvent& event) {
 		m_List->Enable();
 		m_PG->Enable();
 		updateList();
-		m_List->Select(m_List->FindString((wxChar *)name.c_str()));
+		m_List->Select(m_List->FindString(wxString(name.c_str())));
 		m_active = name;
 		update();
 		notifyUpdate(NEW_LIGHT,name,"");

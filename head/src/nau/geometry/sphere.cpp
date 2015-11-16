@@ -99,6 +99,8 @@ Sphere::build() {
 	//aMaterialGroup->setMaterialName("Light Grey");
 
 	addMaterialGroup (aMaterialGroup);
+
+	delete aMaterialGroup;
 }
 
 

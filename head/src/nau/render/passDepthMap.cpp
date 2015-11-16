@@ -25,15 +25,15 @@ PassDepthMap::PassDepthMap (const std::string &passName) :
 	Pass (passName) {
 
 	m_ClassName = "depthmap";
-	m_Viewport = new Viewport;
 	std::string camName = passName + "-LightCam";
+	m_Viewport = RENDERMANAGER->createViewport(camName);	
 	m_LightCamera = RENDERMANAGER->getCamera(camName);
 }
 
 
 PassDepthMap::~PassDepthMap(void) {
 
-	delete m_LightCamera;
+//	delete m_LightCamera;
 }
 
 
@@ -48,8 +48,9 @@ void
 PassDepthMap::addLight(const std::string &lightName) {
 
 	m_Lights.push_back (lightName);
+	//std::shared_ptr<Light> &l = RENDERMANAGER->getLight(*lightsIter);
 
-	Light *light = RENDERMANAGER->getLight (m_Lights[0]);
+	std::shared_ptr<Light> &light = RENDERMANAGER->getLight (m_Lights[0]);
 	if (!m_ExplicitViewport) {
 		uivec2 uiv = uivec2(m_RenderTarget->getPropui2(IRenderTarget::SIZE));
 		m_Viewport->setPropf2(Viewport::SIZE, vec2((float)uiv.x, (float)uiv.y));

@@ -447,6 +447,7 @@ ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::A
 			}
 
 			anObj->setProp(id, a->getType(), value);
+			delete value;
 		}
 		attrib = attrib->Next();
 	}
@@ -898,11 +899,11 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					NAU_THROW("File %s\nScene %s, Object:%s\ntype is not defined", ProjectLoader::s_File.c_str(), pName, pNameSO);
 
 				GeometricObject *go = (GeometricObject *)nau::scene::SceneObjectFactory::create("Geometry");
-
 				if (go == NULL)
 					NAU_THROW("File %s\nScene %s\nInvalid scene type", ProjectLoader::s_File.c_str(), pName);
-				if (pNameSO)
-					go->setName(pNameSO);
+				
+				go->setName(pNameSO);
+
 				bool alreadyThere = false;
 				Primitive *p;
 				if (RESOURCEMANAGER->hasRenderable(pNameSO, "")) {
@@ -1316,7 +1317,6 @@ void
 ProjectLoader::loadLights(TiXmlHandle handle) 
 {
 	TiXmlElement *pElem;
-	Light *l;
 
 	std::vector<std::string> ok = {"light"};
 	checkForNonValidChildTags("lights", ok, handle.FirstChild("lights").Element());
@@ -1335,14 +1335,17 @@ ProjectLoader::loadLights(TiXmlHandle handle)
 		if (RENDERMANAGER->hasLight(pName))
 			NAU_THROW("File %s\nLight %s is already defined", ProjectLoader::s_File.c_str(), pName);
 
-		if (0 == pClass) 
-			l = RENDERMANAGER->getLight (pName);
-		else
-			l = RENDERMANAGER->getLight (pName, pClass);
+		std::vector<std::string> excluded;
+		std::shared_ptr<Light> l;
+		if (0 == pClass) {
+			l = RENDERMANAGER->getLight(pName);
+		}
+		else {
+			l = RENDERMANAGER->createLight(pName, pClass);
+		}
+			readChildTags(pName, (AttributeValues *)l.get(), Light::Attribs, excluded, pElem);
 		
 		// Reading Light Attributes
-		std::vector<std::string> excluded;
-		readChildTags(pName, (AttributeValues *)l, Light::Attribs, excluded, pElem);
 
 	}//End of lights
 }
@@ -1517,13 +1520,16 @@ ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 		std::unique_ptr<Attribute> &a = aPass->getAttribSet()->get("TEST_MODE");
 
 		Data *val = readAttribute("TEST_MODE", a, pElem);
-		int value = dynamic_cast<NauInt *>(val)->getNumber();
-		if (a->isValid(value))
-			aPass->setProp(Pass::TEST_MODE, Enums::ENUM, val);
-		else {
-			std::string s = getValidValuesString(a);
-			NAU_THROW("File %s\nElement testScript: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), a->getName().c_str(), s.c_str());
+		if (val != NULL) {
+			int value = dynamic_cast<NauInt *>(val)->getNumber();
+			if (a->isValid(value))
+				aPass->setProp(Pass::TEST_MODE, Enums::ENUM, val);
+			else {
+				std::string s = getValidValuesString(a);
+				NAU_THROW("File %s\nElement testScript: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), a->getName().c_str(), s.c_str());
 
+			}
+			delete val;
 		}
 
 		aPass->setTestScript(File::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
@@ -1611,6 +1617,7 @@ ProjectLoader::loadPassScenes(TiXmlHandle hPass, Pass *aPass)
 	if (d != NULL) {
 		unsigned int ui = dynamic_cast<NauUInt *>(d)->getNumber();
 		aPass->setPropui(Pass::INSTANCE_COUNT, ui);
+		delete d;
 	}
 	const char* pDrawIndirect = pElem->Attribute("drawIndirectBuffer");
 	if (pDrawIndirect != NULL)
@@ -2483,8 +2490,10 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 					NAU_THROW("File %s\nPass %s\nNo offset defined for buffer %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
 			}
 		}
-		if (res)
+		if (res) {
 			r1 = dynamic_cast<NauUInt *>(res)->getNumber();
+			delete res;
+		}
 		// Read value or buffer id for dimY
 		std::unique_ptr<Attribute> &attr2 = attrs->get(PassCompute::DIM_Y, Enums::UINT);
 		Data *res2 = readAttribute("dimY", attr, pElem);
@@ -2505,8 +2514,10 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 					NAU_THROW("File %s\nPass %s\nNo offset defined for buffer %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtY);
 			}
 		}
-		if (res2)
+		if (res2) {
 			r2 = dynamic_cast<NauUInt *>(res2)->getNumber();
+			delete res2; 
+		}
 		// Read value or buffer id for dimZ
 		std::unique_ptr<Attribute> &attr3 = attrs->get(PassCompute::DIM_Z, Enums::UINT);
 
@@ -2528,8 +2539,10 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 					NAU_THROW("File %s\nPass %s\nNo offset defined for buffer %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtZ);
 			}
 		}
-		if (res3)
+		if (res3) {
 			r3 = dynamic_cast<NauUInt *>(res3)->getNumber();
+			delete res3;
+		}
 
 		p->setMaterialName (pLibName, pMatName);
 		p->setDimension( r1, r2, r3);	

@@ -53,6 +53,7 @@ DlgTextureLib::DlgTextureLib()
 	m_Name("DlgTextureLib")
                 
 {
+	m_EmptyBitmap = new wxBitmap(96, 96);
 
 	m_ActiveTexture = 0;
 
@@ -76,6 +77,8 @@ DlgTextureLib::~DlgTextureLib() {
 		delete b.second;
 	}
 	m_Bitmaps.clear();
+
+	delete m_EmptyBitmap;
 }
 
 
@@ -217,7 +220,7 @@ void DlgTextureLib::updateTextures(int index) {
 		unsigned char *data = ti->getRGBData();
 
 		if (data == NULL)
-			m_ImagesGrid[j]->setBitmap(new wxBitmap(96,96));
+			m_ImagesGrid[j]->setBitmap(m_EmptyBitmap);
 		else {
 			wxImage *ima = new wxImage(ti->getWidth(), ti->getHeight(), data, true);
 			ima->Rescale(96, 96);

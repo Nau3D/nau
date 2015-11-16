@@ -19,6 +19,7 @@ namespace nau
 	{
 		class Light: public SceneObject
 		{
+			friend class LightFactory;
 		public:
 
 			FLOAT4_PROP(POSITION,0);
@@ -40,7 +41,6 @@ namespace nau
 
 			static AttribSet Attribs;
 
-			Light (std::string &name);
 			~Light(void);
 
 			// returns "LIGHT"
@@ -52,6 +52,7 @@ namespace nau
 
 		protected:
 
+			Light (std::string &name);
 			static bool Inited;
 			static bool Init();
 		};

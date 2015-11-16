@@ -48,6 +48,7 @@ BBox::BBox(void) : Primitive(),
 	//aMaterialGroup->setParent (this);
 	//aMaterialGroup->setMaterialName("__Emission Blue");
 	addMaterialGroup (aMaterialGroup);
+	delete aMaterialGroup;
 
 	//LEFT
 	indices = new std::vector<unsigned int>(4);
@@ -61,6 +62,7 @@ BBox::BBox(void) : Primitive(),
 	//aMaterialGroup->setParent (this);
 	//aMaterialGroup->setMaterialName("__Emission Cyan");
 	addMaterialGroup (aMaterialGroup);
+	delete aMaterialGroup;
 
 	//BACK
 	indices = new std::vector<unsigned int>(4);
@@ -74,6 +76,7 @@ BBox::BBox(void) : Primitive(),
 	//aMaterialGroup->setParent (this);
 	//aMaterialGroup->setMaterialName("__Emission Yellow");
 	addMaterialGroup (aMaterialGroup);
+	delete aMaterialGroup;
 
 	//RIGHT
 	indices = new std::vector<unsigned int>(4);
@@ -87,6 +90,7 @@ BBox::BBox(void) : Primitive(),
 	//aMaterialGroup->setParent (this);
 	//aMaterialGroup->setMaterialName("__Emission Red");
 	addMaterialGroup (aMaterialGroup);
+	delete aMaterialGroup;
 
 	//TOP
 	indices = new std::vector<unsigned int>(4);
@@ -100,6 +104,7 @@ BBox::BBox(void) : Primitive(),
 	//aMaterialGroup->setParent (this);
 	//aMaterialGroup->setMaterialName("__Emission Green");
 	addMaterialGroup (aMaterialGroup);
+	delete aMaterialGroup;
 
 	//BOTTOM
 	indices = new std::vector<unsigned int>(4);
@@ -113,6 +118,7 @@ BBox::BBox(void) : Primitive(),
 	//aMaterialGroup->setParent (this);
 	//aMaterialGroup->setMaterialName("__Emission Purple");
 	addMaterialGroup (aMaterialGroup);
+	delete aMaterialGroup;
 }
 
 

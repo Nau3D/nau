@@ -663,18 +663,6 @@
     <ClCompile Include="..\src\nau\event\route.cpp" />
     <ClCompile Include="..\src\nau\event\sensorFactory.cpp" />
     <ClCompile Include="..\src\nau\event\timeSensor.cpp" />
-    <ClCompile Include="..\src\nau\event\touchSensor.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\src\nau\util\tree.cpp" />
     <ClCompile Include="..\src\nau\world\bulletMotionState.cpp" />
     <ClCompile Include="..\src\nau\world\bulletWorld.cpp" />
@@ -908,18 +896,6 @@
     <ClInclude Include="..\src\nau\event\sensor.h" />
     <ClInclude Include="..\src\nau\event\sensorFactory.h" />
     <ClInclude Include="..\src\nau\event\timeSensor.h" />
-    <CustomBuildStep Include="..\src\nau\event\touchSensor.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
-    </CustomBuildStep>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\src\optix\common.cu">

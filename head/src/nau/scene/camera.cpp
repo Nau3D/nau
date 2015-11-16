@@ -115,11 +115,10 @@ Camera::Camera (const std::string &name) :
 	indices->at (14) = Camera::BOTTOM_LEFT_FAR;		indices->at (15) = Camera::TOP_LEFT_FAR;
 
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (renderable);
-	//aMaterialGroup->setMaterialName("__Black");
-	//aMaterialGroup->setMaterialName("__Emission White");
 
 	renderable->addMaterialGroup (aMaterialGroup);
+	delete aMaterialGroup;
+
 	m_Transform = m_Mat4Props[VIEW_INVERSE_MATRIX];
 	setRenderable (renderable);
 
@@ -131,11 +130,10 @@ Camera::Camera (const std::string &name) :
 	indices->at (6) = Camera::BOTTOM_LEFT_NEAR;		indices->at (7) = Camera::TOP_LEFT_NEAR;
 
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (renderable);
-	//aMaterialGroup->setMaterialName("__Black");
-//	aMaterialGroup->setMaterialName("__Emission Red");
 
 	renderable->addMaterialGroup (aMaterialGroup);
+	delete aMaterialGroup;
+
 	setRenderable (renderable);
 
 	IScene *s = RENDERMANAGER->createScene(name, "SceneAux");

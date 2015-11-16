@@ -220,7 +220,8 @@ PassOptix::setRenderTarget (nau::render::IRenderTarget* rt)
 	}
 	else {
 		if (m_RenderTarget == NULL){
-			m_Viewport = new Viewport();
+			std::string s = "__" + m_Name;
+			m_Viewport = RENDERMANAGER->createViewport(s);
 			m_UseRT = true;
 		}
 		setRTSize(rt->getPropui2(IRenderTarget::SIZE));

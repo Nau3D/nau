@@ -269,7 +269,7 @@ GLRenderer::getLightCount() {
 }
 
 
-Light *
+std::shared_ptr<Light> &
 GLRenderer::getLight(unsigned int i) {
 
 	assert(i < m_Lights.size());
@@ -278,7 +278,7 @@ GLRenderer::getLight(unsigned int i) {
 
 
 bool
-GLRenderer::addLight(nau::scene::Light *aLight) {
+GLRenderer::addLight(std::shared_ptr<Light> &aLight) {
 
 	int id = (unsigned int)m_Lights.size();
 

@@ -133,9 +133,9 @@ namespace nau
 			/// returns the number of active lights
 			virtual unsigned int getLightCount() = 0;
 			/// returns light index i
-			virtual Light *getLight(unsigned int i) = 0;
+			virtual std::shared_ptr<Light> &getLight(unsigned int i) = 0;
 			/// adds a light at the next free index
-			virtual bool addLight(nau::scene::Light* aLight) = 0;
+			virtual bool addLight(std::shared_ptr<Light> &l) = 0;
 			/// removes all lights
 			virtual void removeLights() = 0;
 

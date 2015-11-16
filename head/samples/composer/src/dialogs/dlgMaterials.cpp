@@ -74,7 +74,7 @@ DlgMaterials* DlgMaterials::Instance () {
 
 DlgMaterials::~DlgMaterials() {
 
-	delete empty;
+	delete m_EmptyBitmap;
 }
 
 
@@ -86,7 +86,7 @@ DlgMaterials::DlgMaterials()
 	m_parent = DlgMaterials::parent;
 
 	m_copyMat = NULL;
-	empty = new wxBitmap(96, 96);
+	m_EmptyBitmap = new wxBitmap(96, 96);
 
 	/* ----------------------------------------------------------------
 								 Toolbar
@@ -824,7 +824,7 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 			if (texture != NULL)
 				imagesGrid[i * 4 + j] = new ImageGridCellRenderer(DlgTextureLib::Instance()->m_Bitmaps[texture->getPropi(ITexture::ID)]);
 			else
-				imagesGrid[i*4+j] = new ImageGridCellRenderer(new wxBitmap(96,96));
+				imagesGrid[i*4+j] = new ImageGridCellRenderer(m_EmptyBitmap);
 			gridTextures->SetCellRenderer(i, j, imagesGrid[i*4+j]);
 		}
 	}
@@ -1067,7 +1067,7 @@ void DlgMaterials::updateTextures(Material *mm, int index) {
 				imagesGrid[i * 4 + j]->setBitmap(DlgTextureLib::Instance()->m_Bitmaps[texture->getPropi(ITexture::ID)]);
 //				imagesGrid[i * 4 + j]->setBitmap(texture->getBitmap());
 			else
-				imagesGrid[i*4+j]->setBitmap(empty);
+				imagesGrid[i*4+j]->setBitmap(m_EmptyBitmap);
 		}
 	}
 	setTextureUnit(index);

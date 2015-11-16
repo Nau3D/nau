@@ -4,15 +4,19 @@
 
 #include "nau/scene/light.h"
 
+#include "nau/render/renderManager.h"
+
 namespace nau
 {
 	namespace scene
 	{
 		class LightFactory
 		{
+			friend class nau::render::RenderManager;
+
 		public:
-			static Light *create ( std::string lName, std::string lType);
 		private:
+			static Light *create ( std::string lName, std::string lType);
 			LightFactory(void) {};
 		};
 	};

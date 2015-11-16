@@ -644,7 +644,7 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 	}
 
 	if (context == "LIGHT") {
-		return (AttributeValues *)renderer->getLight(number);
+		return (AttributeValues *)renderer->getLight(number).get();
 	}
 	if (context == "MATERIAL_TEXTURE") {
 		return (AttributeValues *)renderer->getMaterialTexture(number);
@@ -684,7 +684,7 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 	}
 	if (type == "LIGHT") {
 		if (m_pRenderManager->hasLight(context))
-			return (AttributeValues *)m_pRenderManager->getLight(context);
+			return (AttributeValues *)m_pRenderManager->getLight(context).get();
 	}
 	if (type == "SCENE") {
 		if (m_pRenderManager->hasScene(context))
@@ -1065,7 +1065,7 @@ void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 		aNewCam->setPerspective (60.0f, 1.0f, 10000.0f);
 
 	// creates a directional light by default
-	Light *l = m_pRenderManager->getLight("MainDirectionalLight");
+	std::shared_ptr<Light> &l = m_pRenderManager->getLight("MainDirectionalLight");
 	l->setPropf4(Light::DIRECTION,1.0f,-1.0f,-1.0f, 0.0f);
 	l->setPropf4(Light::COLOR, 0.9f,0.9f,0.9f,1.0f);
 	l->setPropf4(Light::AMBIENT,0.5f,0.5f,0.5f,1.0f );

@@ -436,6 +436,7 @@ Pass::getViewport() {
 
 void
 Pass::addLight (const std::string &name) {
+
 	assert(!hasLight(name));
 
 	m_Lights.push_back (name);
@@ -479,7 +480,7 @@ Pass::setupLights(void) {
 	lightsIter = m_Lights.begin();
 
 	for (; lightsIter != m_Lights.end(); ++lightsIter) {
-		Light *l = RENDERMANAGER->getLight(*lightsIter);
+		std::shared_ptr<Light> &l = RENDERMANAGER->getLight(*lightsIter);
 		RENDERER->addLight(l);
 	}
 }
@@ -626,7 +627,8 @@ Pass::setRenderTarget (nau::render::IRenderTarget* rt) {
 	}
 	else {
 		if (m_RenderTarget == NULL){
-			m_Viewport = new Viewport();
+			std::string s = "__" + m_Name;
+			m_Viewport = RENDERMANAGER->createViewport(s);
 			m_UseRT = true;
 		}
 		setRTSize(rt->getPropui2(IRenderTarget::SIZE));
