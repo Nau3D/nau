@@ -9,20 +9,22 @@ namespace nau
 {
 	namespace render
 	{
-		class PassDepthMap : public Pass
-		{
+		class PassDepthMap : public Pass {
+
+			friend class PassFactory;
+
 		protected:
-			nau::scene::Camera *m_LightCamera;
+			std::shared_ptr<nau::scene::Camera> m_LightCamera;
 
 			static bool Init();
 			static bool Inited;
+			PassDepthMap(const std::string &name);
 
 		public:
 
-			PassDepthMap(const std::string &name);
 			~PassDepthMap(void);
 
-			static Pass *Create(const std::string &name);
+			static std::shared_ptr<Pass> Create(const std::string &name);
 
 			virtual void prepare (void);
 			virtual void doPass (void);

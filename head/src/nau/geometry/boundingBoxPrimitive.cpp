@@ -37,7 +37,8 @@ BBox::BBox(void) : Primitive(),
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 	//FRONT
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>(4);
+	std::shared_ptr<std::vector<unsigned int>> indices = 
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(4));
 	indices->at (0) = 0;		
 	indices->at (1) = 1;
 	indices->at (2) = 5;
@@ -51,7 +52,7 @@ BBox::BBox(void) : Primitive(),
 	delete aMaterialGroup;
 
 	//LEFT
-	indices = new std::vector<unsigned int>(4);
+	indices.reset(new std::vector<unsigned int>(4));
 	indices->at (0) = 0;		
 	indices->at (1) = 4;
 	indices->at (2) = 7;
@@ -65,7 +66,7 @@ BBox::BBox(void) : Primitive(),
 	delete aMaterialGroup;
 
 	//BACK
-	indices = new std::vector<unsigned int>(4);
+	indices.reset(new std::vector<unsigned int>(4));
 	indices->at (0)= 2;		
 	indices->at (1)= 3;
 	indices->at (2)= 7;
@@ -79,7 +80,7 @@ BBox::BBox(void) : Primitive(),
 	delete aMaterialGroup;
 
 	//RIGHT
-	indices = new std::vector<unsigned int>(4);
+	indices.reset(new std::vector<unsigned int>(4));
 	indices->at (0)= 1;		
 	indices->at (1)= 2;
 	indices->at (2)= 6;
@@ -93,7 +94,7 @@ BBox::BBox(void) : Primitive(),
 	delete aMaterialGroup;
 
 	//TOP
-	indices = new std::vector<unsigned int>(4);
+	indices.reset(new std::vector<unsigned int>(4));
 	indices->at (0)= 4;		
 	indices->at (1)= 5;
 	indices->at (2)= 6;
@@ -107,7 +108,7 @@ BBox::BBox(void) : Primitive(),
 	delete aMaterialGroup;
 
 	//BOTTOM
-	indices = new std::vector<unsigned int>(4);
+	indices.reset(new std::vector<unsigned int>(4));
 	indices->at (0)= 0;		
 	indices->at (1)= 1;
 	indices->at (2)= 2;

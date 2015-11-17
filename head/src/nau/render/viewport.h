@@ -20,6 +20,8 @@ namespace nau
 	{
 		class Viewport: public AttributeValues, public IListener
 		{
+			friend class RenderManager;
+
 		public:
 
 			FLOAT2_PROP(ORIGIN, 0);
@@ -35,7 +37,6 @@ namespace nau
 
 			static AttribSet Attribs;
 
-			Viewport(void);
 			~Viewport(void);
 
 			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
@@ -53,6 +54,8 @@ namespace nau
 			float getPropf(FloatProperty prop);
 
 		protected:
+			Viewport(void);
+
 			std::string m_Name;
 
 			static bool Inited;

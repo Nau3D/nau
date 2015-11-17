@@ -21,12 +21,12 @@ namespace nau
 	{
 
 		class PassOptixPrime : public Pass {
+			friend class PassFactory;
 
 		public:
-			PassOptixPrime(const std::string &passName);
 			virtual ~PassOptixPrime();
 
-			static Pass *Create(const std::string &name);
+			static std::shared_ptr<Pass> Create(const std::string &name);
 
 			virtual void prepare (void);
 			virtual void restore (void);
@@ -40,6 +40,7 @@ namespace nau
 			void addHitBuffer(IBuffer *b);
 		
 		protected:
+			PassOptixPrime(const std::string &passName);
 			static bool Init();
 			static bool Inited;
 

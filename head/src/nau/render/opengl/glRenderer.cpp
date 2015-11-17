@@ -306,7 +306,7 @@ GLRenderer::removeLights() {
 // -----------------------------------------------------------------
 
 void
-GLRenderer::setViewport(nau::render::Viewport *aViewport) {
+GLRenderer::setViewport(std::shared_ptr<Viewport> aViewport) {
 
 	m_Viewport = aViewport;
 	const vec2& vpOrigin = aViewport->getPropf2(Viewport::ABSOLUT_ORIGIN);
@@ -321,7 +321,7 @@ GLRenderer::setViewport(nau::render::Viewport *aViewport) {
 }
 
 
-Viewport *
+std::shared_ptr<Viewport>
 GLRenderer::getViewport() {
 
 	return m_Viewport;
@@ -329,7 +329,7 @@ GLRenderer::getViewport() {
 
 
 void
-GLRenderer::setCamera(nau::scene::Camera *aCamera) {
+GLRenderer::setCamera(std::shared_ptr<Camera> &aCamera) {
 
 	m_Camera = aCamera;
 	setViewport(aCamera->getViewport());
@@ -340,7 +340,7 @@ GLRenderer::setCamera(nau::scene::Camera *aCamera) {
 }
 
 
-Camera *
+std::shared_ptr<Camera> &
 GLRenderer::getCamera() {
 
 	return m_Camera;

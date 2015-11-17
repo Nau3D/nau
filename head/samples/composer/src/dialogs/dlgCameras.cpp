@@ -109,12 +109,11 @@ DlgCameras::updateViewportLabels() {
 	m_ViewportLabels.RemoveAt(0, m_ViewportLabels.GetCount());
 	m_ViewportLabels.Add(wxT("None"), -1);
 
-	std::vector<std::string>::iterator iter;
-	std::vector<std::string> *viewports = RENDERMANAGER->getViewportNames();
-	for (iter = viewports->begin(); iter != viewports->end(); ++iter)
-		m_ViewportLabels.Add(wxString(iter->c_str()));
+	std::vector<std::string> viewports;
+	RENDERMANAGER->getViewportNames(&viewports);
+	for (auto &v:viewports)
+		m_ViewportLabels.Add(wxString(v.c_str()));
 
-	delete viewports;
 	wxPGProperty *p = m_PG->GetProperty(wxT("Viewport"));
 	p->SetChoices(m_ViewportLabels);
 }
@@ -187,32 +186,31 @@ DlgCameras::setupGrid() {
 void 
 DlgCameras::updateList() {
 
-	std::vector<std::string> *names = RENDERMANAGER->getCameraNames();
-	int num = names->size();
+	std::vector<std::string> names;
+	RENDERMANAGER->getCameraNames(&names);
+	int num = names.size();
 
 	m_List->Clear();
 
 	for(int i = 0; i < num; i++)  {
 		wxString s;
 		s << i;
-		m_List->Append(wxString(names->at(i).c_str()));
+		m_List->Append(wxString(names[i].c_str()));
 	}
-	m_Active = names->at(0);
-	delete names;
+	m_Active = names[0];
 }
 
 
 void DlgCameras::update() {
 
-	nau::scene::Camera *cam;		
-	cam = RENDERMANAGER->getCamera(m_Active);
+	std::shared_ptr<nau::scene::Camera> &cam = RENDERMANAGER->getCamera(m_Active);
 
 	m_PG->ClearModifiedStatus();
 
-	PropertyManager::updateGrid(m_PG, Camera::Attribs, (AttributeValues *)cam);
+	PropertyManager::updateGrid(m_PG, Camera::Attribs, (AttributeValues *)cam.get());
 
 	updateViewportLabels();
-	Viewport *vp = cam->getViewport();
+	std::shared_ptr<Viewport> vp = cam->getViewport();
 	std::string vpname;
 	if (vp)
 		vpname = vp->getName();
@@ -226,7 +224,7 @@ void DlgCameras::update() {
 
 void DlgCameras::OnPropsChange( wxPropertyGridEvent& e) {
 
-	nau::scene::Camera *cam = RENDERMANAGER->getCamera(m_Active);
+	std::shared_ptr<nau::scene::Camera> &cam = RENDERMANAGER->getCamera(m_Active);
 	const wxString& name = e.GetPropertyName();
 	unsigned int dotLocation = name.find_first_of(wxT("."),0);
 	std::string topProp = std::string(name.substr(0,dotLocation).mb_str());
@@ -242,7 +240,7 @@ void DlgCameras::OnPropsChange( wxPropertyGridEvent& e) {
 			cam->setViewport(NULL);
 	}
 	else
-		PropertyManager::updateProp(m_PG, topProp, Camera::Attribs, (AttributeValues *)cam);
+		PropertyManager::updateProp(m_PG, topProp, Camera::Attribs, (AttributeValues *)cam.get());
 
 	notifyUpdate(PROPS_CHANGED,m_Active,topProp);
 	update();

@@ -633,7 +633,7 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 	IAPISupport *sup = IAPISupport::GetInstance();
 
 	if (context == "CAMERA") {
-		return (AttributeValues *)renderer->getCamera();
+		return (AttributeValues *)renderer->getCamera().get();
 	}
 	if (context == "COLOR") {
 		return (AttributeValues *)renderer->getMaterial();
@@ -666,7 +666,7 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 		return (AttributeValues *)renderer->getTexture(number);
 	}
 	if (context == "VIEWPORT") {
-		return (AttributeValues *)renderer->getViewport();
+		return (AttributeValues *)renderer->getViewport().get();
 	}
 	// If we get here then we are trying to fetch something that does not exist
 	NAU_THROW("Getting an invalid object\ntype: %s", context.c_str());
@@ -680,7 +680,7 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 	// From Render Manager
 	if (type == "CAMERA") {
 		if (m_pRenderManager->hasCamera(context))
-			return (AttributeValues *)m_pRenderManager->getCamera(context);
+			return (AttributeValues *)m_pRenderManager->getCamera(context).get();
 	}
 	if (type == "LIGHT") {
 		if (m_pRenderManager->hasLight(context))
@@ -697,7 +697,7 @@ Nau::getObjectAttributes(std::string type, std::string context, int number) {
 	}
 	if (type == "VIEWPORT") {
 		if (m_pRenderManager->hasViewport(context))
-			return (AttributeValues *)m_pRenderManager->getViewport(context);
+			return (AttributeValues *)m_pRenderManager->getViewport(context).get();
 	}
 	if (type == "RENDERER") {
 		return (AttributeValues *)RENDERER;
@@ -1051,8 +1051,8 @@ Nau::appendModel(std::string fileName) {
 
 void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 
-	Camera *aNewCam = m_pRenderManager->getCamera ("MainCamera");
-	Viewport *v = m_pRenderManager->getViewport("defaultFixedVP");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	Camera *aNewCam = m_pRenderManager->getCamera ("MainCamera").get();
+	std::shared_ptr<Viewport> v = m_pRenderManager->getViewport("defaultFixedVP");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	aNewCam->setViewport (v);
 
 	setActiveCameraName("MainCamera");
@@ -1292,14 +1292,14 @@ void
 Nau::setActiveCameraName(const std::string &aCamName) {
 
 	if (m_ActiveCameraName != "") {
-		EVENTMANAGER->removeListener("CAMERA_MOTION",RENDERMANAGER->getCamera(m_ActiveCameraName));
-		EVENTMANAGER->removeListener("CAMERA_ORIENTATION",RENDERMANAGER->getCamera(m_ActiveCameraName));
+		EVENTMANAGER->removeListener("CAMERA_MOTION",RENDERMANAGER->getCamera(m_ActiveCameraName).get());
+		EVENTMANAGER->removeListener("CAMERA_ORIENTATION",RENDERMANAGER->getCamera(m_ActiveCameraName).get());
 	}
 	m_ActiveCameraName = aCamName;
 
 	if (m_ActiveCameraName != "") {
-		EVENTMANAGER->addListener("CAMERA_MOTION",RENDERMANAGER->getCamera(m_ActiveCameraName));
-		EVENTMANAGER->addListener("CAMERA_ORIENTATION",RENDERMANAGER->getCamera(m_ActiveCameraName));
+		EVENTMANAGER->addListener("CAMERA_MOTION",RENDERMANAGER->getCamera(m_ActiveCameraName).get());
+		EVENTMANAGER->addListener("CAMERA_ORIENTATION",RENDERMANAGER->getCamera(m_ActiveCameraName).get());
 	}
 }
 
@@ -1308,7 +1308,7 @@ nau::scene::Camera *
 Nau::getActiveCamera() {
 
 	if (RENDERMANAGER->hasCamera(m_ActiveCameraName)) {
-		return RENDERMANAGER->getCamera(m_ActiveCameraName);
+		return RENDERMANAGER->getCamera(m_ActiveCameraName).get();
 	}
 	else
 		return NULL;
@@ -1321,7 +1321,7 @@ Nau::getDepthAtCenter() {
 	float wz;
 	vec2 v = m_Viewport->getPropf2(Viewport::ORIGIN);
 	v += m_Viewport->getPropf2(Viewport::SIZE);
-	Camera *cam = RENDERMANAGER->getCamera(m_ActiveCameraName);
+	std::shared_ptr<Camera> &cam = RENDERMANAGER->getCamera(m_ActiveCameraName);
 	float f = cam->getPropf(Camera::FARP);
 	float n = cam->getPropf(Camera::NEARP);
 	float p22 = cam->getPropm4(Camera::PROJECTION_MATRIX).at(2,2);
@@ -1491,7 +1491,7 @@ Nau::getWindowWidth() {
 //}
 
 
-Viewport*
+std::shared_ptr<Viewport>
 Nau::getDefaultViewport() {
 	
 	return m_Viewport;

@@ -32,8 +32,9 @@ Axis::Axis(void) : Primitive()
 	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>(2);
-	indices->at (0) = 0;		
+	std::shared_ptr<std::vector<unsigned int>> indices =
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(2));
+	indices->at (0) = 0;
 	indices->at (1) = 1;
 	aMaterialGroup->setIndexList (indices);
 	//aMaterialGroup->setParent (this);
@@ -41,7 +42,7 @@ Axis::Axis(void) : Primitive()
 	addMaterialGroup (aMaterialGroup);
 
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Green");
-	indices = new std::vector<unsigned int>(2);
+	indices.reset(new std::vector<unsigned int>(2));
 	indices->at (0) = 2;		
 	indices->at (1) = 3;
 	aMaterialGroup->setIndexList (indices);
@@ -50,7 +51,7 @@ Axis::Axis(void) : Primitive()
 	addMaterialGroup (aMaterialGroup);
 
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Blue");
-	indices = new std::vector<unsigned int>(2);
+	indices.reset(new std::vector<unsigned int>(2));
 	indices->at (0) = 4;		
 	indices->at (1) = 5;
 	aMaterialGroup->setIndexList (indices);

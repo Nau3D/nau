@@ -72,7 +72,6 @@ Camera::Camera (const std::string &name) :
 	SceneObject(),
 
 	m_IsDynamic (false),
-	m_pViewport (0),
 	m_LookAt(false),
 	//m_LookAtPoint(0.0f, 0.0f, 0.0f),
 	m_PositionOffset (0.0f)
@@ -103,7 +102,8 @@ Camera::Camera (const std::string &name) :
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Green");
 	
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>(16);
+	std::shared_ptr<std::vector<unsigned int>> indices =
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(16));
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_LEFT_FAR;
 	indices->at (2) = Camera::TOP_RIGHT_NEAR;		indices->at (3) = Camera::TOP_RIGHT_FAR;
 	indices->at (4) = Camera::BOTTOM_RIGHT_NEAR;	indices->at (5) = Camera::BOTTOM_RIGHT_FAR;
@@ -123,7 +123,7 @@ Camera::Camera (const std::string &name) :
 	setRenderable (renderable);
 
 	aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Red");
-	indices = new std::vector<unsigned int>(8);
+	indices.reset(new std::vector<unsigned int>(8));
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_RIGHT_NEAR;
 	indices->at (2) = Camera::TOP_RIGHT_NEAR;		indices->at (3) = Camera::BOTTOM_RIGHT_NEAR;
 	indices->at (4) = Camera::BOTTOM_RIGHT_NEAR;	indices->at (5) = Camera::BOTTOM_LEFT_NEAR;
@@ -511,7 +511,7 @@ Camera::buildProjectionMatrix() {
 	
 
 void
-Camera::setViewport (Viewport* aViewport) {
+Camera::setViewport (std::shared_ptr<Viewport> aViewport) {
 
 	m_pViewport = aViewport;
 
@@ -527,7 +527,7 @@ Camera::setViewport (Viewport* aViewport) {
 }
 
 
-Viewport *
+std::shared_ptr<Viewport>
 Camera::getViewport (void) {
 
 	return (m_pViewport);

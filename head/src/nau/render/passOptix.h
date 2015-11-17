@@ -24,12 +24,13 @@ namespace nau
 
 		class PassOptix : public Pass {
 
+			friend class PassFactory;
+
 		public:
-			PassOptix (const std::string &passName);
 			//Pass(std::string path,std::string fname);
 			virtual ~PassOptix();
 
-			static Pass *Create(const std::string &name);
+			static std::shared_ptr<Pass> Create(const std::string &name);
 
 			virtual void addScene (const std::string &sceneName);
 			virtual void setRenderTarget (nau::render::IRenderTarget* rt);
@@ -61,6 +62,7 @@ namespace nau
 			void addGlobalAttribute(std::string name, ProgramValue &p);
 
 		protected:
+			PassOptix (const std::string &passName);
 			static bool Init();
 			static bool Inited;
 

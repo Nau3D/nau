@@ -53,7 +53,8 @@ Square::Square(void) : Primitive(),
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
 	
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>(6);
+	std::shared_ptr<std::vector<unsigned int>> indices = 
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(6));
 
 	//BOTTOM
 	indices->at (0)= Square::BOTTOM_LEFT;

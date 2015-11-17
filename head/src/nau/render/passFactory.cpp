@@ -106,7 +106,7 @@ PassFactory::PassFactory() {
 
 
 void 
-PassFactory::registerClass(const std::string &type, Pass *(*cb)(const std::string &)) {
+PassFactory::registerClass(const std::string &type, std::shared_ptr<Pass> (*cb)(const std::string &)) {
 
 	m_Creator[type] = cb;
 }
@@ -119,7 +119,7 @@ PassFactory::registerClassFromPlugIn(char *type, void * (*callback)(const char *
 }
 
 
-Pass*
+std::shared_ptr<Pass>
 PassFactory::create (const std::string &type, const std::string &name) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
@@ -127,22 +127,24 @@ PassFactory::create (const std::string &type, const std::string &name) {
 		NAU_THROW("Compute Shader is not supported");
 
 	if (m_Creator.count(type))
-		return (*(Pass *(*)(const std::string &))(m_Creator[type]))(name);
+		return (*(std::shared_ptr<Pass>(*)(const std::string &))(m_Creator[type]))(name);
+		//return (*(Pass *(*)(const std::string &))(m_Creator[type]))(name);
 	else if (m_PluginCreator.count(type)) {
-		return (*(Pass *(*)(const char *))(m_PluginCreator[type]))(name.c_str());
+		std::shared_ptr<Pass> *p = (std::shared_ptr<Pass> *)(*(Pass *(*)(const char *))(m_PluginCreator[type]))(name.c_str());
+		return *p;
 	}
 
 //	if ("default" == type) {
 //		return new Pass (name);
 //	}
 	if ("depthmap2" == type) {
-		return new PassDepthMap (name);
+		return std::shared_ptr<Pass>(new PassDepthMap (name));
 	}
 //	if ("quad" ==  type) {
 //		return new PassQuad (name);
 //	}
 	if ("profiler" == type) {
-		return new PassProfiler(name);
+		return std::shared_ptr<Pass>(new PassProfiler(name));
 	}
 	return NULL;
 //	if ("compute" == type) {

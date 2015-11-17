@@ -160,7 +160,8 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence)
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), texCoords);
 
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>(size*6);
+	std::shared_ptr<std::vector<unsigned int>> indices = 
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(size*6));
 	for (int j = 0; j < size*6 ; j++)
 		indices->push_back(j);
 

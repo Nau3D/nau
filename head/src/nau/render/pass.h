@@ -46,6 +46,7 @@ namespace nau
 	{
 		class Pass : public IListener, public AttributeValues {
 
+			friend class PassFactory;
 		public:
 
 			// Pass properties
@@ -111,10 +112,9 @@ namespace nau
 
 			static AttribSet Attribs;
 
-			Pass (const std::string &passName);
 			virtual ~Pass();
 
-			static Pass *Create(const std::string &name);
+			static std::shared_ptr<Pass> Create(const std::string &name);
 
 			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
 
@@ -153,8 +153,8 @@ namespace nau
 			//
 			// VIEWPORTS
 			//
-			void setViewport (nau::render::Viewport *aViewport);
-			nau::render::Viewport *getViewport();
+			void setViewport (std::shared_ptr<Viewport>);
+			std::shared_ptr<Viewport> getViewport();
 
 			//
 			// LIGHTS
@@ -232,6 +232,7 @@ namespace nau
 
 		protected:
 
+			Pass(const std::string &passName);
 			// BUFFER DRAW INDIRECT
 			IBuffer *m_BufferDrawIndirect = NULL;
 
@@ -269,10 +270,13 @@ namespace nau
 			std::string m_CameraName;
 			std::vector<std::string> m_Lights;
 			std::vector<std::string> m_SceneVector;
-			nau::render::Viewport *m_Viewport;
+
+			// VIEWPORTS
 			bool m_ExplicitViewport;
 			// used to temporarily store the camera viewport when the pass has an explicit viewport
-			nau::render::Viewport *m_RestoreViewport;
+			std::shared_ptr<Viewport> m_RestoreViewport;
+			std::shared_ptr<Viewport> m_Viewport;
+
 			nau::render::IRenderTarget *m_RenderTarget;
 			// size of render targets
 			int m_RTSizeWidth;

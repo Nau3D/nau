@@ -23,41 +23,36 @@ MaterialGroup::Create(nau::render::IRenderable *parent, std::string materialName
 
 
 MaterialGroup::MaterialGroup() :
-//	m_MaterialId (0),
 	m_Parent (0),
 	m_MaterialName ("default"),
-	m_IndexData (0)
-{
+	m_IndexData (0) {
    //ctor
 }
 
 
 MaterialGroup::MaterialGroup(IRenderable *parent, std::string materialName) :
-//	m_MaterialId (0),
-m_Parent(parent),
-m_MaterialName(materialName),
-m_IndexData(0)
-{
+	m_Parent(parent),
+	m_MaterialName(materialName),
+	m_IndexData(0) {
 	//ctor
 }
 
 
-MaterialGroup::~MaterialGroup()
-{
-	delete m_IndexData;
+MaterialGroup::~MaterialGroup() {
+
 }
 
 
 void
-MaterialGroup::setParent(IRenderable* parent)
-{
+MaterialGroup::setParent(IRenderable* parent) {
+
 	this->m_Parent = parent;
 }
 
 
 void 
-MaterialGroup::setMaterialName (std::string name)
-{
+MaterialGroup::setMaterialName (std::string name) {
+
 	this->m_MaterialName = name;
 	m_IndexData->setName(getName());
 }
@@ -72,15 +67,15 @@ MaterialGroup::getName() {
 
 
 const std::string&
-MaterialGroup::getMaterialName ()
-{
+MaterialGroup::getMaterialName () {
+
 	return m_MaterialName;
 }
 
 
 IndexData&
-MaterialGroup::getIndexData (void)
-{
+MaterialGroup::getIndexData (void) {
+
 	if (0 == m_IndexData) {
 		m_IndexData = IndexData::create(getName());
 	}
@@ -89,15 +84,15 @@ MaterialGroup::getIndexData (void)
 
 
 size_t
-MaterialGroup::getIndexOffset(void)
-{
+MaterialGroup::getIndexOffset(void) {
+
 	return 0;
 }
 
 
 size_t
-MaterialGroup::getIndexSize(void)
-{
+MaterialGroup::getIndexSize(void) {
+
 	if (0 == m_IndexData) {
 		return 0;
 	}
@@ -106,8 +101,8 @@ MaterialGroup::getIndexSize(void)
 
 
 void 
-MaterialGroup::setIndexList (std::vector<unsigned int>* indices) 
-{
+MaterialGroup::setIndexList (std::shared_ptr<std::vector<unsigned int>> &indices) {
+
 	if (0 == m_IndexData) {
 		m_IndexData = IndexData::create(getName());
 	}
@@ -124,8 +119,8 @@ MaterialGroup::getNumberOfPrimitives(void) {
 
 
 IRenderable& 
-MaterialGroup::getParent ()
-{
+MaterialGroup::getParent () {
+
 	return *(this->m_Parent);
 }
 

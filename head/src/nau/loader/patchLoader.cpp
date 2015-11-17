@@ -27,9 +27,9 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 
 	int numPatches, numVert;
 	unsigned int verticesPerPatch;
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>;
+	std::shared_ptr<std::vector<unsigned int>> indices =
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 	std::vector<VertexData::Attr>* vertices = new std::vector<VertexData::Attr>;
-
 
 	fscanf(fp, "%d\n", &verticesPerPatch);
 	fscanf(fp, "%d\n", &numPatches);

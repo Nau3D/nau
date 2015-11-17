@@ -4,6 +4,7 @@
 #include "nau/math/vec4.h"
 
 #include <map>
+#include <memory>
 #include <vector>
 
 using namespace nau::math;
@@ -16,8 +17,6 @@ namespace nau
 		{
 		public:
 
-			static std::vector<unsigned int> NoIndexData;
-		
 			static IndexData* create (std::string);
 
 			virtual ~IndexData(void);
@@ -25,23 +24,22 @@ namespace nau
 			void setName(std::string name);
 
 			void offsetIndices (int amount);
-			virtual std::vector<unsigned int>& getIndexData (void);
+			virtual std::shared_ptr<std::vector<unsigned int>> & getIndexData (void);
 #ifdef NAU_OPTIX
 			/// required for optixPrime: returns indices as ints
-			virtual std::vector<int>* getIndexDataAsInt(void);
+			virtual void getIndexDataAsInt(std::vector<int> *);
 #endif
-			void setIndexData (std::vector<unsigned int>* indexData);
+			void setIndexData (std::shared_ptr<std::vector<unsigned int>> &);
 			/// returns the number of indices
 			unsigned int getIndexSize (void);
 
 			void buildAdjacencyList();
 
-			int add (IndexData &anIndexData);
+			void add (IndexData &anIndexData);
 
 			virtual void useAdjacency(bool adj) = 0;
 			virtual bool getAdjacency() = 0;
 
-			//virtual std::vector<unsigned int>& _getReallyIndexData (void) = 0;
 			virtual unsigned int getBufferID() = 0;
 
 			virtual void setBuffer(unsigned int id) = 0;
@@ -56,9 +54,8 @@ namespace nau
 			IndexData(void);
 			std::string m_Name;
 			
-			std::vector<unsigned int>* m_InternalIndexArray;
-			std::vector<unsigned int> m_AdjIndexArray;
-			//unsigned int m_IndexSize;
+			std::shared_ptr<std::vector<unsigned int>> m_InternalIndexArray;
+			std::shared_ptr<std::vector<unsigned int>> m_AdjIndexArray;
 
 			bool m_UseAdjacency;
 

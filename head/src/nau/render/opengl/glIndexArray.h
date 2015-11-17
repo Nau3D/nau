@@ -24,7 +24,7 @@ namespace nau
 		public:
 			GLIndexArray(void);
 
-			std::vector<unsigned int>& getIndexData (void);
+			//std::vector<unsigned int>& getIndexData (void);
 			void compile();
 			void useAdjacency(bool adj);
 			bool getAdjacency();

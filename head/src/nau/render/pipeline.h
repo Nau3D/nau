@@ -8,11 +8,12 @@
 #include "nau/render/pass.h"
 
 #include <deque>
-#include <set>
-#include <string>
-#include <sstream>
 #include <fstream>
 #include <iostream>
+#include <memory>
+#include <set>
+#include <sstream>
+#include <string>
 
 #define PIPE_PASS_MIDDLE 0
 #define PIPE_PASS_START 1
@@ -32,7 +33,7 @@ namespace nau
 			~Pipeline();
 
 			std::string getName();
-			std::vector<std::string> *getPassNames();
+			void getPassNames(std::vector<std::string> *);
 
 			int getNumberOfPasses();
 			int getPassCounter();
@@ -44,7 +45,7 @@ namespace nau
 			 * \param PassIndex The pipeline position to insert the pass. 
 			 *                  0 is the first pass. -1 is the last. 
 			 */
-			void addPass (Pass* aPass, int PassIndex = -1);
+			//void addPass (Pass* aPass, int PassIndex = -1);
 			Pass* createPass (const std::string &name, const std::string &passName = "default");
 
 			bool hasPass(const std::string &passName);
@@ -79,17 +80,17 @@ namespace nau
 			void callScript(std::string &name);
 
 		protected:
-			void executePass(Pass *p);			
+			void executePass(std::shared_ptr<Pass> &);
 			Pipeline (const Pipeline&);
 			Pipeline& operator= (const Pipeline&);
 
-			std::deque<Pass *> m_Passes;
+			std::deque<std::shared_ptr<Pass>> m_Passes;
 			std::string m_Name;
 
 			//! The default camera will receive events from the EventManager
 			std::string m_DefaultCamera;
 
-			Pass *m_CurrentPass;
+			std::shared_ptr<Pass> m_CurrentPass;
 
 			unsigned int m_NextPass;
 

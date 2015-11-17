@@ -67,7 +67,8 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		meshNameMap[n] = renderable->getName();
 		renderable->setDrawingPrimitive(primitive);
 
-		std::vector<unsigned int> *indices = new std::vector<unsigned int>;
+		std::shared_ptr<std::vector<unsigned int>> indices = 
+			std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 
 		for (unsigned int t = 0; t < mesh->mNumFaces; ++t) {
 			const  aiFace* face = &mesh->mFaces[t];

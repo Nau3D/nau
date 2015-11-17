@@ -7,31 +7,30 @@
 #include <string>
 #include <vector>
 
-namespace nau
-{
+namespace nau {
 
 #define PASSFACTORY nau::render::PassFactory::GetInstance()
 
-	namespace render
-	{
-		class PassFactory
-		{
+	namespace render {
+
+		class PassFactory {
+			friend class Pipeline;
 		public:
 			static PassFactory* GetInstance (void);
 			static void DeleteInstance();
 
-			Pass* create (const std::string &type, const std::string &name);
 			bool isClass(const std::string &name);
 			std::vector<std::string> *getClassNames();
-			void registerClass(const std::string &type, Pass * (*callback)(const std::string &));
+			void registerClass(const std::string &type, std::shared_ptr<Pass> (*callback)(const std::string &));
 			void registerClassFromPlugIn(char *, void * (*callback)(const char *));
 			unsigned int loadPlugins();
 			~PassFactory(void) {};
 
 		protected:
+			std::shared_ptr<Pass> create (const std::string &type, const std::string &name);
 			PassFactory(void) ;
 
-			std::map<std::string, void *> m_Creator;
+			std::map<std::string, std::shared_ptr<Pass>(*)(const std::string &)> m_Creator;
 			std::map<std::string, void *> m_PluginCreator;
 			//std::vector<void *> CreatorV;
 			//Pass * (*callback)(const std::string &);

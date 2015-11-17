@@ -2,10 +2,6 @@
 #define RENDERMANAGER_H
 
 
-#include <map>
-#include <string>
-#include <vector>
-
 #include "nau/render/pipeline.h"
 #include "nau/render/iRenderer.h"
 #include "nau/render/iRenderQueue.h"
@@ -15,7 +11,12 @@
 #include "nau/scene/light.h"
 #include "nau/scene/sceneObject.h"
 
-namespace nau 
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+
+namespace nau
 {
 	namespace render 
 	{
@@ -26,16 +27,16 @@ namespace nau
 		class RenderManager
 		{
 		private:
-			IRenderer* m_pRenderer;
-			IRenderQueue* m_pRenderQueue;
-//			std::map<std::string, Pipeline*> m_Pipelines;
+			std::unique_ptr<IRenderer> m_pRenderer;
+			std::unique_ptr<IRenderQueue> m_pRenderQueue;
 			std::vector<Pipeline*> m_Pipelines;
-			std::map<std::string, nau::scene::Camera*> m_Cameras;
-			std::map<std::string, std::shared_ptr<nau::scene::Light>> m_Lights;
 			std::map<std::string, nau::scene::IScene*> m_Scenes;
 			std::vector<nau::scene::SceneObject*> m_SceneObjects;
-			std::map <std::string, nau::render::Viewport*> m_Viewports; 
-			//Pipeline *m_ActivePipeline;
+
+			std::map<std::string, std::shared_ptr<Camera>> m_Cameras;
+			std::map<std::string, std::shared_ptr<Light>> m_Lights;
+			std::map <std::string, std::shared_ptr<Viewport>> m_Viewports;
+
 			unsigned int m_ActivePipelineIndex;
 			
 			typedef enum {
@@ -66,11 +67,13 @@ namespace nau
 			void compile();
 			
 			// VIEWPORTS
-			nau::render::Viewport* createViewport(const std::string &name, nau::math::vec4 &bgColor);
-			nau::render::Viewport* createViewport(const std::string &name);
-			nau::render::Viewport* getViewport(const std::string &name);
-			std::vector<std::string> *getViewportNames();
+			std::shared_ptr<Viewport> createViewport(const std::string &name, nau::math::vec4 &bgColor);
+			std::shared_ptr<Viewport> createViewport(const std::string &name);
+			std::shared_ptr<Viewport> getViewport(const std::string &name);
+			void getViewportNames(std::vector<std::string> *);
 			bool hasViewport(const std::string &name);
+			//! Calls the Renderer to set the viewport
+			//void setViewport(nau::render::Viewport *vp);
 
 
 			// PIPELINES
@@ -140,17 +143,14 @@ namespace nau
 			//! Checks if the given named camera exists
 			bool hasCamera (const std::string &cameraName);
 			//! Returns a pointer to the given named camera
-			nau::scene::Camera* getCamera (const std::string &cameraName);
+			std::shared_ptr<Camera> &getCamera (const std::string &cameraName);
 			//! Returns the number of cameras
 			unsigned int getNumCameras();
 			//! Returns a vector with the name of all cameras
-			std::vector<std::string> *getCameraNames();
+			void getCameraNames(std::vector<std::string> *);
 			//! Returns the camera of the pass currently in execution. if no pass is being rendered it returns the pipeline's default camera
-			nau::scene::Camera* getCurrentCamera();
+			std::shared_ptr<Camera> &getCurrentCamera();
 
-			// VIEWPORTS
-			//! Calls the Renderer to set the viewport
-			void setViewport(nau::render::Viewport *vp);
 
 			// LIGHTS
 			//! Checks to see if the given named light exists
@@ -162,7 +162,7 @@ namespace nau
 			//! Returns the number of lights
 			unsigned int getNumLights();
 			//! Returns a vector with the name of all the lights
-			std::vector<std::string> *getLightNames();
+			void getLightNames(std::vector<std::string> *);
 
 			// SCENES
 			bool hasScene (const std::string &sceneName);

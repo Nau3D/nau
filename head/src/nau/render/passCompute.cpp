@@ -39,15 +39,15 @@ m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0) {
 }
 
 
-PassCompute::~PassCompute(){
+PassCompute::~PassCompute() {
 
 }
 
 
-Pass *
+std::shared_ptr<Pass>
 PassCompute::Create(const std::string &passName) {
 
-	return new PassCompute(passName);
+	return dynamic_pointer_cast<Pass>(std::shared_ptr<PassCompute>(new PassCompute(passName)));
 }
 
 

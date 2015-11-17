@@ -1148,7 +1148,7 @@ void
 ProjectLoader::loadViewports(TiXmlHandle handle) 
 {
 	TiXmlElement *pElem;
-	Viewport *v;
+	std::shared_ptr<Viewport> v;
 
 	pElem = handle.FirstChild ("viewports").FirstChild ("viewport").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
@@ -1166,7 +1166,7 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 
 		// Reading remaining viewport attributes
 		std::vector<std::string> excluded;
-		readChildTags(pName, (AttributeValues *)v, Viewport::Attribs, excluded, pElem);
+		readChildTags(pName, (AttributeValues *)v.get(), Viewport::Attribs, excluded, pElem);
 
 	} //End of Viewports
 }
@@ -1219,14 +1219,14 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 		if (RENDERMANAGER->hasCamera(pName))
 			NAU_THROW("File %s\nCamera %s is already defined", ProjectLoader::s_File.c_str(), pName);
 
-		Camera *aNewCam = RENDERMANAGER->getCamera (pName);
+		std::shared_ptr<Camera> &aNewCam = RENDERMANAGER->getCamera (pName);
 
 		TiXmlElement *pElemAux = 0;
 		std::string s;
 
 		// Read Viewport
 		pElemAux = pElem->FirstChildElement ("viewport");
-		Viewport *v = 0;
+		std::shared_ptr<Viewport> v;
 		if (0 == pElemAux) {
 			v = NAU->getDefaultViewport ();
 		} else {
@@ -1269,7 +1269,7 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 			//}
 			//else if (s == "ORTHO") {
 				std::vector<std::string> excluded;// = { "TYPE" };
-				readAttributes(std::string(pName), (AttributeValues *)aNewCam, Camera::Attribs, excluded, pElemAux);
+				readAttributes(std::string(pName), (AttributeValues *)aNewCam.get(), Camera::Attribs, excluded, pElemAux);
 				//float left, right, bottom, top, nearPlane, farPlane;
 
 				//if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute("LEFT", &left) ||
@@ -1290,7 +1290,7 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 
 		std::vector<std::string> excluded;
 		excluded.push_back("projection"); excluded.push_back("viewport");
-		readChildTags(pName, (AttributeValues *)aNewCam, Camera::Attribs, excluded, pElem);
+		readChildTags(pName, (AttributeValues *)aNewCam.get(), Camera::Attribs, excluded, pElem);
 	} //End of Cameras
 }
 
@@ -1744,8 +1744,8 @@ ProjectLoader::loadPassViewport(TiXmlHandle hPass, Pass *aPass)
 	if (0 != pElem) {
 		const char *pViewport = pElem->Attribute("name");
 		if (pViewport) {
-			Viewport *vp = RENDERMANAGER->getViewport(pViewport);
-			if (vp == NULL) {
+			std::shared_ptr<Viewport> vp = RENDERMANAGER->getViewport(pViewport);
+			if (!vp) {
 				NAU_THROW("File %s\nPass %s\nViewport %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pViewport);
 			}
 			else

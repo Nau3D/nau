@@ -30,8 +30,8 @@ using namespace nau::system;
 std::string CBOLoader::m_FileName;
 
 void
-CBOLoader::_writeVertexData (VertexData& aVertexData, std::fstream &f) 
-{
+CBOLoader::_writeVertexData (VertexData& aVertexData, std::fstream &f) {
+
 	unsigned int siz;
 	unsigned int sizeVec;
 	unsigned int countFilledArrays = 0;
@@ -75,8 +75,8 @@ CBOLoader::_writeVertexData (VertexData& aVertexData, std::fstream &f)
 
 
 void
-CBOLoader::_writeIndexData (IndexData& aVertexData, std::fstream &f) 
-{
+CBOLoader::_writeIndexData (IndexData& aVertexData, std::fstream &f) {
+
 	unsigned int siz;
 
 	unsigned int countFilledArrays = 0;
@@ -85,19 +85,19 @@ CBOLoader::_writeIndexData (IndexData& aVertexData, std::fstream &f)
 	f.write (reinterpret_cast<char *> (&countFilledArrays), sizeof (countFilledArrays));
 
 
-	std::vector<unsigned int> &aVec = aVertexData.getIndexData();
-	siz = (unsigned int)aVec.size();
+	std::shared_ptr<std::vector<unsigned int>> &aVec = aVertexData.getIndexData();
+	siz = (unsigned int)aVec->size();
 	f.write (reinterpret_cast<char *> (&siz), sizeof (siz));
 
-	if (aVec.size() > 0) {
-		f.write (reinterpret_cast<char *> (&(aVec[0])), 
-				  siz * sizeof(unsigned int));
+	if (aVec->size() > 0) {
+		f.write (reinterpret_cast<char *> (&(aVec->at(0))), siz * sizeof(unsigned int));
 	}
 }
 
+
 void
-CBOLoader::_readVertexData (VertexData& aVertexData, std::fstream &f)
-{
+CBOLoader::_readVertexData (VertexData& aVertexData, std::fstream &f) {
+
 	unsigned int siz;
 	unsigned int countFilledArrays;
 	char buffer[1024];
@@ -126,8 +126,8 @@ CBOLoader::_readVertexData (VertexData& aVertexData, std::fstream &f)
 
 
 void
-CBOLoader::_readIndexData (IndexData& aVertexData, std::fstream &f)
-{
+CBOLoader::_readIndexData (IndexData& aVertexData, std::fstream &f) {
+
 	unsigned int siz;
 	unsigned int countFilledArrays;
 
@@ -135,7 +135,8 @@ CBOLoader::_readIndexData (IndexData& aVertexData, std::fstream &f)
 
 	f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
 	if (siz > 0) {
-		std::vector<unsigned int> *aNewVector = new std::vector<unsigned int>(siz);
+		std::shared_ptr<std::vector<unsigned int>> &aNewVector = 
+			std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(siz));
 
 		f.read (reinterpret_cast<char *> (&(*aNewVector)[0]), siz * sizeof (unsigned int));
 
@@ -164,8 +165,8 @@ CBOLoader::_readIndexData (IndexData& aVertexData, std::fstream &f)
 //}
 
 void
-CBOLoader::_writeString (const std::string& aString, std::fstream &f)
-{
+CBOLoader::_writeString (const std::string& aString, std::fstream &f) {
+
 	unsigned int siz = (unsigned int)aString.size();
 
 	f.write (reinterpret_cast<char *> (&siz), sizeof (siz));
@@ -174,8 +175,8 @@ CBOLoader::_writeString (const std::string& aString, std::fstream &f)
 
 
 void
-CBOLoader::_readString ( char *buffer, std::fstream &f)
-{
+CBOLoader::_readString ( char *buffer, std::fstream &f) {
+
 	unsigned int siz;
 
 	memset (buffer, 0, 1024);
@@ -183,17 +184,19 @@ CBOLoader::_readString ( char *buffer, std::fstream &f)
 	f.read (buffer, siz + 1);
 }
 
+
 void
-CBOLoader::_ignoreString (std::fstream &f)
-{
+CBOLoader::_ignoreString (std::fstream &f) {
+
 	unsigned int siz;
 	f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
 	f.ignore (siz + 1);
 }
 
+
 void 
-CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::string &params)
-{
+CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::string &params) {
+
 	//CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
 
 	m_FileName = aFilename;
@@ -472,6 +475,7 @@ CBOLoader::_readOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 	}
 }
 
+
 void
 CBOLoader::_writeOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 
@@ -520,8 +524,6 @@ CBOLoader::_writeOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 }
 
 
-
-
 void
 CBOLoader::_readOctreeByMat(OctreeByMatScene *aScene, std::fstream &f) {
 
@@ -542,7 +544,6 @@ CBOLoader::_readOctreeByMat(OctreeByMatScene *aScene, std::fstream &f) {
 	_readOctreeByMatNode(n,f);
 	o->m_pOctreeRootNode = n;
 }
-
 
 
 void
@@ -570,8 +571,8 @@ CBOLoader::_writeOctreeByMat(OctreeByMatScene *aScene, std::fstream &f) {
 
 
 void 
-CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
-{
+CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
+
 //	CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
 
 	std::string path = File::GetPath(aFilename);
@@ -773,11 +774,8 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
 }
 
 
-
-
 void 
-CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f) 
-{
+CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f) {
 
 	Material *aMaterial = MATERIALLIBMANAGER->getDefaultMaterial (matName); 
 
@@ -813,8 +811,8 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 
 
 void
-CBOLoader::_readMaterial(std::string path, std::fstream &f)
-{
+CBOLoader::_readMaterial(std::string path, std::fstream &f) {
+
 	Material* aMaterial;// = new Material;
 
 	// read materials name
@@ -849,5 +847,4 @@ CBOLoader::_readMaterial(std::string path, std::fstream &f)
 			aMaterial->createTexture (i, File::GetFullPath(path,buffer));
 		}
 	}
-
 }

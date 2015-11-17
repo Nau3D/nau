@@ -304,20 +304,20 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 			MaterialGroup *pMaterialGroup = (*matIter);
 
 			IndexData &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
-			std::vector<unsigned int> &vIndexData = VertexDataMaterialGroup.getIndexData();
+			std::shared_ptr<std::vector<unsigned int>> &vIndexData = VertexDataMaterialGroup.getIndexData();
 			std::vector<unsigned int>::iterator indexIter;
 
-			indexIter = vIndexData.begin();
+			indexIter = vIndexData->begin();
 			std::vector<VertexData::Attr> vVertices = vVertexData.getDataOf(vertexArrayPos);
 
 			// For each triangle, index, index + 1, index + 2, check to which octant it belongs to
 			try {
-				for (unsigned int i = 0; i < vIndexData.size(); i += offSet) {
+				for (unsigned int i = 0; i < vIndexData->size(); i += offSet) {
 					// carefull: three vertices are only for triangles, not lines
 					// strips and fans have their own set of rules for indexes
-					VertexData::Attr &v1 = vVertices.at (vIndexData[i]);
-					VertexData::Attr &v2 = vVertices.at (vIndexData[i+1]);
-					VertexData::Attr &v3 = vVertices.at (vIndexData[i+2]);
+					VertexData::Attr &v1 = vVertices.at (vIndexData->at(i));
+					VertexData::Attr &v2 = vVertices.at (vIndexData->at(i+1));
+					VertexData::Attr &v3 = vVertices.at (vIndexData->at(i+2));
 						
 					int v1Octant = _octantFor (v1);
 					int v2Octant = _octantFor (v2);
@@ -336,20 +336,21 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 						//tempMaterialGroup[index]->setMaterialId (pMaterialGroup->getMaterialId());
 					}
 
-					std::vector<unsigned int> &vTempIndexData = 
+					std::shared_ptr<std::vector<unsigned int>> &vTempIndexData =
 						tempMaterialGroup[index]->getIndexData().getIndexData();
 
-					if (IndexData::NoIndexData == vTempIndexData) {
-						std::vector<unsigned int>* newIndexData = new std::vector<unsigned int>;
+					if (vTempIndexData) {
+						std::shared_ptr<std::vector<unsigned int>> newIndexData = 
+							std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 						// carefull: order of triangles is relevant for strips
 						(tempMaterialGroup[index]->getIndexData()).setIndexData (newIndexData);
-						newIndexData->push_back (vIndexData[i]);
-						newIndexData->push_back (vIndexData[i+1]);
-						newIndexData->push_back (vIndexData[i+2]);
+						newIndexData->push_back (vIndexData->at(i));
+						newIndexData->push_back (vIndexData->at(i+1));
+						newIndexData->push_back (vIndexData->at(i+2));
 					} else {
-						vTempIndexData.push_back (vIndexData[i]);
-						vTempIndexData.push_back (vIndexData[i+1]);
-						vTempIndexData.push_back (vIndexData[i+2]);
+						vTempIndexData->push_back (vIndexData->at(i));
+						vTempIndexData->push_back (vIndexData->at(i+1));
+						vTempIndexData->push_back (vIndexData->at(i+2));
 					}
 				}
 

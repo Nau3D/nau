@@ -31,7 +31,7 @@ namespace nau
 
 			void updateIndexDataName();
 
-			void setIndexList(std::vector<unsigned int>* indices);
+			void setIndexList(std::shared_ptr<std::vector<unsigned int>> &indices);
 
 			std::string &getName();
 

@@ -146,7 +146,7 @@ namespace nau {
 		unsigned int getWindowWidth();
 
 		// Viewports
-		nau::render::Viewport* getDefaultViewport ();
+		std::shared_ptr<Viewport> getDefaultViewport ();
 
 		bool reload (void);
 
@@ -222,7 +222,7 @@ namespace nau {
 		std::string m_ActiveCameraName;
 		unsigned int m_WindowWidth, m_WindowHeight;
 		nau::world::IWorld *m_pWorld;
-		nau::render::Viewport *m_Viewport;
+		std::shared_ptr<Viewport> m_Viewport;
 		int m_ClickX = 0, m_ClickY = 0;
 		IState *m_DefaultState;
 

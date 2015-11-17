@@ -26,21 +26,20 @@ PassDepthMap::PassDepthMap (const std::string &passName) :
 
 	m_ClassName = "depthmap";
 	std::string camName = passName + "-LightCam";
-	m_Viewport = RENDERMANAGER->createViewport(camName);	
+	m_Viewport = RENDERMANAGER->createViewport(camName);
 	m_LightCamera = RENDERMANAGER->getCamera(camName);
 }
 
 
 PassDepthMap::~PassDepthMap(void) {
 
-//	delete m_LightCamera;
 }
 
 
-Pass *
+std::shared_ptr<Pass>
 PassDepthMap::Create(const std::string &passName) {
 
-	return new PassDepthMap(passName);
+	return dynamic_pointer_cast<Pass>(std::shared_ptr<PassDepthMap>(new PassDepthMap(passName)));
 }
 
 
@@ -95,16 +94,15 @@ PassDepthMap::prepare (void) {
 
 	prepareBuffers();
 
-	Viewport *v = m_LightCamera->getViewport();
 	// if pass has a viewport 
-	if (0 != m_Viewport ) {
-		m_RestoreViewport = v;
+	if (m_ExplicitViewport ) {
+		m_RestoreViewport = m_LightCamera->getViewport();
 		m_LightCamera->setViewport (m_Viewport);
 	}
 	
 	RENDERER->setCamera(m_LightCamera);
 
-	setupLights();
+//	setupLights();
 }
 
 
@@ -129,7 +127,7 @@ PassDepthMap::doPass (void) {
 	vec4 l = RENDERMANAGER->getLight(m_Lights[0])->getPropf4(Light::DIRECTION);
 	m_LightCamera->setPropf4(Camera::VIEW_VEC,l.x,l.y,l.z,l.w);
 
-	Camera *aCamera = RENDERMANAGER->getCamera(m_CameraName);
+	std::shared_ptr<Camera> &aCamera = RENDERMANAGER->getCamera(m_CameraName);
 
 	cNear = aCamera->getPropf(Camera::NEARP);
 	cFar = aCamera->getPropf(Camera::FARP);
@@ -141,7 +139,7 @@ PassDepthMap::doPass (void) {
 	if (idTo != -1)
 		cFar = m_FloatProps[idTo];
 
-	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
+	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera.get());
 
 	RENDERER->setCamera(m_LightCamera);
 	frustum.setFromMatrix ((float *)((mat4 *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4))->getMatrix());

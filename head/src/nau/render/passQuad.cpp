@@ -33,10 +33,10 @@ PassQuad::~PassQuad(void) {
 }
 
 
-Pass *
+std::shared_ptr<Pass>
 PassQuad::Create(const std::string &passName) {
 
-	return new PassQuad(passName);
+	return dynamic_pointer_cast<Pass>(std::shared_ptr<PassQuad>(new PassQuad(passName)));
 }
 
 

@@ -144,13 +144,13 @@ namespace nau
 
 		public:
 			/// sets viewport
-			virtual void setViewport(nau::render::Viewport *aViewport) = 0;
+			virtual void setViewport(std::shared_ptr<Viewport>) = 0;
 			/// returns currrent viewport
-			virtual Viewport *getViewport() = 0;
+			virtual std::shared_ptr<Viewport> getViewport() = 0;
 			/// set the camera
-			virtual void setCamera(nau::scene::Camera *aCamera) = 0;
+			virtual void setCamera(std::shared_ptr<Camera> &aCamera) = 0;
 			/// returns current camera
-			virtual Camera *getCamera() = 0;
+			virtual std::shared_ptr<Camera> &getCamera() = 0;
 
 
 		// COUNTERS

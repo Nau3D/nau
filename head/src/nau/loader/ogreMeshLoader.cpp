@@ -733,7 +733,8 @@ OgreMeshLoader::loadFaces(TiXmlElement *pElem, MaterialGroup *mg, unsigned int o
 		iCount *= 3;
 	else
 		iCount += 2;
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>(iCount);
+	std::shared_ptr<std::vector<unsigned int>> indices = 
+		std::shared_ptr<std::vector<unsigned int>> (new std::vector<unsigned int>(iCount));
 	
 	TiXmlElement *pElemFace = pElemFaces->FirstChildElement("face");
 	for ( ; pElemFace != 0; pElemFace = pElemFace->NextSiblingElement("face")) {

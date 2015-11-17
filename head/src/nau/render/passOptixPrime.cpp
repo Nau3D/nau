@@ -282,10 +282,10 @@ PassOptixPrime::~PassOptixPrime() {
 }
 
 
-Pass *
+std::shared_ptr<Pass>
 PassOptixPrime::Create(const std::string &passName) {
 
-	return new PassOptixPrime(passName);
+	return dynamic_pointer_cast<Pass>(std::shared_ptr<PassOptixPrime>(new PassOptixPrime(passName)));
 }
 
 
@@ -358,18 +358,17 @@ PassOptixPrime::initOptixPrime() {
 
 	// Create Index Buffer
 	IndexData *ind = &(renderable->getIndexData());
-	std::vector<int> *v = ind->getIndexDataAsInt();
+	std::vector<int> v; 
+	ind->getIndexDataAsInt(&v);
 	GLuint index;
 	IBuffer *b;
 	b = RESOURCEMANAGER->createBuffer(m_Name);
 	index = b->getPropi(IBuffer::ID);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, v->size() * sizeof(int), &(*v)[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, v.size() * sizeof(int), &(v)[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	int numInd = (int)v->size();
-
-	delete v;
+	int numInd = (int)v.size();
 
 	void * devPtrInd;
 	k = cudaGraphicsGLRegisterBuffer(&cglInd, index, cudaGraphicsRegisterFlagsReadOnly);

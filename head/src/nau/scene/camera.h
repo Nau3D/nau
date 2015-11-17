@@ -23,6 +23,7 @@ namespace nau
 
 		class Camera : public SceneObject
 		{
+			friend class nau::render::RenderManager;
 		public:
 
 			typedef enum {
@@ -59,7 +60,6 @@ namespace nau
 
 			static AttribSet Attribs;
 
-			Camera (const std::string &name);
 			virtual ~Camera (void);
 
 
@@ -81,8 +81,8 @@ namespace nau
 			void setCamera (vec3 position, vec3 view, vec3 up);
 
 			// Viewport
-			nau::render::Viewport* getViewport (void);
-			void setViewport (nau::render::Viewport* aViewport);
+			std::shared_ptr<Viewport> getViewport (void);
+			void setViewport (std::shared_ptr<Viewport> aViewport);
 
 			// Adjusts the frustum of the current Camera to include
 			// the frustum of the target camera
@@ -106,13 +106,14 @@ namespace nau
 
 		protected:
 
+			Camera(const std::string &name);
 			static bool Init();
 			static bool Inited;
 
 			//std::map<int,mat4> m_Mat4Props;
 
 			nau::event_::EventVec3 m_Event;
-			nau::render::Viewport *m_pViewport;
+			std::shared_ptr<Viewport> m_pViewport;
 			//void setPropm4(Mat4Property prop, mat4 &mat);
 
 			vec3 result;

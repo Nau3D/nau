@@ -12,13 +12,10 @@ using namespace nau::geometry;
 using namespace nau::render;
 using namespace nau::math;
 
-std::vector<unsigned int> IndexData::NoIndexData;
-
-
 
 IndexData*
-IndexData::create(std::string name)
-{
+IndexData::create(std::string name) {
+
 	IndexData *i;
 
 #ifdef NAU_OPENGL
@@ -33,20 +30,13 @@ IndexData::create(std::string name)
 
 
 IndexData::IndexData(void) :
-	m_InternalIndexArray (0),
-	m_AdjIndexArray(0),
-	//m_IndexSize (0),
-	m_UseAdjacency(false)
-{
+	m_UseAdjacency(false) {
+
 }
 
 
-IndexData::~IndexData(void)
-{
-	//if (0 != m_InternalIndexArray) {
-	//	delete m_InternalIndexArray;
-	//	m_InternalIndexArray = 0;
-	//}
+IndexData::~IndexData(void) {
+
 }
 
 
@@ -56,24 +46,20 @@ IndexData::setName(std::string name) {
 	m_Name = name;
 }
 
-std::vector<unsigned int>&
-IndexData::getIndexData (void)
-{
-	if (0 == m_InternalIndexArray) {
-		return IndexData::NoIndexData;
-	}
 
-	return (*m_InternalIndexArray);
+std::shared_ptr<std::vector<unsigned int>> &
+IndexData::getIndexData (void) {
+
+	return m_InternalIndexArray;
 }
 
+
 #ifdef NAU_OPTIX
-std::vector<int>*
-IndexData::getIndexDataAsInt(void) {
+void
+IndexData::getIndexDataAsInt(std::vector<int> *v) {
 
-	std::vector < int >* v = new std::vector < int >;
-
-	if (NULL == m_InternalIndexArray)
-		v->resize(0);
+	if (!m_InternalIndexArray)
+		return;
 	else {
 		v->resize(m_InternalIndexArray->size());
 		for (unsigned int i = 0; i < m_InternalIndexArray->size(); ++i) {
@@ -81,70 +67,69 @@ IndexData::getIndexDataAsInt(void) {
 			v->at(i) = (int)m_InternalIndexArray->at(i);
 		}
 	}
-	return v;
 }
 #endif
+
 
 unsigned int
 IndexData::getIndexSize (void) 
 {
-	if (m_InternalIndexArray != NULL && m_UseAdjacency == false)
+	if (m_InternalIndexArray && m_UseAdjacency == false)
 		return (unsigned int)m_InternalIndexArray->size();
-	else 
-		return (unsigned int)m_AdjIndexArray.size();
-	//else
-	//	return 0;
+	else if (m_AdjIndexArray)
+		return (unsigned int)m_AdjIndexArray->size();
+	else
+		return 0;
 }
 
 
 void
-IndexData::setIndexData (std::vector<unsigned int>* indexData)
+IndexData::setIndexData (std::shared_ptr<std::vector<unsigned int>> &indexData)
 {
-	if (m_InternalIndexArray != 0 && m_InternalIndexArray != indexData) {
-		delete m_InternalIndexArray;
+	if (m_InternalIndexArray && m_InternalIndexArray != indexData) {
+		m_InternalIndexArray.reset();
 	}
 
 	m_InternalIndexArray = indexData;
 }
 
 
-int
+void
 IndexData::add (IndexData &aIndexData)
 {
 	size_t offset = 0;
 
+	std::shared_ptr<std::vector<unsigned int>> &indexData = aIndexData.getIndexData();
 
-	std::vector<unsigned int> &indexData = aIndexData.getIndexData();
-	if (IndexData::NoIndexData != indexData) {
+	if (indexData) {
+		std::shared_ptr<std::vector<unsigned int>> &aIndexVec = getIndexData();
 
-		std::vector<unsigned int> &aIndexVec = getIndexData();
+		if (!aIndexVec) {
+			aIndexVec = 
+				std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 
-		if (aIndexVec == IndexData::NoIndexData) {
-
-			std::vector<unsigned int> *aNewVector = new std::vector<unsigned int>;
-			aNewVector->insert (aNewVector->begin(), indexData.begin(), indexData.end());
-			setIndexData (aNewVector);
+			aIndexVec->insert (aIndexVec->begin(), indexData->begin(), indexData->end());
 			m_UseAdjacency = aIndexData.getAdjacency();
 
-		} else {
-
-			aIndexVec.insert (aIndexVec.end(), indexData.begin(), indexData.end());
+		} 
+		else {
+			aIndexVec->insert (aIndexVec->end(), indexData->begin(), indexData->end());
 		}
 	}
-
-	return (int)offset;
 }
 
 
 void
 IndexData::offsetIndices (int amount)
 {
-	std::vector<unsigned int> &indices = getIndexData();
+	if (!m_InternalIndexArray)
+		return;
+
 	std::vector<unsigned int>::iterator indIter;
 
-	indIter = indices.begin();
+	indIter = m_InternalIndexArray->begin();
 
-	for ( ; indIter != indices.end(); indIter++) {
+	for (; indIter != m_InternalIndexArray->end(); indIter++) {
 		(*indIter) += amount;
 	}
 }
@@ -199,18 +184,22 @@ IndexData::buildAdjacencyList() {
 			iter->second->twin = NULL;
 	}
 		
-	m_AdjIndexArray.resize(triC*6);// = (unsigned int *)malloc(sizeof(unsigned int) * mesh->mNumFaces * 6);
+	if (m_AdjIndexArray)
+		m_AdjIndexArray.reset();
+	m_AdjIndexArray = std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
+	m_AdjIndexArray->resize(triC*6);
+	std::vector<unsigned int> &aux = *m_AdjIndexArray.get();
 	for (unsigned int i = 0; i < triC; i++) {
 		
 		// NOTE: twin may be null
-		m_AdjIndexArray[i*6]   = edge[3*i + 0].next->vertex;
-		m_AdjIndexArray[i*6+1] = edge[3*i + 0].twin?edge[3*i + 0].twin->vertex:edge[3*i + 0].next->vertex;
+		aux[i*6]   = edge[3*i + 0].next->vertex;
+		aux[i*6+1] = edge[3*i + 0].twin?edge[3*i + 0].twin->vertex:edge[3*i + 0].next->vertex;
 
-		m_AdjIndexArray[i*6+2] = edge[3*i + 1].next->vertex;
-		m_AdjIndexArray[i*6+3] = edge[3*i + 1].twin?edge[3*i + 1].twin->vertex:edge[3*i + 1].next->vertex;
+		aux[i*6+2] = edge[3*i + 1].next->vertex;
+		aux[i*6+3] = edge[3*i + 1].twin?edge[3*i + 1].twin->vertex:edge[3*i + 1].next->vertex;
 
-		m_AdjIndexArray[i*6+4] = edge[3*i + 2].next->vertex;
-		m_AdjIndexArray[i*6+5] = edge[3*i + 2].twin?edge[3*i + 2].twin->vertex:edge[3*i + 2].next->vertex;
+		aux[i*6+4] = edge[3*i + 2].next->vertex;
+		aux[i*6+5] = edge[3*i + 2].twin?edge[3*i + 2].twin->vertex:edge[3*i + 2].next->vertex;
 
 	}
 	free(edge);

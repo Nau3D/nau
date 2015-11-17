@@ -919,7 +919,8 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		// Set up the index array
 
 		// Create array
-		std::vector<unsigned int> *iArr = new std::vector<unsigned int>;
+		std::shared_ptr<std::vector<unsigned int>> iArr = 
+			std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 		iArr->resize(currG->numTriangles*3);
 
 		for (unsigned int i = 0; i < currG->numTriangles; ++i) {
@@ -936,6 +937,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		if (currG->numTriangles > 0)
 			aRenderable->addMaterialGroup(aMatGroup);
 
+		delete aMatGroup;
 	}
 
 	// Set the Object's Renderable

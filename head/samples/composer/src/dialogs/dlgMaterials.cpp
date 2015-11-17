@@ -1358,28 +1358,26 @@ void DlgMaterials::updateShader(Material *m){
 
 		// camList should only be updated when a new camera is added
 		m_pgCamList.Clear();
-		std::vector<std::string> *camNames = RENDERMANAGER->getCameraNames();
-		std::vector<std::string>::iterator it;
-		it = camNames->begin();
-		for ( int n = 0; it != camNames->end(); it++, n++) {
+		std::vector<std::string> camNames;
+		RENDERMANAGER->getCameraNames(&camNames);
+		for (unsigned int n = 0; n < camNames.size(); n++) {
 		
-			m_pgCamList.Add(wxString((*it).c_str()),n);
+			m_pgCamList.Add(wxString(camNames[n].c_str()),n);
 		}
-		delete camNames;
 
 		// lightlist should only be updated when a new light is added.
 		m_pgLightList.Clear();
-		std::vector<std::string> *lightNames = RENDERMANAGER->getLightNames();
-		it = lightNames->begin();
-		for ( int n = 0; it != lightNames->end(); it++, n++) {
-		
-			m_pgLightList.Add(wxString((*it).c_str()),n);
-		}
-		delete lightNames;
 
+		std::vector<std::string> lightNames;
+		RENDERMANAGER->getLightNames(&lightNames);
+		for ( unsigned int n = 0; n < lightNames.size(); n++) {
+		
+			m_pgLightList.Add(wxString(lightNames[n].c_str()),n);
+		}
 
 		m_pgTextureList.Clear();
 		std::vector<std::string> textureNames;
+		std::vector<std::string>::iterator it;
 		m->getTextureNames(&textureNames);
 		if (textureNames.size() != 0) {
 			std::vector<unsigned int> textureUnits;

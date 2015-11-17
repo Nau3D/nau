@@ -35,7 +35,7 @@ PassProfiler::Init() {
 
 
 PassProfiler::PassProfiler (const std::string &name) :
-	Pass (name), m_pCam(0)
+	Pass (name)
 {
 	m_ClassName = "profiler";
 
@@ -65,10 +65,10 @@ PassProfiler::~PassProfiler(void)
 }
 
 
-Pass *
+std::shared_ptr<Pass>
 PassProfiler::Create(const std::string &passName) {
 
-	return new PassProfiler(passName);
+	return dynamic_pointer_cast<Pass>(std::shared_ptr<PassProfiler>(new PassProfiler(passName)));
 }
 
 

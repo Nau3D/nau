@@ -77,14 +77,14 @@ namespace nau
 			// CAMERA
 
 		protected:
-			Viewport *m_Viewport;
-			Camera *m_Camera;
+			std::shared_ptr<Viewport> m_Viewport;
+			std::shared_ptr<Camera> m_Camera;
 
 		public:
-			void setViewport(nau::render::Viewport *vp);
-			Viewport *getViewport();
-			void setCamera(nau::scene::Camera *aCamera);
-			Camera *getCamera();
+			void setViewport(std::shared_ptr<Viewport>);
+			std::shared_ptr<Viewport> getViewport();
+			void setCamera(std::shared_ptr<Camera> &aCamera);
+			std::shared_ptr<Camera> &getCamera();
 
 
 			// COUNTERS

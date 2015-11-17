@@ -47,7 +47,7 @@ protected:
 	wxButton *m_bNextFrame;
 	wxButton *m_bNextToPass;
 	std::string name;
-	std::vector<std::string> *passes;
+	std::vector<std::string> passes;
 	std::string pipenameString;
 	int currentPassIndex;
 

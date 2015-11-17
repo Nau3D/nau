@@ -147,10 +147,10 @@ Pass::~Pass() {
 }
 
 
-Pass *
+std::shared_ptr<Pass>
 Pass::Create(const std::string &passName) {
 
-	return new Pass(passName);
+	return dynamic_pointer_cast<Pass>(std::shared_ptr<Pass>(new Pass(passName)));
 }
 
 
@@ -300,7 +300,6 @@ Pass::prepare (void) {
 void
 Pass::doPass (void) {
 
-	Camera *aCam = 0;
 	Frustum camFrustum;
 	std::vector<SceneObject*>::iterator objsIter;
 	std::vector<std::string>::iterator scenesIter;
@@ -308,9 +307,9 @@ Pass::doPass (void) {
 
 	prepareBuffers();
 
+	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_CameraName);
 	const float *a = (float *)((mat4 *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4))->getMatrix();
 	camFrustum.setFromMatrix (a);
-	aCam = RENDERMANAGER->getCamera (m_CameraName);
 	RENDERMANAGER->clearQueue();
 
 	scenesIter = m_SceneVector.begin();
@@ -415,14 +414,14 @@ Pass::callPostScript() {
 
 
 void
-Pass::setViewport(nau::render::Viewport *aViewport) {
+Pass::setViewport(std::shared_ptr<Viewport> aViewport) {
 
 	m_Viewport = aViewport;
 	m_ExplicitViewport = true;
 }
 
 
-nau::render::Viewport *
+std::shared_ptr<Viewport>
 Pass::getViewport() {
 
 	return (m_Viewport);
@@ -621,8 +620,8 @@ void
 Pass::setRenderTarget (nau::render::IRenderTarget* rt) {
 	
 	if (rt == NULL) {
-		if (m_RenderTarget != NULL) 
-			delete m_Viewport;
+		if (m_RenderTarget != NULL && !m_ExplicitViewport) 
+			m_Viewport.reset();
 		m_UseRT = true;
 	}
 	else {
@@ -660,17 +659,11 @@ Pass::setRTSize(uivec2 &v) {
 void
 Pass::setupCamera (void) {
 
-	Camera *aCam = 0;
-
-	aCam = RENDERMANAGER->getCamera (m_CameraName);
+	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_CameraName);
 	
-	if (0 == aCam) {
-		return; 
-	}
-
-	Viewport *v = aCam->getViewport();
+	std::shared_ptr<Viewport> v = aCam->getViewport();
 	// if pass has a viewport 
-	if (0 != m_Viewport ) {
+	if (m_Viewport) {
 		m_RestoreViewport = v;
 		aCam->setViewport (m_Viewport);
 	}
@@ -682,14 +675,9 @@ Pass::setupCamera (void) {
 void
 Pass::restoreCamera (void) {
 
-	Camera *aCam = 0;
-	aCam = RENDERMANAGER->getCamera (m_CameraName);
+	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera(m_CameraName);
 
-	if (0 == aCam) {
-		return; 
-	}
-	
-	if (0 != m_Viewport ) {
+	if (m_ExplicitViewport) {
 		aCam->setViewport (m_RestoreViewport);
 	}
 }
@@ -707,10 +695,6 @@ Pass::setCamera (const std::string &cameraName) {
 
 	m_CameraName = cameraName;
 }
-
-
-
-
 
 
 // --------------------------------------------------

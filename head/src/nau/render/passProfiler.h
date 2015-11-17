@@ -10,22 +10,22 @@ namespace nau
 {
 	namespace render
 	{
-		class PassProfiler :
-			public Pass
-		{
+		class PassProfiler : public Pass {
+			friend class PassFactory;
+
 		protected:
+			PassProfiler (const std::string &name);
 			nau::geometry::Font m_pFont;
-			nau::scene::Camera *m_pCam;
+			std::shared_ptr<nau::scene::Camera> m_pCam;
 			nau::scene::SceneObject *m_pSO;
 
 			static bool Init();
 			static bool Inited;
 
 		public:
-			PassProfiler (const std::string &name);
 			virtual ~PassProfiler(void);
 
-			static Pass *Create(const std::string &name);
+			static std::shared_ptr<Pass> Create(const std::string &name);
 
 			void prepare (void);
 			void restore (void);

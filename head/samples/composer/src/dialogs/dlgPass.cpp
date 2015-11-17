@@ -224,15 +224,15 @@ DlgPass::updatePipelines() {
 	std::string pipName = std::string(sel.mb_str());
 
 	Pipeline *pip = RENDERMANAGER->getPipeline(pipName);
-	std::vector<std::string> *passes = pip->getPassNames();
+
+	std::vector<std::string> passes;
+	pip->getPassNames(&passes);
 
 	sel = m_PassList->GetStringSelection();
 	m_PassList->Clear();
 
-	for (iter = passes->begin(); iter != passes->end(); ++iter)
-		m_PassList->Append(wxString(iter->c_str()));
-
-	delete passes;
+	for (auto &name:passes)
+		m_PassList->Append(wxString(name.c_str()));
 
 	if (! m_PassList->SetStringSelection(sel))
 		m_PassList->SetSelection(0);
@@ -489,13 +489,13 @@ void DlgPass::updateProperties(Pass *p) {
 	m_PG->SetPropertyValue(wxT("Camera"), wxString(p->getCameraName().c_str()));
 
 	// VIEWPORT
-	nau::render::Viewport *v = p->getViewport();
+	std::shared_ptr<Viewport> v = p->getViewport();
 
 	if (p->hasRenderTarget() && p->isRenderTargetEnabled()) {
 		m_PG->SetPropertyValue(wxT("Viewport"), wxT("From Render Target"));
 		m_PG->DisableProperty(wxT("Viewport"));
 	}
-	else if (v == NULL) {
+	else if (!v) {
 		m_PG->EnableProperty(wxT("Viewport"));
 		m_PG->SetPropertyValue(wxT("Viewport"), wxT("From Camera"));
 	}
@@ -539,40 +539,20 @@ void DlgPass::updateProperties(Pass *p) {
 	delete names;
 
 	// LIGHTS
-	names = RENDERMANAGER->getLightNames();
+	std::vector<std::string> lNames;
+	RENDERMANAGER->getLightNames(&lNames);
 
-	for (iter = names->begin(); iter != names->end(); ++iter) {
+	for (auto & name:lNames) {
 
-		if (p->hasLight(*iter))
+		if (p->hasLight(name))
 			b = true;
 		else
 			b = false;
 		wxString str(wxT("Lights."));
-		wxString aux((*iter).c_str());
-		str.Append(wxString((*iter).c_str()));
+		wxString aux(name.c_str());
+		str.Append(wxString(name.c_str()));
 		m_PG->SetPropertyValue(str, b);
 	}
-	delete names;
-
-	//// COLOR & DEPTH
-	//m_PG->SetPropertyValue(wxT("Clear Color"), p->getPropb(Pass::COLOR_CLEAR));
-	//m_PG->SetPropertyValue(wxT("Clear Depth"), p->getPropb(Pass::DEPTH_CLEAR));
-
-
-	//if (m_PG->GetPropertyByName(wxT("Parameters")))
-	//	m_PG->DeleteProperty(wxT("Parameters"));
-	//
-	//std::map<std::string, float> params = p->getParamsf();
-
-	//wxPGProperty* pgprop;
-	//pgprop = m_PG->Append(new wxPGProperty(wxT("Parameters"), wxPG_LABEL));
-
-	//std::map<std::string, float>::iterator pIter = params.begin();
-
-	//for( ; pIter != params.end() ; ++pIter) {
-
-	//	m_PG->AppendIn(pgprop, new wxFloatProperty(wxString(pIter->first.c_str()), wxPG_LABEL, pIter->second));
-	//}
 
 	if (m_PG->GetPropertyByName(wxT("Material Maps")))
 		m_PG->DeleteProperty(wxT("Material Maps"));
@@ -638,24 +618,19 @@ void DlgPass::updateLists(Pass *p)
 
 void DlgPass::updateCameraList(Pass *p) {
 
-	std::vector<std::string>::iterator iter;
-
 	m_PG->ClearSelection();
 	m_pgCamList.RemoveAt(0,m_pgCamList.GetCount());
 
 	int i = 0;
-	std::vector<std::string> *passes = RENDERMANAGER->getCameraNames();
-	for (iter = passes->begin(); iter != passes->end(); ++iter) {
-		m_pgCamList.Add(wxString(iter->c_str()),i++);
+	std::vector<std::string> passes;
+	RENDERMANAGER->getCameraNames(&passes);
+	for (auto& name: passes) {
+		m_pgCamList.Add(wxString(name.c_str()),i++);
 	}
-	delete passes;
-
 	m_pgPropCam->SetChoices(m_pgCamList);
 }	
 	
 void DlgPass::updateViewportList(Pass *p) {
-
-	std::vector<std::string>::iterator iter;
 
 	int i = 0;
 
@@ -666,21 +641,15 @@ void DlgPass::updateViewportList(Pass *p) {
 	if (p->hasRenderTarget()) 
 		m_pgViewportList.Add(wxT("From Render Target"),++i);
 	
-	//if (p->isRenderTargetEnabled()) {
-	//	m_PG->DisableProperty("Viewport");
-	//}
-	//else {
-	//	m_PG->EnableProperty("Viewport");
+	std::vector<std::string> viewports;
+	RENDERMANAGER->getViewportNames(&viewports);
 
-	std::vector<std::string> *viewports = RENDERMANAGER->getViewportNames();
-
-	for (iter = viewports->begin(); iter != viewports->end(); ++iter)
-		m_pgViewportList.Add(wxString(iter->c_str()), ++i);
-
-	delete viewports;
+	for (auto &v:viewports)
+		m_pgViewportList.Add(wxString(v.c_str()), ++i);
 
 	m_pgPropViewport->SetChoices(m_pgViewportList);
 }
+
 
 void DlgPass::updateRenderTargetList(Pass *p) {
 
@@ -720,17 +689,16 @@ void DlgPass::updateScenes(Pass *p)
 
 void DlgPass::updateLights(Pass *p)
 {
-	std::vector<std::string> *names = RENDERMANAGER->getLightNames();
-	std::vector<std::string>::iterator iter;
+	std::vector<std::string> names;
+	RENDERMANAGER->getLightNames(&names);
 
 	wxPGProperty *pid = m_PG->Append(new wxPGProperty(wxT("Lights"), wxPG_LABEL));
 
 	wxPGProperty *pid2;
-	for (iter = names->begin(); iter != names->end(); ++iter) {
-		pid2 = m_PG->AppendIn(pid, new wxBoolProperty( wxString((*iter).c_str()), wxPG_LABEL, false ) );
+	for (auto &name:names) {
+		pid2 = m_PG->AppendIn(pid, new wxBoolProperty( wxString(name.c_str()), wxPG_LABEL, false ) );
 		pid2->SetAttribute( wxPG_BOOL_USE_CHECKBOX, true );
 	}
-	delete names;
 }
 
 
@@ -807,14 +775,14 @@ void DlgPass::OnSelectPipeline(wxCommandEvent& event) {
 	selName = event.GetString();
 
 	Pipeline *pip = RENDERMANAGER->getPipeline(std::string(selName.mb_str()));
-	std::vector<std::string> *passes = pip->getPassNames();
+	std::vector<std::string> passes;
+	pip->getPassNames(&passes);
 
 	m_PassList->Clear();
-	std::vector<std::string>::iterator iter;
-	for (iter = passes->begin(); iter != passes->end(); ++iter)
-		m_PassList->Append(wxString(iter->c_str()));
+	
+	for (auto &name:passes)
+		m_PassList->Append(wxString(name.c_str()));
 
-	delete passes;
 	m_PassList->SetSelection(0);
 		
 	Pass *p = getPass();

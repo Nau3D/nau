@@ -20,9 +20,11 @@ MaterialSortRenderQueue::MaterialSortRenderQueue(void) {
 
 }
 
+
 MaterialSortRenderQueue::~MaterialSortRenderQueue(void) {
 
 }
+
 
 void 
 MaterialSortRenderQueue::clearQueue (void) {

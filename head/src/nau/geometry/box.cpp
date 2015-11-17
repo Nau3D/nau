@@ -158,7 +158,8 @@ Box::Box(void) : Primitive(),
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "Light Grey");
 	
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>(36);
+	std::shared_ptr<std::vector<unsigned int>> indices =
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(36));
 	//FRONT
 	indices->at (0) = Box::FACE_FRONT + Box::TOP_LEFT;		
 	indices->at (1) = Box::FACE_FRONT + Box::BOTTOM_LEFT;

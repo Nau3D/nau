@@ -115,10 +115,10 @@ PassOptix::PassOptix(const std::string &passName) :
 }
 
 
-Pass *
+std::shared_ptr<Pass>
 PassOptix::Create(const std::string &passName) {
 
-	return new PassOptix(passName);
+	return dynamic_pointer_cast<Pass>(std::shared_ptr<PassOptix>(new PassOptix(passName)));
 }
 
 
@@ -214,8 +214,8 @@ PassOptix::setRenderTarget (nau::render::IRenderTarget* rt)
 {
 	glGetError();
 	if (rt == NULL) {
-		if (m_RenderTarget != NULL) 
-			delete m_Viewport;
+		//if (m_RenderTarget != NULL) 
+		//	delete m_Viewport;
 		m_UseRT = true;
 	}
 	else {
@@ -358,16 +358,16 @@ PassOptix::prepare (void)
 
 
 void
-PassOptix::restore (void)
-{
+PassOptix::restore (void) {
+
 	restoreCamera();
 	RENDERER->removeLights();
 }
 
 
 void
-PassOptix::doPass (void)
-{
+PassOptix::doPass (void) {
+
 	glGetError();
 	glFinish();
 
@@ -431,17 +431,11 @@ PassOptix::doPass (void)
 
 
 void
-PassOptix::setupCamera (void)
-{
-	Camera *aCam = 0;
+PassOptix::setupCamera (void) {
 
-	aCam = RENDERMANAGER->getCamera (m_CameraName);
+	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_CameraName);
 	
-	if (0 == aCam) {
-		return; 
-	}
-
-	if (0 != m_Viewport) {
+	if (m_ExplicitViewport) {
 		m_RestoreViewport = aCam->getViewport();
 		aCam->setViewport (m_Viewport);
 	}
@@ -571,8 +565,8 @@ PassOptix::optixInit() {
 
 
 void 
-PassOptix::addScene (const std::string &sceneName)
-{
+PassOptix::addScene (const std::string &sceneName) {
+
 	if (m_SceneVector.end() == std::find (m_SceneVector.begin(), m_SceneVector.end(), sceneName)) {
 	
 		m_SceneVector.push_back (sceneName);
@@ -588,95 +582,6 @@ PassOptix::addScene (const std::string &sceneName)
 
 		IScene *sc = RENDERMANAGER->getScene(sceneName);
 		sc->compile();
-
-/*		std::vector<SceneObject *> objs = sc->getAllObjects();
-		for (unsigned int i = 0; i < objs.size(); ++i) {
-
-			IRenderable &r = objs[i]->getRenderable();
-			VertexData &v = r.getVertexData();
-			// just to make sure we get this data compiled
-			//r.getVertexData().compile();
-
-			// which attrs should we send to optix?
-			unsigned int id = v.getBufferID(0);
-			// clear OpenGL Errors so far; otherwise Optix won't work
-			int e = glGetError();
-
-			optix::Buffer buffers[VertexData::MaxAttribs];
-			try {
-				for (unsigned int b = 0; b < VertexData::MaxAttribs; ++b) { 
-					if (v.getBufferID(b)) {
-						buffers[b] = o_Context->createBufferFromGLBO(RT_BUFFER_INPUT,v.getBufferID(b));
-						buffers[b]->setFormat(RT_FORMAT_FLOAT4);
-						buffers[b]->setSize(v.getDataOf(0).size());
-					}
-				}
-			}
-			catch ( optix::Exception& e ) {
-				NAU_THROW("Optix Error: Adding scene %s to pass %s (creating buffers from VBOs) [%s]",
-										sc->getName().c_str(), m_Name.c_str(),e.getErrorString().c_str()); 
-			}
-
-			std::vector<IMaterialGroup *> mg = r.getMaterialGroups();
-			for (unsigned int g = 0; g < mg.size(); ++g) {
-
-				if (mg[g]->getNumberOfPrimitives() > 0) {
-					try {
-						optix::Geometry geom = o_Context->createGeometry();
-						geom->setPrimitiveCount(mg[g]->getNumberOfPrimitives());
-						geom->setBoundingBoxProgram(o_BoundingBoxProgram);
-						geom->setIntersectionProgram(o_GeometryIntersectionProgram);
-
-						geom["vertex_buffer"]->setBuffer(buffers[0]);
-						for (unsigned int b = 1; b < VertexData::MaxAttribs; ++b) {
-							if (v.getBufferID(b))
-								geom[VertexData::Syntax[b]]->setBuffer(buffers[b]);
-						}
-						id = mg[g]->getIndexData().getBufferID();
-						optix::Buffer indices = o_Context->createBufferFromGLBO(RT_BUFFER_INPUT, id);
-						indices->setFormat(RT_FORMAT_UNSIGNED_INT);
-						indices->setSize(mg[g]->getIndexData().getIndexSize());
-
-						geom["index_buffer"]->setBuffer(indices);
-						o_Material = o_Context->createMaterial();
-						o_Material->setClosestHitProgram(0, o_ClosestHitProgram);
-						
-						o_Material["diffuse"]->set4fv(MATERIALLIBMANAGER->getMaterial(this->m_MaterialMap[mg[g]->getMaterialName()])->getColor().getDiffuse());
-
-						o_GeomInstances.push_back(o_Context->createGeometryInstance());
-						o_GeomInstances[o_GeomInstances.size()-1]->setMaterialCount(1);
-						o_GeomInstances[o_GeomInstances.size()-1]->setMaterial(0, o_Material);
-						o_GeomInstances[o_GeomInstances.size()-1]->setGeometry(geom);
-					}
-					catch ( optix::Exception& e ) {
-						NAU_THROW("Optix Error: Adding scene %s to pass %s (adding material groups) [%s]",
-												sc->getName().c_str(), m_Name.c_str(),e.getErrorString().c_str()); 
-					}
-				}
-			}
-		}
-		try {
-			o_GeomGroup->setChildCount(o_GeomInstances.size());
-			for (unsigned int i = 0; i < o_GeomInstances.size(); ++i) {
-				o_GeomGroup->setChild(i,o_GeomInstances[i]);
-			}
-
-			o_GeomGroup->setAcceleration(o_Context->createAcceleration("Bvh","Bvh"));
-		}
-		catch ( optix::Exception& e ) {
-			NAU_THROW("Optix Error: Adding scene %s to pass %s (adding instances to geometry group) [%s]",
-												sc->getName().c_str(), m_Name.c_str(),e.getErrorString().c_str()); 
-		}
-
-		//o_Context["geometry"]->set(o_GeomGroup);
-
-
-
-
-
-
-*/		
-
 	}
 }
 

@@ -153,9 +153,9 @@ OctreeByMatNode::setRenderable (nau::render::IRenderable *aRenderable)
 
 		pMaterialGroup = *matIter;
 		IndexData &indexDataMaterialGroup = pMaterialGroup->getIndexData();
-		std::vector<unsigned int> &vIndexData = indexDataMaterialGroup.getIndexData();
+		std::shared_ptr<std::vector<unsigned int>> &vIndexData = indexDataMaterialGroup.getIndexData();
 
-		if (vIndexData.size() > 0) {
+		if (vIndexData->size() > 0) {
 		
 			SceneObject *so = SceneObjectFactory::create("SimpleObject");
 			so->setName(m_Name+"::"+pMaterialGroup->getMaterialName());
@@ -248,19 +248,19 @@ OctreeByMatNode::_split() {
 		if (r->getNumberOfVertices()/3 > MAXPRIMITIVES) {
 			VertexData &vVertexData = r->getVertexData();
 			IndexData &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
-			std::vector<unsigned int> &vIndexData = VertexDataMaterialGroup.getIndexData();
+			std::shared_ptr<std::vector<unsigned int>> &vIndexData = VertexDataMaterialGroup.getIndexData();
 			std::vector<unsigned int>::iterator indexIter;
-			indexIter = vIndexData.begin();
+			indexIter = vIndexData->begin();
 			std::vector<VertexData::Attr> vVertices = vVertexData.getDataOf(vertexArrayPos);
 			// Octree are only implemented for triangles
 			offSet = 3;// ((Mesh *)r)->getPrimitiveOffset();
 			// for every primitive, split into temporary arrays
-			for (unsigned int i = 0; i < vIndexData.size(); i += offSet) {
+			for (unsigned int i = 0; i < vIndexData->size(); i += offSet) {
 				// carefull: three vertices are only for triangles, not lines
 				// strips and fans have their own set of rules for indexes
-				VertexData::Attr &v1 = vVertices.at (vIndexData[i]);
-				VertexData::Attr &v2 = vVertices.at (vIndexData[i+1]);
-				VertexData::Attr &v3 = vVertices.at (vIndexData[i+2]);
+				VertexData::Attr &v1 = vVertices.at (vIndexData->at(i));
+				VertexData::Attr &v2 = vVertices.at (vIndexData->at(i+1));
+				VertexData::Attr &v3 = vVertices.at (vIndexData->at(i+2));
 						
 				int v1Octant = _octantFor (v1);
 				int v2Octant = _octantFor (v2);
@@ -277,19 +277,20 @@ OctreeByMatNode::_split() {
 					tempMaterialGroup[index]->setMaterialName (pMaterialGroup->getMaterialName());
 				}
 
-				std::vector<unsigned int> &vTempIndexData = 
+				std::shared_ptr<std::vector<unsigned int>> &vTempIndexData =
 					tempMaterialGroup[index]->getIndexData().getIndexData();
 
-				if (IndexData::NoIndexData == vTempIndexData) {
-					std::vector<unsigned int>* newIndexData = new std::vector<unsigned int>;
+				if (vTempIndexData) {
+					std::shared_ptr<std::vector<unsigned int>> newIndexData = 
+						std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 					(tempMaterialGroup[index]->getIndexData()).setIndexData (newIndexData);
-					newIndexData->push_back (vIndexData[i]);
-					newIndexData->push_back (vIndexData[i+1]);
-					newIndexData->push_back (vIndexData[i+2]);
+					newIndexData->push_back (vIndexData->at(i));
+					newIndexData->push_back (vIndexData->at(i+1));
+					newIndexData->push_back (vIndexData->at(i+2));
 				} else {
-					vTempIndexData.push_back (vIndexData[i]);
-					vTempIndexData.push_back (vIndexData[i+1]);
-					vTempIndexData.push_back (vIndexData[i+2]);
+					vTempIndexData->push_back (vIndexData->at(i));
+					vTempIndexData->push_back (vIndexData->at(i+1));
+					vTempIndexData->push_back (vIndexData->at(i+2));
 				}
 			}
 

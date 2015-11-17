@@ -125,13 +125,12 @@ Mesh::getVertexData (void) {
 IndexData&
 Mesh::getIndexData() {
 
-	if (m_UnifiedIndex.size() == 0)
-		createUnifiedIndexVector();
-
 	if (!m_IndexData)
 		m_IndexData = IndexData::create(m_Name);
 
-	m_IndexData->setIndexData(&m_UnifiedIndex);
+	if (!m_IndexData->getIndexData())
+		createUnifiedIndexVector();
+
 	return *m_IndexData;
 }
 
@@ -191,37 +190,37 @@ Mesh::prepareIndexData() {
 	std::vector<int> outlaws;
 
 	createUnifiedIndexVector();
-
+	std::vector<unsigned int> &unified = *(m_IndexData->getIndexData().get());
 	unsigned int index0, index1, index2, aux0, aux1, aux2;
 	for (unsigned int i = 0 ; i < getNumberOfVertices()/3; i++) {
 	
-		index0 = m_UnifiedIndex[ i * 3 ];
-		index1 = m_UnifiedIndex[ i * 3 + 1 ];
-		index2 = m_UnifiedIndex[ i * 3 + 2 ];
+		index0 = unified[ i * 3 ];
+		index1 = unified[ i * 3 + 1 ];
+		index2 = unified[ i * 3 + 2 ];
 
 		if (idsArray[index2] == -1)
 			idsArray[index2] = i;
 		else if (idsArray[index1] == -1) {
 			idsArray[index1] = i;
-			aux0 = m_UnifiedIndex[ i * 3 ];
-			aux1 = m_UnifiedIndex[ i * 3 + 1];
-			aux2 = m_UnifiedIndex[ i * 3 +2 ];
-			m_UnifiedIndex[ i * 3 ]    = aux2;
-			m_UnifiedIndex[ i * 3 + 1] = aux0;
-			m_UnifiedIndex[ i * 3 + 2] = aux1;
+			aux0 = unified[ i * 3 ];
+			aux1 = unified[ i * 3 + 1];
+			aux2 = unified[ i * 3 +2 ];
+			unified[ i * 3 ]    = aux2;
+			unified[ i * 3 + 1] = aux0;
+			unified[ i * 3 + 2] = aux1;
 		}
 		else if (idsArray[index0] == -1) {
 			idsArray[index0] = i;
-			aux0 = m_UnifiedIndex[ i * 3 ];
-			aux1 = m_UnifiedIndex[ i * 3 + 1];
-			aux2 = m_UnifiedIndex[ i * 3 +2 ];
-			m_UnifiedIndex[ i * 3 ]    = aux1;
-			m_UnifiedIndex[ i * 3 + 1] = aux2;
-			m_UnifiedIndex[ i * 3 + 2] = aux0;
+			aux0 = unified[ i * 3 ];
+			aux1 = unified[ i * 3 + 1];
+			aux2 = unified[ i * 3 +2 ];
+			unified[ i * 3 ]    = aux1;
+			unified[ i * 3 + 1] = aux2;
+			unified[ i * 3 + 2] = aux0;
 		}
 		else {
 			m_VertexData->appendVertex(index2);
-			m_UnifiedIndex[i * 3 + 2] = (unsigned int)size;
+			unified[i * 3 + 2] = (unsigned int)size;
 			size++;
 		}
 	}
@@ -232,11 +231,12 @@ Mesh::prepareIndexData() {
 	iter = m_vMaterialGroups.begin();
 	size_t base = 0;
 	std::vector<unsigned int>::iterator indexIter;
-	indexIter = m_UnifiedIndex.begin();
+	indexIter = m_IndexData->getIndexData()->begin();
 	for ( ; iter != m_vMaterialGroups.end(); iter ++) {
 
-		size_t size = (*iter)->getIndexData().getIndexData().size();
-		std::vector<unsigned int>* matGroupIndexes = new std::vector<unsigned int>(size);
+		size_t size = (*iter)->getIndexData().getIndexData()->size();
+		std::shared_ptr<std::vector<unsigned int>> matGroupIndexes = 
+			std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(size));
 		matGroupIndexes->assign(indexIter+base, indexIter+(base+size));
 		(*iter)->getIndexData().setIndexData(matGroupIndexes);
 		base += size;
@@ -254,16 +254,18 @@ Mesh::getNumberOfVertices (void) {
 void 
 Mesh::createUnifiedIndexVector() {
 
-	m_UnifiedIndex.clear();
+	std::shared_ptr<std::vector<unsigned int>> unified = 
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 
 	std::vector<nau::material::MaterialGroup*>::iterator iter;
 
 	iter = m_vMaterialGroups.begin();
 	for ( ; iter != m_vMaterialGroups.end(); iter ++) {
 
-		std::vector<unsigned int> matGroupIndexes = (*iter)->getIndexData().getIndexData();
-		m_UnifiedIndex.insert(m_UnifiedIndex.end(), matGroupIndexes.begin(),matGroupIndexes.end());
+		std::shared_ptr<std::vector<unsigned int>> &matGroupIndexes = (*iter)->getIndexData().getIndexData();
+		unified->insert(unified->end(), matGroupIndexes->begin(),matGroupIndexes->end());
 	}
+	m_IndexData->setIndexData(unified);
 }
 
 
@@ -317,15 +319,15 @@ Mesh::addMaterialGroup (MaterialGroup* materialGroup, IRenderable *aRenderable) 
 	}
 	std::map<unsigned int, unsigned int> newIndicesMap;
 
-	std::vector<unsigned int>& indices	= materialGroup->getIndexData().getIndexData();
+	std::shared_ptr<std::vector<unsigned int>>& indices	= materialGroup->getIndexData().getIndexData();
 	std::vector<unsigned int>::iterator indexesIter;
 	
-	indexesIter = indices.begin();
+	indexesIter = indices->begin();
 
 	for (int i = 0 ; i < VertexData::MaxAttribs; i++)
 		poolList[i] = renderableVertexData.getDataOf(i);
 
-	for ( ; indexesIter != indices.end(); indexesIter++) {
+	for ( ; indexesIter != indices->end(); indexesIter++) {
 
 		if (0 == newIndicesMap.count ((*indexesIter))) {
 

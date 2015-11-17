@@ -79,7 +79,8 @@ Sphere::build() {
 
 	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
 	
-	std::vector<unsigned int> *indices = new std::vector<unsigned int>((slices)*(stacks)*2*3);
+	std::shared_ptr<std::vector<unsigned int>> indices = 
+		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>((slices)*(stacks)*2*3));
 
 	int k =  0;
 	for (int i = 0; i < stacks-1; ++i) {

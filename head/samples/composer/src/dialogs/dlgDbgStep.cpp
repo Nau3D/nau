@@ -102,7 +102,6 @@ DlgDbgStep::DlgDbgStep(): wxDialog(DlgDbgStep::m_Parent, -1, wxT("Nau - Frame pa
 	this->Layout();
 	this->Centre(wxBOTH);
 
-	passes = 0;
 	pipenameString = "";
 }
 
@@ -115,7 +114,6 @@ DlgDbgStep::updateDlg()
 	//	wxString str = wxString(pipenameString.c_str());
 	//	pipename->SetValue(str);
 	//}
-	std::vector<std::string>::iterator iter;
 	std::string newPipeName = RENDERMANAGER->getActivePipelineName();
 	if (pipenameString.compare(newPipeName) != 0){
 		pipenameString = newPipeName;
@@ -124,7 +122,7 @@ DlgDbgStep::updateDlg()
 	int nextIndex = 0;
 	m_list->Clear();
 	
-	if (pipenameString.size() > 0 && passes){
+	if (pipenameString.size() > 0 && passes.size()){
 
 		Pass *currentPass = RENDERMANAGER->getCurrentPass();
 		std::string passCurrentName;
@@ -132,11 +130,7 @@ DlgDbgStep::updateDlg()
 			passCurrentName = currentPass->getName();
 		}
 
-
-
-		
-		for (iter = passes->begin(); iter != passes->end(); ++iter){
-			std::string passName = *iter;
+		for (auto &passName :passes){
 			if (passCurrentName.compare(passName) == 0){
 				m_list->AppendAndEnsureVisible(wxString("Next:> " + passName));
 				m_list->SetSelection(nextIndex);
@@ -157,12 +151,8 @@ void
 DlgDbgStep::getPasses(std::string pipenameString){
 	Pipeline *pip = RENDERMANAGER->getPipeline(pipenameString);
 
-	if (passes){
-		delete passes;
-
-	}
-	passes = pip->getPassNames();
-
+	passes.clear();
+	pip->getPassNames(&passes);
 }
 
 

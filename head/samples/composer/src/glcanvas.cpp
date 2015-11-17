@@ -496,7 +496,7 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		aObject->_getTransformPtr()->translate (0.0f, -0.5f, 0.0f);
 	}
 
-	nau::scene::Camera *cam = RENDERMANAGER->getCamera ("testCamera");
+	std::shared_ptr<Camera> &cam = RENDERMANAGER->getCamera ("testCamera");
 
 	if ('L' == event.GetKeyCode()){
 		

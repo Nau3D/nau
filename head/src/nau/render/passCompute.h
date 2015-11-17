@@ -17,6 +17,7 @@ namespace nau
 	{
 
 		class PassCompute : public Pass {
+			friend class PassFactory;
 
 		public:
 
@@ -24,10 +25,9 @@ namespace nau
 			UINT_PROP(DIM_Y, 102);
 			UINT_PROP(DIM_Z, 103);
 
-			PassCompute (const std::string &passName);
 			virtual ~PassCompute();
 
-			static Pass *Create(const std::string &name);
+			static std::shared_ptr<Pass> Create(const std::string &name);
 
 			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
 
@@ -47,6 +47,7 @@ namespace nau
 
 		protected:
 
+			PassCompute(const std::string &passName);
 			static bool Init();
 			static bool Inited;
 

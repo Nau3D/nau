@@ -93,7 +93,7 @@ namespace nau {
 		virtual unsigned int getWindowWidth() = 0;
 
 		// Viewports
-		virtual nau::render::Viewport* getDefaultViewport () = 0;
+		virtual std::shared_ptr<Viewport> getDefaultViewport () = 0;
 		virtual void setWindowSize(unsigned int width, unsigned int height) = 0;
 
 

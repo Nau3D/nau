@@ -75,10 +75,10 @@ BulletWorld::build (void) /***MARK***/ //I'm assuming all objects inside scene a
 
 				if ((*matGroupsIter)->getIndexData().getIndexSize()) {
 				
-					std::vector<unsigned int> &indexes = (*matGroupsIter)->getIndexData().getIndexData();
+					std::shared_ptr<std::vector<unsigned int>> &indexes = (*matGroupsIter)->getIndexData().getIndexData();
 					btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray (
-							static_cast<int> (indexes.size() / 3), 
-							reinterpret_cast<int *>(&indexes[0]),
+							static_cast<int> (indexes->size() / 3), 
+							reinterpret_cast<int *>(&((*indexes)[0])),
 							3 * sizeof(unsigned int),
 							static_cast<int> (vd.getDataOf(VertexData::GetAttribIndex(std::string("position"))).size()),
 							reinterpret_cast<btScalar*>(&(vd.getDataOf(VertexData::GetAttribIndex(std::string("position")))[0])),
