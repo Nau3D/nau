@@ -62,7 +62,9 @@ namespace nau {
 	{
 
 	public:		
-
+		bool m_ProfileResetRequest;
+		void setProfileResetRequest();
+		bool getProfileResetRequest();
 
 		static nau::Nau* Create (void);
 		static nau::Nau* GetInstance (void);

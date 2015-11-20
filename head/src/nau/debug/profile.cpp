@@ -312,7 +312,7 @@ void
 Profile::CollectQueryResults() {
 
 #if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
-	int siz;
+	size_t siz;
 	section *sec;
 	int availableEnd = 0;
 	GLuint64 timeStart=0, timeEnd = 0;
@@ -321,7 +321,7 @@ Profile::CollectQueryResults() {
 	for (int l = 0; l < sTotalLevels; ++l) {
 		siz = sLevels[l].sec.size();
 
-		for(int cur = 0; cur < siz; ++cur) {
+		for(unsigned int cur = 0; cur < siz; ++cur) {
 			sec = &(sLevels[l].sec[cur]);
 
 			if (sec->profileGL) {

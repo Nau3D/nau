@@ -202,6 +202,8 @@ GLCanvas::Render () {
 	}
 	Profile::CollectQueryResults();
 
+	if (m_pEngine->getProfileResetRequest())
+		Profile::Reset();
 	//  FPS Counter
 	m_CounterFps++;
 

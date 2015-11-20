@@ -128,7 +128,8 @@ Nau::Nau() :
 	m_DefaultState(0),
 	m_pAPISupport(0),
 	m_pWorld(0), 
-	m_LuaState(0)
+	m_LuaState(0),
+	m_ProfileResetRequest(false)
 {
 
 }
@@ -254,6 +255,20 @@ Nau::getName() {
 //
 //}
 
+
+void
+Nau::setProfileResetRequest() {
+	m_ProfileResetRequest = true;
+}
+
+
+bool
+Nau::getProfileResetRequest() {
+
+	bool aux = m_ProfileResetRequest;
+	m_ProfileResetRequest = false;
+	return aux;
+}
 
 // ----------------------------------------------------
 //		Lua Stuff
@@ -568,7 +583,25 @@ luaSaveTexture(lua_State *l) {
 }
 
 
-void 
+int
+luaSaveProfile(lua_State *l) {
+
+	const char *fileName = lua_tostring(l, -1);
+
+	std::string prof = Profile::DumpLevels();
+
+	fstream s;
+	s.open(fileName, fstream::out);
+	s << prof << "\n";
+	s.close();
+
+	NAU->setProfileResetRequest();
+	//Profile::Reset();
+	return 0;
+}
+
+
+void
 Nau::initLua() {
 
 	m_LuaState = luaL_newstate();
@@ -583,6 +616,8 @@ Nau::initLua() {
 	lua_setglobal(m_LuaState, "saveTexture");
 	lua_pushcfunction(m_LuaState, luaSetBuffer);
 	lua_setglobal(m_LuaState, "setBuffer");
+	lua_pushcfunction(m_LuaState, luaSaveProfile);
+	lua_setglobal(m_LuaState, "saveProfiler");
 }
 
 
@@ -624,6 +659,12 @@ Nau::callLuaTestScript(std::string name) {
 
 
 #endif
+
+
+
+
+
+
 
 
 // ----------------------------------------------------------
