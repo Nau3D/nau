@@ -17,6 +17,8 @@
 
 					<valueof uniform="VM"          		type="RENDERER" context="CURRENT" 
 														component="VIEW_MODEL" />
+					<valueof uniform="camDir"				type="CAMERA" context="CURRENT"
+														component="VIEW" />
 														
 				</values>
 			</shader>

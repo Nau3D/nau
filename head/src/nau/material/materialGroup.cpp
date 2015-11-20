@@ -13,27 +13,25 @@ using namespace nau::render::opengl;
 using namespace nau::math;
 
 
-MaterialGroup *
+std::shared_ptr<MaterialGroup>
 MaterialGroup::Create(nau::render::IRenderable *parent, std::string materialName) {
 
 #ifdef NAU_OPENGL
-	return new GLMaterialGroup(parent, materialName);
+	return std::shared_ptr<MaterialGroup>(new GLMaterialGroup(parent, materialName));
 #endif
 }
 
 
 MaterialGroup::MaterialGroup() :
 	m_Parent (0),
-	m_MaterialName ("default"),
-	m_IndexData (0) {
+	m_MaterialName ("default") {
    //ctor
 }
 
 
 MaterialGroup::MaterialGroup(IRenderable *parent, std::string materialName) :
 	m_Parent(parent),
-	m_MaterialName(materialName),
-	m_IndexData(0) {
+	m_MaterialName(materialName) {
 	//ctor
 }
 
@@ -73,13 +71,13 @@ MaterialGroup::getMaterialName () {
 }
 
 
-IndexData&
+std::shared_ptr<nau::geometry::IndexData>&
 MaterialGroup::getIndexData (void) {
 
-	if (0 == m_IndexData) {
-		m_IndexData = IndexData::create(getName());
+	if (!m_IndexData) {
+		m_IndexData = IndexData::Create(getName());
 	}
-	return (*m_IndexData);
+	return (m_IndexData);
 }
 
 
@@ -93,7 +91,7 @@ MaterialGroup::getIndexOffset(void) {
 size_t
 MaterialGroup::getIndexSize(void) {
 
-	if (0 == m_IndexData) {
+	if (!m_IndexData) {
 		return 0;
 	}
 	return m_IndexData->getIndexSize();
@@ -103,8 +101,9 @@ MaterialGroup::getIndexSize(void) {
 void 
 MaterialGroup::setIndexList (std::shared_ptr<std::vector<unsigned int>> &indices) {
 
-	if (0 == m_IndexData) {
-		m_IndexData = IndexData::create(getName());
+	if (!m_IndexData) {
+		m_IndexData.reset();
+		m_IndexData = IndexData::Create(getName());
 	}
 	m_IndexData->setIndexData (indices);
 }

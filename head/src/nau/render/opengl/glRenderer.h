@@ -166,7 +166,7 @@ namespace nau
 
 			// DEBUG
 		protected:
-			void showDrawDebugInfo(MaterialGroup *aMatGroup);
+			void showDrawDebugInfo(std::shared_ptr<MaterialGroup> &aMatGroup);
 			void showDrawDebugInfo(PassCompute *aPass);
 			void showDrawDebugInfo(Material *mat, nau::util::Tree *t);
 			void showDrawDebugInfo(IProgram *p, nau::util::Tree *t);
@@ -180,7 +180,7 @@ namespace nau
 
 		public:
 			void setRenderMode(TRenderMode mode);
-			void drawGroup (nau::material::MaterialGroup* aMatGroup);
+			void drawGroup(std::shared_ptr<MaterialGroup> aMaterialGroup);
 			void setCullFace (Face aFace);
 
 			void dispatchCompute(int dimX, int dimY, int dimZ);

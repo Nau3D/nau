@@ -17,7 +17,7 @@ namespace nau
 		{
 		public:
 
-			static IndexData* create (std::string);
+			static std::shared_ptr<IndexData> Create (std::string &);
 
 			virtual ~IndexData(void);
 
@@ -35,7 +35,7 @@ namespace nau
 
 			void buildAdjacencyList();
 
-			void add (IndexData &anIndexData);
+			void add (std::shared_ptr<IndexData> &anIndexData);
 
 			virtual void useAdjacency(bool adj) = 0;
 			virtual bool getAdjacency() = 0;
@@ -52,6 +52,7 @@ namespace nau
 
 		protected:
 			IndexData(void);
+			IndexData(std::string &name);
 			std::string m_Name;
 			
 			std::shared_ptr<std::vector<unsigned int>> m_InternalIndexArray;

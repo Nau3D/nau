@@ -623,7 +623,6 @@
     <ClCompile Include="..\src\nau\geometry\box.cpp" />
     <ClCompile Include="..\src\nau\geometry\frustum.cpp" />
     <ClCompile Include="..\src\nau\geometry\mesh.cpp" />
-    <ClCompile Include="..\src\nau\geometry\primitive.cpp" />
     <ClCompile Include="..\src\nau\geometry\quad.cpp" />
     <ClCompile Include="..\src\nau\geometry\sphere.cpp" />
     <ClCompile Include="..\src\nau\loader\objLoader.cpp" />

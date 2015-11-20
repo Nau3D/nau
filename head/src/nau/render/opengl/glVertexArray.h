@@ -14,14 +14,16 @@ namespace nau
 	{
 		class GLVertexArray : public VertexData
 		{
-		private:
+			friend class nau::geometry::VertexData;
+
+		protected:
 			unsigned int m_GLBuffers[VertexData::MaxAttribs+1];
 			unsigned int m_AttributesLocations[VertexData::MaxAttribs];
 			bool m_IsCompiled;
+			GLVertexArray(const std::string &name);
 			//static unsigned int m_OpenGLOwnAttribs;
 
 		public:
-			GLVertexArray(void);
 			~GLVertexArray(void);
 
 			void setAttributeDataFor (unsigned int type, 

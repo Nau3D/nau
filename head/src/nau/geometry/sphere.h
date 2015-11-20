@@ -16,17 +16,11 @@ namespace nau
 			~Sphere(void);
 
 			static AttribSet Attribs;
+			
+			FLOAT_PROP(SLICES, 0);
+			FLOAT_PROP(STACKS, 1);
 
-			static const std::string FloatParamNames[];
-			
-			typedef enum {SLICES, STACKS, COUNT_FLOATPARAMS} FloatParams;
-			
-			void setParam(unsigned int, float value);
-			float getParamf(unsigned int param);
-			const std::string &getParamfName(unsigned int i);
 			void build();
-
-			virtual unsigned int translate(const std::string &name);
 
 		protected:
 

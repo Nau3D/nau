@@ -853,7 +853,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 
 	// Create an object for the Model.  
-	SceneObject *aObject = SceneObjectFactory::create ("SimpleObject");
+	SceneObject *aObject = SceneObjectFactory::Create("SimpleObject");
 
 	// Get and set name as the model path 
 	aObject->setName(obj.m_Pathname);
@@ -914,7 +914,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		//		s = "DefaultOBJMat";
 		}
 
-		MaterialGroup *aMatGroup = MaterialGroup::Create(aRenderable, s);
+		std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable, s);
 
 		// Set up the index array
 
@@ -931,13 +931,12 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		// Assign it to Material Group
 		aMatGroup->setIndexList(iArr);
 		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
-			aMatGroup->getIndexData().useAdjacency(true);
+			aMatGroup->getIndexData()->useAdjacency(true);
 
 		// Add it to the Renderable
 		if (currG->numTriangles > 0)
 			aRenderable->addMaterialGroup(aMatGroup);
 
-		delete aMatGroup;
 	}
 
 	// Set the Object's Renderable

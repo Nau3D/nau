@@ -38,7 +38,7 @@ Quad::Quad(void) :
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
-	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Quad");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable, "__Quad");
 	std::shared_ptr<std::vector<unsigned int>> indices =
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(6));
 	indices->at (0) = 0;
@@ -49,7 +49,6 @@ Quad::Quad(void) :
 	indices->at (5) = 3;
 	aMaterialGroup->setIndexList (indices);
 	renderable->addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 
 	setRenderable (renderable);
 }

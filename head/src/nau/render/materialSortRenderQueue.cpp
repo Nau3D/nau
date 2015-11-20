@@ -12,7 +12,7 @@ using namespace nau::material;
 using namespace nau::math;
 using namespace nau;
 
-typedef std::pair<MaterialGroup*, mat4*> pair_MatGroup_Transform;
+typedef std::pair<std::shared_ptr<MaterialGroup>, mat4*> pair_MatGroup_Transform;
 
 #pragma warning( disable : 4503)
 
@@ -63,13 +63,10 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 
 	IRenderable &aRenderable = aObject->getRenderable();
 
-	std::vector<MaterialGroup*> vMaterialGroups = aRenderable.getMaterialGroups();
-	std::vector<MaterialGroup*>::iterator groupIter;
-	groupIter = vMaterialGroups.begin();
+	std::vector<std::shared_ptr<MaterialGroup>> vMaterialGroups = aRenderable.getMaterialGroups();
 
-	for ( ; groupIter != vMaterialGroups.end(); groupIter++ ) {
-		MaterialGroup *aGroup = (*groupIter);
-		IndexData &indexData = aGroup->getIndexData();
+	for (auto &aGroup: vMaterialGroups) {
+		std::shared_ptr<nau::geometry::IndexData> &indexData = aGroup->getIndexData();
 		{
 			PROFILE ("Get material");
 			aMaterial = materialMap[aGroup->getMaterialName()].m_MatPtr;
@@ -96,10 +93,9 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 
 		Profile("Enqueue Bounding Boxes");
 
-		groupIter = nau::geometry::BoundingBox::getGeometry()->getMaterialGroups().begin();
+		vMaterialGroups = nau::geometry::BoundingBox::getGeometry()->getMaterialGroups();
 
-		for ( ; groupIter != nau::geometry::BoundingBox::getGeometry()->getMaterialGroups().end(); groupIter++ ) {
-			MaterialGroup *aGroup = (*groupIter);;
+		for (auto& aGroup: vMaterialGroups) {
 			Material *aMaterial = MATERIALLIBMANAGER->getMaterial(DEFAULTMATERIALLIBNAME, aGroup->getMaterialName());
 			mat4 *trans = &((nau::geometry::BoundingBox *)(aObject->getBoundingVolume()))->getTransform();
 			if (0 == m_RenderQueue.count (0)){

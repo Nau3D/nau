@@ -50,7 +50,7 @@ namespace nau
 			static void loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &vertexData);
 			static void loadSubMeshes (TiXmlHandle hRoot, IScene *scn, IRenderable *m, std::string meshType);
 			static void loadGeometry(TiXmlElement *pElem, VertexData &vertexData);
-			static void loadFaces(TiXmlElement *pElem, MaterialGroup *mg, unsigned int operationType);
+			static void loadFaces(TiXmlElement *pElem, std::shared_ptr<MaterialGroup> &mg, unsigned int operationType);
 			static IRenderable *loadSharedGeometry (TiXmlHandle hRoot, IScene *scn, std::string meshType);
 			static void loadSubMeshNames(TiXmlHandle hRoot, IScene *scn, bool meshSharedGeometry);
 			static void loadVertexBuffers(TiXmlElement *pElem, VertexData &vertexData);

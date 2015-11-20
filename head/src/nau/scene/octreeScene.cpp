@@ -28,12 +28,12 @@ OctreeScene::OctreeScene(void) : IScenePartitioned(),
 
 OctreeScene::~OctreeScene(void)
 {
-	delete m_pGeometry;
+	//delete m_pGeometry;
 
-	while (!m_SceneObjects.empty()) {
-		delete(*m_SceneObjects.begin());
-		m_SceneObjects.erase(m_SceneObjects.begin());
-	}
+	//while (!m_SceneObjects.empty()) {
+	//	delete(*m_SceneObjects.begin());
+	//	m_SceneObjects.erase(m_SceneObjects.begin());
+	//}
 }
 
 
@@ -160,9 +160,9 @@ OctreeScene::compile (void)
 	objIter = m_SceneObjects.begin();
 	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
 		(*objIter)->getRenderable().getVertexData().compile();
-		std::vector<MaterialGroup*> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
+		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
 
-		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
+		std::vector<std::shared_ptr<MaterialGroup>>::iterator matGroupsIter = matGroups.begin();
 		for ( ; matGroupsIter != matGroups.end(); ++matGroupsIter){
 			(*matGroupsIter)->compile();
 		}

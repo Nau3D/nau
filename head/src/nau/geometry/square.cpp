@@ -10,11 +10,8 @@ using namespace nau::material;
 using namespace nau::math;
 
 
-const std::string Square::FloatParamNames[] = {""};
+Square::Square(void) : Primitive() {
 
-Square::Square(void) : Primitive(),
-	m_Floats(COUNT_FLOATPARAMS)
-{
 	float n = 1.0f;
 
 	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(4);
@@ -50,8 +47,7 @@ Square::Square(void) : Primitive(),
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("tangent")), tangent);
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
-
-	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
 	
 	std::shared_ptr<std::vector<unsigned int>> indices = 
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(6));
@@ -66,60 +62,19 @@ Square::Square(void) : Primitive(),
 	indices->at (5)= Square::TOP_RIGHT;
 
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Light Grey");
 
 	addMaterialGroup (aMaterialGroup);
 }
 
 
-Square::~Square(void)
-{
+Square::~Square(void) {
 
 }
 
 
 void 
-Square::build()
-{
+Square::build() {
+
 }
 
 
-const std::string &
-Square::getParamfName(unsigned int i) 
-{
-	if (i < Square::COUNT_FLOATPARAMS)
-		return Square::FloatParamNames[i];
-	else
-		return Primitive::NoParam;
-}
-
-
-float 
-Square::getParamf(unsigned int param)
-{
-	assert(param < Square::COUNT_FLOATPARAMS);
-
-	if (param < Square::COUNT_FLOATPARAMS)
-		return(m_Floats[param]);
-	else
-		return (0.0f);
-}
-
-
-void
-Square::setParam(unsigned int param, float value)
-{
-	assert(param < Square::COUNT_FLOATPARAMS);
-
-	if (param < Square::COUNT_FLOATPARAMS)
-		m_Floats[param] = value;
-}
-
-
-unsigned int
-Square::translate(const std::string &name) 
-{
-	assert("name is not a primitive param");
-	return (0);
-}

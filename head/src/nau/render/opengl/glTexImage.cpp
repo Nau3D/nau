@@ -61,7 +61,6 @@ GLTexImage::~GLTexImage(void)
 }
 
 
-
 void
 GLTexImage::update(void) {
 	
@@ -77,17 +76,16 @@ GLTexImage::update(void) {
 	if (texType == (unsigned int)GL_TEXTURE_CUBE_MAP)
 		texType = (unsigned int)GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 	glGetTexImage((GLenum)texType, 0, (GLenum)m_Texture->getPrope(ITexture::FORMAT), (GLenum)m_DataType, 0);
-	void *m_Data2 = glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
-	memcpy(m_Data, m_Data2, m_DataSize);
+	void *data2 = glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
+	memcpy(m_Data, data2, m_DataSize);
 	glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
 	glDeleteBuffers(1, &b);
 }
 
 
-
 void *
-GLTexImage::getData() 
-{
+GLTexImage::getData() {
+
 	update();
 	return m_Data;
 }
@@ -98,9 +96,7 @@ GLTexImage::getRGBData() {
 
 	GLenum texType = (GLenum)m_Texture->getPrope(ITexture::DIMENSION);
 
-	if (texType == GL_TEXTURE_CUBE_MAP)
-		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-	else if (texType != GL_TEXTURE_2D)
+	if (texType != GL_TEXTURE_CUBE_MAP && texType != GL_TEXTURE_2D)
 		return NULL;
 
 	unsigned int dataSize = m_Width * m_Height * 3 * (sizeof(unsigned char));
@@ -115,10 +111,25 @@ GLTexImage::getRGBData() {
 	glBindTexture(texType,m_Texture->getPropi(ITexture::ID));
 
 	unsigned char *data = (unsigned char *)malloc(dataSize);
-	glGetTexImage(texType, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	if (texType == GL_TEXTURE_CUBE_MAP)
+		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+
+	if (m_Texture->getPrope(ITexture::FORMAT) != GL_DEPTH_COMPONENT)
+		glGetTexImage(texType, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	else
+		glGetTexImage(texType, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 	void *data2 = glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
 
-	memcpy(data, data2, dataSize);
+	if (m_Texture->getPrope(ITexture::FORMAT) == GL_DEPTH_COMPONENT) {
+
+		for (unsigned int k = 0; k < m_Width*m_Height; ++k) {
+			data[k * 3] = ((unsigned char *)data2)[k];
+			data[k * 3+1] = ((unsigned char *)data2)[k];
+			data[k * 3+2] = ((unsigned char *)data2)[k];
+		}
+	}
+	else
+		memcpy(data, data2, dataSize);
 	glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
 	glDeleteBuffers(1, &b);
 	return data;

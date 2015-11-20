@@ -15,19 +15,7 @@ namespace nau
 			friend class nau::resource::ResourceManager;
 			~Axis(void);
 
-
-			static const std::string FloatParamNames[];
-			
-			typedef enum {COUNT_FLOATPARAMS} FloatParams;
-			
-			//void setParam(unsigned int, float value);
-			//float getParamf(unsigned int param);
-			//const std::string &getParamfName(unsigned int i);
 			void build();
-
-			float getParamf(unsigned int param) {return 0.0f;};
-
-			virtual unsigned int translate(const std::string &name);
 
 		private:
 			

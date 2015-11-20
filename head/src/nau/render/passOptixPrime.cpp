@@ -357,7 +357,7 @@ PassOptixPrime::initOptixPrime() {
 	CHK_PRIME(rtpBufferDescSetRange(m_VerticesDesc, 0, numVert));
 
 	// Create Index Buffer
-	IndexData *ind = &(renderable->getIndexData());
+	std::shared_ptr<IndexData> &ind = renderable->getIndexData();
 	std::vector<int> v; 
 	ind->getIndexDataAsInt(&v);
 	GLuint index;

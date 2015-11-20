@@ -100,7 +100,7 @@ Camera::Camera (const std::string &name) :
 	VertexData &vertexData = renderable->getVertexData();
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 
-	MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Green");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Green");
 	
 	std::shared_ptr<std::vector<unsigned int>> indices =
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(16));
@@ -117,11 +117,11 @@ Camera::Camera (const std::string &name) :
 	aMaterialGroup->setIndexList (indices);
 
 	renderable->addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 
 	m_Transform = m_Mat4Props[VIEW_INVERSE_MATRIX];
 	setRenderable (renderable);
 
+	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Red");
 	indices.reset(new std::vector<unsigned int>(8));
 	indices->at (0) = Camera::TOP_LEFT_NEAR;		indices->at (1) = Camera::TOP_RIGHT_NEAR;
@@ -132,7 +132,6 @@ Camera::Camera (const std::string &name) :
 	aMaterialGroup->setIndexList (indices);
 
 	renderable->addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 
 	setRenderable (renderable);
 

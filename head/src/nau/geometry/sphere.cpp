@@ -11,10 +11,6 @@ using namespace nau::render;
 using namespace nau::material;
 
 
-const std::string Sphere::FloatParamNames[] = {"slices", "stacks"};
-
-
-
 bool
 Sphere::InitSphere() {
 
@@ -30,15 +26,13 @@ AttribSet Sphere::Attribs;
 bool Sphere::InitedSphere = InitSphere();
 
 
-Sphere::Sphere(): Primitive()/*,
-	m_Floats(COUNT_FLOATPARAMS)*/ {
+Sphere::Sphere(): Primitive() {
 
 		registerAndInitArrays(Attribs);
 }
 
 
-Sphere::~Sphere(void)
-{
+Sphere::~Sphere(void) {
 
 }
 
@@ -77,7 +71,7 @@ Sphere::build() {
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 
-	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
 	
 	std::shared_ptr<std::vector<unsigned int>> indices = 
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>((slices)*(stacks)*2*3));
@@ -96,54 +90,7 @@ Sphere::build() {
 	
 	}
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("Light Grey");
-
 	addMaterialGroup (aMaterialGroup);
-
-	delete aMaterialGroup;
 }
 
 
-const std::string &
-Sphere::getParamfName(unsigned int i) 
-{
-	if (i < Sphere::COUNT_FLOATPARAMS)
-		return Sphere::FloatParamNames[i];
-	else
-		return Primitive::NoParam;
-}
-
-
-float 
-Sphere::getParamf(unsigned int param)
-{
-	assert(param < Sphere::COUNT_FLOATPARAMS);
-
-	if (param < Sphere::COUNT_FLOATPARAMS)
-		return(m_Floats[param]);
-	else
-		return (0.0f);
-}
-
-
-void
-Sphere::setParam(unsigned int param, float value)
-{
-	assert(param < Sphere::COUNT_FLOATPARAMS);
-
-	if (param < Sphere::COUNT_FLOATPARAMS)
-		m_Floats[param] = value;
-}
-
-
-unsigned int
-Sphere::translate(const std::string &name) 
-{
-	for (int i = 0; i < Sphere::COUNT_FLOATPARAMS; ++i) {
-		if (FloatParamNames[i] == name)
-			return i;
-	}
-	assert("name is not a primitive param");
-	return (0);
-}

@@ -15,7 +15,7 @@ namespace nau
 		class SceneObjectFactory
 		{
 		public:
-			static nau::scene::SceneObject* create (std::string type);
+			static nau::scene::SceneObject* Create (std::string type);
 		private:
 			SceneObjectFactory(void) {};
 			~SceneObjectFactory(void) {};

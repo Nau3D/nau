@@ -715,7 +715,7 @@ OgreMeshLoader::loadGeometry(TiXmlElement *pElem,VertexData &vertexData)
 
 
 void 
-OgreMeshLoader::loadFaces(TiXmlElement *pElem, MaterialGroup *mg, unsigned int operationType)
+OgreMeshLoader::loadFaces(TiXmlElement *pElem, std::shared_ptr<MaterialGroup> &mg, unsigned int operationType)
 {
 	unsigned int faceIndex = 0;
 	TiXmlElement *pElemFaces = pElem->FirstChildElement("faces");
@@ -805,7 +805,7 @@ OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, IRenderable *m, s
 		
 		if (!pUseSharedVertices || strcmp("true", pUseSharedVertices) == 0) {
 		
-			MaterialGroup *mg = MaterialGroup::Create(m, pMaterialName);
+			std::shared_ptr<MaterialGroup> mg = MaterialGroup::Create(m, pMaterialName);
 			//mg->setMaterialName(pMaterialName);
 			//mg->setParent(m);
 			m->setDrawingPrimitive(operationType);
@@ -817,7 +817,7 @@ OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, IRenderable *m, s
 
 			IRenderable *m = RESOURCEMANAGER->createRenderable(meshType, aux, OgreMeshLoader::m_MeshFile);
 			m->setDrawingPrimitive(operationType);
-			scnObj = SceneObjectFactory::create("SimpleObject");
+			scnObj = SceneObjectFactory::Create("SimpleObject");
 			sprintf(aux,"Unnamed_%d", index);
 			scnObj->setName(aux);
 			if (meshType != "Mesh")
@@ -825,7 +825,7 @@ OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, IRenderable *m, s
 			//m->setName(aux);
 			//RESOURCEMANAGER->addRenderable(m, OgreMeshLoader::m_MeshFile);
 			scnObj->setRenderable(m);
-			MaterialGroup *mg = MaterialGroup::Create(m, pMaterialName);
+			std::shared_ptr<MaterialGroup> mg = MaterialGroup::Create(m, pMaterialName);
 			//mg->setMaterialName(pMaterialName);
 			//mg->setParent(m);
 
@@ -861,7 +861,7 @@ OgreMeshLoader::loadSharedGeometry (TiXmlHandle hRoot, IScene *scn, std::string 
 
 	if (pElem) {
 		m = RESOURCEMANAGER->createRenderable(meshType, "Unnamed_shared", OgreMeshLoader::m_MeshFile);
-		scnObj = SceneObjectFactory::create("SimpleObject");
+		scnObj = SceneObjectFactory::Create("SimpleObject");
 		//sprintf(aux,"Unnamed_shared", index);
 		scnObj->setName("Unnamed_shared");
 		if (meshType != "Mesh")

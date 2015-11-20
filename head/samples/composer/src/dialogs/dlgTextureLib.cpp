@@ -94,7 +94,8 @@ DlgTextureLib::notifyUpdate(Notification aNot, std::string texName, std::string 
 	}
 	else if (aNot == TEXTURE_ICON_UPDATE) {
 		nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
-		e->setData("");
+		std::string st = "";
+		e->setData(&st);
 		EVENTMANAGER->notifyEvent("NEW_TEXTURE", "","", e);
 		delete e;
 	}

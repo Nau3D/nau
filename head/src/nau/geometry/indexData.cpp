@@ -13,24 +13,26 @@ using namespace nau::render;
 using namespace nau::math;
 
 
-IndexData*
-IndexData::create(std::string name) {
-
-	IndexData *i;
+std::shared_ptr<IndexData>
+IndexData::Create(std::string &name) {
 
 #ifdef NAU_OPENGL
-	i = new GLIndexArray;
+	return std::shared_ptr<IndexData>(new GLIndexArray(name));
 #elif NAU_DIRECTX
-	i =  new DXIndexArray;
+	i = std::shared_ptr<IndexData>(new DXIndexArray(name));
 #endif
-
-	i->m_Name = name;
-	return i;
 }
 
 
 IndexData::IndexData(void) :
 	m_UseAdjacency(false) {
+
+}
+
+
+IndexData::IndexData(std::string & name):
+	m_UseAdjacency(false),
+	m_Name(name) {
 
 }
 
@@ -72,8 +74,8 @@ IndexData::getIndexDataAsInt(std::vector<int> *v) {
 
 
 unsigned int
-IndexData::getIndexSize (void) 
-{
+IndexData::getIndexSize (void) {
+
 	if (m_InternalIndexArray && m_UseAdjacency == false)
 		return (unsigned int)m_InternalIndexArray->size();
 	else if (m_AdjIndexArray)
@@ -84,8 +86,8 @@ IndexData::getIndexSize (void)
 
 
 void
-IndexData::setIndexData (std::shared_ptr<std::vector<unsigned int>> &indexData)
-{
+IndexData::setIndexData (std::shared_ptr<std::vector<unsigned int>> &indexData) {
+
 	if (m_InternalIndexArray && m_InternalIndexArray != indexData) {
 		m_InternalIndexArray.reset();
 	}
@@ -95,21 +97,21 @@ IndexData::setIndexData (std::shared_ptr<std::vector<unsigned int>> &indexData)
 
 
 void
-IndexData::add (IndexData &aIndexData)
-{
+IndexData::add (std::shared_ptr<IndexData> &aIndexData) {
+
 	size_t offset = 0;
 
-	std::shared_ptr<std::vector<unsigned int>> &indexData = aIndexData.getIndexData();
+	std::shared_ptr<std::vector<unsigned int>> &indexData = aIndexData->getIndexData();
 
 	if (indexData) {
 		std::shared_ptr<std::vector<unsigned int>> &aIndexVec = getIndexData();
 
 		if (!aIndexVec) {
-			aIndexVec = 
-				std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
+			aIndexVec.reset(new std::vector<unsigned int>);
+				//std::shared_ptr<std::vector<unsigned int>>(>);
 
 			aIndexVec->insert (aIndexVec->begin(), indexData->begin(), indexData->end());
-			m_UseAdjacency = aIndexData.getAdjacency();
+			m_UseAdjacency = aIndexData->getAdjacency();
 
 		} 
 		else {
@@ -120,8 +122,8 @@ IndexData::add (IndexData &aIndexData)
 
 
 void
-IndexData::offsetIndices (int amount)
-{
+IndexData::offsetIndices (int amount) {
+
 	if (!m_InternalIndexArray)
 		return;
 

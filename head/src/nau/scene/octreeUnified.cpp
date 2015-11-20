@@ -103,7 +103,7 @@ OctreeUnified::compile(void) {
 	m_Compiled = true;
 	
 	if (m_SceneObject) {
-		std::vector<MaterialGroup*> &matGroups = m_SceneObject->getRenderable().getMaterialGroups();
+		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = m_SceneObject->getRenderable().getMaterialGroups();
 
 		for (auto mg : matGroups) {
 			mg->compile();
@@ -119,7 +119,7 @@ OctreeUnified::add(SceneObject *aSceneObject) {
 	aSceneObject->burnTransform();
 
 	if (!m_SceneObject) {
-		m_SceneObject = SceneObjectFactory::create("SimpleObject");
+		m_SceneObject = SceneObjectFactory::Create("SimpleObject");
 		m_SceneObject->setRenderable(&(aSceneObject->getRenderable()));
 	}
 	else {

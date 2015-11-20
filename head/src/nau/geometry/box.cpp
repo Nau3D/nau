@@ -10,11 +10,9 @@ using namespace nau::render;
 using namespace nau::material;
 
 
-const std::string Box::FloatParamNames[] = {""};
 
-Box::Box(void) : Primitive(),
-	m_Floats(COUNT_FLOATPARAMS)
-{
+Box::Box(void) : Primitive() {
+
 	float n = 1.0f;
 
 	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(24);
@@ -156,7 +154,7 @@ Box::Box(void) : Primitive(),
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 
-	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "Light Grey");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "Light Grey");
 	
 	std::shared_ptr<std::vector<unsigned int>> indices =
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(36));
@@ -215,60 +213,18 @@ Box::Box(void) : Primitive(),
 	indices->at (35)= Box::FACE_BOTTOM + Box::TOP_RIGHT;
 
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("Light Grey");
-
 	addMaterialGroup (aMaterialGroup);
 }
 
 
-Box::~Box(void)
-{
+Box::~Box(void) {
 
 }
 
 
 void 
-Box::build()
-{
+Box::build() {
+
 }
 
 
-const std::string &
-Box::getParamfName(unsigned int i) 
-{
-	if (i < Box::COUNT_FLOATPARAMS)
-		return Box::FloatParamNames[i];
-	else
-		return Primitive::NoParam;
-}
-
-
-float 
-Box::getParamf(unsigned int param)
-{
-	assert(param < Box::COUNT_FLOATPARAMS);
-
-	if (param < Box::COUNT_FLOATPARAMS)
-		return(m_Floats[param]);
-	else
-		return (0.0f);
-}
-
-
-void
-Box::setParam(unsigned int param, float value)
-{
-	assert(param < Box::COUNT_FLOATPARAMS);
-
-	if (param < Box::COUNT_FLOATPARAMS)
-		m_Floats[param] = value;
-}
-
-
-unsigned int
-Box::translate(const std::string &name) 
-{
-	assert("name is not a primitive param");
-	return (0);
-}

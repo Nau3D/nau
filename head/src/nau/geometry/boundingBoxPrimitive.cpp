@@ -10,11 +10,9 @@ using namespace nau::render;
 using namespace nau::material;
 
 
-const std::string BBox::FloatParamNames[] = {"size"};
 
-BBox::BBox(void) : Primitive(),
-	m_Floats(COUNT_FLOATPARAMS)
-{
+BBox::BBox(void) : Primitive() {
+
 	float n = 1.0f;
 
 	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(8);
@@ -44,12 +42,9 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2) = 5;
 	indices->at (3) = 4;
 
-	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Emission Blue");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Emission Blue");
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Blue");
 	addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 
 	//LEFT
 	indices.reset(new std::vector<unsigned int>(4));
@@ -58,12 +53,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2) = 7;
 	indices->at (3) = 3;
 
+	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Cyan");
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Cyan");
 	addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 
 	//BACK
 	indices.reset(new std::vector<unsigned int>(4));
@@ -72,12 +65,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2)= 7;
 	indices->at (3)= 6;
 
+	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Yellow");
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Yellow");
 	addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 
 	//RIGHT
 	indices.reset(new std::vector<unsigned int>(4));
@@ -86,12 +77,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2)= 6;
 	indices->at (3)= 5;
 
+	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Red");
 	addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 
 	//TOP
 	indices.reset(new std::vector<unsigned int>(4));
@@ -100,12 +89,10 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2)= 6;
 	indices->at (3)= 7;
 
+	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Green");
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Green");
 	addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 
 	//BOTTOM
 	indices.reset(new std::vector<unsigned int>(4));
@@ -114,62 +101,20 @@ BBox::BBox(void) : Primitive(),
 	indices->at (2)= 2;
 	indices->at (3)= 3;
 
+	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Purple");
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Purple");
 	addMaterialGroup (aMaterialGroup);
-	delete aMaterialGroup;
 }
 
 
-BBox::~BBox(void)
-{
+BBox::~BBox(void) {
 
 }
 
 
 void 
-BBox::build()
-{
+BBox::build() {
+
 }
 
-
-const std::string &
-BBox::getParamfName(unsigned int i) 
-{
-	if (i < BBox::COUNT_FLOATPARAMS)
-		return BBox::FloatParamNames[i];
-	else
-		return Primitive::NoParam;
-}
-
-
-float 
-BBox::getParamf(unsigned int param)
-{
-	assert(param < BBox::COUNT_FLOATPARAMS);
-
-	if (param < BBox::COUNT_FLOATPARAMS)
-		return(m_Floats[param]);
-	else
-		return (0.0f);
-}
-
-
-void
-BBox::setParam(unsigned int param, float value)
-{
-	assert(param < BBox::COUNT_FLOATPARAMS);
-
-	if (param < BBox::COUNT_FLOATPARAMS)
-		m_Floats[param] = value;
-}
-
-
-unsigned int
-BBox::translate(const std::string &name) 
-{
-	assert("name is not a primitive param");
-	return (0);
-}

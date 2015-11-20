@@ -12,6 +12,9 @@ namespace nau
 	{
 		class GLIndexArray : public IndexData
 		{
+
+			friend class nau::geometry::IndexData;
+
 		protected:
 			bool m_IsCompiled;
 			unsigned int m_GLBuffer;
@@ -20,9 +23,10 @@ namespace nau
 			bool isCompiled();
 			void bind (void);
 			void unbind (void);
+			//GLIndexArray(void);
+			GLIndexArray(std::string &name);
 
 		public:
-			GLIndexArray(void);
 
 			//std::vector<unsigned int>& getIndexData (void);
 			void compile();

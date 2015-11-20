@@ -20,7 +20,6 @@ GLMaterialGroup::~GLMaterialGroup() {
 
 	if (m_VAO)
 		glDeleteVertexArrays(1, &m_VAO);
-	delete m_IndexData;
 }
 
 

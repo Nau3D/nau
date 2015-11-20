@@ -66,16 +66,16 @@ BulletWorld::build (void) /***MARK***/ //I'm assuming all objects inside scene a
 			VertexData &vd = (*sceneObjectsIter)->getRenderable().getVertexData();
 			
 
-			std::vector<MaterialGroup*> &matGroups = (*sceneObjectsIter)->getRenderable().getMaterialGroups();
-			std::vector<MaterialGroup*>::iterator matGroupsIter;
+			std::vector<std::shared_ptr<MaterialGroup>> &matGroups = (*sceneObjectsIter)->getRenderable().getMaterialGroups();
+			std::vector<std::shared_ptr<MaterialGroup>>::iterator matGroupsIter;
 
 			matGroupsIter = matGroups.begin();
 
 			for ( ; matGroupsIter != matGroups.end(); matGroupsIter++) {
 
-				if ((*matGroupsIter)->getIndexData().getIndexSize()) {
+				if ((*matGroupsIter)->getIndexData()->getIndexSize()) {
 				
-					std::shared_ptr<std::vector<unsigned int>> &indexes = (*matGroupsIter)->getIndexData().getIndexData();
+					std::shared_ptr<std::vector<unsigned int>> &indexes = (*matGroupsIter)->getIndexData()->getIndexData();
 					btTriangleIndexVertexArray* indexVertexArrays = new btTriangleIndexVertexArray (
 							static_cast<int> (indexes->size() / 3), 
 							reinterpret_cast<int *>(&((*indexes)[0])),

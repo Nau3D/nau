@@ -13,10 +13,17 @@ using namespace nau::render;
 using namespace nau::math;
 
 
-GLIndexArray::GLIndexArray(void):
-	IndexData (),
+//GLIndexArray::GLIndexArray(void):
+//	IndexData (),
+//	m_GLBuffer(0),
+//	m_IsCompiled (false) {
+//
+//}
+
+GLIndexArray::GLIndexArray(std::string & name):
+	IndexData(name),
 	m_GLBuffer(0),
-	m_IsCompiled (false) {
+	m_IsCompiled(false) {
 
 }
 

@@ -898,7 +898,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (pPrimType == NULL)
 					NAU_THROW("File %s\nScene %s, Object:%s\ntype is not defined", ProjectLoader::s_File.c_str(), pName, pNameSO);
 
-				GeometricObject *go = (GeometricObject *)nau::scene::SceneObjectFactory::create("Geometry");
+				GeometricObject *go = (GeometricObject *)nau::scene::SceneObjectFactory::Create("Geometry");
 				if (go == NULL)
 					NAU_THROW("File %s\nScene %s\nInvalid scene type", ProjectLoader::s_File.c_str(), pName);
 				
@@ -958,11 +958,11 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					NAU_THROW("File %s\nScene: %s\nInvalid primitive type %s in buffers definition", ProjectLoader::s_File.c_str(), pName, primString.c_str());
 				}
 				IRenderable::DrawPrimitive dp = IRenderer::PrimitiveTypes[primString];
-				SceneObject *so = SceneObjectFactory::create("SimpleObject");
+				SceneObject *so = SceneObjectFactory::Create("SimpleObject");
 				so->setName(pNameSO);
 				IRenderable *i = RESOURCEMANAGER->createRenderable("Mesh", pNameSO);
 				i->setDrawingPrimitive(dp);
-				MaterialGroup *mg;
+				std::shared_ptr<MaterialGroup> mg;
 				if (pMaterial)
 					mg = MaterialGroup::Create(i, pMaterial);
 				else
@@ -986,7 +986,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					}
 					else if (p->Value() == "index"){
 
-						mg->getIndexData().setBuffer(b->getPropi(IBuffer::ID));
+						mg->getIndexData()->setBuffer(b->getPropi(IBuffer::ID));
 					}
 					else {
 						NAU_THROW("File %s\nScene: %s\nVertex Attribute %s is not valid", ProjectLoader::s_File.c_str(), pName, p->Value());
@@ -1850,7 +1850,7 @@ ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits",
 		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
 		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes", "preScript", "postScript"};
-	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),true);
+	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),false);
 }
 
 
@@ -3629,7 +3629,7 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 	TiXmlElement *pElem;
 	int layers = 0;
 	pElem = hRoot.FirstChild ("textures").FirstChild ("texture").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("texture")) {
 		const char* pTextureName = pElem->Attribute ("name");
 		const char* pFilename = pElem->Attribute ("filename");
 
@@ -3663,7 +3663,7 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 	}
 
 	pElem = hRoot.FirstChild ("textures").FirstChild ("cubeMap").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("cubeMap")) {
 		const char* pTextureName = pElem->Attribute ("name");
 		const char* pFilePosX = pElem->Attribute ("filePosX");
 		const char* pFileNegX = pElem->Attribute ("fileNegX");

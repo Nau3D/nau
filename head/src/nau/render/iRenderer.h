@@ -257,7 +257,7 @@ namespace nau
 
 
 			virtual void setRenderMode(TRenderMode mode) = 0;
-			virtual void drawGroup(nau::material::MaterialGroup* aMaterialGroup) = 0;
+			virtual void drawGroup(std::shared_ptr<nau::material::MaterialGroup> aMaterialGroup) = 0;
 			virtual void setCullFace(Face aFace) = 0;
 			virtual void dispatchCompute(int dimX, int dimY, int dimZ) = 0;
 

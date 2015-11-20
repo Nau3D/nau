@@ -38,6 +38,7 @@
     <ProjectGuid>{B4688BBF-66C7-4109-96EB-6DA471817F7A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>attribute</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -132,11 +133,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32;D:\toolkits\libs;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(TOOLKITS)libs;$(LibraryPath)</LibraryPath>
+    <TargetName>attribute64Optix_d</TargetName>
+    <OutDir>..\..\build\samples\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32;D:\toolkits\libs;$(LibraryPath)</LibraryPath>
+    <OutDir>..\..\build\samples\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -158,13 +162,14 @@
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>D:\toolkits\libs64;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <OutDir>..\..\build\samples\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">
     <TargetName>attribute64Optix</TargetName>
     <IncludePath>d:\toolkits\includes64;D:\toolkits\includes;$(IncludePath)</IncludePath>
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>D:\toolkits\libs64;$(LibraryPath)</LibraryPath>
-    <OutDir>../../build/samples\</OutDir>
+    <OutDir>..\..\build\samples\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -179,7 +184,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;;lua52.lib;wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nauOptix_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;opengl32.lib;tinyxmlSTLd.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcmtd.lib;nau64_d.lib;luad.lib;glbindingd.lib;assimpd.lib;wxmsw30ud_adv.lib;wxmsw30ud_core.lib;wxbase30ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw30ud_propgrid.lib;wxmsw30ud_gl.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;Bullet3Common_Debug.lib;BulletSoftBody_Debug.lib;LinearMath_Debug.lib;tinyxmlSTLd.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrtd.lib;msvcprtd.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
@@ -215,7 +220,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>cudart_static.lib;optix_prime.1.lib;optix.1.lib;;lua52.lib;wxmsw29ud_core.lib;wxmsw29ud_adv.lib;wxbase29ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_gl.lib;nauOptix_d.lib;bulletdynamics_d.lib;bulletcollision_d.lib;bulletmath_d.lib;glew32s.lib;opengl32.lib;tinyxmlSTLd.lib;devil.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcmtd.lib;nau64_d.lib;luad.lib;glbindingd.lib;assimpd.lib;wxmsw30ud_adv.lib;wxmsw30ud_core.lib;wxbase30ud.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;wxpngd.lib;wxjpegd.lib;wxtiffd.lib;wxmsw30ud_propgrid.lib;wxmsw30ud_gl.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;Bullet3Common_Debug.lib;BulletSoftBody_Debug.lib;LinearMath_Debug.lib;tinyxmlSTLd.lib;devil.lib;opengl32.lib;glu32.lib;wsock32.lib;comctl32.lib;winmm.lib;rpcrt4.lib;ilu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrtd.lib;msvcprtd.lib;libcmt.lib</IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>

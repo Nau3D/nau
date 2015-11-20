@@ -85,9 +85,6 @@
     <ClCompile Include="..\src\nau\geometry\mesh.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\geometry\primitive.cpp">
-      <Filter>Source Files\geometry</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\geometry\quad.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>

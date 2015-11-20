@@ -83,10 +83,10 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		std::string matName = name.data;
 		if (matName == "")
 			matName = "Default";
-		MaterialGroup *aMaterialGroup = MaterialGroup::Create(renderable, matName);
+		std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable, matName);
 		aMaterialGroup->setIndexList(indices);
 		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
-			aMaterialGroup->getIndexData().useAdjacency(true);
+			aMaterialGroup->getIndexData()->useAdjacency(true);
 
 		renderable->addMaterialGroup(aMaterialGroup);
 		
@@ -186,7 +186,7 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 	
 		if (sc->mMeshes[nd->mMeshes[n]]->mPrimitiveTypes == 4) {
 		//sc->mMeshes[nd->mMeshes[n]]->mName.data;
-		SceneObject *so = SceneObjectFactory::create("SimpleObject");
+		SceneObject *so = SceneObjectFactory::Create("SimpleObject");
 		so->setRenderable(RESOURCEMANAGER->getRenderable(meshNameMap[nd->mMeshes[n]],""));
 		so->setTransform(m);
 		aScene->add(so);

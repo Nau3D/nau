@@ -144,20 +144,16 @@ OctreeByMatNode::setRenderable (nau::render::IRenderable *aRenderable)
 
 	// first divide the renderable so that each renderable has only one material
 
-	std::vector<MaterialGroup*> &vMaterialGroups = aRenderable->getMaterialGroups();
-	std::vector<MaterialGroup*>::iterator matIter;
-	matIter = vMaterialGroups.begin();
-	MaterialGroup *pMaterialGroup;
+	std::vector<std::shared_ptr<MaterialGroup>> &vMaterialGroups = aRenderable->getMaterialGroups();
 
-	for ( ; matIter != vMaterialGroups.end(); matIter++) {
+	for (auto &pMaterialGroup: vMaterialGroups) {
 
-		pMaterialGroup = *matIter;
-		IndexData &indexDataMaterialGroup = pMaterialGroup->getIndexData();
-		std::shared_ptr<std::vector<unsigned int>> &vIndexData = indexDataMaterialGroup.getIndexData();
+		std::shared_ptr<nau::geometry::IndexData> &indexDataMaterialGroup = pMaterialGroup->getIndexData();
+		std::shared_ptr<std::vector<unsigned int>> &vIndexData = indexDataMaterialGroup->getIndexData();
 
 		if (vIndexData->size() > 0) {
 		
-			SceneObject *so = SceneObjectFactory::create("SimpleObject");
+			SceneObject *so = SceneObjectFactory::Create("SimpleObject");
 			so->setName(m_Name+"::"+pMaterialGroup->getMaterialName());
 
 			m_pLocalMeshes[pMaterialGroup->getMaterialName()] = so;
@@ -204,7 +200,7 @@ OctreeByMatNode::_unifyLocalMeshes() {
 				if (iter->second->getRenderable().getNumberOfVertices()/3 < 8000) {
 
 					if (!m_pLocalMeshes.count(iter->first))
-						m_pLocalMeshes[iter->first] = SceneObjectFactory::create("SimpleObject");
+						m_pLocalMeshes[iter->first] = SceneObjectFactory::Create("SimpleObject");
 
 					m_pLocalMeshes[iter->first]->getRenderable().addMaterialGroup((iter->second->getRenderable().getMaterialGroups())[0], &(iter->second->getRenderable()));
 
@@ -228,27 +224,26 @@ OctreeByMatNode::_split() {
 	std::map<std::string, nau::scene::SceneObject *>::iterator matIter;
 	SceneObject *s;
 	std::string name;
-	MaterialGroup *pMaterialGroup;
 
 	// do the splitting for each material 
 	int countSplits = (unsigned int)m_pLocalMeshes.size();
 	matIter = m_pLocalMeshes.begin();
 	for ( ; matIter != m_pLocalMeshes.end(); matIter++) {
 
-		MaterialGroup *tempMaterialGroup[9] = { 0 };
+		std::shared_ptr<MaterialGroup> tempMaterialGroup[9] = { 0 };
 		SceneObject *tempSO[9] = { 0 };
 
 		name = matIter->first;
 		s = matIter->second;
 
 		IRenderable *r = m_pLocalMeshes[name]->_getRenderablePtr();
-		pMaterialGroup = r->getMaterialGroups()[0];
+		std::shared_ptr<MaterialGroup> &pMaterialGroup = r->getMaterialGroups()[0];
 
 		// if needs to be splitted
 		if (r->getNumberOfVertices()/3 > MAXPRIMITIVES) {
 			VertexData &vVertexData = r->getVertexData();
-			IndexData &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
-			std::shared_ptr<std::vector<unsigned int>> &vIndexData = VertexDataMaterialGroup.getIndexData();
+			std::shared_ptr<nau::geometry::IndexData> &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
+			std::shared_ptr<std::vector<unsigned int>> &vIndexData = VertexDataMaterialGroup->getIndexData();
 			std::vector<unsigned int>::iterator indexIter;
 			indexIter = vIndexData->begin();
 			std::vector<VertexData::Attr> vVertices = vVertexData.getDataOf(vertexArrayPos);
@@ -278,12 +273,12 @@ OctreeByMatNode::_split() {
 				}
 
 				std::shared_ptr<std::vector<unsigned int>> &vTempIndexData =
-					tempMaterialGroup[index]->getIndexData().getIndexData();
+					tempMaterialGroup[index]->getIndexData()->getIndexData();
 
 				if (vTempIndexData) {
 					std::shared_ptr<std::vector<unsigned int>> newIndexData = 
 						std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
-					(tempMaterialGroup[index]->getIndexData()).setIndexData (newIndexData);
+					(tempMaterialGroup[index]->getIndexData())->setIndexData (newIndexData);
 					newIndexData->push_back (vIndexData->at(i));
 					newIndexData->push_back (vIndexData->at(i+1));
 					newIndexData->push_back (vIndexData->at(i+2));
@@ -300,7 +295,7 @@ OctreeByMatNode::_split() {
 						stringstream s;
 						s << r->getName() << "." << index;
 						Mesh *m = (Mesh *)RESOURCEMANAGER->createRenderable("Mesh", s.str()); //new Mesh;
-						tempSO[index] = SceneObjectFactory::create("SimpleObject");
+						tempSO[index] = SceneObjectFactory::Create("SimpleObject");
 						tempSO[index]->setName(s.str());
 						tempSO[index]->setRenderable(m);
 					}
@@ -493,11 +488,10 @@ OctreeByMatNode::_compile (void)
 
 		iter->second->getRenderable().getVertexData().compile();
 
-		std::vector<MaterialGroup*> &matGroups = iter->second->getRenderable().getMaterialGroups();
-		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
+		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = iter->second->getRenderable().getMaterialGroups();
 
-		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
-			(*matGroupsIter)->compile();
+		for (auto &matGroupsIter: matGroups){
+			matGroupsIter->compile();
 		}
 	}
 

@@ -40,7 +40,7 @@ GeometricObject::setRenderable (nau::render::IRenderable *renderable)
 void 
 GeometricObject::setMaterial(const std::string &name) 
 {
-	MaterialGroup *mg = m_Renderable->getMaterialGroups().at(0);
+	std::shared_ptr<MaterialGroup> &mg = m_Renderable->getMaterialGroups().at(0);
 
 	mg ->setMaterialName(name);
 }

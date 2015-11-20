@@ -67,7 +67,7 @@ OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::materia
 	VertexData &v = r.getVertexData();
 	size_t size = v.getDataOf(0).size();;
 
-	std::vector<MaterialGroup *> mg = r.getMaterialGroups();
+	std::vector<std::shared_ptr<MaterialGroup>> &mg = r.getMaterialGroups();
 	for (unsigned int g = 0; g < mg.size(); ++g) {
 		if (mg[g]->getNumberOfPrimitives() > 0) {
 			try {
@@ -81,17 +81,20 @@ OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::materia
 						geom[VertexData::Syntax[b]]->setBuffer(m_BufferLib->getBuffer(v.getBufferID(b),size));		
 				}
 
-				geom["index_buffer"]->setBuffer(m_BufferLib->getIndexBuffer(mg[g]->getIndexData().getBufferID(), mg[g]->getIndexData().getIndexSize()));
+				geom["index_buffer"]->setBuffer(
+					m_BufferLib->getIndexBuffer(mg[g]->getIndexData()->getBufferID(), 
+												mg[g]->getIndexData()->getIndexSize()));
 
 				m_GeomInstances.push_back(m_Context->createGeometryInstance());
 				m_GeomInstances[m_GeomInstances.size()-1]->setMaterialCount(1);
-				m_MaterialLib->applyMaterial(m_GeomInstances[m_GeomInstances.size()-1], materialMap[mg[g]->getMaterialName()]);
+				m_MaterialLib->applyMaterial(m_GeomInstances[m_GeomInstances.size()-1], 
+					materialMap[mg[g]->getMaterialName()]);
 				m_GeomInstances[m_GeomInstances.size()-1]->setGeometry(geom);
 				
 			}
 			catch ( optix::Exception& e ) {
 				NAU_THROW("Optix Error: Adding scene object %s, material %s(creating buffers from VBOs) [%s]",
-										r.getName().c_str(), mg[g]->getMaterialName().c_str(), e.getErrorString().c_str()); 
+						r.getName().c_str(), mg[g]->getMaterialName().c_str(), e.getErrorString().c_str()); 
 			}
 		}
 	}

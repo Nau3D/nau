@@ -390,25 +390,25 @@ GLRenderer::getCounter(Counters c) {
 unsigned int
 GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
 
-	unsigned int indices = (unsigned int)m->getIndexData().getIndexSize();
+	unsigned int indices = (unsigned int)m->getIndexData()->getIndexSize();
 	unsigned int primitive = (unsigned int)m->getParent().getRealDrawingPrimitive();
 
 	switch (primitive) {
 
-	case GL_TRIANGLES_ADJACENCY:
+	case (unsigned int)GL_TRIANGLES_ADJACENCY:
 		return (indices / 6);
-	case GL_TRIANGLES:
+	case (unsigned int)GL_TRIANGLES:
 		return (indices / 3);
-	case GL_TRIANGLE_STRIP:
-	case GL_TRIANGLE_FAN:
+	case (unsigned int)GL_TRIANGLE_STRIP:
+	case (unsigned int)GL_TRIANGLE_FAN:
 		return (indices - 2);
-	case GL_LINES:
+	case (unsigned int)GL_LINES:
 		return (indices / 2);
-	case GL_LINE_LOOP:
+	case (unsigned int)GL_LINE_LOOP:
 		return (indices - 1);
-	case GL_POINTS:
+	case (unsigned int)GL_POINTS:
 		return indices;
-	case GL_PATCHES:
+	case (unsigned int)GL_PATCHES:
 		assert(APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS) && "invalid primitive type");
 		return indices / m->getParent().getnumberOfVerticesPerPatch();
 	default:
@@ -828,12 +828,12 @@ GLRenderer::setRenderMode(TRenderMode mode) {
 
 
 void
-GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
+GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 
 	if (aMatGroup->getMaterialName() == "__Emission Green" || aMatGroup->getMaterialName() == "__Emission Red")
 		int x = 3;
 	IRenderable& aRenderable = aMatGroup->getParent();
-	IndexData &indexData = aMatGroup->getIndexData();
+	std::shared_ptr<nau::geometry::IndexData> &indexData = aMatGroup->getIndexData();
 
 	unsigned int drawPrimitive = aRenderable.getRealDrawingPrimitive();
 
@@ -858,7 +858,7 @@ GLRenderer::drawGroup(MaterialGroup* aMatGroup) {
 	{
 		PROFILE_GL("Draw elements");
 
-		size = (GLsizei)indexData.getIndexSize();
+		size = (GLsizei)indexData->getIndexSize();
 
 		if (size != 0) {
 			if (m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]) {
@@ -948,7 +948,7 @@ GLRenderer::showDrawDebugInfo(PassCompute *p) {
 
 
 void
-GLRenderer::showDrawDebugInfo(MaterialGroup *mg) {
+GLRenderer::showDrawDebugInfo(std::shared_ptr<MaterialGroup> &mg) {
 
 	Pass *p = RENDERMANAGER->getCurrentPass();
 	std::string passName = p->getName();
@@ -961,7 +961,7 @@ GLRenderer::showDrawDebugInfo(MaterialGroup *mg) {
 	else
 		tree = tree->getBranch("Pass", passName);
 
-	GLMaterialGroup *glMG = (GLMaterialGroup *)mg;
+	std::shared_ptr<GLMaterialGroup> glMG = dynamic_pointer_cast<GLMaterialGroup>(mg);
 	std::string s = mg->getMaterialName();
 	std::map<string, MaterialID> m = RENDERMANAGER->getCurrentPass()->getMaterialMap();
 	if (m.count(s) == 0)
@@ -988,7 +988,7 @@ GLRenderer::showDrawDebugInfo(MaterialGroup *mg) {
 
 	SLOG("VAO: %d", glMG->getVAO());
 	int buffID;
-	buffID = glMG->getIndexData().getBufferID();
+	buffID = glMG->getIndexData()->getBufferID();
 	nau::util::Tree *tVAO, *tInputs;
 	if (!tree->hasKey("Uniforms and Attributes"))
 		tInputs = tree->appendBranch("Uniforms and Attributes");

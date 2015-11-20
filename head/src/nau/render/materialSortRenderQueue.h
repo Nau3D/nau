@@ -35,7 +35,7 @@ namespace nau
 		private:
 			std::map<int, 
 					std::map<nau::material::Material*, 
-							std::vector<std::pair<nau::material::MaterialGroup*, 
+							std::vector<std::pair<std::shared_ptr<nau::material::MaterialGroup>, 
 												  nau::math::mat4 *> >* >* > m_RenderQueue;
 		};
 	};

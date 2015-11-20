@@ -292,19 +292,14 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 		offSet = 3; // m_pLocalMesh->getPrimitiveOffset();
 
 		//For each material group
-		std::vector<MaterialGroup*> &vMaterialGroups =
+		std::vector<std::shared_ptr<MaterialGroup>> &vMaterialGroups =
 			aRenderable->getMaterialGroups();
-		std::vector<MaterialGroup*>::iterator matIter;
 
-		matIter = vMaterialGroups.begin();
+		for (auto& pMaterialGroup: vMaterialGroups) {
+			std::shared_ptr<MaterialGroup> tempMaterialGroup[9];
 
-		for ( ; matIter != vMaterialGroups.end(); matIter++) {
-			MaterialGroup *tempMaterialGroup[9] = { 0 };
-
-			MaterialGroup *pMaterialGroup = (*matIter);
-
-			IndexData &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
-			std::shared_ptr<std::vector<unsigned int>> &vIndexData = VertexDataMaterialGroup.getIndexData();
+			std::shared_ptr<IndexData> &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
+			std::shared_ptr<std::vector<unsigned int>> &vIndexData = VertexDataMaterialGroup->getIndexData();
 			std::vector<unsigned int>::iterator indexIter;
 
 			indexIter = vIndexData->begin();
@@ -337,13 +332,13 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 					}
 
 					std::shared_ptr<std::vector<unsigned int>> &vTempIndexData =
-						tempMaterialGroup[index]->getIndexData().getIndexData();
+						tempMaterialGroup[index]->getIndexData()->getIndexData();
 
 					if (vTempIndexData) {
 						std::shared_ptr<std::vector<unsigned int>> newIndexData = 
 							std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 						// carefull: order of triangles is relevant for strips
-						(tempMaterialGroup[index]->getIndexData()).setIndexData (newIndexData);
+						(tempMaterialGroup[index]->getIndexData())->setIndexData (newIndexData);
 						newIndexData->push_back (vIndexData->at(i));
 						newIndexData->push_back (vIndexData->at(i+1));
 						newIndexData->push_back (vIndexData->at(i+2));
@@ -367,8 +362,7 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 						//tempMesh[index]->setName(_genOctName());
 					}
 					tempMesh[index]->addMaterialGroup (tempMaterialGroup[index], aRenderable);
-					delete tempMaterialGroup[index];
-					tempMaterialGroup[index] = 0;
+					tempMaterialGroup[index].reset();
 				}
 			}
 		}
@@ -550,12 +544,10 @@ OctreeNode::_compile (void)
 {
 	if (0 != m_pLocalMesh) {
 		m_pLocalMesh->getVertexData().compile();
-		std::vector<MaterialGroup*> &matGroups = m_pLocalMesh->getMaterialGroups();
+		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = m_pLocalMesh->getMaterialGroups();
 
-		std::vector<MaterialGroup*>::iterator matGroupsIter = matGroups.begin();
-
-		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
-			(*matGroupsIter)->compile();
+		for (auto& matGroupsIter: matGroups){
+			matGroupsIter->compile();
 		}
 
 	}

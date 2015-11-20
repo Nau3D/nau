@@ -1,16 +1,16 @@
 #include "nau/geometry/vertexData.h"
+
 #include "nau/config.h"
-#include <assert.h>
 
 #ifdef NAU_OPENGL
 #include "nau/render/opengl/glVertexArray.h"
 #endif
 
+#include <assert.h>
+
 using namespace nau::geometry;
 using namespace nau::render;
 using namespace nau::math;
-
-std::vector<VertexData::Attr> VertexData::NoData;
 
 const std::string VertexData::Syntax[] = {
 	"position", 
@@ -47,37 +47,29 @@ VertexData::GetAttribIndex(std::string &attribName) {
 }
 
 
-VertexData* 
-VertexData::create (std::string name) {
+std::shared_ptr<VertexData>
+VertexData::Create (const std::string &name) {
 
-	VertexData *v;
 #ifdef NAU_OPENGL
-	v = new GLVertexArray;
+	return std::shared_ptr<VertexData>(new GLVertexArray(name));
 #elif NAU_DIRECTX
-	v = new DXVertexArray;
+	return  std::shared_ptr<VertexData>(new DXVertexArray(name));
 #endif
-	v->m_Name = name;
-
-	return v;
 }
 
 
 VertexData::VertexData(void) {
 
-	for (int i = 0; i < VertexData::MaxAttribs; i++) {
-		m_InternalArrays[i] = 0;
-	}
+}
+
+
+VertexData::VertexData(const std::string &name): m_Name(name) {
+
 }
 
 
 VertexData::~VertexData(void) {
 
-	for (int i = 0; i < VertexData::MaxAttribs; i++) {
-
-		if (0 != m_InternalArrays[i]){
-			delete m_InternalArrays[i];
-		}
-	}
 }
 
 
@@ -88,25 +80,22 @@ VertexData::setName(std::string &name) {
 }
 
 
-std::vector<VertexData::Attr>& 
+std::shared_ptr<std::vector<VertexData::Attr>> &
 VertexData::getDataOf (unsigned int type) {
 
-	if (0 == m_InternalArrays[type]) {
-		return VertexData::NoData;
-	}
-	return (*m_InternalArrays[type]);
+	return m_InternalArrays[type];
 }
 
 
 void 
-VertexData::setDataFor (unsigned index, std::vector<Attr>* dataArray) {
+VertexData::setDataFor (unsigned index, std::shared_ptr<std::vector<Attr>> &dataArray) {
 
 	assert(index < VertexData::MaxAttribs && *dataArray != VertexData::NoData);
 
-	if (0 != m_InternalArrays[index])
-		delete m_InternalArrays[index];
+	if (!m_InternalArrays[index])
+		m_InternalArrays[index].reset();
 
-	if (index < VertexData::MaxAttribs && *dataArray != VertexData::NoData) {
+	if (index < VertexData::MaxAttribs && dataArray) {
 		m_InternalArrays[index] = dataArray;
 	}
 }
@@ -117,17 +106,17 @@ VertexData::add (VertexData &aVertexData) {
 
 	size_t offset = 0;
 	std::string s = "position";
-	std::vector<Attr> &vertices = getDataOf (GetAttribIndex(s));
+	std::shared_ptr<std::vector<Attr>> &vertices = getDataOf (GetAttribIndex(s));
 
-	offset = vertices.size();
+	offset = vertices->size();
 
 	if (offset == 0) {
 
 		for (int i = 0; i < VertexData::MaxAttribs; i++) {
-			std::vector<Attr> &newVec = aVertexData.getDataOf(i);
-			if (newVec != VertexData::NoData) {
-				std::vector<Attr> *aVec = new std::vector<Attr>;
-				aVec->insert(aVec->end(),newVec.begin(), newVec.end());
+			std::shared_ptr<std::vector<Attr>> &newVec = aVertexData.getDataOf(i);
+			if (!newVec) {
+				std::shared_ptr<std::vector<Attr>> aVec = std::shared_ptr<std::vector<Attr>>(new std::vector<Attr>);
+				aVec->insert(aVec->end(),newVec->begin(), newVec->end());
 				setDataFor(i,aVec);
 			}
 		}
@@ -136,27 +125,26 @@ VertexData::add (VertexData &aVertexData) {
 
 		for (int i = 0; i < VertexData::MaxAttribs; i++) {
 
-			std::vector<Attr> &thisVec = getDataOf(i);
-			std::vector<Attr> &newVec = aVertexData.getDataOf(i);
+			std::shared_ptr<std::vector<Attr>> &thisVec = getDataOf(i);
+			std::shared_ptr<std::vector<Attr>> &newVec = aVertexData.getDataOf(i);
 
-			if (newVec != VertexData::NoData && thisVec != VertexData::NoData) {
+			if (newVec && thisVec) {
 			
-				thisVec.insert(thisVec.end(),newVec.begin(), newVec.end());
+				thisVec->insert(thisVec->end(),newVec->begin(), newVec->end());
 			}
-			else if (newVec != VertexData::NoData && thisVec == VertexData::NoData) {
+			else if (newVec && !thisVec) {
 			
-				std::vector<Attr> *aVec = new std::vector<Attr>(offset);
-				aVec->insert(aVec->end(), newVec.begin(), newVec.end());
+				std::shared_ptr<std::vector<Attr>> aVec = std::shared_ptr<std::vector<Attr>>(new std::vector<Attr>(offset));
+				aVec->insert(aVec->end(), newVec->begin(), newVec->end());
 				setDataFor(i,aVec);
 			}
-			else if (newVec == VertexData::NoData && thisVec != VertexData::NoData) {
+			else if (!newVec && thisVec) {
 
-				size_t size = aVertexData.getDataOf(GetAttribIndex(std::string("position"))).size();
-				thisVec.resize(offset + size);
+				size_t size = aVertexData.getDataOf(GetAttribIndex(std::string("position")))->size();
+				thisVec->resize(offset + size);
 			}
 		}
 	}
-
 	return (int)offset;
 }
 
@@ -164,9 +152,9 @@ VertexData::add (VertexData &aVertexData) {
 void 
 VertexData::unitize(vec3 &vCenter, vec3 &vMin, vec3 &vMax) {
 
-	std::vector<Attr> &vertices = getDataOf (GetAttribIndex(std::string("position")));
+	std::shared_ptr<std::vector<Attr>> &vertices = getDataOf (GetAttribIndex(std::string("position")));
 
-	if (vertices == VertexData::NoData) 
+	if (!vertices) 
 		return;
 
 	float max;
@@ -193,13 +181,12 @@ VertexData::unitize(vec3 &vCenter, vec3 &vMin, vec3 &vMax) {
 
 	max *= 0.5;
 	//scale vertices so that min = -1 and max = 1
-	for(unsigned int i = 0; i < vertices.size(); i++) {
+	for(unsigned int i = 0; i < vertices->size(); i++) {
 	
-		vertices[i].x = (vertices[i].x - vCenter.x) / max; 
-		vertices[i].y = (vertices[i].y - vCenter.y) / max; 
-		vertices[i].z = (vertices[i].z - vCenter.z) / max; 
+		(*vertices)[i].x = ((*vertices)[i].x - vCenter.x) / max; 
+		(*vertices)[i].y = ((*vertices)[i].y - vCenter.y) / max; 
+		(*vertices)[i].z = ((*vertices)[i].z - vCenter.z) / max; 
 	}
-
 }
 
 

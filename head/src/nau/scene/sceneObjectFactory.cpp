@@ -8,7 +8,7 @@
 using namespace nau::scene;
 
 SceneObject* 
-SceneObjectFactory::create (std::string type)
+SceneObjectFactory::Create (std::string type)
 {
 	SceneObject *s;
 	if (0 == type.compare ("SimpleObject")) {

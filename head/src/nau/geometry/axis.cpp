@@ -11,14 +11,11 @@ using namespace nau::material;
 
 
 
-Axis::Axis(void) : Primitive()
-	
-{
+Axis::Axis(void) : Primitive() {
+
 	setDrawingPrimitive(nau::render::IRenderable::LINES);
 	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(6);
-	//std::vector<VertexData::Attr> *normals = new std::vector<vec4>(6);
 
-	// FRONT
 	vertices->at (0).set	(-1.0f,  0.0f,  0.0f);
 	vertices->at (1).set	( 1.0f,  0.0f,  0.0f);
 	vertices->at (2).set	( 0.0f, -1.0f,  0.0f);
@@ -29,53 +26,41 @@ Axis::Axis(void) : Primitive()
 	VertexData &vertexData = getVertexData();
 
 	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
-	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
 
-	MaterialGroup *aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
 	std::shared_ptr<std::vector<unsigned int>> indices =
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(2));
 	indices->at (0) = 0;
 	indices->at (1) = 1;
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Red");
 	addMaterialGroup (aMaterialGroup);
 
+	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Green");
 	indices.reset(new std::vector<unsigned int>(2));
 	indices->at (0) = 2;		
 	indices->at (1) = 3;
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Green");
 	addMaterialGroup (aMaterialGroup);
 
+	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(this, "__Emission Blue");
 	indices.reset(new std::vector<unsigned int>(2));
 	indices->at (0) = 4;		
 	indices->at (1) = 5;
 	aMaterialGroup->setIndexList (indices);
-	//aMaterialGroup->setParent (this);
-	//aMaterialGroup->setMaterialName("__Emission Blue");
 	addMaterialGroup (aMaterialGroup);
 }
 
 
-Axis::~Axis(void)
-{
+Axis::~Axis(void) {
 
 }
 
 
 void 
-Axis::build()
-{
+Axis::build() {
+
 }
 
 
-unsigned int
-Axis::translate(const std::string &name) 
-{
-	assert("name is not a primitive param");
-	return (0);
-}

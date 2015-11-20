@@ -8,10 +8,3 @@
 
 using namespace nau::geometry;
 
-const std::string Primitive::NoParam = "";
-
-const std::string &
-Primitive::getParamfName(unsigned int i) 
-{
-	return Primitive::NoParam;
-}

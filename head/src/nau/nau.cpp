@@ -124,7 +124,11 @@ Nau::Nau() :
 	m_pResourceManager(NULL),
 	m_pEventManager(NULL),
 	m_TraceFrames(0),
-	m_ProjectName("")
+	m_ProjectName(""),
+	m_DefaultState(0),
+	m_pAPISupport(0),
+	m_pWorld(0), 
+	m_LuaState(0)
 {
 
 }
@@ -155,7 +159,8 @@ Nau::~Nau() {
 	PassFactory::DeleteInstance();
 
 #ifdef NAU_LUA
-	lua_close(m_LuaState);
+	if (m_LuaState)
+		lua_close(m_LuaState);
 #endif
 }
 

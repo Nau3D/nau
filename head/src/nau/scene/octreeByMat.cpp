@@ -28,7 +28,7 @@ OctreeByMat::OctreeByMat() :
 
 OctreeByMat::~OctreeByMat()
 {
-	delete m_pOctreeRootNode;
+	//delete m_pOctreeRootNode;
    //dtor
 	/***MARK***/ //The OctreeNode must be deleted
 }

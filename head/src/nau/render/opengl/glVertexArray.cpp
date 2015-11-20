@@ -18,8 +18,8 @@ using namespace nau::math;
 
 
 //	CONST e DEST
-GLVertexArray::GLVertexArray(void):
-	VertexData (),
+GLVertexArray::GLVertexArray(const std::string &name):
+	VertexData (name),
 	m_IsCompiled (false) {
 
 	for (int i = 0; i < VertexData::MaxAttribs; i++){

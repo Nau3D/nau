@@ -24,8 +24,8 @@ namespace nau
 		{
 		protected:
 			nau::geometry::VertexData* m_VertexData;
-			nau::geometry::IndexData* m_IndexData;
-			std::vector<nau::material::MaterialGroup*> m_vMaterialGroups;
+			std::shared_ptr<nau::geometry::IndexData> m_IndexData;
+			std::vector<std::shared_ptr<nau::material::MaterialGroup>> m_vMaterialGroups;
 			unsigned int m_DrawPrimitive;
 			unsigned int m_RealDrawPrimitive;
 			std::string m_Name;
@@ -53,13 +53,13 @@ namespace nau
 			void unitize(vec3 &center, vec3 &min, vec3 &max);
 
 			void getMaterialNames(std::set<std::string> *nameList);
-			void addMaterialGroup (nau::material::MaterialGroup*, int offset = 0);
-			void addMaterialGroup (nau::material::MaterialGroup* materialGroup, 
+			void addMaterialGroup (std::shared_ptr<nau::material::MaterialGroup> &, int offset = 0);
+			void addMaterialGroup (std::shared_ptr<nau::material::MaterialGroup> & materialGroup,
 				nau::render::IRenderable *aRenderable); 
-			std::vector<nau::material::MaterialGroup*>& getMaterialGroups (void);
+			std::vector<std::shared_ptr<nau::material::MaterialGroup>>& getMaterialGroups (void);
 
 			nau::geometry::VertexData& getVertexData (void);
-			nau::geometry::IndexData& getIndexData(void);
+			std::shared_ptr<nau::geometry::IndexData>& getIndexData(void);
 
 			unsigned int getNumberOfVertices (void);
 			void setNumberOfVerticesPerPatch(int i);

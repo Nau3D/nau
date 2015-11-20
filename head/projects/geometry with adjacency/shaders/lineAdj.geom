@@ -6,6 +6,7 @@ layout (line_strip, max_vertices=6) out;
 uniform	mat4 PVM;
 uniform mat4 VM;
 
+uniform vec3 camDir;
 
 // Explore culling option
 
@@ -37,6 +38,9 @@ uniform mat4 VM;
 	vec3 n6 = normalize(cross(edge6, edge5));
 //	n = normalize(normalMatrix * n2);
 
+	if (dot(n2, ps[0]) < 0)
+		return;
+		
 	vec4 p[3];
 	p[0] = PVM * gl_in[0].gl_Position;
 	p[1] = PVM * gl_in[2].gl_Position;
@@ -47,7 +51,54 @@ uniform mat4 VM;
 	q[1] = PVM * gl_in[3].gl_Position;
 	q[2] = PVM * gl_in[5].gl_Position;
 
-	if (dot(cross(vec3(p[1] - p[0]), vec3(p[2] - p[0])), vec3(p[0])) > 0.0) 
+	float crease = 0.1;
+ 	if (
+	dot(n2,n) < crease 
+	|| gl_in[0].gl_Position == gl_in[1].gl_Position
+	|| 
+	dot(n, ps[0]) < 0
+	) 
+	{
+			gl_Position = p[0];
+			EmitVertex();
+ 
+			gl_Position = p[1];
+			EmitVertex();
+
+			EndPrimitive();
+	}
+	if (
+	dot(n2,n4) < crease 
+	|| gl_in[4].gl_Position == gl_in[5].gl_Position 
+	|| 
+	dot(n4, ps[0]) < 0
+	) 
+	{
+			gl_Position = p[0];
+			EmitVertex();
+ 
+			gl_Position = p[2];
+			EmitVertex();
+
+			EndPrimitive();
+	}
+	if (
+	dot(n2,n6) < crease 
+	|| gl_in[2].gl_Position == gl_in[3].gl_Position
+	|| 
+	dot(n6, ps[0]) < 0
+	) 
+	{
+			gl_Position = p[1];
+			EmitVertex();
+ 
+			gl_Position = p[2];
+			EmitVertex();
+
+			EndPrimitive();
+	}
+ 
+/*  	if (dot(cross(vec3(p[1] - p[0]), vec3(p[2] - p[0])), vec3(p[0])) > 0.0) 
 	{
 		// copy attributes
 		if (
@@ -101,5 +152,5 @@ uniform mat4 VM;
 			EndPrimitive();
 		}
 	}
+ */
  }
-
