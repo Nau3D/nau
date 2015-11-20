@@ -535,12 +535,12 @@ OgreMeshLoader::loadTextureCoordElement(TiXmlElement *pElemVertexAttrib, VertexD
 }
 
 void
-OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &vertexData)
+OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, std::shared_ptr<VertexData> &vertexData)
 {
-	std::vector<VertexData::Attr> *vertices = NULL, *normals = NULL, *tangents = NULL, *bitangents = NULL, 
-		*texCoord0 = NULL, *texCoord1 = NULL,
-		*texCoord2 = NULL, *texCoord3 = NULL, *texCoord4 = NULL, *texCoord5 = NULL, 
-		*texCoord6 = NULL, *texCoord7 = NULL;
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices, normals, tangents, bitangents, 
+		texCoord0, texCoord1,
+		texCoord2, texCoord3, texCoord4, texCoord5, 
+		texCoord6, texCoord7;
 
 	// count actual vertices
 	int actualVertices = 0;
@@ -563,56 +563,56 @@ OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &ve
 
 	// Alocate Space
 	if (pPositions && strcmp(pPositions,"true") == 0) {
-		vertices = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+		vertices = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 		loadVertices = true;
 	}
 	if (pNormals && strcmp(pNormals,"true") == 0) {
-		normals = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
+		normals = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 		loadNormals = true;
 	}
 	if (pTangents && strcmp(pTangents,"true") == 0) {
-		tangents = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("tangent")), tangents);
+		tangents = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("tangent")), tangents);
 		loadTangents = true;
 	}
 	if (pBitangents && strcmp(pBitangents, "true") == 0) {
-		bitangents = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor(VertexData::GetAttribIndex(std::string("bitangent")), bitangents);
+		bitangents = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor(VertexData::GetAttribIndex(std::string("bitangent")), bitangents);
 		loadBitangents = true;
 	}
 	if (iTextureCoords >0) {
-		texCoord0 = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), texCoord0);
+		texCoord0 = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), texCoord0);
 	}
 	if (iTextureCoords >1){
-		texCoord1 = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord1")), texCoord1);
+		texCoord1 = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord1")), texCoord1);
 	}
 	if (iTextureCoords >2) {
-		texCoord2 = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord2")), texCoord2);
+		texCoord2 = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord2")), texCoord2);
 	}
 	if (iTextureCoords >3) {
-		texCoord3 = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord3")), texCoord3);
+		texCoord3 = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord3")), texCoord3);
 	}
 	if (iTextureCoords >4) {
-		texCoord4 = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord4")), texCoord4);
+		texCoord4 = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord4")), texCoord4);
 	}
 	if (iTextureCoords >5) {
-		texCoord5 = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord5")), texCoord5);
+		texCoord5 = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord5")), texCoord5);
 	}
 	if (iTextureCoords >6) {
-		texCoord6 = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord6")), texCoord6);
+		texCoord6 = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord6")), texCoord6);
 	}
 	if (iTextureCoords >7) {
-		texCoord7 = new std::vector<VertexData::Attr>(actualVertices);
-		vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord7")), texCoord7);
+		texCoord7 = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(actualVertices));
+		vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord7")), texCoord7);
 	}
 
 
@@ -688,7 +688,7 @@ OgreMeshLoader::loadVertexBuffer(TiXmlElement *pElemVertexBuffer, VertexData &ve
 
 
 void 
-OgreMeshLoader::loadVertexBuffers(TiXmlElement *pElem, VertexData &vertexData) 
+OgreMeshLoader::loadVertexBuffers(TiXmlElement *pElem, std::shared_ptr<VertexData> &vertexData)
 {
 	// for each vertex buffer
 	TiXmlElement *pElemVertexBuffer = pElem->FirstChildElement("vertexbuffer");
@@ -700,7 +700,7 @@ OgreMeshLoader::loadVertexBuffers(TiXmlElement *pElem, VertexData &vertexData)
 
 
 void
-OgreMeshLoader::loadGeometry(TiXmlElement *pElem,VertexData &vertexData)
+OgreMeshLoader::loadGeometry(TiXmlElement *pElem, std::shared_ptr<VertexData> &vertexData)
 {
 	TiXmlElement *pElemGeometry;
 	pElemGeometry = pElem->FirstChildElement("geometry");
@@ -829,13 +829,13 @@ OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, IRenderable *m, s
 			//mg->setMaterialName(pMaterialName);
 			//mg->setParent(m);
 
-			VertexData &vertexData = m->getVertexData();
+			std::shared_ptr<VertexData> &vertexData = m->getVertexData();
 			loadGeometry(pElem,vertexData);
 			
 
 			if (meshType == "MeshPose") {
 				MeshPose *mp = (MeshPose *)scnObj->_getRenderablePtr();
-				mp->setReferencePose(vertexData.getDataOf(VertexData::GetAttribIndex(std::string("position"))));
+				mp->setReferencePose(vertexData->getDataOf(VertexData::GetAttribIndex(std::string("position"))));
 			}
 			if (meshType == "MeshBones") {
 				MeshBones *mb = (MeshBones *)scnObj->_getRenderablePtr();
@@ -871,12 +871,12 @@ OgreMeshLoader::loadSharedGeometry (TiXmlHandle hRoot, IScene *scn, std::string 
 
 		scnObj->setRenderable(m);
 
-		VertexData &vertexData = m->getVertexData();
+		std::shared_ptr<VertexData> &vertexData = m->getVertexData();
 
 		loadVertexBuffers(pElem,vertexData);
 		if (meshType == "MeshPose") {
 			MeshPose *mp = (MeshPose *)scnObj->_getRenderablePtr();
-			mp->setReferencePose(vertexData.getDataOf(VertexData::GetAttribIndex(std::string("position"))));
+			mp->setReferencePose(vertexData->getDataOf(VertexData::GetAttribIndex(std::string("position"))));
 		}
 		scn->add(scnObj);
 	}

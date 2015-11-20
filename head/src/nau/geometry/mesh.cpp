@@ -35,20 +35,6 @@ Mesh::Mesh(void) :
 
 Mesh::~Mesh(void) {
 
-	if (0 != m_VertexData) {
-		delete m_VertexData;
-		m_VertexData = 0;
-	}
-
-	//if (0 != m_IndexData) {
-	//	delete m_IndexData;
-	//	m_IndexData = 0;
-	//}
-	
-	//while (!m_vMaterialGroups.empty()){
-	//	delete((*m_vMaterialGroups.begin()));
-	//	m_vMaterialGroups.erase(m_vMaterialGroups.begin());
-	//}
 }
 
 
@@ -108,13 +94,13 @@ Mesh::getnumberOfVerticesPerPatch() {
 }
 
 
-VertexData& 
+std::shared_ptr<nau::geometry::VertexData>&
 Mesh::getVertexData (void) {
 
-	if (0 == m_VertexData) {
-		m_VertexData = VertexData::create(m_Name);
+	if (!m_VertexData) {
+		m_VertexData = VertexData::Create(m_Name);
 	}
-	return (*m_VertexData);
+	return (m_VertexData);
 }
 
 
@@ -161,8 +147,9 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 		prepareIndexData();
 		createUnifiedIndexVector();
 
-		size_t size = m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position"))).size();
-		std::vector<VertexData::Attr>* idsArray = new std::vector<VertexData::Attr>(size);
+		size_t size = m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")))->size();
+		std::shared_ptr<std::vector<VertexData::Attr>> idsArray = 
+			std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(size));
 
 		int primitiveOffset = 3;//getPrimitiveOffset();
 		for (unsigned int i = 0; i < size; i++) {
@@ -177,7 +164,7 @@ Mesh::prepareTriangleIDs(unsigned int sceneObjectID) {
 void 
 Mesh::prepareIndexData() {
 
-	size_t size = m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position"))).size();
+	size_t size = m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")))->size();
 	std::vector<int> idsArray = std::vector<int>(size, -1);
 	std::vector<int> outlaws;
 
@@ -236,7 +223,7 @@ Mesh::prepareIndexData() {
 unsigned int 
 Mesh::getNumberOfVertices (void) {
 
-	return (int)(getVertexData().getDataOf (VertexData::GetAttribIndex(std::string("position")))).size();
+	return (int)(getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))))->size();
 }
 
 
@@ -290,14 +277,14 @@ Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, IRenderab
 	/* In this case it is necessary to copy the vertices from the 
 	 * IRenderable into the local buffer and reindex the materialgroup
 	 */
-	VertexData &renderableVertexData = aRenderable->getVertexData();
+	std::shared_ptr<VertexData> &renderableVertexData = aRenderable->getVertexData();
 
-	VertexData *newData = VertexData::create("dummy"); 
+	std::shared_ptr<VertexData> newData = VertexData::Create("dummy");
 
-	std::vector<VertexData::Attr> *list[VertexData::MaxAttribs], poolList[VertexData::MaxAttribs];
+	std::shared_ptr<std::vector<VertexData::Attr>> list[VertexData::MaxAttribs], poolList[VertexData::MaxAttribs];
 
 	for (int i = 0; i < VertexData::MaxAttribs; i++) {
-		list[i] = new  std::vector<VertexData::Attr>;
+		list[i] = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>);
 	}
 	std::map<unsigned int, unsigned int> newIndicesMap;
 
@@ -307,15 +294,15 @@ Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, IRenderab
 	indexesIter = indices->begin();
 
 	for (int i = 0 ; i < VertexData::MaxAttribs; i++)
-		poolList[i] = renderableVertexData.getDataOf(i);
+		poolList[i] = renderableVertexData->getDataOf(i);
 
 	for ( ; indexesIter != indices->end(); indexesIter++) {
 
 		if (0 == newIndicesMap.count ((*indexesIter))) {
 
 			for (int i = 0; i < VertexData::MaxAttribs; i++) {
-				if (poolList[i].size()) 
-					list[i]->push_back(poolList[i].at((*indexesIter)));
+				if (poolList[i]->size()) 
+					list[i]->push_back(poolList[i]->at((*indexesIter)));
 			}
 
 
@@ -328,8 +315,7 @@ Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, IRenderab
 	for ( int i = 0; i < VertexData::MaxAttribs; i++) 
 		newData->setAttributeDataFor(i,list[i]);
 
-	int offset = getVertexData().add (*newData);
-	delete newData;
+	int offset = getVertexData()->add (newData);
 	
 	materialGroup->getIndexData()->offsetIndices (offset);
 	addMaterialGroup (materialGroup);			
@@ -339,9 +325,9 @@ Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, IRenderab
 void 
 Mesh::merge (nau::render::IRenderable *aRenderable) {
 
-	VertexData &vVertexData = aRenderable->getVertexData();
+	std::shared_ptr<VertexData> &vVertexData = aRenderable->getVertexData();
 
-	int ofs = getVertexData().add (vVertexData);
+	int ofs = getVertexData()->add (vVertexData);
 
 	std::vector<std::shared_ptr<nau::material::MaterialGroup>> &materialGroups = aRenderable->getMaterialGroups();
 

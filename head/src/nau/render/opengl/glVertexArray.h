@@ -27,8 +27,8 @@ namespace nau
 			~GLVertexArray(void);
 
 			void setAttributeDataFor (unsigned int type, 
-				                      std::vector<VertexData::Attr>* dataArray, 
-									  int location = -1);
+				std::shared_ptr<std::vector<VertexData::Attr>> &dataArray,
+				int location = -1);
 			void setAttributeLocationFor (unsigned int type, int location);
 
 			virtual void prepareTriangleIDs(unsigned int sceneObjID, 

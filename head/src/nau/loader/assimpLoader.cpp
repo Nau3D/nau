@@ -90,21 +90,24 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 
 		renderable->addMaterialGroup(aMaterialGroup);
 		
-		VertexData &vertexData = renderable->getVertexData();
+		std::shared_ptr<VertexData> &vertexData = renderable->getVertexData();
 
 		if (mesh->HasPositions()) {
-			std::vector<VertexData::Attr>* vertex = readGL3FArray((float *)mesh->mVertices,mesh->mNumVertices, order, 1.0f);
-			vertexData.setDataFor(VertexData::GetAttribIndex(std::string("position")), vertex);
+			std::shared_ptr<std::vector<VertexData::Attr>> vertex = 
+				std::shared_ptr<std::vector<VertexData::Attr>>(readGL3FArray((float *)mesh->mVertices,mesh->mNumVertices, order, 1.0f));
+			vertexData->setDataFor(VertexData::GetAttribIndex(std::string("position")), vertex);
 		}
 
 		if (mesh->HasNormals()) {
-			std::vector<VertexData::Attr>* normal = readGL3FArray((float *)mesh->mNormals,mesh->mNumVertices, order, 0.0f);
-			vertexData.setDataFor(VertexData::GetAttribIndex(std::string("normal")), normal);
+			std::shared_ptr<std::vector<VertexData::Attr>> normal = 
+				std::shared_ptr<std::vector<VertexData::Attr>>(readGL3FArray((float *)mesh->mNormals,mesh->mNumVertices, order, 0.0f));
+			vertexData->setDataFor(VertexData::GetAttribIndex(std::string("normal")), normal);
 		}
 
 		// buffer for vertex texture coordinates
 		if (mesh->HasTextureCoords(0)) {
-			std::vector<VertexData::Attr>* texCoord = new std::vector<VertexData::Attr>(mesh->mNumVertices);
+			std::shared_ptr<std::vector<VertexData::Attr>> texCoord = 
+				std::shared_ptr<std::vector<VertexData::Attr>> (new std::vector<VertexData::Attr>(mesh->mNumVertices));
 			for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
 
 				texCoord->at(k).x   = mesh->mTextureCoords[0][k].x;
@@ -113,7 +116,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 				//texCoord->at(k).z = 0.0;
 				texCoord->at(k).w = 1.0;
 			}
-			vertexData.setDataFor(VertexData::GetAttribIndex(std::string("texCoord0")), texCoord);
+			vertexData->setDataFor(VertexData::GetAttribIndex(std::string("texCoord0")), texCoord);
 		}
 
 		if (!MATERIALLIBMANAGER->hasMaterial (DEFAULTMATERIALLIBNAME, matName)) {

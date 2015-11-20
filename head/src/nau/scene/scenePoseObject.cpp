@@ -84,7 +84,7 @@ ScenePoseObject::calculateBoundingVolume (void)
 	MeshPose *mp = (MeshPose *)m_Renderable;
 
 	mp->setReferencePose();
-	m_BoundingVolume->calculate (m_Renderable->getVertexData().getDataOf (VertexData::GetAttribIndex(std::string("position"))));
+	m_BoundingVolume->calculate (m_Renderable->getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))));
 	
 	IBoundingVolume *bv = new BoundingBox;
 
@@ -92,7 +92,7 @@ ScenePoseObject::calculateBoundingVolume (void)
 	for (unsigned int i = 0; i < numPoses; i++) {
 
 		mp->setPose(i);
-		bv->calculate( m_Renderable->getVertexData().getDataOf (VertexData::GetAttribIndex(std::string("position"))));
+		bv->calculate( m_Renderable->getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))));
 		m_BoundingVolume->compound(bv);
 	}
 	mp->setReferencePose();

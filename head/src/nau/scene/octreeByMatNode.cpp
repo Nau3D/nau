@@ -77,7 +77,7 @@ OctreeByMatNode::tightBoundingVolume() {
 
 	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
 	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 
-		m_TightBoundingVolume.calculate ((iter->second)->getRenderable().getVertexData().getDataOf (VertexData::GetAttribIndex(std::string("position"))));
+		m_TightBoundingVolume.calculate ((iter->second)->getRenderable().getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))));
 
 	for (int i = TOPFRONTLEFT; i < ROOT; i++) {
 	
@@ -241,21 +241,21 @@ OctreeByMatNode::_split() {
 
 		// if needs to be splitted
 		if (r->getNumberOfVertices()/3 > MAXPRIMITIVES) {
-			VertexData &vVertexData = r->getVertexData();
+			std::shared_ptr<VertexData> &vVertexData = r->getVertexData();
 			std::shared_ptr<nau::geometry::IndexData> &VertexDataMaterialGroup = pMaterialGroup->getIndexData();
 			std::shared_ptr<std::vector<unsigned int>> &vIndexData = VertexDataMaterialGroup->getIndexData();
 			std::vector<unsigned int>::iterator indexIter;
 			indexIter = vIndexData->begin();
-			std::vector<VertexData::Attr> vVertices = vVertexData.getDataOf(vertexArrayPos);
+			std::shared_ptr<std::vector<VertexData::Attr>> &vVertices = vVertexData->getDataOf(vertexArrayPos);
 			// Octree are only implemented for triangles
 			offSet = 3;// ((Mesh *)r)->getPrimitiveOffset();
 			// for every primitive, split into temporary arrays
 			for (unsigned int i = 0; i < vIndexData->size(); i += offSet) {
 				// carefull: three vertices are only for triangles, not lines
 				// strips and fans have their own set of rules for indexes
-				VertexData::Attr &v1 = vVertices.at (vIndexData->at(i));
-				VertexData::Attr &v2 = vVertices.at (vIndexData->at(i+1));
-				VertexData::Attr &v3 = vVertices.at (vIndexData->at(i+2));
+				VertexData::Attr &v1 = vVertices->at (vIndexData->at(i));
+				VertexData::Attr &v2 = vVertices->at (vIndexData->at(i+1));
+				VertexData::Attr &v3 = vVertices->at (vIndexData->at(i+2));
 						
 				int v1Octant = _octantFor (v1);
 				int v2Octant = _octantFor (v2);
@@ -486,7 +486,7 @@ OctreeByMatNode::_compile (void)
 	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
 	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter)  {
 
-		iter->second->getRenderable().getVertexData().compile();
+		iter->second->getRenderable().getVertexData()->compile();
 
 		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = iter->second->getRenderable().getMaterialGroups();
 

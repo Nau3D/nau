@@ -23,7 +23,7 @@ namespace nau
 		class Mesh : public nau::render::IRenderable
 		{
 		protected:
-			nau::geometry::VertexData* m_VertexData;
+			std::shared_ptr<nau::geometry::VertexData> m_VertexData;
 			std::shared_ptr<nau::geometry::IndexData> m_IndexData;
 			std::vector<std::shared_ptr<nau::material::MaterialGroup>> m_vMaterialGroups;
 			unsigned int m_DrawPrimitive;
@@ -58,7 +58,7 @@ namespace nau
 				nau::render::IRenderable *aRenderable); 
 			std::vector<std::shared_ptr<nau::material::MaterialGroup>>& getMaterialGroups (void);
 
-			nau::geometry::VertexData& getVertexData (void);
+			std::shared_ptr<nau::geometry::VertexData>& getVertexData (void);
 			std::shared_ptr<nau::geometry::IndexData>& getIndexData(void);
 
 			unsigned int getNumberOfVertices (void);

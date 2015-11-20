@@ -29,10 +29,10 @@ namespace nau
 
 			static void _writeMaterial(std::string matName, std::string path, std::fstream &f);
 			static void _readMaterial(std::string path, std::fstream &f);
-			static void _writeVertexData (VertexData& aVertexData, std::fstream &f) ;
-			static void _readVertexData (VertexData& aVertexData, std::fstream &f);
-			static void _writeIndexData (std::shared_ptr<nau::geometry::IndexData>& aVertexData, std::fstream &f) ;
-			static void _readIndexData (std::shared_ptr<nau::geometry::IndexData>& aVertexData, std::fstream &f);
+			static void _writeVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstream &f) ;
+			static void _readVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstream &f);
+			static void _writeIndexData (std::shared_ptr<IndexData>& aVertexData, std::fstream &f) ;
+			static void _readIndexData (std::shared_ptr<IndexData>& aVertexData, std::fstream &f);
 			//static void _ignoreVertexData (std::fstream &f);
 			static void _writeString (const std::string& aString, std::fstream &f);
 			static void _readString ( char *buffer, std::fstream &f);

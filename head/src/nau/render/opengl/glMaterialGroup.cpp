@@ -29,10 +29,10 @@ GLMaterialGroup::compile() {
 	if (m_VAO)
 		return;
 
-	VertexData &v = m_Parent->getVertexData();
+	std::shared_ptr<VertexData> &v = m_Parent->getVertexData();
 
-	if (!v.isCompiled())
-		v.compile();
+	if (!v->isCompiled())
+		v->compile();
 
 	if (!m_IndexData->isCompiled())
 		m_IndexData->compile();
@@ -40,11 +40,11 @@ GLMaterialGroup::compile() {
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
 
-	v.bind();
+	v->bind();
 	m_IndexData->bind();
 
 	glBindVertexArray(0);
-	v.unbind();
+	v->unbind();
 	m_IndexData->unbind();
 }
 
@@ -58,8 +58,8 @@ GLMaterialGroup::resetCompilationFlag() {
 	glDeleteVertexArrays(1, &m_VAO);
 	m_VAO = 0;
 
-	VertexData &v = m_Parent->getVertexData();
-	v.resetCompilationFlag();
+	std::shared_ptr<VertexData> &v = m_Parent->getVertexData();
+	v->resetCompilationFlag();
 
 	m_IndexData->resetCompilationFlag();
 }

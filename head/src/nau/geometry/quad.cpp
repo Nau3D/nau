@@ -15,9 +15,12 @@ Quad::Quad(void) :
 	SceneObject()
 {
 	Mesh *renderable = (Mesh *)RESOURCEMANAGER->createRenderable("Mesh");//new Mesh;
-	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(4);
-	std::vector<VertexData::Attr> *textureCoords = new std::vector<VertexData::Attr>(4);
-	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(4);
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
+	std::shared_ptr<std::vector<VertexData::Attr>> textureCoords = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
+	std::shared_ptr<std::vector<VertexData::Attr>> normals = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
 
 	for (int i = 0; i < 4; ++i)
 		normals->at(i).set(0.0f, 0.0f, 0.0f);
@@ -32,11 +35,11 @@ Quad::Quad(void) :
 	textureCoords->at (2).set (1.0f, 1.0f, 0.0f);
 	textureCoords->at (3).set (0.0f, 1.0f, 0.0f);
 
-	VertexData &vertexData = renderable->getVertexData();
+	std::shared_ptr<VertexData> &vertexData = renderable->getVertexData();
 
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable, "__Quad");
 	std::shared_ptr<std::vector<unsigned int>> indices =

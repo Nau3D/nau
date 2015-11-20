@@ -884,7 +884,7 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 				glDrawElements((GLenum)drawPrimitive, size, GL_UNSIGNED_INT, 0);
 		}
 		else {
-			size = aRenderable.getVertexData().getNumberOfVertices();
+			size = aRenderable.getVertexData()->getNumberOfVertices();
 						
 			if (m_UIntProps[IRenderer::BUFFER_DRAW_INDIRECT]) {
 
@@ -1003,7 +1003,7 @@ GLRenderer::showDrawDebugInfo(std::shared_ptr<MaterialGroup> &mg) {
 		SLOG("\tIndex Buffer: %d", buffID);
 	}
 	for (int i = 0; i < VertexData::MaxAttribs; ++i) {
-		buffID = glMG->getParent().getVertexData().getBufferID(i);
+		buffID = glMG->getParent().getVertexData()->getBufferID(i);
 		if (buffID) {
 			buffName = RESOURCEMANAGER->getBufferByID(buffID)->getLabel();
 			tVAO->appendItem("Attribute " + VertexData::Syntax[i], " Buffer " + buffName + " (" + std::to_string(buffID) + ")");

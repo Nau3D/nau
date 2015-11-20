@@ -34,12 +34,12 @@ MeshPose::eventReceived(const std::string &sender, const std::string &eventType,
 }
 
 void
-MeshPose::setReferencePose(std::vector<VertexData::Attr> vertexData)
+MeshPose::setReferencePose(std::shared_ptr<std::vector<VertexData::Attr>> &vertexData)
 {
-	m_ReferencePose.resize(vertexData.size());
+	m_ReferencePose.resize(vertexData->size());
 
-	for ( unsigned int i = 0 ; i < vertexData.size(); i++) {
-		m_ReferencePose[i].set(vertexData[i].x, vertexData[i].y, vertexData[i].z);
+	for ( unsigned int i = 0 ; i < vertexData->size(); i++) {
+		m_ReferencePose[i].set(vertexData->at(i).x, vertexData->at(i).y, vertexData->at(i).z);
 	}
 }
 
@@ -71,36 +71,36 @@ MeshPose::setPose(unsigned int index)
 	
 		// add Pose offsets to the Reference pose
 		// and set the result in the vertexdata
-		std::vector<VertexData::Attr>& vertexData = 
+		std::shared_ptr<std::vector<VertexData::Attr>>& vertexData =
 			m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")));
 		std::vector<vec3> offsets = m_vOffsets[index]->getOffsets();
 
 		vec3 v;
 
-		for (unsigned int i = 0 ; i < vertexData.size(); i++) 
+		for (unsigned int i = 0 ; i < vertexData->size(); i++) 
 		{
 			v.x = m_ReferencePose[i].x + offsets[i].x;
 			v.y = m_ReferencePose[i].y + offsets[i].y;
 			v.z = m_ReferencePose[i].z + offsets[i].z;
 
-			vertexData[i].set(v.x, v.y, v.z);
+			vertexData->at(i).set(v.x, v.y, v.z);
 		}
 	}
 	// else set the reference pose
 	else {
 		
 		// similar to above, but without adding the offsets
-		std::vector<VertexData::Attr>& vertexData = 
+		std::shared_ptr<std::vector<VertexData::Attr>>& vertexData =
 			m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")));
 		vec3 v;
 
-		for (unsigned int i = 0 ; i < vertexData.size(); i++) 
+		for (unsigned int i = 0 ; i < vertexData->size(); i++) 
 		{
 			v.x = m_ReferencePose[i].x;
 			v.y = m_ReferencePose[i].y;
 			v.z = m_ReferencePose[i].z;
 
-			vertexData[i].set(v.x, v.y, v.z);
+			vertexData->at(i).set(v.x, v.y, v.z);
 		}
 	}
 	resetCompilationFlags();
@@ -133,7 +133,7 @@ MeshPose::setPose(std::string aName)
 void 
 MeshPose::setReferencePose() 
 {
-	std::vector<VertexData::Attr>& vertexData = 
+	std::shared_ptr<std::vector<VertexData::Attr>>& vertexData =
 		m_VertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")));
 
 	vec3 v;
@@ -141,13 +141,13 @@ MeshPose::setReferencePose()
 	std::map<unsigned int , float >::iterator iter;
 
 	// set the vertex data to the reference pose
-	for (unsigned int i = 0 ; i < vertexData.size(); i++) {
+	for (unsigned int i = 0 ; i < vertexData->size(); i++) {
 	
 		v.x = m_ReferencePose[i].x;
 		v.y = m_ReferencePose[i].y;
 		v.z = m_ReferencePose[i].z;
 
-		vertexData[i].set(v.x, v.y, v.z);
+		vertexData->at(i).set(v.x, v.y, v.z);
 	}
 	
 	resetCompilationFlags();
@@ -160,7 +160,7 @@ MeshPose::setPose(std::map<unsigned int , float > *influences)
 {
 	// THIS IS WHERE THE MESH IS SET BASED ON THE POSE INFLUENCES
 
-	std::vector<VertexData::Attr>& vertexData = 
+	std::shared_ptr<std::vector<VertexData::Attr>>& vertexData =
 		m_VertexData->getDataOf(VertexData::GetAttribIndex((std::string("position"))));
 
 	vec3 v;
@@ -168,13 +168,13 @@ MeshPose::setPose(std::map<unsigned int , float > *influences)
 	std::map<unsigned int , float >::iterator iter;
 
 	// first set the vertex data to the reference pose
-	for (unsigned int i = 0 ; i < vertexData.size(); i++) {
+	for (unsigned int i = 0 ; i < vertexData->size(); i++) {
 	
 		v.x = m_ReferencePose[i].x;
 		v.y = m_ReferencePose[i].y;
 		v.z = m_ReferencePose[i].z;
 
-		vertexData[i].set(v.x, v.y, v.z);
+		vertexData->at(i).set(v.x, v.y, v.z);
 	}
 
 	// for each pose
@@ -183,13 +183,13 @@ MeshPose::setPose(std::map<unsigned int , float > *influences)
 	//SLOG("Pose %d Influence %f", (*iter).first,(*iter).second);
 		std::vector<vec3> offsets = m_vOffsets[(*iter).first]->getOffsets();
 
-		for (unsigned int i = 0 ; i < vertexData.size(); i++) {
+		for (unsigned int i = 0 ; i < vertexData->size(); i++) {
 
 				v2.x = offsets[i].x * (*iter).second;
 				v2.y = offsets[i].y * (*iter).second;
 				v2.z = offsets[i].z * (*iter).second;
 				v2.w = 0.0;
-				vertexData[i].add(v2);
+				vertexData->at(i).add(v2);
 		}
 	}
 	resetCompilationFlags();

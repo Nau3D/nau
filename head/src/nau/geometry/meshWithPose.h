@@ -37,7 +37,7 @@ namespace nau
 
 				void setPose(std::map<unsigned int , float > *influences);
 
-				void setReferencePose(std::vector<VertexData::Attr> vertexData);
+				void setReferencePose(std::shared_ptr<std::vector<VertexData::Attr>> &vertexData);
 				void setReferencePose();
 
 				virtual std::string getType (void);

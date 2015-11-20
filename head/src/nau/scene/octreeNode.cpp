@@ -226,7 +226,7 @@ void OctreeNode::tightBoundingVolume() {
 
 	m_BoundingVolume = new BoundingBox; /***MARK***/
 	if (0 != m_pLocalMesh)
-		m_BoundingVolume->calculate (m_pLocalMesh->getVertexData().getDataOf (VertexData::GetAttribIndex(std::string("position"))));
+		m_BoundingVolume->calculate (m_pLocalMesh->getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))));
 
 	for (int i = TOPFRONTLEFT; i < ROOT; i++) {
 	
@@ -285,7 +285,7 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 
 	if (m_pLocalMesh->getNumberOfVertices()/3 > MAXPRIMITIVES) {
 	
-		VertexData &vVertexData = aRenderable->getVertexData();
+		std::shared_ptr<VertexData> &vVertexData = aRenderable->getVertexData();
 		Mesh *tempMesh[9] = { 0 };
 
 		//Octree are only implemented for triangles
@@ -303,16 +303,16 @@ OctreeNode::setRenderable (nau::render::IRenderable *aRenderable)
 			std::vector<unsigned int>::iterator indexIter;
 
 			indexIter = vIndexData->begin();
-			std::vector<VertexData::Attr> vVertices = vVertexData.getDataOf(vertexArrayPos);
+			std::shared_ptr<std::vector<VertexData::Attr>> &vVertices = vVertexData->getDataOf(vertexArrayPos);
 
 			// For each triangle, index, index + 1, index + 2, check to which octant it belongs to
 			try {
 				for (unsigned int i = 0; i < vIndexData->size(); i += offSet) {
 					// carefull: three vertices are only for triangles, not lines
 					// strips and fans have their own set of rules for indexes
-					VertexData::Attr &v1 = vVertices.at (vIndexData->at(i));
-					VertexData::Attr &v2 = vVertices.at (vIndexData->at(i+1));
-					VertexData::Attr &v3 = vVertices.at (vIndexData->at(i+2));
+					VertexData::Attr &v1 = vVertices->at (vIndexData->at(i));
+					VertexData::Attr &v2 = vVertices->at (vIndexData->at(i+1));
+					VertexData::Attr &v3 = vVertices->at (vIndexData->at(i+2));
 						
 					int v1Octant = _octantFor (v1);
 					int v2Octant = _octantFor (v2);
@@ -543,7 +543,7 @@ void
 OctreeNode::_compile (void)
 {
 	if (0 != m_pLocalMesh) {
-		m_pLocalMesh->getVertexData().compile();
+		m_pLocalMesh->getVertexData()->compile();
 		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = m_pLocalMesh->getMaterialGroups();
 
 		for (auto& matGroupsIter: matGroups){

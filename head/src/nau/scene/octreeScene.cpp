@@ -159,7 +159,7 @@ OctreeScene::compile (void)
 	std::vector<SceneObject*>::iterator objIter;
 	objIter = m_SceneObjects.begin();
 	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		(*objIter)->getRenderable().getVertexData().compile();
+		(*objIter)->getRenderable().getVertexData()->compile();
 		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
 
 		std::vector<std::shared_ptr<MaterialGroup>>::iterator matGroupsIter = matGroups.begin();

@@ -30,7 +30,7 @@ using namespace nau::system;
 std::string CBOLoader::m_FileName;
 
 void
-CBOLoader::_writeVertexData (VertexData& aVertexData, std::fstream &f) {
+CBOLoader::_writeVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstream &f) {
 
 	unsigned int siz;
 	unsigned int sizeVec;
@@ -38,8 +38,8 @@ CBOLoader::_writeVertexData (VertexData& aVertexData, std::fstream &f) {
 
 	for (int i = 0; i < VertexData::MaxAttribs; i++) {
 	
-		std::vector<VertexData::Attr> &aVec = aVertexData.getDataOf (i);
-		if (aVec.size())
+		std::shared_ptr<std::vector<VertexData::Attr>> &aVec = aVertexData->getDataOf (i);
+		if (aVec->size())
 			countFilledArrays++;
 	}
 
@@ -49,15 +49,15 @@ CBOLoader::_writeVertexData (VertexData& aVertexData, std::fstream &f) {
 
 	for (int i = 0; i < VertexData::MaxAttribs; i++) {
 
-		std::vector<VertexData::Attr> &aVec = aVertexData.getDataOf (i);
-		sizeVec = (unsigned int)aVec.size();
+		std::shared_ptr<std::vector<VertexData::Attr>> &aVec = aVertexData->getDataOf (i);
+		sizeVec = (unsigned int)aVec->size();
 		if (sizeVec > 0) {
 
 			_writeString(VertexData::Syntax[i],f);
 			// write size of array
 			f.write (reinterpret_cast<char *> (&sizeVec), sizeof (sizeVec));
 			// write attribute data
-			f.write (reinterpret_cast<char *> (&(aVec[0])), 
+			f.write (reinterpret_cast<char *> (&(aVec.get()[0])), 
 					 sizeVec * sizeof(VertexData::Attr));
 		}
 	}
@@ -96,7 +96,7 @@ CBOLoader::_writeIndexData (std::shared_ptr<nau::geometry::IndexData>& aVertexDa
 
 
 void
-CBOLoader::_readVertexData (VertexData& aVertexData, std::fstream &f) {
+CBOLoader::_readVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstream &f) {
 
 	unsigned int siz;
 	unsigned int countFilledArrays;
@@ -112,13 +112,14 @@ CBOLoader::_readVertexData (VertexData& aVertexData, std::fstream &f) {
 		// read size of array
 		f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
 
-		std::vector<VertexData::Attr> *aVector = new std::vector<VertexData::Attr>(siz);
+		std::shared_ptr<std::vector<VertexData::Attr>> aVector = 
+			std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(siz));
 
 		// read attrib data
 		f.read (reinterpret_cast<char *> (&(*aVector)[0]), siz * sizeof (VertexData::Attr));
 
 		unsigned int index = VertexData::GetAttribIndex(std::string(buffer));
-		aVertexData.setDataFor (index, aVector);
+		aVertexData->setDataFor (index, aVector);
 	}
 	
 	f.read (reinterpret_cast<char *> (&siz), sizeof (siz));
@@ -299,7 +300,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 			aRenderable->setDrawingPrimitive(primitive);
 			renderables[renderableName] = aRenderable;
 			
-			VertexData &vertexData = aRenderable->getVertexData();
+			std::shared_ptr<VertexData> &vertexData = aRenderable->getVertexData();
 			_readVertexData (vertexData, f);
 
 			//LOG_INFO ("[Reading] Renderable type: [%s]", buffer);
@@ -368,7 +369,7 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	_readString(buffer,f);
 	aRenderable = RESOURCEMANAGER->createRenderable("Mesh", buffer, m_FileName);
 			
-	VertexData &vertexData = aRenderable->getVertexData();
+	std::shared_ptr<VertexData> &vertexData = aRenderable->getVertexData();
 	_readVertexData (vertexData, f);
 
 	//LOG_INFO ("[Reading] Renderable type: [%s]", buffer);
@@ -420,7 +421,7 @@ CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	IRenderable *aRenderablePtr = so->_getRenderablePtr();
 	_writeString(aRenderablePtr->getName(),f);
 	/* Vertices data */
-	VertexData &aVertexData = aRenderablePtr->getVertexData();
+	std::shared_ptr<VertexData> &aVertexData = aRenderablePtr->getVertexData();
 
 	_writeVertexData (aVertexData, f);
 
@@ -727,7 +728,7 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 			LOG_INFO ("[Writing] Renderable's type: [%s]", aRenderable.getType().c_str()); 
 
 			/* Vertices data */
-			VertexData &aVertexData = aRenderable.getVertexData();
+			std::shared_ptr<VertexData> &aVertexData = aRenderable.getVertexData();
 
 			_writeVertexData (aVertexData, f);
 

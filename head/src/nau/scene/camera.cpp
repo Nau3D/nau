@@ -96,9 +96,10 @@ Camera::Camera (const std::string &name) :
 	//int drawPrimitive = IRenderer::Attribs.getID("LINES");
 	//renderable->setDrawingPrimitive(drawPrimitive/*nau::render::IRenderer::LINES*/);
 	renderable->setDrawingPrimitive(nau::render::IRenderable::LINES);
-	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(8);
-	VertexData &vertexData = renderable->getVertexData();
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(8));
+	std::shared_ptr<VertexData> &vertexData = renderable->getVertexData();
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 
 	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable, "__Emission Green");
 	
@@ -325,7 +326,8 @@ Camera::getRenderable (void) {
 	vec3 frustumPoints[8];
 
 	/// MARK - This can be done only when modifying the camera parameters
-	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(8);
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(8));
 
 	if (m_EnumProps[PROJECTION_TYPE] == ORTHO) {
 
@@ -352,8 +354,8 @@ Camera::getRenderable (void) {
 		vertices->at (BOTTOM_LEFT_FAR).set (-hw*m_FloatProps[FARP], -hh*m_FloatProps[FARP], -m_FloatProps[FARP]);	
 	}
 
-	VertexData &vertexData = m_Renderable->getVertexData();
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	std::shared_ptr<VertexData> &vertexData = m_Renderable->getVertexData();
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 
 	//std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(8);
 	//for (int i = 0; i < 8 ; ++i) 

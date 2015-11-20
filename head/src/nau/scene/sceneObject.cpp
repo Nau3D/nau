@@ -202,32 +202,30 @@ SceneObject::burnTransform(void)
 	aux.transpose();
 	const mat4 &normalMatrix = aux;
 
-	VertexData &vertexData = m_Renderable->getVertexData();
+	std::shared_ptr<VertexData> &vertexData = m_Renderable->getVertexData();
 
-	std::vector<VertexData::Attr> &vertices = vertexData.getDataOf(VertexData::GetAttribIndex(std::string("position")));
-	std::vector<VertexData::Attr> &normals = vertexData.getDataOf(VertexData::GetAttribIndex(std::string("normal")));
-	std::vector<VertexData::Attr>::iterator verticesIter, normalIter;
+	std::shared_ptr<std::vector<VertexData::Attr>> &vertices = vertexData->getDataOf(VertexData::GetAttribIndex(std::string("position")));
+	std::shared_ptr<std::vector<VertexData::Attr>> &normals = vertexData->getDataOf(VertexData::GetAttribIndex(std::string("normal")));
 
-
-	if (normals.size() > 0) {
-		normalIter = normals.begin();
-		for (; normalIter != normals.end(); ++normalIter) {
-			normalMatrix.transform3((&(*normalIter).x));
-			normalIter->normalize();
+	if (normals) {
+		for (auto& normalIter : *normals) {
+			normalMatrix.transform3((&(normalIter).x));
+			normalIter.normalize();
 		}
 	}
-	verticesIter = vertices.begin();
-	for (; verticesIter != vertices.end(); ++verticesIter) {
-		m_ResultTransform.transform((&(*verticesIter).x));
+	if (vertices) {
+		for (auto& verticesIter : *vertices) {
+			m_ResultTransform.transform((&(verticesIter).x));
+		}
+
+		//Reset transform to the identity
+		m_ResultTransform.setIdentity();
+		m_Transform.setIdentity();
+		m_GlobalTransform.setIdentity();
+
+		//Recalculate bounding box
+		calculateBoundingVolume();
 	}
-
-	//Reset transform to the identity
-	m_ResultTransform.setIdentity();
-	m_Transform.setIdentity();
-	m_GlobalTransform.setIdentity();
-
-	//Recalculate bounding box
-	calculateBoundingVolume();
 }
 
 
@@ -307,7 +305,7 @@ SceneObject::calculateBoundingVolume (void)
 	m_BoundingVolume = new BoundingBox; /***MARK***/
 
 	m_BoundingVolume->
-		calculate (m_Renderable->getVertexData().getDataOf (VertexData::GetAttribIndex(std::string("position"))));
+		calculate (m_Renderable->getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))));
 
 	m_BoundingVolume->setTransform(m_ResultTransform);
 }
@@ -342,7 +340,7 @@ void SceneObject::unitize(vec3 &center, vec3 &min, vec3 &max) {
 		m_BoundingVolume = new BoundingBox();
 
 	m_BoundingVolume->
-		calculate(m_Renderable->getVertexData().getDataOf(VertexData::GetAttribIndex(std::string("position"))));
+		calculate(m_Renderable->getVertexData()->getDataOf(VertexData::GetAttribIndex(std::string("position"))));
 }
 
 

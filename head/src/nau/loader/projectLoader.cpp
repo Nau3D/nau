@@ -968,7 +968,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				else
 					mg = MaterialGroup::Create(i, "dirLightDifAmbPix");
 
-				VertexData &v = i->getVertexData();
+				std::shared_ptr<VertexData> &v = i->getVertexData();
 				std::string bufferName;
 				TiXmlElement *p = pElementAux->FirstChildElement();
 				while (p) {
@@ -982,7 +982,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					int attribIndex = VertexData::GetAttribIndex(std::string(p->Value()));
 
 					if (attribIndex != VertexData::MaxAttribs) {
-						v.setBuffer(attribIndex, b->getPropi(IBuffer::ID));
+						v->setBuffer(attribIndex, b->getPropi(IBuffer::ID));
 					}
 					else if (p->Value() == "index"){
 

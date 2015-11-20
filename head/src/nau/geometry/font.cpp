@@ -106,9 +106,12 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence) {
 	//Mesh *renderable = (Mesh *)RESOURCEMANAGER->createRenderable("Mesh", sentence, "Sentence");
 	//renderable->setDrawingPrimitive(nau::render::IRenderer::TRIANGLES);
 
-	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(size*6);
-	std::vector<VertexData::Attr> *texCoords = new std::vector<VertexData::Attr>(size*6);
-	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(size*6);
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices =
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(size * 6));
+	std::shared_ptr<std::vector<VertexData::Attr>> texCoords =
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(size * 6));
+	std::shared_ptr<std::vector<VertexData::Attr>> normals =
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(size * 6));
 
 	int i = 0;
 	float hDisp = 0.0f, vDisp = 0.0f;
@@ -159,10 +162,10 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence) {
 		}
 	}
 
-	VertexData &vertexData = renderable.getVertexData();
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), texCoords);
+	std::shared_ptr<VertexData> &vertexData = renderable.getVertexData();
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), texCoords);
 
 	std::shared_ptr<std::vector<unsigned int>> indices = 
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(size*6));

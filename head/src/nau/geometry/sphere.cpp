@@ -43,10 +43,14 @@ Sphere::build() {
 	int slices = m_UIntProps[SLICES] + 1;// (int)m_Floats[SLICES] + 1;
 	int stacks = m_UIntProps[STACKS] + 1;//(int)m_Floats[STACKS] + 1;
 	int total = (slices) * (stacks);
-	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(total);
-	std::vector<VertexData::Attr> *tangents = new std::vector<VertexData::Attr>(total);
-	std::vector<VertexData::Attr> *textureCoords = new std::vector<VertexData::Attr>(total);
-	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(total);
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(total));
+	std::shared_ptr<std::vector<VertexData::Attr>> tangents = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(total));
+	std::shared_ptr<std::vector<VertexData::Attr>> textureCoords = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(total));
+	std::shared_ptr<std::vector<VertexData::Attr>> normals = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(total));
 
 	float stepSlice = 2.0f * (float)M_PI / (slices-1);
 	float stepStack = (float)M_PI / (stacks-1);
@@ -63,12 +67,12 @@ Sphere::build() {
 			textureCoords->at(i * (slices) + j).set(j*1.0f/(stacks-1),i*1.0f/(slices-1), 0.0f);
 		}
 	}
-	VertexData &vertexData = getVertexData();
+	std::shared_ptr<VertexData> &vertexData = getVertexData();
 
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("tangent")), tangents);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("tangent")), tangents);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 
 	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");

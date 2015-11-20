@@ -63,7 +63,7 @@ BulletWorld::build (void) /***MARK***/ //I'm assuming all objects inside scene a
 		sceneObjectsIter = sceneObjects.begin();
 
 		for (; sceneObjectsIter != sceneObjects.end(); sceneObjectsIter++) {
-			VertexData &vd = (*sceneObjectsIter)->getRenderable().getVertexData();
+			std::shared_ptr<VertexData> &vd = (*sceneObjectsIter)->getRenderable().getVertexData();
 			
 
 			std::vector<std::shared_ptr<MaterialGroup>> &matGroups = (*sceneObjectsIter)->getRenderable().getMaterialGroups();
@@ -80,8 +80,8 @@ BulletWorld::build (void) /***MARK***/ //I'm assuming all objects inside scene a
 							static_cast<int> (indexes->size() / 3), 
 							reinterpret_cast<int *>(&((*indexes)[0])),
 							3 * sizeof(unsigned int),
-							static_cast<int> (vd.getDataOf(VertexData::GetAttribIndex(std::string("position"))).size()),
-							reinterpret_cast<btScalar*>(&(vd.getDataOf(VertexData::GetAttribIndex(std::string("position")))[0])),
+							static_cast<int> (vd->getDataOf(VertexData::GetAttribIndex(std::string("position")))->size()),
+							reinterpret_cast<btScalar*>(&(vd->getDataOf(VertexData::GetAttribIndex(std::string("position")))->at(0))),
 							/*3*/4 * sizeof (float)
 						);
 

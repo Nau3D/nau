@@ -710,7 +710,6 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	// Read OBJ file
 	obj.readOBJ(aFilename);
 
-	std::vector<VertexData::Attr> *v,*t,*n;
 	unsigned int verts;
 
 	if (!obj.m_NumNormals) {
@@ -825,10 +824,16 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		}
 
 	}
-	v = new std::vector<VertexData::Attr>; v->reserve(verts);
-	n = new std::vector<VertexData::Attr>; n->reserve(verts);
+	std::shared_ptr<std::vector<VertexData::Attr>> t;
+
+	std::shared_ptr<std::vector<VertexData::Attr>> v = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>); 
+	v->reserve(verts);
+	std::shared_ptr<std::vector<VertexData::Attr>> n = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>);
+	n->reserve(verts);
 	if (obj.m_NumTexCoords) {
-		t = new std::vector<VertexData::Attr>;
+		t = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>);
 		t->reserve(verts);
 	}	
 	verts = 0;
@@ -863,7 +868,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	// Bind it to the object
 	aObject->setBoundingVolume (aBoundingVolume);
 	// Use the vertices list to calculate bounds and center.
-	aBoundingVolume->calculate(*v);
+	aBoundingVolume->calculate(v);
 
 	// Transform
 	mat4 aTransform;
@@ -877,7 +882,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	aRenderable->setDrawingPrimitive(primitive);
 
 	// Import VERTEX/NORMAL/TEXTURE data into Renderable
-	VertexData *vdata = &(aRenderable->getVertexData()); //VertexData::create();
+	std::shared_ptr<VertexData> vdata = aRenderable->getVertexData(); 
 
 	vdata->setDataFor(VertexData::GetAttribIndex(std::string("position")), v);
 	vdata->setDataFor(VertexData::GetAttribIndex(std::string("normal")), n);

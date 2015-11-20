@@ -15,8 +15,10 @@ BBox::BBox(void) : Primitive() {
 
 	float n = 1.0f;
 
-	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(8);
-	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(8);
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices =
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(8));
+	std::shared_ptr<std::vector<VertexData::Attr>> normals =
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(8));
 
 	//BOTTOM
 	vertices->at (0).set(-n, -n,  n);
@@ -30,9 +32,9 @@ BBox::BBox(void) : Primitive() {
 	vertices->at (6).set( n,  n, -n);
 	vertices->at (7).set(-n,  n, -n);
 
-	VertexData &vertexData = getVertexData();
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
+	std::shared_ptr<VertexData> &vertexData = getVertexData();
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 	//FRONT
 	std::shared_ptr<std::vector<unsigned int>> indices = 

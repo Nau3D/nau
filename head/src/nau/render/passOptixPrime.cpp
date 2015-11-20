@@ -337,9 +337,9 @@ PassOptixPrime::initOptixPrime() {
 
 	// Create Vertex Buffer
 	IRenderable * renderable = &RENDERMANAGER->getScene(m_SceneVector[0])->getSceneObject(0)->getRenderable();
-	int vbo = renderable->getVertexData().getBufferID(0);
-	int numVert = renderable->getVertexData().getNumberOfVertices();
-	std::vector<VertexAttrib> &vertex = renderable->getVertexData().getDataOf(0);
+	int vbo = renderable->getVertexData()->getBufferID(0);
+	int numVert = renderable->getVertexData()->getNumberOfVertices();
+	std::shared_ptr<std::vector<VertexAttrib>> &vertex = renderable->getVertexData()->getDataOf(0);
 
 	size_t size;
 	void * devPtr;

@@ -90,7 +90,7 @@ VertexData::getDataOf (unsigned int type) {
 void 
 VertexData::setDataFor (unsigned index, std::shared_ptr<std::vector<Attr>> &dataArray) {
 
-	assert(index < VertexData::MaxAttribs && *dataArray != VertexData::NoData);
+	assert(index < VertexData::MaxAttribs && dataArray);
 
 	if (!m_InternalArrays[index])
 		m_InternalArrays[index].reset();
@@ -102,7 +102,7 @@ VertexData::setDataFor (unsigned index, std::shared_ptr<std::vector<Attr>> &data
 
 
 int
-VertexData::add (VertexData &aVertexData) {
+VertexData::add (std::shared_ptr<VertexData> &aVertexData) {
 
 	size_t offset = 0;
 	std::string s = "position";
@@ -113,7 +113,7 @@ VertexData::add (VertexData &aVertexData) {
 	if (offset == 0) {
 
 		for (int i = 0; i < VertexData::MaxAttribs; i++) {
-			std::shared_ptr<std::vector<Attr>> &newVec = aVertexData.getDataOf(i);
+			std::shared_ptr<std::vector<Attr>> &newVec = aVertexData->getDataOf(i);
 			if (!newVec) {
 				std::shared_ptr<std::vector<Attr>> aVec = std::shared_ptr<std::vector<Attr>>(new std::vector<Attr>);
 				aVec->insert(aVec->end(),newVec->begin(), newVec->end());
@@ -126,7 +126,7 @@ VertexData::add (VertexData &aVertexData) {
 		for (int i = 0; i < VertexData::MaxAttribs; i++) {
 
 			std::shared_ptr<std::vector<Attr>> &thisVec = getDataOf(i);
-			std::shared_ptr<std::vector<Attr>> &newVec = aVertexData.getDataOf(i);
+			std::shared_ptr<std::vector<Attr>> &newVec = aVertexData->getDataOf(i);
 
 			if (newVec && thisVec) {
 			
@@ -140,7 +140,7 @@ VertexData::add (VertexData &aVertexData) {
 			}
 			else if (!newVec && thisVec) {
 
-				size_t size = aVertexData.getDataOf(GetAttribIndex(std::string("position")))->size();
+				size_t size = aVertexData->getDataOf(GetAttribIndex(std::string("position")))->size();
 				thisVec->resize(offset + size);
 			}
 		}

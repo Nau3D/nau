@@ -14,10 +14,14 @@ Square::Square(void) : Primitive() {
 
 	float n = 1.0f;
 
-	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(4);
-	std::vector<VertexData::Attr> *tangent = new std::vector<VertexData::Attr>(4);
-	std::vector<VertexData::Attr> *textureCoords = new std::vector<VertexData::Attr>(4);
-	std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(4);
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
+	std::shared_ptr<std::vector<VertexData::Attr>> tangent = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
+	std::shared_ptr<std::vector<VertexData::Attr>> textureCoords = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
+	std::shared_ptr<std::vector<VertexData::Attr>> normals = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
 
 	//BOTTOM
 	vertices->at (Square::TOP_LEFT).set		(-n, 0.0f,  n);
@@ -40,12 +44,12 @@ Square::Square(void) : Primitive() {
 	normals->at (Square::BOTTOM_RIGHT).set	( 0.0f, 1.0f, 0.0f);	
 	normals->at (Square::BOTTOM_LEFT).set	( 0.0f, 1.0f, 0.0f); 	
 
-	VertexData &vertexData = getVertexData();
+	std::shared_ptr<VertexData> &vertexData = getVertexData();
 
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("tangent")), tangent);
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("tangent")), tangent);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
 	

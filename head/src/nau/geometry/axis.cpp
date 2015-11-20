@@ -14,7 +14,8 @@ using namespace nau::material;
 Axis::Axis(void) : Primitive() {
 
 	setDrawingPrimitive(nau::render::IRenderable::LINES);
-	std::vector<VertexData::Attr> *vertices = new std::vector<VertexData::Attr>(6);
+	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
+		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(6));
 
 	vertices->at (0).set	(-1.0f,  0.0f,  0.0f);
 	vertices->at (1).set	( 1.0f,  0.0f,  0.0f);
@@ -23,9 +24,9 @@ Axis::Axis(void) : Primitive() {
 	vertices->at (4).set	( 0.0f,  0.0f, -1.0f);
 	vertices->at (5).set	( 0.0f,  0.0f,  1.0f);
 
-	VertexData &vertexData = getVertexData();
+	std::shared_ptr<VertexData> &vertexData = getVertexData();
 
-	vertexData.setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
+	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 
 	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
 	std::shared_ptr<std::vector<unsigned int>> indices =

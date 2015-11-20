@@ -58,7 +58,7 @@ namespace nau
 				nau::render::IRenderable *aRenderable) = 0; 
 			virtual std::vector<std::shared_ptr<nau::material::MaterialGroup>>& getMaterialGroups(void) = 0;
 
-			virtual nau::geometry::VertexData& getVertexData (void) = 0;
+			virtual std::shared_ptr<nau::geometry::VertexData>& getVertexData (void) = 0;
 			virtual std::shared_ptr<nau::geometry::IndexData>& getIndexData(void) = 0;
 
 			virtual void merge(nau::render::IRenderable *aRenderable) = 0;

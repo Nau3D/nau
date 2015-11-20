@@ -95,7 +95,7 @@ namespace nau
 			void setDataFor (unsigned int index, 
 				std::shared_ptr<std::vector<Attr>> &dataArray);
 
-			int add (VertexData &aVertexData);
+			int add (std::shared_ptr<VertexData> &aVertexData);
 
 			virtual void prepareTriangleIDs(unsigned int sceneObjID, 
 				                                       unsigned int primitiveOffset, 
@@ -103,8 +103,8 @@ namespace nau
 			virtual void appendVertex(unsigned int i) = 0;
 
 			virtual void setAttributeDataFor (unsigned int type, 
-											  std::vector<Attr>* dataArray, 
-											  int location = -1) = 0;
+				std::shared_ptr<std::vector<VertexData::Attr>> &,
+				int location = -1) = 0;
 			virtual void setAttributeLocationFor (unsigned int type, int location) = 0;
 			void unitize(vec3 &vCenter, vec3 &vMin, vec3 &vMax);
 			virtual bool compile(void) = 0;

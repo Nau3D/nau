@@ -64,8 +64,8 @@ OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::materia
 
 //	IRenderable &r = RENDERMANAGER->getSceneObject(id)->getRenderable();
 	IRenderable &r = s->getRenderable();
-	VertexData &v = r.getVertexData();
-	size_t size = v.getDataOf(0).size();;
+	std::shared_ptr<VertexData> &v = r.getVertexData();
+	size_t size = v->getDataOf(0)->size();
 
 	std::vector<std::shared_ptr<MaterialGroup>> &mg = r.getMaterialGroups();
 	for (unsigned int g = 0; g < mg.size(); ++g) {
@@ -75,10 +75,10 @@ OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::materia
 				geom->setPrimitiveCount(mg[g]->getNumberOfPrimitives());
 				geom->setBoundingBoxProgram(m_BoundingBox);
 				geom->setIntersectionProgram(m_GeomIntersect);
-				geom["vertex_buffer"]->setBuffer(m_BufferLib->getBuffer(v.getBufferID(0),size));
+				geom["vertex_buffer"]->setBuffer(m_BufferLib->getBuffer(v->getBufferID(0),size));
 				for (unsigned int b = 1; b < VertexData::MaxAttribs; ++b) {
-					if (m_VertexAttributes[b] && v.getBufferID(b))
-						geom[VertexData::Syntax[b]]->setBuffer(m_BufferLib->getBuffer(v.getBufferID(b),size));		
+					if (m_VertexAttributes[b] && v->getBufferID(b))
+						geom[VertexData::Syntax[b]]->setBuffer(m_BufferLib->getBuffer(v->getBufferID(b),size));		
 				}
 
 				geom["index_buffer"]->setBuffer(

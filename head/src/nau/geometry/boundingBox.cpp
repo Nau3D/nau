@@ -102,16 +102,19 @@ void BoundingBox::set(vec3 min, vec3 max) {
 
 
 void 
-BoundingBox::calculate (const std::vector<VertexData::Attr> &vertices)
+BoundingBox::calculate (const std::shared_ptr<std::vector<VertexData::Attr>> &vertices)
 {
 	m_vPoints[MIN].set ((float)MAXFLOAT, (float)MAXFLOAT, (float)MAXFLOAT);
 	m_vPoints[MAX].set ((float)-MAXFLOAT, (float)-MAXFLOAT, (float)-MAXFLOAT);
 
+	if (!vertices)
+		return;
+
 	std::vector<VertexData::Attr>::const_iterator verticesIter;
 
-	verticesIter = vertices.begin();
+	verticesIter = vertices->begin();
 
-	for ( ; verticesIter != vertices.end(); ++verticesIter) {
+	for ( ; verticesIter != vertices->end(); ++verticesIter) {
 
 		const VertexAttrib &aVec = (*verticesIter);
 
@@ -155,41 +158,22 @@ BoundingBox::setTransform (mat4 &m)
 {
 	m_GeometryTransform.copy(m);
 
-	std::vector<VertexAttrib> vertices (8);
+	std::shared_ptr<std::vector<VertexAttrib>> vertices =
+		std::shared_ptr<std::vector<VertexAttrib>>(new std::vector<VertexAttrib>(8));
 
-	vertices[0].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MIN].z);
-	vertices[1].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MIN].z);
-	vertices[2].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MAX].z);
-	vertices[3].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MAX].z);
-
-	vertices[4].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MAX].y, m_vLocalPoints[MIN].z);
-	vertices[5].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MAX].y, m_vLocalPoints[MIN].z);
-	vertices[6].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MAX].y, m_vLocalPoints[MAX].z);
-	vertices[7].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MAX].y, m_vLocalPoints[MAX].z);
-
-	//vertices[0].set (m_vPoints[MIN].x, m_vPoints[MIN].y, m_vPoints[MIN].z);
-	//vertices[1].set (m_vPoints[MAX].x, m_vPoints[MIN].y, m_vPoints[MIN].z);
-	//vertices[2].set (m_vPoints[MAX].x, m_vPoints[MIN].y, m_vPoints[MAX].z);
-	//vertices[3].set (m_vPoints[MIN].x, m_vPoints[MIN].y, m_vPoints[MAX].z);
-
-	//vertices[4].set (m_vPoints[MIN].x, m_vPoints[MAX].y, m_vPoints[MIN].z);
-	//vertices[5].set (m_vPoints[MAX].x, m_vPoints[MAX].y, m_vPoints[MIN].z);
-	//vertices[6].set (m_vPoints[MAX].x, m_vPoints[MAX].y, m_vPoints[MAX].z);
-	//vertices[7].set (m_vPoints[MIN].x, m_vPoints[MAX].y, m_vPoints[MAX].z);
+	(*vertices)[0].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MIN].z);
+	(*vertices)[1].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MIN].z);
+	(*vertices)[2].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MAX].z);
+	(*vertices)[3].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MIN].y, m_vLocalPoints[MAX].z);
+	
+	(*vertices)[4].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MAX].y, m_vLocalPoints[MIN].z);
+	(*vertices)[5].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MAX].y, m_vLocalPoints[MIN].z);
+	(*vertices)[6].set (m_vLocalPoints[MAX].x, m_vLocalPoints[MAX].y, m_vLocalPoints[MAX].z);
+	(*vertices)[7].set (m_vLocalPoints[MIN].x, m_vLocalPoints[MAX].y, m_vLocalPoints[MAX].z);
 
 	for (int i = 0; i < 8; i++) {
-		m.transform (&(vertices[i].x));
+		m.transform (&(vertices->at(i).x));
 	}
-
-	//aTransform.getMat44().transform (m_vPoints[MIN]);
-	//aTransform.getMat44().transform (m_vPoints[MAX]);
-	//aTransform.getMat44().transform (m_vPoints[CENTER]);
-
-	//std::vector<vec3> vertices(3);
-
-	//for (int i = MIN; i <= CENTER; i++) {
-	//	vertices[i] = m_vPoints[i];
-	//}
 
 	// Need to preserve local points
 	vec3 auxMin, auxMax;
