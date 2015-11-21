@@ -4,7 +4,7 @@
 
 using namespace nau::material;
 
-MaterialLib::MaterialLib (std::string libName) : 
+MaterialLib::MaterialLib (const std::string &libName) : 
   m_MaterialLib(),
   m_LibName (libName) {
 
@@ -13,10 +13,8 @@ MaterialLib::MaterialLib (std::string libName) :
 
 MaterialLib::~MaterialLib() {
 
-   //dtor
 	EVENTMANAGER->removeListener("SHADER_CHANGED", this);
 	while (!m_MaterialLib.empty()) {
-		delete ((*m_MaterialLib.begin()).second);
 		m_MaterialLib.erase(m_MaterialLib.begin());
 	}
 
@@ -24,7 +22,8 @@ MaterialLib::~MaterialLib() {
 
 
 void
-MaterialLib::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+MaterialLib::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<nau::event_::IEventData> &evt) {
 
 	std::string *str;
 		str = (std::string *)evt->getData();
@@ -51,32 +50,28 @@ void
 MaterialLib::clear() {
 
 	while (!m_MaterialLib.empty()) {
-
-		delete m_MaterialLib.begin()->second;
 		m_MaterialLib.erase(m_MaterialLib.begin());
 	}
 }
 
 
 bool 
-MaterialLib::hasMaterial (std::string MaterialName) {
+MaterialLib::hasMaterial (const std::string &materialName) {
 
-	std::map<std::string, Material*>::const_iterator mat = m_MaterialLib.find (MaterialName);
+	std::map<std::string, std::shared_ptr<Material>>::const_iterator mat = m_MaterialLib.find (materialName);
   
 	return (m_MaterialLib.end() != mat);
 }
 
 
-Material*
-MaterialLib::getMaterial (std::string MaterialName) {
+std::shared_ptr<Material> &
+MaterialLib::getMaterial (const std::string &materialName) {
 
-	std::map<std::string, Material*>::const_iterator mat = m_MaterialLib.find (MaterialName);
-
-	if (m_MaterialLib.end() == mat) {
-		return &p_Default;
+	if (m_MaterialLib.count(materialName)) {
+		return m_MaterialLib[materialName];
 	}
-
-	return (mat->second);
+	else
+		return p_Default;
 }
 
 
@@ -104,22 +99,15 @@ MaterialLib::getMaterialNames(std::vector<std::string>* ret) {
 
 
 void 
-MaterialLib::addMaterial (nau::material::Material* aMaterial) {
+MaterialLib::addMaterial (std::shared_ptr<Material> &aMaterial) {
 
-	std::string MatName(aMaterial->getName());
-	Material *pCurrentMat = getMaterial (MatName);
-  
-	if (pCurrentMat != 0 && pCurrentMat != aMaterial) {
+	std::string matName = aMaterial->getName();
+	std::shared_ptr<Material> &pCurrentMat = getMaterial (matName);
 
-	}
-	
-	if (pCurrentMat->getName() != aMaterial->getName()) { 
-		m_MaterialLib[MatName] = aMaterial;
+	// add if it does not exist
+	if (!pCurrentMat) {
+		m_MaterialLib[matName] = aMaterial;
 	} 
-	else if (pCurrentMat != aMaterial) {
-		// TODO: Add to log
-		//std::cout << "Matlib: adding different valid pointers for same name, possible memleak!" << std::endl;
-	}
 }
 
 

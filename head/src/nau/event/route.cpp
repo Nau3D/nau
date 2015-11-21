@@ -45,13 +45,17 @@ std::string &Route::getName(void){
 	return m_Name;
 }
 
-void Route::eventReceived(const std::string &aSender, const std::string &eventType, nau::event_::IEventData *evt){
-	if(eventType==eventIn && sender == aSender){
+void Route::eventReceived(const std::string &aSender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt) {
+
+	if(eventType==eventIn && sender == aSender) {
 		EVENTMANAGER->notifyEvent(eventOut,sender,receiver,evt);
 	}
 }
 
-void Route::init(std::string name, std::string sender, std::string receiver, std::string eventIn, std::string eventOut){
+void Route::init(std::string name, std::string sender, std::string receiver, 
+	std::string eventIn, std::string eventOut) {
+
 	this->m_Name=name;
 	this->sender=sender;
 	this->receiver=receiver;

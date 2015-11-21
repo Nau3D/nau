@@ -37,6 +37,15 @@ bool SceneObject::Inited = Init();
 
 
 void
+SceneObject::eventReceived(const std::string &sender,
+	const std::string &eventType,
+	const std::shared_ptr<IEventData> &evt) {
+
+}
+
+
+
+void
 SceneObject::updateTransform() {
 
 	mat4 tis;

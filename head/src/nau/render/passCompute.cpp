@@ -28,8 +28,7 @@ PassCompute::Init() {
 }
 
 
-PassCompute::PassCompute(const std::string &passName) : Pass(passName),
-m_Mat(0), 
+PassCompute::PassCompute(const std::string &passName) : Pass(passName), 
 m_BufferX(0), m_BufferY(0), m_BufferZ(0),
 m_OffsetX(0), m_OffsetY(0), m_OffsetZ(0) {
 
@@ -52,7 +51,8 @@ PassCompute::Create(const std::string &passName) {
 
 
 void
-PassCompute::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) {
+PassCompute::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt) {
 
 }
 
@@ -97,7 +97,7 @@ PassCompute::setMaterialName(const std::string &lName,const std::string &mName) 
 }
 
 
-Material *
+std::shared_ptr<Material> &
 PassCompute::getMaterial() {
 
 	return m_Mat;

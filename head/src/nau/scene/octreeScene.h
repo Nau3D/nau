@@ -31,7 +31,8 @@ namespace nau {
 
 			void clear();
 
-			virtual void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+			virtual void eventReceived(const std::string &sender, const std::string &eventType, 
+				const std::shared_ptr<IEventData> &evt);
 
 			virtual void build (void);
 			

@@ -41,6 +41,15 @@ PassQuad::Create(const std::string &passName) {
 
 
 void
+PassQuad::eventReceived(const std::string &sender,
+	const std::string &eventType,
+	const std::shared_ptr<IEventData> &evt) {
+
+
+}
+
+
+void
 PassQuad::prepare (void) {
 
 	if (0 != m_RenderTarget && true == m_UseRT) {

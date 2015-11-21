@@ -2,6 +2,8 @@
 #define EVENTFACTORY_H
 
 #include "nau/event/iEventData.h"
+
+#include <memory>
 #include <string>
 
 namespace nau
@@ -11,7 +13,7 @@ namespace nau
 		class EventFactory
 		{
 		public:
-			static nau::event_::IEventData* create (std::string type);
+			static std::shared_ptr<IEventData> Create (std::string type);
 		private:
 			EventFactory(void) {};
 			~EventFactory(void) {};

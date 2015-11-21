@@ -30,7 +30,8 @@ OctreeUnified::~OctreeUnified(void) {
 
 
 void
-OctreeUnified::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+OctreeUnified::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt) {
 
 	vec4 *p = (vec4 *)evt->getData();
 	//	SLOG("Scene %s %s %s %f %f %f", m_Name.c_str(), sender.c_str(), eventType.c_str(), p->x, p->y, p->z);

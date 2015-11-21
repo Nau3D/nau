@@ -26,7 +26,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <nau/event/ilistener.h>
+#include <nau/event/iListener.h>
 
 #include <nau/util/tree.h>
 
@@ -50,19 +50,14 @@ protected:
 	void updateDlgTree();
 	void updateTree(nau::util::Tree *t, wxTreeItemId);
 
-	//void loadProgramInfo(wxTreeItemId basenode, unsigned int program);
-	//void loadProgramUniformsInfo(wxTreeItemId basenode, unsigned int program);
-	//void loadUniformInfo(wxTreeItemId basenode, unsigned int program, std::string blockName, std::string uniformName);
-	//void loadBlockInfo(wxTreeItemId basenode, unsigned int program, std::string blockName);
-	//void loadStandardProgramInfo(wxTreeItemId basenode, unsigned int program);
-	//void loadProgramAttributesInfo(wxTreeItemId basenode, unsigned int program);
 public:
 	static wxWindow *m_Parent; 
 
 	static DlgDbgPrograms* Instance () ;
 	static void SetParent(wxWindow *parent);
 	virtual std::string &getName ();
-	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+	void eventReceived(const std::string &sender, const std::string &eventType, 
+		const std::shared_ptr<nau::event_::IEventData> &evt);
 	void updateDlg();
 	void clear();
 	void loadShaderInfo();

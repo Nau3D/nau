@@ -941,7 +941,7 @@ GLRenderer::showDrawDebugInfo(PassCompute *p) {
 
 	nau::util::Tree *t = m_ShaderDebugTree.appendBranch("Pass", p->getName());
 	t->appendItem("Class", "Compute");
-	Material *mat = p->getMaterial();
+	std::shared_ptr<Material> &mat = p->getMaterial();
 	showDrawDebugInfo(mat,t);
 	showDrawDebugInfo(mat->getProgram(), t);
 }
@@ -982,7 +982,7 @@ GLRenderer::showDrawDebugInfo(std::shared_ptr<MaterialGroup> &mg) {
 		tree = tree->getBranch("Material", matName);
 	SLOG("Drawing with Material: %s", matName.c_str());
 
-	Material *mat = MATERIALLIBMANAGER->getMaterial(m[s]);
+	std::shared_ptr<Material> &mat = MATERIALLIBMANAGER->getMaterial(m[s]);
 
 	showDrawDebugInfo(mat, tree);
 
@@ -1016,7 +1016,7 @@ GLRenderer::showDrawDebugInfo(std::shared_ptr<MaterialGroup> &mg) {
 
 
 void
-GLRenderer::showDrawDebugInfo(Material *mat, nau::util::Tree *tree) {
+GLRenderer::showDrawDebugInfo(std::shared_ptr<Material> &mat, nau::util::Tree *tree) {
 
 	std::string programName = mat->getProgram()->getName();
 	if (!tree->hasElement("Program", programName))

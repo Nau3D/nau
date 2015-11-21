@@ -262,15 +262,6 @@ DlgPass::updatePipelines() {
 		m_pgPropRenderTarget = new wxEnumProperty(wxT("Render Target"),wxPG_LABEL,m_pgRenderTargetList);
 		m_PG->Append(m_pgPropRenderTarget);
 
-		//m_PG->Append(new wxBoolProperty(wxT("Clear Color"), wxPG_LABEL, true));
-		//m_PG->SetPropertyAttribute( wxT("Clear Color"),
-  //                            wxPG_BOOL_USE_CHECKBOX,
-  //                            true );
-		//m_PG->Append(new wxBoolProperty(wxT("Clear Depth"), wxPG_LABEL, true));
-		//m_PG->SetPropertyAttribute( wxT("Clear Depth"),
-  //                            wxPG_BOOL_USE_CHECKBOX,
-  //                            true );
-
 	updateLists(p);
 	setupGrid();
 	updateProperties(p) ;
@@ -295,131 +286,20 @@ DlgPass::setupGrid() {
 void 
 DlgPass::toolbarPipelineNew(wxCommandEvent& WXUNUSED(event) ) {
 
-
-	//std::string path,libFile,fullName,relativeName,libName;
-
-	//wxFileDialog dialog
- //                (
- //                   this,
- //                   _T("New Material Lib"),
- //                   _T(""),
- //                   _T(""),
- //                   _T("SP Library (*.spl)|*.spl"),
-	//				wxSAVE | wxOVERWRITE_PROMPT
- //                );
-
-	//dialog.SetDirectory(CProject::Instance()->m_path.c_str());
-
-	//if (dialog.ShowModal() != wxID_OK)
-	//	return;
-
-	//path = (char *)dialog.GetDirectory().c_str();
-	//libFile = (char *)dialog.GetFilename().c_str();
-	//fullName = (char *)dialog.GetPath().c_str();
-	//relativeName = CFilename::GetRelativeFileName(CProject::Instance()->m_path,fullName);
-	//libName = CFilename::RemoveExt(relativeName);
-	//
-	//CMaterialLib *ml;
-	//CMaterial *mat;
-
-	//mat = new CMaterial();
-	//mat->setName("Default");
-
-	//ml = new CMaterialLib();
-	//ml->m_filename = libName;
-	//ml->add(mat);
-
-	//m_libManager->addLib(ml);
-
-	//updateDlg();
-	//m_toolbar->EnableTool(LIBMAT_SAVEALL, TRUE);
-	//DlgModelInfo::Instance()->updateDlg();
-
 }
 
 void DlgPass::toolbarPipelineRemove(wxCommandEvent& WXUNUSED(event) ) {
-
-
-	//std::string path,libFile,fullName,relativeName,libName;
-
-	//wxFileDialog dialog
- //                (
- //                   this,
- //                   _T("Open Material Lib"),
- //                   _T(""),
- //                   _T(""),
- //                   _T("SP Library (*.spl)|*.spl"),
-	//				wxOPEN | wxFILE_MUST_EXIST 
- //                );
-
-	//dialog.SetDirectory(CProject::Instance()->m_path.c_str());
-
-	//if (dialog.ShowModal() != wxID_OK)
-	//	return;
-
-	//path = (char *)dialog.GetDirectory().c_str();
-	//libFile = (char *)dialog.GetFilename().c_str();
-	//fullName = (char *)dialog.GetPath().c_str();
-	//relativeName = CFilename::GetRelativeFileName(CProject::Instance()->m_path,fullName);
-
-	//
-	//m_libManager->load(relativeName, path);
-
-	//updateDlg();
-	//m_toolbar->EnableTool(LIBMAT_SAVEALL, TRUE);
-	//DlgModelInfo::Instance()->updateDlg();
 
 }
 
 
 void DlgPass::toolbarPassNew(wxCommandEvent& WXUNUSED(event) ) {
 
-	//std::string lib;
-
-	//m_libManager->save(CProject::Instance()->m_path);
-
 }
 
 
 void DlgPass::toolbarPassRemove(wxCommandEvent& WXUNUSED(event) ) {
 
-	//wxString name;
-	//int exit = 0;
-	//CMaterial *mat;
-	//CMaterialLib *ml;
-	//std::string lib;
-	//int dialogRes;
-
-	//lib = libList->GetValue().c_str();
-	//ml = m_libManager->getLib(lib);
-
-	//do {
-	//	wxTextEntryDialog dialog(this,
-	//							 _T("Enter the new material's name\n"),
-	//							 _T("Material's Name"),
-	//							 _T(name),
-	//							 wxOK | wxCANCEL);
-	//	dialogRes = dialog.ShowModal();
-	//	if (dialogRes == wxID_OK)
-	//	{
-	//		name = dialog.GetValue();
-	//		int status = m_libManager->validMatName(lib,name.c_str());
-	//		if (status == CMaterialLibManager::OK) {
-
-	//			mat = new CMaterial();
-	//			mat->setName(name.c_str());
-	//			ml->add(mat);
-	//			exit = 1;
-	//			updateDlg();
-	//			DlgModelInfo::Instance()->updateDlg();
-	//		}
-	//		else if (status == CMaterialLibManager::INVALID_NAME) 
-	//			wxMessageBox(dialog.GetValue(), _T("Invalid Name (can't begin with a space)"), wxOK | wxICON_INFORMATION, this);
-	//		else if (status == CMaterialLibManager::NAME_EXISTS) 
-	//			wxMessageBox(dialog.GetValue(), _T("Name Already Exists"), wxOK | wxICON_INFORMATION, this);
-	//	}
-	//}
-	//while (dialogRes != wxID_CANCEL && !exit);
 }
 
 
@@ -432,36 +312,13 @@ void DlgPass::toolbarPassRemove(wxCommandEvent& WXUNUSED(event) ) {
 
 
 void 
-DlgPass::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+DlgPass::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<nau::event_::IEventData> &evt) {
 
 	Pass *p = getPass();
 
 	updatePipelines();
-
-/*	if (eventType == "NEW_RENDERTARGET") {
-		updateRenderTargetList(p);
-	}
-	else if (eventType == "NEW_VIEWPORT") {
-		updateViewportList(p);
-	}
-	else if (eventType == "NEW_CAMERA") {
-		updateCameraList(p);
-		updateScenes(p);
-	}
-	else if (eventType == "NEW_LIGHT") {
-		updateLights(p);
-	}
-	else if (eventType == "NEW_MATERIAL") {
-		updateMaterialList();
-	}
-	else if (eventType == "NEW_SCENE") {
-		wxPGProperty *pid2;
-		pid2 = m_PG->AppendIn(pidScenes,new wxBoolProperty( wxString(sender.c_str()), wxPG_LABEL, false ) );
-		pid2->SetAttribute( wxPG_BOOL_USE_CHECKBOX, true );
-	}
-*/
 }
-
 
 
 

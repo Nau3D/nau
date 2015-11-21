@@ -27,7 +27,7 @@ ScenePoses::~ScenePoses(void) {
 
 void
 ScenePoses::eventReceived(const std::string &sender, const std::string &eventType, 
-			IEventData *evt) {
+	const std::shared_ptr<IEventData> &evt) {
 
 	if (eventType == "SET_POSE_BY_INDEX")
 		setPose(*(int *)evt->getData());

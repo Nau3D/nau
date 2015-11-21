@@ -2,7 +2,7 @@
 #define ISENSOR_H
 
 #include "nau/math/vec3.h"
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 
 #include <string>
 

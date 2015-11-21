@@ -29,13 +29,13 @@ MaterialSortRenderQueue::~MaterialSortRenderQueue(void) {
 void 
 MaterialSortRenderQueue::clearQueue (void) {
 
-	std::map<int, std::map<Material*, std::vector<pair_MatGroup_Transform >* >* >::iterator mapIter;
+	std::map<int, std::map<std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* >* >::iterator mapIter;
 
 	mapIter = m_RenderQueue.begin();
 
 	for ( ; mapIter != m_RenderQueue.end(); mapIter++) {
-		std::map <Material*, std::vector<pair_MatGroup_Transform >* > *aMap;
-		std::map <Material*, std::vector<pair_MatGroup_Transform >* >::iterator mapIter2;
+		std::map <std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* > *aMap;
+		std::map <std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* >::iterator mapIter2;
 
 		aMap = (*mapIter).second;
 
@@ -58,9 +58,8 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 	PROFILE ("Queue add");
 
 	int order;
-	Material* aMaterial = 0;
 	MaterialLibManager *m = NAU->getMaterialLibManager();
-
+	std::shared_ptr<Material> aMaterial;
 	IRenderable &aRenderable = aObject->getRenderable();
 
 	std::vector<std::shared_ptr<MaterialGroup>> vMaterialGroups = aRenderable.getMaterialGroups();
@@ -72,12 +71,12 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 			aMaterial = materialMap[aGroup->getMaterialName()].m_MatPtr;
 		}
 		order = aMaterial->getState()->getPropi(IState::ORDER);
-		if ((order >= 0) && (0 != aMaterial) && (true == aMaterial->isEnabled())) {
+		if ((order >= 0) && (aMaterial) && (true == aMaterial->isEnabled())) {
 
 			if (0 == m_RenderQueue.count (order)){
-				m_RenderQueue[order] = new std::map <Material*, std::vector<pair_MatGroup_Transform >* >;
+				m_RenderQueue[order] = new std::map <std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* >;
 			}
-			std::map<Material*, std::vector<pair_MatGroup_Transform >* > *materialMap = m_RenderQueue[order];
+			std::map<std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* > *materialMap = m_RenderQueue[order];
 
 			if (0 == materialMap->count (aMaterial)) {
 				(*materialMap)[aMaterial] = new std::vector<pair_MatGroup_Transform >;
@@ -96,12 +95,12 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 		vMaterialGroups = nau::geometry::BoundingBox::getGeometry()->getMaterialGroups();
 
 		for (auto& aGroup: vMaterialGroups) {
-			Material *aMaterial = MATERIALLIBMANAGER->getMaterial(DEFAULTMATERIALLIBNAME, aGroup->getMaterialName());
+			std::shared_ptr<Material> &aMaterial = MATERIALLIBMANAGER->getMaterial(DEFAULTMATERIALLIBNAME, aGroup->getMaterialName());
 			mat4 *trans = &((nau::geometry::BoundingBox *)(aObject->getBoundingVolume()))->getTransform();
 			if (0 == m_RenderQueue.count (0)){
-					m_RenderQueue[0] = new std::map <Material*, std::vector<pair_MatGroup_Transform >* >;
+					m_RenderQueue[0] = new std::map <std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* >;
 				}
-				std::map<Material*, std::vector<pair_MatGroup_Transform >* > *materialMap = m_RenderQueue[aMaterial->getState()->getPropi(IState::ORDER)];
+				std::map<std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* > *materialMap = m_RenderQueue[aMaterial->getState()->getPropi(IState::ORDER)];
 
 				if (0 == materialMap->count (aMaterial)) {
 					(*materialMap)[aMaterial] = new std::vector<pair_MatGroup_Transform >;
@@ -122,17 +121,17 @@ MaterialSortRenderQueue::processQueue (void) {
 
 	IRenderer *renderer = RENDERER;
 
-	std::map <int, std::map<Material*, std::vector<pair_MatGroup_Transform >* >* >::iterator renderQueueIter;
+	std::map <int, std::map<std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* >* >::iterator renderQueueIter;
 
 	renderQueueIter = m_RenderQueue.begin();
 
 	for (; renderQueueIter != m_RenderQueue.end(); ++renderQueueIter) {
-		std::map<Material*, std::vector<pair_MatGroup_Transform >* >::iterator materialMapIter;
+		std::map<std::shared_ptr<Material>, std::vector<pair_MatGroup_Transform >* >::iterator materialMapIter;
 
 		materialMapIter = (*renderQueueIter).second->begin();
 
 		for (; materialMapIter != (*renderQueueIter).second->end(); materialMapIter++) {
-			Material *aMat = (*materialMapIter).first;
+			const std::shared_ptr<Material> &aMat = (*materialMapIter).first;
 			
 			{
 				PROFILE ("Material prepare");

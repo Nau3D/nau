@@ -737,22 +737,12 @@ Camera::adjustMatrixPlus(float cNear, float cFar, Camera  *aCamera) {
 
 
 void 
-Camera::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+Camera::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt) {
 
 	if (eventType == "VIEWPORT_CHANGED" && m_pViewport != NULL && m_pViewport->getName() == sender)
 		updateProjection();
 
-	//if (eventType == "DYNAMIC_CAMERA") {
-
-	//	vec3 p = m_Transform->getTranslation();
-	//	setPropf4(POSITION,p.x,p.y,p.z,1.0f);
-	//	buildViewMatrix();
-
-	//	result.set(p.x,p.y,p.z); 
-	//	m_Event.setData(&result);
-	//	EVENTMANAGER->notifyEvent("CAMERA_POSITION", m_Name,"", &m_Event);
-
-	//}
 	if(eventType == "CAMERA_ORIENTATION"  && !m_LookAt) {
 		CameraOrientation *f=(CameraOrientation *)evt->getData();
 		m_FloatProps[ELEVATION_ANGLE] = f->getBeta();
@@ -819,8 +809,8 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType, n
 		}
 
 		result.set(m_Float4Props[POSITION].x, m_Float4Props[POSITION].y, m_Float4Props[POSITION].z); 
-		m_Event.setData(&result);
-		EVENTMANAGER->notifyEvent("CAMERA_POSITION", m_Name,"", &m_Event);
+		std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Vec3");
+		EVENTMANAGER->notifyEvent("CAMERA_POSITION", m_Name,"", e);
 	}
 }
 

@@ -10,17 +10,20 @@ namespace nau
 	{
 		class EventCameraOrientation : public IEventData
 		{
+			friend class EventFactory;
+
 		public:
-			nau::event_::CameraOrientation cam;
-			
-			EventCameraOrientation(nau::event_::CameraOrientation cam);
-			EventCameraOrientation(const EventCameraOrientation &c);
-			EventCameraOrientation(void);
 			~EventCameraOrientation(void);
-			
+
 			void setData(void *data);
 			void *getData(void);
 
+		protected:
+			EventCameraOrientation(nau::event_::CameraOrientation cam);
+			EventCameraOrientation(const EventCameraOrientation &c);
+			EventCameraOrientation(void);
+
+			nau::event_::CameraOrientation cam;
 		};
 	};
 };

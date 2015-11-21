@@ -53,10 +53,9 @@ void
 DlgRenderTargets::notifyUpdate(Notification aNot, std::string itemName, std::string value) {
 
 	// sends events on behalf of the light
-	nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
+	std::shared_ptr<nau::event_::IEventData> e= nau::event_::EventFactory::Create("String");
 	e->setData(&value);
 	EVENTMANAGER->notifyEvent("RENDER_TARGET_CHANGED", itemName, "", e);
-	delete e;
 }
 
 
@@ -75,6 +74,7 @@ DlgRenderTargets::updateDlg() {
 		m_List->Disable();
 	}
 }
+
 
 void 
 DlgRenderTargets::setupPanel(wxSizer *siz, wxWindow *parent) {
@@ -96,7 +96,6 @@ DlgRenderTargets::setupPanel(wxSizer *siz, wxWindow *parent) {
 	siz->Add(sizH1, 0, wxGROW|wxALL, 15);
 
 	/* MIDDLE: Property grid */
-
 
 	m_PG = new wxPropertyGridManager(this, DLG_PROPS,
 				wxDefaultPosition, wxDefaultSize,
@@ -126,7 +125,6 @@ DlgRenderTargets::setupGrid() {
 	m_PG->AddPage(wxT("properties"));
 
 	PropertyManager::createGrid(m_PG, IRenderTarget::Attribs);
-
 
 	m_PG->SetSplitterLeft(true, true);
 }
@@ -193,7 +191,6 @@ DlgRenderTargets::update() {
 	}
 
 }
-
 
 
 void DlgRenderTargets::OnPropsChange( wxPropertyGridEvent& e) {

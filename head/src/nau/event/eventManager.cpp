@@ -110,25 +110,27 @@ void EventManager::clear(void)
 
 
 void 
-EventManager::notify(std::string eventType, std::string sender, std::string receiver, IEventData *evt, vector<IListener *> lsts)
+EventManager::notify(std::string eventType, std::string sender, std::string receiver, 
+	const std::shared_ptr<IEventData> &evt, vector<IListener *> lsts)
 {
 	vector<IListener *>::iterator it;
 
 	for(it=lsts.begin();it != lsts.end();it++){
 		std::string n=(*it)->getName();
 		if(receiver == n || receiver == "")
-			(*it)->eventReceived(sender,eventType,evt);
+			(*it)->eventReceived(sender,eventType, evt);
 	}
 
 }
 
-void EventManager::notifyEvent(std::string eventType, std::string sender, std::string receiver, IEventData *evt)
+void EventManager::notifyEvent(std::string eventType, std::string sender, 
+	std::string receiver, const std::shared_ptr<IEventData> &evt)
 {
 	vector<ListenerType *>::iterator itL;
 	
 	for(itL=listeners.begin();itL != listeners.end();itL++){
 		if((*itL)->eventType == eventType){
-			notify(eventType, sender, receiver, evt,(*itL)->lsts);
+			notify(eventType, sender, receiver, evt, (*itL)->lsts);
 			return;
 		}
 	}

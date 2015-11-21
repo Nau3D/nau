@@ -16,10 +16,9 @@ DlgMatBufferPanels::~DlgMatBufferPanels(){
 
 
 void 
-DlgMatBufferPanels::setMaterial(nau::material::Material *aMat) {
+DlgMatBufferPanels::setMaterial(std::shared_ptr<nau::material::Material> &aMat) {
 
 	m_Material = aMat;
-
 
 	m_MaterialBindings.clear();
 	m_Material->getBufferBindings(&m_MaterialBindings);

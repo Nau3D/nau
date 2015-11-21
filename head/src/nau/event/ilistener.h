@@ -3,6 +3,7 @@
 
 #include "nau/event/iEventData.h"
 
+#include <memory>
 #include <string>
 
 namespace nau
@@ -19,7 +20,9 @@ namespace nau
 
 			// Methods
 			virtual std::string &getName () = 0;
-			virtual void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt){};
+			virtual void eventReceived(const std::string &sender, 
+				const std::string &eventType, 
+				const std::shared_ptr<IEventData> &evt) = 0;
 		};
 	};
 };

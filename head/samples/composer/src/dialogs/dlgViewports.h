@@ -25,7 +25,7 @@
 #include <wx/propgrid/advprops.h>
 #include <wx/propgrid/manager.h>
 
-#include <nau/event/ilistener.h>
+#include <nau/event/iListener.h>
 
 class DlgViewports : public wxDialog, nau::event_::IListener
 {
@@ -36,7 +36,8 @@ public:
 	static wxWindow *Parent;
 
 	void updateInfo(std::string name);
-	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+	void eventReceived(const std::string &sender, const std::string &eventType, 
+		const std::shared_ptr<nau::event_::IEventData> &evt);
 	std::string &getName();
 
 protected:

@@ -13,7 +13,7 @@ float MAXFLOAT = 0xffffff;
 
 #ifdef NAU_RENDER_FLAGS
 
-BBox *BoundingBox::Geometry = NULL;
+std::shared_ptr<nau::geometry::BBox> BoundingBox::Geometry;
 
 #endif
 
@@ -31,8 +31,8 @@ BoundingBox::BoundingBox(void):
 	m_GeometryTransform.scale(-1.0f);
 
 #ifdef NAU_RENDER_FLAGS
-	if (Geometry == NULL) {
-		Geometry = new BBox();
+	if (!Geometry) {
+		Geometry = std::shared_ptr<nau::geometry::BBox>(new BBox());
 		Geometry->setDrawingPrimitive(IRenderable::LINE_LOOP);
 	}
 #endif
@@ -61,15 +61,24 @@ BoundingBox::BoundingBox (const BoundingBox &aBoundingBox):
 }
 
 
-BoundingBox::~BoundingBox(void)
-{
+BoundingBox::~BoundingBox(void) {
+
+}
+
+
+void 
+BoundingBox::eventReceived(const std::string &sender,
+	const std::string &eventType,
+	const std::shared_ptr<IEventData> &evt) {
+
+
 }
 
 
 BBox *
 BoundingBox::getGeometry()
 {
-	return Geometry;
+	return Geometry.get();
 }
 
 
@@ -102,8 +111,8 @@ void BoundingBox::set(vec3 min, vec3 max) {
 
 
 void 
-BoundingBox::calculate (const std::shared_ptr<std::vector<VertexData::Attr>> &vertices)
-{
+BoundingBox::calculate (const std::shared_ptr<std::vector<VertexData::Attr>> &vertices) {
+
 	m_vPoints[MIN].set ((float)MAXFLOAT, (float)MAXFLOAT, (float)MAXFLOAT);
 	m_vPoints[MAX].set ((float)-MAXFLOAT, (float)-MAXFLOAT, (float)-MAXFLOAT);
 
@@ -154,8 +163,8 @@ BoundingBox::calculate (const std::shared_ptr<std::vector<VertexData::Attr>> &ve
 
 
 void
-BoundingBox::setTransform (mat4 &m)
-{
+BoundingBox::setTransform (mat4 &m) {
+
 	m_GeometryTransform.copy(m);
 
 	std::shared_ptr<std::vector<VertexAttrib>> vertices =
@@ -188,8 +197,8 @@ BoundingBox::setTransform (mat4 &m)
 
 
 bool 
-BoundingBox::intersect (const IBoundingVolume *volume)
-{
+BoundingBox::intersect (const IBoundingVolume *volume) {
+
 	vec3 max = volume->getMax();
 	if (max.x < m_vPoints[MAX].x)
 		m_vPoints[MAX].x = max.x; 
@@ -213,8 +222,8 @@ BoundingBox::intersect (const IBoundingVolume *volume)
 
 
 void 
-BoundingBox::compound (const IBoundingVolume  *volume)
-{
+BoundingBox::compound (const IBoundingVolume  *volume) {
+
 	if (true == volume->isA (BOX)) {
 		const BoundingBox *aBox = static_cast<const BoundingBox*> (volume);
 
@@ -279,8 +288,8 @@ BoundingBox::compound (const IBoundingVolume  *volume)
 
 
 void
-BoundingBox::_calculateCenter (void)
-{
+BoundingBox::_calculateCenter (void) {
+
 	m_vPoints[CENTER].x = (m_vPoints[MAX].x + m_vPoints[MIN].x) * 0.5f;
 	m_vPoints[CENTER].y = (m_vPoints[MAX].y + m_vPoints[MIN].y) * 0.5f;
 	m_vPoints[CENTER].z = (m_vPoints[MAX].z + m_vPoints[MIN].z) * 0.5f;
@@ -288,8 +297,8 @@ BoundingBox::_calculateCenter (void)
 
 
 bool 
-BoundingBox::isA (BoundingVolumeKind kind) const
-{
+BoundingBox::isA (BoundingVolumeKind kind) const {
+
 	if (BOX == kind) {
 		return true;
 	}
@@ -298,42 +307,42 @@ BoundingBox::isA (BoundingVolumeKind kind) const
 
 
 std::string 
-BoundingBox::getType (void) const
-{
+BoundingBox::getType (void) const {
+
 	return "BoundingBox";
 }
 
 
 std::vector<vec3> 
-BoundingBox::getPoints (void) 
-{ 
+BoundingBox::getPoints (void) {
+
 	return m_vPoints;
 }
 
 
 std::vector<vec3>& 
-BoundingBox::getNonTransformedPoints (void) 
-{ 
+BoundingBox::getNonTransformedPoints (void) {
+
 	return m_vLocalPoints;
 }
 
 
 const vec3&
-BoundingBox::getMin (void) const
-{
+BoundingBox::getMin (void) const {
+
 	return m_vPoints[MIN];
 }
 
 
 const vec3&
-BoundingBox::getMax (void) const
-{
+BoundingBox::getMax (void) const {
+
 	return m_vPoints[MAX];
 }
 
 
 const vec3& 
-BoundingBox::getCenter (void) const
-{
+BoundingBox::getCenter (void) const {
+
 	return m_vPoints[CENTER];
 }

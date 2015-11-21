@@ -41,7 +41,7 @@ Material::~Material() {
 
 
 
-Material*
+std::shared_ptr<Material> 
 Material::clone() { // check clone Program Values
 
    Material *mat;
@@ -72,7 +72,7 @@ Material::clone() { // check clone Program Values
 
  	mat->m_State = m_State;
 
-   return mat;
+   return std::shared_ptr<Material>(mat);
 }
 
 			
@@ -581,7 +581,7 @@ Material::attachProgram (std::string shaderName)
 
 
 void
-Material::cloneProgramFromMaterial(Material *mat) {
+Material::cloneProgramFromMaterial(std::shared_ptr<Material> &mat) {
 
 	m_Shader = mat->getProgram();
 

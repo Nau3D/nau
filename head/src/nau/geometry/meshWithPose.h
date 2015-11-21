@@ -42,7 +42,7 @@ namespace nau
 
 				virtual std::string getType (void);
 				void eventReceived(const std::string &sender, const std::string &eventType, 
-					nau::event_::IEventData *evt);
+					const std::shared_ptr<IEventData> &evt);
 		};
 	};
 

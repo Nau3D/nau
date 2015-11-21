@@ -5,17 +5,15 @@ using namespace nau::material;
 
 MaterialLibManager::MaterialLibManager() : 
 	m_LibManager (),
-	m_DefaultLib (getLib (DEFAULTMATERIALLIBNAME))
-{
-	//addOwnMaterials();
+	m_DefaultLib (getLib (DEFAULTMATERIALLIBNAME)) {
+
 }
 
 
-MaterialLibManager::~MaterialLibManager()
-{
+MaterialLibManager::~MaterialLibManager() {
+
 	while (!m_LibManager.empty()){
 		delete((*m_LibManager.begin()).second);
-		//m_LibManager.begin()->second->clear();
 		m_LibManager.erase(m_LibManager.begin());
 	}
 
@@ -23,23 +21,20 @@ MaterialLibManager::~MaterialLibManager()
 
 
 void
-MaterialLibManager::clear()
-{
+MaterialLibManager::clear() {
+
 	while (!m_LibManager.empty()){
 	
 		m_LibManager.begin()->second->clear();
 		m_LibManager.erase(m_LibManager.begin());
 	}
 	m_DefaultLib = getLib (DEFAULTMATERIALLIBNAME);
-	//addOwnMaterials();
 
 }
 
 
-//
-
 MaterialLib*
-MaterialLibManager::getLib (std::string libName)
+MaterialLibManager::getLib (const std::string &libName)
 {
 	if (m_LibManager.find (libName) == m_LibManager.end()) {
 		m_LibManager[libName] = new MaterialLib (libName);
@@ -49,9 +44,9 @@ MaterialLibManager::getLib (std::string libName)
 
 
 bool
-MaterialLibManager::hasLibrary(std::string lib)
-{
-	if (m_LibManager.count(lib))
+MaterialLibManager::hasLibrary(const std::string &libName) {
+
+	if (m_LibManager.count(libName))
 		return true;
 	else
 		return false;
@@ -59,22 +54,22 @@ MaterialLibManager::hasLibrary(std::string lib)
 
 
 bool 
-MaterialLibManager::hasMaterial (std::string aLibrary, std::string name)
-{
+MaterialLibManager::hasMaterial (const std::string &aLibrary, const std::string &name) {
+
 	return getLib(aLibrary)->hasMaterial (name);
 }
 
 
-Material*
-MaterialLibManager::getDefaultMaterial (std::string materialName)
-{
+std::shared_ptr<Material> &
+MaterialLibManager::getMaterialFromDefaultLib(const std::string &materialName) {
+
 	return (m_DefaultLib->getMaterial (materialName));
 }
 
 
-Material*
-MaterialLibManager::getMaterial (MaterialID &materialID)
-{
+std::shared_ptr<Material> &
+MaterialLibManager::getMaterial (MaterialID &materialID) {
+
 	MaterialLib *ml;
 
 	ml = getLib (materialID.getLibName());
@@ -82,27 +77,23 @@ MaterialLibManager::getMaterial (MaterialID &materialID)
 }
 
 
-Material*
-MaterialLibManager::getMaterial(std::string lib, std::string mat)
-{
-	MaterialLib *ml;
+std::shared_ptr<Material> &
+MaterialLibManager::getMaterial(const std::string &lib, const std::string &mat) {
 
-	ml = getLib (lib);
-	return (ml->getMaterial (mat));
+	return (getLib(lib)->getMaterial (mat));
 }
 
 
-Material *
-MaterialLibManager::createMaterial(std::string material) {
+std::shared_ptr<Material>
+MaterialLibManager::createMaterial(const std::string &material) {
 
-	Material *mat;
+	std::shared_ptr<Material> mat;
 
-	Material *m;
-	m = getMaterial(DEFAULTMATERIALLIBNAME, "dirLightDifAmbPix");
-	if (m->getName() == "dirLightDifAmbPix")
-		mat = m->clone();
+	std::shared_ptr<Material> &m = getMaterial(DEFAULTMATERIALLIBNAME, "dirLightDifAmbPix");
+	if (m)
+		mat = cloneMaterial(m);
 	else 
-		mat = new Material();
+		mat = std::shared_ptr<Material>(new Material());
 
 	mat->setName(material);
 	addMaterial(DEFAULTMATERIALLIBNAME, mat);
@@ -110,20 +101,28 @@ MaterialLibManager::createMaterial(std::string material) {
 }
 
 
-Material *
-MaterialLibManager::createMaterial(std::string library, std::string material) {
+std::shared_ptr<Material>
+MaterialLibManager::createMaterial(const std::string &library, const std::string &material) {
 
-	Material *mat;
+	std::shared_ptr<Material> mat;
 
-	Material *m;
-	m = getMaterial(DEFAULTMATERIALLIBNAME, "dirLightDifAmbPix");
-	if (m->getName() == "dirLightDifAmbPix")
-		mat = m->clone();
+	std::shared_ptr<Material> &m = getMaterial(DEFAULTMATERIALLIBNAME, "dirLightDifAmbPix");
+	if (m)
+		mat = cloneMaterial(m);
 	else 
-		mat = new Material();
+		mat = std::shared_ptr<Material>(new Material());
+
 	mat->setName(material);
 	addMaterial(library, mat);
+
 	return mat;
+}
+
+
+std::shared_ptr<Material> 
+MaterialLibManager::cloneMaterial(std::shared_ptr<Material> &m) {
+
+	return m->clone();
 }
 
 
@@ -151,7 +150,7 @@ MaterialLibManager::getNumLibs (void) {
 
  
 void
-MaterialLibManager::addMaterial (std::string aLibrary, nau::material::Material* aMaterial) {
+MaterialLibManager::addMaterial (const std::string &aLibrary, std::shared_ptr<Material> &aMaterial) {
 
 	(getLib (aLibrary)->addMaterial (aMaterial));
 }

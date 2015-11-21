@@ -42,6 +42,9 @@ namespace nau
 			static Mesh *createUnregisteredMesh();
 			~Mesh (void);
 
+			void eventReceived(const std::string & sender, const std::string & eventType, 
+				const std::shared_ptr<IEventData>& evt);
+
 			void setName (std::string name);
 			std::string& getName (void);
 

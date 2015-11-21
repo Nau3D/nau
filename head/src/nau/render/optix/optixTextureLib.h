@@ -21,11 +21,11 @@ namespace nau {
 
 		OptixTextureLib() {};
 		void setContext(optix::Context &aContext);
-		unsigned int addTextures(nau::material::Material *m);
+		unsigned int addTextures(std::shared_ptr<nau::material::Material> &m);
 		void addTexture(unsigned int glID);
 		optix::TextureSampler &getTexture(unsigned int GLID);
 
-		void applyTextures(optix::GeometryInstance, nau::material::Material *m);
+		void applyTextures(optix::GeometryInstance, std::shared_ptr<nau::material::Material> &m);
 
 	private:
 		

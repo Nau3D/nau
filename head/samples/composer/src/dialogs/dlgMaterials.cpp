@@ -294,24 +294,23 @@ void DlgMaterials::updateDlg() {
 }
 
 
-Material *DlgMaterials::getModelMaterial() {
+std::shared_ptr<Material> &
+DlgMaterials::getModelMaterial() {
 
 	std::string mat, lib;
-	Material *mm;
-
+	
 	lib = std::string(libList->GetValue().mb_str());
 	mat = std::string(materialList->GetValue().mb_str());
 
-	mm = MATERIALLIBMANAGER->getMaterial(lib,mat);
+	std::shared_ptr<Material> &mm = MATERIALLIBMANAGER->getMaterial(lib,mat);
 
 	return mm;
 }
 
+
 void DlgMaterials::OnSelectMaterial(wxCommandEvent& event) {
 
-	Material *mm;
-		
-	mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 
 	updateColors(mm) ;
 	updateTextures(mm,0);
@@ -343,7 +342,7 @@ void DlgMaterials::OnSelectLibMaterial(wxCommandEvent& event) {
 
 	materialList->SetSelection(0);
 		
-	Material *mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 	updateColors(mm) ;
 	updateTextures(mm,0);
 	updateShader(mm);
@@ -399,7 +398,7 @@ void DlgMaterials::updateMaterialList() {
 	if (! materialList->SetStringSelection(sel))
 		materialList->SetSelection(0);
 
-	Material *mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 
 	updateColors(mm) ;
 	updateTextures(mm,0);
@@ -452,47 +451,8 @@ void DlgMaterials::OnProcessITexPanelSelect( wxCommandEvent& e) {
 
 void DlgMaterials::toolbarLibMatNew(wxCommandEvent& WXUNUSED(event) ) {
 
-
-	//std::string path,libFile,fullName,relativeName,libName;
-
-	//wxFileDialog dialog
- //                (
- //                   this,
- //                   _T("New Material Lib"),
- //                   _T(""),
- //                   _T(""),
- //                   _T("SP Library (*.spl)|*.spl"),
-	//				wxSAVE | wxOVERWRITE_PROMPT
- //                );
-
-	//dialog.SetDirectory(CProject::Instance()->m_path.c_str());
-
-	//if (dialog.ShowModal() != wxID_OK)
-	//	return;
-
-	//path = (char *)dialog.GetDirectory().c_str();
-	//libFile = (char *)dialog.GetFilename().c_str();
-	//fullName = (char *)dialog.GetPath().c_str();
-	//relativeName = CFilename::GetRelativeFileName(CProject::Instance()->m_path,fullName);
-	//libName = CFilename::RemoveExt(relativeName);
-	//
-	//CMaterialLib *ml;
-	//CMaterial *mat;
-
-	//mat = new CMaterial();
-	//mat->setName("Default");
-
-	//ml = new CMaterialLib();
-	//ml->m_filename = libName;
-	//ml->add(mat);
-
-	//m_libManager->addLib(ml);
-
-	//updateDlg();
-	//m_toolbar->EnableTool(LIBMAT_SAVEALL, TRUE);
-	//DlgModelInfo::Instance()->updateDlg();
-
 }
+
 
 void DlgMaterials::toolbarLibMatOpen(wxCommandEvent& WXUNUSED(event) ) {
 
@@ -521,159 +481,38 @@ void DlgMaterials::toolbarLibMatOpen(wxCommandEvent& WXUNUSED(event) ) {
 	EVENTMANAGER->notifyEvent("NEW_MATERIAL", "","",NULL);
 }
 
+
 void DlgMaterials::toolbarLibMatSave(wxCommandEvent& WXUNUSED(event) ) {
-
-	//std::string lib;
-
-	//lib = libList->GetValue().c_str();
-	//m_libManager->getLib(lib)->save(CProject::Instance()->m_path);
 
 }
 
 
 void DlgMaterials::toolbarLibMatSaveAll(wxCommandEvent& WXUNUSED(event) ) {
 
-	//std::string lib;
-
-	//m_libManager->save(CProject::Instance()->m_path);
-
 }
 
 
 void DlgMaterials::toolbarMatNew(wxCommandEvent& WXUNUSED(event) ) {
 
-	//wxString name;
-	//int exit = 0;
-	//CMaterial *mat;
-	//CMaterialLib *ml;
-	//std::string lib;
-	//int dialogRes;
-
-	//lib = libList->GetValue().c_str();
-	//ml = m_libManager->getLib(lib);
-
-	//do {
-	//	wxTextEntryDialog dialog(this,
-	//							 _T("Enter the new material's name\n"),
-	//							 _T("Material's Name"),
-	//							 _T(name),
-	//							 wxOK | wxCANCEL);
-	//	dialogRes = dialog.ShowModal();
-	//	if (dialogRes == wxID_OK)
-	//	{
-	//		name = dialog.GetValue();
-	//		int status = m_libManager->validMatName(lib,name.c_str());
-	//		if (status == CMaterialLibManager::OK) {
-
-	//			mat = new CMaterial();
-	//			mat->setName(name.c_str());
-	//			ml->add(mat);
-	//			exit = 1;
-	//			updateDlg();
-	//			DlgModelInfo::Instance()->updateDlg();
-	//		}
-	//		else if (status == CMaterialLibManager::INVALID_NAME) 
-	//			wxMessageBox(dialog.GetValue(), _T("Invalid Name (can't begin with a space)"), wxOK | wxICON_INFORMATION, this);
-	//		else if (status == CMaterialLibManager::NAME_EXISTS) 
-	//			wxMessageBox(dialog.GetValue(), _T("Name Already Exists"), wxOK | wxICON_INFORMATION, this);
-	//	}
-	//}
-	//while (dialogRes != wxID_CANCEL && !exit);
 }
+
 
 void DlgMaterials::toolbarMatPaste(wxCommandEvent& WXUNUSED(event) ) {
 
-	// BEWARE: THE NAME MAY ALREADY EXIST
-
-	//CMaterialLib *ml;
-	//CMaterial *mat;
-	//std::string libName,matName,newName;
-	//char aux[256];
-	//int i = 0,status;
-
-	//libName = libList->GetValue().c_str();
-	//matName = m_copyMat->getName();
-	//ml = m_libManager->getLib(libName);
-	//mat = m_copyMat->clone();
-	//if (m_libManager->validMatName(libName,matName) != CMaterialLibManager::OK) {
-	//	do {
-	//		i++;
-	//		sprintf(aux,"%s(%d)",matName.c_str(),i);
-	//		status = m_libManager->validMatName(libName,aux);
-	//	}
-	//	while (status != CMaterialLibManager::OK);
-	//	mat->setName(aux);
-	//}
-
-	//ml->add(mat);
-
-	//updateDlg();
-	//DlgModelInfo::Instance()->updateDlg();
-
 }
+
+
 void DlgMaterials::toolbarMatClone(wxCommandEvent& WXUNUSED(event) ) {
 
-	//CMaterialLib *ml;
-	//CMaterial *mat;
-	//CMaterialID mid;
-
-	//std::string libName,matName,newName;
-	//char aux[256];
-	//int i = 0,status;
-
-	//mid.libName = libList->GetValue().c_str();
-	//mid.matName = materialList->GetValue().c_str();
-
-	//ml = m_libManager->getLib(mid.libName);
-	//mat = m_libManager->getMaterial(mid)->clone();
-
-	//if (m_libManager->validMatName(mid.libName,mid.matName) != CMaterialLibManager::OK) {
-	//	do {
-	//		i++;
-	//		sprintf(aux,"%s(%d)",mid.matName.c_str(),i);
-	//		status = m_libManager->validMatName(mid.libName,aux);
-	//	}
-	//	while (status != CMaterialLibManager::OK);
-	//	mat->setName(aux);
-	//}
-
-	//ml->add(mat);
-
-	//updateDlg();
-	//DlgModelInfo::Instance()->updateDlg();
-
 }
+
+
 void DlgMaterials::toolbarMatRemove(wxCommandEvent& WXUNUSED(event) ) {
 
-	//// GOT TO CHECK IF MATERIAL IS IN USE
-	//CMaterialID mid;
-
-	//mid.libName = libList->GetValue().c_str();
-	//mid.matName = materialList->GetValue().c_str();
-
-	//if (CProject::Instance()->materialInUse(mid))
-	//	wxMessageBox(_T("Material is in use"), _T("Material can't be removed"), wxOK | wxICON_INFORMATION, this);
-
-	//else {
-	//	m_libManager->getLib(mid.libName)->lib.erase(mid.matName);
-	//	updateDlg();
-	//	DlgModelInfo::Instance()->updateDlg();
-	//}
-
-
 }
 
+
 void DlgMaterials::toolbarMatCopy(wxCommandEvent& WXUNUSED(event) ) {
-
-	//// STORES THE MATERIAL IN THE SPECIAL VAR m_copyMat
-	//CMaterialID mid;
-
-	//mid.libName = libList->GetValue().c_str();
-	//mid.matName = materialList->GetValue().c_str();
-
-	//m_copyMat = m_libManager->getMaterial(mid)->clone();
-
-	//// CLONE MAT
 
 }
 
@@ -685,11 +524,12 @@ void DlgMaterials::toolbarMatCopy(wxCommandEvent& WXUNUSED(event) ) {
 -----------------------------------------------------------------*/
 
 void 
-DlgMaterials::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+DlgMaterials::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<nau::event_::IEventData> &evt) {
 
 	std::string *str;
 	std::string aux;
-	Material *m = getModelMaterial();
+	std::shared_ptr<Material> &m = getModelMaterial();
 
 	if (eventType == "NEW_LIGHT") {
 		str = (std::string *)evt->getData();	
@@ -728,7 +568,7 @@ DlgMaterials::eventReceived(const std::string &sender, const std::string &eventT
 
 
 void 
-DlgMaterials::setPropf4Aux(std::string propNamex, vec4 &values) 
+DlgMaterials::setPropf4Aux(std::string &propNamex, vec4 &values) 
 {
 	wxString aux;
 	wxString propName = wxString(propNamex.c_str());
@@ -746,7 +586,7 @@ DlgMaterials::setPropf4Aux(std::string propNamex, vec4 &values)
 
 
 void
-DlgMaterials::setPropm4Aux(std::string propNamex, mat4 &m) 
+DlgMaterials::setPropm4Aux(std::string &propNamex, mat4 &m) 
 {
 	wxString aux;
 	wxString propName = wxString(propNamex.c_str());
@@ -799,7 +639,7 @@ DlgMaterials::setPropm4Aux(std::string propNamex, mat4 &m)
 
 void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 
-	Material *mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 
 	gridTextures = new wxGrid(parent,DLG_MI_TEXTURE_GRID,wxDefaultPosition,
                        wxSize( 420, 210 ));
@@ -908,7 +748,7 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 
 void DlgMaterials::setTextureUnit(int index){
 
-	Material *mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 	IState *state = mm->getState();
 	ITexture *texture = mm->getTexture(index);
 	ITextureSampler *ts = mm->getTextureSampler(index);
@@ -987,7 +827,7 @@ void DlgMaterials::setTextureUnit(int index){
 
 void DlgMaterials::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 
-	Material *mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 	IState *state = mm->getState();
 
 	wxString& name = e.GetPropertyName();
@@ -1035,7 +875,7 @@ void DlgMaterials::OnProcessTexturePropsChange( wxPropertyGridEvent& e) {
 
 void DlgMaterials::updateTexture(ITexture *tex) {
 
-	Material *mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 
 	const int index = pgTextureProps->GetPropertyValueAsLong(wxT("Texture Unit"));
 
@@ -1050,13 +890,13 @@ void DlgMaterials::updateTexture(ITexture *tex) {
 void DlgMaterials::updateActiveTexture() {
 
 	const int index = pgTextureProps->GetPropertyValueAsLong(wxT("Texture Unit"));
-	Material *mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 
 	updateTextures(mm,index);
 
 }
 
-void DlgMaterials::updateTextures(Material *mm, int index) {
+void DlgMaterials::updateTextures(std::shared_ptr<Material> &mm, int index) {
 
 	updateTextureList();
 	ITexture *texture;
@@ -1129,33 +969,6 @@ void DlgMaterials::setupColorPanel(wxSizer *siz, wxWindow *parent) {
 
 	pgMaterial->AddPage(wxT("Colours"));
 
-	//wxPGProperty *pid = pgMaterial->Append(new wxPGProperty(wxT("DIFFUSE"),wxPG_LABEL));
-	//pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-	//				wxColour(255,255,255)));
-	//pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
-	//pgMaterial->Expand(pid);
-
-	//pid = pgMaterial->Append(new wxPGProperty(wxT("AMBIENT"),wxPG_LABEL));
-	//pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-	//				wxColour(255,255,255)));
-	//pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
-	//pgMaterial->Expand(pid);
-
-	//pid = pgMaterial->Append(new wxPGProperty(wxT("SPECULAR"),wxPG_LABEL));
-	//pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-	//				wxColour(255,255,255)));
-	//pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
-	//pgMaterial->Expand(pid);
-
-	//pid = pgMaterial->Append(new wxPGProperty(wxT("EMISSION"),wxPG_LABEL));
-	//pgMaterial->AppendIn(pid,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-	//				wxColour(255,255,255)));
-	//pgMaterial->AppendIn(pid,new wxFloatProperty(wxT("Alpha"),wxPG_LABEL,1.0));
-	//pgMaterial->Expand(pid);
-
-	//pgMaterial->Append(new wxFloatProperty(wxT("SHININESS"),wxPG_LABEL,0));
-	//
-
 	std::vector<std::string> order = {"DIFFUSE", "AMBIENT", "EMISSION", "SPECULAR", "SHININESS" };
 	PropertyManager::createOrderedGrid(pgMaterial, ColorMaterial::Attribs, order);
 
@@ -1169,10 +982,6 @@ void DlgMaterials::setupColorPanel(wxSizer *siz, wxWindow *parent) {
 void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 
 	ColorMaterial *cm;
-	//wxColour col;
-	//double f;
-	//wxArrayInt a;
-	//wxVariant variant;
 	wxString& name = e.GetPropertyName();
 	wxPGProperty *topProp = e.GetProperty()->GetParent();
 	const wxString& topName = e.GetProperty()->GetParent()->GetName();
@@ -1181,70 +990,14 @@ void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 
 	cm = &getModelMaterial()->getColor();
 	PropertyManager::updateProp(pgMaterial, name.ToStdString(), ColorMaterial::Attribs, (AttributeValues *)cm);
-
-
-	//variant = pgMaterial->GetPropertyValue(wxT("DIFFUSE.RGB"));
-	//col << variant;
-	//f = pgMaterial->GetPropertyValueAsDouble(wxT("DIFFUSE.Alpha"));
-
-	//mm->getColor().setPropf4(ColorMaterial::DIFFUSE, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
-
-	////col = pgMaterial->GetPropertyColour("AMBIENT.RGB");
-	//variant = pgMaterial->GetPropertyValue(wxT("AMBIENT.RGB"));
-	//col << variant;
-	//f = pgMaterial->GetPropertyValueAsDouble(wxT("AMBIENT.Alpha"));
-
-	//mm->getColor().setPropf4(ColorMaterial::AMBIENT, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
-
-	////col = pgMaterial->GetPropertyColour("SPECULAR.RGB");
-	//variant = pgMaterial->GetPropertyValue(wxT("SPECULAR.RGB"));
-	//col << variant;
-	//f = pgMaterial->GetPropertyValueAsDouble(wxT("SPECULAR.Alpha"));
-
-	//mm->getColor().setPropf4(ColorMaterial::SPECULAR, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
-
-	////col = pgMaterial->GetPropertyColour("EMISSION.RGB");
-	//variant = pgMaterial->GetPropertyValue(wxT("EMISSION.RGB"));
-	//col << variant;
-	//f = pgMaterial->GetPropertyValueAsDouble(wxT("EMISSION.Alpha"));
-
-	//mm->getColor().setPropf4(ColorMaterial::EMISSION, col.Red()/255.0f, col.Green()/255.0f, col.Blue()/255.0f, f);
-
-	//mm->getColor().setPropf(ColorMaterial::SHININESS, pgMaterial->GetPropertyValueAsDouble(wxT("SHININESS")));
 }
 
 
 
 
-void DlgMaterials::updateColors(Material *mm) {
+void DlgMaterials::updateColors(std::shared_ptr<Material> &mm) {
 
-	PropertyManager::updateGrid(pgMaterial, ColorMaterial::Attribs, (AttributeValues *)mm);
-
-	//const float *f;
-
-	//pgMaterial->ClearSelection();
-	//
-	//f = &(mm->getColor().getPropf4(ColorMaterial::DIFFUSE).x);
-	//pgMaterial->SetPropertyValue(wxT("DIFFUSE.RGB"),
-	//				wxColour(255*f[0],255*f[1],255*f[2]));
-	//pgMaterial->SetPropertyValue(wxT("DIFFUSE.Alpha"),f[3]);
-
-	//f = &(mm->getColor().getPropf4(ColorMaterial::AMBIENT).x);
-	//pgMaterial->SetPropertyValue(wxT("AMBIENT.RGB"),
-	//				wxColour(255*f[0],255*f[1],255*f[2]));
-	//pgMaterial->SetPropertyValue(wxT("AMBIENT.Alpha"),f[3]);
-
-	//f = &(mm->getColor().getPropf4(ColorMaterial::SPECULAR).x);
-	//pgMaterial->SetPropertyValue(wxT("SPECULAR.RGB"),
-	//				wxColour(255*f[0],255*f[1],255*f[2]));
-	//pgMaterial->SetPropertyValue(wxT("SPECULAR.Alpha"),f[3]);
-
-	//f = &(mm->getColor().getPropf4(ColorMaterial::EMISSION).x);
-	//pgMaterial->SetPropertyValue(wxT("EMISSION.RGB"),
-	//				wxColour(255*f[0],255*f[1],255*f[2]));
-	//pgMaterial->SetPropertyValue(wxT("EMISSION.Alpha"),f[3]);
-
-	//pgMaterial->SetPropertyValue(wxT("SHININESS"),mm->getColor().getPropf(ColorMaterial::SHININESS));
+	PropertyManager::updateGrid(pgMaterial, ColorMaterial::Attribs, (AttributeValues *)mm.get());
 }
 
 
@@ -1307,8 +1060,7 @@ void DlgMaterials::setupShaderPanel(wxSizer *siz, wxWindow *parent) {
 
 void DlgMaterials::OnShaderListSelect(wxCommandEvent& event){
 
-	Material *mm;
-	mm = getModelMaterial();
+	std::shared_ptr<Material> &mm = getModelMaterial();
 
 	int sel;
 	wxString selString;
@@ -1326,7 +1078,7 @@ void DlgMaterials::OnShaderListSelect(wxCommandEvent& event){
 }
 
 
-void DlgMaterials::updateShader(Material *m){
+void DlgMaterials::updateShader(std::shared_ptr<Material> &m){
 
 	// Update Shader List
 	std::vector<std::string> *names = RESOURCEMANAGER->getProgramNames();
@@ -1406,7 +1158,7 @@ void DlgMaterials::updateShader(Material *m){
 	}
 }
 
-void DlgMaterials::updateShaderAux(Material *m) {
+void DlgMaterials::updateShaderAux(std::shared_ptr<Material> &m) {
 
 	if (NULL != m->getProgram()) {
 		m_cbUseShader->SetValue(m->isShaderEnabled());
@@ -1562,13 +1314,13 @@ DlgMaterials::auxSetMat3(wxPGProperty *pid, wxPGProperty *pid2, int edit, float 
 
 void DlgMaterials::OnProcessUseShader(wxCommandEvent& event){
 
-	Material *m = getModelMaterial();
+	std::shared_ptr<Material> &m = getModelMaterial();
 
 	m->enableShader(event.IsChecked());
 }
 
 
-void DlgMaterials::updateUniforms(Material *m) {
+void DlgMaterials::updateUniforms(std::shared_ptr<Material> &m) {
 
 	//m->checkProgramValuesAndUniforms();
 	pgShaderUniforms->ClearPage(0);
@@ -1616,7 +1368,7 @@ DlgMaterials::OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e) {
 	std::string topProp = std::string(name.substr(0,dotLocation).mb_str());
 	std::string prop = std::string(name.substr(dotLocation+1,name.size()-dotLocation-1).mb_str());
 
-	Material *m = getModelMaterial();
+	std::shared_ptr<Material> &m = getModelMaterial();
 
 	if ("Type" == prop) {
 

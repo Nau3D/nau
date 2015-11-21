@@ -7,7 +7,7 @@
 #pragma interface
 #endif
 
-#include <nau/event/ilistener.h>
+#include <nau/event/iListener.h>
 #include <nau/material/iBuffer.h>
 #include <nau/enums.h>
 
@@ -148,7 +148,8 @@ public:
 	static DlgDbgBuffers* Instance () ;
 	static void SetParent(wxWindow *parent);
 	virtual std::string &getName ();
-	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+	void eventReceived(const std::string &sender, const std::string &eventType, 
+		const std::shared_ptr<nau::event_::IEventData> &evt);
 	void updateDlg(bool shortNames = true);
 
     DECLARE_EVENT_TABLE();

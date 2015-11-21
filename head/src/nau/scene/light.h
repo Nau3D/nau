@@ -43,6 +43,9 @@ namespace nau
 
 			~Light(void);
 
+			void eventReceived(const std::string & sender, const std::string & eventType, 
+				const std::shared_ptr<IEventData>& evt);
+
 			// returns "LIGHT"
 			std::string getType();
 

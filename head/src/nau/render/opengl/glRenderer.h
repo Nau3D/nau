@@ -168,7 +168,7 @@ namespace nau
 		protected:
 			void showDrawDebugInfo(std::shared_ptr<MaterialGroup> &aMatGroup);
 			void showDrawDebugInfo(PassCompute *aPass);
-			void showDrawDebugInfo(Material *mat, nau::util::Tree *t);
+			void showDrawDebugInfo(std::shared_ptr<Material> &mat, nau::util::Tree *t);
 			void showDrawDebugInfo(IProgram *p, nau::util::Tree *t);
 
 

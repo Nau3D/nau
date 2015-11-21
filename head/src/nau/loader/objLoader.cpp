@@ -116,7 +116,7 @@ OBJLoader::readMTL(std::string &name)
 	}
 	
 	m_NumMaterials = 0;
-	Material *mat;
+	std::shared_ptr<Material> mat;
 	float val; vec4 v4;
 	while(fscanf(file, "%s", buf) != EOF) {
 		switch(buf[0]) {
@@ -129,7 +129,6 @@ OBJLoader::readMTL(std::string &name)
 			fgets(buf, sizeof(buf), file);
 			sscanf(buf, "%s %s", buf, buf);
 			mat = MATERIALLIBMANAGER->createMaterial(strdup(buf));
-			//model->materials[nummaterials].name = strdup(buf);
 			break;
 		case 'm' :		
 			fgetc(file);
@@ -896,7 +895,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		// There HAS to be a material
 		// Create material
 		if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME,"DefaultOBJMaterial"))
-			Material* aMaterial = MATERIALLIBMANAGER->createMaterial("DefaultOBJMaterial");
+			MATERIALLIBMANAGER->createMaterial("DefaultOBJMaterial");
 	//}
 
 

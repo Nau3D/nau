@@ -61,14 +61,10 @@ DlgDbgStep::DlgDbgStep(): wxDialog(DlgDbgStep::m_Parent, -1, wxT("Nau - Frame pa
 
 	wxBoxSizer *sizerh = new wxBoxSizer(wxHORIZONTAL);
 	wxStaticText *stg1 = new wxStaticText(this, -1, wxT("Pipeline: "));
-	//wxTextCtrl  *pipename = new wxTextCtrl(this, DLG_TXT_PIPELINE, wxT(""));
 
 	sizerh->Add(stg1, 0, wxGROW | wxALL, 5);
-	//sizerh->Add(pipename, 0, wxGROW | wxALL, 5);
-
 
 	bSizer1->Add(sizerh, 0, wxGROW | wxALL, 5);
-
 
 	wxStaticBoxSizer * sbSizer1;
 	sbSizer1 = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, wxEmptyString), wxVERTICAL);
@@ -107,13 +103,8 @@ DlgDbgStep::DlgDbgStep(): wxDialog(DlgDbgStep::m_Parent, -1, wxT("Nau - Frame pa
 
 
 void
-DlgDbgStep::updateDlg()
-{
-	//if (pipename){
-	//	std::string pipenameString = RENDERMANAGER->getActivePipelineName();
-	//	wxString str = wxString(pipenameString.c_str());
-	//	pipename->SetValue(str);
-	//}
+DlgDbgStep::updateDlg() {
+
 	std::string newPipeName = RENDERMANAGER->getActivePipelineName();
 	if (pipenameString.compare(newPipeName) != 0){
 		pipenameString = newPipeName;
@@ -148,7 +139,7 @@ DlgDbgStep::updateDlg()
 
 
 void
-DlgDbgStep::getPasses(std::string pipenameString){
+DlgDbgStep::getPasses(std::string pipenameString) {
 	Pipeline *pip = RENDERMANAGER->getPipeline(pipenameString);
 
 	passes.clear();
@@ -159,15 +150,16 @@ DlgDbgStep::getPasses(std::string pipenameString){
 
 
 std::string &
-DlgDbgStep::getName ()
-{
+DlgDbgStep::getName () {
+
 	name = "DlgDbgStep";
 	return(name);
 }
 
 
 void
-DlgDbgStep::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt)
+DlgDbgStep::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<nau::event_::IEventData> &evt)
 {
 }
 
@@ -175,8 +167,6 @@ DlgDbgStep::eventReceived(const std::string &sender, const std::string &eventTyp
 void DlgDbgStep::append(std::string s) {
 
 }
-
-
 
 
 void DlgDbgStep::OnNextPass(wxCommandEvent& event){

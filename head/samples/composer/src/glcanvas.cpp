@@ -160,9 +160,12 @@ GLCanvas::OnSize (wxSizeEvent &event) {
 	GetClientSize (&width, &height);
 
 	if (0 != m_pEngine) {
-		EventVec3 *e3 = new EventVec3(vec3(width, height, 0));
+		std::shared_ptr<nau::event_::IEventData> e3 = nau::event_::EventFactory::Create("Vec3");
+		vec3 *v = new vec3(width, height, 0);
+		e3->setData(v);
+		delete v;
 		EVENTMANAGER->notifyEvent("WINDOW_SIZE_CHANGED","Canvas","",e3);
-		delete e3;
+
 	}
 }
 
@@ -351,10 +354,9 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		} 
 		else {
 			nau::event_::CameraMotion c("BACKWARD", direction);
-			nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Motion");
+			std::shared_ptr<IEventData> e= nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
 			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
-			delete e;
 		}
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 	}
@@ -374,11 +376,9 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		else {
 
 			nau::event_::CameraMotion c("FORWARD", direction);
-			nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Motion");
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
 			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
-			delete e;
-
 		}
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 	}
@@ -397,10 +397,9 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		else {
 
 			nau::event_::CameraMotion c("LEFT", direction);
-			nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Motion");
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
 			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
-			delete e;
 		}
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 
@@ -417,30 +416,27 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		} 
 		else {
 			nau::event_::CameraMotion c("RIGHT", direction);
-			nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Motion");
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
 			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
-			delete e;
 		}
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 	}
 	if ('Q' == event.GetKeyCode()){
 		if (false == m_pCamera->isDynamic()) {
 			nau::event_::CameraMotion c("UP", direction);
-			nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Motion");
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
 			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
-			delete e;
 		}
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 	}
 	if ('Z' == event.GetKeyCode()){
 		if (false == m_pCamera->isDynamic()) {
 			nau::event_::CameraMotion c("DOWN", direction);
-			nau::event_::IEventData *e= nau::event_::EventFactory::create("Camera Motion");
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
 			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
-			delete e;
 		}
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 	}
@@ -453,39 +449,6 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		RENDERER->setPropb(IRenderer::DEBUG_DRAW_CALL, true);
 	}
 
-/*	if (WXK_SPACE == event.GetKeyCode()) {
-		if (true == m_pCamera->m_IsDynamic) {
-			vec3 vel (camUp);
-
-			vel *= direction * 3;
-			vel.x = 0.0f;
-			vel.z = 0.0f;
-			
-			m_pEngine->getWorld().setVelocity ("MainCamera", vel);
-
-			m_WaterState = changeWaterState (m_WaterState);
-
-			
-		}
-	}
-*/
-/*	if ('N' == event.GetKeyCode()){
-		m_pCamera->setNearPlane (m_pCamera->getNearPlane() + 0.5f);
-	}
-
-	if ('M' == event.GetKeyCode()){
-		m_pCamera->setNearPlane (m_pCamera->getNearPlane() - 0.5f);
-	}
-
-
-	if ('F' == event.GetKeyCode()){
-		m_pCamera->setFarPlane (m_pCamera->getFarPlane() + 1.0f);
-	}
-
-	if ('G' == event.GetKeyCode()){
-		m_pCamera->setFarPlane (m_pCamera->getFarPlane() - 1.0f);
-	}
-*/
 	if ('+' == event.GetKeyCode() || WXK_NUMPAD_ADD == event.GetKeyCode()) {
 		SceneObject *aObject = RENDERMANAGER->getScene ("MainScene")->getSceneObject ("pPlane1");
 

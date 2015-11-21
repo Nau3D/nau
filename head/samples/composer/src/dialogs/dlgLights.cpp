@@ -55,7 +55,7 @@ void
 DlgLights::notifyUpdate(Notification aNot, std::string lightName, std::string value) {
 
 	// sends events on behalf of the light
-	nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
+	std::shared_ptr<nau::event_::IEventData> e= nau::event_::EventFactory::Create("String");
 	if (aNot == NEW_LIGHT) {
 		e->setData(&lightName);
 		EVENTMANAGER->notifyEvent("NEW_LIGHT", lightName,"", e);
@@ -64,7 +64,6 @@ DlgLights::notifyUpdate(Notification aNot, std::string lightName, std::string va
 		e->setData(&value);
 		EVENTMANAGER->notifyEvent("LIGHT_CHANGED", lightName ,"", e);
 	}
-	delete e;
 }
 
 

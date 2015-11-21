@@ -132,7 +132,8 @@ vec3 ProximitySensor::getMax(void){
 }
 
 
-void ProximitySensor::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt){
+void ProximitySensor::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt){
 
 	//if(strcmp(evt->getReceiver(), &name[0])!=0 && strcmp(evt->getReceiver(), "")!=0) return;
 
@@ -151,18 +152,16 @@ void ProximitySensor::eventReceived(const std::string &sender, const std::string
 		if(b && !previous) {
 			time_t t;
 			t=time(NULL);
-			nau::event_::IEventData *e= nau::event_::EventFactory::create("Float");
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Float");
 			e->setData(&t);
 			EVENTMANAGER->notifyEvent("ENTER_TIME",m_Name,"", e);
-			delete e;
 		}
 		else if (!b && previous) {
 			time_t t;
 			t=time(NULL);
-			nau::event_::IEventData *e= nau::event_::EventFactory::create("Float");
+			std::shared_ptr<IEventData> e= nau::event_::EventFactory::Create("Float");
 			e->setData(&t);
 			EVENTMANAGER->notifyEvent("EXIT_TIME",m_Name, "", e);
-			delete e;
 		}
 		previous = b;
 	}

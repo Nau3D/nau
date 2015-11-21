@@ -20,7 +20,7 @@ OptixTextureLib::setContext(optix::Context &aContext) {
 
 
 unsigned int
-OptixTextureLib::addTextures(Material *m) {
+OptixTextureLib::addTextures(std::shared_ptr<nau::material::Material> &m) {
 
 	unsigned int s, count = 0;
 	unsigned int mode, mode1;
@@ -118,7 +118,7 @@ OptixTextureLib::getTexture(unsigned int glID) {
 
 
 void
-OptixTextureLib::applyTextures(optix::GeometryInstance gi, nau::material::Material *mat) {
+OptixTextureLib::applyTextures(optix::GeometryInstance gi, std::shared_ptr<nau::material::Material> &mat) {
 
 	std::string s;
 	ITexture *t;

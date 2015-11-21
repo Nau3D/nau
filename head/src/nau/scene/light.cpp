@@ -50,6 +50,14 @@ Light::~Light(void) {
 }
 
 
+void 
+Light::eventReceived(const std::string &sender,
+	const std::string &eventType,
+	const std::shared_ptr<IEventData> &evt) {
+
+}
+
+
 std::string
 Light::getType() {
 

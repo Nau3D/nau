@@ -33,7 +33,7 @@ MaterialID::setMaterialID (std::string libName, std::string matName)
 
 }
 
-Material*
+std::shared_ptr<Material> &
 MaterialID::getMaterialPtr()
 {
 	return m_MatPtr;

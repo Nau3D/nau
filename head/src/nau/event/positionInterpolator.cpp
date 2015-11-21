@@ -5,16 +5,15 @@
 using namespace nau::event_;
 
 
-PositionInterpolator::PositionInterpolator(const PositionInterpolator &c){
+PositionInterpolator::PositionInterpolator(const PositionInterpolator &c) {
 	
 	m_Name=c.m_Name;
 	m_KeyFrames = c.m_KeyFrames;
 	this->fraction=fraction;
-
 }
 
 
-PositionInterpolator::PositionInterpolator(void){
+PositionInterpolator::PositionInterpolator(void) {
 	
 	m_Name="";
 	m_KeyFrames.clear();
@@ -22,29 +21,30 @@ PositionInterpolator::PositionInterpolator(void){
 }
 
 
-PositionInterpolator::~PositionInterpolator(void){
+PositionInterpolator::~PositionInterpolator(void) {
 		
 	m_KeyFrames.clear();
 	this->removePositionListener();
 }
 
 
-void PositionInterpolator::removePositionListener(void){
+void PositionInterpolator::removePositionListener(void) {
 	nau::event_::IListener *lst;
 	lst = this;
 	EVENTMANAGER->removeListener("SET_INTERPOLATOR_FRACTION",lst);
 }
 
-void PositionInterpolator::addPositionListener(void){
+
+void PositionInterpolator::addPositionListener(void) {
 	nau::event_::IListener *lst;
 	lst = this;
 	EVENTMANAGER->addListener("SET_INTERPOLATOR_FRACTION",lst);
 }
 
-void PositionInterpolator::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt){ 
-	
-	//if(strcmp(evt->getReceiver(), &name[0])!=0 && strcmp(evt->getReceiver(), "")!=0) return;
 
+void PositionInterpolator::eventReceived(const std::string &sender, 
+	const std::string &eventType, const std::shared_ptr<IEventData> &evt) {
+	
 	float *f=(float *)evt->getData();
 	float fc=*f;
 
@@ -62,13 +62,11 @@ void PositionInterpolator::eventReceived(const std::string &sender, const std::s
 			kv.y=kv0.y+((fc-k0)*(kv1.y-kv0.y)/(k1-k0));
 			kv.z=kv0.z+((fc-k0)*(kv1.z-kv0.z)/(k1-k0));
 			kv.w=kv0.w+((fc-k0)*(kv1.w-kv0.w)/(k1-k0));
-			//nau::event_::IEventData *e= nau::event_::EventFactory::create("Vec4");
-			e.setData(&kv);
-			//FILE *f=fopen("c:/resultados.txt","a+");
-			//fprintf(f,"%f %f %f \n",kv.x,kv.y,kv.z);
-			//fclose(f);
 
-			EVENTMANAGER->notifyEvent("INTERPOLATOR_POSITION", &m_Name[0], "", &e);
+			std::shared_ptr<IEventData> e = EventFactory::Create("Vec4");
+			e->setData(&kv);
+
+			EVENTMANAGER->notifyEvent("INTERPOLATOR_POSITION", &m_Name[0], "", e);
 			return;
 		}
 	}			

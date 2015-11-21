@@ -57,7 +57,8 @@ DlgViewports::DlgViewports()
 
 
 void
-DlgViewports::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+DlgViewports::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<nau::event_::IEventData> &evt) {
 
 	if (eventType == "NEW_VIEWPORT") 
 		updateList();
@@ -77,7 +78,7 @@ void
 DlgViewports::notifyUpdate(Notification aNot, std::string vpName, std::string value) {
 
 	// sends events on behalf of the viewport
-	nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
+	std::shared_ptr<nau::event_::IEventData> e= nau::event_::EventFactory::Create("String");
 	if (aNot == NEW_VIEWPORT) {
 		e->setData(&value);
 		EVENTMANAGER->notifyEvent("NEW_VIEWPORT", vpName,"", e);
@@ -86,7 +87,6 @@ DlgViewports::notifyUpdate(Notification aNot, std::string vpName, std::string va
 		e->setData(&value);
 		EVENTMANAGER->notifyEvent("VIEWPORT_CHANGED", vpName, "", e);
 	}
-	delete e;
 }
 
 

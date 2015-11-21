@@ -9,17 +9,20 @@ namespace nau
 	{
 		class EventFloat : public IEventData
 		{
-		public:
-			float flt;
+			friend class EventFactory;
 
-			EventFloat(float flt);
-			EventFloat(const EventFloat &f);
-			EventFloat(void);
+		public:
 			~EventFloat(void);
 			
 			void setData(void *data);
 			void *getData(void);
 
+		protected:
+			EventFloat(float flt);
+			EventFloat(const EventFloat &f);
+			EventFloat(void);
+
+			float flt;
 		};
 	};
 };

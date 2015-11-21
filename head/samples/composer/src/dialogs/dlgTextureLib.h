@@ -27,7 +27,7 @@
 
 #include <nau.h>
 
-#include <nau/event/ilistener.h>
+#include <nau/event/iListener.h>
 #include <nau/material/iTexture.h>
 
 class ImageGridCellRenderer;
@@ -42,7 +42,8 @@ public:
 	void updateTexInfo(int pos);
 	std::string &getName () {return m_Name;}; 
 
-	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+	void eventReceived(const std::string &sender, const std::string &eventType, 
+		const std::shared_ptr<IEventData> &evt);
 
 	std::map<unsigned int, wxBitmap *> m_Bitmaps;
 

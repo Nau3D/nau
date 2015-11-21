@@ -9,17 +9,20 @@ namespace nau
 	{
 		class EventInt : public IEventData
 		{
-		public:
-			int flt;
+			friend class EventFactory;
 
-			EventInt(int flt);
-			EventInt(const EventInt &f);
-			EventInt(void);
+		public:
 			~EventInt(void);
 			
 			void setData(void *data);
 			void *getData(void);
 
+		protected:
+			EventInt(int flt);
+			EventInt(const EventInt &f);
+			EventInt(void);
+
+			int flt;
 		};
 	};
 };

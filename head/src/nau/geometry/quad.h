@@ -13,6 +13,8 @@ namespace nau
 			Quad(void);
 		public:
 			~Quad(void);
+			void eventReceived(const std::string & sender, const std::string & eventType, 
+				const std::shared_ptr<IEventData>& evt);
 		};
 	};
 };

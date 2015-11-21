@@ -23,8 +23,8 @@ namespace nau
 			const std::string& getLibName (void);
 			const std::string& getMaterialName (void);
 
-			Material *m_MatPtr;
-			Material *getMaterialPtr();
+			std::shared_ptr<Material> m_MatPtr;
+			std::shared_ptr<Material> &getMaterialPtr();
 		};
 	};
 };

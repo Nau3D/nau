@@ -16,6 +16,7 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -32,10 +33,7 @@ namespace nau
 
 		private:
 		   
-//			typedef enum  { FRONT_TO_BACK, BACK_TO_FRONT, NONE} orderType;
-
 			nau::material::ColorMaterial m_Color;
-//			nau::material::TextureMat *m_Texmat;
 			std::map<int, IImageTexture *> m_ImageTextures;
 
 			// ID -> (binding point, *buffer)
@@ -43,7 +41,6 @@ namespace nau
 
 			std::map<int, MaterialTexture *> m_Textures;
 
-//			std::string m_Shader;
 			IProgram *m_Shader;
 			IState *m_State;
 
@@ -57,11 +54,11 @@ namespace nau
 			bool m_useShader;
 			std::string m_Name;	
 			Material();
+			std::shared_ptr<Material> clone();
 
 		public:
 			~Material();
 
-			Material *clone();
 
 			void setName (std::string name);
 			std::string& getName ();
@@ -75,7 +72,6 @@ namespace nau
 			void setUniformBlockValues();
 
 			// Reset material to defaults
-			//void clear();
 			void enable (void);
 			void disable (void);
 			bool isEnabled (void);
@@ -88,9 +84,7 @@ namespace nau
 			bool hasBuffer(int id);
 			IMaterialBuffer *getBuffer(int id);
 			void getBufferBindings(std::vector<unsigned int> *vi);
-			//int getBufferBindingPoint(int id);
 
-//			nau::material::TextureMat* getTextures (void);
 			MaterialTexture *getMaterialTexture(int unit);
 			bool createTexture (int unit, std::string fn);
 			void attachTexture (int unit, std::string label);
@@ -102,10 +96,9 @@ namespace nau
 			void getTextureUnits(std::vector<unsigned int> *vi);
 
 			void attachProgram (std::string shaderName);
-			void Material::cloneProgramFromMaterial(Material *mat);
+			void Material::cloneProgramFromMaterial(std::shared_ptr<Material> &mat);
 			IProgram *getProgram();
 			std::string getProgramName();
-			bool isInSpecML(std::string programValueName);
 			void addProgramValue (std::string name, nau::material::ProgramValue progVal);
 			void addProgramBlockValue (std::string block, std::string name, nau::material::ProgramBlockValue progVal);
 			void enableShader(bool value);

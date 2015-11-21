@@ -155,7 +155,8 @@ Pass::Create(const std::string &passName) {
 
 
 void
-Pass::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData)  {
+Pass::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt)  {
 
 	if (eventType == "SCENE_CHANGED") 
 		updateMaterialMaps(sender);

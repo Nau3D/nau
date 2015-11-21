@@ -36,7 +36,8 @@ public:
 	static void SetParent(wxWindow *parent);
 	static wxWindow *Parent;
 
-	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+	void eventReceived(const std::string &sender, const std::string &eventType, 
+		const std::shared_ptr<IEventData> &evt);
 	void updateInfo(std::string name);
 	std::string &getName();
 

@@ -36,7 +36,7 @@ class ImageGridCellRenderer;
 #include <nau/render/opengl/glProgram.h>
 #include <nau.h>
 
-#include <nau/event/ilistener.h>
+#include <nau/event/iListener.h>
 
 //#ifndef _WX_OGL_H_
 #include "dlgMatStatepanels.h"
@@ -62,7 +62,8 @@ public:
 
 	~DlgMaterials();
 	std::string &getName () {return m_Name;}; 
-	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+	void eventReceived(const std::string &sender, const std::string &eventType, 
+		const std::shared_ptr<IEventData> &evt);
 
 	void updateDlg();
 	void updateTexture(ITexture *tex);
@@ -84,7 +85,7 @@ private:
 	std::string m_Name;
 
 	void OnClose(wxCloseEvent& event);
-	Material *getModelMaterial();
+	std::shared_ptr<Material> &getModelMaterial();
 	void OnSelectMaterial(wxCommandEvent& event);
 	void OnSelectLibMaterial(wxCommandEvent& event);
 	void updateMaterialList();
@@ -94,7 +95,7 @@ private:
 
 	void setupColorPanel(wxSizer *siz, wxWindow *parent);
 	void OnProcessColorChange( wxPropertyGridEvent& e);
-	void updateColors(Material *mm);
+	void updateColors(std::shared_ptr<Material> &mm);
 
 	/* TEXTURES */
 	wxGrid *gridTextures;
@@ -105,7 +106,7 @@ private:
 
 
 	void setupTexturesPanel(wxSizer *siz, wxWindow *parent);
-	void updateTextures(Material *mm,int index);
+	void updateTextures(std::shared_ptr<Material> &mm,int index);
 
 	void OnProcessTexturePropsChange( wxPropertyGridEvent& e);
 	void setTextureUnit(int index);
@@ -126,14 +127,14 @@ private:
 
 	void OnShaderListSelect(wxCommandEvent& event);
 	void setupShaderPanel(wxSizer *siz, wxWindow *parent);
-	void updateShader(Material *m);
+	void updateShader(std::shared_ptr<Material> &m);
 	void OnProcessUseShader(wxCommandEvent& event);
 	void OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e);
 //	void OnProcessShowGlobalUniforms(wxCommandEvent& event);
-	void updateShaderAux(Material *m);
+	void updateShaderAux(std::shared_ptr<Material> &m);
 	void addUniform(wxPGProperty *pid, ProgramValue &u,int showGlobal);
 	void addBlockUniform(wxPGProperty *pid, ProgramBlockValue &u,int showGlobal);
-	void updateUniforms(Material *m);
+	void updateUniforms(std::shared_ptr<Material> &m);
 
 	void auxSetMat4(wxPGProperty  *pid, wxPGProperty  *pid2, int edit, float *f);
 	void auxSetMat3(wxPGProperty *pid, wxPGProperty *pid2, int edit, float *f);
@@ -150,8 +151,8 @@ private:
 	void OnProcessITexPanelChange( wxPropertyGridEvent& e);
 	void OnProcessITexPanelSelect( wxCommandEvent& e);
 
-	void setPropf4Aux(std::string propName,  vec4 &values);
-	void setPropm4Aux(std::string propName,  mat4 &values);
+	void setPropf4Aux(std::string &propName,  vec4 &values);
+	void setPropm4Aux(std::string &propName,  mat4 &values);
 
 	enum {
 		DLG_MI_COMBO_MATERIAL,

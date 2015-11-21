@@ -175,7 +175,8 @@ Viewport::setPropf2(Float2Property prop, vec2& values) {
 
 
 void
-Viewport::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) {
+Viewport::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evtData) {
 
 	if (eventType != "WINDOW_SIZE_CHANGED")
 		return;

@@ -4,11 +4,12 @@
 #include "nau/event/listenerType.h"
 #include "nau/event/Ilistener.h"
 #include "nau/event/sensor.h"
-#include "nau/event/interpolator.h"
+#include "nau/event/iInterpolator.h"
 #include "nau/event/route.h"
 
-#include <vector>
+#include <memory>
 #include <map>
+#include <vector>
 
 using namespace std;
 using namespace nau::event_;
@@ -24,7 +25,8 @@ namespace nau
 			std::map<std::string, nau::event_::Interpolator*> m_Interpolators;
 			std::map<std::string, nau::event_::Route*> m_Routes;
 
-			void notify(std::string eventType, std::string sender, std::string receiver, IEventData *evt, vector<IListener *> lsts);
+			void notify(std::string eventType, std::string sender, std::string receiver, 
+				const std::shared_ptr<IEventData> &evt, vector<IListener *> lsts);
 
 		public:
 
@@ -49,7 +51,8 @@ namespace nau
 			void eraseAllListeners(void);
 			void clear(void);
 
-			void notifyEvent(std::string eventType, std::string sender, std::string receiver, IEventData *evt);
+			void notifyEvent(std::string eventType, std::string sender, std::string receiver, 
+				const std::shared_ptr<IEventData> &evt);
 
 			bool hasSensor (std::string sensorName);
 			Sensor* getSensor (std::string sensorName, std::string sClass);

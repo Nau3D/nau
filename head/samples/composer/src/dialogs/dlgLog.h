@@ -23,7 +23,7 @@
 #include "wx/wxprec.h"
 #include <wx/string.h>
 #include <string>
-#include <nau/event/ilistener.h>
+#include <nau/event/iListener.h>
 
 
 class DlgLog : public wxDialog, nau::event_::IListener
@@ -50,7 +50,8 @@ public:
 	static DlgLog* Instance () ;
 	static void SetParent(wxWindow *parent);
 	virtual std::string &getName ();
-	void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+	void eventReceived(const std::string &sender, const std::string &eventType, 
+		const std::shared_ptr<nau::event_::IEventData> &evt);
 	void updateDlg();
 	void append(std::string s);
 	void clear();

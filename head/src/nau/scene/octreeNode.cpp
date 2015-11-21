@@ -61,6 +61,14 @@ OctreeNode::~OctreeNode(void)
 }
 
 
+void
+OctreeNode::eventReceived(const std::string &sender,
+	const std::string &eventType,
+	const std::shared_ptr<IEventData> &evt) {
+
+}
+
+
 void 
 OctreeNode::getMaterialNames(std::set<std::string> *nameList)
 {

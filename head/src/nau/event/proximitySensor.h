@@ -35,12 +35,12 @@ namespace nau
 				bool previous;
 
 			public:
-				ProximitySensor(std::string name, bool enabled, nau::math::vec3 center, nau::math::vec3 size); 
+				ProximitySensor(std::string name, bool enabled, nau::math::vec3 center, 
+					nau::math::vec3 size); 
 				ProximitySensor(const ProximitySensor &c);
 				ProximitySensor(void);
 				~ProximitySensor(void);
 
-			//	void setProximitySensor(std::string name, bool enabled, nau::math::vec3 center, nau::math::vec3 size);
 				bool getEnabled(void);
 				nau::math::vec3 getCenter(void);
 				nau::math::vec3 getSize(void);
@@ -49,7 +49,8 @@ namespace nau
 				void addProximityListener(void);
 				nau::math::vec3 getMin(void);
 				nau::math::vec3 getMax(void);
-				void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+				void eventReceived(const std::string &sender, const std::string &eventType, 
+					const std::shared_ptr<IEventData> &evt);
 				void init();
 
 				const std::string &getBoolPropNames(unsigned int i);

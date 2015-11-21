@@ -10,17 +10,20 @@ namespace nau
 	{
 		class EventVec3: public IEventData
 		{
-		public:
-			nau::math::vec3 v;
+			friend class EventFactory;
 
-			EventVec3(nau::math::vec3 v);
-			EventVec3(const EventVec3 &c);
-			EventVec3(void);
+		public:
 			~EventVec3(void);
 			
 			void setData(void *data);
 			void *getData(void);
 
+		protected:
+			EventVec3(nau::math::vec3 v);
+			EventVec3(const EventVec3 &c);
+			EventVec3(void);
+
+			nau::math::vec3 v;
 		};
 	};
 };

@@ -56,7 +56,8 @@ DlgCameras::DlgCameras()
 
 
 void
-DlgCameras::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt) {
+DlgCameras::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<nau::event_::IEventData> &evt) {
 
 	if (eventType == "NEW_VIEWPORT")
 		updateList();
@@ -69,7 +70,7 @@ void
 DlgCameras::notifyUpdate(Notification aNot, std::string camName, std::string value) {
 
 	// sends events on behalf of the camera
-	nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
+	std::shared_ptr<nau::event_::IEventData> e = nau::event_::EventFactory::Create("String");
 	if (aNot == NEW_CAMERA) {
 		e->setData(&value);
 		EVENTMANAGER->notifyEvent("NEW_CAMERA", camName,"", e);
@@ -78,7 +79,6 @@ DlgCameras::notifyUpdate(Notification aNot, std::string camName, std::string val
 		e->setData(&value);
 		EVENTMANAGER->notifyEvent("CAMERA_CHANGED", camName ,"", e);
 	}
-	delete e;
 }
 
 

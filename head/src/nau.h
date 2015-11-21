@@ -14,7 +14,7 @@
 
 #include "nau/errors.h"
 #include "nau/event/eventManager.h"
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 #include "nau/material/materialLibManager.h"
 #include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
@@ -111,7 +111,8 @@ namespace nau {
 		std::vector<std::string> &getContextList();
 
 		// Events
-		void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evt);
+		void eventReceived(const std::string &sender, const std::string &eventType, 
+			const std::shared_ptr<IEventData> &evt);
 
 
 		void setActiveCameraName(const std::string &aCamName);

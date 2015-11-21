@@ -3,7 +3,7 @@
 
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 #include "nau/geometry/iBoundingVolume.h"
 #include "nau/math/matrix.h"
 #include "nau/render/iRenderable.h"
@@ -92,6 +92,8 @@ namespace nau
 			nau::math::mat4 m_Transform, m_GlobalTransform, m_ResultTransform;
 
 			void calculateBoundingVolume (void);
+			void eventReceived(const std::string & sender, const std::string & eventType, 
+				const std::shared_ptr<IEventData>& evt);
 			void updateTransform();
 		};
 	};

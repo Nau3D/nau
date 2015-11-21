@@ -55,11 +55,12 @@ DlgShaders::DlgShaders()
 	this->SetTitle(wxT("Nau - Programs"));
 }
 
+
 void
 DlgShaders::notifyUpdate(Notification aNot, std::string shaderName, std::string value) {
 
 	// sends events on behalf of the shader
-	nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
+	std::shared_ptr<nau::event_::IEventData> e = nau::event_::EventFactory::Create("String");
 	if (aNot == NEW_SHADER) {
 		e->setData(&shaderName);
 		EVENTMANAGER->notifyEvent("NEW_SHADER", shaderName,"", e);
@@ -68,9 +69,8 @@ DlgShaders::notifyUpdate(Notification aNot, std::string shaderName, std::string 
 		e->setData(&value);
 		EVENTMANAGER->notifyEvent("SHADER_CHANGED", shaderName ,"", e);
 	}
-	delete e;
-
 }
+
 
 void DlgShaders::updateDlg() {
 
@@ -78,10 +78,8 @@ void DlgShaders::updateDlg() {
 	updateList();
 	list->SetSelection(0);
 	update();
-	//m_parent->Refresh();	
-
-
 }
+
 
 void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 
@@ -99,7 +97,6 @@ void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 	siz->Add(sizH1, 0, wxEXPAND, 5);
 
 	/* MIDDLE: Property grid */
-
 
 	pg = new wxPropertyGridManager(this, DLG_PROPS,
 				wxDefaultPosition, wxDefaultSize,
@@ -161,11 +158,6 @@ void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 
 	sizerL->Add(m_Log,1, wxALL|wxEXPAND, 5);
 	siz->Add(sizerL,1,wxALL|wxEXPAND,5);
-
-
-//	wxBoxSizer *sizH2 = new wxBoxSizer(wxHORIZONTAL);
-//	sizH2->Add(siz,1,wxALIGN_CENTER_HORIZONTAL | wxGROW | wxALL  ,5);
-//	siz->Add(sizH2,1,wxGROW|wxALL|wxEXPAND,5);
 
 	/* BOTTOM: Add Shader Button */
 
@@ -229,8 +221,6 @@ void DlgShaders::OnPropsChange( wxPropertyGridEvent& e) {
 	notifyUpdate(PROPS_CHANGED, m_active,std::string(name.mb_str()));
 
 }
-
-
 
 
 void

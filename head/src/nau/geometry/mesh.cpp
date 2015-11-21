@@ -39,6 +39,14 @@ Mesh::~Mesh(void) {
 
 
 void 
+Mesh::eventReceived(const std::string &sender,
+	const std::string &eventType,
+	const std::shared_ptr<IEventData> &evt) {
+
+}
+
+
+void 
 Mesh::setName (std::string name) {
 
 	m_Name = name;

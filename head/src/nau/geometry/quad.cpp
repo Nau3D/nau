@@ -56,6 +56,20 @@ Quad::Quad(void) :
 	setRenderable (renderable);
 }
 
+
 Quad::~Quad(void) {
 
 }
+
+
+void
+Quad::eventReceived(const std::string &sender,
+	const std::string &eventType,
+	const std::shared_ptr<IEventData> &evt) {
+
+
+}
+
+
+
+

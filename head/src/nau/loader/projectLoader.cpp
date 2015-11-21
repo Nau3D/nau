@@ -930,7 +930,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (!alreadyThere) {
 					if (pMaterial) {
 						if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME, pMaterial)) {
-							Material *mat = MATERIALLIBMANAGER->createMaterial(pMaterial);
+							MATERIALLIBMANAGER->createMaterial(pMaterial);
 						}
 						go->setMaterial(pMaterial);
 					}
@@ -1789,9 +1789,8 @@ ProjectLoader::loadPassTexture(TiXmlHandle hPass, Pass *aPass)
 		if (!RESOURCEMANAGER->hasTexture(fullName))
 			NAU_THROW("File %s\nPass %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), fullName.c_str());
 
-		Material *srcMat, *dstMat;
-		srcMat = MATERIALLIBMANAGER->getDefaultMaterial("__Quad");
-		dstMat = srcMat->clone();
+		std::shared_ptr<Material> &srcMat = MATERIALLIBMANAGER->getMaterialFromDefaultLib("__Quad");
+		std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->cloneMaterial(srcMat);
 		dstMat->attachTexture(0,fullName);
 		MATERIALLIBMANAGER->addMaterial(aPass->getName(),dstMat);
 		aPass->remapMaterial ("__Quad", aPass->getName(), "__Quad");
@@ -3046,12 +3045,10 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		if (names.size() == 0)
 			NAU_THROW("File %s\nPass %s\nInjection map error: No materials match %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pMat);
 
-		Material *dstMat, *srcMat;
-
 		for(auto& name:names) {
 
-			Material *srcMat = defLib->getMaterial(name);
-			dstMat = srcMat->clone();
+			std::shared_ptr<Material> &srcMat = defLib->getMaterial(name);
+			std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->cloneMaterial(srcMat);
 			MATERIALLIBMANAGER->addMaterial(aPass->getName(), dstMat);
 
 			aPass->remapMaterial (name, aPass->getName(), name);
@@ -3075,7 +3072,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		
 			for(auto& name: names) {
 
-				dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+				std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
 				dstMat->setState(RESOURCEMANAGER->getState(fullName));
 			}
 		}
@@ -3097,7 +3094,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 
 			for(auto& name:names) {
 
-				dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+				std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
 				dstMat->cloneProgramFromMaterial(MATERIALLIBMANAGER->getMaterial(pLib,pMat));
 			}
 		}
@@ -3125,7 +3122,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 
 				for(auto &name:names) {
 
-					dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+					std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
 					dstMat->attachTexture(unit, RESOURCEMANAGER->getTexture(s_pFullName));
 					std::map<std::string, std::unique_ptr<Attribute>> &attribs = ITextureSampler::Attribs.getAttributes();
 
@@ -3164,7 +3161,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 
 				for (auto& name:names) {
 
-					dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+					std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
 					ITexture *t = RESOURCEMANAGER->getTexture(s_pFullName);
 					dstMat->attachImageTexture(t->getLabel(), unit, t->getPropi(ITexture::ID));
 
@@ -3197,7 +3194,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 
 				for (auto &name:names) {
 
-					dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+					std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
 					IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
 					IMaterialBuffer *imb = IMaterialBuffer::Create(buffer);
 					//IBuffer *b = buffer->clone();
@@ -3232,10 +3229,10 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 				NAU_THROW("File %s\nPass%s\nInjection map error: Material %s is not defined in lib %s", 
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pMat, pLib);
 
-			srcMat = MATERIALLIBMANAGER->getMaterial(pLib,pMat);
+			std::shared_ptr<Material> &srcMat = MATERIALLIBMANAGER->getMaterial(pLib,pMat);
 			for (auto &name : names) {
 
-				dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+				std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
 				if (!pAmbient && !pDiffuse && !pSpecular && !pEmission && !pShininess)
 					dstMat->getColor().clone(srcMat->getColor());
 				if (pAmbient && !strcmp("true",pAmbient))
@@ -3930,7 +3927,7 @@ MATERIALCOLOR
 	
 -----------------------------------------------------------------------------*/
 void 
-ProjectLoader::loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
+ProjectLoader::loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux;
 	pElemAux = handle.FirstChild ("color").Element();
@@ -3962,7 +3959,7 @@ The name can refer to a texture in another lib, in which case the syntax is lib_
 -----------------------------------------------------------------------------*/
 
 void 
-ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
+ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux;
 	pElemAux = handle.FirstChild ("imageTextures").FirstChild ("imageTexture").Element();
@@ -4017,7 +4014,7 @@ The name can refer to a buffer in another lib, in which case the syntax is lib_n
 -----------------------------------------------------------------------------*/
 
 void
-ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
+ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux;
 	pElemAux = handle.FirstChild("buffers").FirstChild("buffer").Element();
@@ -4065,7 +4062,7 @@ The name can refer to a texture in another lib, in which case the syntax is lib_
 -----------------------------------------------------------------------------*/
 
 void 
-ProjectLoader::loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
+ProjectLoader::loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux;
 	pElemAux = handle.FirstChild ("textures").FirstChild ("texture").Element();
@@ -4110,7 +4107,7 @@ MATERIALSHADER
 	
 -----------------------------------------------------------------------------*/
 void 
-ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
+ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux, *pElemAux2;
 
@@ -4184,20 +4181,6 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 			}
 			std::string s(pType);
 
-			//if (pBlock) {
-			//	std::string sBlock = pBlock;
-			//	std::string uniName = pUniformName;
-			//	IUniformBlock *aBlock = UNIFORMBLOCKMANAGER->getBlock(sBlock);
-			//	if (aBlock == NULL) {
-			//		NAU_THROW("Uniform Block %s is not defined", sBlock.c_str());
-			//	}
-			//	if (!aBlock->hasUniform(uniName))
-			//		NAU_THROW("Uniform Block %s does not hava a uniform named %s", sBlock.c_str(), uniName.c_str());
-
-			//	if (!aBlock->getUniformType(uniName) != Enums::getType(pType))
-			//		NAU_THROW("Uniform Block %s, uniform %s - type does not match", sBlock.c_str(), uniName.c_str());
-			//}
-
 			if (s == "TEXTURE" && strcmp(pContext, "CURRENT")) {
 				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(),pContext);
 				if (!RESOURCEMANAGER->hasTexture(s_pFullName)) {
@@ -4245,9 +4228,6 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, Materia
 					aMat->addProgramValue(pUniformName, 
 						ProgramValue(pUniformName, pType, pContext, pComponent, id));
 			}
-				//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
-
-			
 		}
 	}
 	aMat->checkProgramValuesAndUniforms();
@@ -4265,7 +4245,7 @@ where bla is previously defined in the mat lib.
 -----------------------------------------------------------------------------*/
 
 void 
-ProjectLoader::loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, Material *aMat)
+ProjectLoader::loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux;
 
@@ -4277,16 +4257,12 @@ ProjectLoader::loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, Material
 			NAU_THROW("MatLib %s\nMaterial %s\nState requires a name", aLib->getName().c_str(), aMat->getName().c_str());
 		}
 		else {
-			//sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pStateName);
 			std::string fullName = aLib->getName() + "::" + pStateName;
 			if (!RESOURCEMANAGER->hasState(fullName))
 				NAU_THROW("MatLib %s\nMaterial %s\nState %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pStateName);
 
 			aMat->setState(RESOURCEMANAGER->getState(fullName));
 		}
-		//else { // definition inline
-		//	loadState(pElemAux,aLib,aMat,aMat->getState());
-		//}
 	}
 }
 
@@ -4386,7 +4362,7 @@ ProjectLoader::loadMatLib (std::string file)
 
 		//Material *mat = new Material;
 		//mat->setName (pMaterialName);
-		Material *mat = MATERIALLIBMANAGER->createMaterial(pName,pMaterialName);
+		std::shared_ptr<Material> &mat = MATERIALLIBMANAGER->createMaterial(pName,pMaterialName);
 
 		loadMaterialColor(handle,aLib,mat);
 		loadMaterialTextures(handle,aLib,mat);

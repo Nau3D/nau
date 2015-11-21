@@ -29,18 +29,12 @@ OctreeByMatScene::OctreeByMatScene(void) : IScenePartitioned(),
 
 OctreeByMatScene::~OctreeByMatScene(void) {
 
-	//delete m_pGeometry;
-
-	//while (!m_SceneObjects.empty()) {
-	//	delete(*m_SceneObjects.begin());
-	//	m_SceneObjects.erase(m_SceneObjects.begin());
-	//}
 }
 
 
 void
 OctreeByMatScene::eventReceived(const std::string &sender, 
-	const std::string &eventType, nau::event_::IEventData *evt) {	
+	const std::string &eventType, const std::shared_ptr<IEventData> &evt) {
 	vec4 *p = (vec4 *)evt->getData();
 
 	if (eventType == "SET_POSITION") {

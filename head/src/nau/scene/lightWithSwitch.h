@@ -4,7 +4,7 @@
 // Marta
 #include "nau/scene/light.h"
 #include "nau/event/iEventData.h"
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 
 namespace nau
 {
@@ -24,7 +24,8 @@ namespace nau
 			void lightOn(void);
 			void addLightListener(void);
 			void removeLightListener(void);
-			void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+			void eventReceived(const std::string &sender, const std::string &eventType, 
+				const std::shared_ptr<IEventData> &evt);
 		};
 	};
 };

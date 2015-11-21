@@ -33,7 +33,7 @@
 class ImageGridCellRenderer;
 
 #include "nau.h"
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 #include "nau/render/pipeline.h"
 #include "nau/material/materialLibManager.h"
 #include "nau/render/pass.h"
@@ -56,7 +56,8 @@ class DlgPass : public wxDialog, IListener
 
 		std::string &getName () {return m_Name;};
 
-		void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+		void eventReceived(const std::string &sender, const std::string &eventType, 
+			const std::shared_ptr<IEventData> &evt);
 
 		void updateDlg();	
 

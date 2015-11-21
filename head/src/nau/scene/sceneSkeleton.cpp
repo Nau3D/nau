@@ -21,7 +21,7 @@ SceneSkeleton::compile() {
 
 void 
 SceneSkeleton::eventReceived(const std::string &sender, const std::string &eventType, 
-		IEventData *evt) {
+	const std::shared_ptr<IEventData> &evt) {
 
 }
 

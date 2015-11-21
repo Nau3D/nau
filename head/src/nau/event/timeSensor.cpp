@@ -128,7 +128,8 @@ void TimeSensor::addTimeListener(void){
 }
 
 
-void TimeSensor::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt){
+void TimeSensor::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt){
 	
 	float t;
 	t = (float)clock()/CLOCKS_PER_SEC;
@@ -136,18 +137,18 @@ void TimeSensor::eventReceived(const std::string &sender, const std::string &eve
 	if (eventType == "ACTIVATE") {
 
 		BoolProps[ENABLED] = true;
-		//nau::event_::IEventData *e = nau::event_::EventFactory::create("Float");
-		e.setData(&t);
+		std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Float");
+		e->setData(&t);
 		startTime = t + FloatProps[SECONDS_TO_START];
 		this->stopTime = startTime + FloatProps[CYCLE_INTERVAL];
-		EVENTMANAGER->notifyEvent("TIMESENSOR_IS_ACTIVE", m_Name, "", &e);
+		EVENTMANAGER->notifyEvent("TIMESENSOR_IS_ACTIVE", m_Name, "", e);
 	}
 	else if(eventType == "DEACTIVATE") {
 
 		BoolProps[ENABLED] = false;
-		//nau::event_::IEventData *e = nau::event_::EventFactory::create("Float");
-		e.setData(&t);
-		EVENTMANAGER->notifyEvent("TIMESENSOR_IS_FINISHED", m_Name, "", &e);
+		std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Float");
+		e->setData(&t);
+		EVENTMANAGER->notifyEvent("TIMESENSOR_IS_FINISHED", m_Name, "", e);
 	}
 
 	if(BoolProps[ENABLED]){
@@ -161,27 +162,25 @@ void TimeSensor::eventReceived(const std::string &sender, const std::string &eve
 			}
 			else {
 				BoolProps[ENABLED] = false;
-				//nau::event_::IEventData *e = nau::event_::EventFactory::create("Float");
-				e.setData(&t);
-				EVENTMANAGER->notifyEvent("TIMESENSOR_IS_FINISHED", m_Name, "", &e);
+				std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Float");
+				e->setData(&t);
+				EVENTMANAGER->notifyEvent("TIMESENSOR_IS_FINISHED", m_Name, "", e);
 				return;
 			}
 		}
 		if(t > startTime){
-
-			//nau::event_::IEventData *e = nau::event_::EventFactory::create("Float");
-			
 			float fr = (float)(t - startTime) / FloatProps[CYCLE_INTERVAL];
-			e.setData(&fr);
-			EVENTMANAGER->notifyEvent("TIMESENSOR_FRACTION_CHANGED", m_Name, "", &e);
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Float");
+			e->setData(&fr);
+			EVENTMANAGER->notifyEvent("TIMESENSOR_FRACTION_CHANGED", m_Name, "", e);
 		}
 	}
 }
 
 
 const std::string &
-TimeSensor::getBoolPropNames(unsigned int i) 
-{
+TimeSensor::getBoolPropNames(unsigned int i) {
+
 	if (i < COUNT_BOOLPROP)
 		return BoolPropNames[i];
 	else
@@ -190,8 +189,8 @@ TimeSensor::getBoolPropNames(unsigned int i)
 
 
 const std::string &
-TimeSensor::getFloatPropNames(unsigned int i) 
-{
+TimeSensor::getFloatPropNames(unsigned int i) {
+
 	if (i < COUNT_FLOATPROP)
 		return FloatPropNames[i];
 	else
@@ -200,24 +199,24 @@ TimeSensor::getFloatPropNames(unsigned int i)
 
 
 void 
-TimeSensor::setBool(unsigned int prop, bool value)
-{
+TimeSensor::setBool(unsigned int prop, bool value) {
+
 	if (prop < COUNT_BOOLPROP)
 		BoolProps[prop] = value;	
 }
 
 
 void 
-TimeSensor::setFloat(unsigned int prop, float value)
-{
+TimeSensor::setFloat(unsigned int prop, float value) {
+
 	if (prop < COUNT_FLOATPROP)
 		FloatProps[prop] = value;	
 }
 
 
 float 
-TimeSensor::getFloat(unsigned int prop)
-{
+TimeSensor::getFloat(unsigned int prop) {
+
 	assert(prop < COUNT_FLOATPROP);
 
 	return (FloatProps[prop]);
@@ -225,8 +224,8 @@ TimeSensor::getFloat(unsigned int prop)
 
 
 bool 
-TimeSensor::getBool(unsigned int prop)
-{
+TimeSensor::getBool(unsigned int prop) {
+
 	assert(prop < COUNT_BOOLPROP);
 
 	return (BoolProps[prop]);	
@@ -234,7 +233,7 @@ TimeSensor::getBool(unsigned int prop)
 
 
 void 
-TimeSensor::init(){
+TimeSensor::init() {
 
 	float t;
 	t=(float)clock()/CLOCKS_PER_SEC;

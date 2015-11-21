@@ -87,19 +87,16 @@ DlgTextureLib::notifyUpdate(Notification aNot, std::string texName, std::string 
 
 	// sends events on behalf of the light
 	if (aNot == NEW_TEXTURE) {
-		nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
+		std::shared_ptr<nau::event_::IEventData> e = nau::event_::EventFactory::Create("String");
 		e->setData(&texName);
 		EVENTMANAGER->notifyEvent("NEW_TEXTURE", texName,"", e);
-		delete e;
 	}
 	else if (aNot == TEXTURE_ICON_UPDATE) {
-		nau::event_::IEventData *e= nau::event_::EventFactory::create("String");
+		std::shared_ptr<nau::event_::IEventData> e = nau::event_::EventFactory::Create("String");
 		std::string st = "";
 		e->setData(&st);
 		EVENTMANAGER->notifyEvent("NEW_TEXTURE", "","", e);
-		delete e;
 	}
-
 }
 
 

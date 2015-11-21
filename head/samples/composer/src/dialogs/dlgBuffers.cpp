@@ -778,18 +778,19 @@ DlgDbgBuffers::getName () {
 
 
 DlgDbgBuffers::BufferSettings::BufferSettings() :
-lines(16),
-currentPage(0),
-ID(0),
-size(0),
-types({}),
-lineSize(0)
+	lines(16),
+	currentPage(0),
+	ID(0),
+	size(0),
+	types({}),
+	lineSize(0)
 {
 }
 
 void
-DlgDbgBuffers::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt)
-{
+DlgDbgBuffers::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt) {
+
 }
 
 

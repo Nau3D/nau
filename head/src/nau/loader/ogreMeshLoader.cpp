@@ -794,9 +794,9 @@ OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, IRenderable *m, s
 		else
 			operationType = TRIANGLE_LIST;
 			
-		Material *mat;
+		std::shared_ptr<Material> mat;
 		if (0 == pMaterialName)  // Material is required
-			mat = MATERIALLIBMANAGER->createMaterial("Default Material");					
+			mat = MATERIALLIBMANAGER->createMaterial("Default Ogre Material");					
 		else
 			mat = MATERIALLIBMANAGER->createMaterial(pMaterialName);
 		//MATERIALLIBMANAGER->addMaterial(DEFAULTMATERIALLIBNAME, mat);

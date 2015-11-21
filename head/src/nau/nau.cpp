@@ -137,17 +137,10 @@ Nau::Nau() :
 
 Nau::~Nau() {
 
-	if (m_pMaterialLibManager)
-		delete MATERIALLIBMANAGER;
-	if (m_pEventManager) {
-		delete EVENTMANAGER;
-	}
-	//if (m_pRenderManager)
-	//	RENDERMANAGER->clear();
+	delete MATERIALLIBMANAGER;
+	delete EVENTMANAGER;
 	delete RENDERMANAGER;
-
-	if (m_pResourceManager)
-		delete RESOURCEMANAGER;
+	delete RESOURCEMANAGER;
 
 	delete m_DefaultState; 
 	delete m_pAPISupport;
@@ -969,7 +962,8 @@ Nau::getContextList() {
 
 
 void
-Nau::eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData) {
+Nau::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<nau::event_::IEventData> &evtData) {
 
 	if (eventType == "WINDOW_SIZE_CHANGED") {
 	

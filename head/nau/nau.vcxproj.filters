@@ -657,12 +657,6 @@
     <ClInclude Include="..\src\nau\event\iEventData.h">
       <Filter>Source Files\event</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\nau\event\ilistener.h">
-      <Filter>Source Files\event</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\event\interpolator.h">
-      <Filter>Source Files\event</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\nau\event\interpolatorFactory.h">
       <Filter>Source Files\event</Filter>
     </ClInclude>
@@ -1058,6 +1052,12 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\math\data.h">
       <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\iInterpolator.h">
+      <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\event\iListener.h">
+      <Filter>Source Files\event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

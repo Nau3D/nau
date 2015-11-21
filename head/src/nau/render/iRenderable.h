@@ -4,7 +4,7 @@
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"
 #include "nau/config.h"
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 #include "nau/math/vec3.h"
 #include "nau/geometry/indexData.h"
 #include "nau/geometry/vertexData.h"

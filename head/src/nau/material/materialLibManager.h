@@ -22,6 +22,7 @@ namespace nau
 		private:
 			std::map<std::string, nau::material::MaterialLib*> m_LibManager;
 			MaterialLib *m_DefaultLib;
+			MaterialLibManager(const MaterialLibManager&);
 
 
 		public:
@@ -30,30 +31,23 @@ namespace nau
 
 			void clear();
 
-			bool hasLibrary (std::string lib);
-			nau::material::MaterialLib* getLib(std::string libName);
+			bool hasLibrary (const std::string &lib);
+			nau::material::MaterialLib* getLib(const std::string &libName);
 
-			bool hasMaterial (std::string aLibrary, std::string name);
-			void addMaterial (std::string aLibrary, nau::material::Material* aMaterial);
-			Material* getDefaultMaterial (std::string name);
-			Material* getMaterial (nau::material::MaterialID &materialID);
-			Material* getMaterial (std::string lib, std::string material);
+			bool hasMaterial (const std::string &aLibrary, const std::string &name);
+			void addMaterial (const std::string &aLibrary, std::shared_ptr<Material> &aMaterial);
+			std::shared_ptr<Material> &getMaterialFromDefaultLib(const std::string &name);
+			std::shared_ptr<Material> &getMaterial(nau::material::MaterialID &materialID);
+			std::shared_ptr<Material> &getMaterial (const std::string &lib, const std::string &material);
 
-			Material* createMaterial(std::string lib, std::string material);
-			Material* createMaterial(std::string material);
-
+			std::shared_ptr<Material> createMaterial(const std::string &lib, const std::string &material);
+			std::shared_ptr<Material> createMaterial(const std::string &material);
+			std::shared_ptr<Material> cloneMaterial(std::shared_ptr<Material> &);
 
 			void getLibNames (std::vector<std::string>* );
 			void getMaterialNames (const std::string &lib, std::vector<std::string> *ret);
 			
 			unsigned int getNumLibs();
-
-		private:
-			MaterialLibManager(const MaterialLibManager&);
-			MaterialLibManager& operator= (const MaterialLibManager&);
-
-			// adds some materials 
-			//void addOwnMaterials();
 		};
 	};
 };

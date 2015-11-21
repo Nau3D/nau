@@ -1,15 +1,15 @@
 #ifndef MATERIALLIB_H
 #define MATERIALLIB_H
 
-#include <string>
-#include <map>
-#include <fstream>
-#include <iostream>
-
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 #include "nau/material/material.h"
 
-//include "filenames.h"
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <map>
+#include <string>
+
 
 namespace nau
 {
@@ -20,34 +20,27 @@ namespace nau
 
 		private:
 		   
-			std::map<std::string, nau::material::Material*> m_MaterialLib;
+			std::map<std::string, std::shared_ptr<Material>> m_MaterialLib;
 			std::string m_LibName;
 
-			Material p_Default;
-
-			//std::string m_Filename;
+			std::shared_ptr<Material> p_Default;
 
 		public:
-			MaterialLib (std::string libName);
+			MaterialLib (const std::string &libName);
 			~MaterialLib();
 
-			void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+			void eventReceived(const std::string &sender, const std::string &eventType, 
+				const std::shared_ptr<nau::event_::IEventData> &evt);
 
 			void clear();
 			std::string &getName();
 			
-			bool hasMaterial (std::string materialName);
-			void addMaterial (nau::material::Material* aMaterial); /***MARK***/ //To be removed, probably
-			nau::material::Material* getMaterial(std::string s);
+			bool hasMaterial (const std::string &materialName);
+			void addMaterial (std::shared_ptr<Material> &aMaterial);
+			std::shared_ptr<Material> &getMaterial(const std::string &);
 			
 			void getMaterialNames(std::vector<std::string>* ret);
 			void getMaterialNames(const std::string &aName, std::vector<std::string>* ret);
-
-			//void load(std::string &filename);
-			//void save(std::string path);
-			//void save(std::ofstream &outf, std::string path);
-
-			//void add(Material *mat);
 		};
 	};
 };

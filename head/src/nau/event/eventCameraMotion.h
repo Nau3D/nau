@@ -10,16 +10,20 @@ namespace nau
 	{
 		class EventCameraMotion : public IEventData
 		{
+			friend class EventFactory;
+
 		public:
-			nau::event_::CameraMotion cam;
-			
-			EventCameraMotion(nau::event_::CameraMotion cam);
-			EventCameraMotion(const EventCameraMotion &c);
-			EventCameraMotion(void);
 			~EventCameraMotion(void);
 			
 			void setData(void *data);
-			void *getData(void);			
+			void *getData(void);
+
+		protected:
+			EventCameraMotion(nau::event_::CameraMotion cam);
+			EventCameraMotion(const EventCameraMotion &c);
+			EventCameraMotion(void);
+
+			nau::event_::CameraMotion cam;
 		};
 	};
 };

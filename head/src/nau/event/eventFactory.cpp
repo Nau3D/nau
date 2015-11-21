@@ -11,36 +11,36 @@
 using namespace nau::event_;
 using namespace std;
 
-nau::event_::IEventData* 
-EventFactory::create (std::string type)
+std::shared_ptr<IEventData>
+EventFactory::Create (std::string type)
 {
 	if ("String" == type) {
-		return new nau::event_::EventString;
+		return std::shared_ptr<IEventData>(new nau::event_::EventString);
 	}
 
 	if ("Vec3" == type) {
-		return new nau::event_::EventVec3;
+		return std::shared_ptr<IEventData>(new nau::event_::EventVec3);
 	}
 
 	if ("Vec4" == type) {
-		return new nau::event_::EventVec4;
+		return std::shared_ptr<IEventData>(new nau::event_::EventVec4);
 	}
 
 	if ("Float" == type) {
-		return new nau::event_::EventFloat;
+		return std::shared_ptr<IEventData>(new nau::event_::EventFloat);
 	}
 
 	if ("Camera Orientation" == type) {
-		return new nau::event_::EventCameraOrientation;
+		return std::shared_ptr<IEventData>(new nau::event_::EventCameraOrientation);
 	}
 
 	if ("Camera Motion" == type) {
-		return new nau::event_::EventCameraMotion;
+		return std::shared_ptr<IEventData>(new nau::event_::EventCameraMotion);
 	}
 	if ("Int" == type) {
-		return new nau::event_::EventInt;
+		return std::shared_ptr<IEventData>(new nau::event_::EventInt);
 	}
 
 	assert("EventFactory: invalid type");
-	return 0;
+	return std::shared_ptr<IEventData>();
 }

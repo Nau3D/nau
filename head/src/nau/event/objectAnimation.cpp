@@ -46,25 +46,17 @@ SceneObject *ObjectAnimation::getObject(void){
 	return object;
 }
 
-void ObjectAnimation::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt){ 
+void ObjectAnimation::eventReceived(const std::string &sender, 
+	const std::string &eventType, const std::shared_ptr<IEventData> &evt){
 		
 	vec3 *f=(vec3 *)evt->getData();
 	vec3 fc=*f;
 
 	if(object!=0){
-				//verificar na animação como mudar a posição de um objecto polySurface1219
 		object->_getTransformPtr()->translate (fc);
 	}	
-	nau::event_::IEventData *e= nau::event_::EventFactory::create("Vector");
+	std::shared_ptr<IEventData> e = EventFactory::Create("Vec3");
 	e->setData(&fc);
 	EVENTMANAGER->notifyEvent("OBJECT_POSITION", &name[0], "", e);
-	delete e;
-	return;
-			
 }
 
-//void ObjectAnimation::init(std::string name, ISceneObject *o){
-//	this->name=name;
-//	this->object=o;
-//	this->addAnimationListener();
-//}

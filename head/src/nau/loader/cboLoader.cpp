@@ -760,7 +760,7 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 void 
 CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f) {
 
-	Material *aMaterial = MATERIALLIBMANAGER->getDefaultMaterial (matName); 
+	std::shared_ptr<Material> &aMaterial = MATERIALLIBMANAGER->getMaterialFromDefaultLib (matName);
 
 	_writeString (matName, f);
 
@@ -796,13 +796,12 @@ CBOLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f
 void
 CBOLoader::_readMaterial(std::string path, std::fstream &f) {
 
-	Material* aMaterial;// = new Material;
 
 	// read materials name
 	char buffer[1024];
 	_readString(buffer, f);
-	//aMaterial->setName (buffer);
-	aMaterial = MATERIALLIBMANAGER->createMaterial(buffer);
+
+	std::shared_ptr<Material> &aMaterial = MATERIALLIBMANAGER->createMaterial(buffer);
 
 	float values[4];
 	float value;

@@ -69,6 +69,9 @@ namespace nau
 			
 			virtual ~OctreeNode(void);
 
+			void eventReceived(const std::string & sender, const std::string & eventType, 
+				const std::shared_ptr<IEventData>& evt);
+
 
 		protected:
 			void _compile (void);

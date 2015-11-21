@@ -15,6 +15,9 @@ namespace nau {
 
 			static std::shared_ptr<Pass> Create(const std::string &name);
 
+			void eventReceived(const std::string & sender, const std::string & eventType, 
+				const std::shared_ptr<IEventData>& evt);
+
 			void prepare (void);
 			void restore (void);
 			void doPass (void);

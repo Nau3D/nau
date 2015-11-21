@@ -1,6 +1,7 @@
 #ifndef EventString_H
 #define EventString_H
 
+#include "nau/event/eventFactory.h"
 #include "nau/event/iEventData.h"
 #include <string>
 
@@ -10,17 +11,19 @@ namespace nau
 	{
 		class EventString : public IEventData
 		{
-		public:
-			std::string m_Str;
+			friend class EventFactory;
 
-			//EventString(std::string *str);
-			EventString(const EventString &s);
-			EventString(void);
+		public:
 			~EventString(void);
 			
 			void setData(void *data);			
 			void *getData(void);
 
+		protected:
+			EventString(const EventString &s);
+			EventString(void);
+
+			std::string m_Str;
 		};
 	};
 };

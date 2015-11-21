@@ -681,6 +681,7 @@
     <ClInclude Include="..\src\nau.h" />
     <ClInclude Include="..\src\nau\enums.h" />
     <ClInclude Include="..\src\nau\errors.h" />
+    <ClInclude Include="..\src\nau\event\iListener.h" />
     <ClInclude Include="..\src\nau\geometry\boundingBox.h" />
     <ClInclude Include="..\src\nau\geometry\boundingVolumeFactory.h" />
     <ClInclude Include="..\src\nau\geometry\font.h" />
@@ -884,8 +885,7 @@
     <ClInclude Include="..\src\nau\event\eventVec3.h" />
     <ClInclude Include="..\src\nau\event\eventVec4.h" />
     <ClInclude Include="..\src\nau\event\iEventData.h" />
-    <ClInclude Include="..\src\nau\event\ilistener.h" />
-    <ClInclude Include="..\src\nau\event\interpolator.h" />
+    <ClInclude Include="..\src\nau\event\iInterpolator.h" />
     <ClInclude Include="..\src\nau\event\interpolatorFactory.h" />
     <ClInclude Include="..\src\nau\event\listenerType.h" />
     <ClInclude Include="..\src\nau\event\objectAnimation.h" />

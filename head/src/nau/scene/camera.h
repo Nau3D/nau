@@ -67,16 +67,15 @@ namespace nau
 			void setPropf4(Float4Property prop, float r, float g, float b, float a);
 			void setPropf(FloatProperty prop, float value);
 			void setPrope(EnumProperty prop, int value);
-			// Note: no validation is performed!
-			//void setProp(int prop, Enums::DataType type, void *value);
 
-			//const mat4 &getPropm4(Mat4Property prop);
 			void *getProp(int prop, Enums::DataType type);
+
 
 			void setOrtho (float left, float right, float bottom, float top, float near, float far);
 			void setPerspective (float fov, float near, float far);
 
-			void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+			void eventReceived(const std::string &sender, const std::string &eventType, 
+				const std::shared_ptr<IEventData> &evt);
 
 			void setCamera (vec3 position, vec3 view, vec3 up);
 
@@ -110,11 +109,7 @@ namespace nau
 			static bool Init();
 			static bool Inited;
 
-			//std::map<int,mat4> m_Mat4Props;
-
-			nau::event_::EventVec3 m_Event;
 			std::shared_ptr<Viewport> m_pViewport;
-			//void setPropm4(Mat4Property prop, mat4 &mat);
 
 			vec3 result;
 			// LookAt settings

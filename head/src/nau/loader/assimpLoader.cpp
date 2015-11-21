@@ -121,7 +121,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 
 		if (!MATERIALLIBMANAGER->hasMaterial (DEFAULTMATERIALLIBNAME, matName)) {
 
-			Material *m = MATERIALLIBMANAGER->createMaterial(matName);
+			std::shared_ptr<Material> &m = MATERIALLIBMANAGER->createMaterial(matName);
 			aiString texPath;	
 			if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath)){
 				m->createTexture(0,File::GetFullPath(path,texPath.data));

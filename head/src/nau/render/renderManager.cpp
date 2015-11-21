@@ -39,15 +39,15 @@ RenderManager::~RenderManager(void) {
 void 
 RenderManager::clear() {
 
-	//while (!m_Cameras.empty()){
-	//	delete ((*m_Cameras.begin()).second);
-	//	m_Cameras.erase(m_Cameras.begin());
-	//}
+	while (!m_Cameras.empty()){
+//		((*m_Cameras.begin()).second).reset();
+		m_Cameras.erase(m_Cameras.begin());
+	}
 
-	//while (!m_Lights.empty()){
-	//	delete ((*m_Lights.begin()).second);
-	//	m_Lights.erase(m_Lights.begin());
-	//}
+	while (!m_Lights.empty()){
+//		delete ((*m_Lights.begin()).second);
+		m_Lights.erase(m_Lights.begin());
+	}
 
 	while (!m_Scenes.empty()){
 		delete ((*m_Scenes.begin()).second);
@@ -58,10 +58,10 @@ RenderManager::clear() {
 		delete ((*m_Pipelines.begin()));
 		m_Pipelines.erase(m_Pipelines.begin());
 	}
-	//while (!m_Viewports.empty()){
-	//	delete ((*m_Viewports.begin()).second);
-	//	m_Viewports.erase(m_Viewports.begin());
-	//}
+	while (!m_Viewports.empty()){
+//		delete ((*m_Viewports.begin()).second);
+		m_Viewports.erase(m_Viewports.begin());
+	}
 
 
 	m_ActivePipelineIndex = 0;

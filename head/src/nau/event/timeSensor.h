@@ -28,10 +28,10 @@ namespace nau
 				float startTime;
 				float stopTime;
 				float fraction;
-				nau::event_::EventFloat e;
 
 			public:
-				TimeSensor(std::string name, bool enabled, int secondsToStart, int cycleInterval, bool loop); 
+				TimeSensor(std::string name, bool enabled, int secondsToStart, 
+					int cycleInterval, bool loop); 
 				TimeSensor(const TimeSensor &c);
 				TimeSensor(void);
 				~TimeSensor(void);
@@ -43,7 +43,8 @@ namespace nau
 
 				void removeTimeListener(void);
 				void addTimeListener(void);
-				void eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt);
+				void eventReceived(const std::string &sender, const std::string &eventType, 
+					const std::shared_ptr<IEventData> &evt);
 
 				void init();
 

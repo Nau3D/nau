@@ -16,7 +16,7 @@ DlgMatImageTexturePanels::~DlgMatImageTexturePanels(){
 
 
 void 
-DlgMatImageTexturePanels::setMaterial(nau::material::Material *aMat) {
+DlgMatImageTexturePanels::setMaterial(std::shared_ptr<nau::material::Material> &aMat) {
 
 	m_Material = aMat;
 

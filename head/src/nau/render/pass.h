@@ -21,7 +21,7 @@ https://github.com/Nau3D
 #include "nau/attributeValues.h"
 #include "nau/event/eventManager.h"
 #include "nau/event/eventString.h"
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 #include "nau/geometry/boundingBox.h"
 #include "nau/geometry/quad.h"
 #include "nau/material/iBuffer.h"
@@ -116,7 +116,8 @@ namespace nau
 
 			static std::shared_ptr<Pass> Create(const std::string &name);
 
-			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
+			void eventReceived(const std::string &sender, const std::string &eventType, 
+				const std::shared_ptr<IEventData> &evt);
 
 			const std::string &getClassName();
 			std::string &getName (void);

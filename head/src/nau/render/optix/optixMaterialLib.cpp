@@ -96,7 +96,7 @@ OptixMaterialLib::addMaterial(nau::material::MaterialID aMat) {
 	if (m_MaterialLib.count(fullMatName))
 		return;
 
-	Material *mat = MATERIALLIBMANAGER->getMaterial(aMat);
+	std::shared_ptr<Material> &mat = MATERIALLIBMANAGER->getMaterial(aMat);
 	mat->prepareNoShaders();
 	optix::Material omat;
 	try {
@@ -217,7 +217,7 @@ OptixMaterialLib::applyMaterial(optix::GeometryInstance gi, nau::material::Mater
 	std::string s = matID.getLibName() + ":" + matID.getMaterialName();
 	gi->setMaterial(0, m_MaterialLib[s]);
 
-	nau::material::Material *mat = MATERIALLIBMANAGER->getMaterial(matID);
+	std::shared_ptr<nau::material::Material> &mat = MATERIALLIBMANAGER->getMaterial(matID);
 	m_TextureLib->applyTextures(gi, mat);
 }
 

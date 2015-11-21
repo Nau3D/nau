@@ -34,7 +34,8 @@ Scene::~Scene(void) {
 
 
 void
-Scene::eventReceived(const std::string &sender, const std::string &eventType, nau::event_::IEventData *evt)
+Scene::eventReceived(const std::string &sender, const std::string &eventType, 
+	const std::shared_ptr<IEventData> &evt)
 {
 	if (eventType == "SET_POSITION") {
 

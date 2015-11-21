@@ -29,7 +29,8 @@ namespace nau
 
 			static std::shared_ptr<Pass> Create(const std::string &name);
 
-			void eventReceived(const std::string &sender, const std::string &eventType, IEventData *evtData);
+			void eventReceived(const std::string &sender, const std::string &eventType, 
+				const std::shared_ptr<IEventData> &evt);
 
 			const std::string &getClassName();
 
@@ -38,7 +39,7 @@ namespace nau
 			void doPass();
 
 			void setMaterialName(const std::string &lName,const std::string &mName);
-			Material *getMaterial();
+			std::shared_ptr<Material> &getMaterial();
 
 			void setDimension(unsigned int dimX, unsigned int dimY, unsigned int dimZ);
 			void setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX,
@@ -51,7 +52,7 @@ namespace nau
 			static bool Init();
 			static bool Inited;
 
-			Material *m_Mat;
+			std::shared_ptr<Material> m_Mat;
 			IBuffer  *m_BufferX, *m_BufferY, *m_BufferZ;
 			unsigned int m_OffsetX, m_OffsetY, m_OffsetZ;
 

@@ -12,7 +12,7 @@
 #include "nau/attributeValues.h"
 
 #include "nau/event/eventManager.h"
-#include "nau/event/ilistener.h"
+#include "nau/event/iListener.h"
 #include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
 #include "nau/render/pipeline.h"
