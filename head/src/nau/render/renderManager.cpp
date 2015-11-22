@@ -647,10 +647,8 @@ RenderManager::hasScene (const std::string &sceneName) {
 }
 
 
-std::vector<std::string> * 
-RenderManager::getSceneNames() {
-
-	std::vector<std::string> *names = new std::vector<std::string>; 
+void
+RenderManager::getSceneNames(std::vector<std::string> *names) {
 
 	std::map<std::string, nau::scene::IScene*>::iterator iter = m_Scenes.begin();
 
@@ -658,7 +656,6 @@ RenderManager::getSceneNames() {
 		if ((*iter).second->getType() != "SceneAux")
       names->push_back((*iter).first); 
     }
-	return names;
 }
 
 

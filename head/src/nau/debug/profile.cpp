@@ -230,7 +230,9 @@ void Profile::Reset() {
 			}
 		}
 		sLevels[i].sec.clear();
+		sLevels[i].cursor = 0;
 	}
+	
 	sTotalLevels = 0;
 }
 

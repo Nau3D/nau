@@ -102,7 +102,7 @@ PassDepthMap::prepare (void) {
 	
 	RENDERER->setCamera(m_LightCamera);
 
-//	setupLights();
+	setupLights();
 }
 
 
@@ -112,6 +112,7 @@ PassDepthMap::restore (void) {
 	if (0 != m_RenderTarget && true == m_UseRT) {
 		m_RenderTarget->unbind();
 	}
+	RENDERER->removeLights();
 }
 
 

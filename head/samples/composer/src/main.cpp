@@ -265,7 +265,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
 	debugMenu = new wxMenu(_T(""));
     debugMenu->Append(idMenuDlgLog, _("&Log\tCtrl-L"), _("Show Log"));
-	debugMenu->Append(idMenuProfileReset, _("&Reset Profiler"), _(""));
+	debugMenu->Append(idMenuProfileReset, _("Reset Profiler\tCtrl-R"), _(""));
 	debugMenu->AppendSeparator();
 	debugMenu->Append(idMenuDbgBreak, _("&Pause"), _("Pauses or resumes rendering"));
 	debugMenu->Append(idMenuDlgStep, _("&Advanced Pass Controller"), _("Aditional Pass control options"));
@@ -326,6 +326,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
 
 	m_pRoot = nau::Nau::Create();
+
 
 	bool nauInit (false);
         
@@ -635,6 +636,7 @@ FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event) {
 			wxMessageBox("An exception has occured during folder load");
 		}
 	}
+	delete openDirDlg;
 }
 
 
@@ -664,6 +666,7 @@ FrmMainFrame::OnModelLoad (wxCommandEvent& event) {
 			wxMessageBox(wxString(s.c_str()));
 		}
 	}
+	delete openFileDlg;
 }
 
 

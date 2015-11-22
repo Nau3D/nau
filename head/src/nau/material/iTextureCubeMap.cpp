@@ -41,9 +41,10 @@ ITextureCubeMap::Create (std::vector<std::string> files, std::string label, bool
 //	t->bitmap = new wxBitmap(wxImage(96,96,loader[0]->getData(),true).Mirror(false));
 //#endif
 
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++) {
 		loader[i]->freeImage();
-	delete[] *loader;
+		delete loader[i];
+	}
 	return t;
 }
 

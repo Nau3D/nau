@@ -124,11 +124,13 @@ OBJLoader::readMTL(std::string &name)
 			/* eat up rest of line */
 			fgets(buf, sizeof(buf), file);
 			break;
-		case 'n':				/* newmtl */
+		case 'n': {				/* newmtl */
 			m_NumMaterials++;
 			fgets(buf, sizeof(buf), file);
 			sscanf(buf, "%s %s", buf, buf);
-			mat = MATERIALLIBMANAGER->createMaterial(strdup(buf));
+			std::string s(buf);
+			mat = MATERIALLIBMANAGER->createMaterial(s);
+		}
 			break;
 		case 'm' :		
 			fgetc(file);

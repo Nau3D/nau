@@ -25,7 +25,8 @@ MaterialLibManager::clear() {
 
 	while (!m_LibManager.empty()){
 	
-		m_LibManager.begin()->second->clear();
+		delete((*m_LibManager.begin()).second);
+//		m_LibManager.begin()->second->clear();
 		m_LibManager.erase(m_LibManager.begin());
 	}
 	m_DefaultLib = getLib (DEFAULTMATERIALLIBNAME);

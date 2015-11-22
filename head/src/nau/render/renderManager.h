@@ -170,7 +170,7 @@ namespace nau
 			//! Return the named scene. If it does not exist it creates one
 			nau::scene::IScene* getScene (const std::string &sceneName);
 			//! Returns all the scene names, but the SceneAux type
-			std::vector<std::string> *getSceneNames();
+			void getSceneNames(std::vector<std::string> *);
 			//! Returns ALL the scene names
 			std::vector<std::string> *getAllSceneNames();
 

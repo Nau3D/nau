@@ -105,34 +105,38 @@ GLCanvas::_setCamera() {
 void 
 GLCanvas::OnPaint (wxPaintEvent &event) {
 
-	PROFILE("Nau");
-	wxPaintDC dc(this);
+	{
+		PROFILE("Nau");
+		wxPaintDC dc(this);
 
 
-	if (!isPaused) {
-		this->Render();
-		if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
-			DlgAtomics::Instance()->update();
+		if (!isPaused) {
+			this->Render();
+			if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
+				DlgAtomics::Instance()->update();
+		}
+		//	if(!isPaused){
+		//
+		//		Render();
+		//
+		//		if (step != 0){
+		//			DlgTrace::Instance()->loadLog();
+		//
+		//#ifdef GLINTERCEPTDEBUG
+		//			gliSetIsGLIActive(false);
+		//			if (gliIsLogPerFrame()){
+		//				DlgTrace::Instance()->clear();
+		//			}
+		//
+		//			DlgDbgStep::Instance()->updateDlg();
+		//#endif
+		//			step = 0;
+		//		}
+		//	}
+		event.Skip();
 	}
-//	if(!isPaused){
-//
-//		Render();
-//
-//		if (step != 0){
-//			DlgTrace::Instance()->loadLog();
-//
-//#ifdef GLINTERCEPTDEBUG
-//			gliSetIsGLIActive(false);
-//			if (gliIsLogPerFrame()){
-//				DlgTrace::Instance()->clear();
-//			}
-//
-//			DlgDbgStep::Instance()->updateDlg();
-//#endif
-//			step = 0;
-//		}
-//	}
-	event.Skip ();
+	if (m_pEngine->getProfileResetRequest())
+		Profile::Reset();
 }
 
 
@@ -140,14 +144,18 @@ void
 GLCanvas::OnIdle(wxIdleEvent& event) {
 
 	//Refresh();
-	PROFILE("Nau");
+	{
+		PROFILE("Nau");
 
-	if (!isPaused) {
-		this->Render();
-		if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
-			DlgAtomics::Instance()->update();
+		if (!isPaused) {
+			this->Render();
+			if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
+				DlgAtomics::Instance()->update();
+		}
+		event.RequestMore();
 	}
-	event.RequestMore();
+	if (m_pEngine->getProfileResetRequest())
+		Profile::Reset();
 }
 
 
@@ -205,8 +213,6 @@ GLCanvas::Render () {
 	}
 	Profile::CollectQueryResults();
 
-	if (m_pEngine->getProfileResetRequest())
-		Profile::Reset();
 	//  FPS Counter
 	m_CounterFps++;
 

@@ -1146,7 +1146,7 @@ Nau::clear() {
 	EVENTMANAGER->addListener("WINDOW_SIZE_CHANGED", this);
 	RENDERMANAGER->clear();
 	RESOURCEMANAGER->clear();
-
+	Profile::Reset();
 	deleteUserAttributes();
 
 	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");

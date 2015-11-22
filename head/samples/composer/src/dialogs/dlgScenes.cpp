@@ -191,8 +191,9 @@ DlgScenes::setupGrid() {
 void 
 DlgScenes::updateList() {
 
-	std::vector<std::string> *names = RENDERMANAGER->getSceneNames();
-	int num = names->size();
+	std::vector<std::string> names;
+	RENDERMANAGER->getSceneNames(&names);
+	int num = names.size();
 
 	if (num == 0) {
 		m_Active = "";
@@ -204,10 +205,9 @@ DlgScenes::updateList() {
 	for(int i = 0; i < num; i++)  {
 		wxString s;
 		s << i;
-		m_List->Append(wxString(names->at(i).c_str()));
+		m_List->Append(wxString(names[i].c_str()));
 	}
-	m_Active = names->at(0);
-	delete names;
+	m_Active = names[0];
 }
 
 
