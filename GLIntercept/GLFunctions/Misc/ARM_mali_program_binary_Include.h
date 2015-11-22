@@ -1,8 +1,0 @@
-#define GLI_INCLUDE_GL_ARM_MALI_PROGRAM_BINARY
-
-enum Main {
-
-  GL_MALI_PROGRAM_BINARY_ARM       = 0x8F61,
-
-};
-

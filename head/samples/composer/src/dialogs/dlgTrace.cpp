@@ -2,7 +2,7 @@
 #include <nau.h>
 #include <nau/debug/profile.h>
 #include <nau/slogger.h>
-#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+//#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
 #include <dirent.h>
 #include <algorithm>
 

@@ -1,8 +1,0 @@
-#define GLI_INCLUDE_GL_AMD_PROGRAM_BINARY_Z400
-
-enum Main {
-
-  GL_Z400_BINARY_AMD       = 0x8740,
-
-};
-

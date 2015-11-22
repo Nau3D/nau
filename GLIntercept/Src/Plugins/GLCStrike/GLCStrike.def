@@ -1,6 +1,0 @@
-LIBRARY GLCStrike.dll
-EXPORTS
-   GetFunctionLogPluginVersion
-   CreateFunctionLogPlugin
-   RegisterDLLEventHandler
-   UnRegisterDLLEventHandler

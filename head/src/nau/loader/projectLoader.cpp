@@ -44,9 +44,9 @@
 
 #include <memory>
 
-#ifdef GLINTERCEPTDEBUG
-#include "nau/loader/projectLoaderDebugLinker.h"
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//#include "nau/loader/projectLoaderDebugLinker.h"
+//#endif
 
 
 using namespace nau::loader;
@@ -666,9 +666,9 @@ ProjectLoader::load (std::string file, int *width, int *height)
 		std::vector<std::string> ok = {"name", "width", "height"};
 		checkForNonValidAttributes("project", ok, pElem);
 		
-#ifdef GLINTERCEPTDEBUG
-		loadDebug(hRoot);
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//		loadDebug(hRoot);
+//#endif
 		loadAssets (hRoot, matLibs);
 		loadPipelines (hRoot);
 
@@ -4425,43 +4425,43 @@ errors.
 		</plugins>
 	</assets>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebug (TiXmlHandle &hRoot)
-{
-#ifdef GLINTERCEPTDEBUG
-	
-	TiXmlElement *pElem;
-	TiXmlHandle handle (hRoot.FirstChild ("debug").Element());
-	bool startGliLog = true;
-
-	if (handle.Element()){
-		pElem = handle.Element();
-
-		initGLInterceptFunctions();
-	
-		if (pElem->Attribute("glilog")){
-			pElem->QueryBoolAttribute("glilog",&startGliLog);
-		}
-		if (startGliLog){
-			startGlilog();
-		}
-
-		activateGLI();
-
-		//TiXmlElement *pElem;
-		loadDebugFunctionlog(handle);
-		loadDebugLogperframe(handle);
-		loadDebugErrorchecking(handle);
-		loadDebugImagelog(handle);
-		loadDebugShaderlog(handle);
-//		loadDebugDisplaylistlog(handle);
-		loadDebugFramelog(handle);
-		loadDebugTimerlog(handle);
-		loadDebugPlugins(handle);
-		startGLIConfiguration();
-	}
-#endif
-}
+//void
+//ProjectLoader::loadDebug (TiXmlHandle &hRoot)
+//{
+//#ifdef GLINTERCEPTDEBUG
+//	
+//	TiXmlElement *pElem;
+//	TiXmlHandle handle (hRoot.FirstChild ("debug").Element());
+//	bool startGliLog = true;
+//
+//	if (handle.Element()){
+//		pElem = handle.Element();
+//
+//		initGLInterceptFunctions();
+//	
+//		if (pElem->Attribute("glilog")){
+//			pElem->QueryBoolAttribute("glilog",&startGliLog);
+//		}
+//		if (startGliLog){
+//			startGlilog();
+//		}
+//
+//		activateGLI();
+//
+//		//TiXmlElement *pElem;
+//		loadDebugFunctionlog(handle);
+//		loadDebugLogperframe(handle);
+//		loadDebugErrorchecking(handle);
+//		loadDebugImagelog(handle);
+//		loadDebugShaderlog(handle);
+////		loadDebugDisplaylistlog(handle);
+//		loadDebugFramelog(handle);
+//		loadDebugTimerlog(handle);
+//		loadDebugPlugins(handle);
+//		startGLIConfiguration();
+//	}
+//#endif
+//}
 
 /* ----------------------------------------------------------------
 Specification of the functionlog:
@@ -4479,22 +4479,22 @@ Specification of the functionlog:
 			</xmlformat>
 		</functionlog>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugFunctionlog (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("functionlog").Element());
-
-#ifdef GLINTERCEPTDEBUG
-	if (handle.Element()){
-		bool defaultValue = true;
-		void *functionSetPointer = getGLIFunction("enabled", "functionlog");
-		useGLIFunction(functionSetPointer, &defaultValue);
-	}
-#endif
-
-	loadDebugConfigData(handle,"functionlog");
-
-	//loadDebugFunctionlogXmlFormat(hRoot);
-}
+//void
+//ProjectLoader::loadDebugFunctionlog (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("functionlog").Element());
+//
+//#ifdef GLINTERCEPTDEBUG
+//	if (handle.Element()){
+//		bool defaultValue = true;
+//		void *functionSetPointer = getGLIFunction("enabled", "functionlog");
+//		useGLIFunction(functionSetPointer, &defaultValue);
+//	}
+//#endif
+//
+//	loadDebugConfigData(handle,"functionlog");
+//
+//	//loadDebugFunctionlogXmlFormat(hRoot);
+//}
 
 
 
@@ -4514,12 +4514,12 @@ with GL intercept 1.2 installed the default locations should be
 				<logxslbasedir value="xslfilesource"/>
 			</xmlformat>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugFunctionlogXmlFormat (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("xmlformat").Element());
-
-	loadDebugConfigData(handle,"functionlogxmlformat");
-}
+//void
+//ProjectLoader::loadDebugFunctionlogXmlFormat (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("xmlformat").Element());
+//
+//	loadDebugConfigData(handle,"functionlogxmlformat");
+//}
 
 /* ----------------------------------------------------------------
 Specification of the logperframe:
@@ -4539,12 +4539,12 @@ will enable log the frame using ctrl+F
 			</logframekeys>
 		</logperframe>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugLogperframe (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("logperframe").Element());
-
-	loadDebugConfigData(handle,"logperframe");
-}
+//void
+//ProjectLoader::loadDebugLogperframe (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("logperframe").Element());
+//
+//	loadDebugConfigData(handle,"logperframe");
+//}
 
 /* ----------------------------------------------------------------
 Specification of the errorchecking:
@@ -4558,13 +4558,13 @@ Specification of the errorchecking:
 			<errordebuggererrorlog value="bool"/>
 		</errorchecking>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugErrorchecking (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("errorchecking").Element());
-
-	loadDebugConfigData(handle,"errorchecking");
-
-}
+//void
+//ProjectLoader::loadDebugErrorchecking (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("errorchecking").Element());
+//
+//	loadDebugConfigData(handle,"errorchecking");
+//
+//}
 
 /* ----------------------------------------------------------------
 Specification of the imagelog:
@@ -4588,15 +4588,15 @@ imagesavepng, imagesavetga and imagesavejpg can be used simultaneosly
 			</imageicon>
 		</imagelog>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugImagelog (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("imagelog").Element());
-
-	loadDebugConfigData(handle,"imagelog");
-
-
-	loadDebugImagelogimageicon(handle);
-}
+//void
+//ProjectLoader::loadDebugImagelog (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("imagelog").Element());
+//
+//	loadDebugConfigData(handle,"imagelog");
+//
+//
+//	loadDebugImagelogimageicon(handle);
+//}
 
 /* ----------------------------------------------------------------
 Specification of the imageicon:
@@ -4610,12 +4610,12 @@ only one format at a time
 				<imageiconformat value="png"/>
 			</imageicon>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugImagelogimageicon (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("imageicon").Element());
-
-	loadDebugConfigData(handle,"imagelogimageicon");
-}
+//void
+//ProjectLoader::loadDebugImagelogimageicon (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("imageicon").Element());
+//
+//	loadDebugConfigData(handle,"imagelogimageicon");
+//}
 
 /* ----------------------------------------------------------------
 Specification of the shaderlog:
@@ -4628,20 +4628,20 @@ Specification of the shaderlog:
 			<shaderloguniformsprerender value="bool"/>
 		</shaderlog>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugShaderlog (TiXmlHandle &hRoot){
-	TiXmlHandle handle(hRoot.FirstChild("shaderlog").Element());
-
-#ifdef GLINTERCEPTDEBUG
-	if (handle.Element()){
-		bool defaultValue = true;
-		void *functionSetPointer = getGLIFunction("enabled", "shaderlog");
-		useGLIFunction(functionSetPointer, &defaultValue);
-	}
-#endif
-
-	loadDebugConfigData(handle,"shaderlog");
-}
+//void
+//ProjectLoader::loadDebugShaderlog (TiXmlHandle &hRoot){
+//	TiXmlHandle handle(hRoot.FirstChild("shaderlog").Element());
+//
+//#ifdef GLINTERCEPTDEBUG
+//	if (handle.Element()){
+//		bool defaultValue = true;
+//		void *functionSetPointer = getGLIFunction("enabled", "shaderlog");
+//		useGLIFunction(functionSetPointer, &defaultValue);
+//	}
+//#endif
+//
+//	loadDebugConfigData(handle,"shaderlog");
+//}
 
 
 
@@ -4696,24 +4696,24 @@ AABBGGRR. If an index is missing, it will take the value of the index as the col
 		</framelog>
 
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugFramelog (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("framelog").Element());
-
-#ifdef GLINTERCEPTDEBUG
-	if (handle.Element()){
-		bool defaultValue = true;
-		void *functionSetPointer = getGLIFunction("enabled", "framelog");
-		useGLIFunction(functionSetPointer, &defaultValue);
-	}
-#endif
-
-	loadDebugConfigData(handle,"framelog");
-
-	
-	loadDebugFramelogFrameicon(handle);
-	loadDebugFramelogFramemovie(handle);
-}
+//void
+//ProjectLoader::loadDebugFramelog (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("framelog").Element());
+//
+//#ifdef GLINTERCEPTDEBUG
+//	if (handle.Element()){
+//		bool defaultValue = true;
+//		void *functionSetPointer = getGLIFunction("enabled", "framelog");
+//		useGLIFunction(functionSetPointer, &defaultValue);
+//	}
+//#endif
+//
+//	loadDebugConfigData(handle,"framelog");
+//
+//	
+//	loadDebugFramelogFrameicon(handle);
+//	loadDebugFramelogFramemovie(handle);
+//}
 
 /* ----------------------------------------------------------------
 Specification of the frameicon:
@@ -4727,14 +4727,14 @@ only one format at a time
 				<frameiconimageformat value="png"/>
 			</frameicon>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugFramelogFrameicon (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("frameicon").Element());
-
-	loadDebugConfigData(handle,"framelogframeicon");
-
-}
-
+//void
+//ProjectLoader::loadDebugFramelogFrameicon (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("frameicon").Element());
+//
+//	loadDebugConfigData(handle,"framelogframeicon");
+//
+//}
+//
 
 /* ----------------------------------------------------------------
 Specification of the framemovie:
@@ -4751,21 +4751,21 @@ Specification of the framemovie:
 				</frameMovieCodecs>
 			</framemovie>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("framemovie").Element());
-
-#ifdef GLINTERCEPTDEBUG
-	if (handle.Element()){
-		bool defaultValue = true;
-		void *functionSetPointer = getGLIFunction("framemovieenabled", "framelogframemovie");
-		useGLIFunction(functionSetPointer, &defaultValue);
-	}
-#endif
-
-	loadDebugConfigData(handle,"framelogframemovie");
-
-}
+//void
+//ProjectLoader::loadDebugFramelogFramemovie (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("framemovie").Element());
+//
+//#ifdef GLINTERCEPTDEBUG
+//	if (handle.Element()){
+//		bool defaultValue = true;
+//		void *functionSetPointer = getGLIFunction("framemovieenabled", "framelogframemovie");
+//		useGLIFunction(functionSetPointer, &defaultValue);
+//	}
+//#endif
+//
+//	loadDebugConfigData(handle,"framelogframemovie");
+//
+//}
 
 /* ----------------------------------------------------------------
 Specification of the timerlog:
@@ -4775,21 +4775,21 @@ Specification of the timerlog:
 			<timerlogcutoff value="uint"/>
 		</timerlog>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugTimerlog (TiXmlHandle &hRoot){
-	TiXmlHandle handle (hRoot.FirstChild ("timerlog").Element());
-
-#ifdef GLINTERCEPTDEBUG
-	if (handle.Element()){
-		bool defaultValue = true;
-		void *functionSetPointer = getGLIFunction("enabled", "timerlog");
-		useGLIFunction(functionSetPointer, &defaultValue);
-	}
-#endif
-
-	loadDebugConfigData(handle,"timerlog");
-
-}
+//void
+//ProjectLoader::loadDebugTimerlog (TiXmlHandle &hRoot){
+//	TiXmlHandle handle (hRoot.FirstChild ("timerlog").Element());
+//
+//#ifdef GLINTERCEPTDEBUG
+//	if (handle.Element()){
+//		bool defaultValue = true;
+//		void *functionSetPointer = getGLIFunction("enabled", "timerlog");
+//		useGLIFunction(functionSetPointer, &defaultValue);
+//	}
+//#endif
+//
+//	loadDebugConfigData(handle,"timerlog");
+//
+//}
 
 /* ----------------------------------------------------------------
 Specification of the plugins:
@@ -4819,29 +4819,29 @@ if you give the plugin a different name it may not work at all.
 				...
 			</plugins>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugPlugins (TiXmlHandle &hRoot)
-{
-#ifdef GLINTERCEPTDEBUG
-	TiXmlElement *pElem;
-	TiXmlHandle handle (hRoot.FirstChild("plugins").Element());
-	
-	string name;
-	string dllpath;
-	string data="";
-
-	pElem = handle.FirstChild().Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-			pElem->QueryStringAttribute("name",&name);
-			pElem->QueryStringAttribute("dll",&dllpath);
-			if(pElem->GetText()){
-				data=pElem->GetText();
-			}
-			addPlugin(name.c_str(), dllpath.c_str(), data.c_str());
-		
-	}
-#endif
-}
+//void
+//ProjectLoader::loadDebugPlugins (TiXmlHandle &hRoot)
+//{
+//#ifdef GLINTERCEPTDEBUG
+//	TiXmlElement *pElem;
+//	TiXmlHandle handle (hRoot.FirstChild("plugins").Element());
+//	
+//	string name;
+//	string dllpath;
+//	string data="";
+//
+//	pElem = handle.FirstChild().Element();
+//	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+//			pElem->QueryStringAttribute("name",&name);
+//			pElem->QueryStringAttribute("dll",&dllpath);
+//			if(pElem->GetText()){
+//				data=pElem->GetText();
+//			}
+//			addPlugin(name.c_str(), dllpath.c_str(), data.c_str());
+//		
+//	}
+//#endif
+//}
 
 /* ----------------------------------------------------------------
 Helper function, reads sub attributes.
@@ -4850,54 +4850,54 @@ Helper function, reads sub attributes.
 					...
 				</configcategory>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugConfigData (TiXmlHandle &handle, const char *configMapName)
-{
-#ifdef GLINTERCEPTDEBUG
-
-	TiXmlElement *pElem;
-	void *functionSetPointer;
-	pElem = handle.FirstChild().Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-		const char *functionName = pElem->Value();
-		functionSetPointer = getGLIFunction(functionName,configMapName);
-		switch (getGLIFunctionType(functionSetPointer))
-		{
-		case GLIEnums::FunctionType::BOOL:{
-				bool functionValue; 
-				pElem->QueryBoolAttribute("value",&functionValue);
-				useGLIFunction(functionSetPointer,&functionValue);
-				break;
-			}
-		case GLIEnums::FunctionType::INT:{
-				int functionValue; 
-				pElem->QueryIntAttribute("value",&functionValue);
-				useGLIFunction(functionSetPointer,&functionValue);
-				break;
-			}
-		case GLIEnums::FunctionType::UINT:{
-				unsigned int functionValue; 
-				pElem->QueryUnsignedAttribute("value",&functionValue);
-				useGLIFunction(functionSetPointer,&functionValue);
-				break;
-			}
-		case GLIEnums::FunctionType::STRING:{
-				string functionValue; 
-				pElem->QueryStringAttribute("value",&functionValue);
-				useGLIFunction(functionSetPointer,(void*)functionValue.c_str());
-				break;
-			}
-		case GLIEnums::FunctionType::UINTARRAY:
-		case GLIEnums::FunctionType::STRINGARRAY:
-			useGLIClearFunction(functionSetPointer);
-			loadDebugArrayData(handle,functionName,functionSetPointer);
-			break;
-		default:
-			break;
-		}
-	}
-#endif
-}
+//void
+//ProjectLoader::loadDebugConfigData (TiXmlHandle &handle, const char *configMapName)
+//{
+//#ifdef GLINTERCEPTDEBUG
+//
+//	TiXmlElement *pElem;
+//	void *functionSetPointer;
+//	pElem = handle.FirstChild().Element();
+//	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+//		const char *functionName = pElem->Value();
+//		functionSetPointer = getGLIFunction(functionName,configMapName);
+//		switch (getGLIFunctionType(functionSetPointer))
+//		{
+//		case GLIEnums::FunctionType::BOOL:{
+//				bool functionValue; 
+//				pElem->QueryBoolAttribute("value",&functionValue);
+//				useGLIFunction(functionSetPointer,&functionValue);
+//				break;
+//			}
+//		case GLIEnums::FunctionType::INT:{
+//				int functionValue; 
+//				pElem->QueryIntAttribute("value",&functionValue);
+//				useGLIFunction(functionSetPointer,&functionValue);
+//				break;
+//			}
+//		case GLIEnums::FunctionType::UINT:{
+//				unsigned int functionValue; 
+//				pElem->QueryUnsignedAttribute("value",&functionValue);
+//				useGLIFunction(functionSetPointer,&functionValue);
+//				break;
+//			}
+//		case GLIEnums::FunctionType::STRING:{
+//				string functionValue; 
+//				pElem->QueryStringAttribute("value",&functionValue);
+//				useGLIFunction(functionSetPointer,(void*)functionValue.c_str());
+//				break;
+//			}
+//		case GLIEnums::FunctionType::UINTARRAY:
+//		case GLIEnums::FunctionType::STRINGARRAY:
+//			useGLIClearFunction(functionSetPointer);
+//			loadDebugArrayData(handle,functionName,functionSetPointer);
+//			break;
+//		default:
+//			break;
+//		}
+//	}
+//#endif
+//}
 
 /* ----------------------------------------------------------------
 Specification of the configdata:
@@ -4906,36 +4906,36 @@ Specification of the configdata:
 					...
 				</arrayconfigname>
 ----------------------------------------------------------------- */
-void
-ProjectLoader::loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer)
-{
-#ifdef GLINTERCEPTDEBUG
-	TiXmlElement *pElem;
-	TiXmlHandle handle (hRoot.FirstChild(functionName).Element());
-	unsigned int functionType = getGLIFunctionType(functionSetPointer);
-
-	pElem = handle.FirstChild().Element();
-	switch (functionType)
-	{
-	case GLIEnums::FunctionType::UINTARRAY:{
-		for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-				unsigned int functionValue; 
-				pElem->QueryUnsignedAttribute("value",&functionValue);
-				useGLIFunction(functionSetPointer,&functionValue);
-				break;
-			}
-		}
-	case GLIEnums::FunctionType::STRINGARRAY:{
-		for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-				string functionValue; 
-				pElem->QueryStringAttribute("value",&functionValue);
-				useGLIFunction(functionSetPointer,(void*)functionValue.c_str());
-				break;
-			}
-		}
-	default:
-		break;
-	}
-#endif
-}
-
+//void
+//ProjectLoader::loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer)
+//{
+//#ifdef GLINTERCEPTDEBUG
+//	TiXmlElement *pElem;
+//	TiXmlHandle handle (hRoot.FirstChild(functionName).Element());
+//	unsigned int functionType = getGLIFunctionType(functionSetPointer);
+//
+//	pElem = handle.FirstChild().Element();
+//	switch (functionType)
+//	{
+//	case GLIEnums::FunctionType::UINTARRAY:{
+//		for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+//				unsigned int functionValue; 
+//				pElem->QueryUnsignedAttribute("value",&functionValue);
+//				useGLIFunction(functionSetPointer,&functionValue);
+//				break;
+//			}
+//		}
+//	case GLIEnums::FunctionType::STRINGARRAY:{
+//		for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+//				string functionValue; 
+//				pElem->QueryStringAttribute("value",&functionValue);
+//				useGLIFunction(functionSetPointer,(void*)functionValue.c_str());
+//				break;
+//			}
+//		}
+//	default:
+//		break;
+//	}
+//#endif
+//}
+//

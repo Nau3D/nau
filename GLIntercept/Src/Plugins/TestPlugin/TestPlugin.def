@@ -1,6 +1,0 @@
-LIBRARY TestPlugin.dll
-EXPORTS
-   GetFunctionLogPluginVersion
-   CreateFunctionLogPlugin
-   RegisterDLLEventHandler
-   UnRegisterDLLEventHandler

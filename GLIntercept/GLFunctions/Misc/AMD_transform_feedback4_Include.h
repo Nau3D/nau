@@ -1,8 +1,0 @@
-#define GLI_INCLUDE_GL_AMD_TRANSFORM_FEEDBACK4
-
-enum Main {
-
-  GL_STREAM_RASTERIZATION_AMD       = 0x91A0,
-
-};
-

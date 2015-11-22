@@ -1,8 +1,0 @@
-#define GLI_INCLUDE_GL_DMP_SHADER_BINARY
-
-enum Main {
-
-  GL_SHADER_BINARY_DMP       = 0x9250,
-
-};
-

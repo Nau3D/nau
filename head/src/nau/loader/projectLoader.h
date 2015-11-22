@@ -140,21 +140,21 @@ namespace nau
 			static void loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass);
 
 			//Debug Loading
-			static void loadDebug (TiXmlHandle &hRoot);
-			static void loadDebugConfigData (TiXmlHandle &handle, const char *configMapName);
-			static void loadDebugFunctionlog (TiXmlHandle &hRoot);
-			static void loadDebugFunctionlogXmlFormat (TiXmlHandle &hRoot);
-			static void loadDebugLogperframe (TiXmlHandle &hRoot);
-			static void loadDebugErrorchecking (TiXmlHandle &hRoot);
-			static void loadDebugImagelog (TiXmlHandle &hRoot);
-			static void loadDebugImagelogimageicon (TiXmlHandle &hRoot);
-			static void loadDebugShaderlog (TiXmlHandle &hRoot);
-			static void loadDebugFramelog (TiXmlHandle &hRoot);
-			static void loadDebugFramelogFrameicon (TiXmlHandle &hRoot);
-			static void loadDebugFramelogFramemovie (TiXmlHandle &hRoot);
-			static void loadDebugTimerlog (TiXmlHandle &hRoot);
-			static void loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer);
-			static void loadDebugPlugins (TiXmlHandle &hRoot);
+			//static void loadDebug (TiXmlHandle &hRoot);
+			//static void loadDebugConfigData (TiXmlHandle &handle, const char *configMapName);
+			//static void loadDebugFunctionlog (TiXmlHandle &hRoot);
+			//static void loadDebugFunctionlogXmlFormat (TiXmlHandle &hRoot);
+			//static void loadDebugLogperframe (TiXmlHandle &hRoot);
+			//static void loadDebugErrorchecking (TiXmlHandle &hRoot);
+			//static void loadDebugImagelog (TiXmlHandle &hRoot);
+			//static void loadDebugImagelogimageicon (TiXmlHandle &hRoot);
+			//static void loadDebugShaderlog (TiXmlHandle &hRoot);
+			//static void loadDebugFramelog (TiXmlHandle &hRoot);
+			//static void loadDebugFramelogFrameicon (TiXmlHandle &hRoot);
+			//static void loadDebugFramelogFramemovie (TiXmlHandle &hRoot);
+			//static void loadDebugTimerlog (TiXmlHandle &hRoot);
+			//static void loadDebugArrayData (TiXmlHandle &hRoot, const char *functionName, void *functionSetPointer);
+			//static void loadDebugPlugins (TiXmlHandle &hRoot);
 
 			// load Material Lib elements
 			static void loadMatLibRenderTargets(TiXmlHandle hPass, MaterialLib *aLib, std::string path);

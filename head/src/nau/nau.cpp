@@ -12,9 +12,9 @@
 #include "nau/loader/assimpLoader.h"
 #include "nau/loader/patchLoader.h"
 #include "nau/loader/projectLoader.h"
-#ifdef GLINTERCEPTDEBUG
-#include "nau/loader/projectLoaderDebugLinker.h"
-#endif //GLINTERCEPTDEBUG
+//#ifdef GLINTERCEPTDEBUG
+//#include "nau/loader/projectLoaderDebugLinker.h"
+//#endif //GLINTERCEPTDEBUG
 #include "nau/material/uniformBlockManager.h"
 #include "nau/render/iAPISupport.h"
 #include "nau/render/passFactory.h"
@@ -1186,9 +1186,9 @@ Nau::step() {
 		LOG_trace("#NAU(FRAME,START)");
 	}
 
-#ifdef GLINTERCEPTDEBUG
-	addMessageToGLILog("\n#NAU(FRAME,START)");
-#endif //GLINTERCEPTDEBUG
+//#ifdef GLINTERCEPTDEBUG
+//	addMessageToGLILog("\n#NAU(FRAME,START)");
+//#endif //GLINTERCEPTDEBUG
 
 	m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
 
@@ -1241,9 +1241,9 @@ void Nau::stepPass() {
 		if (m_TraceFrames) {
 			LOG_trace("#NAU(FRAME,START)");
 		}
-#ifdef GLINTERCEPTDEBUG
-		addMessageToGLILog("\n#NAU(FRAME,START)");
-#endif //GLINTERCEPTDEBUG
+//#ifdef GLINTERCEPTDEBUG
+//		addMessageToGLILog("\n#NAU(FRAME,START)");
+//#endif //GLINTERCEPTDEBUG
 
 		renderer->resetCounters();
 
@@ -1258,25 +1258,22 @@ void Nau::stepPass() {
 	if (m_TraceFrames) {
 		LOG_trace("\n#NAU(PASS START %s)", s.c_str());
 	}
-#ifdef GLINTERCEPTDEBUG
-	addMessageToGLILog(("\n#NAU(PASS,START," + s + ")").c_str());
-#endif //GLINTERCEPTDEBUG
+//#ifdef GLINTERCEPTDEBUG
+//	addMessageToGLILog(("\n#NAU(PASS,START," + s + ")").c_str());
+//#endif //GLINTERCEPTDEBUG
 
 	p->executeNextPass();
 
 	if (m_TraceFrames) {
 		LOG_trace("#NAU(PASS END %s)", s.c_str());
 	}
-#ifdef GLINTERCEPTDEBUG
-	addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
-#endif //GLINTERCEPTDEBUG
+//#ifdef GLINTERCEPTDEBUG
+//	addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
+//#endif //GLINTERCEPTDEBUG
 
 	if (currentPass == lastPass) {
 
 		m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
-//#ifdef GLINTERCEPTDEBUG
-//		addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
-//#endif //GLINTERCEPTDEBUG	
 	
 	}
 

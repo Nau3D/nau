@@ -9,9 +9,9 @@
 #include "nau/render/passFactory.h"
 #include "nau/render/renderManager.h"
 
-#ifdef GLINTERCEPTDEBUG
-#include "nau/loader/projectLoaderDebugLinker.h"
-#endif 
+//#ifdef GLINTERCEPTDEBUG
+//#include "nau/loader/projectLoaderDebugLinker.h"
+//#endif 
 
 #include <glbinding/gl/gl.h>
 using namespace gl;
@@ -227,9 +227,9 @@ Pipeline::executePass(std::shared_ptr<Pass> &pass) {
 		if (NAU->getTraceStatus()) {
 			LOG_trace("#NAU(PASS START %s)", pass->getName().c_str());
 		}
-#ifdef GLINTERCEPTDEBUG
-		addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
-#endif //GLINTERCEPTDEBUG
+//#ifdef GLINTERCEPTDEBUG
+//		addMessageToGLILog(("\n#NAU(PASS,START," + pass->getName() + ")").c_str());
+//#endif //GLINTERCEPTDEBUG
 
 		if (RENDERER->getPropb(IRenderer::DEBUG_DRAW_CALL))
 			SLOG("Pass: %s", pass->getName().c_str());
@@ -247,9 +247,9 @@ Pipeline::executePass(std::shared_ptr<Pass> &pass) {
 		if (NAU->getTraceStatus()) {
 			LOG_trace("#NAU(PASS END %s)", pass->getName().c_str());
 		}
-#ifdef GLINTERCEPTDEBUG
-		addMessageToGLILog(("\n#NAU(PASS,END," + pass->getName() + ")").c_str());
-#endif //GLINTERCEPTDEBUG
+//#ifdef GLINTERCEPTDEBUG
+//		addMessageToGLILog(("\n#NAU(PASS,END," + pass->getName() + ")").c_str());
+//#endif //GLINTERCEPTDEBUG
 
 		keepRunning = keepRunning && run;
 	} while (keepRunning);

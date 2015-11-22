@@ -1,8 +1,8 @@
 #include "dlgBuffers.h"
 
-#ifdef GLINTERCEPTDEBUG
-#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+//#endif
 
 
 #include <nau.h>
@@ -272,9 +272,9 @@ DlgDbgBuffers::setVAOList(void) {
 	std::string label;
 
 	pgVAOs->ClearPage(0);
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(false);
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(false);
+//#endif
 	// ugly but practical :-)
 	for (int i = 0; i < 65536; ++i) {
 
@@ -322,9 +322,9 @@ DlgDbgBuffers::setVAOList(void) {
 			list.push_back(vao);
 		}
 	}
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(true);
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(true);
+//#endif
 
 	for (auto info : list) {
 
@@ -452,15 +452,15 @@ DlgDbgBuffers::setBufferData(){
 	bufferValues = malloc(pageSize);
 
 	IBuffer *b = bufferSettingsList[currentBuffer].bufferPtr;
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(false);
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(false);
+//#endif
 
 	int dataRead = b->getData(pageOffset, pageSize, bufferValues);
 
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(true);
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(true);
+//#endif
 
 	setSpinners(lines, columns, page, lineSize, bufferSettingsList[currentBuffer].size);
 
@@ -594,15 +594,14 @@ DlgDbgBuffers::OnUpdateBuffer(wxCommandEvent& event) {
 			}
 		}
 	}
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(false);
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(false);
+//#endif
 
 	bufferSettingsList[currentBuffer].bufferPtr->setSubData(offSet, dataRead, buffer);
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(true);
-#endif
-
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(true);
+//#endif
 }
 
 

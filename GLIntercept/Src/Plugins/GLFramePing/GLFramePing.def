@@ -1,6 +1,0 @@
-LIBRARY GLFramePing.dll
-EXPORTS
-   GetFunctionLogPluginVersion
-   CreateFunctionLogPlugin
-   RegisterDLLEventHandler
-   UnRegisterDLLEventHandler

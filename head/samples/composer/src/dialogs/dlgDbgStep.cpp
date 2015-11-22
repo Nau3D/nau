@@ -3,9 +3,9 @@
 #include <nau/debug/profile.h>
 
 
-#ifdef GLINTERCEPTDEBUG
-#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+//#endif
 
 BEGIN_EVENT_TABLE(DlgDbgStep, wxDialog)
 	EVT_BUTTON(DLG_BTN_NEXTPASS, OnNextPass)
@@ -172,13 +172,13 @@ void DlgDbgStep::append(std::string s) {
 void DlgDbgStep::OnNextPass(wxCommandEvent& event){
 
 	if (m_Canvas->IsPaused()){
-#ifdef GLINTERCEPTDEBUG 
-		gliSetIsGLIActive(true);
-#endif
+//#ifdef GLINTERCEPTDEBUG 
+//		gliSetIsGLIActive(true);
+//#endif
 		m_Canvas->StepPass();
-#ifdef GLINTERCEPTDEBUG 
-		gliSetIsGLIActive(false);
-#endif
+//#ifdef GLINTERCEPTDEBUG 
+//		gliSetIsGLIActive(false);
+//#endif
 		updateDlg();
 	}
 }
@@ -187,13 +187,13 @@ void DlgDbgStep::OnNextPass(wxCommandEvent& event){
 void DlgDbgStep::OnNextFrame(wxCommandEvent& event){
 
 	if (m_Canvas->IsPaused()){
-#ifdef GLINTERCEPTDEBUG 
-		gliSetIsGLIActive(true);
-#endif
+//#ifdef GLINTERCEPTDEBUG 
+//		gliSetIsGLIActive(true);
+//#endif
 		m_Canvas->StepToEndOfFrame();
-#ifdef GLINTERCEPTDEBUG 
-		gliSetIsGLIActive(false);
-#endif
+//#ifdef GLINTERCEPTDEBUG 
+//		gliSetIsGLIActive(false);
+//#endif
 		updateDlg();
 	}
 }
@@ -203,13 +203,13 @@ void DlgDbgStep::OnToPass(wxCommandEvent& event){
 
 
 	if (m_Canvas->IsPaused()){
-#ifdef GLINTERCEPTDEBUG 
-		gliSetIsGLIActive(true);
-#endif
+//#ifdef GLINTERCEPTDEBUG 
+//		gliSetIsGLIActive(true);
+//#endif
 		m_Canvas->StepUntilSamePassNextFrame();
-#ifdef GLINTERCEPTDEBUG 
-		gliSetIsGLIActive(false);
-#endif
+//#ifdef GLINTERCEPTDEBUG 
+//		gliSetIsGLIActive(false);
+//#endif
 		updateDlg();
 	}
 }

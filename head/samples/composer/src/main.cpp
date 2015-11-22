@@ -15,9 +15,9 @@
 #include <nau/debug/profile.h>
 #include <nau/render/iAPISupport.h>
 
-#ifdef GLINTERCEPTDEBUG
-#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+//#endif
 
 #include <wx/bitmap.h>
 #include <wx/dir.h>
@@ -398,9 +398,9 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	DlgDbgStep::SetParent(this);
 	DlgDbgStep::SetCanvas(m_Canvas);
 	DlgRenderTargets::SetParent(this);
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(true);
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(true);
+//#endif
 
 #ifdef FINAL
 	startStandAlone();
@@ -414,9 +414,9 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
 FrmMainFrame::~FrmMainFrame() {
 
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(true);
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(true);
+//#endif
 }
 
 
@@ -843,29 +843,29 @@ FrmMainFrame::OnBreakResume(wxCommandEvent& event) {
 	m_Canvas->BreakResume();
 	if (m_Canvas->IsPaused()){
 		
-#ifdef GLINTERCEPTDEBUG
-		FreezeGLI();
-#endif
+//#ifdef GLINTERCEPTDEBUG
+//		FreezeGLI();
+//#endif
 		debugMenu->Enable(idMenuDlgStep, true);
 		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
 	}
 	else{
 
-#ifdef GLINTERCEPTDEBUG		
-		gliSetIsGLIActive(true);
-#endif
+//#ifdef GLINTERCEPTDEBUG		
+//		gliSetIsGLIActive(true);
+//#endif
 		debugMenu->Enable(idMenuDlgStep, false);
 		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 	}
 }
 
 
-void
-FrmMainFrame::FreezeGLI(){
-#ifdef GLINTERCEPTDEBUG
-	gliSetIsGLIActive(false);
-#endif
-}
+//void
+//FrmMainFrame::FreezeGLI(){
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(false);
+//#endif
+//}
 
 
 void
