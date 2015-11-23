@@ -135,6 +135,15 @@ MaterialLibManager::getLibNames(std::vector<std::string>* names) {
     }
 }
 
+void 
+MaterialLibManager::getNonEmptyLibNames(std::vector<std::string>* names) {
+
+	for (auto &lib : m_LibManager) {
+		if (lib.second->getMaterialCount())
+			names->push_back(lib.first);
+	}
+}
+
 
 void
 MaterialLibManager::getMaterialNames(const std::string &lib, std::vector<std::string> *ret) {

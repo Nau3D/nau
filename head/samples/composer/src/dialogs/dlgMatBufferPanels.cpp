@@ -20,6 +20,9 @@ DlgMatBufferPanels::setMaterial(std::shared_ptr<nau::material::Material> &aMat) 
 
 	m_Material = aMat;
 
+	if (!aMat)
+		return;
+
 	m_MaterialBindings.clear();
 	m_Material->getBufferBindings(&m_MaterialBindings);
 	if (m_MaterialBindings.size() == 0) {

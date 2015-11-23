@@ -45,6 +45,7 @@ namespace nau
 			std::shared_ptr<Material> cloneMaterial(std::shared_ptr<Material> &);
 
 			void getLibNames (std::vector<std::string>* );
+			void getNonEmptyLibNames(std::vector<std::string>*);
 			void getMaterialNames (const std::string &lib, std::vector<std::string> *ret);
 			
 			unsigned int getNumLibs();

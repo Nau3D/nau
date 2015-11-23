@@ -143,11 +143,12 @@ DlgMaterials::DlgMaterials()
 	libList = new wxComboBox(this, DLG_MI_COMBO_LIBMATERIAL, wxT(""), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
 
 	std::vector<std::string> libs;
-	MATERIALLIBMANAGER->getLibNames(&libs);
+	MATERIALLIBMANAGER->getNonEmptyLibNames(&libs);
 
-	for (auto& lib : libs)
-		libList->Append(wxString(lib.c_str()));
-
+	for (auto& lib : libs) {
+		if (MATERIALLIBMANAGER->getLib(lib)->getMaterialCount())
+			libList->Append(wxString(lib.c_str()));
+	}
 	libList->SetSelection(0);
 
 	materialList = new wxComboBox(this, DLG_MI_COMBO_MATERIAL, wxT(""), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
@@ -222,7 +223,10 @@ DlgMaterials::DlgMaterials()
 
 	wxSizer *OGL = new wxBoxSizer(wxVERTICAL);
 
-	panels.setState(getModelMaterial()->getState());
+	std::shared_ptr<Material> &mm = getModelMaterial();
+	if (mm) {
+		panels.setState(mm->getState());
+	}
 	panels.setPanel(OGL,pOGL);
 
 	pOGL->SetAutoLayout(TRUE);
@@ -242,8 +246,8 @@ DlgMaterials::DlgMaterials()
 
 	/* Image Textures */
 	wxPanel *pITexs = new wxPanel(notebook,-1);
+	
 	notebook->AddPage(pITexs,wxT("Image Textures"));
-
 	wxSizer *ITexs = new wxBoxSizer(wxVERTICAL);
 
 	m_ITexPanel.setPanel(ITexs,pITexs);
@@ -332,24 +336,28 @@ void DlgMaterials::OnSelectLibMaterial(wxCommandEvent& event) {
 	sel = event.GetSelection();
 
 	std::vector<std::string> libs;
-	MATERIALLIBMANAGER->getLibNames(&libs);
+	MATERIALLIBMANAGER->getNonEmptyLibNames(&libs);
 	std::vector<std::string> mats;
 	MATERIALLIBMANAGER->getMaterialNames(libs.at(sel), &mats);
 
 	materialList->Clear();
-	for (auto& mat:mats)
+	for (auto& mat : mats)
 		materialList->Append(wxString(mat.c_str()));
 
 	materialList->SetSelection(0);
-		
+
 	std::shared_ptr<Material> &mm = getModelMaterial();
-	updateColors(mm) ;
-	updateTextures(mm,0);
-	updateShader(mm);
-	panels.setState(mm->getState());
-	panels.updatePanel();
-	m_BufferPanel.setMaterial(mm);
-	m_ITexPanel.setMaterial(mm);
+	if (mm) {
+		updateColors(mm);
+		updateTextures(mm, 0);
+		updateShader(mm);
+		panels.setState(mm->getState());
+		panels.updatePanel();
+		m_BufferPanel.setMaterial(mm);
+		m_ITexPanel.setMaterial(mm);
+	}
+	else {
+	}
 
 	if (libs.at(sel).substr(0,1) == " ") {
 		m_toolbar->EnableTool(LIBMAT_SAVE, FALSE);
@@ -378,7 +386,7 @@ void DlgMaterials::OnSelectLibMaterial(wxCommandEvent& event) {
 void DlgMaterials::updateMaterialList() {
 
 	std::vector<std::string> libs;
-	MATERIALLIBMANAGER->getLibNames(&libs);
+	MATERIALLIBMANAGER->getNonEmptyLibNames(&libs);
 
 	wxString sel = libList->GetStringSelection();
 	libList->Clear();
@@ -399,14 +407,15 @@ void DlgMaterials::updateMaterialList() {
 		materialList->SetSelection(0);
 
 	std::shared_ptr<Material> &mm = getModelMaterial();
-
-	updateColors(mm) ;
-	updateTextures(mm,0);
-	updateShader(mm);
-	panels.setState(mm->getState());
-	panels.updatePanel();
-	m_BufferPanel.setMaterial(mm);
-	m_ITexPanel.setMaterial(mm);
+	if (mm) {
+		updateColors(mm);
+		updateTextures(mm, 0);
+		updateShader(mm);
+		panels.setState(mm->getState());
+		panels.updatePanel();
+		m_BufferPanel.setMaterial(mm);
+		m_ITexPanel.setMaterial(mm);
+	}
 }
 
 
@@ -654,11 +663,14 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	gridTextures->SetRowMinimalAcceptableHeight(100);
 	gridTextures->SetColMinimalAcceptableWidth(100);
 
+	ITexture *texture;
 	for(int i = 0; i < 2; i++) { 
 		gridTextures->SetRowSize(i,100);
 		for(int j = 0 ; j < 4 ; j++){
-
-			ITexture *texture = mm->getTexture(i*4+j);
+			if (mm)
+				texture = mm->getTexture(i * 4 + j);
+			else
+				texture = NULL;
 	
 			gridTextures->SetReadOnly(i,j,true);
 			if (texture != NULL)
@@ -741,8 +753,8 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 	siz->Add(gridTextures,0,wxALL|wxALIGN_CENTER,5);
 
 	siz->Add(sizerTP,1,wxALL|wxGROW,5);
-
-	updateTextures(getModelMaterial(),0);
+	if (mm)
+		updateTextures(mm,0);
 }
 
 
@@ -902,7 +914,10 @@ void DlgMaterials::updateTextures(std::shared_ptr<Material> &mm, int index) {
 	ITexture *texture;
 	for(int i = 0; i < 2; i++) { 
 		for(int j = 0 ; j < 4 ; j++) {
-			texture = mm->getTexture(i*4+j);
+			if (mm)
+				texture = mm->getTexture(i * 4 + j);
+			else
+				texture = NULL;
 			if (texture != NULL)
 				imagesGrid[i * 4 + j]->setBitmap(DlgTextureLib::Instance()->m_Bitmaps[texture->getPropi(ITexture::ID)]);
 //				imagesGrid[i * 4 + j]->setBitmap(texture->getBitmap());
@@ -996,8 +1011,8 @@ void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 
 
 void DlgMaterials::updateColors(std::shared_ptr<Material> &mm) {
-
-	PropertyManager::updateGrid(pgMaterial, ColorMaterial::Attribs, (AttributeValues *)mm.get());
+	if (mm)
+		PropertyManager::updateGrid(pgMaterial, ColorMaterial::Attribs, (AttributeValues *)mm.get());
 }
 
 
@@ -1079,6 +1094,9 @@ void DlgMaterials::OnShaderListSelect(wxCommandEvent& event){
 
 
 void DlgMaterials::updateShader(std::shared_ptr<Material> &m){
+
+	if (!m)
+		return;
 
 	// Update Shader List
 	std::vector<std::string> *names = RESOURCEMANAGER->getProgramNames();

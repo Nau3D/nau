@@ -572,7 +572,7 @@ void DlgPass::updateMaterialList() {
 	m_pgMaterialListPlus.Add(wxT("None"));
 
 	std::vector<std::string> libList; 
-	MATERIALLIBMANAGER->getLibNames(&libList);
+	MATERIALLIBMANAGER->getNonEmptyLibNames(&libList);
 
 	wxString libname;
 	for (auto& lib:libList) {

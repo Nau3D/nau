@@ -20,6 +20,9 @@ DlgMatImageTexturePanels::setMaterial(std::shared_ptr<nau::material::Material> &
 
 	m_Material = aMat;
 
+	if (!aMat)
+		return;
+
 	m_ImageTextureUnits.clear();
 	m_Material->getImageTextureUnits(&m_ImageTextureUnits);
 	if (m_ImageTextureUnits.size() == 0) {
