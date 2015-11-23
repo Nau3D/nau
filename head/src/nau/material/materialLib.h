@@ -39,7 +39,7 @@ namespace nau
 			void addMaterial (std::shared_ptr<Material> &aMaterial);
 			std::shared_ptr<Material> &getMaterial(const std::string &);
 			
-			int getMaterialCount();
+			unsigned int getMaterialCount();
 			void getMaterialNames(std::vector<std::string>* ret);
 			void getMaterialNames(const std::string &aName, std::vector<std::string>* ret);
 		};

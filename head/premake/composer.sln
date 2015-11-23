@@ -25,9 +25,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nauGlut", "nauGlut\nauGlut.vcxproj", "{991075CE-418C-49EF-98A1-CE6AB3122A34}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Optix Dynamic|Win32 = Debug Optix Dynamic|Win32
 		Debug Optix Dynamic|x64 = Debug Optix Dynamic|x64

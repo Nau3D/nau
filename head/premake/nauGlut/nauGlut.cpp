@@ -99,6 +99,7 @@ int main(int argc, char **argv) {
 		else
 			s = std::string(argv[1]);
 		std::string appPath = nau::system::File::GetAppFolder();
+		std::string cleanAppPath = nau::system::File::CleanFullPath(appPath);
 		std::string full = nau::system::File::GetFullPath(appPath, s);
 		NAU->setWindowSize(w, h);
 		NAU->readProjectFile(full, &w, &h);

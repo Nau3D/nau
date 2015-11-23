@@ -89,7 +89,7 @@ MaterialLib::getMaterialNames(const std::string &aName, std::vector<std::string>
 }
 
 
-int
+unsigned int
 MaterialLib::getMaterialCount() {
 
 	return m_MaterialLib.size();
