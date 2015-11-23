@@ -19,14 +19,12 @@ namespace nau
 		class ResourceManager
 		{
 		private:
-			//TextureManager* m_pTextureManager;
 			std::string m_Path;
 			
 			std::map<std::string, nau::render::IRenderTarget*> m_RenderTargets;
 			std::map<std::string, nau::render::IRenderable*> m_Meshes;
 			std::map<std::string, nau::material::IProgram*> m_Programs;
 			std::map<std::string, nau::material::IState*> m_States;
-			//std::map<std::string, nau::material::ITexImage*> m_TexImages;    
 			std::vector<nau::material::ITexture*> m_Textures;
 			std::map<std::string, nau::material::IBuffer*> m_Buffers;
 			static int renderableCount;
@@ -40,35 +38,21 @@ namespace nau
 			/***Textures***/
 			bool hasTexture(std::string name);
 			int getNumTextures();
+
 			ITexture* getTexture(unsigned int i);
 			ITexture* getTextureByID(unsigned int id);
 			ITexture* getTexture (std::string name);
+
 			ITexture* addTexture (std::string fn, std::string label = "", bool mipmap = 1);
 			ITexture* addTexture (std::vector<std::string> fn, std::string label, bool mipmap = 1);
+
 			void removeTexture (std::string name);
 			
-			//nau::render::ITexture* createTexture (std::string label, 
-			//	std::string internalFormat, 
-			//	std::string aFormat, 
-			//	std::string aType, int width, int height,
-			//	unsigned char* data = NULL);
-
-			ITexture* createTexture (std::string label, 
-				std::string internalFormat, 
-				int width, int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
-
-			//nau::render::ITexture* createTextureMS (std::string label, 
-			//	std::string internalFormat, 
-			//	int width, int height,
-			//	int samples);
+			ITexture* createTexture (std::string label, std::string internalFormat, int width, 
+				int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
 
 			/// create texture with default attributes, texture requires building prior to usage
 			ITexture * createTexture(std::string label);
-
-			/***ITexImage***/
-			//nau::material::ITexImage* createTexImage(ITexture *t);
-			//nau::material::ITexImage* getTexImage(std::string aTextureName);
-
 
 			/***Rendertargets***/
 			nau::render::IRenderTarget* createRenderTarget (std::string name);
@@ -85,7 +69,6 @@ namespace nau
 			nau::render::IRenderable* addRenderable (nau::render::IRenderable* aMesh, std::string filename);
 			void removeRenderable(std::string name);
 
-
 			/***States***/
 			IState * createState(std::string &stateName);
 			bool hasState (std::string &stateName);
@@ -97,7 +80,6 @@ namespace nau
 			nau::material::IProgram* getProgram (std::string programName);
 			unsigned int getNumPrograms();
 			std::vector<std::string> *getProgramNames();
-
 
 			/***Buffers***/
 			nau::material::IBuffer* getBuffer(std::string name);

@@ -35,7 +35,7 @@ namespace nau
 
 			std::map<std::string, std::shared_ptr<Camera>> m_Cameras;
 			std::map<std::string, std::shared_ptr<Light>> m_Lights;
-			std::map <std::string, std::shared_ptr<Viewport>> m_Viewports;
+			std::map<std::string, std::shared_ptr<Viewport>> m_Viewports;
 
 			unsigned int m_ActivePipelineIndex;
 			

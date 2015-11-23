@@ -29,9 +29,10 @@ namespace nau
 		{
 		public:
 
+			friend class nau::material::IBuffer;
+
 			static std::map<GLenum, GLenum> BufferBound;
 
-			GLBuffer(std::string label);
 			~GLBuffer(void) ;
 
 			void bind(unsigned int target);
@@ -53,6 +54,7 @@ namespace nau
 			static bool Init();
 			static bool Inited;
 
+			GLBuffer(std::string label);
 			GLBuffer() {};
 
 			int m_LastBound;

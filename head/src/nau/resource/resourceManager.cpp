@@ -23,16 +23,13 @@ int ResourceManager::renderableCount = 0;
 
 
 ResourceManager::ResourceManager(std::string path) :
-		//m_pTextureManager(0),
 		m_Path(path),
 		m_RenderTargets(),
 		m_Meshes(),
 		m_States(),
 		m_Programs(),
 		m_Textures()
-//		m_TexImages()
 {
-	//m_pTextureManager = new TextureManager (m_Path);
 }
 
 
@@ -75,40 +72,6 @@ ResourceManager::clear() {
 		m_Buffers.erase(m_Buffers.begin());
 	}
 }
-//-------------------------------------	
-
-//			TEXIMAGES
-
-//-------------------------------------
-
-//
-//nau::material::ITexImage* 
-//ResourceManager::createTexImage(nau::material::ITexture *t) {
-//
-//	if ( m_TexImages.count(t->getLabel())) {
-//		m_TexImages[t->getLabel()]->update();
-//		return m_TexImages[t->getLabel()];
-//	}
-//	
-//	nau::material::ITexImage *ti = nau::material::ITexImage::create(t);
-//
-//	m_TexImages[t->getLabel()] = ti;
-//
-//	return ti;
-//}
-//
-//
-//nau::material::ITexImage* 
-//ResourceManager::getTexImage(std::string aTextureName) {
-//
-//	if ( m_TexImages.count(aTextureName)) {
-//
-//		m_TexImages[aTextureName]->update();
-//		return m_TexImages[aTextureName];
-//	}
-//	else
-//		return NULL;
-//}
 
 //-------------------------------------	
 
@@ -136,11 +99,10 @@ ResourceManager::hasTexture(std::string name) {
 nau::material::ITexture * 
 ResourceManager::createTexture(std::string label) {
 
-//	return (m_pTextureManager->createTexture(label));
 	ITexture *tex;
 
 	if (true == hasTexture(label)) {
-		tex = getTexture(label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
+		tex = getTexture(label); 
 		return(tex);
 	}
 
@@ -157,11 +119,10 @@ ResourceManager::createTexture (std::string label,
 				int width, int height, int depth, 
 				int layers, int levels, int samples) {
 
-//	return (m_pTextureManager->createTexture (label, internalFormat, width, height, depth, layers, levels, samples));
 	ITexture *tex;
 
 	if (true == hasTexture (label)) {
-		tex = getTexture (label); /***MARK***/ //Must check if the texture is the same (dimension, format, width, height, ...)
+		tex = getTexture (label); 
 		return(tex);
 	}
 
@@ -175,7 +136,6 @@ ResourceManager::createTexture (std::string label,
 nau::material::ITexture* 
 ResourceManager::addTexture (std::string filename, std::string label, bool mipmap) {
 
-	//return (m_pTextureManager->addTexture (fn, label, mipmap));
 	size_t siz = m_Textures.size();
 	ITexture *tex;
 
@@ -194,7 +154,6 @@ ResourceManager::addTexture (std::string filename, std::string label, bool mipma
 	}
 
 	// if the texture does not exist yet
-
 	tex = ITexture::Create (filename, label, mipmap);
 	if (tex)
 		m_Textures.push_back(tex);
@@ -206,7 +165,6 @@ ResourceManager::addTexture (std::string filename, std::string label, bool mipma
 nau::material::ITexture* 
 ResourceManager::addTexture (std::vector<std::string> filenames, std::string label, bool mipmap) {
 
-//	return (m_pTextureManager->addTexture (fn, label, mipmap));
 	size_t siz = m_Textures.size();
 	ITexture *tex;
 
@@ -218,7 +176,6 @@ ResourceManager::addTexture (std::vector<std::string> filenames, std::string lab
 	}
 
 	// if the texture does not exist yet
-
 	tex = ITextureCubeMap::Create (filenames, label, mipmap);
 	m_Textures.push_back(tex);
 
@@ -229,7 +186,6 @@ ResourceManager::addTexture (std::vector<std::string> filenames, std::string lab
 void 
 ResourceManager::removeTexture (std::string name) {
 
-//	m_pTextureManager->removeTexture (name);
 	std::vector<ITexture*>::iterator texIter;
 
 	texIter = m_Textures.begin();
@@ -247,7 +203,6 @@ ResourceManager::removeTexture (std::string name) {
 ITexture*
 ResourceManager::getTexture (std::string name) {
 
-//	return (m_pTextureManager->getTexture (name));
 	size_t siz = m_Textures.size();
 	ITexture *tex;
 
@@ -265,7 +220,6 @@ ResourceManager::getTexture (std::string name) {
 ITexture*
 ResourceManager::getTextureByID (unsigned int id) {
 
-//	return (m_pTextureManager->getTexture (id));
 	size_t siz = m_Textures.size();
 	ITexture *tex;
 
@@ -297,9 +251,9 @@ ResourceManager::getNumTextures() {
 }
 
 //-------------------------------------	
-
+//
 //			RENDER TARGETS
-
+//
 //-------------------------------------
 
 nau::render::IRenderTarget* 
@@ -574,7 +528,6 @@ ResourceManager::getProgramNames() {
 //			BUFFERS
 //-------------------------------------
 
-
 void
 ResourceManager::clearBuffers() {
 
@@ -584,7 +537,6 @@ ResourceManager::clearBuffers() {
 			b.second->clear();
 	}
 }
-
 
 
 nau::material::IBuffer* 
