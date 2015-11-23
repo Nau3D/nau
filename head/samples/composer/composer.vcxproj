@@ -246,7 +246,7 @@
     <IntDir>..\..\build\obj\composer\Debug64\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">
-    <OutDir>../../build/samples\</OutDir>
+    <OutDir>..\..\build\samples\</OutDir>
     <TargetName>composerOptix64</TargetName>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
@@ -714,7 +714,7 @@
       <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>msvcprt.lib</IgnoreSpecificDefaultLibraries>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>
@@ -722,6 +722,8 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -802,6 +804,9 @@
     <ClInclude Include="src\dialogs\dlgScenes.h" />
     <ClInclude Include="src\dialogs\dlgShaders.h" />
     <ClInclude Include="src\dialogs\dlgTextureLib.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\Users\ARF\AppData\Local\Temp\Report20151122-0121.diagsession" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

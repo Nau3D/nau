@@ -53,7 +53,7 @@ UniformBlockManager::addBlock(std::string &name, unsigned int size) {
 
 
 IUniformBlock *
-UniformBlockManager::getBlock(std::string &name) {
+UniformBlockManager::getBlock(const std::string &name) {
 
 	if (m_Blocks.count(name))
 		return m_Blocks[name];

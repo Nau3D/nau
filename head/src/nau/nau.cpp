@@ -666,7 +666,7 @@ Nau::callLuaTestScript(std::string name) {
 
 
 AttributeValues *
-Nau::getCurrentObjectAttributes(std::string context, int number) {
+Nau::getCurrentObjectAttributes(std::string &context, int number) {
 
 	IRenderer *renderer = m_pRenderManager->getRenderer();
 	IAPISupport *sup = IAPISupport::GetInstance();
@@ -713,7 +713,7 @@ Nau::getCurrentObjectAttributes(std::string context, int number) {
 
 
 AttributeValues *
-Nau::getObjectAttributes(std::string type, std::string context, int number) {
+Nau::getObjectAttributes(std::string &type, std::string &context, int number) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
 	// From Render Manager

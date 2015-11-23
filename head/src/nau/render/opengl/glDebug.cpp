@@ -118,9 +118,9 @@ int
 GLDebug::SetTrace(int numberOfFrames) {
 
 	if (numberOfFrames == 0) {
-		glbinding::setCallbackMask(glbinding::CallbackMask::None);
 		// if we we're tracing close the log
 		if (sTracing) {
+			glbinding::setCallbackMask(glbinding::CallbackMask::None);
 			CLogger::CloseLog(CLogger::LEVEL_TRACE);
 			EVENTMANAGER->notifyEvent("TRACE_FILE_READY", "", "", NULL);
 		}

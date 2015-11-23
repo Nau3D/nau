@@ -99,8 +99,8 @@ namespace nau {
 				 Data *values);
 		void *getAttribute(std::string type, std::string context,
 			std::string component, int number);
-		AttributeValues *getObjectAttributes(std::string type, std::string context, int number=0);
-		AttributeValues *getCurrentObjectAttributes(std::string context, int number = 0);
+		AttributeValues *getObjectAttributes(std::string &type, std::string &context, int number=0);
+		AttributeValues *getCurrentObjectAttributes(std::string &context, int number = 0);
 
 		// Attributes
 		void registerAttributes(std::string s, AttribSet *attrib);

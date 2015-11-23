@@ -135,4 +135,7 @@
       <UniqueIdentifier>{024471a4-0fd2-4ee2-9b3a-24a43df3d006}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\Users\ARF\AppData\Local\Temp\Report20151122-0121.diagsession" />
+  </ItemGroup>
 </Project>

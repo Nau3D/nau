@@ -14,14 +14,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attribute", "..\samples\att
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF} = {B2A55A68-A417-4C52-BFE7-8193BA388ABF}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nauGlut", "nauGlut\nauGlut.vcxproj", "{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B2A55A68-A417-4C52-BFE7-8193BA388ABF} = {B2A55A68-A417-4C52-BFE7-8193BA388ABF}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLLpassDepthMap", "DLLpassDepthMap\DLLpassDepthMap.vcxproj", "{B2BBEF8A-1306-41BE-9475-053E72878AC8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E3BCE780-4940-4AB1-A4F5-668248B298EB}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+		Performance2.psess = Performance2.psess
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nauGlut", "nauGlut\nauGlut.vcxproj", "{991075CE-418C-49EF-98A1-CE6AB3122A34}"
+EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Optix Dynamic|Win32 = Debug Optix Dynamic|Win32
 		Debug Optix Dynamic|x64 = Debug Optix Dynamic|x64
@@ -87,20 +93,6 @@ Global
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release|Win32.ActiveCfg = Release|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release|Win32.Build.0 = Release|Win32
 		{B4688BBF-66C7-4109-96EB-6DA471817F7A}.Release|x64.ActiveCfg = Release|x64
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug Optix Dynamic|Win32.ActiveCfg = Debug|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug Optix Dynamic|x64.ActiveCfg = Debug|x64
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug Optix|Win32.ActiveCfg = Debug|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug Optix|x64.ActiveCfg = Debug|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|Win32.ActiveCfg = Debug|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|Win32.Build.0 = Debug|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|x64.ActiveCfg = Debug|x64
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Debug|x64.Build.0 = Debug|x64
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release Optix|Win32.ActiveCfg = Release|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release Optix|x64.ActiveCfg = Release|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|Win32.ActiveCfg = Release|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|Win32.Build.0 = Release|Win32
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|x64.ActiveCfg = Release|x64
-		{27AABF1A-E197-459D-BA5D-BF76FBBD74FD}.Release|x64.Build.0 = Release|x64
 		{B2BBEF8A-1306-41BE-9475-053E72878AC8}.Debug Optix Dynamic|Win32.ActiveCfg = Debug Optix Dynamic|Win32
 		{B2BBEF8A-1306-41BE-9475-053E72878AC8}.Debug Optix Dynamic|Win32.Build.0 = Debug Optix Dynamic|Win32
 		{B2BBEF8A-1306-41BE-9475-053E72878AC8}.Debug Optix Dynamic|x64.ActiveCfg = Debug Optix Dynamic|x64
@@ -121,6 +113,26 @@ Global
 		{B2BBEF8A-1306-41BE-9475-053E72878AC8}.Release|Win32.Build.0 = Release|Win32
 		{B2BBEF8A-1306-41BE-9475-053E72878AC8}.Release|x64.ActiveCfg = Release|x64
 		{B2BBEF8A-1306-41BE-9475-053E72878AC8}.Release|x64.Build.0 = Release|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug Optix Dynamic|Win32.ActiveCfg = Debug|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug Optix Dynamic|Win32.Build.0 = Debug|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug Optix Dynamic|x64.ActiveCfg = Debug|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug Optix Dynamic|x64.Build.0 = Debug|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug Optix|Win32.ActiveCfg = Debug|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug Optix|Win32.Build.0 = Debug|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug Optix|x64.ActiveCfg = Debug|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug Optix|x64.Build.0 = Debug|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug|Win32.ActiveCfg = Debug|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug|Win32.Build.0 = Debug|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug|x64.ActiveCfg = Debug|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Debug|x64.Build.0 = Debug|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Release Optix|Win32.ActiveCfg = Release|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Release Optix|Win32.Build.0 = Release|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Release Optix|x64.ActiveCfg = Release Optix|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Release Optix|x64.Build.0 = Release Optix|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Release|Win32.ActiveCfg = Release|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Release|Win32.Build.0 = Release|Win32
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Release|x64.ActiveCfg = Release|x64
+		{991075CE-418C-49EF-98A1-CE6AB3122A34}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

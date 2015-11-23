@@ -29,7 +29,7 @@ namespace nau
 
 			void clear();
 			void addBlock(std::string &name, unsigned int size);
-			IUniformBlock *getBlock(std::string &name);
+			IUniformBlock *getBlock(const std::string &name);
 			bool hasBlock(std::string &name);
 
 			unsigned int getCurrentBindingIndex();

@@ -218,13 +218,13 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	unsigned int nMatGroups, nMats;
 
 	// MATERIALS
-	LOG_INFO ("[Reading] Materials start");
+	//LOG_INFO ("[Reading] Materials start");
 	f.read (reinterpret_cast<char *> (&nMats), sizeof(nMats));
 	for (unsigned int i = 0 ; i < nMats; i++) {
 		
 		_readMaterial(path,f);
 	}
-	LOG_INFO ("[Reading] Materials done");
+	//LOG_INFO ("[Reading] Materials done");
 	//GEOMETRY
 	_readString (buffer, f);
 
@@ -241,7 +241,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	for (unsigned int i = 0; i < nObjects; i++) {
 
 		_readString (buffer, f);
-		LOG_INFO ("[Reading] Type of object: [%s]", buffer);
+		//LOG_INFO ("[Reading] Type of object: [%s]", buffer);
 		SceneObject *aObject = SceneObjectFactory::Create(buffer);
 
 		_readString (buffer, f);

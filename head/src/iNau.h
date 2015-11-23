@@ -78,8 +78,8 @@ namespace nau {
 				 Data *values) = 0;
 		virtual void *getAttribute(std::string type, std::string context,
 			std::string component, int number) = 0;
-		virtual AttributeValues *getObjectAttributes(std::string type, std::string context, int number=0) = 0;
-		virtual AttributeValues *getCurrentObjectAttributes(std::string context, int number = 0) = 0;
+		virtual AttributeValues *getObjectAttributes(std::string &type, std::string &context, int number=0) = 0;
+		virtual AttributeValues *getCurrentObjectAttributes(std::string &context, int number = 0) = 0;
 
 		virtual void registerAttributes(std::string s, AttribSet *attrib) = 0;
 		virtual bool validateUserAttribContext(std::string s) = 0;

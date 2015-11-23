@@ -209,7 +209,7 @@ Material::setUniformBlockValues() {
 	for (auto pbv:m_ProgramBlockValues) {
 			
 		void *v = pbv.second.getValues();
- 		std::string block = pbv.first.first;
+ 		const std::string &block = pbv.first.first;
 		std::string uniform = pbv.first.second;
 		IUniformBlock *b = UNIFORMBLOCKMANAGER->getBlock(block);
 		if (b) {
@@ -338,7 +338,7 @@ Material::prepare () {
 
 	{
 		PROFILE("Buffers");
-		for (auto b : m_Buffers) {
+		for (auto &b : m_Buffers) {
 			b.second->bind();
 		}
 	}
@@ -351,7 +351,7 @@ Material::prepare () {
 		m_Color.prepare();
 	}
 	{	PROFILE("Texture");
-		for (auto t : m_Textures) {
+		for (auto &t : m_Textures) {
 			t.second->bind();
 		}
 	}
@@ -359,7 +359,7 @@ Material::prepare () {
 	{
 		PROFILE("Image Textures");
 		if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
-			for (auto it : m_ImageTextures)
+			for (auto &it : m_ImageTextures)
 				it.second->prepare();
 		}
 	}
@@ -382,11 +382,11 @@ Material::prepare () {
 void 
 Material::restore() {
 
-	m_Color.restore();
+	//m_Color.restore();
 	
-	if (NULL != m_Shader && m_useShader) {
-		m_Shader->restore();
-	}
+	//if (NULL != m_Shader && m_useShader) {
+	//	m_Shader->restore();
+	//}
 	
 	RENDERER->resetTextures(m_Textures);
 	//for (auto t : m_Textures)
@@ -396,7 +396,7 @@ Material::restore() {
 		b.second->unbind();
 	
 	if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
-		for (auto b : m_ImageTextures)
+		for (auto &b : m_ImageTextures)
 			b.second->restore();
 	}
 }
