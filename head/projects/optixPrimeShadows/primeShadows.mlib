@@ -28,8 +28,9 @@
 		<buffer name="rays" >
 			<SIZE value=33554432 />
 		</buffer>	
-		<!--buffer name="hits" size=4194304 />
-		<buffer name="rays" size=8388608 /-->
+		<buffer name="test" >
+			<SIZE value=8 />
+		</buffer>	
 	</buffers>	
 	
 	<shaders>
@@ -87,13 +88,15 @@
 			<shader name="compose">
 				<values>
 					<valueof uniform="texColor" 		type="MATERIAL_TEXTURE" context="CURRENT" 
-														component="UNIT" id="0" />	
+															component="UNIT" id="0" />	
 					<valueof uniform="texNormal" 		type="MATERIAL_TEXTURE" context="CURRENT" 
-														component="UNIT" id="1" />	
+															component="UNIT" id="1" />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
-														component="DIRECTION" /> 
+															component="DIRECTION" /> 
 					<valueof uniform="V"				type="CAMERA" context="MainCamera" 
-														component="VIEW_MATRIX" />								
+															component="VIEW_MATRIX" />
+					<valueof uniform="rayCount"			type="PASS" context="OptixPrime#Optix Prime"
+															component="RAY_COUNT" />
 				</values>
 			</shader>
 			<textures>

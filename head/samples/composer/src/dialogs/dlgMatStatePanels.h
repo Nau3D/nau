@@ -35,7 +35,7 @@ public:
 
 	nau::material::IState *m_glState;
 
-	wxPropertyGridManager *pg;	
+	wxPropertyGridManager *m_PG;
 
 	enum {
 		PG
@@ -48,6 +48,7 @@ public:
 	void updatePanel();
 
 	void setPanel(wxSizer *siz, wxWindow *parent);
+	void resetPropGrid();
 	void OnProcessPanelChange(wxPropertyGridEvent& e);
 };
 

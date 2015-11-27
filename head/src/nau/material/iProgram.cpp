@@ -45,3 +45,10 @@ IProgram::isShaderSupported(IProgram::ShaderType type) {
 	else
 		return true;
 }
+
+
+bool
+IProgram::hasTessellationShader() {
+
+	return m_HasTessShader;
+}

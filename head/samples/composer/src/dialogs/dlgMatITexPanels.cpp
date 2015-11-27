@@ -84,6 +84,21 @@ DlgMatImageTexturePanels::setPanel(wxSizer *siz, wxWindow *parent) {
 
 
 void 
+DlgMatImageTexturePanels::resetPropGrid() {
+
+	pg->Clear();
+	pg->AddPage(wxT("Standard Items"));
+
+	std::vector<std::string> order = { "UNIT", "TEX_ID" };
+	PropertyManager::createOrderedGrid(pg, nau::material::IImageTexture::Attribs, order);
+	PropertyManager::setAllReadOnly(pg, nau::material::IImageTexture::Attribs);
+
+	pg->SetSplitterLeft(true);
+
+}
+
+
+void 
 DlgMatImageTexturePanels::onProcessPanelChange(wxPropertyGridEvent& e) {
 
 	nau::material::IImageTexture *it;

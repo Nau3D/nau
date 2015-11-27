@@ -16,19 +16,8 @@ using namespace nau::system;
 // STATIC METHOD
 
 
-//#if NAU_OPENGL_VERSION >= 430
 GLenum GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
 	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER};
-//#elif NAU_OPENGL_VERSION >= 400
-//int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
-//	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_FRAGMENT_SHADER};
-//#elif NAU_OPENGL_VERSION >= 320
-//int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
-//	{GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER};
-//#else
-//int GLProgram::ShaderGLId[IProgram::SHADER_COUNT] = 
-//	{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
-//#endif
 
 // CONSTRUCTORS
 
@@ -121,6 +110,9 @@ GLProgram::loadShader (IProgram::ShaderType type, const std::string &filename) {
 
 	if (!isShaderSupported(type))
 		return false;
+
+	if (type == TESS_CONTROL_SHADER || type == TESS_EVALUATION_SHADER)
+		m_HasTessShader = true;
 
 	if (true == setShaderFile(type,filename)) {
 		m_Compiled[type] = compileShader(type);

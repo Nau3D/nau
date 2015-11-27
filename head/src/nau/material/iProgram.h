@@ -14,6 +14,10 @@ namespace nau
 	{
 		class IProgram
 		{
+		protected:
+			bool m_HasTessShader;
+			IProgram() :m_HasTessShader(false) {}
+
 		public:
 			static IProgram* create ();
 
@@ -28,35 +32,11 @@ namespace nau
 				FRAGMENT_SHADER,
 				COMPUTE_SHADER
 			 };
-//#elif NAU_OPENGL_VERSION >= 400
-//			const static int SHADER_COUNT = 5;
-//
-//			enum ShaderType {
-//				VERTEX_SHADER,
-//				GEOMETRY_SHADER,
-//				TESS_CONTROL_SHADER,
-//				TESS_EVALUATION_SHADER,
-//				FRAGMENT_SHADER,
-//			 };
-//#elif NAU_OPENGL_VERSION >= 320
-//			const static int SHADER_COUNT = 3;
-//
-//			enum ShaderType {
-//				VERTEX_SHADER,
-//				GEOMETRY_SHADER,
-//				FRAGMENT_SHADER,
-//			 };
-//#else
-//			const static int SHADER_COUNT = 2;
-//
-//			enum ShaderType {
-//				VERTEX_SHADER,
-//				FRAGMENT_SHADER,
-//			 };
-//#endif
+
 			static std::string ShaderNames[IProgram::SHADER_COUNT];
 
 			virtual bool isShaderSupported(IProgram::ShaderType);
+			bool hasTessellationShader();
 			virtual bool loadShader(IProgram::ShaderType type, const std::string &filename) = 0;
 			virtual bool reload (void) = 0;
 			
@@ -71,8 +51,6 @@ namespace nau
 
 			virtual bool setValueOfUniform (const std::string &name, void *values) = 0; 
 			virtual void prepareBlocks() = 0;
-			//virtual bool setValueOfUniform(int loc, void *values) = 0;
-			//virtual bool setValueOfUniform (const std::string &name, int *values) = 0;
 
 			virtual int getNumberOfUniforms (void) = 0;
 			virtual int getNumberOfUserUniforms (void) = 0;

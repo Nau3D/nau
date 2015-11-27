@@ -108,6 +108,7 @@ int main(int argc, char **argv) {
 	}
 	catch (std::string s) {
 		printf("%s\n", s.c_str());
+		exit(0);
 	}
 	//  GLUT main loop
 	glutMainLoop();

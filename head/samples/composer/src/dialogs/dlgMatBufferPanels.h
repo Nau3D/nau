@@ -34,7 +34,7 @@ class DlgMatBufferPanels {
 public:
 
 
-	wxPropertyGridManager *pg;	
+	wxPropertyGridManager *m_PG;	
 	wxComboBox *itemList;
 
 	enum {
@@ -50,6 +50,7 @@ public:
 	void setPanel(wxSizer *siz, wxWindow *parent);
 	void onProcessPanelChange(wxPropertyGridEvent& e);
 	void onItemListSelect(wxCommandEvent& event);
+	void resetPropGrid();
 
 private:
 	std::shared_ptr<nau::material::Material> m_Material;

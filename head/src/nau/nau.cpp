@@ -1213,6 +1213,10 @@ Nau::step() {
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, 2);
 	else
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, ++k);
+
+	if (getProfileResetRequest())
+		Profile::Reset();
+
 }
 
 

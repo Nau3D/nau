@@ -26,7 +26,7 @@ DlgMatBufferPanels::setMaterial(std::shared_ptr<nau::material::Material> &aMat) 
 	m_MaterialBindings.clear();
 	m_Material->getBufferBindings(&m_MaterialBindings);
 	if (m_MaterialBindings.size() == 0) {
-		pg->Hide();
+		m_PG->Hide();
 		itemList->Clear();
 		itemList->Disable();
 	}
@@ -35,7 +35,7 @@ DlgMatBufferPanels::setMaterial(std::shared_ptr<nau::material::Material> &aMat) 
 		itemList->SetSelection(0);
 		m_CurrentBinding = 0;
 		updatePanel();
-		pg->Show();
+		m_PG->Show();
 	}
 }
 
@@ -60,7 +60,7 @@ DlgMatBufferPanels::setPanel(wxSizer *siz, wxWindow *parent) {
 	wxSizer *sizerf = new wxStaticBoxSizer(sf2,wxVERTICAL);;
 
 	// Item properties
-	pg = new wxPropertyGridManager(parent, PG,
+	m_PG = new wxPropertyGridManager(parent, PG,
 				wxDefaultPosition, wxDefaultSize,
 				// These and other similar styles are automatically
 				// passed to the embedded wxPropertyGrid.
@@ -68,23 +68,42 @@ DlgMatBufferPanels::setPanel(wxSizer *siz, wxWindow *parent) {
 				// Plus defaults.
 				wxPGMAN_DEFAULT_STYLE
            );
-	pg->AddPage(wxT("Standard Items"));
+	m_PG->AddPage(wxT("Standard Items"));
 
 	std::vector<std::string> order2 = {};
-	PropertyManager::createOrderedGrid(pg, nau::material::IMaterialBuffer::Attribs, order2);
+	PropertyManager::createOrderedGrid(m_PG, nau::material::IMaterialBuffer::Attribs, order2);
 
 	std::vector<std::string> order = {"ID", "SIZE", "CLEAR"};
-	PropertyManager::createOrderedGrid(pg, nau::material::IBuffer::Attribs, order);
+	PropertyManager::createOrderedGrid(m_PG, nau::material::IBuffer::Attribs, order);
 
-	PropertyManager::setAllReadOnly(pg, nau::material::IBuffer::Attribs);
-	PropertyManager::setAllReadOnly(pg, nau::material::IMaterialBuffer::Attribs);
+	PropertyManager::setAllReadOnly(m_PG, nau::material::IBuffer::Attribs);
+	PropertyManager::setAllReadOnly(m_PG, nau::material::IMaterialBuffer::Attribs);
 
-	pg->SetSplitterLeft(true);
+	m_PG->SetSplitterLeft(true);
 
-	sizerf->Add(pg,1,wxEXPAND);
+	sizerf->Add(m_PG,1,wxEXPAND);
 
 	siz->Add(sizerL,0,wxGROW|wxEXPAND|wxALL,5);
 	siz->Add(sizerf,1,wxGROW|wxEXPAND|wxALL,5);
+}
+
+
+void 
+DlgMatBufferPanels::resetPropGrid() {
+
+	m_PG->Clear();
+	m_PG->AddPage(wxT("Standard Items"));
+
+	std::vector<std::string> order2 = {};
+	PropertyManager::createOrderedGrid(m_PG, nau::material::IMaterialBuffer::Attribs, order2);
+
+	std::vector<std::string> order = { "ID", "SIZE", "CLEAR" };
+	PropertyManager::createOrderedGrid(m_PG, nau::material::IBuffer::Attribs, order);
+
+	PropertyManager::setAllReadOnly(m_PG, nau::material::IBuffer::Attribs);
+	PropertyManager::setAllReadOnly(m_PG, nau::material::IMaterialBuffer::Attribs);
+
+	m_PG->SetSplitterLeft(true);
 }
 
 
@@ -96,8 +115,8 @@ DlgMatBufferPanels::onProcessPanelChange(wxPropertyGridEvent& e) {
 	buffer = m_Material->getBuffer(m_CurrentBinding);
 
 	const wxString& name = e.GetPropertyName();
-	PropertyManager::updateProp(pg, name.ToStdString(), nau::material::IMaterialBuffer::Attribs, (AttributeValues *)buffer);
-	PropertyManager::updateProp(pg, name.ToStdString(), nau::material::IBuffer::Attribs, (AttributeValues *)buffer->getBuffer());
+	PropertyManager::updateProp(m_PG, name.ToStdString(), nau::material::IMaterialBuffer::Attribs, (AttributeValues *)buffer);
+	PropertyManager::updateProp(m_PG, name.ToStdString(), nau::material::IBuffer::Attribs, (AttributeValues *)buffer->getBuffer());
 }
 
 
@@ -116,9 +135,9 @@ DlgMatBufferPanels::updatePanel() {
 
 	buffer = m_Material->getBuffer(m_MaterialBindings[m_CurrentBinding]);
 
-	PropertyManager::updateGrid(pg, nau::material::IMaterialBuffer::Attribs, (AttributeValues *)buffer);
-	PropertyManager::updateGrid(pg, nau::material::IBuffer::Attribs, (AttributeValues *)buffer->getBuffer());
-	pg->Refresh();
+	PropertyManager::updateGrid(m_PG, nau::material::IMaterialBuffer::Attribs, (AttributeValues *)buffer);
+	PropertyManager::updateGrid(m_PG, nau::material::IBuffer::Attribs, (AttributeValues *)buffer->getBuffer());
+	m_PG->Refresh();
 }
 
 

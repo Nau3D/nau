@@ -154,8 +154,9 @@ GLCanvas::OnIdle(wxIdleEvent& event) {
 		}
 		event.RequestMore();
 	}
-	if (m_pEngine->getProfileResetRequest())
-		Profile::Reset();
+	// moved to nau
+	//if (m_pEngine->getProfileResetRequest())
+	//	Profile::Reset();
 }
 
 

@@ -294,6 +294,9 @@ void DlgMaterials::updateDlg() {
 	EVENTMANAGER->addListener("NEW_CAMERA",this);
 	EVENTMANAGER->addListener("CAMERA_CHANGED",this);
 	EVENTMANAGER->addListener("NEW_TEXTURE",this);
+	resetTexturePropGrid();
+	panels.resetPropGrid();
+	resetColorPanel();
 	updateMaterialList();
 }
 
@@ -696,32 +699,6 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 
 	pgTextureProps->AddPage(wxT("Texture"));
 
-	//const wxChar*  repeat[] =  {wxT("REPEAT"),wxT("CLAMP_TO_EDGE"),wxT("CLAMP_TO_BORDER"),wxT("MIRRORED_REPEAT"),NULL};
-	//const long repeatInd[] = {GL_REPEAT,GL_CLAMP_TO_EDGE, 
-	//				GL_CLAMP_TO_BORDER, GL_MIRRORED_REPEAT}; 
-
-	//const wxChar* filtersMag[] =  {wxT("NEAREST"),wxT("LINEAR"),NULL};
-	//const long filtersIndMag[] =  {GL_NEAREST, GL_LINEAR};
-	//		
-	//const wxChar* filtersMin[] =  {wxT("NEAREST"),wxT("LINEAR"),
-	//	wxT("NEAREST_MIPMAP_NEAREST"),wxT("NEAREST_MIPMAP_LINEAR"),
-	//	wxT("LINEAR_MIPMAP_NEAREST"),wxT("LINEAR_MIPMAP_LINEAR"),NULL};
-	//const long filtersIndMin[] =  {GL_NEAREST, GL_LINEAR, 
-	//				GL_NEAREST_MIPMAP_NEAREST,
-	//				GL_NEAREST_MIPMAP_LINEAR,
-	//				GL_LINEAR_MIPMAP_NEAREST,
-	//				GL_LINEAR_MIPMAP_LINEAR};
-
-	//const wxChar* compareFunc[] =  {wxT("LEQUAL"), wxT("GEQUAL"), wxT("LESS"),
-	//				wxT("GREATER"), wxT("EQUAL"), wxT("NOTEQUAL"),
-	//				wxT("ALWAYS"), wxT("NEVER"),NULL};
-	//const long compareFuncInd[] =  {GL_LEQUAL, GL_GEQUAL, 
-	//				GL_LESS, GL_GREATER, GL_EQUAL, GL_NOTEQUAL,
-	//				GL_ALWAYS, GL_NEVER};
-
-	//const wxChar* compareMode[] =  {wxT("NONE"), wxT("COMPARE_REF_TO_TEXTURE"),NULL};
-	//const long compareModeInd[] =  {GL_NONE, GL_COMPARE_REF_TO_TEXTURE};
-
 			
 	const wxChar* units[] = {wxT("0"),wxT("1"),wxT("2"),wxT("3"),wxT("4"),wxT("5"),wxT("6"),wxT("7"),NULL};
 	const long unitsInd[] = {0,1,2,3,4,5,6,7};
@@ -757,6 +734,40 @@ void DlgMaterials::setupTexturesPanel(wxSizer *siz, wxWindow *parent) {
 		updateTextures(mm,0);
 }
 
+
+void 
+DlgMaterials::resetTexturePropGrid() {
+
+	pgTextureProps->Clear();
+	pgTextureProps->AddPage(wxT("Texture"));
+
+
+	const wxChar* units[] = { wxT("0"),wxT("1"),wxT("2"),wxT("3"),wxT("4"),wxT("5"),wxT("6"),wxT("7"),NULL };
+	const long unitsInd[] = { 0,1,2,3,4,5,6,7 };
+
+	const wxChar* texType[] = { wxT("TEXTURE_1D"), wxT("TEXTURE_2D"), wxT("TEXTURE_3D"), wxT("TEXTURE_CUBE_MAP"),NULL };
+	const long texTypeInd[] = { (long)GL_TEXTURE_1D,(long)GL_TEXTURE_2D,(long)GL_TEXTURE_3D, (long)GL_TEXTURE_CUBE_MAP };
+
+	pgTextureProps->Append(new wxEnumProperty(wxT("Texture Unit"), wxPG_LABEL, units, unitsInd, 0));
+
+	wxPGProperty *pgid;
+	textureLabels.Add(wxT("No Texture"), -1);
+	m_pgPropTextureList = new wxEnumProperty(wxT("Name"), wxPG_LABEL, textureLabels);
+	pgid = pgTextureProps->Append(m_pgPropTextureList);
+	updateTextureList();
+
+	pgTextureProps->Append(new wxEnumProperty(wxT("Texture Type"), wxPG_LABEL, texType, texTypeInd, (int)GL_TEXTURE_2D));
+	pgTextureProps->DisableProperty(wxT("Texture Type"));
+
+	wxString texDim;
+	texDim.Printf(wxT("%d x %d x %d"), 0, 0, 0);
+	pgTextureProps->Append(new wxStringProperty(wxT("Dimensions(WxHxD)"), wxPG_LABEL, texDim));
+	pgTextureProps->DisableProperty(wxT("Dimensions(WxHxD)"));
+	std::vector<std::string> order = { "WRAP_S", "WRAP_T", "WRAP_R", "MIN_FILTER", "MAG_FILTER", "COMPARE_MODE",
+		"COMPARE_FUNC", "BORDER_COLOR" };
+	PropertyManager::createOrderedGrid(pgTextureProps, ITextureSampler::Attribs, order);
+
+}
 
 void DlgMaterials::setTextureUnit(int index){
 
@@ -968,7 +979,8 @@ void DlgMaterials::OnprocessClickGrid(wxGridEvent &e) {
 
 
 
-void DlgMaterials::setupColorPanel(wxSizer *siz, wxWindow *parent) {
+void 
+DlgMaterials::setupColorPanel(wxSizer *siz, wxWindow *parent) {
 
 	wxColour col;
 
@@ -994,7 +1006,18 @@ void DlgMaterials::setupColorPanel(wxSizer *siz, wxWindow *parent) {
 }
 
 
-void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
+void 
+DlgMaterials::resetColorPanel() {
+
+	pgMaterial->Clear();
+	pgMaterial->AddPage(wxT("Colours"));
+	std::vector<std::string> order = { "DIFFUSE", "AMBIENT", "EMISSION", "SPECULAR", "SHININESS" };
+	PropertyManager::createOrderedGrid(pgMaterial, ColorMaterial::Attribs, order);
+}
+
+
+void 
+DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 
 	ColorMaterial *cm;
 	wxString& name = e.GetPropertyName();
@@ -1010,7 +1033,8 @@ void DlgMaterials::OnProcessColorChange( wxPropertyGridEvent& e){
 
 
 
-void DlgMaterials::updateColors(std::shared_ptr<Material> &mm) {
+void 
+DlgMaterials::updateColors(std::shared_ptr<Material> &mm) {
 	if (mm)
 		PropertyManager::updateGrid(pgMaterial, ColorMaterial::Attribs, (AttributeValues *)mm.get());
 }
@@ -1025,7 +1049,8 @@ void DlgMaterials::updateColors(std::shared_ptr<Material> &mm) {
 
 
 
-void DlgMaterials::setupShaderPanel(wxSizer *siz, wxWindow *parent) {
+void 
+DlgMaterials::setupShaderPanel(wxSizer *siz, wxWindow *parent) {
 
 	wxStaticBox *shaderSB = new wxStaticBox(parent,-1,wxT("Shaders"));
 	wxSizer *sizerS = new wxStaticBoxSizer(shaderSB,wxVERTICAL);

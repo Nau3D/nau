@@ -2,6 +2,10 @@
 <project name="OptixPrimeShadows" width="1536" height="512">
 	<assets>
 	
+		<constants>
+			<constant name ="RAYCOUNT" type="FLOAT" value = 500000 />
+		</constants>
+		
 		<scenes>
 			<!--scene name="bench" type="OctreeUnified" 
 				   filename="../../models/ntg-bench/bench.obj" /--> 
@@ -50,7 +54,7 @@
 	</assets>
 	
 	<pipelines>
-		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
+		<pipeline name="OptixPrime" default="true" defaultCamera="MainCamera">
 			<pass class="default" name="GBuffer" >
 				<scenes>
 					<scene name="pl3d" />
@@ -75,6 +79,8 @@
 			</pass>
 			<pass name="Optix Prime" class="optixPrime">
 				<scene name="pl3d" />
+				<!--RAY_COUNT value="RAYCOUNT" /-->
+				<rayCount buffer="PrimeShadows::test" offset=4/>
 				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
 				<hits buffer ="PrimeShadows::hits" />
 			</pass>		

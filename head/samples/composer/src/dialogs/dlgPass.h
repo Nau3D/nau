@@ -92,6 +92,8 @@ class DlgPass : public wxDialog, IListener
 		void updatePipelines();
 		void setupGrid();
 
+		void resetPanel();
+
 		// Event Processing
 		void OnClose(wxCloseEvent& events);
 		void OnSelectPass(wxCommandEvent& events);

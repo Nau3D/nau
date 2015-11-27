@@ -112,33 +112,6 @@ Pipeline::getPassNames(std::vector<std::string> *names) {
 }
 
 
-//void 
-//Pipeline::addPass (Pass* aPass, int PassIndex) {
-//
-//	// Pass index must be valid
-//	assert(PassIndex > -2 && PassIndex < (int)m_Passes.size());
-//
-//	if (PassIndex < -1) {
-//		return;
-//	}
-//
-//	switch (PassIndex) {
-//  
-//		case -1: 
-//			m_Passes.push_back (aPass);
-//			break;
-//		case 0:
-//		    m_Passes.push_front (aPass);
-//			break;
-//		default:
-//			unsigned int pos = static_cast<unsigned int>(PassIndex);
-//			if (pos < m_Passes.size()) {
-//				m_Passes.insert (m_Passes.begin() + pos, aPass);
-//			}
-//	}
-//}
-
-
 Pass* 
 Pipeline::createPass (const std::string &name, const std::string &passType) 
 {

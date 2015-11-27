@@ -182,6 +182,7 @@ namespace nau
 			void setRenderMode(TRenderMode mode);
 			void drawGroup(std::shared_ptr<MaterialGroup> aMaterialGroup);
 			void setCullFace (Face aFace);
+			unsigned int getVerticesPerPrimitive(unsigned int primitive);
 
 			void dispatchCompute(int dimX, int dimY, int dimZ);
 

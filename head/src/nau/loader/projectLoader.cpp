@@ -1846,7 +1846,7 @@ ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
 	std::vector<std::string> excluded = {"testScript", "preProcess", "postProcess", "mode", "scene", "scenes", 
 		"camera", "lights", "viewport", "renderTarget",
-		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits",
+		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits", "rayCount",
 		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
 		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes", "preScript", "postScript"};
 	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),false);
@@ -2420,6 +2420,33 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 			ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 	}
 
+	pElem = hPass.FirstChildElement("rayCount").Element();
+	if (pElem != NULL) {
+
+		if (readIntAttribute(pElem, "value", &s_Dummy_int))
+			p->setPropi(PassOptixPrime::RAY_COUNT, s_Dummy_int);
+		else { // read value from buffer
+			std::string buff;
+			int offset = 0;
+			if (TIXML_SUCCESS != pElem->QueryStringAttribute("buffer", &buff)) {
+				NAU_THROW("File %s\nPass %s\nrayCount attribute requires 'value' or 'buffer' tags",
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			}
+			if (!RESOURCEMANAGER->hasBuffer(buff)) {
+				NAU_THROW("File %s\nPass %s\nrayCount buffer %s has not been defined",
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), buff.c_str());
+
+			}
+			pElem->QueryIntAttribute("offset", &offset);
+			IBuffer *b = RESOURCEMANAGER->getBuffer(buff);
+			if (offset > b->getPropui(IBuffer::SIZE)- 4) {
+				NAU_THROW("File %s\nPass %s\noffset %d is greater than buffer size - sizeof(float)",
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), offset);
+			}
+			p->setBufferForRayCount(b, offset);
+
+		}
+	}
 
 }
 

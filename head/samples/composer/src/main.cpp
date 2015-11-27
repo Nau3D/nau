@@ -371,8 +371,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 		wxMessageBox((wxString)s.c_str());
 	}
 
-	if (wxGetApp().argc == 2)
-		m_pRoot->setTrace(-1);
+	//if (wxGetApp().argc == 2)
+	//	m_pRoot->setTrace(-1);
 
 	if (true != nauInit){
 		wxMessageBox (_("Nau error!"), _("Kaput!"));

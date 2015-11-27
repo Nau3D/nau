@@ -263,7 +263,13 @@ bool PassOptixPrime::Inited = PassOptixPrime::Init();
 bool
 PassOptixPrime::Init() {
 
+	Attribs.add(Attribute(RAY_COUNT, "RAY_COUNT", Enums::INT, false, new NauInt(-1)));
+#ifndef _WINDLL
+	NAU->registerAttributes("PASS", &Attribs);
+#endif
+
 	PASSFACTORY->registerClass("optixPrime", Create);
+
 	return true;
 }
 
@@ -272,6 +278,7 @@ PassOptixPrime::PassOptixPrime(const std::string &passName) : Pass(passName) {
 
 	m_ClassName = "optix prime";
 	m_Context = NULL;
+	m_RayCountBuffer = NULL;
 }
 
 
@@ -324,6 +331,17 @@ PassOptixPrime::restore(void) {
 void
 PassOptixPrime::doPass(void) {
 
+	if (m_RayCountBuffer) {
+		m_RayCountBuffer->getData(m_RayCountBufferOffset, sizeof(int), &m_IntProps[RAY_COUNT]);
+	}
+
+	if (m_IntProps[RAY_COUNT] == -1) {
+		m_IntProps[RAY_COUNT] = m_Hits->getPropui(IBuffer::SIZE) / 16;
+	}
+	CHK_PRIME(rtpBufferDescSetRange(m_RaysDesc, 0, m_IntProps[RAY_COUNT]));
+	CHK_PRIME(rtpBufferDescSetRange(m_HitsDesc, 0, m_IntProps[RAY_COUNT]));
+	CHK_PRIME(rtpQuerySetRays(m_Query, m_RaysDesc));
+	CHK_PRIME(rtpQuerySetHits(m_Query, m_HitsDesc));
 	CHK_PRIME(rtpQueryExecute(m_Query, 0 /* hints */));
 	//CHK_PRIME(rtpQueryFinish(m_Query));
 }
@@ -456,6 +474,13 @@ void
 PassOptixPrime::addHitBuffer(IBuffer *b) {
 
 	m_Hits = b;
+}
+
+void 
+PassOptixPrime::setBufferForRayCount(IBuffer * b, unsigned int offset) {
+
+	m_RayCountBuffer = b;
+	m_RayCountBufferOffset = offset;
 }
 
 

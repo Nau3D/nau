@@ -48,6 +48,7 @@ public:
 	void setMaterial(std::shared_ptr<nau::material::Material> &aMat);
 
 	void setPanel(wxSizer *siz, wxWindow *parent);
+	void resetPropGrid();
 	void onProcessPanelChange(wxPropertyGridEvent& e);
 	void onItemListSelect(wxCommandEvent& event);
 

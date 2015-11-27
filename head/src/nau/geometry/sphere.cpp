@@ -12,18 +12,19 @@ using namespace nau::material;
 
 
 bool
-Sphere::InitSphere() {
+Sphere::Init() {
 
 	//UINT
 	Attribs.add(Attribute(STACKS, "STACKS", Enums::UINT, false, new NauUInt(10), new NauUInt(2), NULL));
 	Attribs.add(Attribute(SLICES, "SLICES", Enums::UINT, false, new NauUInt(10), new NauUInt(3), NULL));
 
+	NAU->registerAttributes("SPHERE", &Attribs);
 	return true;
 }
 
 
 AttribSet Sphere::Attribs;
-bool Sphere::InitedSphere = InitSphere();
+bool Sphere::Inited = Init();
 
 
 Sphere::Sphere(): Primitive() {

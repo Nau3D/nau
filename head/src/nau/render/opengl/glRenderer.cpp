@@ -418,6 +418,28 @@ GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
 }
 
 
+unsigned int 
+GLRenderer::getVerticesPerPrimitive(unsigned int primitive) {
+
+
+	switch (primitive) {
+
+	case (unsigned int)GL_TRIANGLES_ADJACENCY:
+		return  6;
+	case (unsigned int)GL_TRIANGLES:
+	case (unsigned int)GL_TRIANGLE_STRIP:
+	case (unsigned int)GL_TRIANGLE_FAN:
+		return  3;
+	case (unsigned int)GL_LINES:
+	case (unsigned int)GL_LINE_LOOP:
+		return 2;
+	case (unsigned int)GL_POINTS:
+		return 1;
+	default:
+		return (0);
+	}
+}
+
 
 // -----------------------------------------------------------------
 //		MATRICES
@@ -830,8 +852,6 @@ GLRenderer::setRenderMode(TRenderMode mode) {
 void
 GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 
-	if (aMatGroup->getMaterialName() == "__Emission Green" || aMatGroup->getMaterialName() == "__Emission Red")
-		int x = 3;
 	IRenderable& aRenderable = aMatGroup->getParent();
 	std::shared_ptr<nau::geometry::IndexData> &indexData = aMatGroup->getIndexData();
 
@@ -841,6 +861,10 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 		assert(APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS));
 		int k = aRenderable.getnumberOfVerticesPerPatch();
 		glPatchParameteri(GL_PATCH_VERTICES, k);
+	}
+	else if (m_Shader->hasTessellationShader()) {
+		drawPrimitive = (unsigned int)GL_PATCHES;
+		glPatchParameteri(GL_PATCH_VERTICES, getVerticesPerPrimitive(drawPrimitive));
 	}
 	// this forces compilation for everything that is rendered!
 	// required for animated objects

@@ -17,6 +17,7 @@ layout(std430, binding = 2) buffer hitsBuffer {
 uniform sampler2D texColor;
 uniform sampler2D texNormal;
 uniform vec3 lightDirection;
+uniform int rayCount = 0;
 
 uniform mat4 V;
 
@@ -24,10 +25,14 @@ in vec2 texCoordV;
 out vec4 colorOut;
 
 void main() {
+
+	hit h;
 	ivec2 coord = ivec2(texCoordV * ivec2(1024,1024));
 	int coordB = coord.x* 1024 + coord.y;
-
-	 hit h = hits[coordB];
+	if (coordB < rayCount)
+		h = hits[coordB];
+	else
+		h.t_id = -1;
 //	 vec4 h = hits[coordB];
 	
 	vec4 color = texture(texColor, texCoordV);

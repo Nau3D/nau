@@ -94,6 +94,7 @@ private:
 	wxPropertyGridManager *pgMaterial;
 
 	void setupColorPanel(wxSizer *siz, wxWindow *parent);
+	void resetColorPanel();
 	void OnProcessColorChange( wxPropertyGridEvent& e);
 	void updateColors(std::shared_ptr<Material> &mm);
 
@@ -109,6 +110,7 @@ private:
 	void updateTextures(std::shared_ptr<Material> &mm,int index);
 
 	void OnProcessTexturePropsChange( wxPropertyGridEvent& e);
+	void resetTexturePropGrid();
 	void setTextureUnit(int index);
 	void OnprocessClickGrid(wxGridEvent &e);
 

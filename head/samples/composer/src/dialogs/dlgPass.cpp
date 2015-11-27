@@ -180,8 +180,17 @@ DlgPass::updateDlg() {
 	EVENTMANAGER->addListener("NEW_RENDER_TARGET",this);
 	EVENTMANAGER->addListener("NEW_SCENE",this);
 	EVENTMANAGER->addListener("NEW_VIEWPORT", this);
-
+	resetPanel();
 	updatePipelines();
+}
+
+
+void 
+DlgPass::resetPanel() {
+
+	m_PG->Clear();
+	m_PG->AddPage(wxT("Properties"));
+	setupGrid();
 }
 
 

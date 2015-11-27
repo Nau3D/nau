@@ -25,8 +25,8 @@ namespace nau
 		protected:
 
 			std::vector<float> m_Floats;
-			static bool InitSphere();
-			static bool InitedSphere;
+			static bool Init();
+			static bool Inited;
 
 		};
 	};
