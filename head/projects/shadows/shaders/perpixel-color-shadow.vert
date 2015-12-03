@@ -15,6 +15,7 @@ out vec4 projShadowCoord;
 out vec3 normalV;
 out vec2 texCoordV;
 out vec3 lightDir;
+out vec4 pos;
 
 
 void main() 
@@ -24,6 +25,6 @@ void main()
 	lightDir = normalize (vec3(V * -lightDirection)) ;
 			
 	projShadowCoord = lightSpaceMat * M * position;
-
+	pos = position;
 	gl_Position = PVM * position;
 } 

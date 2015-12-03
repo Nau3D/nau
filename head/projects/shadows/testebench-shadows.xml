@@ -85,14 +85,13 @@
 			<pass class="default" name="computeShadowsToRT">
 				<scenes>
 					<scene name="MainScene" />
-					
 				</scenes>
 				<camera name="testCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
 				
 				<renderTarget name="simple" fromLibrary="Shadow Materials" />
-				<!--materialMaps>
-					<map fromMaterial="*" toLibrary="Shadow Materials" toMaterial="flat-with-shadow" />
-				</materialMaps-->
 				<injectionMaps>
 					<map toMaterial="*">
 						<shader fromMaterial ="flat-with-shadow" fromLibrary="Shadow Materials" />
@@ -102,26 +101,26 @@
 								<COMPARE_FUNC value="LEQUAL" />
 								<MIN_FILTER value="LINEAR" />
 								<MAG_FILTER value="LINEAR" />
-								<!--depthCompare mode= "COMPARE_REF_TO_TEXTURE" func="LEQUAL" />
-								<filtering min="LINEAR" mag="LINEAR" /-->
 							</texture>
 						</textures>
 					</map>	
 				</injectionMaps>	
-				<lights>
-					<light name="Sun" />
-				</lights>
+			</pass>
+			
+			
+			<pass class="quad" name="showComputedShadows">
+				<viewport name="MainViewport" />				
+				<texture name="offscreenrender" fromLibrary="Shadow Materials"/>
 			</pass>
 			
 			<pass class="quad" name="showShadowMap">
-				<viewport name="MainViewport" />				
+				<viewport name="SmallViewport1" />				
 				<texture name="shadowMap" fromLibrary="Shadow Materials"/>
 			</pass>
 			
 			<pass class="default" name="DebugViewFromGodsCamera">
 				<scenes>
 					<scene name="MainScene" />
-					
 					<scene name="testCamera" />
 					<scene name="shadow#getShadowMap-LightCam" />
 				</scenes>
@@ -131,11 +130,6 @@
 					<light name="Sun" />
 				</lights>
 			</pass> 
-			
-			<pass class="quad" name="showComputedShadows">
-				<viewport name="SmallViewport1" />				
-				<texture name="offscreenrender" fromLibrary="Shadow Materials"/>
-			</pass>
 			
 			<pass class="default" name="DebugViewFromLight">
 				<scenes>
@@ -148,6 +142,7 @@
 					<light name="Sun" />
 				</lights>
 			</pass> 
+			
 		</pipeline>
 	</pipelines>
 </project>

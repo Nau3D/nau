@@ -92,7 +92,6 @@ PassDepthMap::prepare (void) {
 		m_RenderTarget->bind();
 	}
 
-	prepareBuffers();
 
 	// if pass has a viewport 
 	if (m_ExplicitViewport ) {
@@ -103,6 +102,8 @@ PassDepthMap::prepare (void) {
 	RENDERER->setCamera(m_LightCamera);
 
 	setupLights();
+
+	prepareBuffers();
 }
 
 

@@ -155,8 +155,8 @@ GLCanvas::OnIdle(wxIdleEvent& event) {
 		event.RequestMore();
 	}
 	// moved to nau
-	//if (m_pEngine->getProfileResetRequest())
-	//	Profile::Reset();
+	if (m_pEngine->getProfileResetRequest())
+		Profile::Reset();
 }
 
 
@@ -209,8 +209,8 @@ GLCanvas::Render () {
 	}
 
 	{
-	PROFILE ("Zi swap");
-	SwapBuffers();
+		PROFILE ("Zi swap");
+		SwapBuffers();
 	}
 	Profile::CollectQueryResults();
 

@@ -233,7 +233,12 @@ void Profile::Reset() {
 		sLevels[i].cursor = 0;
 	}
 	
-	sTotalLevels = 0;
+	sTotalLevels = 0; 
+	sBackBuffer = 0;
+	sFrontBuffer = 1;
+	sCurrLevel = -1;
+	sDisp = 0;
+
 }
 
 

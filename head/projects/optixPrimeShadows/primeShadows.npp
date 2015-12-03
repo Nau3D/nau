@@ -1,0 +1,15 @@
+<NotepadPlus>
+    <Project name="optix Prime Shadows">
+        <Folder name="shaders">
+            <File name="shaders\compose.frag" />
+            <File name="shaders\fillGBuffers.frag" />
+            <File name="shaders\fillGBuffers.vert" />
+            <File name="shaders\fillRayBuffer.frag" />
+            <File name="shaders\fillRayBuffer.vert" />
+            <File name="shaders\quadShader.vert" />
+            <File name="shaders\showBuffer.frag" />
+        </Folder>
+        <File name="primeShadows.mlib" />
+        <File name="primeShadows.xml" />
+    </Project>
+</NotepadPlus>

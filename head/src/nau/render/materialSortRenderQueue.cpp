@@ -152,7 +152,8 @@ MaterialSortRenderQueue::processQueue (void) {
 						aMat->setUniformValues();
 						aMat->setUniformBlockValues();
 					}
-					{	PROFILE("Draw");
+					{	
+						PROFILE("Draw");
 						renderer->drawGroup ((*matGroupsIter).first);
 					}
 					if (!b)

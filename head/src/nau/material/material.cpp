@@ -350,7 +350,8 @@ Material::prepare () {
 		PROFILE("Color");
 		m_Color.prepare();
 	}
-	{	PROFILE("Texture");
+	{	
+		PROFILE("Texture");
 		for (auto &t : m_Textures) {
 			t.second->bind();
 		}

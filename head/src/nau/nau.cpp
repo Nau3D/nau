@@ -1214,8 +1214,8 @@ Nau::step() {
 	else
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, ++k);
 
-	if (getProfileResetRequest())
-		Profile::Reset();
+	//if (getProfileResetRequest())
+	//	Profile::Reset();
 
 }
 
@@ -1445,8 +1445,6 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 	catch(std::string &s) {
 		throw(s);
 	}
-
-	Profile::Reset();
 }
 
 

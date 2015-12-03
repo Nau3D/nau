@@ -189,6 +189,7 @@ Pipeline::getPassCounter() {
 void 
 Pipeline::executePass(std::shared_ptr<Pass> &pass) {
 
+	bool run = false;
 	m_CurrentPass = pass;
 	pass->callPreScript();
 	bool keepRunning = false;
@@ -206,16 +207,17 @@ Pipeline::executePass(std::shared_ptr<Pass> &pass) {
 
 		if (RENDERER->getPropb(IRenderer::DEBUG_DRAW_CALL))
 			SLOG("Pass: %s", pass->getName().c_str());
+		{
+			PROFILE(pass->getName());
 
-		PROFILE(pass->getName());
-
-		bool run = pass->renderTest();
-		if (run) {
-			pass->prepare();
-			pass->executePreProcessList();
-			pass->doPass();
-			pass->executePostProcessList();
-			pass->restore();
+			run = pass->renderTest();
+			if (run) {
+				pass->prepare();
+				pass->executePreProcessList();
+				pass->doPass();
+				pass->executePostProcessList();
+				pass->restore();
+			}
 		}
 		if (NAU->getTraceStatus()) {
 			LOG_trace("#NAU(PASS END %s)", pass->getName().c_str());

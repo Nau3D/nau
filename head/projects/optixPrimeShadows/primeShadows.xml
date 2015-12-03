@@ -79,8 +79,8 @@
 			</pass>
 			<pass name="Optix Prime" class="optixPrime">
 				<scene name="pl3d" />
-				<!--RAY_COUNT value="RAYCOUNT" /-->
-				<rayCount buffer="PrimeShadows::test" offset=4/>
+				<RAY_COUNT value=-1 />
+				<!--rayCount buffer="PrimeShadows::test" offset=4/-->
 				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
 				<hits buffer ="PrimeShadows::hits" />
 			</pass>		

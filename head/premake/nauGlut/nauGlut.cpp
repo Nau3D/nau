@@ -1,5 +1,7 @@
 #include "../../src/nau.h"
 
+#include "../../src/nau/debug/profile.h"
+
 #ifdef _WIN32
 #	ifdef _DEBUG
 #		pragma comment(lib, "glbindingd.lib")
@@ -41,6 +43,8 @@ void renderScene() {
 	NAU->step();
 	// swap buffers
 	glutSwapBuffers();
+	if (NAU->getProfileResetRequest())
+		Profile::Reset();
 }
 
 
