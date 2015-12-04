@@ -12,6 +12,8 @@ namespace nau {
 
 		class OctreeScene : public IScenePartitioned
 		{
+			friend class SceneFactory;
+
 		private:
 			std::vector<SceneObject*> m_vReturnVector;
 			std::vector<SceneObject*> m_SceneObjects;
@@ -23,10 +25,10 @@ namespace nau {
 			nau::geometry::BoundingBox m_BoundingBox;
 
 		protected:
+			OctreeScene (void);
 			void updateSceneObjectTransforms();
 
 		public:
-			OctreeScene (void);
 			~OctreeScene (void);
 
 			void clear();

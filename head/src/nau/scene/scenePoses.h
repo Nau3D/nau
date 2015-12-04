@@ -13,8 +13,12 @@ namespace nau {
 
 		class ScenePoses : public Scene
 		{
-			public:
+			friend class SceneFactory;
+
+			protected:
 				ScenePoses(void);
+
+			public:
 				~ScenePoses(void);
 
 				virtual void compile();

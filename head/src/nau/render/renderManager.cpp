@@ -50,12 +50,12 @@ RenderManager::clear() {
 	}
 
 	while (!m_Scenes.empty()){
-		delete ((*m_Scenes.begin()).second);
+//		delete ((*m_Scenes.begin()).second);
 		m_Scenes.erase(m_Scenes.begin());
 	}
 
 	while (!m_Pipelines.empty()){
-		delete ((*m_Pipelines.begin()));
+//		delete ((*m_Pipelines.begin()));
 		m_Pipelines.erase(m_Pipelines.begin());
 	}
 	while (!m_Viewports.empty()){
@@ -150,6 +150,16 @@ RenderManager::getViewportNames(std::vector<std::string> *names) {
 
 // =========  PIPELINES  =========================
 
+std::shared_ptr<Pipeline> &
+RenderManager::createPipeline(const std::string &pipelineName) {
+
+	Pipeline *pip = new Pipeline(pipelineName);
+	m_Pipelines.push_back(std::shared_ptr<Pipeline>(pip));
+
+	return m_Pipelines[m_Pipelines.size()-1];
+}
+
+
 bool 
 RenderManager::hasPipeline (const std::string &pipelineName) {
 
@@ -161,26 +171,15 @@ RenderManager::hasPipeline (const std::string &pipelineName) {
 }
 
 
-Pipeline*
+std::shared_ptr<Pipeline> &
 RenderManager::getPipeline(const std::string &pipelineName) {
 
-	Pipeline *pip = NULL;
-	bool found = false;
-
-	for (auto p : m_Pipelines) {
-		if (p->getName() == pipelineName) {
-			pip = p;
-			found = true;
-			break;
-		}
+	for (auto &p : m_Pipelines) {
+		if (p->getName() == pipelineName) 
+			return p;
 	}
 
-	if (!found) {
-		pip = new Pipeline(pipelineName);
-		m_Pipelines.push_back(pip);
-	}
-
-	return pip;
+	return m_Pipelines[0];
 }
 
 
@@ -206,13 +205,13 @@ RenderManager::getPipelineIndex(const std::string &pipelineName) {
 }
 
 
-Pipeline*
+std::shared_ptr<Pipeline> &
 RenderManager::getActivePipeline() {
 
 	if (m_Pipelines.size() > m_ActivePipelineIndex)
 		return m_Pipelines[m_ActivePipelineIndex];
 	else
-		return NULL;
+		return m_Pipelines[0];
 }
  
 
@@ -250,15 +249,11 @@ RenderManager::getNumPipelines() {
 }
 
 
-std::vector<std::string> * 
-RenderManager::getPipelineNames() {
-
-	std::vector<std::string> *names = new std::vector<std::string>; 
+void 
+RenderManager::getPipelineNames(std::vector<std::string> *names) {
 
 	for (auto p : m_Pipelines)
 		names->push_back(p->getName());
-
-	return names;
 }
 
 
@@ -281,10 +276,8 @@ RenderManager::setRunMode(std::string mode) {
 bool
 RenderManager::hasPass(const std::string &pipeline, const std::string &pass) {
 
-	Pipeline *pip;
-
 	if (hasPipeline(pipeline)) {
-		pip = getPipeline(pipeline);
+		std::shared_ptr<Pipeline> &pip = getPipeline(pipeline);
 		return pip->hasPass(pass);
 	}
 	else 
@@ -297,7 +290,7 @@ Pass *RenderManager::getPass(const std::string &pipeline, const std::string &pas
 	// Pipeline and pass must exist
 	assert(hasPass(pipeline,pass));
 
-	Pipeline *pip = getPipeline(pipeline);
+	std::shared_ptr<Pipeline> &pip = getPipeline(pipeline);
 	return pip->getPass(pass);
 }
 
@@ -308,7 +301,7 @@ Pass *RenderManager::getPass(const std::string &pass) {
 		m_Pipelines[m_ActivePipelineIndex]->hasPass(pass));
 
 	// Pipeline and pass must exist
-	Pipeline *active = m_Pipelines[m_ActivePipelineIndex];
+	std::shared_ptr<Pipeline> &active = m_Pipelines[m_ActivePipelineIndex];
 	return active->getPass(pass);
 }
 
@@ -321,11 +314,10 @@ RenderManager::getCurrentPass() {
 }
 
 
-
 void
 RenderManager::prepareTriangleIDs(bool ids) {
 
-	std::map<std::string, nau::scene::IScene*>::iterator sceneIter;
+	std::map<std::string, std::shared_ptr<IScene>>::iterator sceneIter;
 
 	sceneIter = m_Scenes.begin();
 	for ( ; sceneIter != m_Scenes.end(); ++sceneIter) {
@@ -341,30 +333,8 @@ RenderManager::prepareTriangleIDs(bool ids) {
 		}
 
 	}
-
-	//if (ids) {
-	//	int total = SceneObject::Counter;
-	//	m_SceneObjects.resize(total);
-	//	sceneIter = m_Scenes.begin();
-	//	int count = 0;
-	//	for ( ; sceneIter != m_Scenes.end(); sceneIter++) {
-
-	//		std::vector <SceneObject*> sceneObjs = (*sceneIter).second->getAllObjects();
-
-	//		std::vector <SceneObject*>::iterator sceneObjIter;
-
-	//		sceneObjIter = sceneObjs.begin();
-	//		for ( ; sceneObjIter != sceneObjs.end(); sceneObjIter ++) {
-	//			if ((*sceneObjIter)->getId() != 0) {
-	//				count++;
-	//				m_SceneObjects[(*sceneObjIter)->getId()-1] = (*sceneObjIter);
-	//			}
-	//		}
-	//	}
-	//	m_SceneObjects.resize(count);
-	//}
-
 }
+
 
 SceneObject *
 RenderManager::getSceneObject(int id) {
@@ -416,12 +386,10 @@ RenderManager::renderActivePipelineNextPass() {
 unsigned char
 RenderManager::renderActivePipeline () 
 {
-	Pipeline *pip;
-
 	if (!(m_ActivePipelineIndex < m_Pipelines.size()))
 		return 0;
 
-	pip = m_Pipelines[m_ActivePipelineIndex];
+	std::shared_ptr<Pipeline> &pip = m_Pipelines[m_ActivePipelineIndex];
 
 	int n = RENDERER->getPropui(IRenderer::FRAME_COUNT);
 	int k = pip->getFrameCount();
@@ -433,7 +401,6 @@ RenderManager::renderActivePipeline ()
 			exit(0);
 	}
 
-	pip = m_Pipelines[m_ActivePipelineIndex];
 	pip->execute ();
 
 	return 0;
@@ -650,7 +617,7 @@ RenderManager::hasScene (const std::string &sceneName) {
 void
 RenderManager::getSceneNames(std::vector<std::string> *names) {
 
-	std::map<std::string, nau::scene::IScene*>::iterator iter = m_Scenes.begin();
+	std::map<std::string, std::shared_ptr<IScene>>::iterator iter = m_Scenes.begin();
 
 	for( ; iter != m_Scenes.end(); ++iter ) {
 		if ((*iter).second->getType() != "SceneAux")
@@ -659,24 +626,21 @@ RenderManager::getSceneNames(std::vector<std::string> *names) {
 }
 
 
-std::vector<std::string> * 
-RenderManager::getAllSceneNames() {
+void 
+RenderManager::getAllSceneNames(std::vector<std::string> *names) {
 
-	std::vector<std::string> *names = new std::vector<std::string>; 
-
-	std::map<std::string, nau::scene::IScene*>::iterator iter = m_Scenes.begin();
+	std::map<std::string, std::shared_ptr<IScene>>::iterator iter = m_Scenes.begin();
 
 	for( ; iter != m_Scenes.end(); ++iter ) {
       names->push_back((*iter).first); 
     }
-	return names;
 }
 
 
 void 
 RenderManager::buildOctrees() {
 
-	std::map<std::string, nau::scene::IScene*>::iterator iter;
+	std::map<std::string, std::shared_ptr<IScene>>::iterator iter;
 	for( iter = m_Scenes.begin(); iter != m_Scenes.end(); ++iter ) {
       ((*iter).second)->build(); 
     }
@@ -686,30 +650,30 @@ RenderManager::buildOctrees() {
 void 
 RenderManager::compile() {
 
-	std::map<std::string, nau::scene::IScene*>::iterator iter;
+	std::map<std::string, std::shared_ptr<IScene>>::iterator iter;
 	for( iter = m_Scenes.begin(); iter != m_Scenes.end(); ++iter ) {
       ((*iter).second)->compile(); 
     }
 }
 
 
-nau::scene::IScene* 
+std::shared_ptr<IScene> &
 RenderManager::createScene (const std::string &sceneName, const std::string &sceneType) {
 
 	if (false == hasScene (sceneName)) {
-		IScene *s = SceneFactory::create (sceneType);
+		std::shared_ptr<IScene> s = std::shared_ptr<IScene>(SceneFactory::Create(sceneType));
 		if (s) {
 			m_Scenes[sceneName] = s;
 			s->setName(sceneName);
 		}
-		return s;
+		return m_Scenes[sceneName];
 	} 
 	else
 		return m_Scenes[sceneName]; //Or should it return NULL if it exists a scene with that name already
 }
 
 
-nau::scene::IScene* 
+std::shared_ptr<IScene> &
 RenderManager::getScene (const std::string &sceneName) {
 
 	if (false == hasScene (sceneName)) {

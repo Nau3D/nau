@@ -727,7 +727,7 @@ Nau::getObjectAttributes(std::string &type, std::string &context, int number) {
 	}
 	if (type == "SCENE") {
 		if (m_pRenderManager->hasScene(context))
-			return (AttributeValues *)m_pRenderManager->getScene(context);
+			return (AttributeValues *)m_pRenderManager->getScene(context).get();
 	}
 	if (type == "PASS") {
 		std::string pipName = m_pRenderManager->getActivePipelineName();
@@ -1110,7 +1110,7 @@ void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 	l->setPropf4(Light::COLOR, 0.9f,0.9f,0.9f,1.0f);
 	l->setPropf4(Light::AMBIENT,0.5f,0.5f,0.5f,1.0f );
 
-	Pipeline *aPipeline = m_pRenderManager->getPipeline("MainPipeline");
+	std::shared_ptr<Pipeline> &aPipeline = m_pRenderManager->createPipeline("MainPipeline");
 	Pass *aPass = aPipeline->createPass("MainPass");
 	aPass->setCamera ("MainCamera");
 
@@ -1230,8 +1230,7 @@ void Nau::stepPass() {
 	double deltaT = timer - m_LastFrameTime;
 	m_LastFrameTime = timer;
 
-	Pipeline *p;
-	p = RENDERMANAGER->getActivePipeline();
+	std::shared_ptr<Pipeline> &p = RENDERMANAGER->getActivePipeline();
 	int lastPass;
 	int currentPass;
 	lastPass = p->getNumberOfPasses()-1;
@@ -1295,8 +1294,7 @@ void Nau::stepPass() {
 void 
 Nau::stepCompleteFrame() {
 
-	Pipeline *p;
-	p = RENDERMANAGER->getActivePipeline();
+	std::shared_ptr<Pipeline> &p = RENDERMANAGER->getActivePipeline();
 	int totalPasses;
 	int currentPass;
 	totalPasses = p->getNumberOfPasses();
@@ -1414,7 +1412,7 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 	try {
 		switch (file.getType()) {
 			case File::PATCH:
-				PatchLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());
+				PatchLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath());
 				break;
 			case File::COLLADA:
 			case File::BLENDER:
@@ -1422,21 +1420,21 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 			case File::LIGHTWAVE:
 			case File::STL:
 			case File::TRUESPACE:
-				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(),params);
 				break;
 			case File::NAUBINARYOBJECT:
-				CBOLoader::loadScene(RENDERMANAGER->getScene(sceneName), file.getFullPath(), params);
+				CBOLoader::loadScene(RENDERMANAGER->getScene(sceneName).get(), file.getFullPath(), params);
 				break;
 			case File::THREEDS:
-				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(), params);
 				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);				
 				break;
 			case File::WAVEFRONTOBJ:
 				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);
-				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath(), params);				
+				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(), params);
 				break;
 			case File::OGREXMLMESH:
-				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName), file.getFullPath());				
+				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath());
 				break;
 			default:
 			  break;
@@ -1452,7 +1450,7 @@ void
 Nau::writeAssets (std::string fileType, std::string aFilename, std::string sceneName) {
 
 	if (0 == fileType.compare ("NBO")) {
-		CBOLoader::writeScene (RENDERMANAGER->getScene (sceneName), aFilename);
+		CBOLoader::writeScene (RENDERMANAGER->getScene (sceneName).get(), aFilename);
 	}
 }
 

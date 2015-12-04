@@ -317,7 +317,7 @@ Pass::doPass (void) {
 
 	for ( ; scenesIter != m_SceneVector.end(); ++scenesIter) {
 
-		IScene *aScene = RENDERMANAGER->getScene (*scenesIter);
+		std::shared_ptr<IScene> &aScene = RENDERMANAGER->getScene (*scenesIter);
 		{
 			PROFILE("View Frustum Culling");
 			sceneObjects = aScene->findVisibleSceneObjects(camFrustum, *aCam);

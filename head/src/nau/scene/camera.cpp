@@ -136,7 +136,7 @@ Camera::Camera (const std::string &name) :
 
 	setRenderable (renderable);
 
-	IScene *s = RENDERMANAGER->createScene(name, "SceneAux");
+	std::shared_ptr<IScene> &s = RENDERMANAGER->createScene(name, "SceneAux");
 	s->add(this);
 
 	EVENTMANAGER->addListener("VIEWPORT_CHANGED", this);

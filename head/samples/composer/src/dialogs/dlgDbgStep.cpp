@@ -140,7 +140,8 @@ DlgDbgStep::updateDlg() {
 
 void
 DlgDbgStep::getPasses(std::string pipenameString) {
-	Pipeline *pip = RENDERMANAGER->getPipeline(pipenameString);
+
+	std::shared_ptr<Pipeline> &pip = RENDERMANAGER->getPipeline(pipenameString);
 
 	passes.clear();
 	pip->getPassNames(&passes);

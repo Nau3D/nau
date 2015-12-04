@@ -42,6 +42,11 @@ namespace nau
 			static AttribSet Attribs;
 
 		protected:
+
+			IScene(void) : m_Compiled(false), m_Visible(true) {
+				registerAndInitArrays(Attribs);
+			};
+
 			std::string m_Name;
 			bool m_Compiled;
 			//ITransform *m_Transform;
@@ -59,12 +64,12 @@ namespace nau
 
 			virtual void setPropf4(Float4Property prop, vec4& aVec);
 			virtual void setPrope(EnumProperty prop, int v);
-			//void *getProp(unsigned int prop, Enums::DataType type);
 			vec3 &getPropf3(Float3Property prop);
 
 			virtual void setName(std::string name) {
 				m_Name = name; 
 			};
+
 			virtual std::string &getName() {
 				return m_Name;
 			};
@@ -101,9 +106,6 @@ namespace nau
 			virtual const std::string &getType (void);
 
 			virtual ~IScene(void) {};
-			IScene(void) : m_Compiled(false), m_Visible(true) {
-				registerAndInitArrays(Attribs);
-			};
 
 		};
 	};

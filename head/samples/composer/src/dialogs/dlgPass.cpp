@@ -214,16 +214,15 @@ DlgPass::getPass() {
 void 
 DlgPass::updatePipelines() {
 
-	std::vector<std::string> *pips = RENDERMANAGER->getPipelineNames();
+	std::vector<std::string> pips;
+	RENDERMANAGER->getPipelineNames(&pips);
 	std::vector<std::string>::iterator iter;
 
 	//wxString sel = m_PipelineList->GetStringSelection();
 	wxString sel = wxString(RENDERMANAGER->getActivePipelineName());
 	m_PipelineList->Clear();
-	for (iter = pips->begin(); iter != pips->end(); ++iter)
+	for (iter = pips.begin(); iter != pips.end(); ++iter)
 		m_PipelineList->Append(wxString(iter->c_str()));
-
-	delete pips;
 
 	if (! m_PipelineList->SetStringSelection(sel)) 
 		m_PipelineList->SetSelection(0);
@@ -232,7 +231,7 @@ DlgPass::updatePipelines() {
 	m_ActivePipText->SetLabelText(sel);
 	std::string pipName = std::string(sel.mb_str());
 
-	Pipeline *pip = RENDERMANAGER->getPipeline(pipName);
+	std::shared_ptr<Pipeline> &pip = RENDERMANAGER->getPipeline(pipName);
 
 	std::vector<std::string> passes;
 	pip->getPassNames(&passes);
@@ -388,11 +387,12 @@ void DlgPass::updateProperties(Pass *p) {
 	m_PG->SetPropertyValue(wxT("Use Render Target"),p->isRenderTargetEnabled());
 
 	// SCENES
-	std::vector<std::string> *names = RENDERMANAGER->getAllSceneNames();
+	std::vector<std::string> names;
+	RENDERMANAGER->getAllSceneNames(&names);
 	std::vector<std::string>::iterator iter;
 	bool b;
 
-	for (iter = names->begin(); iter != names->end(); ++iter) {
+	for (iter = names.begin(); iter != names.end(); ++iter) {
 
 		if (p->hasScene(*iter))
 			b = true;
@@ -402,7 +402,6 @@ void DlgPass::updateProperties(Pass *p) {
 		str.Append(wxString(*iter).c_str());
 		m_PG->SetPropertyValue(str, b);
 	}
-	delete names;
 
 	// LIGHTS
 	std::vector<std::string> lNames;
@@ -536,25 +535,25 @@ void DlgPass::updateRenderTargetList(Pass *p) {
 }
 
 
-void DlgPass::updateScenes(Pass *p)
-{
+void DlgPass::updateScenes(Pass *p) {
+
 	wxPGProperty *m_PidScenes;
-	std::vector<std::string> *names = RENDERMANAGER->getAllSceneNames();
+	std::vector<std::string> names;
+	RENDERMANAGER->getAllSceneNames(&names);
 	std::vector<std::string>::iterator iter;
-	
+
 	m_PidScenes = m_PG->Append(new wxPGProperty(wxT("Scenes"), wxPG_LABEL));
 
 	wxPGProperty *pid2;
-	for (iter = names->begin(); iter != names->end(); ++iter) {
-		pid2 = m_PG->AppendIn(m_PidScenes, new wxBoolProperty( wxString((*iter).c_str()), wxPG_LABEL, false ) );
-		pid2->SetAttribute( wxPG_BOOL_USE_CHECKBOX, true );
+	for (iter = names.begin(); iter != names.end(); ++iter) {
+		pid2 = m_PG->AppendIn(m_PidScenes, new wxBoolProperty(wxString((*iter).c_str()), wxPG_LABEL, false));
+		pid2->SetAttribute(wxPG_BOOL_USE_CHECKBOX, true);
 	}
-	delete names;
 }
 
 
-void DlgPass::updateLights(Pass *p)
-{
+void DlgPass::updateLights(Pass *p) {
+
 	std::vector<std::string> names;
 	RENDERMANAGER->getLightNames(&names);
 
@@ -640,7 +639,7 @@ void DlgPass::OnSelectPipeline(wxCommandEvent& event) {
 	wxString selName;
 	selName = event.GetString();
 
-	Pipeline *pip = RENDERMANAGER->getPipeline(std::string(selName.mb_str()));
+	std::shared_ptr<Pipeline> &pip = RENDERMANAGER->getPipeline(std::string(selName.mb_str()));
 	std::vector<std::string> passes;
 	pip->getPassNames(&passes);
 

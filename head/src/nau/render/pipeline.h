@@ -27,9 +27,9 @@ namespace nau
 
 		class Pipeline {
 
+			friend class RenderManager;
 		public:
 
-			Pipeline (std::string pipelineName = "Default");
 			~Pipeline();
 
 			std::string getName();
@@ -80,6 +80,9 @@ namespace nau
 			void callScript(std::string &name);
 
 		protected:
+
+			Pipeline(std::string pipelineName = "Default");
+
 			void executePass(std::shared_ptr<Pass> &);
 			Pipeline (const Pipeline&);
 			Pipeline& operator= (const Pipeline&);

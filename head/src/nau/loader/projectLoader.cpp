@@ -861,12 +861,12 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 		else
 			s = pParam;
 
-		IScene *is;
+		std::shared_ptr<IScene> is;
 		if (0 == pType)
 			is = RENDERMANAGER->createScene(pName);
 		else {
 			is = RENDERMANAGER->createScene(pName, pType);
-			if (is == NULL)
+			if (is)
 				NAU_THROW("File %s\nScene %s\nInvalid type for scene", ProjectLoader::s_File.c_str(), pName);
 		}
 
@@ -1055,7 +1055,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 			std::vector<std::string> excluded;
 			excluded.push_back("file"); excluded.push_back("folder");
 			excluded.push_back("geometry"); excluded.push_back("buffers");
-			readChildTags(pName, (AttributeValues *)is, IScene::Attribs, excluded, pElem);
+			readChildTags(pName, (AttributeValues *)is.get(), IScene::Attribs, excluded, pElem);
 		}
 		if (pParam) {
 			std::string params = std::string(pParam);
@@ -2439,7 +2439,7 @@ ProjectLoader::loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass) {
 			}
 			pElem->QueryIntAttribute("offset", &offset);
 			IBuffer *b = RESOURCEMANAGER->getBuffer(buff);
-			if (offset > b->getPropui(IBuffer::SIZE)- 4) {
+			if ((unsigned int)offset > b->getPropui(IBuffer::SIZE)- 4) {
 				NAU_THROW("File %s\nPass %s\noffset %d is greater than buffer size - sizeof(float)",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), offset);
 			}
@@ -3321,7 +3321,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 		if (RENDERMANAGER->hasPipeline(pNamePip))
 			NAU_THROW("File %s\nPipeline %s redefinition", ProjectLoader::s_File.c_str(), pNamePip);
 
-		Pipeline *aPipeline = RENDERMANAGER->getPipeline (pNamePip);
+		std::shared_ptr<Pipeline> &aPipeline = RENDERMANAGER->createPipeline (pNamePip);
 		
 		unsigned int k = 0;
 		pElem->QueryUnsignedAttribute("frameCount", &k);

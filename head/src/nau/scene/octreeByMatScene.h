@@ -19,6 +19,8 @@ namespace nau {
 
 		class OctreeByMatScene : public IScenePartitioned
 		{
+			friend class SceneFactory;
+
 		public:
 			friend class nau::loader::CBOLoader;
 		private:
@@ -28,11 +30,12 @@ namespace nau {
 			nau::geometry::BoundingBox m_BoundingBox;
 
 		protected:
+			OctreeByMatScene (void);
+
 			void updateSceneObjectTransforms();
 			OctreeByMat *m_pGeometry;
 
 		public:
-			OctreeByMatScene (void);
 			~OctreeByMatScene (void);
 
 			void clear();

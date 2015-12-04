@@ -14,16 +14,21 @@
 #include <string>
 
 
-
 using namespace nau;
 
 
 namespace nau
 {
+	namespace resource {
+		class ResourceManager;
+	};
+
 	namespace material
 	{
 		class IBuffer : public AttributeValues
 		{
+			friend class nau::resource::ResourceManager;
+
 		public:
 
 			INT_PROP(ID,0);
@@ -47,7 +52,6 @@ namespace nau
 			virtual void setPropui(UIntProperty  prop, unsigned int value) = 0;
 			virtual void setPropui3(UInt3Property  prop, uivec3 &v) = 0;
 
-			static IBuffer* Create(std::string label);
 
 			std::string& getLabel (void);
 
@@ -74,6 +78,8 @@ namespace nau
 			~IBuffer(void) {};
 		
 		protected:
+
+			static IBuffer* Create(std::string label);
 
 			IBuffer() : m_Label("") { registerAndInitArrays(Attribs); };
 

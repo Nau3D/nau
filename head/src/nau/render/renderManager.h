@@ -29,10 +29,10 @@ namespace nau
 		private:
 			std::unique_ptr<IRenderer> m_pRenderer;
 			std::unique_ptr<IRenderQueue> m_pRenderQueue;
-			std::vector<Pipeline*> m_Pipelines;
-			std::map<std::string, nau::scene::IScene*> m_Scenes;
+			std::vector<std::shared_ptr<Pipeline>> m_Pipelines;
 			std::vector<nau::scene::SceneObject*> m_SceneObjects;
 
+			std::map<std::string, std::shared_ptr<IScene>> m_Scenes;
 			std::map<std::string, std::shared_ptr<Camera>> m_Cameras;
 			std::map<std::string, std::shared_ptr<Light>> m_Lights;
 			std::map<std::string, std::shared_ptr<Viewport>> m_Viewports;
@@ -59,12 +59,6 @@ namespace nau
 			unsigned char renderActivePipeline();
 			void renderActivePipelineNextPass();
 
-			// OCTREE STUFF
-			//! Creates an octree for every OctreeScene
-			void buildOctrees();
-
-			//! Create VBOs for every IScene, erases all vertex data, except vertex coordinates 
-			void compile();
 			
 			// VIEWPORTS
 			std::shared_ptr<Viewport> createViewport(const std::string &name, nau::math::vec4 &bgColor);
@@ -72,18 +66,17 @@ namespace nau
 			std::shared_ptr<Viewport> getViewport(const std::string &name);
 			void getViewportNames(std::vector<std::string> *);
 			bool hasViewport(const std::string &name);
-			//! Calls the Renderer to set the viewport
-			//void setViewport(nau::render::Viewport *vp);
 
 
 			// PIPELINES
+			std::shared_ptr<Pipeline> &createPipeline(const std::string &pipelineName);
 			//! Checks if a given named pipeline exists
 			bool hasPipeline (const std::string &pipelineName);
 			//! Returns a pointer to the named pipeline
-			Pipeline* getPipeline (const std::string &pipelineName);
+			std::shared_ptr<Pipeline> &getPipeline (const std::string &pipelineName);
 			unsigned int getPipelineIndex (const std::string &pipelineName);
 			//! Returns a pointer to the active pipeline
-			Pipeline* getActivePipeline();
+			std::shared_ptr<Pipeline> &getActivePipeline();
 
 			//! Returns the active pipeline name
 			std::string getActivePipelineName();
@@ -94,7 +87,7 @@ namespace nau
 			//! Returns the number of pipelines
 			unsigned int getNumPipelines();
 			//! Returns a vector with the name of all the defined pipelines
-			std::vector<std::string> *getPipelineNames();
+			void getPipelineNames(std::vector<std::string> *);
 
 			bool setRunMode(std::string s);
 
@@ -114,9 +107,6 @@ namespace nau
 
 			//! Returns the name of the last pass' camera from the active pipeline
 			const std::string &getDefaultCameraName();
-
-			//void reload (void);
-			//void sendKeyToEngine (char keyCode); 
 
 			//! Currently does nothing. Returns -1
 			int pick (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera);
@@ -166,13 +156,19 @@ namespace nau
 
 			// SCENES
 			bool hasScene (const std::string &sceneName);
-			nau::scene::IScene* createScene (const std::string &sceneName, const std::string &sceneType = "OctreeUnified");
+			std::shared_ptr<IScene> & createScene (const std::string &sceneName, const std::string &sceneType = "OctreeUnified");
 			//! Return the named scene. If it does not exist it creates one
-			nau::scene::IScene* getScene (const std::string &sceneName);
+			std::shared_ptr<IScene> & getScene (const std::string &sceneName);
 			//! Returns all the scene names, but the SceneAux type
 			void getSceneNames(std::vector<std::string> *);
 			//! Returns ALL the scene names
-			std::vector<std::string> *getAllSceneNames();
+			void getAllSceneNames(std::vector<std::string> *);
+			// OCTREE STUFF
+			//! Creates an octree for every OctreeScene
+			void buildOctrees();
+
+			//! Create VBOs for every IScene, erases all vertex data, except vertex coordinates 
+			void compile();
 
 			// MATERIALS
 			//! Returns all the material names from the loaded scenes

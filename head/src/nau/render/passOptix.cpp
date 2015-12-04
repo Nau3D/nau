@@ -470,7 +470,7 @@ PassOptix::optixInit() {
 	scenesIter = m_SceneVector.begin();
 	for ( ; scenesIter != m_SceneVector.end(); ++scenesIter) {
 
-		IScene *aScene = RENDERMANAGER->getScene (*scenesIter);
+		std::shared_ptr<IScene> &aScene = RENDERMANAGER->getScene (*scenesIter);
 		aScene->compile();
 
 		// Adding Materials to optix lib
@@ -580,7 +580,7 @@ PassOptix::addScene (const std::string &sceneName) {
 				m_MaterialMap[iter] = MaterialID(DEFAULTMATERIALLIBNAME, iter);
 		}
 
-		IScene *sc = RENDERMANAGER->getScene(sceneName);
+		std::shared_ptr<IScene> &sc = RENDERMANAGER->getScene(sceneName);
 		sc->compile();
 	}
 }

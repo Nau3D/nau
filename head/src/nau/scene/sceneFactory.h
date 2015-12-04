@@ -10,7 +10,7 @@ namespace nau
 		class SceneFactory
 		{
 		public:
-			static IScene * create (std::string scene);
+			static IScene * Create (std::string scene);
 		private:
 			SceneFactory(void) {};
 		};

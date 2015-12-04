@@ -18,11 +18,12 @@ namespace nau {
 
 		class SceneAux : public Scene
 		{
+			friend class SceneFactory;
+
 		protected:
-			//bool m_Compiled;
+			SceneAux (void);
 
 		public:
-			SceneAux (void);
 
 			virtual void unitize();
 			virtual void compile();

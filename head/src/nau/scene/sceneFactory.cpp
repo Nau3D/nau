@@ -14,7 +14,7 @@ using namespace nau::scene;
 
 
 IScene*
-SceneFactory::create(std::string scene)
+SceneFactory::Create(std::string scene)
 {
 	IScene *pScene = 0;
 

@@ -14,12 +14,13 @@ out vec4 outColor;
 void main()
 {
 	vec4 color, diff;
-
+	
 	if (texCount  != 2)
-		diff = /* diffuse * */ texture(texUnit, texCoordV) ; // ambient term
+		diff = texture(texUnit, texCoordV) ; 
 	else 
 		diff = diffuse;
 		
+	// ambient term
 	color = diff * 0.25;
 	
 	vec3 n = normalize (normalV);

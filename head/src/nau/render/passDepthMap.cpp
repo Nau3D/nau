@@ -152,7 +152,7 @@ PassDepthMap::doPass (void) {
 	scenesIter = m_SceneVector.begin();
 
 	for ( ; scenesIter != m_SceneVector.end(); ++scenesIter) {
-		IScene *aScene = RENDERMANAGER->getScene (*scenesIter);
+		std::shared_ptr<IScene> &aScene = RENDERMANAGER->getScene (*scenesIter);
 
 		std::vector<SceneObject*> &sceneObjects = aScene->findVisibleSceneObjects (frustum, *m_LightCamera,true);
 		std::vector<SceneObject*>::iterator objIter;

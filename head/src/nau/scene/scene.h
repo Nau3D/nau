@@ -13,7 +13,11 @@ namespace nau {
 
 		class Scene : public IScene
 		{
+			friend class SceneFactory;
+
 		protected:
+			Scene(void);
+
 			std::vector<SceneObject*> m_vReturnVector;
 			std::vector<SceneObject*> m_SceneObjects;
 
@@ -23,7 +27,6 @@ namespace nau {
 			void updateSceneObjectTransforms();
 
 		public:
-			Scene(void);
 			~Scene (void);
 
 			void clear();

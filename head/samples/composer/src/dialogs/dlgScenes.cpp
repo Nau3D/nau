@@ -216,12 +216,12 @@ void DlgScenes::update()
 	if (m_Active == "")
 		return;
 
-	IScene *scene = RENDERMANAGER->getScene(m_Active);
+	std::shared_ptr<IScene> &scene = RENDERMANAGER->getScene(m_Active);
 
 	/* Is scene a partitioned scene? */
 	if (scene->getType() == "Octree" || scene->getType() == "OctreeByMatScene") {
 	
-		IScenePartitioned *part = (IScenePartitioned *)scene;
+		std::shared_ptr<IScenePartitioned> part = std::dynamic_pointer_cast<IScenePartitioned>(scene);
 
 		if (part->isBuilt() || part->isCompiled())
 			m_toolbar->EnableTool(BUILD, FALSE);
@@ -241,7 +241,7 @@ void DlgScenes::update()
 
 	m_PG->ClearModifiedStatus();
 
-	PropertyManager::updateGrid(m_PG, IScene::Attribs, (AttributeValues *)scene);
+	PropertyManager::updateGrid(m_PG, IScene::Attribs, (AttributeValues *)scene.get());
 	//wxString s;
 	//s.Printf("(%f,%f,%f)",bv.getMax().x, bv.getMax().y, bv.getMax().z);
 	//tBoundingBoxMax->SetLabel(s);
@@ -260,13 +260,13 @@ void DlgScenes::update()
 
 void DlgScenes::OnPropsChange( wxPropertyGridEvent& e) {
 
-	IScene *scene = RENDERMANAGER->getScene(m_Active);
+	std::shared_ptr<IScene> &scene = RENDERMANAGER->getScene(m_Active);
 	const wxString& name = e.GetPropertyName();
 	unsigned int dotLocation = name.find_first_of(wxT("."), 0);
 	std::string topProp = std::string(name.substr(0, dotLocation).mb_str());
 	std::string prop = std::string(name.substr(dotLocation + 1, name.size() - dotLocation - 1).mb_str());
 
-	PropertyManager::updateProp(m_PG, name.ToStdString(), IScene::Attribs, (AttributeValues *)scene);
+	PropertyManager::updateProp(m_PG, name.ToStdString(), IScene::Attribs, (AttributeValues *)scene.get());
 
 }
 
@@ -286,7 +286,7 @@ DlgScenes::OnSaveScene( wxCommandEvent& event)
 void 
 DlgScenes::OnCompile( wxCommandEvent& event)
 {
-	IScene *scene = RENDERMANAGER->getScene(m_Active);
+	std::shared_ptr<IScene> &scene = RENDERMANAGER->getScene(m_Active);
 	scene->compile();
 	//((FrmMainFrame *)Parent)->compile(scene);
 
@@ -298,7 +298,8 @@ DlgScenes::OnCompile( wxCommandEvent& event)
 void 
 DlgScenes::OnBuild( wxCommandEvent& event)
 {
-	IScenePartitioned *part = (IScenePartitioned *) RENDERMANAGER->getScene(m_Active);
+	std::shared_ptr<IScenePartitioned> &part = 
+		dynamic_pointer_cast<IScenePartitioned>(RENDERMANAGER->getScene(m_Active));
 	part->build();
 
 	m_toolbar->EnableTool(BUILD, FALSE);
