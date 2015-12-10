@@ -679,7 +679,7 @@
     <ClInclude Include="..\src\nau\attribute.h" />
     <ClInclude Include="..\src\nau\attributeValues.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\src\nau\bimap.h" />
     <ClInclude Include="..\src\nau\clogger.h" />
