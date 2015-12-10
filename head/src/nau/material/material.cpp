@@ -187,37 +187,42 @@ Material::getTextureUnits(std::vector<unsigned int> *vi) {
 void 
 Material::setUniformValues() {
 
-	PROFILE_GL("Set Uniforms");
-	std::map<std::string,ProgramValue>::iterator progValIter;
+	{ // explicit block for profiler
+		PROFILE_GL("Set Uniforms");
+		std::map<std::string, ProgramValue>::iterator progValIter;
 
-	progValIter = m_ProgramValues.begin();
+		progValIter = m_ProgramValues.begin();
 
-	for (; progValIter != m_ProgramValues.end(); ++progValIter) {
-			
-		void *v = progValIter->second.getValues();
-		m_Shader->setValueOfUniform(progValIter->first, v);
+		for (; progValIter != m_ProgramValues.end(); ++progValIter) {
+
+			void *v = progValIter->second.getValues();
+			m_Shader->setValueOfUniform(progValIter->first, v);
+		}
 	}
+	int x = 3;
 }
 
 
 void 
 Material::setUniformBlockValues() {
 
-	PROFILE_GL("Set Blocks");
+	{ // explicit block for profiler
+		PROFILE_GL("Set Blocks");
 
-	std::set<std::string> blocks;
-	for (auto pbv:m_ProgramBlockValues) {
-			
-		void *v = pbv.second.getValues();
- 		const std::string &block = pbv.first.first;
-		std::string uniform = pbv.first.second;
-		IUniformBlock *b = UNIFORMBLOCKMANAGER->getBlock(block);
-		if (b) {
-			b->setUniform(uniform, v);
-			blocks.insert(block);
+		std::set<std::string> blocks;
+		for (auto pbv : m_ProgramBlockValues) {
+
+			void *v = pbv.second.getValues();
+			const std::string &block = pbv.first.first;
+			std::string uniform = pbv.first.second;
+			IUniformBlock *b = UNIFORMBLOCKMANAGER->getBlock(block);
+			if (b) {
+				b->setUniform(uniform, v);
+				blocks.insert(block);
+			}
 		}
+		m_Shader->prepareBlocks();
 	}
-	m_Shader->prepareBlocks();
 }
 
 #include <algorithm>

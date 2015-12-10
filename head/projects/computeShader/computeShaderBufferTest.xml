@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="Simple" width="512" height="512">
+<project name="Compute Shader Test" width="512" height="512">
 	<assets>
 		<viewports>
 			<viewport name="Main" >
@@ -12,10 +12,50 @@
 		</materialLibs>
 	</assets>
 	
-	<pipelines>
-		<pipeline name="fixedfunction" default="true">
+	<pipelines >
+		<pipeline name="LS = 1" >
 			<pass class="compute" name="pass1">
-				<material name="computeShader" fromLibrary="Compute" dimX=64 dimY=64 dimZ=1 />
+				<material name="computeShader" fromLibrary="Compute" dimX=512 dimY=512 dimZ=1 />
+			</pass>
+			<pass class="quad" name="pass2" >
+				<viewport name="Main" />
+				<texture name="Compute::tex" />
+			</pass>
+		</pipeline>
+		
+		<pipeline name="LS = 2" >
+			<pass class="compute" name="pass1">
+				<material name="computeShader2" fromLibrary="Compute" dimX=256 dimY=256 dimZ=1 />
+			</pass>
+			<pass class="quad" name="pass2" >
+				<viewport name="Main" />
+				<texture name="Compute::tex" />
+			</pass>
+		</pipeline>
+		
+		<pipeline name="LS = 4" >
+			<pass class="compute" name="pass1">
+				<material name="computeShader4" fromLibrary="Compute" dimX=128 dimY=128 dimZ=1 />
+			</pass>
+			<pass class="quad" name="pass2" >
+				<viewport name="Main" />
+				<texture name="Compute::tex" />
+			</pass>
+		</pipeline>
+		
+		<pipeline name="LS = 8" >
+			<pass class="compute" name="pass1">
+				<material name="computeShader8" fromLibrary="Compute" dimX=64 dimY=64 dimZ=1 />
+			</pass>
+			<pass class="quad" name="pass2" >
+				<viewport name="Main" />
+				<texture name="Compute::tex" />
+			</pass>
+		</pipeline>
+		
+		<pipeline name="LS = 16" >
+			<pass class="compute" name="pass1">
+				<material name="computeShader16" fromLibrary="Compute" dimX=32 dimY=32 dimZ=1 />
 			</pass>
 			<pass class="quad" name="pass2" >
 				<viewport name="Main" />

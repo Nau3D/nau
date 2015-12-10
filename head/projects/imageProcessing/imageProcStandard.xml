@@ -1,0 +1,26 @@
+
+<?xml version="1.0" ?>
+<project name="Image Processing Vertex" width="512" height="512">
+	<assets>
+		<viewports>
+			<viewport name="Main" >
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+	
+		<materialLibs>
+			<materialLib filename="imageProcessing.mlib"/>
+		</materialLibs>
+	</assets>
+
+	<pipelines>
+		<pipeline name="Standard" >
+			<pass class="quad" name="process" >
+				<viewport name="Main" />
+				<materialMaps>
+					<map fromMaterial="__Quad" toMaterial="standard" toLibrary="ImageProcessing" />
+				</materialMaps>
+			</pass>		
+		</pipeline>
+	</pipelines>
+</project>

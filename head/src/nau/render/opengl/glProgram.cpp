@@ -332,6 +332,11 @@ GLProgram::getAttributeLocation (const std::string &name) {
 void 
 GLProgram::useProgram (void) {
 
+	if (m_ID[FRAGMENT_SHADER] == 0 && m_ID[COMPUTE_SHADER] == 0)
+		glEnable(GL_RASTERIZER_DISCARD);
+	else
+		glDisable(GL_RASTERIZER_DISCARD);
+
 	if (true == m_PLinked) {
 		glUseProgram (m_P);
 	} else {

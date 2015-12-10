@@ -1,5 +1,7 @@
 #include "profile.h"
 
+#include "nau/slogger.h"
+
 #include <ctime>
 
 #include <glbinding/gl/gl.h>
@@ -159,6 +161,7 @@ void Profile::createNewSection(std::string &name, pTime w, bool profileGL) {
 	GetTicks(&(s.startTime));
 	s.wastedTime = s.startTime - w;
 	sLevels[sCurrLevel].sec.push_back(s);
+	//SLOG("opening %s", s.name.c_str());
 }
 
 
@@ -203,13 +206,14 @@ void Profile::accumulate() {
 
 	s = &(sLevels[sCurrLevel].sec[sLevels[sCurrLevel].cursor]);
 
-	if (s->profileGL) {
+	if (s->profileGL) { 
 		glQueryCounter(s->queriesGL[sBackBuffer][s->queriesGL[sBackBuffer].size()-1].queries[1], GL_TIMESTAMP);
 	}
 	// to measure wasted time when accumulating
 	GetTicks(&t2);
 	s->wastedTime += (t2-t);
 	s->totalTime += (t - s->startTime);
+	//SLOG("closing %s", s->name.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////

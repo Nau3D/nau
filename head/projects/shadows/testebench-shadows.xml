@@ -67,7 +67,7 @@
 	<pipelines>
 		<pipeline name="shadow" defaultCamera="testCamera">
 		
-			<pass class="depthmap" name="getShadowMap">
+			<!--pass class="depthmap" name="getShadowMap">
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
@@ -105,24 +105,18 @@
 						</textures>
 					</map>	
 				</injectionMaps>	
-			</pass>
-			
-			
-			<pass class="quad" name="showComputedShadows">
-				<viewport name="MainViewport" />				
-				<texture name="offscreenrender" fromLibrary="Shadow Materials"/>
-			</pass>
+			</pass>		
 			
 			<pass class="quad" name="showShadowMap">
 				<viewport name="SmallViewport1" />				
 				<texture name="shadowMap" fromLibrary="Shadow Materials"/>
-			</pass>
+			</pass-->
 			
 			<pass class="default" name="DebugViewFromGodsCamera">
 				<scenes>
 					<scene name="MainScene" />
 					<scene name="testCamera" />
-					<scene name="shadow#getShadowMap-LightCam" />
+					<!--scene name="shadow#getShadowMap-LightCam" /-->
 				</scenes>
 				<camera name="MainCamera" />
 				<viewport name="SmallViewport2" />
@@ -131,7 +125,12 @@
 				</lights>
 			</pass> 
 			
-			<pass class="default" name="DebugViewFromLight">
+			<pass class="quad" name="showComputedShadows">
+				<viewport name="MainViewport" />				
+				<texture name="offscreenrender" fromLibrary="Shadow Materials"/>
+			</pass>
+			
+			<!--pass class="default" name="DebugViewFromLight">
 				<scenes>
 					<scene name="MainScene" />
 					<scene name="testCamera" />
@@ -141,7 +140,8 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-			</pass> 
+			</pass--> 
+			
 			
 		</pipeline>
 	</pipelines>

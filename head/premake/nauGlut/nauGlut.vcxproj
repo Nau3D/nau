@@ -181,7 +181,7 @@
       <IgnoreSpecificDefaultLibraries>msvcprt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\build\samples\nauGlut64.exe ..\..\release64\nauGlut64.exe</Command>
+      <Command>copy ..\..\build\samples\nauGlut64.exe ..\..\release64\nauGLUT64.exe</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

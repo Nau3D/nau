@@ -40,9 +40,18 @@ void changeSize(int w, int h) {
 
 void renderScene() {
 
-	NAU->step();
+	{
+		PROFILE("Nau");
+		NAU->step();
+	}
 	// swap buffers
-	glutSwapBuffers();
+	{
+		PROFILE("Swap");
+		glutSwapBuffers();
+	}
+#if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
+	Profile::CollectQueryResults();
+#endif
 	if (NAU->getProfileResetRequest())
 		Profile::Reset();
 }

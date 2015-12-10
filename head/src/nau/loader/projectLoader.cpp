@@ -866,7 +866,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 			is = RENDERMANAGER->createScene(pName);
 		else {
 			is = RENDERMANAGER->createScene(pName, pType);
-			if (is)
+			if (!is)
 				NAU_THROW("File %s\nScene %s\nInvalid type for scene", ProjectLoader::s_File.c_str(), pName);
 		}
 
@@ -3842,8 +3842,9 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		const char *pTEFile = pElem->Attribute("te");
 		const char *pCSFile = pElem->Attribute("cs");
 
-		if ((0 == pCSFile) && (0 == pVSFile || (0 == pPSFile && 0 == pGSFile))) {
-			NAU_THROW("Mat Lib %s\nShader %s missing files", aLib->getName().c_str(), pProgramName);
+		//if ((0 == pCSFile) && (0 == pVSFile || (0 == pPSFile && 0 == pGSFile))) {
+		if (0 == pCSFile && 0 == pVSFile) {
+				NAU_THROW("Mat Lib %s\nShader %s missing files", aLib->getName().c_str(), pProgramName);
 		}
 
 		if (0 != pCSFile && (0 != pVSFile || 0 != pPSFile || 0 != pGSFile || 0 != pTEFile || 0 != pTCFile)) 
