@@ -3,7 +3,6 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene">
-				<!--file name="..\3dsmodels\testGeomMaya.obj"/-->
 				<file name="..\..\models\ntg-bench\bench.obj"/>
 			</scene>
 		</scenes>
@@ -67,7 +66,7 @@
 	<pipelines>
 		<pipeline name="shadow" defaultCamera="testCamera">
 		
-			<!--pass class="depthmap" name="getShadowMap">
+			<pass class="depthmap" name="getShadowMap">
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
@@ -107,16 +106,11 @@
 				</injectionMaps>	
 			</pass>		
 			
-			<pass class="quad" name="showShadowMap">
-				<viewport name="SmallViewport1" />				
-				<texture name="shadowMap" fromLibrary="Shadow Materials"/>
-			</pass-->
-			
 			<pass class="default" name="DebugViewFromGodsCamera">
 				<scenes>
 					<scene name="MainScene" />
 					<scene name="testCamera" />
-					<!--scene name="shadow#getShadowMap-LightCam" /-->
+					<scene name="shadow#getShadowMap-LightCam" />
 				</scenes>
 				<camera name="MainCamera" />
 				<viewport name="SmallViewport2" />
@@ -125,12 +119,13 @@
 				</lights>
 			</pass> 
 			
-			<pass class="quad" name="showComputedShadows">
-				<viewport name="MainViewport" />				
-				<texture name="offscreenrender" fromLibrary="Shadow Materials"/>
+			<pass class="quad" name="showShadowMap">
+				<viewport name="SmallViewport1" />				
+				<texture name="shadowMap" fromLibrary="Shadow Materials"/>
 			</pass>
 			
-			<!--pass class="default" name="DebugViewFromLight">
+			
+			<pass class="default" name="DebugViewFromLight">
 				<scenes>
 					<scene name="MainScene" />
 					<scene name="testCamera" />
@@ -140,8 +135,12 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-			</pass--> 
+			</pass> 
 			
+			<pass class="quad" name="showComputedShadows">
+				<viewport name="MainViewport" />				
+				<texture name="offscreenrender" fromLibrary="Shadow Materials"/>
+			</pass>
 			
 		</pipeline>
 	</pipelines>

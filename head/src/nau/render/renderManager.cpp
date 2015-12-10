@@ -389,10 +389,8 @@ RenderManager::renderActivePipeline ()
 	if (!(m_ActivePipelineIndex < m_Pipelines.size()))
 		return 0;
 
-	std::shared_ptr<Pipeline> &pip = m_Pipelines[m_ActivePipelineIndex];
-
 	int n = RENDERER->getPropui(IRenderer::FRAME_COUNT);
-	int k = pip->getFrameCount();
+	int k = m_Pipelines[m_ActivePipelineIndex]->getFrameCount();
 	if (m_RunMode == RUN_ALL && k > 0 && k == n) {
 		m_ActivePipelineIndex++;
 		m_ActivePipelineIndex = m_ActivePipelineIndex % m_Pipelines.size();
@@ -401,7 +399,7 @@ RenderManager::renderActivePipeline ()
 			exit(0);
 	}
 
-	pip->execute ();
+	m_Pipelines[m_ActivePipelineIndex]->execute ();
 
 	return 0;
 }

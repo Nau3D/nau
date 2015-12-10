@@ -149,7 +149,7 @@ void Profile::createNewSection(std::string &name, pTime w, bool profileGL) {
 	s.totalTime = 0;
 	s.totalQueryTime = 0;
 	
-	sLevels[sCurrLevel].cursor++;
+	sLevels[sCurrLevel].cursor = (int)sLevels[sCurrLevel].sec.size();
 
 	if (profileGL) {
 		queryPair p;

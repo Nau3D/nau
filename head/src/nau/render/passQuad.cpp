@@ -24,6 +24,9 @@ PassQuad::PassQuad (const std::string &name) :
 {
 	m_ClassName = "quad";
 	m_QuadObject = new Quad;
+	std::string mat = "__Quad";
+	std::string lib = DEFAULTMATERIALLIBNAME;
+	setMaterialName(lib, mat);
 }
 
 

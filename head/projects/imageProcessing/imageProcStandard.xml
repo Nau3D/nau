@@ -18,7 +18,7 @@
 			<pass class="quad" name="process" >
 				<viewport name="Main" />
 				<materialMaps>
-					<map fromMaterial="__Quad" toMaterial="standard" toLibrary="ImageProcessing" />
+					<map fromMaterial="*" toMaterial="standard" toLibrary="ImageProcessing" />
 				</materialMaps>
 			</pass>		
 		</pipeline>
