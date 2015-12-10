@@ -1,9 +1,10 @@
 #version 440
 
-uniform writeonly image2D imageUnit;
 uniform sampler2D texUnit;
 
 in vec4 texCoordV;
+
+out vec4 res;
 
 void main() {
 
@@ -18,8 +19,5 @@ void main() {
 	vec4 bc = texelFetchOffset(texUnit, texCoord, 0, ivec2( 0,	 1));
 	vec4 br = texelFetchOffset(texUnit, texCoord, 0, ivec2( 1,  1));
 
-	vec4 res = (8 * cc - tl - tc - tr - cl - cr - bl - bc - br);
-	imageStore(imageUnit, texCoord, res);
-	
-
+	res = (8 * cc - tl - tc - tr - cl - cr - bl - bc - br);
 } 

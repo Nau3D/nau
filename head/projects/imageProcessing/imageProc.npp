@@ -14,4 +14,12 @@
             <File name="shaders\standard.vert" />
         </Folder>
     </Project>
+    <Project name="standard with imageTexture">
+        <File name="imageProcessing.mlib" />
+        <File name="imageProcStandard.xml" />
+        <Folder name="shaders">
+            <File name="shaders\standardImgTex.frag" />
+            <File name="shaders\standard.vert" />
+        </Folder>
+    </Project>
 </NotepadPlus>

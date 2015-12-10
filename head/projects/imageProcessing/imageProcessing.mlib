@@ -27,8 +27,11 @@
 
 	<shaders>
 		<shader name="vertexOnly" 		vs = "shaders/vertexOnly.vert" /> 
+		
 		<shader name="standard" 		vs = "shaders/standard.vert"
 										ps = "shaders/standard.frag" /> 
+		<shader name="standardImgTex" 		vs = "shaders/standard.vert"
+										ps = "shaders/standardImgTex.frag" /> 
 	</shaders>
 
 	<materials>
@@ -56,12 +59,33 @@
 			<shader name="standard">
 				<values>									
 					<valueof uniform="texUnit"		type="MATERIAL_TEXTURE" context="CURRENT"
-														id=0 component="UNIT" />								
+														id=0 component="UNIT" />		
 				</values>
 			</shader>
 			<textures>
 				<texture UNIT=0 name="source" />
 			</textures>	
 		</material>
+		
+		<material name ="standardImgTex">
+			<shader name="standardImgTex">
+				<values>									
+					<valueof uniform="texUnit"		type="MATERIAL_TEXTURE" context="CURRENT"
+														id=0 component="UNIT" />		
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT=0 name="source" />
+			</textures>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="tex" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+		</material>
+
 	</materials>
 </materialLib>

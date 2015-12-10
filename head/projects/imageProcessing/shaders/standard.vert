@@ -1,8 +1,5 @@
 #version 440
 
-uniform writeonly image2D imageUnit;
-uniform sampler2D texUnit;
-
 in vec4 position;
 in vec2 texCoord0;
 
