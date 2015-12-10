@@ -89,7 +89,7 @@
 		<pipeline name="voxels" default="true" defaultCamera = "MainCamera">
 		
 			<pass class="default" name="voxelization">
-				<mode value="RUN_ONCE" />	
+				<!--mode value="RUN_ONCE" /-->	
 				<camera name="MainCamera" />
 				<scenes>
 					<scene name="Sponza" />

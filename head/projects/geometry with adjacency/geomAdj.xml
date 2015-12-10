@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="Al"  param="USE_ADJACENCY" >
-				<file name="..\..\models\al.obj"/>
+				<file name="..\..\models\sponza/crytek-sponza/sponza.nbo"/>
 
 			</scene>
 		</scenes>

@@ -298,9 +298,6 @@
     <ClCompile Include="..\src\nau\loader\projectLoaderDebugLinker.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\nau\material\colorMaterial.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\nau\material\iMaterialBuffer.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
@@ -528,6 +525,9 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\render\iRenderTarget.cpp">
       <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\colorMaterial.cpp">
+      <Filter>Source Files\material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
