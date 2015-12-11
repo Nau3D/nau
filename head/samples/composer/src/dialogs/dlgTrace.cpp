@@ -296,8 +296,8 @@ DlgTrace::loadLog() {
 					FILETIME ft1, ft2, ftlw;
 					GetFileTime(hFile, &ft1, &ft2, &ftlw);
 					ULARGE_INTEGER uLargeIntegerTime1;
-					uLargeIntegerTime1.LowPart = ft1.dwLowDateTime;
-					uLargeIntegerTime1.HighPart = ft1.dwHighDateTime;
+					uLargeIntegerTime1.LowPart = ftlw.dwLowDateTime;
+					uLargeIntegerTime1.HighPart = ftlw.dwHighDateTime;
 					if (uLargeIntegerTime1.QuadPart > m_LastTime) {
 						m_FileTimes[uLargeIntegerTime1.QuadPart] = std::pair<std::string, int>(logfile, atoi(ent->d_name + 6));
 						tempLastTime = tempLastTime > uLargeIntegerTime1.QuadPart ? tempLastTime : uLargeIntegerTime1.QuadPart;

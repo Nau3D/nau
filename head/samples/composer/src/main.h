@@ -106,6 +106,8 @@ private:
 
 	void startStandAlone (void);
 
+	void loadProject(const char *s);
+
    DECLARE_EVENT_TABLE();
 
 	//void buildPhysics (void);

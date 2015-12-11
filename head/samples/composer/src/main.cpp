@@ -371,8 +371,6 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 		wxMessageBox((wxString)s.c_str());
 	}
 
-	//if (wxGetApp().argc == 2)
-	//	m_pRoot->setTrace(-1);
 
 	if (true != nauInit){
 		wxMessageBox (_("Nau error!"), _("Kaput!"));
@@ -412,6 +410,26 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	int w, h;
 	GetClientSize(&w, &h);
 	SetClientSize(w+1, h+1);
+
+	if (wxGetApp().argc > 1) {
+		int param = 1;
+		if (wxGetApp().argv[1].c_str()[0] != '-') {
+			loadProject(wxGetApp().argv[1].c_str());
+			param = 2;
+		}
+		for (int i = param; i < wxGetApp().argc; ++i) {
+			if (wxGetApp().argv[i].ToStdString() == "-trace") {
+				long frames;
+				if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
+					m_pRoot->setTrace((int)frames);
+					++i;
+				}
+				else
+					m_pRoot->setTrace(1);
+			}
+		}
+	}
+
 }
 
 
@@ -681,36 +699,72 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event) {
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
 		wxString path = openFileDlg->GetPath ();
-		wxStopWatch aTimer;
-		aTimer.Start();
-
-		try {
-			m_pRoot->clear();
-			DlgLog::Instance()->updateDlg();
-			DlgLog::Instance()->clear();
-			int width=0, height=0;
-			std::string ProjectFile ((const char *) path.c_str());
-			m_pRoot->readProjectFile (ProjectFile, &width,&height);
-			if (width)
-				SetClientSize(width,height);
-			m_Canvas->setCamera();
-			updateDlgs();
-#ifndef FINAL
-
-			float t =  aTimer.Time()/1000.0;
-			SLOG("Elapsed time: %f", t);
-#endif
-
-			DlgTrace::Instance()->clear();
-
-		} catch (nau::ProjectLoaderError &e) {
-		  wxMessageBox (wxString (e.getException().c_str()));
-		} 	
-		catch (std::string s) {
-			wxMessageBox(wxString (s.c_str()));
-		}
+		loadProject(path.c_str());
+//		wxStopWatch aTimer;
+//		aTimer.Start();
+//
+//		try {
+//			m_pRoot->clear();
+//			DlgLog::Instance()->updateDlg();
+//			DlgLog::Instance()->clear();
+//			int width=0, height=0;
+//			std::string ProjectFile ((const char *) path.c_str());
+//			m_pRoot->readProjectFile (ProjectFile, &width,&height);
+//			if (width)
+//				SetClientSize(width,height);
+//			m_Canvas->setCamera();
+//			updateDlgs();
+//#ifndef FINAL
+//
+//			float t =  aTimer.Time()/1000.0;
+//			SLOG("Elapsed time: %f", t);
+//#endif
+//
+//			DlgTrace::Instance()->clear();
+//
+//		} catch (nau::ProjectLoaderError &e) {
+//		  wxMessageBox (wxString (e.getException().c_str()));
+//		} 	
+//		catch (std::string s) {
+//			wxMessageBox(wxString (s.c_str()));
+//		}
 	}
 	delete openFileDlg;
+}
+
+
+void 
+FrmMainFrame::loadProject(const char *s) {
+
+	wxStopWatch aTimer;
+	aTimer.Start();
+
+	try {
+		m_pRoot->clear();
+		DlgLog::Instance()->updateDlg();
+		DlgLog::Instance()->clear();
+		int width = 0, height = 0;
+		std::string ProjectFile(s);
+		m_pRoot->readProjectFile(ProjectFile, &width, &height);
+		if (width)
+			SetClientSize(width, height);
+		m_Canvas->setCamera();
+		updateDlgs();
+#ifndef FINAL
+
+		float t = aTimer.Time() / 1000.0;
+		SLOG("Elapsed time: %f", t);
+#endif
+
+		DlgTrace::Instance()->clear();
+
+	}
+	catch (nau::ProjectLoaderError &e) {
+		wxMessageBox(wxString(e.getException().c_str()));
+	}
+	catch (std::string s) {
+		wxMessageBox(wxString(s.c_str()));
+	}
 }
 
 
