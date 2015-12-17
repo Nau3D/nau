@@ -1,6 +1,6 @@
 
 <?xml version="1.0" ?>
-<project name="Image Processing Vertex" width="512" height="512">
+<project name="Image Processing" width="512" height="512">
 	<assets>
 		<viewports>
 			<viewport name="Main" >
