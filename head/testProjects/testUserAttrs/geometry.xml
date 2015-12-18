@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<project name="Geometric Primitives" width=512 height = 512>
+	<assets>
+	
+		<attributes>
+			<attribute context="LIGHT" name="DIR" type="VEC4" x="-1.0" y="-1.0" z="-1.0" w = "0" />
+			<attribute context="CAMERA" name="DIST" type="FLOAT" value="10" />
+			<attribute context="STATE" name="FOG_MIN_DIST" type="FLOAT" value = 0.0 />
+			<attribute context="STATE" name="FOG_MAX_DIST" type="FLOAT" value = 100.0 />
+			<attribute context="PASS" name="EXPOSURE" type="FLOAT" min = 0.0 max = 10.0 value = 10.0 />
+		</attributes>
+		
+		<scenes>
+			<scene name="CubeLand" >
+				<SCALE x = 1.0 y=0.5 z = 1.0 />
+				<geometry name = "sphere" type = "SPHERE"  STACKS = 2 SLICES = 3 material="crateBox">
+					<TRANSLATE x =-2.5 y=0 z =0  />
+					<SCALE x=2 y=2 z=2 />
+				</geometry>								
+				<geometry name = "box" type = "BOX"  material="dirLightDifAmbPix" >
+					<TRANSLATE x =2.5 y=0 z =0  />
+					<SCALE x=2 y=4 z=2 />
+
+				</geometry>
+			</scene>
+			<scene name="Axis">
+				<geometry name = "axis" type = "AXIS"  >
+					<SCALE x=5 y=5 z =5 />
+				</geometry>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">				
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="0.3" FAR="100.0" />
+				<!-- DIST is an user attribute -->
+				<DIST value="10" />
+				<POSITION x="0" y="0.0" z="10" />
+				<VIEW x="0.0" y="-0.0" z="-1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<!-- DIR is an user attribute -->
+				<DIR x="1.0" y="-2.5" z="-2" />
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "geometry.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1" axis="5">
+				<scenes>
+					<scene name="CubeLand" />
+					<scene name="Axis" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
+				</materialMaps>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

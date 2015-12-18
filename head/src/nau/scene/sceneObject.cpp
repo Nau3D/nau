@@ -28,6 +28,7 @@ SceneObject::Init() {
 	Attribs.listAdd("TRANSFORM_ORDER", "S_R_T", S_R_T);
 	Attribs.listAdd("TRANSFORM_ORDER", "S_T_R", S_T_R);
 
+	NAU->registerAttributes("SCENE_OBJECT", &Attribs);
 
 	return true;
 }

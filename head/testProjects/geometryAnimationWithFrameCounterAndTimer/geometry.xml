@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<project name="Geometric Primitives" width=512 height = 512>
+	<assets>
+	
+		<scenes>
+			<scene name="Sphere">
+				<geometry name = "Sphere" type = "SPHERE" material="simple" SLICES=15 STACKS=15 /> 
+			</scene>
+			<scene name="Axis">
+				<geometry name = "axis" type = "AXIS"  >
+					<SCALE x=5 y=5 z =5 />
+				</geometry>
+			</scene>
+			
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="0.3" FAR="100.0" />
+				<POSITION x="0" y="0.0" z="10" />
+				<VIEW x="0.0" y="-0.0" z="-1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "geometry.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1" axis="5">
+				<scenes>
+					<scene name="Sphere" />
+					<scene name="Axis" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="simple">
+						<shader fromMaterial="anim" fromLibrary="Simple" />
+					</map>
+				</injectionMaps>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>
