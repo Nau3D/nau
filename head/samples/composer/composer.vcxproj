@@ -805,9 +805,6 @@
     <ClInclude Include="src\dialogs\dlgShaders.h" />
     <ClInclude Include="src\dialogs\dlgTextureLib.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\Users\ARF\AppData\Local\Temp\Report20151122-0121.diagsession" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

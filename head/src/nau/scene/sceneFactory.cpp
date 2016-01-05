@@ -11,34 +11,60 @@
 using namespace nau::scene;
 
 
-
-
-IScene*
-SceneFactory::Create(std::string scene)
-{
-	IScene *pScene = 0;
+std::shared_ptr<IScene> 
+SceneFactory::Create(std::string scene) {
 
 	if ("OctreeUnified" == scene) {
-		pScene = new OctreeUnified;
+		return std::shared_ptr<IScene>(new OctreeUnified);
 	}
 	else if ("OctreeByMat" == scene) {
-		pScene = new OctreeByMatScene;
+		return std::shared_ptr<IScene>(new OctreeByMatScene);
 	}
 	else if ("Octree" == scene) {
-		pScene = new OctreeScene;
+		return std::shared_ptr<IScene>(new OctreeScene);
 	}
 	else if ("Scene" == scene) {
-		pScene = new Scene;
+		return std::shared_ptr<IScene>(new Scene);
 	}
 	else if ("ScenePoses" == scene) {
-		pScene = new ScenePoses;
+		return std::shared_ptr<IScene>(new ScenePoses);
 	}
 	else if ("SceneSkeleton" == scene) {
-		pScene = new SceneSkeleton;
+		return std::shared_ptr<IScene>(new SceneSkeleton);
 	}
 	else if ("SceneAux" == scene) {
-		pScene = new SceneAux;
+		return std::shared_ptr<IScene>(new SceneAux);
 	}
-
-	return pScene;
+	else
+		return NULL;
 }
+
+//IScene*
+//SceneFactory::Create(std::string scene)
+//{
+//	IScene *pScene = 0;
+//
+//	if ("OctreeUnified" == scene) {
+//		pScene = new OctreeUnified;
+//	}
+//	else if ("OctreeByMat" == scene) {
+//		pScene = new OctreeByMatScene;
+//	}
+//	else if ("Octree" == scene) {
+//		pScene = new OctreeScene;
+//	}
+//	else if ("Scene" == scene) {
+//		pScene = new Scene;
+//	}
+//	else if ("ScenePoses" == scene) {
+//		pScene = new ScenePoses;
+//	}
+//	else if ("SceneSkeleton" == scene) {
+//		pScene = new SceneSkeleton;
+//	}
+//	else if ("SceneAux" == scene) {
+//		pScene = new SceneAux;
+//	}
+//
+//	return pScene;
+//}

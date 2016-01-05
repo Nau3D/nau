@@ -243,11 +243,11 @@ GLCanvas::Render () {
 void 
 GLCanvas::OnKeyUp(wxKeyEvent & event) {
 
-	if (m_pCamera && true == m_pCamera->isDynamic()) {
-		vec3 v3;
-		v3.set(0.0f, 0.0f, 0.0f);
-		m_pEngine->getWorld().setVelocity ("testCamera", v3);
-	}
+	//if (m_pCamera && true == m_pCamera->isDynamic()) {
+	//	vec3 v3;
+	//	v3.set(0.0f, 0.0f, 0.0f);
+	//	m_pEngine->getWorld().setVelocity ("testCamera", v3);
+	//}
 }
 
 
@@ -349,17 +349,18 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 	}
 
 	if ('S' == event.GetKeyCode()) {
-		if (true == m_pCamera->isDynamic()) {
-			vec4 vel (camView);
+		//if (true == m_pCamera->isDynamic()) {
+		//	vec4 vel (camView);
 
-			vel.y = 0.0f;
-			vel.normalize();
-			vel *= -direction;
-			vec3 v3;
-			v3.set(vel.x,vel.y,vel.z);
-			m_pEngine->getWorld().setVelocity ("testCamera", v3);
-		} 
-		else {
+		//	vel.y = 0.0f;
+		//	vel.normalize();
+		//	vel *= -direction;
+		//	vec3 v3;
+		//	v3.set(vel.x,vel.y,vel.z);
+		//	m_pEngine->getWorld().setVelocity ("testCamera", v3);
+		//} 
+		//else
+		{
 			nau::event_::CameraMotion c("BACKWARD", direction);
 			std::shared_ptr<IEventData> e= nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
@@ -369,18 +370,19 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 	}
 
 	if ('W' == event.GetKeyCode()) {
-		if (true == m_pCamera->isDynamic()) {
-			vec4 vel (camView);
-			
-			vel.y = 0.0f;
-			vel.normalize();
-			vel *= direction; 
-			
-			vec3 v3;
-			v3.set(vel.x,vel.y,vel.z);
-			m_pEngine->getWorld().setVelocity ("testCamera", v3);
-		} 
-		else {
+		//if (true == m_pCamera->isDynamic()) {
+		//	vec4 vel (camView);
+		//	
+		//	vel.y = 0.0f;
+		//	vel.normalize();
+		//	vel *= direction; 
+		//	
+		//	vec3 v3;
+		//	v3.set(vel.x,vel.y,vel.z);
+		//	m_pEngine->getWorld().setVelocity ("testCamera", v3);
+		//} 
+		//else 
+		{
 
 			nau::event_::CameraMotion c("FORWARD", direction);
 			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
@@ -391,17 +393,18 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 	}
 
 	if ('A' == event.GetKeyCode()){
-		if (true == m_pCamera->isDynamic()) {
-			vec4 vel (camView.cross (camUp));
+		//if (true == m_pCamera->isDynamic()) {
+		//	vec4 vel (camView.cross (camUp));
 
-			vel *= -direction;
-			vel.y = 0.0f;
-			vec3 v3;
-			v3.set(vel.x,vel.y,vel.z);
-			m_pEngine->getWorld().setVelocity ("testCamera", v3);
+		//	vel *= -direction;
+		//	vel.y = 0.0f;
+		//	vec3 v3;
+		//	v3.set(vel.x,vel.y,vel.z);
+		//	m_pEngine->getWorld().setVelocity ("testCamera", v3);
 
-		} 
-		else {
+		//} 
+		//else 
+		{
 
 			nau::event_::CameraMotion c("LEFT", direction);
 			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
@@ -412,16 +415,17 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 
 	}
 	if ('D' == event.GetKeyCode()){
-		if (true == m_pCamera->isDynamic()) {
-			vec4 vel (camView.cross (camUp));
+		//if (true == m_pCamera->isDynamic()) {
+		//	vec4 vel (camView.cross (camUp));
 
-			vel *= direction;
-			vel.y = 0.0f;
-			vec3 v3;
-			v3.set(vel.x,vel.y,vel.z);
-			m_pEngine->getWorld().setVelocity ("testCamera", v3);
-		} 
-		else {
+		//	vel *= direction;
+		//	vel.y = 0.0f;
+		//	vec3 v3;
+		//	v3.set(vel.x,vel.y,vel.z);
+		//	m_pEngine->getWorld().setVelocity ("testCamera", v3);
+		//} 
+		//else 
+		{
 			nau::event_::CameraMotion c("RIGHT", direction);
 			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
@@ -430,7 +434,8 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 	}
 	if ('Q' == event.GetKeyCode()){
-		if (false == m_pCamera->isDynamic()) {
+		//if (false == m_pCamera->isDynamic()) 
+		{
 			nau::event_::CameraMotion c("UP", direction);
 			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
@@ -439,7 +444,8 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 	}
 	if ('Z' == event.GetKeyCode()){
-		if (false == m_pCamera->isDynamic()) {
+		//if (false == m_pCamera->isDynamic()) 
+		{
 			nau::event_::CameraMotion c("DOWN", direction);
 			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
 			e->setData(&c);
@@ -448,36 +454,36 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 		DlgCameras::Instance()->updateInfo(m_pCamera->getName());
 	}
 
-	if (m_pCamera->isDynamic()){
-		EVENTMANAGER->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
-	}
+	//if (m_pCamera->isDynamic()){
+	//	EVENTMANAGER->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+	//}
 
 	if ('N' == event.GetKeyCode()) {
 		RENDERER->setPropb(IRenderer::DEBUG_DRAW_CALL, true);
 	}
 
-	if ('+' == event.GetKeyCode() || WXK_NUMPAD_ADD == event.GetKeyCode()) {
-		SceneObject *aObject = RENDERMANAGER->getScene ("MainScene")->getSceneObject ("pPlane1");
+	//if ('+' == event.GetKeyCode() || WXK_NUMPAD_ADD == event.GetKeyCode()) {
+	//	SceneObject *aObject = RENDERMANAGER->getScene ("MainScene")->getSceneObject ("pPlane1");
 
-		aObject->_getTransformPtr()->translate (0.0f, 0.5f, 0.0f);
-	}
+	//	aObject->_getTransformPtr()->translate (0.0f, 0.5f, 0.0f);
+	//}
 
-	if ('-' == event.GetKeyCode() || WXK_NUMPAD_SUBTRACT == event.GetKeyCode()) {
-		SceneObject *aObject = RENDERMANAGER->getScene ("MainScene")->getSceneObject ("pPlane1");
+	//if ('-' == event.GetKeyCode() || WXK_NUMPAD_SUBTRACT == event.GetKeyCode()) {
+	//	SceneObject *aObject = RENDERMANAGER->getScene ("MainScene")->getSceneObject ("pPlane1");
 
-		aObject->_getTransformPtr()->translate (0.0f, -0.5f, 0.0f);
-	}
+	//	aObject->_getTransformPtr()->translate (0.0f, -0.5f, 0.0f);
+	//}
 
-	std::shared_ptr<Camera> &cam = RENDERMANAGER->getCamera ("testCamera");
+	//std::shared_ptr<Camera> &cam = RENDERMANAGER->getCamera ("testCamera");
 
 	if ('L' == event.GetKeyCode()){
 		
 		if (false == physics) {
 			m_pEngine->enablePhysics();
-			cam->setDynamic(true);
+			//cam->setDynamic(true);
 		} else {
 			m_pEngine->disablePhysics();
-			cam->setDynamic(false);
+			//cam->setDynamic(false);
 		}
 		physics = !physics;
 	}

@@ -659,7 +659,7 @@ std::shared_ptr<IScene> &
 RenderManager::createScene (const std::string &sceneName, const std::string &sceneType) {
 
 	if (false == hasScene (sceneName)) {
-		std::shared_ptr<IScene> s = std::shared_ptr<IScene>(SceneFactory::Create(sceneType));
+		std::shared_ptr<IScene> s = SceneFactory::Create(sceneType);
 		if (s) {
 			m_Scenes[sceneName] = s;
 			s->setName(sceneName);

@@ -70,10 +70,6 @@ PassFactory::loadPlugins() {
 			break;
 		}
 
-		// Get the function and the class exported by the DLL.
-		// If you aren't using the MinGW compiler, you may need to adjust
-		// this to cope with name mangling (I haven't gone into this here,
-		// look it up if you want).
 		initProc initFunc = (initProc)GetProcAddress(mod, "init");
 		createPassProc createPassFunc = (createPassProc)GetProcAddress(mod, "createPass");
 		getClassNameProc getClassNameFunc = (getClassNameProc)GetProcAddress(mod, "getClassName");
@@ -134,34 +130,14 @@ PassFactory::create (const std::string &type, const std::string &name) {
 		return *p;
 	}
 
-//	if ("default" == type) {
-//		return new Pass (name);
-//	}
 	if ("depthmap2" == type) {
 		return std::shared_ptr<Pass>(new PassDepthMap (name));
 	}
-//	if ("quad" ==  type) {
-//		return new PassQuad (name);
-//	}
+
 	if ("profiler" == type) {
 		return std::shared_ptr<Pass>(new PassProfiler(name));
 	}
 	return NULL;
-//	if ("compute" == type) {
-//		return new PassCompute(name);
-//	}
-//#ifdef NAU_OPTIX
-//	if ("optix" == type)
-//		return new PassOptix(name);
-//#endif
-//#ifdef NAU_OPTIX
-//#if NAU_OPENGL_VERSION >= 420
-//	if ("optixPrime" == type)
-//		return new PassOptixPrime(name);
-//#endif
-//#endif
-
-	//return 0;
 }
 
 bool

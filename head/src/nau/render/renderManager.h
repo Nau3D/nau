@@ -30,7 +30,7 @@ namespace nau
 			std::unique_ptr<IRenderer> m_pRenderer;
 			std::unique_ptr<IRenderQueue> m_pRenderQueue;
 			std::vector<std::shared_ptr<Pipeline>> m_Pipelines;
-			std::vector<nau::scene::SceneObject*> m_SceneObjects;
+			std::vector<SceneObject*> m_SceneObjects;
 
 			std::map<std::string, std::shared_ptr<IScene>> m_Scenes;
 			std::map<std::string, std::shared_ptr<Camera>> m_Cameras;
