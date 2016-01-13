@@ -3,7 +3,7 @@
 
 using namespace nau::world;
 
-NauBulletMotionState::NauBulletMotionState (nau::scene::SceneObject *aObject) : m_SceneObject (aObject)
+NauBulletMotionState::NauBulletMotionState (std::shared_ptr<nau::scene::SceneObject> &aObject) : m_SceneObject (aObject)
 {
 }
 

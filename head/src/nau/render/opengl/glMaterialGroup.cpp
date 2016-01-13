@@ -10,7 +10,7 @@ using namespace gl;
 
 using namespace nau::render::opengl;
 
-GLMaterialGroup::GLMaterialGroup(nau::render::IRenderable *parent, std::string materialName) : 
+GLMaterialGroup::GLMaterialGroup(IRenderable *parent, std::string materialName) :
 	MaterialGroup(parent, materialName), 
 	m_VAO(0) {
 

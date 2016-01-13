@@ -280,7 +280,7 @@ Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, int offse
 
 
 void 
-Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, IRenderable *aRenderable) {
+Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, std::shared_ptr<nau::render::IRenderable> &aRenderable) {
 
 	/* In this case it is necessary to copy the vertices from the 
 	 * IRenderable into the local buffer and reindex the materialgroup
@@ -331,7 +331,7 @@ Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, IRenderab
 
 
 void 
-Mesh::merge (nau::render::IRenderable *aRenderable) {
+Mesh::merge (std::shared_ptr<IRenderable> &aRenderable) {
 
 	std::shared_ptr<VertexData> &vVertexData = aRenderable->getVertexData();
 

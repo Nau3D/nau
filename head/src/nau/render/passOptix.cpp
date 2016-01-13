@@ -480,12 +480,11 @@ PassOptix::optixInit() {
 			o_MatLib.addMaterial(m_MaterialMap[matIter]);
 		}
 
-		std::vector<SceneObject *> objs = aScene->getAllObjects();
-		std::vector<nau::scene::SceneObject*>::iterator objsIter;
+		std::vector<std::shared_ptr<SceneObject>> objs;
+		aScene->getAllObjects(&objs);
 
-		objsIter = objs.begin();
-		for ( ; objsIter != objs.end(); ++objsIter) {
-			o_GeomLib.addSceneObject(*objsIter, m_MaterialMap);
+		for (auto &so: objs) {
+			o_GeomLib.addSceneObject(so, m_MaterialMap);
 //			o_GeomLib.addSceneObject((*objsIter)->getId(), m_MaterialMap);
 		}
 	}

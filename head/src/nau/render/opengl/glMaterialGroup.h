@@ -19,7 +19,7 @@ namespace nau {
 			protected:
 				unsigned int m_VAO;
 
-				GLMaterialGroup(nau::render::IRenderable *parent, std::string materialName);
+				GLMaterialGroup(IRenderable *parent, std::string materialName);
 
 			public:
 				void compile();

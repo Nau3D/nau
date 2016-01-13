@@ -46,7 +46,9 @@ Viewport::Viewport(void) :
 
 Viewport::~Viewport(void) {
 
-	EVENTMANAGER->removeListener("WINDOW_SIZE_CHANGED",this);
+	EventManager *ev = EVENTMANAGER;
+	if (ev)
+		ev->removeListener("WINDOW_SIZE_CHANGED",this);
 }
 
 

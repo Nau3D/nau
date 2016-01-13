@@ -24,7 +24,7 @@ namespace nau
 		
 		public:
 			void clearQueue (void);
-			void addToQueue (nau::scene::SceneObject* aObject,
+			void addToQueue (std::shared_ptr<nau::scene::SceneObject> &aObject,
 				std::map<std::string, nau::material::MaterialID> &materialMap);
 			void processQueue (void);
 		protected:

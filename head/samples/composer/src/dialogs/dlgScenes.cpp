@@ -249,11 +249,11 @@ void DlgScenes::update()
 	//tBoundingBoxMin->SetLabel(s);
 
 	m_Objects->Clear();
-	std::vector<SceneObject*> objList = scene->getAllObjects();
-	std::vector<SceneObject*>::iterator iter = objList.begin();
+	std::vector<std::shared_ptr<SceneObject>> objList;
+	scene->getAllObjects(&objList);
 
-	for ( ; iter != objList.end(); ++iter )
-		m_Objects->AppendString(wxString((*iter)->getName().c_str()));
+	for (auto &so: objList)
+		m_Objects->AppendString(wxString(so->getName().c_str()));
 
 }
 

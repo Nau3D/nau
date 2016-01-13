@@ -10,6 +10,12 @@
 
 #include "nau/system/file.h"
 
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <stdexcept>
+#include <exception>
+#include <windows.h>
 
 
 using namespace nau::render;
@@ -40,12 +46,6 @@ PassFactory::DeleteInstance() {
 
 
 
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <stdexcept>
-#include <exception>
-#include <windows.h>
 
 unsigned int 
 PassFactory::loadPlugins() {
@@ -95,7 +95,6 @@ PassFactory::loadPlugins() {
 }
 
 
-
 PassFactory::PassFactory() {
 
 }
@@ -130,7 +129,7 @@ PassFactory::create (const std::string &type, const std::string &name) {
 		return *p;
 	}
 
-	if ("depthmap2" == type) {
+	if ("depthmap" == type) {
 		return std::shared_ptr<Pass>(new PassDepthMap (name));
 	}
 

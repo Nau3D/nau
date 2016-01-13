@@ -181,7 +181,7 @@ DevILTextureLoader::convertType(std::string type) {
 
 
 void
-DevILTextureLoader::save(int width, int height, char *data, std::string filename) {
+DevILTextureLoader::save(int width, int height, unsigned char *data, std::string filename) {
 
 
 	ILuint image;
@@ -191,6 +191,7 @@ DevILTextureLoader::save(int width, int height, char *data, std::string filename
 	ilBindImage(image);
 	ilTexImage(width, height, 1, 4, IL_RGBA, IL_UNSIGNED_BYTE, data);
 	ilEnable(IL_FILE_OVERWRITE);
-	ilSave(IL_PNG, (ILstring)filename.c_str());
+	char res;
+	res = ilSave(IL_JPG, (ILstring)filename.c_str());
 	ilDeleteImage(image);
 }

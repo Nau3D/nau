@@ -52,7 +52,7 @@ MaterialSortRenderQueue::clearQueue (void) {
 }
 
 void 
-MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
+MaterialSortRenderQueue::addToQueue (std::shared_ptr<SceneObject> &aObject,
 									 std::map<std::string, MaterialID> &materialMap) {
 
 	PROFILE ("Queue add");
@@ -60,9 +60,9 @@ MaterialSortRenderQueue::addToQueue (SceneObject* aObject,
 	int order;
 	MaterialLibManager *m = NAU->getMaterialLibManager();
 	std::shared_ptr<Material> aMaterial;
-	IRenderable &aRenderable = aObject->getRenderable();
+	std::shared_ptr<IRenderable> &aRenderable = aObject->getRenderable();
 
-	std::vector<std::shared_ptr<MaterialGroup>> vMaterialGroups = aRenderable.getMaterialGroups();
+	std::vector<std::shared_ptr<MaterialGroup>> vMaterialGroups = aRenderable->getMaterialGroups();
 
 	for (auto &aGroup: vMaterialGroups) {
 		std::shared_ptr<nau::geometry::IndexData> &indexData = aGroup->getIndexData();

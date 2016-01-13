@@ -304,7 +304,7 @@ Pass::doPass (void) {
 	Frustum camFrustum;
 	std::vector<SceneObject*>::iterator objsIter;
 	std::vector<std::string>::iterator scenesIter;
-	std::vector<nau::scene::SceneObject*> sceneObjects;
+	std::vector<std::shared_ptr<SceneObject>> sceneObjects;
 
 	prepareBuffers();
 
@@ -320,12 +320,12 @@ Pass::doPass (void) {
 		std::shared_ptr<IScene> &aScene = RENDERMANAGER->getScene (*scenesIter);
 		{
 			PROFILE("View Frustum Culling");
-			sceneObjects = aScene->findVisibleSceneObjects(camFrustum, *aCam);
+			aScene->findVisibleSceneObjects(&sceneObjects, camFrustum, *aCam);
 		//	sceneObjects = aScene->getAllObjects();
 		}
-		objsIter = sceneObjects.begin();
-		for ( ; objsIter != sceneObjects.end(); ++objsIter) {
-			RENDERMANAGER->addToQueue ((*objsIter), m_MaterialMap);
+		
+		for (auto &so: sceneObjects) {
+			RENDERMANAGER->addToQueue (so, m_MaterialMap);
 		}
 	}
 	RENDERMANAGER->processQueue();	

@@ -22,7 +22,7 @@ namespace nau
 			~Font();
 
 
-			void createSentenceRenderable(IRenderable &renderable, std::string sentence);
+			void createSentenceRenderable(std::shared_ptr<IRenderable> &renderable, std::string sentence);
 			void setMaterialName(std::string aMatName);
 			const std::string &getMaterialName();
 

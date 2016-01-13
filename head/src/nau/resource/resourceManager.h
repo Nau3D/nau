@@ -22,12 +22,14 @@ namespace nau
 			std::string m_Path;
 			
 			std::map<std::string, nau::render::IRenderTarget*> m_RenderTargets;
-			std::map<std::string, nau::render::IRenderable*> m_Meshes;
+			std::map<std::string, std::shared_ptr<nau::render::IRenderable>> m_Meshes;
 			std::map<std::string, nau::material::IProgram*> m_Programs;
 			std::map<std::string, nau::material::IState*> m_States;
 			std::vector<nau::material::ITexture*> m_Textures;
 			std::map<std::string, nau::material::IBuffer*> m_Buffers;
 			static int renderableCount;
+
+			std::shared_ptr<nau::render::IRenderable> m_EmptyMesh;
 
 		public:
 			ResourceManager (std::string path);
@@ -63,10 +65,10 @@ namespace nau
 			std::vector<std::string>* ResourceManager::getRenderTargetNames();
 
 			/***Renderables***/
-			nau::render::IRenderable* createRenderable(std::string type, std::string name="", std::string filename = "");
+			std::shared_ptr<IRenderable> createRenderable(std::string type, std::string name="", std::string filename = "");
 			bool hasRenderable (std::string meshName, std::string filename);
-			nau::render::IRenderable* getRenderable (std::string meshName, std::string filename);
-			nau::render::IRenderable* addRenderable (nau::render::IRenderable* aMesh, std::string filename);
+			std::shared_ptr<IRenderable> &getRenderable (std::string meshName, std::string filename);
+			std::shared_ptr<IRenderable> &addRenderable (std::shared_ptr<IRenderable> &aMesh, std::string filename);
 			void removeRenderable(std::string name);
 
 			/***States***/

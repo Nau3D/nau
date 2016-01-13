@@ -81,7 +81,7 @@ ScenePoseObject::calculateBoundingVolume (void)
 	}
 	m_BoundingVolume = new BoundingBox; /***MARK***/
 
-	MeshPose *mp = (MeshPose *)m_Renderable;
+	std::shared_ptr<MeshPose> &mp = std::dynamic_pointer_cast<MeshPose>(m_Renderable);
 
 	mp->setReferencePose();
 	m_BoundingVolume->calculate (m_Renderable->getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))));

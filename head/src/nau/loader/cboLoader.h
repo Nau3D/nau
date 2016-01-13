@@ -39,12 +39,12 @@ namespace nau
 			static void _ignoreString (std::fstream &f);
 
 			static void _writeOctreeByMat(OctreeByMatScene *aScene, std::fstream &f);
-			static void _writeOctreeByMatNode(OctreeByMatNode *n, std::fstream &f)	;	
-			static void _writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f)	;
+			static void _writeOctreeByMatNode(std::shared_ptr<OctreeByMatNode> &n, std::fstream &f)	;
+			static void _writeOctreeByMatSceneObject(std::shared_ptr<SceneObject> &so, std::fstream &f)	;
 
 			static void _readOctreeByMat(OctreeByMatScene *aScene, std::fstream &f);
-			static void _readOctreeByMatNode(OctreeByMatNode *n, std::fstream &f)	;	
-			static void _readOctreeByMatSceneObject(SceneObject *so, std::fstream &f)	;
+			static void _readOctreeByMatNode(std::shared_ptr<OctreeByMatNode> &n, std::fstream &f)	;
+			static void _readOctreeByMatSceneObject(std::shared_ptr<SceneObject> &so, std::fstream &f)	;
 		};
 	};
 };

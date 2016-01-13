@@ -805,13 +805,13 @@ void
 GLRenderer::saveScreenShot() {
 
 	int w, h;
-	char *pixels;
+	unsigned char *pixels;
 	w = NAU->getWindowWidth();
 	h = NAU->getWindowHeight();
-	pixels = (char *)malloc(w * h * 4);
+	pixels = (unsigned char *)malloc(w * h * 4);
 
+	glFlush();
 	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-	
 	nau::loader::ITextureLoader::Save(w, h, pixels);
 	free (pixels);
 }

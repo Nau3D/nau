@@ -14,7 +14,7 @@ using namespace nau::material;
 Quad::Quad(void) : 
 	SceneObject()
 {
-	Mesh *renderable = (Mesh *)RESOURCEMANAGER->createRenderable("Mesh");//new Mesh;
+	std::shared_ptr<IRenderable> &renderable = RESOURCEMANAGER->createRenderable("Mesh");//new Mesh;
 	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
 		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
 	std::shared_ptr<std::vector<VertexData::Attr>> textureCoords = 
@@ -41,7 +41,7 @@ Quad::Quad(void) :
 	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), textureCoords);
 	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
-	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable, "__Quad");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable.get(), "__Quad");
 	std::shared_ptr<std::vector<unsigned int>> indices =
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(6));
 	indices->at (0) = 0;

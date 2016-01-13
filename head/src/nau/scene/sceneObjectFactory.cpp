@@ -7,26 +7,46 @@
 
 using namespace nau::scene;
 
-SceneObject* 
-SceneObjectFactory::Create (std::string type)
-{
-	SceneObject *s;
-	if (0 == type.compare ("SimpleObject")) {
-		s = new SceneObject;
-	} 
+//SceneObject* 
+//SceneObjectFactory::Create (const std::string &type)
+//{
+//	SceneObject *s;
+//	if (0 == type.compare ("SimpleObject")) {
+//		s = new SceneObject;
+//	} 
+//
+//	else if (0 == type.compare ("OctreeNode")) {
+//		s =  new OctreeNode;
+//	}
+//
+//	else if (0 == type.compare ("Geometry")) {
+//		s =  new GeometricObject;
+//	}
+//	else {
+//		assert("SceneObjectFactory: type is not valid");
+//		return 0;
+//	}
+//
+//	//RENDERMANAGER->addSceneObject(s);
+//	return s;
+//}
 
-	else if (0 == type.compare ("OctreeNode")) {
-		s =  new OctreeNode;
+std::shared_ptr<SceneObject>
+SceneObjectFactory::Create(const std::string &type)
+{
+	if (0 == type.compare("SimpleObject")) {
+		return std::shared_ptr<SceneObject>(new SceneObject);
 	}
 
-	else if (0 == type.compare ("Geometry")) {
-		s =  new GeometricObject;
+	else if (0 == type.compare("OctreeNode")) {
+		return std::shared_ptr<SceneObject>(new OctreeNode);
+	}
+
+	else if (0 == type.compare("Geometry")) {
+		return std::shared_ptr<SceneObject>(new GeometricObject);
 	}
 	else {
 		assert("SceneObjectFactory: type is not valid");
-		return 0;
+		return NULL;
 	}
-
-	RENDERMANAGER->addSceneObject(s);
-	return s;
 }

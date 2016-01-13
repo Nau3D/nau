@@ -859,7 +859,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 
 	// Create an object for the Model.  
-	SceneObject *aObject = SceneObjectFactory::Create("SimpleObject");
+	std::shared_ptr<SceneObject> &aObject = SceneObjectFactory::Create("SimpleObject");
 
 	// Get and set name as the model path 
 	aObject->setName(obj.m_Pathname);
@@ -878,8 +878,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 	// Renderable
 	// Set Renderable Factory 
-	IRenderable *aRenderable = 0;
-	aRenderable = RESOURCEMANAGER->createRenderable ("Mesh","unnamed", aObject->getName());
+	std::shared_ptr<IRenderable> &aRenderable = RESOURCEMANAGER->createRenderable ("Mesh","unnamed", aObject->getName());
 	aRenderable->setDrawingPrimitive(primitive);
 
 	// Import VERTEX/NORMAL/TEXTURE data into Renderable
@@ -920,7 +919,7 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		//		s = "DefaultOBJMat";
 		}
 
-		std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable, s);
+		std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable.get(), s);
 
 		// Set up the index array
 

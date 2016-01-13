@@ -205,7 +205,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 	std::fstream f (aFilename.c_str(), std::fstream::in | std::fstream::binary);
 
-	std::map<std::string, IRenderable*> renderables; /***MARK***/ //PROTO Renderables Manager
+	std::map<std::string, std::shared_ptr<IRenderable>> renderables; 
 	//std::map<std::pair<std::string, std::string>, int> materialTrack;
 
 	if (!f.is_open()) {
@@ -242,7 +242,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 		_readString (buffer, f);
 		//LOG_INFO ("[Reading] Type of object: [%s]", buffer);
-		SceneObject *aObject = SceneObjectFactory::Create(buffer);
+		std::shared_ptr<SceneObject> &aObject = SceneObjectFactory::Create(buffer);
 
 		_readString (buffer, f);
 		aObject->setName (buffer);
@@ -282,7 +282,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 			continue;
 		}
 
-		IRenderable *aRenderable = 0;
+		std::shared_ptr<IRenderable> aRenderable;
 
 		if (0 == renderables.count (renderableName)) {
 			/*Create the new renderable */
@@ -311,7 +311,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 				_readString (buffer, f);
 				//LOG_INFO ("[Reading] Material Groups name: [%s]", buffer);
 
-				std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable, buffer);
+				std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable.get(), buffer);
 				if (primitive == IRenderable::TRIANGLES_ADJACENCY)
 					aMatGroup->getIndexData()->useAdjacency(true);
 				//aMatGroup->setMaterialName (buffer);				
@@ -340,7 +340,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 
 void
-CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
+CBOLoader::_readOctreeByMatSceneObject(std::shared_ptr<SceneObject> &so, std::fstream &f) {
 
 	char buffer[1024];
 
@@ -364,10 +364,8 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	//aTransform->setMat44 (mat);
 	so->setTransform (mat);
 
-	IRenderable *aRenderable = 0;
-
 	_readString(buffer,f);
-	aRenderable = RESOURCEMANAGER->createRenderable("Mesh", buffer, m_FileName);
+	std::shared_ptr<IRenderable> &aRenderable = RESOURCEMANAGER->createRenderable("Mesh", buffer, m_FileName);
 			
 	std::shared_ptr<VertexData> &vertexData = aRenderable->getVertexData();
 	_readVertexData (vertexData, f);
@@ -377,7 +375,7 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 		//LOG_INFO ("[Reading] Material Groups name: [%s]", buffer);
 
 
-	std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable, buffer);
+	std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable.get(), buffer);
 	//aMatGroup->setParent (aRenderable);
 	//aMatGroup->setMaterialName (buffer);				
 
@@ -395,7 +393,7 @@ CBOLoader::_readOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 
 
 void 
-CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
+CBOLoader::_writeOctreeByMatSceneObject(std::shared_ptr<SceneObject> &so, std::fstream &f) {
 
 	_writeString (so->getName(), f); 
 	
@@ -418,7 +416,7 @@ CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 	 f.write(reinterpret_cast<char*> ((float *)aTransform.getMatrix()), sizeof(float) * 16);
 
 
-	IRenderable *aRenderablePtr = so->_getRenderablePtr();
+	 std::shared_ptr<IRenderable> &aRenderablePtr = so->getRenderable();
 	_writeString(aRenderablePtr->getName(),f);
 	/* Vertices data */
 	std::shared_ptr<VertexData> &aVertexData = aRenderablePtr->getVertexData();
@@ -438,7 +436,7 @@ CBOLoader::_writeOctreeByMatSceneObject(SceneObject *so, std::fstream &f) {
 
 
 void
-CBOLoader::_readOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
+CBOLoader::_readOctreeByMatNode(std::shared_ptr<OctreeByMatNode> &n, std::fstream &f) {
 
 	char buffer[1024];
 
@@ -453,7 +451,7 @@ CBOLoader::_readOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 
 	for (unsigned int i = 0; i < siz; ++i) {
 		_readString(buffer, f);
-		SceneObject *so = SceneObjectFactory::Create ("SimpleObject");
+		std::shared_ptr<SceneObject> &so = SceneObjectFactory::Create ("SimpleObject");
 		so->setName(buffer);
 		_readOctreeByMatSceneObject(so, f);
 		n->m_pLocalMeshes[buffer] = so;
@@ -467,7 +465,7 @@ CBOLoader::_readOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 		n->m_Divided = true;
 
 	for (int i = 0; i < n->m_ChildCount; ++i) {
-		OctreeByMatNode *o = new OctreeByMatNode();
+		std::shared_ptr<OctreeByMatNode> &o = std::shared_ptr<OctreeByMatNode>(new OctreeByMatNode());
 		_readOctreeByMatNode(o,f);
 		o->m_pParent = n;
 		n->m_pChilds[o->m_NodeId] = o;
@@ -476,7 +474,7 @@ CBOLoader::_readOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 
 
 void
-CBOLoader::_writeOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
+CBOLoader::_writeOctreeByMatNode(std::shared_ptr<OctreeByMatNode> &n, std::fstream &f) {
 
 	unsigned int siz;
 
@@ -505,12 +503,9 @@ CBOLoader::_writeOctreeByMatNode(OctreeByMatNode *n, std::fstream &f) {
 	siz = (unsigned int)n->m_pLocalMeshes.size();
 	f.write (reinterpret_cast<char *> (&siz), sizeof(siz));
 
-	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
-
-	iter = n->m_pLocalMeshes.begin();
-	for (; iter != n->m_pLocalMeshes.end(); ++iter) {
-		_writeString(iter->first, f);
-		_writeOctreeByMatSceneObject(iter->second, f);
+	for (auto so: n->m_pLocalMeshes) {
+		_writeString(so.first, f);
+		_writeOctreeByMatSceneObject(so.second, f);
 	}
 
 	f.write (reinterpret_cast<char *> (&n->m_ChildCount), sizeof(n->m_ChildCount));
@@ -539,7 +534,7 @@ CBOLoader::_readOctreeByMat(OctreeByMatScene *aScene, std::fstream &f) {
 	//aScene->setName(buffer);
 	o->setName(buffer);
 
-	OctreeByMatNode *n = new OctreeByMatNode();
+	std::shared_ptr<OctreeByMatNode> n = std::shared_ptr<OctreeByMatNode>(new OctreeByMatNode());
 	_readOctreeByMatNode(n,f);
 	o->m_pOctreeRootNode = n;
 }
@@ -563,7 +558,7 @@ CBOLoader::_writeOctreeByMat(OctreeByMatScene *aScene, std::fstream &f) {
 	OctreeByMat *o = aScene->m_pGeometry;
 	_writeString(o->getName(),f);
 
-	OctreeByMatNode *n = o->m_pOctreeRootNode;
+	std::shared_ptr<OctreeByMatNode> &n = o->m_pOctreeRootNode;
 
 	_writeOctreeByMatNode(n,f);
 }
@@ -576,7 +571,7 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 
 	std::string path = File::GetPath(aFilename);
 
-	std::map<std::string, IRenderable*> renderables;
+	std::map<std::string, std::shared_ptr<IRenderable>> renderables;
 	std::set<std::string> materials;
 
 	//std::fstream f (aFilename.c_str(), std::fstream::out);
@@ -590,8 +585,9 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 
 	unsigned int siz; 
 
-	std::vector<SceneObject*> &sceneObjects = aScene->getAllObjects();
-	std::vector<SceneObject*>::iterator objIter;
+	std::vector<std::shared_ptr<SceneObject>> sceneObjects;
+	aScene->getAllObjects(&sceneObjects);
+	std::vector<std::shared_ptr<SceneObject>>::iterator objIter;
 
 
 	// MATERIALS - collect materials
@@ -600,16 +596,16 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 	// For each object in the scene 
 	for ( ; objIter != sceneObjects.end(); objIter++) {
 
-		IRenderable *aRenderablePtr = (*objIter)->_getRenderablePtr();
+		std::shared_ptr<IRenderable> &aRenderablePtr = (*objIter)->getRenderable();
 
-		if (0 == aRenderablePtr) {
+		if (NULL == aRenderablePtr) {
 			continue;
 		}
 
-		IRenderable &aRenderable = (*objIter)->getRenderable();
+		std::shared_ptr<IRenderable> &aRenderable = (*objIter)->getRenderable();
 		
 		// Material groups 
-		std::vector<std::shared_ptr<MaterialGroup>>& materialGroups = aRenderable.getMaterialGroups();
+		std::vector<std::shared_ptr<MaterialGroup>>& materialGroups = aRenderable->getMaterialGroups();
 
 		// collect material names in a set
 		for (auto &aMaterialGroup: materialGroups) {
@@ -694,7 +690,7 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 		/* The transform's matrix */
 		f.write(reinterpret_cast<char*> (const_cast<float *>(aTransform.getMatrix())), sizeof(float)*16);
 
-		IRenderable *aRenderablePtr = (*objIter)->_getRenderablePtr();
+		std::shared_ptr<IRenderable> &aRenderablePtr = (*objIter)->getRenderable();
 
 		if (0 == aRenderablePtr) {
 			_writeString ("NULLOBJECT", f);
@@ -702,11 +698,11 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 		}
 
 		/* Write the object's renderable */
-		IRenderable &aRenderable = (*objIter)->getRenderable();
+		std::shared_ptr<IRenderable> &aRenderable = (*objIter)->getRenderable();
 
 
 		/* The renderable name, for later lookup */
-		std::string name = aRenderable.getName();
+		std::string name = aRenderable->getName();
 		unsigned int pos = (unsigned int)name.rfind("#");
 		std::string name2;
 		if (pos != string::npos)
@@ -717,23 +713,23 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 			name2 = name;
 		_writeString (name2, f);
 
-		LOG_INFO ("[Writing] Renderable's name: [%s]", aRenderable.getName().c_str()); 
+		LOG_INFO ("[Writing] Renderable's name: [%s]", aRenderable->getName().c_str()); 
 
-		if (0 == renderables.count (aRenderable.getName())) {
+		if (0 == renderables.count (aRenderable->getName())) {
 
-			renderables[aRenderable.getName()] = &aRenderable;
+			renderables[aRenderable->getName()] = aRenderable;
 
-			_writeString (aRenderable.getType(), f);
+			_writeString (aRenderable->getType(), f);
 
-			LOG_INFO ("[Writing] Renderable's type: [%s]", aRenderable.getType().c_str()); 
+			LOG_INFO ("[Writing] Renderable's type: [%s]", aRenderable->getType().c_str()); 
 
 			/* Vertices data */
-			std::shared_ptr<VertexData> &aVertexData = aRenderable.getVertexData();
+			std::shared_ptr<VertexData> &aVertexData = aRenderable->getVertexData();
 
 			_writeVertexData (aVertexData, f);
 
 			/* Material groups */
-			std::vector<std::shared_ptr<MaterialGroup>>& materialGroups = aRenderable.getMaterialGroups();
+			std::vector<std::shared_ptr<MaterialGroup>>& materialGroups = aRenderable->getMaterialGroups();
 			siz = (unsigned int)materialGroups.size();
 
 			f.write (reinterpret_cast<char*> (&siz), sizeof (siz));

@@ -23,7 +23,7 @@ PassQuad::PassQuad (const std::string &name) :
 	m_QuadObject (0)
 {
 	m_ClassName = "quad";
-	m_QuadObject = new Quad;
+	m_QuadObject = std::shared_ptr<SceneObject>(new Quad);
 	std::string mat = "__Quad";
 	std::string lib = DEFAULTMATERIALLIBNAME;
 	setMaterialName(lib, mat);
@@ -32,7 +32,6 @@ PassQuad::PassQuad (const std::string &name) :
 
 PassQuad::~PassQuad(void) {
 
-	delete m_QuadObject;
 }
 
 

@@ -4,7 +4,7 @@
 #pragma warning( disable: 4299)
 #pragma warning( disable: 4099)
 
-//#include <vld.h>
+#include <vld.h>
 
 #include <main.h>
 #include <glcanvas.h>
@@ -275,6 +275,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	debugMenu->Append(idMenuDlgTrace, _("&Trace Log Window\tCtrl-T"), _("Displays Trace Info"));
 	debugMenu->Append(idMenuTraceSingle, _("Trace Single Frame\tShift+T"), _("Trace 3D API calls for a single frame"));
 	debugMenu->Append(idMenuTracing, _("Trace Start\tT"), _("Start/Stop tracing 3D API calls"));
+	debugMenu->AppendSeparator();
+	debugMenu->Append(idMenuScreenShot, _("Screen Shot\t0"), _(""));
 
 	debugMenu->Enable(idMenuDbgBreak, false);
 	debugMenu->Enable(idMenuDlgStep, false);

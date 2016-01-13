@@ -29,7 +29,7 @@ namespace nau {
 		void addVertexAttribute(unsigned int attr);
 
 //		void addSceneObject(int id, std::map<std::string, nau::material::MaterialID> & materialMap);
-		void addSceneObject(nau::scene::SceneObject *s, std::map<std::string, nau::material::MaterialID> & materialMap);
+		void addSceneObject(std::shared_ptr<nau::scene::SceneObject> &s, std::map<std::string, nau::material::MaterialID> & materialMap);
 
 		void buildGeometryGroup();
 		optix::GeometryGroup &getGeometryGroup();

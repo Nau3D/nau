@@ -342,6 +342,8 @@ PassOptixPrime::doPass(void) {
 	CHK_PRIME(rtpBufferDescSetRange(m_HitsDesc, 0, m_IntProps[RAY_COUNT]));
 	CHK_PRIME(rtpQuerySetRays(m_Query, m_RaysDesc));
 	CHK_PRIME(rtpQuerySetHits(m_Query, m_HitsDesc));
+	const char *err_string;
+	rtpContextGetLastErrorString(m_Context, &err_string);
 	CHK_PRIME(rtpQueryExecute(m_Query, 0 /* hints */));
 	//CHK_PRIME(rtpQueryFinish(m_Query));
 }
@@ -354,10 +356,10 @@ PassOptixPrime::initOptixPrime() {
 	CHK_PRIME(rtpContextCreate(RTP_CONTEXT_TYPE_CUDA, &m_Context));
 
 	// Create Vertex Buffer
-	IRenderable * renderable = &RENDERMANAGER->getScene(m_SceneVector[0])->getSceneObject(0)->getRenderable();
+	std::shared_ptr<IRenderable> &renderable = RENDERMANAGER->getScene(m_SceneVector[0])->getSceneObject(0)->getRenderable();
 	int vbo = renderable->getVertexData()->getBufferID(0);
 	int numVert = renderable->getVertexData()->getNumberOfVertices();
-	std::shared_ptr<std::vector<VertexAttrib>> &vertex = renderable->getVertexData()->getDataOf(0);
+	//std::shared_ptr<std::vector<VertexAttrib>> &vertex = renderable->getVertexData()->getDataOf(0);
 
 	size_t size;
 	void * devPtr;
@@ -395,7 +397,7 @@ PassOptixPrime::initOptixPrime() {
 	CHK_PRIME(rtpBufferDescCreate(
 		m_Context,
 		RTP_BUFFER_FORMAT_INDICES_INT3,
-		RTP_BUFFER_TYPE_CUDA_LINEAR, // CUDA or HOST?
+		RTP_BUFFER_TYPE_CUDA_LINEAR, 
 		devPtrInd,
 		&m_IndicesDesc)
 		);
@@ -404,7 +406,7 @@ PassOptixPrime::initOptixPrime() {
 	// Create Model
 	CHK_PRIME(rtpModelCreate(m_Context, &m_Model));
 	CHK_PRIME(rtpModelSetTriangles(m_Model, m_IndicesDesc, m_VerticesDesc));
-	int useCallerTris = 1;
+	int useCallerTris = 0;
 	CHK_PRIME(rtpModelSetBuilderParameter(m_Model, RTP_BUILDER_PARAM_USE_CALLER_TRIANGLES, sizeof(int), &useCallerTris));
 	CHK_PRIME(rtpModelUpdate(m_Model, 0));
 	CHK_PRIME(rtpModelFinish(m_Model));

@@ -59,15 +59,15 @@ OptixGeometry::setBufferLib(OptixBufferLib *obl) {
 #include "nau/slogger.h"
 
 void
-OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::material::MaterialID> & materialMap) {
+OptixGeometry::addSceneObject(std::shared_ptr<SceneObject> &s, std::map<std::string, nau::material::MaterialID> & materialMap) {
 //OptixGeometry::addSceneObject(int id, std::map<std::string, nau::material::MaterialID> & materialMap) {
 
 //	IRenderable &r = RENDERMANAGER->getSceneObject(id)->getRenderable();
-	IRenderable &r = s->getRenderable();
-	std::shared_ptr<VertexData> &v = r.getVertexData();
+	std::shared_ptr<IRenderable> r = s->getRenderable();
+	std::shared_ptr<VertexData> &v = r->getVertexData();
 	size_t size = v->getDataOf(0)->size();
 
-	std::vector<std::shared_ptr<MaterialGroup>> &mg = r.getMaterialGroups();
+	std::vector<std::shared_ptr<MaterialGroup>> &mg = r->getMaterialGroups();
 	for (unsigned int g = 0; g < mg.size(); ++g) {
 		if (mg[g]->getNumberOfPrimitives() > 0) {
 			try {
@@ -94,7 +94,7 @@ OptixGeometry::addSceneObject(SceneObject *s, std::map<std::string, nau::materia
 			}
 			catch ( optix::Exception& e ) {
 				NAU_THROW("Optix Error: Adding scene object %s, material %s(creating buffers from VBOs) [%s]",
-						r.getName().c_str(), mg[g]->getMaterialName().c_str(), e.getErrorString().c_str()); 
+						r->getName().c_str(), mg[g]->getMaterialName().c_str(), e.getErrorString().c_str()); 
 			}
 		}
 	}

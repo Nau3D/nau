@@ -37,7 +37,7 @@ GeometricObject::~GeometricObject() {
 
 
 void 
-GeometricObject::setRenderable (nau::render::IRenderable *renderable) {
+GeometricObject::setRenderable (std::shared_ptr<IRenderable> &renderable) {
 
 	// It must be a primitive!
 	m_Renderable = renderable;

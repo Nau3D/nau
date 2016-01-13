@@ -898,20 +898,21 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (pPrimType == NULL)
 					NAU_THROW("File %s\nScene %s, Object:%s\ntype is not defined", ProjectLoader::s_File.c_str(), pName, pNameSO);
 
-				GeometricObject *go = (GeometricObject *)nau::scene::SceneObjectFactory::Create("Geometry");
+				std::shared_ptr<GeometricObject> go = 
+					dynamic_pointer_cast<GeometricObject>(nau::scene::SceneObjectFactory::Create("Geometry"));
 				if (go == NULL)
 					NAU_THROW("File %s\nScene %s\nInvalid scene type", ProjectLoader::s_File.c_str(), pName);
 				
 				go->setName(pNameSO);
 
 				bool alreadyThere = false;
-				Primitive *p;
+				std::shared_ptr<Primitive> p;
 				if (RESOURCEMANAGER->hasRenderable(pNameSO, "")) {
 					alreadyThere = true;
-					p = (Primitive *)RESOURCEMANAGER->getRenderable(pNameSO, "");
+					p = dynamic_pointer_cast<Primitive>(RESOURCEMANAGER->getRenderable(pNameSO, ""));
 				}
 				else {
-					p = (Primitive *)RESOURCEMANAGER->createRenderable(pPrimType, pNameSO);
+					p = dynamic_pointer_cast<Primitive>(RESOURCEMANAGER->createRenderable(pPrimType, pNameSO));
 				}
 				if (!p)
 					NAU_THROW("File %s\nScene %s\nPrimitive %s has an invalid primitive type - %s", ProjectLoader::s_File.c_str(), pName, pNameSO, pPrimType);
@@ -921,11 +922,11 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					if (as != NULL) {
 						std::vector <std::string> excluded;
 						excluded.push_back("name"); excluded.push_back("type"); excluded.push_back("material");
-						readAttributes(pName, (AttributeValues *)p, *as, excluded, pElementAux);
+						readAttributes(pName, (AttributeValues *)p.get(), *as, excluded, pElementAux);
 					}
 					p->build();
 				}
-				go->setRenderable(p);
+				go->setRenderable(dynamic_pointer_cast<IRenderable>(p));
 
 				if (!alreadyThere) {
 					if (pMaterial) {
@@ -937,9 +938,9 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				}
 
 				std::vector<std::string> excluded;
-				readChildTags(pNameSO, (AttributeValues *)go, SceneObject::Attribs, excluded, pElementAux);
+				readChildTags(pNameSO, (AttributeValues *)go.get(), SceneObject::Attribs, excluded, pElementAux);
 
-				is->add(go);
+				is->add(dynamic_pointer_cast<SceneObject>(go));
 			}
 
 			pElementAux = handle.FirstChild("buffers").Element();
@@ -958,15 +959,15 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					NAU_THROW("File %s\nScene: %s\nInvalid primitive type %s in buffers definition", ProjectLoader::s_File.c_str(), pName, primString.c_str());
 				}
 				IRenderable::DrawPrimitive dp = IRenderer::PrimitiveTypes[primString];
-				SceneObject *so = SceneObjectFactory::Create("SimpleObject");
+				std::shared_ptr<SceneObject> &so = SceneObjectFactory::Create("SimpleObject");
 				so->setName(pNameSO);
-				IRenderable *i = RESOURCEMANAGER->createRenderable("Mesh", pNameSO);
+				std::shared_ptr<IRenderable> &i = RESOURCEMANAGER->createRenderable("Mesh", pNameSO);
 				i->setDrawingPrimitive(dp);
 				std::shared_ptr<MaterialGroup> mg;
 				if (pMaterial)
-					mg = MaterialGroup::Create(i, pMaterial);
+					mg = MaterialGroup::Create(i.get(), pMaterial);
 				else
-					mg = MaterialGroup::Create(i, "dirLightDifAmbPix");
+					mg = MaterialGroup::Create(i.get(), "dirLightDifAmbPix");
 
 				std::shared_ptr<VertexData> &v = i->getVertexData();
 				std::string bufferName;
@@ -1245,46 +1246,8 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 
 		if (pElemAux != NULL)
 		{
-			//NAU_THROW("File %s: Element %s: projection definition missing", ProjectLoader::s_File.c_str(), pName);
-
-			//if (TIXML_SUCCESS != pElemAux->QueryStringAttribute("TYPE", &s))
-			//	NAU_THROW("File %s\nElement %s\nprojection type is not defined", ProjectLoader::s_File.c_str(), pName);
-			//
-			//if (s == "PERSPECTIVE") {
-			//	std::vector<std::string> excluded = { "TYPE" };
-			//	std::map<std::string, Attribute> attrList;
-			//	std::map<std::string, Attribute> fullList = Camera::Attribs.getAttributes();
-			//	attrList["FOV"] = fullList["FOV"];
-			//	attrList["NEAR"] = fullList["NEAR"];
-			//	attrList["FAR"] = fullList["FAR"];
-			//	readAttributeList(std::string(pName), (AttributeValues *)aNewCam, attrList, Camera::Attribs, excluded, pElemAux);
-			//	//float fov, nearPlane, farPlane;
-			//	//if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute("FOV", &fov) ||
-			//	//	TIXML_SUCCESS != pElemAux->QueryFloatAttribute("NEAR", &nearPlane) ||
-			//	//	TIXML_SUCCESS != pElemAux->QueryFloatAttribute("FAR", &farPlane)) {
-
-			//	//	NAU_THROW("File %s\nElement %s\nperspective definition error (FOV, NEAR and FAR are required)", ProjectLoader::s_File.c_str(), pName);
-			//	//}
-			//	//aNewCam->setPerspective(fov, nearPlane, farPlane);
-			//}
-			//else if (s == "ORTHO") {
-				std::vector<std::string> excluded;// = { "TYPE" };
-				readAttributes(std::string(pName), (AttributeValues *)aNewCam.get(), Camera::Attribs, excluded, pElemAux);
-				//float left, right, bottom, top, nearPlane, farPlane;
-
-				//if (TIXML_SUCCESS != pElemAux->QueryFloatAttribute("LEFT", &left) ||
-				//	TIXML_SUCCESS != pElemAux->QueryFloatAttribute("RIGHT", &right) ||
-				//	TIXML_SUCCESS != pElemAux->QueryFloatAttribute("BOTTOM", &bottom) ||
-				//	TIXML_SUCCESS != pElemAux->QueryFloatAttribute("TOP", &top) ||
-				//	TIXML_SUCCESS != pElemAux->QueryFloatAttribute("NEAR", &nearPlane) ||
-				//	TIXML_SUCCESS != pElemAux->QueryFloatAttribute("FAR", &farPlane)) {
-
-				//	NAU_THROW("File %s\nElement %s\northo definition error (LEFT, RIGHT, BOTTOM, TOP, NEAR and FAR are required)", ProjectLoader::s_File.c_str(), pName);
-				//}
-				//aNewCam->setOrtho(left, right, bottom, top, nearPlane, farPlane);
-			//}
-			//else
-			//	NAU_THROW("File %s\nElement %s\nprojection type is not valid", ProjectLoader::s_File.c_str(), pName);
+			std::vector<std::string> excluded;
+			readAttributes(std::string(pName), (AttributeValues *)aNewCam.get(), Camera::Attribs, excluded, pElemAux);
 		}
 		// Reading remaining camera attributes
 
@@ -2881,26 +2844,25 @@ ProjectLoader::loadEvents(TiXmlHandle handle)
 	// End of Interpolators
 
 
-	SceneObject *o;
-	pElem = handle.FirstChild ("moveableobjects").FirstChild ("moveableobject").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-		const char *pName = pElem->Attribute ("name");
-		const char *pObject = pElem->Attribute("object");
+	//pElem = handle.FirstChild ("moveableobjects").FirstChild ("moveableobject").Element();
+	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	//	const char *pName = pElem->Attribute ("name");
+	//	const char *pObject = pElem->Attribute("object");
 
-		if (0 == pName) 
-			NAU_THROW("MoveableObject has no name in file %s ", ProjectLoader::s_File.c_str());
+	//	if (0 == pName) 
+	//		NAU_THROW("MoveableObject has no name in file %s ", ProjectLoader::s_File.c_str());
 
-		if (0 == pObject) {
-			o=0;
-		}
+	//	if (0 == pObject) {
+	//		o=0;
+	//	}
 
-		o = RENDERMANAGER->getScene("MainScene")->getSceneObject(pObject); // substituir o MainScene, pode ter mais do q uma Cena?
+	//	std::shared_ptr<SceneObject> &o = RENDERMANAGER->getScene("MainScene")->getSceneObject(pObject); // substituir o MainScene, pode ter mais do q uma Cena?
 
-		nau::event_::ObjectAnimation *oa= new nau::event_::ObjectAnimation(pName, o);
+	//	nau::event_::ObjectAnimation *oa= new nau::event_::ObjectAnimation(pName, o);
 
 		//in->init((char *) pName, o, (char *)pKey, (char *)pKeyValue); 
 		
-	}
+	//}
 	// End of MoveableObjects
 
 	////Begin of routes //Marta

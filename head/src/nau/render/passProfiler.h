@@ -17,7 +17,7 @@ namespace nau
 			PassProfiler (const std::string &name);
 			nau::geometry::Font m_pFont;
 			std::shared_ptr<nau::scene::Camera> m_pCam;
-			nau::scene::SceneObject *m_pSO;
+			std::shared_ptr<SceneObject> m_pSO;
 
 			static bool Init();
 			static bool Inited;

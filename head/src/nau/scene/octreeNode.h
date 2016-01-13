@@ -38,25 +38,25 @@ namespace nau
 			  ROOT
 			};
 
-			OctreeNode* m_pParent;
-			OctreeNode* m_pChilds[8];
+			std::shared_ptr<OctreeNode> m_pParent;
+			std::shared_ptr<OctreeNode> m_pChilds[8];
 
 			int m_ChildCount;
 			bool m_Divided;
 			int m_NodeId;
 			int m_NodeDepth;
 
-			nau::geometry::Mesh *m_pLocalMesh;
+			std::shared_ptr<nau::render::IRenderable> m_pLocalMesh;
 
 		//	nau::geometry::BoundingBox m_BoundingBox;
 
 		public:
 			OctreeNode ();
 			
-			OctreeNode (OctreeNode *parent, nau::geometry::IBoundingVolume *boundingBox, int nodeId = 0, int nodeDepth = 0);
+			OctreeNode (std::shared_ptr<OctreeNode> parent, nau::geometry::IBoundingVolume *boundingBox, int nodeId = 0, int nodeDepth = 0);
 			void updateNodeTransform(nau::math::mat4 &t);
 			//void addRenderable (nau::render::IRenderable *aRenderable);
-			void setRenderable (nau::render::IRenderable *renderable);
+			void setRenderable (std::shared_ptr<nau::render::IRenderable> &renderable);
 
 			void getMaterialNames(std::set<std::string> *nameList);
 
@@ -75,7 +75,7 @@ namespace nau
 
 		protected:
 			void _compile (void);
-			void _findVisibleSceneObjects (std::vector<nau::scene::SceneObject*> &m_vReturnVector,
+			void _findVisibleSceneObjects (std::vector<std::shared_ptr<SceneObject>> *v,
 						nau::geometry::Frustum &aFrustum, 
 						nau::scene::Camera &aCamera,
 						bool conservative = false);
@@ -83,15 +83,17 @@ namespace nau
 			static int counter;
 			
 
-			OctreeNode* _getChild (int i);
-			void _setParent (OctreeNode *parent);
-			void _setChild (int i, OctreeNode *aNode);
+			std::shared_ptr<OctreeNode> &_getChild (int i);
+			void _setParent (std::shared_ptr<OctreeNode> &parent);
+			void _setChild (int i, std::shared_ptr<OctreeNode> &aNode);
 			int _getChildCount (void);
 
 		private:
 			int _octantFor (VertexData::Attr& v);
-			OctreeNode* _createChild (int octant);
+			std::shared_ptr<OctreeNode> &_createChild (int octant);
 			std::string _genOctName (void);
+
+			std::shared_ptr<OctreeNode> m_Temp;
 
 
 		};

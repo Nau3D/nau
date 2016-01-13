@@ -15,7 +15,7 @@ namespace nau
 		{
 		public:
 
-			static std::shared_ptr<MaterialGroup> Create(nau::render::IRenderable *parent, std::string materialName);
+			static std::shared_ptr<MaterialGroup> Create(IRenderable *parent, std::string materialName);
 
 			const std::string& getMaterialName ();
 			void setMaterialName (std::string name);
@@ -26,7 +26,7 @@ namespace nau
 			size_t getIndexOffset(void);
 			size_t getIndexSize(void);
 
-			void setParent (nau::render::IRenderable* parent);
+			void setParent (std::shared_ptr<nau::render::IRenderable> &parent);
 			nau::render::IRenderable& getParent ();
 
 			void updateIndexDataName();
@@ -44,13 +44,13 @@ namespace nau
 			~MaterialGroup();
 
 		protected:
-			nau::render::IRenderable* m_Parent;
+			IRenderable *m_Parent;
 			std::string m_MaterialName;
 			std::shared_ptr<nau::geometry::IndexData> m_IndexData;
 			std::string m_Name;
 
 			MaterialGroup();
-			MaterialGroup(nau::render::IRenderable *parent, std::string materialName);
+			MaterialGroup(IRenderable *parent, std::string materialName);
 		};
 
 	};

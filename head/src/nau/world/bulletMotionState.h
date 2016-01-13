@@ -14,11 +14,11 @@ namespace nau
 			public btMotionState
 		{
 		private:
-			nau::scene::SceneObject *m_SceneObject;
+			std::shared_ptr<nau::scene::SceneObject> m_SceneObject;
 			nau::math::mat4 m_Matrix;
 
 		public:
-			NauBulletMotionState(nau::scene::SceneObject *aObject);
+			NauBulletMotionState(std::shared_ptr<nau::scene::SceneObject> &aObject);
 			~NauBulletMotionState(void);
 
 			/*btMotionState interface*/

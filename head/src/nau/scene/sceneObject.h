@@ -66,9 +66,8 @@ namespace nau
 			virtual nau::math::mat4 *_getTransformPtr(void);
 			virtual void updateGlobalTransform(nau::math::mat4 &m_Transform);
 			
-			virtual nau::render::IRenderable& getRenderable (void);
-			virtual nau::render::IRenderable* _getRenderablePtr (void);
-			virtual void setRenderable (nau::render::IRenderable *renderable);
+			virtual std::shared_ptr<IRenderable> & getRenderable (void);
+			virtual void setRenderable (std::shared_ptr<IRenderable> &renderable);
 
 			virtual void writeSpecificData (std::fstream &f);
 			virtual void readSpecificData (std::fstream &f);
@@ -87,7 +86,7 @@ namespace nau
 			int m_Id;
 			std::string m_Name;
 			bool m_StaticCondition;
-			nau::render::IRenderable *m_Renderable;
+			std::shared_ptr<nau::render::IRenderable> m_Renderable;
 			nau::geometry::IBoundingVolume *m_BoundingVolume;
 			nau::math::mat4 m_Transform, m_GlobalTransform, m_ResultTransform;
 

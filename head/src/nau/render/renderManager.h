@@ -30,7 +30,7 @@ namespace nau
 			std::unique_ptr<IRenderer> m_pRenderer;
 			std::unique_ptr<IRenderQueue> m_pRenderQueue;
 			std::vector<std::shared_ptr<Pipeline>> m_Pipelines;
-			std::vector<SceneObject*> m_SceneObjects;
+			//std::vector<SceneObject*> m_SceneObjects;
 
 			std::map<std::string, std::shared_ptr<IScene>> m_Scenes;
 			std::map<std::string, std::shared_ptr<Camera>> m_Cameras;
@@ -109,21 +109,21 @@ namespace nau
 			const std::string &getDefaultCameraName();
 
 			//! Currently does nothing. Returns -1
-			int pick (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera);
+			int pick (int x, int y, std::vector<std::shared_ptr<SceneObject>> &objects, nau::scene::Camera &aCamera);
 		
 			// TRIANGLE IDS
 			void prepareTriangleIDs(bool ids);
 			void getVertexData(unsigned int sceneObjID, 
 									 unsigned int triID);
-			SceneObject *getSceneObject(int id);
-			void addSceneObject(SceneObject *s);
-			void deleteSceneObject(int id);
+			//SceneObject *getSceneObject(int id);
+			//void addSceneObject(SceneObject *s);
+			//void deleteSceneObject(int id);
 
 			// RENDER QUEUE
 			//! Clear Renderqueue
 			void clearQueue (void);
 			//! Add an ISceneObject to the IRenderQueue
-			void addToQueue (nau::scene::SceneObject *aObject, 
+			void addToQueue (std::shared_ptr<SceneObject> &aObject,
 				std::map<std::string, nau::material::MaterialID> &materialMap);
 			//! Calls the IRenderQueue processQueue method
 			void processQueue (void);

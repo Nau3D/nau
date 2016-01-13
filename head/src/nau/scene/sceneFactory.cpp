@@ -12,7 +12,7 @@ using namespace nau::scene;
 
 
 std::shared_ptr<IScene> 
-SceneFactory::Create(std::string scene) {
+SceneFactory::Create(const std::string &scene) {
 
 	if ("OctreeUnified" == scene) {
 		return std::shared_ptr<IScene>(new OctreeUnified);

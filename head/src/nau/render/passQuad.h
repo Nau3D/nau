@@ -27,7 +27,8 @@ namespace nau {
 
 		protected:
 			PassQuad (const std::string &name);
-			nau::geometry::Quad *m_QuadObject;
+			std::shared_ptr<nau::scene::SceneObject> m_QuadObject;
+			//nau::geometry::Quad *m_QuadObject;
 			static bool Init();
 			static bool Inited;
 

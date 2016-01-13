@@ -87,20 +87,19 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	tmp = maxY - minY > tmp? maxY - minY:tmp;
 	tmp = maxZ - minZ > tmp? maxZ - minZ:tmp;
 
-	SceneObject *anObject = SceneObjectFactory::Create("SimpleObject");
+	std::shared_ptr<SceneObject> &anObject = SceneObjectFactory::Create("SimpleObject");
 	anObject->setName(aFilename);
 
 	IBoundingVolume *aBoundingVolume = BoundingVolumeFactory::create("BoundingBox");
 	aBoundingVolume->set(vec3(minX,minY,minZ), vec3(maxX, maxY, maxZ));
 	anObject->setBoundingVolume(aBoundingVolume);
 
-	IRenderable *aRenderable;
-	aRenderable = RESOURCEMANAGER->createRenderable("Mesh", "patch", aFilename);
+	std::shared_ptr<IRenderable> &aRenderable = RESOURCEMANAGER->createRenderable("Mesh", "patch", aFilename);
 
 	std::shared_ptr<VertexData> vData = aRenderable->getVertexData();
 	vData->setDataFor(VertexData::GetAttribIndex(std::string("position")), vertices);
 
-	std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable, "dirLightDifAmbPix");
+	std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable.get(), "dirLightDifAmbPix");
 
 	if (hasIndices[0] == 'y')
 		aMatGroup->setIndexList(indices);

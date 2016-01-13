@@ -86,7 +86,7 @@ Font::addChar(char code, int width, float x1, float x2, float y1, float y2, int 
 
 
 void
-Font::createSentenceRenderable(IRenderable &renderable, std::string sentence) {
+Font::createSentenceRenderable(std::shared_ptr<IRenderable> &renderable, std::string sentence) {
 
 	assert(mMaterialName != "");
 
@@ -162,7 +162,7 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence) {
 		}
 	}
 
-	std::shared_ptr<VertexData> &vertexData = renderable.getVertexData();
+	std::shared_ptr<VertexData> &vertexData = renderable->getVertexData();
 	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("texCoord0")), texCoords);
@@ -172,14 +172,14 @@ Font::createSentenceRenderable(IRenderable &renderable, std::string sentence) {
 	for (int j = 0; j < size*6 ; j++)
 		indices->push_back(j);
 
-	std::vector<std::shared_ptr<MaterialGroup>> aMatG = renderable.getMaterialGroups();
+	std::vector<std::shared_ptr<MaterialGroup>> aMatG = renderable->getMaterialGroups();
 	if (aMatG.size()) {
 		aMatG[0]->setIndexList (indices);
 	}
 	else {
-		std::shared_ptr<MaterialGroup> auxMG = MaterialGroup::Create(&renderable, mMaterialName);
+		std::shared_ptr<MaterialGroup> auxMG = MaterialGroup::Create(renderable.get(), mMaterialName);
 		auxMG->setIndexList (indices);
-		renderable.addMaterialGroup(auxMG);
+		renderable->addMaterialGroup(auxMG);
 	}
 }
 

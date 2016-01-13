@@ -1,3 +1,10 @@
+#include "nau/scene/octree.h"
+
+#include "nau/scene/octreeNode.h"
+#include "nau/clogger.h" 
+#include "nau.h"
+
+#include <list>
 #include <algorithm>
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
@@ -5,36 +12,24 @@
 #include <cmath>
 #include <ctime>
 
-#include "nau/scene/octree.h"
-#include "nau/scene/octreeNode.h"
-#include "nau/clogger.h" /***MARK***/
-#include "nau.h"
-
-#include <list>
-
 using namespace nau::scene;
 using namespace nau::geometry;
 
-//int nodesRendered;
 
 Octree::Octree() :
-	m_pOctreeRootNode (0),
-	m_vReturnVector()
-{
-	
-   //ctor
+	m_pOctreeRootNode (0) {
+
 }
 
-Octree::~Octree()
-{
-	delete m_pOctreeRootNode;
-   //dtor
-	/***MARK***/ //The OctreeNode must be deleted
+
+Octree::~Octree() {
+
 }
+
 
 void 
-Octree::build (std::vector<SceneObject*> &sceneObjects)
-{
+Octree::build (std::vector<std::shared_ptr<SceneObject>> &sceneObjects) {
+
 	//Get all objects currently in the object's array and build a static octree of them
 	// For each SceneObject, burn the transform on vertices
 	srand((unsigned)time(0));
@@ -44,34 +39,23 @@ Octree::build (std::vector<SceneObject*> &sceneObjects)
 	BoundingBox sceneBoundingBox = _calculateBoundingBox(sceneObjects);
 
 	// Create the Octree's root node
-	m_pOctreeRootNode = new OctreeNode (0, new BoundingBox(sceneBoundingBox));
+	m_pOctreeRootNode = std::shared_ptr<OctreeNode>(new OctreeNode (0, new BoundingBox(sceneBoundingBox)));
 
-	Mesh *m = (Mesh *)RESOURCEMANAGER->createRenderable("Mesh");//new Mesh();
+	std::shared_ptr<nau::render::IRenderable> &m = RESOURCEMANAGER->createRenderable("Mesh");//new Mesh();
 
 	// Send the Renderables down the octree
-	std::vector<SceneObject*>::iterator objIter;
-	objIter = sceneObjects.begin();
 
-	std::map<Mesh*,int> meshMap;
-	for ( ; objIter != sceneObjects.end(); objIter++) {
-		if (meshMap.count((Mesh *)(*objIter)->_getRenderablePtr()))
-			int x = 2;
-		else
-			meshMap[(Mesh *)(*objIter)->_getRenderablePtr()] = 1;
+	std::map<std::shared_ptr<nau::render::IRenderable>,int> meshMap;
+	for (auto &so : sceneObjects) {
+		meshMap[so->getRenderable()] = 1;
 	}
 
-	std::map<Mesh*,int>::iterator iter = meshMap.begin();
+	std::map<std::shared_ptr<nau::render::IRenderable>,int>::iterator iter = meshMap.begin();
 	for ( ; iter != meshMap.end(); ++iter) {
-		m->merge((iter->first));
-		
-	//	m_pOctreeRootNode->addRenderable (&(*objIter)->getRenderable()); /***MARK***/
+		std::shared_ptr<nau::render::IRenderable> rend = iter->first;
+		m->merge(rend);
 	}
-	//objIter = sceneObjects.begin();
-	//for ( ; objIter != sceneObjects.end(); objIter++) {
-	//	m->merge(&(*objIter)->getRenderable());
-	//	
-	////	m_pOctreeRootNode->addRenderable (&(*objIter)->getRenderable()); /***MARK***/
-	//}
+
 	m_pOctreeRootNode->resetCounter();
 	m_pOctreeRootNode->setRenderable(m);
 	
@@ -79,69 +63,58 @@ Octree::build (std::vector<SceneObject*> &sceneObjects)
 
 
 void
-Octree::getMaterialNames(std::set<std::string> *nameList) 
-{
-	if (m_pOctreeRootNode)
+Octree::getMaterialNames(std::set<std::string> *nameList) {
 
+	if (m_pOctreeRootNode)
 		m_pOctreeRootNode->getMaterialNames(nameList);
 }
 
 
 void
-Octree::_transformSceneObjects (std::vector<SceneObject*> &sceneObjects)
-{
-	std::vector<SceneObject*>::iterator objIter;
+Octree::_transformSceneObjects (std::vector<std::shared_ptr<SceneObject>> &sceneObjects) {
 
-	objIter = sceneObjects.begin();
-
-	for ( ; objIter != sceneObjects.end(); objIter++) {
-		(*objIter)->burnTransform();	
+	for (auto &so : sceneObjects) {
+		so->burnTransform();
 	}
 }
 
 
 BoundingBox
-Octree::_calculateBoundingBox (std::vector<SceneObject*> &sceneObjects)
+Octree::_calculateBoundingBox (std::vector<std::shared_ptr<SceneObject>> &sceneObjects)
 {
 	BoundingBox sceneBoundingBox;
-
-	std::vector<SceneObject*>::iterator objIter;
-
-	objIter = sceneObjects.begin();
-
-	for ( ; objIter != sceneObjects.end();
-		objIter++) {
-		const IBoundingVolume *aBoundingBox = (*objIter)->getBoundingVolume();
+	for (auto &so : sceneObjects) {
+		const IBoundingVolume *aBoundingBox = so->getBoundingVolume();
 		sceneBoundingBox.compound (aBoundingBox);
 	}
-
 	return sceneBoundingBox;
 }
 
+
 void
-Octree::_compile (void)
-{
+Octree::_compile (void) {
+
 	if (0 != m_pOctreeRootNode) {
 		m_pOctreeRootNode->_compile();
 	}
 }
 
 void
-Octree::_findVisibleSceneObjects (std::vector<SceneObject*> &m_vReturnVector,
+Octree::_findVisibleSceneObjects (std::vector<std::shared_ptr<SceneObject>> *v,
 											 nau::geometry::Frustum &aFrustum, 
 											 Camera &aCamera,
 											 bool conservative)
 {
 	if (0 != m_pOctreeRootNode) {
-		m_pOctreeRootNode->_findVisibleSceneObjects (m_vReturnVector, aFrustum, aCamera,conservative);
+		m_pOctreeRootNode->_findVisibleSceneObjects (v, aFrustum, aCamera,conservative);
 	}
 	//return m_vReturnVector;
 }
 
 void 
-Octree::_getAllObjects (std::vector<nau::scene::SceneObject*> &m_vReturnVector)
+Octree::_getAllObjects (std::vector<std::shared_ptr<SceneObject>> *v)
 {
-	std::vector<nau::scene::OctreeNode*> tmpVector (10000);
+	std::vector<std::shared_ptr<OctreeNode>> tmpVector (10000);
 	unsigned int count = 0;
 	
 	if (0 != m_pOctreeRootNode) {
@@ -163,17 +136,17 @@ Octree::_getAllObjects (std::vector<nau::scene::SceneObject*> &m_vReturnVector)
 	//objIter = tmpVector.begin();
 
 	for (unsigned int i = 0; i < count; i++) {
-		m_vReturnVector.push_back (tmpVector.at (i));
+		v->push_back (tmpVector.at (i));
 	}
 }
 
 void 
-Octree::_place (nau::scene::SceneObject *aSceneObject)
+Octree::_place (std::shared_ptr<SceneObject> &aSceneObject)
 {
-	static std::list<nau::scene::OctreeNode*> tmpVector;
+	static std::list<std::shared_ptr<OctreeNode>> tmpVector;
 	static int octant = 0;
 
-	OctreeNode* aNode = reinterpret_cast<OctreeNode*> (aSceneObject);
+	std::shared_ptr<OctreeNode>aNode = dynamic_pointer_cast<OctreeNode> (aSceneObject);
 
 	if (0 == m_pOctreeRootNode) {
 		m_pOctreeRootNode = aNode;
@@ -185,7 +158,7 @@ Octree::_place (nau::scene::SceneObject *aSceneObject)
 		tmpVector.pop_front();
 	}
 
-	OctreeNode* currentNode = *(tmpVector.begin());
+	std::shared_ptr<OctreeNode> currentNode = *(tmpVector.begin());
 	octant = aNode->m_NodeId;
 
 	currentNode->_setChild(octant, aNode);

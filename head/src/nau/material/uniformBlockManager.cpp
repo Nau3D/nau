@@ -32,16 +32,20 @@ UniformBlockManager::~UniformBlockManager() {
 
 UniformBlockManager::UniformBlockManager() {
 
-	while (!m_Blocks.empty()){
-		delete((*m_Blocks.begin()).second);
-		m_Blocks.erase(m_Blocks.begin());
-	}
+	//while (!m_Blocks.empty()){
+	//	delete((*m_Blocks.begin()).second);
+	//	m_Blocks.erase(m_Blocks.begin());
+	//}
 }
 
 
 void 
 UniformBlockManager::clear() {
 
+	while (!m_Blocks.empty()) {
+		delete((*m_Blocks.begin()).second);
+		m_Blocks.erase(m_Blocks.begin());
+	}
 }
 
 

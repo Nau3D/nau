@@ -33,7 +33,7 @@ namespace nau
 
 			void save(ITexImage *ti, std::string filename);
 
-			void save(int width, int height, char *data, std::string filename);
+			void save(int width, int height, unsigned char *data, std::string filename);
 
 
 		private:

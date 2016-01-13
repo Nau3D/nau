@@ -15,8 +15,7 @@ namespace nau {
 			friend class SceneFactory;
 
 		private:
-			std::vector<SceneObject*> m_vReturnVector;
-			std::vector<SceneObject*> m_SceneObjects;
+			std::vector<std::shared_ptr<SceneObject>> m_SceneObjects;
 
 			Octree *m_pGeometry;
 
@@ -44,16 +43,14 @@ namespace nau {
 
 			virtual void unitize();
 
-			virtual void add (nau::scene::SceneObject *aSceneObject);
-			
-			virtual std::vector <SceneObject*>& findVisibleSceneObjects 
-																(nau::geometry::Frustum &aFrustum, 
-																Camera &aCamera,
-																bool conservative = false);
-			virtual std::vector<SceneObject*>& getAllObjects ();
-
-			virtual nau::scene::SceneObject* getSceneObject (std::string name);
-			virtual nau::scene::SceneObject* getSceneObject (int index);
+			virtual void add(std::shared_ptr<SceneObject> &aSceneObject);
+			virtual void findVisibleSceneObjects(std::vector<std::shared_ptr<SceneObject>> *v,
+				nau::geometry::Frustum &aFrustum,
+				Camera &aCamera,
+				bool conservative = false);
+			virtual void getAllObjects(std::vector<std::shared_ptr<SceneObject>> *);
+			virtual std::shared_ptr<SceneObject> &getSceneObject(std::string name);
+			virtual std::shared_ptr<SceneObject> &getSceneObject(int index);
 
 			virtual const std::set<std::string> &getMaterialNames();
 

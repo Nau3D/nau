@@ -277,22 +277,15 @@ SceneObject::updateGlobalTransform(mat4 &t)
 }
 
 
-IRenderable& 
+std::shared_ptr<IRenderable> &
 SceneObject::getRenderable (void)
-{
-	return (*m_Renderable);
-}
-
-
-IRenderable* 
-SceneObject::_getRenderablePtr (void)
 {
 	return m_Renderable;
 }
 
 
 void 
-SceneObject::setRenderable (nau::render::IRenderable *renderable)
+SceneObject::setRenderable (std::shared_ptr<IRenderable> &renderable)
 {
 	m_Renderable = renderable;
 }

@@ -141,7 +141,7 @@ PassDepthMap::doPass (void) {
 	if (idTo != -1)
 		cFar = m_FloatProps[idTo];
 
-	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera.get());
+	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
 
 	RENDERER->setCamera(m_LightCamera);
 	frustum.setFromMatrix ((float *)((mat4 *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4))->getMatrix());
@@ -154,12 +154,11 @@ PassDepthMap::doPass (void) {
 	for ( ; scenesIter != m_SceneVector.end(); ++scenesIter) {
 		std::shared_ptr<IScene> &aScene = RENDERMANAGER->getScene (*scenesIter);
 
-		std::vector<SceneObject*> &sceneObjects = aScene->findVisibleSceneObjects (frustum, *m_LightCamera,true);
-		std::vector<SceneObject*>::iterator objIter;
-
-		objIter = sceneObjects.begin();
-		for (; objIter != sceneObjects.end(); ++objIter) {
-			RENDERMANAGER->addToQueue (*objIter, m_MaterialMap);
+		std::vector<std::shared_ptr<SceneObject>> sceneObjects;
+		aScene->findVisibleSceneObjects(&sceneObjects, frustum, *m_LightCamera, true);
+		
+		for (auto &so: sceneObjects) {
+			RENDERMANAGER->addToQueue (so, m_MaterialMap);
 		}
 	}
 

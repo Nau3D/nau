@@ -28,7 +28,8 @@ Axis::Axis(void) : Primitive() {
 
 	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 
-	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
+	std::shared_ptr<MaterialGroup> aMaterialGroup;
+	aMaterialGroup = MaterialGroup::Create(this, "__Emission Red");
 	std::shared_ptr<std::vector<unsigned int>> indices =
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(2));
 	indices->at (0) = 0;

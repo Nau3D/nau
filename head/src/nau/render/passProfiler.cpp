@@ -131,7 +131,7 @@ PassProfiler::doPass (void)
 //	nau::scene::SceneObject *string;
 
 	m_pFont.createSentenceRenderable(m_pSO->getRenderable(), Profile::DumpLevels());
-	m_pSO->getRenderable().resetCompilationFlags();
+	m_pSO->getRenderable()->resetCompilationFlags();
 	//m_pSO->setRenderable(r);//Profile::DumpLevels()));
 	//string = m_pFont.createSentenceSceneObject(Profile::DumpLevels());
 	RENDERMANAGER->clearQueue();

@@ -12,7 +12,7 @@ namespace nau
 		{
 		public:
 			virtual void clearQueue (void) = 0;
-			virtual void addToQueue (nau::scene::SceneObject* aObject,
+			virtual void addToQueue (std::shared_ptr<nau::scene::SceneObject> &aObject,
 				std::map<std::string, nau::material::MaterialID> &materialMap) = 0;
 			virtual void processQueue (void) = 0;
 

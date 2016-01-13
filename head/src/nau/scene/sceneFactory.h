@@ -15,9 +15,9 @@ namespace nau
 		{
 			friend class nau::render::RenderManager;
 		public:
-			/*static IScene * Create (std::string scene);*/
+			//static IScene * Create (std::string scene);
 		private:
-			static std::shared_ptr<IScene> Create(std::string name);
+			static std::shared_ptr<IScene> Create(const std::string &name);
 			SceneFactory(void) {};
 		};
 	};

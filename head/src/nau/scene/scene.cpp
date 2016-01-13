@@ -14,7 +14,6 @@ using namespace nau::material;
 
 
 Scene::Scene(void) :
-	m_vReturnVector(),
 	m_SceneObjects(),
 	m_BoundingBox()
 {
@@ -55,139 +54,118 @@ Scene::eventReceived(const std::string &sender, const std::string &eventType,
 
 
 mat4 &
-Scene::getTransform() 
-{
+Scene::getTransform() {
+
 	return m_Transform;
 }
 
 
 void
-Scene::setTransform(nau::math::mat4 &t)
-{
+Scene::setTransform(nau::math::mat4 &t) {
+
 	m_Transform.copy(t);
 	updateSceneObjectTransforms();
 }
 
 
 void
-Scene::transform(nau::math::mat4 &t)
-{
+Scene::transform(nau::math::mat4 &t) {
+
 	m_Transform *= t;
 	updateSceneObjectTransforms();
 }
 
 
 void 
-Scene::updateSceneObjectTransforms()
-{
-	std::vector<SceneObject*>::iterator iter; 
-	iter = m_SceneObjects.begin();
-    for( ; iter != m_SceneObjects.end(); ++iter)
-    {
-		(*iter)->updateGlobalTransform(m_Transform);
-    }
+Scene::updateSceneObjectTransforms() {
 
+    for(auto &so: m_SceneObjects) {
+		so->updateGlobalTransform(m_Transform);
+    }
 }
 
 
 void 
-Scene::build (void)
-{
+Scene::build (void) {
+
 }
 
+
 IBoundingVolume& 
-Scene::getBoundingVolume (void)
-{
+Scene::getBoundingVolume (void) {
+
 	return m_BoundingBox;
 }
 
+
 void
-Scene::compile (void)
-{
+Scene::compile (void) {
+
 	if (true == m_Compiled) {
 		return;
 	}
 		
 	m_Compiled = true;
 
-	std::vector<SceneObject*>::iterator objIter;
-	objIter = m_SceneObjects.begin();
-	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		(*objIter)->getRenderable().getVertexData()->compile();
-		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = (*objIter)->getRenderable().getMaterialGroups();
+	for (auto &so : m_SceneObjects) {
+		so->getRenderable()->getVertexData()->compile();
+		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = so->getRenderable()->getMaterialGroups();
 
-		std::vector<std::shared_ptr<MaterialGroup>>::iterator matGroupsIter = matGroups.begin();
-
-		for ( ; matGroupsIter != matGroups.end(); matGroupsIter++){
-			(*matGroupsIter)->compile();
+		for (auto &matGroup: matGroups) {
+			matGroup->compile();
 		}
 	}
 }
 
 
 void 
-Scene::add (SceneObject *aSceneObject)
-{
+Scene::add (std::shared_ptr<SceneObject> &aSceneObject) {
+
 	m_SceneObjects.push_back (aSceneObject);
 	aSceneObject->updateGlobalTransform(m_Transform);
 	m_BoundingBox.compound (aSceneObject->getBoundingVolume());
 }
 
 
-std::vector <SceneObject*>& 
-Scene::findVisibleSceneObjects (Frustum &aFrustum, Camera &aCamera, bool conservative)
-{
-	m_vReturnVector.clear();
+void 
+Scene::findVisibleSceneObjects (std::vector<std::shared_ptr<SceneObject>> *v, Frustum &aFrustum, Camera &aCamera, bool conservative) {
+	
+	for (auto &so:m_SceneObjects) {
 
-	std::vector<SceneObject*>::iterator objIter;
-	objIter = m_SceneObjects.begin();
-	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		/***MARK***/ /* View Frustum Culling Test */
-		
-		int side = aFrustum.isVolumeInside ((*objIter)->getBoundingVolume(), conservative);
+		int side = aFrustum.isVolumeInside (so->getBoundingVolume(), conservative);
 
 		if (Frustum::OUTSIDE != side) {
-			m_vReturnVector.push_back (*(objIter));
+			v->push_back (so);
 		}
 	}
-	return m_vReturnVector;
 }
 
 
-std::vector<SceneObject*>& 
-Scene::getAllObjects ()
-{
-	m_vReturnVector.clear();
+void 
+Scene::getAllObjects (std::vector<std::shared_ptr<SceneObject>> *v) {
 
-	std::vector<SceneObject*>::iterator objIter;
-	objIter = m_SceneObjects.begin();
-	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		m_vReturnVector.push_back(*(objIter));
-	}
-
-	return m_vReturnVector;
+	for (auto &so : m_SceneObjects) 
+		v->push_back(so);
 }
 
 
-SceneObject* 
+std::shared_ptr<SceneObject> &
 Scene::getSceneObject (std::string name)
 {
-	std::vector<SceneObject*>::iterator objIter;
-	objIter = m_SceneObjects.begin();
-	for ( ; objIter != m_SceneObjects.end(); ++objIter) {
-		if (0 == (*objIter)->getName().compare (name)) {
-			return (*objIter);
+	for (auto &so: m_SceneObjects) {
+		if (0 == so->getName().compare (name)) {
+			return so;
 		}
 	}
-	return 0;
+	return m_EmptySOptr;
 }
 
 
-SceneObject*
+std::shared_ptr<SceneObject> &
 Scene::getSceneObject( int index) 
 {
 	if (index < 0 || (unsigned int)index >= m_SceneObjects.size())
-		return NULL;
+		return m_EmptySOptr;
 
 	return m_SceneObjects.at(index);
 }
@@ -200,7 +178,7 @@ Scene::getMaterialNames()
 	
 	for ( auto so: m_SceneObjects) {
 
-		so->getRenderable().getMaterialNames(&m_MaterialNames);
+		so->getRenderable()->getMaterialNames(&m_MaterialNames);
 	}
 	return m_MaterialNames;
 }

@@ -45,23 +45,22 @@ namespace nau
 			  ROOT
 			};
 
-			OctreeByMatNode *m_pParent;
-			OctreeByMatNode *m_pChilds[8];
+			std::shared_ptr<OctreeByMatNode> m_pParent;
+			std::shared_ptr<OctreeByMatNode> m_pChilds[8];
 
 			int m_ChildCount;
 			bool m_Divided;
 			int m_NodeId;
 			int m_NodeDepth;
 
-			std::map<std::string, nau::scene::SceneObject *> m_pLocalMeshes;
+			std::map<std::string, std::shared_ptr<SceneObject>> m_pLocalMeshes;
 
 		public:
 			OctreeByMatNode ();
 			
-			OctreeByMatNode (OctreeByMatNode *parent, vec3 bbMin, vec3 bbMax, int nodeId = 0, int nodeDepth = 0);
+			OctreeByMatNode (OctreeByMatNode* parent, vec3 bbMin, vec3 bbMax, int nodeId = 0, int nodeDepth = 0);
 			void updateNodeTransform(nau::math::mat4 &t);
-			//void addRenderable (nau::render::IRenderable *aRenderable);
-			void setRenderable (nau::render::IRenderable *renderable);
+			void setRenderable (std::shared_ptr<nau::render::IRenderable> &renderable);
 
 			void getMaterialNames(std::set<std::string> *nameList);
 
@@ -69,8 +68,8 @@ namespace nau
 			void setName(std::string name);
 			std::string getName();
 
-			virtual void writeSpecificData (std::fstream &f);
-			virtual void readSpecificData (std::fstream &f);
+			//virtual void writeSpecificData (std::fstream &f);
+			//virtual void readSpecificData (std::fstream &f);
 			void tightBoundingVolume();
 			void unitize(vec3 &center, vec3 &min, vec3 &max);
 			
@@ -80,22 +79,22 @@ namespace nau
 		protected:
 			std::string m_Name;
 			void _compile (void);
-			void _findVisibleSceneObjects (std::vector<nau::scene::SceneObject*> &m_vReturnVector,
+			void _findVisibleSceneObjects (std::vector<std::shared_ptr<SceneObject>> *m_vReturnVector,
 																nau::geometry::Frustum &aFrustum, 
 																nau::scene::Camera &aCamera,
 																bool conservative = false);
-			void getAllSceneObjects (std::vector<nau::scene::SceneObject*> &m_vReturnVector);
+			void getAllSceneObjects (std::vector<std::shared_ptr<SceneObject>> *m_vReturnVector);
 
 			nau::geometry::BoundingBox m_BoundingVolume, m_TightBoundingVolume;
 
-			OctreeByMatNode* _getChild (int i);
-			void _setParent (OctreeByMatNode *parent);
-			void _setChild (int i, OctreeByMatNode *aNode);
+			std::shared_ptr<OctreeByMatNode> &_getChild (int i);
+			void _setParent (std::shared_ptr<OctreeByMatNode> &parent);
+			void _setChild (int i, std::shared_ptr<OctreeByMatNode> &aNode);
 			int _getChildCount (void);
 
 		private:
 			int _octantFor (VertexData::Attr& v);
-			OctreeByMatNode* _createChild (int octant);
+			std::shared_ptr<OctreeByMatNode> _createChild (int octant);
 			std::string _genOctName (void);
 			void _split();
 			void _unifyLocalMeshes();

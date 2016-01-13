@@ -40,7 +40,7 @@ ITextureLoader::Save(ITexture *t, FileType ft) {
 
 
 void
-ITextureLoader::Save(int width, int height, char *data, std::string filename) {
+ITextureLoader::Save(int width, int height, unsigned char *data, std::string filename) {
 
 
 	if (filename == "") {
@@ -59,6 +59,7 @@ ITextureLoader::Save(int width, int height, char *data, std::string filename) {
 
 	nau::loader::ITextureLoader *loader = nau::loader::ITextureLoader::create();
 	loader->save(width, height, data, filename);
+	delete loader;
 
 }
 

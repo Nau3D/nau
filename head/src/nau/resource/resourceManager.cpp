@@ -30,6 +30,7 @@ ResourceManager::ResourceManager(std::string path) :
 		m_Programs(),
 		m_Textures()
 {
+	m_EmptyMesh = NULL;
 }
 
 
@@ -52,10 +53,11 @@ ResourceManager::clear() {
 		m_States.erase(m_States.begin());
 	}
 
-	while (!m_Meshes.empty()){
-		delete((*m_Meshes.begin()).second);
-		m_Meshes.erase(m_Meshes.begin());
-	}
+	m_Meshes.clear();
+	//while (!m_Meshes.empty()){
+	//	delete((*m_Meshes.begin()).second);
+	//	m_Meshes.erase(m_Meshes.begin());
+	//}
 
 	while (!m_RenderTargets.empty()){
 		delete((*m_RenderTargets.begin()).second);
@@ -325,10 +327,10 @@ ResourceManager::getRenderTargetNames() {
 
 using namespace nau::geometry;
 
-nau::render::IRenderable* 
+std::shared_ptr<nau::render::IRenderable>
 ResourceManager::createRenderable(std::string type, std::string name, std::string filename) {
 
-	IRenderable *r = NULL;
+	std::shared_ptr<nau::render::IRenderable> r;
 
 	if ("" == name) {
 		std::stringstream z;
@@ -338,31 +340,31 @@ ResourceManager::createRenderable(std::string type, std::string name, std::strin
 	}
 
 	if (hasRenderable(name,filename))
-		return(getRenderable(name, filename));
+		return getRenderable(name, filename);
 
 	if (0 == type.compare ("Mesh")) 
-		r = new Mesh();
+		r =  std::shared_ptr<nau::render::IRenderable>(new Mesh());
 	
 	else if (0 == type.compare("MeshPose")) 
-		r = new MeshPose();
+		r = std::shared_ptr<nau::render::IRenderable>(new MeshPose());
 	
 	else if ("MeshBones" == type) 
-		r = new MeshBones();
+		r = std::shared_ptr<nau::render::IRenderable>(new MeshBones());
 	
 	else if ("BOX" == type) 
-		r = new Box();
+		r = std::shared_ptr<nau::render::IRenderable>(new Box());
 
 	else if ("SQUARE" == type) 
-		r = new Square();
+		r = std::shared_ptr<nau::render::IRenderable>(new Square());
 
 	else if ("SPHERE" == type) 
-		r = new Sphere();
+		r = std::shared_ptr<nau::render::IRenderable>(new Sphere());
 
 	else if ("AXIS" == type)
-		r = new Axis();
+		r = std::shared_ptr<nau::render::IRenderable>(new Axis());
 
 	else if ("BoundingBox" == type)
-		r = new BBox();
+		r = std::shared_ptr<nau::render::IRenderable>(new BBox());
 	else
 		return NULL;
 
@@ -389,7 +391,7 @@ ResourceManager::hasRenderable (std::string meshName, std::string filename) {
 }
 
 
-nau::render::IRenderable* 
+std::shared_ptr<nau::render::IRenderable> &
 ResourceManager::getRenderable (std::string meshName, std::string filename) {	
 	
 	std::string key (filename);
@@ -402,12 +404,12 @@ ResourceManager::getRenderable (std::string meshName, std::string filename) {
 	if (m_Meshes.count (key) > 0) {
 		return m_Meshes[key];
 	}
-	return 0;
+	return m_EmptyMesh;
 }
 
 
-nau::render::IRenderable* 
-ResourceManager::addRenderable (nau::render::IRenderable* aMesh, std::string filename) {
+std::shared_ptr<nau::render::IRenderable> &
+ResourceManager::addRenderable (std::shared_ptr<nau::render::IRenderable> &aMesh, std::string filename) {
 
 	std::string key (filename);
 	std::string meshName = aMesh->getName();

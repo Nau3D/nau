@@ -30,48 +30,21 @@ RenderManager::RenderManager(void) :
 
 RenderManager::~RenderManager(void) {
 
-	clear();
-	//delete m_pRenderer;
-	//delete m_pRenderQueue;
 }
 
 
 void 
 RenderManager::clear() {
 
-	while (!m_Cameras.empty()){
-//		((*m_Cameras.begin()).second).reset();
-		m_Cameras.erase(m_Cameras.begin());
-	}
-
-	while (!m_Lights.empty()){
-//		delete ((*m_Lights.begin()).second);
-		m_Lights.erase(m_Lights.begin());
-	}
-
-	while (!m_Scenes.empty()){
-//		delete ((*m_Scenes.begin()).second);
-		m_Scenes.erase(m_Scenes.begin());
-	}
-
-	while (!m_Pipelines.empty()){
-//		delete ((*m_Pipelines.begin()));
-		m_Pipelines.erase(m_Pipelines.begin());
-	}
-	while (!m_Viewports.empty()){
-//		delete ((*m_Viewports.begin()).second);
-		m_Viewports.erase(m_Viewports.begin());
-	}
-
+	m_Cameras.clear();
+	m_Lights.clear();
+	m_Scenes.clear();
+	m_Pipelines.clear();
+	m_Viewports.clear();
 
 	m_ActivePipelineIndex = 0;
 
 	m_pRenderQueue->clearQueue();
-
-	while (!m_SceneObjects.empty()){
-		delete (*m_SceneObjects.begin());
-		m_SceneObjects.erase(m_SceneObjects.begin());
-	}
 }
 
 
@@ -317,55 +290,50 @@ RenderManager::getCurrentPass() {
 void
 RenderManager::prepareTriangleIDs(bool ids) {
 
-	std::map<std::string, std::shared_ptr<IScene>>::iterator sceneIter;
+	for (auto &s:m_Scenes) {
 
-	sceneIter = m_Scenes.begin();
-	for ( ; sceneIter != m_Scenes.end(); ++sceneIter) {
+		std::vector <std::shared_ptr<SceneObject>> sceneObjs;
+		s.second->getAllObjects(&sceneObjs);
 
-		std::vector <SceneObject*> sceneObjs = (*sceneIter).second->getAllObjects();
+		for (auto &so: sceneObjs ) {
 
-		std::vector <SceneObject*>::iterator sceneObjIter;
-
-		sceneObjIter = sceneObjs.begin();
-		for ( ; sceneObjIter != sceneObjs.end(); ++sceneObjIter ) {
-
-			(*sceneObjIter)->prepareTriangleIDs(ids);
+			so->prepareTriangleIDs(ids);
 		}
 
 	}
 }
 
 
-SceneObject *
-RenderManager::getSceneObject(int id) {
-
-	std::vector<nau::scene::SceneObject*>::iterator iter;
-	for (iter = m_SceneObjects.begin(); iter != m_SceneObjects.end() && (*iter)->getId() != id; ++iter);
-
-	if (iter != m_SceneObjects.end())
-		return *iter;
-	else
-		return NULL;
-}
-
-
-void 
-RenderManager::addSceneObject(SceneObject *s) {
-
-	m_SceneObjects.push_back(s);
-}
-
-
-void 
-RenderManager::deleteSceneObject(int id) {
-
-	std::vector<nau::scene::SceneObject*>::iterator iter;
-
-	for (iter = m_SceneObjects.begin(); iter != m_SceneObjects.end() && (*iter)->getId() != id; ++iter);
-
-	if (iter != m_SceneObjects.end())
-		m_SceneObjects.erase(iter);
-}
+//SceneObject *
+//RenderManager::getSceneObject(int id) {
+//
+//	std::vector<nau::scene::SceneObject*>::iterator iter;
+//	for (iter = m_SceneObjects.begin(); iter != m_SceneObjects.end() && (*iter)->getId() != id; ++iter);
+//
+//	if (iter != m_SceneObjects.end())
+//		return *iter;
+//	else
+//		return NULL;
+//}
+//
+//
+//void 
+//RenderManager::addSceneObject(SceneObject *s) {
+//
+//	m_SceneObjects.push_back(s);
+//}
+//
+//
+//void 
+//RenderManager::deleteSceneObject(int id) {
+//
+//	std::vector<nau::scene::SceneObject*>::iterator iter;
+//
+//	for (iter = m_SceneObjects.begin(); iter != m_SceneObjects.end() && (*iter)->getId() != id; ++iter);
+//
+//	if (iter != m_SceneObjects.end())
+//		m_SceneObjects.erase(iter);
+//}
 
 
 void
@@ -439,7 +407,7 @@ RenderManager::getPassAttribute(std::string passName, std::string name, Enums::D
 
 
 int
-RenderManager::pick (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera) {
+RenderManager::pick (int x, int y, std::vector<std::shared_ptr<SceneObject>> &objects, nau::scene::Camera &aCamera) {
 
 	return -1;
 }
@@ -474,7 +442,7 @@ RenderManager::clearQueue (void) {
 
 
 void 
-RenderManager::addToQueue (SceneObject *aObject, 
+RenderManager::addToQueue (std::shared_ptr<SceneObject> &aObject,
 				std::map<std::string, MaterialID> &materialMap) {
 
 	m_pRenderQueue->addToQueue (aObject, materialMap);
@@ -542,7 +510,7 @@ std::shared_ptr<Camera> &
 RenderManager::getCamera (const std::string &cameraName) {
 
 	if (false == hasCamera (cameraName)) {
-		m_Cameras[cameraName] = std::shared_ptr<Camera>(new Camera (cameraName));
+		m_Cameras[cameraName] = Camera::Create(cameraName);
 	}
 	return m_Cameras[cameraName];
 }

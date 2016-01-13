@@ -325,7 +325,7 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 
 	//}
 
-	//if ('O' == event.GetKeyCode()) {
+	//if ('0' == event.GetKeyCode()) {
 	//	RENDERER->saveScreenShot();
 	//}
 

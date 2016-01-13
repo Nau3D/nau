@@ -3,8 +3,8 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" >
-				<file name="../../models/ntg-bench/bench.obj" />
-				<!--file name="../../models/LargoCamoes/largoCamoes.nbo"/-->
+				<!--file name="../../models/ntg-bench/bench.obj" /-->
+				<file name="../../models/LargoCamoes/largoCamoes.nbo"/>
 			</scene>
 		</scenes>
 		<viewports>

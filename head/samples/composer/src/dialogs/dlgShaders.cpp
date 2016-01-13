@@ -321,13 +321,16 @@ DlgShaders::updateShaderAux() {
 		std::vector<std::string> blockNames, uniformNames;
 		p->getUniformBlockNames(&blockNames);
 		int uni = p->getNumberOfUniforms();
-		if (uni + blockNames.size() != 0){
-			pg->Append( new wxPropertyCategory(wxT("Uniform Variables"),wxPG_LABEL));
+		if (uni + blockNames.size() != 0) {
+			pg->Append(new wxPropertyCategory(wxT("Uniform Variables"), wxPG_LABEL));
 		}
 		//p->updateUniforms();
 
-		wxPGProperty *pid = new wxStringProperty(wxT("Default Block"), wxPG_LABEL);
-		pg->Append(pid);
+		wxPGProperty *pid = pg->GetPropertyByName(wxT("Default Block"));
+		if (!pid) {
+			pid = new wxStringProperty(wxT("Default Block"), wxPG_LABEL);
+			pg->Append(pid);
+		}
 		for (int i = 0; i < uni; i++) {
 			u = p->getUniform(i);
 			addUniform(pid, wxString(u.getName().c_str()),

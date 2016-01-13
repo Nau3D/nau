@@ -58,7 +58,7 @@ namespace nau
 			void getMaterialNames(std::set<std::string> *nameList);
 			void addMaterialGroup (std::shared_ptr<nau::material::MaterialGroup> &, int offset = 0);
 			void addMaterialGroup (std::shared_ptr<nau::material::MaterialGroup> & materialGroup,
-				nau::render::IRenderable *aRenderable); 
+				std::shared_ptr<nau::render::IRenderable> &aRenderable);
 			std::vector<std::shared_ptr<nau::material::MaterialGroup>>& getMaterialGroups (void);
 
 			std::shared_ptr<nau::geometry::VertexData>& getVertexData (void);
@@ -71,7 +71,7 @@ namespace nau
 			std::string getType (void);
 			void resetCompilationFlags();
 
-			void merge (nau::render::IRenderable *aRenderable);
+			void merge (std::shared_ptr<nau::render::IRenderable> &aRenderable);
 		};
 	};
 };

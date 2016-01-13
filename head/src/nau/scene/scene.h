@@ -7,6 +7,9 @@
 #include "nau/geometry/frustum.h"
 #include "nau/geometry/boundingBox.h"
 
+
+#include <memory>
+
 namespace nau {
 
 	namespace scene {
@@ -18,13 +21,14 @@ namespace nau {
 		protected:
 			Scene(void);
 
-			std::vector<SceneObject*> m_vReturnVector;
-			std::vector<SceneObject*> m_SceneObjects;
+			//std::vector<std::shared_ptr<SceneObject>> m_vReturnVector;
+			std::vector<std::shared_ptr<SceneObject>> m_SceneObjects;
 
 			//bool m_Visible;
 
 			nau::geometry::BoundingBox m_BoundingBox;
 			void updateSceneObjectTransforms();
+
 
 		public:
 			~Scene (void);
@@ -33,7 +37,6 @@ namespace nau {
 
 			virtual void eventReceived(const std::string &sender, const std::string &eventType, 
 				const std::shared_ptr<IEventData> &evt);
-			virtual void add (nau::scene::SceneObject *aSceneObject);
 
 			virtual void build (void);
 			virtual void compile (void);
@@ -42,13 +45,14 @@ namespace nau {
 
 			virtual void unitize();
 
-			virtual std::vector <SceneObject*>& findVisibleSceneObjects 
-																(nau::geometry::Frustum &aFrustum, 
-																Camera &aCamera,
-																bool conservative = false);
-			virtual std::vector<SceneObject*>& getAllObjects ();
-			virtual nau::scene::SceneObject* getSceneObject (std::string name);
-			virtual nau::scene::SceneObject* getSceneObject (int index);
+			virtual void add (std::shared_ptr<SceneObject> &aSceneObject);
+			virtual void findVisibleSceneObjects(std::vector<std::shared_ptr<SceneObject>> *v,
+														nau::geometry::Frustum &aFrustum,
+														Camera &aCamera,
+														bool conservative = false);
+			virtual void getAllObjects(std::vector<std::shared_ptr<SceneObject>> *);
+			virtual std::shared_ptr<SceneObject> &getSceneObject (std::string name);
+			virtual std::shared_ptr<SceneObject> &getSceneObject (int index);
 
 			virtual const std::set<std::string> &getMaterialNames();
 

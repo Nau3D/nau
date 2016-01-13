@@ -63,7 +63,8 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		if (mesh->mPrimitiveTypes != 4)
 			continue;
 
-		Mesh *renderable =  (Mesh *)RESOURCEMANAGER->createRenderable("Mesh", mesh->mName.data, aFilename);
+		std::shared_ptr<nau::render::IRenderable> & renderable =  
+			RESOURCEMANAGER->createRenderable("Mesh", mesh->mName.data, aFilename);
 		meshNameMap[n] = renderable->getName();
 		renderable->setDrawingPrimitive(primitive);
 
@@ -83,7 +84,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		std::string matName = name.data;
 		if (matName == "")
 			matName = "Default";
-		std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable, matName);
+		std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(renderable.get(), matName);
 		aMaterialGroup->setIndexList(indices);
 		if (primitive == IRenderable::TRIANGLES_ADJACENCY)
 			aMaterialGroup->getIndexData()->useAdjacency(true);
@@ -189,7 +190,8 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 	
 		if (sc->mMeshes[nd->mMeshes[n]]->mPrimitiveTypes == 4) {
 		//sc->mMeshes[nd->mMeshes[n]]->mName.data;
-		SceneObject *so = SceneObjectFactory::Create("SimpleObject");
+		std::shared_ptr<SceneObject> so = SceneObjectFactory::Create("SimpleObject");
+		//SceneObject *so = SceneObjectFactory::Create("SimpleObject");
 		so->setRenderable(RESOURCEMANAGER->getRenderable(meshNameMap[nd->mMeshes[n]],""));
 		so->setTransform(m);
 		aScene->add(so);

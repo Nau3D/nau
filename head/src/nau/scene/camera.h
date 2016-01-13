@@ -11,6 +11,7 @@
 #include "nau/scene/sceneObject.h"
 #include "nau/render/viewport.h"
 
+#include <memory>
 #include <string>
 
 using namespace nau::math;
@@ -25,6 +26,10 @@ namespace nau
 		{
 			friend class nau::render::RenderManager;
 		public:
+
+			//std::shared_ptr<Camera> shared() {
+			//	return std::shared_from_this();
+			//}
 
 			typedef enum {
 				ORTHO,
@@ -68,7 +73,7 @@ namespace nau
 			void setPropf(FloatProperty prop, float value);
 			void setPrope(EnumProperty prop, int value);
 
-			void *getProp(int prop, Enums::DataType type);
+			//void *getProp(int prop, Enums::DataType type);
 
 
 			void setOrtho (float left, float right, float bottom, float top, float near, float far);
@@ -80,32 +85,35 @@ namespace nau
 			void setCamera (vec3 position, vec3 view, vec3 up);
 
 			// Viewport
-			std::shared_ptr<Viewport> getViewport (void);
+			std::shared_ptr<Viewport> &getViewport (void);
 			void setViewport (std::shared_ptr<Viewport> aViewport);
 
 			// Adjusts the frustum of the current Camera to include
 			// the frustum of the target camera
 			// usefull for shadow mapping for instance
-			void adjustMatrix (nau::scene::Camera *targetCamera);
+			void adjustMatrix (std::shared_ptr<Camera> &targetCamera);
 			// This version considers only a fraction of the target camera
 			// the params near and far relate to the targets camera frustum
-			void adjustMatrixPlus (float cNear, float cFar, nau::scene::Camera *targetCamera);
+			void adjustMatrixPlus (float cNear, float cFar, std::shared_ptr<Camera> &targetCamera);
 
 			// Bounding Volume 	
 			virtual nau::geometry::IBoundingVolume* getBoundingVolume();
 
 			// Renderable is the graphic representation of the camera
 			// usefull for debug purposes
-			nau::render::IRenderable& getRenderable();
+			std::shared_ptr<IRenderable> &getRenderable();
 
 			// used for Physics
 			bool isDynamic();
 			void setDynamic(bool value);
 			void setPositionOffset (float value);
 
+		private:
+			Camera(const std::string &name);
+			static std::shared_ptr<Camera> m_Temp;
 		protected:
 
-			Camera(const std::string &name);
+			static std::shared_ptr<Camera> Create(const std::string &name);
 			static bool Init();
 			static bool Inited;
 

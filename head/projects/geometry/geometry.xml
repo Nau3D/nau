@@ -7,7 +7,7 @@
 				<SCALE x = 1.0 y=0.5 z = 1.0 />
 				<geometry name = "Sphere" type = "SPHERE" material="crateBox" SLICES=15 STACKS=15 > 
 					<TRANSLATE x =-2.5 y=0 z =0  />
-					<SCALE x=2 y=2 z=2 />
+					<SCALE x=1 y=2 z=2 />
 				</geometry>								
 				<geometry name = "Box" type = "BOX"  material="crateBox" >
 					<TRANSLATE x =2.5 y=0 z =0  />

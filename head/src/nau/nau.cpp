@@ -138,9 +138,11 @@ Nau::Nau() :
 Nau::~Nau() {
 
 	delete MATERIALLIBMANAGER;
-	delete EVENTMANAGER;
 	delete RENDERMANAGER;
 	delete RESOURCEMANAGER;
+	m_Viewport.reset();
+	delete EVENTMANAGER;
+	m_pEventManager = NULL;
 
 	delete m_DefaultState; 
 	delete m_pAPISupport;
@@ -156,6 +158,8 @@ Nau::~Nau() {
 	if (m_LuaState)
 		lua_close(m_LuaState);
 #endif
+
+	gInstance = NULL;
 }
 
 
@@ -989,8 +993,6 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 }
 
 
-
-
 void
 Nau::readDirectory (std::string dirName) {
 
@@ -1011,37 +1013,6 @@ Nau::readDirectory (std::string dirName) {
 			throw(s);
 		}
 	}
-//	DIR *dir;
-//	struct dirent *ent;
-//	bool result = true;
-//	char fileName [1024];
-//	char sceneName[256];
-//
-//	clear();
-//	sprintf(sceneName,"MainScene"); //,loadedScenes);
-//	loadedScenes++;
-//	RENDERMANAGER->createScene (dirName);
-//	dir = opendir (dirName.c_str());
-//
-//	if (0 == dir) {
-//		NAU_THROW("Can't open dir: %s",dirName);
-//	}
-//	while (0 != (ent = readdir (dir))) {
-//
-//#ifdef NAU_PLATFORM_WIN32
-//		sprintf (fileName, "%s\\%s", dirName.c_str(), ent->d_name);
-//#else
-//		sprintf (fileName, "%s/%s", dirName, ent->d_name);						
-//#endif
-//		try {
-//			NAU->loadAsset (fileName, sceneName);
-//		}
-//		catch(std::string &s) {
-//			closedir(dir);
-//			throw(s);
-//		}
-//	}
-//	closedir (dir);
 	loadFilesAndFoldersAux(dirName, false);	
 }
 
@@ -1148,6 +1119,7 @@ Nau::clear() {
 	RESOURCEMANAGER->clear();
 	//Profile::Reset();
 	deleteUserAttributes();
+	UniformBlockManager::DeleteInstance();
 
 	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
 

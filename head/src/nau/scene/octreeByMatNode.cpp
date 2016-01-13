@@ -33,11 +33,11 @@ OctreeByMatNode::OctreeByMatNode () :
 
 
 OctreeByMatNode::OctreeByMatNode (OctreeByMatNode *parent, vec3 bbMin, vec3 bbMax, int nodeId, int nodeDepth) :
-	m_pParent (parent),
 	m_ChildCount (0),
 	m_Divided (false),
 	m_NodeDepth (nodeDepth)
 {
+	m_pParent = std::shared_ptr<OctreeByMatNode>(parent);
 	for (int i = 0; i < 8; i++) {
 		m_pChilds[i] = 0;
 	}
@@ -51,19 +51,17 @@ OctreeByMatNode::OctreeByMatNode (OctreeByMatNode *parent, vec3 bbMin, vec3 bbMa
 
 OctreeByMatNode::~OctreeByMatNode(void)
 {
-	for (int i = 0; i < 8; i++) {
-		delete m_pChilds[i];
-	}
+	//for (int i = 0; i < 8; i++) {
+	//	delete m_pChilds[i];
+	//}
 }
 
 
 void 
 OctreeByMatNode::getMaterialNames(std::set<std::string> *nameList)
 {
-	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
-
-	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 
-		nameList->insert(iter->first);
+	for (auto &so: m_pLocalMeshes) 
+		nameList->insert(so.first);
 
 	for (int i = 0; i < 8 ; i++) {
 		if (m_pChilds[i])
@@ -75,9 +73,8 @@ OctreeByMatNode::getMaterialNames(std::set<std::string> *nameList)
 void 
 OctreeByMatNode::tightBoundingVolume() {
 
-	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
-	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 
-		m_TightBoundingVolume.calculate ((iter->second)->getRenderable().getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))));
+	for (auto &so: m_pLocalMeshes) 
+		m_TightBoundingVolume.calculate ((so.second)->getRenderable()->getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))));
 
 	for (int i = TOPFRONTLEFT; i < ROOT; i++) {
 	
@@ -91,9 +88,8 @@ OctreeByMatNode::tightBoundingVolume() {
 void 
 OctreeByMatNode::updateNodeTransform(nau::math::mat4 &t)
 {
-	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
-	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 
-		iter->second->updateGlobalTransform(t);
+	for (auto &so : m_pLocalMeshes)
+		so.second->updateGlobalTransform(t);
 
 	for (int i = TOPFRONTLEFT; i < ROOT; i++) {
 	
@@ -108,9 +104,8 @@ OctreeByMatNode::updateNodeTransform(nau::math::mat4 &t)
 void 
 OctreeByMatNode::unitize(vec3 &center, vec3 &min, vec3 &max) {
 	
-	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
-	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) 
-		iter->second->unitize(center, min, max);
+	for (auto &so : m_pLocalMeshes)
+		so.second->unitize(center, min, max);
 
 	for (int i = OctreeByMatNode::TOPFRONTLEFT; i < OctreeByMatNode::ROOT;  i++) {
 	
@@ -138,7 +133,7 @@ OctreeByMatNode::getName() {
 
 
 void 
-OctreeByMatNode::setRenderable (nau::render::IRenderable *aRenderable)
+OctreeByMatNode::setRenderable (std::shared_ptr<nau::render::IRenderable> &aRenderable)
 {
 	m_pLocalMeshes.clear();
 
@@ -153,11 +148,11 @@ OctreeByMatNode::setRenderable (nau::render::IRenderable *aRenderable)
 
 		if (vIndexData->size() > 0) {
 		
-			SceneObject *so = SceneObjectFactory::Create("SimpleObject");
+			std::shared_ptr<SceneObject> &so = SceneObjectFactory::Create("SimpleObject");
 			so->setName(m_Name+"::"+pMaterialGroup->getMaterialName());
 
 			m_pLocalMeshes[pMaterialGroup->getMaterialName()] = so;
-			Mesh *m = (Mesh *)RESOURCEMANAGER->createRenderable("Mesh", m_Name+"::"+pMaterialGroup->getMaterialName());
+			std::shared_ptr<IRenderable> &m = RESOURCEMANAGER->createRenderable("Mesh", m_Name+"::"+pMaterialGroup->getMaterialName());
 
 			m->addMaterialGroup(pMaterialGroup, aRenderable); 
 			so->setRenderable(m);
@@ -186,23 +181,22 @@ OctreeByMatNode::_unifyLocalMeshes() {
 				m_pChilds[index]->_unifyLocalMeshes();
 	}
 
-	OctreeByMatNode *aux;
 	// for each leaf
 	for (int index = TOPFRONTLEFT; index <= BOTTOMBACKRIGHT; index++) {
 
-		aux = m_pChilds[index];
+		std::shared_ptr<OctreeByMatNode> &aux = m_pChilds[index];
 		if (aux) {
-			std::map<std::string, nau::scene::SceneObject *>::iterator iter,iter2;
+			std::map<std::string, std::shared_ptr<SceneObject>>::iterator iter,iter2;
 			iter = aux->m_pLocalMeshes.begin();
 
 			while(  iter != aux->m_pLocalMeshes.end() ) {
 		
-				if (iter->second->getRenderable().getNumberOfVertices()/3 < 8000) {
+				if (iter->second->getRenderable()->getNumberOfVertices()/3 < 8000) {
 
 					if (!m_pLocalMeshes.count(iter->first))
 						m_pLocalMeshes[iter->first] = SceneObjectFactory::Create("SimpleObject");
 
-					m_pLocalMeshes[iter->first]->getRenderable().addMaterialGroup((iter->second->getRenderable().getMaterialGroups())[0], &(iter->second->getRenderable()));
+					m_pLocalMeshes[iter->first]->getRenderable()->addMaterialGroup((iter->second->getRenderable()->getMaterialGroups())[0], iter->second->getRenderable());
 
 					aux->m_pLocalMeshes.erase(iter++);
 				}
@@ -221,8 +215,8 @@ OctreeByMatNode::_split() {
 
 	int vertexArrayPos = VertexData::GetAttribIndex(std::string("position"));
 	int offSet;
-	std::map<std::string, nau::scene::SceneObject *>::iterator matIter;
-	SceneObject *s;
+	std::map<std::string, std::shared_ptr<SceneObject>>::iterator matIter;
+	
 	std::string name;
 
 	// do the splitting for each material 
@@ -231,12 +225,12 @@ OctreeByMatNode::_split() {
 	for ( ; matIter != m_pLocalMeshes.end(); matIter++) {
 
 		std::shared_ptr<MaterialGroup> tempMaterialGroup[9] = { 0 };
-		SceneObject *tempSO[9] = { 0 };
+		std::shared_ptr<SceneObject> tempSO[9] = { 0 };
 
 		name = matIter->first;
-		s = matIter->second;
+		std::shared_ptr<SceneObject> &s = matIter->second;
 
-		IRenderable *r = m_pLocalMeshes[name]->_getRenderablePtr();
+		std::shared_ptr<IRenderable> &r = m_pLocalMeshes[name]->getRenderable();
 		std::shared_ptr<MaterialGroup> &pMaterialGroup = r->getMaterialGroups()[0];
 
 		// if needs to be splitted
@@ -294,7 +288,7 @@ OctreeByMatNode::_split() {
 					if (0 == tempSO[index]) {
 						stringstream s;
 						s << r->getName() << "." << index;
-						Mesh *m = (Mesh *)RESOURCEMANAGER->createRenderable("Mesh", s.str()); //new Mesh;
+						std::shared_ptr<IRenderable> &m = RESOURCEMANAGER->createRenderable("Mesh", s.str()); //new Mesh;
 						tempSO[index] = SceneObjectFactory::Create("SimpleObject");
 						tempSO[index]->setName(s.str());
 						tempSO[index]->setRenderable(m);
@@ -314,9 +308,8 @@ OctreeByMatNode::_split() {
 			}
 
 			if (0 != tempSO[ROOT]) {
-				SceneObject *so = m_pLocalMeshes[name];
+				std::shared_ptr<SceneObject> &so = m_pLocalMeshes[name];
 				RESOURCEMANAGER->removeRenderable(so->getName());
-				delete so;
 				m_pLocalMeshes[name] = tempSO[ROOT];
 			}
 		}
@@ -381,7 +374,7 @@ OctreeByMatNode::_octantFor (VertexAttrib& v)
 }
 
 
-OctreeByMatNode*
+std::shared_ptr<OctreeByMatNode> 
 OctreeByMatNode::_createChild (int octant)
 {
 	vec3 bbMin;
@@ -475,7 +468,7 @@ OctreeByMatNode::_createChild (int octant)
 	}
 	
 	this->m_ChildCount++;
-	return new OctreeByMatNode (this, bbMin, bbMax, octant, m_NodeDepth + 1);
+	return std::shared_ptr<OctreeByMatNode>(new OctreeByMatNode (this, bbMin, bbMax, octant, m_NodeDepth + 1));
 }
 
 
@@ -483,12 +476,11 @@ void
 OctreeByMatNode::_compile (void)
 {
 
-	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
-	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter)  {
+	for (auto &so: m_pLocalMeshes)  {
 
-		iter->second->getRenderable().getVertexData()->compile();
+		so.second->getRenderable()->getVertexData()->compile();
 
-		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = iter->second->getRenderable().getMaterialGroups();
+		std::vector<std::shared_ptr<MaterialGroup>> &matGroups = so.second->getRenderable()->getMaterialGroups();
 
 		for (auto &matGroupsIter: matGroups){
 			matGroupsIter->compile();
@@ -504,26 +496,24 @@ OctreeByMatNode::_compile (void)
 
 
 void 
-OctreeByMatNode::getAllSceneObjects (std::vector<SceneObject*> &m_vReturnVector)
-{
+OctreeByMatNode::getAllSceneObjects (std::vector<std::shared_ptr<SceneObject>> *returnVector) {
 
 	// for each scene object in the node, check if its in and add it
-	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
-	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) {
-			m_vReturnVector.push_back(iter->second);
+	for (auto &so: m_pLocalMeshes) {
+		returnVector->push_back(so.second);
 	}
 
 	// recurse for children
 	for (int i = TOPFRONTLEFT; i <= BOTTOMBACKRIGHT; i++) {
 		if (0 != m_pChilds[i]) {
-			m_pChilds[i]->getAllSceneObjects (m_vReturnVector);	
+			m_pChilds[i]->getAllSceneObjects (returnVector);
 		}
 	}
 }
 
 
 void 
-OctreeByMatNode::_findVisibleSceneObjects (std::vector<SceneObject*> &m_vReturnVector,
+OctreeByMatNode::_findVisibleSceneObjects (std::vector<std::shared_ptr<SceneObject>> *returnVector,
 																Frustum &aFrustum, 
 																Camera &aCamera,
 																bool conservative)
@@ -538,67 +528,51 @@ OctreeByMatNode::_findVisibleSceneObjects (std::vector<SceneObject*> &m_vReturnV
 	}
 
 	// for each scene object in the node, check if its in and add it
-	std::map<std::string, nau::scene::SceneObject *>::iterator iter;
-	for (iter = m_pLocalMeshes.begin(); iter != m_pLocalMeshes.end(); ++iter) {
-		side = aFrustum.isVolumeInside (iter->second->getBoundingVolume());
+	for (auto &so : m_pLocalMeshes) {
+		side = aFrustum.isVolumeInside (so.second->getBoundingVolume());
 		if (Frustum::OUTSIDE != side)
-			m_vReturnVector.push_back(iter->second);
+			returnVector->push_back(so.second);
 	}
 
 	// recurse for children
 	for (int i = TOPFRONTLEFT; i <= BOTTOMBACKRIGHT; i++) {
 		if (0 != m_pChilds[i]) {
-			m_pChilds[i]->_findVisibleSceneObjects (m_vReturnVector, aFrustum, aCamera, conservative);	
+			m_pChilds[i]->_findVisibleSceneObjects (returnVector, aFrustum, aCamera, conservative);	
 		}
 	}
 }
 
 
-OctreeByMatNode*
-OctreeByMatNode::_getChild (int i) 
-{
+std::shared_ptr<OctreeByMatNode> &
+OctreeByMatNode::_getChild (int i) {
 	return m_pChilds[i];
 }
 
+
 void 
-OctreeByMatNode::_setChild (int i, OctreeByMatNode *aNode)
-{
+OctreeByMatNode::_setChild (int i, std::shared_ptr<OctreeByMatNode> &aNode) {
+
 	m_pChilds[i] = aNode;
 }
 
 
 void
-OctreeByMatNode::_setParent (OctreeByMatNode *parent)
-{
+OctreeByMatNode::_setParent (std::shared_ptr<OctreeByMatNode> &parent) {
+
 	m_pParent = parent;
 }
 
+
 int
-OctreeByMatNode::_getChildCount (void)
-{
+OctreeByMatNode::_getChildCount (void) {
+
 	return m_ChildCount;
-}
-
-void 
-OctreeByMatNode::writeSpecificData (std::fstream &f)
-{
-	f.write ((char *)&m_ChildCount, sizeof (m_ChildCount));
-	f.write ((char *)&m_NodeId, sizeof (m_NodeId));
-	f.write ((char *)&m_NodeDepth, sizeof (m_NodeDepth));
-}
-
-void 
-OctreeByMatNode::readSpecificData (std::fstream &f)
-{
-	f.read ((char *)&m_ChildCount, sizeof (m_ChildCount));
-	f.read ((char*)&m_NodeId, sizeof (int));
-	f.read ((char*)&m_NodeDepth, sizeof (int));
 }
 
 
 std::string
-OctreeByMatNode::_genOctName (void)
-{
+OctreeByMatNode::_genOctName (void) {
+
 	char name[256];
 
 	sprintf (name, "oct%d", rand());

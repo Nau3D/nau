@@ -84,12 +84,10 @@ ScenePoses::addAnimTrack(std::string aName, unsigned int meshIndex) {
 void
 ScenePoses::setPose(int index) {
 
-	MeshPose *mp;
-
 	unsigned int numScenes = (unsigned int)m_SceneObjects.size();
 	for (unsigned int i = 0; i < numScenes; i++) {
 		
-		mp = (MeshPose *)m_SceneObjects[i];
+		std::shared_ptr<MeshPose> &mp = dynamic_pointer_cast<MeshPose>(m_SceneObjects[i]);
 		mp->setPose(i);
 	}
 }
@@ -98,12 +96,10 @@ ScenePoses::setPose(int index) {
 void
 ScenePoses::setPose(std::string name) {
 
-	MeshPose *mp;
-
 	unsigned int numScenes = (unsigned int)m_SceneObjects.size();
 	for (unsigned int i = 0; i < numScenes; i++) {
 		
-		mp = (MeshPose *)m_SceneObjects[i];
+		std::shared_ptr<MeshPose> &mp = dynamic_pointer_cast<MeshPose>(m_SceneObjects[i]);
 		mp->setPose(name);
 	}
 }
@@ -126,8 +122,8 @@ ScenePoses::setRelativeTime(std::string aAnim, float time) {
 		MeshPoseAnim mpa = m_Anims[aAnim];
 
 		for (unsigned int i = 0; i < m_SceneObjects.size(); i++) {
-		
-			((MeshPose *)m_SceneObjects[i]->_getRenderablePtr())->setPose(mpa.getInfluences(i,time * mpa.getLength()));
+			std::shared_ptr<MeshPose> mp = std::dynamic_pointer_cast<MeshPose>(m_SceneObjects[i]->getRenderable());
+			mp->setPose(mpa.getInfluences(i,time * mpa.getLength()));
 		} 
 	}
 }

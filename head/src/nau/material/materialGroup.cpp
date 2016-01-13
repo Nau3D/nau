@@ -14,7 +14,7 @@ using namespace nau::math;
 
 
 std::shared_ptr<MaterialGroup>
-MaterialGroup::Create(nau::render::IRenderable *parent, std::string materialName) {
+MaterialGroup::Create(IRenderable *parent, std::string materialName) {
 
 #ifdef NAU_OPENGL
 	return std::shared_ptr<MaterialGroup>(new GLMaterialGroup(parent, materialName));
@@ -42,9 +42,9 @@ MaterialGroup::~MaterialGroup() {
 
 
 void
-MaterialGroup::setParent(IRenderable* parent) {
+MaterialGroup::setParent(std::shared_ptr<nau::render::IRenderable> &parent) {
 
-	this->m_Parent = parent;
+	this->m_Parent = parent.get();
 }
 
 

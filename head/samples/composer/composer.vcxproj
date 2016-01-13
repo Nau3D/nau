@@ -727,6 +727,7 @@
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Xdcmake>
       <DocumentLibraryDependencies>false</DocumentLibraryDependencies>
