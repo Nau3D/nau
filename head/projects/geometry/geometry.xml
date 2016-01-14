@@ -21,6 +21,11 @@
 					<SCALE x=5 y=5 z =5 />
 				</geometry>
 			</scene>
+			<scene name="Testing">
+				<terrain name = "terrain" heightMap ="fractalNoise.jpg"  >
+					<SCALE x=0.1 y=0.1 z =0.1 />
+				</terrain>
+			</scene>
 			
 		</scenes>
 		
@@ -59,6 +64,7 @@
 				<scenes>
 					<scene name="CubeLand" />
 					<scene name="Axis" />
+					<scene name="Testing" />
 				</scenes>
 				<camera name="MainCamera" />
 				<viewport name="MainViewport" />

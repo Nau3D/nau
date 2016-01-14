@@ -23,7 +23,7 @@ namespace nau
 		public:
 			~DevILTextureLoader (void);
 
-			int loadImage (std::string file);
+			int loadImage (std::string file, bool convertToRGBA = true);
 			unsigned char* getData (void);
 			int getWidth (void);
 			int getHeight (void);
@@ -31,8 +31,9 @@ namespace nau
 			std::string getType (void);
 			void freeImage (void);
 
+			virtual void convertToFloatLuminance();
+				
 			void save(ITexImage *ti, std::string filename);
-
 			void save(int width, int height, unsigned char *data, std::string filename);
 
 

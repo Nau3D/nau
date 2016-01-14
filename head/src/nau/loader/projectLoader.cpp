@@ -11,6 +11,7 @@
 #include "nau/event/sensorfactory.h"
 
 #include "nau/geometry/primitive.h"
+#include "nau/geometry/terrain.h"
 #include "nau/material/iBuffer.h"
 #include "nau/material/programValue.h"
 #include "nau/material/uniformBlockManager.h"
@@ -30,6 +31,7 @@
 
 #include "nau/scene/geometricObject.h"
 #include "nau/scene/sceneObjectFactory.h"
+
 
 #include "nau/system/TextUtil.h"
 
@@ -942,6 +944,58 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 				is->add(dynamic_pointer_cast<SceneObject>(go));
 			}
+			pElementAux = handle.FirstChild("terrain").Element();
+			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("terrain")) {
+				const char *pNameSO = pElementAux->Attribute("name");
+				const char *pMaterial = pElementAux->Attribute("material");
+				const char *pHeightMap = pElementAux->Attribute("heightMap");
+
+				if (pNameSO == NULL)
+					NAU_THROW("File %s\nScene %s\nTerrain object without a name", ProjectLoader::s_File.c_str(), pName);
+
+				std::shared_ptr<GeometricObject> go =
+					dynamic_pointer_cast<GeometricObject>(nau::scene::SceneObjectFactory::Create("Geometry"));
+
+				go->setName(pNameSO);
+
+				bool alreadyThere = false;
+				std::shared_ptr<nau::geometry::Terrain> p;
+				if (RESOURCEMANAGER->hasRenderable(pNameSO, "")) {
+					alreadyThere = true;
+					p = dynamic_pointer_cast<Terrain>(RESOURCEMANAGER->getRenderable(pNameSO, ""));
+				}
+				else {
+					p = dynamic_pointer_cast<Terrain>(RESOURCEMANAGER->createRenderable("Terrain", pNameSO));
+				}
+
+				if (!alreadyThere) {
+					AttribSet *as = NAU->getAttribs("TERRAIN");
+					if (as != NULL) {
+						std::vector <std::string> excluded;
+						excluded.push_back("name"); excluded.push_back("heightMap"); excluded.push_back("material");
+						readAttributes(pName, (AttributeValues *)p.get(), *as, excluded, pElementAux);
+					}
+					if (!File::Exists(File::GetFullPath(ProjectLoader::s_Path, pHeightMap)))
+						NAU_THROW("File %s\nScene %s\nTerrain heightmap does not exist", ProjectLoader::s_File.c_str(), pName);
+					p->setHeightMap(File::GetFullPath(ProjectLoader::s_Path, pHeightMap));
+					p->build();
+				}
+				go->setRenderable(dynamic_pointer_cast<IRenderable>(p));
+
+				if (!alreadyThere) {
+					if (pMaterial) {
+						if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME, pMaterial)) {
+							MATERIALLIBMANAGER->createMaterial(pMaterial);
+						}
+						go->setMaterial(pMaterial);
+					}
+				}
+
+				std::vector<std::string> excluded;
+				readChildTags(pNameSO, (AttributeValues *)go.get(), SceneObject::Attribs, excluded, pElementAux);
+
+				is->add(dynamic_pointer_cast<SceneObject>(go));
+			}
 
 			pElementAux = handle.FirstChild("buffers").Element();
 			std::string primString;
@@ -1053,9 +1107,9 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					closedir(dir);
 				}
 			}
-			std::vector<std::string> excluded;
-			excluded.push_back("file"); excluded.push_back("folder");
-			excluded.push_back("geometry"); excluded.push_back("buffers");
+			std::vector<std::string> excluded = {"file", "folder", "geometry", "terrain", "buffers"};
+//			excluded.push_back("file"); excluded.push_back("folder");
+//			excluded.push_back("geometry"); excluded.push_back("buffers");
 			readChildTags(pName, (AttributeValues *)is.get(), IScene::Attribs, excluded, pElem);
 		}
 		if (pParam) {

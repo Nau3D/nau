@@ -53,7 +53,7 @@ ITextureLoader::Save(int width, int height, unsigned char *data, std::string fil
 		timeinfo = localtime(&rawtime);
 		float k = (float)clock();
 		strftime(buffer, 80, "%Y-%m-%d_%H-%M-%S", timeinfo);
-		sprintf(buffer2, "%s.%f.png", buffer, k);
+		sprintf(buffer2, "%s.%f.jpg", buffer, k);
 		filename = std::string(buffer2);
 	}
 

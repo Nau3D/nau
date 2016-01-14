@@ -266,7 +266,7 @@ void DlgScenes::OnPropsChange( wxPropertyGridEvent& e) {
 	std::string topProp = std::string(name.substr(0, dotLocation).mb_str());
 	std::string prop = std::string(name.substr(dotLocation + 1, name.size() - dotLocation - 1).mb_str());
 
-	PropertyManager::updateProp(m_PG, name.ToStdString(), IScene::Attribs, (AttributeValues *)scene.get());
+	PropertyManager::updateProp(m_PG, topProp, IScene::Attribs, (AttributeValues *)scene.get());
 
 }
 

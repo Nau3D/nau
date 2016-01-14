@@ -127,7 +127,7 @@ CBOLoader::_readVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstre
 
 
 void
-CBOLoader::_readIndexData (std::shared_ptr<nau::geometry::IndexData>& aVertexData, std::fstream &f) {
+CBOLoader::_readIndexData (std::shared_ptr<nau::geometry::IndexData>& anIndexData, std::fstream &f) {
 
 	unsigned int siz;
 	unsigned int countFilledArrays;
@@ -141,7 +141,7 @@ CBOLoader::_readIndexData (std::shared_ptr<nau::geometry::IndexData>& aVertexDat
 
 		f.read (reinterpret_cast<char *> (&(*aNewVector)[0]), siz * sizeof (unsigned int));
 
-		aVertexData->setIndexData (aNewVector);
+		anIndexData->setIndexData (aNewVector);
 	}
 }
 

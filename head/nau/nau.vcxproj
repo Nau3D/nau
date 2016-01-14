@@ -473,6 +473,7 @@
     <ClCompile Include="..\src\nau\geometry\poseOffset.cpp" />
     <ClCompile Include="..\src\nau\geometry\skeletonAnim.cpp" />
     <ClCompile Include="..\src\nau\geometry\skeletonBone.cpp" />
+    <ClCompile Include="..\src\nau\geometry\terrain.cpp" />
     <ClCompile Include="..\src\nau\geometry\vertexData.cpp" />
     <ClCompile Include="..\src\nau\loader\assimpLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\cboLoader.cpp" />
@@ -700,6 +701,7 @@
     <ClInclude Include="..\src\nau\geometry\skeletonAnim.h" />
     <ClInclude Include="..\src\nau\geometry\skeletonBone.h" />
     <ClInclude Include="..\src\nau\geometry\square.h" />
+    <ClInclude Include="..\src\nau\geometry\terrain.h" />
     <ClInclude Include="..\src\nau\geometry\vertexData.h" />
     <ClInclude Include="..\src\nau\loader\assimpLoader.h" />
     <ClInclude Include="..\src\nau\loader\cboLoader.h" />

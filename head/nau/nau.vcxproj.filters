@@ -529,6 +529,9 @@
     <ClCompile Include="..\src\nau\material\colorMaterial.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\geometry\terrain.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1058,6 +1061,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\event\iListener.h">
       <Filter>Source Files\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\geometry\terrain.h">
+      <Filter>Source Files\geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

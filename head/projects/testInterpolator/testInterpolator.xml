@@ -11,8 +11,9 @@
 				<geometry name = "box" type = "BOX"  material="crateBox" >
 					<TRANSLATE x =2.5 y=0 z =0  />
 					<ROTATE x=0 y=1 z=0 w=45 />
-
 				</geometry>
+			</scene>
+			<scene name="Axis">
 				<geometry name = "axis" type = "AXIS" scale = 5 />
 			</scene>
 		</scenes>

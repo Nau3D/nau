@@ -12,8 +12,9 @@ using namespace nau::system;
 
 bool DevILTextureLoader::inited = false;
 
-DevILTextureLoader::DevILTextureLoader(void)
-{
+
+DevILTextureLoader::DevILTextureLoader(void) {
+
 	if (!DevILTextureLoader::inited) {
 		ilInit();
 		DevILTextureLoader::inited = true;
@@ -22,29 +23,47 @@ DevILTextureLoader::DevILTextureLoader(void)
 	ilGenImages (1, &m_IlId);
 }
 
-DevILTextureLoader::~DevILTextureLoader(void)
-{
+DevILTextureLoader::~DevILTextureLoader(void) {
+
 	ilDeleteImage(m_IlId);
 }
 
 int 
-DevILTextureLoader::loadImage (std::string file)
-{
+DevILTextureLoader::loadImage (std::string file, bool convertToRGBA) {
+
 	ilBindImage(m_IlId);
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_LOWER_LEFT); 
 	ILstring ils = (ILstring)(file.c_str());
 	int success = ilLoadImage((ILstring)(file.c_str()));
-	if (success)
-		ilConvertImage(IL_RGBA,IL_UNSIGNED_BYTE);
+	if (success && convertToRGBA) {
+		ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+		return success;
+	}
+	// if format not supported convert to the closest supported format
+	int format = ilGetInteger(IL_IMAGE_FORMAT);
+	int type = ilGetInteger(IL_IMAGE_TYPE);
+	if (type == IL_HALF)
+		type = IL_FLOAT;
+	switch (format) {
+	case IL_BGR: ilConvertImage(IL_RGB, type);
+		break;
+	case IL_BGRA: ilConvertImage(IL_RGBA, type);
+		break;
+	case IL_COLOR_INDEX: ilConvertImage(IL_RGBA, type);
+		break;
+	default:
+		if (type != ilGetInteger(IL_IMAGE_TYPE))
+			ilConvertImage(format, type);
+	}
 
-	return(success); 
-	
+	return success; 	
 }
 
+
 unsigned char* 
-DevILTextureLoader::getData (void)
-{
+DevILTextureLoader::getData (void) {
+
 	if (m_IlId > 0) {
 		ilBindImage(m_IlId);
 		return(ilGetData());
@@ -54,9 +73,10 @@ DevILTextureLoader::getData (void)
 	}
 }
 
+
 int 
-DevILTextureLoader::getWidth (void)
-{
+DevILTextureLoader::getWidth (void) {
+
 	if (m_IlId > 0) {
 		ilBindImage(m_IlId);
 		return(ilGetInteger(IL_IMAGE_WIDTH));
@@ -66,9 +86,10 @@ DevILTextureLoader::getWidth (void)
 	}
 }
 
+
 int 
-DevILTextureLoader::getHeight (void)
-{
+DevILTextureLoader::getHeight (void) {
+
 	if (m_IlId > 0) {
 		ilBindImage(m_IlId);
 		return(ilGetInteger(IL_IMAGE_HEIGHT));
@@ -78,24 +99,66 @@ DevILTextureLoader::getHeight (void)
 	}
 }
 
+
 std::string 
-DevILTextureLoader::getFormat (void)
-{
-	/***MARK***/
-	return "RGBA";
-}
-			
-std::string
-DevILTextureLoader::getType (void)
-{
-	/***MARK***/
-	return "UNSIGNED_BYTE";
+DevILTextureLoader::getFormat (void) {
+
+	int format;
+	ilBindImage(m_IlId);
+	format = ilGetInteger(IL_IMAGE_FORMAT);
+	// the values returned can be found in GLTexture.cpp
+
+	switch (format) {
+
+	case IL_RGBA: return "RGBA";
+	case IL_RGB: return "RGB";
+	case IL_LUMINANCE: 
+	case IL_ALPHA:
+		return "RED";
+	case IL_LUMINANCE_ALPHA:
+		return "RG";
+	default:
+		assert(false && "DevilTextureLoader Issue in getFormat");
+		return "RGBA";
+	}
 }
 
+			
+std::string
+DevILTextureLoader::getType (void) {
+
+	int type;
+	ilBindImage(m_IlId);
+	type = ilGetInteger(IL_IMAGE_TYPE);
+	switch (type) {
+	case IL_BYTE: return "BYTE";
+	case IL_UNSIGNED_BYTE: return "UNSIGNED_BYTE";
+	case IL_SHORT: return "SHORT";
+	case IL_UNSIGNED_SHORT: return "UNSIGNED_SHORT";
+	case IL_INT: return "INT";
+	case IL_UNSIGNED_INT   : return "UNSIGNED_INT";
+	case IL_FLOAT          : return "FLOAT";
+	case IL_DOUBLE         : return "DOUBLE";
+	default:
+		assert(false && "DevilTextureLoader Issue in getType");
+		return "RGBA";
+	}
+//	return "UNSIGNED_BYTE";
+}
+
+
 void 
-DevILTextureLoader::freeImage (void)
-{
-	/***MARK***/
+DevILTextureLoader::convertToFloatLuminance() {
+
+	ilBindImage(m_IlId);
+	ilConvertImage(IL_LUMINANCE, IL_FLOAT);
+}
+
+
+void 
+DevILTextureLoader::freeImage (void) {
+
+	ilDeleteImage(m_IlId);
 }
 
 
@@ -151,9 +214,6 @@ DevILTextureLoader::save(ITexImage *ti, std::string filename) {
 		ilDeleteImage(image);
 	}
 }
-
-
-
 
 
 ILuint 

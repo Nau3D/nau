@@ -32,7 +32,7 @@ namespace nau
 			static void _writeVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstream &f) ;
 			static void _readVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstream &f);
 			static void _writeIndexData (std::shared_ptr<IndexData>& aVertexData, std::fstream &f) ;
-			static void _readIndexData (std::shared_ptr<IndexData>& aVertexData, std::fstream &f);
+			static void _readIndexData (std::shared_ptr<IndexData>& anIndexData, std::fstream &f);
 			//static void _ignoreVertexData (std::fstream &f);
 			static void _writeString (const std::string& aString, std::fstream &f);
 			static void _readString ( char *buffer, std::fstream &f);

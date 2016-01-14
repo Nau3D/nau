@@ -157,22 +157,31 @@ GLTexture::InitGL() {
 	
 		Attribs.listAdd("INTERNAL_FORMAT", f.second.name,		(int)f.first);
 	}
+	NauInt def;
+	def = NauInt((int)GL_RGBA8);
+	Attribs.setDefault("INTERNAL_FORMAT", def);
 
 	for (auto f:TexFormat) {
 
 		Attribs.listAdd("FORMAT", f.second.name,		(int)f.first);
 	}
+	def = NauInt((int)GL_RGBA);
+	Attribs.setDefault("FORMAT", def);
 
 	for (auto f:TexDataType) {
 
 		Attribs.listAdd("TYPE", f.second.name,		(int)f.first);
 	}
+	def = NauInt((int)GL_UNSIGNED_BYTE);
+	Attribs.setDefault("TYPE", def);
 
 	Attribs.listAdd("DIMENSION", "TEXTURE_2D", (int)GL_TEXTURE_2D);
 	Attribs.listAdd("DIMENSION", "TEXTURE_3D", (int)GL_TEXTURE_3D);
 	Attribs.listAdd("DIMENSION", "TEXTURE_2D_MULTISAMPLE_ARRAY" , (int)GL_TEXTURE_2D_MULTISAMPLE_ARRAY);
 	Attribs.listAdd("DIMENSION", "TEXTURE_2D_ARRAY" , (int)GL_TEXTURE_2D_ARRAY);
 	Attribs.listAdd("DIMENSION", "TEXTURE_2D_MULTISAMPLE" , (int)GL_TEXTURE_2D_MULTISAMPLE);
+	def = NauInt((int)GL_TEXTURE_2D);
+	Attribs.setDefault("DIMENSION", def);
 	return(true);
 };
 

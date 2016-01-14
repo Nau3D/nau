@@ -4,6 +4,7 @@
 #include "nau/geometry/sphere.h"
 #include "nau/geometry/square.h"
 #include "nau/geometry/axis.h"
+#include "nau/geometry/terrain.h"
 #include "nau/geometry/boundingBoxPrimitive.h"
 #include "nau/geometry/meshWithPose.h"
 #include "nau/geometry/meshBones.h"
@@ -365,6 +366,9 @@ ResourceManager::createRenderable(std::string type, std::string name, std::strin
 
 	else if ("BoundingBox" == type)
 		r = std::shared_ptr<nau::render::IRenderable>(new BBox());
+
+	else if ("Terrain" == type)
+		r = std::shared_ptr<nau::render::IRenderable>(new Terrain());
 	else
 		return NULL;
 
