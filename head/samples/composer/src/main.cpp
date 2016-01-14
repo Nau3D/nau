@@ -15,10 +15,6 @@
 #include <nau/debug/profile.h>
 #include <nau/render/iAPISupport.h>
 
-//#ifdef GLINTERCEPTDEBUG
-//#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
-//#endif
-
 #include <wx/bitmap.h>
 #include <wx/dir.h>
 #include <wx/filename.h>

@@ -55,9 +55,9 @@ ProgramValue::ProgramValue (std::string name, std::string type,
 
 ProgramValue::~ProgramValue () {
 
-	//if (m_Value) {
-	//	free (m_Value);
-	//	m_Value = NULL;
+	//if (m_Values) {
+	//	free (m_Values);
+	//	m_Values = NULL;
 	//}
 	//if (m_IntValue) {
 	//	free (m_IntValue);

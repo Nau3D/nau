@@ -14,15 +14,12 @@ namespace nau {
  
 		private:
 			std::string m_TypeString;
-			//SEMANTIC_TYPE m_Type;
 			int m_ValueOf;
 			std::string m_ValueOfString;
 			nau::Enums::DataType m_ValueType;
 			std::string m_Context, m_Name;
 			std::string m_Param;
 			void *m_Values = NULL;
-		//	float* m_Value;
-		//	int *m_IntValue;
 			int m_Cardinality = 0;
 			int m_Id = -1;
 			int m_Loc = -1;
@@ -49,15 +46,11 @@ namespace nau {
 			int getId();
 			void setId(int id);
 			nau::Enums::DataType getValueType ();
-//			SEMANTIC_TYPE getSemanticType();
 			int getSemanticValueOf();
-			//void setSemanticType(SEMANTIC_TYPE s);
 			void setSemanticValueOf(int s);
 			void setValueType(nau::Enums::DataType s);
 				
 			void setValueOfUniform(void *values);
-			//void setValueOfUniform(int *values);
-			//void setValueOfUniform (float *values);
 			void* getValues ();
 
 			void setLoc(int l);
