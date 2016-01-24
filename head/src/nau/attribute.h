@@ -130,7 +130,7 @@ namespace nau {
 		// -1 if attribute does not exist
 		int getID(std::string name);
 		const std::string &getName(int id, Enums::DataType dt);
-		void getPropTypeAndId(std::string &s, nau::Enums::DataType *dt, int *id);
+		void getPropTypeAndId(const std::string &s, nau::Enums::DataType *dt, int *id);
 
 		const std::vector<std::string> &getListString(int id);
 		const std::vector<int> &getListValues(int id);

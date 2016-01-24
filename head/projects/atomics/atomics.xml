@@ -28,11 +28,6 @@
 			</light>
 		</lights>
 		
-		<atomics>
-			<atomic buffer="atomics::test" offset=0 semantics="Red Pixels" />
-			<atomic buffer="atomics::test" offset=4 semantics="Green Pixels" />
-			<atomic buffer="atomics::test" offset=8 semantics="Blue Pixels" />
-		</atomics>	
 		
 		<materialLibs>
 			<materialLib filename="atomics.mlib"/>
@@ -65,4 +60,11 @@
 			</pass>
 		</pipeline>
 	</pipelines>
+	<interface>
+		<atomics>
+			<atomic buffer="atomics::test" offset=0 semantics="Red Pixels" />
+			<atomic buffer="atomics::test" offset=4 semantics="Green Pixels" />
+			<atomic buffer="atomics::test" offset=8 semantics="Blue Pixels" />
+		</atomics>	
+	</interface>
 </project>

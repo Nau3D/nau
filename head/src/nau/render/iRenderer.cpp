@@ -48,7 +48,9 @@ IRenderer::Init() {
 	Attribs.add(Attribute(LIGHT_COUNT, "LIGHT_COUNT", Enums::DataType::INT, true, new NauInt(0)));
 
 	// VEC2
-	Attribs.add(Attribute(MOUSE_CLICK, "MOUSE_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
+	Attribs.add(Attribute(MOUSE_LEFT_CLICK, "MOUSE_LEFT_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
+	Attribs.add(Attribute(MOUSE_MIDDLE_CLICK, "MOUSE_MIDDLE_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
+	Attribs.add(Attribute(MOUSE_RIGHT_CLICK, "MOUSE_RIGHT_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
 
 	//UINT		
 	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new NauUInt(0)));

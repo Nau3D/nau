@@ -19,7 +19,8 @@ int main(int argc, char **argv) {
 
 	std::map<std::string, Attribute> attrs;
 	AttribSet *a;
-	std::vector<std::string> contexts = NAU->getContextList();
+	std::vector<std::string> contexts;
+	NAU->getObjTypeList(&contexts);
 	std::vector<std::string> options;
 	Enums::DataType dt;
 

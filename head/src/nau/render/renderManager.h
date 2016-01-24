@@ -82,6 +82,7 @@ namespace nau
 			std::string getActivePipelineName();
 			//! Sets the named pipeline as the active pipeline for rendering purposes
 			void setActivePipeline (const std::string &pipelineName);
+			void setActivePipeline(int index);
 			//! Sets the named pipeline as the active pipeline for rendering purposes
 			void setActivePipeline (unsigned int index);
 			//! Returns the number of pipelines

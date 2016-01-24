@@ -1,5 +1,5 @@
-#ifndef GLINDEXARRAY_H
-#define GLINDEXARRAY_H
+#ifndef _NAU_GLINDEXARRAY_H
+#define _NAU_GLINDEXARRAY_H
 
 #include "nau/geometry/indexData.h"
 

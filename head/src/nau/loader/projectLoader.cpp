@@ -12,6 +12,7 @@
 
 #include "nau/geometry/primitive.h"
 #include "nau/geometry/terrain.h"
+#include "nau/interface/interface.h"
 #include "nau/material/iBuffer.h"
 #include "nau/material/programValue.h"
 #include "nau/material/uniformBlockManager.h"
@@ -615,6 +616,10 @@ Project Specification
 		...
 	</pipelines>
 
+	<interface>
+		...
+	</interface>
+
 </project>
 
 -------------------------------------------------------------------*/
@@ -673,13 +678,13 @@ ProjectLoader::load (std::string file, int *width, int *height)
 //#endif
 		loadAssets (hRoot, matLibs);
 		loadPipelines (hRoot);
+		loadInterface(hRoot);
 
 	}
 	catch(std::string &s) {
 		throw(s);
 	}
-	std::vector<std::string> v;
-	v.push_back("assets"); v.push_back("pipelines");
+	std::vector<std::string> v = { "assets" , "pipelines" , "interface"};
 	checkForNonValidChildTags("project", v, pElem);
 
 #if NAU_DEBUG == 1
@@ -733,7 +738,9 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 			NAU_THROW("File %s\nAttribute without a context", ProjectLoader::s_File.c_str());
 		}
 		if (!NAU->validateUserAttribContext(pContext)) {
-			nau::system::TextUtil::Join(NAU->getContextList(), delim.c_str(), &s);
+			std::vector<std::string> objTypes;
+			NAU->getObjTypeList(&objTypes);
+			nau::system::TextUtil::Join(objTypes, delim.c_str(), &s);
 			NAU_THROW("File %s\nAttribute with an invalid context %s\nValid Values are: \n%s", ProjectLoader::s_File.c_str(), pContext, s.c_str());
 		}
 		if (0 == pName) {
@@ -3324,7 +3331,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 
 
 	pElem = hRoot.FirstChild ("pipelines").FirstChild ("pipeline").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("pipeline")) {
 		const char *pNamePip = pElem->Attribute ("name");
 		const char *pDefaultCamera = pElem->Attribute("defaultCamera");
 
@@ -3465,6 +3472,93 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 	}
 	else {
 		RENDERMANAGER->setActivePipeline(0);
+	}
+
+}
+
+
+/* -----------------------------------------------------------------------------
+INTERFACE
+
+<interface>
+	<window name="bla"  label="My Bar">
+		<var label="direction" type="LIGHT" context="Sun" component="DIRECTION" option="DIRECTION"/>
+		<var label="darkColor" type="RENDERER" context="CURRENT" component="dark" option="COLOR" />
+		<pipelines />
+	<window>
+
+	<window ... >
+	</window>
+</interface>
+
+ ----------------------------------------------------------------------------- */
+
+void 
+ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
+
+	TiXmlElement *pElem;
+	TiXmlHandle handle(0);
+
+	char activePipeline[256];
+
+	memset(activePipeline, 0, 256);
+
+
+	handle = hRoot.FirstChild("interface");
+	loadAtomicSemantics(handle);
+
+	pElem = hRoot.FirstChild("interface").FirstChild("window").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("window")) {
+		const char *pWindowName = pElem->Attribute("name");
+		//const char *pWindowLabel = pElem->Attribute("label");
+
+		if (0 == pWindowName /*|| 0 == pWindowLabel*/) {
+			NAU_THROW("File %s\nInterface window needs a name", s_File.c_str());
+		}
+
+		INTERFACE->createWindow(pWindowName);// , pWindowLabel);
+
+		TiXmlElement *pElemAux = pElem->FirstChildElement();
+		for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
+
+			const char *tag = pElemAux->Value();
+			if (strcmp(tag, "pipelineList") == 0) {
+				const char *pLabel = pElemAux->Attribute("label");
+				if (0 == pLabel) {
+					NAU_THROW("File %s\nWindow %s, Pipeline list needs a label", s_File.c_str(), pWindowName);
+				}
+				INTERFACE->addPipelineList(pWindowName, pLabel);
+			}
+			if (strcmp(tag, "var") == 0) {
+				const char *pLabel = pElemAux->Attribute("label");
+				const char *pType = pElemAux->Attribute("type");
+				const char *pContext = pElemAux->Attribute("context");
+				const char *pComponent = pElemAux->Attribute("component");
+				const char *pControl = pElemAux->Attribute("option");
+				int id = 0;
+				pElemAux->QueryIntAttribute("id", &id);
+				if (0 == pLabel) {
+					NAU_THROW("File %s\nWindow %s, Variable needs a label", s_File.c_str(), pWindowName);
+				}
+				if (0 == pType || 0 == pContext || 0 == pComponent) {
+					NAU_THROW("File %s\nWindow %s, Variable %s\nVariable needs a type, a context and a component",
+						s_File.c_str(), pWindowName, pLabel);
+				}
+				if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
+					NAU_THROW("File %s\nWindow %s, Variable %s\nVariable not valid", 
+						s_File.c_str(), pWindowName, pLabel);
+				if (pControl) {
+					if (strcmp(pControl, "DIRECTION") == 0)
+						INTERFACE->addDir(pWindowName, pLabel, pType, pContext, pComponent, id);
+					else if (strcmp(pControl, "COLOR") == 0)
+						INTERFACE->addColor(pWindowName, pLabel, pType, pContext, pComponent, id);
+				}
+				else
+				INTERFACE->addVar(pWindowName, pLabel, pType, pContext, pComponent, id);
+			}
+
+		}
+
 	}
 
 }
@@ -4298,7 +4392,7 @@ ProjectLoader::loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, std::sha
 		const char *pStateName = pElemAux->Attribute ("name");
 		//definition by ref
 		if (0 == pStateName) {
-			NAU_THROW("MatLib %s\nMaterial %s\nState requires a name", aLib->getName().c_str(), aMat->getName().c_str());
+			NAU_THROW("MatLib %s\nMaterial %s\nState requires a name and must be previously defined", aLib->getName().c_str(), aMat->getName().c_str());
 		}
 		else {
 			std::string fullName = aLib->getName() + "::" + pStateName;
@@ -4307,6 +4401,10 @@ ProjectLoader::loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, std::sha
 
 			aMat->setState(RESOURCEMANAGER->getState(fullName));
 		}
+	}
+	else {
+		std::string fullName = aLib->getName() + "::" + aMat->getName();
+		aMat->setState(RESOURCEMANAGER->createState(fullName));
 	}
 }
 

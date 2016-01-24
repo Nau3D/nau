@@ -254,12 +254,25 @@ GLCanvas::OnKeyUp(wxKeyEvent & event) {
 void 
 GLCanvas::OnKeyDown(wxKeyEvent & event) {
 
+	int mod = 0;
+	if (true == event.ShiftDown()) 
+		mod |= Nau::KEY_MOD_SHIFT;
+	if (true == event.AltDown())
+		mod |= Nau::KEY_MOD_ALT;
+	if (true == event.ControlDown())
+		mod |= Nau::KEY_MOD_CTRL;
+
+	if (m_pEngine->keyPressed(event.GetKeyCode(), mod))
+		return;
+
+
 	static bool physics = true;
 
 	_setCamera();
 	if (0 == m_pCamera) {
 		return;
 	}
+
 
 	vec4 camPosition = m_pCamera->getPropf4(Camera::POSITION);
 	vec4 camUp = m_pCamera->getPropf4(Camera::UP_VEC);
@@ -494,6 +507,9 @@ GLCanvas::OnKeyDown(wxKeyEvent & event) {
 void 
 GLCanvas::OnMouseMove (wxMouseEvent& event) {
 
+	if (m_pEngine->mouseMotion(event.GetX(), event.GetY()))
+		return;
+
 	static bool first = true; // Can't be here!
 
 	if (event.ButtonIsDown (wxMOUSE_BTN_LEFT)) {
@@ -593,13 +609,17 @@ GLCanvas::OnMouseMove (wxMouseEvent& event) {
 void
 GLCanvas::OnMiddleUp(wxMouseEvent &event) {
 
-	m_pEngine->setClickPosition(event.GetX(), event.GetY());
+	if (m_pEngine->mouseButton(Nau::MouseAction::PRESSED, Nau::MouseButton::MIDDLE, event.GetX(), event.GetY()))
+		event.Skip();
 	event.Skip();
 }
 
 
 void
 GLCanvas::OnRightUp(wxMouseEvent &event) {
+
+	if (m_pEngine->mouseButton(Nau::MouseAction::RELEASED, Nau::MouseButton::RIGHT, event.GetX(), event.GetY()))
+		return;
 
 	m_tracking = false;
 	event.Skip();
@@ -609,6 +629,8 @@ GLCanvas::OnRightUp(wxMouseEvent &event) {
 void
 GLCanvas::OnRightDown(wxMouseEvent &event) {
 
+	if (m_pEngine->mouseButton(Nau::MouseAction::PRESSED, Nau::MouseButton::RIGHT, event.GetX(), event.GetY()))
+		return;
 	_setCamera();
 	if (m_pCamera) {
 		m_OldX = event.GetX();
@@ -636,6 +658,9 @@ GLCanvas::OnRightDown(wxMouseEvent &event) {
 void
 GLCanvas::OnLeftDown (wxMouseEvent& event) {
 
+	if (m_pEngine->mouseButton(Nau::MouseAction::PRESSED, Nau::MouseButton::LEFT, event.GetX(), event.GetY()))
+		event.Skip();
+
 	_setCamera();
 	if (m_pCamera) {
 		m_OldX = event.GetX();
@@ -656,6 +681,9 @@ GLCanvas::OnLeftDown (wxMouseEvent& event) {
 void
 GLCanvas::OnLeftUp (wxMouseEvent &event) {
 	
+	if (m_pEngine->mouseButton(Nau::MouseAction::RELEASED, Nau::MouseButton::LEFT, event.GetX(), event.GetY()))
+		event.Skip();
+
 	m_tracking = false;
 
 

@@ -85,7 +85,7 @@ namespace nau {
 		virtual bool validateUserAttribContext(std::string s) = 0;
 		virtual bool validateUserAttribName(std::string context, std::string name) = 0;
 		virtual AttribSet *getAttribs(std::string context) = 0;
-		virtual std::vector<std::string> &getContextList() = 0;
+		virtual void getObjTypeList(std::vector<std::string> *) = 0;
 
 		virtual nau::scene::Camera *getActiveCamera() = 0;
 
@@ -108,7 +108,6 @@ namespace nau {
 		virtual void setProjectName(std::string name) = 0;
 		virtual void loadAsset(std::string aFilename, std::string sceneName, std::string params = "") throw (std::string) = 0;
 
-		virtual void resetFrameCount() = 0;
 		virtual bool getTraceStatus() = 0;
 		virtual bool getRenderFlag(RenderFlags aFlag) = 0;
 

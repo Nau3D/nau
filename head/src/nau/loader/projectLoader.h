@@ -45,6 +45,8 @@ namespace nau
 			static void loadAssets (TiXmlHandle &hRoot, std::vector<std::string> &matLib);
 			// load the pipelines section
 			static void loadPipelines (TiXmlHandle &hRoots);
+			// load interface elements
+			static void loadInterface(TiXmlHandle &hRoots);
 
 			// check for tags that are not allowed
 			static void checkForNonValidChildTags(std::string parent, std::vector<std::string> &excluded, 

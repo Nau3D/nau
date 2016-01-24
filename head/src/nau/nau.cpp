@@ -3,7 +3,7 @@
 #include "nau/config.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
-//#include "nau/debug/state.h"
+#include "nau/interface/interface.h"
 #include "nau/event/eventFactory.h"
 #include "nau/loader/cboLoader.h"
 #include "nau/loader/iTextureLoader.h"
@@ -12,9 +12,6 @@
 #include "nau/loader/assimpLoader.h"
 #include "nau/loader/patchLoader.h"
 #include "nau/loader/projectLoader.h"
-//#ifdef GLINTERCEPTDEBUG
-//#include "nau/loader/projectLoaderDebugLinker.h"
-//#endif //GLINTERCEPTDEBUG
 #include "nau/material/uniformBlockManager.h"
 #include "nau/render/iAPISupport.h"
 #include "nau/render/passFactory.h"
@@ -34,15 +31,8 @@ extern "C" {
 }
 #endif
 
-#include <ctime>
 
-//// added for directory loading
-//#ifdef NAU_PLATFORM_WIN32
-//#include <dirent.h>
-//#else
-//#include <dirent.h>
-//#include <sys/types.h>
-//#endif
+#include <ctime>
 
 using namespace nau;
 using namespace nau::system;
@@ -55,24 +45,6 @@ using namespace nau::material;
 
 
 static nau::Nau *gInstance = 0;
-
-
-//bool
-//Nau::Init() {
-//
-//	// UINT
-//	Attribs.add(Attribute(FRAME_COUNT, "FRAME_COUNT", Enums::DataType::UINT, true, new unsigned int(0)));
-//	// FLOAT
-//	Attribs.add(Attribute(TIMER, "TIMER", Enums::DataType::FLOAT, false, new bool(false)));
-//
-//	NAU->registerAttributes("NAU", &Attribs);
-//
-//	return true;
-//}
-//
-//
-//AttribSet Nau::Attribs;
-//bool Nau::Inited = Init();
 
 
 nau::Nau*
@@ -107,7 +79,6 @@ Nau::SetInstance(Nau * inst) {
 Nau::Nau() :
 	m_WindowWidth (0), 
 	m_WindowHeight (0), 
-//	m_vViewports(),
 	m_Inited (false),
 	m_Physics (false),
 	loadedScenes(0),
@@ -117,8 +88,6 @@ Nau::Nau() :
 	m_UseTangents(false),
 	m_UseTriangleIDs(false),
 	m_CoreProfile(false),
-	isFrameBegin(true), 
-	m_DummyVector(),
 	m_pRenderManager(NULL),
 	m_pMaterialLibManager(NULL),
 	m_pResourceManager(NULL),
@@ -212,8 +181,11 @@ Nau::init (bool context, std::string aConfigFile) {
 #endif
 	PASSFACTORY->loadPlugins();
 
+//	TwInit(TW_OPENGL_CORE, NULL);
+
 	return true;
 }
+
 
 
 const std::string &
@@ -237,24 +209,14 @@ Nau::getName() {
 }
 
 
-//float 
-//Nau::getPropf(FloatProperty prop) {
-//
-//	switch (prop) {
-//	case TIMER:
-//		CLOCKS_PER_MILISEC = CLOCKS_PER_SEC / 1000.0;
-//		INV_CLOCKS_PER_MILISEC = 1.0 / CLOCKS_PER_MILISEC;
-//		m_FloatProps[TIMER] = clock() * INV_CLOCKS_PER_MILISEC;
-//		return m_FloatProps[TIMER];
-//
-//	default:return(AttributeValues::getPropf(prop));
-//	}
-//
-//}
+// ----------------------------------------------------
+//		Profiling
+// ----------------------------------------------------
 
 
 void
 Nau::setProfileResetRequest() {
+
 	m_ProfileResetRequest = true;
 }
 
@@ -267,6 +229,7 @@ Nau::getProfileResetRequest() {
 	return aux;
 }
 
+#pragma region LuaStuff
 // ----------------------------------------------------
 //		Lua Stuff
 // ----------------------------------------------------
@@ -658,7 +621,7 @@ Nau::callLuaTestScript(std::string name) {
 #endif
 
 
-
+#pragma endregion
 
 
 
@@ -770,7 +733,7 @@ Nau::getObjectAttributes(std::string &type, std::string &context, int number) {
 		mat = context.substr(found + 2);
 	}
 
-	if (type == "COLOR_MATERIAL") {
+	if (type == "COLOR") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)&(m_pMaterialLibManager->getMaterial(lib, mat)->getColor());
 	}
@@ -949,14 +912,12 @@ Nau::deleteUserAttributes() {
 }
 
 
-std::vector<std::string> &
-Nau::getContextList() {
+void 
+Nau::getObjTypeList(std::vector<std::string> *v) {
 
-	m_DummyVector.clear();
 	for (auto attr : m_Attributes) {
-		m_DummyVector.push_back(attr.first);
+		v->push_back(attr.first);
 	}
-	return m_DummyVector;
 }
 
 
@@ -977,12 +938,87 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType,
 }
 
 
+// -----------------------------------------------------------
+//		KEYBOARD AND MOUSE
+// -----------------------------------------------------------
+
+
+int 
+Nau::keyPressed(int key, int modifiers) {
+
+	return TwKeyPressed(key, modifiers);
+}
+
+
+int 
+Nau::mouseButton(Nau::MouseAction action, Nau::MouseButton buttonID, int x, int y) {
+
+	if (action == PRESSED) {
+		switch (buttonID) {
+		case LEFT:
+			RENDERER->setPropi2(IRenderer::MOUSE_LEFT_CLICK, ivec2(x, y));
+			break;
+		case MIDDLE:
+			RENDERER->setPropi2(IRenderer::MOUSE_MIDDLE_CLICK, ivec2(x, y));
+			break;
+		case RIGHT:
+			RENDERER->setPropi2(IRenderer::MOUSE_RIGHT_CLICK, ivec2(x, y));
+			break;
+		}
+	}
+
+
+	return TwMouseButton((TwMouseAction)action, (TwMouseButtonID)buttonID);
+}
+
+
+int 
+Nau::mouseMotion(int x, int y) {
+
+	return TwMouseMotion(x, y);
+}
+
+
+int 
+Nau::mouseWheel(int pos) {
+
+	return TwMouseWheel(pos);
+}
+
+
+// -----------------------------------------------------------
+//		LOAD ASSETS
+// -----------------------------------------------------------
+
+
+void
+Nau::clear() {
+
+	RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
+	setActiveCameraName("");
+	SceneObject::ResetCounter();
+	MATERIALLIBMANAGER->clear();
+	EVENTMANAGER->clear();
+	EVENTMANAGER->addListener("WINDOW_SIZE_CHANGED", this);
+	RENDERMANAGER->clear();
+	RESOURCEMANAGER->clear();
+	Profile::Reset();
+	deleteUserAttributes();
+	UniformBlockManager::DeleteInstance();
+
+	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
+
+	ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
+
+	INTERFACE->clear();
+}
+
+
 void
 Nau::readProjectFile (std::string file, int *width, int *height) {
 
 	try {
 		ProjectLoader::load (file, width, height);
-		isFrameBegin = true;
 	}
 	catch (std::string s) {
 		clear();
@@ -990,12 +1026,25 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 	}
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
+	//std::string wn = "test";
+	//std::string wl = "My AT Bar";
+	//INTERFACE->createWindow(wn, wl);
+	////INTERFACE->addVar("test", "Viewport_Size", "VIEWPORT", "defaultFixedVP", "SIZE", 0);
+	////INTERFACE->addVar("test", "Camera_Far", "CAMERA", "MainCamera", "FAR", 0);
+	////INTERFACE->addVar("test", "Depth_Func", "STATE", "nau_material_lib::__Emission Purple", "DEPTH_FUNC");
+	//INTERFACE->addPipelineList("test", "Step");
+	//INTERFACE->addColor("test", "dark", "RENDERER", "Materials::woodRings", "dark", 0);
+	//INTERFACE->addDir("test", "LightDir", "LIGHT", "Sun", "DIRECTION", 0);
+	//INTERFACE->addVar("test", "normal", "RENDERER", "CURRENT", "NORMAL");
+	//INTERFACE->addVar("test", "view", "CAMERA", "MainCamera", "VIEW_MATRIX");
+	//SLOG("AntTweakBar error : %s", TwGetLastError());
 }
 
 
 void
 Nau::readDirectory (std::string dirName) {
 
+	clear();
 	std::vector<std::string> files;
 
 	File::RecurseDirectory(dirName, &files);
@@ -1096,37 +1145,6 @@ void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 }
 
 
-bool
-Nau::reload (void) {
-
-	if (false == m_Inited) {
-		return false;
-	}
-	return true;
-}
-
-
-void
-Nau::clear() {
-
-	resetFrameCount();
-	setActiveCameraName("");
-	SceneObject::ResetCounter();
-	MATERIALLIBMANAGER->clear();
-	EVENTMANAGER->clear();
-	EVENTMANAGER->addListener("WINDOW_SIZE_CHANGED", this);
-	RENDERMANAGER->clear();
-	RESOURCEMANAGER->clear();
-	//Profile::Reset();
-	deleteUserAttributes();
-	UniformBlockManager::DeleteInstance();
-
-	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
-
-	ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
-}
-
-
 void 
 Nau::setTrace(int frames) {
 
@@ -1188,7 +1206,7 @@ Nau::step() {
 
 	//if (getProfileResetRequest())
 	//	Profile::Reset();
-
+	INTERFACE->render();
 }
 
 
@@ -1285,21 +1303,6 @@ void Nau::stepPasses(int n) {
 
 
 void 
-Nau::resetFrameCount() {
-
-	RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
-}
-
-
-//unsigned long
-//Nau::getFrameCount() {
-//
-//	return RENDERER->FRAME_COUNT];
-//
-//}
-
-
-void 
 Nau::setActiveCameraName(const std::string &aCamName) {
 
 	if (m_ActiveCameraName != "") {
@@ -1347,26 +1350,6 @@ Nau::getDepthAtCenter() {
 	return (pz);
 }
 
-
-void 
-Nau::sendKeyToEngine (char keyCode) {
-
-	switch(keyCode) {
-	case 'K':
-		Profile::Reset();
-		break;
-	case 'I':
-		getDepthAtCenter();
-		break;
-	}
-}
-
-
-void 
-Nau::setClickPosition(int x, int y) {
-
-	RENDERER->setPropi2(IRenderer::MOUSE_CLICK, ivec2(x, y));
-}
 
 
 IWorld&
@@ -1432,6 +1415,8 @@ Nau::setWindowSize (unsigned int width, unsigned int height) {
 	m_WindowWidth = width;
 	m_WindowHeight = height;
 	m_Viewport->setPropf2(Viewport::SIZE, vec2((float)m_WindowWidth, (float)m_WindowHeight));
+
+	TwWindowSize(width, height);
 }
 
 
@@ -1449,74 +1434,11 @@ Nau::getWindowWidth() {
 }
 
 
-//Viewport*
-//Nau::createViewport (const std::string &name, nau::math::vec4 &bgColor) {
-//
-//	Viewport* v = new Viewport;
-//
-//	v->setName(name);
-//	v->setPropf2 (Viewport::ORIGIN, vec2(0.0f,0.0f));
-//	v->setPropf2 (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
-//
-//	v->setPropf4(Viewport::CLEAR_COLOR, bgColor);
-//	v->setPropb(Viewport::FULL, true);
-//
-//	m_vViewports[name] = v;
-//
-//	return v;
-//}
-//
-//
-//bool 
-//Nau::hasViewport(const std::string &name) {
-//
-//	return (m_vViewports.count(name) != NULL);
-//}
-//
-//
-//Viewport*
-//Nau::createViewport (const std::string &name) {
-//
-//	Viewport* v = new Viewport;
-//
-//	v->setName(name);
-//	v->setPropf2 (Viewport::ORIGIN, vec2(0.0f,0.0f));
-////	v->setPropf2 (Viewport::SIZE, vec2(m_WindowWidth, m_WindowHeight));
-//	v->setPropb(Viewport::FULL, true);
-//
-//	m_vViewports[name] = v;
-//
-//	return v;
-//}
-
-
-//Viewport* 
-//Nau::getViewport (const std::string &name) {
-//
-//	if (m_vViewports.count(name))
-//		return m_vViewports[name];
-//	else
-//		return NULL;
-//}
-
-
 std::shared_ptr<Viewport>
 Nau::getDefaultViewport() {
 	
 	return m_Viewport;
 }
-
-
-//std::vector<std::string> *
-//Nau::getViewportNames() {
-//
-//	std::vector<std::string> *names = new std::vector<std::string>; 
-//
-//	for( std::map<std::string, nau::render::Viewport*>::iterator iter = m_vViewports.begin(); iter != m_vViewports.end(); ++iter ) {
-//      names->push_back(iter->first); 
-//    }
-//	return names;
-//}
 
 
 void
@@ -1545,33 +1467,6 @@ Nau::getRenderFlag(RenderFlags aFlag) {
 
 	return(m_RenderFlags[aFlag]);
 }
-
-
-int 
-Nau::picking (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera) {
-
-	return -1;//	RenderManager->pick (x, y, objects, aCamera);
-}
-
-////StateList functions:
-//void 
-//Nau::loadStateXMLFile(std::string file){
-//	State::loadStateXMLFile(file);
-//}
-//
-//
-//std::vector<std::string> 
-//Nau::getStateEnumNames() {
-//	return State::getStateEnumNames();
-//}
-//
-//
-//std::string 
-//Nau::getState(std::string enumName) {
-//	return State::getState(enumName);
-//}
-
-
 
 
 RenderManager* 

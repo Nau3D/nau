@@ -187,12 +187,12 @@ Viewport::eventReceived(const std::string &sender, const std::string &eventType,
 
 	if (m_BoolProps[FULL]) {
 	
-		//m_Float2Props[SIZE].set(ev->x, ev->y);
 		m_Float2Props[ABSOLUT_SIZE].set(ev->x, ev->y);
+		m_Float2Props[SIZE].set(ev->x, ev->y);
 
 	}
 	else {
-		if (m_Float2Props[ORIGIN].x <= 1)
+		if (m_Float2Props[ORIGIN].x <= 1) 
 			m_Float2Props[ABSOLUT_ORIGIN].x = ev->x * m_Float2Props[ORIGIN].x;
 
 		if (m_Float2Props[ORIGIN].y <= 1)

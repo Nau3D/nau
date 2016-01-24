@@ -396,7 +396,7 @@ AttribSet::getName(int id, Enums::DataType dt) {
 
 
 void 
-AttribSet::getPropTypeAndId(std::string &s, nau::Enums::DataType *dt, int *id) {
+AttribSet::getPropTypeAndId(const std::string &s, nau::Enums::DataType *dt, int *id) {
 			
 	std::unique_ptr<Attribute> &a = get(s);
 	*id = a->m_Id;

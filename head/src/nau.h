@@ -36,6 +36,8 @@ extern "C" {
 }
 #endif
 
+//#include <AntTweakBar.h>
+
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
@@ -53,6 +55,10 @@ using namespace nau;
 //#define EVENTMANAGER NAU->getEventManager()
 //#define APISupport NAU->getAPISupport()
 
+#define NAU_KEY_MOD_NONE	0x0000
+#define NAU_KEY_MOD_SHIFT	0x0003
+#define NAU_KEY_MOD_CTRL	0x00c0
+#define NAU_KEY_MOD_ALT		0x0100
 
 namespace nau {
 	
@@ -61,17 +67,74 @@ namespace nau {
 	class Nau : public INau // , public IListener, public AttributeValues
 	{
 
-	public:		
-		bool m_ProfileResetRequest;
-		void setProfileResetRequest();
-		bool getProfileResetRequest();
+	public:
+
+		float g_Zoom;
+
+		typedef enum  {
+			RELEASED,
+			PRESSED
+		} MouseAction;
+
+		typedef enum  {
+			LEFT = 1,
+			MIDDLE,
+			RIGHT
+		} MouseButton;
+
+		typedef enum {
+			KEY_MOD_NONE =	0x0000,
+			KEY_MOD_SHIFT =	0x0003,
+			KEY_MOD_CTRL =	0x00c0,
+			KEY_MOD_ALT = 0x0100
+		} KeyModifiers;
+
+		typedef enum  { // same order as AntTweakToolbar
+			KEY_BACKSPACE = '\b',
+			KEY_TAB = '\t',
+			KEY_CLEAR = 0x0c,
+			KEY_RETURN = '\r',
+			KEY_PAUSE = 0x13,
+			KEY_ESCAPE = 0x1b,
+			KEY_SPACE = ' ',
+			KEY_DELETE = 0x7f,
+			KEY_UP = 273,      // same codes and order as SDL 1.2 keysym.sym
+			KEY_DOWN,
+			KEY_RIGHT,
+			KEY_LEFT,
+			KEY_INSERT,
+			KEY_HOME,
+			KEY_END,
+			KEY_PAGE_UP,
+			KEY_PAGE_DOWN,
+			KEY_F1,
+			KEY_F2,
+			KEY_F3,
+			KEY_F4,
+			KEY_F5,
+			KEY_F6,
+			KEY_F7,
+			KEY_F8,
+			KEY_F9,
+			KEY_F10,
+			KEY_F11,
+			KEY_F12,
+			KEY_F13,
+			KEY_F14,
+			KEY_F15,
+			KEY_LAST
+		} KeySpecial;
+
 
 		static nau::Nau* Create (void);
 		static nau::Nau* GetInstance (void);
 #ifdef _WINDLL
 		static void SetInstance(Nau *inst);
 #endif
+
 		bool init(bool context, std::string aConfigFile = "");
+		// Returns the class name
+		std::string &getName();
 
 		void setProjectName(std::string name);
 		const std::string &getProjectName();
@@ -84,7 +147,9 @@ namespace nau {
 		void callLuaScript(std::string name);
 		bool callLuaTestScript(std::string name);
 #endif
-		std::string &getName();
+
+
+		// Attributes
 
 		// Global gets and sets
 		// note: gets and set perform no validation
@@ -102,30 +167,40 @@ namespace nau {
 		AttributeValues *getObjectAttributes(std::string &type, std::string &context, int number=0);
 		AttributeValues *getCurrentObjectAttributes(std::string &context, int number = 0);
 
-		// Attributes
 		void registerAttributes(std::string s, AttribSet *attrib);
 		bool validateUserAttribContext(std::string s);
 		bool validateUserAttribName(std::string context, std::string name);
 		AttribSet *getAttribs(std::string context);
 		void deleteUserAttributes();
-		std::vector<std::string> &getContextList();
+		void getObjTypeList(std::vector<std::string> *);
 
 		// Events
 		void eventReceived(const std::string &sender, const std::string &eventType, 
 			const std::shared_ptr<IEventData> &evt);
 
+		// Mouse and Keyboard interface
+		int keyPressed(int key, int modifiers);
+		int mouseButton(Nau::MouseAction action, Nau::MouseButton buttonID, int x, int y);
+		int mouseMotion(int x, int y);
+		int mouseWheel(int pos);
 
+		// Camera and Viewport
 		void setActiveCameraName(const std::string &aCamName);
 		nau::scene::Camera *getActiveCamera();
+		std::shared_ptr<Viewport> getDefaultViewport ();
 
+		// provides linear depth at the center pixel
 		float getDepthAtCenter();
 
-		//void setProfileMaterial(std::string aMaterial);
+		// Profile Reset
+		void setProfileResetRequest();
+		bool getProfileResetRequest();
 
-		nau::world::IWorld& getWorld (void);
-
+		// Tracing
 		void setTrace(int frames);
 		bool getTraceStatus();
+
+		// Stepping
 		// Executes the whole pipeline
 		void step ();
 		// Executes the next pass
@@ -138,43 +213,35 @@ namespace nau {
 		// only to be used when in paused mode
 		void stepPasses(int n);
 
-		void resetFrameCount();
-//		unsigned long int getFrameCount();
 
+		// Physics
+		nau::world::IWorld& getWorld (void);
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);
+		void enablePhysics (void);
+		void disablePhysics (void); 
 
+		// Window stuff
 		void setWindowSize (unsigned int width, unsigned int height);
 		unsigned int getWindowHeight();
 		unsigned int getWindowWidth();
 
-		// Viewports
-		std::shared_ptr<Viewport> getDefaultViewport ();
 
-		bool reload (void);
 
-		void sendKeyToEngine (char keyCode); /***Change this in to a register system. The sub-system register as a particular key receiver*/
-		void setClickPosition(int x, int y);
-
-		void enablePhysics (void);
-		void disablePhysics (void); 
-
-		int picking (int x, int y, std::vector<nau::scene::SceneObject*> &objects, nau::scene::Camera &aCamera);
-
-		/* Readers */
+		// Readers 
 		void readModel (std::string fileName) throw (std::string);
 		void appendModel(std::string fileName);
 		void readProjectFile (std::string file, int *width, int *height);
 		void Nau::readDirectory (std::string dirName);
 
-		/* Managers */
+
+		// Managers 
 		nau::render::RenderManager* getRenderManager (void);
 		nau::resource::ResourceManager* getResourceManager (void);
 		nau::material::MaterialLibManager* getMaterialLibManager (void);
 		nau::event_::EventManager* getEventManager (void);
 		nau::render::IRenderer *getRenderer(void);
 		IAPISupport * getAPISupport(void);
-
 
 		/* Render Flags */
 		void setRenderFlag(RenderFlags aFlag, bool aState);
@@ -193,17 +260,18 @@ namespace nau {
 
 		std::string m_ProjectName;
 		float m_StartTime;
-		int m_TraceFrames;
-		bool m_TraceOn;
 
 		std::string m_Name;
 
-		/*
-		Attributes
-		*/
+		bool m_ProfileResetRequest;
+		int m_TraceFrames;
+		bool m_TraceOn;
+
+		/* 	Attributes	*/
 		typedef AttribSet *AttribSetPointer;
 		AttribSetPointer a;
 		std::map<std::string, AttribSet*> m_Attributes;
+
 		/*
 		 * Rendering Flags
 		 */
@@ -218,19 +286,16 @@ namespace nau {
 		nau::event_::EventManager *m_pEventManager;
 		nau::render::IAPISupport *m_pAPISupport;
 
-		/*
-		 * Members
-		 */
 		std::string m_AppFolder;
 		std::string m_ActiveCameraName;
 		unsigned int m_WindowWidth, m_WindowHeight;
-		nau::world::IWorld *m_pWorld;
 		std::shared_ptr<Viewport> m_Viewport;
-		int m_ClickX = 0, m_ClickY = 0;
 		IState *m_DefaultState;
 
 		bool m_Inited;
+
 		bool m_Physics;
+		nau::world::IWorld *m_pWorld;
 		
 		//double m_CurrentTime;
 		double m_LastFrameTime;
@@ -243,12 +308,6 @@ namespace nau {
 		void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize);
 
 		int loadedScenes;
-
-		bool isFrameBegin;
-
-		// this vector allows returning string vectors safely without
-		// memory leaks
-		std::vector<std::string> m_DummyVector;
 
 	};
 };

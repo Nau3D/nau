@@ -207,6 +207,13 @@ RenderManager::setActivePipeline (const std::string &pipelineName) {
 
 
 void
+RenderManager::setActivePipeline(int index) {
+
+	m_ActivePipelineIndex = index;
+}
+
+
+void
 RenderManager::setActivePipeline (unsigned int index) {
 
 	if (index < m_Pipelines.size()) {
@@ -362,7 +369,7 @@ RenderManager::renderActivePipeline ()
 	if (m_RunMode == RUN_ALL && k > 0 && k == n) {
 		m_ActivePipelineIndex++;
 		m_ActivePipelineIndex = m_ActivePipelineIndex % m_Pipelines.size();
-		NAU->resetFrameCount();
+		RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
 		if (m_ActivePipelineIndex == 0)
 			exit(0);
 	}

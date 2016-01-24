@@ -475,6 +475,13 @@
     <ClCompile Include="..\src\nau\geometry\skeletonBone.cpp" />
     <ClCompile Include="..\src\nau\geometry\terrain.cpp" />
     <ClCompile Include="..\src\nau\geometry\vertexData.cpp" />
+    <ClCompile Include="..\src\nau\interface\interface.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\src\nau\loader\assimpLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\cboLoader.cpp" />
     <ClCompile Include="..\src\nau\loader\devilTextureLoader.cpp" />
@@ -703,6 +710,13 @@
     <ClInclude Include="..\src\nau\geometry\square.h" />
     <ClInclude Include="..\src\nau\geometry\terrain.h" />
     <ClInclude Include="..\src\nau\geometry\vertexData.h" />
+    <ClInclude Include="..\src\nau\interface\interface.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\src\nau\loader\assimpLoader.h" />
     <ClInclude Include="..\src\nau\loader\cboLoader.h" />
     <ClInclude Include="..\src\nau\loader\devilTextureLoader.h" />

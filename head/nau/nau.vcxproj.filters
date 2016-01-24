@@ -59,6 +59,9 @@
     <Filter Include="Source Files\util">
       <UniqueIdentifier>{becfe7e4-fd9d-41ae-88a4-5d2810dffd16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\interface">
+      <UniqueIdentifier>{171d6acd-f3bb-41b2-884f-e119203bcdaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\nau\clogger.cpp">
@@ -531,6 +534,9 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\geometry\terrain.cpp">
       <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\interface\interface.cpp">
+      <Filter>Source Files\interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1064,6 +1070,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\geometry\terrain.h">
       <Filter>Source Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\interface\interface.h">
+      <Filter>Source Files\interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

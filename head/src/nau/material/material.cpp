@@ -683,8 +683,7 @@ IState*
 Material::getState (void) {
 
 	if (m_State == NULL) {
-		std::string name = "__" + m_Name;
-		m_State = RESOURCEMANAGER->createState(name);
+		m_State = RESOURCEMANAGER->createState(m_Name);
 	}
    return m_State;
 }
