@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<materialLib name="Materials">
+	<shaders>
+		<shader name="ivory"		 		vs = "shaders/ivory.vert" 
+											ps = "shaders/ivory.frag" />
+
+	</shaders>
+	
+	<materials>
+		<material name="ivory">
+			<shader name="ivory">
+				<values>
+					<valueof uniform="mPVM" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="mNormal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+							 
+					<valueof uniform="mView" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+							 
+					<valueof uniform="mViewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+						 
+					<valueof uniform="lDir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+				</values>
+			</shader>
+		</material>
+	</materials>
+</materialLib>	

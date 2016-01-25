@@ -1,0 +1,145 @@
+<?xml version="1.0" ?>
+<materialLib name="Materials">
+	<shaders>
+		<shader name="woodRings"	vs = "shaders/woodRings.vert" 
+									ps = "shaders/woodRings.frag" />
+		<shader name="wrSharp"		vs = "shaders/woodRingsSharp.vert" 
+									ps = "shaders/woodRingsSharp.frag" />
+		<shader name="wrsNoise"		vs = "shaders/woodRingsSharpNoise.vert" 
+									ps = "shaders/woodRingsSharpNoise.frag" />
+
+	</shaders>
+	
+	<materials>
+		<material name="woodRings">
+			<shader name="woodRings">
+				<values>
+					<valueof uniform="mPVM" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="mNormal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+							 
+					<valueof uniform="mView" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+							 
+					<valueof uniform="mViewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+						 
+					<valueof uniform="lDir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+							 
+					<valueof uniform="frequency" 
+							type="RENDERER" context="CURRENT"
+							component="frequency" />
+							
+					<valueof uniform="darkColor"
+							type="RENDERER" context="CURRENT" 
+							component="dark" />
+
+					<valueof uniform="lightColor"
+							type="RENDERER" context="CURRENT" 
+							component="light" />
+
+
+				</values>
+			</shader>
+		</material>
+
+		<material name="wrSharp">
+			<shader name="wrSharp">
+				<values>
+					<valueof uniform="mPVM" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="mNormal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+							 
+					<valueof uniform="mView" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+							 
+					<valueof uniform="mViewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+						 
+					<valueof uniform="lDir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+
+					<valueof uniform="sharpness" 
+							type="RENDERER" context="CURRENT"
+							component="sharpness" />
+							
+					<valueof uniform="frequency" 
+							type="RENDERER" context="CURRENT"
+							component="frequency" />
+							
+					<valueof uniform="darkColor"
+							type="RENDERER" context="CURRENT" 
+							component="dark" />
+
+					<valueof uniform="lightColor"
+							type="RENDERER" context="CURRENT" 
+							component="light" />
+
+				</values>
+			</shader>
+		</material>
+
+		<material name="wrsNoise">
+			<shader name="wrsNoise">
+				<values>
+					<valueof uniform="mPVM" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="mNormal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+							 
+					<valueof uniform="mView" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+							 
+					<valueof uniform="mViewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+						 
+					<valueof uniform="lDir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+
+					<valueof uniform="noiseScale" 
+							type="RENDERER" context="CURRENT"
+							component="noiseScale" />
+							
+					<valueof uniform="sharpness" 
+							type="RENDERER" context="CURRENT"
+							component="sharpness" />
+							
+					<valueof uniform="frequency" 
+							type="RENDERER" context="CURRENT"
+							component="frequency" />
+							
+					<valueof uniform="darkColor"
+							type="RENDERER" context="CURRENT" 
+							component="dark" />
+
+					<valueof uniform="lightColor"
+							type="RENDERER" context="CURRENT" 
+							component="light" />
+
+				</values>
+			</shader>
+		</material>
+
+		</materials>
+</materialLib>	

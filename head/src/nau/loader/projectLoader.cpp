@@ -99,7 +99,10 @@ ProjectLoader::readFile(TiXmlElement *p, std::string tag, std::string item) {
 }
 
 
-std::string 
+
+
+
+std::string
 ProjectLoader::toLower(std::string strToConvert) {
 
 	s_Dummy = strToConvert;
@@ -457,51 +460,57 @@ ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::A
 }
 
 
-//void 
-//ProjectLoader::readAttributeList(std::string parent, AttributeValues *anObj, std::map<std::string, std::unique_ptr<nau::Attribute> > &attributes, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem) {
-//
-//	TiXmlElement *p = pElem->FirstChildElement();
-//	Data *value;
-//
-//	TiXmlAttribute* attrib = pElem->FirstAttribute();
-//
-//	while (attrib) {
-//		// skip previously excluded attributes
-//		if (!isExcluded(attrib->Name(), excluded)) {
-//			// trying to define an attribute that does not exist?		
-//			if (attributes.count(attrib->Name()) == 0) {
-//				std::vector<std::string> attribVec;
-//				getKeystoVector(attributes, &attribVec);
-//				attribVec.insert(attribVec.end(), excluded.begin(), excluded.end());
-//				std::string result;
-//				TextUtil::Join(attribVec, ", ", &result);
-//				NAU_THROW("File %s: Element %s: \"%s\" is not a valid attribute\nValid tags are: %s", 
-//					ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name(), result.c_str());
-//			}
-//			std::unique_ptr<Attribute> &a = attributes[attrib->Name()];
-//			// trying to set the value of a read only attribute?
-//			if (a->getReadOnlyFlag())
-//				NAU_THROW("File %s\nElement %s: \"%s\" is a read-only attribute", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name());
-//
-//			int id = a->getId();
-//			value = readAttribute(attrib->Name(), a, pElem);
-//			if (value == NULL || !anObj->isValid(id, a->getType(), value)) {
-//				std::string s = getValidValuesString(a);
-//				if (s != "") {
-//					NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name(), s.c_str());
-//				}
-//				else {
-//					NAU_THROW("File %s\nElement %s: \"%s\" is not supported", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name());
-//				}
-//			}
-//			anObj->setProp(id, a->getType(), value);
-//		}
-//		attrib = attrib->Next();
-//	}
-//}
+void
+ProjectLoader::validateObjectAttribute(std::string type, std::string context, std::string component, std::string *message) {
+
+	if (!NAU->validateObjectType(type)) {
+		std::vector<std::string> validTypes;
+		NAU->getValidObjectTypes(&validTypes);
+		std::string messageAux;
+		TextUtil::Join(validTypes, ", ", &messageAux);
+		*message = "Invalid type value\nValid values are: " + messageAux;
+		return;
+	}
+	if (context != "CURRENT" && !NAU->validateObjectContext(type, context)) {
+		*message = "Invalid context value\nValid values are name of objects (or CURRENT if aplicable)";
+		return;
+	}
+	if (!NAU->validateObjectComponent(type, component)) {
+		std::vector<std::string> validComponents;
+		NAU->getValidObjectComponents(type, &validComponents);
+		std::string messageAux;
+		TextUtil::Join(validComponents, ", ", &messageAux);
+		*message = "Invalid component value\nValid values are: " + messageAux;
+		return;
+	}
+	*message = "";
+}
 
 
-void 
+void
+ProjectLoader::validateObjectTypeAndComponent(std::string type, std::string component, std::string *message) {
+
+	if (!NAU->validateObjectType(type)) {
+		std::vector<std::string> validTypes;
+		NAU->getValidObjectTypes(&validTypes);
+		std::string messageAux;
+		TextUtil::Join(validTypes, ", ", &messageAux);
+		*message = "Invalid type value\nValid values are: " + messageAux;
+		return;
+	}
+	if (!NAU->validateObjectComponent(type, component)) {
+		std::vector<std::string> validComponents;
+		NAU->getValidObjectComponents(type, &validComponents);
+		std::string messageAux;
+		TextUtil::Join(validComponents, ", ", &messageAux);
+		*message = "Invalid component value\nValid values are: " + messageAux;
+		return;
+	}
+	*message = "";
+}
+
+
+void
 ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem, bool showOnlyExcluded) {
 
 	TiXmlElement *p = pElem->FirstChildElement();
@@ -3493,6 +3502,7 @@ INTERFACE
 
  ----------------------------------------------------------------------------- */
 
+
 void 
 ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 
@@ -3509,7 +3519,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 
 	pElem = hRoot.FirstChild("interface").FirstChild("window").Element();
 	for (; 0 != pElem; pElem = pElem->NextSiblingElement("window")) {
-		const char *pWindowName = pElem->Attribute("name");
+		const char *pWindowName = pElem->Attribute("label");
 		//const char *pWindowLabel = pElem->Attribute("label");
 
 		if (0 == pWindowName /*|| 0 == pWindowLabel*/) {
@@ -3537,16 +3547,27 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				const char *pControl = pElemAux->Attribute("option");
 				int id = 0;
 				pElemAux->QueryIntAttribute("id", &id);
+
+				// check if fields are filled)
 				if (0 == pLabel) {
 					NAU_THROW("File %s\nWindow %s, Variable needs a label", s_File.c_str(), pWindowName);
 				}
+
 				if (0 == pType || 0 == pContext || 0 == pComponent) {
 					NAU_THROW("File %s\nWindow %s, Variable %s\nVariable needs a type, a context and a component",
 						s_File.c_str(), pWindowName, pLabel);
 				}
-				if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-					NAU_THROW("File %s\nWindow %s, Variable %s\nVariable not valid", 
-						s_File.c_str(), pWindowName, pLabel);
+
+				// check if var is well defined
+				std::string message;
+				validateObjectAttribute(pType, pContext, pComponent, &message);
+				if (message != "") {
+					NAU_THROW("File %s\nWindow %s, Variable %s\n%s", s_File.c_str(), pWindowName, pLabel, message.c_str());
+				}
+
+				//if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
+				//	NAU_THROW("File %s\nWindow %s, Variable %s\nVariable not valid", 
+				//		s_File.c_str(), pWindowName, pLabel);
 				if (pControl) {
 					if (strcmp(pControl, "DIRECTION") == 0)
 						INTERFACE->addDir(pWindowName, pLabel, pType, pContext, pComponent, id);
@@ -4294,13 +4315,19 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 				NAU_THROW("MatLib %s\nMaterial %s\nNo component found for uniform %s", 
 					aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
 			}
-			if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-				NAU_THROW("MatLib %s\nMaterial %s\nUniform %s is not valid", 
-					aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+			std::string message;
+			validateObjectTypeAndComponent(pType, pComponent, &message);
+			if ( message != "")
+				NAU_THROW("MatLib %s\nMaterial %s\nUniform %s is not valid\n%s",
+					aLib->getName().c_str(), aMat->getName().c_str(), pUniformName, message.c_str());
+
+			//if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
+			//	NAU_THROW("MatLib %s\nMaterial %s\nUniform %s is not valid", 
+			//		aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
 
 			int id = 0;
 			if ((strcmp(pContext,"CURRENT") == 0) && 
-						((strcmp(pType,"LIGHT") == 0) || (0 == strcmp(pType,"MATERIAL_TEXTURE")) || (0 == strcmp(pType,"IMAGE_TEXTURE"))) 
+						((strcmp(pType,"LIGHT") == 0) || (0 == strcmp(pType,"TEXTURE_BINDING")) || (0 == strcmp(pType,"IMAGE_TEXTURE"))) 
 						&&  (0 != strcmp(pComponent,"COUNT"))) {
 				if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
 					NAU_THROW("MatLib %s\nMaterial %s\nUniform %s - id is required for type %s ", 
@@ -4308,7 +4335,8 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 				if (id < 0)
 					NAU_THROW("MatLib %s\nMaterial %s\nUniform %s - id must be non negative", 
 						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
-				if (0 == strcmp(pType, "MATERIAL_TEXTURE") && !aMat->getTexture(id)) {
+
+				if (0 == strcmp(pType, "TEXTURE_BINDING") && !aMat->getTexture(id)) {
 					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned texture unit", 
 						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
 				}

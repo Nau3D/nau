@@ -33,9 +33,8 @@
 														component="VIEW_MODEL" />
 														
 									
-					<valueof uniform="texUnit"		type="MATERIAL_TEXTURE" context="CURRENT"
-												component="UNIT"
-												id=0 />
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+														component="UNIT" id=0 />
 														
 					<!--valueof uniform="camWorldPos"	type="CAMERA" context="MainCamera"	
 												component="POSITION" /-->

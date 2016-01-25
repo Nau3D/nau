@@ -40,7 +40,7 @@
 				<values>									
 					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="texUnit"		type="MATERIAL_TEXTURE" context="CURRENT"
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
 														id=0 component="UNIT" />								
 				</values>
 			</shader>
@@ -58,7 +58,7 @@
 		<material name ="standard">
 			<shader name="standard">
 				<values>									
-					<valueof uniform="texUnit"		type="MATERIAL_TEXTURE" context="CURRENT"
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
 														id=0 component="UNIT" />		
 				</values>
 			</shader>
@@ -70,7 +70,7 @@
 		<material name ="standardImgTex">
 			<shader name="standardImgTex">
 				<values>									
-					<valueof uniform="texUnit"		type="MATERIAL_TEXTURE" context="CURRENT"
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
 														id=0 component="UNIT" />		
 					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />

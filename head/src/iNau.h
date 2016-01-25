@@ -70,7 +70,7 @@ namespace nau {
 		// if in doubt call validate first
 
 		// Fully validate - context must refer to an existing object
-		virtual bool validateAttribute(std::string type, std::string context, std::string component) = 0;
+		//virtual bool validateAttribute(std::string type, std::string context, std::string component) = 0;
 		// Only validates the existence of the component in a particular type/context of object
 		virtual bool validateShaderAttribute(std::string type, std::string context, std::string component) = 0;
 		virtual bool setAttribute(std::string type, std::string context,
@@ -78,8 +78,8 @@ namespace nau {
 				 Data *values) = 0;
 		virtual void *getAttribute(std::string type, std::string context,
 			std::string component, int number) = 0;
-		virtual AttributeValues *getObjectAttributes(std::string &type, std::string &context, int number=0) = 0;
-		virtual AttributeValues *getCurrentObjectAttributes(std::string &context, int number = 0) = 0;
+		virtual AttributeValues *getObjectAttributes(const std::string &type, const std::string &context, int number=0) = 0;
+		virtual AttributeValues *getCurrentObjectAttributes(const std::string &context, int number = 0) = 0;
 
 		virtual void registerAttributes(std::string s, AttribSet *attrib) = 0;
 		virtual bool validateUserAttribContext(std::string s) = 0;

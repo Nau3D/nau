@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<materialLib name="Materials">
+
+	<textures>
+		ue<texture name="hatch0" filename="textures/hatch_0.jpg" mipmap=true/>
+		ue<texture name="hatch1" filename="textures/hatch_1.jpg" mipmap=true/>
+		ue<texture name="hatch2" filename="textures/hatch_2.jpg" mipmap=true/>
+		ue<texture name="hatch3" filename="textures/hatch_3.jpg" mipmap=true/>
+		ue<texture name="hatch4" filename="textures/hatch_4.jpg" mipmap=true/>
+		ue<texture name="hatch5" filename="textures/hatch_5.jpg" mipmap=true/>
+	</textures>
+
+	<shaders>
+		<shader name="hatching"	vs = "shaders/hatching.vert" 
+								ps = "shaders/hatching.frag" />
+
+	</shaders>
+	
+	<materials>
+		<material name="hatching">
+			<shader name="hatching">
+				<values>
+					<valueof uniform="mPVM" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="mNormal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+							 
+					<valueof uniform="mView" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+							 
+					<valueof uniform="mViewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+						 
+					<valueof uniform="lDir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+					<valueof uniform="lDir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+					<valueof uniform="t0" 
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=0 />
+					<valueof uniform="t1" 
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=1 />
+					<valueof uniform="t2" 
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=2 />
+					<valueof uniform="t3" 
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=3 />
+					<valueof uniform="t4" 
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=4 />
+					<valueof uniform="t5" 
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=5 />
+				</values>
+			</shader>
+			<textures>
+				<texture name="hatch5" UNIT=0 />
+				<texture name="hatch4" UNIT=1 />
+				<texture name="hatch3" UNIT=2 />
+				<texture name="hatch2" UNIT=3 />
+				<texture name="hatch1" UNIT=4 />
+				<texture name="hatch0" UNIT=5 />
+			</textures>
+		</material>
+	</materials>
+</materialLib>	

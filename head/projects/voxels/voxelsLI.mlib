@@ -151,7 +151,7 @@
 														component="SHININESS" />
 					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />				
 				</values>
 			</shader>
@@ -199,9 +199,9 @@
 														id=1 component="UNIT" />
 					<valueof uniform="imageUnitN"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=2 component="UNIT" />
-					<valueof uniform="grid"			type="MATERIAL_TEXTURE" context="CURRENT"
+					<valueof uniform="grid"			type="TEXTURE_BINDING" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="normal"		type="MATERIAL_TEXTURE" context="CURRENT"
+					<valueof uniform="normal"		type="TEXTURE_BINDING" context="CURRENT"
 														id=2 component="UNIT" />
 					<valueof uniform="destMipLevel"	type="PASS" context="CURRENT"
 														component="GridCurrentLevel" />
@@ -244,7 +244,7 @@
 				<values>
 					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="grid"			type="MATERIAL_TEXTURE" context="CURRENT"
+					<valueof uniform="grid"			type="TEXTURE_BINDING" context="CURRENT"
 														id=1 component="UNIT" />
 					<valueof uniform="destMipLevel"	type="PASS" context="CURRENT"
 														component="GridCurrentLevel" />
@@ -295,7 +295,7 @@
 														component="PROJECTION_VIEW_MODEL" />
 					<valueof uniform="VM"         	type="RENDERER" context="CURRENT" 
 														component="VIEW_MODEL" />
-					<valueof uniform="grid"			type="MATERIAL_TEXTURE" context="CURRENT"
+					<valueof uniform="grid"			type="TEXTURE_BINDING" context="CURRENT"
 														id=1 component="UNIT" />
 					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
 														component="ABSOLUT_SIZE" />
@@ -339,9 +339,9 @@
 					<valueof uniform="top" type="CAMERA" context="voxels#RSM-LightCam" 
 														component="TOP" />
 														
-					<valueof uniform="texRSM" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texRSM" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="1" />			
-					<valueof uniform="texPos" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texPos" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="2" />
 					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
@@ -394,7 +394,7 @@
 														component="DIRECTION" /> 
 					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />				
 				</values>
 			</shader>
@@ -414,7 +414,7 @@
 														component="SHININESS" />
 					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />				
 				</values>
 			</shader>
@@ -435,9 +435,9 @@
 														component="SHININESS" />
 					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />	
-					<valueof uniform="texPos" 		type="MATERIAL_TEXTURE" context="CURRENT"
+					<valueof uniform="texPos" 		type="TEXTURE_BINDING" context="CURRENT"
 														component="UNIT" id="1" />
 				</values>
 			</shader>
@@ -446,15 +446,15 @@
 		<material name ="computeAO">
 			<shader name="computeAO">
 				<values>
-					<valueof uniform="texPos" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texPos" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />				
-					<valueof uniform="texNormal" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texNormal" 	type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="3" />				
-					<valueof uniform="texColor" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texColor" 	type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="4" />				
-					<valueof uniform="grid" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="grid" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="1" />				
-					<!--valueof uniform="gridNormal" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<!--valueof uniform="gridNormal" 	type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="2" /-->				
 					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
 														component="GridSize" />
@@ -505,15 +505,15 @@
 				<values>
 					<valueof uniform="camPos"		type="CAMERA" context="MainCamera"
 														component="POSITION" />
-					<valueof uniform="texPos" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texPos" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />				
-					<valueof uniform="texNormal" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texNormal" 	type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="3" />				
-					<valueof uniform="texColor" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texColor" 	type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="4" />				
-					<valueof uniform="grid" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="grid" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="1" />				
-					<valueof uniform="gridN" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="gridN" 	type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="2" />				
 					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
 														component="GridSize" />

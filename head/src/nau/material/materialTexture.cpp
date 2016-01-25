@@ -11,7 +11,7 @@ MaterialTexture::Init() {
 	Attribs.add(Attribute(UNIT, "UNIT", Enums::DataType::INT, false, new NauInt(0)));
 
 #ifndef _WINDLL
-	NAU->registerAttributes("MATERIAL_TEXTURE", &Attribs);
+	NAU->registerAttributes("TEXTURE_BINDING", &Attribs);
 #endif
 
 	return true;

@@ -85,7 +85,7 @@
 					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />
 				</values>
 			</shader>
@@ -132,7 +132,7 @@
 					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />
 				</values>
 			</shader>
@@ -185,8 +185,8 @@
 				<values>
 					<valueof uniform="tex1"			type="IMAGE_TEXTURE" context="CURRENT" 
 														id=0 component="UNIT" />
-					<valueof uniform="tex2"			type="MATERIAL_TEXTURE" context="CURRENT" id=0 
-														component="UNIT" />
+					<valueof uniform="tex2"			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT"  id=0/>
 					<valueof uniform="frameCount" 	type="RENDERER" context="CURRENT"
 														component="FRAME_COUNT" />
 				</values>

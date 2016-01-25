@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<project name="Geometric Primitives" width=512 height = 512>
+	<assets>
+	
+		<scenes>
+			<scene name="Terrain">
+				<terrain name = "fractal" heightMap ="fractalNoise.jpg"  >
+					<SCALE x=0.1 y=2.5 z =0.1 />
+				</terrain>
+			</scene>
+			
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="0.3" FAR="100.0" />
+				<POSITION x="0" y="2.45" z="10" />
+				<VIEW x="0.289735" y="-0.389418" z="-0.874304" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "geometry.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="Terrain" default="true">
+			<pass class="default" name="pass1" axis="5">
+				<scenes>
+					<scene name="Terrain" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
+				</materialMaps>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

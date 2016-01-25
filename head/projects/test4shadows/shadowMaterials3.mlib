@@ -101,16 +101,16 @@
 					<!--valueof uniform="split[1]" type="DATA" context="15" component="FLOAT" />
 					<valueof uniform="split[2]" type="DATA" context="50" component="FLOAT" />
 					<valueof uniform="split[3]" type="DATA" context="500" component="FLOAT" /-->
-					<valueof uniform="shadowMap1" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="shadowMap1" 	type="TEXTURE_BINDING" context="CURRENT" 
 														id=0 component="UNIT" />
 														
-					<valueof uniform="shadowMap2" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="shadowMap2" 	type="TEXTURE_BINDING" context="CURRENT" 
 														id=1 component="UNIT" />
 														
-					<valueof uniform="shadowMap3" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="shadowMap3" 	type="TEXTURE_BINDING" context="CURRENT" 
 														id=2 component="UNIT" />
 														
-					<valueof uniform="shadowMap4" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="shadowMap4" 	type="TEXTURE_BINDING" context="CURRENT" 
 														id=3 component="UNIT" />
 				</values>
 			</shader>

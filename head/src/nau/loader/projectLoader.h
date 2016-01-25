@@ -71,14 +71,11 @@ namespace nau
 											nau::AttribSet &attribs, 
 											std::vector<std::string> &excluded, 
 											TiXmlElement *pElem);
+			// returns a text message to include in the throw statement. 
+			// if message  == "" then attribute is ok
+			static void validateObjectAttribute(std::string type, std::string context, std::string component, std::string *message);
+			static void validateObjectTypeAndComponent(std::string type, std::string component, std::string *message);
 
-			//static void readAttributeList(std::string parent, 
-			//								AttributeValues *anObj, 
-			//								std::map<std::string, std::unique_ptr<nau::Attribute>> &attributes, 
-			//								nau::AttribSet &attribs, 
-			//								std::vector<std::string> &excluded, 
-			//								TiXmlElement *pElem);
-			
 			// converts to lower caps
 			static std::string toLower(std::string strToConvert);
 			// read file and return full path relative to project

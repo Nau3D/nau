@@ -1,0 +1,108 @@
+<?xml version="1.0" ?>
+<project name="Wood Tutorial" >
+	<assets>
+	
+		<attributes>
+			<attribute context="RENDERER" name="frequency" type="FLOAT" value="32" />
+			<attribute context="RENDERER" name="sharpness" type="FLOAT" value = 16 />
+			<attribute context="RENDERER" name="noiseScale" type="FLOAT" value=4 />
+			<attribute context="RENDERER" name="dark" type="VEC4" x="0.91" y = "0.5" z="0.12" w = "1.0" />
+			<attribute context="RENDERER" name="light" type="VEC4" x="0.44" y = "0.21" z="0.0" w = "1.0" />
+		</attributes>
+		<scenes>
+			<scene name="Model" param="UNITIZE">
+				<file name="../../models/cube.obj"/>
+			</scene>
+			<!--scene name="Teapot" param="UNITIZE SWAP_YZ">
+				<file name="../../models/Teapot.3ds"/>
+			</scene-->
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+				<FOV value=60/>
+				<NEAR value= 0.1/>
+				<FAR value= 100/>
+				<POSITION x=-1.914014 y=1.992289 z=1.460414 />
+				<VIEW x=0.562365 y=-0.67465 z=-0.478115 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=2 y=-1 z=-2 />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="wood2.mlib" />
+		</materialLibs>
+	</assets>
+	
+	<pipelines  default="Wood Rings Sharp with Noise">
+		<pipeline name="Wood Rings">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="Model" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="*" toMaterial="woodRings" toLibrary="Materials" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+		<pipeline name="Wood Rings Sharp">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="Model" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="*" toMaterial="wrSharp" toLibrary="Materials" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+		<pipeline name="Wood Rings Sharp with Noise">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="Model" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="*" toMaterial="wrsNoise" toLibrary="Materials" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+
+	<interface>
+		<window label="Main Window">
+			<pipelineList label="Effect List" />
+			<var label="Dark" type="RENDERER" context="CURRENT" component="dark" option="COLOR"/>
+			<var label="Light" type="RENDERER" context="CURRENT" component="light" option="COLOR"/>
+			<var label="Light Dir" type="LIGHT" context="Sun" component="DIRECTION" option="DIRECTION"/>
+			<var label="Frequency" type="RENDERER" context="CURRENT" component="frequency" />
+			<var label="Sharpness" type="RENDERER" context="CURRENT" component="sharpness" />
+			<var label="Noise Scale" type="RENDERER" context="CURRENT" component="noiseScale" />
+			
+		</window>
+	</interface>
+	
+</project>

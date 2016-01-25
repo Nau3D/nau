@@ -1,4 +1,4 @@
-#ifndef PASS_PRE_PROCESS_TEXTURE_H
+	#ifndef PASS_PRE_PROCESS_TEXTURE_H
 #define PASS_PRE_PROCESS_TEXTURE_H
 
 #include "nau/material/iTexture.h"

@@ -72,9 +72,9 @@ namespace nau
 			void removeRenderable(std::string name);
 
 			/***States***/
-			IState * createState(std::string &stateName);
-			bool hasState (std::string &stateName);
-			nau::material::IState* getState (std::string &stateName);
+			IState * createState(const std::string &stateName);
+			bool hasState (const std::string &stateName);
+			nau::material::IState* getState (const std::string &stateName);
 			void addState (nau::material::IState* aState);
 
 			/***Shaders***/

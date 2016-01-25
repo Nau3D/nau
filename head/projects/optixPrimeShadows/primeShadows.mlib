@@ -56,7 +56,7 @@
 														component="NORMAL" />
 					<valueof uniform="diffuse" 			type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
-					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />	
 					<valueof uniform="texCount" 		type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT"  />	
@@ -67,7 +67,7 @@
 		<material name="fillRayBuffer">			
 			<shader name="fillRayBuffer">
 				<values>
-					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
 														component="DIRECTION" /> 
@@ -87,9 +87,9 @@
 		<material name="compose">
 			<shader name="compose">
 				<values>
-					<valueof uniform="texColor" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texColor" 		type="TEXTURE_BINDING" context="CURRENT" 
 															component="UNIT" id="0" />	
-					<valueof uniform="texNormal" 		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texNormal" 		type="TEXTURE_BINDING" context="CURRENT" 
 															component="UNIT" id="1" />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
 															component="DIRECTION" /> 

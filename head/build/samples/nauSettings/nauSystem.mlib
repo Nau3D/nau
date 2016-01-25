@@ -67,7 +67,7 @@
 					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />														
 				</values>
 			</shader>
@@ -93,7 +93,7 @@
 			</color>
 			<shader name ="quadShader" >
 				<values>
-					<valueof uniform="texUnit" 	type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 	type="TEXTURE_BINDING" context="CURRENT" 
 												component="UNIT" id="0" />			
 				</values>
 			</shader>
@@ -294,7 +294,7 @@
 					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
 
-					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />
 				</values>
 			</shader>

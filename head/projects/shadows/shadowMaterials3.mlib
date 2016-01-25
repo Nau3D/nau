@@ -71,13 +71,13 @@
  					<valueof uniform="lightSpaceMat" 	type="CAMERA"  context="shadow#getShadowMap-LightCam" 
 														component="TS05_PVM_MATRIX" />
 														
-					<valueof uniform="shadowMap" 		type="MATERIAL_TEXTURE" context="CURRENT" id=1 
+					<valueof uniform="shadowMap" 		type="TEXTURE_BINDING" context="CURRENT" id=1 
 														component="UNIT" />	
 														
 					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />		
 				</values>
 			</shader>

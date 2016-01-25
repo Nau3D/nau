@@ -52,7 +52,7 @@
 					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
 														component="TEXTURE_COUNT" />
 														
-					<valueof uniform="texUnit" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />														
 				</values>
 			</shader>
@@ -61,9 +61,9 @@
 		<material name="combine">
 			<shader name="combine">
 				<values>
-					<valueof uniform="color" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="color" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />		
-					<valueof uniform="shadow" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="shadow" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="1" />
 				</values>
 			</shader>

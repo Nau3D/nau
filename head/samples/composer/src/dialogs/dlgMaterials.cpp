@@ -1236,7 +1236,7 @@ void DlgMaterials::addUniform(wxPGProperty *pdefaultBlock, ProgramValue  &u, int
 	pgShaderUniforms->DisableProperty(pid2);
 
 	std::string s = u.getType();
-	if ((s == "TEXTURE" || s == "IMAGE_TEXTURE" || s == "MATERIAL_BUFFER" || s == "TEXTURE_SAMPLER" || s == "MATERIAL_TEXTURES") ||
+	if ((s == "TEXTURE" || s == "IMAGE_TEXTURE" || s == "MATERIAL_BUFFER" || s == "TEXTURE_SAMPLER" || s == "TEXTURE_BINDING") ||
 		(s == "LIGHT" && u.getContext() == "CURRENT")) {
 		pid2 = pgShaderUniforms->AppendIn(pid, new wxIntProperty(wxT("id"), wxPG_LABEL, u.getId()));
 		pgShaderUniforms->DisableProperty(pid2);

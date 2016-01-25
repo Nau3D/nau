@@ -51,11 +51,11 @@
 											component="VIEW_MATRIX" />
 					<valueof uniform="CamP" type="CAMERA" context="MainCamera"
 											component="PROJECTION_MATRIX" />
-					<valueof uniform="depth" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="depth" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="0" />		
-					<valueof uniform="normals" 			type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="normals" 			type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="1" />		
-					<valueof uniform="positions"		type="MATERIAL_TEXTURE" context="CURRENT" 
+					<valueof uniform="positions"		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="2" />											
 				</values>
 			</shader>

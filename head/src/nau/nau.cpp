@@ -633,54 +633,54 @@ Nau::callLuaTestScript(std::string name) {
 
 
 AttributeValues *
-Nau::getCurrentObjectAttributes(std::string &context, int number) {
+Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 
 	IRenderer *renderer = m_pRenderManager->getRenderer();
 	IAPISupport *sup = IAPISupport::GetInstance();
 
-	if (context == "CAMERA") {
+	if (type == "CAMERA") {
 		return (AttributeValues *)renderer->getCamera().get();
 	}
-	if (context == "COLOR") {
+	if (type == "COLOR") {
 		return (AttributeValues *)renderer->getMaterial();
 	}
 	
-	if (sup->apiSupport(IAPISupport::IMAGE_TEXTURE) && context == "IMAGE_TEXTURE") {
+	if (sup->apiSupport(IAPISupport::IMAGE_TEXTURE) && type == "IMAGE_TEXTURE") {
 		return (AttributeValues *)renderer->getImageTexture(number);
 	}
 
-	if (context == "LIGHT") {
+	if (type == "LIGHT") {
 		return (AttributeValues *)renderer->getLight(number).get();
 	}
-	if (context == "MATERIAL_TEXTURE") {
+	if (type == "TEXTURE_BINDING") {
 		return (AttributeValues *)renderer->getMaterialTexture(number);
 	}
-	if (context == "PASS") {
+	if (type == "PASS") {
 		return (AttributeValues *)m_pRenderManager->getCurrentPass();
 	}
-	if (context == "RENDERER") {
+	if (type == "RENDERER") {
 		return (AttributeValues *)renderer;
 	}
-	if (context == "RENDER_TARGET") {
+	if (type == "RENDER_TARGET") {
 		return (AttributeValues *)m_pRenderManager->getCurrentPass()->getRenderTarget();
 			//m_pResourceManager->getRenderTarget(context);
 	}
-	if (context == "STATE") {
+	if (type == "STATE") {
 		return (AttributeValues *)renderer->getState();
 	}
-	if (context == "TEXTURE") {
+	if (type == "TEXTURE") {
 		return (AttributeValues *)renderer->getTexture(number);
 	}
-	if (context == "VIEWPORT") {
+	if (type == "VIEWPORT") {
 		return (AttributeValues *)renderer->getViewport().get();
 	}
 	// If we get here then we are trying to fetch something that does not exist
-	NAU_THROW("Getting an invalid object\ntype: %s", context.c_str());
+	NAU_THROW("Getting an invalid object\ntype: %s", type.c_str());
 }
 
 
 AttributeValues *
-Nau::getObjectAttributes(std::string &type, std::string &context, int number) {
+Nau::getObjectAttributes(const std::string &type, const std::string &context, int number) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
 	// From Render Manager
@@ -692,21 +692,21 @@ Nau::getObjectAttributes(std::string &type, std::string &context, int number) {
 		if (m_pRenderManager->hasLight(context))
 			return (AttributeValues *)m_pRenderManager->getLight(context).get();
 	}
-	if (type == "SCENE") {
-		if (m_pRenderManager->hasScene(context))
-			return (AttributeValues *)m_pRenderManager->getScene(context).get();
-	}
 	if (type == "PASS") {
 		std::string pipName = m_pRenderManager->getActivePipelineName();
 		if (m_pRenderManager->hasPass(pipName, context))
 			return (AttributeValues *)m_pRenderManager->getPass(pipName, context);
 	}
+	if (type == "RENDERER") {
+		return (AttributeValues *)RENDERER;
+	}
+	if (type == "SCENE") {
+		if (m_pRenderManager->hasScene(context))
+			return (AttributeValues *)m_pRenderManager->getScene(context).get();
+	}
 	if (type == "VIEWPORT") {
 		if (m_pRenderManager->hasViewport(context))
 			return (AttributeValues *)m_pRenderManager->getViewport(context).get();
-	}
-	if (type == "RENDERER") {
-		return (AttributeValues *)RENDERER;
 	}
 
 	// From ResourceManager
@@ -741,6 +741,14 @@ Nau::getObjectAttributes(std::string &type, std::string &context, int number) {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTexture(number);
 	}
+	if (type == "TEXTURE_SAMPLER") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTextureSampler(number);
+	}
+	if (type == "TEXTURE_BINDING") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialTexture(number);
+	}
 	if (sup->apiSupport(IAPISupport::IMAGE_TEXTURE) && type == "IMAGE_TEXTURE") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getImageTexture(number);
@@ -749,14 +757,6 @@ Nau::getObjectAttributes(std::string &type, std::string &context, int number) {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getBuffer(number);
 	}
-	if (type == "TEXTURE_SAMPLER") {
-		if (m_pMaterialLibManager->hasMaterial(lib, mat))
-			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTextureSampler(number);
-	}
-	if (type == "MATERIAL_TEXTURE") {
-		if (m_pMaterialLibManager->hasMaterial(lib, mat))
-			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialTexture(number);
-	}
 
 	// If we get here then we are trying to fetch something that does not exist
 	NAU_THROW("Getting an invalid object\ntype: %s\ncontext: %s", 
@@ -764,33 +764,27 @@ Nau::getObjectAttributes(std::string &type, std::string &context, int number) {
 }
 
 
-bool
-Nau::validateAttribute(std::string type, std::string context, std::string component) {
-
-	int id;
-	Enums::DataType dt;
-	if (!getObjectAttributes(type, context))
-		return false; 
-	m_Attributes[type]->getPropTypeAndId(component, &dt, &id); 
-	return (id != -1);
-}
+//bool
+//Nau::validateAttribute(std::string type, std::string context, std::string component) {
+//
+//	int id;
+//	Enums::DataType dt;
+//	if (!getObjectAttributes(type, context))
+//		return false; 
+//	m_Attributes[type]->getPropTypeAndId(component, &dt, &id); 
+//	return (id != -1);
+//}
 
 bool
 Nau::validateShaderAttribute(std::string type, std::string context, std::string component) {
 
 	int id;
 	Enums::DataType dt;
-	std::string what;
 
-	//if (type == "CURRENT")
-	//	what = context;
-	//else
-		what = type;
-
-	if (m_Attributes.count(what) == 0)
+	if (m_Attributes.count(type) == 0)
 		return false;
 
-	m_Attributes[what]->getPropTypeAndId(component, &dt, &id);
+	m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
 	return (id != -1);
 }
 
@@ -804,18 +798,13 @@ Nau::setAttribute(std::string type, std::string context, std::string component, 
 	AttributeValues *attrVal;
 
 	if (context != "CURRENT") {
-//	if (type != "CURRENT") {
 		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
 		attrVal = NAU->getObjectAttributes(type, context, number);
 	}
 	else {
 		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
 		attrVal = NAU->getCurrentObjectAttributes(type, number);
-//		m_Attributes[context]->getPropTypeAndId(component, &dt, &id);
-//		attrVal = NAU->getCurrentObjectAttributes(context, number);
 	}
-
-	//attrVal = getObjectAttributes(type, context, number);
 
 	if (attrVal == NULL || id == -1) {
 		return false;
@@ -835,7 +824,6 @@ Nau::getAttribute(std::string type, std::string context, std::string component, 
 	AttributeValues *attrVal;
 
 	if (context != "CURRENT") {
-//	if (type != "CURRENT") {
 		attrVal = NAU->getObjectAttributes(type, context, number);
 		m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
 	}
@@ -850,6 +838,72 @@ Nau::getAttribute(std::string type, std::string context, std::string component, 
 	}
 	else
 		return attrVal->getProp(id, dt);
+}
+
+
+bool 
+Nau::validateObjectType(const std::string &type) {
+
+	if (m_Attributes.count(type) == 0)
+		return false;
+	else
+		return true;
+}
+
+
+void
+Nau::getValidObjectTypes(std::vector<std::string> *v) {
+
+	for (auto &s : m_Attributes)
+		v->push_back(s.first);
+}
+
+
+bool 
+Nau::validateObjectContext(const std::string &type, const std::string &context) {
+
+	if (m_Attributes.count(type) == 0)
+		return false;
+
+	AttributeValues *attrVal;
+
+	if (context != "CURRENT") {
+		attrVal = NAU->getObjectAttributes(type, context, 0);
+	}
+	else {
+		attrVal = NAU->getCurrentObjectAttributes(type, 0);
+	}
+
+	if (attrVal == NULL)
+		return false;
+	else
+		return true;
+}
+
+
+bool
+Nau::validateObjectComponent(const std::string &type, const std::string & component) {
+
+	if (m_Attributes.count(type) == 0)
+		return false;
+
+	AttribSet *as = m_Attributes[type];
+	if (as->getID(component) == -1)
+		return false;
+
+	return true;
+}
+
+
+void
+Nau::getValidObjectComponents(const std::string &type, std::vector<std::string> *v) {
+
+	if (m_Attributes.count(type) == 0)
+		return;
+
+	AttribSet *as = m_Attributes[type];
+	for (auto &attr : as->getAttributes())
+		v->push_back(attr.first);
 }
 
 

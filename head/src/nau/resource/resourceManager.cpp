@@ -447,7 +447,7 @@ ResourceManager::removeRenderable(std::string name) {
 
 
 IState *
-ResourceManager::createState(std::string &stateName) {
+ResourceManager::createState(const std::string &stateName) {
 
 	if (!m_States.count(stateName)) {
 		m_States[stateName] = IState::create();
@@ -458,7 +458,7 @@ ResourceManager::createState(std::string &stateName) {
 
 
 bool 
-ResourceManager::hasState (std::string &stateName) {
+ResourceManager::hasState (const std::string &stateName) {
 
 	if (m_States.count (stateName) > 0) {
 		return true;
@@ -468,7 +468,7 @@ ResourceManager::hasState (std::string &stateName) {
 
 
 nau::material::IState* 
-ResourceManager::getState (std::string &stateName) {
+ResourceManager::getState (const std::string &stateName) {
 
 	if (m_States.count (stateName) > 0) {
 		return m_States[stateName];
