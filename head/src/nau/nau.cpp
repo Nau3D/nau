@@ -3,6 +3,7 @@
 #include "nau/config.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
+#include "nau/geometry/sphere.h"
 #include "nau/interface/interface.h"
 #include "nau/event/eventFactory.h"
 #include "nau/loader/cboLoader.h"
@@ -15,6 +16,8 @@
 #include "nau/material/uniformBlockManager.h"
 #include "nau/render/iAPISupport.h"
 #include "nau/render/passFactory.h"
+#include "nau/render/PassProcessTexture.h"
+#include "nau/render/PassProcessBuffer.h"
 #include "nau/resource/fontManager.h"
 #include "nau/scene/sceneFactory.h"
 #include "nau/system/file.h"
@@ -33,15 +36,17 @@ extern "C" {
 
 
 #include <ctime>
+#include <typeinfo>
 
 using namespace nau;
-using namespace nau::system;
+using namespace nau::geometry;
 using namespace nau::loader;
-using namespace nau::scene;
+using namespace nau::material;
 using namespace nau::render;
 using namespace nau::resource;
+using namespace nau::scene;
+using namespace nau::system;
 using namespace nau::world;
-using namespace nau::material;
 
 
 static nau::Nau *gInstance = 0;
@@ -642,7 +647,7 @@ Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 		return (AttributeValues *)renderer->getCamera().get();
 	}
 	if (type == "COLOR") {
-		return (AttributeValues *)renderer->getMaterial();
+		return (AttributeValues *)renderer->getColorMaterial();
 	}
 	
 	if (sup->apiSupport(IAPISupport::IMAGE_TEXTURE) && type == "IMAGE_TEXTURE") {
@@ -651,6 +656,15 @@ Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 
 	if (type == "LIGHT") {
 		return (AttributeValues *)renderer->getLight(number).get();
+	}
+	if (type == "BUFFER_BINDING") {
+		return (AttributeValues *)renderer->getMaterial()->getMaterialBuffer(number);
+	}
+	if (type == "BUFFER_MATERIAL") {
+		return (AttributeValues *)renderer->getMaterial()->getBuffer(number);
+	}
+	if (type == "IMAGE_TEXTURE") {
+		return (AttributeValues *)renderer->getMaterial()->getImageTexture(number);
 	}
 	if (type == "TEXTURE_BINDING") {
 		return (AttributeValues *)renderer->getMaterialTexture(number);
@@ -688,22 +702,109 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 		if (m_pRenderManager->hasCamera(context))
 			return (AttributeValues *)m_pRenderManager->getCamera(context).get();
 	}
+
 	if (type == "LIGHT") {
 		if (m_pRenderManager->hasLight(context))
 			return (AttributeValues *)m_pRenderManager->getLight(context).get();
 	}
+
 	if (type == "PASS") {
 		std::string pipName = m_pRenderManager->getActivePipelineName();
 		if (m_pRenderManager->hasPass(pipName, context))
 			return (AttributeValues *)m_pRenderManager->getPass(pipName, context);
 	}
+
 	if (type == "RENDERER") {
 		return (AttributeValues *)RENDERER;
 	}
+
 	if (type == "SCENE") {
 		if (m_pRenderManager->hasScene(context))
 			return (AttributeValues *)m_pRenderManager->getScene(context).get();
 	}
+
+	if (type == "SPHERE") {
+		std::string scene, object;
+		std::size_t found = context.find("::");
+		if (found != std::string::npos && context.size() > found + 2) {
+			scene = context.substr(0, found);
+			object = context.substr(found + 2);
+		}
+
+		if (m_pRenderManager->hasScene(scene)) {
+			SceneObject *s = m_pRenderManager->getScene(scene)->getSceneObject(object).get();
+			if (s) {
+				SceneObject *so = (SceneObject *)m_pRenderManager->getScene(scene)->getSceneObject(object)->getRenderable().get();
+				std::string s = typeid(*so).name();
+				if (s == "class nau::geometry::Sphere") {
+					Sphere *sp = (Sphere *)so;
+					return (AttributeValues *)sp;
+
+				}
+			}
+		}
+	}
+
+	if (type == "PASS_POST_PROCESS_TEXTURE") {
+		Pass *p = RENDERMANAGER->getPass(context);
+		if (p) {
+			PassProcessItem *pp = p->getPostProcessItem(number);
+			std::string s = typeid(*pp).name();
+			if (s == "class nau::render::PassProcessTexture") {
+				PassProcessTexture *ppt = (PassProcessTexture *)pp;
+				return (AttributeValues *)ppt;
+			}
+		}
+	}
+	if (type == "PASS_PRE_PROCESS_TEXTURE") {
+		Pass *p = RENDERMANAGER->getPass(context);
+		if (p) {
+			PassProcessItem *pp = p->getPreProcessItem(number);
+			std::string s = typeid(*pp).name();
+			if (s == "class nau::render::PassProcessTexture") {
+				PassProcessTexture *ppt = (PassProcessTexture *)pp;
+				return (AttributeValues *)ppt;
+			}
+		}
+	}
+	if (type == "PASS_POST_PROCESS_BUFFER") {
+		Pass *p = RENDERMANAGER->getPass(context);
+		if (p) {
+			PassProcessItem *pp = p->getPostProcessItem(number);
+			std::string s = typeid(*pp).name();
+			if (s == "class nau::render::PassProcessBuffer") {
+				PassProcessBuffer *ppt = (PassProcessBuffer *)pp;
+				return (AttributeValues *)ppt;
+			}
+		}
+	}
+	if (type == "PASS_PRE_PROCESS_BUFFER") {
+		Pass *p = RENDERMANAGER->getPass(context);
+		if (p) {
+			PassProcessItem *pp = p->getPreProcessItem(number);
+			std::string s = typeid(*pp).name();
+			if (s == "class nau::render::PassProcessBuffer") {
+				PassProcessBuffer *ppt = (PassProcessBuffer *)pp;
+				return (AttributeValues *)ppt;
+			}
+		}
+	}
+
+	if (type == "SCENE_OBJECT") {
+		std::string scene, object;
+		std::size_t found = context.find("::");
+		if (found != std::string::npos && context.size() > found + 2) {
+			scene = context.substr(0, found);
+			object = context.substr(found + 2);
+		}
+
+		if (m_pRenderManager->hasScene(scene)) {
+			SceneObject *s = m_pRenderManager->getScene(scene)->getSceneObject(object).get();
+			if (s)
+				return (AttributeValues *)s;
+		}
+	}
+
 	if (type == "VIEWPORT") {
 		if (m_pRenderManager->hasViewport(context))
 			return (AttributeValues *)m_pRenderManager->getViewport(context).get();
@@ -714,6 +815,10 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 	if (type == "BUFFER") {
 		if (m_pResourceManager->hasBuffer(context))
 			return (AttributeValues *)m_pResourceManager->getBuffer(context);
+	}
+	if (type == "TEXTURE") {
+		if (m_pResourceManager->hasTexture(context))
+			return (AttributeValues *)m_pResourceManager->getTexture(context);
 	}
 	if (type == "RENDER_TARGET") {
 		if (m_pResourceManager->hasRenderTarget(context))
@@ -737,7 +842,7 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)&(m_pMaterialLibManager->getMaterial(lib, mat)->getColor());
 	}
-	if (type == "TEXTURE") {
+	if (type == "TEXTURE_MATERIAL") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getTexture(number);
 	}
@@ -753,9 +858,14 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getImageTexture(number);
 	}
-	if (type == "MATERIAL_BUFFER") {
-		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+	if (type == "BUFFER_MATERIAL") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat)) {
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getBuffer(number);
+		}
+	}
+	if (type == "BUFFER_BINDING") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialBuffer(number);
 	}
 
 	// If we get here then we are trying to fetch something that does not exist
@@ -920,9 +1030,9 @@ Nau::registerAttributes(std::string s, AttribSet *attrib) {
 
 
 bool 
-Nau::validateUserAttribContext(std::string context) {
+Nau::validateUserAttribType(std::string type) {
 
-	if (m_Attributes.count(context) != 0)
+	if (m_Attributes.count(type) != 0)
 		return true;
 	else
 		return false;

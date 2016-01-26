@@ -72,4 +72,13 @@
 			
 		</pipeline>
 	</pipelines>
+	
+	<interface>
+		<window label="Main Window">
+			<var label="Slices" type="SPHERE" context="CubeLand::Sphere" component="SLICES" />
+			<var label="Stacks" type="SPHERE" context="CubeLand::Sphere" component="STACKS" />
+			<var label="Scale" type="SCENE_OBJECT" context="CubeLand::Sphere" component="SCALE" />
+		</window>
+	</interface>
+	
 </project>

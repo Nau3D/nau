@@ -12,7 +12,8 @@ PassProcessBuffer::Init() {
 
 
 #ifndef _WINDLL
-	NAU->registerAttributes("PASS_PROCESS_BUFFER", &Attribs);
+	NAU->registerAttributes("PASS_PRE_PROCESS_BUFFER", &Attribs);
+	NAU->registerAttributes("PASS_POST_PROCESS_BUFFER", &Attribs);
 #endif
 	return true;
 }

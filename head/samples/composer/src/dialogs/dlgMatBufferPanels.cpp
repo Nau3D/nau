@@ -112,7 +112,7 @@ DlgMatBufferPanels::onProcessPanelChange(wxPropertyGridEvent& e) {
 
 	nau::material::IMaterialBuffer *buffer;
 
-	buffer = m_Material->getBuffer(m_CurrentBinding);
+	buffer = m_Material->getMaterialBuffer(m_CurrentBinding);
 
 	const wxString& name = e.GetPropertyName();
 	PropertyManager::updateProp(m_PG, name.ToStdString(), nau::material::IMaterialBuffer::Attribs, (AttributeValues *)buffer);
@@ -133,7 +133,7 @@ DlgMatBufferPanels::updatePanel() {
 	}
 	itemList->SetSelection(m_CurrentBinding);
 
-	buffer = m_Material->getBuffer(m_MaterialBindings[m_CurrentBinding]);
+	buffer = m_Material->getMaterialBuffer(m_MaterialBindings[m_CurrentBinding]);
 
 	PropertyManager::updateGrid(m_PG, nau::material::IMaterialBuffer::Attribs, (AttributeValues *)buffer);
 	PropertyManager::updateGrid(m_PG, nau::material::IBuffer::Attribs, (AttributeValues *)buffer->getBuffer());

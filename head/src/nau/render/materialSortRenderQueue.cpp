@@ -135,7 +135,8 @@ MaterialSortRenderQueue::processQueue (void) {
 			
 			{
 				PROFILE ("Material prepare");
-				aMat->prepare();
+				RENDERER->setMaterial(aMat);
+				//aMat->prepare();
 			}
 			
 			std::vector<pair_MatGroup_Transform >::iterator matGroupsIter;

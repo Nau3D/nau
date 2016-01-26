@@ -21,12 +21,17 @@ namespace nau
 			FLOAT_PROP(STACKS, 1);
 
 			void build();
+			void setPropui(UIntProperty prop, int unsigned value);
 
 		protected:
 
-			std::vector<float> m_Floats;
+			//std::vector<float> m_Floats;
 			static bool Init();
 			static bool Inited;
+
+			bool m_Built;
+
+			void rebuild();
 
 		};
 	};

@@ -1,6 +1,7 @@
 #include "nau/interface/interface.h"
 
 #include "nau.h"
+#include "nau/config.h"
 #include "nau/slogger.h"
 #include "nau/math/data.h"
 
@@ -120,7 +121,9 @@ ToolBar::~ToolBar() {
 
 ToolBar::ToolBar() {
 
+#ifdef NAU_OPENGL
 	TwInit(TW_OPENGL_CORE, NULL);
+#endif
 	Vec2 = TwDefineStruct("VEC2", Vec2Members, 2, sizeof(vec2), NULL, NULL);
 	Vec3 = TwDefineStruct("VEC3", Vec3Members, 3, sizeof(vec3), NULL, NULL);
 	Vec4 = TwDefineStruct("VEC4", Vec4Members, 4, sizeof(vec4), NULL, NULL);

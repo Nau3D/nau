@@ -82,7 +82,8 @@ namespace nau
 
 			void attachBuffer(IMaterialBuffer *b);
 			bool hasBuffer(int id);
-			IMaterialBuffer *getBuffer(int id);
+			IMaterialBuffer *getMaterialBuffer(int id);
+			IBuffer *getBuffer(int id);
 			void getBufferBindings(std::vector<unsigned int> *vi);
 
 			MaterialTexture *getMaterialTexture(int unit);

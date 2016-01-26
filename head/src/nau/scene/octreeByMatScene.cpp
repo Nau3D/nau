@@ -114,7 +114,7 @@ OctreeByMatScene::build (void) {
 
 	// Erase the scene object afterwards
 	std::vector<std::shared_ptr<SceneObject>>::iterator objIter;
-	for (objIter != m_SceneObjects.begin(); objIter != m_SceneObjects.end(); ) {
+	for (objIter = m_SceneObjects.begin(); objIter != m_SceneObjects.end(); ) {
 			
 		if ((*objIter)->isStatic()) {
 			std::string renderableName = (*objIter)->getRenderable()->getName();

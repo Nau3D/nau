@@ -22,7 +22,7 @@ IRenderable::Init() {
 //#endif
 
 #ifndef _WINDLL
-	NAU->registerAttributes("RENDERABLE", &Attribs);
+//	NAU->registerAttributes("RENDERABLE", &Attribs);
 #endif
 
 	return true;

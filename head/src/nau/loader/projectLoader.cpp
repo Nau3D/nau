@@ -739,18 +739,18 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 		//ok.push_back("context"); ok.push_back("name"); ok.push_back("type");
 		//checkForNonValidAttributes("attribute", ok, pElem);
 
-		const char *pContext = pElem->Attribute("context");
+		const char *pContext = pElem->Attribute("type");
 		const char *pName = pElem->Attribute("name");
-		const char *pType = pElem->Attribute("type");
+		const char *pType = pElem->Attribute("data");
 
 		if (0 == pContext) {
-			NAU_THROW("File %s\nAttribute without a context", ProjectLoader::s_File.c_str());
+			NAU_THROW("File %s\nAttribute without an object", ProjectLoader::s_File.c_str());
 		}
-		if (!NAU->validateUserAttribContext(pContext)) {
+		if (!NAU->validateUserAttribType(pContext)) {
 			std::vector<std::string> objTypes;
 			NAU->getObjTypeList(&objTypes);
 			nau::system::TextUtil::Join(objTypes, delim.c_str(), &s);
-			NAU_THROW("File %s\nAttribute with an invalid context %s\nValid Values are: \n%s", ProjectLoader::s_File.c_str(), pContext, s.c_str());
+			NAU_THROW("File %s\nAttribute with an invalid type %s\nValid Values are: \n%s", ProjectLoader::s_File.c_str(), pContext, s.c_str());
 		}
 		if (0 == pName) {
 			NAU_THROW("File %s\nAttribute without a name", ProjectLoader::s_File.c_str());
@@ -759,11 +759,11 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 			NAU_THROW("File %s\nAttribute name %s is already in use in context %s", ProjectLoader::s_File.c_str(), pName, pContext);
 		}
 		if (0 == pType) {
-			NAU_THROW("File %s\nAttribute %s without a type", ProjectLoader::s_File.c_str(), pName);
+			NAU_THROW("File %s\nAttribute %s without a data type", ProjectLoader::s_File.c_str(), pName);
 		}
 		if (!Attribute::isValidUserAttrType(pType)) {
 			nau::system::TextUtil::Join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
-			NAU_THROW("File %s\nAttribute %s with an invalid type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
+			NAU_THROW("File %s\nAttribute %s with an invalid data type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
 		}
 
 		AttribSet *attribs = NAU->getAttribs(pContext);
@@ -772,7 +772,7 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 		//Attribute *a = new Attribute(attribs->getNextFreeID(), pName, dt, false, v);
 		attribs->add(Attribute(attribs->getNextFreeID(), pName, dt, false, v));
 		std::string s;
-		SLOG("User Attribute : %s::%s", pContext, pName);
+		SLOG("User Attribute : %s::%s (%s)", pContext, pName, pType);
 				
 	}
 }
@@ -1984,7 +1984,7 @@ ProjectLoader::loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass,std::map<std
 	<optixMaterialAttributes>
 		<valueof optixVar="diffuse" type="CURRENT" context="COLOR" component="DIFFUSE" />
 		<valueof optixVar="ambient" type="CURRENT" context="COLOR" component="AMBIENT" />
-		<valueof uniform="texCount"	type="CURRENT" context="TEXTURE" component="COUNT" />
+		<valueof uniform="texCount"	type="CURRENT" context="RENDERER" component="TEXTURE_COUNT" />
 	</optixMaterialAttributes>
 
 	// For globl attributes, i.e. attributes that remain constant per frame
@@ -2175,9 +2175,14 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
-		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
-				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+		std::string message;
+		validateObjectTypeAndComponent(pType, pComponent, &message);
+		if (message != "")
+			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid\n%s",
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName, message.c_str());
+		//if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
+		//	NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+		//		ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 
 		int id = 0;
 		if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
@@ -3544,7 +3549,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				const char *pType = pElemAux->Attribute("type");
 				const char *pContext = pElemAux->Attribute("context");
 				const char *pComponent = pElemAux->Attribute("component");
-				const char *pControl = pElemAux->Attribute("option");
+				const char *pControl = pElemAux->Attribute("mode");
 				int id = 0;
 				pElemAux->QueryIntAttribute("id", &id);
 

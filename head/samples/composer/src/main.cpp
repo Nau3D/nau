@@ -367,6 +367,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	}
 	catch(std::string &s) {
 		wxMessageBox((wxString)s.c_str());
+		exit(1);
 	}
 
 

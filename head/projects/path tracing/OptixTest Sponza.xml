@@ -5,7 +5,7 @@
 			<constant name="RTSIZE" value = 512 />
 		</constants>
 		<attributes>
-			<attribute context="PASS" name="EXPOSURE" type="FLOAT" value = "10" />
+			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "10" />
 			<attribute name="Levels" context="PASS" type="INT" value=9 />
 			<attribute name="CurrentLevel" context="PASS" type="INT" value=0 />
 		</attributes>

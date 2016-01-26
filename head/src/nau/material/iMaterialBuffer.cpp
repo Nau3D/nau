@@ -17,7 +17,7 @@ IMaterialBuffer::Init() {
 	Attribs.add(Attribute(TYPE, "TYPE", Enums::DataType::ENUM, false));
 
 #ifndef _WINDLL
-	NAU->registerAttributes("MATERIAL_BUFFER", &Attribs);
+	NAU->registerAttributes("BUFFER_BINDING", &Attribs);
 #endif
 
 	return true;

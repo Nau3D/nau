@@ -364,44 +364,45 @@ Enums::valueToString(DataType p, void *v) {
 	int intconverter;
 	unsigned int uintconverter;
 	bool boolconverter;
+	void *v1 = ((Data *)v)->getPtr();;
 
 	switch (p) {
 	case BYTE:
-		intconverter = *((char *)v); 
+		intconverter = *((char *)v1); 
 		m_Result = std::to_string(intconverter);
 		return m_Result;
 	case SHORT:
-		intconverter = *((short *)v);
+		intconverter = *((short *)v1);
 		m_Result = std::to_string(intconverter);
 		return m_Result;
 	case BOOL:	
-		boolconverter = *((bool *)v);
+		boolconverter = *((bool *)v1);
 		m_Result = boolconverter == false ? "false" : "true";
 		return m_Result;
 	case SAMPLER:
 	case ENUM:
 	case INT:
-		intconverter = *((int *)v);
+		intconverter = *((int *)v1);
 		m_Result = std::to_string(intconverter);
 		return m_Result;
 	case UBYTE:
-		uintconverter = *((unsigned char *)v);
+		uintconverter = *((unsigned char *)v1);
 		m_Result = std::to_string(uintconverter);
 		return m_Result;
 	case USHORT:
-		uintconverter = *((unsigned short *)v);
+		uintconverter = *((unsigned short *)v1);
 		m_Result = std::to_string(uintconverter);
 		return m_Result;
 	case UINT:
-		uintconverter = *((unsigned int *)v);
+		uintconverter = *((unsigned int *)v1);
 		m_Result = std::to_string(uintconverter);
 		return m_Result;
 	case FLOAT:
-		m_Result = std::to_string(*((float *)v));
+		m_Result = std::to_string(*((float *)v1));
 		return m_Result;
 
 	case DOUBLE:
-		m_Result = std::to_string(*((double *)v));
+		m_Result = std::to_string(*((double *)v1));
 		return m_Result;
 
 	case IVEC2:

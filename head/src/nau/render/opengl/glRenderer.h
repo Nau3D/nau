@@ -122,14 +122,18 @@ namespace nau
 			std::map<int, MaterialTexture *> m_Textures;
 			std::map<int, IImageTexture *> m_ImageTextures;
 			nau::render::GLState m_glCurrState, m_glDefaultState;
-			nau::material::ColorMaterial m_Material;
+			nau::material::ColorMaterial m_ColorMaterial;
+			std::shared_ptr<Material> m_Material;
 			IProgram *m_Shader;
 
 		public:
+			virtual void setMaterial(const std::shared_ptr<Material> &aMat);
+			virtual void resetMaterial();
+			const std::shared_ptr<Material>& getMaterial();
 			// COLOR
-			virtual void setMaterial(nau::material::ColorMaterial &mat);
-			virtual void setMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess);
-			virtual ColorMaterial *getMaterial();
+			virtual void setColorMaterial(nau::material::ColorMaterial &mat);
+			virtual void setColorMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess);
+			virtual ColorMaterial *getColorMaterial();
 
 			// STATE
 			void setState(IState *aState);

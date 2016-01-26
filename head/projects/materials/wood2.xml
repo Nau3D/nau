@@ -3,11 +3,11 @@
 	<assets>
 	
 		<attributes>
-			<attribute context="RENDERER" name="frequency" type="FLOAT" value="32" />
-			<attribute context="RENDERER" name="sharpness" type="FLOAT" value = 16 />
-			<attribute context="RENDERER" name="noiseScale" type="FLOAT" value=4 />
-			<attribute context="RENDERER" name="dark" type="VEC4" x="0.91" y = "0.5" z="0.12" w = "1.0" />
-			<attribute context="RENDERER" name="light" type="VEC4" x="0.44" y = "0.21" z="0.0" w = "1.0" />
+			<attribute type="RENDERER" name="frequency" data="FLOAT" value="32" />
+			<attribute type="RENDERER" name="sharpness" data="FLOAT" value = 16 />
+			<attribute type="RENDERER" name="noiseScale" data="FLOAT" value=4 />
+			<attribute type="RENDERER" name="dark" data="VEC4" x="0.91" y = "0.5" z="0.12" w = "1.0" />
+			<attribute type="RENDERER" name="light" data="VEC4" x="0.44" y = "0.21" z="0.0" w = "1.0" />
 		</attributes>
 		<scenes>
 			<scene name="Model" param="UNITIZE">
@@ -95,9 +95,9 @@
 	<interface>
 		<window label="Main Window">
 			<pipelineList label="Effect List" />
-			<var label="Dark" type="RENDERER" context="CURRENT" component="dark" option="COLOR"/>
+			<var label="Dark" type="RENDERER" context="CURRENT" component="dark" mode="COLOR"/>
 			<var label="Light" type="RENDERER" context="CURRENT" component="light" option="COLOR"/>
-			<var label="Light Dir" type="LIGHT" context="Sun" component="DIRECTION" option="DIRECTION"/>
+			<var label="Light Dir" type="LIGHT" context="Sun" component="DIRECTION" mode="DIRECTION"/>
 			<var label="Frequency" type="RENDERER" context="CURRENT" component="frequency" />
 			<var label="Sharpness" type="RENDERER" context="CURRENT" component="sharpness" />
 			<var label="Noise Scale" type="RENDERER" context="CURRENT" component="noiseScale" />

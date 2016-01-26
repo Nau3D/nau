@@ -108,13 +108,16 @@ VertexData::add (std::shared_ptr<VertexData> &aVertexData) {
 	std::string s = "position";
 	std::shared_ptr<std::vector<Attr>> &vertices = getDataOf (GetAttribIndex(s));
 
-	offset = vertices->size();
+	if (vertices.get() == NULL)
+		offset = 0;
+	else
+		offset = vertices->size();
 
 	if (offset == 0) {
 
 		for (int i = 0; i < VertexData::MaxAttribs; i++) {
 			std::shared_ptr<std::vector<Attr>> &newVec = aVertexData->getDataOf(i);
-			if (!newVec) {
+			if (newVec.get() != NULL) {
 				std::shared_ptr<std::vector<Attr>> aVec = std::shared_ptr<std::vector<Attr>>(new std::vector<Attr>);
 				aVec->insert(aVec->end(),newVec->begin(), newVec->end());
 				setDataFor(i,aVec);

@@ -27,7 +27,10 @@ IBuffer::Init() {
 	Attribs.add(Attribute(DIM, "DIM", Enums::DataType::UIVEC3, false, new uivec3(1)));
 
 #ifndef _WINDLL
+	// for direct access
 	NAU->registerAttributes("BUFFER", &Attribs);
+	// for access through material
+	NAU->registerAttributes("BUFFER_MATERIAL", &Attribs);
 #endif
 	return true;
 }

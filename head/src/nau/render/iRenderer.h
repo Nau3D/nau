@@ -202,10 +202,14 @@ namespace nau
 		// MATERIAL (color, state, shaders and textures)
 
 		public:
+
+			virtual void setMaterial(const std::shared_ptr<Material> &aMat) = 0;
+			virtual void resetMaterial() = 0;
+			virtual const std::shared_ptr<Material>& getMaterial() = 0;
 			// color
-			virtual void setMaterial(nau::material::ColorMaterial &mat) = 0;
-			virtual void setMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess) = 0;
-			virtual ColorMaterial *getMaterial() = 0;
+			virtual void setColorMaterial(nau::material::ColorMaterial &mat) = 0;
+			virtual void setColorMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess) = 0;
+			virtual ColorMaterial *getColorMaterial() = 0;
 
 			// state
 			virtual void setState(IState *aState) = 0;

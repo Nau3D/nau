@@ -2,8 +2,8 @@
 <project name="teste1-shadows" width=1000 height=1000 >
 	<assets>
 		<attributes>
-			<attribute context="PASS" name="FROM" type="FLOAT" value = -1 />
-			<attribute context="PASS" name="TO" type="FLOAT" value = -1 />
+			<attribute type="PASS" name="FROM" data="FLOAT" value = -1 />
+			<attribute type="PASS" name="TO" data="FLOAT" value = -1 />
 		</attributes>
 
 		<scenes>

@@ -177,7 +177,7 @@ GLVertexArray::compile (void) {
 
 	for (int i = 0; i < VertexData::MaxAttribs; i++){
 
-		if (0 != m_InternalArrays[i]){
+		if (0 != m_InternalArrays[i] && m_InternalArrays[i]->size() != 0){
 			std::shared_ptr<std::vector<VertexData::Attr>> &pArray = m_InternalArrays[i];
 
 			IBuffer *b = NULL;

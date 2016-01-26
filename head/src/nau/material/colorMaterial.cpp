@@ -55,7 +55,7 @@ ColorMaterial::~ColorMaterial() {
 void 
 ColorMaterial::prepare () {
 		
-	RENDERER->setMaterial(*this);
+	RENDERER->setColorMaterial(*this);
 }
 
 
@@ -74,7 +74,7 @@ ColorMaterial::restore() {
 	float shininess = (std::dynamic_pointer_cast<NauFloat>
 		(ColorMaterial::Attribs.get((AttributeValues::FloatProperty)SHININESS, Enums::FLOAT)->getDefault()))->getNumber();
 	
-	RENDERER->setMaterial(diffuse, ambient, emission, specular, shininess);
+	RENDERER->setColorMaterial(diffuse, ambient, emission, specular, shininess);
 }
 
 

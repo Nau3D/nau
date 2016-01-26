@@ -176,7 +176,7 @@ namespace nau {
 		void getValidObjectComponents(const std::string &type, std::vector<std::string>* v);
 
 		void registerAttributes(std::string s, AttribSet *attrib);
-		bool validateUserAttribContext(std::string s);
+		bool validateUserAttribType(std::string s);
 		bool validateUserAttribName(std::string context, std::string name);
 		AttribSet *getAttribs(std::string context);
 		void deleteUserAttributes();

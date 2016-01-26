@@ -135,7 +135,7 @@ GLCanvas::OnPaint (wxPaintEvent &event) {
 		//	}
 		event.Skip();
 	}
-	if (m_pEngine->getProfileResetRequest())
+	if (m_pEngine && m_pEngine->getProfileResetRequest())
 		Profile::Reset();
 }
 

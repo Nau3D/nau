@@ -60,7 +60,8 @@ PassCompute::eventReceived(const std::string &sender, const std::string &eventTy
 void
 PassCompute::prepare (void) {
 
-	m_Mat->prepare();	
+	RENDERER->setMaterial(m_Mat);
+	//m_Mat->prepare();	
 
 	if (m_BufferX) {
 		m_BufferX->getData(m_OffsetX, 4, &m_UIntProps[DIM_X]);

@@ -133,6 +133,12 @@ namespace nau
 			void addPreProcessItem(PassProcessItem *pp);
 			void addPostProcessItem(PassProcessItem *pp);
 
+			PassProcessItem * getPreProcessItem(unsigned int i);
+			PassProcessItem * getPostProcessItem(unsigned int i);
+
+			void executePreProcessList();
+			void executePostProcessList();
+
 			//
 			// RENDER TEST
 			//
@@ -228,8 +234,6 @@ namespace nau
 			void callPreScript();
 			void callPostScript();
 
-			void executePreProcessList();
-			void executePostProcessList();
 
 		protected:
 

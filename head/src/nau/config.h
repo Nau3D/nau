@@ -18,11 +18,8 @@
 
 #define NAU_RENDER_FLAGS
 
-
-//#define GLINTERCEPTDEBUG
 #define NAU_LUA
 
 #define NAU_DEBUG 0
 
-#define GLBINDING_STATIC
 #endif // NAU_CONFIG_H

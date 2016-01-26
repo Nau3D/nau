@@ -208,6 +208,26 @@ Pass::addPostProcessItem(PassProcessItem *pp) {
 }
 
 
+PassProcessItem *
+Pass::getPreProcessItem(unsigned int i) {
+
+	if (i < m_PreProcessList.size())
+		return m_PreProcessList[i];
+	else
+		return NULL;
+}
+
+
+PassProcessItem *
+Pass::getPostProcessItem(unsigned int i) {
+
+	if (i < m_PostProcessList.size())
+		return m_PostProcessList[i];
+	else
+		return NULL;
+}
+
+
 void
 Pass::executePreProcessList() {
 

@@ -502,29 +502,51 @@ GLRenderer::rotate(MatrixMode mode, float angle, nau::math::vec3 &axis) {
 // -----------------------------------------------------------------
 
 
-void
-GLRenderer::setMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess) {
+void 
+GLRenderer::setMaterial(const std::shared_ptr<Material> &aMat) {
 
-	m_Material.setPropf(ColorMaterial::SHININESS, shininess);
-	m_Material.setPropf4(ColorMaterial::DIFFUSE, diffuse);
-	m_Material.setPropf4(ColorMaterial::AMBIENT, ambient);
-	m_Material.setPropf4(ColorMaterial::EMISSION, emission);
-	m_Material.setPropf4(ColorMaterial::SPECULAR, specular);
+	m_Material = aMat;
+	m_Material->prepare();
 }
 
 
 void
-GLRenderer::setMaterial(ColorMaterial &mat) {
+GLRenderer::resetMaterial() {
 
-	m_Material = mat;
+	m_Material.reset();
+}
+
+
+const std::shared_ptr<Material> &
+GLRenderer::getMaterial() {
+
+	return m_Material;
+}
+
+
+void
+GLRenderer::setColorMaterial(vec4 &diffuse, vec4 &ambient, vec4 &emission, vec4 &specular, float shininess) {
+
+	m_ColorMaterial.setPropf(ColorMaterial::SHININESS, shininess);
+	m_ColorMaterial.setPropf4(ColorMaterial::DIFFUSE, diffuse);
+	m_ColorMaterial.setPropf4(ColorMaterial::AMBIENT, ambient);
+	m_ColorMaterial.setPropf4(ColorMaterial::EMISSION, emission);
+	m_ColorMaterial.setPropf4(ColorMaterial::SPECULAR, specular);
+}
+
+
+void
+GLRenderer::setColorMaterial(ColorMaterial &mat) {
+
+	m_ColorMaterial = mat;
 	//m_Material.clone(mat);
 }
 
 
 ColorMaterial *
-GLRenderer::getMaterial() {
+GLRenderer::getColorMaterial() {
 
-	return &m_Material;
+	return &m_ColorMaterial;
 }
 
 
@@ -1099,7 +1121,7 @@ GLRenderer::showDrawDebugInfo(std::shared_ptr<Material> &mat, nau::util::Tree *t
 		bufferTree = tree->appendBranch("Buffers");
 		SLOG("Buffers");
 		for (unsigned int i = 0; i < vi.size(); ++i) {
-			IMaterialBuffer *b = mat->getBuffer(vi[i]);
+			IMaterialBuffer *b = mat->getMaterialBuffer(vi[i]);
 			IBuffer *buff = b->getBuffer();
 			bufferIDTree = bufferTree->appendBranch("Binding Point", std::to_string(vi[i]));
 			bufferIDTree->appendItem("Label", buff->getLabel());

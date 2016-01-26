@@ -309,7 +309,7 @@ Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, std::shar
 		if (0 == newIndicesMap.count ((*indexesIter))) {
 
 			for (int i = 0; i < VertexData::MaxAttribs; i++) {
-				if (poolList[i]->size()) 
+				if (poolList[i].get() && poolList[i]->size()) 
 					list[i]->push_back(poolList[i]->at((*indexesIter)));
 			}
 

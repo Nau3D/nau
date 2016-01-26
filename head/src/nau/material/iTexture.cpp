@@ -33,7 +33,10 @@ ITexture::Init() {
 	Attribs.add(Attribute(INTERNAL_FORMAT, "INTERNAL_FORMAT", Enums::DataType::ENUM, false));
 
 #ifndef _WINDLL
+	// for direct access
 	NAU->registerAttributes("TEXTURE", &Attribs);
+	// for access through material
+	NAU->registerAttributes("TEXTURE_MATERIAL", &Attribs);
 #endif
 
 	return true;

@@ -262,14 +262,14 @@
 			</color>
 			<shader name="emission">
 				<values>
-					<valueof uniform="emission" 		type="COLOR" context="CURRENT" 
-														component="EMISSION" />
+					<valueof uniform="emission" type="COLOR" context="CURRENT" 
+													component="EMISSION" />
 														
-					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
-														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="PVM"      type="RENDERER" context="CURRENT" 
+													component="PROJECTION_VIEW_MODEL" />
 					
-					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
-														component="TEXTURE_COUNT" />
+					<valueof uniform="texCount"	type="RENDERER" context="CURRENT" 
+													component="TEXTURE_COUNT" />
 				</values>
 			</shader>
 		</material>
@@ -288,14 +288,14 @@
 			</color>
 			<shader name="font">
 				<values>
-					<valueof uniform="emission" 		type="COLOR" context="CURRENT" 
-														component="EMISSION" />
+					<valueof uniform="emission" type="COLOR" context="CURRENT" 
+													component="EMISSION" />
 															
-					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
-														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="PVM"      type="RENDERER" context="CURRENT" 
+													component="PROJECTION_VIEW_MODEL" />
 
-					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
-														component="UNIT" id="0" />
+					<valueof uniform="texUnit" 	type="TEXTURE_BINDING" context="CURRENT" 
+													component="UNIT" id="0" />
 				</values>
 			</shader>
 			<state name="__Transparent"/>

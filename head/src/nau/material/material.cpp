@@ -472,10 +472,20 @@ Material::attachBuffer(IMaterialBuffer *b) {
 
 
 IMaterialBuffer *
-Material::getBuffer(int id) {
+Material::getMaterialBuffer(int id) {
 
 	if (m_Buffers.count(id))
 		return m_Buffers[id];
+	else
+		return NULL;
+}
+
+
+IBuffer *
+Material::getBuffer(int id) {
+
+	if (m_Buffers.count(id))
+		return m_Buffers[id]->getBuffer();
 	else
 		return NULL;
 }
