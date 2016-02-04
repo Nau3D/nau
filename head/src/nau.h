@@ -159,12 +159,18 @@ namespace nau {
 		//bool validateAttribute(std::string type, std::string context, std::string component);
 		// Only validates the existence of the component in a particular type/context of object
 		bool validateShaderAttribute(std::string type, std::string context, std::string component);
-		bool setAttribute(std::string type, std::string context,
+		bool setAttributeValue(std::string type, std::string context,
 				 std::string component, int number,
 				 Data *values);
-		void *getAttribute(std::string type, std::string context,
-			std::string component, int number);
-		AttributeValues *getObjectAttributes(const std::string &type, const std::string &context, int number=0);
+		void *getAttributeValue(std::string type, std::string context,
+			std::string component, int number=0);
+
+		/// returns the attribute, usefull to get attr info, such as max, min, etc
+		/// type is assumed to be valid. Use validateObjectType to check
+		std::unique_ptr<Attribute> &getAttribute(const std::string &type, const std::string &component);
+
+		AttributeValues *getObjectAttributes(const std::string &type, const std::string &context, 
+			int number=0);
 		AttributeValues *getCurrentObjectAttributes(const std::string &type, int number = 0);
 
 		bool validateObjectType(const std::string & type);

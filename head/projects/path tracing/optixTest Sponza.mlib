@@ -128,7 +128,7 @@
 		<material name="computeLuminance" >
 			<shader name="computeLuminance">
 				<values>
-					<valueof uniform="input"		type="TEXTURE_BINDING" context="CURRENT" 
+					<valueof uniform="input"	type="TEXTURE_BINDING" context="CURRENT" 
 														id=0 component="UNIT" />
 				</values>
 			</shader>

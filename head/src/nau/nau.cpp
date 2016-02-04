@@ -402,7 +402,7 @@ luaGet(lua_State *l) {
 
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
-	arr = NAU->getAttribute(tipo, context, component, number);
+	arr = NAU->getAttributeValue(tipo, context, component, number);
 	if (arr == NULL) {
 		NAU_THROW("Lua get: Invalid context or number: %s %d", context, number);
 	}
@@ -521,7 +521,7 @@ luaSet(lua_State *l) {
 		NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[bdt].c_str());
 	}
 
-	if (!NAU->setAttribute(tipo, context, component, number, arr))
+	if (!NAU->setAttributeValue(tipo, context, component, number, arr))
 		NAU_THROW("Lua set: Invalid context: %s", context);
 
 	delete arr;
@@ -637,6 +637,15 @@ Nau::callLuaTestScript(std::string name) {
 // ----------------------------------------------------------
 
 
+std::unique_ptr<Attribute>& 
+Nau::getAttribute(const std::string & type, const std::string & component) {
+
+	// type is assumed to be valid. Use validateObjectType to check
+	assert(m_Attributes.count(type));
+	return m_Attributes[type]->get(component);
+}
+
+
 AttributeValues *
 Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 
@@ -691,6 +700,7 @@ Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 	// If we get here then we are trying to fetch something that does not exist
 	NAU_THROW("Getting an invalid object\ntype: %s", type.c_str());
 }
+
 
 
 AttributeValues *
@@ -901,7 +911,7 @@ Nau::validateShaderAttribute(std::string type, std::string context, std::string 
 
 
 bool 
-Nau::setAttribute(std::string type, std::string context, std::string component, int number, Data *values) {
+Nau::setAttributeValue(std::string type, std::string context, std::string component, int number, Data *values) {
 
 	int id;
 	Enums::DataType dt; 
@@ -927,7 +937,7 @@ Nau::setAttribute(std::string type, std::string context, std::string component, 
 
 
 void *
-Nau::getAttribute(std::string type, std::string context, std::string component, int number) {
+Nau::getAttributeValue(std::string type, std::string context, std::string component, int number) {
 
 	int id;
 	Enums::DataType dt;

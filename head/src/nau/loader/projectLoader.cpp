@@ -2543,7 +2543,7 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 		else if (res && pAtX != NULL) {
 			NAU_THROW("File %s\nPass %s\ndimX and bufferX are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
-		// 
+		// Read value or buffer id for dimX
 		if (pAtX != NULL) {
 			bX = RESOURCEMANAGER->getBuffer(pAtX);
 			if (!bX) {
@@ -3496,7 +3496,7 @@ INTERFACE
 
 <interface>
 	<window name="bla"  label="My Bar">
-		<var label="direction" type="LIGHT" context="Sun" component="DIRECTION" option="DIRECTION"/>
+		<var label="direction" type="LIGHT" context="Sun" component="DIRECTION" option="DIRECTION" def="min=0 max=9 step=1"/>
 		<var label="darkColor" type="RENDERER" context="CURRENT" component="dark" option="COLOR" />
 		<pipelines />
 	<window>
@@ -3528,7 +3528,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 		//const char *pWindowLabel = pElem->Attribute("label");
 
 		if (0 == pWindowName /*|| 0 == pWindowLabel*/) {
-			NAU_THROW("File %s\nInterface window needs a name", s_File.c_str());
+			NAU_THROW("File %s\nInterface window needs a label", s_File.c_str());
 		}
 
 		INTERFACE->createWindow(pWindowName);// , pWindowLabel);
@@ -3550,6 +3550,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				const char *pContext = pElemAux->Attribute("context");
 				const char *pComponent = pElemAux->Attribute("component");
 				const char *pControl = pElemAux->Attribute("mode");
+				const char *pDef = pElemAux->Attribute("def");
 				int id = 0;
 				pElemAux->QueryIntAttribute("id", &id);
 
@@ -3570,6 +3571,11 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 					NAU_THROW("File %s\nWindow %s, Variable %s\n%s", s_File.c_str(), pWindowName, pLabel, message.c_str());
 				}
 
+				std::string def = "";
+				if (pDef) {
+					def = pDef;
+				}
+
 				//if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
 				//	NAU_THROW("File %s\nWindow %s, Variable %s\nVariable not valid", 
 				//		s_File.c_str(), pWindowName, pLabel);
@@ -3580,7 +3586,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 						INTERFACE->addColor(pWindowName, pLabel, pType, pContext, pComponent, id);
 				}
 				else
-				INTERFACE->addVar(pWindowName, pLabel, pType, pContext, pComponent, id);
+					INTERFACE->addVar(pWindowName, pLabel, pType, pContext, pComponent, id, def);
 			}
 
 		}

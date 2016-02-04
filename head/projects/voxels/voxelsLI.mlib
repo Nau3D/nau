@@ -32,6 +32,26 @@
 				<color name="color" internalFormat="RGBA" />
 			</colors>
 		</renderTarget>
+		<renderTarget name="preToneMap" >
+			<SIZE width="1024" height="1024" />
+			<colors>
+				<color name="preToneMap" internalFormat="RGBA32F"  />
+			</colors>		
+		</renderTarget>
+		<renderTarget name="postToneMap" >
+			<SIZE width="1024" height="1024" />
+			<colors>
+				<color name="postToneMap" internalFormat="RGBA"  />
+			</colors>		
+		</renderTarget>
+		<renderTarget name="luminance" >
+			<SIZE width="1024" height="1024" />
+			<LEVELS value=10 />
+			<colors>
+				<color name="luminance" internalFormat="RG32F"  />
+			</colors>		
+		</renderTarget>
+		
 	</renderTargets>
 
 	<textures>
@@ -74,45 +94,31 @@
 		<shader name="voxelization" 	vs = "shaders/voxelization.vert" 
 										gs = "shaders/voxelization.geom"
 										ps = "shaders/voxelization.frag" /> 
-										
-		<shader name="voxelization2" 	vs = "shaders/voxelization2.vert" 
-										gs = "shaders/voxelization2.geom"
-										ps = "shaders/voxelization2.frag" /> 
-										
-		<shader name="showVoxels" 		vs = "shaders/showVoxels.vert" 
-										gs = "shaders/showVoxels.geom"
-										ps = "shaders/showVoxels.frag" /> 
-										
+																	
 		<shader name="lightInjection" 	vs = "shaders/lightInjection.vert" 
 										ps = "shaders/lightInjection.frag" /> 
 
-		<shader name="showVoxelCubes" 	vs = "shaders/showVoxels2.vert" 
-										ps = "shaders/showVoxels2.frag" /> 
-										
 		<shader name="RSM"			 	vs = "shaders/RSM.vert" 
 										ps = "shaders/RSM.frag" /> 
 										
-		<shader name="mipmap" 			cs = "shaders/mipmap.comp" /> 
-
 		<shader name="mipmap2" 			cs = "shaders/mipmap2.comp" /> 
 
-		<shader name="computeCubePos" 	cs = "shaders/computeCubePos.comp" /> 
-		
-		<shader name="resetOpacity" 	cs = "shaders/resetOpacity.comp" /> 
+		<shader name="mipmap" 			cs = "shaders/mipmap.comp" /> 
 
-		<shader name="renderToTexture" 	vs = "shaders/renderToTexture.vert" 
-										ps = "shaders/renderToTexture.frag" /> 
+		<shader name="resetOpacity" 	cs = "shaders/resetOpacity.comp" /> 
 
 		<shader name="renderToTexture2" vs = "shaders/renderToTexture2.vert" 
 										ps = "shaders/renderToTexture2.frag" /> 
 
-		<shader name="computeAO" 		vs = "shaders/computeAO.vert" 
-										ps = "shaders/computeAO.frag" /> 
-		
 		<shader name="computeIndirectLight" 		
 										vs = "shaders/computeIndirectLight.vert" 
 										ps = "shaders/computeIndirectLight.frag" /> 
 		
+		<shader name="computeLuminance"	ps="shaders/computeLuminance.frag" 
+										vs="shaders/combine.vert" />
+		<shader name="tonemap"			ps="shaders/tonemap.frag" 
+										vs="shaders/combine.vert" />
+		<shader name="mipmapLuminance"	cs="shaders/mipmapLuminance.comp" /> 
 	</shaders>
 	
 	<states>
@@ -174,26 +180,9 @@
 			<state name="voxelization"/>
 		</material>
 	
-		<material name ="voxelization2">
-			<shader name="voxelization2">
-				<values>
-					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
-														id=1 component="UNIT" />
-					<valueof uniform="camXPV"		type="CAMERA" context="xx"
-														component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="camYPV"		type="CAMERA" context="yy"
-														component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="camZPV"		type="CAMERA" context="zz"
-														component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
-														component="ABSOLUT_SIZE" />
-				
-				</values>
-			</shader>
-		</material>
-
-		<material name="mipmap2" >
-			<shader name="mipmap2">
+	
+		<material name="mipmap" >
+			<shader name="mipmap">
 				<values>
 					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
@@ -221,8 +210,6 @@
 			</imageTextures>
 			<textures>
 				<texture UNIT=1 name="gridColor" >
-					<!--MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
-					<MAG_FILTER value="NEAREST" /-->
 					<MIN_FILTER value="LINEAR_MIPMAP_NEAREST" />
 					<MAG_FILTER value="LINEAR" />
 					<WRAP_S value="CLAMP_TO_BORDER" />
@@ -239,35 +226,7 @@
 			</textures>
 		</material>
 		
-		<material name="mipmap" >
-			<shader name="mipmap">
-				<values>
-					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
-														id=1 component="UNIT" />
-					<valueof uniform="grid"			type="TEXTURE_BINDING" context="CURRENT"
-														id=1 component="UNIT" />
-					<valueof uniform="destMipLevel"	type="PASS" context="CURRENT"
-														component="GridCurrentLevel" />
-				</values>
-			</shader>	
-			<imageTextures>
-				<imageTexture UNIT=1 texture="gridColor" >
-					<ACCESS value="WRITE_ONLY" />
-					<LEVEL value=1 />
-					<CLEAR value="true"/>
-				</imageTexture>
-			</imageTextures>
-			<textures>
-				<texture UNIT=1 name="gridColor" >
-					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
-					<MAG_FILTER value="NEAREST" />
-					<WRAP_S value="CLAMP_TO_BORDER" />
-					<WRAP_T value="CLAMP_TO_BORDER" />
-					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
-			</textures>
-		</material>
-
+		
 		<material name="resetOpacity" >
 			<shader name="resetOpacity">
 				<values>
@@ -284,38 +243,6 @@
 			</imageTextures>
 		</material>
 
-		<material name ="showVoxels">
-			<shader name="showVoxels">
-				<values>
-					<valueof uniform="RayOrigin"    type="CAMERA" context="CURRENT" 
-														component="POSITION" />
-					<valueof uniform="FOV"			type="CAMERA" context="CURRENT"
-														component="FOV" />
-					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
-														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="VM"         	type="RENDERER" context="CURRENT" 
-														component="VIEW_MODEL" />
-					<valueof uniform="grid"			type="TEXTURE_BINDING" context="CURRENT"
-														id=1 component="UNIT" />
-					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
-														component="ABSOLUT_SIZE" />
-					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
-														component="GridSize" />
-				</values>
-			</shader>
-			
-			<textures>
-				<texture UNIT=1 name="gridColor" >
-					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
-					<MAG_FILTER value="NEAREST" />
-					<WRAP_S value="CLAMP_TO_BORDER" />
-					<WRAP_T value="CLAMP_TO_BORDER" />
-					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
-			</textures>
-			
-			<state name="NoCull" />
-		</material>
 
 		<material name ="lightInjection">
 			<shader name="lightInjection">
@@ -381,6 +308,7 @@
 			</imageTextures>
 		</material>
 
+		
 		<material  name="RSM" >
 			<shader name="RSM">
 				<values>
@@ -388,6 +316,8 @@
 														component="PROJECTION_VIEW_MODEL" />
 					<valueof uniform="NormalMat"    type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
+					<valueof uniform="ViewModelMat"    type="RENDERER" context="CURRENT" 
+														component="VIEW_MODEL" />
 					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
 					<valueof uniform="lightDir" 	type="LIGHT" context="Sun" 
@@ -401,25 +331,6 @@
 		</material>
 		
 
-		<material name ="renderScene">
-			<shader name="renderToTexture">
-				<values>
-					<valueof uniform="PVM"      	type="RENDERER" context="CURRENT" 
-														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="NormalMat"    type="RENDERER" context="CURRENT" 
-														component="NORMAL" />
-					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 
-														component="DIFFUSE" />
-					<valueof uniform="shininess" 	type="COLOR" context="CURRENT" 
-														component="SHININESS" />
-					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
-														component="TEXTURE_COUNT" />
-					<valueof uniform="texUnit" 		type="TEXTURE_BINDING" context="CURRENT" 
-														component="UNIT" id="0" />				
-				</values>
-			</shader>
-		</material>
-
 		<material name ="renderScene2">
 			<shader name="renderToTexture2">
 				<values>
@@ -429,8 +340,12 @@
 														component="PROJECTION_VIEW_MODEL" />
 					<valueof uniform="NormalMat"    type="RENDERER" context="CURRENT" 
 														component="NORMAL" />
+					<valueof uniform="ViewModelMat"    type="RENDERER" context="CURRENT" 
+														component="VIEW_MODEL" />
 					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 
 														component="DIFFUSE" />
+					<valueof uniform="lightDir" 	type="LIGHT" context="Sun" 
+														component="DIRECTION" /> 
 					<valueof uniform="shininess" 	type="COLOR" context="CURRENT" 
 														component="SHININESS" />
 					<valueof uniform="texCount"		type="RENDERER" context="CURRENT" 
@@ -443,62 +358,6 @@
 			</shader>
 		</material>
 	
-		<material name ="computeAO">
-			<shader name="computeAO">
-				<values>
-					<valueof uniform="texPos" 		type="TEXTURE_BINDING" context="CURRENT" 
-														component="UNIT" id="0" />				
-					<valueof uniform="texNormal" 	type="TEXTURE_BINDING" context="CURRENT" 
-														component="UNIT" id="3" />				
-					<valueof uniform="texColor" 	type="TEXTURE_BINDING" context="CURRENT" 
-														component="UNIT" id="4" />				
-					<valueof uniform="grid" 		type="TEXTURE_BINDING" context="CURRENT" 
-														component="UNIT" id="1" />				
-					<!--valueof uniform="gridNormal" 	type="TEXTURE_BINDING" context="CURRENT" 
-														component="UNIT" id="2" /-->				
-					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
-														component="GridSize" />
-				</values>
-			</shader>	
-			<textures>
-				<texture UNIT=0 name="pos" >
-					<MIN_FILTER value="NEAREST" />
-					<MAG_FILTER value="NEAREST" />
-					<WRAP_S value="CLAMP_TO_BORDER" />
-					<WRAP_T value="CLAMP_TO_BORDER" />
-					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
-				<texture UNIT=3 name="normal" >
-					<MIN_FILTER value="NEAREST" />
-					<MAG_FILTER value="NEAREST" />
-					<WRAP_S value="CLAMP_TO_BORDER" />
-					<WRAP_T value="CLAMP_TO_BORDER" />
-					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
-				<texture UNIT=4 name="color" >
-					<MIN_FILTER value="NEAREST" />
-					<MAG_FILTER value="NEAREST" />
-					<WRAP_S value="CLAMP_TO_BORDER" />
-					<WRAP_T value="CLAMP_TO_BORDER" />
-					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
-				<texture UNIT=1 name="gridColor" >
-					<MIN_FILTER value="LINEAR_MIPMAP_LINEAR" />
-					<MAG_FILTER value="LINEAR" />
-					<WRAP_S value="CLAMP_TO_BORDER" />
-					<WRAP_T value="CLAMP_TO_BORDER" />
-					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture>
-				<!--texture UNIT=2 name="gridNormal" >
-					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
-					<MAG_FILTER value="NEAREST" />
-					<WRAP_S value="CLAMP_TO_BORDER" />
-					<WRAP_T value="CLAMP_TO_BORDER" />
-					<WRAP_R value="CLAMP_TO_BORDER" />
-				</texture-->
-				
-			</textures>
-		</material>
 
 		<material name ="computeIndirectLight">
 			<shader name="computeIndirectLight">
@@ -559,7 +418,70 @@
 			</textures>
 		</material>
 		
+		<material name="computeLuminance" >
+			<shader name="computeLuminance">
+				<values>
+					<valueof uniform="input"	type="TEXTURE_BINDING" context="CURRENT" 
+														id=0 component="UNIT" />
+				</values>
+			</shader>
+			<textures>
+				<texture name="preToneMap" UNIT = 0 />
+			</textures>
+		</material>
+		
+		<material name="mipmapLuminance" >
+			<shader name="mipmapLuminance">
+				<values>
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="tex"			type="TEXTURE_BINDING" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="destMipLevel"	type="PASS" context="CURRENT"
+														component="CurrentLevel" />
+				</values>
+			</shader>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="luminance" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=1 />
+				</imageTexture>
+			</imageTextures>
+			<textures>
+				<texture UNIT=1 name="luminance" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		</material>
+		
+		<material name="tonemap" >
+			<shader name="tonemap">
+				<values>
+					<valueof uniform="lumiTex"	type="TEXTURE_BINDING" context="CURRENT"
+														id=2 component="UNIT" />
+					<valueof uniform="origTex"	type="TEXTURE_BINDING" context="CURRENT"
+														id=1 component="UNIT" />
+				</values>
+			</shader>	
+			<textures>
+				<texture UNIT=1 name="preToneMap" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=2 name="luminance" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		</material>
 
-		</materials>
+	</materials>
 	
 </materialLib>

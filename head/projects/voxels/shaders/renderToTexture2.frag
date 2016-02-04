@@ -3,6 +3,7 @@
 in vec3 normalV;
 in vec2 texCoordV;
 in vec4 posV;
+in vec3 lightDirV;
 
 layout (location = 0) out vec4 outPos;
 layout (location = 1) out vec4 outNormal;
@@ -17,7 +18,7 @@ uniform sampler2D texPos;
 
 void main()
 {
-	float intensity = max(0,dot(normalV, normalize(vec3(-2.0, 2.5, -0.5))));
+	float intensity = max(0,dot(normalize(normalV), lightDirV));
 	outPos = posV * 0.5 + 0.5;
 	outNormal = vec4(normalV, 0);
 	if (texCount != 0)

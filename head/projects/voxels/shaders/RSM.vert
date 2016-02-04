@@ -15,7 +15,7 @@ out vec4 worldPosV;
 
 void main() {
 
-	lightDirV = normalize(-lightDir);
+	lightDirV = - normalize(lightDir);
 	normalV = normalize(normal);
 	texCoordV = texCoord0;
 	worldPosV = position;

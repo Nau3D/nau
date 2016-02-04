@@ -294,7 +294,7 @@ ToolBar::addDir(const std::string &windowName, const std::string &varLabel,
 bool 
 ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 	const std::string &varType, const std::string &varContext,
-	const std::string &component, int id) {
+	const std::string &component, int id, const std::string def) {
 
 	// window does not exist
 	if (m_Windows.count(windowName) == 0)
@@ -313,6 +313,18 @@ ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 	if (attr == -1)
 		return false;
 
+	std::unique_ptr<Attribute> &attribute = NAU->getAttribute(varType, component);
+	std::shared_ptr<math::Data> &max = attribute->getMax();
+	std::shared_ptr<math::Data> &min = attribute->getMin();
+
+	std::string defLocal = "";
+	if (min)
+		defLocal += " min=" + Enums::pointerToString(dt, min->getPtr()) + " ";
+	if (max)
+		defLocal += "max=" + Enums::pointerToString(dt, max->getPtr());
+
+	defLocal = def + defLocal;
+
 	NauVar *clientData = new NauVar();
 	clientData->type = varType;
 	clientData->context = varContext;
@@ -322,86 +334,89 @@ ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 
 	std::string name = varLabel;
 	name.erase(remove_if(name.begin(), name.end(), [](char c) { return !isalpha(c); }), name.end());
-	char s[256];
+	char s[256]; s[0] = '\0';
 	if (name != varLabel) {
 		sprintf(s, " label='%s' ", varLabel.c_str());
 	}
-	else
-		s[0] = '\0';
+	if (defLocal != "") {
+		sprintf(s, "%s%s ", s, defLocal.c_str());
+	}
+	//else
+	//	s[0] = '\0';
 
 	switch (dt)
 	{
 	case nau::Enums::INT:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), TW_TYPE_INT32, SetIntCallBack, GetIntCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_INT32, SetIntCallBack, GetIntCallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), TW_TYPE_INT32, NULL, GetIntCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_INT32, NULL, GetIntCallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::UINT:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), TW_TYPE_UINT32, SetUIntCallBack, GetUIntCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_UINT32, SetUIntCallBack, GetUIntCallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), TW_TYPE_UINT32, NULL, GetUIntCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_UINT32, NULL, GetUIntCallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::UIVEC2:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), UIVec2, SetCallBack, GetUIVec2CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), UIVec2, SetCallBack, GetUIVec2CallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), UIVec2, NULL, GetUIVec2CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), UIVec2, NULL, GetUIVec2CallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::UIVEC3:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), UIVec3, SetCallBack, GetUIVec3CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), UIVec3, SetCallBack, GetUIVec3CallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), UIVec3, NULL, GetUIVec3CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), UIVec3, NULL, GetUIVec3CallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::BOOL:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), TW_TYPE_BOOLCPP, SetBoolCallBack, GetBoolCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_BOOLCPP, SetBoolCallBack, GetBoolCallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), TW_TYPE_BOOLCPP, NULL, GetBoolCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_BOOLCPP, NULL, GetBoolCallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::BVEC4:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), BVec4, SetCallBack, GetBVec4CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), BVec4, SetCallBack, GetBVec4CallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), BVec4, NULL, GetBVec4CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), BVec4, NULL, GetBVec4CallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::FLOAT:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), TW_TYPE_FLOAT, SetFloatCallBack, GetFloatCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_FLOAT, SetFloatCallBack, GetFloatCallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), TW_TYPE_FLOAT, NULL, GetFloatCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_FLOAT, NULL, GetFloatCallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::VEC2:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), Vec2, SetCallBack, GetVec2CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Vec2, SetCallBack, GetVec2CallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), Vec2, NULL, GetVec2CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Vec2, NULL, GetVec2CallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::VEC3:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), Vec3, SetCallBack, GetVec3CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Vec3, SetCallBack, GetVec3CallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), Vec3, NULL, GetVec3CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Vec3, NULL, GetVec3CallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::VEC4:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), Vec4, SetCallBack, GetVec4CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Vec4, SetCallBack, GetVec4CallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), Vec4, NULL, GetVec4CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Vec4, NULL, GetVec4CallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::MAT3:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), Mat3, SetCallBack, GetMat3CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Mat3, SetCallBack, GetMat3CallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), Mat3, NULL, GetMat3CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Mat3, NULL, GetMat3CallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::MAT4:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), Mat4, SetCallBack, GetMat4CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Mat4, SetCallBack, GetMat4CallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), Mat4, NULL, GetMat4CallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), Mat4, NULL, GetMat4CallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::ENUM: 
 	{
@@ -413,11 +428,11 @@ ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 			enums[i].Label = vs[i].c_str();
 			enums[i].Value = vi[i];
 		}
-		TwType options = TwDefineEnum(varLabel.c_str(), enums, (unsigned int)vi.size());
+		TwType options = TwDefineEnum(name.c_str(), enums, (unsigned int)vi.size());
 		if (attrSet->get(id, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, varLabel.c_str(), options, SetIntCallBack, GetIntCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), options, SetIntCallBack, GetIntCallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, varLabel.c_str(), options, NULL, GetIntCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), options, NULL, GetIntCallBack, clientData, s) == 1);
 	}
 		break;
 	default:
@@ -481,7 +496,7 @@ TW_CALL ToolBar::SetColorCallBack(const void *value, void *clientData) {
 	NauVar *v = static_cast<NauVar *>(clientData);
 	vec4 v2;
 	v2.set(*(float *)value, *((float *)value + 1), *((float *)value + 2), *((float *)value + 3));
-	NAU->setAttribute(v->type, v->context, v->component, v->id, &v2);
+	NAU->setAttributeValue(v->type, v->context, v->component, v->id, &v2);
 }
 
 
@@ -489,7 +504,7 @@ void
 TW_CALL ToolBar::GetColorCallBack(void * value, void * clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	vec4 *v2 = (vec4 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	vec4 *v2 = (vec4 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, &(v2->x), sizeof(float) *4);
 }
 
@@ -500,7 +515,7 @@ TW_CALL ToolBar::SetDirCallBack(const void * value, void * clientData) {
 	NauVar *v = static_cast<NauVar *>(clientData);
 	vec4 v2;
 	v2.set(*(float *)value, *((float *)value + 1), *((float *)value + 2), 0);
-	NAU->setAttribute(v->type, v->context, v->component, v->id, &v2);
+	NAU->setAttributeValue(v->type, v->context, v->component, v->id, &v2);
 }
 
 
@@ -508,7 +523,7 @@ void
 TW_CALL ToolBar::GetDirCallBack(void * value, void * clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	vec4 *v2 = (vec4 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	vec4 *v2 = (vec4 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, &(v2->x), sizeof(float) * 3);
 }
 
@@ -518,7 +533,7 @@ TW_CALL ToolBar::SetCallBack(const void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
 	Data *v2 = (Data *)value;
-	NAU->setAttribute(v->type, v->context, v->component, v->id, v2);
+	NAU->setAttributeValue(v->type, v->context, v->component, v->id, v2);
 }
 
 
@@ -527,7 +542,7 @@ TW_CALL ToolBar::SetIntCallBack(const void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauInt> p = std::shared_ptr<NauInt>(new NauInt(*(int *)value));
-	NAU->setAttribute(v->type, v->context, v->component, v->id, p.get());
+	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
 }
 
 
@@ -536,7 +551,7 @@ TW_CALL ToolBar::SetBoolCallBack(const void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauInt> p = std::shared_ptr<NauInt>(new NauInt(*(int *)value));
-	NAU->setAttribute(v->type, v->context, v->component, v->id, p.get());
+	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
 }
 
 
@@ -545,7 +560,7 @@ TW_CALL ToolBar::ToolBar::SetFloatCallBack(const void *value, void *clientData) 
 
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauFloat> p = std::shared_ptr<NauFloat>(new NauFloat(*(float *)value));
-	NAU->setAttribute(v->type, v->context, v->component, v->id, p.get());
+	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
 }
 
 
@@ -554,7 +569,7 @@ TW_CALL ToolBar::SetUIntCallBack(const void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauUInt> p = std::shared_ptr<NauUInt>(new NauUInt(*(unsigned int *)value));
-	NAU->setAttribute(v->type, v->context, v->component, v->id, p.get());
+	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
 }
 
 
@@ -564,7 +579,7 @@ void
 TW_CALL ToolBar::GetIntCallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	int *v2 = (int *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	int *v2 = (int *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	*(int *)value = *v2;
 }
 
@@ -573,7 +588,7 @@ void
 TW_CALL ToolBar::GetFloatCallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	float *v2 = (float *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	float *v2 = (float *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	*(float *)value = *v2;
 }
 
@@ -582,7 +597,7 @@ void
 TW_CALL ToolBar::GetVec2CallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	Data *v2 = (vec2 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	Data *v2 = (vec2 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, v2, sizeof(vec2));
 }
 
@@ -591,7 +606,7 @@ void
 TW_CALL ToolBar::GetVec3CallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	Data *v2 = (vec3 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	Data *v2 = (vec3 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, v2, sizeof(vec3));
 }
 
@@ -600,7 +615,7 @@ void
 TW_CALL ToolBar::GetVec4CallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	vec4 *v2 = (vec4 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	vec4 *v2 = (vec4 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, v2, sizeof(vec4));
 }
 
@@ -609,7 +624,7 @@ void
 TW_CALL ToolBar::GetUIntCallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	unsigned int *v2 = (unsigned int *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	unsigned int *v2 = (unsigned int *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	*(unsigned int *)value = *v2;
 }
 
@@ -618,7 +633,7 @@ void
 TW_CALL ToolBar::GetUIVec2CallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	Data *v2 = (uivec2 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	Data *v2 = (uivec2 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, v2, sizeof(uivec2));
 }
 
@@ -627,7 +642,7 @@ void
 TW_CALL ToolBar::GetUIVec3CallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	Data *v2 = (uivec3 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	Data *v2 = (uivec3 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, v2, sizeof(uivec3));
 }
 
@@ -635,7 +650,7 @@ TW_CALL ToolBar::GetUIVec3CallBack(void *value, void *clientData) {
 void TW_CALL nau::inter::ToolBar::GetBoolCallBack(void * value, void * clientData)
 {
 	NauVar *v = static_cast<NauVar *>(clientData);
-	int *v2 = (int *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	int *v2 = (int *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	*(bool *)value = (*v2 == 1);
 }
 
@@ -643,7 +658,7 @@ void
 TW_CALL ToolBar::GetBVec4CallBack(void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
-	Data *v2 = (bvec4 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	Data *v2 = (bvec4 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, v2, sizeof(bvec4));
 }
 
@@ -651,7 +666,7 @@ TW_CALL ToolBar::GetBVec4CallBack(void *value, void *clientData) {
 void 
 TW_CALL ToolBar::GetMat3CallBack(void * value, void * clientData) {
 	NauVar *v = static_cast<NauVar *>(clientData);
-	Data *v2 = (mat3 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	Data *v2 = (mat3 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, v2, sizeof(mat3));
 }
 
@@ -659,7 +674,7 @@ TW_CALL ToolBar::GetMat3CallBack(void * value, void * clientData) {
 void 
 TW_CALL ToolBar::GetMat4CallBack(void * value, void * clientData) {
 	NauVar *v = static_cast<NauVar *>(clientData);
-	Data *v2 = (mat4 *)NAU->getAttribute(v->type, v->context, v->component, v->id);
+	Data *v2 = (mat4 *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
 	memcpy(value, v2, sizeof(mat4));
 }
 

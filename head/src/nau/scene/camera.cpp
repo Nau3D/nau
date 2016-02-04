@@ -45,7 +45,7 @@ Camera::Init() {
 	Attribs.add(Attribute(PROJECTION_VIEW_MATRIX, "PROJECTION_VIEW_MATRIX",Enums::DataType::MAT4, true));
 	Attribs.add(Attribute(TS05_PVM_MATRIX, "TS05_PVM_MATRIX",Enums::DataType::MAT4, true));
 	// FLOAT
-	Attribs.add(Attribute(FOV, "FOV",Enums::DataType::FLOAT, false, new NauFloat(60.0f)));
+	Attribs.add(Attribute(FOV, "FOV",Enums::DataType::FLOAT, false, new NauFloat(60.0f), new NauFloat(0.1f), new NauFloat(179.0f)));
 	Attribs.add(Attribute(NEARP, "NEAR",Enums::DataType::FLOAT, false, new NauFloat(1.0f)));
 	Attribs.add(Attribute(FARP, "FAR",Enums::DataType::FLOAT, false, new NauFloat(10000.0f)));
 	Attribs.add(Attribute(LEFT, "LEFT",Enums::DataType::FLOAT, false, new NauFloat(-1.0f)));

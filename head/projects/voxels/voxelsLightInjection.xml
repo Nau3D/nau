@@ -6,9 +6,12 @@
 			<constant name="CompRO" value = 64 /> <!-- GridSize/8 -->
 		</constants>
 		<attributes>
-			<attribute name="GridSize" context="PASS" type="INT" value="GridSize" />
-			<attribute name="GridLevels" context="PASS" type="INT" value=9 />
-			<attribute name="GridCurrentLevel" context="PASS" type="INT" value=0 />
+			<attribute name="GridSize" type="PASS" data="INT" value="GridSize" />
+			<attribute name="GridLevels" type="PASS" data="INT" value=9 />
+			<attribute name="GridCurrentLevel" type="PASS" data="INT" value=0 />
+			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "10" />
+			<attribute type="PASS" name="Levels" data="INT" value=10 />
+			<attribute type="PASS" name="CurrentLevel" data="INT" value=0 />
 		</attributes>
 		<scenes>
 			<scene name="MainScene" param="UNITIZE">
@@ -73,7 +76,7 @@
 		
 		<lights>
 			<light name="Sun" >
-				<DIRECTION x="0.0" y="-2" z="0.5" />
+				<DIRECTION x="-4.2" y="-10" z="-2" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
 				<AMBIENT r="0.5" g="0.0" b="0.0" />
 			</light>
@@ -89,7 +92,7 @@
 		<pipeline name="voxels" default="true" defaultCamera = "MainCamera">
 		
 			<pass class="default" name="voxelization">
-				<!--mode value="RUN_ONCE" /-->	
+				<mode value="RUN_ONCE" />	
 				<camera name="MainCamera" />
 				<scenes>
 					<scene name="Sponza" />
@@ -98,8 +101,7 @@
 				<COLOR_ENABLE value = false />
 				<DEPTH_MASK value = false />
 				<DEPTH_ENABLE value = false />
-				<!--color clear=false enable=false />
-				<depth test=false write=false /-->
+
 				<renderTarget name="dummy" fromLibrary="Voxels" />
 				<injectionMaps>
 					<map toMaterial="*" >
@@ -158,7 +160,7 @@
 			<pass class="compute" name="mipmap" >
 				<mode value="RUN_ONCE" />	
 				<testScript file="test.lua" script="test" TEST_MODE="RUN_WHILE"/>
-				<material name="mipmap2" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
+				<material name="mipmap" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
 			</pass>
 
 			<pass class="default" name="renderScene">
@@ -202,10 +204,33 @@
 			</pass-->
 			
 			<pass class="quad" name="computeIndirectLight" >
+				<renderTarget name="preToneMap" fromLibrary="Voxels" />
 				<material name="computeIndirectLight" fromLibrary="Voxels" />
 				<viewport name="MainViewport" />
 			</pass>
 
+			<pass class="quad" name="computeLuminance">
+				<COLOR_CLEAR value=false />
+				<renderTarget name="luminance" fromLibrary="Voxels" />
+				<material name="computeLuminance" fromLibrary="Voxels" />
+			</pass>
+			
+			<pass class="compute" name="mipmapLuminance">
+				<testScript file="test.lua" script="testMipmap" TEST_MODE="RUN_WHILE"/>
+				<material name="mipmapLuminance" fromLibrary="Voxels" 
+					dimX=512 dimY=512 dimZ=1/>
+			</pass>
+			
+			<pass class="quad" name="tonemap">
+				<renderTarget name="postToneMap" fromLibrary="Voxels" />
+				<viewport name="MainViewport" />
+				<material name="tonemap" fromLibrary="Voxels" />
+			</pass>
+			<pass class="quad" name="show">
+				<viewport name="MainViewport" />
+				<texture name="postToneMap" fromLibrary="Voxels" />
+			</pass>
+			
 		</pipeline>
 	</pipelines>
 </project>

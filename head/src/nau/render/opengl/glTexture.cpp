@@ -537,5 +537,5 @@ GLTexture::generateMipmaps() {
 	m_IntProps[LEVELS] = (int)log2(maxi);
 	glTexParameteri((GLenum)m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, m_IntProps[LEVELS]);
 	glGenerateMipmap((GLenum)m_EnumProps[DIMENSION]);
-	glGetTexParameteriv((GLenum)m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, &m_IntProps[LEVELS]);
+//	glGetTexParameteriv((GLenum)m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, &m_IntProps[LEVELS]);
 }

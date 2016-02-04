@@ -12,7 +12,7 @@ out vec2 texCoordV;
 void main() {
 	
 	gl_Position = M * position;
-	normalV = normal;
+	normalV = normalize(normal);
 	texCoordV = texCoord0;
 }
 

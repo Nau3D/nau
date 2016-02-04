@@ -3,7 +3,7 @@
 
 using namespace nau::render::optixRender;
 
-optix::Context OptixRenderer::s_Context; //= optix::Context::create();
+optix::Context OptixRenderer::s_Context = NULL;
 unsigned int OptixRenderer::s_EntryPointCount; //= 1;
 std::map<OptixRenderer::ProgramTypes, optix::Program> OptixRenderer::s_Program;
 unsigned int OptixRenderer::s_RayTypeCount = OptixRenderer::Init();
@@ -12,18 +12,30 @@ unsigned int OptixRenderer::s_RayTypeCount = OptixRenderer::Init();
 int
 OptixRenderer::Init() {
 
-//	s_RayTypeCount = 0;
-	s_EntryPointCount = 0;
-	try {
-		s_Context = optix::Context::create();
-//		s_Context->setRayTypeCount(1);
-//		s_Context->setEntryPointCount(1);
-	}
-	catch(optix::Exception& e) {
-	
-		NAU_THROW("Optix Creating Context Error [%s]", e.getErrorString().c_str());
+	if (s_Context == NULL) {
+		s_EntryPointCount = 0;
+		try {
+			s_Context = optix::Context::create();
+		}
+		catch (optix::Exception& e) {
+			s_Context = NULL;
+			NAU_THROW("Optix Creating Context Error [%s]", e.getErrorString().c_str());
+		}
 	}
 	return 0;
+}
+
+
+void
+OptixRenderer::Terminate() {
+
+	if (s_Context) {
+		s_Program.clear();
+		s_RayTypeCount = 0;
+		s_EntryPointCount = 0;
+		s_Context->destroy();
+		s_Context = NULL;
+	}
 }
 
 

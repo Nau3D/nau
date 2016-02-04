@@ -27,11 +27,12 @@ namespace nau {
 		static optix::Context &GetContext();
 		static int GetNextAvailableRayType();
 		static int GetNextAvailableEntryPoint();
+		static void Terminate();
+		static int Init();
 
 	private:
 		OptixRenderer();
 
-		static int Init();
 		static optix::Context s_Context;
 		static unsigned int s_RayTypeCount;
 		static unsigned int s_EntryPointCount;

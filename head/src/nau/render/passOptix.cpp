@@ -40,15 +40,10 @@ PassOptix::PassOptix(const std::string &passName) :
 	Pass(passName), o_OutputBuffer(0), o_OutputPBO(0)
 {
 	try {
+		OptixRenderer::Init();
+		o_Context = OptixRenderer::GetContext();
 		o_EntryPoint = OptixRenderer::GetNextAvailableEntryPoint();
 
-	//#if (TEST == 1)
-	////	OptixRenderer::setProgram(OptixRenderer::RAY_GEN, o_EntryPoint, "optix/common.ptx", "buffer_camera" );
-	//#elif (TEST == 2)
-	//	OptixRenderer::setProgram(OptixRenderer::RAY_GEN, o_EntryPoint, "optix/common.ptx", "buffer_camera" );
-	//#endif
-		//OptixRenderer::setProgram(OptixRenderer::EXCEPTION, o_EntryPoint, "optix/common.ptx", "exception" );
-		o_Context = OptixRenderer::GetContext();
 		o_Context->setStackSize(2048);
 		o_Context->setExceptionEnabled(RT_EXCEPTION_ALL,false);
 		o_BufferLib.setContext(o_Context);
@@ -57,19 +52,7 @@ PassOptix::PassOptix(const std::string &passName) :
 
 		o_MatLib.setContext(o_Context);
 		o_MatLib.setTextureLib(&o_TexLib);
-	//#if (TEST == 1)
 
-	//	//o_RayType["Phong"] = OptixRenderer::getNextAvailableRayType();
-	//	//o_RayType["Shadow"] = OptixRenderer::getNextAvailableRayType();
-	//	//o_MatLib.setMaterialProgram(o_MatLib.MISS, o_RayType["Phong"], "optix/common.ptx", "miss" );
-	//	//o_MatLib.setMaterialProgram(o_MatLib.CLOSEST_HIT, o_RayType["Phong"],  "optix/common.ptx", "shade" );
-	//	//o_MatLib.setMaterialProgram(o_MatLib.ANY_HIT, o_RayType["Phong"],  "optix/common.ptx", "any_hit" );
-	//	//o_MatLib.setMaterialProgram(o_MatLib.ANY_HIT, o_RayType["Shadow"], "optix/common.ptx", "shadow" );
-	//#elif (TEST == 2)
-	//	o_RayType["Shadow"] = OptixRenderer::getNextAvailableRayType();
-	//	OptixRenderer::setProgram(OptixRenderer::MISS, o_RayType["Shadow"], "optix/common.ptx", "miss" );
-	//	o_MatLib.setMaterialProgram(o_MatLib.ANY_HIT, o_RayType["Shadow"],  "optix/common.ptx", "any_hit_shadow" );
-	//#endif
 		o_GeomLib.setContext(o_Context);
 		o_GeomLib.setBufferLib(&o_BufferLib);
 		o_GeomLib.setMaterialLib(&o_MatLib);
@@ -79,39 +62,6 @@ PassOptix::PassOptix(const std::string &passName) :
 	catch(optix::Exception& e) {	
 		NAU_THROW("Optix Error: pass %s [%s]", m_Name.c_str(), e.getErrorString().c_str());
 	}
-
-
-	//try {
-	//	o_Context = optix::Context::create();
-	//	o_Context->setRayTypeCount(1);
-	//	o_Context->setEntryPointCount(1);
-	//	o_Context->setExceptionEnabled(RT_EXCEPTION_ALL, 1);
-
-	//	optix::Program ray_gen_program = o_Context->createProgramFromPTXFile( "optix/common.ptx", "pinhole_camera" );
-	//	o_Context->setRayGenerationProgram( 0, ray_gen_program );
-
-	//	optix::Program miss_program = o_Context->createProgramFromPTXFile( "optix/common.ptx", "miss" );
-	//	o_Context->setMissProgram(0, miss_program);
-
-	//	optix::Program exception_program = o_Context->createProgramFromPTXFile( "optix/common.ptx", "exception" );
-	//	o_Context->setExceptionProgram(0, exception_program);
-
-	//	o_Material = o_Context->createMaterial();
-	//	o_ClosestHitProgram = o_Context->createProgramFromPTXFile( "optix/common.ptx", "shade");
-	//	o_Material->setClosestHitProgram(0, o_ClosestHitProgram);
-
-	//	o_GeomGroup = o_Context->createGeometryGroup();
-	//	o_Context["top_object"]->set(o_GeomGroup);
-
-	//	o_GeometryIntersectionProgram = o_Context->createProgramFromPTXFile("optix/common.ptx","geometryintersection");
-	//	o_BoundingBoxProgram = o_Context->createProgramFromPTXFile("optix/common.ptx","boundingbox");
-
-	//	o_Context->setStackSize(2048);
-	//}
-	//catch(optix::Exception& e) {
-	//
-	//	NAU_THROW("Optix Error: Init pass %s [%s]", m_Name.c_str(), e.getErrorString().c_str());
-	//}
 }
 
 
@@ -203,9 +153,9 @@ PassOptix::addGlobalAttribute(std::string name, nau::material::ProgramValue &p) 
 }
 
 
-PassOptix::~PassOptix()
-{
-	/***MARK***/ //Delete resources ?
+PassOptix::~PassOptix() {
+
+	OptixRenderer::Terminate();
 }
 
 

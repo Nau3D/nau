@@ -73,11 +73,11 @@ namespace nau {
 		//virtual bool validateAttribute(std::string type, std::string context, std::string component) = 0;
 		// Only validates the existence of the component in a particular type/context of object
 		virtual bool validateShaderAttribute(std::string type, std::string context, std::string component) = 0;
-		virtual bool setAttribute(std::string type, std::string context,
+		virtual bool setAttributeValue(std::string type, std::string context,
 				 std::string component, int number,
 				 Data *values) = 0;
-		virtual void *getAttribute(std::string type, std::string context,
-			std::string component, int number) = 0;
+		virtual void *getAttributeValue(std::string type, std::string context,
+			std::string component, int number=0) = 0;
 		virtual AttributeValues *getObjectAttributes(const std::string &type, const std::string &context, int number=0) = 0;
 		virtual AttributeValues *getCurrentObjectAttributes(const std::string &context, int number = 0) = 0;
 

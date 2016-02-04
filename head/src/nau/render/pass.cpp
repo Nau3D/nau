@@ -231,6 +231,7 @@ Pass::getPostProcessItem(unsigned int i) {
 void
 Pass::executePreProcessList() {
 
+	PROFILE_GL("Pre Process List");
 	for (auto pp : m_PreProcessList)
 		pp->process();
 }
@@ -239,6 +240,7 @@ Pass::executePreProcessList() {
 void 
 Pass::executePostProcessList() {
 
+	PROFILE_GL("Post Process List");
 	for (auto pp : m_PostProcessList)
 		pp->process();
 }

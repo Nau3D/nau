@@ -503,7 +503,7 @@ DlgDbgBuffers::setBufferData(){
 		for (int col = 0; col < columns; ++col){
 			if (pointerIndex < dataRead){
 				void *ptr = (char *)bufferValues + pointerIndex;
-				value = Enums::valueToString(bufferSettingsList[currentBuffer].types[col], ptr);
+				value = Enums::pointerToString(bufferSettingsList[currentBuffer].types[col], ptr);
 			}
 			else{
 				value = "";

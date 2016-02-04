@@ -6,8 +6,8 @@
 		</constants>
 		<attributes>
 			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "10" />
-			<attribute name="Levels" context="PASS" type="INT" value=9 />
-			<attribute name="CurrentLevel" context="PASS" type="INT" value=0 />
+			<attribute type="PASS" name="Levels" data="INT" value=9 />
+			<attribute type="PASS" name="CurrentLevel" data="INT" value=0 />
 		</attributes>
 		<scenes>
 			<scene name="MainScene">
