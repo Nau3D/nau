@@ -1,0 +1,27 @@
+<NotepadPlus>
+    <Project name="VoxelLightInjection">
+        <File name="voxelsLightInjection.xml" />
+        <File name="voxelsLI.mlib" />
+        <File name="test.lua" />
+    </Project>
+    <Project name="Shaders">
+        <File name="shaders\computeIndirectLight.vert" />
+        <File name="shaders\computeIndirectLight.frag" />
+        <File name="shaders\lightInjection.vert" />
+        <File name="shaders\lightInjection.frag" />
+        <File name="shaders\mipmap.comp" />
+        <File name="shaders\mipmap2.comp" />
+        <File name="shaders\renderToTexture2.vert" />
+        <File name="shaders\renderToTexture2.frag" />
+        <File name="shaders\resetOpacity.comp" />
+        <File name="shaders\RSM.vert" />
+        <File name="shaders\RSM.frag" />
+        <File name="shaders\voxelization.vert" />
+        <File name="shaders\voxelization.geom" />
+        <File name="shaders\voxelization.frag" />
+        <File name="shaders\combine.vert" />
+        <File name="shaders\computeLuminance.frag" />
+        <File name="shaders\tonemap.frag" />
+        <File name="shaders\mipmapLuminance.comp" />
+    </Project>
+</NotepadPlus>
