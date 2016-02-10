@@ -669,7 +669,7 @@ Enums::pointerToString(DataType p, void *v) {
 
 // Outputs similar to what is expected in std140 from OpenGL
 std::string &
-Enums::valueToStringAligned(DataType p, void *v) {
+Enums::pointerToStringAligned(DataType p, void *v) {
 
 	m_Result = "[ ";
 	switch (p) {
@@ -692,18 +692,18 @@ Enums::valueToStringAligned(DataType p, void *v) {
 		m_Result = ((mat2x3 *)v)->toString();
 		return m_Result;
 
+	case DMAT2x3:
+		m_Result = ((dmat2x3 *)v)->toString();
+		return m_Result;
 	case MAT4x3:
 		m_Result = ((mat4x3 *)v)->toString();
 		return m_Result;
 
-	case DMAT2x3:
-		m_Result = ((dmat2x3 *)v)->toString();
-		return m_Result;
 	case DMAT4x3:
 		m_Result = ((dmat4x3 *)v)->toString();
 		return m_Result;
 	default:
-		return valueToString(p, v);
+		return pointerToString(p, v);
 	}
 }
 

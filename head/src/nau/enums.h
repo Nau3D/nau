@@ -49,6 +49,7 @@ namespace nau {
 		static std::string &valueToStringAligned(DataType p, void *v);
 		static DataType getBasicType(DataType dt);
 		static std::string &pointerToString(DataType p, void *v);
+		static std::string &pointerToStringAligned(DataType p, void *v);
 
 	private:
 		static std::string m_Result;

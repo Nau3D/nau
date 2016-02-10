@@ -222,7 +222,9 @@ void main()
 		 re += voxelConeTrace(coord, reflect(camDir, normal), 0.001, 1.0);
 		//il += voxelConeTrace2(coord, normalize(camDir), 0.25, 1.0);
 	//}
-	// shadow = voxelConeTrace2(coord, normalize(vec3(0,2, -0.5)), 0.001, 1.0);
+	if (dot(normal, vec3(4.2,10,2)) > 0 && color.a != 0)
+		shadow = voxelConeTrace(coord, normalize(vec3(4.2,10,2)), 0.0001, 1.0);
+	else shadow.a = 1;
 	// shadow.a = max(0.20, shadow.a);
 	if (color.a != 0.0)
 		outColor = color*1.5;
@@ -240,10 +242,11 @@ void main()
 	 // outColor = re;
 	 // outColor = vec4(1- shadow.a);
 	//outColor = il*0.5;//vec4(1-il.a*0.15);//vec4(normal*0.5 + 0.5,0);
-	float level = 1;
+	float level = 0;
 	texel = texelFetch(grid, coordi/int(pow(2,level)), int(level));
 	//float a = 1.0 - pow(1.0 - texel.a,255);
 	//outColor = texel;
 	//  outColor = vec4(texel.a);
 	//outColor =  color;//vec4(normal,1);
+	//outColor = vec4(1-shadow.a);
 }

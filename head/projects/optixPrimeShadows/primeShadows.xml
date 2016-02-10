@@ -3,16 +3,16 @@
 	<assets>
 	
 		<constants>
+			<constant name="SIZE" type="INT" value=1024 />
 			<constant name ="RAYCOUNT" type="FLOAT" value = 500000 />
 		</constants>
 		
+		<attributes>
+			<attribute type="PASS" name="SIZE" data="INT" value="SIZE" />
+		</attributes>
 		<scenes>
-			<!--scene name="bench" type="OctreeUnified" 
-				   filename="../../models/ntg-bench/bench.obj" /--> 
 			<scene name="pl3d" type="OctreeUnified" 
 				   filename="../../models/LargoCamoes/largoCamoes.nbo" />
-			<!--scene name="bench" type="OctreeUnified" 
-				   filename="../../models/cow.obj" /--> 
 		</scenes>
 		
 		<viewports>
@@ -79,8 +79,6 @@
 			</pass>
 			<pass name="Optix Prime" class="optixPrime">
 				<scene name="pl3d" />
-				<RAY_COUNT value=-1 />
-				<!--rayCount buffer="PrimeShadows::test" offset=4/-->
 				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
 				<hits buffer ="PrimeShadows::hits" />
 			</pass>		
@@ -104,4 +102,10 @@
 			</pass>
 		</pipeline>
 	</pipelines>
+	
+	<interface>
+		<window label="Settings" >
+			<var label="Light Dir" type="LIGHT" context="Sun" component="DIRECTION" mode="DIRECTION" />
+		</window>
+	</interface>
 </project>

@@ -2,8 +2,7 @@
 <materialLib name="PrimeShadows">
 	<renderTargets>
 		<renderTarget name ="gBuffer">
-			<SIZE width=1024 height=1024 />
-			<!--size width="512" height="512" /-->
+			<SIZE width="SIZE" height="SIZE" />
 			<colors>
 				<color name="pos" internalFormat="RGBA32F" />
 				<color name="normal" internalFormat="RGBA" />
@@ -12,8 +11,7 @@
 		</renderTarget>
 		
 		<renderTarget name ="dummy">
-			<SIZE width=1024 height=1024 />
-			<!--size width="512" height="512" /-->
+			<SIZE width="SIZE" height="SIZE" />
 			<colors>
 				<color name="dummy" internalFormat="RGBA" />
 			</colors>
@@ -23,10 +21,22 @@
 
 	<buffers>
 		<buffer name="hits" >
-			<SIZE value=16777216 />
+			<!--SIZE value=16777216 /-->
+			<DIM x="SIZE" y="SIZE" z=1 />
+			<structure>
+				<field value="FLOAT" />
+				<field value="INT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+			</structure> 
 		</buffer>	
 		<buffer name="rays" >
-			<SIZE value=33554432 />
+			<!--SIZE value=33554432 /-->
+			<DIM x="SIZE" y="SIZE" z=1 />
+			<structure>
+				<field value="VEC4" />
+				<field value="VEC4" />
+			</structure> 
 		</buffer>	
 		<buffer name="test" >
 			<SIZE value=8 />
@@ -71,6 +81,8 @@
 														component="UNIT" id="0" />	
 					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
 														component="DIRECTION" /> 
+					<valueof uniform="size"				type="PASS" context="CURRENT" 
+															component="SIZE" />
 				</values>
 			</shader>
 			<buffers>	
@@ -97,6 +109,8 @@
 															component="VIEW_MATRIX" />
 					<valueof uniform="rayCount"			type="PASS" context="OptixPrime#Optix Prime"
 															component="RAY_COUNT" />
+					<valueof uniform="size"				type="PASS" context="CURRENT" 
+															component="SIZE" />
 				</values>
 			</shader>
 			<textures>
@@ -113,6 +127,10 @@
 		
 		<material name="showBuffer">			
 			<shader name="showBuffer">
+				<values>
+					<valueof uniform="size"				type="PASS" context="CURRENT" 
+															component="SIZE" />
+				</values>
 			</shader>
 			<buffers>	
 				<buffer name="rays" >

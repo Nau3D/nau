@@ -482,7 +482,8 @@ GLProgram::setBlocks() {
 
 	int count, dataSize, actualLen, activeUnif, maxUniLength;
 	int uniType, uniSize, uniOffset, uniMatStride, uniArrayStride, auxSize;
-	char *name, *name2;
+	char name[256], name2[256];
+	unsigned int indices[256];
 
 	IUniformBlock *block;
 	UniformBlockManager *blockMan = UNIFORMBLOCKMANAGER;
@@ -492,7 +493,7 @@ GLProgram::setBlocks() {
 	for (int i = 0; i < count; ++i) {
 		// Get buffers name
 		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_NAME_LENGTH, &actualLen);
-		name = (char *)malloc(sizeof(char) * actualLen);
+		//name = (char *)malloc(sizeof(char) * actualLen);
 		glGetActiveUniformBlockName(m_P, i, actualLen, NULL, name);
 		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_DATA_SIZE, &dataSize);
 		bool newBlock = true;
@@ -532,12 +533,11 @@ GLProgram::setBlocks() {
 		m_Blocks[name] = i;
 		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &activeUnif);
 
-		unsigned int *indices;
-		indices = (unsigned int *)malloc(sizeof(unsigned int) * activeUnif);
+		//indices = (unsigned int *)malloc(sizeof(unsigned int) * activeUnif);
 		glGetActiveUniformBlockiv(m_P, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, (int *)indices);
 
 		glGetProgramiv(m_P, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniLength);
-		name2 = (char *)malloc(sizeof(char) * maxUniLength);
+		//name2 = (char *)malloc(sizeof(char) * maxUniLength);
 
 		for (int k = 0; k < activeUnif; ++k) {
 

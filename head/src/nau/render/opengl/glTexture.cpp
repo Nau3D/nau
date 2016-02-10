@@ -317,6 +317,8 @@ GLTexture::build(int immutable) {
 		max = std::max(m_IntProps[HEIGHT], std::max(m_IntProps[WIDTH], m_IntProps[DEPTH]));
 		m_IntProps[LEVELS] = (int)log2(max);
 	}
+	else if (m_IntProps[LEVELS] != 0)
+		m_BoolProps[MIPMAP] = true;
 
 	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
 	
@@ -417,9 +419,9 @@ GLTexture::build(int immutable) {
 
 //	m_BoolProps[MIPMAP] = false;
 
-	if (!immutable && m_BoolProps[MIPMAP]) {
-		glGenerateMipmap((GLenum)m_EnumProps[DIMENSION]);
+	if (!immutable && m_IntProps[LEVELS] != 0) {//m_BoolProps[MIPMAP]) {
 		glTexParameteriv((GLenum)m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, &m_IntProps[LEVELS]);
+		glGenerateMipmap((GLenum)m_EnumProps[DIMENSION]);
 	}
 	else {
 		glTexParameteri((GLenum)m_EnumProps[DIMENSION], GL_TEXTURE_MAX_LEVEL, m_IntProps[LEVELS]);

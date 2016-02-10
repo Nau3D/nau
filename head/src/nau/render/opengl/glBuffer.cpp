@@ -123,17 +123,16 @@ GLBuffer::getData(size_t offset, size_t size, void *data) {
 	if (offset + size > m_UIntProps[SIZE])
 		actualSize = (size_t)m_UIntProps[SIZE] - offset;
 
+	GLenum type = GL_UNIFORM_BUFFER;
 	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	GLenum type = GL_UNIFORM_BUFFER;// SHADER_STORAGE_BUFFER;
+	//glGetBufferSubData(type, offset, actualSize, data);
+
 	glBindBuffer(type, m_IntProps[ID]);
-	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	void *bufferData;
 	bufferData = glMapBufferRange(type, offset, actualSize, GL_MAP_READ_BIT);
 	assert(bufferData != NULL);
 	memcpy(data, bufferData, actualSize);
 	glUnmapBuffer(type);
-	//glGetBufferSubData(type, offset, actualSize, data);
-	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	glBindBuffer(type, 0);
 
 	return actualSize;

@@ -102,7 +102,6 @@
 			<var label="Sharpness" type="RENDERER" context="CURRENT" component="sharpness" def="min=0 max=16 step=0.1"/>
 			<var label="Noise Scale" type="RENDERER" context="CURRENT" component="noiseScale" def="min=0 max=8 step=0.1" />
 			
-			<var label="FOV" type="CAMERA" context="MainCamera" component="FOV"  />
 		</window>
 	</interface>
 	

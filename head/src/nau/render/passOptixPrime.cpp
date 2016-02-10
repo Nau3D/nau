@@ -331,19 +331,23 @@ PassOptixPrime::restore(void) {
 void
 PassOptixPrime::doPass(void) {
 
-	if (m_RayCountBuffer) {
-		m_RayCountBuffer->getData(m_RayCountBufferOffset, sizeof(int), &m_IntProps[RAY_COUNT]);
+	{
+		PROFILE("Prepare");
+
+		if (m_RayCountBuffer) {
+			m_RayCountBuffer->getData(m_RayCountBufferOffset, sizeof(int), &m_IntProps[RAY_COUNT]);
+		}
 	}
 
-	if (m_IntProps[RAY_COUNT] == -1) {
-		m_IntProps[RAY_COUNT] = m_Hits->getPropui(IBuffer::SIZE) / 16;
-	}
-	CHK_PRIME(rtpBufferDescSetRange(m_RaysDesc, 0, m_IntProps[RAY_COUNT]));
-	CHK_PRIME(rtpBufferDescSetRange(m_HitsDesc, 0, m_IntProps[RAY_COUNT]));
-	CHK_PRIME(rtpQuerySetRays(m_Query, m_RaysDesc));
-	CHK_PRIME(rtpQuerySetHits(m_Query, m_HitsDesc));
-	const char *err_string;
-	rtpContextGetLastErrorString(m_Context, &err_string);
+		if (m_IntProps[RAY_COUNT] == -1) {
+			m_IntProps[RAY_COUNT] = m_Hits->getPropui(IBuffer::SIZE) / 16;
+		}
+		CHK_PRIME(rtpBufferDescSetRange(m_RaysDesc, 0, m_IntProps[RAY_COUNT]));
+		CHK_PRIME(rtpBufferDescSetRange(m_HitsDesc, 0, m_IntProps[RAY_COUNT]));
+		CHK_PRIME(rtpQuerySetRays(m_Query, m_RaysDesc));
+		CHK_PRIME(rtpQuerySetHits(m_Query, m_HitsDesc));
+		const char *err_string;
+		rtpContextGetLastErrorString(m_Context, &err_string);
 	CHK_PRIME(rtpQueryExecute(m_Query, 0 /* hints */));
 	//CHK_PRIME(rtpQueryFinish(m_Query));
 }

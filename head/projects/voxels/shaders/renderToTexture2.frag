@@ -28,7 +28,11 @@ void main()
 		
 	vec4 lightTexCoord = LSpaceMat * posV;
 	vec4 pos = texture(texPos, lightTexCoord.xy);
-	if (distance(pos, posV) > 0.0001)
+	// vec4 pos2 = texture(texPos, lightTexCoord.xy + 1/4096.0);
+	// vec4 pos3 = texture(texPos, lightTexCoord.xy - 1/4096.0);
+	// vec4 pos4 = texture(texPos, lightTexCoord.xy + vec2(1/4096.0, -1/4096.0));
+	if (distance(pos, posV) > 0.001)// || distance(pos2, posV) > 0.001 
+		// || distance(pos3, posV) > 0.001 || distance(pos4, posV) > 0.001)
 		outColor.w = 0.0;
 }
 

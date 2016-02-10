@@ -2,12 +2,9 @@
 
 uniform vec3 lightDirection;
 uniform sampler2D texUnit;
+uniform int size;
 
 struct ray {
-	// vec3 pos;
-	// float tmin;
-	// vec3 dir;
-	// float tmax;
 	vec4 pos;
 	vec4 dir;
 };
@@ -27,13 +24,9 @@ void main()
 	ray r;
 	r.pos = vec4(pos, 0.01);
 	r.dir = vec4(-lightDirection, 1000.0);
-	// r.pos = pos;
-	// r.tmin = 0.01;
-	// r.dir = -lightDirection;
-	// r.tmax = 1000.0;
 	
-	ivec2 coord = ivec2(texCoordV*vec2(1024,1024));
-	int coordB = coord.x* 1024 + coord.y;
+	ivec2 coord = ivec2(texCoordV*vec2(size,size));
+	int coordB = coord.x* size + coord.y;
 	rays[coordB] = r;
 
 	 outColor=r.pos;

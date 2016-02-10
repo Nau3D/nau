@@ -1347,7 +1347,7 @@ GLRenderer::showDrawDebugInfo(IProgram *pp, nau::util::Tree *tree) {
 			}
 			if (buff != NULL) {
 				buff->getData(uniOffset, auxSize, values);
-				s = Enums::valueToStringAligned(GLUniform::spSimpleType[(GLenum)uniType], values);
+				s = Enums::pointerToStringAligned(GLUniform::spSimpleType[(GLenum)uniType], values);
 				uniTree->appendItem("Values", s);
 			}
 		}

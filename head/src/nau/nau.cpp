@@ -134,6 +134,7 @@ Nau::~Nau() {
 #endif
 
 	gInstance = NULL;
+	delete INTERFACE;
 }
 
 
@@ -305,7 +306,6 @@ luaGetBuffer(lua_State *l) {
 	}
 
 	luaGetValues(l, arr, card, bdt);
-
 	return 0;
 }
 
@@ -471,6 +471,7 @@ luaSet(lua_State *l) {
 		default:
 			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
 		}
+		free (arrF);
 		break;
 	case Enums::INT:
 	case Enums::BOOL:
@@ -496,6 +497,7 @@ luaSet(lua_State *l) {
 		default:
 			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
 		}
+		free(arrI);
 		break;
 	case Enums::UINT :
 		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
@@ -516,6 +518,7 @@ luaSet(lua_State *l) {
 		default:
 			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
 		}
+		free(arrUI);
 		break;
 	default:
 		NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[bdt].c_str());

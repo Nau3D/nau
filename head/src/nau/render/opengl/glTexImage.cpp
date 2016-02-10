@@ -56,8 +56,10 @@ GLTexImage::GLTexImage (ITexture *t) :
 
 GLTexImage::~GLTexImage(void)
 {
-	if (m_Data)
+	if (m_Data) {
 		free(m_Data);
+		m_Data = NULL;
+	}
 }
 
 

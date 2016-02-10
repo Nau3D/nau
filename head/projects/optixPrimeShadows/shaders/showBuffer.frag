@@ -13,13 +13,15 @@ layout(std430, binding = 1) buffer RayBuffer {
 	ray rays[];
 };
 
+
+uniform int size;
+
 in vec2 texCoordV;
 out vec4 colorOut;
 
 void main() {
-//	ivec2 coord = ivec2(gl_FragCoord.xy);
-	ivec2 coord = ivec2(texCoordV*vec2(1024,1024));
-	int coordB = coord.x* 1024 + coord.y;
+	ivec2 coord = ivec2(texCoordV*vec2(size,size));
+	int coordB = coord.x* size + coord.y;
 
 	 vec4 h = hits[coordB];
 	
@@ -28,6 +30,4 @@ void main() {
 	 else
 		 colorOut = vec4(1.0, 1.0, 1.0, 1.0);
 		 
-//	colorOut = vec4(length(rays[coordB].pos)/100,0,0,1);
-//	colorOut = vec4(rays[coordB].pos);
 }	
