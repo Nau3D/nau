@@ -28,12 +28,15 @@ rtDeclareVariable(uint2, launch_index, rtLaunchIndex, );
 rtDeclareVariable(uint2, launch_dim,   rtLaunchDim, );
 rtDeclareVariable(PerRayDataResult, prdr, rtPayload, );
 
+rtDeclareVariable(int, Shadow, , );
 
 RT_PROGRAM void buffer_camera(void)
 {
 	float4 i = tex2D( pos_buffer, launch_index.x, launch_index.y );
 	PerRayDataResult prdr;	
+	
 	prdr.result = make_float4(1.0f);
+	// w is greater than zero when pixel is facing the light
 	if (i.w > 0.0f) {	
 		float3 ray_origin = make_float3(i);
 		float3 lDir = make_float3(-lightDir);
@@ -43,7 +46,6 @@ RT_PROGRAM void buffer_camera(void)
 	else
 		prdr.result = make_float4(1.0f);
 
-	//prdr.result.x = ray_origin.x/256.0; prdr.result.y = ray_origin.y/256.0; prdr.result.z = ray_origin.z/256.0; prdr.result.w = 1.0;
 	output0[launch_index] = prdr.result;
 
 }

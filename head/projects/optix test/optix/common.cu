@@ -85,6 +85,7 @@ RT_PROGRAM void pinhole_camera()
 	output0[launch_index] = prd.result;
 }
 
+
 RT_PROGRAM void pinhole_camera_ms()
 {
 	float4 color = make_float4(0.0);

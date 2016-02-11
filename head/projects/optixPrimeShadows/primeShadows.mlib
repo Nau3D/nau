@@ -103,7 +103,7 @@
 															component="UNIT" id="0" />	
 					<valueof uniform="texNormal" 		type="TEXTURE_BINDING" context="CURRENT" 
 															component="UNIT" id="1" />	
-					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
+					<valueof uniform="lightDir" 	type="LIGHT" context="Sun" 
 															component="DIRECTION" /> 
 					<valueof uniform="V"				type="CAMERA" context="MainCamera" 
 															component="VIEW_MATRIX" />

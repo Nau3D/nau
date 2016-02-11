@@ -3,12 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">
-				<!--file>..\3dsmodels\cow.obj</file-->
-				<!--file>..\ntg-bench\bench.obj</file-->
 				<file name="..\..\models\LargoCamoes\largoCamoes.nbo"/>
-				<!--file>..\3dsmodels\pl3dsecXXI-octreeByMat-test.nbo</file-->
-				<!--file>..\ntg-bin-pl3d-secxxi-other\avPlatanosArvoresII.mesh.xml</file-->
-				<!--file>..\3dsmodels\jeep1.3ds</file-->
 			</scene>
 		</scenes>
 		<viewports>
@@ -35,13 +30,6 @@
 				<VIEW x="0.91" y="-0.29" z="0.26" />
 				<UP x="0" y="1" z="0" />
 			</camera>
-			<!--camera name="MainCamera" >
-				<viewport name="LeftViewport" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
-				<POSITION x="7.42" y="18.61" z="-38.62" />
-				<VIEW x="0.31" y="-0.36" z="0.87" />
-				<UP x="0.0" y="1.0" z="0.0" />
-			</camera-->
 		</cameras>
 		<lights>
 			<light name="Sun">
@@ -54,21 +42,19 @@
 		</materialLibs>
 	</assets>
 
-
-
-
 	<pipelines>
 
-		<pipeline name="fixedfunction" default="true" defaultCamera="MainCamera">
-			<pass class="default" name="pass1">
+		<pipeline name="optix deffered" default="true" defaultCamera="MainCamera">
+		
+			<pass class="default" name="deferred">
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<renderTarget name="deferred" fromLibrary="Deferred Render Targets" />
 				<lights>
 					<light name="Sun" />
 				</lights>
+				<renderTarget name="deferred" fromLibrary="Deferred Render Targets" />
 				<injectionMaps>
 					<map toMaterial="*">
 						<shader fromMaterial ="deferred" fromLibrary="Deferred Render Targets" />
@@ -82,13 +68,14 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
-				<renderTarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
 				<lights>
 					<light name="Sun" />
 				</lights>
+				<renderTarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="nau_material_lib" toMaterial="__Black" />
 				</materialMaps>
+				
 				<optixEntryPoint>
 					<optixProgram type="RayGen" file="optix/deferredShadows.ptx" proc="buffer_camera"/> 
 					<optixProgram type="Exception" file="optix/deferredShadows.ptx" proc="exception"/> 

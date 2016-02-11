@@ -1,0 +1,20 @@
+<NotepadPlus>
+    <Project name="Optix Deferred">
+        <Folder name="optix">
+            <File name="optix\common.cu" />
+            <File name="optix\common.ptx" />
+            <File name="optix\deferredShadows.cu" />
+            <File name="optix\deferredShadows.ptx" />
+            <File name="optix\random.h" />
+        </Folder>
+        <Folder name="shaders">
+            <File name="shaders\combine.frag" />
+            <File name="shaders\combine.vert" />
+            <File name="shaders\deferredShading.frag" />
+            <File name="shaders\deferredShading.vert" />
+        </Folder>
+        <File name="DeferredRenderTargets.mlib" />
+        <File name="optixTest.mlib" />
+        <File name="OptixTestDeferred.xml" />
+    </Project>
+</NotepadPlus>
