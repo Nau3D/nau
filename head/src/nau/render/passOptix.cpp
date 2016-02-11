@@ -456,7 +456,7 @@ PassOptix::optixInit() {
 				rtWorldSpaceTexture->setIndexingMode(RT_TEXTURE_INDEX_ARRAY_INDEX);
 				rtWorldSpaceTexture->setReadMode(RT_TEXTURE_READ_ELEMENT_TYPE);
 				rtWorldSpaceTexture->setMaxAnisotropy(1.0f);
-				rtWorldSpaceTexture->setFilteringModes(RT_FILTER_NEAREST, RT_FILTER_NEAREST, RT_FILTER_NONE);
+				rtWorldSpaceTexture->setFilteringModes(RT_FILTER_NEAREST, RT_FILTER_NEAREST, RT_FILTER_LINEAR);
 				o_Context[iter->first]->setTextureSampler(rtWorldSpaceTexture);
 			}
 		}
@@ -502,7 +502,7 @@ PassOptix::optixInit() {
 		rtWorldSpaceTexture->setIndexingMode(RT_TEXTURE_INDEX_ARRAY_INDEX);
 		rtWorldSpaceTexture->setReadMode(RT_TEXTURE_READ_ELEMENT_TYPE);
 		rtWorldSpaceTexture->setMaxAnisotropy(1.0f);
-		rtWorldSpaceTexture->setFilteringModes(RT_FILTER_NEAREST, RT_FILTER_NEAREST, RT_FILTER_NONE);
+		rtWorldSpaceTexture->setFilteringModes(RT_FILTER_NEAREST, RT_FILTER_NEAREST, RT_FILTER_LINEAR);
 		o_Context["pos_buffer"]->setTextureSampler(rtWorldSpaceTexture);
 	}
 	catch(optix::Exception& e) {

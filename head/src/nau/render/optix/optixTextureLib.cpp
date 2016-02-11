@@ -49,11 +49,11 @@ OptixTextureLib::addTextures(std::shared_ptr<nau::material::Material> &m) {
 		//	mode1 = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i), IState::TEXTURE_MIN_FILTER);
 			m_TextureLib[s]->setFilteringModes( (RTfiltermode)translateFilterModeToOptix(mode1), 
 												(RTfiltermode)translateFilterModeToOptix(mode), 
-												RT_FILTER_NONE );
+												RT_FILTER_LINEAR);
 			m_TextureLib[s]->setIndexingMode(RT_TEXTURE_INDEX_NORMALIZED_COORDINATES);
 			m_TextureLib[s]->setReadMode(RT_TEXTURE_READ_NORMALIZED_FLOAT);
 			m_TextureLib[s]->setMaxAnisotropy(1.0f);
-
+			
 			count++;
 		}
 	  }
@@ -100,7 +100,7 @@ OptixTextureLib::addTexture(unsigned int glID) {
 			
 	m_TextureLib[glID]->setFilteringModes( RT_FILTER_NEAREST, 
 										RT_FILTER_NEAREST, 
-										RT_FILTER_NONE );
+										RT_FILTER_LINEAR );
 	//m_TextureLib[glID]->setFilteringModes( RT_FILTER_NEAREST, 
 	//									RT_FILTER_NEAREST, 
 	//									RT_FILTER_LINEAR );	

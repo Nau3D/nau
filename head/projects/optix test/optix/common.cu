@@ -32,7 +32,7 @@ rtBuffer<uint> index_buffer;
 rtBuffer<float4> normal;
 rtBuffer<float4> texCoord0;
 
-//rtTextureSampler<float4,2> pos_buffer;
+rtTextureSampler<float4,2> pos_buffer;
 
 rtTextureSampler<float4, 2> tex0;
 
