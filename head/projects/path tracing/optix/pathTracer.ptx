@@ -21,6 +21,7 @@
 .global .align 16 .b8 lightDir[16];
 .global .align 16 .b8 lightPos[16];
 .global .align 4 .u32 frameCount;
+.global .align 4 .u32 trace;
 .global .align 8 .b8 top_object[4];
 .global .align 1 .b8 vertex_buffer[1];
 .global .align 1 .b8 index_buffer[1];
@@ -72,6 +73,7 @@
 .global .align 4 .b8 _ZN21rti_internal_typeinfo8lightDirE[8] = {82, 97, 121, 0, 16, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo8lightPosE[8] = {82, 97, 121, 0, 16, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo10frameCountE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo5traceE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo10top_objectE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo3rayE[8] = {82, 97, 121, 0, 36, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo12launch_indexE[8] = {82, 97, 121, 0, 8, 0, 0, 0};
@@ -93,6 +95,7 @@
 .global .align 1 .b8 _ZN21rti_internal_typename8lightDirE[7] = {102, 108, 111, 97, 116, 52, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename8lightPosE[7] = {102, 108, 111, 97, 116, 52, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename10frameCountE[5] = {117, 105, 110, 116, 0};
+.global .align 1 .b8 _ZN21rti_internal_typename5traceE[4] = {105, 110, 116, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename10top_objectE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename3rayE[11] = {111, 112, 116, 105, 120, 58, 58, 82, 97, 121, 0};
 .global .align 1 .b8 _ZN21rti_internal_typename12launch_indexE[6] = {117, 105, 110, 116, 50, 0};
@@ -114,6 +117,7 @@
 .global .align 4 .u32 _ZN21rti_internal_typeenum8lightDirE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum8lightPosE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum10frameCountE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum5traceE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum10top_objectE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum3rayE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum12launch_indexE = 4919;
@@ -135,6 +139,7 @@
 .global .align 1 .b8 _ZN21rti_internal_semantic8lightDirE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic8lightPosE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic10frameCountE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic5traceE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic10top_objectE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic3rayE[13] = {114, 116, 67, 117, 114, 114, 101, 110, 116, 82, 97, 121, 0};
 .global .align 1 .b8 _ZN21rti_internal_semantic12launch_indexE[14] = {114, 116, 76, 97, 117, 110, 99, 104, 73, 110, 100, 101, 120, 0};
@@ -156,6 +161,7 @@
 .global .align 1 .b8 _ZN23rti_internal_annotation8lightDirE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation8lightPosE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation10frameCountE[1];
+.global .align 1 .b8 _ZN23rti_internal_annotation5traceE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation10top_objectE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation3rayE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation12launch_indexE[1];
@@ -2097,7 +2103,7 @@ BB12_3:
 	.reg .b64 	%SPL;
 	.reg .pred 	%p<8>;
 	.reg .f32 	%f<272>;
-	.reg .b32 	%r<23>;
+	.reg .b32 	%r<24>;
 	.reg .f64 	%fd<3>;
 	.reg .b64 	%rd<16>;
 
@@ -2223,15 +2229,16 @@ BB13_4:
 	max.ftz.f32 	%f33, %f156, %f160;
 	ld.global.u64 	%rd2, [prdr+16];
 	cvt.u32.u64	%r1, %rd2;
-	setp.gt.s32	%p3, %r1, 4;
+	ld.global.u32 	%r12, [trace];
+	setp.gt.s32	%p3, %r1, %r12;
 	@%p3 bra 	BB13_9;
 
 	shr.u64 	%rd9, %rd2, 32;
-	cvt.u32.u64	%r12, %rd9;
-	mad.lo.s32 	%r2, %r12, 1664525, 1013904223;
+	cvt.u32.u64	%r13, %rd9;
+	mad.lo.s32 	%r2, %r13, 1664525, 1013904223;
 	st.global.u32 	[prdr+20], %r2;
-	and.b32  	%r13, %r2, 16777215;
-	cvt.rn.f32.u32	%f161, %r13;
+	and.b32  	%r14, %r2, 16777215;
+	cvt.rn.f32.u32	%f161, %r14;
 	mov.f32 	%f162, 0f4B800000;
 	div.approx.ftz.f32 	%f163, %f161, %f162;
 	setp.gt.ftz.f32	%p4, %f163, %f33;
@@ -2253,18 +2260,18 @@ BB13_9:
 	bra.uni 	BB13_10;
 
 BB13_6:
-	add.s32 	%r14, %r1, 1;
+	add.s32 	%r15, %r1, 1;
 	mov.f32 	%f165, 0f3F800000;
 	st.local.v4.f32 	[%rd5], {%f165, %f165, %f165, %f165};
-	st.local.v2.u32 	[%rd5+16], {%r14, %r2};
-	mad.lo.s32 	%r15, %r2, 1664525, 1013904223;
-	and.b32  	%r16, %r15, 16777215;
-	cvt.rn.f32.u32	%f166, %r16;
+	st.local.v2.u32 	[%rd5+16], {%r15, %r2};
+	mad.lo.s32 	%r16, %r2, 1664525, 1013904223;
+	and.b32  	%r17, %r16, 16777215;
+	cvt.rn.f32.u32	%f166, %r17;
 	div.approx.ftz.f32 	%f168, %f166, %f162;
-	mad.lo.s32 	%r17, %r15, 1664525, 1013904223;
-	st.global.u32 	[prdr+20], %r17;
-	and.b32  	%r18, %r17, 16777215;
-	cvt.rn.f32.u32	%f169, %r18;
+	mad.lo.s32 	%r18, %r16, 1664525, 1013904223;
+	st.global.u32 	[prdr+20], %r18;
+	and.b32  	%r19, %r18, 16777215;
+	cvt.rn.f32.u32	%f169, %r19;
 	div.approx.ftz.f32 	%f170, %f169, %f162;
 	mul.ftz.f32 	%f171, %f2, 0f00000000;
 	sub.ftz.f32 	%f172, %f171, %f3;
@@ -2325,13 +2332,13 @@ BB13_8:
 	fma.rn.ftz.f32 	%f201, %f1, %f263, %f216;
 	fma.rn.ftz.f32 	%f202, %f2, %f263, %f218;
 	fma.rn.ftz.f32 	%f203, %f3, %f263, %f220;
-	ld.global.u32 	%r20, [Phong];
-	ld.global.u32 	%r19, [top_object];
+	ld.global.u32 	%r21, [Phong];
+	ld.global.u32 	%r20, [top_object];
 	mov.f32 	%f204, 0f3E4CCCCD;
 	mov.f32 	%f205, 0f4A989680;
-	mov.u32 	%r21, 32;
+	mov.u32 	%r22, 32;
 	// inline asm
-	call _rt_trace_64, (%r19, %f4, %f5, %f6, %f201, %f202, %f203, %r20, %f204, %f205, %rd4, %r21);
+	call _rt_trace_64, (%r20, %f4, %f5, %f6, %f201, %f202, %f203, %r21, %f204, %f205, %rd4, %r22);
 	// inline asm
 	ld.local.v4.f32 	{%f221, %f222, %f223, %f224}, [%rd5];
 	add.ftz.f32 	%f264, %f259, %f221;
@@ -2344,8 +2351,8 @@ BB13_8:
 	mov.f32 	%f271, %f159;
 
 BB13_10:
-	ld.global.u32 	%r22, [texCount];
-	setp.lt.s32	%p7, %r22, 1;
+	ld.global.u32 	%r23, [texCount];
+	setp.lt.s32	%p7, %r23, 1;
 	@%p7 bra 	BB13_12;
 
 	ld.global.v2.f32 	{%f232, %f233}, [texCoord];

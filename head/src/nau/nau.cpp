@@ -381,16 +381,17 @@ luaGet(lua_State *l) {
 	void *arr;
 	AttribSet *attr;
 
-	//if (!strcmp(tipo, "CURRENT")) {
-	//	attr = NAU->getAttribs(context);
-	//	if (attr == NULL)
-	//		NAU_THROW("Lua set: Invalid context: %s", context);
-	//}
-	//else {
+	if (!strcmp(context, "CURRENT")) {
+		
+		attr = NAU->getCurrentObjectAttributes(tipo)->getAttribSet();
+		if (attr == NULL)
+			NAU_THROW("Lua set: Invalid context: %s", context);
+	}
+	else {
 		attr = NAU->getAttribs(tipo);
 		if (attr == NULL)
 			NAU_THROW("Lua get: invalid type: %s", tipo);
-	//}
+	}
 
 	std::string s = component;
 	Enums::DataType dt, bdt;
@@ -425,16 +426,18 @@ luaSet(lua_State *l) {
 	Data *arr = NULL;
 	AttribSet *attr;
 
-	//if (!strcmp(tipo, "CURRENT")) {
-	//	attr = NAU->getAttribs(context);
-	//	if (attr == NULL)
-	//		NAU_THROW("Lua set: Invalid context: %s", context);
-	//}
-	//else {
+	if (!strcmp(context, "CURRENT")) {
+
+		AttributeValues *av = NAU->getCurrentObjectAttributes(tipo);
+		attr = av->getAttribSet();
+		if (attr == NULL)
+			NAU_THROW("Lua set: Invalid type: %s", tipo);
+	}
+	else {
 		attr = NAU->getAttribs(tipo);
 		if (attr == NULL)
 			NAU_THROW("Lua set: invalid type: %s", tipo);
-	//}
+	}
 	std::string s = component;
 	Enums::DataType dt, bdt;
 	int id;

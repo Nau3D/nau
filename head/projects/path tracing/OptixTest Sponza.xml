@@ -8,6 +8,7 @@
 			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "10" />
 			<attribute type="PASS" name="Levels" data="INT" value=9 />
 			<attribute type="PASS" name="CurrentLevel" data="INT" value=0 />
+			<attribute type="PASS" name="trace" data="INT" value=4 />
 		</attributes>
 		<scenes>
 			<scene name="MainScene">
@@ -123,6 +124,7 @@
 					<valueof optixVar="texCount" type="RENDERER" context="CURRENT" component="TEXTURE_COUNT" />
 				</optixMaterialAttributes>
 				<optixGlobalAttributes>
+					<valueof optixVar="trace" type="PASS" context="CURRENT" component="trace" />
 					<valueof optixVar="lightDir" type="LIGHT" context="CURRENT" id=0 component="DIRECTION" />
 					<valueof optixVar="lightPos" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
 					<valueof optixVar="frameCount" type="RENDERER" context="CURRENT" component="FRAME_COUNT" />
@@ -175,4 +177,10 @@
 			
 		</pipeline>
 	</pipelines>
+	<interface>
+		<window label="Path Trace" >
+			<var label="trace" type="PASS" context="PathTracer#Path Trace" component="trace" def="min=1 max=6 step=1" />
+		</window>
+	</interface>
 </project>
+	

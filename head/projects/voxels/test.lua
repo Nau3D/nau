@@ -4,16 +4,16 @@ test = function()
 	local g = {}
 	local h = {}
 	local k = {}
-	getAttr("PASS", "voxels#mipmap", "GridLevels", 0, h);
-	getAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
+	getAttr("PASS", "CURRENT", "GridLevels", 0, h);
+	getAttr("PASS", "CURRENT", "GridCurrentLevel",0,f)
 	
 	if f[1] == h[1] then
 		f[1] = 0
-		setAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
+		setAttr("PASS", "CURRENT", "GridCurrentLevel",0,f)
 		return false
 	else
 		f[1] = f[1] + 1
-		setAttr("PASS", "voxels#mipmap", "GridCurrentLevel",0,f)
+		setAttr("PASS", "CURRENT", "GridCurrentLevel",0,f)
 
 		k[1] = h[1] - f[1];
 		if k[1] == 0 then
@@ -23,9 +23,9 @@ test = function()
 				g[1] = g[1] * 2
 			end	
 		end
-		setAttr("PASS", "voxels#mipmap", "DIM_X", 0, g);
-		setAttr("PASS", "voxels#mipmap", "DIM_Y", 0, g);
-		setAttr("PASS", "voxels#mipmap", "DIM_Z", 0, g);
+		setAttr("PASS", "CURRENT", "DIM_X", 0, g);
+		setAttr("PASS", "CURRENT", "DIM_Y", 0, g);
+		setAttr("PASS", "CURRENT", "DIM_Z", 0, g);
 		
 		setAttr("IMAGE_TEXTURE", "Voxels::mipmap", "LEVEL", 1, f);
 		setAttr("IMAGE_TEXTURE", "Voxels::mipmap", "LEVEL", 2, f);

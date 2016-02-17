@@ -88,16 +88,20 @@
 	</assets>
 	
 	
-	<pipelines>
-		<pipeline name="voxels" default="true" defaultCamera = "MainCamera">
+	<pipelines default="voxels" >
+		<pipeline name="voxels" defaultCamera = "MainCamera">
 		
 			<pass class="default" name="voxelization">
 				<mode value="RUN_ONCE" />	
+				<preProcess>
+					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+				</preProcess>	
 				<camera name="MainCamera" />
 				<scenes>
 					<scene name="Sponza" />
 				</scenes>
-				<COLOR_CLEAR value=false />
+				<COLOR_CLEAR value = false />
 				<COLOR_ENABLE value = false />
 				<DEPTH_MASK value = false />
 				<DEPTH_ENABLE value = false />
@@ -113,10 +117,6 @@
 						</imageTextures>
 					</map>
 				</injectionMaps>
-				<preProcess>
-					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
-					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0  />
-				</preProcess>	
 			</pass>
 			
 			<pass class="depthmap" name="RSM">
@@ -232,5 +232,149 @@
 			</pass>
 			
 		</pipeline>
+
+		<pipeline name="voxels2" defaultCamera = "MainCamera">
+		
+			<pass class="default" name="voxelization">
+				<camera name="MainCamera" />
+				<scenes>
+					<scene name="Sponza" />
+				</scenes>
+				<COLOR_CLEAR value=false />
+				<COLOR_ENABLE value = false />
+				<DEPTH_MASK value = false />
+				<DEPTH_ENABLE value = false />
+
+				<renderTarget name="dummy" fromLibrary="Voxels" />
+				<injectionMaps>
+					<map toMaterial="*" >
+						<shader fromMaterial ="voxelization" fromLibrary="Voxels" />
+						<state name="voxelization" fromLibrary="Voxels" />
+						<imageTextures>
+							<imageTexture texture="gridColor" fromLibrary="Voxels" toUnit=1 />
+							<imageTexture texture="gridNormal" fromLibrary="Voxels" toUnit=2 />
+						</imageTextures>
+					</map>
+				</injectionMaps>
+				<preProcess>
+					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+				</preProcess>	
+			</pass>
+			
+			<pass class="depthmap" name="RSM">
+				<scenes>
+					<scene name="Sponza" />
+				</scenes>	
+				<lights>
+					<light name="Sun" />
+				</lights>	
+				<camera name="xx" />
+				<renderTarget name="RSM" fromLibrary="Voxels" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="RSM" fromLibrary="Voxels" />
+					</map>
+				</injectionMaps>
+			</pass>
+			
+					
+			<pass class="quad" name="lightInjection">
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="Voxels" toMaterial="lightInjection" />
+				</materialMaps>		
+				<renderTarget name="RSMTest" fromLibrary="Voxels" />
+			</pass>
+			
+			<!--pass class="quad" name="test">
+				<viewport name="MainViewport" />
+				<texture name="RSMTest" fromLibrary="Voxels" />
+			</pass-->
+			
+			<pass class="compute" name="resetOpacity" >
+				<material name="resetOpacity" fromLibrary="Voxels" 
+						dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
+			</pass>
+
+			<pass class="compute" name="mipmap" >
+				<testScript file="test.lua" script="test" TEST_MODE="RUN_WHILE"/>
+				<material name="mipmap" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
+			</pass>
+
+			<pass class="default" name="renderScene">
+				<scenes>
+					<scene name="Sponza" />
+				</scenes>	
+				<lights>
+					<light name="Sun" />
+				</lights>	
+				<camera name="MainCamera" />
+				<!--viewport name="MainViewport" /-->
+				<renderTarget name="scene" fromLibrary="Voxels" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="renderScene2" fromLibrary="Voxels" />
+						<textures>
+							<texture name="posRSM" fromLibrary="Voxels" toUnit="1" >
+								<MIN_FILTER value="LINEAR" />
+								<MAG_FILTER value="LINEAR" />					
+							</texture>
+						</textures>
+					</map>
+				</injectionMaps>
+			</pass>
+			
+			<!--pass class="quad" name="test">
+				<viewport name="MainViewport" />
+				<texture name="color" fromLibrary="Voxels" />
+			</pass-->
+
+			<!--pass class="default" name="showVoxels">
+				<scenes>
+					<scene name="Dummy" />
+				</scenes>	
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
+				<materialMaps>			
+					<map fromMaterial="showRays" 
+						 toLibrary="Voxels" toMaterial="showVoxels" />
+				</materialMaps>				
+			</pass-->
+			
+			<pass class="quad" name="computeIndirectLight" >
+				<renderTarget name="preToneMap" fromLibrary="Voxels" />
+				<material name="computeIndirectLight" fromLibrary="Voxels" />
+				<viewport name="MainViewport" />
+			</pass>
+
+			<pass class="quad" name="computeLuminance">
+				<COLOR_CLEAR value=false />
+				<renderTarget name="luminance" fromLibrary="Voxels" />
+				<material name="computeLuminance" fromLibrary="Voxels" />
+			</pass>
+			
+			<pass class="compute" name="mipmapLuminance">
+				<testScript file="test.lua" script="testMipmap" TEST_MODE="RUN_WHILE"/>
+				<material name="mipmapLuminance" fromLibrary="Voxels" 
+					dimX=512 dimY=512 dimZ=1/>
+			</pass>
+			
+			<pass class="quad" name="tonemap">
+				<renderTarget name="postToneMap" fromLibrary="Voxels" />
+				<viewport name="MainViewport" />
+				<material name="tonemap" fromLibrary="Voxels" />
+			</pass>
+			<pass class="quad" name="show">
+				<viewport name="MainViewport" />
+				<texture name="postToneMap" fromLibrary="Voxels" />
+			</pass>
+			
+		</pipeline>
 	</pipelines>
+	<interface>
+		<window label="settings" >
+			<pipelineList label="effect" />
+		</window>
+	</interface>
 </project>

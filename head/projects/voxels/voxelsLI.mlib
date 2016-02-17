@@ -147,8 +147,8 @@
 														component="PROJECTION_VIEW_MATRIX" />
 					<valueof uniform="camZPV"		type="CAMERA" context="zz"
 														component="PROJECTION_VIEW_MATRIX" />
-					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
-														component="ABSOLUT_SIZE" />
+					<valueof uniform="GridSize"		type="PASS" context="CURRENT"
+														component="GridSize" />
 					<valueof uniform="M"			type="RENDERER" context="CURRENT"
 														component="MODEL" />	
 					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 

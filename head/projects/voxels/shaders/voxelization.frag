@@ -5,7 +5,7 @@ layout (rgba8) uniform writeonly coherent image3D imageUnit;
 //layout (rgba8) uniform writeonly coherent volatile image3D imageUnitN;
 layout (r32ui) uniform coherent volatile uimage3D imageUnitN;
 
-uniform vec2 WindowSize;
+uniform int GridSize;
 uniform vec4 diffuse;
 uniform float shininess;
 uniform int texCount;
@@ -14,7 +14,6 @@ uniform sampler2D texUnit;
 
 in vec4 worldPos;
 in vec4 bBox;
-in vec4 colorG;
 in vec3 normalG;
 in vec2 texCoordG;
 
@@ -51,6 +50,7 @@ void imageAtomicRGBA8Avg(layout(r32ui) coherent volatile uimage3D grid, ivec3 co
 void main() {
 
 	vec4 color;
+	
 	if (texCount == 0) 
 		color = vec4(diffuse.xyz, 1.0);
 	else 
@@ -58,8 +58,8 @@ void main() {
 
 	ivec3 pos = ivec3((worldPos.xyz + 1) * 0.5 * imageSize(imageUnit));
 	
-	if (all(greaterThanEqual(-1+2*gl_FragCoord.xy/WindowSize, bBox.xy)) && all(lessThanEqual(-1+2*gl_FragCoord.xy/WindowSize, bBox.zw))){
-		//imageAtomicRGBA8Avg(imageUnit, ivec3(x,y,z),color);
+	if (all(greaterThanEqual(-1+2*gl_FragCoord.xy/GridSize, bBox.xy)) && all(lessThanEqual(-1+2*gl_FragCoord.xy/GridSize, bBox.zw))){
+		//imageAtomicRGBA8Avg(imageUnit, pos,color);
 		imageStore(imageUnit, pos, vec4(0,0,0,1));
 		imageAtomicRGBA8Avg(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,1));
 		//imageStore(imageUnitN, ivec3(x,y,z), vec4(normalG * 0.5 + 0.5,shininess));

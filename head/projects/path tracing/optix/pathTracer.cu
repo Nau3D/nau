@@ -26,6 +26,7 @@ rtDeclareVariable(int, texCount, , );
 rtDeclareVariable(float4, lightDir, , );
 rtDeclareVariable(float4, lightPos, , );
 rtDeclareVariable(uint, frameCount, , );
+rtDeclareVariable(int, trace, , );
 
 rtDeclareVariable(rtObject,      top_object, , );
 
@@ -218,7 +219,7 @@ RT_PROGRAM void tracePath()
 	float4 color = diffuse;
 	
 	float p = max(diffuse.x, max(diffuse.y, diffuse.z));
-	if (prdr.depth > 4 || rnd(prdr.seed) > p)
+	if (prdr.depth > trace || rnd(prdr.seed) > p)
 		color = color * 1.0/(1-p);
 	else {
 	//if (prdr.depth < 2 ) {//&& r < 0.7f) {

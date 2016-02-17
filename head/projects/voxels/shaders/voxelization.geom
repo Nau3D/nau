@@ -4,7 +4,7 @@ layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
 uniform mat4 camXPV, camYPV, camZPV;
-uniform vec2 WindowSize;
+uniform int GridSize;
 
 in vec3 normalV[3];
 in vec2 texCoordV[3];
@@ -12,11 +12,10 @@ in vec2 texCoordV[3];
 
 out vec4 worldPos;
 out vec4 bBox;
-out vec4 colorG;
 out vec3 normalG;
 out vec2 texCoordG;
 
-float pixelDiagonal = 1.0/WindowSize.x;
+float pixelDiagonal = 1.0/GridSize;
 
 void expandTriangle(inout vec4 screenPos[3]) {
 
@@ -32,30 +31,31 @@ void expandTriangle(inout vec4 screenPos[3]) {
 void main() {
 
 	vec4 screenPos[3];
+	// compute two triangle sides
 	vec3 p1 = gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz;
 	vec3 p2 = gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz;
+	// triangle normal
 	vec3 normal = abs(cross(p2,p1));
 
+	// determine normal's max component
 	float m = max(normal.z, max(normal.y, normal.x));
 
+	mat4 M;
+	// set M to the appropriate matrix
 	if (m == normal.x) {
-		screenPos[0] = camXPV * gl_in[0].gl_Position;
-		screenPos[1] = camXPV * gl_in[1].gl_Position;
-		screenPos[2] = camXPV * gl_in[2].gl_Position;
-		colorG = vec4(1,0,0,1);
+		M = camXPV;
 	}
 	else if (m == normal.y) {
-		screenPos[0] = camYPV * gl_in[0].gl_Position;
-		screenPos[1] = camYPV * gl_in[1].gl_Position;
-		screenPos[2] = camYPV * gl_in[2].gl_Position;
-		colorG = vec4(0,1,0,1);
-	}
+		M = camYPV;
+}
 	else /*if (m == normal.z)*/ {
-		screenPos[0] = camZPV * gl_in[0].gl_Position;
-		screenPos[1] = camZPV * gl_in[1].gl_Position;
-		screenPos[2] = camZPV * gl_in[2].gl_Position;
-		colorG = vec4(0,0,1,1);
+		M = camZPV;
 	}
+	
+	// compute screen position using the rigth matrix
+	screenPos[0] = M * gl_in[0].gl_Position;
+	screenPos[1] = M * gl_in[1].gl_Position;
+	screenPos[2] = M * gl_in[2].gl_Position;
 	
 	// Calculate screen space bounding box to be used for clipping in the fragment shader.
 	bBox.xy = min(screenPos[0].xy, min(screenPos[1].xy, screenPos[2].xy));
