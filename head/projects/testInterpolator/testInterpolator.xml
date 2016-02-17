@@ -5,6 +5,7 @@
 			<scene name="Sphere" class="OctreeUnified">
 				<geometry name = "sphere" type = "SPHERE" SLICES=10 STACKS=10 material="crateBox">
 					<TRANSLATE x =-2.5 y=0 z =0  />
+					<SCALE x = 1 y=0.5 z=1 />
 				</geometry>								
 			</scene>
 			<scene name = "Box" type="OctreeByMat">		
@@ -14,7 +15,9 @@
 				</geometry>
 			</scene>
 			<scene name="Axis">
-				<geometry name = "axis" type = "AXIS" scale = 5 />
+				<geometry name = "axis" type = "AXIS" >
+					<SCALE x = 5 y=5 z=5 />
+				</geometry>
 			</scene>
 		</scenes>
 		
@@ -94,9 +97,10 @@
 				<scenes>
 					<scene name="Sphere" />
 					<scene name="Box" />
+					<scene name="Axis" />
 				</scenes>
 				<camera name="MainCamera" />
-S				<lights>
+				<lights>
 					<light name="Sun" />
 				</lights>
 				<materialMaps>
