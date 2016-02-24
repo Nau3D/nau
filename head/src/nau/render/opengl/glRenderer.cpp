@@ -918,8 +918,8 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 				b->bind((unsigned int)GL_DRAW_INDIRECT_BUFFER);
 				unsigned int temp = 0;
 				//glMultiDrawElementsIndirect(drawPrimitive, GL_UNSIGNED_INT, &temp,1,0);
-				unsigned int instCount;
-				b->getData(4, 4, &instCount);
+				//unsigned int instCount;
+				//b->getData(4, 4, &instCount);
 				//glDrawElementsInstancedBaseVertexBaseInstance(drawPrimitive, size, GL_UNSIGNED_INT, 0, instCount, 0,0);
 				glDrawElementsIndirect((GLenum)drawPrimitive, GL_UNSIGNED_INT, 0);
 				//glDrawElementsInstanced(drawPrimitive, size, GL_UNSIGNED_INT, 0, instCount);

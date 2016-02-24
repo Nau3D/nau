@@ -10,6 +10,7 @@ uniform sampler2D texColor;
 uniform sampler3D grid, gridN;
 uniform int GridSize;
 uniform vec3 camPos;
+uniform int mode=0;
 
 vec4 voxelConeTrace1(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 
@@ -222,9 +223,10 @@ void main()
 		 re += voxelConeTrace(coord, reflect(camDir, normal), 0.001, 1.0);
 		//il += voxelConeTrace2(coord, normalize(camDir), 0.25, 1.0);
 	//}
-	if (dot(normal, vec3(4.2,10,2)) > 0 && color.a != 0)
+	//if (dot(normal, vec3(4.2,10,2)) > 0 && color.a != 0)
+	if (dot(normal, vec3(4.2,10,2)) > 0 )
 		shadow = voxelConeTrace(coord, normalize(vec3(4.2,10,2)), 0.0001, 1.0);
-	else shadow.a = 1;
+	else shadow = vec4(0);
 	// shadow.a = max(0.20, shadow.a);
 	if (color.a != 0.0)
 		outColor = color*1.5;
@@ -235,11 +237,12 @@ void main()
 	// outColor = vec4(1-il.a*0.25);	
 	// outColor = vec4(1-il.a*0.25);
 	//outColor = color;//* color.a;	
-	//  outColor =  il*0.25;// color *  vec4(1- il.a*0.10);
+	//  outColor =  il*0.2;// color *  vec4(1- il.a*0.10);
 	//outColor = vec4((color * il * 0.33 )*(1- il.a*0.33)) ;
 	//outColor = vec4((color * il*0.33)*(1- il.a*0.10)) ;
 	//outColor = vec4(1- il.a*0.25);
 	 // outColor = re;
+	 outColor = shadow;
 	 // outColor = vec4(1- shadow.a);
 	//outColor = il*0.5;//vec4(1-il.a*0.15);//vec4(normal*0.5 + 0.5,0);
 	float level = 0;

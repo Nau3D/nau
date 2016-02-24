@@ -105,16 +105,18 @@ Viewport::setPropf(FloatProperty prop, float value) {
 float
 Viewport::getPropf(FloatProperty prop) {
 
-	switch(prop) {
-	
-		case RATIO:
-			if (m_Float2Props[ABSOLUT_SIZE].y != 0)
-				return (m_Float2Props[ABSOLUT_SIZE].x / m_Float2Props[ABSOLUT_SIZE].y);
-			else
-				return 0;
-		default:
+	switch (prop) {
+
+	case RATIO:
+		if (m_Float2Props[ABSOLUT_SIZE].y != 0)
+			m_FloatProps[RATIO] = m_Float2Props[ABSOLUT_SIZE].x / m_Float2Props[ABSOLUT_SIZE].y;
+		else
+			m_FloatProps[RATIO] = 0;
+		return m_FloatProps[RATIO];
+	default:
 			return AttributeValues::getPropf(prop);
 	}
+ 
 }
 
 
