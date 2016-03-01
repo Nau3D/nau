@@ -956,7 +956,199 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 }
 
-void OBJLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename)
-{
+void OBJLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 
+	//	CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
+
+	std::string path = File::GetPath(aFilename);
+
+	std::map<std::string, std::shared_ptr<IRenderable>> renderables;
+	std::set<std::string> materials;
+
+	std::fstream f(aFilename.c_str(), std::fstream::out );
+
+	std::string fileMatLib = File::GetNameWithoutExtension(aFilename) + ".mtl";
+	std::fstream m(fileMatLib.c_str(), std::fstream::out);
+
+	if (!f.is_open() || !m.is_open()) {
+		NAU_THROW("Cannot open file: %s", aFilename.c_str());
+	}
+
+	std::string matLibFile = File::GetName(fileMatLib);
+
+	char s[256];
+	int len;
+	len = sprintf(s, "mtllib %s\n\n", matLibFile.c_str());
+	f.write(s, len);
+	std::vector<std::shared_ptr<SceneObject>> sceneObjects;
+	aScene->getAllObjects(&sceneObjects);
+	std::vector<std::shared_ptr<SceneObject>>::iterator objIter;
+
+
+	// MATERIALS - collect materials
+	objIter = sceneObjects.begin();
+
+	// For each object in the scene 
+	for (; objIter != sceneObjects.end(); objIter++) {
+
+		std::shared_ptr<IRenderable> &aRenderablePtr = (*objIter)->getRenderable();
+
+		if (NULL == aRenderablePtr) {
+			continue;
+		}
+
+		std::shared_ptr<IRenderable> &aRenderable = (*objIter)->getRenderable();
+
+		std::shared_ptr<VertexData> &aVertexData = aRenderable->getVertexData();
+		bool hasTC = _writeVertexData(aVertexData, f); 
+
+		// Material groups 
+		std::vector<std::shared_ptr<MaterialGroup>>& materialGroups = aRenderable->getMaterialGroups();
+
+		// collect material names in a set
+		for (auto &aMaterialGroup : materialGroups) {
+
+			std::string matName = aMaterialGroup->getMaterialName();
+			materials.insert(matName);
+
+			len = sprintf(s, "\ng %s\nusemtl %s\n", matName.c_str(), matName.c_str());
+			f.write(s, len);
+			std::shared_ptr<nau::geometry::IndexData> &mgIndexData = aMaterialGroup->getIndexData();
+			_writeIndexData(mgIndexData, f,hasTC);
+		}
+
+	}
+
+	// write materials
+	std::set<std::string>::iterator matIter;
+
+	matIter = materials.begin();
+	for (; matIter != materials.end(); matIter++) {
+		_writeMaterial(*matIter, path, m);
+	}
+	f.close();
+	m.close();
+}
+
+void
+OBJLoader::_writeMaterial(std::string matName, std::string path, std::fstream &f) {
+
+	char s[512];
+	int len;
+	std::shared_ptr<Material> &aMaterial = MATERIALLIBMANAGER->getMaterialFromDefaultLib(matName);
+
+	len = sprintf(s, "newmtl %s\n", matName.c_str());
+	f.write(s, len);
+
+	//LOG_INFO("[Writing] Material's name: %s", aMaterial->getName().c_str());
+
+	// write color
+	vec4 v = aMaterial->getColor().getPropf4(ColorMaterial::AMBIENT);
+	len = sprintf(s, "\tKa %f %f %f %f\n", v.x, v.y, v.z, v.w);
+	f.write(s, len);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::SPECULAR);
+	len = sprintf(s, "\tKs %f %f %f %f\n", v.x, v.y, v.z, v.w);
+	f.write(s, len);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::DIFFUSE);
+	len = sprintf(s, "\tKd %f %f %f %f\n", v.x, v.y, v.z, v.w);
+	f.write(s, len);
+	v = aMaterial->getColor().getPropf4(ColorMaterial::EMISSION);
+	len = sprintf(s, "\tKe %f %f %f %f\n", v.x, v.y, v.z, v.w);
+	f.write(s, len);
+
+	float value = aMaterial->getColor().getPropf(ColorMaterial::SHININESS);
+	len = sprintf(s, "\tNs %f\n", value);
+	f.write(s, len);
+
+	std::vector<std::string> textureLabels = { "map_Kd", "map_bump", "map_normal", "map_Ka", "map_K2", "map_N2" };
+
+	// write textures
+	for (int i = 0; i < textureLabels.size(); i++) {
+		if (NULL != aMaterial->getTexture(i)) {
+			std::string label = aMaterial->getTexture(i)->getLabel();
+			std::string k = File::GetRelativePathTo(path, label);
+			len = sprintf(s, "\t%s %s\n", textureLabels[i].c_str(), k.c_str());
+			f.write(s, len);
+		}
+	}
+	f.write("\n", 1);
+}
+
+bool
+OBJLoader::_writeVertexData(std::shared_ptr<VertexData>& aVertexData, std::fstream &f) {
+
+	unsigned int sizeVec;
+	unsigned int countFilledArrays = 0;
+	char s[256];
+	int len;
+	bool result = false;
+
+	std::shared_ptr<std::vector<VertexData::Attr>> &aVec = aVertexData->getDataOf(0);
+	sizeVec = (unsigned int)aVec->size();
+	if (sizeVec > 0) {
+		for (unsigned int i = 0; i < sizeVec; ++i) {
+			len = sprintf(s, "v %f %f %f\n", aVec->at(i).x, aVec->at(i).y, aVec->at(i).z);
+			f.write(s, len);
+		}
+	}
+	f.write("\n", 1);
+	std::shared_ptr<std::vector<VertexData::Attr>> &aVecN = aVertexData->getDataOf(1);
+	if (aVecN) {
+		sizeVec = (unsigned int)aVecN->size();
+		if (sizeVec > 0) {
+			for (unsigned int i = 0; i < sizeVec; ++i) {
+				len = sprintf(s, "vn %f %f %f\n", aVecN->at(i).x, aVecN->at(i).y, aVecN->at(i).z);
+				f.write(s, len);
+			}
+		}
+	}
+	f.write("\n", 1);
+	std::shared_ptr<std::vector<VertexData::Attr>> &aVecT = aVertexData->getDataOf(3);
+	if (aVecT) {
+		result = true;
+		sizeVec = (unsigned int)aVecT->size();
+		if (sizeVec > 0) {
+			for (unsigned int i = 0; i < sizeVec; ++i) {
+				len = sprintf(s, "vt %f %f %f\n", aVecT->at(i).x, aVecT->at(i).y, aVecT->at(i).z);
+				f.write(s, len);
+			}
+		}
+	}
+	return result;
+}
+
+
+void
+OBJLoader::_writeIndexData(std::shared_ptr<nau::geometry::IndexData>& aIndexData, std::fstream &f, bool hasTC) {
+
+	char s[256];
+	int len;
+	std::shared_ptr<std::vector<unsigned int>> &aVec = aIndexData->getIndexData();
+	if (aVec) {
+		unsigned int siz = (unsigned int)aVec->size()/3;
+		if (hasTC) {
+			for (unsigned int i = 0; i < siz; ++i) {
+
+				len = sprintf(s, "f %d/%d/%d %d/%d/%d %d/%d/%d \n",
+					aVec->at(i*3)+1, aVec->at(i * 3) + 1, aVec->at(i * 3) + 1,
+					aVec->at(i * 3 + 1) + 1, aVec->at(i * 3 + 1) + 1, aVec->at(i * 3 + 1) + 1,
+					aVec->at(i * 3 + 2) + 1, aVec->at(i * 3 + 2) + 1, aVec->at(i * 3 + 2) + 1
+					);
+				f.write(s, len);
+			}
+		}
+		else {
+			for (unsigned int i = 0; i < siz; ++i) {
+
+				len = sprintf(s, "f %d//%d %d//%d %d//%d \n",
+					aVec->at(i * 3) + 1, aVec->at(i*3) + 1,
+					aVec->at(i * 3 + 1) + 1, aVec->at(i*3 + 1) + 1,
+					aVec->at(i * 3 + 2) + 1, aVec->at(i*3 + 2) + 1
+					);
+
+				f.write(s, len);
+			}
+		}
+	}
+	
 }

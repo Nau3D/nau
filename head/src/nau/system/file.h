@@ -57,6 +57,7 @@ namespace nau
 			~File(void);
 
 			static std::string GetName(const std::string &fn);
+			static std::string GetNameWithoutExtension(const std::string &fn);
 			static std::string GetExtension(const std::string &fn);
 			static std::string GetPath(const std::string &fn);
 			static std::string GetRelativePathTo(const std::string &currentDir, const std::string &absFileName);
