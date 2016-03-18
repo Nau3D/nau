@@ -9,7 +9,7 @@
 			<attribute name="GridSize" type="PASS" data="INT" value="GridSize" />
 			<attribute name="GridLevels" type="PASS" data="INT" value=9 />
 			<attribute name="GridCurrentLevel" type="PASS" data="INT" value=0 />
-			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "9" />
+			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "10" />
 			<attribute type="PASS" name="Levels" data="INT" value=10 />
 			<attribute type="PASS" name="CurrentLevel" data="INT" value=0 />
 		</attributes>

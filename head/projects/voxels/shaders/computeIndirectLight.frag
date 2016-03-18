@@ -92,7 +92,7 @@ vec4 voxelConeTrace(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 //sampleValue.a ;
 //		accum.rgb += sampleValue.rgb ;//* sampleValue.a;
 		//sampleValue.a = 1.0 - pow(1.0 - sampleValue.a, minDiameter/sampleDiameter);
-		ao += 1.0 - pow(1.0 - sampleValue.a, minDiameter/sampleDiameter);
+		
 		//ao += sampleValue.a;
 		sampleValue.a /= minDiameter/sampleDiameter;
 		
@@ -220,7 +220,7 @@ void main()
 	//if (shininess > 80.0) 
 	//{
 		 vec3 camDir = normalize(coord*2-1 - camPos);//normalize(vec3(-2,2,2));
-		 re += voxelConeTrace(coord, reflect(camDir, normal), 0.001, 1.0);
+		 //re += voxelConeTrace(coord, reflect(camDir, normal), 0.001, 1.0);
 		//il += voxelConeTrace2(coord, normalize(camDir), 0.25, 1.0);
 	//}
 	//if (dot(normal, vec3(4.2,10,2)) > 0 && color.a != 0)
@@ -233,6 +233,12 @@ void main()
 		//outColor = 0.5* color * color.a + color * il * 0.5 * (1- il.a*.15);
 	else
 		outColor = (0.05 * color + color *  il * 0.2) * (1- il.a*0.25);
+		
+	// if (color.a != 0.0)
+		// outColor = color*1.5;
+	// else
+		// outColor = vec4(0.0);
+		
 	//outColor *= 1.5;	
 	// outColor = vec4(1-il.a*0.25);	
 	// outColor = vec4(1-il.a*0.25);
@@ -242,7 +248,7 @@ void main()
 	//outColor = vec4((color * il*0.33)*(1- il.a*0.10)) ;
 	//outColor = vec4(1- il.a*0.25);
 	 // outColor = re;
-	 outColor = shadow;
+	// outColor = re;
 	 // outColor = vec4(1- shadow.a);
 	//outColor = il*0.5;//vec4(1-il.a*0.15);//vec4(normal*0.5 + 0.5,0);
 	float level = 0;
