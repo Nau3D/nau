@@ -1565,8 +1565,8 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);				
 				break;
 			case File::WAVEFRONTOBJ:
-				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(),params);
-				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(), params);
+				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(),params);
+				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(), params);
 				break;
 			case File::OGREXMLMESH:
 				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath());
@@ -1586,6 +1586,9 @@ Nau::writeAssets (std::string fileType, std::string aFilename, std::string scene
 
 	if (0 == fileType.compare ("NBO")) {
 		CBOLoader::writeScene (RENDERMANAGER->getScene (sceneName).get(), aFilename);
+	}
+	else if (0 == fileType.compare("OBJ")) {
+		OBJLoader::writeScene(RENDERMANAGER->getScene(sceneName).get(), aFilename);
 	}
 }
 

@@ -238,6 +238,19 @@ File::GetName(const std::string &fn) {
 		return(fn.substr(found+1));
 }
 
+
+std::string 
+File::GetNameWithoutExtension(const std::string &fn) {
+
+	size_t found = fn.find_last_of(".");
+
+	if (found == fn.npos)
+		return(fn.substr(0, fn.size())); // clone string
+	else
+		return(fn.substr(0,found));
+}
+
+
 std::string 
 File::GetPath(const std::string &fn) {
 

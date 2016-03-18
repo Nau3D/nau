@@ -39,7 +39,7 @@ CBOLoader::_writeVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstr
 	for (int i = 0; i < VertexData::MaxAttribs; i++) {
 	
 		std::shared_ptr<std::vector<VertexData::Attr>> &aVec = aVertexData->getDataOf (i);
-		if (aVec->size())
+		if (aVec && aVec->size())
 			countFilledArrays++;
 	}
 
@@ -50,15 +50,17 @@ CBOLoader::_writeVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstr
 	for (int i = 0; i < VertexData::MaxAttribs; i++) {
 
 		std::shared_ptr<std::vector<VertexData::Attr>> &aVec = aVertexData->getDataOf (i);
-		sizeVec = (unsigned int)aVec->size();
-		if (sizeVec > 0) {
+		if (aVec) {
+			sizeVec = (unsigned int)aVec->size();
+			if (sizeVec > 0) {
 
-			_writeString(VertexData::Syntax[i],f);
-			// write size of array
-			f.write (reinterpret_cast<char *> (&sizeVec), sizeof (sizeVec));
-			// write attribute data
-			f.write (reinterpret_cast<char *> (&(aVec.get()[0])), 
-					 sizeVec * sizeof(VertexData::Attr));
+				_writeString(VertexData::Syntax[i], f);
+				// write size of array
+				f.write(reinterpret_cast<char *> (&sizeVec), sizeof(sizeVec));
+				// write attribute data
+				f.write(reinterpret_cast<char *> (&(aVec->at(0))),
+					sizeVec * sizeof(VertexData::Attr));
+			}
 		}
 	}
 
@@ -94,6 +96,7 @@ CBOLoader::_writeIndexData (std::shared_ptr<nau::geometry::IndexData>& aVertexDa
 	}
 }
 
+// WRITING AL.OBJ AS NBO CRASHES NAU!!!!!
 
 void
 CBOLoader::_readVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstream &f) {

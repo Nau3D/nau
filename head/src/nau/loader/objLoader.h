@@ -19,6 +19,10 @@ namespace nau
 			static void writeScene (nau::scene::IScene *aScene, std::string &aFilename);
 
 		private:
+
+			static void _writeMaterial(std::string matName, std::string path, std::fstream &f);
+			static bool _writeVertexData(std::shared_ptr<VertexData>& aVertexData, std::fstream &f);
+			static void _writeIndexData(std::shared_ptr<nau::geometry::IndexData>& aVertexData, std::fstream &f, bool hasTC);
 			// Constructor
 			OBJLoader(void) {};
 			// Destructor

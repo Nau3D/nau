@@ -270,14 +270,23 @@ void DlgScenes::OnPropsChange( wxPropertyGridEvent& e) {
 
 }
 
+#include "nau/system/file.h"
+
 void 
 DlgScenes::OnSaveScene( wxCommandEvent& event)
 {
-	wxFileDialog *saveOctDlg = 
-		new wxFileDialog (this, _("Save As NBO"), _(""), _(""), _(""), wxFD_SAVE, wxDefaultPosition);
+	static const wxChar *fileTypes = _T("3D Files (*.nbo, *.obj)|*.nbo;*.obj|NBO files (*.nbo)|*.nbo|OBJ files (*.obj)|*.obj");
+	wxFileDialog *saveOctDlg =
+		new wxFileDialog(this, _("Save As"), _(""), _(""), fileTypes, wxFD_SAVE, wxDefaultPosition);
+		//new wxFileDialog (this, _("Save As NBO"), _(""), _(""), _(""), wxFD_SAVE, wxDefaultPosition);
 
 	if (wxID_OK == saveOctDlg->ShowModal ()) {
-		nau::NAU->writeAssets("NBO", (const char *)(saveOctDlg->GetPath()).c_str(), m_Active);
+		nau::system::File f((const char *)saveOctDlg->GetPath().c_str());
+		if (f.getType() == nau::system::File::WAVEFRONTOBJ)
+			nau::NAU->writeAssets("OBJ", (const char *)(saveOctDlg->GetPath()).c_str(), m_Active);
+		else
+			nau::NAU->writeAssets("NBO", (const char *)(saveOctDlg->GetPath()).c_str(), m_Active);
+
 	}		
 
 }
