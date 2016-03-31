@@ -14,46 +14,46 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Common">
-      <UniqueIdentifier>{d96edf1f-0203-465f-b0f5-d0bf2e61f490}</UniqueIdentifier>
+      <UniqueIdentifier>{dfd56674-6ae7-4249-9907-eb4740e97031}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\render">
-      <UniqueIdentifier>{4394e15c-629c-4014-b7ea-6f71243f14cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\material">
-      <UniqueIdentifier>{77579c5e-38bf-489c-a0ed-85c56686d2be}</UniqueIdentifier>
+      <UniqueIdentifier>{0972574a-57da-4ca8-a882-2b71c53afe1f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\render\opengl">
-      <UniqueIdentifier>{4bf5f07c-f1ea-405b-9e8b-d055dd260cd2}</UniqueIdentifier>
+      <UniqueIdentifier>{06ee32b4-7c85-4fbe-bd92-0927ffa00f1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\material">
+      <UniqueIdentifier>{38223449-bec3-4ee0-9083-abdd642dd42a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\loader">
-      <UniqueIdentifier>{69441b29-794d-4976-acaa-b207feae5bcb}</UniqueIdentifier>
+      <UniqueIdentifier>{17857481-5584-495f-8376-f45eb3888feb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\resource">
-      <UniqueIdentifier>{d636ee37-3e89-4a00-831a-94b360db375f}</UniqueIdentifier>
+      <UniqueIdentifier>{0054aa2b-df82-449f-b319-271b70b1132d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\geometry">
-      <UniqueIdentifier>{fbbaf773-64c1-451a-8079-a28395ea118c}</UniqueIdentifier>
+      <UniqueIdentifier>{482d3373-7f65-4329-a6e9-6dc7c743e184}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\scene">
-      <UniqueIdentifier>{b0a3ccba-d46d-4647-a301-29e022581595}</UniqueIdentifier>
+      <UniqueIdentifier>{5a6bb68d-9a1a-47df-9de4-875d67a1fb04}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\event">
-      <UniqueIdentifier>{6dffb7fc-a983-47ee-a52c-1a4cf94e1cb9}</UniqueIdentifier>
+      <UniqueIdentifier>{71ef103c-a6c2-43ea-b08b-61c6765df646}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\profile">
-      <UniqueIdentifier>{6a576516-9051-4ed6-b036-e17df4fcddf8}</UniqueIdentifier>
+      <UniqueIdentifier>{430c0f89-009b-4d0b-8829-585803a39b12}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\math">
-      <UniqueIdentifier>{5bfd3af5-353a-4ac0-8022-e8694d648c74}</UniqueIdentifier>
+      <UniqueIdentifier>{bd6fd5b8-20a0-4fd4-aa50-2822bedb2705}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\system">
-      <UniqueIdentifier>{29bcbf76-1d3b-45b0-b424-fad245ac843b}</UniqueIdentifier>
+      <UniqueIdentifier>{12e7d056-b520-443b-ab53-5f37b905397c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\util">
-      <UniqueIdentifier>{5572a112-c6b4-4d8e-859b-dab5ac8231cd}</UniqueIdentifier>
+      <UniqueIdentifier>{cb03dd18-8212-4e36-8471-e3948ea37116}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\world">
-      <UniqueIdentifier>{144e3878-ad15-492d-b53b-b056b425b5d1}</UniqueIdentifier>
+      <UniqueIdentifier>{52da72f3-2767-4e18-8036-24658e93c2cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +70,15 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\nau\enums.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\iNau.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\nau.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\slogger.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\nau\render\iAPISupport.cpp">
@@ -135,8 +144,62 @@
     <ClCompile Include="..\..\src\nau\render\viewport.cpp">
       <Filter>Common\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nau\slogger.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="..\..\src\nau\render\opengl\glAPISupport.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glBuffer.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glDebug.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glGlobalState.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glImageTexture.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glIndexArray.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glMaterialBuffer.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glMaterialGroup.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glProgram.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glRenderer.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glRenderTarget.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glState.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glTexImage.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glTexture.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glTextureCubeMap.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glTextureSampler.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glUniform.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glUniformBlock.cpp">
+      <Filter>Common\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\render\opengl\glVertexArray.cpp">
+      <Filter>Common\render\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\nau\material\colorMaterial.cpp">
       <Filter>Common\material</Filter>
@@ -201,62 +264,8 @@
     <ClCompile Include="..\..\src\nau\material\uniformBlockManager.cpp">
       <Filter>Common\material</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glAPISupport.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glBuffer.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glDebug.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glGlobalState.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glImageTexture.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glIndexArray.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glMaterialBuffer.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glMaterialGroup.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glProgram.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glRenderer.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glRenderTarget.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glState.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glTexImage.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glTexture.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glTextureCubeMap.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glTextureSampler.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glUniform.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glUniformBlock.cpp">
-      <Filter>Common\render\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\render\opengl\glVertexArray.cpp">
-      <Filter>Common\render\opengl</Filter>
+    <ClCompile Include="..\..\src\nau\loader\assimpLoader.cpp">
+      <Filter>Common\loader</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\nau\loader\cboLoader.cpp">
       <Filter>Common\loader</Filter>
@@ -492,9 +501,6 @@
     <ClCompile Include="..\..\src\nau\util\tree.cpp">
       <Filter>Common\util</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nau\loader\assimpLoader.cpp">
-      <Filter>Common\loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\nau\world\bulletMotionState.cpp">
       <Filter>Common\world</Filter>
     </ClCompile>
@@ -507,16 +513,13 @@
     <ClCompile Include="..\..\src\nau\world\worldFactory.cpp">
       <Filter>Common\world</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nau\nau.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\nau\iNau.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="passDepthMap2.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\iNau.h">
+      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\nau\attribute.h">
       <Filter>Common</Filter>
@@ -535,6 +538,21 @@
     </ClInclude>
     <ClInclude Include="..\..\src\nau\errors.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\slogger.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\iAPISupport.h">
+      <Filter>Common\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\iGlobalState.h">
+      <Filter>Common\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\iRenderable.h">
+      <Filter>Common\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\iRenderer.h">
+      <Filter>Common\render</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\nau\render\iRenderQueue.h">
       <Filter>Common\render</Filter>
@@ -593,20 +611,62 @@
     <ClInclude Include="..\..\src\nau\render\viewport.h">
       <Filter>Common\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\slogger.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="..\..\src\nau\render\opengl\glAPISupport.h">
+      <Filter>Common\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\iAPISupport.h">
-      <Filter>Common\render</Filter>
+    <ClInclude Include="..\..\src\nau\render\opengl\glBuffer.h">
+      <Filter>Common\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\iGlobalState.h">
-      <Filter>Common\render</Filter>
+    <ClInclude Include="..\..\src\nau\render\opengl\glDebug.h">
+      <Filter>Common\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\iRenderable.h">
-      <Filter>Common\render</Filter>
+    <ClInclude Include="..\..\src\nau\render\opengl\glGlobalState.h">
+      <Filter>Common\render\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\iRenderer.h">
-      <Filter>Common\render</Filter>
+    <ClInclude Include="..\..\src\nau\render\opengl\glImageTexture.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glIndexArray.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glMaterialBuffer.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glMaterialGroup.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glProgram.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glRenderer.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glRenderTarget.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glState.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glTexImage.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glTexture.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glTextureCubeMap.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glTextureSampler.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glUniform.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glUniformBlock.h">
+      <Filter>Common\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\render\opengl\glVertexArray.h">
+      <Filter>Common\render\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\nau\material\colorMaterial.h">
       <Filter>Common\material</Filter>
@@ -671,62 +731,8 @@
     <ClInclude Include="..\..\src\nau\material\uniformBlockManager.h">
       <Filter>Common\material</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glAPISupport.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glBuffer.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glDebug.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glGlobalState.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glImageTexture.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glIndexArray.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glMaterialBuffer.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glMaterialGroup.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glProgram.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glRenderer.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glRenderTarget.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glState.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glTexImage.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glTexture.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glTextureCubeMap.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glTextureSampler.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glUniform.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glUniformBlock.h">
-      <Filter>Common\render\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\nau\render\opengl\glVertexArray.h">
-      <Filter>Common\render\opengl</Filter>
+    <ClInclude Include="..\..\src\nau\loader\assimpLoader.h">
+      <Filter>Common\loader</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\nau\loader\cboLoader.h">
       <Filter>Common\loader</Filter>
@@ -1001,9 +1007,6 @@
     <ClInclude Include="..\..\src\nau\util\tree.h">
       <Filter>Common\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\loader\assimpLoader.h">
-      <Filter>Common\loader</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\nau\world\bulletMotionState.h">
       <Filter>Common\world</Filter>
     </ClInclude>
@@ -1018,9 +1021,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\nau\world\worldFactory.h">
       <Filter>Common\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\iNau.h">
-      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -80,6 +80,16 @@ namespace nau {
 			std::string component, int number=0) = 0;
 		virtual AttributeValues *getObjectAttributes(const std::string &type, const std::string &context, int number=0) = 0;
 		virtual AttributeValues *getCurrentObjectAttributes(const std::string &context, int number = 0) = 0;
+		virtual bool validateObjectType(const std::string & type) = 0;
+		virtual void getValidObjectTypes(std::vector<std::string>* v) = 0;
+
+		virtual bool validateObjectContext(const std::string & type, const std::string & context) = 0;
+		virtual bool validateObjectComponent(const std::string & type, const std::string & component) = 0;
+		virtual void getValidObjectComponents(const std::string &type, std::vector<std::string>* v) = 0;
+
+		// Profile Reset
+		virtual void setProfileResetRequest() = 0;
+		virtual bool getProfileResetRequest() = 0;
 
 		virtual void registerAttributes(std::string s, AttribSet *attrib) = 0;
 		virtual bool validateUserAttribType(std::string s) = 0;

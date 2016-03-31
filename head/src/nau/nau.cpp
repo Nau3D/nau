@@ -750,10 +750,10 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 		if (m_pRenderManager->hasScene(scene)) {
 			SceneObject *s = m_pRenderManager->getScene(scene)->getSceneObject(object).get();
 			if (s) {
-				SceneObject *so = (SceneObject *)m_pRenderManager->getScene(scene)->getSceneObject(object)->getRenderable().get();
-				std::string s = typeid(*so).name();
+				IRenderable *r = s->getRenderable().get();
+				std::string s = typeid(*r).name();
 				if (s == "class nau::geometry::Sphere") {
-					Sphere *sp = (Sphere *)so;
+					Sphere *sp = (Sphere *)r;
 					return (AttributeValues *)sp;
 
 				}

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="Geometric Primitives" width=1024 height = 512>
+<project name="Geometric Primitives" width=1024 height = 512 >
 	<assets>
 	
 		<scenes>
@@ -30,12 +30,14 @@
 				<UP x="0" y="1" z="0" />
 			</camera>
 			<camera name="Perspective" >
+				<viewport name="LeftViewport" />
 				<projection TYPE="PERSPECTIVE" FOV="50.0" NEAR="1" FAR="4.0" />
 				<POSITION x="0" y="0.0" z="0" />
 				<VIEW x="0.0" y="0.0" z="-1" />
 				<UP x="0" y="1" z="0" />
 			</camera>
 			<camera name="Orthographic" >
+				<viewport name="RightViewport" />
 				<projection TYPE="ORTHO" LEFT="-1" RIGHT="1" BOTTOM="-1" TOP="1" NEAR="1" FAR="3" />
 				<POSITION x="0" y="0.0" z="2" />
 				<VIEW x="0.0" y="0.0" z="-1" />

@@ -8,7 +8,7 @@
 class PassDepthMap2 : public Pass
 		{
 		protected:
-			nau::scene::Camera *m_LightCamera;
+			std::shared_ptr<nau::scene::Camera> m_LightCamera;
 
 		public:
 

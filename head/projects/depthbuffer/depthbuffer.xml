@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="depth buffer" width=800 height=400>
+<project name="depth buffer" width=800 height=400 >
 	<assets>
 		<scenes>
 			<scene name="MainScene" type="OctreeByMat">

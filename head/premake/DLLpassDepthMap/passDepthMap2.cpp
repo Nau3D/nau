@@ -157,7 +157,7 @@ PassDepthMap2::doPass (void) {
 	m_LightCamera->setPropf4(Camera::VIEW_VEC,l.x,l.y,l.z,l.w);
 
 
-	Camera *aCamera = RENDERMANAGER->getCamera(m_CameraName);
+	std::shared_ptr<Camera> aCamera = RENDERMANAGER->getCamera(m_CameraName);
 
 	cNear = aCamera->getPropf(Camera::NEARP);
 	cFar = aCamera->getPropf(Camera::FARP);
@@ -180,14 +180,14 @@ PassDepthMap2::doPass (void) {
 	scenesIter = m_SceneVector.begin();
 
 	for ( ; scenesIter != m_SceneVector.end(); ++scenesIter) {
-		IScene *aScene = RENDERMANAGER->getScene (*scenesIter);
+		std::shared_ptr<IScene> &aScene = RENDERMANAGER->getScene (*scenesIter);
 
-		std::vector<SceneObject*> &sceneObjects = aScene->findVisibleSceneObjects (frustum, *m_LightCamera,true);
+		std::vector<std::shared_ptr<SceneObject>> sceneObjects;
+		aScene->findVisibleSceneObjects(&sceneObjects, frustum, *m_LightCamera, true);
 		std::vector<SceneObject*>::iterator objIter;
 
-		objIter = sceneObjects.begin();
-		for (; objIter != sceneObjects.end(); ++objIter) {
-			RENDERMANAGER->addToQueue (*objIter, m_MaterialMap);
+		for (auto &so : sceneObjects) {
+			RENDERMANAGER->addToQueue(so, m_MaterialMap);
 		}
 	}
 
