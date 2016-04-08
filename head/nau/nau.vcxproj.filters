@@ -538,6 +538,9 @@
     <ClCompile Include="..\src\nau\interface\interface.cpp">
       <Filter>Source Files\interface</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\loader\bufferLoader.cpp">
+      <Filter>Source Files\loader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1073,6 +1076,9 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\interface\interface.h">
       <Filter>Source Files\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\loader\bufferLoader.h">
+      <Filter>Source Files\loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
