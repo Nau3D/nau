@@ -13,6 +13,7 @@
 #include "nau/geometry/primitive.h"
 #include "nau/geometry/terrain.h"
 #include "nau/interface/interface.h"
+#include "nau/loader/bufferLoader.h"
 #include "nau/material/iBuffer.h"
 #include "nau/material/programValue.h"
 #include "nau/material/uniformBlockManager.h"
@@ -3756,9 +3757,15 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		}
 
 		// Reading buffer attributes
-		std::vector<std::string> excluded;
-		excluded.push_back("structure");
+		std::vector<std::string> excluded = { "structure" , "file"};
 		readChildTags(pName, (AttributeValues *)b, IBuffer::Attribs, excluded, pElem);
+
+		pElemAux = handle.FirstChild("file").Element();
+		if (pElemAux) {
+			const char *pFN = pElemAux->Attribute("name");
+			std::string s(File::GetFullPath(path, pFN));
+			BufferLoader::loadBuffer(b, s);
+		}
 	}
 }
 
