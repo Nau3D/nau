@@ -52,6 +52,7 @@ namespace nau
 			virtual void prepareTriangleIDs(unsigned int sceneObjectID) = 0;
 			virtual void unitize(vec3 &vCenter, vec3 &vMin, vec3 &vMax) = 0;
 
+			virtual std::vector<std::pair<std::string, unsigned int>> & getMaterialIndexes() = 0;
 			virtual void getMaterialNames(std::set<std::string> *nameList) = 0;
 			virtual void addMaterialGroup(std::shared_ptr<nau::material::MaterialGroup> &, int offset=0) = 0;
 			virtual void addMaterialGroup(std::shared_ptr<nau::material::MaterialGroup> &,

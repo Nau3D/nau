@@ -26,6 +26,9 @@ namespace nau
 			std::shared_ptr<nau::geometry::VertexData> m_VertexData;
 			std::shared_ptr<nau::geometry::IndexData> m_IndexData;
 			std::vector<std::shared_ptr<nau::material::MaterialGroup>> m_vMaterialGroups;
+
+			std::vector<std::pair<std::string, unsigned int>> matIndex;
+
 			unsigned int m_DrawPrimitive;
 			unsigned int m_RealDrawPrimitive;
 			std::string m_Name;
@@ -54,6 +57,8 @@ namespace nau
 
 			void prepareTriangleIDs(unsigned int sceneObjectID);
 			void unitize(vec3 &center, vec3 &min, vec3 &max);
+
+			std::vector<std::pair<std::string, unsigned int>> &getMaterialIndexes();
 
 			void getMaterialNames(std::set<std::string> *nameList);
 			void addMaterialGroup (std::shared_ptr<nau::material::MaterialGroup> &, int offset = 0);

@@ -114,7 +114,6 @@ Mesh::getVertexData (void) {
 
 std::shared_ptr<nau::geometry::IndexData>&
 Mesh::getIndexData() {
-
 	if (!m_IndexData)
 		m_IndexData = IndexData::Create(m_Name);
 
@@ -129,6 +128,13 @@ std::vector<std::shared_ptr<nau::material::MaterialGroup>>&
 Mesh::getMaterialGroups (void) {
 
 	return (m_vMaterialGroups);
+}
+
+
+std::vector<std::pair<std::string, unsigned int>> &
+Mesh::getMaterialIndexes() {
+
+	return matIndex;
 }
 
 
@@ -230,7 +236,6 @@ Mesh::prepareIndexData() {
 
 unsigned int 
 Mesh::getNumberOfVertices (void) {
-
 	return (int)(getVertexData()->getDataOf (VertexData::GetAttribIndex(std::string("position"))))->size();
 }
 
@@ -241,10 +246,16 @@ Mesh::createUnifiedIndexVector() {
 	std::shared_ptr<std::vector<unsigned int>> unified = 
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>);
 
+	matIndex.clear();
+	int count = 0;
+
 	for (auto &iter: m_vMaterialGroups) {
 
 		std::shared_ptr<std::vector<unsigned int>> &matGroupIndexes = iter->getIndexData()->getIndexData();
 		unified->insert(unified->end(), matGroupIndexes->begin(),matGroupIndexes->end());
+		unsigned int triCount = (unsigned int)matGroupIndexes->size() / 3;
+		count += triCount;
+		matIndex.push_back(std::pair < std::string, unsigned int > (iter->getMaterialName(), count));
 	}
 	m_IndexData->setIndexData(unified);
 }
