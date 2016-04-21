@@ -97,6 +97,7 @@ namespace nau
 			virtual void build (void) = 0;
 
 			virtual void compile (void) = 0;
+			virtual void recompile();
 			bool isCompiled() { return m_Compiled;}
 
 			virtual void unitize() = 0;

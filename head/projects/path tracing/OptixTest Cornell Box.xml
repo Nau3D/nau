@@ -98,12 +98,12 @@
 					<optixProgram type="Any_Hit"  	 ray="Shadow" file="optix/pathTracer.ptx" proc="any_hit_shadow"/> 
 				</optixDefaultMaterial>
 				<optixMaterialMap>
-					<!--optixMap to="Optix Ray Tracer Render Target:Glass">
+					<optixMap to="Optix Ray Tracer Render Target:Glass">
 						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="shadeGlass"/>
 						<optixProgram type="Any_Hit" ray="Shadow" file="optix/pathTracer.ptx" proc="keepGoingShadow"/> 
-					</optixMap-->	
+					</optixMap>	
 					<optixMap to="Optix Ray Tracer Render Target:Metal">
-						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="tracePathMetal"/>
+						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="tracePathGlossy"/>
 						<optixProgram type="Any_Hit"  	 ray="Shadow" file="optix/pathTracer.ptx" proc="any_hit_shadow"/> 
 					</optixMap>	
 					<optixMap to="nau_material_lib:light">
@@ -129,9 +129,6 @@
 					<valueof optixVar="lightPos" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
 					<valueof optixVar="frameCount" type="RENDERER" context="CURRENT" component="FRAME_COUNT" />
 				</optixGlobalAttributes>
-				<!--optixInput>
-					<buffer var="pos_buffer" texture="Deferred Render Targets::pos" />
-				</optixInput-->
 
 			</pass>
 			<pass class="quad" name="pass2">

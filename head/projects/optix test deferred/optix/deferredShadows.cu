@@ -72,8 +72,6 @@ RT_PROGRAM void geometryintersection(int primIdx)
 	float4 vecauxa = vertex_buffer[index_buffer[primIdx*3]];
 	float4 vecauxb = vertex_buffer[index_buffer[primIdx*3+1]];
 	float4 vecauxc = vertex_buffer[index_buffer[primIdx*3+2]];
-//	float3 e1, e2, h, s, q;
-//	float a,f,u,v,t;
 
 	float3 v0 = make_float3(vecauxa);
 	float3 v1 = make_float3(vecauxb);
@@ -85,18 +83,6 @@ RT_PROGRAM void geometryintersection(int primIdx)
   if( intersect_triangle( ray, v0, v1, v2, n, t, beta, gamma ) ) {
 
     if(  rtPotentialIntersection( t ) ) {
-
- /*     float3 n0 = make_float3(normal[ index_buffer[primIdx*3]]);
-      float3 n1 = make_float3(normal[ index_buffer[primIdx*3+1]]);
-      float3 n2 = make_float3(normal[ index_buffer[primIdx*3+2]]);
-
-	  float3 t0 = make_float3(texCoord0[ index_buffer[primIdx*3]]);
-	  float3 t1 = make_float3(texCoord0[ index_buffer[primIdx*3+1]]);
-	  float3 t2 = make_float3(texCoord0[ index_buffer[primIdx*3+2]]);
-
-      shading_normal   = normalize( n0*(1.0f-beta-gamma) + n1*beta + n2*gamma );
-	  texCoord =  t0*(1.0f-beta-gamma) + t1*beta + t2*gamma ;
-      geometric_normal = normalize( n );*/
 
 	  rtReportIntersection(0);
     }

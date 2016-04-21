@@ -147,7 +147,7 @@ Nau::init (bool context, std::string aConfigFile) {
 	m_AppFolder = File::GetAppFolder();
 	//bool result;
 	if (true == context) {
-
+		m_pPhysicsManager = nau::physics::PhysicsManager::GetInstance();
 		m_pEventManager = new EventManager;
 		m_pRenderManager = new RenderManager;
 		m_pAPISupport = IAPISupport::GetInstance();
@@ -1206,6 +1206,11 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 	}
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
+
+	// Physics Dummy test Init
+
+	//m_pPhysicsManager->addScene(nau::physics::IPhysics::CLOTH, RENDERMANAGER->getScene("CubeLand").get());
+
 	//std::string wn = "test";
 	//std::string wl = "My AT Bar";
 	//INTERFACE->createWindow(wn, wl);
@@ -1384,6 +1389,8 @@ Nau::step() {
 	else
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, ++k);
 
+	if (m_Physics)
+		m_pPhysicsManager->update();
 	//if (getProfileResetRequest())
 	//	Profile::Reset();
 	INTERFACE->render();

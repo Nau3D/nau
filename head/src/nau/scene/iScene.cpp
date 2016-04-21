@@ -158,3 +158,10 @@ IScene::getType() {
 
 	return m_Type;
 }
+
+void nau::scene::IScene::recompile() {
+
+	m_Compiled = false;
+
+	compile();
+}

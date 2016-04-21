@@ -52,7 +52,7 @@
 					<light name="Sun" />
 				</lights>
 				<optixEntryPoint>
-					<optixProgram type="RayGen" file="optix/common.ptx" proc="pinhole_camera"/> 
+					<optixProgram type="RayGen" file="optix/common.ptx" proc="pinhole_camera_ms"/> 
 					<optixProgram type="Exception" file="optix/common.ptx" proc="exception"/> 
 				</optixEntryPoint>
 				<optixDefaultMaterial>

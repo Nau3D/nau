@@ -15,11 +15,11 @@ void main() {
 	ivec2 imageCoords = ivec2(texPos * textureSize(tex2,0));
 	vec4 c1 = imageLoad(tex1, imageCoords);
 	vec3 c2 = texture(tex2, texPos).rgb;
-	// c2 *=16;
+	 c2 *=1;
 	// Reinhardt
 	// c2 = c2/(c2+1);
 	// c2 = pow(c2, vec3(1/2.2));
-	// Jim Heji
+	//Jim Heji
 	// c2 = max(vec3(0), c2-0.004);
 	// c2 = (c2 * (6.2 * c2 + 0.5))/(c2*(6.2*c2 + 1.7)+ 0.06);
 	

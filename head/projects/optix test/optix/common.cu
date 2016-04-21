@@ -42,20 +42,16 @@ rtBuffer<float4,2> output0;
 struct PerRayDataResult
 {
   float4 result;
-	int depth;
+  bool entrance;
+  float transmit;
+  int depth;
 };
 
-struct PerRayData_shadow
-{
-  float4 result;
-  float entrance;
-};
 
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
 rtDeclareVariable(uint2, launch_index, rtLaunchIndex, );
 rtDeclareVariable(uint2, launch_dim,   rtLaunchDim, );
 rtDeclareVariable(PerRayDataResult, prdr, rtPayload, );
-rtDeclareVariable(PerRayData_shadow, prd_shadow, rtPayload, );
 rtDeclareVariable(float,      t_hit,        rtIntersectionDistance, );
 rtDeclareVariable(float3, texCoord, attribute texcoord, ); 
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, ); 
@@ -89,21 +85,23 @@ RT_PROGRAM void pinhole_camera()
 RT_PROGRAM void pinhole_camera_ms()
 {
 	float4 color = make_float4(0.0);
-	int sqrt_num_samples = 1;
+	int sqrt_num_samples = 4;
 	int samples = sqrt_num_samples * sqrt_num_samples;
 	unsigned int seedi, seedj;
 
 	float2 d = make_float2(launch_index) / make_float2(launch_dim) * 2.f - 1.f;
 
-	float2 scale = 1 / (make_float2(launch_dim) * sqrt_num_samples) * 2.0f;
+	float2 scale =  1.0 / (make_float2(launch_dim) * sqrt_num_samples) ;
+	
 
 	for (int i = 0; i < sqrt_num_samples; ++i) {
 		for (int j = 0; j < sqrt_num_samples; ++j) {
 
-			seedi = tea<16>(launch_dim.x*launch_index.y+launch_index.x,2*(i*sqrt_num_samples+j));
-			seedj = tea<16>(launch_dim.x*launch_index.y+launch_index.x,2*(i*sqrt_num_samples+j)+1);
-			float2 sample = d +make_float2((i + 1)*rnd(seedi), (j + 1)*rnd(seedj)) * scale;
-
+			seedi = tea<4>(i,j);
+			seedi = tea<4>(launch_dim.x*seedi,launch_index.y*seedi);
+			seedj = tea<4>(launch_dim.x* launch_dim.y, seedi);
+			
+			float2 sample = d + make_float2((i + 1)*rnd(seedi), (j + 1)*rnd(seedj)) * scale;
 			float3 ray_origin = eye;
 			float3 ray_direction = normalize(sample.x*U*fov + sample.y*V*fov + W);
 	
@@ -124,26 +122,23 @@ RT_PROGRAM void pinhole_camera_ms()
 
 RT_PROGRAM void any_hit_shadow()
 {
-	prd_shadow.result =  make_float4(0.0f);
+	prdr.transmit =  0.0f;
 	rtTerminateRay();
 }
 
 
 RT_PROGRAM void keepGoingShadow() {
 
-	float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
-	float atenuation = 1.0;
-
-	if (prd_shadow.entrance == 0.0) { // entrance
-		atenuation *= sqrt(fabs(dot(n, ray.direction)));
-		prd_shadow.entrance = t_hit;
+	float attenuation = 1.0;
+	
+	if (prdr.entrance == 0.0) { // entrance
+		prdr.entrance = t_hit;
 	}
 	else { // exit
-		atenuation = pow(exp(log(0.84) * (fabs(t_hit - prd_shadow.entrance))),4);
-		atenuation *= sqrt(fabs(dot(n, ray.direction)));
+		//attenuation = pow(exp(log(0.84) * (fabs(t_hit - prdr.entrance))),4);
 	}
-	prd_shadow.result *= atenuation;
-
+	//prdr.transmit *= attenuation;
+	prdr.transmit = 0.5;
 	rtIgnoreIntersection();
 }
 
@@ -158,8 +153,8 @@ RT_PROGRAM void keepGoing() {
 RT_PROGRAM void shade()
 {
 //	prdr.result = make_float4(0.0f, 1.0f, 0.0f, 1.0f);
-	PerRayData_shadow shadow_prd;
-    shadow_prd.result = make_float4(1.0f);
+	PerRayDataResult shadow_prd;
+    shadow_prd.transmit = 1.0f;
 
 
 	float3 lDir = make_float3(-lightDir);
@@ -171,24 +166,19 @@ RT_PROGRAM void shade()
 		optix::Ray shadow_ray( hit_point, lDir, Shadow, 0.001, RT_DEFAULT_MAX );
 		rtTrace(top_object, shadow_ray, shadow_prd);
 	}
-	float4 att = make_float4(1.0);
-	att.x = shadow_prd.result.x * NdotL;
-	att.y = shadow_prd.result.y * NdotL;
-	att.z = shadow_prd.result.z * NdotL;
-	NdotL *= shadow_prd.result.x;
+	NdotL *= shadow_prd.transmit;
 	float4 color = diffuse* 1.3f;
 	if (texCount > 0)
 		color = color * tex2D( tex0, texCoord.x, texCoord.y );
-	prdr.result *= make_float4(color.x*(0.3+att.x), color.y*(0.3+att.y), color.z*(0.3+att.z), 1.0f);
-	//prdr.result *= make_float4(NdotL, NdotL, NdotL,1.0);
+	prdr.result *= make_float4(color.x*(0.3+NdotL), color.y*(0.3+NdotL), color.z*(0.3+NdotL), 1.0f);
 }
 
 
 RT_PROGRAM void shadePointLight()
 {
 //	prdr.result = make_float4(0.0f, 1.0f, 0.0f, 1.0f);
-	PerRayData_shadow shadow_prd;
-    shadow_prd.result = make_float4(1.0f);
+	PerRayDataResult shadow_prd;
+    shadow_prd.transmit = 1.0f;
 	shadow_prd.entrance = 0.0f;
 
 	float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
@@ -205,15 +195,11 @@ RT_PROGRAM void shadePointLight()
 		optix::Ray shadow_ray( hit_point, lDir, Shadow, 0.000002, lightDist+0.01 );
 		rtTrace(top_object, shadow_ray, shadow_prd);
 	}
-	float4 att = make_float4(1.0);
-	att.x = shadow_prd.result.x * NdotL;
-	att.y = shadow_prd.result.y * NdotL;
-	att.z = shadow_prd.result.z * NdotL;
-//	NdotL *= shadow_prd.result.x;
+	NdotL *= shadow_prd.transmit;
 	float4 color = diffuse* 1.3f;
 	if (texCount > 0)
 		color = color * tex2D( tex0, texCoord.x, texCoord.y );
-	prdr.result *= make_float4(color.x*(0.3+att.x), color.y*(0.3+att.y), color.z*(0.3+att.z), 1.0f);
+	prdr.result *= make_float4(color.x*(0.3+NdotL), color.y*(0.3+NdotL), color.z*(0.3+NdotL), 1.0f);
 	//prdr.result = make_float4(NdotL, NdotL, NdotL,1.0);
 }
 
@@ -234,7 +220,7 @@ RT_PROGRAM void shadeLight()
 RT_PROGRAM void shadow()
 {
   // this material is opaque, so it fully attenuates all shadow rays
-  prd_shadow.result = make_float4(0.1);
+  prdr.transmit = 0.0f;
 
   rtTerminateRay();
 }
@@ -272,7 +258,7 @@ RT_PROGRAM void alpha_test_shadow()
 	if (tex2D( tex0, texCoord.x, texCoord.y ).w < 0.25f)
 		rtIgnoreIntersection();
 	else {
-		prd_shadow.result = make_float4(0.0);
+		prdr.transmit = 0.0f;
 		rtTerminateRay();
 	}
 

@@ -70,33 +70,25 @@ RT_PROGRAM void pinhole_camera_ms()
 	int samples = sqrt_num_samples * sqrt_num_samples;
 	unsigned int seedi, seedj;
 
-  size_t2 screen = output0.size();
+	size_t2 screen = output0.size();
 
-  float2 inv_screen = 1.0f/make_float2(screen) * 2.f;
-  float2 pixel = (make_float2(launch_index)) * inv_screen - 1.f;
+	float2 inv_screen = 1.0f/make_float2(screen) * 2.f;
+	float2 pixel = (make_float2(launch_index)) * inv_screen - 1.f;
 
-  float2 jitter_scale = inv_screen / sqrt_num_samples;
+	float2 jitter_scale = inv_screen / sqrt_num_samples;
 	float2 d = make_float2(launch_index) / make_float2(launch_dim) * 2.f - 1.f;
 
 	float2 scale = 1 / (make_float2(launch_dim) * sqrt_num_samples) * 2.0f;
-  unsigned int seed = tea<16>(screen.x*launch_index.y+launch_index.x, frameCount);
+	unsigned int seed = tea<16>(screen.x*launch_index.y+launch_index.x, frameCount);
 
 	for (int i = 0; i < sqrt_num_samples; ++i) {
 		for (int j = 0; j < sqrt_num_samples; ++j) {
 
-			// seedi = tea<16>(launch_dim.x*launch_index.y+launch_index.x,2*(i*sqrt_num_samples+j));
-			// seedj = tea<16>(launch_dim.x*launch_index.y+launch_index.x,2*(i*sqrt_num_samples+j)+1);
-			// float2 sample = d +make_float2((i + 1)*rnd(seedi), (j + 1)*rnd(seedj)) * scale;
-
-			// float3 ray_origin = eye;
-			// float3 ray_direction = normalize(sample.x*U*fov + sample.y*V*fov + W);
-	
-    unsigned int x = samples%sqrt_num_samples;
-    unsigned int y = samples/sqrt_num_samples;
-    float2 jitter = make_float2(x-rnd(seed), y-rnd(seed));
-    float2 d = pixel + jitter*jitter_scale;
-    float3 ray_origin = eye;
-    float3 ray_direction = normalize(d.x*U*fov + d.y*V*fov + W);
+			float2 jitter = make_float2((i+1)+rnd(seed), (j+1)+rnd(seed));
+			float2 d = pixel + jitter*jitter_scale;
+			float3 ray_origin = eye;
+			float3 ray_direction = normalize(d.x*U*fov + d.y*V*fov + W);
+			
 			optix::Ray ray = optix::make_Ray(ray_origin, ray_direction, Phong, 0.000000001, RT_DEFAULT_MAX);
 	
 			PerRayDataResult prd;
@@ -108,13 +100,9 @@ RT_PROGRAM void pinhole_camera_ms()
 			color += prd.result;
 		}
 	}
-	//color = color /0.8;
-	//color = 1-expf(-color * exposure/ samples);
-	// color = color*8;
-	// color = color /(color + 1);
-	output0[launch_index] = color/samples;//make_float4(powf(color.x,1/2.2), powf(color.y,1/2.2), powf(color.z, 1/2.2), 1);
-	//output0[launch_index] = make_float4(rnd(seed), rnd(seed), rnd(seed), rnd(seed));
+	output0[launch_index] = color/samples;
 }
+
 
 RT_PROGRAM void any_hit_shadow()
 {
@@ -122,15 +110,15 @@ RT_PROGRAM void any_hit_shadow()
 	rtTerminateRay();
 }
 
+
 RT_PROGRAM void missShadow(void)
 {
 	prdr.result = make_float4(1.0f);
-
 }
 
 
-RT_PROGRAM void keepGoingShadow() {
-
+RT_PROGRAM void keepGoingShadow() 
+{
 	float3 n = normalize( rtTransformNormal( RT_OBJECT_TO_WORLD, shading_normal ) );
 	float atenuation = 1.0;
 
@@ -167,10 +155,6 @@ RT_PROGRAM void tracePathMetal()
 	}
 	else 
 		prdr.result = make_float4(0.0);
-//	prdr.result = make_float4(1, 0, 0, 0);
-//	prdr.result = make_float4(1, 0, 0, 0);
-//	prd.result = make_float4(1.0f);
-//	prdr.result *= make_float4(0.0, 0.0, 1.0, 1.0);
 }
 
 
@@ -182,26 +166,26 @@ RT_PROGRAM void tracePathGlossy()
 		float3 hit_point = ray.origin + t_hit * ray.direction;
 		float3 i = ray.direction;
 		float3 r = optix::reflect(i, n);
+		
 		float3 newDir;
 		float exponent = 100;
-
-		
 		sampleUnitHemisphereCosLobe(r,exponent, newDir, prdr.seed);
+
 		if (dot(newDir, n) <= 0.0)
 			newDir = r;
+
 		optix::Ray ray = optix::make_Ray(hit_point, newDir, Phong, 0.000002, RT_DEFAULT_MAX);
 	
 		PerRayDataResult prd;
 		prd.result = make_float4(1.0, 1.0, 1.0,1.0);
 		prd.depth = prdr.depth+1;
+		prd.seed = prdr.seed;
 		rtTrace(top_object, ray, prd);
-		prdr.result = prd.result * (exponent+2) / (exponent+1) * dot(newDir,n);
+		prdr.result = prd.result ;
 	}
 	else 
 		prdr.result = make_float4(0.0);
 
-//	prd.result = make_float4(1.0f);
-//	prdr.result *= make_float4(0.0, 0.0, 1.0, 1.0);
 } 
 
 
@@ -219,7 +203,7 @@ RT_PROGRAM void tracePath()
 	float4 color = diffuse;
 	
 	float p = max(diffuse.x, max(diffuse.y, diffuse.z));
-	if (prdr.depth > trace || rnd(prdr.seed) > p)
+	if (prdr.depth > 1 || rnd(prdr.seed) > p)
 		color = color * 1.0/(1-p);
 	else {
 	//if (prdr.depth < 2 ) {//&& r < 0.7f) {
@@ -286,7 +270,7 @@ RT_PROGRAM void shadeGlass()
 	
 	PerRayDataResult prd;
 	prd.result = make_float4(1.0, 1.0, 1.0,1.0);
-	prd.depth = prdr.depth++;
+	prd.depth = prdr.depth;
 	rtTrace(top_object, ray, prd);
 	prdr.result = prd.result * atenuation;
 
