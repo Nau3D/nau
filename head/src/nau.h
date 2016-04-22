@@ -18,6 +18,7 @@
 #include "nau/material/materialLibManager.h"
 #include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
+#include "nau/physics/physicsManager.h"
 #include "nau/render/pipeline.h"
 #include "nau/render/pass.h"
 #include "nau/render/viewport.h"
@@ -299,6 +300,7 @@ namespace nau {
 		nau::material::MaterialLibManager *m_pMaterialLibManager;
 		nau::event_::EventManager *m_pEventManager;
 		nau::render::IAPISupport *m_pAPISupport;
+		nau::physics::PhysicsManager *m_pPhysicsManager;
 
 		std::string m_AppFolder;
 		std::string m_ActiveCameraName;

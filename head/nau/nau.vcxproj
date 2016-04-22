@@ -529,6 +529,9 @@
     <ClCompile Include="..\src\nau\geometry\square.cpp" />
     <ClCompile Include="..\src\nau\loader\patchLoader.cpp" />
     <ClCompile Include="..\src\nau\material\iTextureSampler.cpp" />
+    <ClCompile Include="..\src\nau\physics\physicsDummy.cpp" />
+    <ClCompile Include="..\src\nau\physics\physicsManager.cpp" />
+    <ClCompile Include="..\src\nau\physics\physicsMaterial.cpp" />
     <ClCompile Include="..\src\nau\render\iAPISupport.cpp" />
     <ClCompile Include="..\src\nau\render\iGlobalState.cpp" />
     <ClCompile Include="..\src\nau\render\iRenderable.cpp" />
@@ -761,6 +764,10 @@
     <ClInclude Include="..\src\nau\math\vec2.h" />
     <ClInclude Include="..\src\nau\math\vec3.h" />
     <ClInclude Include="..\src\nau\math\vec4.h" />
+    <ClInclude Include="..\src\nau\physics\iPhysics.h" />
+    <ClInclude Include="..\src\nau\physics\physicsDummy.h" />
+    <ClInclude Include="..\src\nau\physics\physicsManager.h" />
+    <ClInclude Include="..\src\nau\physics\physicsMaterial.h" />
     <ClInclude Include="..\src\nau\render\iAPISupport.h" />
     <ClInclude Include="..\src\nau\render\iGlobalState.h" />
     <ClInclude Include="..\src\nau\render\iRenderable.h" />

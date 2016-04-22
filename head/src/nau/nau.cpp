@@ -85,7 +85,7 @@ Nau::Nau() :
 	m_WindowWidth (0), 
 	m_WindowHeight (0), 
 	m_Inited (false),
-	m_Physics (false),
+	m_Physics (true),
 	loadedScenes(0),
 	m_ActiveCameraName(""),
 	m_Name("Nau"),
@@ -147,7 +147,7 @@ Nau::init (bool context, std::string aConfigFile) {
 	m_AppFolder = File::GetAppFolder();
 	//bool result;
 	if (true == context) {
-
+		m_pPhysicsManager = nau::physics::PhysicsManager::GetInstance();
 		m_pEventManager = new EventManager;
 		m_pRenderManager = new RenderManager;
 		m_pAPISupport = IAPISupport::GetInstance();
@@ -1206,8 +1206,12 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 	}
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
-	//std::string wn = "test";
-	//std::string wl = "My AT Bar";
+
+	// Physics Dummy test Init
+
+	m_pPhysicsManager->addScene(nau::physics::IPhysics::RIGID, RENDERMANAGER->getScene("CubeLand").get());	//std::string wn = "test";
+	
+																											//std::string wl = "My AT Bar";
 	//INTERFACE->createWindow(wn, wl);
 	////INTERFACE->addVar("test", "Viewport_Size", "VIEWPORT", "defaultFixedVP", "SIZE", 0);
 	////INTERFACE->addVar("test", "Camera_Far", "CAMERA", "MainCamera", "FAR", 0);
@@ -1383,6 +1387,9 @@ Nau::step() {
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, 2);
 	else
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, ++k);
+
+	if (m_Physics)
+		m_pPhysicsManager->update();
 
 	//if (getProfileResetRequest())
 	//	Profile::Reset();
