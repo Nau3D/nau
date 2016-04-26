@@ -147,11 +147,11 @@ Nau::init (bool context, std::string aConfigFile) {
 	m_AppFolder = File::GetAppFolder();
 	//bool result;
 	if (true == context) {
-		m_pPhysicsManager = nau::physics::PhysicsManager::GetInstance();
 		m_pEventManager = new EventManager;
 		m_pRenderManager = new RenderManager;
 		m_pAPISupport = IAPISupport::GetInstance();
 		m_pAPISupport->setAPISupport();
+		m_pPhysicsManager = nau::physics::PhysicsManager::GetInstance();
 	}	
 	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
 	m_pMaterialLibManager = new MaterialLibManager();
@@ -1185,6 +1185,7 @@ Nau::clear() {
 	Profile::Reset();
 	deleteUserAttributes();
 	UniformBlockManager::DeleteInstance();
+	m_pPhysicsManager->clear();
 
 	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
 
@@ -1209,7 +1210,7 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 
 	// Physics Dummy test Init
 
-	m_pPhysicsManager->addScene(nau::physics::IPhysics::RIGID, RENDERMANAGER->getScene("CubeLand").get());	//std::string wn = "test";
+	m_pPhysicsManager->addScene(RENDERMANAGER->getScene("CubeLand").get(), "BLE");	//std::string wn = "test";
 	
 																											//std::string wl = "My AT Bar";
 	//INTERFACE->createWindow(wn, wl);
@@ -1686,10 +1687,16 @@ Nau::getEventManager (void) {
 	return m_pEventManager;
 }
 
+
 nau::render::IRenderer * 
-Nau::getRenderer(void)
-{
+Nau::getRenderer(void) {
 	return getRenderManager()->getRenderer();
+}
+
+
+nau::physics::PhysicsManager * nau::Nau::getPhysicsManager() {
+
+	return m_pPhysicsManager;
 }
 
 

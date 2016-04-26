@@ -256,6 +256,7 @@ namespace nau {
 		nau::material::MaterialLibManager* getMaterialLibManager (void);
 		nau::event_::EventManager* getEventManager (void);
 		nau::render::IRenderer *getRenderer(void);
+		nau::physics::PhysicsManager *getPhysicsManager();
 		IAPISupport * getAPISupport(void);
 
 		/* Render Flags */

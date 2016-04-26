@@ -23,20 +23,19 @@ namespace nau
 		
 			FLOAT4_PROP(GRAVITY, 0);
 
-			ENUM_PROP(SCENE_TYPE, 0);
 
 			
 			static AttribSet Attribs;
 
 			static PhysicsManager* GetInstance();
 			
-//			void registerPlugin(IPhysics *p);
+			void updateProps();
 			void update();
 			void build();
 
 			void clear();
 			
-			void addScene(IPhysics::SceneType st, nau::scene::IScene *aScene);
+			void addScene(nau::scene::IScene *aScene, const std::string &matName);
 			
 			PhysicsMaterial &getMaterial(const std::string &name);
 			
@@ -46,7 +45,8 @@ namespace nau
 		
 			PhysicsManager::PhysicsManager();
 			
-			
+			IPhysics *loadPlugin();
+
 			static PhysicsManager *PhysManInst;
 			IPhysics *m_PhysInst;
 			
@@ -55,7 +55,8 @@ namespace nau
 			bool m_Built;
 
 			std::map<std::string, PhysicsMaterial> m_MatLib;
-			std::map<nau::scene::IScene *, IPhysics::SceneType> m_Scenes;
+			// map from scenes to material
+			std::map<nau::scene::IScene *, std::string> m_Scenes;
 		};
 	};
 };

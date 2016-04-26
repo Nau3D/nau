@@ -25,6 +25,7 @@ PhysicsDummy::update() {
 	}
 }
 
+
 void 
 PhysicsDummy::build() {
 
@@ -32,36 +33,70 @@ PhysicsDummy::build() {
 
 
 void 
-PhysicsDummy::setSceneType(std::string & scene, SceneType type) {
+PhysicsDummy::setSceneType(const std::string & scene, SceneType type) {
 
 	m_Scenes[scene].sceneType = type;
 }
 
 
-void nau::physics::PhysicsDummy::applyProperty(std::string & property, nau::math::Data * value) {
+void 
+PhysicsDummy::applyFloatProperty(const std::string &scene, const std::string &property, float value) {
 
 }
 
 
-void nau::physics::PhysicsDummy::setSceneVertices(std::string & scene, float * vertices) {
+void 
+PhysicsDummy::applyVec4Property(const std::string &scene, const std::string &property, float *value) {
+
+}
+
+
+void
+PhysicsDummy::applyGlobalFloatProperty(const std::string &property, float value) {
+
+}
+
+
+void
+PhysicsDummy::applyGlobalVec4Property(const std::string &property, float *value) {
+
+}
+
+
+void 
+PhysicsDummy::setScene(const std::string & scene, float * vertices, unsigned int *indices, float *transform) {
 
 	m_Scenes[scene].vertices = vertices;
-}
-
-
-void nau::physics::PhysicsDummy::setSceneIndices(std::string & scene, unsigned int * indices) {
-
 	m_Scenes[scene].indices = indices;
+	m_Scenes[scene].transform = transform;
 }
 
 
-float * nau::physics::PhysicsDummy::getSceneTransform(std::string & scene) {
+float * 
+PhysicsDummy::getSceneTransform(const std::string & scene) {
 
 	return m_Scenes[scene].transform;
 }
 
 
-void nau::physics::PhysicsDummy::setSceneTransform(std::string & scene, float * transform) {
+void 
+PhysicsDummy::setSceneTransform(const std::string & scene, float * transform) {
 
 	m_Scenes[scene].transform = transform;
 }
+
+
+void
+PhysicsDummy::getGlobalProperties(std::map < std::string, Prop> *m) {
+
+
+}
+
+
+void
+PhysicsDummy::getMaterialProperties(std::map < std::string, Prop> *m) {
+
+
+}
+
+

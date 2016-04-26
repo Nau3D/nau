@@ -18,16 +18,21 @@ namespace nau
 			virtual void update();
 			virtual void build();
 			
-			virtual void setSceneType(std::string &scene, SceneType type);
+			virtual void setSceneType(const std::string &scene, SceneType type);
 
-			virtual void applyProperty(std::string &property, nau::math::Data *value);
-			
-			virtual void setSceneVertices(std::string &scene, float *vertices);
-			virtual void setSceneIndices(std::string &scene, unsigned int *indices);
-			
-			virtual float *getSceneTransform(std::string &scene);
-			virtual void setSceneTransform(std::string &scene, float *transform);
+			virtual void applyFloatProperty(const std::string &scene, const std::string &property, float value);
+			virtual void applyVec4Property(const std::string &scene, const std::string &property, float *value);
 
+			virtual void applyGlobalFloatProperty(const std::string &property, float value);
+			virtual void applyGlobalVec4Property(const std::string &property, float *value);
+
+			virtual void setScene(const std::string &scene, float *vertices, unsigned int *indices, float *transform);
+			
+			virtual float *getSceneTransform(const std::string &scene);
+			virtual void setSceneTransform(const std::string &scene, float *transform);
+
+			void getGlobalProperties(std::map < std::string, Prop> *);
+			void getMaterialProperties(std::map < std::string, Prop> *);
 		};
 	};
 };

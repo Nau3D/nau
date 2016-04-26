@@ -14,8 +14,11 @@ namespace nau
 		{
 		public:
 			FLOAT_PROP(MASS, 0);
+			ENUM_PROP(SCENE_TYPE, 0);
 
 			static AttribSet Attribs;
+
+			PhysicsMaterial();
 
 		protected:
 			static bool Init();

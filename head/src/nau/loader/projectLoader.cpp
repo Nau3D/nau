@@ -18,6 +18,7 @@
 #include "nau/material/programValue.h"
 #include "nau/material/uniformBlockManager.h"
 #include "nau/math/number.h"
+#include "nau/physics/physicsManager.h"
 #include "nau/render/iAPISupport.h"
 #include "nau/render/passCompute.h"
 #include "nau/render/passFactory.h"
@@ -334,7 +335,10 @@ ProjectLoader::readAttribute(std::string tag, std::unique_ptr<Attribute> &attrib
 				return NULL;
 			else {
 				s_Dummy_int = attrib->getOptionValue(s);
-				return new NauInt(s_Dummy_int);
+				if (s_Dummy_int != -1)
+					return new NauInt(s_Dummy_int);
+				else
+					return NULL;
 			}
 			break;
 		default:
@@ -1428,10 +1432,31 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 
 
 	std::vector<std::string> ok = {"constants", "attributes", "scenes", "viewports", "cameras",
-		"lights", "events", "atomics", "materialLibs", "sensors", "routes", "interpolators"};
+		"lights", "events", "atomics", "materialLibs", "physicsLibs", "sensors", "routes", "interpolators"};
 	checkForNonValidChildTags("Assets", ok, hRoot.FirstChild ("assets").Element());
+
+
+
 	loadConstants(handle);
 	loadUserAttrs(handle);
+
+	pElem = handle.FirstChild ("physicsLibs").FirstChild ("physicsLib").Element();
+	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("physicsLib")) {
+		const char *pFilename = pElem->Attribute ("filename");
+
+		if (0 == pFilename) {
+			NAU_THROW("File %s\nNo file specified for physicsc material lib", ProjectLoader::s_File.c_str());
+		}
+
+		try {
+			SLOG("Loading Physics Material Lib from file : %s", File::GetFullPath(ProjectLoader::s_Path,pFilename).c_str());
+			loadPhysLib(File::GetFullPath(ProjectLoader::s_Path,pFilename));
+		}
+		catch(std::string &s) {
+			throw(s);
+		}
+	}
+
 	loadScenes(handle);
 	loadViewports(handle);
 	loadCameras(handle);
@@ -1440,19 +1465,19 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 	if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
 		loadAtomicSemantics(handle);
 
-	pElem = handle.FirstChild ("materialLibs").FirstChild ("materialLib").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-		const char *pFilename = pElem->Attribute ("filename");
+	pElem = handle.FirstChild("materialLibs").FirstChild("materialLib").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		const char *pFilename = pElem->Attribute("filename");
 
 		if (0 == pFilename) {
 			NAU_THROW("File %s\nNo file specified for material lib", ProjectLoader::s_File.c_str());
 		}
 
 		try {
-			SLOG("Loading Material Lib from file : %s", File::GetFullPath(ProjectLoader::s_Path,pFilename).c_str());
-			loadMatLib(File::GetFullPath(ProjectLoader::s_Path,pFilename));
+			SLOG("Loading Material Lib from file : %s", File::GetFullPath(ProjectLoader::s_Path, pFilename).c_str());
+			loadMatLib(File::GetFullPath(ProjectLoader::s_Path, pFilename));
 		}
-		catch(std::string &s) {
+		catch (std::string &s) {
 			throw(s);
 		}
 	}
@@ -4453,6 +4478,106 @@ ProjectLoader::loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, std::sha
 		aMat->setState(RESOURCEMANAGER->createState(fullName));
 	}
 }
+
+
+/* -----------------------------------------------------------------------------
+PHYSICS MATERIAL LIBS
+
+<?xml version="1.0" ?>
+<physicslib name="Billiard">
+
+<globalProperties>
+	<BLA value="0" />
+	<BLE x="1" y="0" z="0" />
+</globalProperties>
+
+<materials>
+	<material name = "bla" tyep="RIGID">
+		<prop name="BLI" value="0" />
+		<prop name="BLO" x="1" y="0" z="0" />
+	</material>
+</materials>
+...
+</materiallib>
+
+
+-----------------------------------------------------------------------------*/
+
+void
+ProjectLoader::loadPhysLib(std::string file)
+{
+	std::string path = File::GetPath(file);
+	//std::map<std::string,IState *> states;
+
+	TiXmlDocument doc(file.c_str());
+	bool loadOkay = doc.LoadFile();
+
+	MaterialLib *aLib = 0;
+
+	if (!loadOkay)
+		NAU_THROW("Parsing Error -%s- Line(%d) Column(%d) in file: %s", doc.ErrorDesc(), doc.ErrorRow(), doc.ErrorCol(), file.c_str());
+
+	TiXmlHandle hDoc(&doc);
+	TiXmlHandle hRoot(0);
+	TiXmlElement *pElem;
+
+	{ //root
+		pElem = hDoc.FirstChildElement().Element();
+		if (0 == pElem)
+			NAU_THROW("Parse Error in physics lib file %s", file.c_str());
+		hRoot = TiXmlHandle(pElem);
+	}
+
+	pElem = hRoot.Element();
+	const char* pName = pElem->Attribute("name");
+
+	if (0 == pName)
+		NAU_THROW("Physics lib has no name in file %s", file.c_str());
+
+	SLOG("Physics Lib: %s", pName);
+
+	aLib = MATERIALLIBMANAGER->getLib(pName);
+
+	std::string aux = s_File;
+	s_File = file;
+
+
+	nau::physics::PhysicsManager *pm = NAU->getPhysicsManager();
+	pElem = hRoot.FirstChild("globalProperties").Element();
+	std::vector<std::string> excluded;
+	readChildTags(pName, pm, nau::physics::PhysicsManager::Attribs, excluded, pElem);
+
+	pElem = hRoot.FirstChild("materials").FirstChild("material").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+		TiXmlHandle handle(pElem);
+
+		const char *pMaterialName = pElem->Attribute("name");
+		if (0 == pMaterialName)
+			NAU_THROW("Physics Lib %s\nMaterial has no name", pName);
+
+		std::unique_ptr<Attribute> &a = nau::physics::PhysicsMaterial::Attribs.get("SCENE_TYPE");
+		nau::math::Data *d = readAttribute("type", a, pElem);
+		if (d == NULL) {
+			std::string s = getValidValuesString(a);
+			NAU_THROW("File %s: Element %s: \"%s\" is not a valid attribute\nValid tags are: %s",
+				ProjectLoader::s_File.c_str(), pMaterialName, a->getName().c_str(), s.c_str());
+		}
+
+		std::string mn = pMaterialName;
+		nau::physics::PhysicsMaterial &mat = pm->getMaterial(mn);
+		mat.setPrope(nau::physics::PhysicsMaterial::SCENE_TYPE, *(int *)(d->getPtr()));
+
+		readChildTags(pMaterialName, &mat, nau::physics::PhysicsMaterial::Attribs, excluded, pElem);
+
+		SLOG("Physics Material: %s", pMaterialName);
+
+		}
+	s_File = aux;
+
+	pm->updateProps();
+}
+
 
 /* -----------------------------------------------------------------------------
 MATERIAL LIBS     

@@ -2,22 +2,23 @@
 
 #include "nau.h"
 #include "nau/enums.h"
+#include "nau/slogger.h"
 #include "nau/math/data.h"
 #include "nau/physics/iPhysics.h"
 #include "nau/physics/physicsDummy.h"
+#include "nau/system/file.h"
+
+#include <stdexcept>
+#include <exception>
+#include <windows.h>
 
 using namespace nau::physics;
 
 bool
 PhysicsManager::Init() {
 
-	Attribs.add(Attribute(GRAVITY, "GRAVITY", Enums::DataType::VEC4, false, new vec4(0.0f, -9.8f, 0.0f, 0.0f)));
+	//Attribs.add(Attribute(GRAVITY, "GRAVITY", Enums::DataType::VEC4, false, new vec4(0.0f, -9.8f, 0.0f, 0.0f)));
 
-	Attribs.add(Attribute(SCENE_TYPE, "SCENE_TYPE", Enums::DataType::ENUM, false, new NauInt(IPhysics::STATIC)));
-	Attribs.listAdd("SCENE_TYPE", "STATIC", IPhysics::STATIC);
-	Attribs.listAdd("SCENE_TYPE", "DYNAMIC", IPhysics::RIGID);
-	Attribs.listAdd("SCENE_TYPE", "CLOTH", IPhysics::CLOTH);
-	Attribs.listAdd("SCENE_TYPE", "PARTICLES", IPhysics::PARTICLES);
 
 	NAU->registerAttributes("PHYSICS_MANAGER", &Attribs);
 
@@ -42,7 +43,33 @@ PhysicsManager::GetInstance() {
 
 PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false) {
 
-	m_PhysInst = new PhysicsDummy();
+	registerAndInitArrays(Attribs);
+	m_PhysInst = loadPlugin();
+	if (!m_PhysInst)
+		m_PhysInst = new PhysicsDummy();
+
+	std::map < std::string, IPhysics::Prop> props;
+	m_PhysInst->getGlobalProperties(&props);
+
+	int k = 0;
+	for (auto p : props) {
+		Enums::DataType dt = p.second.propType == IPhysics::FLOAT ? Enums::FLOAT : Enums::VEC4;
+		if (p.second.propType == IPhysics::FLOAT) 
+			Attribs.add(Attribute(k, p.first, Enums::FLOAT, false, new NauFloat(p.second.x)));
+		else
+			Attribs.add(Attribute(k, p.first, Enums::VEC4, false, new vec4(p.second.x, p.second.y, p.second.z, p.second.w)));
+	}
+
+	props.clear();
+	m_PhysInst->getMaterialProperties(&props);
+	k = 0;
+	for (auto p : props) {
+		Enums::DataType dt = p.second.propType == IPhysics::FLOAT ? Enums::FLOAT : Enums::VEC4;
+		if (p.second.propType == IPhysics::FLOAT)
+			PhysicsMaterial::Attribs.add(Attribute(k, p.first, Enums::FLOAT, false, new NauFloat(p.second.x)));
+		else
+			PhysicsMaterial::Attribs.add(Attribute(k, p.first, Enums::VEC4, false, new vec4(p.second.x, p.second.y, p.second.z, p.second.w)));
+	}
 }
 
 
@@ -54,6 +81,57 @@ PhysicsManager::~PhysicsManager() {
 	}
 
 	clear();
+}
+
+
+IPhysics *
+PhysicsManager::loadPlugin() {
+
+	std::vector<std::string> files;
+	nau::system::File::GetFilesInFolder(".\\nauSettings\\plugins\\physics\\", "dll", &files);
+
+	typedef void (__cdecl *initProc)(void);
+	typedef void *(__cdecl *createPhysics)(void);
+	typedef char *(__cdecl *getClassNameProc)(void);
+	int loaded = 0;
+
+	if (files.size() == 0)
+		return NULL;
+
+	std::string fn = files[0];
+
+		wchar_t wtext[256];
+		mbstowcs(wtext, fn.c_str(), fn.size() + 1);//Plus null
+		LPWSTR ptr = wtext;
+		HINSTANCE mod = LoadLibraryA(fn.c_str());
+
+		if (!mod) {
+			SLOG("Library %s wasn't loaded successfully!", fn.c_str());
+			return NULL;
+		}
+
+		initProc initFunc = (initProc)GetProcAddress(mod, "init");
+		createPhysics createPhys = (createPhysics)GetProcAddress(mod, "createPhysics");
+		getClassNameProc getClassNameFunc = (getClassNameProc)GetProcAddress(mod, "getClassName");
+
+		if (!initFunc || !createPhys || !getClassNameFunc) {
+			SLOG("%s: Invalid Plugin DLL:  'init', 'createPhys' and 'getClassName' must be defined", fn.c_str());
+			return NULL;
+		}
+		else
+			loaded++;
+
+		initFunc();
+		
+		// push the objects and modules into our vectors
+		char *s = getClassNameFunc();
+		SLOG("Physics plugin %s (%s) loaded successfully", fn.c_str(), s);
+	
+
+		IPhysics *ip = (IPhysics *)createPhys();
+
+	// Close the file when we are done
+	return ip;
 }
 
 
@@ -71,7 +149,8 @@ PhysicsManager::update() {
 
 	for (auto s : m_Scenes) {
 		
-		switch (s.second) {
+		int st = getMaterial(s.second).getPrope(PhysicsMaterial::SCENE_TYPE);
+		switch (st) {
 		
 		case IPhysics::STATIC: break;
 
@@ -114,20 +193,52 @@ PhysicsManager::clear() {
 
 
 void
-PhysicsManager::addScene(IPhysics::SceneType st, nau::scene::IScene *aScene) {
+PhysicsManager::addScene(nau::scene::IScene *aScene, const std::string &matName) {
 
-	m_Scenes[aScene] = st;
+	m_Scenes[aScene] = matName;
 	std::string sn = aScene->getName();
-	m_PhysInst->setSceneType(sn, st);
+	PhysicsMaterial &pm = getMaterial(matName);
+
+	m_PhysInst->setSceneType(sn, (IPhysics::SceneType)pm.getPrope(PhysicsMaterial::SCENE_TYPE));
 
 	m_PhysInst->setSceneTransform(sn, (float *)aScene->getTransform().getMatrix());
 
 	std::shared_ptr<IRenderable> &r = aScene->getSceneObject(0)->getRenderable();
 	std::vector<VertexAttrib> *vd = r->getVertexData()->getDataOf(0).get();
-	m_PhysInst->setSceneVertices(sn, (float *)&(vd->at(0)));
-	m_PhysInst->setSceneIndices(sn, (unsigned int *)&(r->getIndexData()->getIndexData()->at(0)));
+	m_PhysInst->setScene(sn, (float *)&(vd->at(0)), 
+		(unsigned int *)&(r->getIndexData()->getIndexData()->at(0)), 
+		(float *)aScene->getTransform().getMatrix());
+
+	std::map<std::string, std::unique_ptr<Attribute>> &attrs = pm.getAttribSet()->getAttributes();
+	
+	for (auto &a : attrs) {
+		switch (a.second->getType()) {
+			case Enums::FLOAT: 
+				m_PhysInst->applyFloatProperty(sn, a.second->getName(), pm.getPropf((FloatProperty)a.second->getId())); break;
+			case Enums::VEC4: 
+				m_PhysInst->applyVec4Property(sn, a.second->getName(), &(pm.getPropf4((Float4Property)a.second->getId()).x)); break;
+	
+		}
+	}
 
 	m_Built = false;
+}
+
+
+void
+PhysicsManager::updateProps() {
+
+	std::map<std::string, std::unique_ptr<Attribute>> &attrs = getAttribSet()->getAttributes();
+
+	for (auto &a : attrs) {
+		switch (a.second->getType()) {
+		case Enums::FLOAT:
+			m_PhysInst->applyGlobalFloatProperty(a.second->getName(), getPropf((FloatProperty)a.second->getId())); break;
+		case Enums::VEC4:
+			m_PhysInst->applyGlobalVec4Property(a.second->getName(), &(getPropf4((Float4Property)a.second->getId()).x)); break;
+
+		}
+	}
 }
 
 
