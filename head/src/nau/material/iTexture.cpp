@@ -97,6 +97,11 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 	//	ima.Rescale(96, 96);
 	//	t->bitmap = new wxBitmap(ima.Mirror(false));
 	//#endif
+		loader->ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+		
+		t->data = (char *)malloc(loader->getHeight() * loader->getWidth() * 4);
+		memcpy(t->data, loader->getData(), loader->getHeight() * loader->getWidth() * 4);
+
 		loader->freeImage();
 		delete loader;
 		return t;

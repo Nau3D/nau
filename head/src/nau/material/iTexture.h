@@ -100,6 +100,8 @@ namespace nau
 
 			virtual ~ITexture(void);
 
+			char *data;
+
 		protected:
 			// For textures with data, ex. loaded images
 			//ITexture(std::string label, std::string aDimension, std::string internalFormat, 
@@ -110,6 +112,7 @@ namespace nau
 
 			ITexture(std::string label);
 
+
 			/// For inheritance reasons only
 			ITexture() {/*bitmap=NULL;*/};
 
@@ -117,6 +120,7 @@ namespace nau
 			static bool Inited;
 
 			std::string m_Label;
+
 //#ifdef __COMPOSER__
 //			wxBitmap *bitmap;
 //#endif
