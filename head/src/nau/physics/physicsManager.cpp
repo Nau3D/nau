@@ -46,7 +46,7 @@ PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false) {
 	registerAndInitArrays(Attribs);
 	m_PhysInst = loadPlugin();
 	if (!m_PhysInst)
-		m_PhysInst = new PhysicsDummy();
+		return;
 
 	std::map < std::string, IPhysics::Prop> props;
 	m_PhysInst->getGlobalProperties(&props);
@@ -195,6 +195,9 @@ PhysicsManager::clear() {
 void
 PhysicsManager::addScene(nau::scene::IScene *aScene, const std::string &matName) {
 
+	if (!m_PhysInst)
+		return;
+
 	m_Scenes[aScene] = matName;
 	std::string sn = aScene->getName();
 	PhysicsMaterial &pm = getMaterial(matName);
@@ -227,6 +230,9 @@ PhysicsManager::addScene(nau::scene::IScene *aScene, const std::string &matName)
 
 void
 PhysicsManager::updateProps() {
+
+	if (!m_PhysInst)
+		return;
 
 	std::map<std::string, std::unique_ptr<Attribute>> &attrs = getAttribSet()->getAttributes();
 

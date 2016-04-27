@@ -32,9 +32,6 @@
     <Filter Include="Source Files\system">
       <UniqueIdentifier>{d1b65763-adcc-40b3-b35a-6cafbd3b9d00}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\world">
-      <UniqueIdentifier>{26f3088a-0502-4e2a-9223-6a47109247d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\debug">
       <UniqueIdentifier>{b321e896-4b75-4edb-b494-007d5ac5f944}</UniqueIdentifier>
     </Filter>
@@ -462,18 +459,6 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\scene\sceneSkeleton.cpp">
       <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\world\bulletMotionState.cpp">
-      <Filter>Source Files\world</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\world\bulletWorld.cpp">
-      <Filter>Source Files\world</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\world\physicalObject.cpp">
-      <Filter>Source Files\world</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\nau\world\worldFactory.cpp">
-      <Filter>Source Files\world</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\material\iTexImage.cpp">
       <Filter>Source Files\material</Filter>
@@ -995,21 +980,6 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\scene\sceneSkeleton.h">
       <Filter>Source Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\bulletMotionState.h">
-      <Filter>Source Files\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\bulletWorld.h">
-      <Filter>Source Files\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\iWorld.h">
-      <Filter>Source Files\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\physicalObject.h">
-      <Filter>Source Files\world</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\world\worldFactory.h">
-      <Filter>Source Files\world</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\material\iTexImage.h">
       <Filter>Source Files\material</Filter>

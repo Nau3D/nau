@@ -4,6 +4,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "composer", "..\samples\composer\composer.vcxproj", "{8AFA88FD-951A-479D-A7F8-124919B6D19F}"
 	ProjectSection(ProjectDependencies) = postProject
+		{38B90109-45D9-4974-9758-803FE9B9D215} = {38B90109-45D9-4974-9758-803FE9B9D215}
 		{B2A55A68-A417-4C52-BFE7-8193BA388ABF} = {B2A55A68-A417-4C52-BFE7-8193BA388ABF}
 	EndProjectSection
 EndProject
@@ -22,7 +23,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Performance2.psess = Performance2.psess
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nauGlut", "..\samples\nauGlut\nauGlut.vcxproj", "{991075CE-418C-49EF-98A1-CE6AB3122A34}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nauGlut", "..\samples\nauglut\nauGlut.vcxproj", "{991075CE-418C-49EF-98A1-CE6AB3122A34}"
+	ProjectSection(ProjectDependencies) = postProject
+		{38B90109-45D9-4974-9758-803FE9B9D215} = {38B90109-45D9-4974-9758-803FE9B9D215}
+		{B2A55A68-A417-4C52-BFE7-8193BA388ABF} = {B2A55A68-A417-4C52-BFE7-8193BA388ABF}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLLPhysics", "DLLPhysics\DLLPhysics.vcxproj", "{38B90109-45D9-4974-9758-803FE9B9D215}"
 EndProject

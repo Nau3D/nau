@@ -870,7 +870,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 		const char *pType = pElem->Attribute("type");
 		const char *pFilename = pElem->Attribute("filename");
 		const char *pParam = pElem->Attribute("param");
-
+		const char *pPhysMat = pElem->Attribute("physicsMaterial");
 		std::string s;
 
 		if (0 == pName) {
@@ -1138,6 +1138,9 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 			if (params.find("UNITIZE") != std::string::npos)
 				is->unitize();
 		}
+
+		if (pPhysMat)
+			NAU->getPhysicsManager()->addScene(is.get(), pPhysMat);
 	}
 }
 

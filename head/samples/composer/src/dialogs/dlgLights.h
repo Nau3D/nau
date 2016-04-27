@@ -1,5 +1,5 @@
-#ifndef __SLANGER_DIALOGS_LIGHTS__
-#define __SLANGER_DIALOGS_LIGHTS__
+#ifndef __COMPOSER_DIALOGS_LIGHTS__
+#define __COMPOSER_DIALOGS_LIGHTS__
 
 
 #ifdef __GNUG__

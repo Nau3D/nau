@@ -7,7 +7,7 @@
 #include "nau/material/iTextureSampler.h"
 
 
-//#ifdef __SLANGER__
+//#ifdef __COMPOSER__
 //#include <wx/bitmap.h>
 //#include <wx/image.h>
 //#include <IL/ilu.h>
@@ -79,7 +79,7 @@ namespace nau
 			static ITexture* Create(std::string label);
 	
 
-//#ifdef __SLANGER__
+//#ifdef __COMPOSER__
 //			virtual wxBitmap *getBitmap(void);
 //#endif
 			virtual std::string& getLabel (void);
@@ -117,7 +117,7 @@ namespace nau
 			static bool Inited;
 
 			std::string m_Label;
-//#ifdef __SLANGER__
+//#ifdef __COMPOSER__
 //			wxBitmap *bitmap;
 //#endif
 		};

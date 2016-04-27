@@ -23,7 +23,7 @@
 #include "nau/scene/iScene.h"
 #include "nau/scene/camera.h"
 #include "nau/scene/light.h"
-#include "nau/world/iWorld.h"
+//#include "nau/world/iWorld.h"
 
 #include <iostream>
 

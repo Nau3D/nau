@@ -27,7 +27,7 @@
 #include "nau/scene/iScene.h"
 #include "nau/scene/camera.h"
 #include "nau/scene/light.h"
-#include "nau/world/iWorld.h"
+//#include "nau/world/iWorld.h"
 
 #ifdef NAU_LUA
 extern "C" {
@@ -230,7 +230,8 @@ namespace nau {
 
 
 		// Physics
-		nau::world::IWorld& getWorld (void);
+		//nau::world::IWorld& getWorld (void);
+		
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);
 		void enablePhysics (void);
@@ -312,7 +313,7 @@ namespace nau {
 		bool m_Inited;
 
 		bool m_Physics;
-		nau::world::IWorld *m_pWorld;
+		//nau::world::IWorld *m_pWorld;
 		
 		//double m_CurrentTime;
 		double m_LastFrameTime;

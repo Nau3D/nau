@@ -21,7 +21,7 @@
 #include "nau/resource/fontManager.h"
 #include "nau/scene/sceneFactory.h"
 #include "nau/system/file.h"
-#include "nau/world/worldFactory.h"
+//#include "nau/world/worldFactory.h"
 
 //#include <GL/glew.h>
 
@@ -46,7 +46,7 @@ using namespace nau::render;
 using namespace nau::resource;
 using namespace nau::scene;
 using namespace nau::system;
-using namespace nau::world;
+//using namespace nau::world;
 
 
 static nau::Nau *gInstance = 0;
@@ -101,7 +101,7 @@ Nau::Nau() :
 	m_ProjectName(""),
 	m_DefaultState(0),
 	m_pAPISupport(0),
-	m_pWorld(0), 
+	//m_pWorld(0), 
 	m_LuaState(0),
 	m_ProfileResetRequest(false)
 {
@@ -124,7 +124,7 @@ Nau::~Nau() {
 	nau::material::UniformBlockManager::DeleteInstance();
 	SLogger::DeleteInstance();
 
-	delete m_pWorld;
+	//delete m_pWorld;
 
 	PassFactory::DeleteInstance();
 
@@ -169,7 +169,7 @@ Nau::init (bool context, std::string aConfigFile) {
 
 	FontManager::addFont("CourierNew10", m_AppFolder + File::PATH_SEPARATOR + "nauSettings/couriernew10.xml", "__FontCourierNew10");
 
-	m_pWorld = WorldFactory::create ("Bullet");
+	//m_pWorld = WorldFactory::create ("Bullet");
 
 	m_StartTime = (float)clock();// *1000.0 / CLOCKS_PER_MILISEC;
 	m_LastFrameTime = NO_TIME;
@@ -1210,7 +1210,7 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 
 	// Physics Dummy test Init
 
-	m_pPhysicsManager->addScene(RENDERMANAGER->getScene("CubeLand").get(), "BLE");	//std::string wn = "test";
+	//m_pPhysicsManager->addScene(RENDERMANAGER->getScene("CubeLand").get(), "BLE");	//std::string wn = "test";
 	
 																											//std::string wl = "My AT Bar";
 	//INTERFACE->createWindow(wn, wl);
@@ -1371,10 +1371,10 @@ Nau::step() {
 	renderer->resetCounters();
 	RESOURCEMANAGER->clearBuffers();
 
-	if (true == m_Physics) {
-		m_pWorld->update();
-		m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
-	}
+	//if (true == m_Physics) {
+	//	m_pWorld->update();
+	//	m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+	//}
 
 	m_pRenderManager->renderActivePipeline();
 
@@ -1429,8 +1429,9 @@ void Nau::stepPass() {
 		renderer->resetCounters();
 
 		if (true == m_Physics) {
-			m_pWorld->update();
-			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+			m_pPhysicsManager->update();
+//			m_pWorld->update();
+//			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
 		}
 
 	}
@@ -1540,11 +1541,11 @@ Nau::getDepthAtCenter() {
 
 
 
-IWorld&
-Nau::getWorld (void) {
-
-	return (*m_pWorld);
-}
+//IWorld&
+//Nau::getWorld (void) {
+//
+//	return (*m_pWorld);
+//}
 
 
 void

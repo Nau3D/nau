@@ -87,7 +87,7 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 		t = new DXTexture (aDimension, aFormat, width, height);
 	#endif
 
-	//#ifdef __SLANGER__
+	//#ifdef __COMPOSER__
 
 	//	ITexImage *ti = ITexImage::create(t);
 	//	unsigned char *data = ti->getRGBData();
@@ -116,7 +116,7 @@ ITexture::ITexture(std::string label) :m_Label(label)/*, bitmap(0), m_Bitmap(0)*
 
 ITexture::~ITexture() {
 
-//#ifdef __SLANGER__
+//#ifdef __COMPOSER__
 //
 //	if (bitmap)
 //		delete bitmap;	
@@ -124,7 +124,7 @@ ITexture::~ITexture() {
 }
 
 
-//#ifdef __SLANGER__
+//#ifdef __COMPOSER__
 //
 //wxBitmap *
 //ITexture::getBitmap(void) {
