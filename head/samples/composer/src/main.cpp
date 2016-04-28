@@ -380,9 +380,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	m_Canvas->setCamera();
 
 	// Dialogs //
-	DlgLog::SetParent(this);
-	DlgLog::Instance()->updateDlg();
 	DlgOGL::SetParent(this);
+	DlgLog::Instance()->updateDlg();
 	DlgTextureLib::SetParent(this);
 	DlgCameras::SetParent(this);
 	DlgMaterials::SetParent(this);

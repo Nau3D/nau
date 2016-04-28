@@ -177,6 +177,7 @@ void
 PhysicsManager::build() {
 
 	if (!m_Built && m_PhysInst) {
+		// Falta passar aqui as propriedades globais
 		m_PhysInst->build();
 		m_Built = true;
 	}
