@@ -1042,7 +1042,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				if (pMaterial)
 					mg = MaterialGroup::Create(i.get(), pMaterial);
 				else
-					mg = MaterialGroup::Create(i.get(), "dirLightDifAmbPix");
+					mg = MaterialGroup::Create(i.get(), "__nauDefault");
 
 				std::shared_ptr<VertexData> &v = i->getVertexData();
 				std::string bufferName;

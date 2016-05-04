@@ -122,7 +122,7 @@ Pass::Init() {
 Pass::Pass (const std::string &passName) :
 	m_ClassName("default"),
 	m_Name (passName),
-	m_CameraName ("default"),
+	m_CameraName ("__nauDefault"),
 	m_SceneVector(),
 	m_MaterialMap(),
 	m_Viewport (0),
