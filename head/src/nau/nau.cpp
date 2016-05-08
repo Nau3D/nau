@@ -179,7 +179,7 @@ Nau::init (bool context, std::string aConfigFile) {
 	EVENTMANAGER->addListener("WINDOW_SIZE_CHANGED",this);
 
 	m_DefaultState = IState::create();
-	m_Viewport = m_pRenderManager->createViewport("defaultFixedVP");
+	m_Viewport = m_pRenderManager->createViewport("__nauDefault");
 
 	// Init LUA
 #ifdef NAU_LUA
@@ -1175,7 +1175,7 @@ void
 Nau::clear() {
 
 	RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
-	setActiveCameraName("");
+	setActiveCameraName("__nauDefault");
 	SceneObject::ResetCounter();
 	MATERIALLIBMANAGER->clear();
 	EVENTMANAGER->clear();
@@ -1187,7 +1187,7 @@ Nau::clear() {
 	UniformBlockManager::DeleteInstance();
 	m_pPhysicsManager->clear();
 
-	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
+	m_Viewport = RENDERMANAGER->createViewport("__nauDefault");
 
 	ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
 
@@ -1214,7 +1214,7 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 	
 																											//std::string wl = "My AT Bar";
 	//INTERFACE->createWindow(wn, wl);
-	////INTERFACE->addVar("test", "Viewport_Size", "VIEWPORT", "defaultFixedVP", "SIZE", 0);
+	////INTERFACE->addVar("test", "Viewport_Size", "VIEWPORT", "__nauDefault", "SIZE", 0);
 	////INTERFACE->addVar("test", "Camera_Far", "CAMERA", "MainCamera", "FAR", 0);
 	////INTERFACE->addVar("test", "Depth_Func", "STATE", "nau_material_lib::__Emission Purple", "DEPTH_FUNC");
 	//INTERFACE->addPipelineList("test", "Step");
@@ -1297,7 +1297,7 @@ Nau::appendModel(std::string fileName) {
 void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 
 	Camera *aNewCam = m_pRenderManager->getCamera ("MainCamera").get();
-	std::shared_ptr<Viewport> v = m_pRenderManager->getViewport("defaultFixedVP");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	std::shared_ptr<Viewport> v = m_pRenderManager->getViewport("__nauDefault");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	aNewCam->setViewport (v);
 
 	setActiveCameraName("MainCamera");

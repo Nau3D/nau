@@ -90,7 +90,7 @@ MaterialLibManager::createMaterial(const std::string &material) {
 
 	std::shared_ptr<Material> mat;
 
-	std::shared_ptr<Material> &m = getMaterial(DEFAULTMATERIALLIBNAME, "dirLightDifAmbPix");
+	std::shared_ptr<Material> &m = getMaterial(DEFAULTMATERIALLIBNAME, "__nauDefault");
 	if (m)
 		mat = cloneMaterial(m);
 	else 
@@ -107,7 +107,7 @@ MaterialLibManager::createMaterial(const std::string &library, const std::string
 
 	std::shared_ptr<Material> mat;
 
-	std::shared_ptr<Material> &m = getMaterial(DEFAULTMATERIALLIBNAME, "dirLightDifAmbPix");
+	std::shared_ptr<Material> &m = getMaterial(DEFAULTMATERIALLIBNAME, "__nauDefault");
 	if (m)
 		mat = cloneMaterial(m);
 	else 
