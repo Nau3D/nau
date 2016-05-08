@@ -86,17 +86,17 @@ PhysicsDummy::setSceneTransform(const std::string & scene, float * transform) {
 }
 
 
-void
-PhysicsDummy::getGlobalProperties(std::map < std::string, Prop> *m) {
+std::map < std::string, IPhysics::Prop> &
+PhysicsDummy::getGlobalProperties() {
 
-
+	return m_GlobalProps;
 }
 
 
-void
-PhysicsDummy::getMaterialProperties(std::map < std::string, Prop> *m) {
+std::map < std::string, IPhysics::Prop> &
+PhysicsDummy::getMaterialProperties() {
 
-
+	return m_MaterialProps;
 }
 
 

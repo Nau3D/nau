@@ -38,6 +38,7 @@ namespace nau
 			void addScene(nau::scene::IScene *aScene, const std::string &matName);
 			
 			PhysicsMaterial &getMaterial(const std::string &name);
+			void getMaterialNames(std::vector<std::string> *);
 			
 			PhysicsManager::~PhysicsManager();
 

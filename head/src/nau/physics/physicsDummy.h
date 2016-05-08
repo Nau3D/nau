@@ -31,8 +31,8 @@ namespace nau
 			virtual float *getSceneTransform(const std::string &scene);
 			virtual void setSceneTransform(const std::string &scene, float *transform);
 
-			void getGlobalProperties(std::map < std::string, Prop> *);
-			void getMaterialProperties(std::map < std::string, Prop> *);
+			std::map < std::string, Prop> &getGlobalProperties();
+			std::map < std::string, Prop> &getMaterialProperties();
 		};
 	};
 };

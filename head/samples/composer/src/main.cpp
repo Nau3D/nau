@@ -91,6 +91,10 @@ int idMenuDlgShaders = wxNewId();
 int idMenuDlgAtomics = wxNewId();
 int idMenuDlgBuffers = wxNewId();
 int idMenuDlgRT = wxNewId();
+// Physics Menu
+int idMenuPhysicsOn = wxNewId();
+int idMenuPhysicsOff = wxNewId();
+int idMenuDlgPhysics = wxNewId();
 // Debug Menu
 int idMenuDbgBreak = wxNewId();
 int idMenuDlgStep = wxNewId();
@@ -104,11 +108,6 @@ int idMenuProfileReset = wxNewId();
 // About Menu
 int idMenuAbout = wxNewId();
 int idMenuDlgOGL = wxNewId();
-
-//int idMenuPhysicsBuild = wxNewId();
-//int idMenuPhysicsOn = wxNewId();
-//int idMenuPhysicsOff = wxNewId();
-
 
 BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
 // File Menu
@@ -135,6 +134,9 @@ EVT_MENU(idMenuDlgAtomics, FrmMainFrame::OnDlgAtomics)
 EVT_MENU(idMenuDlgShaders, FrmMainFrame::OnDlgShaders)
 EVT_MENU(idMenuDlgBuffers, FrmMainFrame::OnDlgBuffers)
 EVT_MENU(idMenuDlgRT, FrmMainFrame::OnDlgRenderTargets)
+// Physics Menu
+EVT_MENU_RANGE(idMenuPhysicsOn, idMenuPhysicsOff, FrmMainFrame::OnPhysicsMode)
+EVT_MENU(idMenuDlgPhysics, FrmMainFrame::OnDlgPhysics)
 // Debug Menu
 EVT_MENU(idMenuDlgLog, FrmMainFrame::OnDlgLog)
 EVT_MENU(idMenuDbgBreak, FrmMainFrame::OnBreakResume)
@@ -151,7 +153,6 @@ EVT_MENU(idMenuAbout, FrmMainFrame::OnAbout)
 
 EVT_KEY_DOWN(FrmMainFrame::OnKeyDown)
 	
-//EVT_MENU_RANGE(idMenuPhysicsOn, idMenuPhysicsOff, FrmMainFrame::OnPhysicsMode)
 //EVT_MENU(idMenuPhysicsBuild, FrmMainFrame::OnPhysicsBuild)
 	
 EVT_CLOSE(FrmMainFrame::OnClose)
@@ -257,6 +258,15 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	
 	mbar->Append (materialsMenu, _("&Materials"));
 
+	// Physics Menu
+
+	physicsMenu = new wxMenu(_T(""));
+	physicsMenu->Append(idMenuDlgPhysics, _("Physics Property Manager"), _(""));
+	physicsMenu->AppendRadioItem (idMenuPhysicsOn, _("Physics On"), _("Physics On"));
+	physicsMenu->AppendRadioItem (idMenuPhysicsOff, _("Physics Off"), _("Physics Off"));
+	physicsMenu->Check (idMenuPhysicsOff, true);
+	mbar->Append (physicsMenu, _("Physics"));
+
 	// Debug Menu
 
 	debugMenu = new wxMenu(_T(""));
@@ -294,10 +304,6 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
 	//wxMenu* physicsMenu = new wxMenu(_T(""));
 	//physicsMenu->Append (idMenuPhysicsBuild, _("&Build physics"), _("Builds physics"));
-	//physicsMenu->AppendRadioItem (idMenuPhysicsOn, _("Physics On"), _("Physics On"));
-	//physicsMenu->AppendRadioItem (idMenuPhysicsOff, _("Physics Off"), _("Physics Off"));
-	//physicsMenu->Check (idMenuPhysicsOff, true);
-	//mbar->Append (physicsMenu, _("Physics"));
 
     SetMenuBar(mbar);
 
@@ -382,6 +388,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	// Dialogs //
 	DlgOGL::SetParent(this);
 	DlgLog::Instance()->updateDlg();
+	DlgPhysics::SetParent(this);
 	DlgTextureLib::SetParent(this);
 	DlgCameras::SetParent(this);
 	DlgMaterials::SetParent(this);
@@ -544,6 +551,7 @@ FrmMainFrame::updateDlgs() {
 	DlgDbgPrograms::Instance()->updateDlg();
 	DlgTrace::Instance()->updateDlg();
 	DlgRenderTargets::Instance()->updateDlg();
+	DlgPhysics::Instance()->updateDlg();
 
 	renderMenu->Enable(idMenuDlgPass, true);
 	renderMenu->Enable(idMenuWireframe, true);
@@ -698,34 +706,6 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event) {
 	if (wxID_OK == openFileDlg->ShowModal ()) {
 		wxString path = openFileDlg->GetPath ();
 		loadProject(path.c_str());
-//		wxStopWatch aTimer;
-//		aTimer.Start();
-//
-//		try {
-//			m_pRoot->clear();
-//			DlgLog::Instance()->updateDlg();
-//			DlgLog::Instance()->clear();
-//			int width=0, height=0;
-//			std::string ProjectFile ((const char *) path.c_str());
-//			m_pRoot->readProjectFile (ProjectFile, &width,&height);
-//			if (width)
-//				SetClientSize(width,height);
-//			m_Canvas->setCamera();
-//			updateDlgs();
-//#ifndef FINAL
-//
-//			float t =  aTimer.Time()/1000.0;
-//			SLOG("Elapsed time: %f", t);
-//#endif
-//
-//			DlgTrace::Instance()->clear();
-//
-//		} catch (nau::ProjectLoaderError &e) {
-//		  wxMessageBox (wxString (e.getException().c_str()));
-//		} 	
-//		catch (std::string s) {
-//			wxMessageBox(wxString (s.c_str()));
-//		}
 	}
 	delete openFileDlg;
 }
@@ -959,11 +939,11 @@ FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event) {
 }
 
 
-//void
-//FrmMainFrame::OnPhysicsBuild (wxCommandEvent &event)
-//{
-//	buildPhysics();
-//}
+void
+FrmMainFrame::OnDlgPhysics (wxCommandEvent &event) {
+
+	DlgPhysics::Instance()->Show(TRUE);
+}
 
 //void
 //FrmMainFrame::buildPhysics(void) {
@@ -981,21 +961,19 @@ FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event) {
 //
 
 
-//void
-//FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
-//{
-//	nau::scene::Camera *cam = NAU->getActiveCamera ();
-//
-//	if (idMenuPhysicsOn == event.GetId()) {
-//		m_pRoot->enablePhysics();		
-//		cam->setDynamic(true);
-//	}
-//	
-//	if (idMenuPhysicsOff == event.GetId()) {
-//		m_pRoot->disablePhysics();	
-//		cam->setDynamic(false);
-//	}
-//}
+void
+FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
+{
+	nau::scene::Camera *cam = NAU->getActiveCamera ();
+
+	if (idMenuPhysicsOn == event.GetId()) {
+		m_pRoot->enablePhysics();		
+	}
+	
+	if (idMenuPhysicsOff == event.GetId()) {
+		m_pRoot->disablePhysics();	
+	}
+}
 
 
 

@@ -48,11 +48,10 @@ PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false) {
 	if (!m_PhysInst)
 		return;
 
-	std::map < std::string, IPhysics::Prop> props;
-	m_PhysInst->getGlobalProperties(&props);
+	std::map < std::string, IPhysics::Prop> &props = m_PhysInst->getGlobalProperties();
 
 	int k = 0;
-	for (auto p : props) {
+	for (auto &p : props) {
 		Enums::DataType dt = p.second.propType == IPhysics::FLOAT ? Enums::FLOAT : Enums::VEC4;
 		if (p.second.propType == IPhysics::FLOAT) 
 			Attribs.add(Attribute(k, p.first, Enums::FLOAT, false, new NauFloat(p.second.x)));
@@ -60,10 +59,10 @@ PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false) {
 			Attribs.add(Attribute(k, p.first, Enums::VEC4, false, new vec4(p.second.x, p.second.y, p.second.z, p.second.w)));
 	}
 
-	props.clear();
-	m_PhysInst->getMaterialProperties(&props);
+	
+	std::map < std::string, IPhysics::Prop> &propsM = m_PhysInst->getMaterialProperties();
 	k = 0;
-	for (auto p : props) {
+	for (auto &p : propsM) {
 		Enums::DataType dt = p.second.propType == IPhysics::FLOAT ? Enums::FLOAT : Enums::VEC4;
 		if (p.second.propType == IPhysics::FLOAT)
 			PhysicsMaterial::Attribs.add(Attribute(k, p.first, Enums::FLOAT, false, new NauFloat(p.second.x)));
@@ -256,4 +255,13 @@ PhysicsManager::getMaterial(const std::string &name) {
 		m_MatLib[name] = PhysicsMaterial();
 
 	return m_MatLib[name];
+}
+
+
+void
+PhysicsManager::getMaterialNames(std::vector<std::string> *v) {
+
+	for (auto s : m_MatLib) {
+		v->push_back(s.first);
+	}
 }

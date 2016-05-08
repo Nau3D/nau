@@ -35,8 +35,8 @@ public:
 	float *getSceneTransform(const std::string &scene);
 	void setSceneTransform(const std::string &scene, float *transform);
 
-	void getGlobalProperties(std::map < std::string, Prop> *);
-	void getMaterialProperties(std::map < std::string, Prop> *);
+	std::map < std::string, Prop> &getGlobalProperties();
+	std::map < std::string, Prop> &getMaterialProperties();
 };
 
 extern "C" {

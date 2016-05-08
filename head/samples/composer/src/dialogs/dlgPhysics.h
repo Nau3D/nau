@@ -48,20 +48,20 @@ protected:
 	static DlgPhysics *Inst;
 
 	/* GLOBAL STUFF */
-	std::string m_Active;
+	std::string m_Active, m_Name;
 
 	wxPropertyGridManager *m_PGGlobal, *m_PGMat;
 	wxComboBox *m_List;
 
 	/* EVENTS */
 	void OnListSelect(wxCommandEvent& event);
-	void OnGlobalPropsChange( wxPropertyGridEvent& e);
+	//void OnGlobalPropsChange( wxPropertyGridEvent& e);
 	void OnMaterialPropsChange(wxPropertyGridEvent& e);
 
 	void update();
+	void updateList();
 	void setupPanel(wxSizer *siz, wxWindow *parent);
 	void setupGrid();
-
 
 	enum {
 		DLG_COMBO,
