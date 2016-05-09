@@ -4,7 +4,7 @@
 #pragma warning( disable: 4299)
 #pragma warning( disable: 4099)
 
-//#include <vld.h>
+#include <vld.h>
 
 #include <main.h>
 #include <glcanvas.h>
@@ -62,6 +62,8 @@ bool WndComposer::OnInit()
     frame->Show();
     return true;
 }
+
+
 
 // Menu Options 
 // File Menu
@@ -322,7 +324,6 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	//}
 #endif
 
-
 	m_pRoot = nau::Nau::Create();
 
 
@@ -442,8 +443,14 @@ FrmMainFrame::~FrmMainFrame() {
 void 
 FrmMainFrame::OnClose(wxCloseEvent& event) {
 
-	delete m_pRoot;
-	Destroy();  
+	if (m_pRoot) {
+		delete m_pRoot;
+		m_pRoot = NULL;
+		m_Canvas->setEngine(NULL);
+		delete m_Canvas;
+	}
+	Destroy();
+	wxExit();
 }
 
 
@@ -800,7 +807,7 @@ FrmMainFrame::OnProcess (wxCommandEvent& event) {
 
 void FrmMainFrame::OnQuit(wxCommandEvent& event) {
 
-	Close();
+	Close(true);
 }
 
 

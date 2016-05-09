@@ -113,31 +113,20 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 }
 
 
-ITexture::ITexture(std::string label) :m_Label(label)/*, bitmap(0), m_Bitmap(0)*/ {
+ITexture::ITexture(std::string label) :m_Label(label), data(NULL)/*, bitmap(0), m_Bitmap(0)*/ {
 
 	registerAndInitArrays(Attribs);
+	
 }
 
 
 ITexture::~ITexture() {
 
-//#ifdef __COMPOSER__
-//
-//	if (bitmap)
-//		delete bitmap;	
-//#endif
+	if (data) {
+		free(data);
+		data = NULL;
+	}
 }
-
-
-//#ifdef __COMPOSER__
-//
-//wxBitmap *
-//ITexture::getBitmap(void) {
-//
-//	return bitmap;	
-//}
-//#endif
-
 
 std::string&
 ITexture::getLabel (void) {

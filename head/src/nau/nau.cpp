@@ -105,7 +105,6 @@ Nau::Nau() :
 	m_LuaState(0),
 	m_ProfileResetRequest(false)
 {
-
 }
 
 
@@ -117,6 +116,7 @@ Nau::~Nau() {
 	m_Viewport.reset();
 	delete EVENTMANAGER;
 	m_pEventManager = NULL;
+	delete m_pPhysicsManager;
 
 	delete m_DefaultState; 
 	delete m_pAPISupport;
@@ -1348,6 +1348,9 @@ void
 Nau::step() {
 
 	IRenderer *renderer = RENDERER;
+	if (!renderer)
+		return;
+
 	float timer = (float)(clock() * INV_CLOCKS_PER_MILISEC);
 	if (NO_TIME == m_LastFrameTime) {
 		m_LastFrameTime = timer;
@@ -1356,7 +1359,7 @@ Nau::step() {
 	m_LastFrameTime = timer;
 
 	m_TraceOn = m_TraceFrames != 0;
-	m_TraceFrames = RENDERER->setTrace(m_TraceFrames);
+	m_TraceFrames = renderer->setTrace(m_TraceFrames);
 	if (m_TraceOn) {
 		LOG_trace("#NAU(FRAME,START)");
 	}
@@ -1380,14 +1383,14 @@ Nau::step() {
 
 	m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
 
-	unsigned int k = RENDERER->getPropui(IRenderer::FRAME_COUNT);
+	unsigned int k = renderer->getPropui(IRenderer::FRAME_COUNT);
 	if (k == UINT_MAX)
 		// 2 avoid issues with run_once and skip_first
 		// and allows a future implementation of odd and even frames for
 		// ping-pong rendering
-		RENDERER->setPropui(IRenderer::FRAME_COUNT, 2);
+		renderer->setPropui(IRenderer::FRAME_COUNT, 2);
 	else
-		RENDERER->setPropui(IRenderer::FRAME_COUNT, ++k);
+		renderer->setPropui(IRenderer::FRAME_COUNT, ++k);
 
 	if (m_Physics)
 		m_pPhysicsManager->update();
@@ -1691,7 +1694,12 @@ Nau::getEventManager (void) {
 
 nau::render::IRenderer * 
 Nau::getRenderer(void) {
-	return getRenderManager()->getRenderer();
+
+	RenderManager *r = getRenderManager();
+	if (r)
+		return r->getRenderer();
+	else
+		return NULL;
 }
 
 

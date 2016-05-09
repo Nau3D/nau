@@ -114,7 +114,7 @@ namespace nau
 
 
 			/// For inheritance reasons only
-			ITexture() {/*bitmap=NULL;*/};
+			ITexture():data(NULL) {/*bitmap=NULL;*/};
 
 			static bool Init();
 			static bool Inited;
