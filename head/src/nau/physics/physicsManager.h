@@ -18,7 +18,7 @@ namespace nau
 	{
 		class PhysicsManager: public AttributeValues
 		{
-		
+			friend class PhysicsMaterial;
 		public:
 		
 			FLOAT4_PROP(GRAVITY, 0);
@@ -39,6 +39,12 @@ namespace nau
 			
 			PhysicsMaterial &getMaterial(const std::string &name);
 			void getMaterialNames(std::vector<std::string> *);
+
+
+			void setPropf(FloatProperty p, float value);
+			void setPropf4(Float4Property p, vec4 &value);
+
+
 			
 			PhysicsManager::~PhysicsManager();
 
@@ -46,7 +52,13 @@ namespace nau
 		
 			PhysicsManager::PhysicsManager();
 			
+			void applyMaterialFloatProperty(const std::string &matName, const std::string &property, float value);
+			void applyMaterialVec4Property(const std::string &matName, const std::string &property, float *value);
+
 			IPhysics *loadPlugin();
+
+			void applyGlobalFloatProperty(const std::string &property, float value);
+			void applyGlobalVec4Property(const std::string &property, float *value);
 
 			static PhysicsManager *PhysManInst;
 			IPhysics *m_PhysInst;

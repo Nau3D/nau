@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
 	try {
 		NAU->init(true);
 		if (argc == 1)
-			s = "C:\\nau\\head\\projects\\simpe\\simple.xml";
+			s = "C:\\nau\\head\\projects\\simple\\simple.xml";
 		else
 			s = std::string(argv[1]);
 		std::string appPath = nau::system::File::GetAppFolder();

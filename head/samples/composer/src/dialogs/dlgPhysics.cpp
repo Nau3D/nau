@@ -12,7 +12,7 @@ using namespace nau::physics;
 BEGIN_EVENT_TABLE(DlgPhysics, wxDialog)
 	EVT_COMBOBOX(DLG_COMBO, DlgPhysics::OnListSelect)
 	//EVT_PG_CHANGED( DLG_PROPS_GLOBAL, DlgPhysics::OnGlobalPropsChange )
-	EVT_PG_CHANGED(DLG_PROPS_GLOBAL, DlgPhysics::OnMaterialPropsChange)
+	EVT_PG_CHANGED(DLG_PROPS_MAT, DlgPhysics::OnMaterialPropsChange)
 	END_EVENT_TABLE()
 
 

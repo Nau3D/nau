@@ -37,7 +37,7 @@ Physics::Create() {
 }
 
 
-Physics::Physics()  {
+Physics::Physics() {
 
 	m_GlobalProps["GRAVITY"] = Prop(IPhysics::VEC4, 0.0f, 9.8f, 0.0f, 0.0f);
 	m_GlobalProps["K"] = Prop(IPhysics::FLOAT, 0.1f);
@@ -53,14 +53,14 @@ Physics::~Physics(void) {
 }
 
 
-std::map < std::string, nau::physics::IPhysics::Prop> &
+std::map<std::string, nau::physics::IPhysics::Prop> &
 Physics::getGlobalProperties() {
 
 	return m_GlobalProps;
 }
 
 
-std::map < std::string, nau::physics::IPhysics::Prop> &
+std::map<std::string, nau::physics::IPhysics::Prop> &
 Physics::getMaterialProperties() {
 
 	return m_MaterialProps;
@@ -155,7 +155,5 @@ Physics::setSceneTransform(const std::string & scene, float * transform) {
 
 	m_Scenes[scene].transform = transform;
 }
-
-
 
 

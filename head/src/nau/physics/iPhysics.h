@@ -4,6 +4,7 @@
 #include "nau/math/data.h"
 
 #include <map>
+#include <memory>
 #include <string>
 
 
@@ -65,8 +66,8 @@ namespace nau
 			virtual float *getSceneTransform(const std::string &scene) = 0;
 			virtual void setSceneTransform(const std::string &scene, float *transform) = 0;
 
-			virtual std::map < std::string, Prop> &getGlobalProperties() = 0;
-			virtual std::map < std::string, Prop> &getMaterialProperties() = 0;
+			virtual std::map<std::string, nau::physics::IPhysics::Prop> &getGlobalProperties() = 0;
+			virtual std::map<std::string, nau::physics::IPhysics::Prop> &getMaterialProperties() = 0;
 
 		protected:
 

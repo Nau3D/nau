@@ -451,6 +451,7 @@ FrmMainFrame::OnClose(wxCloseEvent& event) {
 
 	delete m_pRoot;
 	Destroy();  
+	::wxExit();
 }
 
 
