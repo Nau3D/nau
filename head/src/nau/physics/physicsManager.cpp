@@ -48,11 +48,10 @@ PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false) {
 	if (!m_PhysInst)
 		return;
 
-	std::map < std::string, IPhysics::Prop> props;
-	m_PhysInst->getGlobalProperties(&props);
+	std::map < std::string, IPhysics::Prop> &props = m_PhysInst->getGlobalProperties();
 
 	int k = 0;
-	for (auto p : props) {
+	for (auto &p : props) {
 		Enums::DataType dt = p.second.propType == IPhysics::FLOAT ? Enums::FLOAT : Enums::VEC4;
 		if (p.second.propType == IPhysics::FLOAT) 
 			Attribs.add(Attribute(k, p.first, Enums::FLOAT, false, new NauFloat(p.second.x)));
@@ -60,10 +59,10 @@ PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false) {
 			Attribs.add(Attribute(k, p.first, Enums::VEC4, false, new vec4(p.second.x, p.second.y, p.second.z, p.second.w)));
 	}
 
-	props.clear();
-	m_PhysInst->getMaterialProperties(&props);
+	
+	std::map<std::string, nau::physics::IPhysics::Prop> &propsM = m_PhysInst->getMaterialProperties();
 	k = 0;
-	for (auto p : props) {
+	for (auto &p : propsM) {
 		Enums::DataType dt = p.second.propType == IPhysics::FLOAT ? Enums::FLOAT : Enums::VEC4;
 		if (p.second.propType == IPhysics::FLOAT)
 			PhysicsMaterial::Attribs.add(Attribute(k, p.first, Enums::FLOAT, false, new NauFloat(p.second.x)));
@@ -106,7 +105,7 @@ PhysicsManager::loadPlugin() {
 		HINSTANCE mod = LoadLibraryA(fn.c_str());
 
 		if (!mod) {
-			SLOG("Library %s wasn't loaded successfully!", fn.c_str());
+			//SLOG("Library %s wasn't loaded successfully!", fn.c_str());
 			return NULL;
 		}
 
@@ -115,7 +114,7 @@ PhysicsManager::loadPlugin() {
 		getClassNameProc getClassNameFunc = (getClassNameProc)GetProcAddress(mod, "getClassName");
 
 		if (!initFunc || !createPhys || !getClassNameFunc) {
-			SLOG("%s: Invalid Plugin DLL:  'init', 'createPhys' and 'getClassName' must be defined", fn.c_str());
+			//SLOG("%s: Invalid Plugin DLL:  'init', 'createPhys' and 'getClassName' must be defined", fn.c_str());
 			return NULL;
 		}
 		else
@@ -125,7 +124,7 @@ PhysicsManager::loadPlugin() {
 		
 		// push the objects and modules into our vectors
 		char *s = getClassNameFunc();
-		SLOG("Physics plugin %s (%s) loaded successfully", fn.c_str(), s);
+		//SLOG("Physics plugin %s (%s) loaded successfully", fn.c_str(), s);
 	
 
 		IPhysics *ip = (IPhysics *)createPhys();
@@ -249,11 +248,92 @@ PhysicsManager::updateProps() {
 }
 
 
+void 
+PhysicsManager::setPropf(FloatProperty p, float value) {
+
+	m_FloatProps[p] = value;
+	applyGlobalFloatProperty(Attribs.getName(p, Enums::FLOAT), value);
+}
+
+
+void 
+PhysicsManager::setPropf4(Float4Property p, vec4 &value) {
+
+	m_Float4Props[p] = value;
+	applyGlobalVec4Property(Attribs.getName(p, Enums::VEC4), &value.x);
+}
+
+
+void
+PhysicsManager::applyGlobalFloatProperty(const std::string &property, float value) {
+
+	if (!m_PhysInst)
+		return;
+	
+	m_PhysInst->applyGlobalFloatProperty(property, value);
+}
+
+
+void
+PhysicsManager::applyGlobalVec4Property(const std::string &property, float *value) {
+
+	if (!m_PhysInst)
+		return;
+
+	m_PhysInst->applyGlobalVec4Property(property, value);
+}
+
+
+void
+PhysicsManager::applyMaterialFloatProperty(const std::string &matName, const std::string &property, float value) {
+
+	if (!m_PhysInst || m_MatLib.count(matName) == 0)
+		return;
+
+	int id = PhysicsMaterial::Attribs.getID(property);
+
+	if (id != -1) {
+		for (auto &sc : m_Scenes) {
+			if (sc.second == matName)
+				m_PhysInst->applyFloatProperty(sc.first->getName(), property, value);
+		}
+		
+	}
+
+}
+
+
+void
+PhysicsManager::applyMaterialVec4Property(const std::string &matName, const std::string &property, float *value) {
+
+	if (!m_PhysInst)
+		return;
+
+	int id = Attribs.getID(property);
+
+	if (id != -1) {
+		for (auto &sc : m_Scenes) {
+			if (sc.second == matName)
+				m_PhysInst->applyVec4Property(sc.first->getName(), property, value);
+		}
+	}
+}
+
+
 PhysicsMaterial &
 PhysicsManager::getMaterial(const std::string &name) {
 
 	if (!m_MatLib.count(name))
-		m_MatLib[name] = PhysicsMaterial();
+		m_MatLib[name] = PhysicsMaterial(name);
 
 	return m_MatLib[name];
+}
+
+
+void
+PhysicsManager::getMaterialNames(std::vector<std::string> *v) {
+
+	for (auto s : m_MatLib) {
+		v->push_back(s.first);
+	}
 }

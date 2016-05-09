@@ -37,7 +37,13 @@ Physics::Create() {
 }
 
 
-Physics::Physics()  {
+Physics::Physics() {
+
+	m_GlobalProps["GRAVITY"] = Prop(IPhysics::VEC4, 0.0f, 9.8f, 0.0f, 0.0f);
+	m_GlobalProps["K"] = Prop(IPhysics::FLOAT, 0.1f);
+
+	m_MaterialProps["ACCELERATION"] = Prop(IPhysics::VEC4, 1.0f, 0.0f, 0.0f, 0.0f);
+	m_MaterialProps["MASS"] = Prop(IPhysics::FLOAT, 1.0f);
 
 }
 
@@ -47,20 +53,17 @@ Physics::~Physics(void) {
 }
 
 
-void
-Physics::getGlobalProperties(std::map < std::string, Prop> *m) {
+std::map<std::string, nau::physics::IPhysics::Prop> &
+Physics::getGlobalProperties() {
 
-	(*m)["GRAVITY"] = Prop(IPhysics::VEC4, 0.0f, 9.8f, 0.0f, 0.0f);
-	(*m)["K"] = Prop(IPhysics::FLOAT, 0.1f);
+	return m_GlobalProps;
 }
 
 
-void
-Physics::getMaterialProperties(std::map < std::string, Prop> *m ) {
+std::map<std::string, nau::physics::IPhysics::Prop> &
+Physics::getMaterialProperties() {
 
-	(*m)["ACCELERATION"] = Prop(IPhysics::VEC4, 1.0f, 0.0f, 0.0f, 0.0f);
-	(*m)["MASS"] = Prop(IPhysics::FLOAT, 1.0f);
-
+	return m_MaterialProps;
 }
 
 
@@ -152,6 +155,5 @@ Physics::setSceneTransform(const std::string & scene, float * transform) {
 
 	m_Scenes[scene].transform = transform;
 }
-
 
 

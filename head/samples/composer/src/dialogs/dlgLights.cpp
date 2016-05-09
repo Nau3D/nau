@@ -117,60 +117,9 @@ DlgLights::setupPanel(wxSizer *siz, wxWindow *parent) {
            );
 
 	m_PG->AddPage(wxT("Lights"));
-	//wxPropertyGridPage* pgPropsPage = m_PG->GetPage("Cameras");
-
-//	const wxChar* lightType[] = { wxT("DIRECTIONAL"), wxT("POINT"), wxT("SPOT"), NULL};
-//	const long lightTypeInd[] = { Light::DIRECTIONAL, Light::POSITIONAL, Light::SPOT_LIGHT};
-
-	//m_PG->Append(new wxStringProperty(wxT("Name"),wxPG_LABEL,""));
- 	//m_PG->DisableProperty(wxT("Name"));
-
-//	m_PG->Append(new wxEnumProperty(wxT("TYPE"),wxPG_LABEL,lightType,lightTypeInd,Light::DIRECTIONAL));
- /*   m_PG->Append( new wxBoolProperty( wxT("ENABLED"), wxPG_LABEL ) );
-
-	wxPGProperty* topId;
-	
-	topId= m_PG->Append( new wxStringProperty(wxT("POSITION"), wxPG_LABEL, wxT("<composed>")) );
-
-    m_PG->AppendIn( topId, new wxFloatProperty( wxT("X"), wxPG_LABEL ) );
-    m_PG->AppendIn( topId, new wxFloatProperty( wxT("Y"), wxPG_LABEL ) );
-    m_PG->AppendIn( topId, new wxFloatProperty( wxT("Z"), wxPG_LABEL ) );
-
-	topId= m_PG->Append( new wxStringProperty(wxT("DIRECTION"), wxPG_LABEL, wxT("<composed>")) );
-
-    m_PG->AppendIn( topId, new wxFloatProperty( wxT("X"), wxPG_LABEL ) );
-    m_PG->AppendIn( topId, new wxFloatProperty( wxT("Y"), wxPG_LABEL ) );
-    m_PG->AppendIn( topId, new wxFloatProperty( wxT("Z"), wxPG_LABEL ) );
-
-	topId= m_PG->Append( new wxStringProperty(wxT("COLOR"), wxPG_LABEL, wxT("<composed>")) );
-	m_PG->AppendIn(topId,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-					wxColour(255,255,255)));
-
-	topId= m_PG->Append( new wxStringProperty(wxT("AMBIENT"), wxPG_LABEL, wxT("<composed>")) );
-	m_PG->AppendIn(topId,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-					wxColour(255,255,255)));
-
-	topId= m_PG->Append( new wxStringProperty(wxT("SPECULAR"), wxPG_LABEL, wxT("<composed>")) );
-	m_PG->AppendIn(topId,new wxColourProperty(wxT("RGB"),wxPG_LABEL,
-					wxColour(255,255,255)));
-
-	m_PG->Append( new wxFloatProperty(wxT("SPOT_CUTOFF"), wxPG_LABEL ));
-	m_PG->Append( new wxFloatProperty(wxT("SPOT_EXPONENT"), wxPG_LABEL ));
-
-	m_PG->Append( new wxFloatProperty(wxT("CONSTANT_ATT"), wxPG_LABEL));
-	m_PG->Append( new wxFloatProperty(wxT("LINEAR_ATT"), wxPG_LABEL));
-	m_PG->Append( new wxFloatProperty(wxT("QUADRATIC_ATT"), wxPG_LABEL));
-
-	if (count)
-		update();*/
 
 	m_PG->SetSplitterLeft(true);
-//	m_PG->SetSplitterPosition(100);
 	siz->Add(m_PG,1, wxEXPAND|wxALL,5);
-
-	//wxBoxSizer *sizH2 = new wxBoxSizer(wxHORIZONTAL);
-	//sizH2->Add(m_PG,1,wxALIGN_CENTER_HORIZONTAL | wxGROW | wxALL  ,5);
-	//siz->Add(sizH2,1,wxGROW|wxALL|wxEXPAND,5);
 
 	/* BOTTOM: Add Light Button */
 

@@ -13,6 +13,7 @@
 #include "dialogs/dlgLights.h"
 #include "dialogs/dlgShaders.h"
 #include "dialogs/dlgScenes.h"
+#include "dialogs/dlgPhysics.h"
 #include "dialogs/dlgPass.h"
 #include "dialogs/dlgTrace.h"
 #include "dialogs/dlgDbgPrograms.h"
@@ -50,7 +51,7 @@ public:
 
 private:
    GLCanvas *m_Canvas;
-	wxMenu *fileMenu, *renderMenu, *assetsMenu, *materialsMenu, 
+	wxMenu *fileMenu, *renderMenu, *assetsMenu, *materialsMenu, *physicsMenu,
 		*debugMenu, *aboutMenu;
 	bool m_Inited, m_Tracing;
 
@@ -83,6 +84,8 @@ private:
 	void OnDlgBuffers(wxCommandEvent& event);
 	void OnDlgRenderTargets(wxCommandEvent& event);
 
+	void OnDlgPhysics(wxCommandEvent& event);
+
 	void OnDlgLog(wxCommandEvent& event);
 	void OnBreakResume(wxCommandEvent& event);
 	void OnDlgDbgStep(wxCommandEvent& event);
@@ -94,6 +97,7 @@ private:
 	void OnProfileReset(wxCommandEvent& event);
 
 
+	
 	void OnDlgOGL(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 
@@ -112,7 +116,7 @@ private:
 
 	//void buildPhysics (void);
 	//void OnPhysicsBuild (wxCommandEvent &event);
-	//void OnPhysicsMode (wxCommandEvent &event);
+	void OnPhysicsMode (wxCommandEvent &event);
 	
 };
 
