@@ -87,8 +87,11 @@ IPhysics *
 PhysicsManager::loadPlugin() {
 
 	std::vector<std::string> files;
+#ifdef _DEBUG
+	nau::system::File::GetFilesInFolder(".\\nauSettings\\plugins\\physics_d\\", "dll", &files);
+#else
 	nau::system::File::GetFilesInFolder(".\\nauSettings\\plugins\\physics\\", "dll", &files);
-
+#endif
 	typedef void (__cdecl *initProc)(void);
 	typedef void *(__cdecl *createPhysics)(void);
 	typedef char *(__cdecl *getClassNameProc)(void);
