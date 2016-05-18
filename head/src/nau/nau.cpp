@@ -1207,29 +1207,6 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 	}
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
-
-	// Physics Dummy test Init
-
-<<<<<<< HEAD
-	//m_pPhysicsManager->addScene(nau::physics::IPhysics::CLOTH, RENDERMANAGER->getScene("CubeLand").get());
-
-	//std::string wn = "test";
-	//std::string wl = "My AT Bar";
-=======
-	//m_pPhysicsManager->addScene(RENDERMANAGER->getScene("CubeLand").get(), "BLE");	//std::string wn = "test";
-	
-																											//std::string wl = "My AT Bar";
->>>>>>> physics
-	//INTERFACE->createWindow(wn, wl);
-	////INTERFACE->addVar("test", "Viewport_Size", "VIEWPORT", "__nauDefault", "SIZE", 0);
-	////INTERFACE->addVar("test", "Camera_Far", "CAMERA", "MainCamera", "FAR", 0);
-	////INTERFACE->addVar("test", "Depth_Func", "STATE", "nau_material_lib::__Emission Purple", "DEPTH_FUNC");
-	//INTERFACE->addPipelineList("test", "Step");
-	//INTERFACE->addColor("test", "dark", "RENDERER", "Materials::woodRings", "dark", 0);
-	//INTERFACE->addDir("test", "LightDir", "LIGHT", "Sun", "DIRECTION", 0);
-	//INTERFACE->addVar("test", "normal", "RENDERER", "CURRENT", "NORMAL");
-	//INTERFACE->addVar("test", "view", "CAMERA", "MainCamera", "VIEW_MATRIX");
-	//SLOG("AntTweakBar error : %s", TwGetLastError());
 }
 
 

@@ -60,7 +60,7 @@
       <UniqueIdentifier>{171d6acd-f3bb-41b2-884f-e119203bcdaf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\physics">
-        <UniqueIdentifier>{7e50e0d2-6d5b-4cf1-ab54-0fee5f9feba7}</UniqueIdentifier>
+      <UniqueIdentifier>{7e50e0d2-6d5b-4cf1-ab54-0fee5f9feba7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -529,21 +529,13 @@
     <ClCompile Include="..\src\nau\loader\bufferLoader.cpp">
       <Filter>Source Files\loader</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="..\src\nau\physics\physicsMaterial.cpp">
-=======
     <ClCompile Include="..\src\nau\physics\physicsDummy.cpp">
->>>>>>> physics
       <Filter>Source Files\physics</Filter>
     </ClCompile>
     <ClCompile Include="..\src\nau\physics\physicsManager.cpp">
       <Filter>Source Files\physics</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="..\src\nau\physics\physicsDummy.cpp">
-=======
     <ClCompile Include="..\src\nau\physics\physicsMaterial.cpp">
->>>>>>> physics
       <Filter>Source Files\physics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1073,15 +1065,6 @@
     <ClInclude Include="..\src\nau\physics\iPhysics.h">
       <Filter>Source Files\physics</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="..\src\nau\physics\physicsManager.h">
-      <Filter>Source Files\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\physics\physicsMaterial.h">
-      <Filter>Source Files\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\nau\physics\physicsDummy.h">
-=======
     <ClInclude Include="..\src\nau\physics\physicsDummy.h">
       <Filter>Source Files\physics</Filter>
     </ClInclude>
@@ -1089,7 +1072,6 @@
       <Filter>Source Files\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\physics\physicsMaterial.h">
->>>>>>> physics
       <Filter>Source Files\physics</Filter>
     </ClInclude>
   </ItemGroup>
