@@ -139,7 +139,7 @@ ToolBar::ToolBar() {
 	Mat3 = TwDefineStruct("MAT3", Mat3Members, 9, sizeof(mat3), NULL, NULL);
 	Mat4 = TwDefineStruct("MAT4", Mat4Members, 16, sizeof(mat4), NULL, NULL);
 
-	TwDefine(" Testing iconifiable=true ");
+	//TwDefine(" iconifiable=true ");
 
 	TwHandleErrors(ErrorHandler);
 }
@@ -188,7 +188,7 @@ ToolBar::createWindow(const std::string &label) {
 
 	TwBar *t = TwNewBar(name.c_str());
 	char s[256];
-	sprintf(s, " %s color='25 25 25' alpha=128 text=light label='%s'", name.c_str(), label.c_str());
+	sprintf(s, " %s iconifiable=true color='25 25 25' alpha=128 text=light label='%s' ", name.c_str(), label.c_str());
 	TwDefine(s);
 	if (!t)
 		return false;

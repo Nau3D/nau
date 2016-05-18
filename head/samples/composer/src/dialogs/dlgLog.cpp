@@ -80,9 +80,11 @@ DlgLog::~DlgLog() {
 
 void
 DlgLog::updateDlg() {
-
-	EVENTMANAGER->removeListener("LOG",this);
-	EVENTMANAGER->addListener("LOG",this);
+	EventManager *em = EVENTMANAGER;
+	if (em) {
+		em->removeListener("LOG", this);
+		em->addListener("LOG", this);
+	}
 }
 
 

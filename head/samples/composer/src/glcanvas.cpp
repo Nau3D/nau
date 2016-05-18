@@ -105,6 +105,9 @@ GLCanvas::_setCamera() {
 void 
 GLCanvas::OnPaint (wxPaintEvent &event) {
 
+	if (!m_pEngine)
+		return;
+
 	{
 		PROFILE("Nau");
 		wxPaintDC dc(this);
@@ -144,6 +147,8 @@ void
 GLCanvas::OnIdle(wxIdleEvent& event) {
 
 	//Refresh();
+	if (!m_pEngine)
+		return;
 	{
 		PROFILE("Nau");
 

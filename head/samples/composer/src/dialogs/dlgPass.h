@@ -1,5 +1,5 @@
-#ifndef __SLANGER_DIALOGS_PASS__
-#define __SLANGER_DIALOGS_PASS__
+#ifndef __COMPOSER_DIALOGS_PASS__
+#define __COMPOSER_DIALOGS_PASS__
 
 
 #ifdef __GNUG__

@@ -155,7 +155,15 @@ DevILTextureLoader::convertToFloatLuminance() {
 }
 
 
-void 
+void
+DevILTextureLoader::convertToRGBA() {
+
+	ilBindImage(m_IlId);
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+}
+
+
+void
 DevILTextureLoader::freeImage (void) {
 
 	ilDeleteImage(m_IlId);

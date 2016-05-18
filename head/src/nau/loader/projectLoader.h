@@ -26,6 +26,9 @@ namespace nau
 			// loads a material lib
 			static void loadMatLib (std::string file);
 
+			// loads a physics material lib
+			static void loadPhysLib(std::string file);
+
 			static std::string s_Path;
 			static std::string s_File;
 

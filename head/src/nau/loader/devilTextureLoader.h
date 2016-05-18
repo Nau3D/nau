@@ -32,7 +32,8 @@ namespace nau
 			void freeImage (void);
 
 			virtual void convertToFloatLuminance();
-				
+			virtual void convertToRGBA();
+
 			void save(ITexImage *ti, std::string filename);
 			void save(int width, int height, unsigned char *data, std::string filename);
 

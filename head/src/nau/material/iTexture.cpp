@@ -87,7 +87,7 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 		t = new DXTexture (aDimension, aFormat, width, height);
 	#endif
 
-	//#ifdef __SLANGER__
+	//#ifdef __COMPOSER__
 
 	//	ITexImage *ti = ITexImage::create(t);
 	//	unsigned char *data = ti->getRGBData();
@@ -97,6 +97,11 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 	//	ima.Rescale(96, 96);
 	//	t->bitmap = new wxBitmap(ima.Mirror(false));
 	//#endif
+		loader->convertToRGBA();
+		
+		t->data = (char *)malloc(loader->getHeight() * loader->getWidth() * 4);
+		memcpy(t->data, loader->getData(), loader->getHeight() * loader->getWidth() * 4);
+
 		loader->freeImage();
 		delete loader;
 		return t;
@@ -108,31 +113,20 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 }
 
 
-ITexture::ITexture(std::string label) :m_Label(label)/*, bitmap(0), m_Bitmap(0)*/ {
+ITexture::ITexture(std::string label) :m_Label(label), data(NULL)/*, bitmap(0), m_Bitmap(0)*/ {
 
 	registerAndInitArrays(Attribs);
+	
 }
 
 
 ITexture::~ITexture() {
 
-//#ifdef __SLANGER__
-//
-//	if (bitmap)
-//		delete bitmap;	
-//#endif
+	if (data) {
+		free(data);
+		data = NULL;
+	}
 }
-
-
-//#ifdef __SLANGER__
-//
-//wxBitmap *
-//ITexture::getBitmap(void) {
-//
-//	return bitmap;	
-//}
-//#endif
-
 
 std::string&
 ITexture::getLabel (void) {

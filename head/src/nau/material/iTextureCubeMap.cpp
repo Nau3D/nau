@@ -34,7 +34,7 @@ ITextureCubeMap::Create (std::vector<std::string> files, std::string label, bool
 	t = new DXTexture (aDimension, aFormat, width, height);
 #endif
 
-//#ifdef __SLANGER__
+//#ifdef __COMPOSER__
 //	int aux = loader[0]->getWidth();
 //	ilConvertImage(IL_RGB,IL_UNSIGNED_BYTE);
 //	iluScale(96,96,1);
