@@ -59,10 +59,10 @@ OptixGeometry::setBufferLib(OptixBufferLib *obl) {
 #include "nau/slogger.h"
 
 void
-OptixGeometry::addSceneObject(std::shared_ptr<SceneObject> &s, std::map<std::string, nau::material::MaterialID> & materialMap) {
-//OptixGeometry::addSceneObject(int id, std::map<std::string, nau::material::MaterialID> & materialMap) {
+OptixGeometry::addSceneObject(std::shared_ptr<SceneObject> &s, 
+	std::map<std::string, nau::material::MaterialID> & materialMap) {
 
-//	IRenderable &r = RENDERMANAGER->getSceneObject(id)->getRenderable();
+
 	std::shared_ptr<IRenderable> r = s->getRenderable();
 	std::shared_ptr<VertexData> &v = r->getVertexData();
 	size_t size = v->getDataOf(0)->size();

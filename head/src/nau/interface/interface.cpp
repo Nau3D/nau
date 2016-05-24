@@ -153,6 +153,12 @@ ToolBar::clear() {
 
 	m_Windows.clear();
 	TwDeleteAllBars();
+
+	for (int i = 0; i < m_ClientDataVec.size(); ++i)
+	{
+		delete (m_ClientDataVec[i]);
+	}
+	m_ClientDataVec.clear();
 }
 
 
@@ -329,6 +335,8 @@ ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 	clientData->type = varType;
 	clientData->context = varContext;
 	clientData->component = component;
+
+	m_ClientDataVec.push_back(clientData);
 
 	TwBar *t = m_Windows[windowName].second;
 

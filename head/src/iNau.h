@@ -39,7 +39,7 @@
 #define RENDERMANAGER NAU->getRenderManager()
 #define MATERIALLIBMANAGER NAU->getMaterialLibManager()
 #define RESOURCEMANAGER NAU->getResourceManager()
-#define EVENTMANAGER NAU->getEventManager()
+//#define EVENTMANAGER NAU->getEventManager()
 #define APISupport NAU->getAPISupport()
 
 

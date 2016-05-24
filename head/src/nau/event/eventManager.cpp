@@ -5,38 +5,56 @@
 
 using namespace nau::event_;
 
-EventManager::EventManager(vector<ListenerType *> *listeners)
-{
+EventManager *EventManager::Instance = NULL;
+
+EventManager *
+EventManager::GetInstance() {
+
+	if (Instance == NULL)
+		Instance = new EventManager();
+	
+	return Instance;
+}
+
+
+EventManager::EventManager(vector<ListenerType *> *listeners) {
+
 	this->listeners=*listeners;
 }
 
-EventManager::EventManager(const EventManager &a)
-{
+
+EventManager::EventManager(const EventManager &a) {
+
 	listeners=a.listeners;
 }
 
-EventManager::EventManager(void)
-{
+
+EventManager::EventManager(void) {
+
 	 listeners.clear();
 }
+
 
 EventManager::~EventManager(void) {
 
 	clear();
 }
 
-void EventManager::setListeners(vector<ListenerType *> *listeners)
-{
+
+void EventManager::setListeners(vector<ListenerType *> *listeners) {
+
 	this->listeners=*listeners;
 }
 
-vector<ListenerType *> *EventManager::getAllListeners(void)
-{
+
+vector<ListenerType *> *EventManager::getAllListeners(void) {
+
 	return &listeners;
 }
 
-vector<IListener*> *EventManager::getListeners(std::string eventType)
-{
+
+vector<IListener*> *EventManager::getListeners(std::string eventType) {
+
 	vector<ListenerType *>::iterator it;
 
 	for(it=listeners.begin();it != listeners.end();it++)
@@ -45,8 +63,9 @@ vector<IListener*> *EventManager::getListeners(std::string eventType)
 	return 0;
 }
 
-void EventManager::addListener(std::string eventType, IListener *lst)
-{
+
+void EventManager::addListener(std::string eventType, IListener *lst) {
+
 	vector<ListenerType *>::iterator it;
 
 	for(it=listeners.begin();it != listeners.end();it++)
@@ -63,8 +82,9 @@ void EventManager::addListener(std::string eventType, IListener *lst)
 
 }
 
-void EventManager::removeListener(std::string eventType, IListener *lst)
-{
+
+void EventManager::removeListener(std::string eventType, IListener *lst) {
+
 	vector<ListenerType *>::iterator it;
 	vector<IListener *>::iterator itL;
 
@@ -81,8 +101,9 @@ void EventManager::removeListener(std::string eventType, IListener *lst)
 		}
 }
 
-void EventManager::eraseAllListenersType(std::string eventType)
-{
+
+void EventManager::eraseAllListenersType(std::string eventType) {
+
 	vector<ListenerType *>::iterator it;
 
 	for(it=listeners.begin();it != listeners.end();it++)
@@ -93,14 +114,14 @@ void EventManager::eraseAllListenersType(std::string eventType)
 }
 
 
-void EventManager::eraseAllListeners(void)
-{
+void EventManager::eraseAllListeners(void) {
+
 	clear();
 }
 
 
-void EventManager::clear(void)
-{
+void EventManager::clear(void) {
+
 	while (!listeners.empty()) {
 
 		delete(*listeners.begin());
@@ -111,8 +132,8 @@ void EventManager::clear(void)
 
 void 
 EventManager::notify(std::string eventType, std::string sender, std::string receiver, 
-	const std::shared_ptr<IEventData> &evt, vector<IListener *> lsts)
-{
+	const std::shared_ptr<IEventData> &evt, vector<IListener *> lsts) {
+
 	vector<IListener *>::iterator it;
 
 	for(it=lsts.begin();it != lsts.end();it++){
@@ -122,10 +143,11 @@ EventManager::notify(std::string eventType, std::string sender, std::string rece
 	}
 
 }
+ 
 
 void EventManager::notifyEvent(std::string eventType, std::string sender, 
-	std::string receiver, const std::shared_ptr<IEventData> &evt)
-{
+	std::string receiver, const std::shared_ptr<IEventData> &evt) {
+
 	vector<ListenerType *>::iterator itL;
 	
 	for(itL=listeners.begin();itL != listeners.end();itL++){
@@ -136,18 +158,21 @@ void EventManager::notifyEvent(std::string eventType, std::string sender,
 	}
 	
 }
+
+
 bool 
-EventManager::hasSensor (std::string sensorName)
-{
+EventManager::hasSensor (std::string sensorName) {
+
 	if (m_Sensors.count (sensorName) > 0)
 		return true;
 	
 	return false;
 }
 
+
 Sensor* 
-EventManager::getSensor (std::string sensorName, std::string sClass)
-{
+EventManager::getSensor (std::string sensorName, std::string sClass) {
+
 	if (false == hasSensor (sensorName)) {
 		m_Sensors[sensorName] = nau::event_::SensorFactory::create(sClass);
 		m_Sensors[sensorName]->setName(sensorName);
@@ -155,18 +180,20 @@ EventManager::getSensor (std::string sensorName, std::string sClass)
 	return m_Sensors[sensorName];
 }
 
+
 bool
-EventManager::hasInterpolator (std::string interpolatorName)
-{
+EventManager::hasInterpolator (std::string interpolatorName) {
+
 	if (m_Interpolators.count (interpolatorName) > 0)
 		return true;
 	
 	return false;
 }
 
+
 Interpolator* 
-EventManager::getInterpolator (std::string interpolatorName, std::string sClass)
-{
+EventManager::getInterpolator (std::string interpolatorName, std::string sClass) {
+
 	if (false == hasInterpolator (interpolatorName)) {
 		m_Interpolators[interpolatorName] = nau::event_::InterpolatorFactory::create(sClass);
 		m_Interpolators[interpolatorName]->setName(interpolatorName);
@@ -174,18 +201,20 @@ EventManager::getInterpolator (std::string interpolatorName, std::string sClass)
 	return m_Interpolators[interpolatorName];
 }
 
+
 bool 
-EventManager::hasRoute (std::string routeName)
-{
+EventManager::hasRoute (std::string routeName) {
+
 	if (m_Routes.count (routeName) > 0)
 		return true;
 	
 	return false;
 }
 
+
 Route* 
-EventManager::getRoute (std::string routeName)
-{
+EventManager::getRoute (std::string routeName) {
+
 	if (false == hasRoute (routeName)) {
 		m_Routes[routeName] = new Route;
 	}
