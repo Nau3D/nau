@@ -23,6 +23,7 @@ MaterialSortRenderQueue::MaterialSortRenderQueue(void) {
 
 MaterialSortRenderQueue::~MaterialSortRenderQueue(void) {
 
+	clearQueue();
 }
 
 

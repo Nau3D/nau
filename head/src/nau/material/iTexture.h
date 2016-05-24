@@ -7,7 +7,7 @@
 #include "nau/material/iTextureSampler.h"
 
 
-//#ifdef __SLANGER__
+//#ifdef __COMPOSER__
 //#include <wx/bitmap.h>
 //#include <wx/image.h>
 //#include <IL/ilu.h>
@@ -79,7 +79,7 @@ namespace nau
 			static ITexture* Create(std::string label);
 	
 
-//#ifdef __SLANGER__
+//#ifdef __COMPOSER__
 //			virtual wxBitmap *getBitmap(void);
 //#endif
 			virtual std::string& getLabel (void);
@@ -100,6 +100,8 @@ namespace nau
 
 			virtual ~ITexture(void);
 
+			char *data;
+
 		protected:
 			// For textures with data, ex. loaded images
 			//ITexture(std::string label, std::string aDimension, std::string internalFormat, 
@@ -110,14 +112,16 @@ namespace nau
 
 			ITexture(std::string label);
 
+
 			/// For inheritance reasons only
-			ITexture() {/*bitmap=NULL;*/};
+			ITexture():data(NULL) {/*bitmap=NULL;*/};
 
 			static bool Init();
 			static bool Inited;
 
 			std::string m_Label;
-//#ifdef __SLANGER__
+
+//#ifdef __COMPOSER__
 //			wxBitmap *bitmap;
 //#endif
 		};

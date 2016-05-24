@@ -999,7 +999,7 @@ DlgMaterials::setupColorPanel(wxSizer *siz, wxWindow *parent) {
 	std::vector<std::string> order = {"DIFFUSE", "AMBIENT", "EMISSION", "SPECULAR", "SHININESS" };
 	PropertyManager::createOrderedGrid(pgMaterial, ColorMaterial::Attribs, order);
 
-	pgMaterial->SetSplitterLeft(true);
+	pgMaterial->SetSplitterLeft(true,true);
 
 	siz->Add(pgMaterial,1,wxEXPAND);
 	updateColors(getModelMaterial()); // what is default material?
@@ -1013,6 +1013,7 @@ DlgMaterials::resetColorPanel() {
 	pgMaterial->AddPage(wxT("Colours"));
 	std::vector<std::string> order = { "DIFFUSE", "AMBIENT", "EMISSION", "SPECULAR", "SHININESS" };
 	PropertyManager::createOrderedGrid(pgMaterial, ColorMaterial::Attribs, order);
+	pgMaterial->SetSplitterLeft(true, true);
 }
 
 

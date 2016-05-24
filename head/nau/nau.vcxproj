@@ -681,10 +681,6 @@
     <ClCompile Include="..\src\nau\event\sensorFactory.cpp" />
     <ClCompile Include="..\src\nau\event\timeSensor.cpp" />
     <ClCompile Include="..\src\nau\util\tree.cpp" />
-    <ClCompile Include="..\src\nau\world\bulletMotionState.cpp" />
-    <ClCompile Include="..\src\nau\world\bulletWorld.cpp" />
-    <ClCompile Include="..\src\nau\world\physicalObject.cpp" />
-    <ClCompile Include="..\src\nau\world\worldFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\iNau.h" />
@@ -889,11 +885,6 @@
     <ClInclude Include="..\src\nau\math\mtrand.h" />
     <ClInclude Include="..\src\nau\math\plane.h" />
     <ClInclude Include="..\src\nau\util\tree.h" />
-    <ClInclude Include="..\src\nau\world\bulletMotionState.h" />
-    <ClInclude Include="..\src\nau\world\bulletWorld.h" />
-    <ClInclude Include="..\src\nau\world\iWorld.h" />
-    <ClInclude Include="..\src\nau\world\physicalObject.h" />
-    <ClInclude Include="..\src\nau\world\worldFactory.h" />
     <CustomBuildStep Include="..\src\nau\math\spherical.h" />
     <ClInclude Include="..\src\nau\math\utils.h" />
     <ClInclude Include="..\src\nau\render\pass.h" />

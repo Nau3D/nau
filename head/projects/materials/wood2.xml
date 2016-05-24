@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
 <project name="Wood Tutorial" >
 	<assets>
-	
 		<attributes>
 			<attribute type="RENDERER" name="frequency" data="FLOAT" value="32" />
 			<attribute type="RENDERER" name="sharpness" data="FLOAT" value = 16 />

@@ -99,7 +99,7 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	std::shared_ptr<VertexData> vData = aRenderable->getVertexData();
 	vData->setDataFor(VertexData::GetAttribIndex(std::string("position")), vertices);
 
-	std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable.get(), "dirLightDifAmbPix");
+	std::shared_ptr<MaterialGroup> aMatGroup = MaterialGroup::Create(aRenderable.get(), "__nauDefault");
 
 	if (hasIndices[0] == 'y')
 		aMatGroup->setIndexList(indices);

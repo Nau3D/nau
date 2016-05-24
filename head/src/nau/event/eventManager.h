@@ -14,13 +14,15 @@
 using namespace std;
 using namespace nau::event_;
 
+#define EVENTMANAGER EventManager::GetInstance()
+
 namespace nau
 {
 	namespace event_
 	{
 		class EventManager
 		{
-		private:
+		protected:
 			std::map<std::string, nau::event_::Sensor*> m_Sensors;
 			std::map<std::string, nau::event_::Interpolator*> m_Interpolators;
 			std::map<std::string, nau::event_::Route*> m_Routes;
@@ -28,16 +30,22 @@ namespace nau
 			void notify(std::string eventType, std::string sender, std::string receiver, 
 				const std::shared_ptr<IEventData> &evt, vector<IListener *> lsts);
 
+			static EventManager *Instance;
+
+			EventManager(vector<ListenerType *> *listeners);
+			EventManager(const EventManager &e);
+			EventManager(void);
+
 		public:
+
+			~EventManager(void);
+
+			static EventManager *GetInstance();
 
 			// shouldn't this be private?
 			vector<ListenerType *> listeners;
 			
 
-			EventManager(vector<ListenerType *> *listeners);
-			EventManager(const EventManager &e);
-			EventManager(void);
-			~EventManager(void);
 
 
 			void setListeners(vector<ListenerType *> *listeners);

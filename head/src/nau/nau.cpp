@@ -21,7 +21,7 @@
 #include "nau/resource/fontManager.h"
 #include "nau/scene/sceneFactory.h"
 #include "nau/system/file.h"
-#include "nau/world/worldFactory.h"
+//#include "nau/world/worldFactory.h"
 
 //#include <GL/glew.h>
 
@@ -46,7 +46,7 @@ using namespace nau::render;
 using namespace nau::resource;
 using namespace nau::scene;
 using namespace nau::system;
-using namespace nau::world;
+//using namespace nau::world;
 
 
 static nau::Nau *gInstance = 0;
@@ -101,11 +101,10 @@ Nau::Nau() :
 	m_ProjectName(""),
 	m_DefaultState(0),
 	m_pAPISupport(0),
-	m_pWorld(0), 
+	//m_pWorld(0), 
 	m_LuaState(0),
 	m_ProfileResetRequest(false)
 {
-
 }
 
 
@@ -117,6 +116,7 @@ Nau::~Nau() {
 	m_Viewport.reset();
 	delete EVENTMANAGER;
 	m_pEventManager = NULL;
+	delete m_pPhysicsManager;
 
 	delete m_DefaultState; 
 	delete m_pAPISupport;
@@ -124,7 +124,7 @@ Nau::~Nau() {
 	nau::material::UniformBlockManager::DeleteInstance();
 	SLogger::DeleteInstance();
 
-	delete m_pWorld;
+	//delete m_pWorld;
 
 	PassFactory::DeleteInstance();
 
@@ -147,11 +147,11 @@ Nau::init (bool context, std::string aConfigFile) {
 	m_AppFolder = File::GetAppFolder();
 	//bool result;
 	if (true == context) {
-		m_pPhysicsManager = nau::physics::PhysicsManager::GetInstance();
-		m_pEventManager = new EventManager;
+		m_pEventManager = EventManager::GetInstance();
 		m_pRenderManager = new RenderManager;
 		m_pAPISupport = IAPISupport::GetInstance();
 		m_pAPISupport->setAPISupport();
+		m_pPhysicsManager = nau::physics::PhysicsManager::GetInstance();
 	}	
 	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
 	m_pMaterialLibManager = new MaterialLibManager();
@@ -169,7 +169,7 @@ Nau::init (bool context, std::string aConfigFile) {
 
 	FontManager::addFont("CourierNew10", m_AppFolder + File::PATH_SEPARATOR + "nauSettings/couriernew10.xml", "__FontCourierNew10");
 
-	m_pWorld = WorldFactory::create ("Bullet");
+	//m_pWorld = WorldFactory::create ("Bullet");
 
 	m_StartTime = (float)clock();// *1000.0 / CLOCKS_PER_MILISEC;
 	m_LastFrameTime = NO_TIME;
@@ -179,7 +179,7 @@ Nau::init (bool context, std::string aConfigFile) {
 	EVENTMANAGER->addListener("WINDOW_SIZE_CHANGED",this);
 
 	m_DefaultState = IState::create();
-	m_Viewport = m_pRenderManager->createViewport("defaultFixedVP");
+	m_Viewport = m_pRenderManager->createViewport("__nauDefault");
 
 	// Init LUA
 #ifdef NAU_LUA
@@ -1175,7 +1175,7 @@ void
 Nau::clear() {
 
 	RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
-	setActiveCameraName("");
+	setActiveCameraName("__nauDefault");
 	SceneObject::ResetCounter();
 	MATERIALLIBMANAGER->clear();
 	EVENTMANAGER->clear();
@@ -1185,8 +1185,9 @@ Nau::clear() {
 	Profile::Reset();
 	deleteUserAttributes();
 	UniformBlockManager::DeleteInstance();
+	m_pPhysicsManager->clear();
 
-	m_Viewport = RENDERMANAGER->createViewport("defaultFixedVP");
+	m_Viewport = RENDERMANAGER->createViewport("__nauDefault");
 
 	ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
 
@@ -1195,10 +1196,10 @@ Nau::clear() {
 
 
 void
-Nau::readProjectFile (std::string file, int *width, int *height) {
+Nau::readProjectFile(std::string file, int *width, int *height) {
 
 	try {
-		ProjectLoader::load (file, width, height);
+		ProjectLoader::load(file, width, height);
 	}
 	catch (std::string s) {
 		clear();
@@ -1206,23 +1207,6 @@ Nau::readProjectFile (std::string file, int *width, int *height) {
 	}
 
 	setActiveCameraName(RENDERMANAGER->getDefaultCameraName());
-
-	// Physics Dummy test Init
-
-	//m_pPhysicsManager->addScene(nau::physics::IPhysics::CLOTH, RENDERMANAGER->getScene("CubeLand").get());
-
-	//std::string wn = "test";
-	//std::string wl = "My AT Bar";
-	//INTERFACE->createWindow(wn, wl);
-	////INTERFACE->addVar("test", "Viewport_Size", "VIEWPORT", "defaultFixedVP", "SIZE", 0);
-	////INTERFACE->addVar("test", "Camera_Far", "CAMERA", "MainCamera", "FAR", 0);
-	////INTERFACE->addVar("test", "Depth_Func", "STATE", "nau_material_lib::__Emission Purple", "DEPTH_FUNC");
-	//INTERFACE->addPipelineList("test", "Step");
-	//INTERFACE->addColor("test", "dark", "RENDERER", "Materials::woodRings", "dark", 0);
-	//INTERFACE->addDir("test", "LightDir", "LIGHT", "Sun", "DIRECTION", 0);
-	//INTERFACE->addVar("test", "normal", "RENDERER", "CURRENT", "NORMAL");
-	//INTERFACE->addVar("test", "view", "CAMERA", "MainCamera", "VIEW_MATRIX");
-	//SLOG("AntTweakBar error : %s", TwGetLastError());
 }
 
 
@@ -1297,7 +1281,7 @@ Nau::appendModel(std::string fileName) {
 void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 
 	Camera *aNewCam = m_pRenderManager->getCamera ("MainCamera").get();
-	std::shared_ptr<Viewport> v = m_pRenderManager->getViewport("defaultFixedVP");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	std::shared_ptr<Viewport> v = m_pRenderManager->getViewport("__nauDefault");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	aNewCam->setViewport (v);
 
 	setActiveCameraName("MainCamera");
@@ -1348,6 +1332,9 @@ void
 Nau::step() {
 
 	IRenderer *renderer = RENDERER;
+	if (!renderer)
+		return;
+
 	float timer = (float)(clock() * INV_CLOCKS_PER_MILISEC);
 	if (NO_TIME == m_LastFrameTime) {
 		m_LastFrameTime = timer;
@@ -1356,7 +1343,7 @@ Nau::step() {
 	m_LastFrameTime = timer;
 
 	m_TraceOn = m_TraceFrames != 0;
-	m_TraceFrames = RENDERER->setTrace(m_TraceFrames);
+	m_TraceFrames = renderer->setTrace(m_TraceFrames);
 	if (m_TraceOn) {
 		LOG_trace("#NAU(FRAME,START)");
 	}
@@ -1371,23 +1358,26 @@ Nau::step() {
 	renderer->resetCounters();
 	RESOURCEMANAGER->clearBuffers();
 
-	if (true == m_Physics) {
-		m_pWorld->update();
-		m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
-	}
+	//if (true == m_Physics) {
+	//	m_pWorld->update();
+	//	m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+	//}
 
 	m_pRenderManager->renderActivePipeline();
 
 	m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
 
-	unsigned int k = RENDERER->getPropui(IRenderer::FRAME_COUNT);
+	unsigned int k = renderer->getPropui(IRenderer::FRAME_COUNT);
 	if (k == UINT_MAX)
 		// 2 avoid issues with run_once and skip_first
 		// and allows a future implementation of odd and even frames for
 		// ping-pong rendering
-		RENDERER->setPropui(IRenderer::FRAME_COUNT, 2);
+		renderer->setPropui(IRenderer::FRAME_COUNT, 2);
 	else
-		RENDERER->setPropui(IRenderer::FRAME_COUNT, ++k);
+		renderer->setPropui(IRenderer::FRAME_COUNT, ++k);
+
+	if (m_Physics)
+		m_pPhysicsManager->update();
 
 	if (m_Physics)
 		m_pPhysicsManager->update();
@@ -1428,8 +1418,9 @@ void Nau::stepPass() {
 		renderer->resetCounters();
 
 		if (true == m_Physics) {
-			m_pWorld->update();
-			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
+			m_pPhysicsManager->update();
+//			m_pWorld->update();
+//			m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
 		}
 
 	}
@@ -1539,11 +1530,11 @@ Nau::getDepthAtCenter() {
 
 
 
-IWorld&
-Nau::getWorld (void) {
-
-	return (*m_pWorld);
-}
+//IWorld&
+//Nau::getWorld (void) {
+//
+//	return (*m_pWorld);
+//}
 
 
 void
@@ -1686,10 +1677,21 @@ Nau::getEventManager (void) {
 	return m_pEventManager;
 }
 
+
 nau::render::IRenderer * 
-Nau::getRenderer(void)
-{
-	return getRenderManager()->getRenderer();
+Nau::getRenderer(void) {
+
+	RenderManager *r = getRenderManager();
+	if (r)
+		return r->getRenderer();
+	else
+		return NULL;
+}
+
+
+nau::physics::PhysicsManager * nau::Nau::getPhysicsManager() {
+
+	return m_pPhysicsManager;
 }
 
 

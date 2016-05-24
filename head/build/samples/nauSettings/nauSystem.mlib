@@ -31,7 +31,7 @@
 	</states>
 	
 	<materials>
-		<material name="dirLightDifAmbPix">
+		<material name="__nauDefault">
 			<shader name = "dirLightDifAmbPix">
 				<values>
 					<valueof uniform="lightDirection" 	type="LIGHT" context="CURRENT" 

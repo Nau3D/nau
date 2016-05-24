@@ -23,7 +23,7 @@
 #include "nau/scene/iScene.h"
 #include "nau/scene/camera.h"
 #include "nau/scene/light.h"
-#include "nau/world/iWorld.h"
+//#include "nau/world/iWorld.h"
 
 #include <iostream>
 
@@ -39,7 +39,7 @@
 #define RENDERMANAGER NAU->getRenderManager()
 #define MATERIALLIBMANAGER NAU->getMaterialLibManager()
 #define RESOURCEMANAGER NAU->getResourceManager()
-#define EVENTMANAGER NAU->getEventManager()
+//#define EVENTMANAGER NAU->getEventManager()
 #define APISupport NAU->getAPISupport()
 
 
