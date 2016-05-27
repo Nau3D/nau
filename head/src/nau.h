@@ -1,6 +1,7 @@
 #ifndef NAU_H
 #define NAU_H
 
+
 #pragma warning( disable: 4290)
 
 #ifndef _USE_MATH_DEFINES

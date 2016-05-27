@@ -44,6 +44,7 @@ Physics::Physics() {
 
 	m_MaterialProps["ACCELERATION"] = Prop(IPhysics::VEC4, 1.0f, 0.0f, 0.0f, 0.0f);
 	m_MaterialProps["MASS"] = Prop(IPhysics::FLOAT, 1.0f);
+	m_MaterialProps["MASS1"] = Prop(IPhysics::FLOAT, 1.0f);
 
 }
 
