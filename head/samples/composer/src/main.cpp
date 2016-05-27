@@ -4,6 +4,10 @@
 #pragma warning( disable: 4299)
 #pragma warning( disable: 4099)
 
+#ifdef _WIN32
+#define APIENTRY __stdcall
+#endif
+
 #include <vld.h>
 
 #include <main.h>

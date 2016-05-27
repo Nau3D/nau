@@ -147,7 +147,7 @@ Nau::init (bool context, std::string aConfigFile) {
 	m_AppFolder = File::GetAppFolder();
 	//bool result;
 	if (true == context) {
-		m_pEventManager = new EventManager;
+		m_pEventManager = EventManager::GetInstance();
 		m_pRenderManager = new RenderManager;
 		m_pAPISupport = IAPISupport::GetInstance();
 		m_pAPISupport->setAPISupport();
@@ -1196,10 +1196,10 @@ Nau::clear() {
 
 
 void
-Nau::readProjectFile (std::string file, int *width, int *height) {
+Nau::readProjectFile(std::string file, int *width, int *height) {
 
 	try {
-		ProjectLoader::load (file, width, height);
+		ProjectLoader::load(file, width, height);
 	}
 	catch (std::string s) {
 		clear();

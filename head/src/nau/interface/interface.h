@@ -3,8 +3,9 @@
 
 #include <AntTweakBar.h>
 
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
 #define INTERFACE nau::inter::ToolBar::GetInstance()
 
@@ -20,6 +21,8 @@ namespace nau {
 				std::string type, context, component;
 				int id;
 			} NauVar;
+
+			std::vector< NauVar *> m_ClientDataVec;
 
 			static TwStructMember Vec2Members[2], Vec3Members[3], Vec4Members[4],
 				UIVec2Members[2], UIVec3Members[3], 

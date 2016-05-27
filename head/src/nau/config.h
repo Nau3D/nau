@@ -3,6 +3,7 @@
       
 // use OpenGL
 #define NAU_OPENGL 1
+
 #define GLBINDING_STATIC
 
 // enable and disable functionalities 
