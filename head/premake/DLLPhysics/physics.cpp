@@ -100,7 +100,7 @@ Physics::update() {
 		switch (s.second.sceneType) {
 		case IPhysics::RIGID:
 			translate1 += delta1;
-			translate2 += g[1]*0.001;
+			translate2 += g[1]*0.001f;
 			s.second.transform[12] = translate1;
 			s.second.transform[13] = translate2;
 

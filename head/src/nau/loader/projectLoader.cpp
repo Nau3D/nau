@@ -1060,7 +1060,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					if (attribIndex != VertexData::MaxAttribs) {
 						v->setBuffer(attribIndex, b->getPropi(IBuffer::ID));
 					}
-					else if (p->Value() == "index"){
+					else if (!strcmp(p->Value(),"index")){
 
 						mg->getIndexData()->setBuffer(b->getPropi(IBuffer::ID));
 					}
