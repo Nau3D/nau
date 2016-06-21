@@ -4,6 +4,7 @@
 
 
 #include "nau/physics/iPhysics.h"
+#include "nau/physics/iPhysicsPropertyManager.h"
 
 #include <map>
 #include <string>
@@ -18,6 +19,8 @@ public:
 	static Physics *Create();
 	Physics();
 	~Physics(void);
+
+	virtual void setPropertyManager(nau::physics::IPhysicsPropertyManager *pm);
 
 	void update();
 	void build();
@@ -44,6 +47,7 @@ extern "C" {
 	__declspec(dllexport) void *createPhysics();
 	__declspec(dllexport) void init();
 	__declspec(dllexport) char *getClassName();
+	__declspec(dllexport) void deletePhysics();
 }
 
 #endif //DEPTHMAPPASS_H

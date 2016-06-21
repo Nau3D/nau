@@ -16,6 +16,8 @@ namespace nau
 {
 	namespace physics 
 	{
+		class PhysicsPropertyManager;
+
 		class PhysicsManager: public AttributeValues
 		{
 			friend class PhysicsMaterial;
@@ -61,6 +63,9 @@ namespace nau
 			void applyGlobalVec4Property(const std::string &property, float *value);
 
 			static PhysicsManager *PhysManInst;
+
+			PhysicsPropertyManager *m_PropertyManager;
+
 			IPhysics *m_PhysInst;
 			
 			static bool Init();

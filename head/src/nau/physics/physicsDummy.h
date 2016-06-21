@@ -15,6 +15,11 @@ namespace nau
 		class PhysicsDummy: public IPhysics 
 		{
 		public:
+
+			PhysicsDummy();
+
+			virtual void setPropertyManager(IPhysicsPropertyManager *pm);
+
 			virtual void update();
 			virtual void build();
 			

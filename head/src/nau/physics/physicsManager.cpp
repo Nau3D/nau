@@ -5,6 +5,7 @@
 #include "nau/slogger.h"
 #include "nau/math/data.h"
 #include "nau/physics/iPhysics.h"
+#include "nau/physics/physicsPropertyManager.h"
 #include "nau/physics/physicsDummy.h"
 #include "nau/system/file.h"
 
@@ -13,6 +14,10 @@
 #include <windows.h>
 
 using namespace nau::physics;
+
+typedef int(*deletePhysicsProc)();
+deletePhysicsProc deletePhysics;
+
 
 bool
 PhysicsManager::Init() {
@@ -45,8 +50,11 @@ PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false) {
 
 	registerAndInitArrays(Attribs);
 	m_PhysInst = loadPlugin();
+	m_PropertyManager = PhysicsPropertyManager::GetInstance();
 	if (!m_PhysInst)
 		return;
+
+	m_PhysInst->setPropertyManager(m_PropertyManager);
 
 	std::map < std::string, IPhysics::Prop> &props = m_PhysInst->getGlobalProperties();
 
@@ -75,7 +83,7 @@ PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false) {
 PhysicsManager::~PhysicsManager() {
 
 	if (m_PhysInst) {
-		delete m_PhysInst;
+		deletePhysics();
 		m_PhysInst = NULL;
 	}
 
@@ -115,7 +123,7 @@ PhysicsManager::loadPlugin() {
 		initProc initFunc = (initProc)GetProcAddress(mod, "init");
 		createPhysics createPhys = (createPhysics)GetProcAddress(mod, "createPhysics");
 		getClassNameProc getClassNameFunc = (getClassNameProc)GetProcAddress(mod, "getClassName");
-
+		deletePhysics = (deletePhysicsProc)GetProcAddress(mod, "deletePhysics");
 		if (!initFunc || !createPhys || !getClassNameFunc) {
 			//SLOG("%s: Invalid Plugin DLL:  'init', 'createPhys' and 'getClassName' must be defined", fn.c_str());
 			return NULL;

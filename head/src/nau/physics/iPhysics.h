@@ -2,6 +2,7 @@
 #define _NAU_PHYSICS_H
 
 #include "nau/math/data.h"
+#include "nau/physics/iPhysicsPropertyManager.h"
 
 #include <map>
 #include <memory>
@@ -50,6 +51,8 @@ namespace nau
 
 			} Prop;
 
+			virtual void setPropertyManager(IPhysicsPropertyManager *pm) = 0;
+
 			virtual void update() = 0;
 			virtual void build() = 0;
 			
@@ -81,6 +84,8 @@ namespace nau
 			std::map<std::string, SceneProps> m_Scenes;
 			std::map<std::string, Prop> m_GlobalProps;
 			std::map<std::string, Prop> m_MaterialProps;
+
+			IPhysicsPropertyManager *m_PropertyManager;
 		};
 	};
 };

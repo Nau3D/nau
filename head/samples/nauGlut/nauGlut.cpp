@@ -1,6 +1,9 @@
 #include "../../src/nau.h"
-
 #include "../../src/nau/debug/profile.h"
+#include "../../src/nau/event/eventFactory.h" 
+#include "../../src/nau/event/cameraMotion.h"
+#include "../../src/nau/event/cameraOrientation.h"
+
 
 #ifdef _WIN32
 #	ifdef _DEBUG
@@ -56,6 +59,117 @@ void renderScene() {
 		Profile::Reset();
 }
 
+// --------------------------------------------------------
+//
+//			Keyboard & Mouse
+//
+// --------------------------------------------------------
+
+
+void processKeys(unsigned char c, int xx, int yy) {
+
+	int mod = 0, glutMod;
+	float velocity = 0.05f;
+
+	glutMod = glutGetModifiers();
+
+	if (glutMod & GLUT_ACTIVE_SHIFT) {
+		mod |= Nau::KEY_MOD_SHIFT;
+		velocity *= 10.0f;
+	}
+	else if (glutMod & GLUT_ACTIVE_ALT)
+		mod |= Nau::KEY_MOD_ALT;
+	else if (glutMod & GLUT_ACTIVE_CTRL) {
+		mod |= Nau::KEY_MOD_CTRL;
+		velocity *= 100.0f;
+	}
+	if (NAU->keyPressed(c, mod))
+		return;
+
+	// w = 0111 0111 W = 0101 0111  CTRL-W = 0001 0111
+	// the least five significant digits remain the same :-)
+
+	switch (c&31) {
+
+	case 23: 
+		{
+			nau::event_::CameraMotion c("FORWARD", velocity);
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
+			e->setData(&c);
+			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
+		}
+		break;
+	case 19:
+		{
+			nau::event_::CameraMotion c("BACKWARD", velocity);
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
+			e->setData(&c);
+			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
+		}
+		break;
+	case 1:
+		{
+			nau::event_::CameraMotion c("LEFT", velocity);
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
+			e->setData(&c);
+			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
+		}
+	break;
+	case 4:
+		{
+			nau::event_::CameraMotion c("RIGHT", velocity);
+			std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Motion");
+			e->setData(&c);
+			EVENTMANAGER->notifyEvent("CAMERA_MOTION", "MainCanvas", "", e);
+		}
+	break;
+
+	}
+}
+
+
+bool tracking = false;
+int oldX, oldY;
+float oldAlpha, oldBeta;
+
+
+void processMouseButtons(int button, int state, int xx, int yy) {
+
+	if (button == GLUT_LEFT) {
+
+		if (state == GLUT_DOWN) {
+			tracking = true;
+			Camera *c = NAU->getActiveCamera();
+
+			oldBeta = c->getPropf(Camera::ELEVATION_ANGLE);
+			oldAlpha = c->getPropf(Camera::ZX_ANGLE);
+
+			oldX = xx;
+			oldY = yy;
+		}
+		else
+			tracking = false;
+	}
+}
+
+
+void processMouseMotion(int xx, int yy) {
+
+	float alpha, beta;
+
+	if (!tracking)
+		return;
+
+	float m_ScaleFactor = 1.0f / 100.0f;
+
+	alpha = oldAlpha - (float)(xx - oldX) * m_ScaleFactor;
+	beta = oldBeta + (float)(oldY - yy) * m_ScaleFactor;
+
+	nau::event_::CameraOrientation c(alpha, beta);
+	std::shared_ptr<IEventData> e = nau::event_::EventFactory::Create("Camera Orientation");
+	e->setData(&c);
+	EVENTMANAGER->notifyEvent("CAMERA_ORIENTATION", "MainCanvas", "", e);
+}
 
 // ------------------------------------------------------------
 //
@@ -88,6 +202,10 @@ int main(int argc, char **argv) {
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(renderScene);
+
+	glutKeyboardFunc(processKeys);
+	glutMouseFunc(processMouseButtons);
+	glutMotionFunc(processMouseMotion);
 
 	glbinding::Binding::initialize(false);
 

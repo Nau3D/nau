@@ -538,6 +538,9 @@
     <ClCompile Include="..\src\nau\physics\physicsMaterial.cpp">
       <Filter>Source Files\physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\physics\physicsPropertyManager.cpp">
+      <Filter>Source Files\physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1072,6 +1075,12 @@
       <Filter>Source Files\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\src\nau\physics\physicsMaterial.h">
+      <Filter>Source Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\physics\iPhysicsPropertyManager.h">
+      <Filter>Source Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\physics\physicsPropertyManager.h">
       <Filter>Source Files\physics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,13 +16,11 @@
 		<cameras>
 			<camera name="MainCamera" >
 				<viewport name="MainViewport" />
-				<!--projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=100.0 /-->
 				<TYPE value="PERSPECTIVE"/>
 				<FOV value=60/>
 				<NEAR value= 1/>
 				<FAR value= 100/>
 				<POSITION x=-1.69 y=0.774 z=-1.158 />
-				<!--VIEW x=1.0 y=-0.2 z=1.0 /-->
 				<ZX_ANGLE value = 0.877/>
 				<ELEVATION_ANGLE value=-0.27548/>
 			</camera>

@@ -3,13 +3,22 @@
 #include <memory>
 
 static char className[] = "Dummy";
+static Physics *Instance = NULL;
 
 __declspec(dllexport)
 void *
 createPhysics() {
 
-	Physics *p = new Physics();
-	return p;
+	Instance = new Physics();
+	return Instance;
+}
+
+
+__declspec(dllexport)
+void 
+deletePhysics() {
+
+	delete Instance;
 }
 
 
@@ -37,6 +46,7 @@ Physics::Create() {
 }
 
 
+
 Physics::Physics() {
 
 	m_GlobalProps["GRAVITY"] = Prop(IPhysics::VEC4, 0.0f, 9.8f, 0.0f, 0.0f);
@@ -46,6 +56,13 @@ Physics::Physics() {
 	m_MaterialProps["MASS"] = Prop(IPhysics::FLOAT, 1.0f);
 	m_MaterialProps["MASS1"] = Prop(IPhysics::FLOAT, 1.0f);
 
+}
+
+
+void
+Physics::setPropertyManager(nau::physics::IPhysicsPropertyManager *pm) {
+
+	m_PropertyManager = pm;
 }
 
 
@@ -79,10 +96,11 @@ Physics::update() {
 
 	for (auto s : m_Scenes) {
 
+		float *g = m_PropertyManager->getGlobalVec4Property("GRAVITY");
 		switch (s.second.sceneType) {
 		case IPhysics::RIGID:
 			translate1 += delta1;
-			translate2 += delta2;
+			translate2 += g[1]*0.001;
 			s.second.transform[12] = translate1;
 			s.second.transform[13] = translate2;
 
