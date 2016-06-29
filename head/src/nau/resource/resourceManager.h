@@ -88,7 +88,7 @@ namespace nau
 			nau::material::IBuffer* createBuffer(std::string name);
 			bool hasBuffer(std::string name);
 			nau::material::IBuffer* getBufferByID(int id);
-			void getBufferNames(std::vector<std::string> &names);
+			void getBufferNames(std::vector<std::string> *names);
 			void clearBuffers();
 		};
 	};

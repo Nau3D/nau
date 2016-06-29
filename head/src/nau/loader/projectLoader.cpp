@@ -82,6 +82,9 @@ unsigned int ProjectLoader::s_Dummy_uint;
 bool ProjectLoader::s_Dummy_bool;
 uivec3 ProjectLoader::s_Dummy_uivec3;
 uivec2 ProjectLoader::s_Dummy_uivec2;
+std::string ProjectLoader::s_Dummy_string;
+
+std::vector<ProjectLoader::DeferredValidation> ProjectLoader::s_DeferredVal;
 
 
 
@@ -296,6 +299,28 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 }
 
 
+std::string &
+ProjectLoader::readChildTagString(std::string parent, TiXmlElement *pElem,	AttribSet &attribs) {
+
+	if (TIXML_SUCCESS != pElem->QueryStringAttribute("name", &s_Dummy_string)) {
+		NAU_THROW("File %s: Element %s: String Attribute %s without a value", ProjectLoader::s_File.c_str(), parent.c_str(), pElem->Value());
+	}
+
+	return s_Dummy_string;
+}
+
+
+std::string &
+ProjectLoader::readAttributeString(std::string tag, std::unique_ptr<Attribute> &attrib, TiXmlElement *p) {
+
+	s_Dummy_string = "";
+
+	p->QueryStringAttribute(tag.c_str(), &s_Dummy_string);
+
+	return s_Dummy_string;
+}
+
+
 Data *
 ProjectLoader::readAttribute(std::string tag, std::unique_ptr<Attribute> &attrib, TiXmlElement *p) {
 
@@ -446,19 +471,28 @@ ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::A
 				NAU_THROW("File %s\nElement %s: \"%s\" is a read-only attribute", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name());
 
 			int id = a->getId();
-			value = readAttribute(a->getName(), a, pElem);
-			if (!anObj->isValid(id, a->getType(), value)) {
-				std::string s = getValidValuesString(a);
-				if (s != "") {
-					NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name(), s.c_str());
+			Enums::DataType t = a->getType();
+			if (Enums::STRING != t) {
+				value = readAttribute(a->getName(), a, pElem);
+				if (!anObj->isValid(id, a->getType(), value)) {
+					std::string s = getValidValuesString(a);
+					if (s != "") {
+						NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name(), s.c_str());
+					}
+					else {
+						NAU_THROW("File %s\nElement %s: \"%s\" is not supported", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name());
+					}
 				}
-				else {
-					NAU_THROW("File %s\nElement %s: \"%s\" is not supported", ProjectLoader::s_File.c_str(), parent.c_str(), attrib->Name());
-				}
+				anObj->setProp(id, a->getType(), value);
+				delete value;
 			}
-
-			anObj->setProp(id, a->getType(), value);
-			delete value;
+			else {
+				std::string &valueS = readAttributeString(a->getName(), a, pElem);
+				if (!anObj->isValids((AttributeValues::StringProperty)id, valueS)) {
+					// deal with error
+				}
+				anObj->setProps((AttributeValues::StringProperty)id, valueS);
+			}
 		}
 		attrib = attrib->Next();
 	}
@@ -547,18 +581,34 @@ ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::At
 
 			int id = a->getId();
 			Enums::DataType type = a->getType();
-			value = readChildTag(parent, p, type, attribs);
-			if (!anObj->isValid(id, type, value)) {
-				std::string s = getValidValuesString(a);
-				if (s != "") {
-					NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(), a->getName().c_str(), s.c_str());
+			
+			if (type != Enums::STRING) {
+				
+				value = readChildTag(parent, p, type, attribs);
+				if (!anObj->isValid(id, a->getType(), value)) {
+					std::string s = getValidValuesString(a);
+					if (s != "") {
+						NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(), a->getName().c_str(), s.c_str());
+					}
+					else {
+						NAU_THROW("File %s\nElement %s: \"%s\" is not supported", ProjectLoader::s_File.c_str(), parent.c_str(), a->getName().c_str());
+					}
 				}
-				else {
-					NAU_THROW("File %s\nElement %s: \"%s\" is not supported", ProjectLoader::s_File.c_str(), parent.c_str(), a->getName().c_str());
-				}
+				anObj->setProp(id, a->getType(), value);
+				delete value;
 			}
-			anObj->setProp(id, a->getType(), value);
-			delete value;
+			else {
+				std::string &valueS = readChildTagString(parent, p, attribs);
+				if (!anObj->isValids((AttributeValues::StringProperty)id, valueS)) {
+					std::string s = "File: " + ProjectLoader::s_File;
+					addToDefferredVal(s, p->Row(), p->Column(), valueS, a->getObjType());
+					//std::vector<string> validValues;
+					//NAU->getValidObjectNames(a->getObjType(), &validValues);
+					//TextUtil::Join(validValues, ", ", &s_Dummy);
+					//NAU_THROW("File %s line: %d column: %d\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), p->Row(), p->Column(),parent.c_str(), a->getName().c_str(), s_Dummy.c_str());
+				}
+				anObj->setProps((AttributeValues::StringProperty)id, valueS);
+			}
 		}
 		p = p->NextSiblingElement();
 	}
@@ -645,6 +695,7 @@ ProjectLoader::load (std::string file, int *width, int *height)
 	LOG_INFO ("Loading project: %s", file.c_str()); 
 #endif
 
+	s_DeferredVal.clear();
 	ProjectLoader::s_Path = File::GetPath(file);
 	ProjectLoader::s_File = file;
 	s_Constants.clear();
@@ -700,6 +751,8 @@ ProjectLoader::load (std::string file, int *width, int *height)
 	}
 	std::vector<std::string> v = { "assets" , "pipelines" , "interface"};
 	checkForNonValidChildTags("project", v, pElem);
+
+	deferredValidation();
 
 #if NAU_DEBUG == 1
 	LOG_INFO ("Loading done"); 
@@ -797,6 +850,40 @@ and can be used to replace any numeric type.
 ----------------------------------------------------------------- */
 
 void 
+ProjectLoader::addToDefferredVal(std::string filename, int row, int column, 
+				std::string value, std::string objType) {
+
+	DeferredValidation df;
+	df.filename = filename;
+	df.actualValue = value;
+	df.row = row;
+	df.column = column;
+	df.objType = objType;
+
+	s_DeferredVal.push_back(df);
+}
+
+void nau::loader::ProjectLoader::deferredValidation() {
+
+	std::string s = "";
+	for (auto df : s_DeferredVal) {
+		if (!NAU->validateObjectName(df.objType, df.actualValue)) {
+			s = s + df.filename + " (Line " + std::to_string(df.row) + ", column " + std::to_string(df.column) + ")\n ";
+			s += "Element " + df.objType + " value " + df.actualValue + " is invalid\n";
+			s += "Valid Values: ";
+			std::vector<string> validValues;
+			NAU->getValidObjectNames(df.objType, &validValues);
+			TextUtil::Join(validValues, ", ", &s_Dummy);
+			s += s_Dummy + "\n\n";
+		}
+	}
+	if (s != "") {
+		NAU_THROW(s.c_str());
+	}
+	s_DeferredVal.clear();
+}
+
+void
 ProjectLoader::loadConstants(TiXmlHandle &handle) 
 {
 	TiXmlElement *pElem, *pElem2;
@@ -1303,25 +1390,25 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 		TiXmlElement *pElemAux = 0;
 		std::string s;
 
-		// Read Viewport
-		pElemAux = pElem->FirstChildElement ("viewport");
-		std::shared_ptr<Viewport> v;
-		if (0 == pElemAux) {
-			v = NAU->getDefaultViewport ();
-		} else {
-			if (TIXML_SUCCESS != pElemAux->QueryStringAttribute("name", &s))
-				NAU_THROW("File %s\nElement %s\nviewport name is required", ProjectLoader::s_File.c_str(), pName);
+		//// Read Viewport
+		//pElemAux = pElem->FirstChildElement ("viewport");
+		//std::shared_ptr<Viewport> v;
+		//if (0 == pElemAux) {
+		//	v = NAU->getDefaultViewport ();
+		//} else {
+		//	if (TIXML_SUCCESS != pElemAux->QueryStringAttribute("name", &s))
+		//		NAU_THROW("File %s\nElement %s\nviewport name is required", ProjectLoader::s_File.c_str(), pName);
 
-			// Check if previously defined
-			v = RENDERMANAGER->getViewport(s);
-			if (!v)
-				NAU_THROW("File %s\nElement %s\nviewport %s is not previously defined", ProjectLoader::s_File.c_str(), pName, s.c_str());
+		//	// Check if previously defined
+		//	v = RENDERMANAGER->getViewport(s);
+		//	if (!v)
+		//		NAU_THROW("File %s\nElement %s\nviewport %s is not previously defined", ProjectLoader::s_File.c_str(), pName, s.c_str());
 
-			aNewCam->setViewport (v);
-		}
+		//	aNewCam->setViewport (v);
+		//}
 		// read projection values
 		pElemAux = pElem->FirstChildElement("projection");
-
+		
 		if (pElemAux != NULL)
 		{
 			std::vector<std::string> excluded;
@@ -1330,7 +1417,7 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 		// Reading remaining camera attributes
 
 		std::vector<std::string> excluded;
-		excluded.push_back("projection"); excluded.push_back("viewport");
+		excluded.push_back("projection"); 
 		readChildTags(pName, (AttributeValues *)aNewCam.get(), Camera::Attribs, excluded, pElem);
 	} //End of Cameras
 }
@@ -3617,11 +3704,8 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				else
 					INTERFACE->addVar(pWindowName, pLabel, pType, pContext, pComponent, id, def);
 			}
-
 		}
-
 	}
-
 }
 
 
@@ -3640,8 +3724,8 @@ PRE POST PROCESS
  ----------------------------------------------------------------------------- */
 
 void 
-ProjectLoader::loadPassPreProcess(TiXmlHandle hPass, Pass *aPass) 
-{
+ProjectLoader::loadPassPreProcess(TiXmlHandle hPass, Pass *aPass) {
+
 	TiXmlElement *pElem;
 	std::vector <std::string> excluded = {"name", "fromLibrary"};
 
@@ -3681,15 +3765,13 @@ ProjectLoader::loadPassPreProcess(TiXmlHandle hPass, Pass *aPass)
 		else {
 			NAU_THROW("File %s\nPass %s\nError in pre process tag\nValid child tags are: texture or buffer", s_File.c_str(), aPass->getName().c_str());
 		}
-
-
 	}
 }
 
 
 void 
-ProjectLoader::loadPassPostProcess(TiXmlHandle hPass, Pass *aPass) 
-{
+ProjectLoader::loadPassPostProcess(TiXmlHandle hPass, Pass *aPass) {
+
 	TiXmlElement *pElem;
 	std::vector <std::string> excluded = {"name", "fromLibrary"};
 
@@ -4410,6 +4492,9 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 			}
 
 			else if (s == "CAMERA" && strcmp(pContext, "CURRENT")) {
+				std::string s;
+				s += "MatLib " + aLib->getName();
+				addToDefferredVal(s, pElemAux2->Row(), pElemAux2->Column(), pContext, "CAMERA");
 				// Must consider that a camera can be defined internally in a pass, example:lightcams
 				/*if (!RENDERMANAGER->hasCamera(pContext))
 					NAU_THROW("Camera %s is not defined in the project file", pContext);*/

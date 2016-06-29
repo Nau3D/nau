@@ -41,6 +41,8 @@ namespace nau {
 			Data *min=NULL, Data *max = NULL, 
 			IAPISupport::APIFeatureSupport requires = IAPISupport::OK, Semantics sem=NONE);
 		
+		Attribute(unsigned int id, std::string name, std::string objType, bool readOnlyFlag = false, bool mustExist = true, std::string default = "");
+
 		~Attribute();
 
 		Attribute(const Attribute & source);
@@ -60,6 +62,10 @@ namespace nau {
 		std::shared_ptr<Data> &getMax();
 		std::shared_ptr<Data> &getMin();
 		std::shared_ptr<Data> &getDefault();
+
+		const std::string & getDefaultString();
+		bool getMustExist();
+		const std::string & getObjType();
 
 		bool getListDefined();
 		int getOptionValue(std::string &s);
@@ -84,6 +90,9 @@ namespace nau {
 
 		int m_Id;
 		std::string m_Name;
+		std::string m_ObjType;
+		std::string m_DefaultS;
+		bool m_MustExist;
 		Enums::DataType m_Type;
 		bool m_ReadOnlyFlag;
 		std::shared_ptr<Data> m_Default;

@@ -178,6 +178,10 @@ namespace nau {
 		bool validateObjectType(const std::string & type);
 		void getValidObjectTypes(std::vector<std::string>* v);
 
+		void getValidObjectNames(const std::string & type, std::vector<std::string>* v);
+
+		bool validateObjectName(const std::string & type, std::string & v);
+
 		bool validateObjectContext(const std::string & type, const std::string & context);
 
 		bool validateObjectComponent(const std::string & type, const std::string & component);

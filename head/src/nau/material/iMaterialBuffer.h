@@ -33,7 +33,7 @@ namespace nau
 			void setBuffer(IBuffer *b);
 			IBuffer *getBuffer();
 
-			~IMaterialBuffer(void) {};
+			virtual ~IMaterialBuffer(void) {};
 
 		protected:
 

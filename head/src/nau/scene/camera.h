@@ -63,6 +63,8 @@ namespace nau
 
 			ENUM_PROP(PROJECTION_TYPE, 0);
 
+			STRING_PROP(VIEWPORT, 0);
+
 			static AttribSet Attribs;
 
 			virtual ~Camera (void);
@@ -72,6 +74,7 @@ namespace nau
 			void setPropf4(Float4Property prop, float r, float g, float b, float a);
 			void setPropf(FloatProperty prop, float value);
 			void setPrope(EnumProperty prop, int value);
+			void setProps(StringProperty prop, std::string &value);
 
 			//void *getProp(int prop, Enums::DataType type);
 

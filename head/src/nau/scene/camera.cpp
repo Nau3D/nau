@@ -58,6 +58,8 @@ Camera::Init() {
 	Attribs.add(Attribute(PROJECTION_TYPE, "TYPE", Enums::DataType::ENUM, false, new NauInt(PERSPECTIVE)));
 	Attribs.listAdd("TYPE", "PERSPECTIVE", PERSPECTIVE);
 	Attribs.listAdd("TYPE", "ORTHO", ORTHO);
+	// STRING
+	Attribs.add(Attribute(VIEWPORT, "viewport", "VIEWPORT"));
 
 #ifndef _WINDLL
 	NAU->registerAttributes("CAMERA", &Attribs);
@@ -313,6 +315,18 @@ Camera::setPrope(EnumProperty prop, int value) {
 }
 
 
+void 
+Camera::setProps(StringProperty prop, std::string & value) {
+
+	AttributeValues::setProps(prop, value);
+
+	if (prop == VIEWPORT) {
+		std::shared_ptr<Viewport> &v = RENDERMANAGER->getViewport(value);
+		setViewport(v);
+	}
+}
+
+
 //void *
 //Camera::getProp(int prop, Enums::DataType type) {
 //
@@ -533,13 +547,16 @@ Camera::setViewport (std::shared_ptr<Viewport> aViewport) {
 
 	if (aViewport != NULL) {
 
+		m_StringProps[VIEWPORT] = aViewport->getName();
+
 		buildViewMatrix();
 		buildProjectionMatrix();
 		buildProjectionViewMatrix();
 		buildTS05PVMMatrix();
 		buildInverses();
-
 	}
+	else
+		m_StringProps[VIEWPORT] = "";
 }
 
 

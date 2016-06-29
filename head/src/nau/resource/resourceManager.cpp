@@ -592,10 +592,9 @@ ResourceManager::getBufferByID(int id) {
 
 
 void 
-ResourceManager::getBufferNames(std::vector<std::string> &names) {
+ResourceManager::getBufferNames(std::vector<std::string> *names) {
 
-	names.clear();
 	for (auto b : m_Buffers) {
-		names.push_back(b.second->getLabel());
+		names->push_back(b.second->getLabel());
 	}
 }

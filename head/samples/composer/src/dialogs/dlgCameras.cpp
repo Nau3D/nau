@@ -107,7 +107,6 @@ void
 DlgCameras::updateViewportLabels() {
 
 	m_ViewportLabels.RemoveAt(0, m_ViewportLabels.GetCount());
-	m_ViewportLabels.Add(wxT("None"), -1);
 
 	std::vector<std::string> viewports;
 	RENDERMANAGER->getViewportNames(&viewports);

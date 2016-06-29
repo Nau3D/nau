@@ -15,8 +15,9 @@ namespace nau
 		{
 		public:
 
+
 			static PhysicsPropertyManager* GetInstance();
-			PhysicsPropertyManager::~PhysicsPropertyManager();
+			PhysicsPropertyManager::~PhysicsPropertyManager() {};
 
 			float getMaterialFloatProperty(const std::string &material, const std::string &property);
 			float *getMaterialVec4Property(const std::string &material, const std::string & property);

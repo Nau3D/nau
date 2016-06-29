@@ -59,15 +59,16 @@ namespace nau {
 			virtual void prepare(unsigned int aUnit, int aDim) = 0;
 			virtual void restore(unsigned int aUnit, int aDim) = 0;
 
-			ITextureSampler() ;		
+
+			virtual ~ITextureSampler() {};
 		
 		protected:
 
 			static bool Init();
 			static bool Inited;
 
+			ITextureSampler() ;	
 
-//			bool m_Mipmap;
 		};
 	};
 };

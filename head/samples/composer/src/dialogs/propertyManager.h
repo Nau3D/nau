@@ -39,6 +39,9 @@ protected:
 	static void addAttribute(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static bool inList(std::string attr, std::vector<std::string> &list);
 
+	static void createString(wxPropertyGridManager * pg, std::unique_ptr<Attribute>& a);
+	static void updateString(wxPropertyGridManager * pg, std::string label, const std::string &a);
+
 	static void createEnum(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateEnum(wxPropertyGridManager *pg, std::string label, int a);
 

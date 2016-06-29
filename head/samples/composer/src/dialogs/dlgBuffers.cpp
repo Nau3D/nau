@@ -370,7 +370,7 @@ void DlgDbgBuffers::setBufferList(){
 	bufferSettingsList.clear();
 	currentBuffer = NO_BUFFER;
 
-	RESOURCEMANAGER->getBufferNames(names);
+	RESOURCEMANAGER->getBufferNames(&names);
 
 	for (auto name : names) {
 

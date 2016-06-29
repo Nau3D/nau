@@ -48,7 +48,7 @@ namespace nau
 			virtual int getWidth();
 			virtual int getHeight();
 			virtual int getDepth();
-			~ITexImage();
+			virtual ~ITexImage();
 
 			static const unsigned int IconSize = 96;
 

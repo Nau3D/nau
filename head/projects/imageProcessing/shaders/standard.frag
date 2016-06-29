@@ -2,7 +2,7 @@
 
 uniform sampler2D texUnit;
 
-in vec4 texCoordV;
+in vec2 texCoordV;
 
 out vec4 res;
 

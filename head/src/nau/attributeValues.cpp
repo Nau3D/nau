@@ -8,10 +8,42 @@
 int AttributeValues::NextAttrib = 0;
 
 // ----------------------------------------------
+//		STRING
+// ----------------------------------------------
+
+const std::string & nau::AttributeValues::getProps(StringProperty prop) {
+
+	if (m_StringProps.count(prop))
+		return m_StringProps[prop];
+	else
+		return m_DummyString;
+}
+
+void 
+AttributeValues::setProps(StringProperty prop, std::string &value) {
+
+	if (isValids(prop, value))
+		m_StringProps[prop] = value;
+}
+
+bool 
+AttributeValues::isValids(StringProperty prop, std::string value) {
+
+	//if (!m_StringProps.count(prop))
+	//	return false;
+
+	const std::string &name = m_Attribs->getName(prop, Enums::STRING);
+	const std::string &context = m_Attribs->get(name)->getObjType();
+	return NAU->validateObjectName(context, value);
+}
+
+
+// ----------------------------------------------
 //		ENUM
 // ----------------------------------------------
 
-int 
+
+int
 AttributeValues::getPrope(EnumProperty prop) {
 
 	// if not a user attrib
