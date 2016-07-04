@@ -40,7 +40,21 @@ namespace nau {
 
 	public:
 		bool isValid(Enums::DataType dt, unsigned int prop, Data *value);
+
+	// STRING
+	protected:
+		std::map<int, std::string> m_StringProps;
+		std::string m_DummyString = "";
+
+	public:
+		typedef enum {} StringProperty;
+
+
+		virtual const std::string &getProps(StringProperty prop);
+		virtual void setProps(StringProperty prop, std::string &value);
+		virtual bool isValids(StringProperty, std::string value);
 	// ENUM
+
 	protected:
 		std::map<int, int> m_EnumProps;
 

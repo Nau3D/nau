@@ -22,7 +22,7 @@ Attribute::Attribute(unsigned int id, std::string name, Enums::DataType type,
 	Semantics sem) :
 	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), 
 		m_ListDefined(false), m_RangeDefined(false), m_Semantics(sem),
-		m_Requires(requires){
+		m_Requires(requires) {
 		
 	int s = Enums::getSize(m_Type);
 
@@ -44,6 +44,19 @@ Attribute::Attribute(unsigned int id, std::string name, Enums::DataType type,
 	}
 }
 
+nau::Attribute::Attribute(unsigned int id, std::string name, std::string objType, 
+							bool readOnlyFlag, bool mustExist, std::string default):
+	m_Id(id),
+	m_Name(name),
+	m_ObjType(objType),
+	m_ReadOnlyFlag(readOnlyFlag),
+	m_MustExist(mustExist),
+	m_DefaultS(default),
+	m_Type(Enums::STRING)
+	{
+
+}
+
 
 Attribute::~Attribute() {
 
@@ -51,7 +64,7 @@ Attribute::~Attribute() {
 
 
 Attribute::Attribute(const Attribute & source):
-	m_Id(source.m_Id), m_Name(source.m_Name), m_Type(source.m_Type),
+	m_Id(source.m_Id), m_Name(source.m_Name), m_Type(source.m_Type), m_ObjType(source.m_ObjType),
 	m_ReadOnlyFlag(source.m_ReadOnlyFlag), m_Requires(source.m_Requires),
 	m_Semantics(source.m_Semantics), m_RangeDefined(source.m_RangeDefined) {
 
@@ -107,6 +120,26 @@ shared_ptr<Data> &
 Attribute::getDefault() {
 
 	return m_Default;
+}
+
+
+const std::string &
+Attribute::getDefaultString() {
+
+	return m_DefaultS;
+}
+
+
+const std::string &
+Attribute::getObjType() {
+
+	return m_ObjType;
+}
+
+
+bool nau::Attribute::getMustExist() {
+
+	return m_MustExist;
 }
 
 

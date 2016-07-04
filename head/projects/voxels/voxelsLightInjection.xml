@@ -2,8 +2,8 @@
 <project name="Voxels" width=1024 height=1024>
 	<assets>
 		<constants>
-			<constant name="GridSize" value = 512 />
-			<constant name="CompRO" value = 64 /> <!-- GridSize/8 -->
+			<constant name="GridSize" value = 256 />
+			<constant name="CompRO" value = 32 /> <!-- GridSize/8 -->
 		</constants>
 		<attributes>
 			<attribute name="GridSize" type="PASS" data="INT" value="GridSize" />
@@ -148,7 +148,7 @@
 			
 			<!--pass class="quad" name="test">
 				<viewport name="MainViewport" />
-				<texture name="RSMTest" fromLibrary="Voxels" />
+				<texture name="RSM" fromLibrary="Voxels" />
 			</pass-->
 			
 			<pass class="compute" name="resetOpacity" >
@@ -171,7 +171,7 @@
 					<light name="Sun" />
 				</lights>	
 				<camera name="MainCamera" />
-				<!--viewport name="MainViewport" /-->
+				
 				<renderTarget name="scene" fromLibrary="Voxels" />
 				<injectionMaps>
 					<map toMaterial="*">

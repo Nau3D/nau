@@ -56,20 +56,12 @@ namespace nau
 
 			virtual void generateMipmaps() = 0;
 
-			//virtual void enableCompareToTexture (void) = 0;
-			//virtual void disableCompareToTexture (void) = 0;
-
-			//virtual void enableObjectSpaceCoordGen (void) {};
-			//virtual void generateObjectSpaceCoords (TextureCoord aCoord, float *plane) {}; /***MARK***/ //Maybe this should be plane class
-
+			virtual ~ITextureCubeMap(void);
 
 		protected:
 			ITextureCubeMap(std::string label, std::vector<std::string> files, 
 				std::string internalFormat, 
 				std::string aFormat, std::string aType, int width);
-			//ITextureCubeMap (std::string label, std::vector<std::string> files);
-		public:
-			virtual ~ITextureCubeMap(void);
 		};
 	};
 };

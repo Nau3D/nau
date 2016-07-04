@@ -36,14 +36,14 @@ namespace nau
 			virtual void save(ITexImage *ti, std::string filename) = 0;
 			virtual void save(int width, int height, unsigned char *data, std::string filename) = 0;
 
-			virtual ~ITextureLoader(void) {};
+			static void SaveRaw(ITexture *t, std::string filename);
 
 			static const int BITMAP_SIZE = 96;
 
 			static void Save(ITexture *t, FileType ft);
 			static void Save(int width, int height, unsigned char *data, std::string filename = "");
 
-			static void SaveRaw(ITexture *t, std::string filename);
+			virtual ~ITextureLoader(void) {};
 		};
 	};
 };

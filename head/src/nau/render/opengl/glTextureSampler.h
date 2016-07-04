@@ -14,7 +14,7 @@ namespace nau
 		class GLTextureSampler : public nau::material::ITextureSampler
 		{
 		public:
-			~GLTextureSampler(void);
+			~GLTextureSampler(void) {};
 			GLTextureSampler(ITexture *t);
 
 			void update();
@@ -30,7 +30,7 @@ namespace nau
 			static bool InitGL();
 
 
-			GLTextureSampler(void);
+			GLTextureSampler(void) {};
 		};
 	};
 };

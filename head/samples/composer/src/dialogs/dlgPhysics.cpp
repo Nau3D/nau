@@ -145,9 +145,9 @@ DlgPhysics::setupGrid() {
 	std::vector<std::string> order = { "SCENE_TYPE" };
 	PropertyManager::createOrderedGrid(m_PGMat, PhysicsMaterial::Attribs, order);
 	m_PGMat->SetSplitterLeft(true, true);
-
+	m_PGGlobal->Clear();
+	m_PGGlobal->AddPage(wxT("properties"));
 	PropertyManager::createGrid(m_PGGlobal, PhysicsManager::Attribs);
-
 }
 
 
@@ -170,7 +170,6 @@ DlgPhysics::updateList() {
 		m_Active = names[0];
 		m_List->SetSelection(0);
 		m_List->Enable();
-
 	}
 	else {
 

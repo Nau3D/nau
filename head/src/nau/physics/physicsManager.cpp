@@ -22,9 +22,6 @@ deletePhysicsProc deletePhysics;
 bool
 PhysicsManager::Init() {
 
-	//Attribs.add(Attribute(GRAVITY, "GRAVITY", Enums::DataType::VEC4, false, new vec4(0.0f, -9.8f, 0.0f, 0.0f)));
-
-
 	NAU->registerAttributes("PHYSICS_MANAGER", &Attribs);
 
 	return true;
@@ -85,6 +82,7 @@ PhysicsManager::~PhysicsManager() {
 	if (m_PhysInst) {
 		deletePhysics();
 		m_PhysInst = NULL;
+		delete m_PropertyManager;
 	}
 
 	clear();

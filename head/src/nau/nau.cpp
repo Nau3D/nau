@@ -985,6 +985,39 @@ Nau::getValidObjectTypes(std::vector<std::string> *v) {
 }
 
 
+void
+Nau::getValidObjectNames(const std::string &type, std::vector<std::string> *v) {
+
+	if (type == "VIEWPORT") {
+		RENDERMANAGER->getViewportNames(v);
+	}
+	if (type == "CAMERA") {
+		RENDERMANAGER->getCameraNames(v);
+	}
+	if (type == "BUFFER") {
+		return RESOURCEMANAGER->getBufferNames(v);
+	}
+}
+
+
+bool
+Nau::validateObjectName(const std::string &type, std::string &v) {
+
+	if (type == "")
+		return true;
+	if (type == "VIEWPORT") {
+		return RENDERMANAGER->hasViewport(v);
+	}
+	if (type == "CAMERA") {
+		return RENDERMANAGER->hasCamera(v);
+	}
+	if (type == "BUFFER") {
+		return RESOURCEMANAGER->hasBuffer(v);
+	}
+	return false;
+}
+
+
 bool 
 Nau::validateObjectContext(const std::string &type, const std::string &context) {
 

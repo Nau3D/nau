@@ -24,7 +24,7 @@ namespace nau
 		
 			static IUniformBlock *Create(std::string &name, unsigned int size);
 
-			~IUniformBlock() {};
+			 virtual ~IUniformBlock() {};
 
 			virtual void init(std::string &name, unsigned int size) = 0;
 			virtual void setBindingIndex(unsigned int i) = 0;

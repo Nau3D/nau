@@ -34,6 +34,15 @@ namespace nau
 
 		private:
 
+			typedef struct {
+				std::string filename;
+				int row, column;
+				std::string actualValue;
+				std::string objType;
+			} DeferredValidation;
+
+			static std::vector<DeferredValidation> s_DeferredVal;
+
 			enum {
 				OK,
 				ITEM_NAME_NOT_SPECIFIED,
@@ -41,6 +50,11 @@ namespace nau
 			};
 
 			ProjectLoader(void);
+
+			// add to deferred Validation list
+			static void addToDefferredVal(std::string filename, int row, int column,
+				std::string value, std::string objType);
+			static void deferredValidation();
 
 			// load the constants section
 			static void loadConstants(TiXmlHandle &hRoot);
@@ -88,9 +102,11 @@ namespace nau
 			// read a child tag 
 			static Data *readChildTag(std::string parent, TiXmlElement *pElem, Enums::DataType type, 
 				AttribSet &attribs);
+			static std::string & readChildTagString(std::string parent, TiXmlElement *pElem, AttribSet &attribs);
 			// read an attribute 
 			//static void *readAttribute(const char *name, TiXmlElement *p, Enums::DataType type, AttribSet &attribs);
 			static Data *readAttribute(std::string tag, std::unique_ptr<Attribute> &attr, TiXmlElement *p);
+			static std::string &readAttributeString(std::string tag, std::unique_ptr<Attribute> &attr, TiXmlElement *p);
 			// check if a tring is in a vector
 			static bool isExcluded(std::string what, std::vector<std::string> &excluded);
 			// get all keys in a vector
@@ -188,6 +204,7 @@ namespace nau
 			static bool s_Dummy_bool;
 			static uivec3 s_Dummy_uivec3;
 			static uivec2 s_Dummy_uivec2;
+			static std::string s_Dummy_string;
 
 			static std::map<std::string, float> s_Constants;
 		};
