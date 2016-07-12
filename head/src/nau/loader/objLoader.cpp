@@ -878,7 +878,8 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 	// Renderable
 	// Set Renderable Factory 
-	std::shared_ptr<IRenderable> &aRenderable = RESOURCEMANAGER->createRenderable ("Mesh","unnamed", aObject->getName());
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
+	std::shared_ptr<IRenderable> &aRenderable = rm->createRenderable ("Mesh",rm->makeMeshName("", aObject->getName()));
 	aRenderable->setDrawingPrimitive(primitive);
 
 	// Import VERTEX/NORMAL/TEXTURE data into Renderable

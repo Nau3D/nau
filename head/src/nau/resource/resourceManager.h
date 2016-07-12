@@ -38,23 +38,25 @@ namespace nau
 			void clear();
 
 			/***Textures***/
-			bool hasTexture(std::string name);
-			int getNumTextures();
 
-			ITexture* getTexture(unsigned int i);
-			ITexture* getTextureByID(unsigned int id);
-			ITexture* getTexture (std::string name);
-
-			ITexture* addTexture (std::string fn, std::string label = "", bool mipmap = 1);
-			ITexture* addTexture (std::vector<std::string> fn, std::string label, bool mipmap = 1);
-
-			void removeTexture (std::string name);
-			
 			ITexture* createTexture (std::string label, std::string internalFormat, int width, 
 				int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
 
 			/// create texture with default attributes, texture requires building prior to usage
 			ITexture * createTexture(std::string label);
+
+			/// create texture from file
+			ITexture* addTexture (std::string fn, std::string label = "", bool mipmap = true);
+			/// create cube map from file
+			ITexture* addTexture (std::vector<std::string> &fn, std::string &label, bool mipmap = true);
+			
+			void removeTexture (const std::string &name);
+
+			bool hasTexture(const std::string &name);
+			ITexture* getTexture (const std::string &name);
+			ITexture* getTexture(unsigned int i);
+			ITexture* getTextureByID(unsigned int id);
+			int getNumTextures();
 
 			/***Rendertargets***/
 			nau::render::IRenderTarget* createRenderTarget (std::string name);
@@ -62,20 +64,20 @@ namespace nau
 			bool hasRenderTarget(const std::string &name);
 			nau::render::IRenderTarget *getRenderTarget(const std::string &name);
 			int getNumRenderTargets();
-			std::vector<std::string>* ResourceManager::getRenderTargetNames();
+			void ResourceManager::getRenderTargetNames(std::vector<std::string> *v);
+
 
 			/***Renderables***/
-			std::shared_ptr<IRenderable> createRenderable(std::string type, std::string name="", std::string filename = "");
-			bool hasRenderable (std::string meshName, std::string filename);
-			std::shared_ptr<IRenderable> &getRenderable (std::string meshName, std::string filename);
-			std::shared_ptr<IRenderable> &addRenderable (std::shared_ptr<IRenderable> &aMesh, std::string filename);
-			void removeRenderable(std::string name);
+			std::string makeMeshName(const std::string &name, const std::string &filename);
+			std::shared_ptr<IRenderable> &createRenderable(const std::string &type, const std::string &name);
+			void removeRenderable(const std::string &name);
+			bool hasRenderable (const std::string &name);
+			std::shared_ptr<IRenderable> &getRenderable (const std::string &name);
 
 			/***States***/
 			IState * createState(const std::string &stateName);
 			bool hasState (const std::string &stateName);
 			nau::material::IState* getState (const std::string &stateName);
-			void addState (nau::material::IState* aState);
 
 			/***Shaders***/
 			bool hasProgram (std::string programName);

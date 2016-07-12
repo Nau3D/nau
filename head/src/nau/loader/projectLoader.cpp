@@ -863,24 +863,27 @@ ProjectLoader::addToDefferredVal(std::string filename, int row, int column,
 	s_DeferredVal.push_back(df);
 }
 
-void nau::loader::ProjectLoader::deferredValidation() {
+void 
+ProjectLoader::deferredValidation() {
 
-	std::string s = "";
+	std::string s;
+	s_Dummy = "";
 	for (auto df : s_DeferredVal) {
 		if (!NAU->validateObjectName(df.objType, df.actualValue)) {
-			s = s + df.filename + " (Line " + std::to_string(df.row) + ", column " + std::to_string(df.column) + ")\n ";
-			s += "Element " + df.objType + " value " + df.actualValue + " is invalid\n";
-			s += "Valid Values: ";
+			s_Dummy = s_Dummy + df.filename + " (Line " + std::to_string(df.row) + ", column " + std::to_string(df.column) + ")\n ";
+			s_Dummy += "Element " + df.objType + " value " + df.actualValue + " is invalid\n";
+			s_Dummy += "Valid Values: ";
 			std::vector<string> validValues;
 			NAU->getValidObjectNames(df.objType, &validValues);
-			TextUtil::Join(validValues, ", ", &s_Dummy);
-			s += s_Dummy + "\n\n";
+			TextUtil::Join(validValues, ", ", &s);
+			s_Dummy += s + "\n\n";
 		}
 	}
-	if (s != "") {
-		NAU_THROW(s.c_str());
-	}
 	s_DeferredVal.clear();
+
+	if (s_Dummy != "") {
+		NAU_THROW(s_Dummy.c_str());
+	}
 }
 
 void
@@ -945,6 +948,7 @@ void
 ProjectLoader::loadScenes(TiXmlHandle handle) 
 {
 	TiXmlElement *pElem;
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
 
 	TiXmlElement *pElem2 = handle.FirstChild("scenes").Element();
 	std::vector<std::string> v;
@@ -1017,12 +1021,12 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 				bool alreadyThere = false;
 				std::shared_ptr<Primitive> p;
-				if (RESOURCEMANAGER->hasRenderable(pNameSO, "")) {
+				if (rm->hasRenderable(pNameSO)) {
 					alreadyThere = true;
-					p = dynamic_pointer_cast<Primitive>(RESOURCEMANAGER->getRenderable(pNameSO, ""));
+					p = dynamic_pointer_cast<Primitive>(rm->getRenderable(pNameSO));
 				}
 				else {
-					p = dynamic_pointer_cast<Primitive>(RESOURCEMANAGER->createRenderable(pPrimType, pNameSO));
+					p = dynamic_pointer_cast<Primitive>(rm->createRenderable(pPrimType, pNameSO));
 				}
 				if (!p)
 					NAU_THROW("File %s\nScene %s\nPrimitive %s has an invalid primitive type - %s", ProjectLoader::s_File.c_str(), pName, pNameSO, pPrimType);
@@ -1068,12 +1072,12 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 
 				bool alreadyThere = false;
 				std::shared_ptr<nau::geometry::Terrain> p;
-				if (RESOURCEMANAGER->hasRenderable(pNameSO, "")) {
+				if (rm->hasRenderable(pNameSO)) {
 					alreadyThere = true;
-					p = dynamic_pointer_cast<Terrain>(RESOURCEMANAGER->getRenderable(pNameSO, ""));
+					p = dynamic_pointer_cast<Terrain>(rm->getRenderable(pNameSO));
 				}
 				else {
-					p = dynamic_pointer_cast<Terrain>(RESOURCEMANAGER->createRenderable("Terrain", pNameSO));
+					p = dynamic_pointer_cast<Terrain>(rm->createRenderable("Terrain", pNameSO));
 				}
 
 				if (!alreadyThere) {
@@ -1123,7 +1127,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				IRenderable::DrawPrimitive dp = IRenderer::PrimitiveTypes[primString];
 				std::shared_ptr<SceneObject> &so = SceneObjectFactory::Create("SimpleObject");
 				so->setName(pNameSO);
-				std::shared_ptr<IRenderable> &i = RESOURCEMANAGER->createRenderable("Mesh", pNameSO);
+				std::shared_ptr<IRenderable> &i = rm->createRenderable("Mesh", pNameSO);
 				i->setDrawingPrimitive(dp);
 				std::shared_ptr<MaterialGroup> mg;
 				if (pMaterial)
@@ -1141,7 +1145,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 						NAU_THROW("File %s\nScene: %s\nBuffer has no name", ProjectLoader::s_File.c_str(), pName);
 
 					IBuffer * b;
-					b = RESOURCEMANAGER->createBuffer(bufferName);
+					b = rm->createBuffer(bufferName);
 					int attribIndex = VertexData::GetAttribIndex(std::string(p->Value()));
 
 					if (attribIndex != VertexData::MaxAttribs) {
@@ -3981,7 +3985,7 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 		files[4] = File::GetFullPath(path,pFilePosZ);
 		files[5] = File::GetFullPath(path,pFileNegZ);
 
-		RESOURCEMANAGER->addTexture (files, s_pFullName, mipmap);		
+		RESOURCEMANAGER->addTexture (files, std::string(s_pFullName), mipmap);		
 	}
 }
 
@@ -4056,11 +4060,12 @@ ProjectLoader::loadMatLibStates(TiXmlHandle hRoot, MaterialLib *aLib)
 			NAU_THROW("Mat Lib %s\nState %s is already defined", aLib->getName().c_str(), pStateName);
 
 
-		IState *s = IState::create();
-		s->setName(fullName);
+		IState *s = RESOURCEMANAGER->createState(fullName);
+		//IState *s = IState::create();
+		//s->setName(fullName);
 
 		loadState(pElem,aLib,NULL,s);
-		RESOURCEMANAGER->addState(s);
+		//RESOURCEMANAGER->addState(s);
 	}
 }
 

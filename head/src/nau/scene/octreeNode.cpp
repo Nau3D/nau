@@ -133,6 +133,7 @@ OctreeNode::unitize(vec3 &center, vec3 &min, vec3 &max) {
 void 
 OctreeNode::setRenderable (std::shared_ptr<nau::render::IRenderable> &aRenderable)
 {
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
 	int vertexArrayPos = VertexData::GetAttribIndex(std::string("position"));
 	int offSet;
 
@@ -211,7 +212,7 @@ OctreeNode::setRenderable (std::shared_ptr<nau::render::IRenderable> &aRenderabl
 			for (int index = TOPFRONTLEFT; index <= ROOT; index++) {
 				if (0 != tempMaterialGroup[index]) {
 					if (0 == tempMesh[index]) {
-						tempMesh[index] = RESOURCEMANAGER->createRenderable("Mesh", _genOctName()); //new Mesh;
+						tempMesh[index] = rm->createRenderable("Mesh", _genOctName()); //new Mesh;
 					}
 					tempMesh[index]->addMaterialGroup (tempMaterialGroup[index], aRenderable);
 					tempMaterialGroup[index].reset();

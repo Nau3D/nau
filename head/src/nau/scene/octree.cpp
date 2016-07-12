@@ -41,7 +41,7 @@ Octree::build (std::vector<std::shared_ptr<SceneObject>> &sceneObjects) {
 	// Create the Octree's root node
 	m_pOctreeRootNode = std::shared_ptr<OctreeNode>(new OctreeNode (0, new BoundingBox(sceneBoundingBox)));
 
-	std::shared_ptr<nau::render::IRenderable> &m = RESOURCEMANAGER->createRenderable("Mesh");//new Mesh();
+	std::shared_ptr<nau::render::IRenderable> &m = RESOURCEMANAGER->createRenderable("Mesh","");
 
 	// Send the Renderables down the octree
 

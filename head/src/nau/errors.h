@@ -9,11 +9,13 @@
 //! Exceptions should be used with care and parcimony only to signify serious 
 //! errors
 
+static char errorMessage[4096];
+
 #define NAU_THROW(message, ...) \
 {\
-  char m[1024];\
-  sprintf(m, message, ## __VA_ARGS__);\
-  throw std::string(m);\
+  /*char m[4096];*/\
+  snprintf(errorMessage, 4095, message, ## __VA_ARGS__);\
+  throw std::string(errorMessage);\
 };
 
 

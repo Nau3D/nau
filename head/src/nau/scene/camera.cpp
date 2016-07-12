@@ -11,6 +11,7 @@
 #include "nau/math/matrix.h"
 #include "nau/math/utils.h"
 #include "nau/render/iRenderer.h"
+#include "nau/resource/resourceManager.h"
 
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
@@ -22,6 +23,7 @@ using namespace nau::math;
 using namespace nau::geometry;
 using namespace nau::render;
 using namespace nau::material;
+using namespace nau::resource;
 
 
 
@@ -109,7 +111,8 @@ Camera::Camera (const std::string &name) :
 	setVectorsFromSpherical();
 
 	// Adding a Mesh with the frustum lines
-	std::shared_ptr<IRenderable> &renderable =  RESOURCEMANAGER->createRenderable("Mesh", m_Name, "Camera");
+	ResourceManager *rm = RESOURCEMANAGER;
+	std::shared_ptr<IRenderable> &renderable =  rm->createRenderable("Mesh", rm->makeMeshName(m_Name, "Camera"));
 	//int drawPrimitive = IRenderer::Attribs.getID("LINES");
 	//renderable->setDrawingPrimitive(drawPrimitive/*nau::render::IRenderer::LINES*/);
 	renderable->setDrawingPrimitive(nau::render::IRenderable::LINES);

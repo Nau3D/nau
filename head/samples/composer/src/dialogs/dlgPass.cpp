@@ -524,12 +524,11 @@ void DlgPass::updateRenderTargetList(Pass *p) {
 	m_pgRenderTargetList.RemoveAt(0,m_pgRenderTargetList.GetCount());
 	m_pgRenderTargetList.Add(wxT("None"),0);
 
-	std::vector<std::string> *renderTargets = RESOURCEMANAGER->getRenderTargetNames();
+	std::vector<std::string> renderTargets;
+	RESOURCEMANAGER->getRenderTargetNames(&renderTargets);
 	int i = 0;
-	for (iter = renderTargets->begin(); iter != renderTargets->end(); ++iter)
-		m_pgRenderTargetList.Add(wxString(iter->c_str()), ++i);
-
-	delete renderTargets;
+	for (auto &rt: renderTargets)
+		m_pgRenderTargetList.Add(wxString(rt.c_str()), ++i);
 
 	m_pgPropRenderTarget->SetChoices(m_pgRenderTargetList);
 }

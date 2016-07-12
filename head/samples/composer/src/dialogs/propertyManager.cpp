@@ -394,23 +394,7 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 void
 PropertyManager::createString(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
-	wxPGProperty *pid;
-
 	std::string s = a->getObjType();
-	//std::vector<std::string> strs;
-	//std::vector<int> inds;
-	//a->getOptionListSupported(&inds);
-	//wxArrayString arr;
-	//wxArrayInt ind;
-	//for (unsigned int i = 0; i < inds.size(); ++i) {
-	//	arr.Add(wxString(strs[i].c_str()));
-	//	ind.Add(inds[i]);
-	//}
-
-	//pid = pg->Append(new wxEnumProperty(wxString(a->getName().c_str()), wxPG_LABEL, arr, ind, inds[0]));
-
-	//if (a->getReadOnlyFlag())
-	//	pg->DisableProperty(pid);
 }
 
 

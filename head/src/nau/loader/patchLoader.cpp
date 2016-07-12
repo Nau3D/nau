@@ -94,7 +94,8 @@ void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) 
 	aBoundingVolume->set(vec3(minX,minY,minZ), vec3(maxX, maxY, maxZ));
 	anObject->setBoundingVolume(aBoundingVolume);
 
-	std::shared_ptr<IRenderable> &aRenderable = RESOURCEMANAGER->createRenderable("Mesh", "patch", aFilename);
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
+	std::shared_ptr<IRenderable> &aRenderable = rm->createRenderable("Mesh", rm->makeMeshName("patch", aFilename));
 
 	std::shared_ptr<VertexData> vData = aRenderable->getVertexData();
 	vData->setDataFor(VertexData::GetAttribIndex(std::string("position")), vertices);

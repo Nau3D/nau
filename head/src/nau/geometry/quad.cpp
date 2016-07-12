@@ -14,7 +14,8 @@ using namespace nau::material;
 Quad::Quad(void) : 
 	SceneObject()
 {
-	std::shared_ptr<IRenderable> &renderable = RESOURCEMANAGER->createRenderable("Mesh");//new Mesh;
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
+	std::shared_ptr<IRenderable> &renderable = rm->createRenderable("Mesh", "");
 	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
 		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(4));
 	std::shared_ptr<std::vector<VertexData::Attr>> textureCoords = 
