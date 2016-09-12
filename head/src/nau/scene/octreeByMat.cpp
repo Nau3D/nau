@@ -62,7 +62,7 @@ OctreeByMat::build (std::vector<std::shared_ptr<SceneObject>> &sceneObjects)
 	m_pOctreeRootNode = std::shared_ptr<OctreeByMatNode>(new OctreeByMatNode ());
 	m_pOctreeRootNode->setName(m_Name);
 
-	std::shared_ptr<nau::render::IRenderable> &m = RESOURCEMANAGER->createRenderable("Mesh");
+	std::shared_ptr<nau::render::IRenderable> &m = RESOURCEMANAGER->createRenderable("Mesh","");
 
 	// Send the Renderables down the octree
 

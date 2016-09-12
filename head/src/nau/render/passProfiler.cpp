@@ -42,7 +42,8 @@ PassProfiler::PassProfiler (const std::string &name) :
 	m_CameraName = "__ProfilerCamera";
 	m_pCam = RENDERMANAGER->getCamera("__ProfilerCamera");
 	m_pSO = SceneObjectFactory::Create("SimpleObject");
-	m_pSO->setRenderable(RESOURCEMANAGER->createRenderable("Mesh", "__ProfilerResult", "Profiler"));
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
+	m_pSO->setRenderable(rm->createRenderable("Mesh", rm->makeMeshName("__ProfilerResult", "Profiler")));
 
 	m_Viewport = RENDERMANAGER->createViewport("__Profiler", vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	//m_pViewport = new nau::render::Viewport();

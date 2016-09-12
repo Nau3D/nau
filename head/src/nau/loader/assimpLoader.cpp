@@ -21,6 +21,7 @@ Assimp::Importer AssimpLoader::importer;
 void
 AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std::string &params) {
 
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
 	std::string path = File::GetPath(aFilename);
 	const aiScene *sc;
 	//check if file exists
@@ -63,8 +64,9 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		if (mesh->mPrimitiveTypes != 4)
 			continue;
 
+
 		std::shared_ptr<nau::render::IRenderable> & renderable =  
-			RESOURCEMANAGER->createRenderable("Mesh", mesh->mName.data, aFilename);
+			rm->createRenderable("Mesh", rm->makeMeshName(mesh->mName.data, aFilename));
 		meshNameMap[n] = renderable->getName();
 		renderable->setDrawingPrimitive(primitive);
 
@@ -192,7 +194,7 @@ AssimpLoader::recursiveWalk (nau::scene::IScene *aScene, std::string &aFilename,
 		//sc->mMeshes[nd->mMeshes[n]]->mName.data;
 		std::shared_ptr<SceneObject> so = SceneObjectFactory::Create("SimpleObject");
 		//SceneObject *so = SceneObjectFactory::Create("SimpleObject");
-		so->setRenderable(RESOURCEMANAGER->getRenderable(meshNameMap[nd->mMeshes[n]],""));
+		so->setRenderable(RESOURCEMANAGER->getRenderable(meshNameMap[nd->mMeshes[n]]));
 		so->setTransform(m);
 		aScene->add(so);
 		}

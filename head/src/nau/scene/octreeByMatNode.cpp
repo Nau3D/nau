@@ -135,6 +135,7 @@ OctreeByMatNode::getName() {
 void 
 OctreeByMatNode::setRenderable (std::shared_ptr<nau::render::IRenderable> &aRenderable)
 {
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
 	m_pLocalMeshes.clear();
 
 	// first divide the renderable so that each renderable has only one material
@@ -152,7 +153,7 @@ OctreeByMatNode::setRenderable (std::shared_ptr<nau::render::IRenderable> &aRend
 			so->setName(m_Name+"::"+pMaterialGroup->getMaterialName());
 
 			m_pLocalMeshes[pMaterialGroup->getMaterialName()] = so;
-			std::shared_ptr<IRenderable> &m = RESOURCEMANAGER->createRenderable("Mesh", m_Name+"::"+pMaterialGroup->getMaterialName());
+			std::shared_ptr<IRenderable> &m = rm->createRenderable("Mesh", m_Name+"::"+pMaterialGroup->getMaterialName());
 
 			m->addMaterialGroup(pMaterialGroup, aRenderable); 
 			so->setRenderable(m);

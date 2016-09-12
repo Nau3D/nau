@@ -768,8 +768,7 @@ void
 OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, std::shared_ptr<IRenderable> &m, std::string meshType)
 {
 	TiXmlElement *pElem;
-	//std::vector<vec3> *vertices, *normals, *tangents, *binormals, *texCoord0, *texCoord1,
-	//	*texCoord2, *texCoord3, *texCoord4, *texCoord5, *texCoord6, *texCoord7; 
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
 	char aux[256];
 	unsigned int operationType;
 
@@ -815,7 +814,7 @@ OgreMeshLoader::loadSubMeshes(TiXmlHandle handle, IScene *scn, std::shared_ptr<I
 		}
 		else {
 
-			std::shared_ptr<IRenderable> &m = RESOURCEMANAGER->createRenderable(meshType, aux, OgreMeshLoader::m_MeshFile);
+			std::shared_ptr<IRenderable> &m = rm->createRenderable(meshType, rm->makeMeshName(aux, OgreMeshLoader::m_MeshFile));
 			m->setDrawingPrimitive(operationType);
 			std::shared_ptr<SceneObject> &scnObj = SceneObjectFactory::Create("SimpleObject");
 			sprintf(aux,"Unnamed_%d", index);
@@ -858,7 +857,8 @@ OgreMeshLoader::loadSharedGeometry (TiXmlHandle hRoot, IScene *scn, std::string 
 	pElem = hRoot.FirstChild ("sharedgeometry").Element();
 
 	if (pElem) {
-		m_Temp = RESOURCEMANAGER->createRenderable(meshType, "Unnamed_shared", OgreMeshLoader::m_MeshFile);
+		nau::resource::ResourceManager *rm = RESOURCEMANAGER;
+		m_Temp = rm->createRenderable(meshType, rm->makeMeshName("Unnamed_shared", OgreMeshLoader::m_MeshFile));
 		std::shared_ptr<SceneObject> &scnObj = SceneObjectFactory::Create("SimpleObject");
 		//sprintf(aux,"Unnamed_shared", index);
 		scnObj->setName("Unnamed_shared");

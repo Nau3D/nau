@@ -203,6 +203,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 
 	//CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
 
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
 	m_FileName = aFilename;
 	std::string path = File::GetPath(aFilename);
 
@@ -291,7 +292,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 			/*Create the new renderable */
 
 			_readString (buffer, f);
-			aRenderable = RESOURCEMANAGER->createRenderable(buffer,renderableName,aFilename);
+			aRenderable = rm->createRenderable(buffer,rm->makeMeshName(renderableName,aFilename));
 			//aRenderable->setName (renderableName);
 			//RESOURCEMANAGER->addRenderable(aRenderable,aFilename);
 			//assert (0 == aRenderable);
@@ -368,7 +369,8 @@ CBOLoader::_readOctreeByMatSceneObject(std::shared_ptr<SceneObject> &so, std::fs
 	so->setTransform (mat);
 
 	_readString(buffer,f);
-	std::shared_ptr<IRenderable> &aRenderable = RESOURCEMANAGER->createRenderable("Mesh", buffer, m_FileName);
+	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
+	std::shared_ptr<IRenderable> &aRenderable = rm->createRenderable("Mesh", rm->makeMeshName(buffer, m_FileName));
 			
 	std::shared_ptr<VertexData> &vertexData = aRenderable->getVertexData();
 	_readVertexData (vertexData, f);
