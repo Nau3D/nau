@@ -17,8 +17,14 @@ namespace nau
 			
 
 		public:
-			FLOAT_PROP(MASS, 0);
 			ENUM_PROP(SCENE_TYPE, 0);
+			ENUM_PROP(SCENE_SHAPE, 1);
+			ENUM_PROP(SCENE_CONDITION, 2);
+			FLOAT_PROP(NBPARTICLES, 0);
+			FLOAT_PROP(MAX_PARTICLE, 1);
+			STRING_PROP(BUFFER, 0);
+			FLOAT4_PROP(DIRECTION, 0);
+			FLOAT4_PROP(SCENE_CONDITION_VALUE, 1);
 
 			static AttribSet Attribs;
 
@@ -27,6 +33,10 @@ namespace nau
 
 			void setPropf(FloatProperty p, float value);
 			void setPropf4(Float4Property p, vec4 &value);
+			void setProps(StringProperty prop, std::string &value);
+
+			float * getBuffer() { return buffer;}
+			void setBuffer(float * b) { buffer = b; }
 
 		protected:
 
@@ -34,6 +44,7 @@ namespace nau
 			static bool Inited;
 
 			std::string m_Name;
+			float * buffer;
 
 		};
 	};

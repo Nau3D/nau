@@ -84,7 +84,11 @@ IScene::updateTransform() {
 		break;
 	}
 	setTransform(tis);
-
+	std::shared_ptr<nau::event_::IEventData> e3 = nau::event_::EventFactory::Create("String");
+	std::string * name = new std::string(m_Name);
+	e3->setData(name);
+	delete name;
+	EVENTMANAGER->notifyEvent("SCENE_TRANSFORM", "SCENE", "", e3);
 }
 
 

@@ -154,7 +154,7 @@ Physics::applyGlobalVec4Property(const std::string &property, float *value) {
 
 
 void
-Physics::setScene(const std::string & scene, float * vertices, unsigned int *indices, float *transform) {
+Physics::setScene(const std::string &scene, int nbVertices, float *vertices, int nbIndices, unsigned int *indices, float *transform) {
 
 	m_Scenes[scene].vertices = vertices;
 	m_Scenes[scene].indices = indices;
