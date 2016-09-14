@@ -309,6 +309,21 @@ Camera::setPropf4(Float4Property prop, float x, float y, float z, float w) {
 }
 
 
+void Camera::setPropb(BoolProperty prop, bool value) {
+	assert(isValidb(prop, value));
+	m_BoolProps[prop] = value;
+	nau::physics::PhysicsManager * physMan = NAU->getPhysicsManager();
+	if (!physMan)
+		return;
+	if (value) {
+		float * camPosition = new float[4]();
+		vec4 cpos = getPropf4(Camera::POSITION);
+		camPosition[0] = cpos.x; camPosition[1] = cpos.y; camPosition[2] = cpos.z; camPosition[3] = cpos.w;
+		physMan->cameraAction(this, "POSITION", camPosition);
+	}
+}
+
+
 void 
 Camera::setPrope(EnumProperty prop, int value) {
 

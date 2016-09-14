@@ -75,9 +75,9 @@ namespace nau
 			void setPropf4(Float4Property prop, vec4& aVec);
 			void setPropf4(Float4Property prop, float r, float g, float b, float a);
 			void setPropf(FloatProperty prop, float value);
+			void setPropb(BoolProperty prop, bool value);
 			void setPrope(EnumProperty prop, int value);
 			void setProps(StringProperty prop, std::string &value);
-
 			//void *getProp(int prop, Enums::DataType type);
 
 
