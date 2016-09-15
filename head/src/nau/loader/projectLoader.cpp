@@ -1107,6 +1107,8 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				readChildTags(pNameSO, (AttributeValues *)go.get(), SceneObject::Attribs, excluded, pElementAux);
 
 				is->add(dynamic_pointer_cast<SceneObject>(go));
+				if (pMaterial)
+					MATERIALLIBMANAGER->createMaterial(pMaterial);
 			}
 
 			pElementAux = handle.FirstChild("buffers").Element();
@@ -1151,7 +1153,7 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 					if (attribIndex != VertexData::MaxAttribs) {
 						v->setBuffer(attribIndex, b->getPropi(IBuffer::ID));
 					}
-					else if (p->Value() == "index"){
+					else if (!strcmp(p->Value(),"index")){
 
 						mg->getIndexData()->setBuffer(b->getPropi(IBuffer::ID));
 					}
@@ -1164,6 +1166,8 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 				i->addMaterialGroup(mg);
 				so->setRenderable(i);
 				is->add(so);
+				if (pMaterial)
+					MATERIALLIBMANAGER->createMaterial(pMaterial);
 			}
 
 			pElementAux = handle.FirstChild("file").Element();
@@ -3616,8 +3620,8 @@ INTERFACE
 
 <interface>
 	<window name="bla"  label="My Bar">
-		<var label="direction" type="LIGHT" context="Sun" component="DIRECTION" option="DIRECTION" def="min=0 max=9 step=1"/>
-		<var label="darkColor" type="RENDERER" context="CURRENT" component="dark" option="COLOR" />
+		<var label="direction" type="LIGHT" context="Sun" component="DIRECTION" mode="DIRECTION" def="min=0 max=9 step=1"/>
+		<var label="darkColor" type="RENDERER" context="CURRENT" component="dark" mode="COLOR" />
 		<pipelines />
 	<window>
 

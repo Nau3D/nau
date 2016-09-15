@@ -95,7 +95,7 @@
 		<window label="Main Window">
 			<pipelineList label="Effect List" />
 			<var label="Dark" type="RENDERER" context="CURRENT" component="dark" mode="COLOR"/>
-			<var label="Light" type="RENDERER" context="CURRENT" component="light" option="COLOR"/>
+			<var label="Light" type="RENDERER" context="CURRENT" component="light" mode="COLOR"/>
 			<var label="Light Dir" type="LIGHT" context="Sun" component="DIRECTION" mode="DIRECTION"/>
 			<var label="Frequency" type="RENDERER" context="CURRENT" component="frequency" def="min=1" />
 			<var label="Sharpness" type="RENDERER" context="CURRENT" component="sharpness" def="min=0 max=16 step=0.1"/>
