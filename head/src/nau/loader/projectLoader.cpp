@@ -4665,6 +4665,18 @@ ProjectLoader::loadPhysLib(std::string file)
 		nau::physics::PhysicsMaterial &mat = pm->getMaterial(mn);
 		mat.setPrope(nau::physics::PhysicsMaterial::SCENE_TYPE, *(int *)(d->getPtr()));
 
+		const char *pMaterialShapeName = pElem->Attribute("shape");
+		if (0 != pMaterialShapeName) {
+			std::unique_ptr<Attribute> &b = nau::physics::PhysicsMaterial::Attribs.get("SCENE_SHAPE");
+			nau::math::Data *e = readAttribute("shape", b, pElem);
+			if (e == NULL) {
+				std::string s = getValidValuesString(b);
+				NAU_THROW("File %s: Element %s: \"%s\" is not a valid attribute\nValid tags are: %s",
+					ProjectLoader::s_File.c_str(), pMaterialName, b->getName().c_str(), s.c_str());
+			}
+			mat.setPrope(nau::physics::PhysicsMaterial::SCENE_SHAPE, *(int *)(e->getPtr()));
+		}
+
 		readChildTags(pMaterialName, &mat, nau::physics::PhysicsMaterial::Attribs, excluded, pElem);
 
 		SLOG("Physics Material: %s", pMaterialName);

@@ -328,7 +328,7 @@ luaSetBuffer(lua_State *l) {
 		return 0;
 	}
 
-	void *arr;
+	void *arr = NULL;
 	float *arrF;
 	int *arrI; 
 	unsigned int *arrUI;

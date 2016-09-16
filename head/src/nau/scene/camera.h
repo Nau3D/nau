@@ -65,6 +65,8 @@ namespace nau
 
 			STRING_PROP(VIEWPORT, 0);
 
+			BOOL_PROP(DYNAMIC, 0);
+
 			static AttribSet Attribs;
 
 			virtual ~Camera (void);
@@ -73,9 +75,9 @@ namespace nau
 			void setPropf4(Float4Property prop, vec4& aVec);
 			void setPropf4(Float4Property prop, float r, float g, float b, float a);
 			void setPropf(FloatProperty prop, float value);
+			void setPropb(BoolProperty prop, bool value);
 			void setPrope(EnumProperty prop, int value);
 			void setProps(StringProperty prop, std::string &value);
-
 			//void *getProp(int prop, Enums::DataType type);
 
 
@@ -107,9 +109,9 @@ namespace nau
 			std::shared_ptr<IRenderable> &getRenderable();
 
 			// used for Physics
-			bool isDynamic();
-			void setDynamic(bool value);
-			void setPositionOffset (float value);
+			//bool isDynamic();
+			//void setDynamic(bool value);
+			//void setPositionOffset (float value);
 
 		private:
 			Camera(const std::string &name);
@@ -131,8 +133,8 @@ namespace nau
 			void setVectorsFromSpherical();
 
 			// Physics
-			float m_PositionOffset;
-			bool m_IsDynamic; 
+			//float m_PositionOffset;
+			//bool m_IsDynamic; 
 
 			// Projections
 			//bool m_IsOrtho;
