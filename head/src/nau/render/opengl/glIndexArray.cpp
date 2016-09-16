@@ -22,7 +22,6 @@ using namespace nau::math;
 
 GLIndexArray::GLIndexArray(std::string & name):
 	IndexData(name),
-	m_GLBuffer(0),
 	m_IsCompiled(false) {
 
 }
@@ -30,8 +29,8 @@ GLIndexArray::GLIndexArray(std::string & name):
 
 GLIndexArray::~GLIndexArray(void) {
 
-	if (0 != m_GLBuffer) {
-		glDeleteBuffers (1, &m_GLBuffer);
+	if (0 != m_BufferID) {
+		glDeleteBuffers (1, &m_BufferID);
 	}
 }
 
@@ -39,15 +38,17 @@ GLIndexArray::~GLIndexArray(void) {
 unsigned int
 GLIndexArray::getBufferID() {
 
-	return m_GLBuffer;
+	return 	m_BufferID;
 }
 
 
 void
 GLIndexArray::setBuffer(unsigned int id) {
 
-	m_GLBuffer = id;
-	m_IsCompiled = true;
+	m_BufferID = id;
+	if (m_BufferID != 0)
+		m_IsCompiled = true;
+
 }
 
 
@@ -125,10 +126,10 @@ GLIndexArray::compile() {
 
 		IBuffer *b = NULL;
 
-		if (m_GLBuffer == 0) {
+		if (m_BufferID == 0) {
 			b = RESOURCEMANAGER->createBuffer(m_Name);
 			b->setStructure(std::vector < Enums::DataType > {Enums::UINT});
-			m_GLBuffer = b->getPropi(IBuffer::ID);
+			m_BufferID = b->getPropi(IBuffer::ID);
 		}
 		else {
 			b = RESOURCEMANAGER->getBuffer(m_Name);
@@ -160,7 +161,7 @@ GLIndexArray::isCompiled() {
 void 
 GLIndexArray::bind (void) {
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GLBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID);
 }
 
 
@@ -182,4 +183,18 @@ bool
 GLIndexArray::getAdjacency() {
 
 	return (m_UseAdjacency);
+}
+
+
+unsigned int
+GLIndexArray::getIndexSize(void) {
+
+	if (m_InternalIndexArray && m_UseAdjacency == false)
+		return (unsigned int)m_InternalIndexArray->size();
+	else if (m_AdjIndexArray)
+		return (unsigned int)m_AdjIndexArray->size();
+	else if (m_BufferID)
+		return RESOURCEMANAGER->getBufferByID(m_BufferID)->getPropui(IBuffer::SIZE) / sizeof(unsigned int);
+	else
+		return 0;
 }

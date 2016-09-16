@@ -17,7 +17,6 @@ namespace nau
 
 		protected:
 			bool m_IsCompiled;
-			unsigned int m_GLBuffer;
 			//bool compile (VertexData &v);
 			void resetCompilationFlag();
 			bool isCompiled();
@@ -34,7 +33,9 @@ namespace nau
 			bool getAdjacency();
 
 			virtual unsigned int getBufferID();
-			void setBuffer(unsigned int id);
+			virtual void setBuffer(unsigned int id);
+
+			virtual unsigned int getIndexSize(void);
 
 			~GLIndexArray(void);
 

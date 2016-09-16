@@ -25,14 +25,16 @@ IndexData::Create(std::string &name) {
 
 
 IndexData::IndexData(void) :
-	m_UseAdjacency(false) {
+	m_UseAdjacency(false),
+	m_BufferID(0) {
 
 }
 
 
 IndexData::IndexData(std::string & name):
 	m_UseAdjacency(false),
-	m_Name(name) {
+	m_Name(name),
+	m_BufferID(0) {
 
 }
 
@@ -71,18 +73,6 @@ IndexData::getIndexDataAsInt(std::vector<int> *v) {
 	}
 }
 #endif
-
-
-unsigned int
-IndexData::getIndexSize (void) {
-
-	if (m_InternalIndexArray && m_UseAdjacency == false)
-		return (unsigned int)m_InternalIndexArray->size();
-	else if (m_AdjIndexArray)
-		return (unsigned int)m_AdjIndexArray->size();
-	else
-		return 0;
-}
 
 
 void

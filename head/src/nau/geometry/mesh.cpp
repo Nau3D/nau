@@ -285,6 +285,7 @@ Mesh::addMaterialGroup (std::shared_ptr<MaterialGroup> &materialGroup, int offse
 		std::shared_ptr<MaterialGroup> newMat = MaterialGroup::Create(this, materialGroup->getMaterialName());
 
 		newMat->getIndexData()->add (materialGroup->getIndexData());
+		newMat->getIndexData()->setBuffer(materialGroup->getIndexData()->getBufferID());
 		m_vMaterialGroups.push_back (newMat);		
 	}
 }

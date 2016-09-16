@@ -31,7 +31,8 @@ namespace nau
 #endif
 			void setIndexData (std::shared_ptr<std::vector<unsigned int>> &);
 			/// returns the number of indices
-			unsigned int getIndexSize (void);
+			/// this function is virtual because indexes may exist only in the GPU
+			virtual unsigned int getIndexSize (void) = 0;
 
 			void buildAdjacencyList();
 
@@ -41,7 +42,6 @@ namespace nau
 			virtual bool getAdjacency() = 0;
 
 			virtual unsigned int getBufferID() = 0;
-
 			virtual void setBuffer(unsigned int id) = 0;
 
 			virtual void resetCompilationFlag() = 0;
@@ -59,6 +59,7 @@ namespace nau
 			std::shared_ptr<std::vector<unsigned int>> m_AdjIndexArray;
 
 			bool m_UseAdjacency;
+			unsigned int m_BufferID;
 
 			struct HalfEdge {
 				unsigned int vertex;
