@@ -1,3 +1,7 @@
+/*
+To develop a plugin this interface must be implemented
+*/
+
 #ifndef _NAU_PHYSICS_H
 #define _NAU_PHYSICS_H
 
@@ -26,6 +30,7 @@ namespace nau
 				DEBUG
 			} SceneType;
 
+			// Bounding shapes
 			typedef enum {
 				CUSTOM,
 				BOX,
@@ -33,6 +38,7 @@ namespace nau
 				CAPSULE
 			} SceneShape;
 
+			// data types allowed for communication between Nau3D and the plugin
 			typedef enum {
 				FLOAT,
 				VEC4
@@ -95,7 +101,7 @@ namespace nau
 			virtual void applyGlobalFloatProperty(const std::string &property, float value) = 0;
 			virtual void applyGlobalVec4Property(const std::string &property, float *value) = 0;
 
-			virtual void setScene(const std::string &scene, const std::string & material, int nbVertices, float *vertices, int nbIndices, unsigned int *indices, float *transform) = 0;
+			virtual void setScene(const std::string &scene, const std::string &material, int numVertices, float *vertices, int numIndices, unsigned int *indices, float *transform) = 0;
 
 			virtual float *getSceneTransform(const std::string &scene) = 0;
 			virtual void setSceneTransform(const std::string &scene, float *transform) = 0;

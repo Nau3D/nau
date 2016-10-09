@@ -128,13 +128,13 @@ namespace nau {
 		} KeySpecial;
 
 
-		static nau::Nau* Create (void);
-		static nau::Nau* GetInstance (void);
+		static nau::INau* Create (void);
+		static nau::INau* GetInstance (void);
 #ifdef _WINDLL
 		static void SetInstance(Nau *inst);
 #endif
 
-		bool init(bool context, std::string aConfigFile = "");
+		bool init(bool trace);
 		// Returns the class name
 		std::string &getName();
 
@@ -234,9 +234,6 @@ namespace nau {
 		void stepPasses(int n);
 
 
-		// Physics
-		//nau::world::IWorld& getWorld (void);
-		
 		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);
 		void enablePhysics (void);

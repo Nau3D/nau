@@ -25,10 +25,10 @@ namespace nau
 
 			void offsetIndices (int amount);
 			virtual std::shared_ptr<std::vector<unsigned int>> & getIndexData (void);
-#ifdef NAU_OPTIX
+//#ifdef NAU_OPTIX
 			/// required for optixPrime: returns indices as ints
 			virtual void getIndexDataAsInt(std::vector<int> *);
-#endif
+//#endif
 			void setIndexData (std::shared_ptr<std::vector<unsigned int>> &);
 			/// returns the number of indices
 			/// this function is virtual because indexes may exist only in the GPU

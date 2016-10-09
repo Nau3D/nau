@@ -1,10 +1,13 @@
 #include "dlgTrace.h"
+
 #include <nau.h>
 #include <nau/debug/profile.h>
 #include <nau/slogger.h>
-//#include "..\..\GLIntercept\Src\MainLib\ConfigDataExport.h"
+
 #include <dirent.h>
 #include <algorithm>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 BEGIN_EVENT_TABLE(DlgTrace, wxDialog)
 
@@ -74,6 +77,7 @@ DlgTrace::DlgTrace(): wxDialog(DlgTrace::m_Parent, -1, wxT("Nau - Trace Log"),wx
 	nextFunctionIndex = 0;
 	numGLFunctionCalls = 0;
 	m_Statsnode = NULL;
+	time(&m_ProjectStartTime);
 }
 
 
@@ -96,12 +100,15 @@ DlgTrace::eventReceived(const std::string &sender, const std::string &eventType,
 void
 DlgTrace::updateDlg() {
 
-	FILETIME lt;
-	GetSystemTimeAsFileTime(&lt);
-	ULARGE_INTEGER uLargeIntegerTime1;
-	uLargeIntegerTime1.LowPart = lt.dwLowDateTime;
-	uLargeIntegerTime1.HighPart = lt.dwHighDateTime;
-	m_LastTime = uLargeIntegerTime1.QuadPart;
+	//FILETIME lt;
+	//GetSystemTimeAsFileTime(&lt);
+	//ULARGE_INTEGER uLargeIntegerTime1;
+	//uLargeIntegerTime1.LowPart = lt.dwLowDateTime;
+	//uLargeIntegerTime1.HighPart = lt.dwHighDateTime;
+	//m_LastTime = uLargeIntegerTime1.QuadPart;
+
+	m_FileNames.clear();
+	time(&m_ProjectStartTime);
 	m_Log->DeleteAllItems();
 	EVENTMANAGER->addListener("TRACE_FILE_READY", this);
 
@@ -143,9 +150,9 @@ DlgTrace::loadNewLogFile(string logfile, int fNumber, bool tellg, bool appendCou
 	filestream.clear();
 	filestream.open(logfile);
 	
-	if (fNumber >= 0){
+	//if (fNumber >= 0){
 		frameNumber=fNumber;
-	}
+	//}
 	if (filestream){
 
 		if (tellg){
@@ -168,18 +175,13 @@ DlgTrace::loadNewLogFile(string logfile, int fNumber, bool tellg, bool appendCou
 			}
 		}
 		else{
-			//getline(filestream, line);
-			//getline(filestream, line);
-			//getline(filestream, line);
-			//getline(filestream, line);
-			//getline(filestream, line);
 			isNewFrame = true;
 		}
 
 		while (getline(filestream, line))
 		{
-			if (strcmp(line.substr(0, 4).c_str(), "#NAU") == 0){
-				if (strcmp(line.substr(5, 5).c_str(), "FRAME") == 0){
+			if (strcmp(line.substr(0, 4).c_str(), "#NAU") == 0) {
+				if (strcmp(line.substr(5, 5).c_str(), "FRAME") == 0) {
 					if (strcmp(line.substr(11, 5).c_str(), "START") == 0){
 						if (m_Frame){
 							m_Log->Expand(m_Frame);
@@ -230,10 +232,9 @@ DlgTrace::loadNewLogFile(string logfile, int fNumber, bool tellg, bool appendCou
 		}
 
 	}
-	//if (gliIsLogPerFrame()){
-		filestream.close();
-	//}
+	filestream.close();
 }
+
 
 void 
 DlgTrace::finishReadLogFile() {
@@ -244,120 +245,55 @@ DlgTrace::finishReadLogFile() {
 void 
 DlgTrace::loadLog() {
 
-	//string logname = gliGetLogName();
-	string logfile;
-	HANDLE hFile;
-
-
+	string logfile, fileName;
+	struct stat fst;
+	DIR *dir;
+	struct dirent *ent;
+//	time_t tempLastTime;
+	std::map<int, std::string> filesToProcess;
 	
 	if (isLogClear) {
 		m_Rootnode = m_Log->AddRoot(string("./__nau3Dtrace/") + string("Frame_*.txt"));
 		m_Lognode = m_Log->AppendItem(m_Rootnode, "Frame Log >");
 	}
-		//if (!gliIsLogPerFrame()){
-		//	// Corresponding logfile
-		//	logfile = gliGetLogPath()+logname+".txt";
-		//	rootnode = m_Log->AddRoot(logfile);
-		//	m_Lognode = m_Log->AppendItem(rootnode, "Frame Log>");
-
-		//	//Reads logfile
-		//	loadNewLogFile(logfile, 0, false, true);
-
-		//	//If no logfile was found then leave a message
-		//	if (m_Log->GetChildrenCount(rootnode, false) == 0){
-		//		m_Log->AppendItem(rootnode, "logfile not found");
-		//	}
-		//	
-		//}
-		//else
-			//Directory searching algorithm source:
-			//dirent.h
-	DIR *dir;
-	struct dirent *ent;
 	if ((dir = opendir("./__nau3Dtrace")) != NULL) {
-		m_FileTimes.clear();
-		unsigned long long tempLastTime = m_LastTime;
+		//m_FileTimes.clear();
+		//tempLastTime = m_LastTime;
+		//unsigned long long tempLastTime = m_LastTime;
 		// Read all files and directories in the directory
 		while ((ent = readdir(dir)) != NULL) {
-			// Filters directories starting with Frame_* only
-			if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")) {
-				// Corresponding logfile
-				logfile = string("./__nau3Dtrace/") + string(ent->d_name);
-				wxString ws = wxString(logfile);
-				hFile = CreateFile(ws.c_str(),               // file to open
-					GENERIC_READ,          // open for reading
-					FILE_SHARE_READ,       // share for reading
-					NULL,                  // default security
-					OPEN_EXISTING,         // existing file only
-					FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, // normal file
-					NULL);                 // no attr. template
 
-				if (hFile != INVALID_HANDLE_VALUE) {
-					FILETIME ft1, ft2, ftlw;
-					GetFileTime(hFile, &ft1, &ft2, &ftlw);
-					ULARGE_INTEGER uLargeIntegerTime1;
-					uLargeIntegerTime1.LowPart = ftlw.dwLowDateTime;
-					uLargeIntegerTime1.HighPart = ftlw.dwHighDateTime;
-					if (uLargeIntegerTime1.QuadPart > m_LastTime) {
-						m_FileTimes[uLargeIntegerTime1.QuadPart] = std::pair<std::string, int>(logfile, atoi(ent->d_name + 6));
-						tempLastTime = tempLastTime > uLargeIntegerTime1.QuadPart ? tempLastTime : uLargeIntegerTime1.QuadPart;
+			// Filters files starting with Frame_* only
+			if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")) {
+				// Corresponding logfile with path
+				fileName = std::string(ent->d_name);
+				logfile = std::string("./__nau3Dtrace/") + fileName;
+
+				// if file is at least as recent as project loading
+				if (stat(logfile.c_str(), &fst) == 0 && fst.st_mtime >= m_ProjectStartTime) {
+
+					int frame = -1;
+					if (fileName.size() > 10)
+						frame = stoi(fileName.substr(6, 20), NULL, 10);
+					
+					// if file has not been processed yet
+					if (0 == m_FileNames.count(frame)) {
+						filesToProcess[frame] = logfile;
+						m_FileNames[frame] = logfile;
 					}
 				}
-				//Reads logfile
-				//loadNewLogFile(logfile, atoi(ent->d_name + 6), false, true);
 			}
 		}
 		closedir(dir);
-		for (auto files : m_FileTimes) {
-			loadNewLogFile(files.second.first, files.second.second, false, true);
-		}
-		m_LastTime = tempLastTime;
+
+		for (auto f : filesToProcess)
+			loadNewLogFile(f.second, f.first, false, true);
 
 		m_Log->Expand(m_Rootnode);
 		m_Log->Expand(m_Lognode);
 		isLogClear = false;
 	}
-//	else {
-///*		if (!gliIsLogPerFrame()){
-//			logfile = gliGetLogPath() + logname + ".txt";
-//			loadNewLogFile(logfile, frameNumber, true, true);
-//		}
-//		else*/{
-//			clear();
-//			m_Rootnode = m_Log->AddRoot(string("./__nau3Dtrace") + string("Frame_*\\") + logname + ".txt");
-//			m_Lognode = m_Rootnode;
-//			//Directory searching algorithm source:
-//			//dirent.h
-//			DIR *dir;
-//			struct dirent *ent;
-//			if ((dir = opendir(gliGetLogPath())) != NULL) {
-//				// Read all files and directories in the directory
-//				while ((ent = readdir(dir)) != NULL) {
-//					// Filters directories starting with Frame_* only
-//
-//
-//					if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")){
-////					if (ent->d_type == S_IFDIR && strstr(ent->d_name, "Frame_")){
-//						// Corresponding logfile
-//						logfile = gliGetLogPath() + string(ent->d_name) + "/" + logname + ".txt";
-//
-//						//Reads logfile
-//						loadNewLogFile(logfile, atoi(ent->d_name + 6), false, true);
-//					}
-//				}
-//				closedir(dir);
-//			}
-//
-//			//If no logfile was found then leave a message
-//			if (m_Log->GetChildrenCount(m_Lognode, false) == 0){
-//				m_Log->AppendItem(m_Rootnode, "no related logfiles were found");
-//			}
-//			m_Log->Expand(m_Rootnode);
-//			m_Log->Expand(m_Lognode);
-//			isLogClear = false;
-//		
-//		}
-//	}
+
 	PrintFunctionCount();
 }
 
@@ -366,6 +302,7 @@ DlgTrace::FunctionCallData::FunctionCallData() :
 	funcCallCount(0) {
 
 }
+
 
 bool
 DlgTrace::FunctionCallData::SortByName(const FunctionCallData &a, const FunctionCallData &b) {
@@ -438,7 +375,6 @@ DlgTrace::PrintFunctionCount()
 		std::vector<FunctionCallData> functionDataArrayClone = functionDataArray;
 		//Dump the total call count and average per frame (excluding first frame of xxx calls)
 		m_Log->AppendItem(m_Statsnode, "Total GL Calls: " + std::to_string(numGLFunctionCalls));
-		//m_Log->AppendItem(statsnode, "Frame Number: " + std::to_string(frameStatNumber));
 
 		//Sort the array based on function call count
 		sort(functionDataArrayClone.begin(), functionDataArrayClone.end(), FunctionCallData::SortByCount);

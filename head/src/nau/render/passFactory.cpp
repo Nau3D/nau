@@ -51,7 +51,11 @@ unsigned int
 PassFactory::loadPlugins() {
 
 	std::vector<std::string> files;
-	nau::system::File::GetFilesInFolder(".\\nauSettings\\plugins\\", "dll", &files);
+#ifdef _DEBUG
+	nau::system::File::GetFilesInFolder(".\\nauSettings\\plugins_d\\pass\\", "dll", &files);
+#else
+	nau::system::File::GetFilesInFolder(".\\nauSettings\\plugins\\pass\\", "dll", &files);
+#endif
 
 	typedef void *(__cdecl *initProc)(void *);
 	typedef void *(__cdecl *createPassProc)(const char *);

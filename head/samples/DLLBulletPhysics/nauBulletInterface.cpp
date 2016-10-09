@@ -2,7 +2,7 @@
 
 #include <memory>
 
-static char className[] = "Dummy";
+static char className[] = "Bullet plugin for Nau3D";
 static NauBulletInterface * Instance = NULL;
 
 __declspec(dllexport)

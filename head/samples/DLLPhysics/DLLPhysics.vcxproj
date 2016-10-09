@@ -92,7 +92,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins_d\physics</Command>
+      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins_d\physics
+copy "$(OutDir)$(TargetName).dll" ..\..\release64\nauSettings\plugins_d\physics</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -124,7 +125,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins\physics</Command>
+      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins\physics
+copy "$(OutDir)$(TargetName).dll" ..\..\release64\nauSettings\plugins\physics</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

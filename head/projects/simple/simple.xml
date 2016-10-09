@@ -21,8 +21,9 @@
 				<NEAR value= 1/>
 				<FAR value= 100/>
 				<POSITION x=-1.69 y=0.774 z=-1.158 />
-				<ZX_ANGLE value = 0.877/>
-				<ELEVATION_ANGLE value=-0.27548/>
+				<!--ZX_ANGLE value = 0.877/>
+				<ELEVATION_ANGLE value=-0.27548/-->
+				<VIEW x=0.739835 y=-0.272009 z=0.615349 />
 			</camera>
 		</cameras>
 		

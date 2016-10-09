@@ -91,7 +91,8 @@
       <AdditionalIncludeDirectories>../../src/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins_d\physics</Command>
+      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins_d\physics
+copy "$(OutDir)$(TargetName).dll" ..\..\release64\nauSettings\plugins_d\physics</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalDependencies>Bullet3Common_vs2010_x64_debugDLL.lib;Bullet3Dynamics_vs2010_x64_debugDLL.lib;Bullet3Collision_vs2010_x64_debugDLL.lib;BulletSoftBody_vs2010_x64_debugDLL.lib;LinearMath_vs2010_x64_debugDLL.lib;BulletCollision_vs2010_x64_debugDLL.lib;BulletDynamics_vs2010_x64_debugDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -125,7 +126,8 @@
       <AdditionalDependencies>Bullet3Common_vs2010_x64_releaseDLL.lib;Bullet3Dynamics_vs2010_x64_releaseDLL.lib;Bullet3Collision_vs2010_x64_releaseDLL.lib;BulletSoftBody_vs2010_x64_releaseDLL.lib;LinearMath_vs2010_x64_releaseDLL.lib;BulletCollision_vs2010_x64_releaseDLL.lib;BulletDynamics_vs2010_x64_releaseDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins\physics</Command>
+      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins\physics
+copy "$(OutDir)$(TargetName).dll" ..\..\release64\nauSettings\plugins\physics</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

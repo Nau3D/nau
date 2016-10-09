@@ -233,7 +233,7 @@ void main()
 		//outColor = 0.5* color * color.a + color * il * 0.5 * (1- il.a*.15);
 	else
 		outColor = (0.05 * color + color *  il * 0.2) * (1- il.a*0.25);
-		
+	outColor = vec4(outColor.xyz, 1);	
 	// if (color.a != 0.0)
 		// outColor = color*1.5;
 	// else

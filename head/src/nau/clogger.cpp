@@ -143,43 +143,27 @@ CLogHandler::CLogHandler(std::string file) {
 void 
 CLogHandler::log(std::string& message) {
 
-	//FILE* fileHandler;
+#ifdef _DEBUG
 
-	//fileHandler = m_FileName == "" ? stdout : 0;
+	m_FileHandler = m_FileName == "" ? stdout : 0;
 
-	//if (0 == fileHandler){
-	//	
-	//	fileHandler = fopen (m_FileName.c_str (), "a");
-	//	if (0 == fileHandler){
-	//		return;
-	//	}
-	//} 
+	if (0 == m_FileHandler){
+		
+		m_FileHandler = fopen (m_FileName.c_str (), "a");
+		if (0 == m_FileHandler){
+			return;
+		}
+	} 
+#endif
 
 	fwrite (message.c_str(), message.size (), 1, m_FileHandler);
-	//if (fileHandler != stdout){
-	//	fclose (fileHandler);
-	//}
+
+#ifdef _DEBUG
+	if (m_FileHandler != stdout){
+		fclose (m_FileHandler);
+	}
+#endif
 }
-
-
-//void 
-//CLogHandler::reset() {
-//
-//	if (m_FileHandler != stdout) 
-//		m_FileHandler = fopen (m_FileName.c_str (), "w");
-//	//FILE* fileHandler;
-//
-//	//fileHandler = m_FileName == "" ? stdout : 0;
-//
-//	//if (0 == fileHandler){
-//	//	
-//	//	fileHandler = fopen (m_FileName.c_str (), "w");
-//	//	if (!fileHandler)
-//	//		m_FileName = "";
-//	//	else
-//	//		fclose (fileHandler);
-//	//} 
-//}
 
 
 void

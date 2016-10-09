@@ -6,7 +6,8 @@
     <LocalDebuggerCommandArguments>"..\..\projects\optixPrimeShadows\primeShadows.xml"</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>"..\..\projects\optixPrimeShadows\primeShadows.xml"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>
+    </LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
@@ -16,7 +17,8 @@
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>"..\..\projects\optixPrimeShadows\primeShadows.xml"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>
+    </LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
   </PropertyGroup>

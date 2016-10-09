@@ -93,7 +93,8 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins_d\physics</Command>
+      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins_d\physics
+copy "$(OutDir)$(TargetName).dll" ..\..\release64\nauSettings\plugins_d\physics</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalDependencies>LowLevelClothDEBUGDLL.lib;LowLevelDEBUGDLL.lib;PhysX3CharacterKinematicDEBUGDLL_x64.lib;PhysX3CommonDEBUGDLL_x64.lib;PhysX3CookingDEBUGDLL_x64.lib;PhysX3DEBUGDLL_x64.lib;PhysX3ExtensionsDEBUGDLL.lib;PhysX3VehicleDEBUGDLL.lib;PhysXProfileSDKDEBUGDLL.lib;PhysXVisualDebuggerSDKDEBUGDLL.lib;PvdRuntimeDEBUGDLL.lib;PxTaskDEBUGDLL.lib;SceneQueryDEBUGDLL.lib;SimulationControllerDEBUGDLL.lib;luad.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -131,7 +132,8 @@
       <GenerateDebugInformation>No</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins\physics</Command>
+      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins\physics
+copy "$(OutDir)$(TargetName).dll" ..\..\release64\nauSettings\plugins\physics</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

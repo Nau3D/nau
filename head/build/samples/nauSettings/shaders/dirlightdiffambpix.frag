@@ -1,8 +1,7 @@
-#version 330
+#version 150
 
 uniform vec4 lightDirection, lightColor;
-uniform vec4 diffuse, ambient, emission;
-uniform float shininess;
+uniform vec4 diffuse, emission;
 uniform int texCount;
 uniform sampler2D texUnit;
 
@@ -30,14 +29,13 @@ void main()
 	lightIntensityDiffuse = lightColor * intensity;
 	float alpha;
 	if (texCount == 0) {
-		color = diffuse * lightIntensityDiffuse + diffuse * 0.3 + emission ;
+		color = diffuse * (lightIntensityDiffuse + 0.3) + emission ;
 		alpha = diffuse.a;
 	 }
 	 else {
-		 color = (diffuse * lightIntensityDiffuse + emission + 0.3) * texture(texUnit, TexCoord);
+		 color = (diffuse * (lightIntensityDiffuse + 0.3) + emission) * texture(texUnit, TexCoord);
 		 alpha = texture(texUnit, TexCoord).a * diffuse.a;
 	 }
 	 outColor = vec4(vec3(color ), alpha);
-//	output = (color * X) + amb;
 
 }

@@ -596,7 +596,6 @@ void
 GLProgram::setUniforms() {
 
 	int i,index,len,size;
-	
 	unsigned int type;
 	char *name = new char [m_MaxLength + 1]; 
 	GLUniform uni;

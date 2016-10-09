@@ -118,7 +118,7 @@ int
 GLDebug::SetTrace(int numberOfFrames) {
 
 	if (numberOfFrames == 0) {
-		// if we we're tracing close the log
+		// if we are tracing close the log
 		if (sTracing) {
 			glbinding::setCallbackMask(glbinding::CallbackMask::None);
 			CLogger::CloseLog(CLogger::LEVEL_TRACE);
@@ -134,7 +134,12 @@ GLDebug::SetTrace(int numberOfFrames) {
 
 		std::string name = nau::system::File::GetCurrentFolder() + "/__nau3Dtrace";
 		nau::system::File::CreateDir(name);
-		name += "/Frame_" + std::to_string(RENDERER->getPropui(IRenderer::FRAME_COUNT)) + ".txt";
+		name += "/Frame_";
+
+		if (NAU->getProjectName() != "")
+			name += std::to_string(RENDERER->getPropui(IRenderer::FRAME_COUNT));
+		
+		name += ".txt";
 		CLogger::AddLog(CLogger::LEVEL_TRACE, name);
 		sTracing = true;
 	}
@@ -159,7 +164,9 @@ GLDebug::DebugLog(GLenum source,
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 		return;
 
-	SLOG("OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
+
+	SLOG(
+		"OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
 		GetStringForType(type).c_str(),
 		GetStringForSource(source).c_str(), id,
 		GetStringForSeverity(severity).c_str(),

@@ -8,7 +8,7 @@
 #define APIENTRY __stdcall
 #endif
 
-#include <vld.h>
+//#include <vld.h>
 
 #include <main.h>
 #include <glcanvas.h>
@@ -308,8 +308,6 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 
     mbar->Append(aboutMenu, _("&Help"));
 
-	//wxMenu* physicsMenu = new wxMenu(_T(""));
-	//physicsMenu->Append (idMenuPhysicsBuild, _("&Build physics"), _("Builds physics"));
 
     SetMenuBar(mbar);
 
@@ -334,7 +332,11 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	//}
 #endif
 
-	m_pRoot = nau::Nau::Create();
+	// Dialogs //
+	DlgOGL::SetParent(this);
+	DlgLog::Instance()->updateDlg();
+
+	m_pRoot = (Nau *)Nau::Create();
 
 
 	bool nauInit (false);
@@ -372,9 +374,34 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 			0};
 
 	m_Canvas = new GLCanvas (this , -1, attribList, contextAttribList);
-                
+          
+	bool trace = false;
+	int framesToTrace = 1;
+
+	if (wxGetApp().argc > 1) {
+		int param = 1;
+		if (wxGetApp().argv[1].c_str()[0] != '-') {
+			loadProject(wxGetApp().argv[1].c_str());
+			param = 2;
+		}
+		for (int i = param; i < wxGetApp().argc; ++i) {
+			if (wxGetApp().argv[i].ToStdString() == "-trace") {
+
+				trace = true;
+				long frames;
+				if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
+					framesToTrace = (int)frames;
+					++i;
+				}
+			}
+		}
+	}
+
 	try {
-		nauInit = m_pRoot->init(true);
+		nauInit = m_pRoot->init(trace);
+		if (trace)
+			m_pRoot->setTrace(framesToTrace);
+		
 	}
 	catch(std::string &s) {
 		wxMessageBox((wxString)s.c_str());
@@ -592,12 +619,13 @@ FrmMainFrame::updateDlgs() {
 	debugMenu->Enable(idMenuDlgStep, false);
 	debugMenu->SetLabel(idMenuDbgBreak, "Pause");
 
-	debugMenu->SetLabel(idMenuTracing, "Trace Start\tT");
-	m_pRoot->setTrace(0);
+	//bool traceOn = m_pRoot->getTraceStatus();
+	//if (traceOn)
+	//	debugMenu->SetLabel(idMenuTracing, "Trace Stop\tT");
+	//else 
+		debugMenu->SetLabel(idMenuTracing, "Trace Start\tT");
 
-	//#ifdef GLINTERCEPTDEBUG		
-//	gliSetIsGLIActive(true);
-//#endif
+	//m_pRoot->setTrace(0);
 }
 
 
@@ -728,6 +756,8 @@ FrmMainFrame::loadProject(const char *s) {
 	wxStopWatch aTimer;
 	aTimer.Start();
 
+	LOG_trace("Loading project %s", s);
+
 	try {
 		m_pRoot->clear();
 		DlgLog::Instance()->updateDlg();
@@ -754,6 +784,7 @@ FrmMainFrame::loadProject(const char *s) {
 	catch (std::string s) {
 		wxMessageBox(wxString(s.c_str()));
 	}
+	LOG_trace("Project loaded");
 }
 
 

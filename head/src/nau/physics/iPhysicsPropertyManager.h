@@ -1,3 +1,10 @@
+/*
+This interface allows the plugin to receive an instance to read/write physics material properties. 
+
+The plugin receives an instance of PropertyManager from NAU, a subclass of IPhysicsPropertyManager with 
+a proper implementation to allow properties to move backwards and forwards
+*/
+
 #ifndef _NAU_IPHYSICS_PROP_MANAGER_H
 #define _NAU_IPHYSICS_PROP_MANAGER_H
 

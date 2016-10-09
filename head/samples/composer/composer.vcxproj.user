@@ -9,6 +9,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerDebuggerType>Auto</LocalDebuggerDebuggerType>
     <RemoteDebuggerWorkingDirectory>..\..\build\samples</RemoteDebuggerWorkingDirectory>
+    <LocalDebuggerCommandArguments>-trace</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix|Win32'">
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
@@ -24,6 +25,7 @@
     <RemoteDebuggerWorkingDirectory>..\..\build\samples</RemoteDebuggerWorkingDirectory>
     <LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand>
     <RemoteDebuggerCommand>$(TargetPath)</RemoteDebuggerCommand>
+    <LocalDebuggerCommandArguments>-trace</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
@@ -31,6 +33,7 @@
     <RemoteDebuggerWorkingDirectory>..\..\build\samples</RemoteDebuggerWorkingDirectory>
     <LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand>
     <RemoteDebuggerCommand>$(TargetPath)</RemoteDebuggerCommand>
+    <LocalDebuggerCommandArguments>-trace</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|Win32'">
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
@@ -39,8 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>
-    </LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-trace</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
@@ -53,6 +55,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerWorkingDirectory>..\..\build\samples</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>-trace</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup>
     <ShowAllFiles>false</ShowAllFiles>

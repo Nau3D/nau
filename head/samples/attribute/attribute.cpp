@@ -7,10 +7,6 @@
 #include <stdio.h>
 
 
-//#ifdef GLINTERCEPTDEBUG
-//#include "../../../GLIntercept\Src\MainLib\ConfigDataExport.h"
-//#endif
-
 using namespace nau;
 
 
@@ -126,5 +122,4 @@ int main(int argc, char **argv) {
 	//	printf("</UL>");
 	//}
 
-	delete NAU;
 }

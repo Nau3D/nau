@@ -52,8 +52,14 @@
     <Filter Include="Common\util">
       <UniqueIdentifier>{cb03dd18-8212-4e36-8471-e3948ea37116}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\world">
-      <UniqueIdentifier>{52da72f3-2767-4e18-8036-24658e93c2cc}</UniqueIdentifier>
+    <Filter Include="Code From Nau">
+      <UniqueIdentifier>{3f8c64a1-33e3-425e-8c71-a392562ebe20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\physics">
+      <UniqueIdentifier>{3880c5c6-2bc2-48d7-9642-ae83c8d4e0d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\interface">
+      <UniqueIdentifier>{1098e024-56bd-4271-911b-3680fe828b4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -501,17 +507,26 @@
     <ClCompile Include="..\..\src\nau\util\tree.cpp">
       <Filter>Common\util</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nau\world\bulletMotionState.cpp">
-      <Filter>Common\world</Filter>
+    <ClCompile Include="..\..\src\nau\loader\bufferLoader.cpp">
+      <Filter>Common\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nau\world\bulletWorld.cpp">
-      <Filter>Common\world</Filter>
+    <ClCompile Include="..\..\src\nau\geometry\terrain.cpp">
+      <Filter>Common\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nau\world\physicalObject.cpp">
-      <Filter>Common\world</Filter>
+    <ClCompile Include="..\..\src\nau\physics\physicsDummy.cpp">
+      <Filter>Common\physics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\nau\world\worldFactory.cpp">
-      <Filter>Common\world</Filter>
+    <ClCompile Include="..\..\src\nau\physics\physicsManager.cpp">
+      <Filter>Common\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\physics\physicsMaterial.cpp">
+      <Filter>Common\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\physics\physicsPropertyManager.cpp">
+      <Filter>Common\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nau\interface\interface.cpp">
+      <Filter>Common\interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1007,20 +1022,32 @@
     <ClInclude Include="..\..\src\nau\util\tree.h">
       <Filter>Common\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\world\bulletMotionState.h">
-      <Filter>Common\world</Filter>
+    <ClInclude Include="..\..\src\nau\loader\bufferLoader.h">
+      <Filter>Common\loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\world\bulletWorld.h">
-      <Filter>Common\world</Filter>
+    <ClInclude Include="..\..\src\nau\geometry\terrain.h">
+      <Filter>Common\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\world\iWorld.h">
-      <Filter>Common\world</Filter>
+    <ClInclude Include="..\..\src\nau\physics\iPhysics.h">
+      <Filter>Common\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\world\physicalObject.h">
-      <Filter>Common\world</Filter>
+    <ClInclude Include="..\..\src\nau\physics\iPhysicsPropertyManager.h">
+      <Filter>Common\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\nau\world\worldFactory.h">
-      <Filter>Common\world</Filter>
+    <ClInclude Include="..\..\src\nau\physics\physicsDummy.h">
+      <Filter>Common\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\physics\physicsManager.h">
+      <Filter>Common\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\physics\physicsMaterial.h">
+      <Filter>Common\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\physics\physicsPropertyManager.h">
+      <Filter>Common\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nau\interface\interface.h">
+      <Filter>Common\interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

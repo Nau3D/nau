@@ -2,8 +2,8 @@
 <project name="Toon Per Pixel" >
 	<assets><!-- width="512" height="512" -->
 		<scenes>
-			<scene name="MyScene" param="UNITIZE ">
-				<file name="../../models/al.obj"/>
+			<scene name="MyScene" param="UNITIZE SWAP_YZ">
+				<file name="../../models/teapot.3ds"/>
 			</scene>
 		</scenes>
 		

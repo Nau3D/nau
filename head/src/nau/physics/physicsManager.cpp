@@ -28,7 +28,9 @@ PhysicsManager::Init() {
 	Attribs.add(Attribute(CAMERA_RADIUS, "CAMERA_RADIUS", Enums::DataType::FLOAT, true, new NauFloat(1.0f)));
 	Attribs.add(Attribute(CAMERA_HEIGHT, "CAMERA_HEIGHT", Enums::DataType::FLOAT, true, new NauFloat(1.0f)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("PHYSICS_MANAGER", &Attribs);
+#endif
 
 	return true;
 }
@@ -52,7 +54,9 @@ PhysicsManager::GetInstance() {
 PhysicsManager::PhysicsManager() : m_PhysInst(NULL), m_Built(false), hasCamera(false) {
 
 	registerAndInitArrays(Attribs);
+
 	m_PhysInst = loadPlugin();
+
 	m_PropertyManager = PhysicsPropertyManager::GetInstance();
 	if (!m_PhysInst)
 		return;
@@ -131,7 +135,7 @@ PhysicsManager::loadPlugin() {
 		getClassNameProc getClassNameFunc = (getClassNameProc)GetProcAddress(mod, "getClassName");
 		deletePhysics = (deletePhysicsProc)GetProcAddress(mod, "deletePhysics");
 		if (!initFunc || !createPhys || !getClassNameFunc) {
-			//SLOG("%s: Invalid Plugin DLL:  'init', 'createPhys' and 'getClassName' must be defined", fn.c_str());
+			SLOG("%s: Invalid Plugin DLL:  'init', 'createPhys' and 'getClassName' must be defined", fn.c_str());
 			return NULL;
 		}
 		else
@@ -141,7 +145,7 @@ PhysicsManager::loadPlugin() {
 		
 		// push the objects and modules into our vectors
 		char *s = getClassNameFunc();
-		//SLOG("Physics plugin %s (%s) loaded successfully", fn.c_str(), s);
+		SLOG("Physics plugin %s (%s) loaded successfully", fn.c_str(), s);
 	
 
 		IPhysics *ip = (IPhysics *)createPhys();
@@ -218,9 +222,9 @@ PhysicsManager::update() {
 	for (auto cam : *(m_PhysInst->getCameraPositions())) {
 		Camera * camera = RENDERMANAGER->getCamera(cam.first).get();
 		vec4 previous = camera->getPropf4(Camera::POSITION);
-		vec4 actual = vec4(cam.second[0], cam.second[1], cam.second[2], 1.0f);
-		if (actual != previous)
-			camera->setPropf4(Camera::POSITION, actual);
+		vec4 current = vec4(cam.second[0], cam.second[1], cam.second[2], 1.0f);
+		if (current != previous)
+			camera->setPropf4(Camera::POSITION, current);
 	}
 }
 
@@ -242,6 +246,7 @@ PhysicsManager::clear() {
 	m_MatLib.clear();
 	m_Scenes.clear();
 	m_Built = false;
+	initArrays();
 }
 
 
@@ -354,6 +359,7 @@ PhysicsManager::updateProps() {
 
 void 
 PhysicsManager::setPropf(FloatProperty p, float value) {
+
 	m_FloatProps[p] = value;
 	applyGlobalFloatProperty(Attribs.getName(p, Enums::FLOAT), value);
 }
@@ -361,12 +367,15 @@ PhysicsManager::setPropf(FloatProperty p, float value) {
 
 void 
 PhysicsManager::setPropf4(Float4Property p, vec4 &value) {
+
 	m_Float4Props[p] = value;
 	applyGlobalVec4Property(Attribs.getName(p, Enums::VEC4), &value.x);
 }
 
+
 void 
 PhysicsManager::eventReceived(const std::string & sender, const std::string & eventType, const std::shared_ptr<IEventData>& evt) {
+
 	if (m_PhysInst && eventType == "SCENE_TRANSFORM") {
 		std::string * strEvt = (std::string*) evt->getData();
 		IScene * scene = RENDERMANAGER->getScene(*strEvt).get();
@@ -374,13 +383,16 @@ PhysicsManager::eventReceived(const std::string & sender, const std::string & ev
 	}
 }
 
+
 std::string & nau::physics::PhysicsManager::getName() {
+
 	return *(new std::string("PHYSICS_MANAGER"));
 }
 
 
 void
 PhysicsManager::applyGlobalFloatProperty(const std::string &property, float value) {
+
 	if (!m_PhysInst)
 		return;
 	
@@ -390,6 +402,7 @@ PhysicsManager::applyGlobalFloatProperty(const std::string &property, float valu
 
 void
 PhysicsManager::applyGlobalVec4Property(const std::string &property, float *value) {
+
 	if (!m_PhysInst)
 		return;
 
@@ -399,6 +412,7 @@ PhysicsManager::applyGlobalVec4Property(const std::string &property, float *valu
 
 void
 PhysicsManager::applyMaterialFloatProperty(const std::string &matName, const std::string &property, float value) {
+
 	if (!m_PhysInst || m_MatLib.count(matName) == 0)
 		return;
 
@@ -412,8 +426,10 @@ PhysicsManager::applyMaterialFloatProperty(const std::string &matName, const std
 	}
 }
 
+
 void
 PhysicsManager::applyMaterialVec4Property(const std::string &matName, const std::string &property, float *value) {
+
 	if (!m_PhysInst)
 		return;
 
@@ -427,8 +443,10 @@ PhysicsManager::applyMaterialVec4Property(const std::string &matName, const std:
 	}
 }
 
+
 PhysicsMaterial &
 PhysicsManager::getMaterial(const std::string &name) {
+
 	if (!m_MatLib.count(name))
 		m_MatLib[name] = PhysicsMaterial(name);
 
@@ -438,6 +456,7 @@ PhysicsManager::getMaterial(const std::string &name) {
 
 void
 PhysicsManager::getMaterialNames(std::vector<std::string> *v) {
+
 	for (auto s : m_MatLib) {
 		v->push_back(s.first);
 	}

@@ -58,7 +58,7 @@ IndexData::getIndexData (void) {
 }
 
 
-#ifdef NAU_OPTIX
+//#ifdef NAU_OPTIX
 void
 IndexData::getIndexDataAsInt(std::vector<int> *v) {
 
@@ -72,7 +72,7 @@ IndexData::getIndexDataAsInt(std::vector<int> *v) {
 		}
 	}
 }
-#endif
+//#endif
 
 
 void

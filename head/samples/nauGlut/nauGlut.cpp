@@ -22,6 +22,11 @@ using namespace gl;
 #include <GL/freeglut.h>
 
 #include <stdio.h>
+
+
+Nau *nauInstance = NULL;
+
+
 // ------------------------------------------------------------
 //
 //			Reshape Callback Function
@@ -45,7 +50,7 @@ void renderScene() {
 
 	{
 		PROFILE("Nau");
-		NAU->step();
+		nauInstance->step();
 	}
 	// swap buffers
 	{
@@ -55,7 +60,7 @@ void renderScene() {
 #if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
 	Profile::CollectQueryResults();
 #endif
-	if (NAU->getProfileResetRequest())
+	if (nauInstance->getProfileResetRequest())
 		Profile::Reset();
 }
 
@@ -83,7 +88,7 @@ void processKeys(unsigned char c, int xx, int yy) {
 		mod |= Nau::KEY_MOD_CTRL;
 		velocity *= 100.0f;
 	}
-	if (NAU->keyPressed(c, mod))
+	if (nauInstance->keyPressed(c, mod))
 		return;
 
 	// w = 0111 0111 W = 0101 0111  CTRL-W = 0001 0111
@@ -181,14 +186,18 @@ void processMouseMotion(int xx, int yy) {
 
 int main(int argc, char **argv) {
 
-	int w = 640, h= 360;
+	if (argc == 1) {
+		printf("The application requires the name of a project as a command line parameter");
+		return 1;
+	}
 
+	int w = 640, h = 360;
 	//  GLUT initialization
 	glutInit(&argc, argv);
 	// Standard display mode plus multisample (to provide some antialiasing)
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
 	// the OpenGL version (major, minor)
-	glutInitContextVersion(4, 4);
+	glutInitContextVersion(3, 0);
 	// Profile selection, the core profile ensures no deprecated functions are used
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 
@@ -223,17 +232,16 @@ int main(int argc, char **argv) {
 
 	std::string s;
 
+	nauInstance = (Nau *)Nau::GetInstance();
+
 	try {
-		NAU->init(true);
-		if (argc == 1)
-			s = "C:\\nau\\head\\projects\\simple\\simple.xml";
-		else
-			s = std::string(argv[1]);
+		nauInstance->init(true);
+		s = std::string(argv[1]);
 		std::string appPath = nau::system::File::GetAppFolder();
 		std::string cleanAppPath = nau::system::File::CleanFullPath(appPath);
 		std::string full = nau::system::File::GetFullPath(appPath, s);
-		NAU->setWindowSize(w, h);
-		NAU->readProjectFile(full, &w, &h);
+		nauInstance->setWindowSize(w, h);
+		nauInstance->readProjectFile(full, &w, &h);
 		if (h != 0)
 			glutReshapeWindow(w, h);
 	}
@@ -245,7 +253,7 @@ int main(int argc, char **argv) {
 	glutMainLoop();
 
 	// because standard C++ requires a return value
-	return(1);
+	return 1;
 
 }
 

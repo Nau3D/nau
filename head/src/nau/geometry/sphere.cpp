@@ -18,7 +18,9 @@ Sphere::Init() {
 	Attribs.add(Attribute(STACKS, "STACKS", Enums::UINT, false, new NauUInt(10), new NauUInt(2), NULL));
 	Attribs.add(Attribute(SLICES, "SLICES", Enums::UINT, false, new NauUInt(10), new NauUInt(3), NULL));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("SPHERE", &Attribs);
+#endif
 	return true;
 }
 

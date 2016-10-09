@@ -8,7 +8,7 @@
 #include <glbinding/Binding.h>
 using namespace gl;
 
-static nau::INau *NAU_INTERFACE;
+//static nau::INau *NAU_INTERFACE;
 
 static char className[] = "depthmap2";
 

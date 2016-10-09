@@ -1,3 +1,8 @@
+/*
+Plugins receive an instance of this class, actually IPhysicsPropertyManager, to be able
+to query/set global and material properties in NAU
+*/
+
 #ifndef _NAU_PHYSICS_PROP_MANAGER_H
 #define _NAU_PHYSICS_PROP_MANAGER_H
 

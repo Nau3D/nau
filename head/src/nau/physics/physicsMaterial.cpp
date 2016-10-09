@@ -39,7 +39,9 @@ PhysicsMaterial::Init() {
 
 	Attribs.add(Attribute(DIRECTION, "DIRECTION", Enums::DataType::VEC4, true, new vec4(0.0f, 0.0f, 0.0f, 1.0f)));
 
+#ifndef _WINDLL
 	NAU->registerAttributes("PHYSICS_MATERIAL", &Attribs);
+#endif
 
 	return true;
 }

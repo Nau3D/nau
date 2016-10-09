@@ -1,3 +1,7 @@
+/* 
+Main class for physics in NAU.
+*/
+
 #ifndef _NAU_PHYSICSMANAGER_H
 #define _NAU_PHYSICSMANAGER_H
 
@@ -25,9 +29,11 @@ namespace nau
 		public:
 		
 			FLOAT_PROP(TIME_STEP, 0);
+
 			FLOAT4_PROP(CAMERA_POSITION, 0);
 			FLOAT4_PROP(CAMERA_DIRECTION, 1); 
 			FLOAT4_PROP(CAMERA_UP, 2);
+
 			FLOAT_PROP(CAMERA_RADIUS, 1);
 			FLOAT_PROP(CAMERA_HEIGHT, 2);
 

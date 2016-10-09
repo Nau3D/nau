@@ -1,3 +1,6 @@
+/*
+A dummy instance of iPhysics, required for compilation purposes
+*/
 #ifndef _NAU_PHYSICS_DUMMY_H
 #define _NAU_PHYSICS_DUMMY_H
 

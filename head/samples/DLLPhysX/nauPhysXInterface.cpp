@@ -2,7 +2,7 @@
 
 #include <memory>
 
-static char className[] = "Dummy";
+static char className[] = "PhysX plugin for Nau3D";
 static NauPhysXInterface * Instance = NULL;
 
 __declspec(dllexport)

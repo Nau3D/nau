@@ -348,13 +348,17 @@ void
 AttribSet::add(Attribute &a) {
 			
 	if (a.m_Id != -1) {
+
+		if (0 == m_Attributes.count(a.getName())) { // already exists
+
+			Enums::DataType dt = a.getType();
+			if (mDataTypeCounter.count(dt))
+				++mDataTypeCounter[dt];
+			else
+				mDataTypeCounter[dt] = 1;
+		}
 		m_Attributes[a.m_Name] = std::unique_ptr<Attribute>(new Attribute(a));
 	}
-	Enums::DataType dt = a.getType();
-	if (mDataTypeCounter.count(dt))
-		++mDataTypeCounter[dt];
-	else
-		mDataTypeCounter[dt] = 1;
 }
 
 

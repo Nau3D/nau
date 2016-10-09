@@ -420,8 +420,16 @@ PropertyManager::createEnum(wxPropertyGridManager *pg, std::unique_ptr<Attribute
 		arr.Add(wxString(strs[i].c_str()));
 		ind.Add(inds[i]);
 	}
+	int option;
+	if (!inds.size()) {
+		arr.Add(wxT(" "));
+		ind.Add(0);
+		option = 0;
+	}
+	else
+		option = inds[0];
 
-	pid = pg->Append(new wxEnumProperty(wxString(a->getName().c_str()), wxPG_LABEL, arr, ind, inds[0]));
+	pid = pg->Append(new wxEnumProperty(wxString(a->getName().c_str()), wxPG_LABEL, arr, ind, option));
 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);

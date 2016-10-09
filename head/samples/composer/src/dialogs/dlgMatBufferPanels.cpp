@@ -70,8 +70,7 @@ DlgMatBufferPanels::setPanel(wxSizer *siz, wxWindow *parent) {
            );
 	m_PG->AddPage(wxT("Standard Items"));
 
-	std::vector<std::string> order2 = {};
-	PropertyManager::createOrderedGrid(m_PG, nau::material::IMaterialBuffer::Attribs, order2);
+	PropertyManager::createGrid(m_PG, nau::material::IMaterialBuffer::Attribs);
 
 	std::vector<std::string> order = {"ID", "SIZE", "CLEAR"};
 	PropertyManager::createOrderedGrid(m_PG, nau::material::IBuffer::Attribs, order);

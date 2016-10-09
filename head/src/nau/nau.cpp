@@ -21,9 +21,6 @@
 #include "nau/resource/fontManager.h"
 #include "nau/scene/sceneFactory.h"
 #include "nau/system/file.h"
-//#include "nau/world/worldFactory.h"
-
-//#include <GL/glew.h>
 
 
 #ifdef NAU_LUA
@@ -46,13 +43,12 @@ using namespace nau::render;
 using namespace nau::resource;
 using namespace nau::scene;
 using namespace nau::system;
-//using namespace nau::world;
 
 
 static nau::Nau *gInstance = 0;
 
 
-nau::Nau*
+nau::INau*
 Nau::Create (void) {
 	if (0 == gInstance) {
 		gInstance = new Nau;
@@ -61,7 +57,7 @@ Nau::Create (void) {
 }
 
 
-nau::Nau*
+nau::INau*
 Nau::GetInstance (void) {
 
 	if (0 == gInstance) {
@@ -124,8 +120,6 @@ Nau::~Nau() {
 	nau::material::UniformBlockManager::DeleteInstance();
 	SLogger::DeleteInstance();
 
-	//delete m_pWorld;
-
 	PassFactory::DeleteInstance();
 
 #ifdef NAU_LUA
@@ -139,21 +133,23 @@ Nau::~Nau() {
 
 
 bool 
-Nau::init (bool context, std::string aConfigFile) {
+Nau::init (bool trace) {
 
 #if NAU_DEBUG == 1
 	CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
 #endif
 	m_AppFolder = File::GetAppFolder();
-	//bool result;
-	if (true == context) {
-		m_pEventManager = EventManager::GetInstance();
-		m_pRenderManager = new RenderManager;
-		m_pAPISupport = IAPISupport::GetInstance();
-		m_pAPISupport->setAPISupport();
-		m_pPhysicsManager = nau::physics::PhysicsManager::GetInstance();
-	}	
-	m_pResourceManager = new ResourceManager ("."); /***MARK***/ //Get path!!!
+	m_pEventManager = EventManager::GetInstance();
+	m_pRenderManager = new RenderManager;
+
+	if (trace) {
+		RENDERER->setTrace(-1);
+		m_TraceFrames = -1;
+	}
+	m_pAPISupport = IAPISupport::GetInstance();
+	m_pAPISupport->setAPISupport();
+	m_pPhysicsManager = nau::physics::PhysicsManager::GetInstance();	
+	m_pResourceManager = new ResourceManager ("."); 
 	m_pMaterialLibManager = new MaterialLibManager();
 
 	// reset shader block information
@@ -168,8 +164,6 @@ Nau::init (bool context, std::string aConfigFile) {
 	}
 
 	FontManager::addFont("CourierNew10", m_AppFolder + File::PATH_SEPARATOR + "nauSettings/couriernew10.xml", "__FontCourierNew10");
-
-	//m_pWorld = WorldFactory::create ("Bullet");
 
 	m_StartTime = (float)clock();// *1000.0 / CLOCKS_PER_MILISEC;
 	m_LastFrameTime = NO_TIME;
@@ -186,8 +180,6 @@ Nau::init (bool context, std::string aConfigFile) {
 	initLua();
 #endif
 	PASSFACTORY->loadPlugins();
-
-//	TwInit(TW_OPENGL_CORE, NULL);
 
 	return true;
 }
@@ -1219,6 +1211,7 @@ Nau::clear() {
 	deleteUserAttributes();
 	UniformBlockManager::DeleteInstance();
 	m_pPhysicsManager->clear();
+	m_Physics = false;
 
 	m_Viewport = RENDERMANAGER->createViewport("__nauDefault");
 
@@ -1351,6 +1344,7 @@ void
 Nau::setTrace(int frames) {
 
 	m_TraceFrames = frames;
+	m_TraceOn = m_TraceFrames != 0;
 }
 
 
@@ -1363,6 +1357,8 @@ Nau::getTraceStatus() {
 
 void 
 Nau::step() {
+	if (m_ProjectName == "")
+		return;
 
 	IRenderer *renderer = RENDERER;
 	if (!renderer)
@@ -1381,20 +1377,11 @@ Nau::step() {
 		LOG_trace("#NAU(FRAME,START)");
 	}
 
-//#ifdef GLINTERCEPTDEBUG
-//	addMessageToGLILog("\n#NAU(FRAME,START)");
-//#endif //GLINTERCEPTDEBUG
-
 	m_pEventManager->notifyEvent("FRAME_BEGIN", "Nau", "", NULL);
 
 
 	renderer->resetCounters();
 	RESOURCEMANAGER->clearBuffers();
-
-	//if (true == m_Physics) {
-	//	m_pWorld->update();
-	//	m_pEventManager->notifyEvent("DYNAMIC_CAMERA", "MainCanvas", "", NULL);
-	//}
 
 	m_pRenderManager->renderActivePipeline();
 
@@ -1412,10 +1399,6 @@ Nau::step() {
 	if (m_Physics)
 		m_pPhysicsManager->update();
 
-	if (m_Physics)
-		m_pPhysicsManager->update();
-	//if (getProfileResetRequest())
-	//	Profile::Reset();
 	INTERFACE->render();
 }
 

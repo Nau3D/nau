@@ -15,6 +15,7 @@
 #include "nau/event/iListener.h"
 #include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
+#include "nau/physics/physicsManager.h"
 #include "nau/render/pipeline.h"
 #include "nau/render/pass.h"
 #include "nau/render/viewport.h"
@@ -59,6 +60,10 @@ namespace nau {
 			COUNT_RENDER_FLAGS
 		};
 
+		virtual void setProjectName(std::string name) = 0;
+		virtual const std::string &getProjectName() = 0;
+
+
 #ifdef NAU_LUA
 		virtual void callLuaScript(std::string name) = 0;
 		virtual void initLuaScript(std::string file, std::string name) = 0;
@@ -78,11 +83,15 @@ namespace nau {
 				 Data *values) = 0;
 		virtual void *getAttributeValue(std::string type, std::string context,
 			std::string component, int number=0) = 0;
+
+		virtual std::unique_ptr<Attribute> &getAttribute(const std::string &type, const std::string &component) = 0;
+
 		virtual AttributeValues *getObjectAttributes(const std::string &type, const std::string &context, int number=0) = 0;
 		virtual AttributeValues *getCurrentObjectAttributes(const std::string &context, int number = 0) = 0;
 		virtual bool validateObjectType(const std::string & type) = 0;
 		virtual void getValidObjectTypes(std::vector<std::string>* v) = 0;
-
+		virtual void getValidObjectNames(const std::string & type, std::vector<std::string>* v) = 0;
+		virtual bool validateObjectName(const std::string & type, std::string & v) = 0;
 		virtual bool validateObjectContext(const std::string & type, const std::string & context) = 0;
 		virtual bool validateObjectComponent(const std::string & type, const std::string & component) = 0;
 		virtual void getValidObjectComponents(const std::string &type, std::vector<std::string>* v) = 0;
@@ -103,8 +112,10 @@ namespace nau {
 		virtual unsigned int getWindowWidth() = 0;
 
 		// Viewports
+		virtual void setActiveCameraName(const std::string &aCamName) = 0;
 		virtual std::shared_ptr<Viewport> getDefaultViewport () = 0;
 		virtual void setWindowSize(unsigned int width, unsigned int height) = 0;
+		virtual float getDepthAtCenter() = 0;
 
 
 		/* Managers */
@@ -113,12 +124,15 @@ namespace nau {
 		virtual nau::resource::ResourceManager* getResourceManager (void) = 0;
 		virtual nau::material::MaterialLibManager* getMaterialLibManager (void) = 0;
 		virtual nau::event_::EventManager* getEventManager (void) = 0;
+		virtual nau::physics::PhysicsManager *getPhysicsManager() = 0;
+
 		virtual IAPISupport* getAPISupport(void) = 0;
 
-		virtual void setProjectName(std::string name) = 0;
 		virtual void loadAsset(std::string aFilename, std::string sceneName, std::string params = "") throw (std::string) = 0;
+		virtual void writeAssets(std::string fileType, std::string aFilename, std::string sceneName) = 0;
 
 		virtual bool getTraceStatus() = 0;
+		virtual void setRenderFlag(RenderFlags aFlag, bool aState) = 0;
 		virtual bool getRenderFlag(RenderFlags aFlag) = 0;
 
 	protected:

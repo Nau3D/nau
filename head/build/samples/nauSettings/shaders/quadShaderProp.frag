@@ -1,4 +1,4 @@
-#version 330
+#version 150
 
 uniform sampler2D texUnit;
 uniform vec2 viewport = vec2(512,1024);

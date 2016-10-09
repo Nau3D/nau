@@ -1,3 +1,9 @@
+/*
+A physics material class. Defines all the properties that materials
+can have. Plugins can add new properties (in the initialization process)
+as well as read/write (through IPhysicsPropertyManager).
+*/
+
 #ifndef _NAU_PHYSICS_MATERIAL
 #define _NAU_PHYSICS_MATERIAL
 

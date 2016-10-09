@@ -83,7 +83,7 @@ class CLogger
 	CLogger::LogSimple(CLogger::LEVEL_TRACE,m);\
 };
 
-
+// log without a return at the end
 #define LOG_trace_nr(message, ...) \
 {\
 	char m[256];\

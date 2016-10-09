@@ -1,22 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug Optix Dynamic|Win32">
-      <Configuration>Debug Optix Dynamic</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug Optix Dynamic|x64">
-      <Configuration>Debug Optix Dynamic</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -138,9 +122,12 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glbindingd_dl.lib;luad.lib;devil.lib;tinyxmlSTLd_dl.lib;assimpd_dl.lib;zlibstaticd_dl.lib;opengl32.lib;BulletDynamics_Debug_dl.lib;BulletCollision_Debug_dl.lib;Bullet3Common_Debug_dl.lib;BulletSoftBody_Debug_dl.lib;LinearMath_Debug_dl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glbindingd_dl.lib;luad.lib;devil.lib;tinyxmlSTLd_dl.lib;assimpd_dl.lib;zlibstaticd_dl.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins_d\pass\$(ProjectName).dll</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Optix Dynamic|x64'">
     <ClCompile>
@@ -185,9 +172,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glbinding_dl.lib;lua.lib;devil.lib;tinyxmlSTL_dl.lib;assimp_dl.lib;zlibstatic.lib;opengl32.lib;BulletDynamics_dl.lib;BulletCollision_dl.lib;Bullet3Common_dl.lib;BulletSoftBody_dl.lib;LinearMath_dl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glbinding_dl.lib;lua.lib;devil.lib;tinyxmlSTL_dl.lib;assimp_dl.lib;zlibstatic.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)$(TargetName).dll" ..\..\build\samples\nauSettings\plugins\pass\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\nau\attribute.cpp" />
@@ -233,9 +223,12 @@
     <ClCompile Include="..\..\src\nau\geometry\skeletonBone.cpp" />
     <ClCompile Include="..\..\src\nau\geometry\sphere.cpp" />
     <ClCompile Include="..\..\src\nau\geometry\square.cpp" />
+    <ClCompile Include="..\..\src\nau\geometry\terrain.cpp" />
     <ClCompile Include="..\..\src\nau\geometry\vertexData.cpp" />
     <ClCompile Include="..\..\src\nau\iNau.cpp" />
+    <ClCompile Include="..\..\src\nau\interface\interface.cpp" />
     <ClCompile Include="..\..\src\nau\loader\assimpLoader.cpp" />
+    <ClCompile Include="..\..\src\nau\loader\bufferLoader.cpp" />
     <ClCompile Include="..\..\src\nau\loader\cboLoader.cpp" />
     <ClCompile Include="..\..\src\nau\loader\devilTextureLoader.cpp" />
     <ClCompile Include="..\..\src\nau\loader\fontXmlLoader.cpp" />
@@ -270,6 +263,10 @@
     <ClCompile Include="..\..\src\nau\math\randomGen.cpp" />
     <ClCompile Include="..\..\src\nau\math\spherical.cpp" />
     <ClCompile Include="..\..\src\nau\nau.cpp" />
+    <ClCompile Include="..\..\src\nau\physics\physicsDummy.cpp" />
+    <ClCompile Include="..\..\src\nau\physics\physicsManager.cpp" />
+    <ClCompile Include="..\..\src\nau\physics\physicsMaterial.cpp" />
+    <ClCompile Include="..\..\src\nau\physics\physicsPropertyManager.cpp" />
     <ClCompile Include="..\..\src\nau\render\iAPISupport.cpp" />
     <ClCompile Include="..\..\src\nau\render\iGlobalState.cpp" />
     <ClCompile Include="..\..\src\nau\render\iRenderable.cpp" />
@@ -337,10 +334,6 @@
     <ClCompile Include="..\..\src\nau\system\file.cpp" />
     <ClCompile Include="..\..\src\nau\system\textutil.cpp" />
     <ClCompile Include="..\..\src\nau\util\tree.cpp" />
-    <ClCompile Include="..\..\src\nau\world\bulletMotionState.cpp" />
-    <ClCompile Include="..\..\src\nau\world\bulletWorld.cpp" />
-    <ClCompile Include="..\..\src\nau\world\physicalObject.cpp" />
-    <ClCompile Include="..\..\src\nau\world\worldFactory.cpp" />
     <ClCompile Include="passDepthMap2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -395,8 +388,11 @@
     <ClInclude Include="..\..\src\nau\geometry\skeletonBone.h" />
     <ClInclude Include="..\..\src\nau\geometry\sphere.h" />
     <ClInclude Include="..\..\src\nau\geometry\square.h" />
+    <ClInclude Include="..\..\src\nau\geometry\terrain.h" />
     <ClInclude Include="..\..\src\nau\geometry\vertexData.h" />
+    <ClInclude Include="..\..\src\nau\interface\interface.h" />
     <ClInclude Include="..\..\src\nau\loader\assimpLoader.h" />
+    <ClInclude Include="..\..\src\nau\loader\bufferLoader.h" />
     <ClInclude Include="..\..\src\nau\loader\cboLoader.h" />
     <ClInclude Include="..\..\src\nau\loader\devilTextureLoader.h" />
     <ClInclude Include="..\..\src\nau\loader\fontXmlLoader.h" />
@@ -436,6 +432,12 @@
     <ClInclude Include="..\..\src\nau\math\vec2.h" />
     <ClInclude Include="..\..\src\nau\math\vec3.h" />
     <ClInclude Include="..\..\src\nau\math\vec4.h" />
+    <ClInclude Include="..\..\src\nau\physics\iPhysics.h" />
+    <ClInclude Include="..\..\src\nau\physics\iPhysicsPropertyManager.h" />
+    <ClInclude Include="..\..\src\nau\physics\physicsDummy.h" />
+    <ClInclude Include="..\..\src\nau\physics\physicsManager.h" />
+    <ClInclude Include="..\..\src\nau\physics\physicsMaterial.h" />
+    <ClInclude Include="..\..\src\nau\physics\physicsPropertyManager.h" />
     <ClInclude Include="..\..\src\nau\render\iAPISupport.h" />
     <ClInclude Include="..\..\src\nau\render\iGlobalState.h" />
     <ClInclude Include="..\..\src\nau\render\iRenderable.h" />
@@ -507,11 +509,6 @@
     <ClInclude Include="..\..\src\nau\system\textutil.h" />
     <ClInclude Include="..\..\src\nau\util\bimap.h" />
     <ClInclude Include="..\..\src\nau\util\tree.h" />
-    <ClInclude Include="..\..\src\nau\world\bulletMotionState.h" />
-    <ClInclude Include="..\..\src\nau\world\bulletWorld.h" />
-    <ClInclude Include="..\..\src\nau\world\iWorld.h" />
-    <ClInclude Include="..\..\src\nau\world\physicalObject.h" />
-    <ClInclude Include="..\..\src\nau\world\worldFactory.h" />
     <ClInclude Include="passDepthMap2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

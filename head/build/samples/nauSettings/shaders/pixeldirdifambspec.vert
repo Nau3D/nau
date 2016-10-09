@@ -1,4 +1,4 @@
-#version 420
+#version 150
 
 uniform mat3 NormalMatrix;
 uniform mat4 PVM, VM;

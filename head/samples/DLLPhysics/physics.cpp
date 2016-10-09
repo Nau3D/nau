@@ -154,10 +154,13 @@ Physics::applyGlobalVec4Property(const std::string &property, float *value) {
 
 
 void
-Physics::setScene(const std::string &scene, int nbVertices, float *vertices, int nbIndices, unsigned int *indices, float *transform) {
+Physics::setScene(const std::string &scene, const std::string &material, int nbVertices, float *vertices, int nbIndices, unsigned int *indices, float *transform) {
 
 	m_Scenes[scene].vertices = vertices;
+	m_Scenes[scene].material = material;
+	m_Scenes[scene].nbVertices = nbVertices;
 	m_Scenes[scene].indices = indices;
+	m_Scenes[scene].nbIndices = nbIndices;
 	m_Scenes[scene].transform = transform;
 }
 
@@ -176,3 +179,21 @@ Physics::setSceneTransform(const std::string & scene, float * transform) {
 }
 
 
+void 
+Physics::setCameraAction(const std::string &scene, const std::string &action, float * value) {
+
+}
+
+
+std::map<std::string, float*> * 
+Physics::getCameraPositions() {
+
+	return NULL;
+}
+
+
+std::vector<float> * 
+Physics::getDebug() {
+
+	return NULL;
+}
