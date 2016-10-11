@@ -1,6 +1,6 @@
 #include "dlgDbgPrograms.h"
 
-#include "../glInfo.h"
+//#include "../glInfo.h"
 
 #include <nau.h>
 #include <nau/util/tree.h>

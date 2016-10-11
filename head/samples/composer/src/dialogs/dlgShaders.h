@@ -32,7 +32,7 @@
 
 using namespace nau::material;
 
-class DlgShaders : public wxDialog
+class DlgShaders : public wxDialog, IListener
 {
 public:
 	void updateDlg();
@@ -42,29 +42,32 @@ public:
 
 	void updateInfo(std::string name);
 
+	std::string &getName() { return m_Name; };
+	void eventReceived(const std::string &sender, const std::string &eventType,
+		const std::shared_ptr<IEventData> &evt);
 
 protected:
 
 	DlgShaders();
-	DlgShaders(const DlgShaders&);
-	DlgShaders& operator= (const DlgShaders&);
+	//DlgShaders(const DlgShaders&);
+	//DlgShaders& operator= (const DlgShaders&);
 	static DlgShaders *inst;
+	std::string m_Name;
 
 	/* GLOBAL STUFF */
-	std::string m_active;
+	std::string m_Active;
 
 	/* LIGHTS */
 	wxButton *bAdd,*bActivate;
-	wxComboBox *list;
+	wxComboBox *m_List;
 
 	/* SPECIFIC */
-	wxPropertyGridManager *pg;
-	wxCheckBox *m_cbUseShader; //,*m_cbShowGlobalU;
+	wxPropertyGridManager *m_PG;
 	wxListBox *m_Log;
 	wxPGProperty *m_Shader[IProgram::SHADER_COUNT];
 	wxPGProperty *m_LinkStatus, *m_ValidateStatus,
 		*m_ActiveAtomicBuffers,*m_ActiveAttributes, *m_ActiveUniforms ;
-	wxButton *m_bValidate, *m_bCompile, *m_bLink;
+	wxButton *m_bValidate, *m_bCompileAndLink;
 
 
 	/* EVENTS */
@@ -78,33 +81,24 @@ protected:
 	void setupPanel(wxSizer *siz, wxWindow *parent);
 
 	void OnProcessValidateShaders(wxCommandEvent& event);
-	void OnProcessCompileShaders(wxCommandEvent& event);
-	void OnProcessLinkShaders(wxCommandEvent& event);
+	void OnProcessCompileAndLinkShaders(wxCommandEvent& event);
 	void updateShaderAux();
 	void updateLogAux(std::string aux);
 	void addUniform(wxPGProperty *pid, wxString name, wxString type);
 	wxString getUniformType(int type);
-//	void updateUniforms();
 
 
 	enum {
-/*		DLG_MI_VERTEX=0,
-		DLG_MI_FRAGMENT,
-		DLG_MI_GEOMETRY,
-*/		DLG_COMBO,
+		DLG_COMBO,
 		DLG_BUTTON_ADD,
 		DLG_PROPS,
-
 
 		/* SHADERS */
 		DLG_SHADER_FILES,
 		DLG_SHADER_VALIDATE,
-		DLG_SHADER_COMPILE,
-		DLG_SHADER_LINK,
-		DLG_SHADER_USE,
+		DLG_SHADER_COMPILE_AND_LINK,
 		DLG_SHADER_LOG,
 		DLG_SHADER_UNIFORMS,
-		DLG_SHADER_SHOW_GLOBAL_UNIFORMS,
 
 	};
 		

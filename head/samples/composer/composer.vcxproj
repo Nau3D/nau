@@ -772,7 +772,6 @@
     <ClCompile Include="src\dialogs\dlgViewports.cpp" />
     <ClCompile Include="src\dialogs\propertyManager.cpp" />
     <ClCompile Include="src\glcanvas.cpp" />
-    <ClCompile Include="src\glInfo.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\dialogs\dlgCameras.cpp" />
     <ClCompile Include="src\dialogs\dlgLights.cpp" />
@@ -806,9 +805,9 @@
     <ClInclude Include="src\dialogs\dlgMatStatePanels.h" />
     <ClInclude Include="src\dialogs\dlgPass.h" />
     <ClInclude Include="src\dialogs\dlgViewports.h" />
+    <ClInclude Include="src\dialogs\imagegridcellrenderer.h" />
     <ClInclude Include="src\dialogs\propertyManager.h" />
     <ClInclude Include="src\glcanvas.h" />
-    <ClInclude Include="src\glInfo.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\dialogs\dlgCameras.h" />
     <CustomBuildStep Include="src\dialogs\dlgLights.h" />

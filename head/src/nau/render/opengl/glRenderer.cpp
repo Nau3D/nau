@@ -539,7 +539,6 @@ void
 GLRenderer::setColorMaterial(ColorMaterial &mat) {
 
 	m_ColorMaterial = mat;
-	//m_Material.clone(mat);
 }
 
 
@@ -693,11 +692,11 @@ GLRenderer::getTexture(int unit) {
 void 
 GLRenderer::resetTextures(const std::map<int, MaterialTexture *> &textures)
 {
-	if (APISupport->getVersion() > 440) {
+/*	if (APISupport->getVersion() > 440) {
 		glBindTextures(0, MaxTextureUnits, NULL);
 		glBindSamplers(0, MaxTextureUnits, NULL);
 	}
-	else {
+	else*/ {
 		for (auto t : textures) {
 			t.second->unbind();
 		}

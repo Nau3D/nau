@@ -68,6 +68,7 @@ namespace nau
 			virtual const std::string &getName() = 0;
 
 			virtual bool isCompiled(ShaderType type) = 0;
+			virtual bool areCompiled() = 0;
 			virtual bool isLinked() = 0;
 
 			virtual bool reloadShaderFile(ShaderType type) = 0;

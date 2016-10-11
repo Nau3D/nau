@@ -16,8 +16,7 @@ Material::Material() :
    m_ProgramValues(),
    m_UniformValues(),
    m_Enabled (true),
-   m_Name ("__Default"),
-   m_useShader(true)
+   m_Name ("__Default")
 {
 	m_State = NULL; 
 }
@@ -52,8 +51,7 @@ Material::clone() { // check clone Program Values
 
    mat->m_Enabled = m_Enabled;
    mat->m_Shader = m_Shader;
-   mat->m_useShader = m_useShader;
-
+ 
    mat->m_ProgramValues = m_ProgramValues;
    mat->m_ProgramBlockValues = m_ProgramBlockValues;
 
@@ -76,17 +74,11 @@ Material::clone() { // check clone Program Values
 }
 
 			
-void 
-Material::enableShader(bool value) { 
-
-	m_useShader = value;
-}
-
-			
+		
 bool 
-Material::isShaderEnabled() {
+Material::isShaderLinked() {
 
-	return(m_useShader);
+	return(m_Shader->isLinked());
 }
 
 			
@@ -228,18 +220,22 @@ Material::setUniformBlockValues() {
 #include <algorithm>
 
 void 
-Material::checkProgramValuesAndUniforms() {
+Material::checkProgramValuesAndUniforms(std::string &result) {
 
 	int loc;
 	IUniform iu;
-	std::string s;
+	std::string s,aux;
 
 	std::vector<std::string> names, otherNames;
 	m_Shader->getAttributeNames(&names);
 	for (auto n : names) {
 
-		if (VertexData::GetAttribIndex(n) == VertexData::MaxAttribs)
-			SLOG("Material %s: attribute %s is not valid", m_Name.c_str(), n.c_str());
+		if (VertexData::GetAttribIndex(n) == VertexData::MaxAttribs) {
+
+			aux = "Material " + m_Name + ": attribute " + n + " -  not valid";
+			result += aux + "\n";
+			SLOG("Material %s: attribute %s - not valid", m_Name.c_str(), n.c_str());
+		}
 	}
 
 	names.clear();
@@ -254,13 +250,18 @@ Material::checkProgramValuesAndUniforms() {
 			otherNames.clear();
 			b->getUniformNames(&otherNames);
 			std::string uniName = bi.first.second;
-			if (!std::any_of(otherNames.begin(), otherNames.end(), 
-						[uniName](std::string i) {return i == uniName; }))
-				SLOG("Material %s: block %s: uniform %s is not active in shader", 
+			if (!std::any_of(otherNames.begin(), otherNames.end(),	[uniName](std::string i) {return i == uniName; })) {
+				aux = "Material " + m_Name + ": block: " + bi.first.first + "  uniform: " + uniName + " - not active in shader";
+				result += aux + "\n";
+				SLOG("Material %s: block %s: uniform %s not active in shader",
 					m_Name.c_str(), bi.first.first.c_str(), uniName.c_str());
+			}
 		}
-		else
+		else {
 			SLOG("Material %s: block %s is not active in shader", m_Name.c_str(), bi.first.first.c_str());
+			aux = "Material " + m_Name + ": block: " + bi.first.first + " -  not active in shader";
+			result += aux + "\n";
+		}
 	}
 
 	// check if uniforms used in the shader are defined in the project
@@ -275,9 +276,11 @@ Material::checkProgramValuesAndUniforms() {
 					[&](std::pair<std::pair<std::string , std::string >, ProgramBlockValue> k) 
 					{return k.first == std::pair<std::string, std::string>(name, uni); })) {
 				
-				SLOG("Material %s: block %s: uniform %s is not defined in the material lib",
+				SLOG("Material %s: block %s: uniform %s is not defined in the material",
 					m_Name.c_str(), name.c_str(), uni.c_str());
-				
+				aux = "Material " + m_Name + ": shader block: " + name + " uniform: " + uni + " - not defined in the material";
+				result += aux + "\n";
+
 			}
 		}
 
@@ -291,9 +294,13 @@ Material::checkProgramValuesAndUniforms() {
 	for (; progValIter != m_ProgramValues.end(); ++progValIter) {
 		loc = m_Shader->getUniformLocation(progValIter->first);
 		progValIter->second.setLoc(loc);
-		if (loc == -1)
-			SLOG("Material %s: material uniform %s is not active in shader %s", 
+		if (loc == -1) {
+			SLOG("Material %s: material uniform %s is not active in shader %s",
 				m_Name.c_str(), progValIter->first.c_str(), m_Shader->getName().c_str());
+			aux = "Material: " + m_Name + " uniform: " + progValIter->first + " - not active in shader " + m_Shader->getName();
+			result += aux + "\n";
+
+		}
 	}
 
 	int k = m_Shader->getNumberOfUniforms();
@@ -304,13 +311,17 @@ Material::checkProgramValuesAndUniforms() {
 		if (m_ProgramValues.count(s) == 0) {
 			SLOG("Material %s: shader uniform %s from shader %s is not defined", 
 				m_Name.c_str(), s.c_str(), m_Shader->getName().c_str());
+			aux = "Material: " + m_Name + " shader : " + m_Shader->getName() + " + shader uniform: " + s + " - not defined in material";
+			result += aux + "\n";
 		}
 		else if (! Enums::isCompatible(m_ProgramValues[s].getValueType(), iu.getSimpleType())) {
 	
-			SLOG("Material %s: uniform %s types are not compatiple (%s, %s)", 
+			aux = "Material: " + m_Name + " uniform: " + s + " - types are not compatible(" + iu.getStringSimpleType() + "," + 
+				Enums::DataTypeToString[m_ProgramValues[s].getValueType()] + ")";
+			result += aux + "\n";
+			SLOG("Material %s: uniform %s types are not compatiple (%s, %s)",
 				m_Name.c_str(), s.c_str(), iu.getStringSimpleType().c_str(), 
 				Enums::DataTypeToString[m_ProgramValues[s].getValueType()].c_str());
-
 		}
 	}
 }
@@ -372,12 +383,15 @@ Material::prepare () {
 
 	{
 		PROFILE("Shaders");
-		if (NULL != m_Shader && m_useShader) {
+		if (NULL != m_Shader) {
 
 			m_Shader->prepare();
 			RENDERER->setShader(m_Shader);
-			setUniformValues();
-			setUniformBlockValues();
+
+			if (m_Shader->prepare()) {
+				setUniformValues();
+				setUniformBlockValues();
+			}
 		}
 		else
 			RENDERER->setShader(NULL);

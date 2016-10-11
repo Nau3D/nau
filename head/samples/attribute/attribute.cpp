@@ -1,7 +1,5 @@
 #include "nau.h"
 
-#include "nau/material/iTexture.h"
-
 #include <vector>
 #include <string>
 #include <stdio.h>

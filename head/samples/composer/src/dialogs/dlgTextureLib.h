@@ -105,7 +105,7 @@ protected:
     DECLARE_EVENT_TABLE()
 };
 
-#include "dialogs/imagegridcellrenderer.h"
+#include "imagegridcellrenderer.h"
 
 
 

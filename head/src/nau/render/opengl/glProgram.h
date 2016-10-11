@@ -27,7 +27,10 @@ namespace nau
 		private:
 			std::vector<std::string> m_File; // filenames
 			std::vector<std::string> m_Source; // source code
+			// vector of (shader ID , attached)
 			std::vector<int> m_ID;
+			std::vector<bool> m_Attached;
+
 			std::vector<bool> m_Compiled;
 			unsigned int  m_P; // program id
 			int m_NumUniforms;

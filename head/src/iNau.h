@@ -24,7 +24,6 @@
 #include "nau/scene/iScene.h"
 #include "nau/scene/camera.h"
 #include "nau/scene/light.h"
-//#include "nau/world/iWorld.h"
 
 #include <iostream>
 
@@ -62,7 +61,6 @@ namespace nau {
 
 		virtual void setProjectName(std::string name) = 0;
 		virtual const std::string &getProjectName() = 0;
-
 
 #ifdef NAU_LUA
 		virtual void callLuaScript(std::string name) = 0;
@@ -140,7 +138,6 @@ namespace nau {
 		INau() {};
 
 		static INau *Interface;
-
 	};
 };
 

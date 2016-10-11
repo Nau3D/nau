@@ -182,6 +182,9 @@ CLogHandler::setFile(std::string &fileName) {
 void
 CLogHandler::close() {
 
-	if (m_FileHandler != stdout)
+	if (m_FileHandler != stdout) {
 		fclose(m_FileHandler);
+		m_FileHandler = stdout;
+		m_FileName = "";
+	}
 }

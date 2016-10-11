@@ -60,7 +60,7 @@ class CLogger
 #define LOG_DEBUG(message, ...) \
 {\
   char m[256];\
-  sprintf(m, message, ## __VA_ARGS__);\
+  snprintf(m, 256, message, ## __VA_ARGS__);\
   CLogger::Log(LEVEL_INFO,__FILE__,__LINE__,m);\
 };
 #else
@@ -71,7 +71,7 @@ class CLogger
 #define LOG_TRACE(message, ...) \
 {\
 	char m[256];\
-	sprintf(m, message, ## __VA_ARGS__);\
+	snprintf(m, 256, message, ## __VA_ARGS__);\
 	CLogger::Log(CLogger::LEVEL_TRACE,__FILE__,__LINE__,m);\
 };
 
@@ -79,7 +79,7 @@ class CLogger
 #define LOG_trace(message, ...) \
 {\
 	char m[256];\
-	sprintf(m, message, ## __VA_ARGS__);\
+	snprintf(m, 256, message, ## __VA_ARGS__);\
 	CLogger::LogSimple(CLogger::LEVEL_TRACE,m);\
 };
 
@@ -87,7 +87,7 @@ class CLogger
 #define LOG_trace_nr(message, ...) \
 {\
 	char m[256];\
-	sprintf(m, message, ## __VA_ARGS__);\
+	snprintf(m, 256, message, ## __VA_ARGS__);\
 	CLogger::LogSimpleNR(CLogger::LEVEL_TRACE,m);\
 };
 
@@ -95,7 +95,7 @@ class CLogger
 #define LOG_CONFIG(message, ...) \
 {\
 	char m[256];\
-	sprintf(m, message, ## __VA_ARGS__);\
+	snprintf(m, 256, message, ## __VA_ARGS__);\
 	CLogger::Log(CLogger::LEVEL_CONFIG,__FILE__,__LINE__,m);\
 };
 
@@ -103,7 +103,7 @@ class CLogger
 #define LOG_INFO(message, ...) \
 {\
   char m[256];\
-  sprintf(m, message, ## __VA_ARGS__);\
+  snprintf(m, 256, message, ## __VA_ARGS__);\
   CLogger::Log(CLogger::LEVEL_INFO,__FILE__,__LINE__,m);\
 };
 
@@ -111,7 +111,7 @@ class CLogger
 #define LOG_WARN(message, ...) \
 {\
   char m[256];\
-  sprintf(m, message, ## __VA_ARGS__);\
+  snprintf(m, 256,message, ## __VA_ARGS__);\
   CLogger::Log(CLogger::LEVEL_WARN,__FILE__,__LINE__,m);\
 };
 
@@ -119,7 +119,7 @@ class CLogger
 #define LOG_ERROR(message, ...) \
 {\
   char m[256];\
-  sprintf(m, message, ## __VA_ARGS__);\
+  snprintf(m, 256, message, ## __VA_ARGS__);\
   CLogger::Log(CLogger::LEVEL_ERROR,__FILE__,__LINE__,m);\
 };
 
@@ -127,7 +127,7 @@ class CLogger
 #define LOG_CRITICAL(message, ...) \
 {\
   char m[256];\
-  sprintf(m, message, ## __VA_ARGS__);\
+  snprintf(m, 256, message, ## __VA_ARGS__);\
   CLogger::Log(CLogger::LEVEL_CRITICAL,__FILE__,__LINE__,m);\
 };
 

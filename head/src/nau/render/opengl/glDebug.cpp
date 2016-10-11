@@ -50,7 +50,6 @@ GLDebug::Init() {
 	SetTraceCallbacks();
 	SetTrace(0);
 	//CLogger::GetInstance().addLog(CLogger::LEVEL_TRACE, "nau3Dtrace.txt");
-
 	return sCallBackOK;
 }
 
@@ -164,7 +163,7 @@ GLDebug::DebugLog(GLenum source,
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 		return;
 
-
+	//LOG_trace(
 	SLOG(
 		"OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
 		GetStringForType(type).c_str(),

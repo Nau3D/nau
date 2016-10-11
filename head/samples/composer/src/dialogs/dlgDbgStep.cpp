@@ -87,7 +87,7 @@ DlgDbgStep::DlgDbgStep(): wxDialog(DlgDbgStep::m_Parent, -1, wxT("Nau - Frame pa
 
 	bSizer2->Add(m_bNextFrame, 0, wxALL, 5);
 
-	m_bNextToPass = new wxButton(this, DLG_BTN_TOPASS, wxT("Execute Pass"));
+	m_bNextToPass = new wxButton(this, DLG_BTN_TOPASS, wxT("Execute Pipeline"));
 
 	bSizer2->Add(m_bNextToPass, 0, wxALL, 5);
 
@@ -204,13 +204,7 @@ void DlgDbgStep::OnToPass(wxCommandEvent& event){
 
 
 	if (m_Canvas->IsPaused()){
-//#ifdef GLINTERCEPTDEBUG 
-//		gliSetIsGLIActive(true);
-//#endif
 		m_Canvas->StepUntilSamePassNextFrame();
-//#ifdef GLINTERCEPTDEBUG 
-//		gliSetIsGLIActive(false);
-//#endif
 		updateDlg();
 	}
 }

@@ -26,15 +26,24 @@ MaterialLib::eventReceived(const std::string &sender, const std::string &eventTy
 	const std::shared_ptr<nau::event_::IEventData> &evt) {
 
 	std::string *str;
-		str = (std::string *)evt->getData();
+	std::string s = "";
+
+	str = (std::string *)evt->getData();
 
 	if (*str == "Linked" && eventType == "SHADER_CHANGED") {
 
 		for (auto m : m_MaterialLib) {
 
-			if (m.second->getProgramName() == sender)
-				m.second->checkProgramValuesAndUniforms();
+			if (m.second->getProgramName() == sender) {
+				m.second->checkProgramValuesAndUniforms(s);
+			}
 		}
+		if (s.size()) {
+			std::shared_ptr<nau::event_::IEventData> e = nau::event_::EventFactory::Create("String");
+			e->setData(&s);
+			EVENTMANAGER->notifyEvent("MATERIAL_SHADER_USAGE_REPORT", sender, "", e);
+		}
+
 	}
 }
 

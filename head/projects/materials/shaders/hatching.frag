@@ -25,27 +25,27 @@ void main() {
 		color2 = texture(t1, texCoordV);
 		mixFactor = intensity * 6;		
 	}
-	else if (intensity >= interval && intensity < interval*2) {
+	else if (intensity < interval*2) {
 		color1 = texture(t1, texCoordV);
 		color2 = texture(t2, texCoordV);
 		mixFactor = (intensity - interval)* 6;		
 	}
-	else if (intensity >= interval*2 && intensity < interval*3) {
+	else if (intensity < interval*3) {
 		color1 = texture(t2, texCoordV);
 		color2 = texture(t3, texCoordV);
 		mixFactor = (intensity - interval*2)* 6;		
 	}
-	else if (intensity >= interval*3 && intensity < interval*4) {
+	else if (intensity < interval*4) {
 		color1 = texture(t3, texCoordV);
 		color2 = texture(t4, texCoordV);
 		mixFactor = (intensity - interval*3)* 6;		
 	}
-	else if (intensity >= interval*4 && intensity < interval*5) {
+	else if (intensity < interval*5) {
 		color1 = texture(t4, texCoordV);
 		color2 = texture(t5, texCoordV);
 		mixFactor = (intensity - interval*4)* 6;		
 	}
-	else if (intensity >= interval*5) {
+	else {
 		color1 = texture(t5, texCoordV);
 		color2 = vec4(1);
 		mixFactor = (intensity - interval*5)* 6;		

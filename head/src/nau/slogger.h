@@ -28,15 +28,15 @@ public:
 
 #define SLOG(message, ...) \
 {\
-  char m[32768];\
-  sprintf(m, message, ## __VA_ARGS__);\
+  char m[256];\
+  snprintf(m, 256, message, ## __VA_ARGS__);\
   (SLogger::GetInstance())->log(m);\
 };
 
 #define SLOG_INFO(message, ...) \
 {\
-  char m[32768];\
-  sprintf(m, message, ## __VA_ARGS__);\
+  char m[256];\
+  snprintf(m, 256, message, ## __VA_ARGS__);\
   (SLogger::GetInstance())->log(m);\
 };
 

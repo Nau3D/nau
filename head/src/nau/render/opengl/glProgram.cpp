@@ -25,6 +25,7 @@ GLProgram::GLProgram() :
 	m_File(SHADER_COUNT,""),
 	m_Source(SHADER_COUNT,""),
 	m_ID(SHADER_COUNT,0),
+	m_Attached(SHADER_COUNT, false),
 	m_Compiled(SHADER_COUNT,false),
 	m_NumUniforms (0), 
 	m_MaxLength (0),
@@ -43,10 +44,9 @@ GLProgram::~GLProgram() {
 
 	for (int i = 0; i < SHADER_COUNT; ++i) {
 	
-		if (m_ID[i] != 0)
+		if (m_ID[i] != 0) 
 			glDeleteShader(m_ID[i]);
 	}
-
 }
 
 
@@ -75,6 +75,7 @@ GLProgram::isLinked() {
 
 	return(m_PLinked);
 }
+
 
 void 
 GLProgram::getAttributeNames(std::vector<std::string>* s) {
@@ -159,6 +160,7 @@ GLProgram::setValueOfUniform(int loc, void *values) {
 	return true;
 }
 
+
 int
 GLProgram::getUniformLocation(std::string name) {
 
@@ -183,6 +185,7 @@ GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename
 		glDeleteShader((GLuint)ShaderGLId[type]);
 		m_File[type] = "";
 		m_ID[type] = 0;
+		m_Attached[type] = false;
 		m_Source[type] = "";
 		return true;
 	}
@@ -193,6 +196,7 @@ GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename
 	}
 
 	// init shader variables
+	m_Attached[type] = false;
 	m_Compiled[type] = false;
 	m_PLinked = false;
 	m_File[type] = filename;
@@ -250,14 +254,13 @@ GLProgram::programValidate() {
 	int v;
 
 	glGetProgramiv(m_P,GL_VALIDATE_STATUS,&v);
-
-	return(v);
+	return v;
 }
 
 
 bool
-GLProgram::compileShader (IProgram::ShaderType type)
-{
+GLProgram::compileShader (IProgram::ShaderType type) {
+
 	int r;
 
 	if (m_ID[type] != 0) {
@@ -290,8 +293,10 @@ GLProgram::linkProgram()
 	}
 
 	for (int i = 0; i < SHADER_COUNT; ++i) {
-		if (m_ID[i] != 0)
+		if (m_ID[i] != 0 && m_Attached[i] == false) {
 			glAttachShader(m_P, m_ID[i]);
+			m_Attached[i] = true;
+		}
 	}
 	glLinkProgram (m_P);
 	glUseProgram (m_P);
@@ -362,8 +367,12 @@ GLProgram::showGlobalUniforms (void) {
 bool 
 GLProgram::prepare (void) {
 
-	useProgram();
-	return true;
+	if (m_PLinked) {
+		useProgram();
+		return true;
+	}
+	else
+		return false;
 }
 
 

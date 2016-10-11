@@ -33,7 +33,6 @@
     <ClCompile Include="src\dialogs\dlgTextureLib.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="src\glInfo.cpp" />
     <ClCompile Include="src\dialogs\dlgDbgPrograms.cpp">
       <Filter>dialogs</Filter>
     </ClCompile>
@@ -101,7 +100,6 @@
     <ClInclude Include="src\dialogs\dlgTextureLib.h">
       <Filter>dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="src\glInfo.h" />
     <ClInclude Include="src\dialogs\dlgDbgPrograms.h">
       <Filter>dialogs</Filter>
     </ClInclude>
@@ -133,6 +131,9 @@
       <Filter>dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\dialogs\dlgPhysics.h">
+      <Filter>dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialogs\imagegridcellrenderer.h">
       <Filter>dialogs</Filter>
     </ClInclude>
   </ItemGroup>

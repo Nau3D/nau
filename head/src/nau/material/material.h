@@ -51,7 +51,6 @@ namespace nau
 			
 			std::map<std::pair<std::string, std::string>, nau::material::ProgramBlockValue> m_ProgramBlockValues;
 			bool m_Enabled;
-			bool m_useShader;
 			std::string m_Name;	
 			Material();
 			std::shared_ptr<Material> clone();
@@ -102,10 +101,9 @@ namespace nau
 			std::string getProgramName();
 			void addProgramValue (std::string name, nau::material::ProgramValue progVal);
 			void addProgramBlockValue (std::string block, std::string name, nau::material::ProgramBlockValue progVal);
-			void enableShader(bool value);
-			bool isShaderEnabled();
+			bool isShaderLinked();
 			void clearProgramValues(); 
-			void checkProgramValuesAndUniforms();
+			void checkProgramValuesAndUniforms(std::string &result);
 
 			std::map<std::string, nau::material::ProgramValue>& getProgramValues();
 			std::map<std::string, nau::material::ProgramValue>& getUniformValues();

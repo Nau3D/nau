@@ -9,21 +9,22 @@ using namespace nau::render;
 
 std::vector<std::string> Attribute::m_DummyVS;
 
+
 Attribute::Attribute() : m_Id(-1), 
 			m_RangeDefined(false), m_ListDefined(false) {
 
 }
 
 
-Attribute::Attribute(unsigned int id, std::string name, Enums::DataType type, 
+Attribute::Attribute(unsigned int id, std::string name, Enums::DataType type,
 	bool readOnlyFlag, Data *defaultV,
 	Data *min, Data *max,
-	IAPISupport::APIFeatureSupport requires, 
+	IAPISupport::APIFeatureSupport requires,
 	Semantics sem) :
-	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag), 
-		m_ListDefined(false), m_RangeDefined(false), m_Semantics(sem),
-		m_Requires(requires) {
-		
+	m_Id(id), m_Name(name), m_Type(type), m_ReadOnlyFlag(readOnlyFlag),
+	m_ListDefined(false), m_RangeDefined(false), m_Semantics(sem),
+	m_Requires(requires) {
+
 	int s = Enums::getSize(m_Type);
 
 	if (min != NULL) {
@@ -43,6 +44,7 @@ Attribute::Attribute(unsigned int id, std::string name, Enums::DataType type,
 		m_Default = std::shared_ptr<Data>(Enums::getDefaultValue(m_Type));
 	}
 }
+
 
 nau::Attribute::Attribute(unsigned int id, std::string name, std::string objType, 
 							bool readOnlyFlag, bool mustExist, std::string default):
@@ -192,7 +194,7 @@ Attribute::listAdd(std::string name, int id, IAPISupport::APIFeatureSupport requ
 	m_ListValues.push_back(id);
 	m_ListString.push_back(name);
 	m_ListRequire.push_back(requires);
-};
+}
 
 		 
 bool 
@@ -209,21 +211,21 @@ Attribute::isValid(std::string value) {
 		return false;
 	}
 	return false;
-};
+}
 
 
 bool 
 Attribute::getRangeDefined() {
 
 	return m_RangeDefined; 
-};
+}
 
 
 bool 
 Attribute::getListDefined() {
 
 	return m_ListDefined; 
-};
+}
 
 
 std::shared_ptr<Data> &
@@ -304,7 +306,6 @@ Attribute::getOptionStringListSupported(std::vector<std::string> *result) {
 		if (APISupport->apiSupport(m_ListRequire[i]))
 			result->push_back(m_ListString[i]);
 	}
-
 }
 
 
@@ -322,6 +323,7 @@ AttribSet::AttribSet() : m_NextFreeID(USER_ATTRIBS) {
 
 
 AttribSet::~AttribSet() {};
+
 
 unsigned int 
 AttribSet::getNextFreeID() {
@@ -343,6 +345,7 @@ AttribSet::deleteUserAttributes() {
 			++iter;
 	}
 }
+
 
 void 
 AttribSet::add(Attribute &a) {

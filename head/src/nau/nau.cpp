@@ -1306,6 +1306,7 @@ Nau::appendModel(std::string fileName) {
 
 void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 
+	m_ProjectName = "Model Display";
 	Camera *aNewCam = m_pRenderManager->getCamera ("MainCamera").get();
 	std::shared_ptr<Viewport> v = m_pRenderManager->getViewport("__nauDefault");//createViewport ("MainViewport", nau::math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	aNewCam->setViewport (v);

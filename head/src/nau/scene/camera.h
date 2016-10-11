@@ -71,15 +71,12 @@ namespace nau
 
 			virtual ~Camera (void);
 
-
 			void setPropf4(Float4Property prop, vec4& aVec);
 			void setPropf4(Float4Property prop, float r, float g, float b, float a);
 			void setPropf(FloatProperty prop, float value);
 			void setPropb(BoolProperty prop, bool value);
 			void setPrope(EnumProperty prop, int value);
 			void setProps(StringProperty prop, std::string &value);
-			//void *getProp(int prop, Enums::DataType type);
-
 
 			void setOrtho (float left, float right, float bottom, float top, float near, float far);
 			void setPerspective (float fov, float near, float far);
@@ -132,13 +129,6 @@ namespace nau
 			// Spherical(0,0) means Cartesian(0,0,1)
 			void setVectorsFromSpherical();
 
-			// Physics
-			//float m_PositionOffset;
-			//bool m_IsDynamic; 
-
-			// Projections
-			//bool m_IsOrtho;
-
 			void updateProjection();
 
 			// Matrices
@@ -147,7 +137,6 @@ namespace nau
 			void buildProjectionMatrix();
 			void buildProjectionViewMatrix(void);
 			void buildTS05PVMMatrix(void);
-
 
 			// The eight corners of the frustum
 			enum {
@@ -160,11 +149,6 @@ namespace nau
 				BOTTOM_RIGHT_FAR,
 				BOTTOM_LEFT_FAR,
 			};		
-
-			//AttribSetFloat mFloatAttribs;
-			//AttribSetVec4 mVec4Attribs;
-			//vec3 m_LookAtPoint;
-
 		};
 	};
 };

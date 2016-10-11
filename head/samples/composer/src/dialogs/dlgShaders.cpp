@@ -10,9 +10,8 @@ BEGIN_EVENT_TABLE(DlgShaders, wxDialog)
 	EVT_PG_CHANGED( DLG_PROPS, DlgShaders::OnPropsChange )
 	EVT_BUTTON(DLG_BUTTON_ADD, DlgShaders::OnAdd)
 
-	EVT_BUTTON(DLG_SHADER_COMPILE, DlgShaders::OnProcessCompileShaders)
+	EVT_BUTTON(DLG_SHADER_COMPILE_AND_LINK, DlgShaders::OnProcessCompileAndLinkShaders)
 	EVT_BUTTON(DLG_SHADER_VALIDATE, DlgShaders::OnProcessValidateShaders)
-	EVT_BUTTON(DLG_SHADER_LINK, DlgShaders::OnProcessLinkShaders)
 
 END_EVENT_TABLE()
 
@@ -35,8 +34,10 @@ DlgShaders* DlgShaders::Instance () {
 
 
 
+
 DlgShaders::DlgShaders()
-	: wxDialog(DlgShaders::parent, -1, wxT("Nau - Programs"),wxDefaultPosition,wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE)
+	: wxDialog(DlgShaders::parent, -1, wxT("Nau - Programs"),wxDefaultPosition,wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE),
+	m_Name("Shaders Dialog")
                 
 {
 	SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -72,33 +73,51 @@ DlgShaders::notifyUpdate(Notification aNot, std::string shaderName, std::string 
 }
 
 
-void DlgShaders::updateDlg() {
+void 
+DlgShaders::updateDlg() {
 
 	
 	updateList();
-	list->SetSelection(0);
+	m_List->SetSelection(0);
 	update();
+	EVENTMANAGER->addListener("MATERIAL_SHADER_USAGE_REPORT", this);
+
 }
 
 
-void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
+void
+DlgShaders::eventReceived(const std::string &sender, const std::string &eventType,
+	const std::shared_ptr<nau::event_::IEventData> &evt) {
+
+	std::string *str;
+
+	if (eventType == "MATERIAL_SHADER_USAGE_REPORT" && sender == m_Active) {
+
+		str = (std::string *)evt->getData();
+		updateLogAux(*str);
+	}
+}
+
+
+void 
+DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 
 	// Program identification
 	wxBoxSizer *sizH1 = new wxBoxSizer(wxHORIZONTAL);
 
 	wxStaticText *stg1 =  new wxStaticText(this,-1,wxT("Program: "));
-	list = new wxComboBox(this,DLG_COMBO,wxT(""),wxDefaultPosition,wxDefaultSize,0,NULL,wxCB_READONLY );
+	m_List = new wxComboBox(this,DLG_COMBO,wxT(""),wxDefaultPosition,wxDefaultSize,0,NULL,wxCB_READONLY );
 
 	updateList();
-	list->SetSelection(0);
+	m_List->SetSelection(0);
 
 	sizH1->Add(stg1, 0, wxALL,5);
-	sizH1->Add(list, 1, wxALIGN_RIGHT|wxALL,5);
+	sizH1->Add(m_List, 1, wxALIGN_RIGHT|wxALL,5);
 	siz->Add(sizH1, 0, wxEXPAND, 5);
 
 	/* MIDDLE: Property grid */
 
-	pg = new wxPropertyGridManager(this, DLG_PROPS,
+	m_PG = new wxPropertyGridManager(this, DLG_PROPS,
 				wxDefaultPosition, wxDefaultSize,
 				// These and other similar styles are automatically
 				// passed to the embedded wxPropertyGrid.
@@ -107,45 +126,43 @@ void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 				wxPGMAN_DEFAULT_STYLE
            );
 
-	pg->AddPage(wxT("Programs"));
+	m_PG->AddPage(wxT("Programs"));
 
-	pg->Append( new wxPropertyCategory(wxT("Files"),wxPG_LABEL) );	
+	m_PG->Append( new wxPropertyCategory(wxT("Files"),wxPG_LABEL) );	
 
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 		m_Shader[i] = new wxFileProperty( IProgram::ShaderNames[i].c_str(), IProgram::ShaderNames[i].c_str() );
 		//m_Shader[i]->SetAttribute(wxPG_FILE_WILDCARD,wxT("Vertex Shader Files (*.vert)|*.vert"));
-		pg->Append(m_Shader[i]);
+		m_PG->Append(m_Shader[i]);
 	}
-	pg->Append( new wxPropertyCategory(wxT("Program properties"),wxPG_LABEL) );	
+	m_PG->Append( new wxPropertyCategory(wxT("Program properties"),wxPG_LABEL) );	
 
     m_LinkStatus = new wxBoolProperty( wxT("Link Status"), wxPG_LABEL );
-	pg->Append(m_LinkStatus);
+	m_PG->Append(m_LinkStatus);
 
 	m_ValidateStatus = new wxBoolProperty( wxT("Validate Status"), wxPG_LABEL );
-	pg->Append(m_ValidateStatus);
+	m_PG->Append(m_ValidateStatus);
 
 	m_ActiveAtomicBuffers = new wxIntProperty( wxT("Active Atomic Counter Buffers"), wxPG_LABEL );
-	pg->Append(m_ActiveAtomicBuffers);
+	m_PG->Append(m_ActiveAtomicBuffers);
 		
 	m_ActiveAttributes = new wxIntProperty( wxT("Active Attributes"), wxPG_LABEL );
-	pg->Append(m_ActiveAttributes);
+	m_PG->Append(m_ActiveAttributes);
 		
 	m_ActiveUniforms = new wxIntProperty( wxT("Active Uniforms"), wxPG_LABEL );
-	pg->Append(m_ActiveUniforms);
+	m_PG->Append(m_ActiveUniforms);
 		
-	siz->Add(pg,1, wxEXPAND|wxALL,5);
+	siz->Add(m_PG,1, wxEXPAND|wxALL,5);
 
 	// Buttons
 
 	wxSizer *sizerS_SB = new wxBoxSizer(wxHORIZONTAL);
 		
 	m_bValidate = new wxButton(this,DLG_SHADER_VALIDATE,wxT("Validate"));
-	m_bCompile = new wxButton(this,DLG_SHADER_COMPILE,wxT("Compile"));
-	m_bLink = new wxButton(this,DLG_SHADER_LINK,wxT("Link"));
+	m_bCompileAndLink = new wxButton(this,DLG_SHADER_COMPILE_AND_LINK,wxT("Compile and Link"));
 
 	sizerS_SB->Add(m_bValidate,0,wxALL,5);
-	sizerS_SB->Add(m_bCompile,0,wxALL,5);
-	sizerS_SB->Add(m_bLink,0,wxALL,5);
+	sizerS_SB->Add(m_bCompileAndLink,0,wxALL,5);
 
 	siz->Add(sizerS_SB,0,wxALIGN_CENTER_HORIZONTAL,5);
 
@@ -170,34 +187,36 @@ void DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 }
 
 
-void DlgShaders::updateList() {
+void 
+DlgShaders::updateList() {
 
 	std::vector<std::string> *names = RESOURCEMANAGER->getProgramNames();
 	int num = names->size();
 
-	list->Clear();
+	m_List->Clear();
 
 	for(int i = 0; i < num; i++)  {
 		wxString s;
 		s << i;
-		list->Append(wxString(names->at(i).c_str()));
+		m_List->Append(wxString(names->at(i).c_str()));
 	}
 	if (num > 0)
-		m_active = names->at(0);
+		m_Active = names->at(0);
 	else
-		m_active = "";
+		m_Active = "";
 	delete names;
 }
 
 
-void DlgShaders::OnPropsChange( wxPropertyGridEvent& e) {
+void 
+DlgShaders::OnPropsChange( wxPropertyGridEvent& e) {
 
 	std::string fn;
 	const wxString& name = e.GetPropertyName();
-	wxString filename = pg->GetPropertyValueAsString(name);
+	wxString filename = m_PG->GetPropertyValueAsString(name);
 	fn = std::string(filename.mb_str());
 	
-	IProgram *p = RESOURCEMANAGER->getProgram(m_active);
+	IProgram *p = RESOURCEMANAGER->getProgram(m_Active);
 	if (name == wxT("Vertex"))
 		p->setShaderFile(IProgram::VERTEX_SHADER,fn);
 //#if NAU_OPENGL_VERSION >= 320
@@ -218,7 +237,7 @@ void DlgShaders::OnPropsChange( wxPropertyGridEvent& e) {
 //#endif
 
 	updateShaderAux();
-	notifyUpdate(PROPS_CHANGED, m_active,std::string(name.mb_str()));
+	notifyUpdate(PROPS_CHANGED, m_Active,std::string(name.mb_str()));
 
 }
 
@@ -226,20 +245,19 @@ void DlgShaders::OnPropsChange( wxPropertyGridEvent& e) {
 void
 DlgShaders::update(){
 
-	if (list->GetCount() == 0) {
-		list->Disable();
-		pg->GetPageByName(wxT("Programs"));
+	if (m_List->GetCount() == 0) {
+		m_List->Disable();
+		m_PG->GetPageByName(wxT("Programs"));
 		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
-			pg->DisableProperty(m_Shader[i]);
-			pg->SetPropertyValue(m_Shader[i],"");
+			m_PG->DisableProperty(m_Shader[i]);
+			m_PG->SetPropertyValue(m_Shader[i],"");
 		}
 
-		wxPGProperty *prop = pg->GetPropertyByName(wxT("Uniform Variables"));
+		wxPGProperty *prop = m_PG->GetPropertyByName(wxT("Uniform Variables"));
 		if (prop)
-			pg->DeleteProperty(wxT("Uniform Variables"));
+			m_PG->DeleteProperty(wxT("Uniform Variables"));
 
-		m_bCompile->Disable();
-		m_bLink->Disable();
+		m_bCompileAndLink->Disable();
 		m_bValidate->Disable();
 		m_Log->Disable();
 		m_Log->Clear();
@@ -247,30 +265,30 @@ DlgShaders::update(){
 
 	else {
 
-		list->Enable();
+		m_List->Enable();
 		m_Log->Enable();
 		m_Log->Clear();
 
-		GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_active);
+		GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_Active);
 		std::string f[IProgram::SHADER_COUNT];
 		
-		pg->ClearSelection();
+		m_PG->ClearSelection();
 
 		for (int i = 0 ; i < IProgram::SHADER_COUNT; ++i) {
 		
-			pg->SetPropertyValue(m_Shader[i],(char *)p->getShaderFile((IProgram::ShaderType)i).c_str());
-			pg->EnableProperty(m_Shader[i]);
+			m_PG->SetPropertyValue(m_Shader[i],(char *)p->getShaderFile((IProgram::ShaderType)i).c_str());
+			m_PG->EnableProperty(m_Shader[i]);
 		}
 
 		if (!APISupport->apiSupport(IAPISupport::GEOMETRY_SHADER))
-			pg->DisableProperty(m_Shader[IProgram::GEOMETRY_SHADER]);
+			m_PG->DisableProperty(m_Shader[IProgram::GEOMETRY_SHADER]);
 
 		if (!APISupport->apiSupport(IAPISupport::COMPUTE_SHADER))
-			pg->DisableProperty(m_Shader[IProgram::COMPUTE_SHADER]);
+			m_PG->DisableProperty(m_Shader[IProgram::COMPUTE_SHADER]);
 
 		if (!APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS)) {
-			pg->DisableProperty(m_Shader[IProgram::TESS_CONTROL_SHADER]);
-			pg->DisableProperty(m_Shader[IProgram::TESS_EVALUATION_SHADER]);
+			m_PG->DisableProperty(m_Shader[IProgram::TESS_CONTROL_SHADER]);
+			m_PG->DisableProperty(m_Shader[IProgram::TESS_EVALUATION_SHADER]);
 		}
 
 		updateProgramProperties(p);
@@ -282,24 +300,24 @@ DlgShaders::update(){
 void 
 DlgShaders::updateShaderAux() {
 
-	GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_active);
+	GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_Active);
 	std::string vfn = p->getShaderFile(IProgram::VERTEX_SHADER),
 				ffn = p->getShaderFile(IProgram::FRAGMENT_SHADER),
 				gfn = p->getShaderFile(IProgram::GEOMETRY_SHADER),
 				cfn = p->getShaderFile(IProgram::COMPUTE_SHADER);
 
 	if (vfn != "" || ffn != "" || gfn != "" || cfn != "") {
-		m_bCompile->Enable();
+		m_bCompileAndLink->Enable();
 	}
 	else {
-		m_bCompile->Disable();
+		m_bCompileAndLink->Disable();
 	}
 
-	if (p->areCompiled())
+/*	if (p->areCompiled() && p->isLinked())
 		m_bLink->Enable();
 	else
 		m_bLink->Disable();
-
+*/
 	if (p->isLinked())
 		m_bValidate->Enable();
 	else
@@ -311,25 +329,25 @@ DlgShaders::updateShaderAux() {
 
 	GLUniform u;
 	std::string s;
-	pg->GetPage(0);
+	m_PG->GetPage(0);
 	updateProgramProperties(p);
-	wxPGProperty *prop = pg->GetPropertyByName(wxT("Uniform Variables"));
+	wxPGProperty *prop = m_PG->GetPropertyByName(wxT("Uniform Variables"));
 	if (prop)
-		pg->DeleteProperty(wxT("Uniform Variables"));
+		m_PG->DeleteProperty(wxT("Uniform Variables"));
 
 	if (p->isLinked()) {
 		std::vector<std::string> blockNames, uniformNames;
 		p->getUniformBlockNames(&blockNames);
 		int uni = p->getNumberOfUniforms();
 		if (uni + blockNames.size() != 0) {
-			pg->Append(new wxPropertyCategory(wxT("Uniform Variables"), wxPG_LABEL));
+			m_PG->Append(new wxPropertyCategory(wxT("Uniform Variables"), wxPG_LABEL));
 		}
 		//p->updateUniforms();
 
-		wxPGProperty *pid = pg->GetPropertyByName(wxT("Default Block"));
+		wxPGProperty *pid = m_PG->GetPropertyByName(wxT("Default Block"));
 		if (!pid) {
 			pid = new wxStringProperty(wxT("Default Block"), wxPG_LABEL);
-			pg->Append(pid);
+			m_PG->Append(pid);
 		}
 		for (int i = 0; i < uni; i++) {
 			u = p->getUniform(i);
@@ -340,7 +358,7 @@ DlgShaders::updateShaderAux() {
 		IUniformBlock *ub;
 		for (auto b : blockNames) {
 			pid = new wxStringProperty(wxString(b.c_str()), wxPG_LABEL);
-			pg->Append(pid);
+			m_PG->Append(pid);
 			ub = UNIFORMBLOCKMANAGER->getBlock(b);
 			ub->getUniformNames(&uniformNames);
 			for (auto n : uniformNames) {
@@ -350,7 +368,7 @@ DlgShaders::updateShaderAux() {
 			uniformNames.clear();
 		}
 	}
-	pg->Refresh();
+	m_PG->Refresh();
 	m_Log->Clear();
 	//DlgMaterials::Instance()->updateDlg();
 }
@@ -360,8 +378,8 @@ void
 DlgShaders::addUniform(wxPGProperty *pid, wxString name, wxString type) {
 
 	wxPGProperty *pid2;
-	pid2 = pg->AppendIn(pid, new wxStringProperty(name,wxPG_LABEL,type));
-	pg->DisableProperty(pid2);
+	pid2 = m_PG->AppendIn(pid, new wxStringProperty(name,wxPG_LABEL,type));
+	m_PG->DisableProperty(pid2);
 }
 
 
@@ -395,20 +413,19 @@ DlgShaders::getUniformType(int type) {
 }
 
 
-
 void 
 DlgShaders::updateProgramProperties(GLProgram *p) {
 
-	pg->SetPropertyValue(m_LinkStatus, p->getPropertyb((int)GL_LINK_STATUS));
-	pg->DisableProperty(m_LinkStatus);
-	pg->SetPropertyValue(m_ValidateStatus, p->getPropertyb((int)GL_VALIDATE_STATUS));
-	pg->DisableProperty(m_ValidateStatus);
-	pg->SetPropertyValue(m_ActiveAtomicBuffers, p->getPropertyi((int)GL_ACTIVE_ATOMIC_COUNTER_BUFFERS));
-	pg->DisableProperty(m_ActiveAtomicBuffers);
-	pg->SetPropertyValue(m_ActiveAttributes, p->getPropertyi((int)GL_ACTIVE_ATTRIBUTES));
-	pg->DisableProperty(m_ActiveAttributes);
-	pg->SetPropertyValue(m_ActiveUniforms, p->getPropertyi((int)GL_ACTIVE_UNIFORMS));
-	pg->DisableProperty(m_ActiveUniforms);
+	m_PG->SetPropertyValue(m_LinkStatus, p->getPropertyb((int)GL_LINK_STATUS));
+	m_PG->DisableProperty(m_LinkStatus);
+	m_PG->SetPropertyValue(m_ValidateStatus, p->getPropertyb((int)GL_VALIDATE_STATUS));
+	m_PG->DisableProperty(m_ValidateStatus);
+	m_PG->SetPropertyValue(m_ActiveAtomicBuffers, p->getPropertyi((int)GL_ACTIVE_ATOMIC_COUNTER_BUFFERS));
+	m_PG->DisableProperty(m_ActiveAtomicBuffers);
+	m_PG->SetPropertyValue(m_ActiveAttributes, p->getPropertyi((int)GL_ACTIVE_ATTRIBUTES));
+	m_PG->DisableProperty(m_ActiveAttributes);
+	m_PG->SetPropertyValue(m_ActiveUniforms, p->getPropertyi((int)GL_ACTIVE_UNIFORMS));
+	m_PG->DisableProperty(m_ActiveUniforms);
 
 
 }
@@ -433,11 +450,12 @@ DlgShaders::updateLogAux(std::string s) {
 
 
 void 
-DlgShaders::OnProcessCompileShaders(wxCommandEvent& event){
+DlgShaders::OnProcessCompileAndLinkShaders(wxCommandEvent& event) {
 
 	std::string infoLog;
-	IProgram *p = RESOURCEMANAGER->getProgram(m_active);
+	IProgram *p = RESOURCEMANAGER->getProgram(m_Active);
 
+	// compile individual shaders
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 
 		if (p->getShaderFile((IProgram::ShaderType)i) != "" &&p->reloadShaderFile((IProgram::ShaderType)i)) {
@@ -445,8 +463,13 @@ DlgShaders::OnProcessCompileShaders(wxCommandEvent& event){
 		}
 	}
 
+	// if compiled, link program
+	if (p->areCompiled())
+		p->linkProgram();
+
 	updateShaderAux();
 
+	// Display logs
 	m_Log->Clear();
 
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
@@ -454,37 +477,20 @@ DlgShaders::OnProcessCompileShaders(wxCommandEvent& event){
 		infoLog = p->getShaderInfoLog((IProgram::ShaderType)i);
 		updateLogAux(infoLog);
 	}
-
-	notifyUpdate(PROPS_CHANGED,m_active,"Compiled");
-
-}
-
-
-
-void DlgShaders::OnProcessLinkShaders(wxCommandEvent& event){
-
-	std::string infoLog;
-	IProgram *p = RESOURCEMANAGER->getProgram(m_active);
-
-	p->linkProgram();
-
-	updateShaderAux();
-
-	m_Log->Clear();
 	infoLog = p->getProgramInfoLog();
 	updateLogAux(infoLog);
-//	free(infoLog);
 
-	notifyUpdate(PROPS_CHANGED,m_active,"Linked");
-
+	// notify  
+	notifyUpdate(PROPS_CHANGED,m_Active,"Compiled");
+	notifyUpdate(PROPS_CHANGED, m_Active, "Linked");
 }
 
 
-
-void DlgShaders::OnProcessValidateShaders(wxCommandEvent& event){
+void 
+DlgShaders::OnProcessValidateShaders(wxCommandEvent& event){
 
 	std::string infoLog;
-	IProgram *p = RESOURCEMANAGER->getProgram(m_active);
+	IProgram *p = RESOURCEMANAGER->getProgram(m_Active);
 	wxString s;
 
 	if (p->programValidate())
@@ -495,22 +501,22 @@ void DlgShaders::OnProcessValidateShaders(wxCommandEvent& event){
 	m_Log->Append(s);
 	infoLog = p->getProgramInfoLog();
 	updateLogAux(infoLog);
-//	free(infoLog);
-
-	//updateShaderAux();
-
+	if (p->isLinked())
+		notifyUpdate(PROPS_CHANGED, m_Active, "Linked");
 }
 
 
-void DlgShaders::updateInfo(std::string name) {
+void 
+DlgShaders::updateInfo(std::string name) {
 
-	if (name == m_active) {
+	if (name == m_Active) {
 		update();
 	}
 }
 
 
-void DlgShaders::OnAdd(wxCommandEvent& event) {
+void 
+DlgShaders::OnAdd(wxCommandEvent& event) {
 
 	int result;
 	bool nameUnique,exit = false;
@@ -547,20 +553,20 @@ void DlgShaders::OnAdd(wxCommandEvent& event) {
 	if (result == wxID_OK) {
 		RESOURCEMANAGER->getProgram(name);
 		updateList();
-		list->Select(list->FindString(wxString(name.c_str())));
-		m_active = name;
+		m_List->Select(m_List->FindString(wxString(name.c_str())));
+		m_Active = name;
 		update();
 		notifyUpdate(NEW_SHADER,name,"");
 
 	}
 }
 
-void DlgShaders::OnListSelect(wxCommandEvent& event){
+void 
+DlgShaders::OnListSelect(wxCommandEvent& event) {
 
 	int sel;
 
 	sel = event.GetSelection();
-	m_active = std::string(list->GetString(sel).mb_str());
+	m_Active = std::string(m_List->GetString(sel).mb_str());
 	update();
-//	parent->Refresh();
 }

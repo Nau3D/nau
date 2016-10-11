@@ -33,6 +33,7 @@
 			<enum value="0x91BF" name="GL_MAX_COMPUTE_WORK_GROUP_SIZE" length="3" />
 			<enum value="0x88FF" name="GL_MAX_ARRAY_TEXTURE_LAYERS" />
 			<enum value="0x851C" name="GL_MAX_CUBE_MAP_TEXTURE_SIZE" />
+			<enum value="0x82E8" name="GL_MAX_LABEL_LENGTH" />
 			<!--enum value="0x8455" name="GL_FOG_COORD_ARRAY_STRIDE" alias="GL_FOG_COORDINATE_ARRAY_STRIDE"/>
 			<enum value="0x851C" name="GL_MAX_CUBE_MAP_TEXTURE_SIZE" />
 			<enum value="0x846E" name="GL_ALIASED_LINE_WIDTH_RANGE" length="2"/-->

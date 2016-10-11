@@ -10,7 +10,7 @@ out vec4 colorOut;
 
 void main() {
 
-	float blend = sin(length(worldPos.xz) * frequency) * 0.5 + 0.5 ;
+	float blend = sin(length(worldPos.xz) * frequency) * 0.5 + 0.5;
 	vec4 dif = mix(darkColor, lightColor, blend);
 	colorOut = dif;
 }

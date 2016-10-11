@@ -4536,7 +4536,8 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 			}
 		}
 	}
-	aMat->checkProgramValuesAndUniforms();
+	std::string s;
+	aMat->checkProgramValuesAndUniforms(s);
 }
 
 /* -----------------------------------------------------------------------------

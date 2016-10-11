@@ -117,7 +117,7 @@ private:
 	/* SHADERS */
 	wxComboBox *shaderList;
 	wxPropertyGridManager *pgShaderFiles,*pgShaderUniforms;
-	wxCheckBox *m_cbUseShader; //,*m_cbShowGlobalU;
+	//wxCheckBox *m_cbUseShader; //,*m_cbShowGlobalU;
 	wxPGProperty *m_vf,*m_ff;
 	
 	int aux;
@@ -130,7 +130,7 @@ private:
 	void OnShaderListSelect(wxCommandEvent& event);
 	void setupShaderPanel(wxSizer *siz, wxWindow *parent);
 	void updateShader(std::shared_ptr<Material> &m);
-	void OnProcessUseShader(wxCommandEvent& event);
+//	void OnProcessUseShader(wxCommandEvent& event);
 	void OnProcessShaderUpdateUniforms( wxPropertyGridEvent& e);
 //	void OnProcessShowGlobalUniforms(wxCommandEvent& event);
 	void updateShaderAux(std::shared_ptr<Material> &m);

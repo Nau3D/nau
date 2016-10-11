@@ -22,7 +22,7 @@ BEGIN_EVENT_TABLE(DlgMaterials, wxDialog)
 
 	EVT_COMBOBOX(DLG_SHADER_COMBO, DlgMaterials::OnShaderListSelect)
 
-	EVT_CHECKBOX(DLG_SHADER_USE,DlgMaterials::OnProcessUseShader)
+	//EVT_CHECKBOX(DLG_SHADER_USE,DlgMaterials::OnProcessUseShader)
 	EVT_PG_CHANGED( DLG_SHADER_UNIFORMS, DlgMaterials::OnProcessShaderUpdateUniforms )
 	
 	EVT_PG_CHANGED( DlgMatStatePanels::PG, DlgMaterials::OnProcessPanelChange )
@@ -1069,10 +1069,10 @@ DlgMaterials::setupShaderPanel(wxSizer *siz, wxWindow *parent) {
 	// Buttons
 	wxSizer *sizerS_SB = new wxBoxSizer(wxHORIZONTAL);
 		
-	m_cbUseShader = new wxCheckBox(parent,DLG_SHADER_USE,wxT("Use Shaders"));
-	m_cbUseShader->SetValue(0);
+	//m_cbUseShader = new wxCheckBox(parent,DLG_SHADER_USE,wxT("Use Shaders"));
+	//m_cbUseShader->SetValue(0);
 
-	sizerS_SB->Add(m_cbUseShader,0,wxALIGN_CENTER,5);
+	//sizerS_SB->Add(m_cbUseShader,0,wxALIGN_CENTER,5);
 	sizerS->Add(sizerS_SB,0,wxGROW|wxALL|wxALIGN_CENTER,5);
 
 	/* Uniforms */
@@ -1205,7 +1205,7 @@ void DlgMaterials::updateShader(std::shared_ptr<Material> &m){
 void DlgMaterials::updateShaderAux(std::shared_ptr<Material> &m) {
 
 	if (NULL != m->getProgram()) {
-		m_cbUseShader->SetValue(m->isShaderEnabled());
+		//m_cbUseShader->SetValue(m->isShaderEnabled());
 		updateUniforms(m);
 	}
 }
@@ -1356,12 +1356,12 @@ DlgMaterials::auxSetMat3(wxPGProperty *pid, wxPGProperty *pid2, int edit, float 
 }
 
 
-void DlgMaterials::OnProcessUseShader(wxCommandEvent& event){
-
-	std::shared_ptr<Material> &m = getModelMaterial();
-
-	m->enableShader(event.IsChecked());
-}
+//void DlgMaterials::OnProcessUseShader(wxCommandEvent& event){
+//
+//	std::shared_ptr<Material> &m = getModelMaterial();
+//
+//	m->enableShader(event.IsChecked());
+//}
 
 
 void DlgMaterials::updateUniforms(std::shared_ptr<Material> &m) {

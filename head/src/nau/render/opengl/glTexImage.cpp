@@ -110,11 +110,12 @@ GLTexImage::getRGBData() {
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, b);
 	glBufferData(GL_PIXEL_PACK_BUFFER, dataSize, NULL, GL_STREAM_READ);
 
-	glBindTexture(texType,m_Texture->getPropi(ITexture::ID));
 
 	unsigned char *data = (unsigned char *)malloc(dataSize);
 	if (texType == GL_TEXTURE_CUBE_MAP)
 		texType = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+
+	glBindTexture(texType,m_Texture->getPropi(ITexture::ID));
 
 	if (m_Texture->getPrope(ITexture::FORMAT) != GL_DEPTH_COMPONENT)
 		glGetTexImage(texType, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
@@ -133,6 +134,8 @@ GLTexImage::getRGBData() {
 	else
 		memcpy(data, data2, dataSize);
 	glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 	glDeleteBuffers(1, &b);
+	glBindTexture(texType, 0);
 	return data;
 }
