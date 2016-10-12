@@ -20,17 +20,18 @@ void main() {
 	// normalize both input vectors
 	vec3 n = normalize(DataIn.normal);
 	vec3 e = normalize(vec3(DataIn.eye));
-
-	float intensity = max(dot(n,DataIn.l_dir), 0.0);
+	vec3 l = DataIn.l_dir;
+	
+	float intensity = max(dot(n,l), 0.0);
 
 	// if the vertex is lit compute the specular color
 	if (intensity > 0.0) {
 		// compute the half vector
-		vec3 h = normalize(DataIn.l_dir + e);	
+		vec3 h = normalize(l + e);	
 		// compute the specular intensity
 		float intSpec = max(dot(h,n), 0.0);
 		// compute the specular term into spec
 		spec = specular * pow(intSpec,shininess);
 	}
-	colorOut = max(intensity *  diffuse + spec, diffuse* 0.25);
+	colorOut = max(intensity *  diffuse + spec, diffuse * 0.25);
 }

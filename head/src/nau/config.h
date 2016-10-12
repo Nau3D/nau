@@ -9,8 +9,6 @@
 // enable and disable functionalities 
 // based on OpenGL version
 
-#define NAU_OPENGL_VERSION 450
-
 #define NAU_PLATFORM_WIN32 1
 
 #ifndef _USE_MATH_DEFINES
