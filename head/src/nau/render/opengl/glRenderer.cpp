@@ -309,8 +309,8 @@ void
 GLRenderer::setViewport(std::shared_ptr<Viewport> aViewport) {
 
 	m_Viewport = aViewport;
-	const vec2& vpOrigin = aViewport->getPropf2(Viewport::ABSOLUT_ORIGIN);
-	const vec2& vpSize = aViewport->getPropf2(Viewport::ABSOLUT_SIZE);
+	const vec2& vpOrigin = aViewport->getPropf2(Viewport::ABSOLUTE_ORIGIN);
+	const vec2& vpSize = aViewport->getPropf2(Viewport::ABSOLUTE_SIZE);
 	const vec4& vpColor = aViewport->getPropf4(Viewport::CLEAR_COLOR);
 
 	glViewport((int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);

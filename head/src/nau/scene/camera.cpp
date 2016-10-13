@@ -391,7 +391,7 @@ Camera::getRenderable (void) {
 	}
 	else {
 		float hh = tan(DegToRad(m_FloatProps[FOV])/2.0f);
-		float hw = hh * m_pViewport->getPropf(Viewport::RATIO);
+		float hw = hh * m_pViewport->getPropf(Viewport::ABSOLUTE_RATIO);
 
 		vertices->at (TOP_LEFT_NEAR).set (-hw*m_FloatProps[NEARP], hh*m_FloatProps[NEARP], -m_FloatProps[NEARP]);
 		vertices->at (TOP_RIGHT_NEAR).set (hw*m_FloatProps[NEARP], hh*m_FloatProps[NEARP], -m_FloatProps[NEARP]);
@@ -530,7 +530,7 @@ Camera::setVectorsFromSpherical() {
 void 
 Camera::buildProjectionMatrix() {
 
-	float aspect = m_pViewport->getPropf(Viewport::RATIO);
+	float aspect = m_pViewport->getPropf(Viewport::ABSOLUTE_RATIO);
 	float f = 1.0f / tan (DegToRad(m_FloatProps[FOV] * 0.5f));
 
 	m_Mat4Props[PROJECTION_MATRIX].setIdentity();
@@ -658,7 +658,7 @@ Camera::adjustMatrixPlus(float cNear, float cFar, std::shared_ptr<Camera> &aCame
 	int camType = aCamera->getPrope(Camera::PROJECTION_TYPE);
 	
 	if (camType == Camera::PERSPECTIVE) {
-		ratio = aCamera->getViewport()->getPropf(Viewport::RATIO);
+		ratio = aCamera->getViewport()->getPropf(Viewport::ABSOLUTE_RATIO);
 		fov = aCamera->getPropf(FOV);
 		hNear = 2.0f * tan(DegToRad(fov * 0.5f)) * cNear;
 		wNear = hNear * ratio;

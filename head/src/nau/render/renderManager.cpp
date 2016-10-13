@@ -92,8 +92,8 @@ RenderManager::createViewport(const std::string &name) {
 		std::shared_ptr<Viewport> v = std::shared_ptr<Viewport>(new Viewport());
 
 		v->setName(name);
-		v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
-		v->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight()));
+		//v->setPropf2(Viewport::ORIGIN, vec2(0.0f, 0.0f));
+		//v->setPropf2(Viewport::SIZE, vec2((float)NAU->getWindowWidth(), (float)NAU->getWindowHeight()));
 		v->setPropb(Viewport::FULL, true);
 
 		m_Viewports[name] = v;

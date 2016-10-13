@@ -407,6 +407,8 @@ Material::restore() {
 	//if (NULL != m_Shader && m_useShader) {
 	//	m_Shader->restore();
 	//}
+	if (m_Shader)
+		m_Shader->restore();
 	
 	RENDERER->resetTextures(m_Textures);
 	//for (auto t : m_Textures)

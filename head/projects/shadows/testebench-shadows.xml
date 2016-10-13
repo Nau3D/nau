@@ -9,7 +9,7 @@
 		<viewports>
 			<viewport name="MainViewport" >
 				<ORIGIN x = 0 y = 0 />
-				<SIZE width="0.75" height ="1"/>
+				<SIZE width="0.75" height="1"/>
 				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
 			</viewport>
 			
@@ -66,7 +66,7 @@
 	<pipelines>
 		<pipeline name="shadow" defaultCamera="testCamera">
 		
-			<pass class="depthmap2" name="getShadowMap">
+			<pass class="depthmap" name="getShadowMap">
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>

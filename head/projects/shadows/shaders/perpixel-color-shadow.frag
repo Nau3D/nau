@@ -29,7 +29,7 @@ void main()
 	
 	if (NdotL > 0.01) {
 
-		color += diff  * NdotL * textureProj (shadowMap, projShadowCoord) ;
+		color += diff  * NdotL * textureProj (shadowMap, projShadowCoord/projShadowCoord.w) ;
 		
 	}
 	

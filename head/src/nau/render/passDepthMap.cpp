@@ -81,10 +81,11 @@ PassDepthMap::addLight(const std::string &lightName) {
 void
 PassDepthMap::prepare (void) {
 
+
 	if (0 != m_RenderTarget && true == m_UseRT) {
 
 		if (m_ExplicitViewport) {
-			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUT_SIZE);
+			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUTE_SIZE);
 			m_RTSizeWidth = (int)f2.x;
 			m_RTSizeHeight = (int)f2.y;
 			m_RenderTarget->setPropui2(IRenderTarget::SIZE, uivec2(m_RTSizeWidth, m_RTSizeHeight));
@@ -109,6 +110,7 @@ PassDepthMap::prepare (void) {
 
 void
 PassDepthMap::restore (void) {
+
 
 	if (0 != m_RenderTarget && true == m_UseRT) {
 		m_RenderTarget->unbind();
