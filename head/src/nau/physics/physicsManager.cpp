@@ -336,6 +336,12 @@ void nau::physics::PhysicsManager::cameraAction(Camera * camera, std::string act
 }
 
 
+bool 
+PhysicsManager::isPhysicsAvailable() {
+
+	return (NULL != m_PhysInst);
+}
+
 
 void
 PhysicsManager::updateProps() {

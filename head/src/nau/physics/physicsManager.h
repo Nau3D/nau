@@ -41,6 +41,7 @@ namespace nau
 
 			static PhysicsManager* GetInstance();
 			
+			bool isPhysicsAvailable();
 			void updateProps();
 			void update();
 			void build();

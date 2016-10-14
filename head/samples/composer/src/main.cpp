@@ -420,7 +420,10 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	// Dialogs //
 	DlgOGL::SetParent(this);
 	DlgLog::Instance()->updateDlg();
-	DlgPhysics::SetParent(this);
+	if (m_pRoot->getPhysicsManager()->isPhysicsAvailable())
+		DlgPhysics::SetParent(this);
+	else
+		mbar->EnableTop(mbar->FindMenu(_("Physics")), false);
 	DlgTextureLib::SetParent(this);
 	DlgCameras::SetParent(this);
 	DlgMaterials::SetParent(this);
@@ -589,7 +592,9 @@ FrmMainFrame::updateDlgs() {
 	DlgDbgPrograms::Instance()->updateDlg();
 	DlgTrace::Instance()->updateDlg();
 	DlgRenderTargets::Instance()->updateDlg();
-	DlgPhysics::Instance()->updateDlg();
+
+	if (m_pRoot->getPhysicsManager()->isPhysicsAvailable())
+		DlgPhysics::Instance()->updateDlg();
 
 	renderMenu->Enable(idMenuDlgPass, true);
 	renderMenu->Enable(idMenuWireframe, true);
