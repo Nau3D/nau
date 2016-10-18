@@ -74,6 +74,7 @@ bool WndComposer::OnInit()
 int idMenuProject = wxNewId();
 int idMenuDir = wxNewId();
 int idMenuModel = wxNewId();
+int idMenuSaveProj = wxNewId();
 //int idMenuModelAppend = wxNewId();
 int idMenuProcess = wxNewId();
 int idMenuQuit = wxNewId();
@@ -118,6 +119,8 @@ int idMenuDlgOGL = wxNewId();
 BEGIN_EVENT_TABLE(FrmMainFrame, wxFrame)
 // File Menu
 EVT_MENU(idMenuProject, FrmMainFrame::OnProjectLoad)
+EVT_MENU(idMenuSaveProj, FrmMainFrame::OnProjectSave)
+
 EVT_MENU(idMenuDir, FrmMainFrame::OnDirectoryLoad)
 EVT_MENU(idMenuModel, FrmMainFrame::OnModelLoad)
 //EVT_MENU(idMenuModelAppend, FrmMainFrame::OnModelAppend)
@@ -202,6 +205,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	fileMenu->Append(idMenuProject, _("&Open Project\tCtrl-O"), _("Open a project file"));
 	fileMenu->Append(idMenuDir, _("&Open Folder\tCtrl-F"), _("Loads all files in a folder"));
 	fileMenu->Append(idMenuModel, _("&Open Model\tCtrl-M"), _("Reset and Loads a 3D Model"));
+	fileMenu->Append(idMenuSaveProj, _("&Save Project (WIP)\tCtrl-S"), _("Save the project file"));
 	//fileMenu->Append(idMenuModelAppend, _("&Append Model\tCtrl-+"), _("Appends a 3D Model to the scene"));
 	fileMenu->Append(idMenuProcess, _("&Process Folder\tCtrl-P"), _("Convert all models in a folder to NBO format"));
 	fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
@@ -708,6 +712,19 @@ FrmMainFrame::OnDirectoryLoad (wxCommandEvent& event) {
 		}
 	}
 	delete openDirDlg;
+}
+
+void 
+FrmMainFrame::OnProjectSave(wxCommandEvent & event) {
+
+	static const wxChar *fileTypes = _T("XML files|*.xml|All files|*.*");
+	wxFileDialog *saveFileDlg = new wxFileDialog(this, _("Save File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
+
+	if (wxID_OK == saveFileDlg->ShowModal()) {
+		wxString path = saveFileDlg->GetPath();
+		m_pRoot->saveProject(std::string(path.mb_str()));
+	}
+	delete saveFileDlg;
 }
 
 

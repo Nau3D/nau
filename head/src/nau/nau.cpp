@@ -551,7 +551,8 @@ luaSaveProfile(lua_State *l) {
 
 	const char *fileName = lua_tostring(l, -1);
 
-	std::string prof = Profile::DumpLevels();
+	std::string prof;
+	Profile::DumpLevels(prof);
 
 	fstream s;
 	s.open(fileName, fstream::out);
@@ -1258,6 +1259,12 @@ Nau::readDirectory (std::string dirName) {
 		}
 	}
 	loadFilesAndFoldersAux(dirName, false);	
+}
+
+void 
+Nau::saveProject(std::string filename) {
+
+	ProjectLoader::saveProject(filename);
 }
 
 

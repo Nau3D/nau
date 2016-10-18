@@ -32,19 +32,26 @@ namespace nau {
 				return &m_Number;
 			}
 
-			T operator=(T arg) {
+			T operator = (T arg) {
 				m_Number = arg;
 			}
 
-			bool operator<(const T& T) const {
+			bool operator < (const T& T) const {
 				if (m_Number < a.m_Number)
 					return true;
 				else
 					return false;
 			}
 
-			bool operator>(const T& T) const {
+			bool operator > (const T& T) const {
 				if (m_Number > a.m_Number)
+					return true;
+				else
+					return false;
+			}
+
+			bool operator == (const T& T) const {
+				if (m_Number == a.m_Number)
 					return true;
 				else
 					return false;

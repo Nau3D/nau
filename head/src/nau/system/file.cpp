@@ -333,7 +333,7 @@ File::CleanFullPath(const std::string &fn) {
 
 
 std::string 
-File::Validate(std::string s1) {
+File::Validate(const std::string &s1) {
 
 	std::string res = s1;
 	std::string s = s1;

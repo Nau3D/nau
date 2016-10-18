@@ -20,7 +20,14 @@
 
 	<buffers>
 		<buffer name="test" >
-			<SIZE value=4194304 />
+			<DIM x=512 y=512 z=1 />
+			<structure>
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+			</structure>	
+			<!--SIZE value=4194304 /-->
 		</buffer>
 	</buffers>	
 	

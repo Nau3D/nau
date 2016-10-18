@@ -42,13 +42,22 @@ int BufferLoader::loadBuffer(IBuffer *aBuffer, std::string &aFilename) {
 				itensRead = fscanf(fp, "%d", (int *)dataPtr);
 				dataPtr += elementSize;
 				break;
+			case Enums::UINT:
+				expectedItens = 1;
+				itensRead = fscanf(fp, "%u", (unsigned int *)dataPtr);
+				dataPtr += elementSize;
+				break;
 			case Enums::FLOAT:
 				expectedItens = 1;
 				itensRead = fscanf(fp, "%f", (float *)dataPtr);
 				dataPtr += elementSize;
 				break;
+			case Enums::DOUBLE:
+				expectedItens = 1;
+				itensRead = fscanf(fp, "%lf", (double *)dataPtr);
+				dataPtr += elementSize;
 			default:
-				NAU_THROW("Buffer %s structure must contain only INT or FLOAT", 
+				NAU_THROW("Buffer %s structure must contain only INT, UNSIGNED INT, FLOAT or DOUBLE", 
 					aBuffer->getLabel().c_str());
 			}
 			//if (expectedItens != itensRead)

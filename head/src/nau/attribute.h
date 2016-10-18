@@ -157,18 +157,38 @@ namespace nau {
 
 		void initAttribInstanceIntArray(std::map<int, int> &m);
 		void initAttribInstanceInt2Array(std::map<int, ivec2> &m);
+		void initAttribInstanceInt3Array(std::map<int, ivec3> &m);
+		void initAttribInstanceInt4Array(std::map<int, ivec4> &m);
+
 		void initAttribInstanceEnumArray(std::map<int, int> &m);
+
 		void initAttribInstanceUIntArray(std::map<int, unsigned int> &m);
 		void initAttribInstanceUInt2Array(std::map<int, uivec2> &m);
 		void initAttribInstanceUInt3Array(std::map<int, uivec3> &m);
+		void initAttribInstanceUInt4Array(std::map<int, uivec4> &m);
+
 		void initAttribInstanceFloatArray(std::map<int, float> &m);
 		void initAttribInstanceVec4Array(std::map<int, vec4> &m);
 		void initAttribInstanceVec2Array(std::map<int, vec2> &m);
 		void initAttribInstanceVec3Array(std::map<int, vec3> &m);
+
 		void initAttribInstanceMat4Array(std::map<int, mat4> &m);
 		void initAttribInstanceMat3Array(std::map<int, mat3> &m);
-		void initAttribInstanceBvec4Array(std::map<int, bvec4> &m);
+		void initAttribInstanceMat2Array(std::map<int, mat2> &m);
+
+		void initAttribInstanceDoubleArray(std::map<int, double> &m);
+		void initAttribInstanceDVec4Array(std::map<int, dvec4> &m);
+		void initAttribInstanceDVec2Array(std::map<int, dvec2> &m);
+		void initAttribInstanceDVec3Array(std::map<int, dvec3> &m);
+
+		void initAttribInstanceDMat4Array(std::map<int, dmat4> &m);
+		void initAttribInstanceDMat3Array(std::map<int, dmat3> &m);
+		void initAttribInstanceDMat2Array(std::map<int, dmat2> &m);
+
 		void initAttribInstanceBoolArray(std::map<int, bool> &m);
+		void initAttribInstanceBvec2Array(std::map<int, bvec2> &m);
+		void initAttribInstanceBvec3Array(std::map<int, bvec3> &m);
+		void initAttribInstanceBvec4Array(std::map<int, bvec4> &m);
 
 
 	protected:

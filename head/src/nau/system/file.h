@@ -65,7 +65,7 @@ namespace nau
 			static bool IsRelative(const std::string &fn);
 			static std::string CleanFullPath(const std::string &fn);
 			static bool Exists(const std::string &fn);
-			static std::string Validate(std::string s);
+			static std::string Validate(const std::string &s);
 			static std::string BuildFullFileName(std::string path, std::string filename);
 			static void RecurseDirectory(std::string path, std::vector<std::string> *res);
 			static std::string GetCurrentFolder();

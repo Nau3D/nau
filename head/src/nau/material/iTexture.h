@@ -87,23 +87,21 @@ namespace nau
 
 			virtual ~ITexture(void);
 
-			char *data;
+			const std::string &getFileName();
 
 		protected:
 			ITexture(std::string label);
 
 
 			/// For inheritance reasons only
-			ITexture():data(NULL) {/*bitmap=NULL;*/};
+			ITexture():data(NULL), m_FileName("") {};
 
 			static bool Init();
 			static bool Inited;
 
-			std::string m_Label;
+			std::string m_Label, m_FileName;
 
-//#ifdef __COMPOSER__
-//			wxBitmap *bitmap;
-//#endif
+			char *data;
 		};
 	};
 };

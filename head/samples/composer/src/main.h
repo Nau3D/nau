@@ -64,7 +64,8 @@ private:
 	void OnProjectLoad(wxCommandEvent& event);
 	void OnModelLoad (wxCommandEvent& event);
 	void OnDirectoryLoad (wxCommandEvent& event);
-    void OnProcess (wxCommandEvent& event);
+	void OnProjectSave(wxCommandEvent& event);
+	void OnProcess (wxCommandEvent& event);
     void OnQuit(wxCommandEvent& event);
 
 	void OnDlgPass(wxCommandEvent& event);

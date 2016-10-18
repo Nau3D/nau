@@ -277,7 +277,7 @@
 					<valueof uniform="grid"			type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
 					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
-														component="ABSOLUT_SIZE" />
+														component="ABSOLUTE_SIZE" />
 					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
 														component="GridSize" />
 				</values>

@@ -675,12 +675,12 @@ namespace nau
 			}
 		};
 
+		typedef matrix2<float> mat2;
 		typedef matrix3<float> mat3;
 		typedef matrix4<float> mat4;
-		typedef matrix4<double> dmat4;
-		typedef matrix3<double> dmat3;
-		typedef matrix2<float> mat2;
 		typedef matrix2<double> dmat2;
+		typedef matrix3<double> dmat3;
+		typedef matrix4<double> dmat4;
 
 		typedef matrixNS<float, 2, 3> mat2x3;
 		typedef matrixNS<float, 2, 4> mat2x4;

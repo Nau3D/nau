@@ -606,7 +606,33 @@ AttribSet::initAttribInstanceInt2Array(std::map<int, ivec2> &m) {
 }
 
 
-void 
+void
+AttribSet::initAttribInstanceInt3Array(std::map<int, ivec3> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::IVEC3) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<ivec3> &ni = std::dynamic_pointer_cast<ivec3>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceInt4Array(std::map<int, ivec4> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::IVEC4) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<ivec4> &ni = std::dynamic_pointer_cast<ivec4>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
 AttribSet::initAttribInstanceEnumArray(std::map<int, int> &m) {
 
 	for (auto & attr : m_Attributes) {
@@ -658,6 +684,19 @@ AttribSet::initAttribInstanceUInt3Array(std::map<int, uivec3> &m) {
 }
 
 
+void
+AttribSet::initAttribInstanceUInt4Array(std::map<int, uivec4> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::UIVEC4) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<uivec4> &ni = std::dynamic_pointer_cast<uivec4>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
 void 
 AttribSet::initAttribInstanceFloatArray(std::map<int, float> &m) {
 
@@ -696,6 +735,7 @@ AttribSet::initAttribInstanceVec3Array(std::map<int, vec3> &m) {
 	}
 }
 
+
 void 
 AttribSet::initAttribInstanceVec2Array(std::map<int, vec2> &m) {
 
@@ -707,6 +747,7 @@ AttribSet::initAttribInstanceVec2Array(std::map<int, vec2> &m) {
 		}
 	}
 }
+
 
 void 
 AttribSet::initAttribInstanceMat4Array(std::map<int, mat4> &m) {
@@ -720,6 +761,7 @@ AttribSet::initAttribInstanceMat4Array(std::map<int, mat4> &m) {
 	}
 }
 
+
 void 
 AttribSet::initAttribInstanceMat3Array(std::map<int, mat3> &m) {
 
@@ -727,6 +769,149 @@ AttribSet::initAttribInstanceMat3Array(std::map<int, mat3> &m) {
 		if (attr.second->m_Type == Enums::DataType::MAT3) {
 			std::shared_ptr<Data> &d = attr.second->getDefault();
 			std::shared_ptr<mat3> &ni = std::dynamic_pointer_cast<mat3>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceMat2Array(std::map<int, mat2> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::MAT2) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<mat2> &ni = std::dynamic_pointer_cast<mat2>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceDoubleArray(std::map<int, double> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::FLOAT) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<NauDouble> &ni = std::dynamic_pointer_cast<NauDouble>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceDVec4Array(std::map<int, dvec4> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::DVEC4) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<dvec4> &ni = std::dynamic_pointer_cast<dvec4>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceDVec3Array(std::map<int, dvec3> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::DVEC3) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<dvec3> &ni = std::dynamic_pointer_cast<dvec3>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceDVec2Array(std::map<int, dvec2> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::DVEC2) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<dvec2> &ni = std::dynamic_pointer_cast<dvec2>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceDMat4Array(std::map<int, dmat4> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::DMAT4) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<dmat4> &ni = std::dynamic_pointer_cast<dmat4>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceDMat3Array(std::map<int, dmat3> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::DMAT3) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<dmat3> &ni = std::dynamic_pointer_cast<dmat3>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceDMat2Array(std::map<int, dmat2> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::DMAT2) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<dmat2> &ni = std::dynamic_pointer_cast<dmat2>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceBoolArray(std::map<int, bool> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::BOOL) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<NauInt> &ni = std::dynamic_pointer_cast<NauInt>(d);
+			m[attr.second->m_Id] = (*ni != 0);
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceBvec2Array(std::map<int, bvec2> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::BVEC2) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<bvec2> &ni = std::dynamic_pointer_cast<bvec2>(d);
+			m[attr.second->m_Id] = *ni;
+		}
+	}
+}
+
+
+void
+AttribSet::initAttribInstanceBvec3Array(std::map<int, bvec3> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::BVEC3) {
+			std::shared_ptr<Data> &d = attr.second->getDefault();
+			std::shared_ptr<bvec3> &ni = std::dynamic_pointer_cast<bvec3>(d);
 			m[attr.second->m_Id] = *ni;
 		}
 	}
@@ -745,16 +930,4 @@ AttribSet::initAttribInstanceBvec4Array(std::map<int, bvec4> &m) {
 	}
 }
 
-
-void 
-AttribSet::initAttribInstanceBoolArray(std::map<int, bool> &m) {
-
-	for (auto & attr : m_Attributes) {
-		if (attr.second->m_Type == Enums::DataType::BOOL) {
-			std::shared_ptr<Data> &d = attr.second->getDefault();
-			std::shared_ptr<NauInt> &ni = std::dynamic_pointer_cast<NauInt>(d);
-			m[attr.second->m_Id] = (*ni != 0);
-		}
-	}
-}
 

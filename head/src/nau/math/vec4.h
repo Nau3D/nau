@@ -249,8 +249,8 @@ namespace nau
 
 			bool
 				equals(const vector4 &v, float tolerance = -1.0f) const {
-				return (FloatEqual(x, v.x, tolerance) && FloatEqual(y, v.y, tolerance) && \
-					FloatEqual(z, v.z, tolerance) && FloatEqual(w, v.w, tolerance));
+				return (FloatEqual((float)x, (float)v.x, tolerance) && FloatEqual((float)y, (float)v.y, tolerance) && \
+					FloatEqual((float)z, (float)v.z, tolerance) && FloatEqual((float)w, (float)v.w, tolerance));
 			}
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<materiallib name="nau_material_lib">
+<materiallib name="__nau_material_lib">
 
 	<textures>
 		<texture name="__FontCourierNew10" filename="couriernew10.tga" mipmap=true />		

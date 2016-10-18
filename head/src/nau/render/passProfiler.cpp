@@ -131,7 +131,9 @@ PassProfiler::doPass (void)
 {
 //	nau::scene::SceneObject *string;
 
-	m_pFont.createSentenceRenderable(m_pSO->getRenderable(), Profile::DumpLevels());
+	std::string prof;
+	Profile::DumpLevels(prof);
+	m_pFont.createSentenceRenderable(m_pSO->getRenderable(), prof);
 	m_pSO->getRenderable()->resetCompilationFlags();
 	//m_pSO->setRenderable(r);//Profile::DumpLevels()));
 	//string = m_pFont.createSentenceSceneObject(Profile::DumpLevels());

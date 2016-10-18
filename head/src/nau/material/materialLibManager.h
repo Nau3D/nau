@@ -9,8 +9,7 @@
 
 using namespace nau::material;
 
-// FIXME: Don't know where this should be defined. Added it here for now
-#define DEFAULTMATERIALLIBNAME "nau_material_lib"
+#define DEFAULTMATERIALLIBNAME "__nau_material_lib"
 
 namespace nau
 {

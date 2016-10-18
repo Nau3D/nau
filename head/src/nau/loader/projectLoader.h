@@ -21,6 +21,9 @@ namespace nau
 		class ProjectLoader
 		{
 		public:
+			// save a project
+			static void saveProject(const std::string &file);
+
 			// loads a project
 			static void load (std::string file, int *width, int *height);
 			// loads a material lib
@@ -33,6 +36,10 @@ namespace nau
 			static std::string s_File;
 
 		private:
+
+			static void saveMatLib(const std::string &matLibName, const std::string &matLibFileName);
+			static void saveAttributes(AttribSet *attribSet, AttributeValues *attr, TiXmlElement *parent);
+			static void saveItem(std::string tag, const std::string &name, AttribSet *attribSet, AttributeValues *attr, TiXmlElement *parent);
 
 			typedef struct {
 				std::string filename;

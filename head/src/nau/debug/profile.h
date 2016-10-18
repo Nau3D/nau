@@ -11,7 +11,7 @@
 #define NAU_PROFILE_CPU_AND_GPU 2
 
 
-#define NAU_PROFILE NAU_PROFILE_NONE
+#define NAU_PROFILE NAU_PROFILE_CPU_AND_GPU
 
 
 
@@ -109,7 +109,7 @@ private:
 	static int sTotalLevels;
 
 	/// Puts the profile result in sDump
-	static void DumpLevels(int l, int p, pTime calls);
+	static void DumpLevels(int l, int p, pTime calls, std::string &s);
 
 
 	/// Creates a new section
@@ -128,10 +128,8 @@ private:
 #endif
 
 public:
-	/// String that contains the profile report
-	static std::string sDump;
-	/// create the profile report and store in sDump
-	static const std::string &DumpLevels();
+	/// create the profile report and store in s
+	static void DumpLevels(std::string &s);
 	/// resets profile data
 	static void Reset();
 

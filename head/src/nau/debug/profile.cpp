@@ -4,14 +4,13 @@
 
 #include <ctime>
 
+
+#if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
 #include <glbinding/gl/gl.h>
 using namespace gl;
-//#if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
-//#include <GL/glew.h>
-//#endif
+#endif
 
 // Declare static variables
-std::string Profile::sDump;
 int Profile::sDisp = 0;
 int Profile::sCurrLevel = -1;
 int Profile::sTotalLevels = 0;
@@ -151,12 +150,14 @@ void Profile::createNewSection(std::string &name, pTime w, bool profileGL) {
 	
 	sLevels[sCurrLevel].cursor = (int)sLevels[sCurrLevel].sec.size();
 
+#if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU	
 	if (profileGL) {
 		queryPair p;
 		glGenQueries(2, p.queries);
 		glQueryCounter(p.queries[0], GL_TIMESTAMP);
 		s.queriesGL[sBackBuffer].push_back(p);
 	}
+#endif
 
 	GetTicks(&(s.startTime));
 	s.wastedTime = s.startTime - w;
@@ -188,12 +189,15 @@ void Profile::updateSection(int cur, pTime w) {
 	s->calls++;
 	sLevels[sCurrLevel].cursor = cur;
 
+#if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
 	if (s->profileGL) {
 		queryPair p;
 		glGenQueries(2, p.queries);
 		glQueryCounter(p.queries[0], GL_TIMESTAMP);
 		s->queriesGL[sBackBuffer].push_back(p);
 	}
+#endif
+
 	GetTicks(&s->startTime);
 	s->wastedTime += s->startTime - w;
 }
@@ -206,9 +210,12 @@ void Profile::accumulate() {
 
 	s = &(sLevels[sCurrLevel].sec[sLevels[sCurrLevel].cursor]);
 
+#if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
 	if (s->profileGL) { 
 		glQueryCounter(s->queriesGL[sBackBuffer][s->queriesGL[sBackBuffer].size()-1].queries[1], GL_TIMESTAMP);
 	}
+#endif
+
 	// to measure wasted time when accumulating
 	GetTicks(&t2);
 	s->wastedTime += (t2-t);
@@ -225,6 +232,7 @@ void Profile::Reset() {
 
 	for(int i=0; i < sTotalLevels; ++i) {
 
+#if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
 		for (unsigned int s = 0; s < sLevels[i].sec.size(); ++s) {
 			for (unsigned int k = 0; k < sLevels[i].sec[s].queriesGL[0].size(); ++k) {
 				glDeleteQueries(2, sLevels[i].sec[s].queriesGL[0][k].queries);
@@ -233,6 +241,8 @@ void Profile::Reset() {
 				glDeleteQueries(2, sLevels[i].sec[s].queriesGL[1][k].queries);
 			}
 		}
+#endif
+
 		sLevels[i].sec.clear();
 		sLevels[i].cursor = 0;
 	}
@@ -246,7 +256,7 @@ void Profile::Reset() {
 }
 
 
-void Profile::DumpLevels(int l, int p, pTime calls) {
+void Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
 
 	size_t siz;
 	char a[2] = "";
@@ -281,17 +291,17 @@ void Profile::DumpLevels(int l, int p, pTime calls) {
 					(float)(sec->totalTime)/(calls),
 					(float)(sec->wastedTime)/(calls));
 
-			sDump += s2;
+			dump += s2;
 
 			if (l+1 < sTotalLevels)
-				DumpLevels(l+1,(int)cur,calls);
+				DumpLevels(l+1,(int)cur,calls, dump);
 		}
 		
 	}
 }
 
-const std::string & 
-Profile::DumpLevels() {
+void
+Profile::DumpLevels(std::string &dump ) {
 
 #if NAU_PROFILE != NAU_PROFILE_NONE
 	int indent = sTotalLevels * PROFILE_LEVEL_INDENT + sDisp;
@@ -304,18 +314,17 @@ Profile::DumpLevels() {
 	char t41[8] ="GPU(ms)";
 	char t5[3]="wt";
 
-	sDump = "";
+	dump = "";
 	sprintf(saux,"%-*s  %s  %s  %s       %s\n",indent+4,t1,t2,t4,t41,t5);
-	sDump += saux; 
+	dump += saux; 
 	sprintf(saux,"---- %*s\n",indent+31,"------------------------------------");
-	sDump += saux;
+	dump += saux;
 
-	DumpLevels(0,-1,sLevels[0].sec[0].calls);
+	DumpLevels(0,-1,sLevels[0].sec[0].calls, dump);
 #else
-	sDump = "";
+	dump = "";
 #endif
 
-	return sDump;
 }
 
 

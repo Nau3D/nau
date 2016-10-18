@@ -48,6 +48,7 @@
 #endif
 
 #include <memory>
+#include <string>
 
 //#ifdef GLINTERCEPTDEBUG
 //#include "nau/loader/projectLoaderDebugLinker.h"
@@ -85,6 +86,220 @@ uivec2 ProjectLoader::s_Dummy_uivec2;
 std::string ProjectLoader::s_Dummy_string;
 
 std::vector<ProjectLoader::DeferredValidation> ProjectLoader::s_DeferredVal;
+
+
+
+/* ------------------------------------------------------------
+		SAVE PROJECT
+---------------------------------------------------------------*/
+
+
+void
+ProjectLoader::saveAttributes(AttribSet *as, AttributeValues *attr, TiXmlElement *parent) {
+	
+	TiXmlElement *item;
+	std::map<std::string, std::unique_ptr<Attribute>> &attribMap = as->getAttributes();
+	
+	// for every attribute
+	for (auto &elem : attribMap) {
+		//save only those that are not "read only"
+		if (!elem.second->getReadOnlyFlag()) {
+			// strings
+			switch (elem.second->getType()) {
+				case Enums::STRING: {
+					const std::string &value = attr->getProps(((AttributeValues::StringProperty)elem.second->getId()));
+					// empty is the default for strings
+					if (value != "") {
+						item = new TiXmlElement(elem.first.c_str());
+						item->SetAttribute("value", value);
+						parent->LinkEndChild(item);
+					}
+					break;
+				}
+				case Enums::ENUM: {
+					int value = attr->getPrope(((AttributeValues::EnumProperty)elem.second->getId()));
+					std::string s = elem.second->getOptionString(value);
+					// empty is the default for strings
+					if (value != static_cast<Number<int> *>(elem.second->getDefault().get())->getNumber()) {
+						item = new TiXmlElement(elem.first.c_str());
+						item->SetAttribute("value", s);
+						parent->LinkEndChild(item);
+					}
+					break;
+				}
+				case Enums::FLOAT: {
+					float value = attr->getPropf(((AttributeValues::FloatProperty)elem.second->getId()));
+					if (value != static_cast<Number<float> *>(elem.second->getDefault().get())->getNumber()) {
+						item = new TiXmlElement(elem.first.c_str());
+						item->SetDoubleAttribute("value", value);
+						parent->LinkEndChild(item);
+					}
+					break;
+				}
+				case Enums::VEC2: {
+					vec2 value = attr->getPropf2(((AttributeValues::Float2Property)elem.second->getId()));
+					if (!(value == *static_cast<vec2 *>(elem.second->getDefault().get()))) {
+						item = new TiXmlElement(elem.first.c_str());
+						item->SetDoubleAttribute("x", value.x);
+						item->SetDoubleAttribute("y", value.y);
+						parent->LinkEndChild(item);
+					}
+					break;
+				}
+				case Enums::VEC3: {
+					vec3 value = attr->getPropf3(((AttributeValues::Float3Property)elem.second->getId()));
+					if (!(value == *static_cast<vec3 *>(elem.second->getDefault().get()))) {
+						item = new TiXmlElement(elem.first.c_str());
+						item->SetDoubleAttribute("x", value.x);
+						item->SetDoubleAttribute("y", value.y);
+						item->SetDoubleAttribute("z", value.z);
+						parent->LinkEndChild(item);
+					}
+					break;
+				}
+				case Enums::VEC4: {
+					vec4 value = attr->getPropf4(((AttributeValues::Float4Property)elem.second->getId()));
+					if (!(value == *static_cast<vec4 *>(elem.second->getDefault().get()))) {
+						item = new TiXmlElement(elem.first.c_str());
+						item->SetDoubleAttribute("x", value.x);
+						item->SetDoubleAttribute("y", value.y);
+						item->SetDoubleAttribute("z", value.z);
+						item->SetDoubleAttribute("w", value.w);
+						parent->LinkEndChild(item);
+					}
+					break;
+				}
+
+			}
+		}
+	}
+}
+
+
+void
+ProjectLoader::saveItem(std::string tag, const std::string &name, AttribSet *attribSet, AttributeValues *attr, TiXmlElement *parent) {
+
+	// this is for NAU created itens only
+	if (name.substr(0, 2) == "__")
+		return;
+
+	TiXmlElement *item = new TiXmlElement(tag);
+	parent->LinkEndChild(item);
+	item->SetAttribute("name", name);
+
+
+	saveAttributes(attribSet, attr, item);
+}
+
+
+void 
+ProjectLoader::saveMatLib(const std::string &matLibName, const std::string &matLibFileName) {
+
+	// renderTargets
+	// textures
+	// states
+	// buffers
+	// shaders
+	// materials
+}
+
+
+void
+ProjectLoader::saveProject(const std::string &file) {
+
+	std::vector<std::string> names;
+
+	TiXmlDocument doc;
+	TiXmlDeclaration *decl = new TiXmlDeclaration("1.0", "", "");
+	doc.LinkEndChild(decl);
+
+	TiXmlElement *root = new TiXmlElement("project");
+	root->SetAttribute("name", NAU->getProjectName());
+	doc.LinkEndChild(root);
+
+	TiXmlElement *assets = new TiXmlElement("assets");
+	root->LinkEndChild(assets);
+
+	// save viewports
+
+	names.clear();
+	RENDERMANAGER->getViewportNames(&names);
+	if (names.size()) {
+		TiXmlElement *viewports = new TiXmlElement("viewports");
+		assets->LinkEndChild(viewports);
+		for (auto &name : names) {
+
+			std::shared_ptr<Viewport> &item = RENDERMANAGER->getViewport(name);
+			AttributeValues *attr = (AttributeValues *)item.get();
+			AttribSet *attribSet = item->getAttribSet();
+			saveItem("viewport", name, attribSet, attr, viewports);
+		}
+	}
+
+	// save cameras
+
+	names.clear();
+	RENDERMANAGER->getCameraNames(&names);
+	if (names.size()) {
+		TiXmlElement *cameras = new TiXmlElement("cameras");
+		assets->LinkEndChild(cameras);
+		for (auto &name : names) {
+
+			std::shared_ptr<Camera> &item = RENDERMANAGER->getCamera(name);
+			AttributeValues *attr = (AttributeValues *)item.get();
+			AttribSet *attribSet = item->getAttribSet();
+			saveItem("camera", name, attribSet, attr, cameras);
+		}
+	}
+
+	// save lights
+
+	names.clear();
+	RENDERMANAGER->getLightNames(&names);
+	if (names.size()) {
+		TiXmlElement *lights = new TiXmlElement("lights");
+		assets->LinkEndChild(lights);
+		for (auto &name : names) {
+			std::shared_ptr<Light> &item = RENDERMANAGER->getLight(name);
+			AttributeValues *attr = (AttributeValues *)item.get();
+			AttribSet *attribSet = item->getAttribSet();
+			saveItem("light", name, attribSet, attr, lights);
+		}
+	}
+
+	// save material libs
+
+	names.clear();
+	MATERIALLIBMANAGER->getLibNames(&names);
+	if (names.size()) {
+		TiXmlElement *matlibs = new TiXmlElement("materialLibs");
+		assets->LinkEndChild(matlibs);
+
+		for (auto &name : names) {
+			if (name.substr(0, 2) != "__") {
+
+				std::string pNameWithoutExt = File::GetNameWithoutExtension(file);
+				std::string pName = File::GetName(pNameWithoutExt);
+				std::string ext = File::GetExtension(file);
+				TiXmlElement *matlib = new TiXmlElement("materialLib");
+				matlibs->LinkEndChild(matlib);
+				matlib->SetAttribute("filename", pName + "-" + name + ".mlib");
+				std::string matLibFileName = pNameWithoutExt + "-" + File::Validate(name) + ".mlib";
+				saveMatLib(name, matLibFileName);
+			}
+		}
+	}
+
+	TiXmlElement *pipelines = new TiXmlElement("pipelines");
+	root->LinkEndChild(pipelines);
+
+	doc.SaveFile(file);
+}
+
+
+/* ------------------------------------------------------------
+		LOAD PROJECT
+---------------------------------------------------------------*/
 
 
 
@@ -3868,7 +4083,8 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			if (!pType) {
 				NAU_THROW("Mat Lib %s\nBuffer %s - field has no value", aLib->getName().c_str(), pName);
 			}
-			if (!Enums::isValidType(pType)) {
+			if (!Enums::isValidType(pType) /*&& !Enums::isBasicType(Enums::getType(pType))*/) {
+//				NAU_THROW("Mat Lib %s\nBuffer %s - field has an invalid type. Valid types are: INT, UINT, BOOL, FLOAT, DOUBLE, BYTE, UBYTE, SHORT, USHORT", aLib->getName().c_str(), pName);
 				NAU_THROW("Mat Lib %s\nBuffer %s - field has an invalid type. Valid types are: INT, IVEC2, IVEC3, IVEC4, UINT, UIVEC2, UIVEC3, UIVEC4, BOOL, BVEC2, BVEC3, BVEC4, FLOAT, VEC2, VEC3, VEC4, DOUBLE, DVEC2, DVEC3, DVEC4, MAT2, MAT3, MAT4, MAT2x3, MAT2x4, MAT3x2, MAT3x4, MAT4x2, MAT4x3, DMAT2, DMAT3, DMAT4, DMAT2x3, DMAT2x4, DMAT3x2, DMAT3x4, DMAT4x2, DMAT4x3, SAMPLER, ENUM, BYTE, UBYTE, SHORT, USHORT", aLib->getName().c_str(), pName);
 			}
 			b->appendItemToStruct(Enums::getType(pType));

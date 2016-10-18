@@ -97,6 +97,9 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 	//	ima.Rescale(96, 96);
 	//	t->bitmap = new wxBitmap(ima.Mirror(false));
 	//#endif
+
+		t->m_FileName = file;
+
 		loader->convertToRGBA();
 		
 		t->data = (char *)malloc(loader->getHeight() * loader->getWidth() * 4);
@@ -113,7 +116,7 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 }
 
 
-ITexture::ITexture(std::string label) :m_Label(label), data(NULL)/*, bitmap(0), m_Bitmap(0)*/ {
+ITexture::ITexture(std::string label) :m_Label(label), data(NULL), m_FileName("") {
 
 	registerAndInitArrays(Attribs);
 	
@@ -142,3 +145,8 @@ ITexture::setLabel (std::string label) {
 }
 
 
+const std::string &
+ITexture::getFileName() {
+
+	return m_FileName;
+}

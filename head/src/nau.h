@@ -251,7 +251,7 @@ namespace nau {
 		void appendModel(std::string fileName);
 		void readProjectFile (std::string file, int *width, int *height);
 		void Nau::readDirectory (std::string dirName);
-
+		void saveProject(std::string filename);
 
 		// Managers 
 		nau::render::RenderManager* getRenderManager (void);

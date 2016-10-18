@@ -138,7 +138,9 @@ void DlgLog::OnProfilerLog(wxCommandEvent& event) {
 	wxFont f = wxSystemSettings::GetFont(wxSYS_OEM_FIXED_FONT);
 	m_Log->SetFont(f);
 
-	std::string s = Profile::DumpLevels();
+	std::string s;
+	Profile::DumpLevels(s);
+	
 	unsigned int i = 0, j;
 	while  (i < s.size()) {
 		j = i;
