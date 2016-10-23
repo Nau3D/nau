@@ -67,7 +67,7 @@ Attribute::~Attribute() {
 
 Attribute::Attribute(const Attribute & source):
 	m_Id(source.m_Id), m_Name(source.m_Name), m_Type(source.m_Type), m_ObjType(source.m_ObjType),
-	m_ReadOnlyFlag(source.m_ReadOnlyFlag), m_Requires(source.m_Requires),
+	m_ReadOnlyFlag(source.m_ReadOnlyFlag), m_Requires(source.m_Requires), m_MustExist(source.m_MustExist),
 	m_Semantics(source.m_Semantics), m_RangeDefined(source.m_RangeDefined) {
 
 	if (source.m_Max) {
@@ -645,7 +645,18 @@ AttribSet::initAttribInstanceEnumArray(std::map<int, int> &m) {
 }
 
 
-void 
+void
+AttribSet::initAttribInstanceStringArray(std::map<int, std::string> &m) {
+
+	for (auto & attr : m_Attributes) {
+		if (attr.second->m_Type == Enums::DataType::STRING) {
+			m[attr.second->m_Id] = "";
+		}
+	}
+}
+
+
+void
 AttribSet::initAttribInstanceUIntArray(std::map<int, unsigned int> &m) {
 
 	for (auto & attr : m_Attributes) {

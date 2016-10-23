@@ -4,8 +4,8 @@ can have. Plugins can add new properties (in the initialization process)
 as well as read/write (through IPhysicsPropertyManager).
 */
 
-#ifndef _NAU_PHYSICS_MATERIAL
-#define _NAU_PHYSICS_MATERIAL
+#ifndef PHYSICS_MATERIAL
+#define PHYSICS_MATERIAL
 
 #include "nau/attributeValues.h"
 #include "nau/enums.h"

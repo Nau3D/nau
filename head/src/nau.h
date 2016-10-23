@@ -247,8 +247,8 @@ namespace nau {
 
 
 		// Readers 
-		void readModel (std::string fileName) throw (std::string);
-		void appendModel(std::string fileName);
+		void readModel (std::string filename) throw (std::string);
+		void appendModel(std::string filename);
 		void readProjectFile (std::string file, int *width, int *height);
 		void Nau::readDirectory (std::string dirName);
 		void saveProject(std::string filename);

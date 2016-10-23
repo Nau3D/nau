@@ -45,6 +45,7 @@ namespace nau
 			} RunMode;
 
 			RunMode m_RunMode;
+			std::string m_DefaultCamera;
 
 		public:
 

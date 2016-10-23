@@ -1,5 +1,5 @@
-#ifndef EventVec4_H
-#define EventVec4_H
+#ifndef EVENT_VEC4_H
+#define EVENT_VEC4_H
 
 #include "nau/event/iEventData.h"
 #include "nau/event/eventvec4.h"

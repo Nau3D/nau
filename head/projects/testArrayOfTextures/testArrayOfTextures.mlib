@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<materialLib name="Test">
+
+	<shaders>
+		<shader name="fillTextures" cs="shaders/fillTextures.comp" />
+		<shader name="showTextures" vs="shaders/quadShader.vert" 
+									ps="shaders/showBindlessTextures.frag"/>	
+	</shaders>
+	
+	<arraysOfTextures>
+		<arrayOfTextures name="T">
+			<TEXTURE_COUNT value= 2 />
+			<WIDTH value="128"/>
+			<HEIGHT value="128" />
+			<INTERNAL_FORMAT value="RGBA" />
+			<CREATE_BUFFER value=true />
+		</arrayOfTextures>
+	</arraysOfTextures>
+
+	<materials>
+		<material name ="fillTextures">
+			<shader name="fillTextures">
+				<values>									
+					<valueof uniform="t0"	type="IMAGE_TEXTURE" context="CURRENT"
+											id=0 component="UNIT" />
+					<valueof uniform="t1"	type="IMAGE_TEXTURE" context="CURRENT"
+											id=1 component="UNIT" />
+				</values>
+			</shader>
+			<imageTextures>
+				<imageTexture UNIT=0 texture="T_0" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+				<imageTexture UNIT=1 texture="T_1" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+		</material>
+		
+		<material name ="showTextures">
+			<shader name="showTextures" />
+			<buffers>
+				<buffer name="T" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value=1 />
+				</buffer>
+			</buffers>
+		</material>
+	</materials>	
+	
+</materialLib>
+

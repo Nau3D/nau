@@ -27,7 +27,7 @@ using namespace nau::render;
 using namespace nau::material;
 using namespace nau::system;
 
-std::string CBOLoader::m_FileName;
+std::string CBOLoader::m_Filename;
 
 void
 CBOLoader::_writeVertexData (std::shared_ptr<VertexData>& aVertexData, std::fstream &f) {
@@ -204,7 +204,7 @@ CBOLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	//CLogger::getInstance().addLog(LEVEL_INFO, "debug.txt");
 
 	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
-	m_FileName = aFilename;
+	m_Filename = aFilename;
 	std::string path = File::GetPath(aFilename);
 
 	std::fstream f (aFilename.c_str(), std::fstream::in | std::fstream::binary);
@@ -370,7 +370,7 @@ CBOLoader::_readOctreeByMatSceneObject(std::shared_ptr<SceneObject> &so, std::fs
 
 	_readString(buffer,f);
 	nau::resource::ResourceManager *rm = RESOURCEMANAGER;
-	std::shared_ptr<IRenderable> &aRenderable = rm->createRenderable("Mesh", rm->makeMeshName(buffer, m_FileName));
+	std::shared_ptr<IRenderable> &aRenderable = rm->createRenderable("Mesh", rm->makeMeshName(buffer, m_Filename));
 			
 	std::shared_ptr<VertexData> &vertexData = aRenderable->getVertexData();
 	_readVertexData (vertexData, f);

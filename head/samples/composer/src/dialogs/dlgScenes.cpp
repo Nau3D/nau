@@ -408,7 +408,7 @@ void DlgScenes::OnAddDir(wxCommandEvent& event)
 	DIR *dir;
 	struct dirent *ent;
 	bool result = true;
-	char fileName [1024];
+	char filename [1024];
 
 	wxDirDialog *openDirDlg = new wxDirDialog (this);
 
@@ -427,12 +427,12 @@ void DlgScenes::OnAddDir(wxCommandEvent& event)
 			while (0 != (ent = readdir (dir))) {
 
 		#ifdef NAU_PLATFORM_WIN32
-				sprintf (fileName, "%s\\%s", (const char *)directory.GetName().c_str(), ent->d_name);
+				sprintf (filename, "%s\\%s", (const char *)directory.GetName().c_str(), ent->d_name);
 		#else
-				sprintf (fileName, "%s/%s", dirName, ent->d_name);						
+				sprintf (filename, "%s/%s", dirName, ent->d_name);						
 		#endif
 				try {
-					NAU->loadAsset (fileName, m_Active);
+					NAU->loadAsset (filename, m_Active);
 				}
 				catch(std::string &s) {
 					closedir(dir);

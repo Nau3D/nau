@@ -1,5 +1,5 @@
-#ifndef __STATE__
-#define __STATE__
+#ifndef STATE
+#define STATE
 
 #include "nau/math/vec4.h"
 //#include "nau/math/bvec4.h"

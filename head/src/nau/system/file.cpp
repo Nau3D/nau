@@ -34,7 +34,7 @@ const std::string File::PATH_SEPARATOR("/")
 
 File::File(std::string filepath, bool native) :
 	m_vPath(),
-	m_FileName(filepath),
+	m_Filename(filepath),
 	m_FileExtension(),
 	m_Drive(""),
 	m_IsRelative (true),
@@ -162,7 +162,7 @@ File::CreateDir(std::string path) {
 
 
 std::string
-File::BuildFullFileName(std::string path, std::string filename) {
+File::BuildFullFilename(std::string path, std::string filename) {
 
 	return path + PATH_SEPARATOR + filename;
 }
@@ -187,7 +187,7 @@ File::RecurseDirectory(std::string path, std::vector<std::string> *res) {
 				RecurseDirectory(path + "\\" + nextDir, res);
 			}
 			else {
-				res->push_back(File::BuildFullFileName(path, ent -> d_name));
+				res->push_back(File::BuildFullFilename(path, ent -> d_name));
 			}
 		}
 	}
@@ -486,13 +486,13 @@ File::getURI (void)
 std::string 
 File::getFilename (void)
 {
-	return m_FileName;
+	return m_Filename;
 }
 
 void
 File::setFilename (std::string aFilename)
 {
-	m_FileName = aFilename;
+	m_Filename = aFilename;
 }
 
 std::string 
@@ -507,7 +507,7 @@ File::getFullPath (void)
 	if (false == m_IsNative) {
 		return (join ("", PATH_SEPARATOR, true));
 	} else {
-		return m_FileName; /***MARK***/
+		return m_Filename; /***MARK***/
 	}
 }
 
@@ -558,7 +558,7 @@ File::getRelativeTo (File &file)
 
 	if (pathIter1 != m_vPath.end()) {
 		while (pathIter1 != m_vPath.end()) {
-			if (*pathIter1 != m_FileName) {
+			if (*pathIter1 != m_Filename) {
 				relative.appendToPath ("..");
 			}
 			pathIter1++;
@@ -645,10 +645,10 @@ File::construct (std::string filepath)
 		Pos = filepath.find_last_of (".");
 		if (Pos != std::string::npos) {
 			m_HasExtension = true;
-			m_FileName = filepath.substr (OldPos, (Pos - OldPos));
+			m_Filename = filepath.substr (OldPos, (Pos - OldPos));
 			m_FileExtension = filepath.substr (Pos + 1);
 		} else {
-			m_FileName = filepath.substr (OldPos);
+			m_Filename = filepath.substr (OldPos);
 		}
 	}
 }
@@ -721,7 +721,7 @@ File::join (std::string head, std::string separator, bool file)
 
 	if (true == file) {
 		if (true == m_IsLeaf) {
-			FileURI << m_FileName;
+			FileURI << m_Filename;
 		}
 		if (true == m_HasExtension) {
 			FileURI << "." << m_FileExtension;

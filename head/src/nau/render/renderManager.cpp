@@ -21,7 +21,8 @@ RenderManager::RenderManager(void) :
 	m_Cameras(),
 	m_Lights(),
 //	m_ActivePipeline (0),
-	m_RunMode(RUN_DEFAULT) {
+	m_RunMode(RUN_DEFAULT),
+	m_DefaultCamera("__nauDefault") {
 
 	m_pRenderer = std::unique_ptr<IRenderer>(RenderFactory::create());
 	m_pRenderQueue = std::unique_ptr<IRenderQueue>(RenderQueueFactory::create ("MaterialSort"));
@@ -496,8 +497,11 @@ RenderManager::getCameraNames(std::vector<std::string> *names ) {
 const std::string&
 RenderManager::getDefaultCameraName() {
 
+	if (m_Pipelines.size() == 0)
+		return m_DefaultCamera;
+
 	// there must be an active pipeline
-	assert(m_ActivePipelineIndex < m_Pipelines.size());
+	//assert(m_ActivePipelineIndex < m_Pipelines.size());
 
 	return(m_Pipelines[m_ActivePipelineIndex]->getDefaultCameraName());
 }

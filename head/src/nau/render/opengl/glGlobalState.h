@@ -1,5 +1,5 @@
-#ifndef GLGLOBALSTATE_H
-#define GLGLOBALSTATE_H
+#ifndef GL_GLOBAL_STATE_H
+#define GL_GLOBAL_STATE_H
 
 #include "nau/render/iGlobalState.h"
 

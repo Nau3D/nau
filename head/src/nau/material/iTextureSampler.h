@@ -1,5 +1,5 @@
-#ifndef __TEXTURE_SAMPLER__
-#define __TEXTURE_SAMPLER__
+#ifndef TEXTURE_SAMPLER
+#define TEXTURE_SAMPLER
 
 #include "nau/math/vec4.h"
 #include "nau/material/iTexture.h"

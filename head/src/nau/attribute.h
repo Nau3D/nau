@@ -1,5 +1,5 @@
-#ifndef NAU_ATTRIBUTE_H
-#define NAU_ATTRIBUTE_H
+#ifndef ATTRIBUTE_H
+#define ATTRIBUTE_H
 
 
 #include "nau/enums.h"
@@ -161,6 +161,7 @@ namespace nau {
 		void initAttribInstanceInt4Array(std::map<int, ivec4> &m);
 
 		void initAttribInstanceEnumArray(std::map<int, int> &m);
+		void initAttribInstanceStringArray(std::map<int, std::string> &m);
 
 		void initAttribInstanceUIntArray(std::map<int, unsigned int> &m);
 		void initAttribInstanceUInt2Array(std::map<int, uivec2> &m);

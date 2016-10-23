@@ -111,7 +111,7 @@ ProjectLoader::saveAttributes(AttribSet *as, AttributeValues *attr, TiXmlElement
 					// empty is the default for strings
 					if (value != "") {
 						item = new TiXmlElement(elem.first.c_str());
-						item->SetAttribute("value", value);
+						item->SetAttribute("name", value);
 						parent->LinkEndChild(item);
 					}
 					break;
@@ -193,7 +193,7 @@ ProjectLoader::saveItem(std::string tag, const std::string &name, AttribSet *att
 
 
 void 
-ProjectLoader::saveMatLib(const std::string &matLibName, const std::string &matLibFileName) {
+ProjectLoader::saveMatLib(const std::string &matLibName, const std::string &matLibFilename) {
 
 	// renderTargets
 	// textures
@@ -284,8 +284,8 @@ ProjectLoader::saveProject(const std::string &file) {
 				TiXmlElement *matlib = new TiXmlElement("materialLib");
 				matlibs->LinkEndChild(matlib);
 				matlib->SetAttribute("filename", pName + "-" + name + ".mlib");
-				std::string matLibFileName = pNameWithoutExt + "-" + File::Validate(name) + ".mlib";
-				saveMatLib(name, matLibFileName);
+				std::string matLibFilename = pNameWithoutExt + "-" + File::Validate(name) + ".mlib";
+				saveMatLib(name, matLibFilename);
 			}
 		}
 	}
@@ -703,7 +703,7 @@ ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::A
 			}
 			else {
 				std::string &valueS = readAttributeString(a->getName(), a, pElem);
-				if (!anObj->isValids((AttributeValues::StringProperty)id, valueS)) {
+				if (a->getMustExist() && !anObj->isValids((AttributeValues::StringProperty)id, valueS)) {
 					// deal with error
 				}
 				anObj->setProps((AttributeValues::StringProperty)id, valueS);
@@ -802,7 +802,7 @@ ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::At
 				value = readChildTag(parent, p, type, attribs);
 				if (!anObj->isValid(id, a->getType(), value)) {
 					std::string s = getValidValuesString(a);
-					if (s != "") {
+					if (s != "" && APISupport->apiSupport(a->getRequirement())) {
 						NAU_THROW("File %s\nElement %s: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), parent.c_str(), a->getName().c_str(), s.c_str());
 					}
 					else {
@@ -814,7 +814,7 @@ ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::At
 			}
 			else {
 				std::string &valueS = readChildTagString(parent, p, attribs);
-				if (!anObj->isValids((AttributeValues::StringProperty)id, valueS)) {
+				if (a->getMustExist() && !anObj->isValids((AttributeValues::StringProperty)id, valueS)) {
 					std::string s = "File: " + ProjectLoader::s_File;
 					addToDefferredVal(s, p->Row(), p->Column(), valueS, a->getObjType());
 					//std::vector<string> validValues;
@@ -1388,14 +1388,14 @@ ProjectLoader::loadScenes(TiXmlHandle handle)
 			pElementAux = handle.FirstChild("file").Element();
 			for (; 0 != pElementAux; pElementAux = pElementAux->NextSiblingElement("file")) {
 
-				const char *pFileName = pElementAux->Attribute("name");
-				if (!pFileName)
+				const char *pFilename = pElementAux->Attribute("name");
+				if (!pFilename)
 					NAU_THROW("File %s\nScene: %s\nFile is not specified", ProjectLoader::s_File.c_str(), pName);
 
-				std::string fullName = File::GetFullPath(ProjectLoader::s_Path, pFileName);
+				std::string fullName = File::GetFullPath(ProjectLoader::s_Path, pFilename);
 
 				if (!File::Exists(fullName)) {
-					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFileName);
+					NAU_THROW("File %s\nScene: %s\nFile %s does not exist", ProjectLoader::s_File.c_str(), pName, pFilename);
 				}
 				NAU->loadAsset(fullName, pName, s);
 			}
@@ -3870,7 +3870,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 			NAU_THROW("File %s\nInterface window needs a label", s_File.c_str());
 		}
 
-		INTERFACE->createWindow(pWindowName);// , pWindowLabel);
+		INTERFACE_MANAGER->createWindow(pWindowName);// , pWindowLabel);
 
 		TiXmlElement *pElemAux = pElem->FirstChildElement();
 		for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
@@ -3881,7 +3881,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				if (0 == pLabel) {
 					NAU_THROW("File %s\nWindow %s, Pipeline list needs a label", s_File.c_str(), pWindowName);
 				}
-				INTERFACE->addPipelineList(pWindowName, pLabel);
+				INTERFACE_MANAGER->addPipelineList(pWindowName, pLabel);
 			}
 			if (strcmp(tag, "var") == 0) {
 				const char *pLabel = pElemAux->Attribute("label");
@@ -3920,12 +3920,12 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				//		s_File.c_str(), pWindowName, pLabel);
 				if (pControl) {
 					if (strcmp(pControl, "DIRECTION") == 0)
-						INTERFACE->addDir(pWindowName, pLabel, pType, pContext, pComponent, id);
+						INTERFACE_MANAGER->addDir(pWindowName, pLabel, pType, pContext, pComponent, id);
 					else if (strcmp(pControl, "COLOR") == 0)
-						INTERFACE->addColor(pWindowName, pLabel, pType, pContext, pComponent, id);
+						INTERFACE_MANAGER->addColor(pWindowName, pLabel, pType, pContext, pComponent, id);
 				}
 				else
-					INTERFACE->addVar(pWindowName, pLabel, pType, pContext, pComponent, id, def);
+					INTERFACE_MANAGER->addVar(pWindowName, pLabel, pType, pContext, pComponent, id, def);
 			}
 		}
 	}
@@ -4103,6 +4103,40 @@ ProjectLoader::loadMatLibBuffers(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 	}
 }
 
+
+/* -----------------------------------------------------------------------------
+ARRAYS OF TEXTURES
+
+
+-----------------------------------------------------------------------------*/
+
+
+void
+ProjectLoader::loadMatLibArrayOfTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
+{
+
+	TiXmlElement *pElem;
+	int layers = 0;
+	pElem = hRoot.FirstChild("arraysOfTextures").FirstChild("arrayOfTextures").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("arrayOfTextures")) {
+		const char* pName = pElem->Attribute("name");
+
+		if (0 == pName) {
+			NAU_THROW("Mat Lib %s\nArray of Textures has no name", aLib->getName().c_str());
+		}
+		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pName);
+
+		IArrayOfTextures *b = RESOURCEMANAGER->createArrayOfTextures(s_pFullName);
+
+		SLOG("Buffer : %s", s_pFullName);
+
+		// Reading array of texture attributes
+		std::vector<std::string> excluded;
+		readChildTags(pName, (AttributeValues *)b, IArrayOfTextures::Attribs, excluded, pElem);
+
+		b->build();
+	}
+}
 
 
 /* -----------------------------------------------------------------------------
@@ -4338,8 +4372,8 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		if (pCSFile) {
 			if (APISupport->apiSupport(IAPISupport::COMPUTE_SHADER)) {
 				IProgram *aShader = RESOURCEMANAGER->getProgram(s_pFullName);
-				std::string CSFileName(File::GetFullPath(path, pCSFile));
-				if (!File::Exists(CSFileName))
+				std::string CSFilename(File::GetFullPath(path, pCSFile));
+				if (!File::Exists(CSFilename))
 					NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), pCSFile);
 				SLOG("Program %s", pProgramName);
 
@@ -4352,18 +4386,18 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			}
 		}
 		else {
-			std::string GSFileName;
-			std::string FSFileName;
-			std::string TEFileName, TCFileName;
+			std::string GSFilename;
+			std::string FSFilename;
+			std::string TEFilename, TCFilename;
 
-			std::string VSFileName(File::GetFullPath(path,pVSFile));
-			if (!File::Exists(VSFileName))
+			std::string VSFilename(File::GetFullPath(path,pVSFile));
+			if (!File::Exists(VSFilename))
 				NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), pVSFile);
 
 			if (pGSFile) {
 				if (APISupport->apiSupport(IAPISupport::GEOMETRY_SHADER)) {
-					GSFileName = File::GetFullPath(path, pGSFile);
-					if (!File::Exists(GSFileName))
+					GSFilename = File::GetFullPath(path, pGSFile);
+					if (!File::Exists(GSFilename))
 						NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), pGSFile);
 				}
 				else {
@@ -4371,15 +4405,15 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 				}
 			}
 			if (pPSFile) {
-				FSFileName = File::GetFullPath(path,pPSFile);
-				if (!File::Exists(FSFileName))
-					NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), FSFileName.c_str());
+				FSFilename = File::GetFullPath(path,pPSFile);
+				if (!File::Exists(FSFilename))
+					NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), FSFilename.c_str());
 			}
 			if (pTEFile) {
 				if (APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS)) {
-					TEFileName = File::GetFullPath(path, pTEFile);
-					if (!File::Exists(TEFileName))
-						NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), TEFileName.c_str());
+					TEFilename = File::GetFullPath(path, pTEFile);
+					if (!File::Exists(TEFilename))
+						NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), TEFilename.c_str());
 				}
 				else {
 					NAU_THROW("Mat Lib %s\nShader %s: Tesselation shaders are not allowed with OpenGL < 4.0", aLib->getName().c_str(), pProgramName);
@@ -4388,9 +4422,9 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			if (pTCFile) {
 				if (APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS)) {
 
-					TCFileName = File::GetFullPath(path, pTCFile);
-					if (!File::Exists(TCFileName))
-						NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), TCFileName.c_str());
+					TCFilename = File::GetFullPath(path, pTCFile);
+					if (!File::Exists(TCFilename))
+						NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), TCFilename.c_str());
 				}
 				else {
 					NAU_THROW("Mat Lib %s\nShader %s: Tesselation shaders are not allowed with OpenGL < 4.0", aLib->getName().c_str(), pProgramName);
@@ -4984,6 +5018,8 @@ ProjectLoader::loadMatLib (std::string file)
 	loadMatLibStates(hRoot, aLib);
 	loadMatLibShaders(hRoot, aLib, path);
 	loadMatLibBuffers(hRoot, aLib, path);
+	loadMatLibArrayOfTextures(hRoot, aLib, path);
+
 	pElem = hRoot.FirstChild ("materials").FirstChild ("material").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 

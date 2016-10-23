@@ -16,7 +16,7 @@ map<string,map<string,functionSet>> attributeList;
 //  LogEnabled      
 //  LogFlush        
 //  LogPath         
-//  LogFileName     
+//  LogFilename     
 //  AdditionalRenderCalls 
 //  LogMaxNumFrames 
 //  LogFormat       
@@ -189,7 +189,7 @@ void initGLInterceptFunctions(){
 		addGLInterceptFunction((void*)&gliSetTimerLogEnabled,NULL,GLIEnums::FunctionType::BOOL,"enabled","timerlog");
 		addGLInterceptFunction((void*)&gliSetTimerLogCutOff,NULL,GLIEnums::FunctionType::UINT,"timerlogcutoff","timerlog");
 	
-		//addGLInterceptFunction((void*)&gliSetFunctionDataFileName,NULL,GLIEnums::FunctionType::STRING,"functiondatafilename","inputfiles");
+		//addGLInterceptFunction((void*)&gliSetFunctionDataFilename,NULL,GLIEnums::FunctionType::STRING,"functiondatafilename","inputfiles");
 		//addGLInterceptFunction((void*)&gliSetPluginBasePath,NULL,GLIEnums::FunctionType::STRING,"pluginbasepath","inputfiles");
 
 		isGLInterceptFunctionsInit=true;

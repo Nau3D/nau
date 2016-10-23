@@ -60,13 +60,13 @@ namespace nau
 			static std::string GetNameWithoutExtension(const std::string &fn);
 			static std::string GetExtension(const std::string &fn);
 			static std::string GetPath(const std::string &fn);
-			static std::string GetRelativePathTo(const std::string &currentDir, const std::string &absFileName);
-			static std::string GetFullPath(const std::string &currentDir, const std::string &relFileName);
+			static std::string GetRelativePathTo(const std::string &currentDir, const std::string &absFilename);
+			static std::string GetFullPath(const std::string &currentDir, const std::string &relFilename);
 			static bool IsRelative(const std::string &fn);
 			static std::string CleanFullPath(const std::string &fn);
 			static bool Exists(const std::string &fn);
 			static std::string Validate(const std::string &s);
-			static std::string BuildFullFileName(std::string path, std::string filename);
+			static std::string BuildFullFilename(std::string path, std::string filename);
 			static void RecurseDirectory(std::string path, std::vector<std::string> *res);
 			static std::string GetCurrentFolder();
 			static std::string GetAppFolder();
@@ -84,7 +84,7 @@ namespace nau
 			void decode (std::string &filepath);
 			std::string getCurrentWorkingDir();
 			std::vector<std::string> m_vPath;
-			std::string m_FileName;
+			std::string m_Filename;
 			std::string m_FileExtension;
 			std::string m_Drive;
 			bool m_IsRelative;

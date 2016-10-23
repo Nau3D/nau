@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<project name="Test Array of Textures" width=1024 height=512>
+	<assets>
+		
+		<viewports>
+			<viewport name="left" >
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=0.5 height=1 />
+				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
+			</viewport>
+			<viewport name="right" >
+				<ORIGIN x=0.5 y=0.0 />
+				<SIZE width=0.5 height=1 />
+				<CLEAR_COLOR  r="0.4" g="0.2" b="0.2" />
+			</viewport>
+		</viewports>
+		
+		<materialLibs>
+			<materialLib filename="testArrayOfTextures.mlib" />
+		</materialLibs>
+	</assets>
+	
+	<pipelines default="test TA">
+		<pipeline name="test TA">
+			<pass class="compute" name="fillTextures" >
+				<material name="fillTextures" fromLibrary="Test" 
+					dimX=32 dimY=32 dimZ=1 />
+			</pass>
+			<pass class="quad" name="regular texture access">
+				<viewport name="left" />
+				<texture name="Test::T_0" />
+			</pass>
+			
+			<pass class="quad" name="acessing textures with bindless textures">
+				<viewport name="right" />
+				<material name="showTextures" fromLibrary="Test" /> 
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>	

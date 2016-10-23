@@ -128,7 +128,7 @@ Nau::~Nau() {
 #endif
 
 	gInstance = NULL;
-	delete INTERFACE;
+	delete INTERFACE_MANAGER;
 }
 
 
@@ -549,13 +549,13 @@ luaSaveTexture(lua_State *l) {
 int
 luaSaveProfile(lua_State *l) {
 
-	const char *fileName = lua_tostring(l, -1);
+	const char *filename = lua_tostring(l, -1);
 
 	std::string prof;
 	Profile::DumpLevels(prof);
 
 	fstream s;
-	s.open(fileName, fstream::out);
+	s.open(filename, fstream::out);
 	s << prof << "\n";
 	s.close();
 
@@ -1218,7 +1218,7 @@ Nau::clear() {
 
 	ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
 
-	INTERFACE->clear();
+	INTERFACE_MANAGER->clear();
 }
 
 
@@ -1269,7 +1269,7 @@ Nau::saveProject(std::string filename) {
 
 
 void
-Nau::readModel (std::string fileName) throw (std::string) {
+Nau::readModel (std::string filename) throw (std::string) {
 
 	clear();
 	bool result = true;
@@ -1282,7 +1282,7 @@ Nau::readModel (std::string fileName) throw (std::string) {
 	RENDERMANAGER->createScene (sceneName);
 
 	try {
-		NAU->loadAsset (fileName, sceneName);
+		NAU->loadAsset (filename, sceneName);
 		loadFilesAndFoldersAux(sceneName, false);
 	} 
 	catch (std::string &s) {
@@ -1292,7 +1292,7 @@ Nau::readModel (std::string fileName) throw (std::string) {
 
 
 void
-Nau::appendModel(std::string fileName) {
+Nau::appendModel(std::string filename) {
 	
 	char sceneName[256];
 
@@ -1302,7 +1302,7 @@ Nau::appendModel(std::string fileName) {
 	RENDERMANAGER->createScene (sceneName);
 
 	try {
-		NAU->loadAsset (fileName, sceneName);
+		NAU->loadAsset (filename, sceneName);
 		loadFilesAndFoldersAux(sceneName, false);
 	}
 	catch( std::string &s){
@@ -1365,7 +1365,7 @@ Nau::getTraceStatus() {
 
 void 
 Nau::step() {
-	if (m_ProjectName == "")
+	if (m_ProjectName == "" || RENDERMANAGER->getNumPipelines() == 0)
 		return;
 
 	IRenderer *renderer = RENDERER;
@@ -1407,7 +1407,7 @@ Nau::step() {
 	if (m_Physics)
 		m_pPhysicsManager->update();
 
-	INTERFACE->render();
+	INTERFACE_MANAGER->render();
 }
 
 

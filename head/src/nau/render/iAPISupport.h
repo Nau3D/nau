@@ -16,8 +16,10 @@ namespace nau
 
 			enum APIFeatureSupport {
 				OK, // this is required for attribute setting
+				BINDLESS_TEXTURES,
 				BUFFER_ATOMICS,
 				BUFFER_SHADER_STORAGE,
+				BUFFER_UNIFORM,
 				CLEAR_BUFFER,
 				CLEAR_TEXTURE,
 				CLEAR_TEXTURE_LEVEL,

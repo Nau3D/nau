@@ -1,5 +1,5 @@
-#ifndef GLIMAGETEXTURE_H
-#define GLIMAGETEXTURE_H
+#ifndef GL_IMAGE_TEXTURE_H
+#define GL_IMAGE_TEXTURE_H
 
 #include "nau/config.h"
 

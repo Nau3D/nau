@@ -37,7 +37,7 @@ namespace nau
 
 		private:
 
-			static void saveMatLib(const std::string &matLibName, const std::string &matLibFileName);
+			static void saveMatLib(const std::string &matLibName, const std::string &matLibFilename);
 			static void saveAttributes(AttribSet *attribSet, AttributeValues *attr, TiXmlElement *parent);
 			static void saveItem(std::string tag, const std::string &name, AttribSet *attribSet, AttributeValues *attr, TiXmlElement *parent);
 
@@ -187,6 +187,7 @@ namespace nau
 			static void loadMatLibStates(TiXmlHandle hPass, MaterialLib *aLib);
 			static void loadMatLibShaders(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 			static void loadMatLibBuffers(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
+			static void loadMatLibArrayOfTextures(TiXmlHandle hPass, MaterialLib *aLib, std::string path);
 
 			// load material elements
 			static void loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat);

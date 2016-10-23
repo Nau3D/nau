@@ -1,5 +1,5 @@
-#ifndef MATERIALBUFFER_H
-#define MATERIALBUFFER_H
+#ifndef MATERIAL_BUFFER_H
+#define MATERIAL_BUFFER_H
 
 #include "nau/attribute.h"
 #include "nau/attributeValues.h"

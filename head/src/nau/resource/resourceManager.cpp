@@ -115,7 +115,27 @@ ResourceManager::createTexture (std::string label,
 }
 
 
-nau::material::ITexture* 
+nau::material::ITexture*
+ResourceManager::createTexture(std::string label,
+	int internalFormat,
+	int width, int height, int depth,
+	int layers, int levels, int samples) {
+
+	ITexture *tex;
+
+	if (true == hasTexture(label)) {
+		tex = getTexture(label);
+		return(tex);
+	}
+
+	tex = ITexture::Create(label, internalFormat, width, height, depth, layers, levels, samples);
+	m_Textures.push_back(tex);
+
+	return(tex);
+}
+
+
+nau::material::ITexture*
 ResourceManager::addTexture (std::string filename, std::string label, bool mipmap) {
 
 	size_t siz = m_Textures.size();
@@ -563,6 +583,53 @@ void
 ResourceManager::getBufferNames(std::vector<std::string> *names) {
 
 	for (auto b : m_Buffers) {
+		names->push_back(b.second->getLabel());
+	}
+}
+
+
+//-------------------------------------	
+//			ARRAYS OF TEXTURES
+//-------------------------------------
+
+
+nau::material::IArrayOfTextures*
+ResourceManager::getArrayOfTextures(std::string name) {
+
+	if (m_ArraysOfTextures.count(name) != 0)
+		return m_ArraysOfTextures[name];
+	else
+		return NULL;
+}
+
+
+nau::material::IArrayOfTextures*
+ResourceManager::createArrayOfTextures(std::string name) {
+
+	if (m_ArraysOfTextures.count(name))
+		return m_ArraysOfTextures[name];
+	else {
+		IArrayOfTextures *b = IArrayOfTextures::Create(name);
+		m_ArraysOfTextures[name] = b;
+		return b;
+	}
+}
+
+
+bool
+ResourceManager::hasArrayOfTextures(std::string name) {
+
+	if (m_ArraysOfTextures.count(name) != 0)
+		return true;
+	else
+		return false;
+}
+
+
+void
+ResourceManager::getArrayOfTexturesNames(std::vector<std::string> *names) {
+
+	for (auto b : m_ArraysOfTextures) {
 		names->push_back(b.second->getLabel());
 	}
 }

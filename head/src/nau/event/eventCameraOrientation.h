@@ -1,5 +1,5 @@
-#ifndef EventCameraOrientation_H
-#define EventCameraOrientation_H
+#ifndef EVENT_CAMERA_ORIENTATION_H
+#define EVENT_CAMERA_ORIENTATION_H
 
 #include "nau/event/iEventData.h"
 #include "nau/event/cameraOrientation.h"

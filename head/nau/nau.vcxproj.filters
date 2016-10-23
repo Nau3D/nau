@@ -541,6 +541,18 @@
     <ClCompile Include="..\src\nau\physics\physicsPropertyManager.cpp">
       <Filter>Source Files\physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glArrayOfTextures.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\render\opengl\glMaterialArrayOfTextures.cpp">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iArrayOfTextures.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\nau\material\iMaterialArrayOfTextures.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\nau\clogger.h">
@@ -1083,6 +1095,18 @@
     <ClInclude Include="..\src\nau\physics\physicsPropertyManager.h">
       <Filter>Source Files\physics</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glArrayOfTextures.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\render\opengl\glMaterialArrayOfTextures.h">
+      <Filter>Source Files\render\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iArrayOfTextures.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\nau\material\iMaterialArrayOfTextures.h">
+      <Filter>Source Files\material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="..\src\nau\math\spherical.h">
@@ -1102,5 +1126,8 @@
     <CustomBuild Include="..\src\optix\common.cu">
       <Filter>OPTIX</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -41,7 +41,6 @@ namespace nau
 			ENUM_PROP(FORMAT, 1);
 			ENUM_PROP(TYPE, 2);
 			ENUM_PROP(INTERNAL_FORMAT, 3);
-			ENUM_PROP(COUNT_ENUMPROPERTY, 4);
 			
 			INT_PROP(ID, 0);
 			INT_PROP(WIDTH, 1);
@@ -66,6 +65,8 @@ namespace nau
 
 			static ITexture* Create(std::string label, std::string internalFormat,
 				int width, int height, int depth = 1, int layers = 1, int levels = 0, int samples = 0);
+			static ITexture* Create(std::string label, int internalFormat,
+				int width, int height, int depth = 1, int layers = 1, int levels = 0, int samples = 0);
 
 			static ITexture* Create(std::string label);
 	
@@ -87,19 +88,19 @@ namespace nau
 
 			virtual ~ITexture(void);
 
-			const std::string &getFileName();
+			const std::string &getFilename();
 
 		protected:
 			ITexture(std::string label);
 
 
 			/// For inheritance reasons only
-			ITexture():data(NULL), m_FileName("") {};
+			ITexture():data(NULL), m_Filename("") {};
 
 			static bool Init();
 			static bool Inited;
 
-			std::string m_Label, m_FileName;
+			std::string m_Label, m_Filename;
 
 			char *data;
 		};

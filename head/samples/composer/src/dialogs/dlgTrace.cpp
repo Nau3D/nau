@@ -107,7 +107,7 @@ DlgTrace::updateDlg() {
 	//uLargeIntegerTime1.HighPart = lt.dwHighDateTime;
 	//m_LastTime = uLargeIntegerTime1.QuadPart;
 
-	m_FileNames.clear();
+	m_Filenames.clear();
 	time(&m_ProjectStartTime);
 	m_Log->DeleteAllItems();
 	EVENTMANAGER->addListener("TRACE_FILE_READY", this);
@@ -245,7 +245,7 @@ DlgTrace::finishReadLogFile() {
 void 
 DlgTrace::loadLog() {
 
-	string logfile, fileName;
+	string logfile, filename;
 	struct stat fst;
 	DIR *dir;
 	struct dirent *ent;
@@ -266,20 +266,20 @@ DlgTrace::loadLog() {
 			// Filters files starting with Frame_* only
 			if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")) {
 				// Corresponding logfile with path
-				fileName = std::string(ent->d_name);
-				logfile = std::string("./__nau3Dtrace/") + fileName;
+				filename = std::string(ent->d_name);
+				logfile = std::string("./__nau3Dtrace/") + filename;
 
 				// if file is at least as recent as project loading
 				if (stat(logfile.c_str(), &fst) == 0 && fst.st_mtime >= m_ProjectStartTime) {
 
 					int frame = -1;
-					if (fileName.size() > 10)
-						frame = stoi(fileName.substr(6, 20), NULL, 10);
+					if (filename.size() > 10)
+						frame = stoi(filename.substr(6, 20), NULL, 10);
 					
 					// if file has not been processed yet
-					if (0 == m_FileNames.count(frame)) {
+					if (0 == m_Filenames.count(frame)) {
 						filesToProcess[frame] = logfile;
-						m_FileNames[frame] = logfile;
+						m_Filenames[frame] = logfile;
 					}
 				}
 			}

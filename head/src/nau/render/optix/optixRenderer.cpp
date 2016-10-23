@@ -67,14 +67,14 @@ OptixRenderer::GetContext() {
 
 
 void
-OptixRenderer::SetProgram(ProgramTypes aType, int rayType, std::string fileName, std::string proc) {
+OptixRenderer::SetProgram(ProgramTypes aType, int rayType, std::string filename, std::string proc) {
 
 	try {
-		s_Program[aType] = s_Context->createProgramFromPTXFile( fileName, proc);
+		s_Program[aType] = s_Context->createProgramFromPTXFile( filename, proc);
 	}
 	catch(optix::Exception& e) {
 	
-		NAU_THROW("Optix Creating Program Error (file: %s proc: %s) [%s]", fileName.c_str(), proc.c_str(), e.getErrorString().c_str());
+		NAU_THROW("Optix Creating Program Error (file: %s proc: %s) [%s]", filename.c_str(), proc.c_str(), e.getErrorString().c_str());
 	}
 
 	try {
@@ -88,6 +88,6 @@ OptixRenderer::SetProgram(ProgramTypes aType, int rayType, std::string fileName,
 	}
 	catch(optix::Exception& e) {
 	
-		NAU_THROW("Optix Setting Program Error (file: %s proc: %s) [%s]", fileName.c_str(), proc.c_str(), e.getErrorString().c_str());
+		NAU_THROW("Optix Setting Program Error (file: %s proc: %s) [%s]", filename.c_str(), proc.c_str(), e.getErrorString().c_str());
 	}
 }

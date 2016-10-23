@@ -1,5 +1,5 @@
-#ifndef __NAU_TREE
-#define __NAU_TREE
+#ifndef TREE
+#define TREE
 
 #include <map>
 #include <vector>

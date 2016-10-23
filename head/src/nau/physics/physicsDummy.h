@@ -1,8 +1,8 @@
 /*
 A dummy instance of iPhysics, required for compilation purposes
 */
-#ifndef _NAU_PHYSICS_DUMMY_H
-#define _NAU_PHYSICS_DUMMY_H
+#ifndef PHYSICS_DUMMY_H
+#define PHYSICS_DUMMY_H
 
 
 #include "nau/math/data.h"

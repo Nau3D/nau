@@ -25,7 +25,7 @@ namespace nau
 			CBOLoader(void) {};
 			~CBOLoader(void) {};
 
-			static std::string m_FileName;
+			static std::string m_Filename;
 
 			static void _writeMaterial(std::string matName, std::string path, std::fstream &f);
 			static void _readMaterial(std::string path, std::fstream &f);

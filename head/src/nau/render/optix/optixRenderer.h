@@ -23,7 +23,7 @@ namespace nau {
 		} ;
 
 		static void SetProgram(ProgramTypes aType, int rayType, 
-						std::string fileName, std::string proc);
+						std::string filename, std::string proc);
 		static optix::Context &GetContext();
 		static int GetNextAvailableRayType();
 		static int GetNextAvailableEntryPoint();

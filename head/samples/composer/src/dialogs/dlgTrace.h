@@ -66,7 +66,7 @@ protected:
 	//unsigned long long m_LastTime;
 	time_t m_ProjectStartTime;
 	//std::map<unsigned long long, std::pair<std::string, int>> m_FileTimes;
-	std::map<int, std::string> m_FileNames;
+	std::map<int, std::string> m_Filenames;
 
 	DlgTrace();
 	DlgTrace(const DlgTrace&);

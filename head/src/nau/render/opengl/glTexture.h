@@ -88,6 +88,7 @@ namespace nau
 
 			// for empty textures
 			GLTexture(std::string label, std::string anInternalFormat, int width, int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
+			GLTexture(std::string label, int anInternalFormat, int width, int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
 
 			// for empty textures with default parameters
 			GLTexture(std::string label);

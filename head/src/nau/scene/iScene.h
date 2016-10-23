@@ -30,6 +30,8 @@ namespace nau
 
 			ENUM_PROP(TRANSFORM_ORDER, 0);
 
+			UINT_PROP(TRIANGLE_COUNT, 0);
+
 			typedef enum {
 				T_R_S,
 				T_S_R,

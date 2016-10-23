@@ -243,6 +243,7 @@ ToolBar::addColor(const std::string &windowName, const std::string &varLabel,
 	else
 		s[0] = '\0';
 
+
 	if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
 		return TwAddVarCB(m_Windows[windowName].second, varLabel.c_str(), TW_TYPE_COLOR4F, SetColorCallBack, GetColorCallBack, clientData, NULL) == 1;
 	else

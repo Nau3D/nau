@@ -765,7 +765,7 @@ FrmMainFrame::OnProjectLoad(wxCommandEvent& event) {
 	wxFileDialog *openFileDlg = new wxFileDialog (this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
-		wxString path = openFileDlg->GetPath ();
+		wxString path = openFileDlg->GetPath (); 
 		loadProject(path.c_str());
 	}
 	delete openFileDlg;
@@ -909,15 +909,11 @@ FrmMainFrame::startStandAlone (void) {
 	  m_pRoot->loadAsset (AssetPath, "MainScene");
 	}
 
-	//initScene();
-	//buildPhysics();
-
 	RENDERMANAGER->getScene ("MainScene")->compile();
 
 	m_pRoot->enablePhysics();
 
 	nau::scene::Camera *cam = NAU->getActiveCamera ();
-//	cam->setDynamic(true);		
 	cam->setPropb(Camera::DYNAMIC, true);
 	m_Canvas->setCamera();
 }
@@ -1283,9 +1279,9 @@ FrmMainFrame::OnFileLoad(wxCommandEvent& event)
 	CResourceManager &manager = CResourceManager::getInstance ();
 	wxString path = openFileDlg->GetPath ();
 
-	wxFileName file (path);
+	wxFilename file (path);
 
-	wxString url(wxFileSystem::FileNameToURL (file));
+	wxString url(wxFileSystem::FilenameToURL (file));
 
 	bool result = false;
 	

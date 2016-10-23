@@ -2,8 +2,8 @@
 To develop a plugin this interface must be implemented
 */
 
-#ifndef _NAU_PHYSICS_H
-#define _NAU_PHYSICS_H
+#ifndef PHYSICS_H
+#define PHYSICS_H
 
 #include "nau/math/data.h"
 #include "nau/physics/iPhysicsPropertyManager.h"

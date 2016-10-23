@@ -5,8 +5,8 @@ The plugin receives an instance of PropertyManager from NAU, a subclass of IPhys
 a proper implementation to allow properties to move backwards and forwards
 */
 
-#ifndef _NAU_IPHYSICS_PROP_MANAGER_H
-#define _NAU_IPHYSICS_PROP_MANAGER_H
+#ifndef NAU_IPHYSICS_PROP_MANAGER_H
+#define NAU_IPHYSICS_PROP_MANAGER_H
 
 #include <string>
 

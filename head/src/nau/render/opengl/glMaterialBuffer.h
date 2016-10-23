@@ -1,5 +1,5 @@
-#ifndef GLMATERIALBUFFER_H
-#define GLMATERIALBUFFER_H
+#ifndef GL_MATERIAL_BUFFER_H
+#define GL_MATERIAL_BUFFER_H
 
 
 #include "nau/material/iMaterialBuffer.h"

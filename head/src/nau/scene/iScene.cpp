@@ -28,6 +28,10 @@ IScene::Init() {
 	Attribs.listAdd("TRANSFORM_ORDER", "S_R_T", S_R_T);
 	Attribs.listAdd("TRANSFORM_ORDER", "S_T_R", S_T_R);
 
+	// UINT
+	Attribs.add(Attribute(TRIANGLE_COUNT, "TRIANGLE_COUNT", Enums::DataType::UINT, true, new NauUInt(0)));
+
+
 #ifndef _WINDLL
 	NAU->registerAttributes("SCENE", &Attribs);
 #endif
@@ -122,26 +126,6 @@ IScene::setPrope(EnumProperty prop, int v) {
 }
 
 
-//void *
-//IScene::getProp(unsigned int prop, Enums::DataType type) {
-//
-//	if (type == Enums::VEC3) {
-//
-//		switch (prop) {
-//		case BB_MIN: m_Float3Props[BB_MIN] = getBoundingVolume().getMin();
-//			return &m_Float3Props[BB_MIN];
-//		case BB_MAX: m_Float3Props[BB_MAX] = getBoundingVolume().getMax();
-//			return &m_Float3Props[BB_MAX];
-//		case BB_CENTER: m_Float3Props[BB_CENTER] = getBoundingVolume().getCenter();
-//			return &m_Float3Props[BB_CENTER];
-//		default: return AttributeValues::getProp(prop, type);
-//		}
-//	}
-//	else
-//		return AttributeValues::getProp(prop, type);
-//}
-
-
 vec3 &
 IScene::getPropf3(Float3Property prop) {
 
@@ -162,6 +146,7 @@ IScene::getType() {
 
 	return m_Type;
 }
+
 
 void nau::scene::IScene::recompile() {
 

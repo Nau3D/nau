@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 
-#ifndef _PROFILE_
-#define _PROFILE_
+#ifndef PROFILE_H
+#define PROFILE_H
 
 #define NAU_PROFILE_NONE 0
 #define NAU_PROFILE_CPU 1

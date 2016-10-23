@@ -31,10 +31,13 @@ AttributeValues::isValids(StringProperty prop, std::string value) {
 
 	//if (!m_StringProps.count(prop))
 	//	return false;
-
+	
 	const std::string &name = m_Attribs->getName(prop, Enums::STRING);
-	const std::string &context = m_Attribs->get(name)->getObjType();
-	return NAU->validateObjectName(context, value);
+	if (m_Attribs->get(name)->getMustExist()) {
+		const std::string &context = m_Attribs->get(name)->getObjType();
+		return NAU->validateObjectName(context, value);
+	}
+	else return true;
 }
 
 
@@ -1805,6 +1808,7 @@ AttributeValues::initArrays(AttribSet &attribs) {
 void
 AttributeValues::initArrays() {
 
+	m_Attribs->initAttribInstanceStringArray(m_StringProps);
 	m_Attribs->initAttribInstanceEnumArray(m_EnumProps);
 	m_Attribs->initAttribInstanceIntArray(m_IntProps);
 	m_Attribs->initAttribInstanceInt2Array(m_Int2Props);
@@ -1838,6 +1842,7 @@ AttributeValues::AttributeValues() {
 
 AttributeValues::AttributeValues(const AttributeValues &to) {
 
+	m_StringProps = to.m_StringProps;
 	m_EnumProps = to.m_EnumProps;
 	m_IntProps = to.m_IntProps;
 	m_Int2Props = to.m_Int2Props;

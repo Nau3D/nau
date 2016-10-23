@@ -1,5 +1,5 @@
-#ifndef EventFloat_H
-#define EventFloat_H
+#ifndef EVENT_FLOAT_H
+#define EVENT_FLOAT_H
 
 #include "nau/event/iEventData.h"
 

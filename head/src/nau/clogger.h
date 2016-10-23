@@ -14,7 +14,7 @@
 class CLogHandler
 {
 	private:
-		std::string m_FileName;
+		std::string m_Filename;
 		FILE *m_FileHandler;
 
 	public:
@@ -22,7 +22,7 @@ class CLogHandler
 		~CLogHandler();
 		CLogHandler (std::string file);
 		void log(std::string& message);
-		void setFile(std::string &fileName);
+		void setFile(std::string &filename);
 		void close();
 		//void reset();
 };

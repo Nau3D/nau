@@ -1,5 +1,5 @@
-#ifndef EventInt_H
-#define EventInt_H
+#ifndef EVENT_INT_H
+#define EVENT_INT_H
 
 #include "nau/event/iEventData.h"
 

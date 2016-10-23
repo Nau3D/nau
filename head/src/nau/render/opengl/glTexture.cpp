@@ -33,7 +33,7 @@ std::map<GLenum, GLTexture::TexFormats> GLTexture::TexFormat = {
 	{ GL_DEPTH_STENCIL  , TexFormats("DEPTH32F_STENCIL8",2) },
 };
 
-// Note: there is a duplicate of this map in GLImageTexture due to static initialization issues
+// Note: there is a duplicate of this map in GLImageTexture and GLArrayOfTextures due to static initialization issues
 std::map<GLenum, GLTexture::TexIntFormats> GLTexture::TexIntFormat = {
 	{ GL_R8                  , TexIntFormats("R8",   GL_RED, GL_UNSIGNED_BYTE) },
 	{ GL_R16                 , TexIntFormats("R16",  GL_RED, GL_UNSIGNED_SHORT) },
@@ -82,6 +82,8 @@ std::map<GLenum, GLenum> GLTexture::TextureBound = {
 	{ GL_TEXTURE_3D, GL_TEXTURE_BINDING_3D },
 	{ GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BINDING_CUBE_MAP }
 };
+
+
 bool GLTexture::Inited = GLTexture::InitGL();
 
 
@@ -265,7 +267,26 @@ GLTexture::GLTexture(std::string label, std::string anInternalFormat, int width,
 }
 
 
-GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::string aFormat, 
+GLTexture::GLTexture(std::string label, int anInternalFormat, int width, int height, int depth, int layers, int levels, int samples) :
+	ITexture(label)//, "TEXTURE_2D", anInternalFormat, width, height)
+{
+
+	m_IntProps[WIDTH] = width;
+	m_IntProps[HEIGHT] = height;
+	m_IntProps[DEPTH] = depth;
+	m_IntProps[SAMPLES] = samples;
+	m_IntProps[LEVELS] = levels;
+	m_IntProps[LAYERS] = layers;
+	m_EnumProps[INTERNAL_FORMAT] = anInternalFormat;
+	//TexIntFormat[m_EnumProps[INTERNAL_FORMAT]].type;
+	if (m_IntProps[LEVELS] > 0)
+		m_BoolProps[MIPMAP] = true;
+
+	build();
+}
+
+
+GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::string aFormat,
 		std::string aType, int width, int height, void* data, bool mipmap) :
 	ITexture (label)//, "TEXTURE_2D", anInternalFormat, aFormat, aType, width, height)
 {
@@ -317,7 +338,7 @@ GLTexture::build(int immutable) {
 		max = std::max(m_IntProps[HEIGHT], std::max(m_IntProps[WIDTH], m_IntProps[DEPTH]));
 		m_IntProps[LEVELS] = (int)log2(max);
 	}
-	else if (m_IntProps[LEVELS] != 0)
+	else if (m_IntProps[LEVELS] >= 1)
 		m_BoolProps[MIPMAP] = true;
 
 	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));

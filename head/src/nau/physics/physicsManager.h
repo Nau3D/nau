@@ -2,8 +2,8 @@
 Main class for physics in NAU.
 */
 
-#ifndef _NAU_PHYSICSMANAGER_H
-#define _NAU_PHYSICSMANAGER_H
+#ifndef PHYSICSMANAGER_H
+#define PHYSICSMANAGER_H
 
 #include "nau/attributeValues.h"
 #include "nau/enums.h"

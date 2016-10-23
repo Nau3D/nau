@@ -1,5 +1,5 @@
-#ifndef EventVec3_H
-#define EventVec3_H
+#ifndef EVENT_VEC3_H
+#define EVENT_VEC3_H
 
 #include "nau/event/iEventData.h"
 #include "nau/math/vec3.h"

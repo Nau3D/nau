@@ -231,8 +231,10 @@
     </ClCompile>
     <ClCompile Include="..\src\nau\loader\stateLoader.cpp" />
     <ClCompile Include="..\src\nau\material\colorMaterial.cpp" />
+    <ClCompile Include="..\src\nau\material\iArrayOfTextures.cpp" />
     <ClCompile Include="..\src\nau\material\iBuffer.cpp" />
     <ClCompile Include="..\src\nau\material\iImageTexture.cpp" />
+    <ClCompile Include="..\src\nau\material\iMaterialArrayOfTextures.cpp" />
     <ClCompile Include="..\src\nau\material\iMaterialBuffer.cpp" />
     <ClCompile Include="..\src\nau\material\iProgram.cpp" />
     <ClCompile Include="..\src\nau\material\iUniformBlock.cpp" />
@@ -269,11 +271,13 @@
     <ClCompile Include="..\src\nau\render\iRenderer.cpp" />
     <ClCompile Include="..\src\nau\render\materialSortRenderQueue.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glAPISupport.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glArrayOfTextures.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glBuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glDebug.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glGlobalState.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glImageTexture.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glIndexArray.cpp" />
+    <ClCompile Include="..\src\nau\render\opengl\glMaterialArrayOfTextures.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glMaterialBuffer.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glMaterialGroup.cpp" />
     <ClCompile Include="..\src\nau\render\opengl\glProgram.cpp" />
@@ -443,8 +447,10 @@
     </ClInclude>
     <ClInclude Include="..\src\nau\loader\stateLoader.h" />
     <ClInclude Include="..\src\nau\material\colorMaterial.h" />
+    <ClInclude Include="..\src\nau\material\iArrayOfTextures.h" />
     <ClInclude Include="..\src\nau\material\iBuffer.h" />
     <ClInclude Include="..\src\nau\material\iImageTexture.h" />
+    <ClInclude Include="..\src\nau\material\iMaterialArrayOfTextures.h" />
     <ClInclude Include="..\src\nau\material\iMaterialBuffer.h" />
     <ClInclude Include="..\src\nau\material\iProgram.h" />
     <ClInclude Include="..\src\nau\material\iUniformBlock.h" />
@@ -482,11 +488,13 @@
     <ClInclude Include="..\src\nau\render\iRenderQueue.h" />
     <ClInclude Include="..\src\nau\render\materialSortRenderQueue.h" />
     <ClInclude Include="..\src\nau\render\opengl\glAPISupport.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glArrayOfTextures.h" />
     <ClInclude Include="..\src\nau\render\opengl\glBuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glDebug.h" />
     <ClInclude Include="..\src\nau\render\opengl\glGlobalState.h" />
     <ClInclude Include="..\src\nau\render\opengl\glImageTexture.h" />
     <ClInclude Include="..\src\nau\render\opengl\glIndexArray.h" />
+    <ClInclude Include="..\src\nau\render\opengl\glMaterialArrayOfTextures.h" />
     <ClInclude Include="..\src\nau\render\opengl\glMaterialBuffer.h" />
     <ClInclude Include="..\src\nau\render\opengl\glMaterialGroup.h" />
     <ClInclude Include="..\src\nau\render\opengl\glProgram.h" />
@@ -655,6 +663,9 @@ copy rtvssm.ptx ..\build\samples\optix</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Optix|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Optix|x64'">true</ExcludedFromBuild>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

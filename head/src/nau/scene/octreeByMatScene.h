@@ -37,7 +37,7 @@ namespace nau {
 		public:
 			~OctreeByMatScene (void);
 
-			void clear();
+			//void clear();
 
 			virtual void eventReceived(const std::string &sender, const std::string &eventType, 
 				const std::shared_ptr<IEventData> &evt);

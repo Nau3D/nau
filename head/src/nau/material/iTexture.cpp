@@ -20,7 +20,7 @@ ITexture::Init() {
 	Attribs.add(Attribute(HEIGHT, "HEIGHT", Enums::DataType::INT, false, new NauInt(1)));
 	Attribs.add(Attribute(DEPTH, "DEPTH", Enums::DataType::INT, false, new NauInt(1)));
 	Attribs.add(Attribute(SAMPLES, "SAMPLES", Enums::DataType::INT, false, new NauInt(0)));
-	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::INT, false, new NauInt(0)));
+	Attribs.add(Attribute(LEVELS, "LEVELS", Enums::DataType::INT, false, new NauInt(1)));
 	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::INT, false, new NauInt(1)));
 	Attribs.add(Attribute(COMPONENT_COUNT, "COMPONENT_COUNT", Enums::DataType::INT, true, new NauInt(0)));
 	Attribs.add(Attribute(ELEMENT_SIZE, "ELEMENT_SIZE", Enums::DataType::INT, true, new NauInt(0)));
@@ -49,10 +49,22 @@ bool ITexture::Inited = Init();
 
 ITexture*
 ITexture::Create (std::string label, std::string internalFormat,
-	int width, int height, int depth, int layers, int levels, int samples)
-{
+	int width, int height, int depth, int layers, int levels, int samples) {
+
 #ifdef NAU_OPENGL
 		return new GLTexture (label, internalFormat, width, height, depth, layers, levels, samples);
+#elif NAU_DIRECTX
+	//Put here function for DirectX
+#endif
+}
+
+
+ITexture*
+ITexture::Create(std::string label, int internalFormat,
+	int width, int height, int depth, int layers, int levels, int samples) {
+
+#ifdef NAU_OPENGL
+	return new GLTexture(label, internalFormat, width, height, depth, layers, levels, samples);
 #elif NAU_DIRECTX
 	//Put here function for DirectX
 #endif
@@ -98,7 +110,7 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 	//	t->bitmap = new wxBitmap(ima.Mirror(false));
 	//#endif
 
-		t->m_FileName = file;
+		t->m_Filename = file;
 
 		loader->convertToRGBA();
 		
@@ -116,7 +128,7 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 }
 
 
-ITexture::ITexture(std::string label) :m_Label(label), data(NULL), m_FileName("") {
+ITexture::ITexture(std::string label) :m_Label(label), data(NULL), m_Filename("") {
 
 	registerAndInitArrays(Attribs);
 	
@@ -146,7 +158,7 @@ ITexture::setLabel (std::string label) {
 
 
 const std::string &
-ITexture::getFileName() {
+ITexture::getFilename() {
 
-	return m_FileName;
+	return m_Filename;
 }

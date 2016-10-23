@@ -13,6 +13,7 @@ GLAPISupport::setAPISupport() {
 	glGetIntegerv(GL_MINOR_VERSION, &versionAux);
 	m_Version = version * 100 + versionAux * 10;
 
+
 	//m_Version = 310;
 
 	for (int i = 0; i < APIFeatureSupport::COUNT_API_SUPPORT; ++i) {
@@ -21,6 +22,14 @@ GLAPISupport::setAPISupport() {
 
 	m_APISupport[OK] = true;
 
+	const char* sExtensions = (char *)glGetString(GL_EXTENSIONS);
+	if (strstr(sExtensions, "ARB_bindless_texture") != NULL) {
+		m_APISupport[APIFeatureSupport::BINDLESS_TEXTURES] = true;
+	}
+
+	if (m_Version >= 310) {
+		m_APISupport[APIFeatureSupport::BUFFER_UNIFORM] = true;
+	}
 	if (m_Version >= 320) {
 		m_APISupport[APIFeatureSupport::GEOMETRY_SHADER] = true;
 		m_APISupport[APIFeatureSupport::TEXTURE_SAMPLERS] = true;

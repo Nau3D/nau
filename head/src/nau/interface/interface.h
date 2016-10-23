@@ -1,5 +1,5 @@
-#ifndef NAU_INTERFACE
-#define NAU_INTERFACE
+#ifndef INTERFACE
+#define INTERFACE
 
 #include <AntTweakBar.h>
 
@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#define INTERFACE nau::inter::ToolBar::GetInstance()
+#define INTERFACE_MANAGER nau::inter::ToolBar::GetInstance()
 
 namespace nau {
 

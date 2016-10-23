@@ -1,5 +1,5 @@
-#ifndef EventCameraMotion_H
-#define EventCameraMotion_H
+#ifndef EVENT_CAMERA_MOTION_H
+#define EVENT_CAMERA_MOTION_H
 
 #include "nau/event/iEventData.h"
 #include "nau/event/cameraMotion.h"
