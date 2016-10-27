@@ -25,17 +25,16 @@ namespace nau
 			static void saveProject(const std::string &file);
 
 			// loads a project
-			static void load (std::string file, int *width, int *height);
+			static void load (const std::string &file, int *width, int *height);
 			// loads a material lib
-			static void loadMatLib (std::string file);
+			static void loadMatLib (const std::string &file);
 
 			// loads a physics material lib
-			static void loadPhysLib(std::string file);
-
-			static std::string s_Path;
-			static std::string s_File;
+			static void loadPhysLib(const std::string &file);
 
 		private:
+
+			static void Report(const std::string &file, int row, int column, char *message);
 
 			static void saveMatLib(const std::string &matLibName, const std::string &matLibFilename);
 			static void saveAttributes(AttribSet *attribSet, AttributeValues *attr, TiXmlElement *parent);
@@ -199,6 +198,10 @@ namespace nau
 
 			// load state
 			static void loadState(TiXmlElement *pElemAux, MaterialLib *aLib, Material *aMat, IState *s);
+
+			static std::string s_Path;
+			static std::string s_File;
+			static std::string s_CurrentFile;
 
 			// aux pre alocated variables
 			static char s_pFullName[256];

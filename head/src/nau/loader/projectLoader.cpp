@@ -88,6 +88,53 @@ std::string ProjectLoader::s_Dummy_string;
 std::vector<ProjectLoader::DeferredValidation> ProjectLoader::s_DeferredVal;
 
 
+/* ------------------------------------------------------------
+		ERROR MANAGMENT
+---------------------------------------------------------------*/
+
+void
+ProjectLoader::addToDefferredVal(std::string filename, int row, int column,
+	std::string value, std::string objType) {
+
+	DeferredValidation df;
+	df.filename = filename;
+	df.actualValue = value;
+	df.row = row;
+	df.column = column;
+	df.objType = objType;
+
+	s_DeferredVal.push_back(df);
+}
+
+
+void
+ProjectLoader::deferredValidation() {
+
+	std::string s;
+	s_Dummy = "";
+	for (auto df : s_DeferredVal) {
+		if (!NAU->validateObjectName(df.objType, df.actualValue)) {
+			s_Dummy = s_Dummy + df.filename + " (Line " + std::to_string(df.row) + ", column " + std::to_string(df.column) + ")\n ";
+			s_Dummy += "Element " + df.objType + " value " + df.actualValue + " is invalid\n";
+			s_Dummy += "Valid Values: ";
+			std::vector<string> validValues;
+			NAU->getValidObjectNames(df.objType, &validValues);
+			TextUtil::Join(validValues, ", ", &s);
+			s_Dummy += s + "\n\n";
+		}
+	}
+	s_DeferredVal.clear();
+
+	if (s_Dummy != "") {
+		NAU_THROW(s_Dummy.c_str());
+	}
+}
+
+
+void
+ProjectLoader::Report(const std::string &file, int row, int column, char *message) {
+
+}
 
 /* ------------------------------------------------------------
 		SAVE PROJECT
@@ -904,7 +951,7 @@ Project Specification
 -------------------------------------------------------------------*/
 
 void
-ProjectLoader::load (std::string file, int *width, int *height)
+ProjectLoader::load (const std::string &file, int *width, int *height)
 {
 #if NAU_DEBUG == 1
 	LOG_INFO ("Loading project: %s", file.c_str()); 
@@ -913,6 +960,7 @@ ProjectLoader::load (std::string file, int *width, int *height)
 	s_DeferredVal.clear();
 	ProjectLoader::s_Path = File::GetPath(file);
 	ProjectLoader::s_File = file;
+	ProjectLoader::s_CurrentFile = file;
 	s_Constants.clear();
 
 	TiXmlDocument doc (file.c_str());
@@ -1051,18 +1099,6 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 }
 
 
-/* ----------------------------------------------------------------
-Specification of Constants:
-
-<constants>
-	<constant name="BufferDim" value=128 />
-	<constant name="PI" value=3.14 />
-</constants>
-
-Constants can be used everywhere an attribute requires a number. Constants are read as floats 
-and can be used to replace any numeric type. 
-
------------------------------------------------------------------ */
 
 void 
 ProjectLoader::addToDefferredVal(std::string filename, int row, int column, 
@@ -1100,6 +1136,19 @@ ProjectLoader::deferredValidation() {
 		NAU_THROW(s_Dummy.c_str());
 	}
 }
+
+/* ----------------------------------------------------------------
+Specification of Constants:
+
+<constants>
+	<constant name="BufferDim" value=128 />
+	<constant name="PI" value=3.14 />
+</constants>
+
+Constants can be used everywhere an attribute requires a number. Constants are read as floats 
+and can be used to replace any numeric type. 
+
+----------------------------------------------------------------- */
 
 void
 ProjectLoader::loadConstants(TiXmlHandle &handle) 
@@ -4852,11 +4901,13 @@ PHYSICS MATERIAL LIBS
 -----------------------------------------------------------------------------*/
 
 void
-ProjectLoader::loadPhysLib(std::string file)
+ProjectLoader::loadPhysLib(const std::string &file)
 {
 	std::string path = File::GetPath(file);
 	//std::map<std::string,IState *> states;
 
+	std::string previousFile = s_CurrentFile;
+	s_CurrentFile = file;
 	TiXmlDocument doc(file.c_str());
 	bool loadOkay = doc.LoadFile();
 
@@ -4936,6 +4987,8 @@ ProjectLoader::loadPhysLib(std::string file)
 	s_File = aux;
 
 	pm->updateProps();
+
+	s_CurrentFile = previousFile;
 }
 
 
@@ -4976,11 +5029,13 @@ MATERIAL LIBS
 -----------------------------------------------------------------------------*/
 
 void 
-ProjectLoader::loadMatLib (std::string file)
+ProjectLoader::loadMatLib (const std::string &file)
 {
 	std::string path = File::GetPath(file);
 	//std::map<std::string,IState *> states;
 
+	std::string previousFile = s_CurrentFile;
+	s_CurrentFile = file;
 	TiXmlDocument doc (file.c_str());
 	bool loadOkay = doc.LoadFile();
 
@@ -5049,6 +5104,7 @@ ProjectLoader::loadMatLib (std::string file)
 		//aLib->addMaterial (mat);
 	}
 	s_File = aux;
+	s_CurrentFile = previousFile;
 }
 
 /* ----------------------------------------------------------------
