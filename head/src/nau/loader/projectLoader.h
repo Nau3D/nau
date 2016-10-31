@@ -34,7 +34,9 @@ namespace nau
 
 		private:
 
-			static void Report(const std::string &file, int row, int column, char *message);
+			static void Report(TiXmlElement p, const char *message);
+			static void Report(int row, int column, const char *message);
+			static void Report(const std::string &file, int  row, int column, const char *message);
 
 			static void saveMatLib(const std::string &matLibName, const std::string &matLibFilename);
 			static void saveAttributes(AttribSet *attribSet, AttributeValues *attr, TiXmlElement *parent);
@@ -76,6 +78,7 @@ namespace nau
 											TiXmlElement *pElem);
 			static void checkForNonValidAttributes(std::string parent, std::vector<std::string> &excluded, 
 											TiXmlElement *pElem);
+			static void loadMatLibAux(const std::string &file);
 
 			// read an item from a library
 			static int readItemFromLib(TiXmlElement *p, std::string tag, std::string *lib, std::string *item);
@@ -132,7 +135,7 @@ namespace nau
 			// Asset Loading
 			static void loadUserAttrs(TiXmlHandle handle);
 			static void loadScenes(TiXmlHandle handle);
-			static void loadGeometry(TiXmlElement *elem); 
+			//static void loadGeometry(TiXmlElement *elem); 
 			static void loadViewports(TiXmlHandle handle);
 			static void loadCameras(TiXmlHandle handle);
 			static void loadLights(TiXmlHandle handle);
@@ -204,6 +207,7 @@ namespace nau
 			static std::string s_CurrentFile;
 
 			// aux pre alocated variables
+			static unsigned int s_Errors;
 			static char s_pFullName[256];
 			static string s_Dummy;
 			static vec4 s_Dummy_vec4;
@@ -216,7 +220,6 @@ namespace nau
 			static uivec3 s_Dummy_uivec3;
 			static uivec2 s_Dummy_uivec2;
 			static std::string s_Dummy_string;
-
 			static std::map<std::string, float> s_Constants;
 		};
 	};

@@ -6,7 +6,6 @@
 				<file name="../../models/al.obj"/>
 			</scene>
 		</scenes>
-		
 		<viewports>
 			<viewport name="MainViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
@@ -17,7 +16,7 @@
 			<camera name="MainCamera" >
 				<viewport name="MainViewport" />
 				<TYPE value="PERSPECTIVE"/>
-				<FOV value=60/>
+				<FOV value = 60/>
 				<NEAR value= 1/>
 				<FAR value= 100/>
 				<POSITION x=-1.69 y=0.774 z=-1.158 />

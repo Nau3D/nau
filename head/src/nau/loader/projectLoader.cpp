@@ -69,7 +69,7 @@ using namespace nau::event_;
 std::string ProjectLoader::s_Path = "";
 std::string ProjectLoader::s_File = "";
 std::string ProjectLoader::s_Dummy;
-
+std::string ProjectLoader::s_CurrentFile;
 std::map<std::string, float> ProjectLoader::s_Constants;
 
 char ProjectLoader::s_pFullName[256] = "";
@@ -87,10 +87,36 @@ std::string ProjectLoader::s_Dummy_string;
 
 std::vector<ProjectLoader::DeferredValidation> ProjectLoader::s_DeferredVal;
 
+unsigned int ProjectLoader::s_Errors;
+
 
 /* ------------------------------------------------------------
 		ERROR MANAGMENT
 ---------------------------------------------------------------*/
+
+
+
+#define REPORT_WARNING(p, message, ...) \
+{\
+  char m[512], mes[256];\
+  snprintf(m , 256, "WARNING: File %s (line %d, column %d) ", s_CurrentFile.c_str(), p->Row(), p->Column());\
+  snprintf(mes, 256, message, ## __VA_ARGS__);\
+  strcat(m, mes);\
+  (SLogger::GetInstance())->log(m);\
+  s_Errors++;\
+};
+
+
+#define REPORT_ERROR(p, message, ...) \
+{\
+  char m[512], mes[256];\
+  snprintf(m , 256, "ERROR: File %s (line %d, column %d) ", s_CurrentFile.c_str(), p->Row(), p->Column());\
+  snprintf(mes, 256, message, ## __VA_ARGS__);\
+  strcat(m, mes);\
+  (SLogger::GetInstance())->log(m);\
+  s_Errors++;\
+};
+
 
 void
 ProjectLoader::addToDefferredVal(std::string filename, int row, int column,
@@ -111,31 +137,36 @@ void
 ProjectLoader::deferredValidation() {
 
 	std::string s;
-	s_Dummy = "";
 	for (auto df : s_DeferredVal) {
 		if (!NAU->validateObjectName(df.objType, df.actualValue)) {
-			s_Dummy = s_Dummy + df.filename + " (Line " + std::to_string(df.row) + ", column " + std::to_string(df.column) + ")\n ";
-			s_Dummy += "Element " + df.objType + " value " + df.actualValue + " is invalid\n";
-			s_Dummy += "Valid Values: ";
+			std::string res;
+			res += "Element " + df.objType + " value " + df.actualValue + " is invalid\n";
+			res += "Valid Values: ";
 			std::vector<string> validValues;
 			NAU->getValidObjectNames(df.objType, &validValues);
 			TextUtil::Join(validValues, ", ", &s);
-			s_Dummy += s + "\n\n";
+			res += s + "\n\n";
+			Report(df.filename, df.row, df.column, res.c_str());
 		}
 	}
 	s_DeferredVal.clear();
-
-	if (s_Dummy != "") {
-		NAU_THROW(s_Dummy.c_str());
-	}
 }
 
 
 void
-ProjectLoader::Report(const std::string &file, int row, int column, char *message) {
+ProjectLoader::Report(int row, int column, const char *message) {
 
+	SLOG("File: %s (line %d, column %d) - %s", s_CurrentFile.c_str(), row, column, message);
+	s_Errors++;
 }
 
+
+void
+ProjectLoader::Report(const std::string &file, int row, int column, const char *message) {
+
+	SLOG("File: %s (line %d, column %d) - %s", file.c_str(), row, column, message);
+	s_Errors++;
+}
 /* ------------------------------------------------------------
 		SAVE PROJECT
 ---------------------------------------------------------------*/
@@ -470,8 +501,9 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 	switch (type) {
 	
 		case Enums::FLOAT:
-			if (!readFloatAttribute(p, "value", &s_Dummy_float))
-				NAU_THROW("File %s: Element %s: Float Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
+			if (!readFloatAttribute(p, "value", &s_Dummy_float)) {
+				NAU_THROW("File %s: Element %s: Float Attribute %s without a value", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			}
 			return new NauFloat(s_Dummy_float);
 			break;
 		case Enums::VEC4:
@@ -681,7 +713,7 @@ ProjectLoader::getValidValuesString(std::unique_ptr<Attribute> &a) {
 		if (min != NULL && max != NULL) {
 			std::string smin = Enums::valueToString(type, min.get());
 			std::string smax = Enums::valueToString(type, max.get());
-			s_Dummy = "between" + smin + " and " + smax;
+			s_Dummy = "between " + smin + " and " + smax;
 		}
 		else if (min != NULL) {
 			s_Dummy = "greater or equal than " + Enums::valueToString(type, min.get());
@@ -890,7 +922,9 @@ ProjectLoader::checkForNonValidChildTags(std::string parent, std::vector<std::st
 		if (!isExcluded(p->Value(), ok)) {
 			std::string result;
 			TextUtil::Join(ok, ", ", &result);
-			// trying to define an attribute that does not exist?		
+			// trying to define an attribute that does not exist?
+			//REPORT_WARNING(p, "Element %s \"%s\" is not a valid child tag\nValid tags are: %s",
+			//		parent.c_str(), p->Value(), result.c_str());
 			NAU_THROW("File %s\nElement %s\n\"%s\" is not a valid child tag\nValid tags are: %s", 
 				ProjectLoader::s_File.c_str(), parent.c_str(), p->Value(), result.c_str());
 		}
@@ -957,7 +991,9 @@ ProjectLoader::load (const std::string &file, int *width, int *height)
 	LOG_INFO ("Loading project: %s", file.c_str()); 
 #endif
 
+	s_Errors = 0;
 	s_DeferredVal.clear();
+
 	ProjectLoader::s_Path = File::GetPath(file);
 	ProjectLoader::s_File = file;
 	ProjectLoader::s_CurrentFile = file;
@@ -1016,11 +1052,16 @@ ProjectLoader::load (const std::string &file, int *width, int *height)
 	checkForNonValidChildTags("project", v, pElem);
 
 	deferredValidation();
+	if (s_Errors) {
+		NAU_THROW("Project has errors, check the log");
+	}
 
 #if NAU_DEBUG == 1
 	LOG_INFO ("Loading done"); 
 #endif
 	NAU->setProjectName(name);
+
+
 }
 
 
@@ -1100,42 +1141,6 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 
 
 
-void 
-ProjectLoader::addToDefferredVal(std::string filename, int row, int column, 
-				std::string value, std::string objType) {
-
-	DeferredValidation df;
-	df.filename = filename;
-	df.actualValue = value;
-	df.row = row;
-	df.column = column;
-	df.objType = objType;
-
-	s_DeferredVal.push_back(df);
-}
-
-void 
-ProjectLoader::deferredValidation() {
-
-	std::string s;
-	s_Dummy = "";
-	for (auto df : s_DeferredVal) {
-		if (!NAU->validateObjectName(df.objType, df.actualValue)) {
-			s_Dummy = s_Dummy + df.filename + " (Line " + std::to_string(df.row) + ", column " + std::to_string(df.column) + ")\n ";
-			s_Dummy += "Element " + df.objType + " value " + df.actualValue + " is invalid\n";
-			s_Dummy += "Valid Values: ";
-			std::vector<string> validValues;
-			NAU->getValidObjectNames(df.objType, &validValues);
-			TextUtil::Join(validValues, ", ", &s);
-			s_Dummy += s + "\n\n";
-		}
-	}
-	s_DeferredVal.clear();
-
-	if (s_Dummy != "") {
-		NAU_THROW(s_Dummy.c_str());
-	}
-}
 
 /* ----------------------------------------------------------------
 Specification of Constants:
@@ -5028,8 +5033,19 @@ MATERIAL LIBS
 
 -----------------------------------------------------------------------------*/
 
+void
+ProjectLoader::loadMatLib(const std::string &file) {
+
+	s_Errors = 0;
+	loadMatLibAux(file);
+	if (s_Errors) {
+		NAU_THROW("Material Library has errors, check the log");
+	}
+}
+
+
 void 
-ProjectLoader::loadMatLib (const std::string &file)
+ProjectLoader::loadMatLibAux (const std::string &file)
 {
 	std::string path = File::GetPath(file);
 	//std::map<std::string,IState *> states;

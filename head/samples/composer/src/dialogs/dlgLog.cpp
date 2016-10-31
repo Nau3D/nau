@@ -101,6 +101,7 @@ DlgLog::eventReceived(const std::string &sender, const std::string &eventType,
 	const std::shared_ptr<IEventData> &evt) {
 
 	if (eventType == "LOG") {
+
 		append(*(std::string *)evt->getData());
 	}
 }
