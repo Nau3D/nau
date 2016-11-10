@@ -656,8 +656,10 @@ ProjectLoader::readAttribute(std::string tag, std::unique_ptr<Attribute> &attrib
 				s_Dummy_int = attrib->getOptionValue(s);
 				if (s_Dummy_int != -1)
 					return new NauInt(s_Dummy_int);
-				else
-					return NULL;
+				else {
+					std::string s = getValidValuesString(attrib);
+					NAU_THROW("File %s (line: %d, column %d)\nElement: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_CurrentFile.c_str(), p->Row(), p->Column(), name, s.c_str());
+				}
 			}
 			break;
 		default:
@@ -1946,18 +1948,10 @@ ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 		std::unique_ptr<Attribute> &a = aPass->getAttribSet()->get("TEST_MODE");
 
 		Data *val = readAttribute("TEST_MODE", a, pElem);
-		if (val != NULL) {
-			int value = dynamic_cast<NauInt *>(val)->getNumber();
-			if (a->isValid(value))
-				aPass->setProp(Pass::TEST_MODE, Enums::ENUM, val);
-			else {
-				std::string s = getValidValuesString(a);
-				NAU_THROW("File %s\nElement testScript: \"%s\" has an invalid value\nValid values are\n%s", ProjectLoader::s_File.c_str(), a->getName().c_str(), s.c_str());
-
-			}
+		if (val) {
+			aPass->setProp(Pass::TEST_MODE, Enums::ENUM, val);
 			delete val;
 		}
-
 		aPass->setTestScript(File::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
 	}
 
@@ -3059,49 +3053,6 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 		std::vector<std::string> excluded;
 		excluded.push_back("depth"); excluded.push_back("colors");excluded.push_back("depthStencil");
 		readChildTags(pRTName, (AttributeValues *)rt, IRenderTarget::Attribs, excluded, pElem);
-		//// Render Target size
-		//TiXmlElement *pElemSize;
-		//pElemSize = pElem->FirstChildElement ("size");
-		//	
-		//if (0 != pElemSize) {
-		//	rtSamples = 0;
-		//	pElemSize->QueryIntAttribute("samples", &rtSamples);
-		//	
-		//	rtLayers = 0;
-		//	pElemSize->QueryIntAttribute("layers", &rtLayers);
-
-		//	if (TIXML_SUCCESS != pElemSize->QueryIntAttribute ("width", &rtWidth)) {
-		//		NAU_THROW("Library %s: Render Target %s: WIDTH is required", aLib->getName().c_str(), pRTName);
-		//	}
-
-		//	if (TIXML_SUCCESS != pElemSize->QueryIntAttribute ("height",  &rtHeight)) {
-		//		NAU_THROW("Library %s: Render Target %s: HEIGHT is required", aLib->getName().c_str(), pRTName);
-		//	}
-		//	sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pRTName);
-		//	m_RT = RESOURCEMANAGER->createRenderTarget (s_pFullName);	
-		//	m_RT->setPropui(IRenderTarget::SAMPLES, rtSamples);
-		//	m_RT->setPropui(IRenderTarget::LAYERS, rtLayers);
-		//	m_RT->setPropui2(IRenderTarget::SIZE, uivec2(rtWidth, rtHeight));
-		//} 
-		//else {
-		//	NAU_THROW("Library %s: Render Target %s: No size element found", aLib->getName().c_str(), pRTName);
-		//} //End of  rendertargets size
-
-
-		//// Render Target clear values
-		//TiXmlElement *pElemClear;
-		//pElemClear = pElem->FirstChildElement ("clear");
-		//	
-		//if (0 != pElemClear) {
-
-		//	float r = 0.0f, g = 0.0f, b = 0.0f, a = 0.0f; 
-		//	pElemClear->QueryFloatAttribute ("r", &r);
-		//	pElemClear->QueryFloatAttribute ("g", &g);
-		//	pElemClear->QueryFloatAttribute ("b", &b);
-		//	pElemClear->QueryFloatAttribute ("a", &a);
-
-		//	m_RT->setPropf4(IRenderTarget::CLEAR_VALUES, vec4(r,g,b,a));
-		//} //End of  rendertargets clear
 
 		TiXmlElement *pElemColor;	
 		TiXmlNode *pElemColors;
@@ -3112,22 +3063,20 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 			for ( ; 0 != pElemColor; pElemColor = pElemColor->NextSiblingElement()) {
 
 				const char *pNameColor = pElemColor->Attribute ("name");
-				const char *internalFormat = pElemColor->Attribute("internalFormat");
+				Data *v = readAttribute("internalFormat", ITexture::Attribs.get("INTERNAL_FORMAT"), pElemColor);
 				int layers = 0;
 
 				if (0 == pNameColor) {
 					NAU_THROW("File %s\nLibrary %s\nColor rendertarget has no name, in render target %s", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);							
 				}
 
-				if (internalFormat == 0) {
+				if (v == 0) {
 					NAU_THROW("File %s\nLibrary %s\nColor rendertarget %s has no internal format, in render target %s", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pNameColor, pRTName);
 				}
-				if (!ITexture::Attribs.isValid("INTERNAL_FORMAT", internalFormat)) //isValidInternalFormat(internalFormat))
-					NAU_THROW("File %s\nLibrary %s\nRender Target %s: Color rendertarget %s internal format %s is invalid", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName, pNameColor,internalFormat);
 
 				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pNameColor);
 					
-				rt->addColorTarget (s_pFullName, internalFormat);
+				rt->addColorTarget (s_pFullName, ITexture::Attribs.get("INTERNAL_FORMAT")->getOptionString(*(int *)v->getPtr()));
 			}//End of rendertargets color
 		}
 
@@ -3136,21 +3085,19 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 
 		if (0 != pElemDepth) {
 			const char *pNameDepth = pElemDepth->Attribute ("name");
-			const char *internalFormat = pElemDepth->Attribute("internalFormat");
+			Data *v = readAttribute("internalFormat", ITexture::Attribs.get("INTERNAL_FORMAT"), pElemDepth);
+			//const char *internalFormat = pElemDepth->Attribute("internalFormat");
 
 			if (0 == pNameDepth) {
 				NAU_THROW("File %s\nLibrary %s\nRender Target %s: Depth rendertarget has no name", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);							
 			}
 
-			if (internalFormat == 0) {
+			if (v == 0) {
 				NAU_THROW("File %s\nLibrary %s\nRender Target %s: Depth rendertarget %s has no internal format", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName, pNameDepth);
 			}
 
-			if (!ITexture::Attribs.isValid("INTERNAL_FORMAT", internalFormat)) //isValidInternalFormat(internalFormat))
-					NAU_THROW("File %s\nLibrary %s\nRender Target %s: Depth rendertarget's internal format %s is invalid", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName, internalFormat);
-
 			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pNameDepth);
-			rt->addDepthTarget (s_pFullName, internalFormat);
+			rt->addDepthTarget (s_pFullName, ITexture::Attribs.get("INTERNAL_FORMAT")->getOptionString(*(int *)v->getPtr()));
 		}
 
 		pElemDepth = pElem->FirstChildElement ("depthStencil");
@@ -3172,7 +3119,9 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 			rt->getPropui(IRenderTarget::SAMPLES),
 			rt->getPropui(IRenderTarget::LAYERS));
 		if (!rt->checkStatus()) {
-			NAU_THROW("File %s\nLibrary %s\nRender target %s is not OK", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);							
+			std::string message;
+			rt->getErrorMessage(message);
+			NAU_THROW("File %s\nLibrary %s\nRender target %s: %s", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName, message.c_str());							
 
 		}
 	}//End of rendertargets

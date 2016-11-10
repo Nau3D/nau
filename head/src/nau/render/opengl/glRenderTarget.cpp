@@ -85,6 +85,34 @@ GLRenderTarget::checkStatus() {
 }
 
 
+void 
+GLRenderTarget::getErrorMessage(std::string &message) {
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_Id);
+	GLenum e = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	switch (e) {
+	case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+		message = "Incomplete attachment";
+		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+		message = "Not all attached images have the same width and height";
+		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+		message = "No images are attached to the framebuffer";
+		break;
+	case GL_FRAMEBUFFER_UNSUPPORTED:
+		message = "The combination of internal formats of the attached images violates an implementation-dependent set of restrictions";
+		break;
+	case GL_FRAMEBUFFER_COMPLETE:
+		message = "OK";
+		break;
+	}
+
+}
+
+
 void
 GLRenderTarget::bind (void) {
 

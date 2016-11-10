@@ -39,6 +39,7 @@ namespace nau
 			void unbind (void);
 
 			bool checkStatus();
+			void getErrorMessage(std::string &message);
 			void resize();
 
 			void addColorTarget (std::string name, std::string internalFormat);

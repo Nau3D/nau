@@ -53,6 +53,7 @@ namespace nau
 			static IRenderTarget* Create (std::string name);
 
 			virtual bool checkStatus() = 0;
+			virtual void getErrorMessage(std::string &message) = 0;
 			virtual void resize() = 0;
 
 			virtual void bind (void) = 0;
