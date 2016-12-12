@@ -91,8 +91,8 @@ namespace nau
 
 		protected:
 			int m_TriCounter;
-			unsigned int *userCounters;
 			void accumTriCounter(unsigned int drawPrimitive, unsigned int size);
+			GLuint m_TessQuery;
 		public:
 			void resetCounters(void);
 			unsigned int getCounter(Counters c);

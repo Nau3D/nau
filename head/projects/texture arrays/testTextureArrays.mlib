@@ -15,8 +15,8 @@
 
 	<shaders>
 		<shader name="fillArrays" 		ps="shaders/dirlightdiffambpix.frag" 
-										vs="shaders/dirlightdiffambpix.vert"
-										gs="shaders/fillArrays.geom"/>
+										gs="shaders/fillArrays.geom"
+										vs="shaders/dirlightdiffambpix.vert"/>
 										
 		<shader name="showArrays" 		ps="shaders/showArrays.frag" 
 										vs="shaders/showArrays.vert" />

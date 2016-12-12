@@ -61,6 +61,9 @@ GLRenderer::GLRenderer(void) :
 
 	glEnable(GL_MULTISAMPLE);
 	registerAndInitArrays(Attribs);
+#ifdef PROFILE
+	glGenQueries(1, &m_TessQuery);
+#endif
 }
 
 
@@ -884,8 +887,11 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 		glPatchParameteri(GL_PATCH_VERTICES, k);
 	}
 	else if (m_Shader->hasTessellationShader()) {
-		drawPrimitive = (unsigned int)GL_PATCHES;
 		glPatchParameteri(GL_PATCH_VERTICES, getVerticesPerPrimitive(drawPrimitive));
+		drawPrimitive = (unsigned int)GL_PATCHES;
+#ifdef PROFILE
+		glBeginQuery(GL_PRIMITIVES_GENERATED, m_TessQuery);
+#endif
 	}
 	// this forces compilation for everything that is rendered!
 	// required for animated objects
@@ -950,7 +956,13 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 		showDrawDebugInfo(aMatGroup);
 	}
 
-#ifdef PROFILE
+#ifdef PROFILE 
+	if (m_Shader->hasTessellationShader()) {
+		glEndQuery(GL_PRIMITIVES_GENERATED);
+		GLuint numPrimitives = 0;
+		glGetQueryObjectuiv(m_TessQuery, GL_QUERY_RESULT, &numPrimitives);
+		accumTriCounter((unsigned int)GL_TRIANGLES, numPrimitives * 3);
+	}
 	accumTriCounter(drawPrimitive, size);
 #endif
 
