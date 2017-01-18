@@ -14,6 +14,7 @@ x64/
 [Oo]bj/
 binL/
 binW/
+dlls/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
