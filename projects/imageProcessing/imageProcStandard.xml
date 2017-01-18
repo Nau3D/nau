@@ -1,0 +1,54 @@
+
+<?xml version="1.0" ?>
+<project name="Image Processing" width="512" height="512">
+	<assets>
+		<viewports>
+			<viewport name="Main" >
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+	
+		<materialLibs>
+			<materialLib filename="imageProcessing.mlib"/>
+		</materialLibs>
+	</assets>
+
+	<pipelines>
+		<pipeline name="Fast" >
+			<pass class="quad" name="process" >
+				<viewport name="Main" />
+				<materialMaps>
+					<map fromMaterial="*" toMaterial="standard" toLibrary="ImageProcessing" />
+				</materialMaps>
+			</pass>		
+		</pipeline>
+	
+		<pipeline name="Standard" >
+			<pass class="quad" name="process" >
+				<materialMaps>
+					<map fromMaterial="__Quad" toMaterial="standard" toLibrary="ImageProcessing" />
+				</materialMaps>
+				<renderTarget name="result"  fromLibrary="ImageProcessing"/>
+			</pass>	
+
+			<pass class="quad" name="show" >
+				<viewport name="Main" />
+				<texture name="ImageProcessing::result" />
+			</pass>
+		</pipeline>
+
+		<pipeline name="Standard with Image Texture" >
+			<pass class="quad" name="process" >
+				<viewport name="Main" />
+				<materialMaps>
+					<map fromMaterial="__Quad" toMaterial="standardImgTex" toLibrary="ImageProcessing" />
+				</materialMaps>
+			</pass>	
+
+			<pass class="quad" name="show" >
+				<viewport name="Main" />
+				<texture name="ImageProcessing::tex" />
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

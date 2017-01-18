@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<project name="Toon Mixed" >
+	<assets><!-- width="512" height="512" -->
+		<scenes>
+			<scene name="MyScene" param="UNITIZE SWAP_YZ">
+				<file name="../../models/teapot.3ds"/>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+				<FOV value=60/>
+				<NEAR value= 0.001/>
+				<FAR value= 10/>
+				<POSITION x=0 y=0 z=3 />
+				<VIEW x=0 y=0 z=-1.0 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=-2 y=-1 z=-2 />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="toon.mlib" />
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="lighting" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="MyScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="toonMixed" fromLibrary="Toon" />
+					</map>
+				</injectionMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

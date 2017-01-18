@@ -1,0 +1,25 @@
+<NotepadPlus>
+    <Project name="vertex">
+        <File name="imageProcVert.xml" />
+        <File name="imageProcessing.mlib" />
+        <Folder name="shaders">
+            <File name="shaders\vertexOnly.vert" />
+        </Folder>
+    </Project>
+    <Project name="standard">
+        <File name="imageProcessing.mlib" />
+        <File name="imageProcStandard.xml" />
+        <Folder name="shaders">
+            <File name="shaders\standard.frag" />
+            <File name="shaders\standard.vert" />
+        </Folder>
+    </Project>
+    <Project name="standard with imageTexture">
+        <File name="imageProcessing.mlib" />
+        <File name="imageProcStandard.xml" />
+        <Folder name="shaders">
+            <File name="shaders\standardImgTex.frag" />
+            <File name="shaders\standard.vert" />
+        </Folder>
+    </Project>
+</NotepadPlus>

@@ -1,0 +1,348 @@
+<?xml version="1.0" ?>
+<materiallib name="PrimeShadowMapping">
+		
+	<textures>
+		<texture name="tex">
+			<WIDTH value="RTX" />
+			<HEIGHT value="RTY"/>
+			<INTERNAL_FORMAT value="RGBA32F" />
+		</texture>	
+	</textures>
+
+	<renderTargets>
+		<renderTarget name ="gBuffer">
+			<SIZE width="RTX" height="RTY" />
+			<colors>
+				<color name="pos" internalFormat="RGBA32F" />
+				<color name="normal" internalFormat="RGBA" />
+				<color name="color" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name ="dummy">
+			<SIZE width="RTX" height="RTY" />
+			<colors>
+				<color name="dummy" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name="simple"> <!-- Tamanho igual ao ViewPort -->
+			<SIZE width="RTX" height="RTY"/> 
+			<CLEAR_VALUES r="1.0" g = "1.0" b = "1.0" a = "0.0"/>
+			<colors>
+				<color name="pos2" internalFormat="RGBA32F" />
+				<color name="normal2" internalFormat="RGBA" />
+				<color name="output" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+ 		<renderTarget name="shadowMaps">
+			<SIZE width="GridSizeC" height="GridSizeC" />
+			<LAYERS value="2"/>
+			<depth name="depth2" internalFormat="DEPTH_COMPONENT32F" />
+		</renderTarget>
+		
+		<renderTarget name ="finalRT">
+			<SIZE width="RTX" height="RTY" />
+			<colors>
+				<color name="outputFinal" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name ="finalSM">
+			<SIZE width="RTX" height="RTY" />
+			<colors>
+				<color name="outputSM" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+	</renderTargets>
+	
+	<shaders>
+	<!-- BEGIN OPTIX -->
+		<shader name="showBuffer" 		ps="shaders/prime/showBuffer.frag" 
+										vs="shaders/prime/quadShader.vert" />
+	<!-- END OPTIX -->	
+	
+	<!-- BEGIN SHADOW MAPPING FABIO -->
+		<shader name="depthCalc" 		ps="shaders/sm-adjacency/compute/depth.frag" 
+										vs="shaders/sm-adjacency/compute/depth.vert"
+										gs="shaders/sm-adjacency/compute/depth2.geom" /> 		
+		
+		<shader name="renderShadows" 	ps="shaders/sm-adjacency/compute/renderShadows.frag" 
+										vs="shaders/sm-adjacency/compute/renderShadows.vert" /> 
+										
+		<shader name="showShadowMaps" 	ps="shaders/sm-adjacency/compute/showShadowMaps.frag" 
+										vs="shaders/sm-adjacency/compute/showShadowMaps.vert" /> 
+										
+		<shader name="showFinal" 		ps="shaders/sm-adjacency/compute/showFinal.frag" 
+										vs="shaders/sm-adjacency/compute/showFinal.vert" />		
+												
+		<shader name="computeFinal" 	cs="shaders/sm-adjacency/compute/computeFinal.comp" />
+	
+	<!-- END SHADOW MAPPING FABIO -->
+	</shaders>
+	
+	<buffers>
+		<buffer name="hits" >
+			<SIZE value="HitsBufferSizeC" />	<!--4 floats * Numero de Pixels * 4 bytes-->
+		</buffer>	
+		<buffer name="rays" >
+			<SIZE value="RaysBufferSizeC" /> <!--8 floats * Numero de Pixels * 4 bytes-->
+		</buffer>	
+		
+		<buffer name="screenPos" >	<!-- Numero de Pixels * 2 Vars * 4 bytes -->
+			<SIZE value="ScreenPosSizeC" />
+		</buffer>	
+		
+		<buffer name="atomicos">
+			<SIZE value=2000 />
+			<CLEAR value="BY_FRAME" />
+		</buffer>
+		
+		<buffer name="workGroups" >			<!-- 1 Vars * 4 bytes -->
+			<SIZE value="4" />
+		</buffer>	
+		
+	</buffers>	
+	
+	<states>
+		<state name="noCull">
+			<CULL_FACE value="0" />
+		</state>
+		<state name="frontCull">
+			<CULL_TYPE value="FRONT" />
+		</state>
+	</states>
+	
+	<materials>
+	<!-- BEGIN OPTIX -->		
+		<material name="showBuffer">			
+			<shader name="showBuffer">
+				<values>
+					<valueof uniform="RenderTargetX" 	type="PASS" context="CURRENT"
+														component="RenderTargetX" />
+					<valueof uniform="RenderTargetY" 	type="PASS" context="CURRENT"
+														component="RenderTargetY" />									
+				</values>
+			</shader>
+			<buffers>	
+				<buffer name="rays" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="2" />
+				</buffer>
+				<buffer name="hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="3" />
+				</buffer>
+			</buffers>	
+		</material>	
+	<!-- END OPTIX -->	
+	
+	<!-- BEGIN SHADOW MAPPING FABIO -->
+		<material name="depthCalc">
+			<shader name="depthCalc">
+				<values>
+					<valueof uniform="lightDirection" 	type="LIGHT" context="CURRENT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
+														context="SMPrimePipeline#passDepthCalc-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="M"          		type="RENDERER" context="CURRENT" 
+														component="MODEL" />
+														
+					<valueof uniform="P"          		type="RENDERER" context="CURRENT" 
+														component="PROJECTION" />
+														
+					<valueof uniform="V"          		type="RENDERER" context="CURRENT" 
+														component="VIEW" />
+					
+					<valueof uniform="GridSize" 		type="PASS" context="CURRENT"
+														component="GridSize" />	
+					
+					<valueof uniform="GridSizeF" 		type="PASS" context="CURRENT"
+														component="GridSizeF" />
+														
+					<valueof uniform="ShadowMapSize"	type="PASS" context="CURRENT"
+														component="ShadowMapSize" />
+	
+					
+<!-- 					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
+														component="COUNT" />
+														
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />	 -->		
+				</values>
+			</shader>
+			<state name="frontCull" />	
+		</material>
+	
+		<material name="renderShadows">
+			<shader name="renderShadows">
+				<values>
+					<!-- <valueof uniform="lightDirection" 	type="LIGHT" context="CURRENT" 
+														id=0 component="DIRECTION" />  -->
+					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
+													component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="V"          	type="RENDERER" context="CURRENT" 
+													component="VIEW" />
+														
+					<valueof uniform="M"          	type="RENDERER" context="CURRENT" 
+													component="MODEL" />
+														
+					<valueof uniform="NormalMatrix" type="RENDERER" context="CURRENT" 
+													component="NORMAL" />
+					
+					<valueof uniform="lightDirection" 	type="LIGHT" 
+														context="Sun" 
+														component="DIRECTION" /> 
+														
+					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
+														context="SMPrimePipeline#passDepthCalc-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="shadowMaps" 		type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="2" />													
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="2" name="depth2" >
+   					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+			</textures>	
+		</material>
+	
+		<material name="showShadowMaps">
+			<shader name="showShadowMaps">
+				<values>
+					<valueof uniform="lightDirection" 	type="LIGHT" 
+														context="Sun" 
+														component="DIRECTION" /> 
+														
+ 					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />
+					<valueof uniform="texPos" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="2" />															
+					<valueof uniform="tMax" 			type="PASS" context="CURRENT"
+														component="tMax" />							
+					<valueof uniform="RenderTargetX" 		type="PASS" context="CURRENT"
+														component="RenderTargetX" />
+					<valueof uniform="RenderTargetY" 		type="PASS" context="CURRENT"
+														component="RenderTargetY" />														
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="output" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+				<texture UNIT="2" name="pos2" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>				
+			</textures>	
+			<buffers>	
+				<buffer name="screenPos" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="3" />
+				</buffer>
+ 				<buffer name="rays" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="4" />
+				</buffer>
+				<buffer name="atomicos"  fromLibrary="PrimeShadowMapping2">
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+		</material>
+	<!-- END SHADOW MAPPING FABIO -->
+	
+	<!-- BEGIN COMPUTE SHADERS -->
+	
+		<material name ="computeFinal">
+			<shader name="computeFinal">
+				<values>
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+														component="UNIT" id=2  />							
+					<valueof uniform="RenderTargetX" 	type="PASS" context="CURRENT"
+														component="RenderTargetX" />
+					<valueof uniform="RenderTargetY" 	type="PASS" context="CURRENT"
+														component="RenderTargetY" />
+				</values>
+			</shader>
+			<buffers>	
+				<buffer name="screenPos" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="3" />
+				</buffer>
+				<buffer name="hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="4" />
+				</buffer>
+				<buffer name="atomicos"  fromLibrary="PrimeShadowMapping">
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+				<buffer name="workGroups" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+			<imageTextures>
+				<imageTexture UNIT=2 texture="tex" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+					<CLEAR value=true />
+				</imageTexture>
+			</imageTextures>
+		</material>
+	<!-- END COMPUTE SHADERS -->
+		
+		<material name="showFinal">
+			<shader name="showFinal">
+				<values>
+ 					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />								
+					<valueof uniform="texPrime" 		type="TEXTURE_BINDING" context="CURRENT"
+														component="UNIT" id="2"/>	
+					<valueof uniform="RenderTargetX" 	type="PASS" context="CURRENT"
+														component="RenderTargetX" />
+					<valueof uniform="RenderTargetY" 	type="PASS" context="CURRENT"
+														component="RenderTargetY" />
+					</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="output" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+				<texture UNIT="2" name="tex" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+			</textures>	
+			<buffers>	
+				<buffer name="PrimeShadows::hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="3" />
+				</buffer>
+				<buffer name="atomicos"  fromLibrary="PrimeShadowMapping">
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>
+		</material>
+		
+	</materials>
+	
+</materiallib>

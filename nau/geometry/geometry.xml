@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<project name="Geometric Primitives" width=512 height = 512>
+	<assets>
+	
+		<scenes>
+			<scene name="CubeLand" type="Scene">
+				<SCALE x = 1.0 y=0.5 z = 1.0 />
+				<geometry name = "Sphere" type = "SPHERE" material="earth" SLICES=30 STACKS=30 > 
+					<TRANSLATE x =-2.5 y=0 z =0  />
+					<SCALE x=1 y=2 z=2 />
+				</geometry>								
+				<geometry name = "Box" type = "BOX"  material="crateBox" >
+					<TRANSLATE x =2.5 y=0 z =0  />
+					<SCALE x=2 y=4 z=2 />
+					<ROTATE x=0 y=1 z=0 w=45 />
+				</geometry>
+			</scene>
+			<scene name="Axis">
+				<geometry name = "axis" type = "AXIS"  >
+					<SCALE x=5 y=5 z =5 />
+				</geometry>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="0.3" FAR="100.0" />
+                <POSITION x="-5.25622" y="3.30716" z="3.06599" w="1" />
+                <LOOK_AT_POINT x="-4.49938" y="2.82773" z="2.62174" w="1" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<DIRECTION x="1.0" y="-2.5" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.3" g="0.3" b="0.3" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "geometry.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1" axis="5">
+				<scenes>
+					<scene name="CubeLand" />
+					<scene name="Axis" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTexturedCrate" />
+					<map fromMaterial="earth" toLibrary="Simple" toMaterial="simpleTexturedEarth" />
+				</materialMaps>
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+
+	<interface>
+		<window label="Main Window">
+			<var label="Slices" type="SPHERE" context="CubeLand::Sphere" component="SLICES" />
+			<var label="Stacks" type="SPHERE" context="CubeLand::Sphere" component="STACKS" />
+			<var label="Scale" type="SCENE_OBJECT" context="CubeLand::Sphere" component="SCALE" />
+		</window>
+	</interface>
+	
+	
+</project>

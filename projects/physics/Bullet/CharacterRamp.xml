@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<project name="Simple" width="800" height="600">
+	<assets> 
+		<scenes>
+			
+			<scene name="skateRamp">
+				<file name="..\..\models\skateRamp.3ds" material="ballMat"/>
+			</scene>
+			
+			<scene name="man">
+				<file name="..\..\models\figurine.3ds" material="ballMat"/>
+				<TRANSLATE x=-25 y=20 z=0 />
+				<!--ROTATE x=0 y=1 z=0 w=-90 /-->
+			</scene>
+			
+			<scene name="Axis">
+				<geometry name = "axis" type = "AXIS"  >
+					<SCALE x=5 y=5 z =5 />
+				</geometry>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.2" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x=0.0 y=4.0 z=10.0 />
+				<LOOK_AT_POINT x=0 y=0 z=0/>
+				<UP x=0.0 y=1.0 z=0.0 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=-2 y=-1 z=-2 />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.2" g="0.2" b="0.2" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "materials.mlib"/>
+		</materialLibs> 
+		
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="man" />
+					<scene name="skateRamp" />
+					<scene name="Axis" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crate" toLibrary="Simple" toMaterial="simpleTexturedCrate" />
+					<map fromMaterial="azulejo" toLibrary="Simple" toMaterial="simpleTexturedAzulejo" />
+					<map fromMaterial="ballMat" toLibrary="Simple" toMaterial="simpleColored" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

@@ -1,0 +1,264 @@
+<?xml version="1.0" ?>
+<materiallib name="multipleShadows">
+	<renderTargets>
+<!-- TESTE -->	
+		<renderTarget name="encolhido">
+			<SIZE width="RTX" height="RTY"/>
+			<CLEAR_VALUES r="1.0" g = "1.0" b = "1.0" a = "0.0"/>
+			<colors>
+				<color name="outEncolhido" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name="expandido">
+			<SIZE width="RTX" height="RTY"/>
+			<CLEAR_VALUES r="1.0" g = "1.0" b = "1.0" a = "0.0"/>
+			<colors>
+				<color name="outExpandido" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+<!-- END TESTE -->	
+
+		<renderTarget name="simple">
+			<SIZE width="RTX" height="RTY"/>
+			<CLEAR_VALUES r="1.0" g = "1.0" b = "1.0" a = "0.0"/>
+			<colors>
+				<color name="output" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+				
+		<renderTarget name="shadowMaps">
+			<SIZE width="GridSizeC" height="GridSizeC"/>
+			<LAYERS value="2"/>
+			<depth name="depth2" internalFormat="DEPTH_COMPONENT32F" />
+		</renderTarget>
+		
+		<renderTarget name ="finalRT">
+			<SIZE width="RTX" height="RTY" />
+			<colors>
+				<color name="outputFinal" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>	
+		
+	</renderTargets>
+
+	<shaders>
+<!-- TESTE -->	
+		<shader name="expandido" 		ps="shaders/sm-multiplos/expandido.frag" 
+										vs="shaders/sm-multiplos/combine.vert" />	
+										
+		<shader name="encolhido" 		ps="shaders/sm-multiplos/encolhido.frag" 
+										vs="shaders/sm-multiplos/combine.vert" />
+										
+		<shader name="showExpandido" 	ps="shaders/sm-multiplos/showExpandido.frag" 
+										vs="shaders/sm-multiplos/showCombine.vert" />
+																						
+		<shader name="showEncolhido" 	ps="shaders/sm-multiplos/showEncolhido.frag" 
+										vs="shaders/sm-multiplos/showCombine.vert" />
+		
+<!-- END TESTE -->	
+									
+										
+		<shader name="depthCalc" 		ps="shaders/sm-multiplos/depth.frag" 
+										vs="shaders/sm-multiplos/depth.vert"
+										gs="shaders/sm-multiplos/depth2.geom" /> 								
+	</shaders>
+
+ 	<buffers>
+		<buffer name="atomics">
+			<SIZE value=2000 />
+			<CLEAR value="BY_FRAME" />
+		</buffer>
+	</buffers>
+	
+	<states>
+		<state name="noCull">
+			<CULL_FACE value="0" />
+		</state>
+		<state name="frontCull">
+			<CULL_TYPE value="FRONT" />
+		</state>
+	</states>
+
+	<materials>		
+			
+		<material name="fillArrays">
+			<shader name="depthCalc">
+				<values>
+					<valueof uniform="lightDirection" 	type="LIGHT" context="CURRENT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
+														context="shadowsMultiple#fillTextureArray-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="M"          		type="RENDERER" context="CURRENT" 
+														component="MODEL" />
+														
+					<valueof uniform="P"          		type="RENDERER" context="CURRENT" 
+														component="PROJECTION" />
+														
+					<valueof uniform="V"          		type="RENDERER" context="CURRENT" 
+														component="VIEW" />
+
+					<valueof uniform="GridSize" 		type="PASS" context="CURRENT"
+														component="GridSize" />	
+					
+					<valueof uniform="GridSizeF" 		type="PASS" context="CURRENT"
+														component="GridSizeF" />
+														
+					<valueof uniform="ShadowMapSize"	type="PASS" context="CURRENT"
+														component="ShadowMapSize" />
+														
+<!-- 					<valueof uniform="texCount"			type="RENDERER" context="CURRENT" 
+														component="TEXTURE_COUNT" />
+														
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />	 -->		
+				</values>
+			</shader>
+			<state name="frontCull" />	
+		</material>
+		
+		
+<!-- MAT de TESTE -->
+		<material name="expandido">
+			<shader name="expandido">
+				<values>
+					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
+													component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="V"          	type="RENDERER" context="CURRENT" 
+													component="VIEW" />
+														
+					<valueof uniform="M"          	type="RENDERER" context="CURRENT" 
+													component="MODEL" />
+														
+					<valueof uniform="NormalMatrix" type="RENDERER" context="CURRENT" 
+													component="NORMAL" />
+					
+					<valueof uniform="lightDirection" 	type="LIGHT" 
+														context="Sun" 
+														component="DIRECTION" /> 
+														
+					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
+														context="shadowsMultiple#fillTextureArray-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="shadowMaps" 		type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="2" />													
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="2" name="depth2" >
+   					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+			</textures>	
+		</material>
+		
+		<material name="encolhido">
+			<shader name="encolhido">
+				<values>
+					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
+													component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="V"          	type="RENDERER" context="CURRENT" 
+													component="VIEW" />
+														
+					<valueof uniform="M"          	type="RENDERER" context="CURRENT" 
+													component="MODEL" />
+														
+					<valueof uniform="NormalMatrix" type="RENDERER" context="CURRENT" 
+													component="NORMAL" />
+					
+					<valueof uniform="lightDirection" 	type="LIGHT" 
+														context="Sun" 
+														component="DIRECTION" /> 
+														
+					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
+														context="shadowsMultiple#fillTextureArray-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="shadowMaps" 		type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="2" />													
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="2" name="depth2" >
+   					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+			</textures>	
+		</material>		
+		
+		<material name="showExpandido">
+			<shader name="showExpandido">
+				<values>
+ 					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />								
+					<valueof uniform="RenderTargetX" 		type="PASS" context="CURRENT"
+														component="RenderTargetX" />
+					<valueof uniform="RenderTargetY" 		type="PASS" context="CURRENT"
+														component="RenderTargetY" />
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="outExpandido" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+			</textures>	
+ 			<buffers>	
+				<buffer name="PrimeShadows::hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="2" />
+				</buffer>
+				<buffer name="atomics"  fromLibrary="multipleShadows">
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+	
+			</buffers>
+		</material>
+			
+		<material name="showEncolhido">
+			<shader name="showEncolhido">
+				<values>
+ 					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />								
+					<valueof uniform="RenderTargetX" 		type="PASS" context="CURRENT"
+														component="RenderTargetX" />
+					<valueof uniform="RenderTargetY" 		type="PASS" context="CURRENT"
+														component="RenderTargetY" />														
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="outEncolhido" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+			</textures>	
+ 			<buffers>	
+				<buffer name="PrimeShadows::hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="2" />
+				</buffer>
+				<buffer name="atomics"  fromLibrary="multipleShadows">
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>
+		</material>
+		
+	</materials>
+</materiallib>
+
+

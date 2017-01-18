@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<project name="Image Processing" width="512" height="512">
+	<assets>
+		<scenes>
+			<scene name="Point" >
+				<buffers name="point" primitive="POINTS" material="points">
+					<position name="point" fromLibrary="ImageProcessing" />				
+				</buffers>	
+			</scene>
+		</scenes>	
+		
+		<viewports>
+			<viewport name="Main" >
+				<CLEAR_COLOR  r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+	
+		<cameras>
+			<camera name="dummy" />
+			
+		</cameras>	
+		<materialLibs>
+			<materialLib filename="imageProcessing.mlib"/>
+		</materialLibs>
+	</assets>
+
+	<pipelines>
+		<pipeline name="Vertex only" >
+			<pass class="default" name="process" >
+				<camera name="dummy" />
+				<scenes instances=262144>
+					<scene name ="Point" />  
+				</scenes>
+				<materialMaps>
+					<map fromMaterial="*" toMaterial="vertexOnly" toLibrary="ImageProcessing" />
+				</materialMaps>
+			</pass>
+		
+			<pass class="quad" name="show">
+				<viewport name="Main" />
+				<texture name="ImageProcessing::tex" />
+			</pass>
+			
+		</pipeline>
+	</pipelines>
+</project>

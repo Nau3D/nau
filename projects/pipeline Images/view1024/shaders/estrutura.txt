@@ -1,0 +1,14 @@
+prime - Shaders do Prime 
+	(criar o SM, projectar, e contadores)
+
+sm-adjacency - Shaders Ex/En com uso da adjacencia 
+		(criar o SM, projectar, e contadores)
+
+sm-Coherence - Shaders com o texel coherence
+		(criar o SM, projectar, e contadores)
+	
+sm-multiplos - Shaders com SM expandido e encolhido (Stefan)
+		 (criar o SM, projectar, e contadores)
+
+sm-normal - Shaders com Shadow Mapping normal
+		(criar o SM, projectar, e contadores)

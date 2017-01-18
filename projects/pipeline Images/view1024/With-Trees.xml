@@ -1,0 +1,962 @@
+<?xml version="1.0" ?>
+<!--<project name="shadowmaps sidebench" width=1024 height=512>-->
+<project name="shadowmaps sidebench" width=512 height=512>
+	<assets>
+		<constants>
+			<constant name="GridSizeC" value = "2048" /> <!-- Shadow Maps -->
+			<constant name="RTX" value = "1024" /> <!-- Scene + Prime -->
+			<constant name="RTY" value = "1024" />
+			<constant name="tMAX" value = "1000" />
+			<constant name="HitsBufferSizeC" value = "16777216" /> <!--4 floats * RTX*RTY * 4 bytes-->
+			<constant name="RaysBufferSizeC" value = "33554432" /> <!--8 floats * RTX*RTY * 4 bytes-->
+			<constant name="ScreenPosSizeC" value = "8388608" /> <!--2 vars * RTX*RTY * 4 bytes-->
+		</constants>
+		<attributes>
+			<!-- Lua Vars -->
+			<attribute name="ShadowMapSize" context="PASS" type="INT" value=0 />
+			<!-- Vars do Shadow Maps -->
+			<attribute name="GridSize" context="PASS" type="INT" value="GridSizeC" />
+			<attribute name="GridSizeF" context="PASS" type="FLOAT" value="GridSizeC" />
+			<!-- Vars da Scene -->
+			<attribute name="RenderTargetX" context="PASS" type="INT" value="RTX" />
+			<attribute name="RenderTargetY" context="PASS" type="INT" value="RTY" />
+			<attribute name="tMax" context="PASS" type="FLOAT" value="tMAX" />
+		</attributes>
+		<scenes>						   
+			<scene name="MainScene" param="USE_ADJACENCY" type="OctreeUnified">
+				<file name="..\..\..\models\ntg-bench\bench2.cbo" />
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport" >
+   				<ORIGIN x="0" y="0" />
+				<SIZE width="1.0" height="1.0" /> 
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+			<viewport name="Test2" >
+   				<ORIGIN x="0.0" y="0" />
+				<SIZE width="1.0" height="1.0" /> 
+				<CLEAR_COLOR r="1.0" g="1.0" b="0.0" />
+			</viewport>	
+		</viewports>
+		
+		<cameras>
+     		<camera name="MainCamera" >
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=15.0 FAR=120.0 />
+				<POSITION x="42.947086" y="24.103859" z="-27.831772" /> 
+				<VIEW x="0.415959" y="-0.784187" z="0.460467" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras> 
+			
+		<!-- Sun do Dave -->
+		<lights>
+     		<light name="Sun">
+				<POSITION x="5.0" y="5.0" z="5.0" />
+				<DIRECTION x="0.744" y="-0.408" z="0.527" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.0" g="0.0" b="0.0" />
+			</light> 
+		</lights>
+			
+		<atomics>
+			<!------- Prime COUNTERS ------------->
+			<atomic buffer="PrimeShadows::atomicsPrime" offset=0 semantics="Prime - Light-Facing Pixels (PVPL)" />
+			<atomic buffer="PrimeShadows::atomicsPrime" offset=4 semantics="Prime - Non Light-Facing Pixels (PVCL)" />
+			<atomic buffer="PrimeShadows::atomicsPrime" offset=8 semantics="Prime - Pixels in Light" />
+			<atomic buffer="PrimeShadows::atomicsPrime" offset=12 semantics="Prime - Pixels in Shadow" />
+			<atomic buffer="PrimeShadows::atomicsPrime" offset=16 semantics="Prime - Total Pixels" />
+			
+			<!------- Normal COUNTERS ------------->
+			<atomic buffer="normalShadows::atomicsNormal" offset=24  semantics="SM - Light-Facing Pixels" />
+			<atomic buffer="normalShadows::atomicsNormal" offset=28  semantics="SM - Non Light-Facing Pixels (Green)" />
+			<atomic buffer="normalShadows::atomicsNormal" offset=32  semantics="SM - Pixels in Light" />
+			<atomic buffer="normalShadows::atomicsNormal" offset=36 semantics="SM - Pixels in Shadow" />
+			<atomic buffer="normalShadows::atomicsNormal" offset=40 semantics="SM - Total Pixels" /> 
+			
+			<atomic buffer="normalShadows::atomicsNormal" offset=44 semantics="SM - Correct Pixels in Light" />
+			<atomic buffer="normalShadows::atomicsNormal" offset=48 semantics="SM - Incorrect Pixels in Light (Blue)" />
+ 			<atomic buffer="normalShadows::atomicsNormal" offset=52 semantics="SM - Correct Pixels in Shadow" /> 
+			<atomic buffer="normalShadows::atomicsNormal" offset=56 semantics="SM - Incorrect Pixels in Shadow (Red)" /> 
+
+			
+			<!------- Encolhido (CA) COUNTERS ------------->
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=80 semantics="SM ShrunkenAdj - Light-Facing Pixels (PVPL)" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=84 semantics="SM ShrunkenAdj - Non Light-Facing Pixels (PVCL)" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=88 semantics="SM ShrunkenAdj - Light Pixels" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=92 semantics="SM ShrunkenAdj - Shadow Pixels" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=96 semantics="SM ShrunkenAdj - Correctos em Luz" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=100 semantics="SM ShrunkenAdj - Incorrectos em Luz (Blue)" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=104 semantics="SM ShrunkenAdj - Correctos em Sombra" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=108 semantics="SM ShrunkenAdj - Incorrectos em Sombra (Red)" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=112 semantics="SM ShrunkenAdj - Total Pixels" />
+			
+			<!------- Expandido COUNTERS ------------->
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=120 semantics="SM Expanded - Light-Facing Pixels (PVPL)" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=124 semantics="SM Expanded - Non Light-Facing Pixels (PVCL)" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=128 semantics="SM Expanded - Light Pixels" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=132 semantics="SM Expanded - Shadow Pixels" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=136 semantics="SM Expanded - Correctos em Luz" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=140 semantics="SM Expanded - Incorrectos em Luz (Blue)" />	
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=144 semantics="SM Expanded - Correctos em Sombra" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=148 semantics="SM Expanded - Incorrectos em Sombra (Red)" />
+			<atomic buffer="adjacencyShadows::atomicsAdjacency" offset=152 semantics="SM Expanded - Total Pixels" />			
+			
+			
+			<!------- Encolhido (SA) COUNTERS ------------->
+			
+			<atomic buffer="multipleShadows::atomics" offset=180 semantics="SM Shrunken - Light-Facing Pixels (PVPL)" />
+			<atomic buffer="multipleShadows::atomics" offset=184 semantics="SM Shrunken - Non Light-Facing Pixels (PVCL)" />
+			<atomic buffer="multipleShadows::atomics" offset=188 semantics="SM Shrunken - Light Pixels" />
+			<atomic buffer="multipleShadows::atomics" offset=192 semantics="SM Shrunken - Shadow Pixels" />
+			<atomic buffer="multipleShadows::atomics" offset=196 semantics="SM Shrunken - Correctos em Luz" />	
+			<atomic buffer="multipleShadows::atomics" offset=200 semantics="SM Shrunken - Incorrectos em Luz (Blue)" />
+			<atomic buffer="multipleShadows::atomics" offset=204 semantics="SM Shrunken - Correctos em Sombra" />
+			<atomic buffer="multipleShadows::atomics" offset=208 semantics="SM Shrunken - Incorrectos em Sombra (Red)" />
+			<atomic buffer="multipleShadows::atomics" offset=212 semantics="SM Shrunken - Total Pixels" />	
+			
+		
+			<!------------  COMPUTE SHADERS ATOMICS  			----------------->
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=240 semantics="CASM - Light Pixels in Shrunken SM" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=244 semantics="CASM - Shadow Pixels in Shrunken SM" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=248 semantics="CASM - Light Pixels in Expanded SM" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=252 semantics="CASM - Shadow Pixels in Expanded SM" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=256 semantics="CASM - Light Pixels in Both SMs" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=260 semantics="CASM - Shadow Pixels in Both SMs" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=264 semantics="CASM - Light Pixel in Shrunken and Shadow Pixel in Expanded" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=268 semantics="CASM - Shadow Pixel in Shrunken and Light Pixel in Expanded" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=272 semantics="CASM - Non Light-Facing Pixels (Compare)" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=276 semantics="CASM - Doubt Pixels(Total)" /> 
+			
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=280 semantics="CASM - Light-Facing Pixels (PVPL)" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=284 semantics="CASM - Non Light-Facing Pixels (PVCL)" /> 
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=288 semantics="CASM - Light Pixels in Final" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=292 semantics="CASM - Shadow Pixels in Final" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=296 semantics="CASM - Doubt Pixels to Light Pixels" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=300 semantics="CASM - Doubt Pixels to Shadow Pixels" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=304 semantics="CASM - Correct in Light" />	
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=308 semantics="CASM - Incorrect in Light (Blue)" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=312 semantics="CASM - Correct in Shadow" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=316 semantics="CASM - Incorrect in Shadow (Red)" />
+			<atomic buffer="PrimeShadowMapping::atomicos" offset=320 semantics="CASM - Total Pixels" /> 
+			
+			<!------------  COMPUTE SHADERS ATOMICS  2			----------------->
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=440 semantics="CMSM - Light Pixels in Shrunken SM" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=444 semantics="CMSM - Shadow Pixels in Shrunken SM" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=448 semantics="CMSM - Light Pixels in Expanded SM" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=452 semantics="CMSM - Shadow Pixels in Expanded SM" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=456 semantics="CMSM - Light Pixels in Both SMs" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=460 semantics="CMSM - Shadow Pixels in Both SMs" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=464 semantics="CMSM - Light Pixel in Shrunken and Shadow Pixel in Expanded" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=468 semantics="CMSM - Shadow Pixel in Shrunken and Light Pixel in Expanded" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=472 semantics="CMSM - Non Light-Facing Pixels (Compare)" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=476 semantics="CMSM - Doubt Pixels(Total)" /> 
+			
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=480 semantics="CMSM - Light-Facing Pixels (PVPL)" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=484 semantics="CMSM - Non Light-Facing Pixels (PVCL)" /> 
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=488 semantics="CMSM - Light Pixels in Final" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=492 semantics="CMSM - Shadow Pixels in Final" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=496 semantics="CMSM - Doubt Pixels to Light Pixels" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=500 semantics="CMSM - Doubt Pixels to Shadow Pixels" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=504 semantics="CMSM - Correct in Light" />	
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=508 semantics="CMSM - Incorrect in Light (Blue)" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=512 semantics="CMSM - Correct in Shadow" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=516 semantics="CMSM - Incorrect in Shadow (Red)" />
+			<atomic buffer="PrimeShadowMapping2::atomicos" offset=520 semantics="CMSM - Total Pixels" /> 
+		
+			<!------------  COMPUTE SHADERS ATOMICS  3			----------------->
+			<atomic buffer="PCFShadowMapping::atomicos" offset=640 semantics="PCFSM - Light Pixels in SM" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=644 semantics="PCFSM - Shadow Pixels in SM" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=648 semantics="PCFSM - Non Light-Facing Pixels (Green)" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=652 semantics="PCFSM - Doubt Pixels(Total)" /> 
+			
+			<atomic buffer="PCFShadowMapping::atomicos" offset=656 semantics="PCFSM - Light-Facing Pixels (PVPL)" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=660 semantics="PCFSM - Non Light-Facing Pixels (PVCL)" /> 
+			<atomic buffer="PCFShadowMapping::atomicos" offset=664 semantics="PCFSM - Light Pixels in Final" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=668 semantics="PCFSM - Shadow Pixels in Final" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=672 semantics="PCFSM - Doubt Pixels to Light Pixels" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=676 semantics="PCFSM - Doubt Pixels to Shadow Pixels" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=680 semantics="PCFSM - Correct in Light" />	
+			<atomic buffer="PCFShadowMapping::atomicos" offset=684 semantics="PCFSM - Incorrect in Light (Blue)" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=688 semantics="PCFSM - Correct in Shadow" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=692 semantics="PCFSM - Incorrect in Shadow (Red)" />
+			<atomic buffer="PCFShadowMapping::atomicos" offset=696 semantics="PCFSM - Total Pixels" /> 
+		</atomics>	
+		
+		<materialLibs>
+			<materialLib filename="primeShadows.mlib"/>
+			<materialLib filename="normalShadows.mlib"/>
+			<materialLib filename="pcfShadowsCompute.mlib"/>
+			<materialLib filename="adjacencyShadows.mlib"/>	
+ 			<materialLib filename="adjacencyShadowsCompute.mlib"/>
+			<materialLib filename="multipleShadows.mlib"/>
+			<materialLib filename="multipleShadowsCompute.mlib"/>	
+			<materialLib filename="adjacencyShadows2.mlib"/>			
+		</materialLibs>
+	</assets>
+	
+	<pipelines default="shadowsPrime" mode="RUN_ALL">
+		<pipeline name="shadowsPrime" defaultCamera="MainCamera" >
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>	
+			<pass name="showFinal" class="quad" >
+				<color clear = "false"/>
+				<renderTarget name="finalRT" fromLibrary="PrimeShadows" />
+				<material name="compose" fromLibrary="PrimeShadows" />
+			</pass>
+			
+			 <pass name="showFinal2" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputFinal" fromLibrary="PrimeShadows" />
+			</pass> 
+			
+		</pipeline>
+	
+		<pipeline name="shadowsNormal" defaultCamera="MainCamera" >	
+			<!-- Create Shadow Maps -->
+			<pass class="depthmap" name="fillTextureArray">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="Test2"/> <!--  Viewport > Rendertarget -->
+				<renderTarget name="shadowMaps" fromLibrary="normalShadows" />	
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillArrays" fromLibrary="normalShadows" />
+						<state name="frontCull" fromLibrary="normalShadows" />
+					</map>
+				</injectionMaps>	
+			</pass>
+			
+			<!-- Render a Cena com os resultados do shadowmap  -->
+	 		<pass class="default" name="passShadowMaps">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="simple" fromLibrary="normalShadows"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="normalShadows" toMaterial="combine" />
+				</materialMaps>
+			</pass> 
+								
+<!-- Begin OptiX Prime -->
+			<!-- Fill Gbuffers -->
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<!-- Fill Ray Buffer -->
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<!-- OptiX Prime Pass  -->
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>	
+			<!-- Print to renderTarget-->
+			<pass name="showPrime" class="quad" >
+				<renderTarget name="finalRT" fromLibrary="PrimeShadows" />
+				<material name="compose" fromLibrary="PrimeShadows" />
+			</pass>
+<!-- End OptiX Prime -->
+		
+			<!-- Show Final -->
+  			<pass class="quad" name="showCompare">
+				<renderTarget name="finalRT" fromLibrary="normalShadows" />
+				<material name="compare" fromLibrary="normalShadows" />
+			</pass>
+			<pass name="showFinal" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputFinal" fromLibrary="normalShadows" />
+			</pass> 
+			
+		</pipeline>
+
+		<pipeline name="shadowsMultiple" defaultCamera="MainCamera" >		
+		<!-- Begin SHADOW MAPS -->			
+			<!-- Create Shadow Maps -->
+			<pass class="depthmap" name="fillTextureArray">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="Test2"/> <!--  Viewport > Rendertarget -->
+				<renderTarget name="shadowMaps" fromLibrary="multipleShadows" />	
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillArrays" fromLibrary="multipleShadows" />
+						<state name="frontCull" fromLibrary="multipleShadows" />
+					</map>
+				</injectionMaps>	
+			</pass>	
+			
+			<!-- RENDER SHADOW MAP ENCOLHIDO -->
+	 		<pass class="default" name="passShadowMapEncolhido">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="encolhido" fromLibrary="multipleShadows"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="multipleShadows" toMaterial="encolhido" />
+				</materialMaps>
+			</pass> 	
+<!-- End SHADOW MAPS -->	
+			
+<!-- Begin OptiX Prime -->
+			<!-- Fill Gbuffers -->
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<!-- Fill Ray Buffer -->
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<!-- OptiX Prime Pass  -->
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>	
+			<!-- Print to renderTarget-->
+			<pass name="showPrime" class="quad" >
+				<renderTarget name="finalRT" fromLibrary="PrimeShadows" />
+				<material name="compose" fromLibrary="PrimeShadows" />
+			</pass>
+<!-- End OptiX Prime -->
+			
+			<!-- Show Encolhido -->
+   			<pass class="quad" name="showEncolhido">
+				<renderTarget name="finalRT" fromLibrary="multipleShadows" />
+				<material name="showEncolhido" fromLibrary="multipleShadows" />
+			</pass>
+			<pass name="showFinal" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputFinal" fromLibrary="multipleShadows" />
+			</pass> 
+			
+		</pipeline>
+
+		<pipeline name="shadowsAdjacency" defaultCamera="MainCamera" >
+		<!-- Begin SHADOW MAPS -->			
+			<!-- Create Shadow Maps -->
+			<pass class="depthmap" name="fillTextureArray">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="Test2"/> <!--  Viewport > Rendertarget -->
+				<renderTarget name="shadowMaps" fromLibrary="adjacencyShadows" />	
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillArrays" fromLibrary="adjacencyShadows" />
+						<state name="frontCull" fromLibrary="adjacencyShadows" />
+					</map>
+				</injectionMaps>	
+			</pass>	
+
+			<!-- RENDER SHADOW MAP EXPANDIDO -->
+	 		<pass class="default" name="passShadowMapExpandido">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="expandido" fromLibrary="adjacencyShadows"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="adjacencyShadows" toMaterial="expandido" />
+				</materialMaps>
+			</pass> 
+			
+			<!-- RENDER SHADOW MAP ENCOLHIDO -->
+	 		<pass class="default" name="passShadowMapEncolhido">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="encolhido" fromLibrary="adjacencyShadows"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="adjacencyShadows" toMaterial="encolhido" />
+				</materialMaps>
+			</pass> 	
+<!-- End SHADOW MAPS -->	
+			
+<!-- Begin OptiX Prime -->
+			<!-- Fill Gbuffers -->
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<!-- Fill Ray Buffer -->
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<!-- OptiX Prime Pass  -->
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>	
+			<!-- Print to renderTarget-->
+			<pass name="showPrime" class="quad" >
+				<renderTarget name="finalRT" fromLibrary="PrimeShadows" />
+				<material name="compose" fromLibrary="PrimeShadows" />
+			</pass>
+<!-- End OptiX Prime -->
+			
+			
+			<!-- Show Encolhido (Imcrementa o Sizes) -->
+   			<pass class="quad" name="showEncolhido">
+				<renderTarget name="finalRT" fromLibrary="adjacencyShadows" />
+				<material name="showEncolhido" fromLibrary="adjacencyShadows" />
+			</pass>
+			
+			<pass name="showFinal" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputFinal" fromLibrary="adjacencyShadows" />
+			</pass> 
+			
+		</pipeline>
+
+		<pipeline name="shadowsBGSM" defaultCamera="MainCamera" >
+		<!-- Begin SHADOW MAPS -->			
+			<!-- Create Shadow Maps -->
+			<pass class="depthmap" name="fillTextureArray">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="Test2"/> <!--  Viewport > Rendertarget -->
+				<renderTarget name="shadowMaps" fromLibrary="adjacencyShadows2" />	
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillArrays" fromLibrary="adjacencyShadows2" />
+						<state name="frontCull" fromLibrary="adjacencyShadows2" />
+					</map>
+				</injectionMaps>	
+			</pass>	
+
+			<!-- RENDER SHADOW MAP EXPANDIDO -->
+	 		<pass class="default" name="passShadowMapExpandido">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="expandido" fromLibrary="adjacencyShadows2"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="adjacencyShadows2" toMaterial="expandido" />
+				</materialMaps>
+			</pass> 
+			
+			<!-- RENDER SHADOW MAP ENCOLHIDO -->
+	 		<pass class="default" name="passShadowMapEncolhido">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="encolhido" fromLibrary="adjacencyShadows2"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="adjacencyShadows2" toMaterial="encolhido" />
+				</materialMaps>
+			</pass> 	
+<!-- End SHADOW MAPS -->	
+			
+<!-- Begin OptiX Prime -->
+			<!-- Fill Gbuffers -->
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<!-- Fill Ray Buffer -->
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<!-- OptiX Prime Pass  -->
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>	
+			<!-- Print to renderTarget-->
+			<pass name="showPrime" class="quad" >
+				<renderTarget name="finalRT" fromLibrary="PrimeShadows" />
+				<material name="compose" fromLibrary="PrimeShadows" />
+			</pass>
+<!-- End OptiX Prime -->
+			
+			<!-- Show Expandido (Não imcrementa Sizes) -->
+   			<pass class="quad" name="showExpandido"> 
+				<renderTarget name="finalRT" fromLibrary="adjacencyShadows2" />
+				<material name="showExpandido" fromLibrary="adjacencyShadows2" />
+			</pass>
+			
+			<pass name="showFinal" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputFinal" fromLibrary="adjacencyShadows2" />
+			</pass> 
+			
+		</pipeline>
+
+		<pipeline name="SMPrimePipelinePCF" defaultCamera="MainCamera" >
+<!-- BEGIN Optix Picture -->
+			<!-- Fill Gbuffers -->
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<!-- Fill Ray Buffer -->
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<!-- OptiX Prime Pass  -->
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>	
+			<!-- Print to renderTarget-->
+			<pass name="showPrime" class="quad" >
+				<renderTarget name="finalRT" fromLibrary="PrimeShadows" />
+				<material name="compose" fromLibrary="PrimeShadows" />
+			</pass>
+<!-- END Optix Picture -->
+
+<!-- BEGIN SHADOW MAPS -->			
+			<!-- Create Shadow Maps -->
+			<pass class="depthmap" name="passDepthCalc">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera"/>
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="Test2"/> <!--  Viewport > Rendertarget -->
+				<renderTarget name="shadowMaps" fromLibrary="PCFShadowMapping" />	
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="depthCalc" fromLibrary="PCFShadowMapping" />
+						<state name="frontCull" fromLibrary="PCFShadowMapping" />
+					</map>
+				</injectionMaps>	
+			</pass>
+		
+			<!-- RENDER SHADOW MAP COMBINE -->
+	 		<pass class="default" name="passShadowMaps">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera"/>
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="simple" fromLibrary="PCFShadowMapping"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="PCFShadowMapping" toMaterial="renderShadows" />
+				</materialMaps>
+			</pass> 
+			
+			<!-- OutPut to View -->
+   			<pass class="quad" name="showShadowMaps">
+				<postScript file="teste2.lua" script="createWorkGroups3" />
+				<renderTarget name="finalSM" fromLibrary="PCFShadowMapping" />
+				<material name="showShadowMaps" fromLibrary="PCFShadowMapping" />
+			</pass>
+			<pass name="showSMs" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputSM" fromLibrary="PCFShadowMapping" />
+			</pass> 	
+<!-- END SHADOW MAPS -->
+		
+<!-- BEGIN OPTIX  -->
+			<pass name="Optix Prime2" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PCFShadowMapping::rays" queryType = "ANY"/> 
+				<hits buffer ="PCFShadowMapping::hits" />
+			</pass>
+<!-- End OPTIX -->
+		
+<!-- BEGIN COMPUTE SHADER -->		
+			<!-- Criar Imagem com Resultados (Existe um Problema com o width/height) -->
+			<pass class="compute" name="passCompute">
+				<material name="computeFinal" fromLibrary="PCFShadowMapping" bufferX="PCFShadowMapping::workGroups" offsetX=0 
+												bufferY="PCFShadowMapping::workGroups" offsetY=0 dimZ=1 />
+			</pass> 	 	 	
+<!-- END COMPUTE SHADER -->
+			
+			<!-- Show Final -->
+		  	<pass class="quad" name="passFinal">
+				<renderTarget name="finalRT" fromLibrary="PCFShadowMapping" />
+				<material name="showFinal" fromLibrary="PCFShadowMapping" />
+			</pass>
+			<pass name="showFinal" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputFinal" fromLibrary="PCFShadowMapping" />
+			</pass> 
+			
+		</pipeline>
+			
+		<pipeline name="SMPrimePipelineStefan" defaultCamera="MainCamera" >
+<!-- BEGIN Optix Picture -->
+			<!-- Fill Gbuffers -->
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<!-- Fill Ray Buffer -->
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<!-- OptiX Prime Pass  -->
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>	
+			<!-- Print to renderTarget-->
+			<pass name="showPrime" class="quad" >
+				<renderTarget name="finalRT" fromLibrary="PrimeShadows" />
+				<material name="compose" fromLibrary="PrimeShadows" />
+			</pass>
+<!-- END Optix Picture -->
+
+<!-- BEGIN SHADOW MAPS -->			
+			<!-- Create Shadow Maps -->
+			<pass class="depthmap" name="passDepthCalc">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera"/>
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="Test2"/> <!--  Viewport > Rendertarget -->
+				<renderTarget name="shadowMaps" fromLibrary="PrimeShadowMapping2" />	
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="depthCalc" fromLibrary="PrimeShadowMapping2" />
+						<state name="frontCull" fromLibrary="PrimeShadowMapping2" />
+					</map>
+				</injectionMaps>	
+			</pass>
+		
+			<!-- RENDER SHADOW MAP COMBINE -->
+	 		<pass class="default" name="passShadowMaps">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera"/>
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="simple" fromLibrary="PrimeShadowMapping2"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="PrimeShadowMapping2" toMaterial="renderShadows" />
+				</materialMaps>
+			</pass> 
+			
+			<!-- OutPut to View -->
+   			<pass class="quad" name="showShadowMaps">
+				<postScript file="teste2.lua" script="createWorkGroups2" />
+				<renderTarget name="finalSM" fromLibrary="PrimeShadowMapping2" />
+				<material name="showShadowMaps" fromLibrary="PrimeShadowMapping2" />
+			</pass>
+			<pass name="showSMs" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputSM" fromLibrary="PrimeShadowMapping2" />
+			</pass> 	
+<!-- END SHADOW MAPS -->
+		
+<!-- BEGIN OPTIX --> 
+			<pass name="Optix Prime2" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadowMapping2::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadowMapping2::hits" />
+			</pass>
+<!-- End OPTIX -->
+		
+<!-- BEGIN COMPUTE SHADER -->		
+			<!-- Criar Imagem com Resultados (Existe um Problema com o width/height)  -->
+			<pass class="compute" name="passCompute">
+				<material name="computeFinal" fromLibrary="PrimeShadowMapping2" bufferX="PrimeShadowMapping2::workGroups" offsetX=0 
+												bufferY="PrimeShadowMapping2::workGroups" offsetY=0 dimZ=1 />
+			</pass> 	 	 	
+<!-- END COMPUTE SHADER -->
+			
+			<!-- Show Final -->
+		  	<pass class="quad" name="passFinal">
+				<renderTarget name="finalRT" fromLibrary="PrimeShadowMapping2" />
+				<material name="showFinal" fromLibrary="PrimeShadowMapping2" />
+			</pass>
+			<pass name="showFinal" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputFinal" fromLibrary="PrimeShadowMapping2" />
+			</pass> 
+
+		</pipeline>
+
+		<pipeline name="SMPrimePipeline" defaultCamera="MainCamera" >	
+<!-- BEGIN Optix Picture -->
+			<!-- Fill Gbuffers -->
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<!-- Fill Ray Buffer -->
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<!-- OptiX Prime Pass  -->
+			<pass name="Optix Prime" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>	
+			<!-- Print to renderTarget-->
+			<pass name="showPrime" class="quad" >
+				<renderTarget name="finalRT" fromLibrary="PrimeShadows" />
+				<material name="compose" fromLibrary="PrimeShadows" />
+			</pass>
+<!-- END Optix Picture -->
+		
+<!-- BEGIN SHADOW MAPS -->			
+			<!-- Create Shadow Maps -->
+			<pass class="depthmap" name="passDepthCalc">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera"/>
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="Test2"/> <!--  Viewport > Rendertarget -->
+				<renderTarget name="shadowMaps" fromLibrary="PrimeShadowMapping" />	
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="depthCalc" fromLibrary="PrimeShadowMapping" />
+						<state name="frontCull" fromLibrary="PrimeShadowMapping" />
+					</map>
+				</injectionMaps>	
+			</pass>
+		
+			<!-- RENDER SHADOW MAP COMBINE -->
+	 		<pass class="default" name="passShadowMaps">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera"/>
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="simple" fromLibrary="PrimeShadowMapping"/>
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="PrimeShadowMapping" toMaterial="renderShadows" />
+				</materialMaps>
+			</pass> 
+			
+			<!-- OutPut to View -->
+   			<pass class="quad" name="showShadowMaps">
+				<postScript file="teste2.lua" script="createWorkGroups" />
+				<renderTarget name="finalSM" fromLibrary="PrimeShadowMapping" />
+				<material name="showShadowMaps" fromLibrary="PrimeShadowMapping" />
+			</pass>
+			<pass name="showSMs" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputSM" fromLibrary="PrimeShadowMapping" />
+			</pass> 	
+<!-- END SHADOW MAPS -->
+		
+<!-- BEGIN OPTIX Correcting --> 
+			<pass name="Optix Prime2" class="optixPrime">
+				<scene name="MainScene" />
+				<rays buffer="PrimeShadowMapping::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadowMapping::hits" />
+			</pass>	
+<!-- End OPTIX Correcting-->
+		
+<!-- BEGIN COMPUTE SHADER -->	
+			<!-- Criar Imagem com Resultados (Existe um Problema com o width/height)  -->
+			<pass class="compute" name="passCompute">
+				<material name="computeFinal" fromLibrary="PrimeShadowMapping" bufferX="PrimeShadowMapping::workGroups" offsetX=0 
+												bufferY="PrimeShadowMapping::workGroups" offsetY=0 dimZ=1 />
+			</pass> 	 
+<!-- END COMPUTE SHADER -->
+
+			<!-- Show Final -->
+		  	<pass class="quad" name="passFinal">
+				<renderTarget name="finalRT" fromLibrary="PrimeShadowMapping" />
+				<material name="showFinal" fromLibrary="PrimeShadowMapping" />
+			</pass>
+			<pass name="showFinal" class="quad" >
+				<viewport name="MainViewport" />
+				<texture name="outputFinal" fromLibrary="PrimeShadowMapping" />
+			</pass> 
+		
+		</pipeline>
+	
+	</pipelines>
+</project>	

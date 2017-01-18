@@ -1,0 +1,103 @@
+<NotepadPlus>
+    <Project name="Imagens">
+        <Folder name="shaders">
+            <Folder name="prime">
+                <File name="view1024\shaders\prime\compose.frag" />
+                <File name="view1024\shaders\prime\fillGBuffers.frag" />
+                <File name="view1024\shaders\prime\fillGBuffers.vert" />
+                <File name="view1024\shaders\prime\fillRayBuffer.frag" />
+                <File name="view1024\shaders\prime\fillRayBuffer.vert" />
+                <File name="view1024\shaders\prime\quadShader.vert" />
+                <File name="view1024\shaders\prime\showBuffer.frag" />
+            </Folder>
+            <Folder name="sm-adjacency">
+                <Folder name="compute">
+                    <File name="view1024\shaders\sm-adjacency\compute\computeFinal.comp" />
+                    <File name="view1024\shaders\sm-adjacency\compute\depth.frag" />
+                    <File name="view1024\shaders\sm-adjacency\compute\depth.vert" />
+                    <File name="view1024\shaders\sm-adjacency\compute\depth2.geom" />
+                    <File name="view1024\shaders\sm-adjacency\compute\myshowBuffer.frag" />
+                    <File name="view1024\shaders\sm-adjacency\compute\renderShadows.bak.frag" />
+                    <File name="view1024\shaders\sm-adjacency\compute\renderShadows.frag" />
+                    <File name="view1024\shaders\sm-adjacency\compute\renderShadows.vert" />
+                    <File name="view1024\shaders\sm-adjacency\compute\showFinal.frag" />
+                    <File name="view1024\shaders\sm-adjacency\compute\showFinal.vert" />
+                    <File name="view1024\shaders\sm-adjacency\compute\showShadowMaps.frag" />
+                    <File name="view1024\shaders\sm-adjacency\compute\showShadowMaps.vert" />
+                </Folder>
+                <File name="view1024\shaders\sm-adjacency\combine.vert" />
+                <File name="view1024\shaders\sm-adjacency\depth.frag" />
+                <File name="view1024\shaders\sm-adjacency\depth.vert" />
+                <File name="view1024\shaders\sm-adjacency\depth2.geom" />
+                <File name="view1024\shaders\sm-adjacency\encolhido.frag" />
+                <File name="view1024\shaders\sm-adjacency\expandido.frag" />
+                <File name="view1024\shaders\sm-adjacency\showCombine.vert" />
+                <File name="view1024\shaders\sm-adjacency\showEncolhido.frag" />
+                <File name="view1024\shaders\sm-adjacency\showExpandido.frag" />
+            </Folder>
+            <Folder name="sm-multiplos">
+                <Folder name="compute">
+                    <File name="view1024\shaders\sm-multiplos\compute\computeFinal.comp" />
+                    <File name="view1024\shaders\sm-multiplos\compute\depth.frag" />
+                    <File name="view1024\shaders\sm-multiplos\compute\depth.vert" />
+                    <File name="view1024\shaders\sm-multiplos\compute\depth2.geom" />
+                    <File name="view1024\shaders\sm-multiplos\compute\myshowBuffer.frag" />
+                    <File name="view1024\shaders\sm-multiplos\compute\renderShadows.frag" />
+                    <File name="view1024\shaders\sm-multiplos\compute\renderShadows.vert" />
+                    <File name="view1024\shaders\sm-multiplos\compute\showFinal.frag" />
+                    <File name="view1024\shaders\sm-multiplos\compute\showFinal.vert" />
+                    <File name="view1024\shaders\sm-multiplos\compute\showShadowMaps.frag" />
+                    <File name="view1024\shaders\sm-multiplos\compute\showShadowMaps.vert" />
+                </Folder>
+                <File name="view1024\shaders\sm-multiplos\combine.vert" />
+                <File name="view1024\shaders\sm-multiplos\depth.frag" />
+                <File name="view1024\shaders\sm-multiplos\depth.vert" />
+                <File name="view1024\shaders\sm-multiplos\depth2.geom" />
+                <File name="view1024\shaders\sm-multiplos\encolhido.frag" />
+                <File name="view1024\shaders\sm-multiplos\expandido.frag" />
+                <File name="view1024\shaders\sm-multiplos\showCombine.vert" />
+                <File name="view1024\shaders\sm-multiplos\showEncolhido.frag" />
+                <File name="view1024\shaders\sm-multiplos\showExpandido.frag" />
+            </Folder>
+            <Folder name="sm-normal">
+                <Folder name="compute">
+                    <File name="view1024\shaders\sm-normal\compute\computeFinal.comp" />
+                    <File name="view1024\shaders\sm-normal\compute\depthOnly.frag" />
+                    <File name="view1024\shaders\sm-normal\compute\depthOnly.vert" />
+                    <File name="view1024\shaders\sm-normal\compute\myshowBuffer.frag" />
+                    <File name="view1024\shaders\sm-normal\compute\renderShadows.frag" />
+                    <File name="view1024\shaders\sm-normal\compute\renderShadows.vert" />
+                    <File name="view1024\shaders\sm-normal\compute\showFinal.frag" />
+                    <File name="view1024\shaders\sm-normal\compute\showFinal.vert" />
+                    <File name="view1024\shaders\sm-normal\compute\showShadowMaps.frag" />
+                    <File name="view1024\shaders\sm-normal\compute\showShadowMaps.vert" />
+                </Folder>
+                <File name="view1024\shaders\sm-normal\combine.vert" />
+                <File name="view1024\shaders\sm-normal\combineNeighbour.frag" />
+                <File name="view1024\shaders\sm-normal\compare.frag" />
+                <File name="view1024\shaders\sm-normal\compare.vert" />
+                <File name="view1024\shaders\sm-normal\depthOnly.frag" />
+                <File name="view1024\shaders\sm-normal\depthOnly.vert" />
+                <File name="view1024\shaders\sm-normal\showCombine.frag" />
+                <File name="view1024\shaders\sm-normal\showCombine.vert" />
+            </Folder>
+            <File name="view1024\shaders\estrutura.txt" />
+        </Folder>
+        <File name="view1024\adjacencyShadows.mlib" />
+        <File name="view1024\adjacencyShadows2.mlib" />
+        <File name="view1024\adjacencyShadowsCompute.mlib" />
+        <File name="view1024\multipleShadows.mlib" />
+        <File name="view1024\multipleShadowsCompute.mlib" />
+        <File name="view1024\normalShadows.mlib" />
+        <File name="view1024\pcfShadowsCompute.mlib" />
+        <File name="view1024\primeShadows.mlib" />
+        <File name="view1024\Against-Bench.xml" />
+        <File name="view1024\Against-Flowers.xml" />
+        <File name="view1024\Against-Trees.xml" />
+        <File name="view1024\Side-Trees.xml" />
+        <File name="view1024\With-Bench.xml" />
+        <File name="view1024\With-Trees.xml" />
+        <File name="view1024\teste.lua" />
+        <File name="view1024\teste2.lua" />
+    </Project>
+</NotepadPlus>

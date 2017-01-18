@@ -1,0 +1,129 @@
+<?xml version="1.0" ?>
+<materialLib name="Simple">
+
+	<buffers>
+		<buffer name="dbPosition" >
+			<DIM x=3 y=1 z=1 />
+			<structure>
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+			</structure>	
+		</buffer>
+		<buffer name="dbIndex" >
+			<DIM x=2 y=1 z=1 />
+			<structure>
+				<field value="INT" />
+			</structure>	
+		</buffer>
+	</buffers>
+
+
+	<textures>
+		<!--texture name="Crate" filename="../../models/Texturas/crate.jpg" mipmap=true/-->	
+		<texture name="Azulejo" filename="../../../models/Texturas/AzulejoCapStAnt.tif">
+			<!--WIDTH value=128 />
+			<HEIGHT value=128/-->
+			<SIZE width=128 height=128 />
+		</texture>
+		<texture name="Crate" filename="../../../models/Texturas/crate.jpg" mipmap=true />	
+			<!--SIZE width=128 height=128 />
+		</texture-->
+	</textures>
+	
+	<materials>
+		<material name="simpleTexturedAzulejo">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="Azulejo" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+			<!--imageTextures>
+				<imageTexture name="Crate" UNIT="0"/>
+			</imageTextures-->
+		</material>
+		
+		<material name="simpleTexturedCrate">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="Crate" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture>
+			</textures>
+			<!--imageTextures>
+				<imageTexture name="Crate" UNIT="0"/>
+			</imageTextures-->
+		</material>
+		
+		<material name="simpleTexturedCrateCullFaced">
+			<state name="cullFaceDisabled"/>
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="Crate" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture>
+			</textures>
+		</material>
+		
+		<material name="simpleColored">
+			<color>
+				<AMBIENT r="1.0" g="0.0" b="0.0" a="1.0" />
+				<DIFFUSE r="1.0" g="0.0" b="0.0" a="1.0" />
+				<SPECULAR r="1.0" g="1.0" b="1.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+		</material>
+		
+		<material name="simpleWhite">
+			<color>
+				<AMBIENT r="0.9" g="0.9" b="0.9" a="1.0" />
+				<DIFFUSE r="0.9" g="0.9" b="0.9" a="1.0" />
+				<SPECULAR r="1.0" g="1.0" b="1.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="1.0" />
+			</color>
+		</material>
+		
+		<material name="simpleColoredDebug">
+			<color>
+				<AMBIENT r="0.0" g="1.0" b="1.0" a="1.0" />
+				<DIFFUSE r="0.0" g="1.0" b="1.0" a="1.0" />
+				<SPECULAR r="1.0" g="1.0" b="1.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+		</material>
+	</materials>
+	<states>
+		<state name="cullFaceDisabled">
+			<CULL_FACE value="FALSE"/>
+		</state>
+	</states>
+</materialLib>

@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<materialLib name="ImageProcessing">
+
+	<renderTargets>
+		<renderTarget name="result" >
+			<SIZE width=512 height=512 />
+			<colors>
+				<color name = "result" internalFormat="RGBA" />
+			</colors>	
+		</renderTarget>
+	</renderTargets>
+	
+	<buffers>
+		<buffer name="point">
+			<SIZE value=16 /> <!-- 4 * sizeof(float) -->
+		</buffer>
+	</buffers>	
+	
+	<textures>
+		<texture name="tex">
+			<WIDTH value=512 />
+			<HEIGHT value=512 />
+			<INTERNAL_FORMAT value="RGBA" />
+		</texture>	
+		<texture name="source" filename="../../models/Texturas/CuboEstrada.tif" mipmap="0" />
+	</textures>
+
+	<shaders>
+		<shader name="vertexOnly" 		vs = "shaders/vertexOnly.vert" /> 
+		
+		<shader name="standard" 		vs = "shaders/standard.vert"
+										ps = "shaders/standard.frag" /> 
+		<shader name="standardImgTex" 		vs = "shaders/standard.vert"
+										ps = "shaders/standardImgTex.frag" /> 
+	</shaders>
+
+	<materials>
+		<material name ="vertexOnly">
+			<shader name="vertexOnly">
+				<values>									
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+														id=0 component="UNIT" />								
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT=0 name="source" />
+			</textures>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="tex" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+		</material>
+		
+		<material name ="standard">
+			<shader name="standard">
+				<values>									
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+														id=0 component="UNIT" />		
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT=0 name="source" />
+			</textures>	
+		</material>
+		
+		<material name ="standardImgTex">
+			<shader name="standardImgTex">
+				<values>									
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+														id=0 component="UNIT" />		
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT=0 name="source" />
+			</textures>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="tex" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+		</material>
+
+	</materials>
+</materialLib>

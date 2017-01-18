@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<project name="Simple" width="1024" height="768">
+	<assets> 
+		<scenes>			
+			<!-- <scene name="box">
+				<geometry name="box" type="SPHERE" material="ballMat" SLICES=20 STACKS=20/>
+				<TRANSLATE x=0 y=2 z=0 />
+			</scene> -->
+			<scene name="box" physicsMaterial="box">
+				<geometry name="box" type="BOX" material="crate" />
+				<TRANSLATE x=0 y=7 z=0 />
+				<!-- <ROTATE x=0 y=0 z=1 w=45 /> -->
+				<!-- <SCALE x=2 y=2 z=2 /> -->
+			</scene>
+			
+			<scene name="plane" physicsMaterial="plane" >
+				<geometry name="plane" type="SQUARE" material="azulejo" />
+				<!-- <SCALE x=5 y=5 z=5 /> -->
+			</scene>
+			<!-- <scene name="plane">
+				<geometry name="plane" type="BOX" material="azulejo"/>
+				<TRANSLATE x =0 y=-1 z =0 />
+			</scene> -->
+			
+			<scene name="Axis">
+				<geometry name = "axis" type = "AXIS"  >
+					<SCALE x=5 y=5 z=5 />
+				</geometry>
+			</scene>
+			
+			<!-- <scene name="dbScene" physicsMaterial="debug">
+				<buffers name="dbBuffer" primitive="LINES" material="debugMat">
+					<index name="dbIndex" fromLibrary="Simple" />
+					<position name="dbPosition" fromLibrary="Simple" /> 
+				</buffers>
+			</scene> -->
+			
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.2" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<!--viewport name="MainViewport">
+					<SIZE width="1" height= "750" />
+				</viewport-->
+				<viewport name="MainViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<!--
+				<TYPE value="PERSPECTIVE"/>
+				<FOV value=60/>
+				<NEAR value= 1/>
+				<FAR value= 100/>
+				-->
+				<POSITION x=0.0 y=4.0 z=10.0 />
+				<!--<VIEW x=0.0 y=0.0 z=0.1 />-->
+				<LOOK_AT_POINT x=0 y=0 z=0/>
+				<!--
+				<ZX_ANGLE value = 0.877/>
+				<ELEVATION_ANGLE value=-0.27548/>
+				-->
+				<UP x=0.0 y=1.0 z=0.0 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=-2 y=-1 z=-2 />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.2" g="0.2" b="0.2" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "materials.mlib" />
+		</materialLibs> 
+		
+		<physicsLibs>
+			<physicsLib filename = "physicsDesc.plib" />
+		</physicsLibs>
+		
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<!-- <scene name="ball" /> -->
+					<scene name="box" />
+					<scene name="plane" />
+					<scene name="Axis" />
+					<!-- <scene name="dbScene" /> -->
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="crate" toLibrary="Simple" toMaterial="simpleTexturedCrate" />
+					<map fromMaterial="azulejo" toLibrary="Simple" toMaterial="simpleTexturedAzulejo" />
+					<map fromMaterial="ballMat" toLibrary="Simple" toMaterial="simpleColored" />
+					<map fromMaterial="debugMat" toLibrary="Simple" toMaterial="simpleColoredDebug" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

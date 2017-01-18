@@ -1,0 +1,119 @@
+<?xml version="1.0" ?>
+<project name="teste1" width=900 height=300>
+	<assets>
+		<scenes>
+			<scene name="MainScene" type="OctreeByMat">
+				<file name="..\..\models\LargoCamoes\largoCamoes.nbo"/>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="RightViewport">
+				<ORIGIN x="0.66" y="0" />
+				<SIZE width="0.34" height="1.0" />
+				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="MiddleViewport" >
+				<ORIGIN x="0.33" y="0" />
+				<SIZE width="0.33" height="1.0" />
+				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="LeftViewport">
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width="0.33" height="1.0"/>
+				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera" >
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
+				<POSITION x="-4.0" y="20.0" z="-29.0" />
+				<VIEW x="0.91" y="-0.29" z="0.26" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun">
+				<DIRECTION x="1" y="-1" z="-1" />
+			</light>
+		</lights>
+		<materialLibs>
+			<materialLib filename="optixTest.mlib"/>
+			<materialLib filename="DeferredRenderTargets.mlib"/>
+		</materialLibs>
+	</assets>
+
+	<pipelines>
+
+		<pipeline name="optix deffered" default="true" defaultCamera="MainCamera">
+		
+			<pass class="default" name="deferred">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="deferred" fromLibrary="Deferred Render Targets" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial ="deferred" fromLibrary="Deferred Render Targets" />
+					</map>	
+				</injectionMaps>
+			</pass>
+
+
+			<pass class="optix" name="pass2">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="__nau_material_lib" toMaterial="__Black" />
+				</materialMaps>
+				
+				<optixEntryPoint>
+					<optixProgram type="RayGen" file="optix/deferredShadows.ptx" proc="buffer_camera"/> 
+					<optixProgram type="Exception" file="optix/deferredShadows.ptx" proc="exception"/> 
+				</optixEntryPoint>
+				<optixDefaultMaterial>
+					<optixProgram type="Any_Hit"  	 ray="Shadow" file="optix/deferredShadows.ptx" proc="any_hit_shadow"/> 
+				</optixDefaultMaterial>
+				<optixGeometryProgram>
+					<optixProgram type="Geometry_Intersection"   file="optix/deferredShadows.ptx" proc="geometryintersection"/>
+					<optixProgram type="Bounding_Box"   file="optix/deferredShadows.ptx" proc="boundingbox"/>
+				</optixGeometryProgram>
+				<optixVertexAttributes>
+					<attribute name="position"/>
+				</optixVertexAttributes>
+				<optixGlobalAttributes>
+					<valueof optixVar="lightDir" type="LIGHT" context="CURRENT" id=0 component="DIRECTION" />
+				</optixGlobalAttributes>
+				<optixInput>
+					<buffer var="pos_buffer" texture="Deferred Render Targets::pos" />
+				</optixInput>
+			</pass>
+
+
+
+			<pass class="quad" name="pass3">
+				<viewport name="LeftViewport" />
+				<texture name="color" fromLibrary="Deferred Render Targets" />			
+			</pass>
+			<pass class="quad" name="pass4">
+				<viewport name="MiddleViewport" />
+				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			<pass class="quad" name="pass5">
+				<viewport name="RightViewport" />
+				<materialMaps>
+					<map fromMaterial="__Quad" toLibrary="Deferred Render Targets" toMaterial="combine" />
+				</materialMaps>
+			</pass>	
+		</pipeline>
+	</pipelines>
+</project>

@@ -1,0 +1,155 @@
+<?xml version="1.0" ?>
+<materiallib name="normalShadows">
+	<renderTargets>
+<!-- BEGIN SM Normal -->
+		<renderTarget name="simple">
+			<SIZE width="RTX" height="RTY"/>
+			<CLEAR_VALUES r="1.0" g = "1.0" b = "1.0" a = "0.0"/>
+			<colors>
+				<color name="output" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+				
+		<renderTarget name="shadowMaps">
+			<SIZE width="GridSizeC" height="GridSizeC" />
+			<depth name="depth2" internalFormat="DEPTH_COMPONENT32F" />
+		</renderTarget>
+<!-- END SM Normal -->
+		
+		<renderTarget name ="finalRT">
+			<SIZE width="RTX" height="RTY" />
+			<colors>
+				<color name="outputFinal" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>	
+		
+	</renderTargets>
+
+	<shaders>
+		<!-- BEGIN SM Normal -->
+																		
+ 		<shader name="compare" 			ps="shaders/sm-normal/compare.frag" 
+										vs="shaders/sm-normal/compare.vert" /> 
+										
+		<shader name="combine" 			ps="shaders/sm-normal/combineNeighbour.frag" 
+										vs="shaders/sm-normal/combine.vert" />
+										
+		<shader name="depthCalc" 		ps="shaders/sm-normal/depthOnly.frag" 
+										vs="shaders/sm-normal/depthOnly.vert" /> 
+									
+		<!-- END SM Normal -->
+		
+		
+	</shaders>
+	
+	<buffers>	
+		<buffer name="atomicsNormal">
+			<SIZE value=2000 />
+			<CLEAR value="BY_FRAME" />
+		</buffer>
+	</buffers>
+	
+	<states>
+		<state name="noCull">
+			<CULL_FACE value="0" />
+		</state>
+		<state name="frontCull">
+			<CULL_TYPE value="FRONT" />
+		</state>
+	</states>
+
+	<materials>	
+<!-- BEGIN SM Normal -->
+		<material name="combine">
+			<shader name="combine">
+				<values>
+					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
+													component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="V"          	type="RENDERER" context="CURRENT" 
+													component="VIEW" />
+														
+					<valueof uniform="M"          	type="RENDERER" context="CURRENT" 
+													component="MODEL" />
+														
+					<valueof uniform="NormalMatrix" type="RENDERER" context="CURRENT" 
+													component="NORMAL" />
+					
+					<valueof uniform="lightDirection" 	type="LIGHT" 
+														context="Sun" 
+														component="DIRECTION" /> 
+														
+					<valueof uniform="lightSpaceMat" 	type="CAMERA" 
+														context="shadowsNormal#fillTextureArray-LightCam" 
+														component="TS05_PVM_MATRIX" />
+														
+					<valueof uniform="shadowMaps" 		type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="2" />
+														
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="2" name="depth2" >
+   					<COMPARE_MODE value="COMPARE_REF_TO_TEXTURE" />
+					<COMPARE_FUNC value="LEQUAL" />
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+				</texture>
+			</textures>	
+		</material>
+		
+		
+		<material name="fillArrays">
+			<shader name="depthCalc">
+				<values>														
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
+														component="PROJECTION_VIEW_MODEL" />
+					
+					<valueof uniform="GridSize" 		type="PASS" context="CURRENT"
+														component="GridSize" />	
+					
+					<valueof uniform="GridSizeF" 		type="PASS" context="CURRENT"
+														component="GridSizeF" />
+														
+					<valueof uniform="ShadowMapSize"	type="PASS" context="CURRENT"
+														component="ShadowMapSize" />
+					
+				</values>
+			</shader>
+			<state name="frontCull" />	
+		</material>
+		
+  		<material name="compare">
+			<shader name="compare">
+				<values>														
+					<valueof uniform="shadowMaps" 		type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />
+					<valueof uniform="RenderTargetX" 	type="PASS" context="CURRENT"
+														component="RenderTargetX" />
+					<valueof uniform="RenderTargetY" 	type="PASS" context="CURRENT"
+														component="RenderTargetY" />
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="output" >
+					<MIN_FILTER value="NEAREST" />
+					<MAG_FILTER value="NEAREST" /> 
+				</texture>
+			</textures>
+ 			<buffers>	
+				<buffer name="PrimeShadows::hits">
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="2" />
+				</buffer>
+				<buffer name="atomicsNormal"  fromLibrary="normalShadows">
+					<TYPE value="ATOMIC_COUNTER" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>
+		</material>
+<!-- END SM Normal -->
+	
+	</materials>
+</materiallib>
+
+

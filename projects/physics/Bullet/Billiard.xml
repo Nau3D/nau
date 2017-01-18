@@ -1,0 +1,201 @@
+<?xml version="1.0" ?>
+<project name="Simple" width="1024" height="768">
+	<assets> 
+		<scenes>
+				
+			<scene name="poolTable">
+				<file name="..\..\..\models\MyPoolTable\poolTable.obj" />
+			</scene>
+			<scene name="poolTableBorders" physicsMaterial="poolTableBorder" >
+				<file name="..\..\..\models\MyPoolTable\PoolTableBorders.obj" />
+			</scene>
+			<scene name="poolTableHardBorders" physicsMaterial="poolTableHardBorder" >
+				<file name="..\..\..\models\MyPoolTable\poolTableHardBorders.obj" />
+			</scene>
+			<scene name="poolTablePlane" physicsMaterial="poolTablePlane" >
+				<file name="..\..\..\models\MyPoolTable\poolTablePlane.obj" />
+			</scene>
+			
+			<scene name="billiardBallWhite" physicsMaterial="whiteBilliardBall" >
+				<geometry name="billiardBallWhite" type="SPHERE" material="billiardBallMatCue" SLICES=20 STACKS=20 />
+				<TRANSLATE x=-4 y=9.85 z=0 />
+			</scene>
+			
+			<scene name="billiardBall1" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall01" type="SPHERE" material="billiardBallMat01" SLICES=20 STACKS=20 />
+				<TRANSLATE x=4 y=9.85 z=0 />
+			</scene>
+			
+			<scene name="billiardBall2" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall02" type="SPHERE" material="billiardBallMat02" SLICES=20 STACKS=20 />
+				<TRANSLATE x=6 y=9.85 z=-1 />
+			</scene>
+			
+			<scene name="billiardBall3" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall03" type="SPHERE" material="billiardBallMat03" SLICES=20 STACKS=20 />
+				<TRANSLATE x=6 y=9.85 z=1 />
+			</scene>
+			
+			<scene name="billiardBall4" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall04" type="SPHERE" material="billiardBallMat04" SLICES=20 STACKS=20 />
+				<TRANSLATE x=8 y=9.85 z=-2 />
+			</scene>
+			
+			<scene name="billiardBall5" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall05" type="SPHERE" material="billiardBallMat05" SLICES=20 STACKS=20 />
+				<TRANSLATE x=8 y=9.85 z=2 />
+			</scene>
+			
+			<scene name="billiardBall6" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall06" type="SPHERE" material="billiardBallMat06" SLICES=20 STACKS=20 />
+				<TRANSLATE x=10 y=9.85 z=-3 />
+			</scene>
+			
+			<scene name="billiardBall7" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall07" type="SPHERE" material="billiardBallMat07" SLICES=20 STACKS=20 />
+				<TRANSLATE x=10 y=9.85 z=-1 />
+			</scene>
+			
+			<scene name="billiardBall8" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall08" type="SPHERE" material="billiardBallMat08" SLICES=20 STACKS=20 />
+				<TRANSLATE x=8 y=9.85 z=0 />
+			</scene>
+			
+			<scene name="billiardBall9" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall09" type="SPHERE" material="billiardBallMat09" SLICES=20 STACKS=20 />
+				<TRANSLATE x=10 y=9.85 z=1 />
+			</scene>
+			
+			<scene name="billiardBall10" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall10" type="SPHERE" material="billiardBallMat10" SLICES=20 STACKS=20 />
+				<TRANSLATE x=10 y=9.85 z=3 />
+			</scene>
+			
+			<scene name="billiardBall11" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall11" type="SPHERE" material="billiardBallMat11" SLICES=20 STACKS=20 />
+				<TRANSLATE x=12 y=9.85 z=-4 />
+			</scene>
+			
+			<scene name="billiardBall12" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall12" type="SPHERE" material="billiardBallMat12" SLICES=20 STACKS=20 />
+				<TRANSLATE x=12 y=9.85 z=-2 />
+			</scene>
+			
+			<scene name="billiardBall13" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall13" type="SPHERE" material="billiardBallMat13" SLICES=20 STACKS=20 />
+				<TRANSLATE x=12 y=9.85 z=0 />
+			</scene>
+			
+			<scene name="billiardBall14" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall14" type="SPHERE" material="billiardBallMat14" SLICES=20 STACKS=20 />
+				<TRANSLATE x=12 y=9.85 z=2 />
+			</scene>
+			
+			<scene name="billiardBall15" physicsMaterial="billiardBall" >
+				<geometry name="billiardBall15" type="SPHERE" material="billiardBallMat15" SLICES=20 STACKS=20 />
+				<TRANSLATE x=12 y=9.85 z=4 />
+			</scene>
+			
+			<scene name="Axis">
+				<geometry name = "axis" type = "AXIS"  >
+					<SCALE x=5 y=5 z=5 />
+				</geometry>
+			</scene>
+			
+			<!-- <scene name="dbScene" physicsMaterial="debug">
+				<buffers name="dbBuffer" primitive="LINES" material="debugMat">
+					<index name="dbIndex" fromLibrary="Simple" />
+					<position name="dbPosition" fromLibrary="Simple" /> 
+				</buffers>
+			</scene> -->
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0.2" g="0.2" b="0.2" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x=0.0 y=40.0 z=20.0 />
+				<LOOK_AT_POINT x=0 y=0 z=0/>
+				<UP x=0.0 y=1.0 z=0.0 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=0 y=-10 z=0 />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.2" g="0.2" b="0.2" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "billiardMaterials.mlib" />
+			<materialLib filename = "materials.mlib" />
+		</materialLibs> 
+		
+		<physicsLibs>
+			<physicsLib filename = "physicsDesc.plib" />
+		</physicsLibs>
+		
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="poolTable" />
+					<scene name="poolTableBorders" />
+					<scene name="poolTableHardBorders" />
+					<scene name="poolTablePlane" />
+					<scene name="billiardBallWhite" />
+					<scene name="billiardBall1" />
+					<scene name="billiardBall2" />
+					<scene name="billiardBall3" />
+					<scene name="billiardBall4" />
+					<scene name="billiardBall5" />
+					<scene name="billiardBall6" />
+					<scene name="billiardBall7" />
+					<scene name="billiardBall8" />
+					<scene name="billiardBall9" />
+					<scene name="billiardBall10" />
+					<scene name="billiardBall11" />
+					<scene name="billiardBall12" />
+					<scene name="billiardBall13" />
+					<scene name="billiardBall14" />
+					<scene name="billiardBall15" />
+					<scene name="Axis" />
+					<!-- <scene name="dbScene" /> -->
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="billiardBallMat01" toLibrary="Simple" toMaterial="poolBallTextured01" />
+					<map fromMaterial="billiardBallMat02" toLibrary="Simple" toMaterial="poolBallTextured02" />
+					<map fromMaterial="billiardBallMat03" toLibrary="Simple" toMaterial="poolBallTextured03" />
+					<map fromMaterial="billiardBallMat04" toLibrary="Simple" toMaterial="poolBallTextured04" />
+					<map fromMaterial="billiardBallMat05" toLibrary="Simple" toMaterial="poolBallTextured05" />
+					<map fromMaterial="billiardBallMat06" toLibrary="Simple" toMaterial="poolBallTextured06" />
+					<map fromMaterial="billiardBallMat07" toLibrary="Simple" toMaterial="poolBallTextured07" />
+					<map fromMaterial="billiardBallMat08" toLibrary="Simple" toMaterial="poolBallTextured08" />
+					<map fromMaterial="billiardBallMat09" toLibrary="Simple" toMaterial="poolBallTextured09" />
+					<map fromMaterial="billiardBallMat10" toLibrary="Simple" toMaterial="poolBallTextured10" />
+					<map fromMaterial="billiardBallMat11" toLibrary="Simple" toMaterial="poolBallTextured11" />
+					<map fromMaterial="billiardBallMat12" toLibrary="Simple" toMaterial="poolBallTextured12" />
+					<map fromMaterial="billiardBallMat13" toLibrary="Simple" toMaterial="poolBallTextured13" />
+					<map fromMaterial="billiardBallMat14" toLibrary="Simple" toMaterial="poolBallTextured14" />
+					<map fromMaterial="billiardBallMat15" toLibrary="Simple" toMaterial="poolBallTextured15" />
+					<map fromMaterial="billiardBallMatCue" toLibrary="Simple" toMaterial="poolBallTexturedCue" />
+					<map fromMaterial="colorMat" toLibrary="Simple" toMaterial="simpleWhite" />
+					<map fromMaterial="debugMat" toLibrary="Simple" toMaterial="simpleColoredDebug" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

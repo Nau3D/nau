@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+<project name="Simple" width="800" height="600">
+	<assets> 
+		<scenes>			
+			<!-- <scene name="waterfall" physicsMaterial="waterfall">
+				<geometry name="waterfall" type="SPHERE" material="particlesMat" SLICES=8 STACKS=8 />
+			</scene> -->
+			
+			<scene name="waterfall" physicsMaterial="waterfall">
+				<file name="..\..\..\models\SphereParticle\SphereParticle.obj" />
+			</scene>
+			
+			<!-- <scene name="plane" physicsMaterial="plane">
+				<geometry name="plane" type="SQUARE" material="azulejo" />
+			</scene> -->
+			
+			<scene name="box" physicsMaterial="staticBox">
+				<geometry name="box" type="BOX" material="azulejo" />
+				<TRANSLATE x=0 y=-3 z=0 />
+			</scene>
+			
+			<!-- <scene name="box2" >
+				<geometry name="box" type="BOX" material="crate" />
+				<TRANSLATE x=0 y=-3 z=0 />
+			</scene> -->
+			
+			<!-- <scene name="box1">
+				<geometry name="box1" type="BOX" material="azulejo" />
+				<TRANSLATE x=-1.25 y=1 z=0 />
+			</scene>
+			
+			<scene name="box2">
+				<geometry name="box2" type="BOX" material="azulejo" />
+				<TRANSLATE x=1.25 y=1 z=0 />
+			</scene>
+			
+			<scene name="box3">
+				<geometry name="box3" type="BOX" material="azulejo" />
+				<TRANSLATE x=0 y=1 z=-1.25 />
+			</scene>
+			
+			<scene name="box4">
+				<geometry name="box4" type="BOX" material="azulejo" />
+				<TRANSLATE x=0 y=1 z=1.25 />
+			</scene> -->
+			
+			
+			<scene name="Axis">
+				<geometry name="axis" type="AXIS" >
+					<SCALE x=5 y=5 z =5 />
+				</geometry>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="0" g="0" b="0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport"/>
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x=0.0 y=5.0 z=10.0 />
+				<LOOK_AT_POINT x=0 y=0 z=0 />
+				<UP x=0.0 y=1.0 z=0.0 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=0.0 y=-5.0 z=5.0 />
+				<COLOR r="0.9" g="0.9" b="0.9" a="1.0" />
+				<AMBIENT r="1.0" g="1.0" b="1.0" a="1.0" />
+				<!-- <DIFFUSE r="0.4" g="0.4" b="0.4" a="1.0" />
+				<SPECULAR r="1.0" g="1.0" b="1.0" a="1.0" /> -->
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "materialsParticles.mlib"/>
+			<materialLib filename = "materials.mlib"/>
+		</materialLibs> 
+		
+		<physicsLibs>
+			<physicsLib filename = "physicsDesc.plib" />
+		</physicsLibs>
+		
+	</assets>
+	
+	<pipelines mode="RUN_ALL" default="fixedfunction" >
+		<pipeline name="fixedfunction" default="true">
+			<pass class="default" name="axisPass">
+				<scenes>
+					<scene name="box" />
+					<scene name="Axis" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<!-- <map fromMaterial="particlesMat" toLibrary="Simple" toMaterial="particlesMat" /> -->
+					<map fromMaterial="azulejo" toLibrary="Simple" toMaterial="simpleTexturedAzulejo" />
+					<map fromMaterial="debugMat" toLibrary="Simple" toMaterial="simpleColoredDebug" />
+				</materialMaps>
+			</pass>
+			
+			<pass class="default" name="mainPass">
+				<!-- <scenes instances=4 > -->
+				<scenes>
+					<scene name="waterfall" />
+					<!-- <scene name="plane" /> -->
+				</scenes>
+				<COLOR_CLEAR value = false />
+				<DEPTH_CLEAR value = false />
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="DefaultOBJMaterial" toLibrary="Simple" toMaterial="particlesMat" />
+					<map fromMaterial="particlesMat" toLibrary="Simple" toMaterial="particlesMat" />
+					<!-- <map fromMaterial="azulejo" toLibrary="Simple" toMaterial="simpleTexturedAzulejo" />
+					<map fromMaterial="debugMat" toLibrary="Simple" toMaterial="simpleColoredDebug" /> -->
+				</materialMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

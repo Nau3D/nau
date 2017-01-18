@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<materialLib name="Simple">
+
+
+	<!-- <buffers>
+		<buffer name="pswaterfall" >
+			<SIZE value=320000 /> 
+		</buffer> -->
+	
+	<!-- <buffer name="pswaterfall" >
+			<DIM x=20000 y=1 z=1 />
+			<structure>
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+			</structure>	
+		</buffer> -->
+		<!-- <buffer name="instanceNo" >
+			<DIM x=1 y=1 z=1 />
+			<structure>
+				<field value="INT" />
+			</structure>	
+		</buffer> -->
+	
+	<!-- </buffers> -->
+	
+	<shaders>
+		<!-- <shader name="showPositions" vs = "shaders/showPositions.vert" ps = "shaders/showPositions.frag" />  -->
+		<shader name="showPositions" vs = "shaders/test.vert" ps = "shaders/test.frag" /> 
+	</shaders>
+	
+	<materials>
+		<material name ="particlesMat">
+			<state name="blending"/>
+			<color>
+				<AMBIENT r="0.0" g="0.0" b="0.5" a="0.5" />
+				<DIFFUSE r="0.0" g="0.0" b="0.5" a="0.5" />
+				<SPECULAR r="1.0" g="1.0" b="1.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="256.0" />
+			</color>
+			<shader name="showPositions" >
+				<values>			
+					<valueof uniform="PVM" 				type="RENDERER" context="CURRENT"
+														component="PROJECTION_VIEW_MODEL" />
+														
+					<valueof uniform="PV" 				type="RENDERER" context="CURRENT"
+														component="PROJECTION_VIEW" />
+					
+					<valueof uniform="V"          		type="RENDERER" context="CURRENT" 
+														component="VIEW" />
+					
+					<valueof uniform="VM"          		type="RENDERER" context="CURRENT" 
+														component="VIEW_MODEL" />
+					
+					<valueof uniform="NormalMatrix"   	type="RENDERER" context="CURRENT" 
+														component="NORMAL" />
+						
+					<valueof uniform="ambient" 		  	type="COLOR" context="CURRENT" 
+														component="AMBIENT" />
+														
+					<valueof uniform="diffuse" 		  	type="COLOR" context="CURRENT" 
+														component="DIFFUSE" />
+														
+					<valueof uniform="specular" 		type="COLOR" context="CURRENT" 
+														component="SPECULAR" />
+														
+					<valueof uniform="shininess" 		type="COLOR" context="CURRENT" 
+														component="SHININESS" />
+														
+					<valueof uniform="emission" 		type="COLOR" context="CURRENT" 
+														component="EMISSION" />
+														
+					<valueof uniform="lightDirection" 	type="LIGHT" context="CURRENT" 
+														id=0 component="DIRECTION" /> 
+														
+					<valueof uniform="lightAmbient"     type="LIGHT" context="CURRENT" 
+														id=0 component="AMBIENT" />
+					
+					<!-- <valueof uniform="lightDiffuse"     type="LIGHT" context="CURRENT" 
+														id=0 component="DIFFUSE" />
+														
+					<valueof uniform="lightSpecular"    type="LIGHT" context="CURRENT" 
+														id=0 component="SPECULAR" /> -->
+														
+					<valueof uniform="cameraPosition"   type="CAMERA" context="CURRENT" 
+														id=0 component="POSITION" />
+				</values>										
+			</shader>
+			<buffers>	
+				<buffer name="nau_material_lib::pswaterfall">
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+		</material>
+	</materials>
+	
+	<states>
+		<state name="blending">
+			<BLEND value="TRUE" />
+			<BLEND_SRC value="SRC_ALPHA" />
+			<BLEND_DST value="ONE_MINUS_SRC_COLOR" />
+			<!-- <BLEND_DST value="ONE" /> -->
+		</state>
+	</states>
+
+</materialLib>

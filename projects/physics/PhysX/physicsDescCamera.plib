@@ -1,0 +1,112 @@
+<?xml version="1.0" ?>
+<physicslib name="physicsDesc">
+
+	<globalProperties>
+		<GRAVITY x="0.0" y="-9.81" z="0.0" />
+		
+		<!-- <CAMERA_TIME value="0.016666666667" /> -->
+		<CAMERA_PACE value="0.5" />
+		<CAMERA_MIN_PACE value="0.01" />
+		<CAMERA_HIT_MAGNITUDE value="100.0" />
+		<CAMERA_MASS value="10.0" />
+		<CAMERA_STATIC_FRICTION value="0.5" />
+		<CAMERA_DYNAMIC_FRICTION value="0.5" />
+		<CAMERA_RESTITUTION value="0.5" />
+	</globalProperties>
+
+	<materials>
+		<material name="box" type="RIGID" shape="BOX" >
+			<MASS value="10.0" />
+			<STATIC_FRICTION value="0.1" />
+			<DYNAMIC_FRICTION value="0.1" />
+			<RESTITUTION value="0.5" />
+		</material>
+		
+		<material name="boxNoShape" type="RIGID" >
+			<MASS value="10.0" />
+			<STATIC_FRICTION value="0.1" />
+			<DYNAMIC_FRICTION value="0.1" />
+			<RESTITUTION value="0.5" />
+		</material>
+		
+		<material name="staticBox" type="STATIC">
+			<MASS value="10.0" />
+			<STATIC_FRICTION value="0.5" />
+			<DYNAMIC_FRICTION value="0.5" />
+			<RESTITUTION value="0.5" />
+		</material>
+		
+		<material name="plane" type="STATIC">
+			<STATIC_FRICTION value="0.8" />
+			<DYNAMIC_FRICTION value="0.8" />
+			<RESTITUTION value="0.95" />
+		</material>
+		
+		
+		<material name="billiardBall" type="RIGID" shape="SPHERE" >
+			<MASS value="0.17" />
+			<INERTIA x=0.068 y=0.068 z=0.068 w=1.0 />
+			<STATIC_FRICTION value="0.4" />
+			<DYNAMIC_FRICTION value="0.4" />
+			<ROLLING_FRICTION value="0.020" />
+			<RESTITUTION value="0.92" />
+		</material>
+		
+		<material name="whiteBilliardBall" type="RIGID" shape="SPHERE" >
+			<MASS value="0.17" />
+			<INERTIA x=0.068 y=0.068 z=0.068 w=1.0 />
+			<STATIC_FRICTION value="0.4" />
+			<DYNAMIC_FRICTION value="0.4" />
+			<ROLLING_FRICTION value="0.020" />
+			<RESTITUTION value="0.92" />
+			<IMPULSE x=0.0 y=0.0 z=0.0 w=1.0 />
+		</material>
+		
+		<material name="poolTablePlane" type="STATIC">
+			<STATIC_FRICTION value="1.0" />
+			<DYNAMIC_FRICTION value="1.0" />
+			<RESTITUTION value="0.0" />
+		</material>
+		
+		<material name="poolTableBorder" type="STATIC">
+			<STATIC_FRICTION value="0.9" />
+			<DYNAMIC_FRICTION value="0.9" />
+			<RESTITUTION value="0.6" />
+		</material>
+		
+		<material name="poolTableHardBorder" type="STATIC">
+			<STATIC_FRICTION value="1.0" />
+			<DYNAMIC_FRICTION value="1.0" />
+			<RESTITUTION value="0.5" />
+		</material>
+		
+		<material name="cloth" type="CLOTH">
+			<!-- <FRICTION value="0.5" /> -->
+			<!-- <RESTITUTION value="0.5" /> -->
+		</material>
+		
+		
+		<material name="man" type="CHARACTER" >
+			<PACE value="0.0" />
+			<HIT_MAGNITUDE value="100.0" />
+			<HEIGHT value="1.0" />
+			<RADIUS value="1.0" />
+			<STEP_OFFSET value="0.2" />
+			<MASS value="10.0" />
+			<STATIC_FRICTION value="0.5" />
+			<DYNAMIC_FRICTION value="0.5" />
+			<RESTITUTION value="0.5" />
+		</material>
+		
+		<material name="waterfall" type="PARTICLES">
+			<MAX_PARTICLES value="20000.0" />
+			<BUFFER name="nau_material_lib::pswaterfall" />
+			<!-- <BUFFER name="pswaterfall" /> -->
+		</material>
+		
+		<material name="debug" type="DEBUG">
+		</material>
+		
+	</materials>
+
+</physicslib>

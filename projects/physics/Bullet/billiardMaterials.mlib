@@ -1,0 +1,298 @@
+<?xml version="1.0" ?>
+<materialLib name="Simple">
+
+	<textures>
+		<texture name="poolball01" filename="../../../models/MyPoolTable/textures/Ball01.jpg" />
+		<texture name="poolball02" filename="../../../models/MyPoolTable/textures/Ball02.jpg" />
+		<texture name="poolball03" filename="../../../models/MyPoolTable/textures/Ball03.jpg" />
+		<texture name="poolball04" filename="../../../models/MyPoolTable/textures/Ball04.jpg" />
+		<texture name="poolball05" filename="../../../models/MyPoolTable/textures/Ball05.jpg" />
+		<texture name="poolball06" filename="../../../models/MyPoolTable/textures/Ball06.jpg" />
+		<texture name="poolball07" filename="../../../models/MyPoolTable/textures/Ball07.jpg" />
+		<texture name="poolball08" filename="../../../models/MyPoolTable/textures/Ball08.jpg" />
+		<texture name="poolball09" filename="../../../models/MyPoolTable/textures/Ball09.jpg" />
+		<texture name="poolball10" filename="../../../models/MyPoolTable/textures/Ball10.jpg" />
+		<texture name="poolball11" filename="../../../models/MyPoolTable/textures/Ball11.jpg" />
+		<texture name="poolball12" filename="../../../models/MyPoolTable/textures/Ball12.jpg" />
+		<texture name="poolball13" filename="../../../models/MyPoolTable/textures/Ball13.jpg" />
+		<texture name="poolball14" filename="../../../models/MyPoolTable/textures/Ball14.jpg" />
+		<texture name="poolball15" filename="../../../models/MyPoolTable/textures/Ball15.jpg" />
+		<texture name="poolballcue" filename="../../../models/MyPoolTable/textures/BallCue.jpg" />
+	</textures>
+	
+	<materials>
+		<material name="poolBallTextured01">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball01" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured02">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball02" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured03">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball03" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured04">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball04" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured05">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball05" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured06">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball06" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured07">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball07" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured08">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball08" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured09">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball09" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured10">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball10" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured11">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball11" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured12">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball12" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured13">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball13" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured14">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball14" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+		<material name="poolBallTextured15">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolball15" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+
+		<material name="poolBallTexturedCue">
+			<color>
+				<AMBIENT r="0.4" g="0.4" b="0.4" a="1.0" />
+				<DIFFUSE r="0.8" g="0.8" b="0.8" a="1.0" />
+				<SPECULAR r="0.0" g="0.0" b="0.0" a="1.0" />
+				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
+				<SHININESS value="0.0" />
+			</color>
+			<textures>
+				<texture name="poolballcue" UNIT="0">
+					<WRAP_S value="REPEAT"/>
+					<WRAP_R value="REPEAT"/>
+					<WRAP_T value="REPEAT"/>
+				</texture> 
+			</textures>
+		</material>
+		
+	</materials>
+	
+</materialLib>

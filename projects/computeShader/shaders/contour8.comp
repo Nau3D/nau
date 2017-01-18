@@ -1,0 +1,58 @@
+#version 430
+
+#define LS 8
+layout (local_size_x = LS, local_size_y = LS, local_size_z = 1) in;
+
+shared vec4 f[LS+2][LS+2];
+
+uniform writeonly image2D imageUnit;
+uniform sampler2D texUnit;
+
+void main()
+{
+	ivec2 storeLoc = ivec2(gl_GlobalInvocationID);
+
+	f[gl_LocalInvocationID.x+1][gl_LocalInvocationID.y+1] = texelFetch(texUnit, ivec2(gl_GlobalInvocationID.xy),0);
+
+	if (gl_LocalInvocationID.x == 0 && gl_LocalInvocationID.y == 0)
+		f[0][0] = texelFetch(texUnit, ivec2(gl_GlobalInvocationID.xy) + ivec2(-1,-1), 0);
+
+	if (gl_LocalInvocationID.x == 0 && gl_LocalInvocationID.y == LS-1)
+		f[0][LS+1] = texelFetch(texUnit, ivec2(gl_GlobalInvocationID.xy) + ivec2(-1,1), 0);
+
+	if (gl_LocalInvocationID.x == LS-1 && gl_LocalInvocationID.y == 0)
+		f[LS+1][0] = texelFetch(texUnit, ivec2(gl_GlobalInvocationID.xy) + ivec2(1,-1), 0);
+
+	if (gl_LocalInvocationID.x == LS-1 && gl_LocalInvocationID.y == LS-1)
+		f[LS+1][LS+1] = texelFetch(texUnit, ivec2(gl_GlobalInvocationID.xy) + ivec2(1,1), 0);
+
+	if (gl_LocalInvocationID.x == 0)
+		f[0][gl_LocalInvocationID.y+1] = texelFetch(texUnit,  ivec2(gl_GlobalInvocationID) + ivec2(-1,0), 0);
+
+	if (gl_LocalInvocationID.x == LS-1)
+		f[LS+1][gl_LocalInvocationID.y+1] = texelFetch(texUnit,  ivec2(gl_GlobalInvocationID) + ivec2(1,0), 0);
+	
+	if (gl_LocalInvocationID.y == 0)
+		f[gl_LocalInvocationID.x+1][0] = texelFetch(texUnit,  ivec2(gl_GlobalInvocationID) + ivec2(0,-1), 0);
+
+	if (gl_LocalInvocationID.y == LS-1)
+		f[gl_LocalInvocationID.x+1][LS+1] = texelFetch(texUnit,  ivec2(gl_GlobalInvocationID) + ivec2(0,1), 0);
+
+	
+	barrier();
+
+	uvec2 i = gl_LocalInvocationID.xy + uvec2(1,1);
+	vec4 res = 8 * f[i.x][i.y] - 
+				f[i.x + 1][i.y + 1] -
+				f[i.x + 1][i.y] -
+				f[i.x + 1][i.y - 1] -
+				 
+				f[i.x][i.y - 1] -
+				f[i.x][i.y + 1] -
+				
+				f[i.x - 1][i.y - 1] -
+				f[i.x - 1][i.y] -
+				f[i.x - 1][i.y + 1]; 
+
+	imageStore(imageUnit, storeLoc, res);
+} 

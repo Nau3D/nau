@@ -1,0 +1,13 @@
+<NotepadPlus>
+    <Project name="compute shader">
+        <Folder name="shaders">
+            <File name="shaders\contour16.comp" />
+            <File name="shaders\contour2.comp" />
+            <File name="shaders\contour4.comp" />
+            <File name="shaders\contour8.comp" />
+            <File name="shaders\contour.comp" />
+        </Folder>
+        <File name="computeShader.mlib" />
+        <File name="computeShaderBufferTest.xml" />
+    </Project>
+</NotepadPlus>
