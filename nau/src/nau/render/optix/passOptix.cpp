@@ -196,7 +196,7 @@ PassOptix::setRenderTarget (nau::render::IRenderTarget* rt)
 			// need to allow different types
 			nau::math::uivec2 vec2;
 			vec2 = rt->getPropui2(IRenderTarget::SIZE);
-			glBufferData(GL_PIXEL_UNPACK_BUFFER, vec2.x * vec2.y * rt->getTexture(i)->getPropi(ITexture::ELEMENT_SIZE), 0, GL_STREAM_READ);
+			glBufferData(GL_PIXEL_UNPACK_BUFFER, vec2.x * vec2.y * rt->getTexture(i)->getPropi(ITexture::ELEMENT_SIZE)/8, 0, GL_STREAM_READ);
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
 			optix::Buffer b = o_Context->createBufferFromGLBO(RT_BUFFER_OUTPUT, o_OutputPBO[i]);
@@ -322,12 +322,12 @@ PassOptix::doPass (void) {
 	glGetError();
 	glFinish();
 
-	nau::math::uivec2 vec2 = m_RenderTarget->getPropui2(IRenderTarget::SIZE);
+	nau::math::uivec2 v2 = m_RenderTarget->getPropui2(IRenderTarget::SIZE);
 	try {
 		PROFILE("Optix");
 
 		o_Context->validate();
-		o_Context->launch(0, vec2.x, vec2.y);
+		o_Context->launch(0, v2.x, v2.y);
 	} 
 	catch(optix::Exception& e) {
 		NAU_THROW("Optix Error: Launching Kernel in pass %s [%s]", m_Name.c_str(), e.getErrorString().c_str());
@@ -340,7 +340,7 @@ PassOptix::doPass (void) {
 		glBindTexture(GL_TEXTURE_2D, m_RenderTarget->getTexture(i)->getPropi(ITexture::ID));
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 
-						vec2.x, vec2.y,
+						v2.x, v2.y,
 						(GLenum)m_RenderTarget->getTexture(i)->getPrope(ITexture::FORMAT),
 						(GLenum)m_RenderTarget->getTexture(i)->getPrope(ITexture::TYPE), 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -469,30 +469,35 @@ PassOptix::optixInit() {
 	std::map<std::string, databuffer>::iterator iter2;
 	iter2 = o_OutputDataBuffer.begin();
 	ITexture *texID;
+	try {
+		for (; iter2 != o_OutputDataBuffer.end(); ++iter2) {
 
-	for ( ; iter2 != o_OutputDataBuffer.end() ; ++iter2) {
+			texID = RESOURCEMANAGER->getTexture(iter2->second.texName);
+			//		int format = texID->getPrope(ITexture::FORMAT);
+			int tex = texID->getPropi(ITexture::ID);
 
-		texID = RESOURCEMANAGER->getTexture(iter2->second.texName);
-//		int format = texID->getPrope(ITexture::FORMAT);
-		int tex = texID->getPropi(ITexture::ID);
+			unsigned int pbo;
+			glGenBuffers(1, &pbo);
+			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+			// need to allow different types
+			glBufferData(GL_PIXEL_UNPACK_BUFFER, texID->getPropi(ITexture::WIDTH)*texID->getPropi(ITexture::HEIGHT)*texID->getPropi(ITexture::ELEMENT_SIZE)/8, 0, GL_STREAM_READ);
+			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-		unsigned int pbo;
-		glGenBuffers(1, &pbo);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
-		// need to allow different types
-		glBufferData(GL_PIXEL_UNPACK_BUFFER, texID->getPropi(ITexture::WIDTH)*texID->getPropi(ITexture::HEIGHT)*texID->getPropi(ITexture::ELEMENT_SIZE), 0, GL_STREAM_READ);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+			optix::Buffer ob = o_Context->createBufferFromGLBO(RT_BUFFER_OUTPUT, pbo);
+			ob->setSize(texID->getPropi(ITexture::WIDTH), texID->getPropi(ITexture::HEIGHT));
+			// same here (types)
+			ob->setFormat(getOptixFormat(texID));
 
-		optix::Buffer ob = o_Context->createBufferFromGLBO(RT_BUFFER_OUTPUT, pbo);
-		ob->setSize(texID->getPropi(ITexture::WIDTH), texID->getPropi(ITexture::HEIGHT));
-		// same here (types)
-		ob->setFormat(getOptixFormat(texID));
+			o_Context[iter2->first]->setBuffer(ob);
 
-		o_Context[iter2->first]->setBuffer(ob);
-
-		o_OutputDataBuffer[iter2->first].pbo = pbo;
-		//
+			o_OutputDataBuffer[iter2->first].pbo = pbo;
+			//
+		}
 	}
+	catch (optix::Exception& e) {
+		NAU_THROW("Optix Error: Output Buffer preparation in pass %s [%s]", m_Name.c_str(), e.getErrorString().c_str());
+	}
+	
 
 #if (TEST == 2)
 	try {
