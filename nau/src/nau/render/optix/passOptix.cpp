@@ -441,6 +441,7 @@ PassOptix::optixInit() {
 	}
 	o_GeomLib.buildGeometryGroup();
 	o_Context["top_object"]->set(o_GeomLib.getGeometryGroup());
+	
 
 	o_MatLib.applyMissPrograms();
 

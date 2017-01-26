@@ -115,7 +115,6 @@ OptixGeometry::buildGeometryGroup() {
 		accel->setProperty( "index_buffer_name", "index_buffer");
 		accel->setProperty( "vertex_buffer_stride", "4");*/
 		m_GeomGroup->setAcceleration(accel);
-
 	}
 	catch ( optix::Exception& e ) {
 		NAU_THROW("Optix Error: Building Geometry Group [%s]",
