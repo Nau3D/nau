@@ -1,6 +1,8 @@
 add_executable(nauGLUTDemo
 	nauGlut.cpp)
 	
+set_target_properties(nauGLUTDemo PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+	
 include_directories(
 	../nau/src
 	../contrib/lua-5.3.3/include
@@ -9,7 +11,6 @@ include_directories(
 	../contrib/glbinding-master/source/glbinding/include)	
 
 add_definitions(-DTIXML_USE_STL)
-
 
 link_directories(${Assimp_BINARY_DIR} ${glbinding_BINARY_DIR} ${freeglut})
 

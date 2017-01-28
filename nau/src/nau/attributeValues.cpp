@@ -1570,22 +1570,41 @@ AttributeValues::clearArrays() {
 	//to->m_StringProps = m_StringProps;
 	m_EnumProps.clear();
 	m_StringProps.clear();
+
 	m_IntArrayProps.clear();
+
 	m_IntProps.clear();
 	m_Int2Props.clear();
 	m_Int3Props.clear();
 	m_Int4Props.clear();
+	
 	m_UIntProps.clear();
 	m_UInt2Props.clear();
 	m_UInt3Props.clear();
+	m_UInt4Props.clear();
+	
 	m_BoolProps.clear();
+	m_Bool2Props.clear();
+	m_Bool3Props.clear();
 	m_Bool4Props.clear();
+
 	m_FloatProps.clear();
 	m_Float2Props.clear();
 	m_Float3Props.clear();
 	m_Float4Props.clear();
+
+	m_DoubleProps.clear();
+	m_Double2Props.clear();
+	m_Double3Props.clear();
+	m_Double4Props.clear();
+
+	m_Mat2Props.clear();
 	m_Mat3Props.clear();
 	m_Mat4Props.clear();
+
+	m_DMat2Props.clear();
+	m_DMat3Props.clear();
+	m_DMat4Props.clear();
 }
 
 

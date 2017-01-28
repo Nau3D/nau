@@ -2,7 +2,6 @@ cmake_minimum_required (VERSION 3.5)
 
 project(NauDemo)
 
-
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(NAU_BUILD_WITH_OPTIX "Build Nau ready for optix" OFF)
@@ -110,7 +109,7 @@ add_subdirectory(nau)
 add_subdirectory(plugins/passDepthMap)
 if (WIN32)
 add_subdirectory(plugins/bullet)
-
+add_subdirectory(plugins/physx)
 endif(WIN32)
 
 add_subdirectory(nauGLUT)
