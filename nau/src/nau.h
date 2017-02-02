@@ -163,6 +163,15 @@ namespace nau {
 		void initLuaScript(std::string file, std::string name);
 		void callLuaScript(std::string name);
 		bool callLuaTestScript(std::string name);
+
+		static void luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt);
+		static void luaStackDump(lua_State *m_LuaState);
+		static int luaGet(lua_State *l);
+		static int luaSet(lua_State *l);
+		static int luaGetBuffer(lua_State *l);
+		static int luaSetBuffer(lua_State *l);
+		static int luaSaveTexture(lua_State *l);
+		static int luaSaveProfile(lua_State *l);
 #endif
 
 
@@ -290,8 +299,9 @@ namespace nau {
 
 
 #if NAU_LUA == 1
-		lua_State *m_LuaState;
+		static lua_State *m_LuaState;
 #endif
+		static Nau *Instance;
 
 		std::string m_ProjectName;
 		float m_StartTime;

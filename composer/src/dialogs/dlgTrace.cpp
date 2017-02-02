@@ -209,6 +209,12 @@ DlgTrace::loadNewLogFile(string logfile, int fNumber, bool tellg, bool appendCou
 					}
 				}
 			}
+			else if (strcmp(line.substr(0, 4).c_str(), "#LUA") == 0) {
+				m_Lua = m_Log->AppendItem(m_Frame, "LUASCRIPT(" + line.substr(5, line.length() - 5) + ") >");
+			}
+			else if (strcmp(line.substr(0, 4).c_str(), "LUA:") == 0) {
+				m_Log->AppendItem(m_Lua, line.substr(5, line.length() - 5));
+			}
 			else{
 				if (isNewFrame){
 					if (m_Frame){
