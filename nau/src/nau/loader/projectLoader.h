@@ -142,8 +142,11 @@ namespace nau
 
 			// read single attributes. values can be numbers of constant labels
 			static bool readFloatAttribute(TiXmlElement *p, std::string label, float *value);
+			static bool readDoubleAttribute(TiXmlElement *p, std::string label, double *value);
 			static bool readIntAttribute(TiXmlElement *p, std::string label, int *value);
 			static bool readUIntAttribute(TiXmlElement *p, std::string label, unsigned int *value);
+
+			static void readScript(TiXmlElement *p, std::string &fileName, std::string &scriptName);
 
 			// Asset Loading
 			static void loadUserAttrs(TiXmlHandle handle);
@@ -227,6 +230,7 @@ namespace nau
 			static vec2 s_Dummy_vec2;
 			static bvec4 s_Dummy_bvec4;
 			static float s_Dummy_float;
+			static double s_Dummy_double;
 			static int s_Dummy_int;
 			static unsigned int s_Dummy_uint;
 			static bool s_Dummy_bool;

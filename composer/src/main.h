@@ -23,6 +23,7 @@
 #include "dialogs/dlgDbgStep.h"
 #include "dialogs/dlgRenderTarget.h"
 #include "dialogs/dlgViewports.h"
+#include "dialogs/dlgRenderer.h"
 
 #include "glcanvas.h"
 
@@ -73,6 +74,7 @@ private:
     void OnQuit(wxCommandEvent& event);
 
 	void OnDlgPass(wxCommandEvent& event);
+	void OnDlgRenderer(wxCommandEvent& event);
 	void OnResetFrameCount(wxCommandEvent& event);
 	void OnRenderMode(wxCommandEvent& event);
 	void OnSetRenderFlags(wxCommandEvent& event);

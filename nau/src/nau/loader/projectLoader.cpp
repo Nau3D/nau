@@ -75,6 +75,7 @@ vec4 ProjectLoader::s_Dummy_vec4;
 vec2 ProjectLoader::s_Dummy_vec2;
 bvec4 ProjectLoader::s_Dummy_bvec4;
 float ProjectLoader::s_Dummy_float;
+double ProjectLoader::s_Dummy_double;
 int ProjectLoader::s_Dummy_int;
 unsigned int ProjectLoader::s_Dummy_uint;
 bool ProjectLoader::s_Dummy_bool;
@@ -457,6 +458,23 @@ ProjectLoader::readFloatAttribute(TiXmlElement *p, std::string label, float *val
 
 
 bool
+ProjectLoader::readDoubleAttribute(TiXmlElement *p, std::string label, double *value) {
+
+	std::string s;
+
+	if (TIXML_SUCCESS != p->QueryDoubleAttribute(label.c_str(), value)) {
+		if (TIXML_SUCCESS != p->QueryStringAttribute(label.c_str(), &s) || !isConstantDefined(s))
+			return false;
+		else {
+			*value = s_Constants[s];
+			return true;
+		}
+	}
+	return true;
+}
+
+
+bool
 ProjectLoader::readIntAttribute(TiXmlElement *p, std::string label, int *value) {
 
 	std::string s;
@@ -487,6 +505,24 @@ ProjectLoader::readUIntAttribute(TiXmlElement *p, std::string label, unsigned in
 		}
 	}
 	return true;
+}
+
+
+void 
+ProjectLoader::readScript(TiXmlElement *p, std::string &fileName, std::string &scriptName) {
+
+	const char *pPreScriptFile = p->Attribute("file");
+	const char *pPreScriptName = p->Attribute("script");
+	if (pPreScriptFile && pPreScriptName) {
+		if (!Nau::luaCheckScriptName(pPreScriptFile, pPreScriptName)) {
+			NAU_THROW("File %s (line %d row %d)\nScript name %s is already defined in another file\nScript names must be unique across all Lua files", ProjectLoader::s_File.c_str(), p->Row(), p->Column(), pPreScriptName);
+		}
+	}
+	else {
+			NAU_THROW("File %s (line %d row %d)\nSscript definition must have both file and script attributes", ProjectLoader::s_File.c_str(), p->Row(), p->Column());
+		}
+	fileName = pPreScriptFile;
+	scriptName = pPreScriptName;
 }
 
 
@@ -528,6 +564,12 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 				NAU_THROW("File %s: Element %s: Vec2 Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			break;
 
+		case Enums::DOUBLE:
+			if (!readDoubleAttribute(p, "value", &s_Dummy_double)) {
+				NAU_THROW("File %s: Element %s: Double Attribute %s without a value", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			}
+			return new NauDouble(s_Dummy_double);
+			break;
 		case Enums::BVEC4:
 			if (TIXML_SUCCESS == p->QueryBoolAttribute("x", &(s_Dummy_bvec4.x)) 
 				&& TIXML_SUCCESS == p->QueryBoolAttribute("y", &(s_Dummy_bvec4.y))
@@ -1124,10 +1166,10 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 		if (0 == pType) {
 			NAU_THROW("File %s\nAttribute %s without a data type", ProjectLoader::s_File.c_str(), pName);
 		}
-		if (!Attribute::isValidUserAttrType(pType)) {
-			nau::system::TextUtil::Join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
-			NAU_THROW("File %s\nAttribute %s with an invalid data type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
-		}
+		//if (!Attribute::isValidUserAttrType(pType)) {
+		//	nau::system::TextUtil::Join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
+		//	NAU_THROW("File %s\nAttribute %s with an invalid data type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
+		//}
 
 		AttribSet *attribs = NAU->getAttribs(pContext);
 		Enums::DataType dt = Enums::getType(pType);
@@ -1941,14 +1983,11 @@ void
 ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 {
 	TiXmlElement *pElem;
+	std::string fileName, scriptName;
 
 	pElem = hPass.FirstChild("testScript").Element();
 	if (pElem != 0) {
-		const char *pFile = pElem->Attribute("file");
-		const char *pFunction = pElem->Attribute("script");
-		if (!pFile || !pFunction) {
-			NAU_THROW("File %s\nPass %s\nElement: testScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		}
+		readScript(pElem, fileName, scriptName);
 		std::unique_ptr<Attribute> &a = aPass->getAttribSet()->get("TEST_MODE");
 
 		Data *val = readAttribute("TEST_MODE", a, pElem);
@@ -1956,27 +1995,19 @@ ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 			aPass->setProp(Pass::TEST_MODE, Enums::ENUM, val);
 			delete val;
 		}
-		aPass->setTestScript(File::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+		aPass->setTestScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 	}
 
 	pElem = hPass.FirstChild("preScript").Element();
 	if (pElem) {
-		const char *pFile = pElem->Attribute("file");
-		const char *pFunction = pElem->Attribute("script");
-		if (!pFile || !pFunction) {
-			NAU_THROW("File %s\nPass %s\nElement: preScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		}
-		aPass->setPreScript(File::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+		readScript(pElem, fileName, scriptName);
+		aPass->setPreScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 	}
 
 	pElem = hPass.FirstChild("postScript").Element();
 	if (pElem) {
-		const char *pFile = pElem->Attribute("file");
-		const char *pFunction = pElem->Attribute("script");
-		if (!pFile || !pFunction) {
-			NAU_THROW("File %s\nPass %s\nElement: postScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		}
-		aPass->setPostScript(File::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+		readScript(pElem, fileName, scriptName);
+		aPass->setPostScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 	}
 }
 
@@ -3715,29 +3746,20 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 		TiXmlElement *pElemPass;
 
 #if NAU_LUA == 1
+		std::string scriptName, fileName;
+
 		pElemPass = handle.FirstChild("preScript").Element();
 		if (pElemPass != NULL) {
 			
-
-			const char *pPreScriptFile = pElemPass->Attribute("file");
-			const char *pPreScriptName = pElemPass->Attribute("script");
-			if (pPreScriptFile && pPreScriptName)
-				aPipeline->setPreScript(File::GetFullPath(ProjectLoader::s_Path, pPreScriptFile), pPreScriptName);
-			else {
-				NAU_THROW("File %s\nPipeline %s\nPre script definition must have both file and script attributes", ProjectLoader::s_File.c_str(), pNamePip);
-			}
+			readScript(pElemPass, fileName, scriptName);
+			aPipeline->setPreScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 		}
 
 		pElemPass = handle.FirstChild("postScript").Element();
 		if (pElemPass != NULL) {
 
-			const char *pPostScriptFile = pElemPass->Attribute("file");
-			const char *pPostScriptName = pElemPass->Attribute("script");
-			if (pPostScriptFile && pPostScriptName)
-				aPipeline->setPostScript(File::GetFullPath(ProjectLoader::s_Path, pPostScriptFile), pPostScriptName);
-			else {
-				NAU_THROW("File %s\nPipeline %s\nPost script definition must have both file and name attributes", ProjectLoader::s_File.c_str(), pNamePip);
-			}
+			readScript(pElemPass, fileName, scriptName);
+			aPipeline->setPostScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 		}
 #endif
 		pElemPass = handle.FirstChild ("pass").Element();

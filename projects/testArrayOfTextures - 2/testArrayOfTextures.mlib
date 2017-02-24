@@ -13,7 +13,7 @@
 			<WIDTH value="128"/>
 			<HEIGHT value="128" />
 			<INTERNAL_FORMAT value="RGBA" />
-			<CREATE_BUFFER value=true />
+			<!--CREATE_BUFFER value=true /-->
 		</arrayOfTextures>
 	</arraysOfTextures>
 
@@ -48,12 +48,12 @@
 			
 			</shader>
 			<arrayOfTextures name="T" firstUnit=4 />
-			<buffers>
+			<!--buffers>
 				<buffer name="T" >
 					<TYPE value="SHADER_STORAGE" />
 					<BINDING_POINT value=1 />
 				</buffer>
-			</buffers>
+			</buffers-->
 		</material>
 	</materials>	
 	

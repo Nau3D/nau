@@ -24,11 +24,15 @@
 
 
 #if NAU_LUA == 1
+
 extern "C" {
 #include <lua/lua.h>
 #include <lua/lauxlib.h>
 #include <lua/lualib.h>
 }
+
+std::map<std::string, std::string> Nau::LuaScriptNames;
+
 #endif
 
 
@@ -177,6 +181,7 @@ Nau::init (bool trace) {
 
 	// Init LUA
 #if NAU_LUA == 1
+	LuaScriptNames.clear();
 	initLua();
 #endif
 	PASSFACTORY->loadPlugins();
@@ -673,6 +678,18 @@ Nau::luaSaveProfile(lua_State *l) {
 }
 
 
+bool 
+Nau::luaCheckScriptName(std::string fileName, std::string scriptName) {
+
+	if (LuaScriptNames.count(scriptName) && LuaScriptNames[scriptName] != fileName) {
+		return false;
+	}
+
+	LuaScriptNames[scriptName] = fileName;
+	return true;
+}
+
+
 void 
 luaDebug(lua_State *m_LuaState) {
 
@@ -779,7 +796,7 @@ Nau::callLuaTestScript(std::string name) {
 	int errIndex = 0;
 
 	if (m_TraceOn) {
-		LOG_trace("LUA: call script %s", name.c_str());
+		LOG_trace("#LUA: call script %s", name.c_str());
 
 		lua_getglobal(m_LuaState, "debug");
 		lua_getfield(m_LuaState, -1, "traceback");
@@ -1414,6 +1431,10 @@ Nau::clear() {
 	ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
 
 	INTERFACE_MANAGER->clear();
+
+#if NAU_LUA == 1
+	LuaScriptNames.clear();
+#endif
 }
 
 
@@ -1909,7 +1930,8 @@ Nau::getRenderer(void) {
 }
 
 
-nau::physics::PhysicsManager * nau::Nau::getPhysicsManager() {
+nau::physics::PhysicsManager *
+Nau::getPhysicsManager() {
 
 	return m_pPhysicsManager;
 }

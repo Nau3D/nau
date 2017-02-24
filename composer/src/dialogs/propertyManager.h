@@ -55,6 +55,9 @@ protected:
 	static void createInt(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateInt(wxPropertyGridManager *pg, std::string label, int a);
 
+	static void createIVec2(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
+	static void updateIVec2(wxPropertyGridManager *pg, std::string label, ivec2 a);
+
 	static void createIVec3(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateIVec3(wxPropertyGridManager *pg, std::string label, ivec3 a);
 
@@ -79,6 +82,9 @@ protected:
 	static void createVec4(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateVec4(wxPropertyGridManager *pg, std::string label, vec4 a);
 	static void updateVec4Color(wxPropertyGridManager *pg, std::string label, vec4 a);
+
+	static void createDouble(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
+	static void updateDouble(wxPropertyGridManager *pg, std::string label, double a);
 
 	static void createMat3(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateMat3(wxPropertyGridManager *pg, std::string label, mat3 a);
