@@ -812,7 +812,7 @@ void
 AttribSet::initAttribInstanceDoubleArray(std::map<int, double> &m) {
 
 	for (auto & attr : m_Attributes) {
-		if (attr.second->m_Type == Enums::DataType::FLOAT) {
+		if (attr.second->m_Type == Enums::DataType::DOUBLE) {
 			std::shared_ptr<Data> &d = attr.second->getDefault();
 			std::shared_ptr<NauDouble> ni = std::dynamic_pointer_cast<NauDouble>(d);
 			m[attr.second->m_Id] = *ni;

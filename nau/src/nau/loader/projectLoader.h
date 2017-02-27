@@ -227,10 +227,14 @@ namespace nau
 			static char s_pFullName[256];
 			static string s_Dummy;
 			static vec4 s_Dummy_vec4;
+			static vec3 s_Dummy_vec3;
 			static vec2 s_Dummy_vec2;
 			static bvec4 s_Dummy_bvec4;
 			static float s_Dummy_float;
 			static double s_Dummy_double;
+			static dvec2 s_Dummy_dvec2;
+			static dvec3 s_Dummy_dvec3;
+			static dvec4 s_Dummy_dvec4;
 			static int s_Dummy_int;
 			static unsigned int s_Dummy_uint;
 			static bool s_Dummy_bool;

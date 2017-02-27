@@ -72,10 +72,14 @@ std::map<std::string, float> ProjectLoader::s_Constants;
 char ProjectLoader::s_pFullName[256] = "";
 
 vec4 ProjectLoader::s_Dummy_vec4;
+vec3 ProjectLoader::s_Dummy_vec3; 
 vec2 ProjectLoader::s_Dummy_vec2;
 bvec4 ProjectLoader::s_Dummy_bvec4;
 float ProjectLoader::s_Dummy_float;
 double ProjectLoader::s_Dummy_double;
+dvec2 ProjectLoader::s_Dummy_dvec2;
+dvec3 ProjectLoader::s_Dummy_dvec3;
+dvec4 ProjectLoader::s_Dummy_dvec4;
 int ProjectLoader::s_Dummy_int;
 unsigned int ProjectLoader::s_Dummy_uint;
 bool ProjectLoader::s_Dummy_bool;
@@ -539,6 +543,24 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 			}
 			return new NauFloat(s_Dummy_float);
 			break;
+		case Enums::VEC2:
+			s_Dummy_vec2 = vec2(0.0f);
+			if ((readFloatAttribute(p, "x", &s_Dummy_vec2.x) || readFloatAttribute(p, "width", &s_Dummy_vec2.x)) &&
+				(readFloatAttribute(p, "y", &s_Dummy_vec2.y) || readFloatAttribute(p, "height", &s_Dummy_vec2.y))) {
+				return new vec2(s_Dummy_vec2);
+			}
+			else
+				NAU_THROW("File %s: Element %s: Vec2 Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+		case Enums::VEC3:
+			s_Dummy_vec3 = vec3(0.0f);
+			if (readFloatAttribute(p, "x", &s_Dummy_vec3.x)  &&	readFloatAttribute(p, "y", &s_Dummy_vec3.y) && 
+				readFloatAttribute(p, "z", &s_Dummy_vec3.z)) {
+				return new vec3(s_Dummy_vec3);
+			}
+			else
+				NAU_THROW("File %s: Element %s: Vec3 Attribute %s has absent or incomplete value (x,y and z are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
 		case Enums::VEC4:
 			s_Dummy_vec4 = vec4(0.0f);
 			if ((readFloatAttribute(p, "x", &s_Dummy_vec4.x) || readFloatAttribute(p, "r", &s_Dummy_vec4.x)) 
@@ -549,19 +571,9 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 					readFloatAttribute(p, "a", &s_Dummy_vec4.w);
 
 					return new vec4(s_Dummy_vec4);
-
 			}
 			else
 				NAU_THROW("File %s: Element %s: Vec4 Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
-			break;
-		case Enums::VEC2:
-			s_Dummy_vec2 = vec2(0.0f);
-			if ((readFloatAttribute(p, "x", &s_Dummy_vec2.x) || readFloatAttribute(p, "width", &s_Dummy_vec2.x)) &&
-				(readFloatAttribute(p, "y", &s_Dummy_vec2.y) || readFloatAttribute(p, "height", &s_Dummy_vec2.y))) {
-				return new vec2(s_Dummy_vec2);
-			}
-			else
-				NAU_THROW("File %s: Element %s: Vec2 Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			break;
 
 		case Enums::DOUBLE:
@@ -569,6 +581,31 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 				NAU_THROW("File %s: Element %s: Double Attribute %s without a value", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			}
 			return new NauDouble(s_Dummy_double);
+			break;
+		case Enums::DVEC2:
+			s_Dummy_dvec2 = dvec2(0.0f);
+			if (readDoubleAttribute(p, "x", &s_Dummy_dvec2.x) && readDoubleAttribute(p, "y", &s_Dummy_dvec2.y)) {
+				return new dvec2(s_Dummy_dvec2);
+			}
+			else
+				NAU_THROW("File %s: Element %s: DVec2 Attribute %s has absent or incomplete value (x,y are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+		case Enums::DVEC3:
+			s_Dummy_dvec3 = dvec3(0.0f);
+			if (readDoubleAttribute(p, "x", &s_Dummy_dvec3.x) && readDoubleAttribute(p, "y", &s_Dummy_dvec3.y) && readDoubleAttribute(p, "z", &s_Dummy_dvec3.z)) {
+				return new dvec3(s_Dummy_dvec3);
+			}
+			else
+				NAU_THROW("File %s: Element %s: DVec3 Attribute %s has absent or incomplete value (x,y are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+		case Enums::DVEC4:
+			s_Dummy_dvec4 = dvec4(0.0f);
+			if (readDoubleAttribute(p, "x", &s_Dummy_dvec4.x) && readDoubleAttribute(p, "y", &s_Dummy_dvec4.y)
+				&& readDoubleAttribute(p, "z", &s_Dummy_dvec4.z) && readDoubleAttribute(p, "w", &s_Dummy_dvec4.w)) {
+				return new dvec4(s_Dummy_dvec4);
+			}
+			else
+				NAU_THROW("File %s: Element %s: DVec4 Attribute %s has absent or incomplete value (x,y are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			break;
 		case Enums::BVEC4:
 			if (TIXML_SUCCESS == p->QueryBoolAttribute("x", &(s_Dummy_bvec4.x)) 

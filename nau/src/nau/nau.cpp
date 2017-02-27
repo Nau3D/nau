@@ -301,6 +301,7 @@ Nau::luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
 	float *arrF;
 	int *arrI;
 	unsigned int *arrUI;
+	double *arrD;
 
 	switch (bdt) {
 
@@ -309,6 +310,14 @@ Nau::luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
 		for (int i = 0; i < card; ++i) {
 			lua_pushnumber(l, i + 1); // key
 			lua_pushnumber(l, arrF[i]); // value
+			lua_settable(l, -3); // two pushes 
+		}
+		break;
+	case Enums::DOUBLE:
+		arrD = (double *)arr;
+		for (int i = 0; i < card; ++i) {
+			lua_pushnumber(l, i + 1); // key
+			lua_pushnumber(l, arrD[i]); // value
 			lua_settable(l, -3); // two pushes 
 		}
 		break;
@@ -399,6 +408,7 @@ Nau::luaSetBuffer(lua_State *l) {
 	float *arrF;
 	int *arrI; 
 	unsigned int *arrUI;
+	double *arrD;
 
 	switch (bdt) {
 
@@ -411,6 +421,16 @@ Nau::luaSetBuffer(lua_State *l) {
 		}
 		buff->setSubData(offset, size, arrF);
 		free(arrF);
+		break;
+	case Enums::DOUBLE:
+		arrD = (double *)malloc(sizeof(double) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
+			arrD[i] = (double)lua_tonumber(l, -1);
+			lua_pop(l, 1);
+		}
+		buff->setSubData(offset, size, arrD);
+		free(arrD);
 		break;
 	case Enums::INT:
 	case Enums::BOOL:
@@ -542,9 +562,35 @@ Nau::luaSet(lua_State *l) {
 	float *arrF;
 	int *arrI; 
 	unsigned int *arrUI;
+	double *arrD;
 
 	switch (bdt) {
 
+	case Enums::DOUBLE:
+		arrD = (double *)malloc(sizeof(double) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
+			arrD[i] = (double)lua_tonumber(l, -1);
+			lua_pop(l, 1);
+		}
+		switch (dt) {
+		case Enums::DOUBLE:
+			arr = new NauDouble(*arrD); break;
+		case Enums::DVEC2:
+			arr = new dvec2(arrD[0], arrD[1]); break;
+		case Enums::DVEC3:
+			arr = new dvec3(arrD[0], arrD[1], arrD[2]); break;
+		case Enums::DVEC4:
+			arr = new dvec4(arrD[0], arrD[1], arrD[2], arrD[3]); break;
+		case Enums::DMAT3:
+			arr = new dmat3(arrD); break;
+		case Enums::DMAT4:
+			arr = new dmat4(arrD); break;
+		default:
+			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+		}
+		free(arrD);
+		break;
 	case Enums::FLOAT:
 		arrF = (float *)malloc(sizeof(float) * card);
 		lua_pushnil(l);
