@@ -91,16 +91,16 @@ ITexture::Create(std::string label) {
 ITexture*
 ITexture::Create (std::string file, std::string label, bool mipmap) {
 
-	ITextureLoader *loader = ITextureLoader::create();
+	ITextureLoader *loader = ITextureLoader::create(file);
 
-	int success = loader->loadImage (file);
+	int success = loader->loadImage ();
 	if (success) {
 		std::string aFormat = loader->getFormat();
 		ITexture *t;
 
 	#ifdef NAU_OPENGL
 		t = new GLTexture (label, aFormat, aFormat, loader->getType(), 
-				loader->getWidth(), loader->getHeight(), loader->getData(), mipmap);
+				loader->getWidth(), loader->getHeight(), loader->getDepth(), loader->getData(), mipmap);
 	#elif NAU_DIRECTX
 		t = new DXTexture (aDimension, aFormat, width, height);
 	#endif

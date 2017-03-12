@@ -33,9 +33,9 @@ Terrain::setHeightMap(const std::string &name) {
 void 
 Terrain::build() {
 
-	ITextureLoader *tl = ITextureLoader::create();
+	ITextureLoader *tl = ITextureLoader::create(m_HeightMap);
 	// load image but keep its original format
-	tl->loadImage(m_HeightMap, false);
+	tl->loadImage(false);
 	// convert image to luminance, usefull when image is RGB or RGBA
 	tl->convertToFloatLuminance();
 

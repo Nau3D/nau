@@ -13,7 +13,7 @@ using namespace nau::system;
 bool DevILTextureLoader::inited = false;
 
 
-DevILTextureLoader::DevILTextureLoader(void) {
+DevILTextureLoader::DevILTextureLoader(const std::string &file): ITextureLoader(file) {
 
 	if (!DevILTextureLoader::inited) {
 		ilInit();
@@ -29,14 +29,19 @@ DevILTextureLoader::~DevILTextureLoader(void) {
 }
 
 int 
-DevILTextureLoader::loadImage (std::string file, bool convertToRGBA) {
+DevILTextureLoader::loadImage (bool convertToRGBA) {
 
+	std::string file = m_Filename;
 	File::FixSlashes(file);
 	ilBindImage(m_IlId);
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_LOWER_LEFT); 
 	ILstring ils = (ILstring)(file.c_str());
 	int success = ilLoadImage((ILstring)(file.c_str()));
+
+	if (!success)
+		return 0;
+
 	if (success && convertToRGBA) {
 		ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 		return success;
@@ -67,10 +72,10 @@ DevILTextureLoader::getData (void) {
 
 	if (m_IlId > 0) {
 		ilBindImage(m_IlId);
-		return(ilGetData());
+		return ilGetData();
 	}
 	else {
-		return (0);
+		return 0;
 	}
 }
 
@@ -80,10 +85,10 @@ DevILTextureLoader::getWidth (void) {
 
 	if (m_IlId > 0) {
 		ilBindImage(m_IlId);
-		return(ilGetInteger(IL_IMAGE_WIDTH));
+		return ilGetInteger(IL_IMAGE_WIDTH);
 	}
 	else {
-		return (0);
+		return 0;
 	}
 }
 
@@ -93,15 +98,27 @@ DevILTextureLoader::getHeight (void) {
 
 	if (m_IlId > 0) {
 		ilBindImage(m_IlId);
-		return(ilGetInteger(IL_IMAGE_HEIGHT));
+		return ilGetInteger(IL_IMAGE_HEIGHT);
 	}
 	else {
-		return (0);
+		return 0;
 	}
 }
 
 
-std::string 
+int
+DevILTextureLoader::getDepth(void) {
+
+	if (m_IlId > 0) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
+
+std::string
 DevILTextureLoader::getFormat (void) {
 
 	int format;

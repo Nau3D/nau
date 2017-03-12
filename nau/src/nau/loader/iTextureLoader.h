@@ -27,16 +27,19 @@ namespace nau
 		{
 		public:
 
+			ITextureLoader();
+
 			typedef enum {
 				HDR,
 				PNG
 			} FileType;
-			static ITextureLoader* create (void);
+			static ITextureLoader* create (const std::string &file);
 
-			nau_API virtual int loadImage (std::string file, bool convertToRGBA = true) = 0;
+			nau_API virtual int loadImage (bool convertToRGBA = true) = 0;
 			nau_API virtual unsigned char* getData (void) = 0;
 			nau_API virtual int getWidth (void) = 0;
 			nau_API virtual int getHeight (void) = 0;
+			nau_API virtual int getDepth(void) = 0;
 			nau_API virtual std::string getFormat (void) = 0;
 			nau_API virtual std::string getType (void) = 0;
 			nau_API virtual void freeImage (void) = 0;
@@ -55,6 +58,10 @@ namespace nau
 			static nau_API void Save(int width, int height, unsigned char *data, std::string filename = "");
 
 			nau_API virtual ~ITextureLoader(void) {};
+
+		protected:
+			std::string m_Filename;
+			ITextureLoader(const std::string &file);
 		};
 	};
 };

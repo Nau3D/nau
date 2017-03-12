@@ -15,6 +15,7 @@
 #include "nau/interface/interface.h"
 #include "nau/loader/bufferLoader.h"
 #include "nau/material/iBuffer.h"
+#include "nau/material/materialArrayOfImageTextures.h"
 #include "nau/material/programValue.h"
 #include "nau/material/uniformBlockManager.h"
 #include "nau/math/number.h"
@@ -4609,6 +4610,66 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 	}
 }
 
+
+/* -----------------------------------------------------------------------------
+MATERIAL ARRAY OF IMAGE TEXTURE
+
+<arrayOfImageTextures>
+	<arrayOfImageTexture FIRST_UNIT=0  textureArray="name">
+		<ACCESS value="WRITE_ONLY" />
+		<LEVEL value=0 />
+	<arrayOfImageTexture />
+</arrayOfImageTextures>
+
+All fields are optional except name UNIT and texture
+texture refers to a previously defined texture or render target
+
+The name can refer to a texture in another lib, in which case the syntax is lib_name::tex_name
+
+-----------------------------------------------------------------------------*/
+
+void
+ProjectLoader::loadMaterialArrayOfImageTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
+{
+	TiXmlElement *pElemAux;
+	pElemAux = handle.FirstChild("arrayOfImageTextures").FirstChild("arrayOfImageTexture").Element();
+	for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
+		//const char *pTextureName = pElemAux->GetText();
+
+		if (!APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE))
+			NAU_THROW("MatLib %s\nMaterial %s: Image Texture Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), APISupport->getVersion());
+
+		int unit;
+		if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("FIRST_UNIT", &unit)) {
+			NAU_THROW("MatLib %s\nMaterial %s: Image Texture has no FIRST_UNIT", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+
+		const char *pTextureName = pElemAux->Attribute("textureArray");
+		if (0 == pTextureName) {
+			NAU_THROW("MatLib %s\nMaterial %s: Texture array has no name in image texture", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+		if (!strchr(pTextureName, ':'))
+			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pTextureName);
+		else
+			sprintf(s_pFullName, "%s", pTextureName);
+		if (!RESOURCEMANAGER->hasArrayOfTextures(s_pFullName))
+			NAU_THROW("MatLib %s\nMaterial %s: Texture rray %s in image texture is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pTextureName);
+
+		MaterialArrayOfImageTextures *mait = MaterialArrayOfImageTextures::Create();
+		mait->setPropi(MaterialArrayOfImageTextures::FIRST_UNIT, unit);
+		mait->setArrayOfTextures(RESOURCEMANAGER->getArrayOfTextures(s_pFullName));
+
+		// Reading Image ITexture Attributes
+
+		std::vector<std::string> excluded;
+		std::string s = aMat->getName() + ": image texture array first unit " + TextUtil::ToString(unit);
+		readChildTags(s, (AttributeValues *)mait, IImageTexture::Attribs, excluded, pElemAux);
+
+		aMat->setArrayOfImageTextures(mait);
+	}
+}
+
+
 /* -----------------------------------------------------------------------------
 MATERIAL BUFFERS
 
@@ -5174,6 +5235,7 @@ ProjectLoader::loadMatLibAux (const std::string &file)
 		loadMaterialColor(handle,aLib,mat);
 		loadMaterialTextures(handle,aLib,mat);
 		loadMaterialImageTextures(handle, aLib, mat);
+		loadMaterialArrayOfImageTextures(handle, aLib, mat);
 		loadMaterialState(handle,aLib,mat);		
 		loadMaterialBuffers(handle, aLib, mat);
 		loadMaterialArrayOfTextures(handle, aLib, mat);

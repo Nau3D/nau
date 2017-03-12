@@ -45,6 +45,7 @@ namespace nau {
 						COUNT_DATATYPE
 		};
 
+		// note: must capitalize all static functions
 		static nau_API int getCardinality(DataType p);
 		static nau_API Enums::DataType getType(std::string s);
 		static nau_API bool isValidType(std::string s);

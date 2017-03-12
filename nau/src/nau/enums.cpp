@@ -30,7 +30,7 @@ const std::vector<std::string> Enums::DataTypeToString = {
 						
 						"SAMPLER", "ENUM",
 
-						"BYTE", "UBYTE", "SHORT", "USHORT"};
+						"BYTE", "UBYTE", "SHORT", "USHORT", "STRING", "INTARRAY"};
 
 const std::vector<std::string> &
 Enums::GetDataTypeToString() {

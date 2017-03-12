@@ -286,11 +286,16 @@ GLTexture::GLTexture(std::string label, int anInternalFormat, int width, int hei
 }
 
 
+
 GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::string aFormat,
-		std::string aType, int width, int height, void* data, bool mipmap) :
-	ITexture (label)//, "TEXTURE_2D", anInternalFormat, aFormat, aType, width, height)
+		std::string aType, int width, int height, int depth, void* data, bool mipmap) :
+	ITexture (label)
 {
-	m_EnumProps[DIMENSION] = (int)GL_TEXTURE_2D;
+	if (depth == 1)
+		m_EnumProps[DIMENSION] = (int)GL_TEXTURE_2D;
+	else
+		m_EnumProps[DIMENSION] = (int)GL_TEXTURE_3D;
+
 	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
 	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 	//m_EnumProps[TYPE] = Attribs.getListValueOp(TYPE, aType);
@@ -299,7 +304,7 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 
 	m_IntProps[WIDTH] = width;
 	m_IntProps[HEIGHT] = height;
-	m_IntProps[DEPTH] = 1;
+	m_IntProps[DEPTH] = depth;
 	m_IntProps[SAMPLES] = 0;
 	m_IntProps[LEVELS] = 0;
 
@@ -310,8 +315,13 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 
 		glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
 		glBindTexture((GLenum)m_EnumProps[DIMENSION], m_IntProps[ID]);
-		glTexImage2D((GLenum)m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
+
+		if (depth == 1)
+			glTexImage2D((GLenum)m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
 					(GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], data);
+		else
+			glTexImage3D((GLenum)m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH], 0,
+				(GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], data);
 
 		m_BoolProps[MIPMAP] = mipmap;
 		if (m_BoolProps[MIPMAP]) {

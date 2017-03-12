@@ -7,6 +7,7 @@
 #include "nau/material/iMaterialBuffer.h"
 #include "nau/material/iProgram.h"
 #include "nau/material/iState.h" 
+#include "nau/material/materialArrayOfImageTextures.h"
 #include "nau/material/materialTexture.h"
 #include "nau/material/materialArrayOfTextures.h"
 #include "nau/material/programBlockValue.h"
@@ -54,7 +55,9 @@ namespace nau
 
 			std::map<int, MaterialTexture *> m_Textures;
 
-			nau::material::MaterialArrayOfTextures m_ArrayOfTextures;
+			MaterialArrayOfTextures m_ArrayOfTextures;
+			MaterialArrayOfImageTextures *m_ArrayOfImageTextures;
+
 			IProgram *m_Shader;
 			IState *m_State;
 
@@ -91,6 +94,9 @@ namespace nau
 
 			void setArrayOfTextures(IArrayOfTextures *at, int unit);
 			MaterialArrayOfTextures *getMaterialArrayOfTextures();
+
+			void setArrayOfImageTextures(MaterialArrayOfImageTextures *m);
+			MaterialArrayOfImageTextures * getArrayOfImageTextures();
 
 			nau_API void attachImageTexture(std::string label, unsigned int unit, unsigned int texID);
 			nau_API IImageTexture *getImageTexture(unsigned int unit);

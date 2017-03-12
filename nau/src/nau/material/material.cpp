@@ -17,6 +17,7 @@ Material::Material() :
 	m_UniformValues(),
 	m_Enabled (true),
 	m_Name ("__Default"),
+	m_ArrayOfImageTextures(NULL),
 	m_State(NULL) {
 
 }
@@ -71,6 +72,7 @@ Material::clone() { // check clone Program Values
  	mat->m_State = m_State;
 
 	mat->m_ArrayOfTextures = m_ArrayOfTextures;
+	//mat->m_ArrayOfImageTextures = new MaterialArrayOfTextures(m_ArrayOfImageTextures);
 
    return std::shared_ptr<Material>(mat);
 }
@@ -402,6 +404,8 @@ Material::prepare () {
 		PROFILE("Array Of Textures");
 		m_ArrayOfTextures.bind();
 	}
+	if (NULL != m_ArrayOfImageTextures)
+		m_ArrayOfImageTextures->bind();
 }
 
 
@@ -462,6 +466,20 @@ MaterialArrayOfTextures *
 Material::getMaterialArrayOfTextures() {
 
 	return &m_ArrayOfTextures;
+}
+
+
+void 
+Material::setArrayOfImageTextures(MaterialArrayOfImageTextures *m) {
+
+	m_ArrayOfImageTextures = m;
+}
+
+
+MaterialArrayOfImageTextures * 
+Material::getArrayOfImageTextures() {
+
+	return m_ArrayOfImageTextures;
 }
 
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<materialLib name="Test">
+
+	<shaders>
+		<shader name="fillTextures" cs="shaders/fillTextures.comp" />
+		<shader name="showTextures" vs="shaders/quadShader.vert" 
+									ps="shaders/showTextures.frag"/>	
+	</shaders>
+	
+	<arraysOfTextures>
+		<arrayOfTextures name="T">
+			<TEXTURE_COUNT value= 2 />
+			<WIDTH value="128"/>
+			<HEIGHT value="128" />
+			<INTERNAL_FORMAT value="RGBA" />
+		</arrayOfTextures>
+	</arraysOfTextures>
+
+	<materials>
+		<material name ="fillTextures">
+			<shader name="fillTextures">
+				<values>									
+					<valueof uniform="tex[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+												context="CURRENT"
+												component="SAMPLER_ARRAY" />
+				</values>
+			</shader>
+			<arrayOfImageTextures>
+				<arrayOfImageTexture textureArray="T" FIRST_UNIT=2 >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</arrayOfImageTexture >
+			</arrayOfImageTextures>	
+		</material>
+		
+		<material name ="showTextures">
+			<shader name="showTextures" >
+				<values>									
+					<valueof uniform="tex[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+												context="CURRENT"
+												component="SAMPLER_ARRAY" />
+				</values>
+			</shader>
+			<arrayOfImageTextures>
+				<arrayOfImageTexture textureArray="T" FIRST_UNIT=4 />
+			</arrayOfImageTextures>	
+		</material>
+	</materials>	
+	
+</materialLib>
+
