@@ -41,9 +41,9 @@
 												component="SAMPLER_ARRAY" />
 				</values>
 			</shader>
-			<arrayOfImageTextures>
+			<!--arrayOfImageTextures>
 				<arrayOfImageTexture textureArray="T" FIRST_UNIT=4 />
-			</arrayOfImageTextures>	
+			</arrayOfImageTextures-->	
 		</material>
 	</materials>	
 	

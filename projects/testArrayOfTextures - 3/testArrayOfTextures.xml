@@ -33,6 +33,14 @@
 			
 			<pass class="quad" name="acessing image textures with array of samplers">
 				<viewport name="right" />
+				<injectionMaps>
+					<map toMaterial="__Quad">
+						<shader fromMaterial="showTextures" fromLibrary="Test" /> 
+						<arrayOfImageTextures>
+							<arrayOfImageTexture textureArray="Test::T" FIRST_UNIT=4 />
+						</arrayOfImageTextures>	
+					</map>
+				</injectionMaps>
 				<material name="showTextures" fromLibrary="Test" /> 
 			</pass>
 		</pipeline>

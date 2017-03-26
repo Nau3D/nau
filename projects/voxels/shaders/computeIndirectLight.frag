@@ -100,7 +100,7 @@ vec4 voxelConeTrace(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 		//accum.rgb += sampleValue.rgb * (sampleValue.a) * (1.0 - accum.a);//* 		// if (level > 2.0)
 		//if (dot(sampleNormal, dir) < 0.0)
 			 // accum.rgb += sampleValue.rgb * sampleValue.a * (1-accum.a);		
-			accum.rgb += sampleValue.rgb  * (1-accum.a);		
+		accum.rgb += sampleValue.rgb  * (1-accum.a);		
 		accum.a += sampleValue.a;//sampleValue.a;// * minDiameter/sampleDiameter ;
 	// if (level > 2.0)
 			// accum = 0.5;
@@ -176,16 +176,24 @@ vec4 voxelConeTrace2(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 
 void main()
 {
+	// fetch color from render to texture
 	vec4 color = texture(texColor, texCoordV);
+	
+	if (color.a != 0.0) {
+		outColor = color*1.5;
+		return;
+	}
+		
+	// fetch world position	
 	vec3 coord = texture(texPos, texCoordV).xyz;
+	// convert position to grid index
 	ivec3 coordi = ivec3(coord * GridSize);
-	//coord = coordi* 1.0/GridSize;
+	// fetch voxel from grid
 	vec4 texel = texelFetch(grid, coordi, 0);
-//	if (texel.w == 0)
-//		discard;
-//	vec3 normal = texelFetch(gridNormal, coordi, 0).xyz;
+	// fetch normal for pixel
 	vec3 normal = texture(texNormal, texCoordV).xyz ;
 	normal = normalize(normal);
+	// build reference system
 	vec3 tangent, bitangent;
 	vec3 c1 = cross(normal, vec3(0,0,1));
 	vec3 c2 = cross(normal, vec3(0,1,0));
@@ -193,10 +201,10 @@ void main()
 		tangent = c1;
 	else 
 		tangent = c2;
-		
 	tangent = normalize(tangent);
 	bitangent = cross(normal, tangent);
 	
+	// trace cones cones
 	float coneRatio = 0.677;//tan(30*3.14159/180.9);
 	float maxDist = 1;
 	vec4 il=vec4(0), re=vec4(0), shadow=vec4(0);
@@ -205,14 +213,18 @@ void main()
 	float cbeta = cos(45);
 	float alpha = 60;
 	float alpha2 = 30;
-	    il  = voxelConeTrace(coord, normalize(normal), coneRatio, maxDist);
-	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*cbeta),  coneRatio, maxDist);
-	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*cbeta),  coneRatio, maxDist);
-	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*0.5*cbeta + 			bitangent*0.866*cbeta), coneRatio, maxDist);
-	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*0.5*cbeta - 			bitangent*0.866*cbeta), coneRatio, maxDist);
-	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*0.5*cbeta + 			bitangent*0.866*cbeta), coneRatio, maxDist);
-	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*0.5*cbeta - 			bitangent*0.866*cbeta), coneRatio, maxDist);
-	// ao += 0.707 * voxelConeTrace(coord, normalize(normal+tangent), coneRatio, maxDist);
+    il  = voxelConeTrace(coord, normalize(normal), coneRatio, maxDist);
+    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*cbeta),  coneRatio, maxDist);
+    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*cbeta),  coneRatio, maxDist);
+    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*0.5*cbeta + 					bitangent*0.866*cbeta), coneRatio, maxDist);
+    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*0.5*cbeta - 					bitangent*0.866*cbeta), coneRatio, maxDist);
+    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*0.5*cbeta + 					bitangent*0.866*cbeta), coneRatio, maxDist);
+    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*0.5*cbeta - 					bitangent*0.866*cbeta), coneRatio, maxDist);
+
+	outColor = (0.05 * color + color *  il * 0.2) * (1- il.a*0.25);
+	outColor = vec4(outColor.xyz, 1);	
+	return;
+		// ao += 0.707 * voxelConeTrace(coord, normalize(normal+tangent), coneRatio, maxDist);
 	// ao += 0.707 * voxelConeTrace(coord, normalize(normal-tangent), coneRatio, maxDist);z
 	// ao += 0.707 * voxelConeTrace(coord, normalize(normal+bitangent), coneRatio, maxDist);
 	// ao += 0.707 * voxelConeTrace(coord, normalize(normal-bitangent), coneRatio, maxDist);

@@ -3507,7 +3507,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 	pElem = hPass.FirstChild ("injectionMaps").FirstChild ("map").Element();
 	for ( ; pElem != NULL; pElem = pElem->NextSiblingElement()) {
 	
-		std::vector<std::string> ok = {"state", "shader", "color", "textures", "imageTextures", "buffers"};
+		std::vector<std::string> ok = {"state", "shader", "color", "textures", "imageTextures", "buffers", "arrayOfImageTextures"};
 		std::string s = aPass->getName() + " injectionMaps";
 		checkForNonValidChildTags(s, ok, pElem);
 
@@ -3531,6 +3531,47 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 			MATERIALLIBMANAGER->addMaterial(aPass->getName(), dstMat);
 
 			aPass->remapMaterial (name, aPass->getName(), name);
+		}
+
+		TiXmlNode *pElem2 = pElem->FirstChildElement("arrayOfImageTextures");
+		if (pElem2) {
+			pElemAux = pElem2->FirstChildElement("arrayOfImageTexture");
+			for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement()) {
+				const char *pTextureArray = pElemAux->Attribute("textureArray");
+
+				if (0 == pTextureArray) {
+					NAU_THROW("File %s\nPass %s\nInjection map error: arrayOfImageTextures map error", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+				}
+
+				if (!APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE))
+					NAU_THROW("File %s\nPass %s\nImage Texture Not Supported with OpenGL Version %d", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), APISupport->getVersion());
+
+				int unit;
+				if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("FIRST_UNIT", &unit)) {
+					NAU_THROW("File %s\nPass %s\nImage Texture has no FIRST_UNIT", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+				}
+
+				const char *pTextureName = pElemAux->Attribute("textureArray");
+				if (0 == pTextureName) {
+					NAU_THROW("File %s\nPass %s\nTexture array has no name in image texture", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+				}
+				if (!RESOURCEMANAGER->hasArrayOfTextures(pTextureArray))
+					NAU_THROW("File %s\nPass %s\nTexture rray %s in image texture is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pTextureName);
+
+				MaterialArrayOfImageTextures *mait = MaterialArrayOfImageTextures::Create();
+				mait->setPropi(MaterialArrayOfImageTextures::FIRST_UNIT, unit);
+				mait->setArrayOfTextures(RESOURCEMANAGER->getArrayOfTextures(pTextureArray));
+
+
+				for (auto& name : names) {
+
+					std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+					std::vector<std::string> excluded;
+					std::string s = dstMat->getName() + ": image texture array first unit " + TextUtil::ToString(unit);
+					readChildTags(s, (AttributeValues *)mait, IImageTexture::Attribs, excluded, pElemAux);
+					dstMat->setArrayOfImageTextures(mait);
+				}
+			}
 		}
 
 

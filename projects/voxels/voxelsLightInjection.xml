@@ -2,12 +2,12 @@
 <project name="Voxels" width=1024 height=1024>
 	<assets>
 		<constants>
-			<constant name="GridSize" value = 256 />
-			<constant name="CompRO" value = 32 /> <!-- GridSize/8 -->
+			<constant name="GridSize" value = 512 />
+			<constant name="CompRO" value = 64 /> <!-- GridSize/8 -->
 		</constants>
 		<attributes>
 			<attribute name="GridSize" type="PASS" data="INT" value="GridSize" />
-			<attribute name="GridLevels" type="PASS" data="INT" value=8 />
+			<attribute name="GridLevels" type="PASS" data="INT" value=9 />
 			<attribute name="GridCurrentLevel" type="PASS" data="INT" value=0 />
 			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "10" />
 			<attribute type="PASS" name="Levels" data="INT" value=10 />
@@ -16,9 +16,6 @@
 		<scenes>
 			<scene name="MainScene" param="UNITIZE">
 				<file name="../../models/cube.obj"/>
-			</scene>
-			<scene name="Bench" param="UNITIZE">
-				<file name="../../models/ntg-bench/bench.obj"/>
 			</scene>
 			<scene name="Sponza" param="UNITIZE">
 				<file name="../../models/sponza/crytek-sponza/sponza.nbo"/>
@@ -151,11 +148,11 @@
 				<texture name="RSM" fromLibrary="Voxels" />
 			</pass-->
 			
-			<pass class="compute" name="resetOpacity" >
+			<!--pass class="compute" name="resetOpacity" >
 				<mode value="RUN_ONCE" />	
 				<material name="resetOpacity" fromLibrary="Voxels" 
 						dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
-			</pass>
+			</pass-->
 
 			<pass class="compute" name="mipmap" >
 				<mode value="RUN_ONCE" />	

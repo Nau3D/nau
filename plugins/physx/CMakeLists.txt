@@ -46,7 +46,7 @@ target_link_libraries( nauPhysxPlugin
 	
 	$<TARGET_LINKER_FILE:nau>)	
 	
-target_link_libraries(nauPhysxPlugin "../../../contrib/lua-5.3.3/lua53")
+target_link_libraries(nauPhysxPlugin "${CMAKE_SOURCE_DIR}/contrib/lua-5.3.3/lua53.lib")
 	
 #install (TARGETS nauPhysxPlugin DESTINATION lib)
 #install(FILES ${headers} DESTINATION include)	

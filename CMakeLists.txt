@@ -87,6 +87,7 @@ add_subdirectory(contrib/assimp3.3.1)
 option(FREEGLUT_BUILD_DEMOS "" OFF)
 option(FREEGLUT_BUILD_STATIC_LIBS "" ON)
 option(FREEGLUT_BUILD_SHARED_LIBS "" OFF)
+option(FREEGLUT_GLES "" OFF)
 option(INSTALL_PDB "" OFF)
 add_subdirectory(contrib/freeglut-3.0.0)
 

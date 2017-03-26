@@ -2,8 +2,8 @@
 
 layout (rgba8) uniform writeonly coherent image3D imageUnit;
 //layout (r32ui) uniform coherent volatile uimage3D imageUnit;
-//layout (rgba8) uniform writeonly coherent volatile image3D imageUnitN;
-layout (r32ui) uniform coherent volatile uimage3D imageUnitN;
+layout (rgba8) uniform writeonly coherent volatile image3D imageUnitN;
+//layout (r32ui) uniform coherent volatile uimage3D imageUnitN;
 
 uniform int GridSize;
 uniform vec4 diffuse;
@@ -61,8 +61,8 @@ void main() {
 	if (all(greaterThanEqual(-1+2*gl_FragCoord.xy/GridSize, bBox.xy)) && all(lessThanEqual(-1+2*gl_FragCoord.xy/GridSize, bBox.zw))){
 		//imageAtomicRGBA8Avg(imageUnit, pos,color);
 		imageStore(imageUnit, pos, vec4(0,0,0,1));
-		imageAtomicRGBA8Avg(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,1));
-		//imageStore(imageUnitN, ivec3(x,y,z), vec4(normalG * 0.5 + 0.5,shininess));
+		//imageAtomicRGBA8Avg(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,1));
+		imageStore(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,shininess));
 	 }
 	 else 
 		 discard;
