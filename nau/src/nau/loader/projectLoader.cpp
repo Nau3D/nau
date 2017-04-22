@@ -3569,7 +3569,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 					std::vector<std::string> excluded;
 					std::string s = dstMat->getName() + ": image texture array first unit " + TextUtil::ToString(unit);
 					readChildTags(s, (AttributeValues *)mait, IImageTexture::Attribs, excluded, pElemAux);
-					dstMat->setArrayOfImageTextures(mait);
+					dstMat->addArrayOfImageTextures(mait);
 				}
 			}
 		}
@@ -4236,7 +4236,7 @@ ProjectLoader::loadMatLibArrayOfTextures(TiXmlHandle hRoot, MaterialLib *aLib, s
 
 		IArrayOfTextures *b = RESOURCEMANAGER->createArrayOfTextures(s_pFullName);
 
-		SLOG("Buffer : %s", s_pFullName);
+		SLOG("Array of Textures : %s", s_pFullName);
 
 		// Reading array of texture attributes
 		std::vector<std::string> excluded;
@@ -4694,7 +4694,7 @@ ProjectLoader::loadMaterialArrayOfImageTextures(TiXmlHandle handle, MaterialLib 
 		else
 			sprintf(s_pFullName, "%s", pTextureName);
 		if (!RESOURCEMANAGER->hasArrayOfTextures(s_pFullName))
-			NAU_THROW("MatLib %s\nMaterial %s: Texture rray %s in image texture is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pTextureName);
+			NAU_THROW("MatLib %s\nMaterial %s: Texture array %s in image texture is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pTextureName);
 
 		MaterialArrayOfImageTextures *mait = MaterialArrayOfImageTextures::Create();
 		mait->setPropi(MaterialArrayOfImageTextures::FIRST_UNIT, unit);
@@ -4706,7 +4706,7 @@ ProjectLoader::loadMaterialArrayOfImageTextures(TiXmlHandle handle, MaterialLib 
 		std::string s = aMat->getName() + ": image texture array first unit " + TextUtil::ToString(unit);
 		readChildTags(s, (AttributeValues *)mait, IImageTexture::Attribs, excluded, pElemAux);
 
-		aMat->setArrayOfImageTextures(mait);
+		aMat->addArrayOfImageTextures(mait);
 	}
 }
 

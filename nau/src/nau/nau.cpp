@@ -926,7 +926,7 @@ Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 		return (AttributeValues *)renderer->getMaterial()->getImageTexture(number);
 	}
 	else if (type == "ARRAY_OF_IMAGE_TEXTURES") {
-		return (AttributeValues *)renderer->getMaterial()->getArrayOfImageTextures();
+		return (AttributeValues *)renderer->getMaterial()->getArrayOfImageTextures(number);
 	}
 	else if (type == "TEXTURE_BINDING") {
 		return (AttributeValues *)renderer->getMaterialTexture(number);
@@ -1126,7 +1126,7 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 	}
 	if (type == "ARRAY_OF_IMAGE_TEXTURES") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
-			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getArrayOfImageTextures();
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getArrayOfImageTextures(number);
 	}
 	if (type == "BUFFER_MATERIAL") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat)) {

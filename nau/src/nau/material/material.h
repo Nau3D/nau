@@ -56,7 +56,7 @@ namespace nau
 			std::map<int, MaterialTexture *> m_Textures;
 
 			MaterialArrayOfTextures m_ArrayOfTextures;
-			MaterialArrayOfImageTextures *m_ArrayOfImageTextures;
+			std::vector<MaterialArrayOfImageTextures *> m_ArrayOfImageTextures;
 
 			IProgram *m_Shader;
 			IState *m_State;
@@ -95,8 +95,8 @@ namespace nau
 			void setArrayOfTextures(IArrayOfTextures *at, int unit);
 			MaterialArrayOfTextures *getMaterialArrayOfTextures();
 
-			void setArrayOfImageTextures(MaterialArrayOfImageTextures *m);
-			MaterialArrayOfImageTextures * getArrayOfImageTextures();
+			void addArrayOfImageTextures(MaterialArrayOfImageTextures *m);
+			MaterialArrayOfImageTextures * getArrayOfImageTextures(int id);
 
 			nau_API void attachImageTexture(std::string label, unsigned int unit, unsigned int texID);
 			nau_API IImageTexture *getImageTexture(unsigned int unit);

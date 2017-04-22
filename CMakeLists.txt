@@ -71,7 +71,7 @@ OPTION(INSTALL_PDB "" OFF)
 
 option(OPTION_BUILD_GPU_TESTS "" OFF)
 option(OPTION_BUILD_TESTS "" OFF)
-option(BUILD_SHARED_LIBS "" OFF)
+option (BUILD_SHARED_LIBS "" OFF)
 add_subdirectory(contrib/glbinding-master)
 
 add_subdirectory(contrib/tinyxml)

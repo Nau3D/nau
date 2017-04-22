@@ -404,8 +404,9 @@ Material::prepare () {
 		PROFILE("Array Of Textures");
 		m_ArrayOfTextures.bind();
 	}
-	if (NULL != m_ArrayOfImageTextures)
-		m_ArrayOfImageTextures->bind();
+	if (m_ArrayOfImageTextures.size())
+		for (auto at: m_ArrayOfImageTextures)
+			at->bind();
 }
 
 
@@ -470,16 +471,19 @@ Material::getMaterialArrayOfTextures() {
 
 
 void 
-Material::setArrayOfImageTextures(MaterialArrayOfImageTextures *m) {
+Material::addArrayOfImageTextures(MaterialArrayOfImageTextures *m) {
 
-	m_ArrayOfImageTextures = m;
+	m_ArrayOfImageTextures.push_back(m);
 }
 
 
 MaterialArrayOfImageTextures * 
-Material::getArrayOfImageTextures() {
+Material::getArrayOfImageTextures(int id) {
 
-	return m_ArrayOfImageTextures;
+	if (id < m_ArrayOfImageTextures.size())
+		return m_ArrayOfImageTextures[id];
+	else
+		return NULL;
 }
 
 

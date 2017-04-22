@@ -28,20 +28,21 @@
 			</pass>
 			<pass class="quad" name="regular texture access">
 				<viewport name="left" />
-				<texture name="Test::T_0" />
+				<texture name="Test::T1_0" />
 			</pass>
 			
 			<pass class="quad" name="acessing image textures with array of samplers">
 				<viewport name="right" />
+				<!--material name="showTextures" fromLibrary="Test" /--> 
 				<injectionMaps>
 					<map toMaterial="__Quad">
 						<shader fromMaterial="showTextures" fromLibrary="Test" /> 
 						<arrayOfImageTextures>
-							<arrayOfImageTexture textureArray="Test::T" FIRST_UNIT=4 />
+							<arrayOfImageTexture textureArray="Test::T1" FIRST_UNIT=4 />
+							<arrayOfImageTexture textureArray="Test::T2" FIRST_UNIT=2 />
 						</arrayOfImageTextures>	
 					</map>
 				</injectionMaps>
-				<material name="showTextures" fromLibrary="Test" /> 
 			</pass>
 		</pipeline>
 	</pipelines>

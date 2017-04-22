@@ -8,7 +8,13 @@
 	</shaders>
 	
 	<arraysOfTextures>
-		<arrayOfTextures name="T">
+		<arrayOfTextures name="T1">
+			<TEXTURE_COUNT value= 2 />
+			<WIDTH value="128"/>
+			<HEIGHT value="128" />
+			<INTERNAL_FORMAT value="RGBA" />
+		</arrayOfTextures>
+		<arrayOfTextures name="T2">
 			<TEXTURE_COUNT value= 2 />
 			<WIDTH value="128"/>
 			<HEIGHT value="128" />
@@ -20,13 +26,20 @@
 		<material name ="fillTextures">
 			<shader name="fillTextures">
 				<values>									
-					<valueof uniform="tex[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+					<valueof uniform="tex1[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
 												context="CURRENT"
-												component="SAMPLER_ARRAY" />
+												component="SAMPLER_ARRAY" id=0/>
+					<valueof uniform="tex2[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+												context="CURRENT"
+												component="SAMPLER_ARRAY" id=1/>
 				</values>
 			</shader>
 			<arrayOfImageTextures>
-				<arrayOfImageTexture textureArray="T" FIRST_UNIT=2 >
+				<arrayOfImageTexture textureArray="T1" FIRST_UNIT=2 >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</arrayOfImageTexture >
+				<arrayOfImageTexture textureArray="T2" FIRST_UNIT=4 >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
 				</arrayOfImageTexture >
@@ -36,14 +49,18 @@
 		<material name ="showTextures">
 			<shader name="showTextures" >
 				<values>									
-					<valueof uniform="tex[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+					<valueof uniform="tex1[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
 												context="CURRENT"
-												component="SAMPLER_ARRAY" />
+												component="SAMPLER_ARRAY" id=0/>
+					<valueof uniform="tex2[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+												context="CURRENT"
+												component="SAMPLER_ARRAY" id=1/>
 				</values>
 			</shader>
-			<!--arrayOfImageTextures>
-				<arrayOfImageTexture textureArray="T" FIRST_UNIT=4 />
-			</arrayOfImageTextures-->	
+			<arrayOfImageTextures>
+				<arrayOfImageTexture textureArray="T1" FIRST_UNIT=4 />
+				<arrayOfImageTexture textureArray="T2" FIRST_UNIT=2 />
+			</arrayOfImageTextures>	
 		</material>
 	</materials>	
 	
