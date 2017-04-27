@@ -9,5 +9,5 @@ void main()
 	ivec2 storeLoc = ivec2(gl_GlobalInvocationID);
 
 	imageStore(tex1[0], storeLoc, vec4(1,0,0,0));
-	imageStore(tex2[1], storeLoc, vec4(0,1,0,0));
+	imageStore(tex2[1], storeLoc, vec4(0,0,1,0));
 } 

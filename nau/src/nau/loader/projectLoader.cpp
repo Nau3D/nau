@@ -1802,7 +1802,7 @@ Specification of the lights:
 position is optional, if not specified it will be (0.0 0.0, .0.)
 direction is optional, if not specified it will be (0.0, 0.0, -1.0)
 color is optional, if not defined it will be (1.0, 1.0, 1.0)
-	TODO: must add ambient color
+
 ----------------------------------------------------------------- */
 void 
 ProjectLoader::loadLights(TiXmlHandle handle) 
@@ -3507,7 +3507,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 	pElem = hPass.FirstChild ("injectionMaps").FirstChild ("map").Element();
 	for ( ; pElem != NULL; pElem = pElem->NextSiblingElement()) {
 	
-		std::vector<std::string> ok = {"state", "shader", "color", "textures", "imageTextures", "buffers", "arrayOfImageTextures"};
+		std::vector<std::string> ok = {"state", "shader", "color", "textures", "imageTextures", "buffers", "arraysOfImageTexture"};
 		std::string s = aPass->getName() + " injectionMaps";
 		checkForNonValidChildTags(s, ok, pElem);
 
@@ -3533,7 +3533,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 			aPass->remapMaterial (name, aPass->getName(), name);
 		}
 
-		TiXmlNode *pElem2 = pElem->FirstChildElement("arrayOfImageTextures");
+		TiXmlNode *pElem2 = pElem->FirstChildElement("arraysOfImageTexture");
 		if (pElem2) {
 			pElemAux = pElem2->FirstChildElement("arrayOfImageTexture");
 			for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement()) {
@@ -4673,7 +4673,7 @@ void
 ProjectLoader::loadMaterialArrayOfImageTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux;
-	pElemAux = handle.FirstChild("arrayOfImageTextures").FirstChild("arrayOfImageTexture").Element();
+	pElemAux = handle.FirstChild("arraysOfImageTexture").FirstChild("arrayOfImageTexture").Element();
 	for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
 		//const char *pTextureName = pElemAux->GetText();
 
@@ -4826,34 +4826,36 @@ void
 ProjectLoader::loadMaterialArrayOfTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux;
-	pElemAux = handle.FirstChild("arrayOfTextures").Element();
-	if (!pElemAux)
-		return;	
-	
+	int k = 0;
+	pElemAux = handle.FirstChild("arraysOfTextures").FirstChild("arrayOfTextures").Element();
+	for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
 
-	const char *pTextureName = pElemAux->Attribute("name");
-	if (0 == pTextureName) {
-		NAU_THROW("MatLib %s\nMaterial %s\nArray of Textures has no name", aLib->getName().c_str(), aMat->getName().c_str());
+
+		const char *pTextureName = pElemAux->Attribute("name");
+		if (0 == pTextureName) {
+			NAU_THROW("MatLib %s\nMaterial %s\nArray of Textures has no name", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+
+		int unit;
+		if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("firstUnit", &unit)) {
+			NAU_THROW("MatLib %s\nMaterial %s\nTexture has no first unit", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+
+		if (!strchr(pTextureName, ':'))
+			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pTextureName);
+		else
+			sprintf(s_pFullName, "%s", pTextureName);
+		if (!RESOURCEMANAGER->hasArrayOfTextures(s_pFullName))
+			NAU_THROW("MatLib %s\nMaterial %s\nArray of Textures %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pTextureName);
+
+		IArrayOfTextures *at = RESOURCEMANAGER->getArrayOfTextures(s_pFullName);
+		aMat->addArrayOfTextures(at, unit);
+
+		// Reading ITexture Sampler Attributes
+		std::vector<std::string> excluded;
+		readChildTags(pTextureName, (AttributeValues *)aMat->getMaterialArrayOfTextures(k)->getSampler(), ITextureSampler::Attribs, excluded, pElemAux);
+		k++;
 	}
-
-	int unit;
-	if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("firstUnit", &unit)) {
-		NAU_THROW("MatLib %s\nMaterial %s\nTexture has no first unit", aLib->getName().c_str(), aMat->getName().c_str());
-	}
-
-	if (!strchr(pTextureName, ':'))
-		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pTextureName);
-	else
-		sprintf(s_pFullName, "%s", pTextureName);
-	if (!RESOURCEMANAGER->hasArrayOfTextures(s_pFullName))
-		NAU_THROW("MatLib %s\nMaterial %s\nArray of Textures %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pTextureName);
-
-	IArrayOfTextures *at = RESOURCEMANAGER->getArrayOfTextures(s_pFullName);
-	aMat->setArrayOfTextures(at, unit);
-
-	// Reading ITexture Sampler Attributes
-	std::vector<std::string> excluded;
-	readChildTags(pTextureName, (AttributeValues *)aMat->getMaterialArrayOfTextures()->getSampler(), ITextureSampler::Attribs, excluded, pElemAux);
 }
 
 
@@ -4929,7 +4931,8 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 
 			int id = 0;
 			if ((strcmp(pContext,"CURRENT") == 0) && 
-						((strcmp(pType,"LIGHT") == 0) || (0 == strcmp(pType,"TEXTURE_BINDING")) || (0 == strcmp(pType,"IMAGE_TEXTURE"))) 
+						((strcmp(pType,"LIGHT") == 0) || (0 == strcmp(pType,"TEXTURE_BINDING")) || (0 == strcmp(pType,"IMAGE_TEXTURE")) ||
+						 (0 == strcmp(pType, "ARRAY_OF_IMAGE_TEXTURES")) || (0 == strcmp(pType, "ARRAY_OF_TEXTURES_BINDING")))
 						&&  (0 != strcmp(pComponent,"COUNT"))) {
 				if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
 					NAU_THROW("MatLib %s\nMaterial %s\nUniform %s - id is required for type %s ", 
@@ -4944,6 +4947,14 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 				}
 				else if (0 == strcmp(pType, "IMAGE_TEXTURE") && !aMat->getImageTexture(id)) {
 					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned image texture unit", 
+						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+				}
+				else if (0 == strcmp(pType, "ARRAY_OF_IMAGE_TEXTURES") && !aMat->getArrayOfImageTextures(id)) {
+					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned array of image texture units",
+						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+				}
+				else if (0 == strcmp(pType, "ARRAY_OF_TEXTURES_BINDING") && !aMat->getArrayOfImageTextures(id)) {
+					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned array of texture units",
 						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
 				}
 			}

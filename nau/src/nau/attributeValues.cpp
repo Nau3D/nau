@@ -1624,19 +1624,19 @@ AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 
 		case Enums::ENUM:
 			getPrope((AttributeValues::EnumProperty)prop);
-			return(&(m_EnumProps[prop]));
+			return &(m_EnumProps[prop]);
 			break;
 		case Enums::STRING:
 			getProps((AttributeValues::StringProperty)prop);
-			return(&(m_StringProps[prop]));
+			return &(m_StringProps[prop]);
 			break;
 		case Enums::INTARRAY: 
 			getPropiv((AttributeValues::IntArrayProperty)prop);
-			return(&(m_IntArrayProps[prop]));
+			return &(m_IntArrayProps[prop]);
 			break;
 		case Enums::INT:
 			getPropi((AttributeValues::IntProperty)prop);
-			return(&(m_IntProps[prop]));
+			return &(m_IntProps[prop]);
 			break;
 		case Enums::IVEC2:
 			getPropi2((AttributeValues::Int2Property)prop);

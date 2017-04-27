@@ -9,7 +9,7 @@ out vec4 colorOut;
 
 void main() {
 
-	if (texCoordV.x > 0.5) {
+	if (texCoordV.x < 0.5) {
 		colorOut = imageLoad(tex1[0], ivec2(texCoordV * ivec2(128, 128)));
 	}
 	else {

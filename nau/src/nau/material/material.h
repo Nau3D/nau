@@ -55,7 +55,7 @@ namespace nau
 
 			std::map<int, MaterialTexture *> m_Textures;
 
-			MaterialArrayOfTextures m_ArrayOfTextures;
+			std::vector<MaterialArrayOfTextures> m_ArrayOfTextures;
 			std::vector<MaterialArrayOfImageTextures *> m_ArrayOfImageTextures;
 
 			IProgram *m_Shader;
@@ -92,8 +92,8 @@ namespace nau
 			void disable (void);
 			bool isEnabled (void);
 
-			void setArrayOfTextures(IArrayOfTextures *at, int unit);
-			MaterialArrayOfTextures *getMaterialArrayOfTextures();
+			void addArrayOfTextures(IArrayOfTextures *at, int unit);
+			MaterialArrayOfTextures *getMaterialArrayOfTextures(int id);
 
 			void addArrayOfImageTextures(MaterialArrayOfImageTextures *m);
 			MaterialArrayOfImageTextures * getArrayOfImageTextures(int id);

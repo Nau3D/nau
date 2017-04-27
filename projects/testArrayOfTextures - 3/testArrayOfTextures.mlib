@@ -34,7 +34,7 @@
 												component="SAMPLER_ARRAY" id=1/>
 				</values>
 			</shader>
-			<arrayOfImageTextures>
+			<arraysOfImageTexture>
 				<arrayOfImageTexture textureArray="T1" FIRST_UNIT=2 >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
@@ -43,7 +43,7 @@
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
 				</arrayOfImageTexture >
-			</arrayOfImageTextures>	
+			</arraysOfImageTexture>	
 		</material>
 		
 		<material name ="showTextures">
@@ -57,10 +57,10 @@
 												component="SAMPLER_ARRAY" id=1/>
 				</values>
 			</shader>
-			<arrayOfImageTextures>
-				<arrayOfImageTexture textureArray="T1" FIRST_UNIT=4 />
-				<arrayOfImageTexture textureArray="T2" FIRST_UNIT=2 />
-			</arrayOfImageTextures>	
+			<arraysOfImageTexture>
+				<arrayOfImageTexture textureArray="T1" FIRST_UNIT=6 />
+				<arrayOfImageTexture textureArray="T2" FIRST_UNIT=0 />
+			</arraysOfImageTexture>	
 		</material>
 	</materials>	
 	

@@ -951,7 +951,7 @@ Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 		return (AttributeValues *)renderer->getViewport().get();
 	}
 	else if (type == "ARRAY_OF_TEXTURES_BINDING") {
-		return (AttributeValues *)renderer->getMaterial()->getMaterialArrayOfTextures();
+		return (AttributeValues *)renderer->getMaterial()->getMaterialArrayOfTextures(number);
 	}
 	// If we get here then we are trying to fetch something that does not exist
 	NAU_THROW("Getting an invalid object\ntype: %s", type.c_str());
@@ -1139,7 +1139,7 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 	}
 	else if (type == "ARRAY_OF_TEXTURES_BINDING") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
-			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialArrayOfTextures();
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialArrayOfTextures(number);
 	}
 	// If we get here then we are trying to fetch something that does not exist
 	NAU_THROW("Getting an invalid object\ntype: %s\ncontext: %s", 

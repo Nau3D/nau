@@ -50,7 +50,12 @@ ProgramValue::ProgramValue (std::string name, std::string type,
 	if (def != NULL)
 		m_Values = def;
 	else
-		m_Values = (void *)malloc(Enums::getSize(dt));
+		if (Enums::getSize(dt) != 0)
+			m_Values = (void *)malloc(Enums::getSize(dt));
+	// TODO: this must be fixed for arrays
+	//	else
+	//		m_Values = (void *)malloc(256);
+
 }
 
 

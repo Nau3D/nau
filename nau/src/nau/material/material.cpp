@@ -385,6 +385,16 @@ Material::prepare () {
 		}
 	}
 
+	if (m_ArrayOfTextures.size()) {
+		PROFILE("Array Of Textures");
+		for (auto &at : m_ArrayOfTextures)
+			at.bind();
+	}
+	if (m_ArrayOfImageTextures.size()) {
+		PROFILE("Array Of Image Textures");
+		for (auto at : m_ArrayOfImageTextures)
+			at->bind();
+	}
 	{
 		PROFILE("Shaders");
 		if (NULL != m_Shader) {
@@ -400,13 +410,7 @@ Material::prepare () {
 		else
 			RENDERER->setShader(NULL);
 	}
-	{
-		PROFILE("Array Of Textures");
-		m_ArrayOfTextures.bind();
-	}
-	if (m_ArrayOfImageTextures.size())
-		for (auto at: m_ArrayOfImageTextures)
-			at->bind();
+
 }
 
 
@@ -432,7 +436,8 @@ Material::restore() {
 		for (auto &b : m_ImageTextures)
 			b.second->restore();
 	}
-	m_ArrayOfTextures.unbind();
+	for (auto &b: m_ArrayOfTextures)
+		b.unbind();
 }
 
 
@@ -456,18 +461,26 @@ Material::restoreNoShaders() {
 
 
 void 
-Material::setArrayOfTextures(IArrayOfTextures *at, int unit) {
+Material::addArrayOfTextures(IArrayOfTextures *at, int unit) {
 
-	m_ArrayOfTextures.setArrayOfTextures(at);
-	m_ArrayOfTextures.setPropi(MaterialArrayOfTextures::FIRST_UNIT, unit);
+	size_t k = m_ArrayOfTextures.size();
+	m_ArrayOfTextures.resize(k+1);
+	m_ArrayOfTextures[k].setArrayOfTextures(at);
+	m_ArrayOfTextures[k].setPropi(MaterialArrayOfTextures::FIRST_UNIT, unit);
+//	m_ArrayOfTextures.setArrayOfTextures(at);
+//	m_ArrayOfTextures.setPropi(MaterialArrayOfTextures::FIRST_UNIT, unit);
 }
 
 
 MaterialArrayOfTextures *
-Material::getMaterialArrayOfTextures() {
+Material::getMaterialArrayOfTextures(int k) {
 
-	return &m_ArrayOfTextures;
-}
+	if (k < m_ArrayOfTextures.size())
+		return &m_ArrayOfTextures[k];
+	else
+		return NULL;
+};
+
 
 
 void 
