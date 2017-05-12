@@ -297,6 +297,9 @@ Pipeline::getCurrentPass() {
 	//if (m_Passes.size() > m_NextPass){
 	//	m_CurrentPass = m_Passes[m_NextPass];
 	//}
+	if (!m_CurrentPass)
+		m_CurrentPass = m_Passes[0];
+
 	return m_CurrentPass.get();
 }
 

@@ -513,6 +513,7 @@ FrmMainFrame::init() {
 
 	bool loadProjectFlag = false;
 	bool trace = false;
+	bool pause = false;
 	int framesToTrace = 1;
 
 	if (wxGetApp().argc > 1) {
@@ -531,6 +532,9 @@ FrmMainFrame::init() {
 					framesToTrace = (int)frames;
 					++i;
 				}
+			}
+			if (wxGetApp().argv[i].ToStdString() == "-paused") {
+				pause = true;
 			}
 		}
 	}
@@ -603,7 +607,11 @@ FrmMainFrame::init() {
 	//}
 	if (loadProjectFlag)
 		loadProject(wxGetApp().argv[1].c_str());
-
+	if (pause) {
+		m_Canvas->BreakResume();
+		debugMenu->Enable(idMenuDlgStep, true);
+		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
+	}
 }
 
 
@@ -749,7 +757,18 @@ FrmMainFrame::updateDlgs() {
 	debugMenu->Enable(idMenuProfileReset, true);
 	debugMenu->Enable(idMenuDbgBreak, true);
 	debugMenu->Enable(idMenuDlgStep, false);
-	debugMenu->SetLabel(idMenuDbgBreak, "Pause");
+
+
+	if (m_Canvas->IsPaused()) {
+
+		debugMenu->Enable(idMenuDlgStep, true);
+		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
+	}
+	else {
+
+		debugMenu->Enable(idMenuDlgStep, false);
+		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
+	}
 
 	//bool traceOn = m_pRoot->getTraceStatus();
 	//if (traceOn)
