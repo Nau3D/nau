@@ -515,12 +515,12 @@ FrmMainFrame::init() {
 	bool trace = false;
 	bool pause = false;
 	int framesToTrace = 1;
+	bool invalidOptions = false;
 
 	if (wxGetApp().argc > 1) {
 		int param = 1;
 		if (wxGetApp().argv[1].c_str()[0] != '-') {
 			loadProjectFlag = true;
-			//loadProject(wxGetApp().argv[1].c_str());
 			param = 2;
 		}
 		for (int i = param; i < wxGetApp().argc; ++i) {
@@ -533,11 +533,17 @@ FrmMainFrame::init() {
 					++i;
 				}
 			}
-			if (wxGetApp().argv[i].ToStdString() == "-paused") {
+			else if (wxGetApp().argv[i].ToStdString() == "-pause") {
 				pause = true;
+			}
+			else {
+				invalidOptions = true;
+				
 			}
 		}
 	}
+	if (invalidOptions)
+		wxMessageBox("Invalid option. Valid options are -trace and -pause");
 
 	try {
 		nauInit = m_pRoot->init(trace);
@@ -727,6 +733,7 @@ FrmMainFrame::updateDlgs() {
 	DlgTrace::Instance()->updateDlg();
 	DlgRenderTargets::Instance()->updateDlg();
 	DlgRenderer::Instance()->updateDlg();
+	DlgDbgStep::Instance()->updateDlg();
 
 	if (m_pRoot->getPhysicsManager()->isPhysicsAvailable())
 		DlgPhysics::Instance()->updateDlg();

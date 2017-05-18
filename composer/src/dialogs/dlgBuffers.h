@@ -60,9 +60,8 @@ protected:
 		DLG_MI_GRIDBUFFERINFOPAGE,
 		DLG_MI_REFRESH,
 		DLG_MI_REFRESH_BUFFER_DATA,
-		DLG_MI_SAVEVALUEPAGE,
-		DLG_MI_SAVEVAO,
-		DLG_MI_UPDATE_BUFFER
+		DLG_MI_UPDATE_BUFFER,
+		DLG_MI_SAVE_BUFFER
 	};
 
 	typedef 	// ((VAO index, (Element index, Element name)) , vector(Array index, Array Name))
@@ -83,13 +82,10 @@ protected:
 	void OnBufferValuesPageChange(wxSpinEvent& e);
 	void OnBufferSelection(wxPropertyGridEvent& e);
 
+	void OnSaveBuffer(wxCommandEvent& event);
 	void OnRefreshBufferInfo(wxCommandEvent& event);
-
 	void OnRefreshBufferData(wxCommandEvent& event);
-	
 	void OnUpdateBuffer(wxCommandEvent& event);
-	//void OnRefresh(std::fstream &s, wxPropertyGridPage *page);
-	//void OnSaveVaoInfo(wxCommandEvent& event);
 
 	std::string getStringFromPointer(Enums::DataType type, void* ptr);
 	void insertIntoBuffer(std::string elem, Enums::DataType type, void *ptr);
@@ -134,8 +130,8 @@ protected:
 	wxButton *m_bRefresh;
 	wxButton *m_bRefreshBufferData;
 	wxButton *m_bUpdateBuffer;
-	wxButton *m_bSavevaos;
-	wxButton *m_bSavebuffers;
+
+	wxButton *m_bSavebuffer;
 	
 	std::string name;
 	bool isLogClear;

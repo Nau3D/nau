@@ -115,14 +115,16 @@ DlgDbgStep::updateDlg() {
 	
 	if (pipenameString.size() > 0 && passes.size()){
 
-		Pass *currentPass = RENDERMANAGER->getCurrentPass();
+		//Pass *currentPass = RENDERMANAGER->getCurrentPass();
+		int current = RENDERMANAGER->getActivePipeline()->getPassCounter();
 		std::string passCurrentName;
-		if (currentPass){
-			passCurrentName = currentPass->getName();
-		}
+		//if (currentPass){
+		//	passCurrentName = currentPass->getName();
+		//}
 
 		for (auto &passName :passes){
-			if (passCurrentName.compare(passName) == 0){
+	
+			if (nextIndex == current/*passCurrentName.compare(passName) == 0*/){
 				m_list->AppendAndEnsureVisible(wxString("Next:> " + passName));
 				m_list->SetSelection(nextIndex);
 				currentPassIndex = nextIndex;
@@ -134,7 +136,7 @@ DlgDbgStep::updateDlg() {
 		}
 
 	}
-	m_list->Refresh();
+	//m_list->Refresh();
 }
 
 
@@ -170,40 +172,30 @@ void DlgDbgStep::append(std::string s) {
 }
 
 
-void DlgDbgStep::OnNextPass(wxCommandEvent& event){
+void DlgDbgStep::OnNextPass(wxCommandEvent& event) {
 
-	if (m_Canvas->IsPaused()){
-//#ifdef GLINTERCEPTDEBUG 
-//		gliSetIsGLIActive(true);
-//#endif
+	if (m_Canvas->IsPaused()) {
+
 		m_Canvas->StepPass();
-//#ifdef GLINTERCEPTDEBUG 
-//		gliSetIsGLIActive(false);
-//#endif
 		updateDlg();
 	}
 }
 
 
-void DlgDbgStep::OnNextFrame(wxCommandEvent& event){
+void DlgDbgStep::OnNextFrame(wxCommandEvent& event) {
 
-	if (m_Canvas->IsPaused()){
-//#ifdef GLINTERCEPTDEBUG 
-//		gliSetIsGLIActive(true);
-//#endif
+	if (m_Canvas->IsPaused()) {
+
 		m_Canvas->StepToEndOfFrame();
-//#ifdef GLINTERCEPTDEBUG 
-//		gliSetIsGLIActive(false);
-//#endif
 		updateDlg();
 	}
 }
 
 
-void DlgDbgStep::OnToPass(wxCommandEvent& event){
+void DlgDbgStep::OnToPass(wxCommandEvent& event) {
 
 
-	if (m_Canvas->IsPaused()){
+	if (m_Canvas->IsPaused()) {
 		m_Canvas->StepUntilSamePassNextFrame();
 		updateDlg();
 	}

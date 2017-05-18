@@ -11,7 +11,8 @@ using namespace nau::material;
 using namespace nau::system;
 
 
-int BufferLoader::LoadBuffer(IBuffer *aBuffer, std::string &aFilename) {
+int 
+BufferLoader::LoadBuffer(IBuffer *aBuffer, std::string &aFilename) {
 
 	File::FixSlashes(aFilename);
 	FILE *fp = fopen(aFilename.c_str(),"rt");
@@ -65,13 +66,50 @@ int BufferLoader::LoadBuffer(IBuffer *aBuffer, std::string &aFilename) {
 				NAU_THROW("Buffer %s structure must contain only INT, UNSIGNED INT, FLOAT or DOUBLE", 
 					aBuffer->getLabel().c_str());
 			}
-			//if (expectedItens != itensRead)
-			//	NAU_THROW("Buffer %s\nFile %s\nIncomplete line at or before line %d", 
-			//		aBuffer->getLabel().c_str(), aFilename.c_str(), lines);
 		}
 		lines++;
 	}
 	aBuffer->setData(count, data);
 	fclose(fp);
 	return lines;
+}
+
+
+int
+BufferLoader::SaveBuffer(IBuffer *aBuffer) {
+
+	void *data;
+
+	unsigned int bsize = aBuffer->getPropui(IBuffer::SIZE);
+	data = malloc(bsize);
+	aBuffer->getData(0, bsize, data);
+	std::vector<Enums::DataType> &structure = aBuffer->getStructure();
+
+	char s[200];
+	sprintf(s, "%s.%d.txt", aBuffer->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+	std::string sname = nau::system::File::Validate(s);
+	File::FixSlashes(sname);
+
+	if (structure.size()) {
+		// save as text
+		int pointerIndex = 0;
+		std::string value;
+		FILE *fp = fopen(sname.c_str(), "wb");
+		while (pointerIndex < (int)bsize) {
+			for (auto t : structure) {
+				value = Enums::pointerToString(t, (char *)data + pointerIndex);
+				fprintf(fp, "%s ", value.c_str());
+				pointerIndex += Enums::getSize(t);
+			}
+			fprintf(fp, "\n");
+		}
+		fclose(fp);
+	}
+	else {
+		// save as binary
+		FILE *fp = fopen(sname.c_str(), "wb");
+		fwrite(data, bsize, 1, fp);
+		fclose(fp);
+	}
+	return 0;	
 }

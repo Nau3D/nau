@@ -6,6 +6,7 @@
 #include "nau/geometry/sphere.h"
 #include "nau/interface/interface.h"
 #include "nau/event/eventFactory.h"
+#include "nau/loader/bufferLoader.h"
 #include "nau/loader/cboLoader.h"
 #include "nau/loader/iTextureLoader.h"
 #include "nau/loader/objLoader.h"
@@ -602,7 +603,7 @@ Nau::luaSet(lua_State *l) {
 		case Enums::FLOAT:
 			arr = new NauFloat(*arrF); break;
 		case Enums::VEC2:
-			arr = new vec2(arrF[0], arrF[1]); break;
+arr = new vec2(arrF[0], arrF[1]); break;
 		case Enums::VEC3:
 			arr = new vec3(arrF[0], arrF[1], arrF[2]); break;
 		case Enums::VEC4:
@@ -613,7 +614,7 @@ Nau::luaSet(lua_State *l) {
 		default:
 			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
 		}
-		free (arrF);
+		free(arrF);
 		break;
 	case Enums::INT:
 	case Enums::BOOL:
@@ -641,7 +642,7 @@ Nau::luaSet(lua_State *l) {
 		}
 		free(arrI);
 		break;
-	case Enums::UINT :
+	case Enums::UINT:
 		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
@@ -674,11 +675,11 @@ Nau::luaSet(lua_State *l) {
 }
 
 
-int 
+int
 Nau::luaSaveTexture(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
-		LOG_trace("LUA: Calling getAttrib");
+		LOG_trace("LUA: Calling saveTexture");
 		luaStackDump(m_LuaState);
 	}
 	const char *texName = lua_tostring(l, -1);
@@ -693,9 +694,33 @@ Nau::luaSaveTexture(lua_State *l) {
 	nau::material::ITexture *texture = RESOURCEMANAGER->getTexture(std::string(texName));
 
 	char s[200];
-	sprintf(s,"%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+	sprintf(s, "%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
 	std::string sname = nau::system::File::Validate(s);
-	ITextureLoader::Save(texture,ITextureLoader::PNG);
+	ITextureLoader::Save(texture, ITextureLoader::PNG);
+
+	return 0;
+}
+
+
+int
+Nau::luaSaveBuffer(lua_State *l) {
+
+	if (NAU->getTraceStatus()) {
+		LOG_trace("LUA: Calling saveBuffer");
+		luaStackDump(m_LuaState);
+	}
+	const char *bufferName = lua_tostring(l, -1);
+
+	int top = lua_gettop(l);
+	if (top != 1)
+		NAU_THROW("Lua saveBuffer takes a single argument: the buffer name");
+
+	if (!RESOURCEMANAGER->hasBuffer(bufferName))
+		NAU_THROW("Lua save buffer: invalid buffer name");
+
+	nau::material::IBuffer *buffer = RESOURCEMANAGER->getBuffer(std::string(bufferName));
+
+	BufferLoader::SaveBuffer(buffer);
 
 	return 0;
 }
@@ -750,8 +775,6 @@ luaDebug(lua_State *m_LuaState) {
 		++level;
 	}
 }
-
-
 
 
 void
@@ -1704,9 +1727,6 @@ void Nau::stepPass() {
 		if (m_TraceFrames) {
 			LOG_trace("#NAU(FRAME,START)");
 		}
-//#ifdef GLINTERCEPTDEBUG
-//		addMessageToGLILog("\n#NAU(FRAME,START)");
-//#endif //GLINTERCEPTDEBUG
 
 		renderer->resetCounters();
 
@@ -1718,22 +1738,16 @@ void Nau::stepPass() {
 
 	}
 
-	std::string s = RENDERMANAGER->getCurrentPass()->getName();
-	if (m_TraceFrames) {
-		LOG_trace("\n#NAU(PASS START %s)", s.c_str());
-	}
-//#ifdef GLINTERCEPTDEBUG
-//	addMessageToGLILog(("\n#NAU(PASS,START," + s + ")").c_str());
-//#endif //GLINTERCEPTDEBUG
+ 	std::string s = RENDERMANAGER->getCurrentPass()->getName();
+	//if (m_TraceFrames) {
+	//	LOG_trace("#NAU(PASS START %s)", s.c_str());
+	//}
 
 	p->executeNextPass();
 
-	if (m_TraceFrames) {
-		LOG_trace("#NAU(PASS END %s)", s.c_str());
-	}
-//#ifdef GLINTERCEPTDEBUG
-//	addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
-//#endif //GLINTERCEPTDEBUG
+	//if (m_TraceFrames) {
+	//	LOG_trace("#NAU(PASS END %s)", s.c_str());
+	//}
 
 	if (currentPass == lastPass) {
 
@@ -1822,14 +1836,6 @@ Nau::getDepthAtCenter() {
 }
 
 
-
-//IWorld&
-//Nau::getWorld (void) {
-//
-//	return (*m_pWorld);
-//}
-
-
 void
 Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params) throw (std::string) {
 
@@ -1882,6 +1888,7 @@ Nau::writeAssets (std::string fileType, std::string aFilename, std::string scene
 		OBJLoader::writeScene(RENDERMANAGER->getScene(sceneName).get(), aFilename);
 	}
 }
+
 
 void
 Nau::setWindowSize (unsigned int width, unsigned int height) {

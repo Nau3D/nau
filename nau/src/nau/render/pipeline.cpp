@@ -37,10 +37,6 @@ Pipeline::Pipeline (std::string pipelineName) :
 
 Pipeline::~Pipeline() {
 
-	//for (auto pass : m_Passes) {
-	//	if (pass->getClassName() != "depthmap2")
-	//	delete pass;
-	//}
 }
 
 
@@ -294,9 +290,7 @@ Pipeline::executeNextPass() {
 
 Pass *
 Pipeline::getCurrentPass() {
-	//if (m_Passes.size() > m_NextPass){
-	//	m_CurrentPass = m_Passes[m_NextPass];
-	//}
+
 	if (!m_CurrentPass)
 		m_CurrentPass = m_Passes[0];
 
