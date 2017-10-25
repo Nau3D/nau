@@ -2,12 +2,12 @@
 <project name="Voxels" width=1024 height=1024>
 	<assets>
 		<constants>
-			<constant name="GridSize" value = 256 />
-			<constant name="CompRO" value = 32 /> <!-- GridSize/8 -->
+			<constant name="GridSize" value = 512 />
+			<constant name="CompRO" value = 64 /> <!-- GridSize/8 -->
 		</constants>
 		<attributes>
 			<attribute name="GridSize" type="PASS" data="INT" value="GridSize" />
-			<attribute name="GridLevels" type="PASS" data="INT" value=8 />
+			<attribute name="GridLevels" type="PASS" data="INT" value=9 />
 			<attribute name="GridCurrentLevel" type="PASS" data="INT" value=0 />
 			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "10" />
 			<attribute type="PASS" name="Levels" data="INT" value=10 />
@@ -193,7 +193,7 @@
 
 			<!--pass class="default" name="showVoxels">
 				<scenes>
-					<scene name="Dummy" />
+					<scene name="Cube" />
 				</scenes>	
 				<camera name="MainCamera" />
 				<viewport name="MainViewport" />
@@ -236,11 +236,15 @@
 		<pipeline name="voxels2" defaultCamera = "MainCamera">
 		
 			<pass class="default" name="voxelization">
+				<preProcess>
+					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0  />
+				</preProcess>	
 				<camera name="MainCamera" />
 				<scenes>
 					<scene name="Sponza" />
 				</scenes>
-				<COLOR_CLEAR value=false />
+				<COLOR_CLEAR value = false />
 				<COLOR_ENABLE value = false />
 				<DEPTH_MASK value = false />
 				<DEPTH_ENABLE value = false />
@@ -256,10 +260,6 @@
 						</imageTextures>
 					</map>
 				</injectionMaps>
-				<preProcess>
-					<texture name="gridColor" fromLibrary="Voxels" CLEAR_LEVEL=0  />
-					<texture name="gridNormal" fromLibrary="Voxels" CLEAR_LEVEL=0  />
-				</preProcess>	
 			</pass>
 			
 			<pass class="depthmap" name="RSM">

@@ -8,6 +8,8 @@ source_group("Source Files\\dialogs" FILES ${dialogs})
 add_executable(composer 
 	${root} ${dialogs} )	
 
+set_target_properties(composer PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+
 add_dependencies(composer nau)
 
 find_package(wxWidgets COMPONENTS adv core base gl propgrid)

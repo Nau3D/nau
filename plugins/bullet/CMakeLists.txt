@@ -10,7 +10,7 @@ file(GLOB sources src/*.cpp)
 file(GLOB headers src/*.h)
 
 add_library(nauBulletPlugin SHARED
-	${sources})
+	${sources} ${headers})
 	
 add_dependencies(nauBulletPlugin nau)
 	
@@ -24,7 +24,7 @@ target_link_libraries( nauBulletPlugin
 	${BULLET_LIBRARIES} 
 	$<TARGET_LINKER_FILE:nau>)	
 	
-target_include_directories(tinyxml PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+#target_include_directories(tinyxml PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 install (TARGETS nauBulletPlugin DESTINATION lib)
 install(FILES ${headers} DESTINATION include)	

@@ -46,7 +46,7 @@ void main () {
 		spec = specular * pow(intSpec, shininess);
 	}
 	// add the specular color when the vertex is lit
-	DataOut.color = max(intensity *  diffuse + spec, ambient);
+	DataOut.color = max(intensity *  diffuse + spec, diffuse * 0.25);
 
 	// float len = length(DataOut.color.rgb);
 	// float color;

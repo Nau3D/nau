@@ -138,7 +138,7 @@ PhysicsManager::loadPlugin() {
 		HINSTANCE mod = LoadLibraryA(fn.c_str());
 
 		if (!mod) {
-			//SLOG("Library %s wasn't loaded successfully!", fn.c_str());
+			SLOG("Library %s wasn't loaded successfully!", fn.c_str());
 			return NULL;
 		}
 
