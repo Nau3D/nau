@@ -8,12 +8,19 @@
 	</shaders>
 	
 	<arraysOfTextures>
-		<arrayOfTextures name="T">
+		<arrayOfTextures name="T1">
 			<TEXTURE_COUNT value= 2 />
 			<WIDTH value="128"/>
 			<HEIGHT value="128" />
 			<INTERNAL_FORMAT value="RGBA" />
-			<CREATE_BUFFER value=true />
+			<!--CREATE_BUFFER value=true /-->
+		</arrayOfTextures>
+		<arrayOfTextures name="T2">
+			<TEXTURE_COUNT value= 2 />
+			<WIDTH value="128"/>
+			<HEIGHT value="128" />
+			<INTERNAL_FORMAT value="RGBA" />
+			<!--CREATE_BUFFER value=true /-->
 		</arrayOfTextures>
 	</arraysOfTextures>
 
@@ -28,11 +35,11 @@
 				</values>
 			</shader>
 			<imageTextures>
-				<imageTexture UNIT=0 texture="T_0" >
+				<imageTexture UNIT=0 texture="T1_0" >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
 				</imageTexture>
-				<imageTexture UNIT=1 texture="T_1" >
+				<imageTexture UNIT=1 texture="T2_1" >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
 				</imageTexture>
@@ -42,18 +49,23 @@
 		<material name ="showTextures">
 			<shader name="showTextures" >
 				<values>									
-					<valueof uniform="tex[0]"	type="ARRAY_OF_TEXTURES_BINDING" context="CURRENT"
-											component="SAMPLER_ARRAY" />
+					<valueof uniform="tex1[0]"	type="ARRAY_OF_TEXTURES_BINDING" context="CURRENT"
+											component="SAMPLER_ARRAY" id = 0/>
+					<valueof uniform="tex2[0]"	type="ARRAY_OF_TEXTURES_BINDING" context="CURRENT"
+											component="SAMPLER_ARRAY" id = 1/>
 				</values>
 			
 			</shader>
-			<arrayOfTextures name="T" firstUnit=4 />
-			<buffers>
+			<arraysOfTextures>
+				<arrayOfTextures name="T1" firstUnit=4 />	
+				<arrayOfTextures name="T2" firstUnit=6 />	
+			</arraysOfTextures>
+			<!--buffers>
 				<buffer name="T" >
 					<TYPE value="SHADER_STORAGE" />
 					<BINDING_POINT value=1 />
 				</buffer>
-			</buffers>
+			</buffers-->
 		</material>
 	</materials>	
 	

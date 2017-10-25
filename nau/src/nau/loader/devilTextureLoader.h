@@ -19,14 +19,15 @@ namespace nau
 		friend class ITextureLoader;
 
 		protected:
-			DevILTextureLoader (void);
+			DevILTextureLoader (const std::string &file);
 		public:
 			~DevILTextureLoader (void);
 
-			int loadImage (std::string file, bool convertToRGBA = true);
+			int loadImage (bool convertToRGBA = true);
 			unsigned char* getData (void);
 			int getWidth (void);
 			int getHeight (void);
+			int getDepth(void);
 			std::string getFormat (void); 
 			std::string getType (void);
 			void freeImage (void);

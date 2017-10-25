@@ -15,6 +15,7 @@
 #include "nau/interface/interface.h"
 #include "nau/loader/bufferLoader.h"
 #include "nau/material/iBuffer.h"
+#include "nau/material/materialArrayOfImageTextures.h"
 #include "nau/material/programValue.h"
 #include "nau/material/uniformBlockManager.h"
 #include "nau/math/number.h"
@@ -72,9 +73,14 @@ std::map<std::string, float> ProjectLoader::s_Constants;
 char ProjectLoader::s_pFullName[256] = "";
 
 vec4 ProjectLoader::s_Dummy_vec4;
+vec3 ProjectLoader::s_Dummy_vec3; 
 vec2 ProjectLoader::s_Dummy_vec2;
 bvec4 ProjectLoader::s_Dummy_bvec4;
 float ProjectLoader::s_Dummy_float;
+double ProjectLoader::s_Dummy_double;
+dvec2 ProjectLoader::s_Dummy_dvec2;
+dvec3 ProjectLoader::s_Dummy_dvec3;
+dvec4 ProjectLoader::s_Dummy_dvec4;
 int ProjectLoader::s_Dummy_int;
 unsigned int ProjectLoader::s_Dummy_uint;
 bool ProjectLoader::s_Dummy_bool;
@@ -457,6 +463,23 @@ ProjectLoader::readFloatAttribute(TiXmlElement *p, std::string label, float *val
 
 
 bool
+ProjectLoader::readDoubleAttribute(TiXmlElement *p, std::string label, double *value) {
+
+	std::string s;
+
+	if (TIXML_SUCCESS != p->QueryDoubleAttribute(label.c_str(), value)) {
+		if (TIXML_SUCCESS != p->QueryStringAttribute(label.c_str(), &s) || !isConstantDefined(s))
+			return false;
+		else {
+			*value = s_Constants[s];
+			return true;
+		}
+	}
+	return true;
+}
+
+
+bool
 ProjectLoader::readIntAttribute(TiXmlElement *p, std::string label, int *value) {
 
 	std::string s;
@@ -490,6 +513,24 @@ ProjectLoader::readUIntAttribute(TiXmlElement *p, std::string label, unsigned in
 }
 
 
+void 
+ProjectLoader::readScript(TiXmlElement *p, std::string &fileName, std::string &scriptName) {
+
+	const char *pPreScriptFile = p->Attribute("file");
+	const char *pPreScriptName = p->Attribute("script");
+	if (pPreScriptFile && pPreScriptName) {
+		if (!Nau::luaCheckScriptName(pPreScriptFile, pPreScriptName)) {
+			NAU_THROW("File %s (line %d row %d)\nScript name %s is already defined in another file\nScript names must be unique across all Lua files", ProjectLoader::s_File.c_str(), p->Row(), p->Column(), pPreScriptName);
+		}
+	}
+	else {
+			NAU_THROW("File %s (line %d row %d)\nSscript definition must have both file and script attributes", ProjectLoader::s_File.c_str(), p->Row(), p->Column());
+		}
+	fileName = pPreScriptFile;
+	scriptName = pPreScriptName;
+}
+
+
 Data *
 ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType type, AttribSet &attribs) {
 
@@ -503,6 +544,24 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 			}
 			return new NauFloat(s_Dummy_float);
 			break;
+		case Enums::VEC2:
+			s_Dummy_vec2 = vec2(0.0f);
+			if ((readFloatAttribute(p, "x", &s_Dummy_vec2.x) || readFloatAttribute(p, "width", &s_Dummy_vec2.x)) &&
+				(readFloatAttribute(p, "y", &s_Dummy_vec2.y) || readFloatAttribute(p, "height", &s_Dummy_vec2.y))) {
+				return new vec2(s_Dummy_vec2);
+			}
+			else
+				NAU_THROW("File %s: Element %s: Vec2 Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+		case Enums::VEC3:
+			s_Dummy_vec3 = vec3(0.0f);
+			if (readFloatAttribute(p, "x", &s_Dummy_vec3.x)  &&	readFloatAttribute(p, "y", &s_Dummy_vec3.y) && 
+				readFloatAttribute(p, "z", &s_Dummy_vec3.z)) {
+				return new vec3(s_Dummy_vec3);
+			}
+			else
+				NAU_THROW("File %s: Element %s: Vec3 Attribute %s has absent or incomplete value (x,y and z are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
 		case Enums::VEC4:
 			s_Dummy_vec4 = vec4(0.0f);
 			if ((readFloatAttribute(p, "x", &s_Dummy_vec4.x) || readFloatAttribute(p, "r", &s_Dummy_vec4.x)) 
@@ -513,21 +572,42 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 					readFloatAttribute(p, "a", &s_Dummy_vec4.w);
 
 					return new vec4(s_Dummy_vec4);
-
 			}
 			else
 				NAU_THROW("File %s: Element %s: Vec4 Attribute %s has absent or incomplete value (x,y and z are required, w is optional)", ProjectLoader::s_File.c_str(),pName.c_str(),p->Value()); 
 			break;
-		case Enums::VEC2:
-			s_Dummy_vec2 = vec2(0.0f);
-			if ((readFloatAttribute(p, "x", &s_Dummy_vec2.x) || readFloatAttribute(p, "width", &s_Dummy_vec2.x)) &&
-				(readFloatAttribute(p, "y", &s_Dummy_vec2.y) || readFloatAttribute(p, "height", &s_Dummy_vec2.y))) {
-				return new vec2(s_Dummy_vec2);
+
+		case Enums::DOUBLE:
+			if (!readDoubleAttribute(p, "value", &s_Dummy_double)) {
+				NAU_THROW("File %s: Element %s: Double Attribute %s without a value", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			}
+			return new NauDouble(s_Dummy_double);
+			break;
+		case Enums::DVEC2:
+			s_Dummy_dvec2 = dvec2(0.0f);
+			if (readDoubleAttribute(p, "x", &s_Dummy_dvec2.x) && readDoubleAttribute(p, "y", &s_Dummy_dvec2.y)) {
+				return new dvec2(s_Dummy_dvec2);
 			}
 			else
-				NAU_THROW("File %s: Element %s: Vec2 Attribute %s has absent or incomplete value (x,y  or width,height are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+				NAU_THROW("File %s: Element %s: DVec2 Attribute %s has absent or incomplete value (x,y are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			break;
-
+		case Enums::DVEC3:
+			s_Dummy_dvec3 = dvec3(0.0f);
+			if (readDoubleAttribute(p, "x", &s_Dummy_dvec3.x) && readDoubleAttribute(p, "y", &s_Dummy_dvec3.y) && readDoubleAttribute(p, "z", &s_Dummy_dvec3.z)) {
+				return new dvec3(s_Dummy_dvec3);
+			}
+			else
+				NAU_THROW("File %s: Element %s: DVec3 Attribute %s has absent or incomplete value (x,y are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+		case Enums::DVEC4:
+			s_Dummy_dvec4 = dvec4(0.0f);
+			if (readDoubleAttribute(p, "x", &s_Dummy_dvec4.x) && readDoubleAttribute(p, "y", &s_Dummy_dvec4.y)
+				&& readDoubleAttribute(p, "z", &s_Dummy_dvec4.z) && readDoubleAttribute(p, "w", &s_Dummy_dvec4.w)) {
+				return new dvec4(s_Dummy_dvec4);
+			}
+			else
+				NAU_THROW("File %s: Element %s: DVec4 Attribute %s has absent or incomplete value (x,y are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
 		case Enums::BVEC4:
 			if (TIXML_SUCCESS == p->QueryBoolAttribute("x", &(s_Dummy_bvec4.x)) 
 				&& TIXML_SUCCESS == p->QueryBoolAttribute("y", &(s_Dummy_bvec4.y))
@@ -1124,10 +1204,10 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 		if (0 == pType) {
 			NAU_THROW("File %s\nAttribute %s without a data type", ProjectLoader::s_File.c_str(), pName);
 		}
-		if (!Attribute::isValidUserAttrType(pType)) {
-			nau::system::TextUtil::Join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
-			NAU_THROW("File %s\nAttribute %s with an invalid data type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
-		}
+		//if (!Attribute::isValidUserAttrType(pType)) {
+		//	nau::system::TextUtil::Join(Attribute::getValidUserAttrTypes(), delim.c_str(), &s);
+		//	NAU_THROW("File %s\nAttribute %s with an invalid data type: %s\nValid types are: \n%s", ProjectLoader::s_File.c_str(), pName, pType, s.c_str());
+		//}
 
 		AttribSet *attribs = NAU->getAttribs(pContext);
 		Enums::DataType dt = Enums::getType(pType);
@@ -1722,7 +1802,7 @@ Specification of the lights:
 position is optional, if not specified it will be (0.0 0.0, .0.)
 direction is optional, if not specified it will be (0.0, 0.0, -1.0)
 color is optional, if not defined it will be (1.0, 1.0, 1.0)
-	TODO: must add ambient color
+
 ----------------------------------------------------------------- */
 void 
 ProjectLoader::loadLights(TiXmlHandle handle) 
@@ -1941,14 +2021,11 @@ void
 ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 {
 	TiXmlElement *pElem;
+	std::string fileName, scriptName;
 
 	pElem = hPass.FirstChild("testScript").Element();
 	if (pElem != 0) {
-		const char *pFile = pElem->Attribute("file");
-		const char *pFunction = pElem->Attribute("script");
-		if (!pFile || !pFunction) {
-			NAU_THROW("File %s\nPass %s\nElement: testScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		}
+		readScript(pElem, fileName, scriptName);
 		std::unique_ptr<Attribute> &a = aPass->getAttribSet()->get("TEST_MODE");
 
 		Data *val = readAttribute("TEST_MODE", a, pElem);
@@ -1956,27 +2033,19 @@ ProjectLoader::loadPassScripts(TiXmlHandle hPass, Pass *aPass)
 			aPass->setProp(Pass::TEST_MODE, Enums::ENUM, val);
 			delete val;
 		}
-		aPass->setTestScript(File::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+		aPass->setTestScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 	}
 
 	pElem = hPass.FirstChild("preScript").Element();
 	if (pElem) {
-		const char *pFile = pElem->Attribute("file");
-		const char *pFunction = pElem->Attribute("script");
-		if (!pFile || !pFunction) {
-			NAU_THROW("File %s\nPass %s\nElement: preScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		}
-		aPass->setPreScript(File::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+		readScript(pElem, fileName, scriptName);
+		aPass->setPreScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 	}
 
 	pElem = hPass.FirstChild("postScript").Element();
 	if (pElem) {
-		const char *pFile = pElem->Attribute("file");
-		const char *pFunction = pElem->Attribute("script");
-		if (!pFile || !pFunction) {
-			NAU_THROW("File %s\nPass %s\nElement: postScript\nBoth file and script fields are required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		}
-		aPass->setPostScript(File::GetFullPath(ProjectLoader::s_Path, pFile), pFunction);
+		readScript(pElem, fileName, scriptName);
+		aPass->setPostScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 	}
 }
 
@@ -3438,7 +3507,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 	pElem = hPass.FirstChild ("injectionMaps").FirstChild ("map").Element();
 	for ( ; pElem != NULL; pElem = pElem->NextSiblingElement()) {
 	
-		std::vector<std::string> ok = {"state", "shader", "color", "textures", "imageTextures", "buffers"};
+		std::vector<std::string> ok = {"state", "shader", "color", "textures", "imageTextures", "buffers", "arraysOfImageTexture"};
 		std::string s = aPass->getName() + " injectionMaps";
 		checkForNonValidChildTags(s, ok, pElem);
 
@@ -3462,6 +3531,47 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 			MATERIALLIBMANAGER->addMaterial(aPass->getName(), dstMat);
 
 			aPass->remapMaterial (name, aPass->getName(), name);
+		}
+
+		TiXmlNode *pElem2 = pElem->FirstChildElement("arraysOfImageTexture");
+		if (pElem2) {
+			pElemAux = pElem2->FirstChildElement("arrayOfImageTexture");
+			for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement()) {
+				const char *pTextureArray = pElemAux->Attribute("textureArray");
+
+				if (0 == pTextureArray) {
+					NAU_THROW("File %s\nPass %s\nInjection map error: arrayOfImageTextures map error", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+				}
+
+				if (!APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE))
+					NAU_THROW("File %s\nPass %s\nImage Texture Not Supported with OpenGL Version %d", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), APISupport->getVersion());
+
+				int unit;
+				if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("FIRST_UNIT", &unit)) {
+					NAU_THROW("File %s\nPass %s\nImage Texture has no FIRST_UNIT", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+				}
+
+				const char *pTextureName = pElemAux->Attribute("textureArray");
+				if (0 == pTextureName) {
+					NAU_THROW("File %s\nPass %s\nTexture array has no name in image texture", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+				}
+				if (!RESOURCEMANAGER->hasArrayOfTextures(pTextureArray))
+					NAU_THROW("File %s\nPass %s\nTexture rray %s in image texture is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pTextureName);
+
+				MaterialArrayOfImageTextures *mait = MaterialArrayOfImageTextures::Create();
+				mait->setPropi(MaterialArrayOfImageTextures::FIRST_UNIT, unit);
+				mait->setArrayOfTextures(RESOURCEMANAGER->getArrayOfTextures(pTextureArray));
+
+
+				for (auto& name : names) {
+
+					std::shared_ptr<Material> &dstMat = MATERIALLIBMANAGER->getMaterial(aPass->getName(), name);
+					std::vector<std::string> excluded;
+					std::string s = dstMat->getName() + ": image texture array first unit " + TextUtil::ToString(unit);
+					readChildTags(s, (AttributeValues *)mait, IImageTexture::Attribs, excluded, pElemAux);
+					dstMat->addArrayOfImageTextures(mait);
+				}
+			}
 		}
 
 
@@ -3715,29 +3825,20 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 		TiXmlElement *pElemPass;
 
 #if NAU_LUA == 1
+		std::string scriptName, fileName;
+
 		pElemPass = handle.FirstChild("preScript").Element();
 		if (pElemPass != NULL) {
 			
-
-			const char *pPreScriptFile = pElemPass->Attribute("file");
-			const char *pPreScriptName = pElemPass->Attribute("script");
-			if (pPreScriptFile && pPreScriptName)
-				aPipeline->setPreScript(File::GetFullPath(ProjectLoader::s_Path, pPreScriptFile), pPreScriptName);
-			else {
-				NAU_THROW("File %s\nPipeline %s\nPre script definition must have both file and script attributes", ProjectLoader::s_File.c_str(), pNamePip);
-			}
+			readScript(pElemPass, fileName, scriptName);
+			aPipeline->setPreScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 		}
 
 		pElemPass = handle.FirstChild("postScript").Element();
 		if (pElemPass != NULL) {
 
-			const char *pPostScriptFile = pElemPass->Attribute("file");
-			const char *pPostScriptName = pElemPass->Attribute("script");
-			if (pPostScriptFile && pPostScriptName)
-				aPipeline->setPostScript(File::GetFullPath(ProjectLoader::s_Path, pPostScriptFile), pPostScriptName);
-			else {
-				NAU_THROW("File %s\nPipeline %s\nPost script definition must have both file and name attributes", ProjectLoader::s_File.c_str(), pNamePip);
-			}
+			readScript(pElemPass, fileName, scriptName);
+			aPipeline->setPostScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 		}
 #endif
 		pElemPass = handle.FirstChild ("pass").Element();
@@ -4135,7 +4236,7 @@ ProjectLoader::loadMatLibArrayOfTextures(TiXmlHandle hRoot, MaterialLib *aLib, s
 
 		IArrayOfTextures *b = RESOURCEMANAGER->createArrayOfTextures(s_pFullName);
 
-		SLOG("Buffer : %s", s_pFullName);
+		SLOG("Array of Textures : %s", s_pFullName);
 
 		// Reading array of texture attributes
 		std::vector<std::string> excluded;
@@ -4550,6 +4651,66 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 	}
 }
 
+
+/* -----------------------------------------------------------------------------
+MATERIAL ARRAY OF IMAGE TEXTURE
+
+<arrayOfImageTextures>
+	<arrayOfImageTexture FIRST_UNIT=0  textureArray="name">
+		<ACCESS value="WRITE_ONLY" />
+		<LEVEL value=0 />
+	<arrayOfImageTexture />
+</arrayOfImageTextures>
+
+All fields are optional except name UNIT and texture
+texture refers to a previously defined texture or render target
+
+The name can refer to a texture in another lib, in which case the syntax is lib_name::tex_name
+
+-----------------------------------------------------------------------------*/
+
+void
+ProjectLoader::loadMaterialArrayOfImageTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
+{
+	TiXmlElement *pElemAux;
+	pElemAux = handle.FirstChild("arraysOfImageTexture").FirstChild("arrayOfImageTexture").Element();
+	for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
+		//const char *pTextureName = pElemAux->GetText();
+
+		if (!APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE))
+			NAU_THROW("MatLib %s\nMaterial %s: Image Texture Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), APISupport->getVersion());
+
+		int unit;
+		if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("FIRST_UNIT", &unit)) {
+			NAU_THROW("MatLib %s\nMaterial %s: Image Texture has no FIRST_UNIT", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+
+		const char *pTextureName = pElemAux->Attribute("textureArray");
+		if (0 == pTextureName) {
+			NAU_THROW("MatLib %s\nMaterial %s: Texture array has no name in image texture", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+		if (!strchr(pTextureName, ':'))
+			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pTextureName);
+		else
+			sprintf(s_pFullName, "%s", pTextureName);
+		if (!RESOURCEMANAGER->hasArrayOfTextures(s_pFullName))
+			NAU_THROW("MatLib %s\nMaterial %s: Texture array %s in image texture is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pTextureName);
+
+		MaterialArrayOfImageTextures *mait = MaterialArrayOfImageTextures::Create();
+		mait->setPropi(MaterialArrayOfImageTextures::FIRST_UNIT, unit);
+		mait->setArrayOfTextures(RESOURCEMANAGER->getArrayOfTextures(s_pFullName));
+
+		// Reading Image ITexture Attributes
+
+		std::vector<std::string> excluded;
+		std::string s = aMat->getName() + ": image texture array first unit " + TextUtil::ToString(unit);
+		readChildTags(s, (AttributeValues *)mait, IImageTexture::Attribs, excluded, pElemAux);
+
+		aMat->addArrayOfImageTextures(mait);
+	}
+}
+
+
 /* -----------------------------------------------------------------------------
 MATERIAL BUFFERS
 
@@ -4665,34 +4826,36 @@ void
 ProjectLoader::loadMaterialArrayOfTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat)
 {
 	TiXmlElement *pElemAux;
-	pElemAux = handle.FirstChild("arrayOfTextures").Element();
-	if (!pElemAux)
-		return;	
-	
+	int k = 0;
+	pElemAux = handle.FirstChild("arraysOfTextures").FirstChild("arrayOfTextures").Element();
+	for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
 
-	const char *pTextureName = pElemAux->Attribute("name");
-	if (0 == pTextureName) {
-		NAU_THROW("MatLib %s\nMaterial %s\nArray of Textures has no name", aLib->getName().c_str(), aMat->getName().c_str());
+
+		const char *pTextureName = pElemAux->Attribute("name");
+		if (0 == pTextureName) {
+			NAU_THROW("MatLib %s\nMaterial %s\nArray of Textures has no name", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+
+		int unit;
+		if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("firstUnit", &unit)) {
+			NAU_THROW("MatLib %s\nMaterial %s\nTexture has no first unit", aLib->getName().c_str(), aMat->getName().c_str());
+		}
+
+		if (!strchr(pTextureName, ':'))
+			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pTextureName);
+		else
+			sprintf(s_pFullName, "%s", pTextureName);
+		if (!RESOURCEMANAGER->hasArrayOfTextures(s_pFullName))
+			NAU_THROW("MatLib %s\nMaterial %s\nArray of Textures %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pTextureName);
+
+		IArrayOfTextures *at = RESOURCEMANAGER->getArrayOfTextures(s_pFullName);
+		aMat->addArrayOfTextures(at, unit);
+
+		// Reading ITexture Sampler Attributes
+		std::vector<std::string> excluded;
+		readChildTags(pTextureName, (AttributeValues *)aMat->getMaterialArrayOfTextures(k)->getSampler(), ITextureSampler::Attribs, excluded, pElemAux);
+		k++;
 	}
-
-	int unit;
-	if (TIXML_SUCCESS != pElemAux->QueryIntAttribute("firstUnit", &unit)) {
-		NAU_THROW("MatLib %s\nMaterial %s\nTexture has no first unit", aLib->getName().c_str(), aMat->getName().c_str());
-	}
-
-	if (!strchr(pTextureName, ':'))
-		sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pTextureName);
-	else
-		sprintf(s_pFullName, "%s", pTextureName);
-	if (!RESOURCEMANAGER->hasArrayOfTextures(s_pFullName))
-		NAU_THROW("MatLib %s\nMaterial %s\nArray of Textures %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pTextureName);
-
-	IArrayOfTextures *at = RESOURCEMANAGER->getArrayOfTextures(s_pFullName);
-	aMat->setArrayOfTextures(at, unit);
-
-	// Reading ITexture Sampler Attributes
-	std::vector<std::string> excluded;
-	readChildTags(pTextureName, (AttributeValues *)aMat->getMaterialArrayOfTextures()->getSampler(), ITextureSampler::Attribs, excluded, pElemAux);
 }
 
 
@@ -4768,7 +4931,8 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 
 			int id = 0;
 			if ((strcmp(pContext,"CURRENT") == 0) && 
-						((strcmp(pType,"LIGHT") == 0) || (0 == strcmp(pType,"TEXTURE_BINDING")) || (0 == strcmp(pType,"IMAGE_TEXTURE"))) 
+						((strcmp(pType,"LIGHT") == 0) || (0 == strcmp(pType,"TEXTURE_BINDING")) || (0 == strcmp(pType,"IMAGE_TEXTURE")) ||
+						 (0 == strcmp(pType, "ARRAY_OF_IMAGE_TEXTURES")) || (0 == strcmp(pType, "ARRAY_OF_TEXTURES_BINDING")))
 						&&  (0 != strcmp(pComponent,"COUNT"))) {
 				if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
 					NAU_THROW("MatLib %s\nMaterial %s\nUniform %s - id is required for type %s ", 
@@ -4783,6 +4947,14 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 				}
 				else if (0 == strcmp(pType, "IMAGE_TEXTURE") && !aMat->getImageTexture(id)) {
 					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned image texture unit", 
+						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+				}
+				else if (0 == strcmp(pType, "ARRAY_OF_IMAGE_TEXTURES") && !aMat->getArrayOfImageTextures(id)) {
+					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned array of image texture units",
+						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
+				}
+				else if (0 == strcmp(pType, "ARRAY_OF_TEXTURES_BINDING") && !aMat->getArrayOfImageTextures(id)) {
+					SLOG("MatLib %s\nMaterial %s\nUniform %s - id should refer to an assigned array of texture units",
 						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
 				}
 			}
@@ -5115,6 +5287,7 @@ ProjectLoader::loadMatLibAux (const std::string &file)
 		loadMaterialColor(handle,aLib,mat);
 		loadMaterialTextures(handle,aLib,mat);
 		loadMaterialImageTextures(handle, aLib, mat);
+		loadMaterialArrayOfImageTextures(handle, aLib, mat);
 		loadMaterialState(handle,aLib,mat);		
 		loadMaterialBuffers(handle, aLib, mat);
 		loadMaterialArrayOfTextures(handle, aLib, mat);

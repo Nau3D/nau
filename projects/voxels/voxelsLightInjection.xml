@@ -17,9 +17,6 @@
 			<scene name="MainScene" param="UNITIZE">
 				<file name="../../models/cube.obj"/>
 			</scene>
-			<scene name="Bench" param="UNITIZE">
-				<file name="../../models/ntg-bench/bench.obj"/>
-			</scene>
 			<scene name="Sponza" param="UNITIZE">
 				<file name="../../models/sponza/crytek-sponza/sponza.nbo"/>
 			</scene>
@@ -151,11 +148,11 @@
 				<texture name="RSM" fromLibrary="Voxels" />
 			</pass-->
 			
-			<pass class="compute" name="resetOpacity" >
+			<!--pass class="compute" name="resetOpacity" >
 				<mode value="RUN_ONCE" />	
 				<material name="resetOpacity" fromLibrary="Voxels" 
 						dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
-			</pass>
+			</pass-->
 
 			<pass class="compute" name="mipmap" >
 				<mode value="RUN_ONCE" />	

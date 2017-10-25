@@ -30,7 +30,7 @@ const std::vector<std::string> Enums::DataTypeToString = {
 						
 						"SAMPLER", "ENUM",
 
-						"BYTE", "UBYTE", "SHORT", "USHORT"};
+						"BYTE", "UBYTE", "SHORT", "USHORT", "STRING", "INTARRAY"};
 
 const std::vector<std::string> &
 Enums::GetDataTypeToString() {
@@ -368,7 +368,7 @@ Enums::isBasicType(DataType t) {
 }
 
 
-const std::string &
+const std::string 
 Enums::valueToString(DataType p, void *v) {
 
 	void *v1 = ((Data *)v)->getPtr();
@@ -376,7 +376,7 @@ Enums::valueToString(DataType p, void *v) {
 }
 
 
-std::string &
+std::string 
 Enums::pointerToString(DataType p, void *v, int arraySize) {
 
 	char *ptc = (char *)v;
@@ -394,7 +394,7 @@ Enums::pointerToString(DataType p, void *v, int arraySize) {
 }
 
 
-std::string &
+std::string 
 Enums::pointerToString(DataType p, void *v) {
 
 	int intconverter;
@@ -551,7 +551,7 @@ Enums::pointerToString(DataType p, void *v) {
 
 
 // Outputs similar to what is expected in std140 from OpenGL
-std::string &
+std::string 
 Enums::pointerToStringAligned(DataType p, void *v) {
 
 	m_Result = "[ ";

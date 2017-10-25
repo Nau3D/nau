@@ -83,7 +83,7 @@ namespace nau
 
 			// for loaded images
 			GLTexture (std::string label, std::string internalFormat,
-				std::string aFormat, std::string aType, int width, int height, 
+				std::string aFormat, std::string aType, int width, int height, int depth,
 				void* data, bool mipmap = true );
 
 			// for empty textures

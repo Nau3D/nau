@@ -6,6 +6,7 @@
 
 
 #include <nau.h>
+#include <nau/loader/bufferLoader.h>
 #include <nau/system/file.h>
 
 using namespace nau::system;
@@ -24,6 +25,7 @@ BEGIN_EVENT_TABLE(DlgDbgBuffers, wxDialog)
 	EVT_BUTTON(DLG_MI_REFRESH, DlgDbgBuffers::OnRefreshBufferInfo)
 	EVT_BUTTON(DLG_MI_REFRESH_BUFFER_DATA, DlgDbgBuffers::OnRefreshBufferData)
 	EVT_BUTTON(DLG_MI_UPDATE_BUFFER, DlgDbgBuffers::OnUpdateBuffer)
+	EVT_BUTTON(DLG_MI_SAVE_BUFFER, DlgDbgBuffers::OnSaveBuffer)
 
 END_EVENT_TABLE()
 
@@ -223,6 +225,9 @@ DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::Parent, -1, wxT("Buffer 
 	
 	wxBoxSizer *bSizer2;
 	bSizer2 = new wxBoxSizer(wxHORIZONTAL);
+
+	m_bSavebuffer = new wxButton(this, DLG_MI_SAVE_BUFFER, wxT("Save Buffer"));
+	bSizer2->Add(m_bSavebuffer, 0, wxALIGN_CENTER | wxALL, 5);
 
 	m_bRefresh = new wxButton(this, DLG_MI_REFRESH, wxT("Refresh Buffers"));
 	bSizer2->Add(m_bRefresh, 0, wxALIGN_CENTER | wxALL, 5);
@@ -660,6 +665,16 @@ DlgDbgBuffers::insertIntoBuffer(std::string elem, Enums::DataType type, void *pt
 	}
 }
 
+
+void
+DlgDbgBuffers::OnSaveBuffer(wxCommandEvent& event) {
+
+	if (currentBuffer == NO_BUFFER) {
+		return;
+	}
+	IBuffer *b = bufferSettingsList[currentBuffer].bufferPtr;
+	int k = nau::loader::BufferLoader::SaveBuffer(b);
+}
 
 
 void 

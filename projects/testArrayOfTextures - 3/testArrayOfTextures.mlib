@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<materialLib name="Test">
+
+	<shaders>
+		<shader name="fillTextures" cs="shaders/fillTextures.comp" />
+		<shader name="showTextures" vs="shaders/quadShader.vert" 
+									ps="shaders/showTextures.frag"/>	
+	</shaders>
+	
+	<arraysOfTextures>
+		<arrayOfTextures name="T1">
+			<TEXTURE_COUNT value= 2 />
+			<WIDTH value="128"/>
+			<HEIGHT value="128" />
+			<INTERNAL_FORMAT value="RGBA" />
+		</arrayOfTextures>
+		<arrayOfTextures name="T2">
+			<TEXTURE_COUNT value= 2 />
+			<WIDTH value="128"/>
+			<HEIGHT value="128" />
+			<INTERNAL_FORMAT value="RGBA" />
+		</arrayOfTextures>
+	</arraysOfTextures>
+
+	<materials>
+		<material name ="fillTextures">
+			<shader name="fillTextures">
+				<values>									
+					<valueof uniform="tex1[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+												context="CURRENT"
+												component="SAMPLER_ARRAY" id=0/>
+					<valueof uniform="tex2[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+												context="CURRENT"
+												component="SAMPLER_ARRAY" id=1/>
+				</values>
+			</shader>
+			<arraysOfImageTexture>
+				<arrayOfImageTexture textureArray="T1" FIRST_UNIT=2 >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</arrayOfImageTexture >
+				<arrayOfImageTexture textureArray="T2" FIRST_UNIT=4 >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</arrayOfImageTexture >
+			</arraysOfImageTexture>	
+		</material>
+		
+		<material name ="showTextures">
+			<shader name="showTextures" >
+				<values>									
+					<valueof uniform="tex1[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+												context="CURRENT"
+												component="SAMPLER_ARRAY" id=0/>
+					<valueof uniform="tex2[0]"	type="ARRAY_OF_IMAGE_TEXTURES" 
+												context="CURRENT"
+												component="SAMPLER_ARRAY" id=1/>
+				</values>
+			</shader>
+			<arraysOfImageTexture>
+				<arrayOfImageTexture textureArray="T1" FIRST_UNIT=6 />
+				<arrayOfImageTexture textureArray="T2" FIRST_UNIT=0 />
+			</arraysOfImageTexture>	
+		</material>
+	</materials>	
+	
+</materialLib>
+

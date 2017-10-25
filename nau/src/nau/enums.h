@@ -45,6 +45,7 @@ namespace nau {
 						COUNT_DATATYPE
 		};
 
+		// note: must capitalize all static functions
 		static nau_API int getCardinality(DataType p);
 		static nau_API Enums::DataType getType(std::string s);
 		static nau_API bool isValidType(std::string s);
@@ -57,12 +58,12 @@ namespace nau {
 
 		static nau_API const std::vector<std::string> DataTypeToString;
 		static nau_API const std::vector<std::string> &GetDataTypeToString();
-		static nau_API const std::string &valueToString(DataType p, void *v);
+		static nau_API const std::string valueToString(DataType p, void *v);
 		//static std::string &valueToStringAligned(DataType p, void *v);
 		static nau_API DataType getBasicType(DataType dt);
-		static nau_API std::string &pointerToString(DataType p, void *v);
-		static nau_API std::string &pointerToString(DataType p, void *v, int arraySize);
-		static nau_API std::string &pointerToStringAligned(DataType p, void *v);
+		static nau_API std::string pointerToString(DataType p, void *v);
+		static nau_API std::string pointerToString(DataType p, void *v, int arraySize);
+		static nau_API std::string pointerToStringAligned(DataType p, void *v);
 
 	private:
 		static std::string m_Result;

@@ -49,26 +49,31 @@ ResourceManager::clear() {
 		m_Textures.erase(m_Textures.begin());
 	}
 
-	while (!m_States.empty()){
+	while (!m_States.empty()) {
 		delete((*m_States.begin()).second);
 		m_States.erase(m_States.begin());
 	}
 
 	m_Meshes.clear();
 
-	while (!m_RenderTargets.empty()){
+	while (!m_RenderTargets.empty()) {
 		delete((*m_RenderTargets.begin()).second);
 		m_RenderTargets.erase(m_RenderTargets.begin());
 	}
 
-	while (!m_Programs.empty()){
+	while (!m_Programs.empty()) {
 		delete((*m_Programs.begin()).second);
 		m_Programs.erase(m_Programs.begin());
 	}
 
-	while (!m_Buffers.empty()){
+	while (!m_Buffers.empty()) {
 		delete((*m_Buffers.begin()).second);
 		m_Buffers.erase(m_Buffers.begin());
+	}
+
+	while (!m_ArraysOfTextures.empty()) {
+		delete((*m_ArraysOfTextures.begin()).second);
+		m_ArraysOfTextures.erase(m_ArraysOfTextures.begin());
 	}
 }
 

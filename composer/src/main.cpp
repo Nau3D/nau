@@ -80,6 +80,7 @@ int idMenuSaveProj = wxNewId();
 int idMenuProcess = wxNewId();
 int idMenuQuit = wxNewId();
 // Render Menu
+int idMenuDlgRenderer = wxNewId();
 int idMenuDlgPass = wxNewId();
 int idMenuResetFrameCount = wxNewId();
 int idMenuWireframe = wxNewId();
@@ -128,6 +129,8 @@ EVT_MENU(idMenuModel, FrmMainFrame::OnModelLoad)
 EVT_MENU(idMenuProcess, FrmMainFrame::OnProcess)
 EVT_MENU(idMenuQuit, FrmMainFrame::OnQuit)
 // Render Menu
+
+EVT_MENU(idMenuDlgRenderer, FrmMainFrame::OnDlgRenderer)
 EVT_MENU(idMenuDlgPass, FrmMainFrame::OnDlgPass)
 EVT_MENU(idMenuResetFrameCount, FrmMainFrame::OnResetFrameCount)
 EVT_MENU_RANGE(idMenuWireframe, idMenuMaterial, FrmMainFrame::OnRenderMode)
@@ -217,7 +220,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	// Render Menu
 
 	renderMenu = new wxMenu(_T(""));
-    renderMenu->Append(idMenuDlgPass, _("&Pass Library\tF2"), _("Show Pass Library"));
+	renderMenu->Append(idMenuDlgRenderer, _("&Renderer Props\tCtrl-R"), _(""));
+	renderMenu->Append(idMenuDlgPass, _("&Pass Library\tF2"), _("Show Pass Library"));
 	renderMenu->AppendSeparator ();
 	renderMenu->Append(idMenuResetFrameCount, _("&Reset Frame Count\tB"), _(""));
 	renderMenu->AppendSeparator();
@@ -507,13 +511,16 @@ FrmMainFrame::init() {
 
 	bool nauInit(false);
 
+	bool loadProjectFlag = false;
 	bool trace = false;
+	bool pause = false;
 	int framesToTrace = 1;
+	bool invalidOptions = false;
 
 	if (wxGetApp().argc > 1) {
 		int param = 1;
 		if (wxGetApp().argv[1].c_str()[0] != '-') {
-			loadProject(wxGetApp().argv[1].c_str());
+			loadProjectFlag = true;
 			param = 2;
 		}
 		for (int i = param; i < wxGetApp().argc; ++i) {
@@ -526,8 +533,17 @@ FrmMainFrame::init() {
 					++i;
 				}
 			}
+			else if (wxGetApp().argv[i].ToStdString() == "-pause") {
+				pause = true;
+			}
+			else {
+				invalidOptions = true;
+				
+			}
 		}
 	}
+	if (invalidOptions)
+		wxMessageBox("Invalid option. Valid options are -trace and -pause");
 
 	try {
 		nauInit = m_pRoot->init(trace);
@@ -570,30 +586,38 @@ FrmMainFrame::init() {
 	DlgDbgStep::SetParent(this);
 	DlgDbgStep::SetCanvas(m_Canvas);
 	DlgRenderTargets::SetParent(this);
+	DlgRenderer::SetParent(this);
 
 	int w, h;
 	GetClientSize(&w, &h);
 	SetClientSize(w + 1, h + 1);
 
-	if (wxGetApp().argc > 1) {
-		int param = 1;
-		if (wxGetApp().argv[1].c_str()[0] != '-') {
-			loadProject(wxGetApp().argv[1].c_str());
-			param = 2;
-		}
-		for (int i = param; i < wxGetApp().argc; ++i) {
-			if (wxGetApp().argv[i].ToStdString() == "-trace") {
-				long frames;
-				if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
-					m_pRoot->setTrace((int)frames);
-					++i;
-				}
-				else
-					m_pRoot->setTrace(1);
-			}
-		}
+	//if (wxGetApp().argc > 1) {
+	//	int param = 1;
+	//	if (wxGetApp().argv[1].c_str()[0] != '-') {
+	//		loadProjectFlag = true;
+	//		//loadProject(wxGetApp().argv[1].c_str());
+	//		param = 2;
+	//	}
+	//	for (int i = param; i < wxGetApp().argc; ++i) {
+	//		if (wxGetApp().argv[i].ToStdString() == "-trace") {
+	//			long frames;
+	//			if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
+	//				m_pRoot->setTrace((int)frames);
+	//				++i;
+	//			}
+	//			else
+	//				m_pRoot->setTrace(1);
+	//		}
+	//	}
+	//}
+	if (loadProjectFlag)
+		loadProject(wxGetApp().argv[1].c_str());
+	if (pause) {
+		m_Canvas->BreakResume();
+		debugMenu->Enable(idMenuDlgStep, true);
+		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
 	}
-
 }
 
 
@@ -708,6 +732,8 @@ FrmMainFrame::updateDlgs() {
 	DlgDbgPrograms::Instance()->updateDlg();
 	DlgTrace::Instance()->updateDlg();
 	DlgRenderTargets::Instance()->updateDlg();
+	DlgRenderer::Instance()->updateDlg();
+	DlgDbgStep::Instance()->updateDlg();
 
 	if (m_pRoot->getPhysicsManager()->isPhysicsAvailable())
 		DlgPhysics::Instance()->updateDlg();
@@ -738,7 +764,18 @@ FrmMainFrame::updateDlgs() {
 	debugMenu->Enable(idMenuProfileReset, true);
 	debugMenu->Enable(idMenuDbgBreak, true);
 	debugMenu->Enable(idMenuDlgStep, false);
-	debugMenu->SetLabel(idMenuDbgBreak, "Pause");
+
+
+	if (m_Canvas->IsPaused()) {
+
+		debugMenu->Enable(idMenuDlgStep, true);
+		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
+	}
+	else {
+
+		debugMenu->Enable(idMenuDlgStep, false);
+		debugMenu->SetLabel(idMenuDbgBreak, "Pause");
+	}
 
 	//bool traceOn = m_pRoot->getTraceStatus();
 	//if (traceOn)
@@ -1106,6 +1143,13 @@ FrmMainFrame::OnDlgRenderTargets(wxCommandEvent & event) {
 
 
 void
+FrmMainFrame::OnDlgRenderer(wxCommandEvent & event) {
+
+	DlgRenderer::Instance()->Show(TRUE);
+}
+
+
+void
 FrmMainFrame::OnDlgDbgStep(wxCommandEvent& event) {
 
 	DlgDbgStep::Instance()->Show(TRUE);
@@ -1118,25 +1162,10 @@ FrmMainFrame::OnDlgPhysics (wxCommandEvent &event) {
 	DlgPhysics::Instance()->Show(TRUE);
 }
 
-//void
-//FrmMainFrame::buildPhysics(void) {
-//
-//	nau::scene::Camera *cam = RENDERMANAGER->getCamera("testCamera");
-//
-//	if (0 != m_pRoot) {
-//		m_pRoot->getWorld().build();
-//		EVENTMANAGER->addListener("DYNAMIC_CAMERA", cam);
-//		m_pRoot->getWorld()._add(60.1f, cam, cam->getName(), vec3(0.3f, 0.3f, 0.5f));
-//	}
-//}
-//
-//
-//
-
 
 void
-FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
-{
+FrmMainFrame::OnPhysicsMode (wxCommandEvent &event) {
+
 	nau::scene::Camera *cam = NAU->getActiveCamera ();
 
 	if (idMenuPhysicsOn == event.GetId()) {
@@ -1147,6 +1176,11 @@ FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
 		m_pRoot->disablePhysics();	
 	}
 }
+
+
+/*
+---------------------------------------------- CUT HERE (OLD CODE) ----------------------------------------------------------
+*/
 
 
 
@@ -1230,11 +1264,6 @@ FrmMainFrame::OnPhysicsMode (wxCommandEvent &event)
 
 
 
-
-
-/*
----------------------------------------------- CUT HERE (OLD CODE) ----------------------------------------------------------
-*/
 
 
 //void

@@ -275,7 +275,8 @@ void DlgTextureLib::setTextureProps(int index) {
 	wxBitmap *bm = m_Bitmaps[ texture->getPropi(ITexture::ID)];
 	//wxBitmap *bm = texture->getBitmap();
 	//unsigned char *bm = texture->getBitmap();
-	m_PGTextureProps->SetPropertyImage(wxT("Name"), *bm);
+	if (bm != NULL)
+		m_PGTextureProps->SetPropertyImage(wxT("Name"), *bm);
 }
 
 

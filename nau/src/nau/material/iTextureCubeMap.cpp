@@ -19,8 +19,8 @@ ITextureCubeMap::Create (std::vector<std::string> files, std::string label, bool
 	unsigned char* data[6];
 	
 	for (int i = 0; i < 6; i++) {
-			loader[i] = ITextureLoader::create();
-			loader[i]->loadImage (files[i]);
+			loader[i] = ITextureLoader::create(files[i]);
+			loader[i]->loadImage ();
 			data[i] = loader[i]->getData();
 	}
 

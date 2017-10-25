@@ -221,7 +221,7 @@ GLState::set() {
 void 
 GLState::setDiff(IState *def, IState *aState) {
 
-	GLState s;
+	static GLState s;
 	GLState *d = (GLState *)def;
 	GLState *a = (GLState *)aState;
 

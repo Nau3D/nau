@@ -36,6 +36,13 @@
 			<enum value="0x82E8" name="GL_MAX_LABEL_LENGTH" />
 			<enum value="0x8B4C" name="GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS" />
 			<enum value="0x8872" name="GL_MAX_TEXTURE_IMAGE_UNITS" />
+
+			<enum value="0x90CA" name="GL_MAX_VERTEX_IMAGE_UNIFORMS" />
+			<enum value="0x90CB" name="GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS" />
+			<enum value="0x90CC" name="GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS" />
+			<enum value="0x90CD" name="GL_MAX_GEOMETRY_IMAGE_UNIFORMS" />
+			<enum value="0x90CE" name="GL_MAX_FRAGMENT_IMAGE_UNIFORMS" />
+			<enum value="0x90CF" name="GL_MAX_COMBINED_IMAGE_UNIFORMS	" />	
 			
 			
 			<!--enum value="0x8455" name="GL_FOG_COORD_ARRAY_STRIDE" alias="GL_FOG_COORDINATE_ARRAY_STRIDE"/>

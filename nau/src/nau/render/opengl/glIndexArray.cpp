@@ -29,9 +29,9 @@ GLIndexArray::GLIndexArray(std::string & name):
 
 GLIndexArray::~GLIndexArray(void) {
 
-	if (0 != m_BufferID) {
-		glDeleteBuffers (1, &m_BufferID);
-	}
+	//if (0 != m_BufferID) {
+	//	glDeleteBuffers (1, &m_BufferID);
+	//}
 }
 
 

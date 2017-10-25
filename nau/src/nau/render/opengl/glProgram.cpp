@@ -637,32 +637,32 @@ GLProgram::setUniforms() {
 				uni.setLoc (loc);
 				m_Uniforms.push_back (uni);
 			}
-			if (size > 1) {
+			//if (size > 1) {
 
-				for (int i = 0; i < size; i++) {
-					std::stringstream s;
-					s << n.c_str() << "[" << i << "]";
-					std::string Location = s.str();
-					index = findUniform(Location);
+			//	for (int i = 0; i < size; i++) {
+			//		std::stringstream s;
+			//		s << n.c_str() << "[" << i << "]";
+			//		std::string Location = s.str();
+			//		index = findUniform(Location);
 
-					int loc;
-					loc = glGetUniformLocation(m_P, s.str().c_str());
-					if (loc != -1) {
-						if (-1 != index) {
-							m_Uniforms[index].setGLType(type, 1);
-							m_Uniforms[index].setLoc(loc);
-						}
-						else {
-							uni.reset();
-							std::string ProgName(s.str());
-							uni.setName(ProgName);
-							uni.setGLType(type, 1);
-							uni.setLoc(loc);
-							m_Uniforms.push_back(uni);
-						}
-					}
-				}
-			}
+			//		int loc;
+			//		loc = glGetUniformLocation(m_P, s.str().c_str());
+			//		if (loc != -1) {
+			//			if (-1 != index) {
+			//				m_Uniforms[index].setGLType(type, 1);
+			//				m_Uniforms[index].setLoc(loc);
+			//			}
+			//			else {
+			//				uni.reset();
+			//				std::string ProgName(s.str());
+			//				uni.setName(ProgName);
+			//				uni.setGLType(type, 1);
+			//				uni.setLoc(loc);
+			//				m_Uniforms.push_back(uni);
+			//			}
+			//		}
+			//	}
+			//}
 		}
 	}
 

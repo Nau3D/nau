@@ -536,6 +536,9 @@ Camera::setVectorsFromSpherical() {
 void 
 Camera::buildProjectionMatrix() {
 
+	if (m_pViewport == NULL)
+		return;
+
 	float aspect = m_pViewport->getPropf(Viewport::ABSOLUTE_RATIO);
 	float f = 1.0f / tan (DegToRad(m_FloatProps[FOV] * 0.5f));
 

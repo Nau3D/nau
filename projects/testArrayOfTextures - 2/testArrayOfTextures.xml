@@ -28,7 +28,7 @@
 			</pass>
 			<pass class="quad" name="regular texture access">
 				<viewport name="left" />
-				<texture name="Test::T_0" />
+				<texture name="Test::T1_0" />
 			</pass>
 			
 			<pass class="quad" name="acessing textures with array of samplers">

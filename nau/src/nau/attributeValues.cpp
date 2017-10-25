@@ -1624,19 +1624,19 @@ AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 
 		case Enums::ENUM:
 			getPrope((AttributeValues::EnumProperty)prop);
-			return(&(m_EnumProps[prop]));
+			return &(m_EnumProps[prop]);
 			break;
 		case Enums::STRING:
 			getProps((AttributeValues::StringProperty)prop);
-			return(&(m_StringProps[prop]));
+			return &(m_StringProps[prop]);
 			break;
 		case Enums::INTARRAY: 
 			getPropiv((AttributeValues::IntArrayProperty)prop);
-			return(&(m_IntArrayProps[prop]));
+			return &(m_IntArrayProps[prop]);
 			break;
 		case Enums::INT:
 			getPropi((AttributeValues::IntProperty)prop);
-			return(&(m_IntProps[prop]));
+			return &(m_IntProps[prop]);
 			break;
 		case Enums::IVEC2:
 			getPropi2((AttributeValues::Int2Property)prop);
@@ -1693,6 +1693,30 @@ AttributeValues::getProp(unsigned int prop, Enums::DataType type) {
 		case Enums::MAT3:
 			getPropm3((AttributeValues::Mat3Property)prop);
 			return(&(m_Mat3Props[prop]));
+			break;
+		case Enums::DOUBLE:
+			getPropd((AttributeValues::DoubleProperty)prop);
+			return(&(m_DoubleProps[prop]));
+			break;
+		case Enums::DVEC4:
+			getPropd4((AttributeValues::Double4Property)prop);
+			return(&(m_Double4Props[prop]));
+			break;
+		case Enums::DVEC3:
+			getPropd3((AttributeValues::Double3Property)prop);
+			return(&(m_Double3Props[prop]));
+			break;
+		case Enums::DVEC2:
+			getPropd2((AttributeValues::Double2Property)prop);
+			return(&(m_Double2Props[prop]));
+			break;
+		case Enums::DMAT4:
+			getPropdm4((AttributeValues::DMat4Property)prop);
+			return(&(m_DMat4Props[prop]));
+			break;
+		case Enums::DMAT3:
+			getPropdm3((AttributeValues::DMat3Property)prop);
+			return(&(m_DMat3Props[prop]));
 			break;
 		default:
 			assert(false && "Missing Data Type in class attributeValues");
@@ -1755,6 +1779,24 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, Data *value) {
 		break;
 	case Enums::MAT3:
 		setPropm3((Mat3Property)prop, *(dynamic_cast<mat3 *>(value)));
+		break;
+	case Enums::DOUBLE:
+		setPropd((DoubleProperty)prop, dynamic_cast<NauDouble *>(value)->getNumber());
+		break;
+	case Enums::DVEC2:
+		setPropd2((Double2Property)prop, *(dynamic_cast<dvec2 *>(value)));
+		break;
+	case Enums::DVEC3:
+		setPropd3((Double3Property)prop, *(dynamic_cast<dvec3 *>(value)));
+		break;
+	case Enums::DVEC4:
+		setPropd4((Double4Property)prop, *(dynamic_cast<dvec4 *>(value)));
+		break;
+	case Enums::DMAT4:
+		setPropdm4((DMat4Property)prop, *(dynamic_cast<dmat4 *>(value)));
+		break;
+	case Enums::DMAT3:
+		setPropdm3((DMat3Property)prop, *(dynamic_cast<dmat3 *>(value)));
 		break;
 	default:
 		assert(false && "Missing Data Type in class attributeValues or Invalid prop");
@@ -1891,6 +1933,13 @@ AttributeValues::initArrays() {
 	m_Attribs->initAttribInstanceFloatArray(m_FloatProps);
 	m_Attribs->initAttribInstanceMat4Array(m_Mat4Props);
 	m_Attribs->initAttribInstanceMat3Array(m_Mat3Props);
+
+	m_Attribs->initAttribInstanceDVec4Array(m_Double4Props);
+	m_Attribs->initAttribInstanceDVec3Array(m_Double3Props);
+	m_Attribs->initAttribInstanceDVec2Array(m_Double2Props);
+	m_Attribs->initAttribInstanceDoubleArray(m_DoubleProps);
+	m_Attribs->initAttribInstanceDMat4Array(m_DMat4Props);
+	m_Attribs->initAttribInstanceDMat3Array(m_DMat3Props);
 }
 
 
@@ -1926,6 +1975,14 @@ AttributeValues::AttributeValues(const AttributeValues &to) {
 	m_Float4Props = to.m_Float4Props;
 	m_Mat3Props = to.m_Mat3Props;
 	m_Mat4Props = to.m_Mat4Props;
+
+	m_DoubleProps = to.m_DoubleProps;
+	m_Double2Props = to.m_Double2Props;
+	m_Double3Props = to.m_Double3Props;
+	m_Double4Props = to.m_Double4Props;
+	m_DMat3Props = to.m_DMat3Props;
+	m_DMat4Props = to.m_DMat4Props;
+
 	m_Attribs = to.m_Attribs;
 }
 

@@ -6,6 +6,7 @@
 #include "nau/geometry/sphere.h"
 #include "nau/interface/interface.h"
 #include "nau/event/eventFactory.h"
+#include "nau/loader/bufferLoader.h"
 #include "nau/loader/cboLoader.h"
 #include "nau/loader/iTextureLoader.h"
 #include "nau/loader/objLoader.h"
@@ -24,11 +25,15 @@
 
 
 #if NAU_LUA == 1
+
 extern "C" {
-#include<lua/lua.h>
+#include <lua/lua.h>
 #include <lua/lauxlib.h>
 #include <lua/lualib.h>
 }
+
+std::map<std::string, std::string> Nau::LuaScriptNames;
+
 #endif
 
 
@@ -45,8 +50,11 @@ using namespace nau::scene;
 using namespace nau::system;
 
 
-static nau::Nau *Instance = 0;
+nau::Nau *Nau::Instance = NULL;
 
+#if NAU_LUA == 1
+lua_State *Nau::m_LuaState = NULL;
+#endif
 
 nau::INau*
 Nau::Create (void) {
@@ -95,9 +103,7 @@ Nau::Nau() :
 	m_ProjectName(""),
 	m_DefaultState(0),
 	m_pAPISupport(0),
-#if NAU_LUA == 1
-	m_LuaState(0),
-#endif
+
 	m_ProfileResetRequest(false)
 {
 }
@@ -176,6 +182,7 @@ Nau::init (bool trace) {
 
 	// Init LUA
 #if NAU_LUA == 1
+	LuaScriptNames.clear();
 	initLua();
 #endif
 	PASSFACTORY->loadPlugins();
@@ -233,12 +240,69 @@ Nau::getProfileResetRequest() {
 
 #if NAU_LUA == 1
 
+
+void printTable(lua_State *L, int pos)
+{
+	lua_pushnil(L);
+	while (lua_next(L, -2) != 0)
+	{
+		if (lua_isstring(L, -1)) {
+			LOG_trace_nr("%s ", lua_tostring(L, -1));
+		}
+		else if (lua_isnumber(L, -1)) {
+			LOG_trace_nr("%f", lua_tonumber(L, -1));
+		}
+		else if (lua_istable(L, -1))
+			printTable(L, -1);
+
+		lua_pop(L, 1);
+	}
+}
+
+
+void
+Nau::luaStackDump(lua_State *m_LuaState)
+{
+	int i;
+	int top = lua_gettop(m_LuaState);
+
+	LOG_trace("LUA: total in stack %d", top);
+
+	for (i = 1; i <= top; i++)
+	{
+		int t = lua_type(m_LuaState, i);
+		switch (t) {
+		case LUA_TSTRING:
+			LOG_trace("LUA: string: '%s'", lua_tostring(m_LuaState, i));
+			break;
+		case LUA_TBOOLEAN:
+			LOG_trace("LUA: boolean %s", lua_toboolean(m_LuaState, i) ? "true" : "false");
+			break;
+		case LUA_TNUMBER:
+			LOG_trace("LUA: number: %g", lua_tonumber(m_LuaState, i));
+			break;
+		case LUA_TTABLE:
+			LOG_trace_nr("LUA: table {")
+			lua_pushvalue(m_LuaState, i);
+			printTable(m_LuaState, i);
+			lua_pop(m_LuaState, 1);
+			LOG_trace_nr("}\n");
+			break;
+		default:
+			LOG_trace("LUA: %s", lua_typename(m_LuaState, t));
+			break;
+		}
+	}
+}
+
+
 void 
-luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
+Nau::luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
 
 	float *arrF;
 	int *arrI;
 	unsigned int *arrUI;
+	double *arrD;
 
 	switch (bdt) {
 
@@ -247,6 +311,14 @@ luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
 		for (int i = 0; i < card; ++i) {
 			lua_pushnumber(l, i + 1); // key
 			lua_pushnumber(l, arrF[i]); // value
+			lua_settable(l, -3); // two pushes 
+		}
+		break;
+	case Enums::DOUBLE:
+		arrD = (double *)arr;
+		for (int i = 0; i < card; ++i) {
+			lua_pushnumber(l, i + 1); // key
+			lua_pushnumber(l, arrD[i]); // value
 			lua_settable(l, -3); // two pushes 
 		}
 		break;
@@ -272,8 +344,12 @@ luaGetValues(lua_State *l, void *arr, int card, Enums::DataType bdt) {
 
 
 int
-luaGetBuffer(lua_State *l) {
+Nau::luaGetBuffer(lua_State *l) {
 
+	if (NAU->getTraceStatus()) {
+		LOG_trace("LUA: Calling getAttrib");
+		luaStackDump(m_LuaState);
+	}
 	const char *name = lua_tostring(l, -4);
 	size_t offset = (size_t)lua_tointeger(l, -3);
 	const char *dataType = lua_tostring(l, -2);
@@ -297,16 +373,27 @@ luaGetBuffer(lua_State *l) {
 	}
 
 	luaGetValues(l, arr, card, bdt);
+	free(arr);
 	return 0;
 }
 
 
 int 
-luaSetBuffer(lua_State *l) {
+Nau::luaSetBuffer(lua_State *l) {
 
+	if (NAU->getTraceStatus()) {
+		LOG_trace("LUA: Calling getAttrib");
+		luaStackDump(m_LuaState);
+	}
 	const char *name = lua_tostring(l, -4);
 	size_t offset = (size_t)lua_tointeger(l, -3);
 	const char *dataType = lua_tostring(l, -2);
+
+	int top = lua_gettop(l);
+	// some validation
+	if (top != 4) {
+		NAU_THROW("Lua setBuffer requires 4 arguments: buffer name, offset, the attribute to set, data type, and the values to set");
+	}
 
 	Enums::DataType dt = Enums::getType(dataType);
 	int card = Enums::getCardinality(dt);
@@ -319,10 +406,10 @@ luaSetBuffer(lua_State *l) {
 		return 0;
 	}
 
-	void *arr = NULL;
 	float *arrF;
 	int *arrI; 
 	unsigned int *arrUI;
+	double *arrD;
 
 	switch (bdt) {
 
@@ -333,7 +420,18 @@ luaSetBuffer(lua_State *l) {
 			arrF[i] = (float)lua_tonumber(l, -1);
 			lua_pop(l, 1);
 		}
-		arr = arrF;
+		buff->setSubData(offset, size, arrF);
+		free(arrF);
+		break;
+	case Enums::DOUBLE:
+		arrD = (double *)malloc(sizeof(double) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
+			arrD[i] = (double)lua_tonumber(l, -1);
+			lua_pop(l, 1);
+		}
+		buff->setSubData(offset, size, arrD);
+		free(arrD);
 		break;
 	case Enums::INT:
 	case Enums::BOOL:
@@ -343,7 +441,8 @@ luaSetBuffer(lua_State *l) {
 			arrI[i] = (int)lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
-		arr = arrI;
+		buff->setSubData(offset, size, arrI);
+		free(arrI);
 		break;
 	case Enums::UINT :
 		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
@@ -352,25 +451,34 @@ luaSetBuffer(lua_State *l) {
 			arrUI[i] = (unsigned int)lua_tointeger(l, -1);
 			lua_pop(l, 1);
 		}
-		arr = arrUI;
+		buff->setSubData(offset, size, arrUI);
+		free(arrUI);
 		break;
 	}
-
-	buff->setSubData(offset, size, arr);
 
 	return 0;
 }
 
 
 int
-luaGet(lua_State *l) {
+Nau::luaGet(lua_State *l) {
 
+	if (NAU->getTraceStatus()) {
+		LOG_trace("LUA: Calling getAttr");
+		luaStackDump(m_LuaState);
+	}
 	const char *tipo = lua_tostring(l, -5);
 	const char *context = lua_tostring(l, -4);
 	const char *component = lua_tostring(l, -3);
 	int number = (int)lua_tointeger(l, -2);
 	void *arr;
 	AttribSet *attr;
+
+	int top = lua_gettop(l);
+	// some validation
+	if (top != 5) {
+		NAU_THROW("Lua getAttr requires 5 arguments: objtype, context (either the name of the object or CURRENT where applicable), the attribute to set, the index (where applicable, or 0), values that will be returned");
+	}
 
 	if (!strcmp(context, "CURRENT")) {
 		
@@ -408,14 +516,29 @@ luaGet(lua_State *l) {
 
 
 int 
-luaSet(lua_State *l) {
+Nau::luaSet(lua_State *l) {
+
+	if (NAU->getTraceStatus()) {
+		LOG_trace("LUA: Calling setAttr");
+		luaStackDump(m_LuaState);
+	}
+	int top = lua_gettop(l);
+	// some validation
+	if (top != 5) {
+		NAU_THROW("Lua setAttr requires 5 arguments: objtype, context (either the name of the object or CURRENT where applicable), the attribute to set, the index (where applicable, or 0), and the values to set");
+	}
 
 	const char *tipo = lua_tostring(l, -5);
 	const char *context = lua_tostring(l, -4);
 	const char *component = lua_tostring(l, -3);
+	if (!lua_isnumber(l, -2)) {
+		lua_pushstring(l, "The 4th argument must be the index (where applicable) or 0");
+		lua_error(l);
+	}
 	int number = (int)lua_tointeger(l, - 2);
 	Data *arr = NULL;
 	AttribSet *attr;
+
 
 	if (!strcmp(context, "CURRENT")) {
 
@@ -440,9 +563,35 @@ luaSet(lua_State *l) {
 	float *arrF;
 	int *arrI; 
 	unsigned int *arrUI;
+	double *arrD;
 
 	switch (bdt) {
 
+	case Enums::DOUBLE:
+		arrD = (double *)malloc(sizeof(double) * card);
+		lua_pushnil(l);
+		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
+			arrD[i] = (double)lua_tonumber(l, -1);
+			lua_pop(l, 1);
+		}
+		switch (dt) {
+		case Enums::DOUBLE:
+			arr = new NauDouble(*arrD); break;
+		case Enums::DVEC2:
+			arr = new dvec2(arrD[0], arrD[1]); break;
+		case Enums::DVEC3:
+			arr = new dvec3(arrD[0], arrD[1], arrD[2]); break;
+		case Enums::DVEC4:
+			arr = new dvec4(arrD[0], arrD[1], arrD[2], arrD[3]); break;
+		case Enums::DMAT3:
+			arr = new dmat3(arrD); break;
+		case Enums::DMAT4:
+			arr = new dmat4(arrD); break;
+		default:
+			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+		}
+		free(arrD);
+		break;
 	case Enums::FLOAT:
 		arrF = (float *)malloc(sizeof(float) * card);
 		lua_pushnil(l);
@@ -454,7 +603,7 @@ luaSet(lua_State *l) {
 		case Enums::FLOAT:
 			arr = new NauFloat(*arrF); break;
 		case Enums::VEC2:
-			arr = new vec2(arrF[0], arrF[1]); break;
+arr = new vec2(arrF[0], arrF[1]); break;
 		case Enums::VEC3:
 			arr = new vec3(arrF[0], arrF[1], arrF[2]); break;
 		case Enums::VEC4:
@@ -465,7 +614,7 @@ luaSet(lua_State *l) {
 		default:
 			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
 		}
-		free (arrF);
+		free(arrF);
 		break;
 	case Enums::INT:
 	case Enums::BOOL:
@@ -493,7 +642,7 @@ luaSet(lua_State *l) {
 		}
 		free(arrI);
 		break;
-	case Enums::UINT :
+	case Enums::UINT:
 		arrUI = (unsigned int *)malloc(sizeof(unsigned int) * card);
 		lua_pushnil(l);
 		for (int i = 0; i < card && lua_next(l, -2) != 0; ++i) {
@@ -526,10 +675,18 @@ luaSet(lua_State *l) {
 }
 
 
-int 
-luaSaveTexture(lua_State *l) {
+int
+Nau::luaSaveTexture(lua_State *l) {
 
+	if (NAU->getTraceStatus()) {
+		LOG_trace("LUA: Calling saveTexture");
+		luaStackDump(m_LuaState);
+	}
 	const char *texName = lua_tostring(l, -1);
+
+	int top = lua_gettop(l);
+	if (top != 1)
+		NAU_THROW("Lua saveTexture takes a single argument: the texture name");
 
 	if (!RESOURCEMANAGER->hasTexture(texName))
 		NAU_THROW("Lua save texture: invalid texture name");
@@ -537,17 +694,45 @@ luaSaveTexture(lua_State *l) {
 	nau::material::ITexture *texture = RESOURCEMANAGER->getTexture(std::string(texName));
 
 	char s[200];
-	sprintf(s,"%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+	sprintf(s, "%s.%d.png", texture->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
 	std::string sname = nau::system::File::Validate(s);
-	ITextureLoader::Save(texture,ITextureLoader::PNG);
+	ITextureLoader::Save(texture, ITextureLoader::PNG);
 
 	return 0;
 }
 
 
 int
-luaSaveProfile(lua_State *l) {
+Nau::luaSaveBuffer(lua_State *l) {
 
+	if (NAU->getTraceStatus()) {
+		LOG_trace("LUA: Calling saveBuffer");
+		luaStackDump(m_LuaState);
+	}
+	const char *bufferName = lua_tostring(l, -1);
+
+	int top = lua_gettop(l);
+	if (top != 1)
+		NAU_THROW("Lua saveBuffer takes a single argument: the buffer name");
+
+	if (!RESOURCEMANAGER->hasBuffer(bufferName))
+		NAU_THROW("Lua save buffer: invalid buffer name");
+
+	nau::material::IBuffer *buffer = RESOURCEMANAGER->getBuffer(std::string(bufferName));
+
+	BufferLoader::SaveBuffer(buffer);
+
+	return 0;
+}
+
+
+int
+Nau::luaSaveProfile(lua_State *l) {
+
+	if (NAU->getTraceStatus()) {
+		LOG_trace("LUA: call saveProfile");
+		luaStackDump(m_LuaState);
+	}
 	const char *filename = lua_tostring(l, -1);
 
 	std::string prof;
@@ -564,22 +749,50 @@ luaSaveProfile(lua_State *l) {
 }
 
 
+bool 
+Nau::luaCheckScriptName(std::string fileName, std::string scriptName) {
+
+	if (LuaScriptNames.count(scriptName) && LuaScriptNames[scriptName] != fileName) {
+		return false;
+	}
+
+	LuaScriptNames[scriptName] = fileName;
+	return true;
+}
+
+
+void 
+luaDebug(lua_State *m_LuaState) {
+
+	lua_Debug info;
+	int level = 0;
+	int x = lua_getstack(m_LuaState, level, &info);
+	if (lua_getstack(m_LuaState, level, &info) != 1) {
+		lua_getinfo(m_LuaState, "nSl", &info);
+		fprintf(stderr, "  [%d] %s:%d -- %s [%s]\n",
+			level, info.short_src, info.currentline,
+			(info.name ? info.name : "<unknown>"), info.what);
+		++level;
+	}
+}
+
+
 void
 Nau::initLua() {
 
 	m_LuaState = luaL_newstate();
 	luaL_openlibs(m_LuaState);
-	lua_pushcfunction(m_LuaState, luaSet);
+	lua_pushcfunction(m_LuaState, Nau::luaSet);
 	lua_setglobal(m_LuaState, "setAttr");
-	lua_pushcfunction(m_LuaState, luaGet);
+	lua_pushcfunction(m_LuaState, Nau::luaGet);
 	lua_setglobal(m_LuaState, "getAttr");
-	lua_pushcfunction(m_LuaState, luaGetBuffer);
+	lua_pushcfunction(m_LuaState, Nau::luaGetBuffer);
 	lua_setglobal(m_LuaState, "getBuffer");
-	lua_pushcfunction(m_LuaState, luaSaveTexture);
+	lua_pushcfunction(m_LuaState, Nau::luaSaveTexture);
 	lua_setglobal(m_LuaState, "saveTexture");
-	lua_pushcfunction(m_LuaState, luaSetBuffer);
+	lua_pushcfunction(m_LuaState, Nau::luaSetBuffer);
 	lua_setglobal(m_LuaState, "setBuffer");
-	lua_pushcfunction(m_LuaState, luaSaveProfile);
+	lua_pushcfunction(m_LuaState, Nau::luaSaveProfile);
 	lua_setglobal(m_LuaState, "saveProfiler");
 }
 
@@ -597,10 +810,45 @@ Nau::initLuaScript(std::string file, std::string name) {
 void
 Nau::callLuaScript(std::string name) {
 
-	lua_getglobal(m_LuaState, name.c_str());
-	lua_pcall(m_LuaState, 0, 0, 0);
+	int errIndex = 0;
 
-	// com envio de par\E2metros
+	if (m_TraceOn) {
+		LOG_trace("#LUA %s", name.c_str());
+
+		lua_getglobal(m_LuaState, "debug");
+		lua_getfield(m_LuaState, -1, "traceback");
+		lua_remove(m_LuaState, -2);
+		errIndex = -2;
+	}
+	lua_getglobal(m_LuaState, name.c_str());
+
+	// do we have an error?
+	if (lua_pcall(m_LuaState, 0, 0, errIndex)) {
+//	if (lua_pcall(m_LuaState, 0, 0, 0)) {
+		//luaL_traceback(m_LuaState, m_LuaState, "hello", 0);
+		//lua_Debug info;
+		//int level = 0;
+		
+		//while (lua_getstack(m_LuaState, level, &info)) {
+		//	lua_getinfo(m_LuaState, "nSl", &info);
+		//	SLOG("  [%d] %s:%d -- %s [%s]\n",
+		//		level, info.short_src, info.currentline,
+		//		(info.name ? info.name : "<unknown>"), info.what);
+		//	++level;
+		//}
+		if (!lua_isnil(m_LuaState, -1)) {
+			const char *msg = lua_tostring(m_LuaState, -1);
+			if (msg != NULL) {
+				NAU_THROW("Lua ERROR: %s", msg);
+			}
+		}
+		
+	}
+	if (m_TraceOn) {
+		lua_pop(m_LuaState, 1);
+	}
+
+	// com envio de parametros
 	//lua_pushnumber(m_LuaState, 12);
 	//lua_pushlightuserdata(m_LuaState, &file);
 	//lua_pcall(m_LuaState, 2, 0, 0);
@@ -608,16 +856,43 @@ Nau::callLuaScript(std::string name) {
 	// receber par\E2metros
 	//lua_pcall(m_LuaState, 0, 1, 0);
 	//int k = lua_tonumber(m_LuaState, -1);
-
 }
 
 
 bool
 Nau::callLuaTestScript(std::string name) {
 
+	int errIndex = 0;
+
+	if (m_TraceOn) {
+		LOG_trace("#LUA: call script %s", name.c_str());
+
+		lua_getglobal(m_LuaState, "debug");
+		lua_getfield(m_LuaState, -1, "traceback");
+		lua_remove(m_LuaState, -2);
+		errIndex = -2;
+	}
+
 	lua_getglobal(m_LuaState, name.c_str());
-	lua_pcall(m_LuaState, 0, 1, 0);
-	return (lua_toboolean(m_LuaState, -1) != 0);
+
+	if (lua_pcall(m_LuaState, 0, 1, errIndex)) {
+		if (!lua_isnil(m_LuaState, -1)) {
+			const char *msg = lua_tostring(m_LuaState, -1);
+			if (msg != NULL) {
+				NAU_THROW("Lua ERROR: %s", msg);
+			}
+		}
+
+	}
+
+
+	int result = lua_toboolean(m_LuaState, -1);
+	lua_pop(m_LuaState, 1);
+
+	if (m_TraceOn) {
+		lua_pop(m_LuaState, 1);
+	}
+	return (result != 0);
 }
 
 
@@ -673,6 +948,9 @@ Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 	else if (type == "IMAGE_TEXTURE") {
 		return (AttributeValues *)renderer->getMaterial()->getImageTexture(number);
 	}
+	else if (type == "ARRAY_OF_IMAGE_TEXTURES") {
+		return (AttributeValues *)renderer->getMaterial()->getArrayOfImageTextures(number);
+	}
 	else if (type == "TEXTURE_BINDING") {
 		return (AttributeValues *)renderer->getMaterialTexture(number);
 	}
@@ -696,7 +974,7 @@ Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 		return (AttributeValues *)renderer->getViewport().get();
 	}
 	else if (type == "ARRAY_OF_TEXTURES_BINDING") {
-		return (AttributeValues *)renderer->getMaterial()->getMaterialArrayOfTextures();
+		return (AttributeValues *)renderer->getMaterial()->getMaterialArrayOfTextures(number);
 	}
 	// If we get here then we are trying to fetch something that does not exist
 	NAU_THROW("Getting an invalid object\ntype: %s", type.c_str());
@@ -869,6 +1147,10 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getImageTexture(number);
 	}
+	if (type == "ARRAY_OF_IMAGE_TEXTURES") {
+		if (m_pMaterialLibManager->hasMaterial(lib, mat))
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getArrayOfImageTextures(number);
+	}
 	if (type == "BUFFER_MATERIAL") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat)) {
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getBuffer(number);
@@ -880,7 +1162,7 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 	}
 	else if (type == "ARRAY_OF_TEXTURES_BINDING") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
-			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialArrayOfTextures();
+			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialArrayOfTextures(number);
 	}
 	// If we get here then we are trying to fetch something that does not exist
 	NAU_THROW("Getting an invalid object\ntype: %s\ncontext: %s", 
@@ -1225,6 +1507,10 @@ Nau::clear() {
 	ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
 
 	INTERFACE_MANAGER->clear();
+
+#if NAU_LUA == 1
+	LuaScriptNames.clear();
+#endif
 }
 
 
@@ -1441,9 +1727,6 @@ void Nau::stepPass() {
 		if (m_TraceFrames) {
 			LOG_trace("#NAU(FRAME,START)");
 		}
-//#ifdef GLINTERCEPTDEBUG
-//		addMessageToGLILog("\n#NAU(FRAME,START)");
-//#endif //GLINTERCEPTDEBUG
 
 		renderer->resetCounters();
 
@@ -1455,22 +1738,16 @@ void Nau::stepPass() {
 
 	}
 
-	std::string s = RENDERMANAGER->getCurrentPass()->getName();
-	if (m_TraceFrames) {
-		LOG_trace("\n#NAU(PASS START %s)", s.c_str());
-	}
-//#ifdef GLINTERCEPTDEBUG
-//	addMessageToGLILog(("\n#NAU(PASS,START," + s + ")").c_str());
-//#endif //GLINTERCEPTDEBUG
+ 	std::string s = RENDERMANAGER->getCurrentPass()->getName();
+	//if (m_TraceFrames) {
+	//	LOG_trace("#NAU(PASS START %s)", s.c_str());
+	//}
 
 	p->executeNextPass();
 
-	if (m_TraceFrames) {
-		LOG_trace("#NAU(PASS END %s)", s.c_str());
-	}
-//#ifdef GLINTERCEPTDEBUG
-//	addMessageToGLILog(("\n#NAU(PASS,END," + s + ")").c_str());
-//#endif //GLINTERCEPTDEBUG
+	//if (m_TraceFrames) {
+	//	LOG_trace("#NAU(PASS END %s)", s.c_str());
+	//}
 
 	if (currentPass == lastPass) {
 
@@ -1559,14 +1836,6 @@ Nau::getDepthAtCenter() {
 }
 
 
-
-//IWorld&
-//Nau::getWorld (void) {
-//
-//	return (*m_pWorld);
-//}
-
-
 void
 Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params) throw (std::string) {
 
@@ -1619,6 +1888,7 @@ Nau::writeAssets (std::string fileType, std::string aFilename, std::string scene
 		OBJLoader::writeScene(RENDERMANAGER->getScene(sceneName).get(), aFilename);
 	}
 }
+
 
 void
 Nau::setWindowSize (unsigned int width, unsigned int height) {
@@ -1720,7 +1990,8 @@ Nau::getRenderer(void) {
 }
 
 
-nau::physics::PhysicsManager * nau::Nau::getPhysicsManager() {
+nau::physics::PhysicsManager *
+Nau::getPhysicsManager() {
 
 	return m_pPhysicsManager;
 }

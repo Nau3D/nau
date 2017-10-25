@@ -182,7 +182,7 @@
 	
 	
 		<material name="mipmap" >
-			<shader name="mipmap">
+			<shader name="mipmap2">
 				<values>
 					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />

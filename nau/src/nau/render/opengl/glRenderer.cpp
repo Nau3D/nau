@@ -1083,38 +1083,39 @@ GLRenderer::showDrawDebugInfo(std::shared_ptr<Material> &mat, nau::util::Tree *t
 
 	std::vector<unsigned int> vi; int arrayOfTexSize = 0;
 	nau::util::Tree *textureTree, *textureUnitTree;
-	mat->getTextureUnits(&vi); 
-	IArrayOfTextures *aot = mat->getMaterialArrayOfTextures()->getArrayOfTextures();
-	if (aot != NULL) {
+	mat->getTextureUnits(&vi);
+	IArrayOfTextures *aot;;
+	for (int k = 0; mat->getMaterialArrayOfTextures(k) != NULL; ++k) {
+		aot = mat->getMaterialArrayOfTextures(0)->getArrayOfTextures();
 		arrayOfTexSize = (int)aot->getPropiv(IArrayOfTextures::TEXTURE_ID_ARRAY).getArray().size();
-	}
-	if (vi.size() + arrayOfTexSize > 0) {
-		textureTree = tree->appendBranch("Textures");
-		SLOG("Textures");
-		for (unsigned int i = 0; i < vi.size(); ++i) {
-			ITexture *t = mat->getTexture(vi[i]);
-			textureUnitTree = textureTree->appendBranch("Unit", to_string(vi[i]));
-			textureUnitTree->appendItem("Label", t->getLabel() + " (" + std::to_string(t->getPropi(ITexture::ID)) + ")");
-			SLOG("\tUnit %d ID %d Name %s", vi[i], t->getPropi(ITexture::ID), t->getLabel().c_str());
-			int id;
-			glActiveTexture((GLenum)((int)GL_TEXTURE0+vi[i]));
-			glGetIntegerv((GLenum)GLTexture::TextureBound[(GLenum)t->getPrope(ITexture::DIMENSION)], &id);
-			textureUnitTree->appendItem("Actual texture bound to unit " + std::to_string(vi[i]), std::to_string(id));
-			SLOG("\tActual texture bound to unit %d: %d", vi[i], id);
-		}
-		if (aot != NULL) {
-			const std::vector<int> &texArray = (std::vector<int>)aot->getPropiv(IArrayOfTextures::TEXTURE_ID_ARRAY).getArray();
-			int firstUnit = mat->getMaterialArrayOfTextures()->getPropi(MaterialArrayOfTextures::FIRST_UNIT);
-			for (unsigned int i = 0; i < texArray.size(); ++i) {
-				ITexture *t = mat->getMaterialArrayOfTextures()->getArrayOfTextures()->getTexture(i);
-				textureUnitTree = textureTree->appendBranch("Unit", to_string(i+firstUnit));
+		if (vi.size() + arrayOfTexSize > 0) {
+			textureTree = tree->appendBranch("Textures");
+			SLOG("Textures");
+			for (unsigned int i = 0; i < vi.size(); ++i) {
+				ITexture *t = mat->getTexture(vi[i]);
+				textureUnitTree = textureTree->appendBranch("Unit", to_string(vi[i]));
 				textureUnitTree->appendItem("Label", t->getLabel() + " (" + std::to_string(t->getPropi(ITexture::ID)) + ")");
-				SLOG("\tUnit %d ID %d Name %s", i + firstUnit, t->getPropi(ITexture::ID), t->getLabel().c_str());
+				SLOG("\tUnit %d ID %d Name %s", vi[i], t->getPropi(ITexture::ID), t->getLabel().c_str());
 				int id;
-				glActiveTexture((GLenum)((int)GL_TEXTURE0 + i + firstUnit));
+				glActiveTexture((GLenum)((int)GL_TEXTURE0 + vi[i]));
 				glGetIntegerv((GLenum)GLTexture::TextureBound[(GLenum)t->getPrope(ITexture::DIMENSION)], &id);
-				textureUnitTree->appendItem("Actual texture bound to unit " + std::to_string(i + firstUnit), std::to_string(id));
-				SLOG("\tActual texture bound to unit %d: %d", i + firstUnit, id);
+				textureUnitTree->appendItem("Actual texture bound to unit " + std::to_string(vi[i]), std::to_string(id));
+				SLOG("\tActual texture bound to unit %d: %d", vi[i], id);
+			}
+			if (aot != NULL) {
+				const std::vector<int> &texArray = (std::vector<int>)aot->getPropiv(IArrayOfTextures::TEXTURE_ID_ARRAY).getArray();
+				int firstUnit = mat->getMaterialArrayOfTextures(k)->getPropi(MaterialArrayOfTextures::FIRST_UNIT);
+				for (unsigned int i = 0; i < texArray.size(); ++i) {
+					ITexture *t = mat->getMaterialArrayOfTextures(k)->getArrayOfTextures()->getTexture(i);
+					textureUnitTree = textureTree->appendBranch("Unit", to_string(i + firstUnit));
+					textureUnitTree->appendItem("Label", t->getLabel() + " (" + std::to_string(t->getPropi(ITexture::ID)) + ")");
+					SLOG("\tUnit %d ID %d Name %s", i + firstUnit, t->getPropi(ITexture::ID), t->getLabel().c_str());
+					int id;
+					glActiveTexture((GLenum)((int)GL_TEXTURE0 + i + firstUnit));
+					glGetIntegerv((GLenum)GLTexture::TextureBound[(GLenum)t->getPrope(ITexture::DIMENSION)], &id);
+					textureUnitTree->appendItem("Actual texture bound to unit " + std::to_string(i + firstUnit), std::to_string(id));
+					SLOG("\tActual texture bound to unit %d: %d", i + firstUnit, id);
+				}
 			}
 		}
 	}
@@ -1241,28 +1242,32 @@ GLRenderer::showDrawDebugInfo(IProgram *pp, nau::util::Tree *tree) {
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_TYPE, &uniType);
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_SIZE, &uniSize);
 			glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
-		
+			int loc = glGetUniformLocation(program, name);
+			std::vector<string> val;
 			if (uniType != (int)GL_UNSIGNED_INT_ATOMIC_COUNTER) {
-				switch (Enums::getBasicType(GLUniform::spSimpleType[(GLenum)uniType])) {
+				for (int k = 0; k < uniSize ; ++k) {
+					switch (Enums::getBasicType(GLUniform::spSimpleType[(GLenum)uniType])) {
 
-				case Enums::BOOL:
-				case Enums::INT:
-				case Enums::SAMPLER:
-					glGetUniformiv(program, i, (GLint *)values);
-					break;
-				case Enums::FLOAT:
-					glGetUniformfv(program, i, (GLfloat *)values);
-					break;
-				case Enums::UINT:
-					glGetUniformuiv(program, i, (GLuint *)values);
-					break;
-				case Enums::DOUBLE:
-					glGetUniformdv(program, i, (GLdouble *)values);
-					break;
+					case Enums::BOOL:
+					case Enums::INT:
+					case Enums::SAMPLER:
+						glGetUniformiv(program, loc+k, (GLint *)values);
+						break;
+					case Enums::FLOAT:
+						glGetUniformfv(program, loc+k, (GLfloat *)values);
+						break;
+					case Enums::UINT:
+						glGetUniformuiv(program, loc+k, (GLuint *)values);
+						break;
+					case Enums::DOUBLE:
+						glGetUniformdv(program, loc+k, (GLdouble *)values);
+						break;
+					}
+					val.push_back(Enums::pointerToString(GLUniform::spSimpleType[(GLenum)uniType], values, 1));
 				}
-				s = Enums::pointerToString(GLUniform::spSimpleType[(GLenum)uniType], values, uniSize);
 			}
-			else s = "";
+			else 
+				val.push_back("");
 			int auxSize;
 			if (uniArrayStride > 0)
 				auxSize = uniArrayStride * uniSize;
@@ -1270,12 +1275,17 @@ GLRenderer::showDrawDebugInfo(IProgram *pp, nau::util::Tree *tree) {
 				auxSize = Enums::getSize(GLUniform::spSimpleType[(GLenum)uniType]) * uniSize;
 			nau::util::Tree *uniTree;
 			uniTree = uniformTree->appendBranch(name);
-			uniTree->appendItem("Location", std::to_string(i));
+			
+			uniTree->appendItem("Location", std::to_string(loc));
 			uniTree->appendItem("Type", GLUniform::spGLSLType[(GLenum)uniType]);
 			uniTree->appendItem("Size", std::to_string(auxSize));
+			s = val[0];
+			for (int k = 1; k < val.size(); ++k) {
+				s = s + ", " + val[k];
+			}
 			uniTree->appendItem("Values", s);
-			SLOG("%s (%s) location: %d size: %d values: %s", name, GLUniform::spGLSLType[(GLenum)uniType].c_str(), i,
-				auxSize, s.c_str());
+			//SLOG("%s (%s) location: %d size: %d values: %s", name, GLUniform::spGLSLType[(GLenum)uniType].c_str(), i,
+			//	auxSize, s.c_str());
 		}
 	}
 	// Get named blocks info

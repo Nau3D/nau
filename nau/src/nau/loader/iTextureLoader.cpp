@@ -2,16 +2,28 @@
 
 #include "nau.h"
 #include "nau/loader/devilTextureLoader.h"
+#include "nau/loader/vtkLoader.h"
 #include "nau/system/file.h"
 
 #include <ctime>
 
 using namespace nau::loader;
+using namespace nau::system;
+
+
+ITextureLoader::ITextureLoader(const std::string &file) : m_Filename(file) {
+
+}
+
 
 ITextureLoader*
-ITextureLoader::create (void)
-{
-	return new DevILTextureLoader();
+ITextureLoader::create (const std::string &file) {
+
+	std::string s = File::GetExtension(file);
+	if ((s == "vtk") || ( s == "VTK"))
+		return new VTKTextureLoader(file);
+	else
+		return new DevILTextureLoader(file);
 }
 
 
@@ -24,7 +36,6 @@ ITextureLoader::Save(ITexture *t, FileType ft) {
 	//ITexImage *ti = RESOURCEMANAGER->createTexImage(t);
 	ITexImage *ti = ITexImage::create(t);
 
-	nau::loader::ITextureLoader *loader = nau::loader::ITextureLoader::create();
 
 	char s[200];
 	if (ft == PNG)
@@ -33,7 +44,8 @@ ITextureLoader::Save(ITexture *t, FileType ft) {
 		sprintf(s,"%s.%d.hdr", t->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
 
 	std::string sname = nau::system::File::Validate(s);
-	loader->save(ti,sname);
+	nau::loader::ITextureLoader *loader = nau::loader::ITextureLoader::create("");
+	loader->save(ti, sname);
 	delete loader;
 	delete ti;
 }
@@ -57,7 +69,7 @@ ITextureLoader::Save(int width, int height, unsigned char *data, std::string fil
 		filename = std::string(buffer2);
 	}
 
-	nau::loader::ITextureLoader *loader = nau::loader::ITextureLoader::create();
+	nau::loader::ITextureLoader *loader = nau::loader::ITextureLoader::create("");
 	loader->save(width, height, data, filename);
 	delete loader;
 

@@ -142,8 +142,11 @@ namespace nau
 
 			// read single attributes. values can be numbers of constant labels
 			static bool readFloatAttribute(TiXmlElement *p, std::string label, float *value);
+			static bool readDoubleAttribute(TiXmlElement *p, std::string label, double *value);
 			static bool readIntAttribute(TiXmlElement *p, std::string label, int *value);
 			static bool readUIntAttribute(TiXmlElement *p, std::string label, unsigned int *value);
+
+			static void readScript(TiXmlElement *p, std::string &fileName, std::string &scriptName);
 
 			// Asset Loading
 			static void loadUserAttrs(TiXmlHandle handle);
@@ -208,6 +211,7 @@ namespace nau
 			static void loadMaterialColor(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat);
 			static void loadMaterialTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat);
 			static void loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat);
+			static void loadMaterialArrayOfImageTextures(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat);
 			static void loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat);
 			static void loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat);
 			static void loadMaterialState(TiXmlHandle handle, MaterialLib *aLib, std::shared_ptr<Material> &aMat);
@@ -224,9 +228,14 @@ namespace nau
 			static char s_pFullName[256];
 			static string s_Dummy;
 			static vec4 s_Dummy_vec4;
+			static vec3 s_Dummy_vec3;
 			static vec2 s_Dummy_vec2;
 			static bvec4 s_Dummy_bvec4;
 			static float s_Dummy_float;
+			static double s_Dummy_double;
+			static dvec2 s_Dummy_dvec2;
+			static dvec3 s_Dummy_dvec3;
+			static dvec4 s_Dummy_dvec4;
 			static int s_Dummy_int;
 			static unsigned int s_Dummy_uint;
 			static bool s_Dummy_bool;

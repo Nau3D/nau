@@ -131,7 +131,7 @@ void
 GLUniform::setValueInProgram() {
 
 	switch (m_SimpleType) {
-		// inst, bools and samplers
+		// ints, bools and samplers
 		case Enums::INT:
 		case Enums::BOOL:
 		case Enums::SAMPLER:
