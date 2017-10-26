@@ -21,9 +21,9 @@ namespace nau
 
 		public:
 
-			UINT_PROP(DIM_X, 101);
-			UINT_PROP(DIM_Y, 102);
-			UINT_PROP(DIM_Z, 103);
+			//UINT_PROP(DIM_X, 101);
+			//UINT_PROP(DIM_Y, 102);
+			//UINT_PROP(DIM_Z, 103);
 
 			virtual ~PassCompute();
 

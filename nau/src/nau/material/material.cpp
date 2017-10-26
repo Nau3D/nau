@@ -17,7 +17,6 @@ Material::Material() :
 	m_UniformValues(),
 	m_Enabled (true),
 	m_Name ("__Default"),
-	m_ArrayOfImageTextures(NULL),
 	m_State(NULL) {
 
 }

@@ -1,7 +1,10 @@
 add_executable(nauGLUTDemo
 	nauGlut.cpp)
 	
-set_target_properties(nauGLUTDemo PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+if (WIN32)	
+set_target_properties(nauGLUTDemo PROPERTIES DEBUG_POSTFIX 
+${CMAKE_DEBUG_POSTFIX})
+endif (WIN32)
 	
 include_directories(
 	../nau/src

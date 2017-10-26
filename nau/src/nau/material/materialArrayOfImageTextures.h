@@ -30,8 +30,7 @@ namespace nau
 
 			INTARRAY_PROP(SAMPLER_ARRAY, 0);
 
-			static MaterialArrayOfImageTextures *
-				MaterialArrayOfImageTextures::Create();
+			static MaterialArrayOfImageTextures *Create();
 
 			static AttribSet Attribs;
 			static AttribSet &GetAttribs() { return Attribs; }
