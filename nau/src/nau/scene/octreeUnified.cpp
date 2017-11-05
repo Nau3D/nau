@@ -43,8 +43,8 @@ OctreeUnified::eventReceived(const std::string &sender, const std::string &event
 	}
 	if (eventType == "SET_ROTATION") {
 
-		m_Transform.setIdentity();
-		m_Transform.rotate(p->w, p->x, p->y, p->z);
+		m_Mat4Props[TRANSFORM].setIdentity();
+		m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();
 	}
 }
@@ -52,14 +52,14 @@ OctreeUnified::eventReceived(const std::string &sender, const std::string &event
 
 mat4 &
 OctreeUnified::getTransform() {
-	return m_Transform;
+	return m_Mat4Props[TRANSFORM];
 }
 
 
 void
 OctreeUnified::setTransform(nau::math::mat4 &t) {
 
-	m_Transform = t;
+	m_Mat4Props[TRANSFORM] = t;
 	updateSceneObjectTransforms();
 }
 
@@ -67,7 +67,7 @@ OctreeUnified::setTransform(nau::math::mat4 &t) {
 void
 OctreeUnified::transform(nau::math::mat4 &t) {
 
-	m_Transform *= t;
+	m_Mat4Props[TRANSFORM] *= t;
 	updateSceneObjectTransforms();
 }
 
@@ -76,7 +76,7 @@ void
 OctreeUnified::updateSceneObjectTransforms() {
 
 	if (m_SceneObject)
-		m_SceneObject->updateGlobalTransform(m_Transform);
+		m_SceneObject->updateGlobalTransform(m_Mat4Props[TRANSFORM]);
 }
 
 
@@ -115,7 +115,7 @@ OctreeUnified::compile(void) {
 void
 OctreeUnified::add(std::shared_ptr<SceneObject> &aSceneObject) {
 
-	aSceneObject->updateGlobalTransform(m_Transform);
+	aSceneObject->updateGlobalTransform(m_Mat4Props[TRANSFORM]);
 	aSceneObject->burnTransform();
 
 	if (!m_SceneObject) {

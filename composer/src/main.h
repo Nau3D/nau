@@ -78,6 +78,7 @@ private:
 	void OnResetFrameCount(wxCommandEvent& event);
 	void OnRenderMode(wxCommandEvent& event);
 	void OnSetRenderFlags(wxCommandEvent& event);
+	void OnRecompileLua(wxCommandEvent& event);
 
 	void OnDlgScenes(wxCommandEvent& event);
 	void OnDlgViewports(wxCommandEvent& event);

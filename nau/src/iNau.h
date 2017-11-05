@@ -67,6 +67,8 @@ namespace nau {
 		virtual void callLuaScript(std::string name) = 0;
 		virtual void initLuaScript(std::string file, std::string name) = 0;
 		virtual bool callLuaTestScript(std::string name) = 0;
+		virtual void compileLuaScripts() = 0;
+
 #endif
 
 		// Global gets and sets
@@ -83,6 +85,7 @@ namespace nau {
 		virtual void *getAttributeValue(std::string type, std::string context,
 			std::string component, int number=0) = 0;
 
+		virtual AttributeValues *createObject(const std::string &objType, const std::string &name) = 0;
 		virtual std::unique_ptr<Attribute> &getAttribute(const std::string &type, const std::string &component) = 0;
 
 		virtual AttributeValues *getObjectAttributes(const std::string &type, const std::string &context, int number=0) = 0;
@@ -90,7 +93,7 @@ namespace nau {
 		virtual bool validateObjectType(const std::string & type) = 0;
 		virtual void getValidObjectTypes(std::vector<std::string>* v) = 0;
 		virtual void getValidObjectNames(const std::string & type, std::vector<std::string>* v) = 0;
-		virtual bool validateObjectName(const std::string & type, std::string & v) = 0;
+		virtual bool validateObjectName(const std::string & type, const std::string & v) = 0;
 		virtual bool validateObjectContext(const std::string & type, const std::string & context) = 0;
 		virtual bool validateObjectComponent(const std::string & type, const std::string & component) = 0;
 		virtual void getValidObjectComponents(const std::string &type, std::vector<std::string>* v) = 0;

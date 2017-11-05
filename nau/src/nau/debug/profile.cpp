@@ -274,7 +274,7 @@ void Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
 
 		if ((p == -1) || (sec->parent == p)) {
 
-			sprintf(s,"%#*s%s", l * PROFILE_LEVEL_INDENT ," ",sec->name.c_str());
+			sprintf(s,"%*s%s", l * PROFILE_LEVEL_INDENT ," ",sec->name.c_str());
 
 			if (sec->profileGL)
 				sprintf(s2,"%-*s %5.0f %8.2f %8.2f %8.2f\n",

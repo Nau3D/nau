@@ -15,12 +15,12 @@ bool
 PassCompute::Init() {
 
 	//UINT
-	Attribs.add(Attribute(DIM_X, "DIM_X", Enums::DataType::UINT, false, new NauUInt(1)));
-	Attribs.add(Attribute(DIM_Y, "DIM_Y", Enums::DataType::UINT, false, new NauUInt(1)));
-	Attribs.add(Attribute(DIM_Z, "DIM_Z", Enums::DataType::UINT, false, new NauUInt(1)));
+	//Attribs.add(Attribute(DIM_X, "DIM_X", Enums::DataType::UINT, false, new NauUInt(1)));
+	//Attribs.add(Attribute(DIM_Y, "DIM_Y", Enums::DataType::UINT, false, new NauUInt(1)));
+	//Attribs.add(Attribute(DIM_Z, "DIM_Z", Enums::DataType::UINT, false, new NauUInt(1)));
 
 	//#ifndef _WINDLL
-	NAU->registerAttributes("PASS", &Attribs);
+	//NAU->registerAttributes("PASS", &Attribs);
 	//#endif
 	PASSFACTORY->registerClass("compute", Create);
 

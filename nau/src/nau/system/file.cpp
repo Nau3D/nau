@@ -416,7 +416,7 @@ File::Validate(const std::string &s1) {
 bool
 File::IsRelative(const std::string &fn) {
 
-	if (fn[0] == '/' || fn[1] == ':')
+	if (fn.size() == 0 || fn[0] == '/' || fn[1] == ':')
 		return(false);
 	else
 		return(true);
@@ -873,6 +873,9 @@ File::getType (void) {
 	}
 	else if ("patch" == m_FileExtension) {
 		return File::PATCH;
+	}
+	else if ("fbx" == m_FileExtension) {
+		return File::FBX;
 	}
 	else if ("3ds" == m_FileExtension) {
 		return File::THREEDS;

@@ -45,6 +45,7 @@
 #include <sys/types.h>
 #endif
 
+#include <algorithm>
 #include <memory>
 #include <string>
 
@@ -97,7 +98,14 @@ unsigned int ProjectLoader::s_Errors;
 		ERROR MANAGMENT
 ---------------------------------------------------------------*/
 
-
+#define THROW_ERROR(p, message, ...) \
+{ \
+  char m[512], mes[256]; \
+  snprintf(m , 256, "ERROR: File %s (line %d, column %d) ", s_CurrentFile.c_str(), p->Row(), p->Column()); \
+  snprintf(mes, 256, message, ## __VA_ARGS__); \
+  strcat(m, mes); \
+  NAU_THROW(m); \
+}
 
 #define REPORT_WARNING(p, message, ...) \
 {\
@@ -519,7 +527,7 @@ ProjectLoader::readScript(TiXmlElement *p, std::string &fileName, std::string &s
 	const char *pPreScriptFile = p->Attribute("file");
 	const char *pPreScriptName = p->Attribute("script");
 	if (pPreScriptFile && pPreScriptName) {
-		if (!Nau::luaCheckScriptName(pPreScriptFile, pPreScriptName)) {
+		if (!Nau::luaCheckScriptName(File::GetFullPath(ProjectLoader::s_Path, pPreScriptFile), pPreScriptName)) {
 			NAU_THROW("File %s (line %d row %d)\nScript name %s is already defined in another file\nScript names must be unique across all Lua files", ProjectLoader::s_File.c_str(), p->Row(), p->Column(), pPreScriptName);
 		}
 	}
@@ -663,6 +671,10 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 			s_Dummy_int = attribs.getListValueOp(attribs.getID(p->Value()), s); 
 			return new NauInt(s_Dummy_int);
 			break;
+		case Enums::MAT2:
+		case Enums::MAT3:
+		case Enums::MAT4:
+			break;
 		default:
 			assert(false && "Missing attribute type in function ProjectLoader::readChildTag");
 	}
@@ -754,7 +766,7 @@ ProjectLoader::isConstantDefined(std::string s) {
 
 
 bool
-ProjectLoader::isExcluded(std::string attr, std::vector<std::string> &excluded) {
+ProjectLoader::isExcluded(std::string attr, const std::vector<std::string> &excluded) {
 
 	for (auto s : excluded) {
 
@@ -817,7 +829,7 @@ ProjectLoader::getValidValuesString(std::unique_ptr<Attribute> &a) {
 
 
 void 
-ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem) {
+ProjectLoader::readAttributes(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, const std::vector<std::string> &excluded, TiXmlElement *pElem) {
 
 	TiXmlElement *p = pElem->FirstChildElement();
 	std::map<std::string, std::unique_ptr<nau::Attribute>>& attributes = attribs.getAttributes();
@@ -923,7 +935,7 @@ ProjectLoader::validateObjectTypeAndComponent(std::string type, std::string comp
 
 
 void
-ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, std::vector<std::string> &excluded, TiXmlElement *pElem, bool showOnlyExcluded) {
+ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::AttribSet &attribs, const std::vector<std::string> &excluded, TiXmlElement *pElem, bool showOnlyExcluded) {
 
 	TiXmlElement *p = pElem->FirstChildElement();
 	std::map<std::string, std::unique_ptr<nau::Attribute>> &attributes = attribs.getAttributes();
@@ -1672,15 +1684,61 @@ geometry is specified with ORIGIN and SIZE
 ratio can be used instead of height, in which case height = absolute_width*ratio
 ----------------------------------------------------------------- */
 
+
+AttributeValues *
+ProjectLoader::loadItem(TiXmlElement *pElem, const std::string &labelItem, const std::vector<std::string> &excluded) {
+
+	std::string labelItemUpperCase = labelItem;
+	std::transform(labelItemUpperCase.begin(), labelItemUpperCase.end(), labelItemUpperCase.begin(), toupper);
+	const char *pName = pElem->Attribute("name");
+
+	if (0 == pName) {
+		THROW_ERROR(pElem, "%s has no name", labelItem.c_str());
+		//NAU_THROW("File %s\nViewport has no name", ProjectLoader::s_File.c_str());
+	}
+	std::string s(pName);
+	if (NAU->validateObjectName(labelItemUpperCase, s)) {
+		THROW_ERROR(pElem, "%s %s is already defined", labelItem.c_str(), pName);
+	}
+
+	SLOG("%s : %s", labelItem.c_str(), pName);
+	AttributeValues *item = NAU->createObject(labelItemUpperCase, s);
+
+	// Reading remaining viewport attributes
+	AttribSet *as = NAU->getAttribs(labelItemUpperCase);
+	readChildTags(pName, item, *as, excluded, pElem);
+
+	return item;
+}
+
+
+void 
+ProjectLoader::loadCollection(TiXmlHandle handle, const std::string &labelCol, const std::string &labelItem) {
+
+	TiXmlElement *pElem;
+	std::shared_ptr<Viewport> v;
+	std::vector<std::string> excluded;
+
+	std::vector<std::string> ok = { labelItem };
+	checkForNonValidChildTags(labelCol, ok, handle.FirstChild(labelCol).Element());
+	pElem = handle.FirstChild(labelCol.c_str()).FirstChild(labelItem.c_str()).Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		loadItem(pElem, labelItem, excluded);
+	}
+}
+
+
 void
 ProjectLoader::loadViewports(TiXmlHandle handle) 
 {
 	TiXmlElement *pElem;
 	std::shared_ptr<Viewport> v;
+	std::vector<std::string> excluded;
 
 	pElem = handle.FirstChild ("viewports").FirstChild ("viewport").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-		const char *pName = pElem->Attribute ("name");
+		loadItem(pElem, "viewport", excluded);
+	/*	const char *pName = pElem->Attribute ("name");
 
 		if (0 == pName) {
 			NAU_THROW("File %s\nViewport has no name", ProjectLoader::s_File.c_str());
@@ -1696,7 +1754,7 @@ ProjectLoader::loadViewports(TiXmlHandle handle)
 		// Reading remaining viewport attributes
 		std::vector<std::string> excluded;
 		readChildTags(pName, (AttributeValues *)v.get(), Viewport::Attribs, excluded, pElem);
-
+		*/
 	} //End of Viewports
 }
 
@@ -1707,8 +1765,6 @@ Specification of the cameras:
 		<cameras>
 			<camera name="MainCamera">
 				<viewport name="MainViewport" />
-				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="1.0" FAR="1000.0">
-				<projection TYPE="ORTHO" LEFT="-1.0" RIGHT="1.0" BOTTOM="-1.0" TOP="1.0" NEAR="-30.0" FAR="10.0" />
 				<POSITION x="-240.0" y="180.0" z="-330" />
 				<VIEW x="0.54" y="-0.37" z="0.75" />
 				<UP x="0.0" y="1.0" z="0.0" />
@@ -1732,56 +1788,24 @@ void
 ProjectLoader::loadCameras(TiXmlHandle handle) 
 {
 	TiXmlElement *pElem;
+	std::vector<std::string> excluded = { "projection" };
 
 	std::vector<std::string> ok = {"camera"};
 	checkForNonValidChildTags("cameras", ok, handle.FirstChild("cameras").Element());
 	pElem = handle.FirstChild ("cameras").FirstChild ("camera").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("camera")) {
-		const char *pName = pElem->Attribute ("name");
 
-		if (0 == pName) {
-			NAU_THROW("File %s\nCamera has no name", ProjectLoader::s_File.c_str());
-		}
-
-		SLOG("Camera: %s", pName);
-
-		if (RENDERMANAGER->hasCamera(pName))
-			NAU_THROW("File %s\nCamera %s is already defined", ProjectLoader::s_File.c_str(), pName);
-
-		std::shared_ptr<Camera> &aNewCam = RENDERMANAGER->getCamera (pName);
-
-		TiXmlElement *pElemAux = 0;
-		std::string s;
-
-		//// Read Viewport
-		//pElemAux = pElem->FirstChildElement ("viewport");
-		//std::shared_ptr<Viewport> v;
-		//if (0 == pElemAux) {
-		//	v = NAU->getDefaultViewport ();
-		//} else {
-		//	if (TIXML_SUCCESS != pElemAux->QueryStringAttribute("name", &s))
-		//		NAU_THROW("File %s\nElement %s\nviewport name is required", ProjectLoader::s_File.c_str(), pName);
-
-		//	// Check if previously defined
-		//	v = RENDERMANAGER->getViewport(s);
-		//	if (!v)
-		//		NAU_THROW("File %s\nElement %s\nviewport %s is not previously defined", ProjectLoader::s_File.c_str(), pName, s.c_str());
-
-		//	aNewCam->setViewport (v);
-		//}
+		Camera *c = (Camera *)loadItem(pElem, "camera", excluded);
+		
 		// read projection values
+		TiXmlElement *pElemAux = 0;
 		pElemAux = pElem->FirstChildElement("projection");
 		
 		if (pElemAux != NULL)
 		{
 			std::vector<std::string> excluded;
-			readAttributes(std::string(pName), (AttributeValues *)aNewCam.get(), Camera::Attribs, excluded, pElemAux);
+			readAttributes(c->getName(), (AttributeValues *)c, Camera::Attribs, excluded, pElemAux);
 		}
-		// Reading remaining camera attributes
-
-		std::vector<std::string> excluded;
-		excluded.push_back("projection"); 
-		readChildTags(pName, (AttributeValues *)aNewCam.get(), Camera::Attribs, excluded, pElem);
 	} //End of Cameras
 }
 
@@ -1880,6 +1904,8 @@ Specification of the assets:
 void
 ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLibs)
 {
+
+	std::string collectionName, itemName;
 	TiXmlElement *pElem;
 	TiXmlHandle handle (hRoot.FirstChild ("assets").Element());
 
@@ -1911,7 +1937,10 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 	}
 
 	loadScenes(handle);
-	loadViewports(handle);
+	collectionName = "viewports";
+	itemName = "viewport";
+	loadCollection(handle, collectionName, itemName);
+	//loadViewports(handle);
 	loadCameras(handle);
 	loadLights(handle);	
 	loadEvents(handle);
@@ -3425,6 +3454,14 @@ ProjectLoader::loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass)
 
 		const char *pToMaterial = pElem->Attribute ("toMaterial");
 
+		// check if the fromMaterial exists
+		if (pFromMaterial) {
+			if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME, pFromMaterial)) {
+				NAU_THROW("File %s\nPass %s\nMaterial map error: Missing original material",
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			}
+		}
+
 		if ((pToMaterial == 0)) {
 		    NAU_THROW("File %s\nPass %s\nMaterial map error: Missing destination material", 
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
@@ -3986,10 +4023,31 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 			const char *tag = pElemAux->Value();
 			if (strcmp(tag, "pipelineList") == 0) {
 				const char *pLabel = pElemAux->Attribute("label");
+				const char *pScript = pElemAux->Attribute("script");
+				const char *pScriptFile = pElemAux->Attribute("scriptFile");
+				if (pScriptFile && pScript) {
+					if (!Nau::luaCheckScriptName(pScriptFile, pScript)) {
+						NAU_THROW("File %s (line %d row %d)\nScript name %s is already defined in another file\nScript names must be unique across all Lua files", ProjectLoader::s_File.c_str(), pElemAux->Row(), pElemAux->Column(), pScript);
+					}
+					else
+						NAU->initLuaScript(File::GetFullPath(ProjectLoader::s_Path, pScriptFile), pScript);
+				}
+
+				std::string script;
+				if (!pScript)
+					script = "";
+				else
+					script = pScript;
+				std::string scriptF;
+				if (!pScriptFile)
+					scriptF = "";
+				else
+					scriptF = pScriptFile;
+
 				if (0 == pLabel) {
 					NAU_THROW("File %s\nWindow %s, Pipeline list needs a label", s_File.c_str(), pWindowName);
 				}
-				INTERFACE_MANAGER->addPipelineList(pWindowName, pLabel);
+				INTERFACE_MANAGER->addPipelineList(pWindowName, pLabel,script, scriptF);
 			}
 			if (strcmp(tag, "var") == 0) {
 				const char *pLabel = pElemAux->Attribute("label");
@@ -3998,6 +4056,27 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				const char *pComponent = pElemAux->Attribute("component");
 				const char *pControl = pElemAux->Attribute("mode");
 				const char *pDef = pElemAux->Attribute("def");
+				const char *pScript = pElemAux->Attribute("script");
+				const char *pScriptFile = pElemAux->Attribute("scriptFile");
+
+				if (pScriptFile && pScript) {
+					if (!Nau::luaCheckScriptName(File::GetFullPath(ProjectLoader::s_Path, pScriptFile), pScript)) {
+						NAU_THROW("File %s (line %d row %d)\nScript name %s is already defined in another file\nScript names must be unique across all Lua files", ProjectLoader::s_File.c_str(), pElemAux->Row(), pElemAux->Column(), pScript);
+					}
+					else
+						NAU->initLuaScript(File::GetFullPath(ProjectLoader::s_Path, pScriptFile), pScript);
+				}
+				std::string script;
+				if (!pScript)
+					script = "";
+				else
+					script = pScript;
+				std::string scriptF;
+				if (!pScriptFile)
+					scriptF = "";
+				else
+					scriptF = pScriptFile;
+
 				int id = 0;
 				pElemAux->QueryIntAttribute("id", &id);
 
@@ -4028,12 +4107,12 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				//		s_File.c_str(), pWindowName, pLabel);
 				if (pControl) {
 					if (strcmp(pControl, "DIRECTION") == 0)
-						INTERFACE_MANAGER->addDir(pWindowName, pLabel, pType, pContext, pComponent, id);
+						INTERFACE_MANAGER->addDir(pWindowName, pLabel, pType, pContext, pComponent, id, script, scriptF);
 					else if (strcmp(pControl, "COLOR") == 0)
-						INTERFACE_MANAGER->addColor(pWindowName, pLabel, pType, pContext, pComponent, id);
+						INTERFACE_MANAGER->addColor(pWindowName, pLabel, pType, pContext, pComponent, id, script, scriptF);
 				}
 				else
-					INTERFACE_MANAGER->addVar(pWindowName, pLabel, pType, pContext, pComponent, id, def);
+					INTERFACE_MANAGER->addVar(pWindowName, pLabel, pType, pContext, pComponent, id, def, script, scriptF);
 			}
 		}
 	}

@@ -127,8 +127,8 @@ namespace nau
 		
 			// TRIANGLE IDS
 			void prepareTriangleIDs(bool ids);
-			void getVertexData(unsigned int sceneObjID, 
-									 unsigned int triID);
+			//void getVertexData(unsigned int sceneObjID, 
+			//						 unsigned int triID);
 			//SceneObject *getSceneObject(int id);
 			//void addSceneObject(SceneObject *s);
 			//void deleteSceneObject(int id);
@@ -154,7 +154,7 @@ namespace nau
 			nau_API void getCameraNames(std::vector<std::string> *);
 			//! Returns the camera of the pass currently in execution. if no pass is being rendered it returns the pipeline's default camera
 			nau_API std::shared_ptr<nau::scene::Camera> &getCurrentCamera();
-
+			nau_API std::shared_ptr<Camera> &createCamera(const std::string &name);
 
 			// LIGHTS
 			//! Checks to see if the given named light exists

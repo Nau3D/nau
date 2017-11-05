@@ -119,7 +119,7 @@ Pipeline::createPass (const std::string &name, const std::string &passType)
 	std::stringstream s;
 
 	s << m_Name;
-	s << "#" << name;
+	s << "#" << name.c_str();
 
 	std::shared_ptr<Pass> pass = PASSFACTORY->create (passType, s.str());
 	m_Passes.push_back(pass);
@@ -257,7 +257,7 @@ Pipeline::execute() {
 		}
 	}
 	catch (Exception &e) {
-		SLOG(e.getException().c_str());
+		SLOG("%s", e.getException().c_str());
 	}
 
 	if (m_FrameCount == 0 || n == m_FrameCount-1)
@@ -280,7 +280,7 @@ Pipeline::executeNextPass() {
 			m_NextPass = 0;
 	}
 	catch (Exception &e) {
-		SLOG(e.getException().c_str());
+		SLOG("%s", e.getException().c_str());
 	}
 	if (m_NextPass == 0)
 		callScript(m_PostScriptName);

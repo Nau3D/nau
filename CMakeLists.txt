@@ -11,7 +11,7 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions(-std=gnu++0x -g)
+    add_definitions(-std=c++14 -g)
 endif()
 
 if(WIN32) 

@@ -34,7 +34,6 @@ class DlgAtomics : public wxDialog
 		DlgAtomics();
 
 	public:
-		
 		DlgAtomics( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Slanger - Atomic Counters"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~DlgAtomics();
 

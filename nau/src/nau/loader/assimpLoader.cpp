@@ -28,7 +28,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 	//check if file exists
 	std::ifstream fin(aFilename.c_str());
 	if(!fin.fail()) {
-		fin.close();
+ 		fin.close();
 	}
 
 	else{
@@ -36,7 +36,7 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 		return;
 	}
 
-	sc = importer.ReadFile( aFilename, aiProcessPreset_TargetRealtime_Quality);//aiProcess_CalcTangentSpace|aiProcess_Triangulate);//aiProcessPreset_TargetRealtime_Quality);
+	sc = importer.ReadFile(aFilename, aiProcessPreset_TargetRealtime_Quality);// | aiProcess_CalcTangentSpace | aiProcess_Triangulate);//aiProcessPreset_TargetRealtime_Quality);
 
 	// If the import failed, report it
 	if( !sc)
@@ -106,6 +106,15 @@ AssimpLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename, std:
 			std::shared_ptr<std::vector<VertexData::Attr>> normal = 
 				std::shared_ptr<std::vector<VertexData::Attr>>(readGL3FArray((float *)mesh->mNormals,mesh->mNumVertices, order, 0.0f));
 			vertexData->setDataFor(VertexData::GetAttribIndex(std::string("normal")), normal);
+		}
+
+		if (mesh->HasTangentsAndBitangents()) {
+			std::shared_ptr<std::vector<VertexData::Attr>> tangent =
+				std::shared_ptr<std::vector<VertexData::Attr>>(readGL3FArray((float *)mesh->mTangents, mesh->mNumVertices, order, 0.0f));
+			vertexData->setDataFor(VertexData::GetAttribIndex(std::string("tangent")), tangent);
+			std::shared_ptr<std::vector<VertexData::Attr>> bitangent =
+				std::shared_ptr<std::vector<VertexData::Attr>>(readGL3FArray((float *)mesh->mBitangents, mesh->mNumVertices, order, 0.0f));
+			vertexData->setDataFor(VertexData::GetAttribIndex(std::string("bitangent")), bitangent);
 		}
 
 		// buffer for vertex texture coordinates

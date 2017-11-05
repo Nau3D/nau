@@ -47,6 +47,10 @@
 #endif
 #include <cmath>
 #include <iostream>
+#include <set>
+#include <vector>
+#include <string>
+#include <map>
 
 using namespace nau;
 
@@ -159,8 +163,11 @@ namespace nau {
 
 		// Lua Stuff
 #if NAU_LUA == 1
+
 		void initLua();
 		void initLuaScript(std::string file, std::string name);
+		void compileLuaScripts();
+		const std::string &getLuaLog();
 		void callLuaScript(std::string name);
 		bool callLuaTestScript(std::string name);
 
@@ -203,12 +210,14 @@ namespace nau {
 			int number=0);
 		AttributeValues *getCurrentObjectAttributes(const std::string &type, int number = 0);
 
+		AttributeValues *createObject(const std::string &objType, const std::string &name);
+
 		bool validateObjectType(const std::string & type);
 		void getValidObjectTypes(std::vector<std::string>* v);
 
 		void getValidObjectNames(const std::string & type, std::vector<std::string>* v);
 
-		bool validateObjectName(const std::string & type, std::string & v);
+		bool validateObjectName(const std::string & type, const std::string & v);
 
 		bool validateObjectContext(const std::string & type, const std::string & context);
 
@@ -303,7 +312,9 @@ namespace nau {
 
 
 #if NAU_LUA == 1
-		static lua_State *m_LuaState;
+		static std::string LuaCurrentScript;
+		static std::set<string> LuaFilesWithIssues;
+		static lua_State *LuaState;
 #endif
 		static Nau *Instance;
 

@@ -127,7 +127,7 @@ CLogHandler::CLogHandler() {
 
 CLogHandler::~CLogHandler() {
 
-	if (m_FileHandler != stdout)
+	if (m_FileHandler != stdout && m_FileHandler != NULL)
 		fclose(m_FileHandler);
 }
 
@@ -143,7 +143,7 @@ CLogHandler::CLogHandler(std::string file) {
 
 
 void 
-CLogHandler::log(std::string& message) {
+CLogHandler::log(std::string& message) { 
 
 #ifdef _DEBUG
 	if (m_FileHandler != NULL && m_FileHandler != stdout)
@@ -152,7 +152,7 @@ CLogHandler::log(std::string& message) {
 
 	if (0 == m_FileHandler){
 		
-		m_FileHandler = fopen (m_Filename.c_str (), "a");
+		m_FileHandler = fopen (m_Filename.c_str(), "a");
 		if (0 == m_FileHandler){
 			return;
 		}
@@ -164,6 +164,7 @@ CLogHandler::log(std::string& message) {
 #ifdef _DEBUG
 	if (m_FileHandler != stdout){
 		fclose (m_FileHandler);
+		m_FileHandler = NULL;
 	}
 #endif
 }
@@ -172,7 +173,7 @@ CLogHandler::log(std::string& message) {
 void
 CLogHandler::setFile(std::string &filename) {
 
-	if (m_FileHandler != stdout)
+	if (m_FileHandler != stdout && m_FileHandler != NULL)
 		fclose(m_FileHandler);
 
 	m_Filename = filename;
@@ -186,7 +187,7 @@ CLogHandler::setFile(std::string &filename) {
 void
 CLogHandler::close() {
 
-	if (m_FileHandler != stdout) {
+	if (m_FileHandler != stdout && m_FileHandler != NULL) {
 		fclose(m_FileHandler);
 		m_FileHandler = stdout;
 		m_Filename = "";
