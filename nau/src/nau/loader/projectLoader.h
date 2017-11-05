@@ -101,14 +101,14 @@ namespace nau
 			static void readChildTags(std::string parent, 
 											AttributeValues *anObj, 
 											nau::AttribSet &attribs, 
-											std::vector<std::string> &excluded, 
+											const std::vector<std::string> &excluded, 
 											TiXmlElement *pElem, 
 											bool showOnlyExcluded=false);
 
 			static void readAttributes(std::string parent, 
 											AttributeValues *anObj, 
 											nau::AttribSet &attribs, 
-											std::vector<std::string> &excluded, 
+											const std::vector<std::string> &excluded, 
 											TiXmlElement *pElem);
 			// returns a text message to include in the throw statement. 
 			// if message  == "" then attribute is ok
@@ -130,7 +130,7 @@ namespace nau
 			static Data *readAttribute(std::string tag, std::unique_ptr<Attribute> &attr, TiXmlElement *p);
 			static std::string &readAttributeString(std::string tag, std::unique_ptr<Attribute> &attr, TiXmlElement *p);
 			// check if a tring is in a vector
-			static bool isExcluded(std::string what, std::vector<std::string> &excluded);
+			static bool isExcluded(std::string what, const std::vector<std::string> &excluded);
 			// get all keys in a vector
 			static void getKeystoVector(std::map<std::string, std::unique_ptr<Attribute> > &, 
 				std::vector<std::string> *result);
@@ -147,6 +147,11 @@ namespace nau
 			static bool readUIntAttribute(TiXmlElement *p, std::string label, unsigned int *value);
 
 			static void readScript(TiXmlElement *p, std::string &fileName, std::string &scriptName);
+
+			// loadItems 
+			// returns the item name;
+			static AttributeValues *loadItem(TiXmlElement *pElem, const std::string &labelItem, const std::vector<std::string> &excluded);
+			static void loadCollection(TiXmlHandle handle, const std::string &labelCol, const std::string &labelItem);
 
 			// Asset Loading
 			static void loadUserAttrs(TiXmlHandle handle);

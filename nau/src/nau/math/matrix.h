@@ -548,6 +548,17 @@ namespace nau
 				float radAngle = nau::math::DegToRad(angle);
 				float co = cos(radAngle);
 				float si = sin(radAngle);
+
+				// normalize axis
+				float norm = x*x + y*y + z*z;
+				if (norm == 0)
+					return;
+				
+				norm = sqrt(norm);
+				x /= norm;
+				y /= norm;
+				z /= norm;
+
 				float x2 = x*x;
 				float y2 = y*y;
 				float z2 = z*z;
@@ -675,7 +686,7 @@ namespace nau
 						s = s + ", " + std::to_string(this->m_Matrix[i*COLUMNS + j]);
 					}
 					if (i != LINES - 1)
-						s = s + " \n";
+						s = s + "; ";
 				}
 				return "[" + s + "]";
 			}

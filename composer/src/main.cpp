@@ -88,6 +88,7 @@ int idMenuPoint = wxNewId();
 int idMenuSolid = wxNewId();
 int idMenuMaterial = wxNewId();
 int idMenuRenderFlagBoundingBox = wxNewId();
+int idMenuRecompileLuaScripts = wxNewId();
 // Assets Menu
 int idMenuDlgCameras = wxNewId();
 int idMenuDlgViewports = wxNewId();
@@ -135,6 +136,7 @@ EVT_MENU(idMenuDlgPass, FrmMainFrame::OnDlgPass)
 EVT_MENU(idMenuResetFrameCount, FrmMainFrame::OnResetFrameCount)
 EVT_MENU_RANGE(idMenuWireframe, idMenuMaterial, FrmMainFrame::OnRenderMode)
 EVT_MENU(idMenuRenderFlagBoundingBox, FrmMainFrame::OnSetRenderFlags)
+EVT_MENU(idMenuRecompileLuaScripts, FrmMainFrame::OnRecompileLua)
 // Assets Menu
 EVT_MENU(idMenuDlgScenes, FrmMainFrame::OnDlgScenes)
 EVT_MENU(idMenuDlgViewports, FrmMainFrame::OnDlgViewports)
@@ -231,6 +233,8 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	renderMenu->Check(idMenuMaterial, true);
 	renderMenu->AppendSeparator ();
 	renderMenu->AppendCheckItem(idMenuRenderFlagBoundingBox, _("Show &Bounding Boxes\tCtrl-B"));
+	renderMenu->AppendSeparator();
+	renderMenu->Append(idMenuRecompileLuaScripts, _("Recompile Lua Scripts"), _(""));
 
 	renderMenu->Enable(idMenuDlgPass, false);
 	renderMenu->Enable(idMenuResetFrameCount, false);
@@ -880,7 +884,7 @@ FrmMainFrame::OnProjectSave(wxCommandEvent & event) {
 void
 FrmMainFrame::OnModelLoad (wxCommandEvent& event) {
 
-	static const wxChar *fileTypes = _T("3D Files (*.nbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.nbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.ply;*.lwo;*.stl;*.cob;*.scn|NBO files (*.nbo)|*.nbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
+	static const wxChar *fileTypes = _T("3D Files (*.nbo, *.3ds, *.dae, *.obj, *.xml, *.blend, *.fbx, *.ply, *.lwo, *.stl, *.cob, *.scn)|*.nbo;*.3ds;*.dae;*.obj;*.xml;*.blend;*.fbx;*.ply;*.lwo;*.stl;*.cob;*.scn|NBO files (*.nbo)|*.nbo|COLLADA files (*.dae)|*.dae|3DS files (*.3ds)|*.3ds|OBJ files (*.obj)|*.obj|Ogre XML Meshes (*.xml)|*.xml|Blender files (*.blend)|*.blend|FBX files (*.fbx)|*.fbx|Stanford Polygon Library (*.ply)|*.ply|Lightwave (*.lwo)|*.lwo|Stereolithography (*.stl)|*.stl|True Space Obj (*.cob)|*.cob|True Space Scene (*scn)|*.scn");
 	wxFileDialog *openFileDlg = new wxFileDialog(this, _("Open File"), _(""), _(""), fileTypes, wxFD_OPEN, wxDefaultPosition);
 
 	if (wxID_OK == openFileDlg->ShowModal ()) {
@@ -1028,6 +1032,13 @@ FrmMainFrame::OnSetRenderFlags(wxCommandEvent& event) {
 	if (event.GetId() == idMenuRenderFlagBoundingBox) {
 		NAU->setRenderFlag(nau::Nau::BOUNDING_BOX_RENDER_FLAG,event.IsChecked());
 	}
+}
+
+
+void
+FrmMainFrame::OnRecompileLua(wxCommandEvent& event) {
+
+	NAU->compileLuaScripts();
 }
 
 

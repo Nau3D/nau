@@ -33,6 +33,8 @@ extern "C" {
 }
 
 std::map<std::string, std::string> Nau::LuaScriptNames;
+std::set<string> Nau::LuaFilesWithIssues;
+std::string Nau::LuaCurrentScript;
 
 #endif
 
@@ -53,7 +55,7 @@ using namespace nau::system;
 nau::Nau *Nau::Instance = NULL;
 
 #if NAU_LUA == 1
-lua_State *Nau::m_LuaState = NULL;
+lua_State *Nau::LuaState = NULL;
 #endif
 
 nau::INau*
@@ -128,8 +130,8 @@ Nau::~Nau() {
 	PassFactory::DeleteInstance();
 
 #if NAU_LUA == 1
-	if (m_LuaState)
-		lua_close(m_LuaState);
+	if (LuaState)
+		lua_close(LuaState);
 #endif
 
 	Instance = NULL;
@@ -183,6 +185,7 @@ Nau::init (bool trace) {
 	// Init LUA
 #if NAU_LUA == 1
 	LuaScriptNames.clear();
+	LuaFilesWithIssues.clear();
 	initLua();
 #endif
 	PASSFACTORY->loadPlugins();
@@ -261,35 +264,35 @@ void printTable(lua_State *L, int pos)
 
 
 void
-Nau::luaStackDump(lua_State *m_LuaState)
+Nau::luaStackDump(lua_State *LuaState)
 {
 	int i;
-	int top = lua_gettop(m_LuaState);
+	int top = lua_gettop(LuaState);
 
 	LOG_trace("LUA: total in stack %d", top);
 
 	for (i = 1; i <= top; i++)
 	{
-		int t = lua_type(m_LuaState, i);
+		int t = lua_type(LuaState, i);
 		switch (t) {
 		case LUA_TSTRING:
-			LOG_trace("LUA: string: '%s'", lua_tostring(m_LuaState, i));
+			LOG_trace("LUA: string: '%s'", lua_tostring(LuaState, i));
 			break;
 		case LUA_TBOOLEAN:
-			LOG_trace("LUA: boolean %s", lua_toboolean(m_LuaState, i) ? "true" : "false");
+			LOG_trace("LUA: boolean %s", lua_toboolean(LuaState, i) ? "true" : "false");
 			break;
 		case LUA_TNUMBER:
-			LOG_trace("LUA: number: %g", lua_tonumber(m_LuaState, i));
+			LOG_trace("LUA: number: %g", lua_tonumber(LuaState, i));
 			break;
 		case LUA_TTABLE:
 			LOG_trace_nr("LUA: table {")
-			lua_pushvalue(m_LuaState, i);
-			printTable(m_LuaState, i);
-			lua_pop(m_LuaState, 1);
+			lua_pushvalue(LuaState, i);
+			printTable(LuaState, i);
+			lua_pop(LuaState, 1);
 			LOG_trace_nr("}\n");
 			break;
 		default:
-			LOG_trace("LUA: %s", lua_typename(m_LuaState, t));
+			LOG_trace("LUA: %s", lua_typename(LuaState, t));
 			break;
 		}
 	}
@@ -348,7 +351,7 @@ Nau::luaGetBuffer(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
 		LOG_trace("LUA: Calling getAttrib");
-		luaStackDump(m_LuaState);
+		luaStackDump(LuaState);
 	}
 	const char *name = lua_tostring(l, -4);
 	size_t offset = (size_t)lua_tointeger(l, -3);
@@ -360,7 +363,9 @@ Nau::luaGetBuffer(lua_State *l) {
 
 	IBuffer *buff = RESOURCEMANAGER->getBuffer(name);
 	if (buff == NULL) {
-		NAU_THROW("Lua getBuffer: invalid buffer: %s", name);
+		SLOG("Lua script %s ERROR : Lua getBuffer -> invalid buffer: %s", 
+			LuaCurrentScript.c_str(), name);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 		return 0;
 	}
 
@@ -368,7 +373,9 @@ Nau::luaGetBuffer(lua_State *l) {
 	void *arr = malloc(size);
 	size_t count = buff->getData(offset, size , arr);
 	if (size != count) {
-		NAU_THROW("Lua getBuffer: buffer %s offset %d, out of bounds", name, (unsigned int)offset);
+		SLOG("Lua script %s ERROR : Lua getBuffer -> buffer %s offset %d, out of bounds",
+			LuaCurrentScript.c_str(), name, (unsigned int)offset);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 		return 0;
 	}
 
@@ -383,7 +390,7 @@ Nau::luaSetBuffer(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
 		LOG_trace("LUA: Calling getAttrib");
-		luaStackDump(m_LuaState);
+		luaStackDump(LuaState);
 	}
 	const char *name = lua_tostring(l, -4);
 	size_t offset = (size_t)lua_tointeger(l, -3);
@@ -392,7 +399,9 @@ Nau::luaSetBuffer(lua_State *l) {
 	int top = lua_gettop(l);
 	// some validation
 	if (top != 4) {
-		NAU_THROW("Lua setBuffer requires 4 arguments: buffer name, offset, the attribute to set, data type, and the values to set");
+		SLOG("Lua script %s ERROR : Lua setBuffer requires 4 arguments: buffer name, offset, the attribute to set, data type, and the values to set",
+			LuaCurrentScript.c_str());
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
 
 	Enums::DataType dt = Enums::getType(dataType);
@@ -402,7 +411,9 @@ Nau::luaSetBuffer(lua_State *l) {
 
 	IBuffer *buff = RESOURCEMANAGER->getBuffer(name);
 	if (buff == NULL) {
-		NAU_THROW("Lua getBuffer: invalid buffer: %s", name);
+		SLOG("Lua script %s ERROR : Lua getBuffer -> invalid buffer: %s",
+			LuaCurrentScript.c_str(), name);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 		return 0;
 	}
 
@@ -465,7 +476,7 @@ Nau::luaGet(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
 		LOG_trace("LUA: Calling getAttr");
-		luaStackDump(m_LuaState);
+		luaStackDump(LuaState);
 	}
 	const char *tipo = lua_tostring(l, -5);
 	const char *context = lua_tostring(l, -4);
@@ -477,19 +488,27 @@ Nau::luaGet(lua_State *l) {
 	int top = lua_gettop(l);
 	// some validation
 	if (top != 5) {
-		NAU_THROW("Lua getAttr requires 5 arguments: objtype, context (either the name of the object or CURRENT where applicable), the attribute to set, the index (where applicable, or 0), values that will be returned");
+		SLOG("Lua script %s ERROR : Lua getAttr requires 5 arguments: objtype, context (either the name of the object or CURRENT where applicable), the attribute to set, the index (where applicable, or 0), values that will be returned",
+			LuaCurrentScript.c_str());
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
 
 	if (!strcmp(context, "CURRENT")) {
 		
 		attr = NAU->getCurrentObjectAttributes(tipo)->getAttribSet();
-		if (attr == NULL)
-			NAU_THROW("Lua set: Invalid context: %s", context);
+		if (attr == NULL) {
+			SLOG("Lua script %s ERROR : Lua set -> Invalid context: %s", 
+				LuaCurrentScript.c_str(), context);
+			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+		}
 	}
 	else {
 		attr = NAU->getAttribs(tipo);
-		if (attr == NULL)
-			NAU_THROW("Lua get: invalid type: %s", tipo);
+		if (attr == NULL) {
+			SLOG("Lua script %s ERROR : Lua get -> invalid type: %s", 
+				LuaCurrentScript.c_str(), tipo);
+			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+		}
 	}
 
 	std::string s = component;
@@ -497,14 +516,18 @@ Nau::luaGet(lua_State *l) {
 	int id;
 	attr->getPropTypeAndId(s, &dt, &id);
 	if (id == -1) {
-		NAU_THROW("Lua get: invalid attribute: %s", component);
+		SLOG("Lua script %s ERROR: Lua get -> invalid attribute: %s", 
+			LuaCurrentScript.c_str(), component);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
 
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
 	arr = NAU->getAttributeValue(tipo, context, component, number);
 	if (arr == NULL) {
-		NAU_THROW("Lua get: Invalid context or number: %s %d", context, number);
+		SLOG("Lua script %s ERROR: Lua get -> Invalid context or number: %s %d", 
+			LuaCurrentScript.c_str(), context, number);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
 	if (!Enums::isBasicType(dt)) {
 		arr = ((Data *)(arr))->getPtr();
@@ -520,12 +543,14 @@ Nau::luaSet(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
 		LOG_trace("LUA: Calling setAttr");
-		luaStackDump(m_LuaState);
+		luaStackDump(LuaState);
 	}
 	int top = lua_gettop(l);
 	// some validation
 	if (top != 5) {
-		NAU_THROW("Lua setAttr requires 5 arguments: objtype, context (either the name of the object or CURRENT where applicable), the attribute to set, the index (where applicable, or 0), and the values to set");
+		SLOG("Lua script %s ERROR: Lua setAttr requires 5 arguments: objtype, context (either the name of the object or CURRENT where applicable), the attribute to set, the index (where applicable, or 0), and the values to set",
+			LuaCurrentScript.c_str());
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
 
 	const char *tipo = lua_tostring(l, -5);
@@ -541,23 +566,33 @@ Nau::luaSet(lua_State *l) {
 
 
 	if (!strcmp(context, "CURRENT")) {
-
-		AttributeValues *av = NAU->getCurrentObjectAttributes(tipo);
-		attr = av->getAttribSet();
-		if (attr == NULL)
-			NAU_THROW("Lua set: Invalid type: %s", tipo);
+		try {
+			AttributeValues *av = NAU->getCurrentObjectAttributes(tipo);
+			attr = av->getAttribSet();
+		}
+		catch (std::string e) {
+			SLOG("Lua script %s ERROR: Lua set -> Invalid type: %s", 
+				LuaCurrentScript.c_str(), tipo);
+			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+		}
 	}
 	else {
 		attr = NAU->getAttribs(tipo);
-		if (attr == NULL)
-			NAU_THROW("Lua set: invalid type: %s", tipo);
+		if (attr == NULL) {
+			SLOG("Lua script %s ERROR: Lua set -> Invalid type: %s",
+				LuaCurrentScript.c_str(), tipo);
+			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+		}
 	}
 	std::string s = component;
 	Enums::DataType dt, bdt;
 	int id;
 	attr->getPropTypeAndId(s, &dt, &id);
-	if (id == -1)
-		NAU_THROW("Lua set: invalid component: %s", component);
+	if (id == -1) {
+		SLOG("Lua script %s ERROR: Lua set -> Invalid component: %s", 
+			LuaCurrentScript.c_str(), component);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+	}
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
 	float *arrF;
@@ -588,7 +623,9 @@ Nau::luaSet(lua_State *l) {
 		case Enums::DMAT4:
 			arr = new dmat4(arrD); break;
 		default:
-			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+			SLOG("Lua script %s ERROR: Lua set -> Type %s not supported",
+				LuaCurrentScript.c_str(), Enums::DataTypeToString[dt].c_str());
+			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 		}
 		free(arrD);
 		break;
@@ -603,7 +640,7 @@ Nau::luaSet(lua_State *l) {
 		case Enums::FLOAT:
 			arr = new NauFloat(*arrF); break;
 		case Enums::VEC2:
-arr = new vec2(arrF[0], arrF[1]); break;
+			arr = new vec2(arrF[0], arrF[1]); break;
 		case Enums::VEC3:
 			arr = new vec3(arrF[0], arrF[1], arrF[2]); break;
 		case Enums::VEC4:
@@ -612,7 +649,9 @@ arr = new vec2(arrF[0], arrF[1]); break;
 		case Enums::MAT3:
 			arr = new mat4(arrF); break;
 		default:
-			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+			SLOG("Lua script %s ERROR: Lua set -> Type %s not supported",
+				LuaCurrentScript.c_str(), Enums::DataTypeToString[dt].c_str());
+			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 		}
 		free(arrF);
 		break;
@@ -638,7 +677,9 @@ arr = new vec2(arrF[0], arrF[1]); break;
 		case Enums::BVEC4:
 			arr = new ivec4(arrI[0], arrI[1], arrI[2], arrI[3]); break;
 		default:
-			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+			SLOG("Lua script %s ERROR: Lua set -> Type %s not supported",
+				LuaCurrentScript.c_str(), Enums::DataTypeToString[dt].c_str());
+			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 		}
 		free(arrI);
 		break;
@@ -659,16 +700,26 @@ arr = new vec2(arrF[0], arrF[1]); break;
 		case Enums::UIVEC4:
 			arr = new uivec4(arrUI[0], arrUI[1], arrUI[2], arrUI[3]); break;
 		default:
-			NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[dt].c_str());
+			SLOG("Lua script %s ERROR: Lua set -> Type %s not supported",
+				LuaCurrentScript.c_str(),  Enums::DataTypeToString[dt].c_str());
+			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 		}
 		free(arrUI);
 		break;
 	default:
-		NAU_THROW("Lua set: Type %s not supported", Enums::DataTypeToString[bdt].c_str());
+		SLOG("Lua script %s ERROR: Lua set -> Type %s not supported", 
+			LuaCurrentScript.c_str(), Enums::DataTypeToString[bdt].c_str());
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
 
-	if (!NAU->setAttributeValue(tipo, context, component, number, arr))
-		NAU_THROW("Lua set: Invalid context: %s", context);
+	try {
+		NAU->setAttributeValue(tipo, context, component, number, arr);
+	}
+	catch (std::string e) {
+		SLOG("Lua script %s ERROR: Lua set -> Invalid context: %s", 
+			LuaCurrentScript.c_str(), context);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+	}
 
 	delete arr;
 	return 0;
@@ -680,16 +731,23 @@ Nau::luaSaveTexture(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
 		LOG_trace("LUA: Calling saveTexture");
-		luaStackDump(m_LuaState);
+		luaStackDump(LuaState);
 	}
-	const char *texName = lua_tostring(l, -1);
 
 	int top = lua_gettop(l);
-	if (top != 1)
-		NAU_THROW("Lua saveTexture takes a single argument: the texture name");
+	if (top != 1) {
+		SLOG("Lua script %s ERROR: Lua saveTexture takes a single argument: the texture name",
+			LuaCurrentScript.c_str());
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+	}
 
-	if (!RESOURCEMANAGER->hasTexture(texName))
-		NAU_THROW("Lua save texture: invalid texture name");
+	const char *texName = lua_tostring(l, -1);
+
+	if (!RESOURCEMANAGER->hasTexture(texName)) {
+		SLOG("Lua script %s ERROR: Lua save texture -> invalid texture name: %s",
+			LuaCurrentScript.c_str(), texName);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+	}
 
 	nau::material::ITexture *texture = RESOURCEMANAGER->getTexture(std::string(texName));
 
@@ -707,16 +765,23 @@ Nau::luaSaveBuffer(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
 		LOG_trace("LUA: Calling saveBuffer");
-		luaStackDump(m_LuaState);
+		luaStackDump(LuaState);
 	}
-	const char *bufferName = lua_tostring(l, -1);
 
 	int top = lua_gettop(l);
-	if (top != 1)
-		NAU_THROW("Lua saveBuffer takes a single argument: the buffer name");
+	if (top != 1) {
+		SLOG("Lua script %s ERROR: Lua saveBuffer takes a single argument: the buffer name",
+			LuaCurrentScript.c_str());
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+	}
 
-	if (!RESOURCEMANAGER->hasBuffer(bufferName))
-		NAU_THROW("Lua save buffer: invalid buffer name");
+	const char *bufferName = lua_tostring(l, -1);
+
+	if (!RESOURCEMANAGER->hasBuffer(bufferName)) {
+		SLOG("Lua script %s ERROR: Lua save buffer -> invalid buffer name: %s", 
+			LuaCurrentScript.c_str(), bufferName);
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+	}
 
 	nau::material::IBuffer *buffer = RESOURCEMANAGER->getBuffer(std::string(bufferName));
 
@@ -731,7 +796,7 @@ Nau::luaSaveProfile(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
 		LOG_trace("LUA: call saveProfile");
-		luaStackDump(m_LuaState);
+		luaStackDump(LuaState);
 	}
 	const char *filename = lua_tostring(l, -1);
 
@@ -762,13 +827,13 @@ Nau::luaCheckScriptName(std::string fileName, std::string scriptName) {
 
 
 void 
-luaDebug(lua_State *m_LuaState) {
+luaDebug(lua_State *LuaState) {
 
 	lua_Debug info;
 	int level = 0;
-	int x = lua_getstack(m_LuaState, level, &info);
-	if (lua_getstack(m_LuaState, level, &info) != 1) {
-		lua_getinfo(m_LuaState, "nSl", &info);
+	int x = lua_getstack(LuaState, level, &info);
+	if (lua_getstack(LuaState, level, &info) != 1) {
+		lua_getinfo(LuaState, "nSl", &info);
 		fprintf(stderr, "  [%d] %s:%d -- %s [%s]\n",
 			level, info.short_src, info.currentline,
 			(info.name ? info.name : "<unknown>"), info.what);
@@ -780,119 +845,152 @@ luaDebug(lua_State *m_LuaState) {
 void
 Nau::initLua() {
 
-	m_LuaState = luaL_newstate();
-	luaL_openlibs(m_LuaState);
-	lua_pushcfunction(m_LuaState, Nau::luaSet);
-	lua_setglobal(m_LuaState, "setAttr");
-	lua_pushcfunction(m_LuaState, Nau::luaGet);
-	lua_setglobal(m_LuaState, "getAttr");
-	lua_pushcfunction(m_LuaState, Nau::luaGetBuffer);
-	lua_setglobal(m_LuaState, "getBuffer");
-	lua_pushcfunction(m_LuaState, Nau::luaSaveTexture);
-	lua_setglobal(m_LuaState, "saveTexture");
-	lua_pushcfunction(m_LuaState, Nau::luaSetBuffer);
-	lua_setglobal(m_LuaState, "setBuffer");
-	lua_pushcfunction(m_LuaState, Nau::luaSaveProfile);
-	lua_setglobal(m_LuaState, "saveProfiler");
+	LuaState = luaL_newstate();
+	luaL_openlibs(LuaState);
+	lua_pushcfunction(LuaState, Nau::luaSet);
+	lua_setglobal(LuaState, "setAttr");
+	lua_pushcfunction(LuaState, Nau::luaGet);
+	lua_setglobal(LuaState, "getAttr");
+	lua_pushcfunction(LuaState, Nau::luaGetBuffer);
+	lua_setglobal(LuaState, "getBuffer");
+	lua_pushcfunction(LuaState, Nau::luaSaveTexture);
+	lua_setglobal(LuaState, "saveTexture");
+	lua_pushcfunction(LuaState, Nau::luaSetBuffer);
+	lua_setglobal(LuaState, "setBuffer");
+	lua_pushcfunction(LuaState, Nau::luaSaveProfile);
+	lua_setglobal(LuaState, "saveProfiler");
 }
 
 
 void
 Nau::initLuaScript(std::string file, std::string name) {
 
-	int res = luaL_dofile(m_LuaState, file.c_str());
+	//std::string fileName = File::GetName(file);
+
+	if (LuaFilesWithIssues.find(name) != LuaFilesWithIssues.end())
+		return;
+
+	int res = luaL_dofile(LuaState, file.c_str());
 	if (res) {
-		NAU_THROW("Error loading lua file: %s", lua_tostring(m_LuaState, -1));
+		SLOG("Error loading lua file: %s", lua_tostring(LuaState, -1));
+		LuaFilesWithIssues.insert(name);
 	}
+}
+
+
+void 
+Nau::compileLuaScripts() {
+
+	LuaFilesWithIssues.clear();
+
+	std::set<std::string> luaFiles;
+	for (auto &s : LuaScriptNames) {
+			luaFiles.insert(s.second);
+	}
+	for (auto &s : luaFiles) {
+		initLuaScript(s, "");
+	}
+
+	if (LuaFilesWithIssues.size() == 0) {
+		SLOG("Lua Compilation OK");
+	}
+
 }
 
 
 void
 Nau::callLuaScript(std::string name) {
 
+	if (LuaFilesWithIssues.size() != 0 &&
+		LuaFilesWithIssues.find(LuaScriptNames[name]) != LuaFilesWithIssues.end())
+		return;
+
+	LuaCurrentScript = name;
+
 	int errIndex = 0;
 
 	if (m_TraceOn) {
 		LOG_trace("#LUA %s", name.c_str());
 
-		lua_getglobal(m_LuaState, "debug");
-		lua_getfield(m_LuaState, -1, "traceback");
-		lua_remove(m_LuaState, -2);
+		lua_getglobal(LuaState, "debug");
+		lua_getfield(LuaState, -1, "traceback");
+		lua_remove(LuaState, -2);
 		errIndex = -2;
 	}
-	lua_getglobal(m_LuaState, name.c_str());
+	lua_getglobal(LuaState, name.c_str());
 
 	// do we have an error?
-	if (lua_pcall(m_LuaState, 0, 0, errIndex)) {
-//	if (lua_pcall(m_LuaState, 0, 0, 0)) {
-		//luaL_traceback(m_LuaState, m_LuaState, "hello", 0);
+	if (lua_pcall(LuaState, 0, 0, errIndex)) {
+//	if (lua_pcall(LuaState, 0, 0, 0)) {
+		//luaL_traceback(LuaState, LuaState, "hello", 0);
 		//lua_Debug info;
 		//int level = 0;
 		
-		//while (lua_getstack(m_LuaState, level, &info)) {
-		//	lua_getinfo(m_LuaState, "nSl", &info);
+		//while (lua_getstack(LuaState, level, &info)) {
+		//	lua_getinfo(LuaState, "nSl", &info);
 		//	SLOG("  [%d] %s:%d -- %s [%s]\n",
 		//		level, info.short_src, info.currentline,
 		//		(info.name ? info.name : "<unknown>"), info.what);
 		//	++level;
 		//}
-		if (!lua_isnil(m_LuaState, -1)) {
-			const char *msg = lua_tostring(m_LuaState, -1);
+		if (!lua_isnil(LuaState, -1)) {
+			const char *msg = lua_tostring(LuaState, -1);
 			if (msg != NULL) {
-				NAU_THROW("Lua ERROR: %s", msg);
+				SLOG("Lua script %s ERROR: %s", name.c_str() ,msg);
+				LuaFilesWithIssues.insert(LuaScriptNames[name]);
 			}
 		}
 		
 	}
 	if (m_TraceOn) {
-		lua_pop(m_LuaState, 1);
+		lua_pop(LuaState, 1);
 	}
 
-	// com envio de parametros
-	//lua_pushnumber(m_LuaState, 12);
-	//lua_pushlightuserdata(m_LuaState, &file);
-	//lua_pcall(m_LuaState, 2, 0, 0);
-
-	// receber par\E2metros
-	//lua_pcall(m_LuaState, 0, 1, 0);
-	//int k = lua_tonumber(m_LuaState, -1);
+	LuaCurrentScript = "";
 }
 
 
 bool
 Nau::callLuaTestScript(std::string name) {
 
+	// if script has errors then just return false
+	if (LuaFilesWithIssues.size() != 0 &&
+		LuaFilesWithIssues.find(LuaScriptNames[name]) != LuaFilesWithIssues.end())
+		return false;
+
+	LuaCurrentScript = name;
+
 	int errIndex = 0;
 
 	if (m_TraceOn) {
 		LOG_trace("#LUA: call script %s", name.c_str());
 
-		lua_getglobal(m_LuaState, "debug");
-		lua_getfield(m_LuaState, -1, "traceback");
-		lua_remove(m_LuaState, -2);
+		lua_getglobal(LuaState, "debug");
+		lua_getfield(LuaState, -1, "traceback");
+		lua_remove(LuaState, -2);
 		errIndex = -2;
 	}
 
-	lua_getglobal(m_LuaState, name.c_str());
+	lua_getglobal(LuaState, name.c_str());
 
-	if (lua_pcall(m_LuaState, 0, 1, errIndex)) {
-		if (!lua_isnil(m_LuaState, -1)) {
-			const char *msg = lua_tostring(m_LuaState, -1);
+	if (lua_pcall(LuaState, 0, 1, errIndex)) {
+		if (!lua_isnil(LuaState, -1)) {
+			const char *msg = lua_tostring(LuaState, -1);
 			if (msg != NULL) {
-				NAU_THROW("Lua ERROR: %s", msg);
+				SLOG("Lua script %s ERROR: %s", name.c_str(), msg);
+				LuaFilesWithIssues.insert(LuaScriptNames[name]);
 			}
 		}
-
 	}
 
-
-	int result = lua_toboolean(m_LuaState, -1);
-	lua_pop(m_LuaState, 1);
+	int result = lua_toboolean(LuaState, -1);
+	lua_pop(LuaState, 1);
 
 	if (m_TraceOn) {
-		lua_pop(m_LuaState, 1);
+		lua_pop(LuaState, 1);
 	}
 	return (result != 0);
+	LuaCurrentScript = "";
 }
 
 
@@ -1170,17 +1268,6 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 }
 
 
-//bool
-//Nau::validateAttribute(std::string type, std::string context, std::string component) {
-//
-//	int id;
-//	Enums::DataType dt;
-//	if (!getObjectAttributes(type, context))
-//		return false; 
-//	m_Attributes[type]->getPropTypeAndId(component, &dt, &id); 
-//	return (id != -1);
-//}
-
 bool
 Nau::validateShaderAttribute(std::string type, std::string context, std::string component) {
 
@@ -1193,7 +1280,6 @@ Nau::validateShaderAttribute(std::string type, std::string context, std::string 
 	m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
 	return (id != -1);
 }
-
 
 
 bool 
@@ -1268,33 +1354,49 @@ Nau::getValidObjectTypes(std::vector<std::string> *v) {
 void
 Nau::getValidObjectNames(const std::string &type, std::vector<std::string> *v) {
 
-	if (type == "VIEWPORT") {
+	if (type == "VIEWPORT" || type == "viewport") {
 		RENDERMANAGER->getViewportNames(v);
 	}
-	if (type == "CAMERA") {
+	if (type == "CAMERA" || type == "camera") {
 		RENDERMANAGER->getCameraNames(v);
 	}
-	if (type == "BUFFER") {
+	if (type == "BUFFER" || type == "buffer") {
 		return RESOURCEMANAGER->getBufferNames(v);
 	}
 }
 
 
 bool
-Nau::validateObjectName(const std::string &type, std::string &v) {
+Nau::validateObjectName(const std::string &type, const std::string &v) {
 
 	if (type == "")
 		return true;
-	if (type == "VIEWPORT") {
+	if (type == "VIEWPORT" || type == "viewport") {
 		return RENDERMANAGER->hasViewport(v);
 	}
-	if (type == "CAMERA") {
+	if (type == "CAMERA" || type == "camera") {
 		return RENDERMANAGER->hasCamera(v);
 	}
-	if (type == "BUFFER") {
+	if (type == "BUFFER" || type == "buffer") {
 		return RESOURCEMANAGER->hasBuffer(v);
 	}
 	return false;
+}
+
+
+AttributeValues *
+Nau::createObject(const std::string &type, const std::string &name) {
+
+	if (type == "VIEWPORT" || type == "viewport") {
+		return RENDERMANAGER->createViewport(name).get();
+	}
+	if (type == "CAMERA" || type == "camera") {
+		return RENDERMANAGER->createCamera(name).get();
+	}
+	if (type == "BUFFER" || type == "buffer") {
+		return RESOURCEMANAGER->createBuffer(name);
+	}
+	return NULL;
 }
 
 
@@ -1510,6 +1612,7 @@ Nau::clear() {
 
 #if NAU_LUA == 1
 	LuaScriptNames.clear();
+	LuaFilesWithIssues.clear();
 #endif
 }
 
@@ -1847,6 +1950,7 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 				PatchLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath);
 				break;
 			case File::COLLADA:
+			case File::FBX:
 			case File::BLENDER:
 			case File::PLY:
 			case File::LIGHTWAVE:
@@ -1862,8 +1966,8 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);				
 				break;
 			case File::WAVEFRONTOBJ:
-				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(),params);
-				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath, params);
+				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), file.getFullPath(),params);
+				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath, params);
 				break;
 			case File::OGREXMLMESH:
 				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath);

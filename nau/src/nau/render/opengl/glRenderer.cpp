@@ -277,7 +277,10 @@ std::shared_ptr<Light> &
 GLRenderer::getLight(unsigned int i) {
 
 	assert(i < m_Lights.size());
-	return m_Lights[i];
+	if (!(m_Lights.size() > i))
+		return RENDERMANAGER->getLight("__nauDefault");
+	else
+		return m_Lights[i];
 }
 
 

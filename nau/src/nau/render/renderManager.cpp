@@ -314,45 +314,6 @@ RenderManager::prepareTriangleIDs(bool ids) {
 }
 
 
-//SceneObject *
-//RenderManager::getSceneObject(int id) {
-//
-//	std::vector<nau::scene::SceneObject*>::iterator iter;
-//	for (iter = m_SceneObjects.begin(); iter != m_SceneObjects.end() && (*iter)->getId() != id; ++iter);
-//
-//	if (iter != m_SceneObjects.end())
-//		return *iter;
-//	else
-//		return NULL;
-//}
-//
-//
-//void 
-//RenderManager::addSceneObject(SceneObject *s) {
-//
-//	m_SceneObjects.push_back(s);
-//}
-//
-//
-//void 
-//RenderManager::deleteSceneObject(int id) {
-//
-//	std::vector<nau::scene::SceneObject*>::iterator iter;
-//
-//	for (iter = m_SceneObjects.begin(); iter != m_SceneObjects.end() && (*iter)->getId() != id; ++iter);
-//
-//	if (iter != m_SceneObjects.end())
-//		m_SceneObjects.erase(iter);
-//}
-
-
-void
-RenderManager::getVertexData(unsigned int sceneObjID, unsigned int triID) {
-
-
-}
-
-
 void
 RenderManager::renderActivePipelineNextPass() {
 
@@ -526,6 +487,19 @@ RenderManager::getCamera (const std::string &cameraName) {
 		m_Cameras[cameraName] = Camera::Create(cameraName);
 	}
 	return m_Cameras[cameraName];
+}
+
+
+std::shared_ptr<Camera> &
+RenderManager::createCamera(const std::string &name) {
+
+	if (m_Cameras.count(name) == 0) {
+		std::shared_ptr<Camera> c = Camera::Create(name);
+
+		c->setName(name);
+		m_Cameras[name] = c;
+	}
+	return m_Cameras[name];
 }
 
 // -----------------------------------------------------------

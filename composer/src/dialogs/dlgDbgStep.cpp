@@ -91,7 +91,7 @@ DlgDbgStep::DlgDbgStep(): wxDialog(DlgDbgStep::m_Parent, -1, wxT("Nau - Frame pa
 
 	bSizer2->Add(m_bNextToPass, 0, wxALL, 5);
 
-	bSizer1->Add(bSizer2, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND|wxSHAPED, 5);
+	bSizer1->Add(bSizer2, 0, wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL|wxSHAPED, 5);
 
 
 	this->SetSizer(bSizer1);

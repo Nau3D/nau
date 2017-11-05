@@ -212,7 +212,7 @@ ToolBar::createWindow(const std::string &label) {
 bool
 ToolBar::addColor(const std::string &windowName, const std::string &varLabel,
 	const std::string &varType, const std::string &varContext,
-	const std::string &component, int id) {
+	const std::string &component, int id, const std::string &luaScript, const std::string &luaScriptFile) {
 
 	// window does not exist
 	if (m_Windows.count(windowName) == 0)
@@ -238,6 +238,8 @@ ToolBar::addColor(const std::string &windowName, const std::string &varLabel,
 	clientData->type = varType;
 	clientData->context = varContext;
 	clientData->component = component;
+	clientData->luaScript = luaScript;
+	clientData->luaScriptFile = luaScriptFile;
 
 	std::string name = varLabel;
 	name.erase(remove_if(name.begin(), name.end(), [](char c) { return !isalpha(c); }), name.end());
@@ -259,7 +261,7 @@ ToolBar::addColor(const std::string &windowName, const std::string &varLabel,
 bool
 ToolBar::addDir(const std::string &windowName, const std::string &varLabel,
 	const std::string &varType, const std::string &varContext,
-	const std::string &component, int id) {
+	const std::string &component, int id, const std::string &luaScript, const std::string &luaScriptFile) {
 
 	// window does not exist
 	if (m_Windows.count(windowName) == 0)
@@ -285,6 +287,8 @@ ToolBar::addDir(const std::string &windowName, const std::string &varLabel,
 	clientData->type = varType;
 	clientData->context = varContext;
 	clientData->component = component;
+	clientData->luaScript = luaScript;
+	clientData->luaScriptFile = luaScriptFile;
 
 	std::string name = varLabel;
 	name.erase(remove_if(name.begin(), name.end(), [](char c) { return !isalpha(c); }), name.end());
@@ -306,7 +310,7 @@ ToolBar::addDir(const std::string &windowName, const std::string &varLabel,
 bool 
 ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 	const std::string &varType, const std::string &varContext,
-	const std::string &component, int id, const std::string def) {
+	const std::string &component, int id, const std::string def, const std::string &luaScript, const std::string &luaScriptFile) {
 
 	// window does not exist
 	if (m_Windows.count(windowName) == 0)
@@ -341,6 +345,8 @@ ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 	clientData->type = varType;
 	clientData->context = varContext;
 	clientData->component = component;
+	clientData->luaScript = luaScript;
+	clientData->luaScriptFile = luaScriptFile;
 
 	m_ClientDataVec.push_back(clientData);
 
@@ -458,7 +464,7 @@ ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 
 
 bool 
-ToolBar::addPipelineList(const std::string &windowName, const std::string &label) {
+ToolBar::addPipelineList(const std::string &windowName, const std::string &label, const std::string &luaScript, const std::string &luaScriptFile) {
 
 	// window does not exist
 	if (m_Windows.count(windowName) == 0)
@@ -475,6 +481,10 @@ ToolBar::addPipelineList(const std::string &windowName, const std::string &label
 	}
 	TwType options = TwDefineEnum("Pipelines", enums, (unsigned int)vs.size());
 
+	NauVar *clientData = new NauVar();
+	clientData->luaScript = luaScript;
+	clientData->luaScriptFile = luaScriptFile;
+
 	std::string name = label;
 	name.erase(remove_if(name.begin(), name.end(), [](char c) { return !isalpha(c); }), name.end());
 	char s[256];
@@ -483,7 +493,7 @@ ToolBar::addPipelineList(const std::string &windowName, const std::string &label
 	}
 	else
 		s[0] = '\0';
-	return (TwAddVarCB(m_Windows[windowName].second, name.c_str(), options, SetPipelineCallBack, GetPipelineCallBack, NULL, s) == 1);
+	return (TwAddVarCB(m_Windows[windowName].second, name.c_str(), options, SetPipelineCallBack, GetPipelineCallBack, clientData, s) == 1);
 }
 
 // STATIC METHODS
@@ -493,6 +503,9 @@ void
 TW_CALL ToolBar::SetPipelineCallBack(const void *value, void *clientData) {
 
 	RENDERMANAGER->setActivePipeline(*(int *)value);
+	NauVar *v = static_cast<NauVar *>(clientData);
+	if (v->luaScript != "")
+		NAU->callLuaScript(v->luaScript);
 }
 
 
@@ -511,6 +524,8 @@ TW_CALL ToolBar::SetColorCallBack(const void *value, void *clientData) {
 	vec4 v2;
 	v2.set(*(float *)value, *((float *)value + 1), *((float *)value + 2), *((float *)value + 3));
 	NAU->setAttributeValue(v->type, v->context, v->component, v->id, &v2);
+	if (v->luaScript != "")
+		NAU->callLuaScript(v->luaScript);
 }
 
 
@@ -530,6 +545,8 @@ TW_CALL ToolBar::SetDirCallBack(const void * value, void * clientData) {
 	vec4 v2;
 	v2.set(*(float *)value, *((float *)value + 1), *((float *)value + 2), 0);
 	NAU->setAttributeValue(v->type, v->context, v->component, v->id, &v2);
+	if (v->luaScript != "")
+		NAU->callLuaScript(v->luaScript);
 }
 
 
@@ -548,6 +565,8 @@ TW_CALL ToolBar::SetCallBack(const void *value, void *clientData) {
 	NauVar *v = static_cast<NauVar *>(clientData);
 	Data *v2 = (Data *)value;
 	NAU->setAttributeValue(v->type, v->context, v->component, v->id, v2);
+	if (v->luaScript != "")
+		NAU->callLuaScript(v->luaScript);
 }
 
 
@@ -557,6 +576,8 @@ TW_CALL ToolBar::SetIntCallBack(const void *value, void *clientData) {
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauInt> p = std::shared_ptr<NauInt>(new NauInt(*(int *)value));
 	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
+	if (v->luaScript != "")
+		NAU->callLuaScript(v->luaScript);
 }
 
 
@@ -566,6 +587,8 @@ TW_CALL ToolBar::SetBoolCallBack(const void *value, void *clientData) {
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauInt> p = std::shared_ptr<NauInt>(new NauInt(*(int *)value));
 	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
+	if (v->luaScript != "")
+		NAU->callLuaScript(v->luaScript);
 }
 
 
@@ -575,6 +598,8 @@ TW_CALL ToolBar::ToolBar::SetFloatCallBack(const void *value, void *clientData) 
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauFloat> p = std::shared_ptr<NauFloat>(new NauFloat(*(float *)value));
 	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
+	if (v->luaScript != "")
+		NAU->callLuaScript(v->luaScript);
 }
 
 
@@ -584,6 +609,8 @@ TW_CALL ToolBar::SetUIntCallBack(const void *value, void *clientData) {
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauUInt> p = std::shared_ptr<NauUInt>(new NauUInt(*(unsigned int *)value));
 	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
+	if (v->luaScript != "")
+		NAU->callLuaScript(v->luaScript);
 }
 
 

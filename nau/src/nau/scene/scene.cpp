@@ -39,16 +39,16 @@ Scene::eventReceived(const std::string &sender, const std::string &eventType,
 	if (eventType == "SET_POSITION") {
 
 		vec4 *p = (vec4 *)evt->getData();
-		m_Transform.setIdentity();
-		m_Transform.translate(p->x, p->y, p->z);
+		m_Mat4Props[TRANSFORM].setIdentity();
+		m_Mat4Props[TRANSFORM].translate(p->x, p->y, p->z);
 //		SLOG("Scene SET_POS %f %f %f", p->x, p->y, p->z);
 	}
 	if (eventType == "SET_ROTATION") {
 
 		vec4 *p = (vec4 *)evt->getData();
 		
-		m_Transform.setIdentity();
-		m_Transform.rotate(p->w, p->x, p->y, p->z);
+		m_Mat4Props[TRANSFORM].setIdentity();
+		m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
 	}
 }
 
@@ -56,14 +56,14 @@ Scene::eventReceived(const std::string &sender, const std::string &eventType,
 mat4 &
 Scene::getTransform() {
 
-	return m_Transform;
+	return m_Mat4Props[TRANSFORM];
 }
 
 
 void
 Scene::setTransform(nau::math::mat4 &t) {
 
-	m_Transform.copy(t);
+	m_Mat4Props[TRANSFORM].copy(t);
 	updateSceneObjectTransforms();
 }
 
@@ -71,7 +71,7 @@ Scene::setTransform(nau::math::mat4 &t) {
 void
 Scene::transform(nau::math::mat4 &t) {
 
-	m_Transform *= t;
+	m_Mat4Props[TRANSFORM] *= t;
 	updateSceneObjectTransforms();
 }
 
@@ -80,7 +80,7 @@ void
 Scene::updateSceneObjectTransforms() {
 
     for(auto &so: m_SceneObjects) {
-		so->updateGlobalTransform(m_Transform);
+		so->updateGlobalTransform(m_Mat4Props[TRANSFORM]);
     }
 }
 
@@ -122,7 +122,7 @@ void
 Scene::add (std::shared_ptr<SceneObject> &aSceneObject) {
 
 	m_SceneObjects.push_back (aSceneObject);
-	aSceneObject->updateGlobalTransform(m_Transform);
+	aSceneObject->updateGlobalTransform(m_Mat4Props[TRANSFORM]);
 	m_BoundingBox.compound (aSceneObject->getBoundingVolume());
 }
 

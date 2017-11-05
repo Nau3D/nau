@@ -28,6 +28,7 @@ IAPISupport::GetInstance() {
 bool 
 IAPISupport::apiSupport(APIFeatureSupport feature) {
 
+	//if (Instance == )
 	return m_APISupport[feature];
 }
 

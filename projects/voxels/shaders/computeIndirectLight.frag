@@ -223,7 +223,22 @@ void main()
 
 	outColor = (0.05 * color + color *  il * 0.2) * (1- il.a*0.25);
 	outColor = vec4(outColor.xyz, 1);	
+	float level2 = 0;
+	texel = texelFetch(gridN, coordi/int(pow(2,level2)), int(level2));
+	//float a = 1.0 - pow(1.0 - texel.a,255);
+	outColor = texel;
 	return;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 		// ao += 0.707 * voxelConeTrace(coord, normalize(normal+tangent), coneRatio, maxDist);
 	// ao += 0.707 * voxelConeTrace(coord, normalize(normal-tangent), coneRatio, maxDist);z
 	// ao += 0.707 * voxelConeTrace(coord, normalize(normal+bitangent), coneRatio, maxDist);
@@ -266,7 +281,7 @@ void main()
 	float level = 0;
 	texel = texelFetch(grid, coordi/int(pow(2,level)), int(level));
 	//float a = 1.0 - pow(1.0 - texel.a,255);
-	//outColor = texel;
+	outColor = texel;
 	//  outColor = vec4(texel.a);
 	//outColor =  color;//vec4(normal,1);
 	//outColor = vec4(1-shadow.a);

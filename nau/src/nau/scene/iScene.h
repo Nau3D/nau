@@ -31,6 +31,8 @@ namespace nau
 		class IScene : public AttributeValues, public IListener
 		{
 		public:
+			MAT4_PROP(TRANSFORM, 0);
+
 			FLOAT4_PROP(SCALE, 0);
 			FLOAT4_PROP(ROTATE, 1);
 			FLOAT4_PROP(TRANSLATE, 2);
@@ -65,7 +67,7 @@ namespace nau
 			std::string m_Name;
 			bool m_Compiled;
 			//ITransform *m_Transform;
-			mat4 m_Transform;
+			//mat4 m_Transform;
 			bool m_Visible;
 			std::set<std::string> m_MaterialNames;
 			std::string m_Type;

@@ -43,8 +43,8 @@ OctreeByMatScene::eventReceived(const std::string &sender,
 		this->setTransform(t);
 	}
 	if (eventType == "SET_ROTATION") {
-		m_Transform.setIdentity();
-		m_Transform.rotate(p->w, p->x, p->y, p->z);
+		m_Mat4Props[TRANSFORM].setIdentity();
+		m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();	
 	}
 }
@@ -53,14 +53,14 @@ OctreeByMatScene::eventReceived(const std::string &sender,
 mat4 &
 OctreeByMatScene::getTransform() {
 
-	return m_Transform;
+	return m_Mat4Props[TRANSFORM];
 }
 
 
 void
 OctreeByMatScene::setTransform(nau::math::mat4 &t) {
 
-	m_Transform = t;
+	m_Mat4Props[TRANSFORM] = t;
 	updateSceneObjectTransforms();
 }
 
@@ -68,7 +68,7 @@ OctreeByMatScene::setTransform(nau::math::mat4 &t) {
 void
 OctreeByMatScene::transform(nau::math::mat4 &t) {
 
-	m_Transform*= t;
+	m_Mat4Props[TRANSFORM] *= t;
 	updateSceneObjectTransforms();
 }
 
@@ -78,11 +78,11 @@ OctreeByMatScene::updateSceneObjectTransforms() {
 
     for(auto &so: m_SceneObjects)
     {
-		so->updateGlobalTransform(m_Transform);
+		so->updateGlobalTransform(m_Mat4Props[TRANSFORM]);
     }
 
 	if (m_pGeometry)
-		m_pGeometry->updateOctreeTransform(m_Transform);
+		m_pGeometry->updateOctreeTransform(m_Mat4Props[TRANSFORM]);
 }
 
 
@@ -167,7 +167,7 @@ OctreeByMatScene::add (std::shared_ptr<SceneObject> &aSceneObject) {
 	} else {
 		m_SceneObjects.push_back (aSceneObject);
 	}
-	aSceneObject->updateGlobalTransform(m_Transform);
+	aSceneObject->updateGlobalTransform(m_Mat4Props[TRANSFORM]);
 	m_BoundingBox.compound (aSceneObject->getBoundingVolume());
 }
 

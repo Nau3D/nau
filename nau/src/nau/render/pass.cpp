@@ -354,9 +354,9 @@ Pass::doPass (void) {
 			aScene->getAllObjects(&sceneObjects);
 		}
 		
-		for (auto &so: sceneObjects) {
-			RENDERMANAGER->addToQueue (so, m_MaterialMap);
-		}
+	}
+	for (auto &so: sceneObjects) {
+		RENDERMANAGER->addToQueue (so, m_MaterialMap);
 	}
 	RENDERMANAGER->processQueue();	
 }

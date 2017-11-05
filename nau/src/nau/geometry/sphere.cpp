@@ -62,11 +62,11 @@ Sphere::build() {
 		for (int j = 0; j < slices; ++j) {
 			float cosAlpha = cos(j * stepSlice);
 			float sinAlpha = sin(j * stepSlice);
-			float sinBeta = sin(i * stepStack - (float)M_PI * 0.5f);
-			float cosBeta = cos(i * stepStack - (float)M_PI * 0.5f);
-			vertices->at(i * (slices) + j).set(cosAlpha*cosBeta, sinBeta, sinAlpha*cosBeta);
-			tangents->at(i * (slices) + j).set(cosAlpha*sinBeta, cosBeta, sinAlpha*sinBeta);
-			normals->at(i * (slices) + j).set(cosAlpha*cosBeta, sinBeta, sinAlpha*cosBeta);
+			float sinBeta = sin( i * stepStack - (float)M_PI * 0.5f);
+			float cosBeta = cos( i * stepStack - (float)M_PI * 0.5f);
+			vertices->at(i * (slices) + j).set(sinAlpha*cosBeta, sinBeta, cosAlpha*cosBeta);
+			tangents->at(i * (slices) + j).set(sinAlpha*sinBeta, cosBeta, cosAlpha*sinBeta);
+			normals->at(i * (slices) + j).set(sinAlpha*cosBeta, sinBeta, cosAlpha*cosBeta);
 			textureCoords->at(i * (slices) + j).set(j*1.0f/(slices-1),i*1.0f/(stacks-1), 0.0f);
 		}
 	}
@@ -87,12 +87,12 @@ Sphere::build() {
 	for (int i = 0; i < stacks-1; ++i) {
 		for (int j = 0; j < slices-1; ++j) {
 			indices->at(k++) = i * slices + j;
-			indices->at(k++)   = (i+1) * slices + j;
 			indices->at(k++) = i * slices + j + 1;
+			indices->at(k++)   = (i+1) * slices + j;
 
 			indices->at(k++) = i * slices + j + 1;
-			indices->at(k++) = (i+1) * slices + j;
 			indices->at(k++) = (i+1) * slices + j + 1;
+			indices->at(k++) = (i+1) * slices + j;
 		}
 	
 	}

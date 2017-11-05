@@ -9,6 +9,9 @@ using namespace nau::scene;
 bool 
 IScene::Init() {
 
+	// MAT4
+	Attribs.add(Attribute(TRANSFORM, "TRANSFORM", Enums::MAT4, true));
+
 	// VEC4
 	Attribs.add(Attribute(SCALE, "SCALE", Enums::DataType::VEC4, false, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
 	Attribs.add(Attribute(TRANSLATE, "TRANSLATE", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));

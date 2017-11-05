@@ -34,6 +34,7 @@ namespace nau
 				LIGHTWAVE,
 				STL,
 				TRUESPACE,
+				FBX,
 				UNKNOWN
 			} FileType;
 

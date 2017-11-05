@@ -299,7 +299,7 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 		s = prop + "." + "y";
 		pgProp = pg->GetProperty(wxString(s));
 		v3.y = pgProp->GetValue().GetDouble();
-		s = prop + "." + "w";
+		s = prop + "." + "z";
 		pgProp = pg->GetProperty(wxString(s));
 		v3.z = pgProp->GetValue().GetDouble();
 		attribVal->setPropf3((AttributeValues::Float3Property)id, v3);

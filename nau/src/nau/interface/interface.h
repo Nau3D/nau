@@ -20,6 +20,7 @@ namespace nau {
 			typedef struct {
 				std::string type, context, component;
 				int id;
+				std::string luaScript, luaScriptFile;
 			} NauVar;
 
 			std::vector< NauVar *> m_ClientDataVec;
@@ -94,17 +95,17 @@ namespace nau {
 
 			bool addColor(const std::string &windowName, const std::string &varLabel,
 				const std::string &varType, const std::string &varContext,
-				const std::string &component, int id = 0);
+				const std::string &component, int id = 0, const std::string &luaScript = "", const std::string &luaScriptFile = "");
 			
 			bool addDir(const std::string &windowName, const std::string &varLabel,
 				const std::string &varType, const std::string &varContext,
-				const std::string &component, int id = 0);
+				const std::string &component, int id = 0, const std::string &luaScript = "", const std::string &luaScriptFile = "");
 
 			bool addVar(const std::string &windowName, const std::string &varLabel,
 				const std::string &varType, const std::string &varContext,
-				const std::string &component, int id = 0, const std::string def = "");
+				const std::string &component, int id = 0, const std::string def = "", const std::string &luaScript = "", const std::string &luaScriptFile = "");
 
-			bool addPipelineList(const std::string &windowName, const std::string &label);
+			bool addPipelineList(const std::string &windowName, const std::string &label, const std::string &luaScript = "", const std::string &luaScriptFile = "");
 
 			//bool setWindowProp(const std::string &name, const std::string &prop);
 			//bool setVarProp(const std::string &name, const std::string &var, const std::string &prop);
