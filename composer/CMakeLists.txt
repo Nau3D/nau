@@ -8,7 +8,10 @@ source_group("Source Files\\dialogs" FILES ${dialogs})
 add_executable(composer 
 	${root} ${dialogs} )	
 
-set_target_properties(composer PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+if (WIN32)
+	set_target_properties(composer PROPERTIES DEBUG_POSTFIX 
+${CMAKE_DEBUG_POSTFIX})
+endif (WIN32)
 
 add_dependencies(composer nau)
 

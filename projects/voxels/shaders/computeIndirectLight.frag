@@ -42,7 +42,7 @@ vec4 voxelConeTrace1(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 		sampleValue.a = 1.0 - pow(1.0 - sampleValue.a, minDiameter/sampleDiameter);
 		//vec4 sampleValue = texelFetch(grid, ivec3(samplePos*512/pow(2.0,level)), level);	
 		//sampleValue.a /= minDiameter/sampleDiameter;
-		if (dist < 0.01)
+		//if (dist < 0.1)
 			accum += sampleValue.a;// * minDiameter/sampleDiameter ;
 		// if (level > 2.0)
 			// accum = 0.5;
@@ -84,11 +84,11 @@ vec4 voxelConeTrace(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 		vec4 sampleValue = textureLod(grid, samplePos , level);
 		vec3 sampleNormal = textureLod(gridN, samplePos, level).xyz * 2 - 1;
 		float sampleWeight = max(0.0, -dot(sampleNormal, dir))*(1- sampleValue.a);
-		// if (dot(sampleNormal, dir) > 0.0)
-			// sampleWeight = 0;
-		// else	
-			// sampleWeight = (1.0 - accum.a);
-		//accum.a += sampleValue.a * sampleWeight;
+		/*if (dot(sampleNormal, dir) > 0.0)
+			 sampleWeight = 0;
+		 else	
+			 sampleWeight = (1.0 - accum.a);
+		accum.a += sampleValue.a * sampleWeight;*/
 //sampleValue.a ;
 //		accum.rgb += sampleValue.rgb ;//* sampleValue.a;
 		//sampleValue.a = 1.0 - pow(1.0 - sampleValue.a, minDiameter/sampleDiameter);
@@ -170,30 +170,26 @@ vec4 voxelConeTrace2(vec3 origin, vec3 dir, float coneRatio, float maxDist) {
 		dist += sampleDiameter;
 		//dist += 0.5;
 	}
-	accum.a = ao;
+	//accum.a = ao;
 	return accum;
 }
 
+
+
+
+
 void main()
 {
-	// fetch color from render to texture
 	vec4 color = texture(texColor, texCoordV);
-	
-	if (color.a != 0.0) {
-		outColor = color*1.5;
-		return;
-	}
-		
-	// fetch world position	
 	vec3 coord = texture(texPos, texCoordV).xyz;
-	// convert position to grid index
 	ivec3 coordi = ivec3(coord * GridSize);
-	// fetch voxel from grid
+	//coord = coordi* 1.0/GridSize;
 	vec4 texel = texelFetch(grid, coordi, 0);
-	// fetch normal for pixel
+//	if (texel.w == 0)
+//		discard;
+//	vec3 normal = texelFetch(gridNormal, coordi, 0).xyz;
 	vec3 normal = texture(texNormal, texCoordV).xyz ;
 	normal = normalize(normal);
-	// build reference system
 	vec3 tangent, bitangent;
 	vec3 c1 = cross(normal, vec3(0,0,1));
 	vec3 c2 = cross(normal, vec3(0,1,0));
@@ -201,11 +197,11 @@ void main()
 		tangent = c1;
 	else 
 		tangent = c2;
+		
 	tangent = normalize(tangent);
 	bitangent = cross(normal, tangent);
 	
-	// trace cones cones
-	float coneRatio = 0.677;//tan(30*3.14159/180.9);
+	float coneRatio = 0.677;//tan(30*3.14159/180.0);
 	float maxDist = 1;
 	vec4 il=vec4(0), re=vec4(0), shadow=vec4(0);
 	
@@ -213,61 +209,42 @@ void main()
 	float cbeta = cos(45);
 	float alpha = 60;
 	float alpha2 = 30;
-    il  = voxelConeTrace(coord, normalize(normal), coneRatio, maxDist);
-    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*cbeta),  coneRatio, maxDist);
-    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*cbeta),  coneRatio, maxDist);
-    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*0.5*cbeta + 					bitangent*0.866*cbeta), coneRatio, maxDist);
-    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*0.5*cbeta - 					bitangent*0.866*cbeta), coneRatio, maxDist);
-    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*0.5*cbeta + 					bitangent*0.866*cbeta), coneRatio, maxDist);
-    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*0.5*cbeta - 					bitangent*0.866*cbeta), coneRatio, maxDist);
-
-	outColor = (0.05 * color + color *  il * 0.2) * (1- il.a*0.25);
-	outColor = vec4(outColor.xyz, 1);	
-	float level2 = 0;
-	texel = texelFetch(gridN, coordi/int(pow(2,level2)), int(level2));
-	//float a = 1.0 - pow(1.0 - texel.a,255);
-	outColor = texel;
-	return;
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		// ao += 0.707 * voxelConeTrace(coord, normalize(normal+tangent), coneRatio, maxDist);
+	    il  = voxelConeTrace(coord, normalize(normal), coneRatio, maxDist);
+	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*cbeta),  coneRatio, maxDist);
+	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*cbeta),  coneRatio, maxDist);
+	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*0.5*cbeta + 			bitangent*0.866*cbeta), coneRatio, maxDist);
+	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta+tangent*0.5*cbeta - 			bitangent*0.866*cbeta), coneRatio, maxDist);
+	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*0.5*cbeta + 			bitangent*0.866*cbeta), coneRatio, maxDist);
+	    il  += 0.5 * voxelConeTrace(coord, normalize(normal*sbeta-tangent*0.5*cbeta - 			bitangent*0.866*cbeta), coneRatio, maxDist);
+	// ao += 0.707 * voxelConeTrace(coord, normalize(normal+tangent), coneRatio, maxDist);
 	// ao += 0.707 * voxelConeTrace(coord, normalize(normal-tangent), coneRatio, maxDist);z
 	// ao += 0.707 * voxelConeTrace(coord, normalize(normal+bitangent), coneRatio, maxDist);
 	// ao += 0.707 * voxelConeTrace(coord, normalize(normal-bitangent), coneRatio, maxDist);
 	
 	//if (shininess > 80.0) 
 	//{
-		 vec3 camDir = normalize(coord*2-1 - camPos);//normalize(vec3(-2,2,2));
+		 //vec3 camDir = normalize(coord*2-1 - camPos);//normalize(vec3(-2,2,2));
 		 //re += voxelConeTrace(coord, reflect(camDir, normal), 0.001, 1.0);
 		//il += voxelConeTrace2(coord, normalize(camDir), 0.25, 1.0);
 	//}
 	//if (dot(normal, vec3(4.2,10,2)) > 0 && color.a != 0)
-	if (dot(normal, vec3(4.2,10,2)) > 0 )
-		shadow = voxelConeTrace(coord, normalize(vec3(4.2,10,2)), 0.0001, 1.0);
-	else shadow = vec4(0);
+	//if (dot(normal, vec3(4.2,10,2)) > 0 )
+	//	shadow = voxelConeTrace(coord, normalize(vec3(4.2,10,2)), 0.0001, 1.0);
+	//else shadow = vec4(0);
 	// shadow.a = max(0.20, shadow.a);
 	if (color.a != 0.0)
 		outColor = color*1.5;
 		//outColor = 0.5* color * color.a + color * il * 0.5 * (1- il.a*.15);
 	else
-		outColor = (0.05 * color + color *  il * 0.2) * (1- il.a*0.25);
+		outColor = (0.05 * color + color *  il * 0.2) *  (1 - il.a*0.25);
 	outColor = vec4(outColor.xyz, 1);	
 	// if (color.a != 0.0)
 		// outColor = color*1.5;
 	// else
 		// outColor = vec4(0.0);
-		
+	//outColor = vec4(color * il*0.25);	
 	//outColor *= 1.5;	
-	// outColor = vec4(1-il.a*0.25);	
+	//outColor = vec4(1-il.a*0.25);	
 	// outColor = vec4(1-il.a*0.25);
 	//outColor = color;//* color.a;	
 	//  outColor =  il*0.2;// color *  vec4(1- il.a*0.10);
@@ -278,11 +255,11 @@ void main()
 	// outColor = re;
 	 // outColor = vec4(1- shadow.a);
 	//outColor = il*0.5;//vec4(1-il.a*0.15);//vec4(normal*0.5 + 0.5,0);
-	float level = 0;
+	float level = 1;
 	texel = texelFetch(grid, coordi/int(pow(2,level)), int(level));
 	//float a = 1.0 - pow(1.0 - texel.a,255);
-	outColor = texel;
-	//  outColor = vec4(texel.a);
-	//outColor =  color;//vec4(normal,1);
+	//outColor = texel;
+	  //outColor = vec4(texel.a);
+	//outColor =  vec4(normal,1);
 	//outColor = vec4(1-shadow.a);
 }

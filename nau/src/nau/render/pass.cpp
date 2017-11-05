@@ -22,6 +22,10 @@ bool Pass::Inited = Init();
 bool
 Pass::Init() {
 
+	Attribs.add(Attribute(DIM_X, "DIM_X", Enums::DataType::UINT, false, new NauUInt(1)));
+	Attribs.add(Attribute(DIM_Y, "DIM_Y", Enums::DataType::UINT, false, new NauUInt(1)));
+	Attribs.add(Attribute(DIM_Z, "DIM_Z", Enums::DataType::UINT, false, new NauUInt(1)));
+
 	// BOOL
 	Attribs.add(Attribute(COLOR_CLEAR, "COLOR_CLEAR", Enums::DataType::BOOL, false, new NauInt(1)));
 	Attribs.add(Attribute(COLOR_ENABLE, "COLOR_ENABLE", Enums::DataType::BOOL, false, new NauInt(1)));

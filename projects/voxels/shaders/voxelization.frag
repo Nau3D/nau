@@ -1,6 +1,6 @@
 #version 440
 
-layout (rgba8) uniform writeonly coherent image3D imageUnit;
+layout (rgba8) uniform writeonly image3D imageUnit;
 //layout (r32ui) uniform coherent volatile uimage3D imageUnit;
 layout (rgba8) uniform writeonly coherent volatile image3D imageUnitN;
 //layout (r32ui) uniform coherent volatile uimage3D imageUnitN;
@@ -62,7 +62,11 @@ void main() {
 		//imageAtomicRGBA8Avg(imageUnit, pos,color);
 		imageStore(imageUnit, pos, vec4(0,0,0,1));
 		//imageAtomicRGBA8Avg(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,1));
+//<<<<<<< HEAD
+//		imageStore(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,1));
+//=======
 		imageStore(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,shininess));
+//>>>>>>> 0b818b2817ac18a0f7140f42f70abfb77d8570c2
 	 }
 	 else 
 		 discard;

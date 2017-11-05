@@ -77,6 +77,7 @@ void main()
 	ivec3 coord = ivec3((pos*0.5 + 0.5)*GridSize);
 
 	if (color.xyz != vec3(0,0,0))
+		//imageStore(grid, coord, vec4(color.xyz,1));
 		imageAtomicRGBA8Avg(coord, vec4(color.xyz,1));
 		
 	//FragColor = vec4(1,0,0,0);	

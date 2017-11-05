@@ -6,31 +6,29 @@
 				<file name="../../models/al.obj"/>
 			</scene>
 		</scenes>
+		
 		<viewports>
 			<viewport name="MainViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
 			</viewport>
-		</viewports>
-		
+		</viewports>		
+
 		<cameras>
 			<camera name="MainCamera" >
 				<viewport name="MainViewport" />
 				<TYPE value="PERSPECTIVE"/>
-				<FOV value = 60/>
-				<NEAR value= 1/>
-				<FAR value= 100/>
-				<POSITION x=-1.69 y=0.774 z=-1.158 />
-				<!--ZX_ANGLE value = 0.877/>
-				<ELEVATION_ANGLE value=-0.27548/-->
-				<VIEW x=0.739835 y=-0.272009 z=0.615349 />
+				<FOV value = "60"/>
+				<NEAR value= "1"/>
+				<FAR value= "100"/>
+               <POSITION x="0.460277" y="-0.0375654" z="1.76627" w="1" />
+                <VIEW x="-0.095234" y="0.0245173" z="-0.995153" w="0" />
 			</camera>
 		</cameras>
 		
 		<lights>
 			<light name="Sun">
-				<DIRECTION x=-2 y=-1 z=2 />
+				<DIRECTION x="-2" y="-1" z="-2" />
 				<COLOR r="0.9" g="0.9" b="0.9" />
-				<AMBIENT r="0.5" g="0.0" b="0.0" />
 			</light>
 		</lights>
 	</assets>

@@ -26,29 +26,36 @@
 			</viewport>
 		</viewports>
 		
-		<cameras>
-			<camera name="ClipSpaceCamera" type="perspective" >
-				<viewport name="SmallViewport3" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
-				<POSITION x="-3.127" y="-0.06" z="4.301" />
-				<VIEW x="0.936" y="-0.03" z="-0.35" />
-				<UP x="0.028" y="0.995" z="-0.01" />
-			</camera>
-			<camera name="GodCamera" type="perspective" >
-				<viewport name="SmallViewport2" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
-				<POSITION x="-1.49" y="28.41" z="-58-17" />
-				<VIEW x="0.15" y="-0.37" z="0.91" />
-				<UP x="0.0" y="1.0" z="0.0" />
-			</camera>
-			<camera name="UserCamera" type="perspective" >
-				<viewport name="SmallViewport1" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
-				<POSITION x="-18.734" y="6.51" z="-3.13" />
-				<VIEW x="0.934" y="-0.189" z="0.3" />
-				<UP x="0" y="1.0" z="0.0" />
-			</camera>
-		</cameras>
+        <cameras>
+            <camera name="ClipSpaceCamera">
+                <ELEVATION_ANGLE value="-0.0700121" />
+                <FAR value="1000" />
+                <LOOK_AT_POINT x="-3.03828" y="-0.129955" z="2.94233" w="1" />
+                <POSITION x="-4.03531" y="-0.06" z="2.91025" w="1" />
+                <VIEW x="0.997034" y="-0.0699549" z="0.0320831" w="0" />
+                <ZX_ANGLE value="1.53863" />
+                <viewport name="SmallViewport3" />
+            </camera>
+            <camera name="GodCamera">
+                <ELEVATION_ANGLE value="-0.381523" />
+                <FAR value="1000" />
+                <LOOK_AT_POINT x="-1.33905" y="28.0377" z="-57.0843" w="1" />
+                <POSITION x="-1.49" y="28.41" z="-58" w="1" />
+                <VIEW x="0.150946" y="-0.372334" z="0.915741" w="0" />
+                <ZX_ANGLE value="0.163366" />
+                <viewport name="SmallViewport2" />
+            </camera>
+            <camera name="UserCamera">
+                <ELEVATION_ANGLE value="-0.190329" />
+                <FAR value="50" />
+                <LOOK_AT_POINT x="-17.7991" y="6.32082" z="-2.82971" w="1" />
+                <NEAR value="10" />
+                <POSITION x="-18.734" y="6.51" z="-3.13" w="1" />
+                <VIEW x="0.934899" y="-0.189182" z="0.300289" w="0" />
+                <ZX_ANGLE value="1.26001" />
+                <viewport name="SmallViewport1" />
+            </camera>
+        </cameras>
 		
 		<lights>
 			<light name="Sun" >

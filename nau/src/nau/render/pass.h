@@ -88,6 +88,10 @@ namespace nau
 			ENUM_PROP(RUN_MODE, 5);
 			ENUM_PROP(TEST_MODE, 6);
 
+			// from pass compute
+			UINT_PROP(DIM_X, 101);
+			UINT_PROP(DIM_Y, 102);
+			UINT_PROP(DIM_Z, 103);
 
 			typedef enum {
 				KEEP,
