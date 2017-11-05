@@ -269,6 +269,11 @@
 					<valueof uniform="l_spotCutOff" block="LightSpot" 
 							 type="LIGHT" context="Sun"
 							 component="SPOT_CUTOFF" />
+
+					<valueof uniform="l_spotExponent" block="LightSpot" 
+							 type="LIGHT" context="Sun"
+							 component="SPOT_EXPONENT" />
+
 				</values>
 			</shader>
 		</material>

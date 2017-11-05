@@ -13,7 +13,7 @@ layout (std140) uniform Material {
 
 layout (std140) uniform LightSpot {
 	vec4 l_pos, l_spotDir;
-	float l_spotCutOff;
+	float l_spotCutOff, l_spotExponent;
 };
 
 in Data {
@@ -28,6 +28,7 @@ void main() {
 
 	float intensity = 0.0;
 	vec4 spec = vec4(0.0);
+	float spotAttenuation = 0.0;
 
 	vec3 ld = normalize(DataIn.lightDir);
 	vec3 sd = normalize(DataIn.spotDir);
@@ -37,14 +38,18 @@ void main() {
 		
 		vec3 n = normalize(DataIn.normal);
 		intensity = max(dot(n,ld), 0.0);
+		spotAttenuation = pow(dot(sd,-ld), l_spotExponent);
+
 		
 		if (intensity > 0.0) {
 			vec3 eye = normalize(DataIn.eye);
 			vec3 h = normalize(ld + eye);
 			float intSpec = max(dot(h,n), 0.0);
-			spec = Mat.specular * pow(intSpec, Mat.shininess);
+			spec =  Mat.specular * pow(intSpec, Mat.shininess);
 		}
 	}
 	
-	colorOut = max(intensity * Mat.diffuse + spec, Mat.diffuse * 0.25);
+	
+	colorOut = max(spotAttenuation * (intensity * Mat.diffuse + spec), Mat.diffuse * 0.25);
+
 }

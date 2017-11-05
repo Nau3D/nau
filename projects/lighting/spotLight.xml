@@ -1,10 +1,11 @@
 <?xml version="1.0" ?>
-<project name="Point Light" >
+<project name="Spot Light" >
 	<assets><!-- width="512" height="512" -->
 		<scenes>
 			<scene name="MySceneC" param="UNITIZE">
 				<file name="../../models/geom.obj"/>
 			</scene>
+
 		</scenes>
 		
 		<viewports>
@@ -30,6 +31,7 @@
 				<POSITION x=0 y=0.5 z=0 />
 				<SPOT_CUTOFF value = 0.7 />
 				<SPOT_DIRECTION x=0 y=-1 z=0 />
+				<SPOT_EXPONENT value=1 />
 			</light>
 		</lights>
 		

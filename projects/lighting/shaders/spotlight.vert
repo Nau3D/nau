@@ -9,7 +9,7 @@ layout (std140) uniform Matrices {
 
 layout (std140) uniform LightSpot {
 	vec4 l_pos, l_spotDir; // global space
-	float l_spotCutOff;
+	float l_spotCutOff, l_spotExponent;
 };
 
 in vec4 position; // local space
