@@ -14,6 +14,8 @@
 					<SCALE x=2 y=4 z=2 />
 					<ROTATE x=0 y=1 z=0 w=45 />
 				</geometry>
+				<geometry name = "Grid" type = "GRID" LENGTH=10  DIVISIONS=10>
+				</geometry>
 			</scene>
 			<scene name="Axis">
 				<geometry name = "axis" type = "AXIS"  >

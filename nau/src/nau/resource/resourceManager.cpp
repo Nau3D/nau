@@ -1,6 +1,7 @@
 #include "nau/resource/resourceManager.h"
 
 #include "nau/geometry/box.h"
+#include "nau/geometry/grid.h"
 #include "nau/geometry/sphere.h"
 #include "nau/geometry/square.h"
 #include "nau/geometry/axis.h"
@@ -386,6 +387,9 @@ ResourceManager::createRenderable(const std::string &type, const std::string &fi
 
 	else if ("SPHERE" == type) 
 		r = std::shared_ptr<nau::render::IRenderable>(new Sphere());
+
+	else if ("GRID" == type)
+		r = std::shared_ptr<nau::render::IRenderable>(new Grid());
 
 	else if ("AXIS" == type)
 		r = std::shared_ptr<nau::render::IRenderable>(new Axis());

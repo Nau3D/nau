@@ -102,6 +102,7 @@ Sphere::build() {
 	m_Built = true;
 }
 
+
 void 
 Sphere::setPropui(UIntProperty prop, int unsigned value) {
 

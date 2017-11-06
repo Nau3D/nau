@@ -1,6 +1,5 @@
-#ifndef SPHERE_H
-#define SPHERE_H
-
+#ifndef GRID_H
+#define GRID_H
 
 #include "nau/geometry/primitive.h"
 
@@ -8,32 +7,30 @@ namespace nau
 {
 	namespace geometry
 	{
-		class Sphere : public Primitive
+		class Grid : public Primitive
 		{
 		public:
-
-			Sphere(void);			
-			~Sphere(void);
+			Grid(void);
+			~Grid(void);
 
 			static AttribSet Attribs;
 			static AttribSet &GetAttribs() { return Attribs; }
 
-			UINT_PROP(SLICES, 0);
-			UINT_PROP(STACKS, 1);
+			UINT_PROP(DIVISIONS, 0);
+			FLOAT_PROP(LENGTH, 1);
 
 			void build();
 			void setPropui(UIntProperty prop, int unsigned value);
+			void setPropf(FloatProperty prop, float value);
 
 		protected:
 
-			//std::vector<float> m_Floats;
 			static bool Init();
 			static bool Inited;
 
 			bool m_Built;
 
 			void rebuild();
-
 		};
 	};
 };
