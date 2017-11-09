@@ -864,10 +864,10 @@ GLRenderer::setRenderMode(TRenderMode mode) {
 		m_TexturingFlag = false;
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		break;
-	case SOLID_MODE:
-		m_TexturingFlag = false;
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		break;
+	//case SOLID_MODE:
+	//	m_TexturingFlag = false;
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//	break;
 	case MATERIAL_MODE:
 		m_TexturingFlag = true;
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

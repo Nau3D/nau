@@ -9,6 +9,7 @@
 #include "nau/math/matrix.h"
 
 #include <assert.h>
+#include <sstream>
 
 
 using namespace nau;
@@ -400,6 +401,7 @@ Enums::pointerToString(DataType p, void *v) {
 	int intconverter;
 	unsigned int uintconverter;
 	bool boolconverter;
+	std::ostringstream oss;
 
 	switch (p) {
 	case BYTE:
@@ -433,7 +435,9 @@ Enums::pointerToString(DataType p, void *v) {
 		m_Result = std::to_string(uintconverter);
 		return m_Result;
 	case FLOAT:
-		m_Result = std::to_string(*((float *)v));
+		oss << *((float *)v);
+		m_Result = oss.str();
+		//m_Result = std::to_string(*((float *)v));
 		return m_Result;
 
 	case DOUBLE:

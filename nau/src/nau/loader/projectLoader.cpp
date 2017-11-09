@@ -3454,12 +3454,24 @@ ProjectLoader::loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass)
 
 		const char *pToMaterial = pElem->Attribute ("toMaterial");
 
+		std::vector<std::string> names;
+		std::string sss = std::string(pFromMaterial);
+		MaterialLib *defLib = MATERIALLIBMANAGER->getLib(DEFAULTMATERIALLIBNAME);
+		defLib->getMaterialNames(sss, &names);
+
+		if (names.size() == 0)
+			NAU_THROW("File %s\nPass %s\nInjection map error: No materials match %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pFromMaterial);
 		// check if the fromMaterial exists
-		if (pFromMaterial) {
-			if (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME, pFromMaterial)) {
-				NAU_THROW("File %s\nPass %s\nMaterial map error: Missing original material",
-					ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-			}
+		//if (pFromMaterial) {
+		//	if (strcmp(pFromMaterial,"*") && (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME, pFromMaterial))) {
+		//		NAU_THROW("File %s\nPass %s\nMaterial map error: Missing original material",
+		//			ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		//	}
+		//}
+
+		for (auto& name : names) {
+
+			aPass->remapMaterial(name, aPass->getName(), name);
 		}
 
 		if ((pToMaterial == 0)) {
@@ -3487,8 +3499,14 @@ ProjectLoader::loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass)
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str(), pToMaterial);
 		}
 		else {
-			if (MATERIALLIBMANAGER->hasMaterial(library, pToMaterial))
-				aPass->remapMaterial (pFromMaterial, library, pToMaterial);
+			if (MATERIALLIBMANAGER->hasMaterial(library, pToMaterial)) {
+				for (auto& name : names) {
+
+					aPass->remapMaterial(name, pToLibrary, pToMaterial);
+				}
+
+			}
+//				aPass->remapMaterial (pFromMaterial, library, pToMaterial);
 			else
 				NAU_THROW("File %s\nPass %s\nMaterial map error: Destination material (%s,%s) is not defined", 
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), library.c_str(), pToMaterial);

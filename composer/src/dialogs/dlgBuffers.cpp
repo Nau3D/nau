@@ -66,7 +66,7 @@ DlgDbgBuffers::Instance () {
 }
  
 
-DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::Parent, -1, wxT("Buffer Info"),wxDefaultPosition,
+DlgDbgBuffers::DlgDbgBuffers(): wxDialog(DlgDbgBuffers::Parent, -1, wxT("Nau - Buffers"),wxDefaultPosition,
 						   wxDefaultSize,wxRESIZE_BORDER|wxDEFAULT_DIALOG_STYLE)
 {
 	currentBuffer = NO_BUFFER;

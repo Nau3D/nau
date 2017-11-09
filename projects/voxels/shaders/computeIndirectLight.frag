@@ -205,8 +205,8 @@ void main()
 	float maxDist = 1;
 	vec4 il=vec4(0), re=vec4(0), shadow=vec4(0);
 	
-	float sbeta = sin(45);
-	float cbeta = cos(45);
+	float sbeta = sin(45*3.14159/180.0);
+	float cbeta = cos(45*3.14159/180.0);
 	float alpha = 60;
 	float alpha2 = 30;
 	    il  = voxelConeTrace(coord, normalize(normal), coneRatio, maxDist);

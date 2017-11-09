@@ -260,7 +260,7 @@ namespace nau
 			typedef enum  {
 				WIREFRAME_MODE = 0,
 				POINT_MODE,
-				SOLID_MODE,
+				//SOLID_MODE,
 				MATERIAL_MODE
 			} TRenderMode;
 

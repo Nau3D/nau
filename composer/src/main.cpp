@@ -85,7 +85,7 @@ int idMenuDlgPass = wxNewId();
 int idMenuResetFrameCount = wxNewId();
 int idMenuWireframe = wxNewId();
 int idMenuPoint = wxNewId();
-int idMenuSolid = wxNewId();
+//int idMenuSolid = wxNewId();
 int idMenuMaterial = wxNewId();
 int idMenuRenderFlagBoundingBox = wxNewId();
 int idMenuRecompileLuaScripts = wxNewId();
@@ -228,7 +228,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	renderMenu->Append(idMenuResetFrameCount, _("&Reset Frame Count\tB"), _(""));
 	renderMenu->AppendSeparator();
 	renderMenu->AppendRadioItem (idMenuWireframe, _("&Wireframe"), _("Render in wireframe mode"));
-	renderMenu->AppendRadioItem (idMenuSolid, _("&Solid"), _("Render in solid mode"));
+	//renderMenu->AppendRadioItem (idMenuSolid, _("&Solid"), _("Render in solid mode"));
 	renderMenu->AppendRadioItem (idMenuMaterial, _("&Material"), _("Render with materials"));
 	renderMenu->Check(idMenuMaterial, true);
 	renderMenu->AppendSeparator ();
@@ -239,7 +239,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	renderMenu->Enable(idMenuDlgPass, false);
 	renderMenu->Enable(idMenuResetFrameCount, false);
 	renderMenu->Enable(idMenuWireframe, false);
-	renderMenu->Enable(idMenuSolid, false);
+	//renderMenu->Enable(idMenuSolid, false);
 	renderMenu->Enable(idMenuMaterial, false);
 	renderMenu->Enable(idMenuRenderFlagBoundingBox, false);
 
@@ -744,7 +744,7 @@ FrmMainFrame::updateDlgs() {
 
 	renderMenu->Enable(idMenuDlgPass, true);
 	renderMenu->Enable(idMenuWireframe, true);
-	renderMenu->Enable(idMenuSolid, true);
+	//renderMenu->Enable(idMenuSolid, true);
 	renderMenu->Enable(idMenuMaterial, true);
 	renderMenu->Enable(idMenuRenderFlagBoundingBox, true);
 	renderMenu->Enable(idMenuResetFrameCount, true);
@@ -1017,9 +1017,9 @@ FrmMainFrame::OnRenderMode(wxCommandEvent& event) {
 	if (event.GetId() == idMenuPoint) {
 		RENDERMANAGER->setRenderMode (nau::render::IRenderer::POINT_MODE);
 	}
-	if (event.GetId() == idMenuSolid){
-		RENDERMANAGER->setRenderMode (nau::render::IRenderer::SOLID_MODE);
-	}
+	//if (event.GetId() == idMenuSolid){
+	//	RENDERMANAGER->setRenderMode (nau::render::IRenderer::SOLID_MODE);
+	//}
 	if (event.GetId() == idMenuMaterial){
 		RENDERMANAGER->setRenderMode (nau::render::IRenderer::MATERIAL_MODE);
 	}
