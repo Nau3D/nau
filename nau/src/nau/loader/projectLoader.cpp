@@ -1689,7 +1689,7 @@ AttributeValues *
 ProjectLoader::loadItem(TiXmlElement *pElem, const std::string &labelItem, const std::vector<std::string> &excluded) {
 
 	std::string labelItemUpperCase = labelItem;
-	std::transform(labelItemUpperCase.begin(), labelItemUpperCase.end(), labelItemUpperCase.begin(), toupper);
+	std::transform(labelItemUpperCase.begin(), labelItemUpperCase.end(), labelItemUpperCase.begin(), ::toupper);
 	const char *pName = pElem->Attribute("name");
 
 	if (0 == pName) {
