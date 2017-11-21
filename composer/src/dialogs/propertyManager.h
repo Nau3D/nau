@@ -70,6 +70,8 @@ protected:
 	static void createUIVec3(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateUIVec3(wxPropertyGridManager *pg, std::string label, uivec3 a);
 
+	static wxFloatProperty* wauxFloatProperty(wxString s);
+
 	static void createFloat(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateFloat(wxPropertyGridManager *pg, std::string label, float a);
 

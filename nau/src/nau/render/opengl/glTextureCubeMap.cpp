@@ -59,6 +59,8 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
 	glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+
+	//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 

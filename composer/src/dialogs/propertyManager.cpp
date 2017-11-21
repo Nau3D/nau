@@ -837,11 +837,22 @@ PropertyManager::updateUIVec3(wxPropertyGridManager *pg, std::string label, uive
 
 //		FLOAT
 
+
+wxFloatProperty *
+PropertyManager::wauxFloatProperty(wxString s) {
+
+	wxFloatProperty *fprop = new wxFloatProperty(s, wxPG_LABEL);
+	fprop->SetAttribute(wxPG_FLOAT_PRECISION, 20);
+	return fprop;
+}
+
+
 void
 PropertyManager::createFloat(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
+
 	wxPGProperty *pid;
-	pid = pg->Append(new wxFloatProperty(wxString(a->getName().c_str()), wxPG_LABEL));
+	pid = pg->Append(wauxFloatProperty(wxString(a->getName().c_str())));
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);
 }
@@ -862,10 +873,8 @@ PropertyManager::createVec2(wxPropertyGridManager *pg, std::unique_ptr<Attribute
 	wxPGProperty* topId;
 
 	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
-
-	pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-
+	pg->AppendIn(topId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("y"))); 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
 }
@@ -891,9 +900,9 @@ PropertyManager::createVec3(wxPropertyGridManager *pg, std::unique_ptr<Attribute
 
 	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
-	pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("z")));
 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
@@ -931,10 +940,10 @@ PropertyManager::createVec4(wxPropertyGridManager *pg, std::unique_ptr<Attribute
 		pg->Expand(topId);
 	}
 	else {
-		pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-		pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-		pg->AppendIn(topId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-		pg->AppendIn(topId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+		pg->AppendIn(topId, wauxFloatProperty(wxT("x")));
+		pg->AppendIn(topId, wauxFloatProperty(wxT("y")));
+		pg->AppendIn(topId, wauxFloatProperty(wxT("z")));
+		pg->AppendIn(topId, wauxFloatProperty(wxT("w")));
 	}
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
@@ -981,19 +990,19 @@ PropertyManager::createMat3(wxPropertyGridManager *pg, std::unique_ptr<Attribute
 	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	rowId = pg->AppendIn(topId,new wxStringProperty(wxT("Row0"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row1"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row2"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
@@ -1044,28 +1053,28 @@ PropertyManager::createMat4(wxPropertyGridManager *pg, std::unique_ptr<Attribute
 	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row0"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("w")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row1"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("w")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row2"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("w")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row3"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("w")));
 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
@@ -1130,11 +1139,13 @@ PropertyManager::updateMat4(wxPropertyGridManager *pg, std::string label, mat4 a
 
 //		DOUBLE
 
+
+
 void
 PropertyManager::createDouble(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty *pid;
-	pid = pg->Append(new wxFloatProperty(wxString(a->getName().c_str()), wxPG_LABEL));
+	pid = pg->Append(wauxFloatProperty(wxString(a->getName().c_str())));
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);
 }
@@ -1157,8 +1168,8 @@ PropertyManager::createDVec2(wxPropertyGridManager *pg, std::unique_ptr<Attribut
 
 	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
-	pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("y")));
 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
@@ -1185,9 +1196,9 @@ PropertyManager::createDVec3(wxPropertyGridManager *pg, std::unique_ptr<Attribut
 
 	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
-	pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(topId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(topId, wauxFloatProperty(wxT("z")));
 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
@@ -1225,10 +1236,10 @@ PropertyManager::createDVec4(wxPropertyGridManager *pg, std::unique_ptr<Attribut
 		pg->Expand(topId);
 	}
 	else {
-		pg->AppendIn(topId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-		pg->AppendIn(topId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-		pg->AppendIn(topId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-		pg->AppendIn(topId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+		pg->AppendIn(topId, wauxFloatProperty(wxT("x")));
+		pg->AppendIn(topId, wauxFloatProperty(wxT("y")));
+		pg->AppendIn(topId, wauxFloatProperty(wxT("z")));
+		pg->AppendIn(topId, wauxFloatProperty(wxT("w")));
 	}
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
@@ -1262,19 +1273,19 @@ PropertyManager::createDMat3(wxPropertyGridManager *pg, std::unique_ptr<Attribut
 	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row0"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row1"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row2"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);
@@ -1325,28 +1336,28 @@ PropertyManager::createDMat4(wxPropertyGridManager *pg, std::unique_ptr<Attribut
 	topId = pg->Append(new wxStringProperty(wxString(a->getName().c_str()), wxPG_LABEL, wxT("<composed>")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row0"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("w")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row1"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("w")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row2"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("w")));
 
 	rowId = pg->AppendIn(topId, new wxStringProperty(wxT("Row3"), wxPG_LABEL, wxT("<composed>")));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("x"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("y"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("z"), wxPG_LABEL));
-	pg->AppendIn(rowId, new wxFloatProperty(wxT("w"), wxPG_LABEL));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("x")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("y")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("z")));
+	pg->AppendIn(rowId, wauxFloatProperty(wxT("w")));
 
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(topId);

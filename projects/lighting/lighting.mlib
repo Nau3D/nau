@@ -46,7 +46,7 @@
 							 
 					<valueof uniform="l_dir" 
 							 type="LIGHT" context="Sun"
-							 component="DIRECTION" />
+							 component="DIRECTION"/>
 				</values>
 			</shader>
 		</material>
