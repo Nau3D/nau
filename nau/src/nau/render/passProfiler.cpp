@@ -113,6 +113,8 @@ PassProfiler::prepare (void)
 	RENDERER->pushMatrix(IRenderer::MODEL_MATRIX);
 	vec3 v3(15,15,0);
 	RENDERER->translate(IRenderer::MODEL_MATRIX, v3);
+	RENDERER->setPropui(IRenderer::INSTANCE_COUNT, m_UIntProps[INSTANCE_COUNT]);
+	RENDERER->setPropui(IRenderer::BUFFER_DRAW_INDIRECT, m_UIntProps[BUFFER_DRAW_INDIRECT]);
 
 }
 

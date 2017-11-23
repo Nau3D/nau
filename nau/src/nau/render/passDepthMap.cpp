@@ -103,6 +103,8 @@ PassDepthMap::prepare (void) {
 	}
 	
 	RENDERER->setCamera(m_LightCamera);
+	RENDERER->setPropui(IRenderer::INSTANCE_COUNT, m_UIntProps[INSTANCE_COUNT]);
+	RENDERER->setPropui(IRenderer::BUFFER_DRAW_INDIRECT, m_UIntProps[BUFFER_DRAW_INDIRECT]);
 
 	setupLights();
 

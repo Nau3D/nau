@@ -59,7 +59,7 @@ PassQuad::prepare (void) {
 			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUTE_SIZE);
 			m_RTSizeWidth = (int)f2.x;
 			m_RTSizeHeight = (int)f2.y;
-			uivec2 uiv2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeWidth);
+			uivec2 uiv2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight);
 			m_RenderTarget->setPropui2(IRenderTarget::SIZE, uiv2);
 		}
 		m_RenderTarget->bind();
@@ -73,6 +73,9 @@ PassQuad::prepare (void) {
 
 	RENDERER->pushMatrix(IRenderer::MODEL_MATRIX);
 	RENDERER->loadIdentity(IRenderer::MODEL_MATRIX);
+
+	RENDERER->setPropui(IRenderer::INSTANCE_COUNT, m_UIntProps[INSTANCE_COUNT]);
+	RENDERER->setPropui(IRenderer::BUFFER_DRAW_INDIRECT, m_UIntProps[BUFFER_DRAW_INDIRECT]);
 
 
 	if (m_Viewport != NULL)
