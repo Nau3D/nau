@@ -353,6 +353,19 @@ Nau::luaGetBuffer(lua_State *l) {
 		LOG_trace("LUA: Calling getAttrib");
 		luaStackDump(LuaState);
 	}
+	int top = lua_gettop(l);
+	// some validation
+	if (top != 4) {
+		SLOG("Lua script %s ERROR : Lua getBuffer requires 4 arguments: buffer name, offset, the attribute to set, data type, and a table to hold the return values",
+			LuaCurrentScript.c_str());
+		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+	}
+
+	luaL_checktype(l, 1, LUA_TSTRING);
+	luaL_checktype(l, 2, LUA_TNUMBER);
+	luaL_checktype(l, 3, LUA_TSTRING);
+	luaL_checktype(l, 4, LUA_TTABLE);
+
 	const char *name = lua_tostring(l, -4);
 	size_t offset = (size_t)lua_tointeger(l, -3);
 	const char *dataType = lua_tostring(l, -2);
@@ -392,9 +405,6 @@ Nau::luaSetBuffer(lua_State *l) {
 		LOG_trace("LUA: Calling getAttrib");
 		luaStackDump(LuaState);
 	}
-	const char *name = lua_tostring(l, -4);
-	size_t offset = (size_t)lua_tointeger(l, -3);
-	const char *dataType = lua_tostring(l, -2);
 
 	int top = lua_gettop(l);
 	// some validation
@@ -404,6 +414,16 @@ Nau::luaSetBuffer(lua_State *l) {
 		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
 
+	luaL_checktype(l, 1, LUA_TSTRING);
+	luaL_checktype(l, 2, LUA_TNUMBER);
+	luaL_checktype(l, 3, LUA_TSTRING);
+	luaL_checktype(l, 4, LUA_TTABLE);
+
+	const char *name = lua_tostring(l, -4);
+	size_t offset = (size_t)lua_tointeger(l, -3);
+	const char *dataType = lua_tostring(l, -2);
+
+
 	Enums::DataType dt = Enums::getType(dataType);
 	int card = Enums::getCardinality(dt);
 	Enums::DataType bdt = Enums::getBasicType(dt);
@@ -411,7 +431,7 @@ Nau::luaSetBuffer(lua_State *l) {
 
 	IBuffer *buff = RESOURCEMANAGER->getBuffer(name);
 	if (buff == NULL) {
-		SLOG("Lua script %s ERROR : Lua getBuffer -> invalid buffer: %s",
+		SLOG("Lua script %s ERROR : Lua setBuffer -> invalid buffer: %s",
 			LuaCurrentScript.c_str(), name);
 		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 		return 0;
@@ -478,12 +498,11 @@ Nau::luaGet(lua_State *l) {
 		LOG_trace("LUA: Calling getAttr");
 		luaStackDump(LuaState);
 	}
-	const char *tipo = lua_tostring(l, -5);
-	const char *context = lua_tostring(l, -4);
-	const char *component = lua_tostring(l, -3);
-	int number = (int)lua_tointeger(l, -2);
-	void *arr;
-	AttribSet *attr;
+	luaL_checktype(l, 1, LUA_TSTRING);
+	luaL_checktype(l, 2, LUA_TSTRING);
+	luaL_checktype(l, 3, LUA_TSTRING);
+	luaL_checktype(l, 4, LUA_TNUMBER);
+	luaL_checktype(l, 5, LUA_TTABLE);
 
 	int top = lua_gettop(l);
 	// some validation
@@ -492,6 +511,14 @@ Nau::luaGet(lua_State *l) {
 			LuaCurrentScript.c_str());
 		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
+
+	const char *tipo = lua_tostring(l, -5);
+	const char *context = lua_tostring(l, -4);
+	const char *component = lua_tostring(l, -3);
+	int number = (int)lua_tointeger(l, -2);
+	void *arr;
+	AttribSet *attr;
+
 
 	if (!strcmp(context, "CURRENT")) {
 		
@@ -556,6 +583,12 @@ Nau::luaSet(lua_State *l) {
 			LuaCurrentScript.c_str());
 		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
 	}
+
+	luaL_checktype(l, 1, LUA_TSTRING);
+	luaL_checktype(l, 2, LUA_TSTRING);
+	luaL_checktype(l, 3, LUA_TSTRING);
+	luaL_checktype(l, 4, LUA_TNUMBER);
+	luaL_checktype(l, 5, LUA_TTABLE);
 
 	const char *tipo = lua_tostring(l, -5);
 	const char *context = lua_tostring(l, -4);
