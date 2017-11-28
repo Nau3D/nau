@@ -91,6 +91,9 @@ protected:
 	static void createMat4(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateMat4(wxPropertyGridManager *pg, std::string label, mat4 a);
 
+	static wxStringProperty* wauxDoubleProperty(wxString s);
+	static wxString doubleToString(double d);
+
 	static void createDouble(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a);
 	static void updateDouble(wxPropertyGridManager *pg, std::string label, double a);
 

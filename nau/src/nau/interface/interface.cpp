@@ -496,6 +496,15 @@ ToolBar::addPipelineList(const std::string &windowName, const std::string &label
 	return (TwAddVarCB(m_Windows[windowName].second, name.c_str(), options, SetPipelineCallBack, GetPipelineCallBack, clientData, s) == 1);
 }
 
+
+void 
+ToolBar::resize(unsigned int width, unsigned int height) {
+
+	TwWindowSize(width, height);
+}
+
+
+
 // STATIC METHODS
 
 

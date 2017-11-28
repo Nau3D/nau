@@ -516,9 +516,13 @@ Nau::luaGet(lua_State *l) {
 	int id;
 	attr->getPropTypeAndId(s, &dt, &id);
 	if (id == -1) {
-		SLOG("Lua script %s ERROR: Lua get -> invalid attribute: %s", 
+		SLOG("Lua script %s ERROR: Lua get -> invalid component: %s", 
 			LuaCurrentScript.c_str(), component);
 		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+		lua_pushnumber(l, 1); // key
+		lua_pushnumber(l, 0); // value
+		lua_settable(l, -3); // two pushes 
+		return 0;
 	}
 
 	int card = Enums::getCardinality(dt);
@@ -592,6 +596,7 @@ Nau::luaSet(lua_State *l) {
 		SLOG("Lua script %s ERROR: Lua set -> Invalid component: %s", 
 			LuaCurrentScript.c_str(), component);
 		LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
+		return 0;
 	}
 	int card = Enums::getCardinality(dt);
 	bdt = Enums::getBasicType(dt);
@@ -1529,6 +1534,7 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType,
 	
 		vec3 *evVec = (vec3 *)evtData->getData();
 		setWindowSize((unsigned int)evVec->x, (unsigned int)evVec->y);
+		INTERFACE_MANAGER->resize((unsigned int)evVec->x, (unsigned int)evVec->y);
 	}
 }
 

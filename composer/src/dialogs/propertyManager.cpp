@@ -1,6 +1,7 @@
 #include <dialogs/propertyManager.h>
 
 #include <assert.h>
+#include <sstream>
 
 
 void
@@ -423,6 +424,7 @@ PropertyManager::updateProp(wxPropertyGridManager *pg, std::string prop, AttribS
 
 		attribVal->setPropm4((AttributeValues::Mat4Property)id, m4);
 		break;
+
 	case Enums::DOUBLE:
 
 		pgProp = pg->GetProperty(wxString(prop));
@@ -842,14 +844,13 @@ wxFloatProperty *
 PropertyManager::wauxFloatProperty(wxString s) {
 
 	wxFloatProperty *fprop = new wxFloatProperty(s, wxPG_LABEL);
-	fprop->SetAttribute(wxPG_FLOAT_PRECISION, 20);
+	//fprop->SetAttribute(wxPG_FLOAT_PRECISION, 30);
 	return fprop;
 }
 
 
 void
 PropertyManager::createFloat(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
-
 
 	wxPGProperty *pid;
 	pid = pg->Append(wauxFloatProperty(wxString(a->getName().c_str())));
@@ -1140,21 +1141,41 @@ PropertyManager::updateMat4(wxPropertyGridManager *pg, std::string label, mat4 a
 //		DOUBLE
 
 
+wxStringProperty *
+PropertyManager::wauxDoubleProperty(wxString s) {
+
+	wxStringProperty *fprop = new wxStringProperty(s, wxPG_LABEL);
+	//fprop->SetAttribute(wxPG_FLOAT_PRECISION, 30);
+	return fprop;
+}
+
+
+wxString
+PropertyManager::doubleToString(double d) {
+
+	std::stringstream s;
+
+	s.precision(30);
+	s << std::scientific << d;
+
+	return wxString(s.str());
+}
+
 
 void
 PropertyManager::createDouble(wxPropertyGridManager *pg, std::unique_ptr<Attribute> &a) {
 
 	wxPGProperty *pid;
-	pid = pg->Append(wauxFloatProperty(wxString(a->getName().c_str())));
+	pid = pg->Append(wauxDoubleProperty(wxString(a->getName().c_str())));
 	if (a->getReadOnlyFlag())
 		pg->DisableProperty(pid);
 }
 
+
 void
 PropertyManager::updateDouble(wxPropertyGridManager *pg, std::string label, double a) {
 
-
-	pg->SetPropertyValue(wxString(label.c_str()), a);
+	pg->SetPropertyValue(wxString(label.c_str()), doubleToString(a));
 }
 
 
@@ -1180,10 +1201,10 @@ void
 PropertyManager::updateDVec2(wxPropertyGridManager *pg, std::string label, dvec2 a) {
 
 	std::string s = label + '.' + "x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.x);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.x));
 	s.clear();
 	s = label + '.' + "y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.y);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.y));
 }
 
 
@@ -1209,13 +1230,13 @@ void
 PropertyManager::updateDVec3(wxPropertyGridManager *pg, std::string label, dvec3 a) {
 
 	std::string s = label + '.' + "x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.x);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.x));
 	s.clear();
 	s = label + '.' + "y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.y);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.y));
 	s.clear();
 	s = label + '.' + "z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.z);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.z));
 }
 
 
@@ -1250,16 +1271,16 @@ void
 PropertyManager::updateDVec4(wxPropertyGridManager *pg, std::string label, dvec4 a) {
 
 	std::string s = label + '.' + "x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.x);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.x));
 	s.clear();
 	s = label + '.' + "y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.y);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.y));
 	s.clear();
 	s = label + '.' + "z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.z);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.z));
 	s.clear();
 	s = label + '.' + "w";
-	pg->SetPropertyValue(wxString(s.c_str()), a.w);
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.w));
 }
 
 
@@ -1296,33 +1317,33 @@ void
 PropertyManager::updateDMat3(wxPropertyGridManager *pg, std::string label, dmat3 a) {
 
 	std::string s = label + ".Row0.x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(0, 0));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(0, 0)));
 	s.clear();
 	s = label + ".Row0.y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(0, 1));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(0, 1)));
 	s.clear();
 	s = label + ".Row0.z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(0, 2));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(0, 2)));
 
 	s.clear();
 	s = label + ".Row1.x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(1, 0));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(1, 0)));
 	s.clear();
 	s = label + ".Row1.y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(1, 1));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(1, 1)));
 	s.clear();
 	s = label + ".Row1.z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(1, 2));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(1, 2)));
 
 	s.clear();
 	s = label + ".Row2.x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(2, 0));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(2, 0)));
 	s.clear();
 	s = label + ".Row2.y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(2, 1));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(2, 1)));
 	s.clear();
 	s = label + ".Row2.z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(2, 2));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(2, 2)));
 }
 
 
@@ -1368,53 +1389,53 @@ void
 PropertyManager::updateDMat4(wxPropertyGridManager *pg, std::string label, dmat4 a) {
 
 	std::string s = label + ".Row0.x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(0, 0));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(0, 0)));
 	s.clear();
 	s = label + ".Row0.y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(0, 1));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(0, 1)));
 	s.clear();
 	s = label + ".Row0.z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(0, 2));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(0, 2)));
 	s.clear();
 	s = label + ".Row0.w";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(0, 3));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(0, 3)));
 
 	s.clear();
 	s = label + ".Row1.x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(1, 0));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(1, 0)));
 	s.clear();
 	s = label + ".Row1.y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(1, 1));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(1, 1)));
 	s.clear();
 	s = label + ".Row1.z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(1, 2));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(1, 2)));
 	s.clear();
 	s = label + ".Row1.w";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(1, 3));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(1, 3)));
 
 	s.clear();
 	s = label + ".Row2.x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(2, 0));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(2, 0)));
 	s.clear();
 	s = label + ".Row2.y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(2, 1));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(2, 1)));
 	s.clear();
 	s = label + ".Row2.z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(2, 2));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(2, 2)));
 	s.clear();
 	s = label + ".Row2.w";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(2, 3));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(2, 3)));
 
 	s.clear();
 	s = label + ".Row3.x";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(3, 0));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(3, 0)));
 	s.clear();
 	s = label + ".Row3.y";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(3, 1));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(3, 1)));
 	s.clear();
 	s = label + ".Row3.z";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(3, 2));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(3, 2)));
 	s.clear();
 	s = label + ".Row3.w";
-	pg->SetPropertyValue(wxString(s.c_str()), a.at(3, 3));
+	pg->SetPropertyValue(wxString(s.c_str()), doubleToString(a.at(3, 3)));
 }

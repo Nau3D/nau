@@ -441,8 +441,8 @@ Enums::pointerToString(DataType p, void *v) {
 		return m_Result;
 
 	case DOUBLE:
-		char s[22];
-		snprintf(s, 21, "%.17f", *((double *)v));
+		char s[42];
+		snprintf(s, 41, "%.30e", *((double *)v));
 		m_Result = std::string(s);
 		return m_Result;
 

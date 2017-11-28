@@ -107,6 +107,7 @@ namespace nau {
 
 			bool addPipelineList(const std::string &windowName, const std::string &label, const std::string &luaScript = "", const std::string &luaScriptFile = "");
 
+			void resize(unsigned int width, unsigned int heigth);
 			//bool setWindowProp(const std::string &name, const std::string &prop);
 			//bool setVarProp(const std::string &name, const std::string &var, const std::string &prop);
 		};
