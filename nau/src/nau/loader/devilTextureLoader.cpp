@@ -41,8 +41,7 @@ DevILTextureLoader::loadImage (bool convertToRGBA) {
 
 	if (!success)
 		return 0;
-
-	if (success && convertToRGBA) {
+	if (convertToRGBA) {
 		ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 		return success;
 	}
@@ -52,7 +51,8 @@ DevILTextureLoader::loadImage (bool convertToRGBA) {
 	if (type == IL_HALF)
 		type = IL_FLOAT;
 	switch (format) {
-	case IL_BGR: ilConvertImage(IL_RGB, type);
+	case IL_BGR: 
+	case IL_RGB:	ilConvertImage(IL_RGBA, type);
 		break;
 	case IL_BGRA: ilConvertImage(IL_RGBA, type);
 		break;
@@ -136,7 +136,56 @@ DevILTextureLoader::getFormat (void) {
 	case IL_LUMINANCE_ALPHA:
 		return "RG";
 	default:
-		assert(false && "DevilTextureLoader Issue in getFormat");
+		assert(false && "DevilTextureLoader: Missing format in getFormat");
+		return "RGBA";
+	}
+}
+
+
+std::string
+DevILTextureLoader::getSizedFormat(void) {
+
+	int format, type;
+	ilBindImage(m_IlId);
+	format = ilGetInteger(IL_IMAGE_FORMAT);
+	type = ilGetInteger(IL_IMAGE_TYPE);
+	// the values returned can be found in GLTexture.cpp
+
+	switch (format) {
+
+	case IL_RGBA: 
+		switch (type) {
+		case IL_BYTE: return "RGBA8I";
+		case IL_UNSIGNED_BYTE: return "RGBA";
+		case IL_SHORT: return "RGBA16I";
+		case IL_UNSIGNED_SHORT: return "RGBA16UI";
+		case IL_INT: return "RGBA32I";
+		case IL_UNSIGNED_INT: return "RGBA32UI";
+		case IL_FLOAT: return "RGBA32F";
+		}
+	case IL_LUMINANCE:
+	case IL_ALPHA:
+		switch (type) {
+		case IL_BYTE: return "R8I";
+		case IL_UNSIGNED_BYTE: return "R8";
+		case IL_SHORT: return "R16I";
+		case IL_UNSIGNED_SHORT: return "R16UI";
+		case IL_INT: return "R32I";
+		case IL_UNSIGNED_INT: return "R32UI";
+		case IL_FLOAT: return "R32F";
+		}
+	case IL_LUMINANCE_ALPHA:
+		switch (type) {
+		case IL_BYTE: return "RG8I";
+		case IL_UNSIGNED_BYTE: return "RG8";
+		case IL_SHORT: return "RG16I";
+		case IL_UNSIGNED_SHORT: return "RG16UI";
+		case IL_INT: return "RG32I";
+		case IL_UNSIGNED_INT: return "RG32UI";
+		case IL_FLOAT: return "RG32F";
+		}
+	default:
+		assert(false && "DevilTextureLoader: Missing format in getSizedFormat");
 		return "RGBA";
 	}
 }
@@ -158,7 +207,7 @@ DevILTextureLoader::getType (void) {
 	case IL_FLOAT          : return "FLOAT";
 	case IL_DOUBLE         : return "DOUBLE";
 	default:
-		assert(false && "DevilTextureLoader Issue in getType");
+		assert(false && "DevilTextureLoader: Missing type in getType");
 		return "RGBA";
 	}
 //	return "UNSIGNED_BYTE";

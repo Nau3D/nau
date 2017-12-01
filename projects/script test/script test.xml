@@ -24,14 +24,20 @@
 		<cameras>
 			<camera name="Master" >
 				<viewport name="Left" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR="500.0" />
+				<TYPE value="PERSPECTIVE" />
+				<FOV value=60.0 />
+				<NEAR value = 1 />
+				<FAR value="500.0" />
 				<POSITION x="0.0" y="0.5" z="2.5" />
 				<VIEW x="0.0" y="0.0" z="-1.0" />
 				<UP x="0.0" y="1.0" z="0.0" />
 			</camera>
 			<camera name="Slave" >
 				<viewport name="Right" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR="500.0" />
+				<TYPE value="PERSPECTIVE" />
+				<FOV value=60.0 />
+				<NEAR value = 1 />
+				<FAR value="5000.0" />
 				<POSITION x="0.0" y="0.0" z="2.5" />
 				<VIEW x="0.0" y="0.0" z="-1.0" />
 				<UP x="0.0" y="1.0" z="0.0" />

@@ -93,13 +93,14 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 
 	ITextureLoader *loader = ITextureLoader::create(file);
 
-	int success = loader->loadImage ();
+	int success = loader->loadImage (false);
 	if (success) {
 		std::string aFormat = loader->getFormat();
+		std::string sizedFormat = loader->getSizedFormat();
 		ITexture *t;
 
 	#ifdef NAU_OPENGL
-		t = new GLTexture (label, aFormat, aFormat, loader->getType(), 
+		t = new GLTexture (label, sizedFormat, aFormat, loader->getType(),
 				loader->getWidth(), loader->getHeight(), loader->getDepth(), loader->getData(), mipmap);
 	#elif NAU_DIRECTX
 		t = new DXTexture (aDimension, aFormat, width, height);
@@ -120,6 +121,8 @@ ITexture::Create (std::string file, std::string label, bool mipmap) {
 
 		loader->convertToRGBA();
 		
+		//t->data = (char *)malloc(loader->getHeight() * loader->getWidth() );
+		//memcpy(t->data, loader->getData(), loader->getHeight() * loader->getWidth() );
 		t->data = (char *)malloc(loader->getHeight() * loader->getWidth() * 4);
 		memcpy(t->data, loader->getData(), loader->getHeight() * loader->getWidth() * 4);
 

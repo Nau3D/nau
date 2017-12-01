@@ -29,6 +29,7 @@ namespace nau
 			int getHeight (void);
 			int getDepth(void);
 			std::string getFormat (void); 
+			std::string getSizedFormat(void);
 			std::string getType (void);
 			void freeImage (void);
 

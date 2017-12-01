@@ -1716,7 +1716,6 @@ void
 ProjectLoader::loadCollection(TiXmlHandle handle, const std::string &labelCol, const std::string &labelItem) {
 
 	TiXmlElement *pElem;
-	std::shared_ptr<Viewport> v;
 	std::vector<std::string> excluded;
 
 	std::vector<std::string> ok = { labelItem };
@@ -1728,35 +1727,18 @@ ProjectLoader::loadCollection(TiXmlHandle handle, const std::string &labelCol, c
 }
 
 
-void
-ProjectLoader::loadViewports(TiXmlHandle handle) 
-{
-	TiXmlElement *pElem;
-	std::shared_ptr<Viewport> v;
-	std::vector<std::string> excluded;
-
-	pElem = handle.FirstChild ("viewports").FirstChild ("viewport").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-		loadItem(pElem, "viewport", excluded);
-	/*	const char *pName = pElem->Attribute ("name");
-
-		if (0 == pName) {
-			NAU_THROW("File %s\nViewport has no name", ProjectLoader::s_File.c_str());
-		}
-		if (RENDERMANAGER->hasViewport(pName)) {
-			NAU_THROW("File %s\nViewport %s is already defined", ProjectLoader::s_File.c_str(), pName);
-		}
-
-		SLOG("Viewport : %s", pName);
-		vec4 v4 = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-		v = RENDERMANAGER->createViewport(pName, v4);
-
-		// Reading remaining viewport attributes
-		std::vector<std::string> excluded;
-		readChildTags(pName, (AttributeValues *)v.get(), Viewport::Attribs, excluded, pElem);
-		*/
-	} //End of Viewports
-}
+//void
+//ProjectLoader::loadViewports(TiXmlHandle handle) 
+//{
+//	TiXmlElement *pElem;
+//	std::shared_ptr<Viewport> v;
+//	std::vector<std::string> excluded;
+//
+//	pElem = handle.FirstChild ("viewports").FirstChild ("viewport").Element();
+//	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+//		loadItem(pElem, "viewport", excluded);
+//	} 
+//}
 
 
 /* ----------------------------------------------------------------
@@ -1828,42 +1810,42 @@ direction is optional, if not specified it will be (0.0, 0.0, -1.0)
 color is optional, if not defined it will be (1.0, 1.0, 1.0)
 
 ----------------------------------------------------------------- */
-void 
-ProjectLoader::loadLights(TiXmlHandle handle) 
-{
-	TiXmlElement *pElem;
-
-	std::vector<std::string> ok = {"light"};
-	checkForNonValidChildTags("lights", ok, handle.FirstChild("lights").Element());
-
-	pElem = handle.FirstChild ("lights").FirstChild ("light").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("light")) {
-		const char *pName = pElem->Attribute ("name");
-		const char *pClass = pElem->Attribute("class"); 
-		
-		if (0 == pName) 
-			NAU_THROW("File %s\nLight has no name", ProjectLoader::s_File.c_str());
-
-		SLOG("Light: %s", pName);
-
-
-		if (RENDERMANAGER->hasLight(pName))
-			NAU_THROW("File %s\nLight %s is already defined", ProjectLoader::s_File.c_str(), pName);
-
-		std::vector<std::string> excluded;
-		std::shared_ptr<Light> l;
-		if (0 == pClass) {
-			l = RENDERMANAGER->getLight(pName);
-		}
-		else {
-			l = RENDERMANAGER->createLight(pName, pClass);
-		}
-			readChildTags(pName, (AttributeValues *)l.get(), Light::Attribs, excluded, pElem);
-		
-		// Reading Light Attributes
-
-	}//End of lights
-}
+//void 
+//ProjectLoader::loadLights(TiXmlHandle handle) 
+//{
+//	TiXmlElement *pElem;
+//
+//	std::vector<std::string> ok = {"light"};
+//	checkForNonValidChildTags("lights", ok, handle.FirstChild("lights").Element());
+//
+//	pElem = handle.FirstChild ("lights").FirstChild ("light").Element();
+//	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("light")) {
+//		const char *pName = pElem->Attribute ("name");
+//		const char *pClass = pElem->Attribute("class"); 
+//		
+//		if (0 == pName) 
+//			NAU_THROW("File %s\nLight has no name", ProjectLoader::s_File.c_str());
+//
+//		SLOG("Light: %s", pName);
+//
+//
+//		if (RENDERMANAGER->hasLight(pName))
+//			NAU_THROW("File %s\nLight %s is already defined", ProjectLoader::s_File.c_str(), pName);
+//
+//		std::vector<std::string> excluded;
+//		std::shared_ptr<Light> l;
+//		if (0 == pClass) {
+//			l = RENDERMANAGER->getLight(pName);
+//		}
+//		else {
+//			l = RENDERMANAGER->createLight(pName, pClass);
+//		}
+//			readChildTags(pName, (AttributeValues *)l.get(), Light::Attribs, excluded, pElem);
+//		
+//		// Reading Light Attributes
+//
+//	}//End of lights
+//}
 
 
 /* ----------------------------------------------------------------
@@ -1891,6 +1873,9 @@ Specification of the assets:
 		<atomics>
 			...
 		</atomics>
+		<events>
+			...
+		</events>
 		<materiallibs>
 			<mlib filename="..\mlibs\vision.mlib"/>
 			<mlib filename="..\mlibs\quadMaterials.mlib"/>
@@ -1924,7 +1909,7 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 		const char *pFilename = pElem->Attribute ("filename");
 
 		if (0 == pFilename) {
-			NAU_THROW("File %s\nNo file specified for physicsc material lib", ProjectLoader::s_File.c_str());
+			NAU_THROW("File %s\nNo file specified for physics material lib", ProjectLoader::s_File.c_str());
 		}
 
 		try {
@@ -1937,13 +1922,25 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 	}
 
 	loadScenes(handle);
+
 	collectionName = "viewports";
 	itemName = "viewport";
 	loadCollection(handle, collectionName, itemName);
+
+	collectionName = "lights";
+	itemName = "light";
+	loadCollection(handle, collectionName, itemName);
+
+	//collectionName = "cameras";
+	//itemName = "camera";
+	//loadCollection(handle, collectionName, itemName);
+
 	//loadViewports(handle);
 	loadCameras(handle);
-	loadLights(handle);	
+	//loadLights(handle);
+
 	loadEvents(handle);
+
 	if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
 		loadAtomicSemantics(handle);
 

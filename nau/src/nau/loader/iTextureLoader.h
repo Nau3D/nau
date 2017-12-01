@@ -41,6 +41,7 @@ namespace nau
 			nau_API virtual int getHeight (void) = 0;
 			nau_API virtual int getDepth(void) = 0;
 			nau_API virtual std::string getFormat (void) = 0;
+			nau_API virtual std::string getSizedFormat(void) = 0;
 			nau_API virtual std::string getType (void) = 0;
 			nau_API virtual void freeImage (void) = 0;
 

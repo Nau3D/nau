@@ -25,10 +25,11 @@ ITextureCubeMap::Create (std::vector<std::string> files, std::string label, bool
 	}
 
 	std::string aFormat = loader[0]->getFormat();
+	std::string aSizedFormat = loader[0]->getSizedFormat();
 	nau::material::ITextureCubeMap *t;
 
 #ifdef NAU_OPENGL
-	t = new GLTextureCubeMap (label, files, aFormat, aFormat, loader[0]->getType(), 
+	t = new GLTextureCubeMap (label, files, aSizedFormat, aFormat, loader[0]->getType(), 
 			loader[0]->getWidth(), data, mipmap);
 #elif NAU_DIRECTX
 	t = new DXTexture (aDimension, aFormat, width, height);

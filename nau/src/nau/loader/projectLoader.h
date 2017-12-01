@@ -157,9 +157,9 @@ namespace nau
 			static void loadUserAttrs(TiXmlHandle handle);
 			static void loadScenes(TiXmlHandle handle);
 			//static void loadGeometry(TiXmlElement *elem); 
-			static void loadViewports(TiXmlHandle handle);
+			//static void loadViewports(TiXmlHandle handle);
 			static void loadCameras(TiXmlHandle handle);
-			static void loadLights(TiXmlHandle handle);
+			//static void loadLights(TiXmlHandle handle);
 			static void loadEvents(TiXmlHandle handle);
 			static void loadAtomicSemantics(TiXmlHandle handle);
 

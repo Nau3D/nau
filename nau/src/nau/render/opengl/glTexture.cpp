@@ -322,7 +322,6 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 		else
 			glTexImage3D((GLenum)m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT], m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH], 0,
 				(GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], data);
-
 		m_BoolProps[MIPMAP] = mipmap;
 		if (m_BoolProps[MIPMAP]) {
 			generateMipmaps();

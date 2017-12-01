@@ -1148,7 +1148,7 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 			return (AttributeValues *)m_pRenderManager->getScene(context).get();
 	}
 
-	if (type == "SPHERE") {
+	if (type == "SPHERE" || type == "GRID") {
 		std::string scene, object;
 		std::size_t found = context.find("::");
 		if (found != std::string::npos && context.size() > found + 2) {
@@ -1162,8 +1162,8 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 				IRenderable *r = s->getRenderable().get();
 				std::string s = typeid(*r).name();
 				if (true/*s == "class nau::geometry::Sphere"*/) {
-					Sphere *sp = (Sphere *)r;
-					return (AttributeValues *)sp;
+					//Sphere *sp = (Sphere *)r;
+					return (AttributeValues *)r;
 
 				}
 			}
@@ -1427,6 +1427,9 @@ Nau::createObject(const std::string &type, const std::string &name) {
 
 	if (type == "VIEWPORT" || type == "viewport") {
 		return RENDERMANAGER->createViewport(name).get();
+	}
+	if (type == "LIGHT" || type == "light") {
+		return RENDERMANAGER->createLight(name, "default").get();
 	}
 	if (type == "CAMERA" || type == "camera") {
 		return RENDERMANAGER->createCamera(name).get();

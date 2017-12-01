@@ -144,10 +144,17 @@ VTKTextureLoader::getDepth(void) {
 std::string
 VTKTextureLoader::getFormat (void) {
 
+	return "RED";
+}
+
+
+std::string
+VTKTextureLoader::getSizedFormat(void) {
+
 	return "R8";
 }
 
-			
+
 std::string
 VTKTextureLoader::getType (void) {
 
