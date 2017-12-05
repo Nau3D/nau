@@ -943,48 +943,51 @@ Nau::callLuaScript(std::string name) {
 		LuaFilesWithIssues.find(LuaScriptNames[name]) != LuaFilesWithIssues.end())
 		return;
 
-	LuaCurrentScript = name;
+	{
+		PROFILE("Lua");
+		LuaCurrentScript = name;
 
-	int errIndex = 0;
+		int errIndex = 0;
 
-	if (m_TraceOn) {
-		LOG_trace("#LUA %s", name.c_str());
+		if (m_TraceOn) {
+			LOG_trace("#LUA %s", name.c_str());
 
-		lua_getglobal(LuaState, "debug");
-		lua_getfield(LuaState, -1, "traceback");
-		lua_remove(LuaState, -2);
-		errIndex = -2;
-	}
-	lua_getglobal(LuaState, name.c_str());
-
-	// do we have an error?
-	if (lua_pcall(LuaState, 0, 0, errIndex)) {
-//	if (lua_pcall(LuaState, 0, 0, 0)) {
-		//luaL_traceback(LuaState, LuaState, "hello", 0);
-		//lua_Debug info;
-		//int level = 0;
-		
-		//while (lua_getstack(LuaState, level, &info)) {
-		//	lua_getinfo(LuaState, "nSl", &info);
-		//	SLOG("  [%d] %s:%d -- %s [%s]\n",
-		//		level, info.short_src, info.currentline,
-		//		(info.name ? info.name : "<unknown>"), info.what);
-		//	++level;
-		//}
-		if (!lua_isnil(LuaState, -1)) {
-			const char *msg = lua_tostring(LuaState, -1);
-			if (msg != NULL) {
-				SLOG("Lua script %s ERROR: %s", name.c_str() ,msg);
-				LuaFilesWithIssues.insert(LuaScriptNames[name]);
-			}
+			lua_getglobal(LuaState, "debug");
+			lua_getfield(LuaState, -1, "traceback");
+			lua_remove(LuaState, -2);
+			errIndex = -2;
 		}
-		
-	}
-	if (m_TraceOn) {
-		lua_pop(LuaState, 1);
-	}
+		lua_getglobal(LuaState, name.c_str());
 
-	LuaCurrentScript = "";
+		// do we have an error?
+		if (lua_pcall(LuaState, 0, 0, errIndex)) {
+			//	if (lua_pcall(LuaState, 0, 0, 0)) {
+					//luaL_traceback(LuaState, LuaState, "hello", 0);
+					//lua_Debug info;
+					//int level = 0;
+
+					//while (lua_getstack(LuaState, level, &info)) {
+					//	lua_getinfo(LuaState, "nSl", &info);
+					//	SLOG("  [%d] %s:%d -- %s [%s]\n",
+					//		level, info.short_src, info.currentline,
+					//		(info.name ? info.name : "<unknown>"), info.what);
+					//	++level;
+					//}
+			if (!lua_isnil(LuaState, -1)) {
+				const char *msg = lua_tostring(LuaState, -1);
+				if (msg != NULL) {
+					SLOG("Lua script %s ERROR: %s", name.c_str(), msg);
+					LuaFilesWithIssues.insert(LuaScriptNames[name]);
+				}
+			}
+
+		}
+		if (m_TraceOn) {
+			lua_pop(LuaState, 1);
+		}
+
+		LuaCurrentScript = "";
+	}
 }
 
 
@@ -996,39 +999,42 @@ Nau::callLuaTestScript(std::string name) {
 		LuaFilesWithIssues.find(LuaScriptNames[name]) != LuaFilesWithIssues.end())
 		return false;
 
-	LuaCurrentScript = name;
+	{
+		PROFILE("LUA");
+		LuaCurrentScript = name;
 
-	int errIndex = 0;
+		int errIndex = 0;
 
-	if (m_TraceOn) {
-		LOG_trace("#LUA: call script %s", name.c_str());
+		if (m_TraceOn) {
+			LOG_trace("#LUA: call script %s", name.c_str());
 
-		lua_getglobal(LuaState, "debug");
-		lua_getfield(LuaState, -1, "traceback");
-		lua_remove(LuaState, -2);
-		errIndex = -2;
-	}
+			lua_getglobal(LuaState, "debug");
+			lua_getfield(LuaState, -1, "traceback");
+			lua_remove(LuaState, -2);
+			errIndex = -2;
+		}
 
-	lua_getglobal(LuaState, name.c_str());
+		lua_getglobal(LuaState, name.c_str());
 
-	if (lua_pcall(LuaState, 0, 1, errIndex)) {
-		if (!lua_isnil(LuaState, -1)) {
-			const char *msg = lua_tostring(LuaState, -1);
-			if (msg != NULL) {
-				SLOG("Lua script %s ERROR: %s", name.c_str(), msg);
-				LuaFilesWithIssues.insert(LuaScriptNames[name]);
+		if (lua_pcall(LuaState, 0, 1, errIndex)) {
+			if (!lua_isnil(LuaState, -1)) {
+				const char *msg = lua_tostring(LuaState, -1);
+				if (msg != NULL) {
+					SLOG("Lua script %s ERROR: %s", name.c_str(), msg);
+					LuaFilesWithIssues.insert(LuaScriptNames[name]);
+				}
 			}
 		}
-	}
 
-	int result = lua_toboolean(LuaState, -1);
-	lua_pop(LuaState, 1);
-
-	if (m_TraceOn) {
+		int result = lua_toboolean(LuaState, -1);
 		lua_pop(LuaState, 1);
+
+		if (m_TraceOn) {
+			lua_pop(LuaState, 1);
+		}
+		return (result != 0);
+		LuaCurrentScript = "";
 	}
-	return (result != 0);
-	LuaCurrentScript = "";
 }
 
 
