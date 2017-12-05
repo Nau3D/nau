@@ -15,6 +15,8 @@ namespace nau
 
 			~Box(void);
 
+			std::string getClassName();
+
 			void build();
 
 		private:

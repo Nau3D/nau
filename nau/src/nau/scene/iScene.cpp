@@ -151,7 +151,7 @@ IScene::getPropf3(Float3Property prop) {
 
 
 const std::string &
-IScene::getType() {
+IScene::getClassName() {
 
 	return m_Type;
 }

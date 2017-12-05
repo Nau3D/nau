@@ -41,6 +41,13 @@ Grid::~Grid(void) {
 }
 
 
+std::string 
+Grid::getClassName() {
+
+	return "Grid";
+}
+
+
 void
 Grid::build() {
 
@@ -61,10 +68,10 @@ Grid::build() {
 
 	for (int i = 0; i < divs; ++i) {
 		for (int j = 0; j < divs; ++j) {
-			vertices->at(i * (divs)+j).set(start + i*step, 0.0f, start + j*step,1.0f);
+			vertices->at(i * (divs)+j).set(start + i*step, 0.0f, -start - j*step,1.0f);
 			tangents->at(i * (divs)+j).set(1.0f, 0.0f, 0.0f, 0.0f);
 			normals->at(i * (divs)+j).set(0.0f, 1.0f, 0.0f, 0.0f);
-			textureCoords->at(i * (divs)+j).set(i*1.0f/divs, j*1.0f/divs, 0.0f, 0.0f);
+			textureCoords->at(i * (divs)+j).set(i*1.0f/ m_UIntProps[DIVISIONS], j*1.0f/ m_UIntProps[DIVISIONS], 0.0f, 0.0f);
 		}
 	}
 	std::shared_ptr<VertexData> &vertexData = getVertexData();
@@ -84,12 +91,12 @@ Grid::build() {
 	for (int i = 0; i < divs - 1; ++i) {
 		for (int j = 0; j < divs - 1; ++j) {
 			indices->at(k++) = i * divs + j;
-			indices->at(k++) = i * divs + j + 1;
 			indices->at(k++) = (i + 1) * divs + j;
+			indices->at(k++) = i * divs + j + 1;
 
 			indices->at(k++) = i * divs + j + 1;
-			indices->at(k++) = (i + 1) * divs + j + 1;
 			indices->at(k++) = (i + 1) * divs + j;
+			indices->at(k++) = (i + 1) * divs + j + 1;
 		}
 
 	}

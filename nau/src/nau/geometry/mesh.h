@@ -25,6 +25,7 @@ namespace nau
 		class Mesh : public nau::render::IRenderable
 		{
 		protected:
+			std::string m_ClassName = "Mesh";
 			std::shared_ptr<nau::geometry::VertexData> m_VertexData;
 			std::shared_ptr<nau::geometry::IndexData> m_IndexData;
 			std::vector<std::shared_ptr<nau::material::MaterialGroup>> m_vMaterialGroups;
@@ -53,6 +54,8 @@ namespace nau
 			void setName (std::string name);
 			std::string& getName (void);
 
+			std::string getClassName();
+
 			unsigned int getDrawingPrimitive(); 
 			unsigned int getRealDrawingPrimitive();
 			void setDrawingPrimitive(unsigned int aDrawingPrimitive);
@@ -75,7 +78,6 @@ namespace nau
 			void setNumberOfVerticesPerPatch(int i);
 			int getnumberOfVerticesPerPatch(void);
 
-			std::string getType (void);
 			void resetCompilationFlags();
 
 			void merge (std::shared_ptr<nau::render::IRenderable> &aRenderable);

@@ -65,6 +65,13 @@ Mesh::getName (void) {
 }
 
 
+std::string
+Mesh::getClassName(void) {
+
+	return "Mesh";
+}
+
+
 unsigned int
 Mesh::getDrawingPrimitive() {
 
@@ -359,13 +366,6 @@ Mesh::merge (std::shared_ptr<IRenderable> &aRenderable) {
 
 		addMaterialGroup (aMaterialGroup);
 	}
-}
-
-
-std::string 
-Mesh::getType (void) {
-
-	return "Mesh";
 }
 
 

@@ -22,7 +22,14 @@ MeshPose::~MeshPose(void)
 }
 
 
-void 
+std::string
+MeshPose::getClassName() {
+
+	return "MeshPose";
+}
+
+
+void
 MeshPose::eventReceived(const std::string &sender, const std::string &eventType, 
 	const std::shared_ptr<IEventData> &evt)
 {
@@ -196,8 +203,3 @@ MeshPose::setPose(std::map<unsigned int , float > *influences)
 	resetCompilationFlags();
 }
 
-std::string 
-MeshPose::getType() 
-{
-	return ("MeshPose");
-}

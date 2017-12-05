@@ -25,7 +25,7 @@ namespace nau
 			void setRenderable(std::shared_ptr<IRenderable> &renderable);
 			void setMaterial(const std::string &name);
 
-			std::string getType (void);
+			std::string getClassName(void);
 
 		protected:
 			GeometricObject();

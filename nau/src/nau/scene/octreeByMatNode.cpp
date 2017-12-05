@@ -328,7 +328,7 @@ OctreeByMatNode::_split() {
 
 
 std::string 
-OctreeByMatNode::getType (void)
+OctreeByMatNode::getClassName(void)
 {
 	return "OctreeByMatNode";
 }

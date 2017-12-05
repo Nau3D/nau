@@ -29,7 +29,7 @@ namespace nau {
 			SkeletonAnim();
 			~SkeletonAnim();
 				
-			std::string getType (void);
+			std::string getClassName(void);
 
 			void setLength(float lenght);
 			float getLength();

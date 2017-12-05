@@ -216,7 +216,7 @@ void DlgScenes::update()
 	std::shared_ptr<IScene> &scene = RENDERMANAGER->getScene(m_Active);
 
 	/* Is scene a partitioned scene? */
-	if (scene->getType() == "Octree" || scene->getType() == "OctreeByMatScene") {
+	if (scene->getClassName() == "Octree" || scene->getClassName() == "OctreeByMatScene") {
 	
 		std::shared_ptr<IScenePartitioned> part = std::dynamic_pointer_cast<IScenePartitioned>(scene);
 
@@ -228,12 +228,12 @@ void DlgScenes::update()
 	else
 		m_toolbar->EnableTool(BUILD, FALSE);
 
-	if (scene->isCompiled() || (scene->getType() == "ScenePoses") || (scene->getType() == "SceneSkeleton"))
+	if (scene->isCompiled() || (scene->getClassName() == "ScenePoses") || (scene->getClassName() == "SceneSkeleton"))
 		m_toolbar->EnableTool(COMPILE, FALSE);
 	else
 		m_toolbar->EnableTool(COMPILE, TRUE);
 
-	m_TType->SetLabel(wxString(scene->getType().c_str()));
+	m_TType->SetLabel(wxString(scene->getClassName().c_str()));
 	IBoundingVolume &bv = scene->getBoundingVolume();
 
 	m_PG->ClearModifiedStatus();

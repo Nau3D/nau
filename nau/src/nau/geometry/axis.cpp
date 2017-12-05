@@ -61,6 +61,13 @@ Axis::~Axis(void) {
 }
 
 
+std::string
+Axis::getClassName() {
+
+	return "Axis";
+}
+
+
 void 
 Axis::build() {
 

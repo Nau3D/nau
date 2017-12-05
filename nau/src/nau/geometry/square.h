@@ -15,6 +15,8 @@ namespace nau
 
 			~Square(void);
 
+			std::string getClassName();
+
 			void build();
 
 		private:

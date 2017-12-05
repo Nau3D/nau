@@ -44,7 +44,7 @@ namespace nau
 			static void ResetCounter();
 			static unsigned int Counter;
 
-			virtual std::string getType (void);
+			virtual std::string getClassName(void);
 
 			virtual int getId ();
 			virtual void setId (int id);

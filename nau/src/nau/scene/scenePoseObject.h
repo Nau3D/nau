@@ -27,7 +27,7 @@ namespace nau
 			virtual void writeSpecificData (std::fstream &f);
 			virtual void readSpecificData (std::fstream &f);
 
-			virtual std::string getType (void);
+			virtual std::string getClassName(void);
 
 		protected:
 			void calculateBoundingVolume (void);

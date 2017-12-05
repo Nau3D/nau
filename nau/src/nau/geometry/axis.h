@@ -15,6 +15,8 @@ namespace nau
 			friend class nau::resource::ResourceManager;
 			~Axis(void);
 
+			std::string getClassName();
+
 			void build();
 
 		private:

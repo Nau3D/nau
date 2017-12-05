@@ -48,7 +48,7 @@ namespace nau
 				const std::shared_ptr<IEventData>& evt);
 
 			// returns "LIGHT"
-			std::string getType();
+			std::string getClassName();
 
 			virtual void setPropf(FloatProperty prop, float value);
 			virtual void setPropf4(Float4Property prop, float r, float g, float b, float a);

@@ -38,7 +38,7 @@ std::string Nau::LuaCurrentScript;
 
 #endif
 
-
+#include <algorithm>
 #include <ctime>
 #include <typeinfo>
 
@@ -1160,8 +1160,10 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 			SceneObject *s = m_pRenderManager->getScene(scene)->getSceneObject(object).get();
 			if (s) {
 				IRenderable *r = s->getRenderable().get();
-				std::string s = typeid(*r).name();
-				if (true/*s == "class nau::geometry::Sphere"*/) {
+				std::string s = r->getClassName();
+				std::transform(s.begin(), s.end(), s.begin(), toupper);
+				//std::string s = typeid(*r).name();
+				if (type == s) {
 					//Sphere *sp = (Sphere *)r;
 					return (AttributeValues *)r;
 
@@ -2008,13 +2010,14 @@ Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params
 				//THREEDSLoader::loadScene (RENDERMANAGER->getScene (sceneName), file.getFullPath(),params);				
 				break;
 			case File::WAVEFRONTOBJ:
-				AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath,params);
-				//OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath, params);
+				//AssimpLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath,params);
+				OBJLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath, params);
 				break;
 			case File::OGREXMLMESH:
 				OgreMeshLoader::loadScene(RENDERMANAGER->getScene (sceneName).get(), fullPath);
 				break;
 			default:
+				SLOG("Model loading: Unsupported file type %s\n", fullPath.c_str());
 			  break;
 		}
 	}

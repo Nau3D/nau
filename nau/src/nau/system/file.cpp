@@ -868,43 +868,46 @@ File::decode (std::string &filepath) {
 File::FileType
 File::getType (void) {
 
-	if ("dae" == m_FileExtension) {
+	std::string s = m_FileExtension;
+	transform(s.begin(), s.end(), s.begin(), tolower);
+
+	if ("dae" == s) {
 		return File::COLLADA;
 	}
-	else if ("patch" == m_FileExtension) {
+	else if ("patch" == s) {
 		return File::PATCH;
 	}
-	else if ("fbx" == m_FileExtension) {
+	else if ("fbx" == s) {
 		return File::FBX;
 	}
-	else if ("3ds" == m_FileExtension) {
+	else if ("3ds" == s) {
 		return File::THREEDS;
 	}
-	else if ("nbo" == m_FileExtension) {
+	else if ("nbo" == s) {
 		return File::NAUBINARYOBJECT;
 	}
-	else if ("obj" == m_FileExtension) {
+	else if ("obj" == s) {
 		return File::WAVEFRONTOBJ;
 	}
-	else if ("xml" == m_FileExtension) {
+	else if ("xml" == s) {
 		return File::OGREXMLMESH;
 	}
-	else if ("blend" == m_FileExtension) {
+	else if ("blend" == s) {
 		return File::BLENDER;
 	}
-	else if ("ply" == m_FileExtension) {
+	else if ("ply" == s) {
 		return File::PLY;
 	}
-	else if ("lwo" == m_FileExtension) {
+	else if ("lwo" == s) {
 		return File::LIGHTWAVE;
 	}
-	else if ("stl" == m_FileExtension) {
+	else if ("stl" == s) {
 		return File::STL;
 	}
-	else if ("cob" == m_FileExtension) {
+	else if ("cob" == s) {
 		return File::TRUESPACE;
 	}
-	else if ("scn" == m_FileExtension) {
+	else if ("scn" == s) {
 		return File::TRUESPACE;
 	}
 	else

@@ -11,7 +11,7 @@ SkeletonAnim::~SkeletonAnim()
 {}
 
 std::string
-SkeletonAnim::getType()
+SkeletonAnim::getClassName()
 {
 	return "SkeletonAnim";
 }

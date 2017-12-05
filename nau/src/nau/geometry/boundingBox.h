@@ -36,6 +36,8 @@ namespace nau
 			BoundingBox (nau::math::vec3 min, nau::math::vec3 max);
 			BoundingBox (const BoundingBox &aBoundingBox);
 
+			std::string getClassName();
+
 			void set(nau::math::vec3 min, nau::math::vec3 max);
 			void calculate (const std::shared_ptr<std::vector<VertexData::Attr>> &vertices);
 
@@ -48,7 +50,6 @@ namespace nau
 			void compound (const IBoundingVolume *volume);
 			
 			bool isA (BoundingVolumeKind kind) const;
-			std::string getType (void) const;
 			std::vector<nau::math::vec3>& getPoints (void);
 			std::vector<nau::math::vec3>& getNonTransformedPoints (void) ;
 

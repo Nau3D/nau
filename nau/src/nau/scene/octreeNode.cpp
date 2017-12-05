@@ -243,7 +243,7 @@ OctreeNode::setRenderable (std::shared_ptr<nau::render::IRenderable> &aRenderabl
 
 
 std::string 
-OctreeNode::getType (void) {
+OctreeNode::getClassName(void) {
 
 	return "OctreeNode";
 }

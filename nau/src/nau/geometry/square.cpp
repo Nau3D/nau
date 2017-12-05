@@ -76,7 +76,14 @@ Square::~Square(void) {
 }
 
 
-void 
+std::string
+Square::getClassName() {
+
+	return "Square";
+}
+
+
+void
 Square::build() {
 
 }

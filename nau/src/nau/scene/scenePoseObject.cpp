@@ -67,7 +67,7 @@ ScenePoseObject::burnTransform (void)
 
 
 std::string 
-ScenePoseObject::getType (void)
+ScenePoseObject::getClassName(void)
 {
 	return "PoseObject";
 }

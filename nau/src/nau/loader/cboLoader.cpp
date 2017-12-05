@@ -633,11 +633,11 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 	}
 
 	// writing geometry
-	_writeString (aScene->getType(), f);
-	LOG_INFO ("[Writing] scene type: %s", aScene->getType().c_str()); 
+	_writeString (aScene->getClassName(), f);
+	LOG_INFO ("[Writing] scene type: %s", aScene->getClassName().c_str());
 
 
-	if (aScene->getType() == "OctreeByMatScene") {
+	if (aScene->getClassName() == "OctreeByMatScene") {
 		_writeOctreeByMat((OctreeByMatScene *)aScene,f);
 		f.close();
 		return;
@@ -656,9 +656,9 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 	for (; objIter != sceneObjects.end(); objIter++) {
 		/* Write the object type */
 
-		_writeString((*objIter)->getType(), f);
+		_writeString((*objIter)->getClassName(), f);
 
-		LOG_INFO("[Writing] object type: [%s]", (*objIter)->getType().c_str());
+		LOG_INFO("[Writing] object type: [%s]", (*objIter)->getClassName().c_str());
 
 
 		/* Write the object's name */
@@ -674,7 +674,7 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 
 		/* Bounding volume type */
 
-		_writeString(aBoundingVolume->getType(), f);
+		_writeString(aBoundingVolume->getClassName(), f);
 
 		/* Bounding volume points */
 		std::vector<vec3> points = aBoundingVolume->getPoints();
@@ -724,9 +724,9 @@ CBOLoader::writeScene (nau::scene::IScene *aScene, std::string &aFilename) {
 
 			renderables[aRenderable->getName()] = aRenderable;
 
-			_writeString (aRenderable->getType(), f);
+			_writeString (aRenderable->getClassName(), f);
 
-			LOG_INFO ("[Writing] Renderable's type: [%s]", aRenderable->getType().c_str()); 
+			LOG_INFO ("[Writing] Renderable's type: [%s]", aRenderable->getClassName().c_str());
 
 			/* Vertices data */
 			std::shared_ptr<VertexData> &aVertexData = aRenderable->getVertexData();

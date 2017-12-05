@@ -24,6 +24,7 @@ namespace nau
 			  SPHERE
 			};
         public:
+			virtual std::string getClassName() = 0;
 			// defines a bounding volume based on two points
 			virtual void set(nau::math::vec3 a, nau::math::vec3 b) = 0;
 			virtual void calculate (const std::shared_ptr<std::vector<VertexData::Attr>> &vertices) = 0;
@@ -31,7 +32,6 @@ namespace nau
 			virtual bool intersect (const IBoundingVolume *volume) = 0;
 			virtual void compound (const IBoundingVolume *volume) = 0;
 			virtual bool isA (BoundingVolumeKind kind) const = 0; /***MARK***/
-			virtual std::string getType (void) const = 0;
 			virtual std::vector<vec3> &getPoints (void) = 0;
 
 			virtual const nau::math::vec3& getMin (void) const = 0;

@@ -284,10 +284,11 @@ OBJLoader::firstPass(FILE* file)
 			buf[strlen(buf) - 1] = '\0';	/* nuke '\n' */
 #endif
 			s = std::string(buf);
+			s = s + "-" + materialName;
 			initGroup(s);
 			group = &(m_Groups[s]);
 			group->material = materialName;
-			groupName = s;
+			groupName = buf;
 			break;
 
 		case 'f':				/* face */
@@ -383,7 +384,7 @@ OBJLoader::secondPass(FILE* file)
 	unsigned int    numtriangles;		/* number of triangles in model */
 	Group* group;			/* current group pointer */
 	std::string    material;			/* current material */
-	unsigned int    v, n, t;
+	int    v, n, t;
 	char      buf[128];
 	std::string s, groupName;
 
@@ -447,9 +448,11 @@ OBJLoader::secondPass(FILE* file)
 			buf[strlen(buf)-1] = '\0';	/* nuke '\n' */
 #endif
 			s = std::string(buf);
-			group = &m_Groups[s];
+//			group = &m_Groups[s];
 			groupName = s;
-//			group = &m_Groups[buf];
+			s = groupName + "-" + material;
+			group = &m_Groups[s];
+			//			group = &m_Groups[buf];
 //			group->material = material;
 			break;
 		case 'f':				/* face */
@@ -459,16 +462,24 @@ OBJLoader::secondPass(FILE* file)
 			if (strstr(buf, "//")) {
 			/* v//n */
 				sscanf(buf, "%d//%d", &v, &n);
+				v = v < 0 ? numvertices + v : v;
+				n = n < 0 ? numnormals + n : n;
 				addIndex(numtriangles * 3, v,0,n);
 				fscanf(file, "%d//%d", &v, &n);
+				v = v < 0 ? numvertices + v : v;
+				n = n < 0 ? numnormals + n : n;
 				addIndex(numtriangles * 3+1, v,0,n);
 				fscanf(file, "%d//%d", &v, &n);
+				v = v < 0 ? numvertices + v : v;
+				n = n < 0 ? numnormals + n : n;
 				addIndex(numtriangles * 3+2, v,0,n);
 				group->indices[group->numTriangles] = numtriangles;
 				group->numTriangles++;
 				numtriangles++;
 				while(fscanf(file, "%d//%d", &v, &n) > 0) {
-					addIndex(numtriangles * 3, 
+					v = v < 0 ? numvertices + v : v;
+					n = n < 0 ? numnormals + n : n;
+					addIndex(numtriangles * 3,
 						m_Indices[(numtriangles - 1) * 3].v,0,
 						m_Indices[(numtriangles - 1) * 3].n);
 					addIndex(numtriangles * 3 + 1, 
@@ -482,16 +493,29 @@ OBJLoader::secondPass(FILE* file)
 			} 
 			else if (sscanf(buf, "%d/%d/%d", &v, &t, &n) == 3) {
 				/* v/t/n */
+				v = v < 0 ? numvertices + v : v;
+				t = t < 0 ? numtexcoords + t : t;
+				n = n < 0 ? numnormals + n : n;
+
 				addIndex(numtriangles * 3, v,t,n);
 				fscanf(file, "%d/%d/%d", &v, &t, &n);
+				v = v < 0 ? numvertices + v : v;
+				t = t < 0 ? numtexcoords + t : t;
+				n = n < 0 ? numnormals + n : n;
 				addIndex(numtriangles * 3+1, v,t,n);
 				fscanf(file, "%d/%d/%d", &v, &t, &n);
+				v = v < 0 ? numvertices + v : v;
+				t = t < 0 ? numtexcoords + t : t;
+				n = n < 0 ? numnormals + n : n;
 				addIndex(numtriangles * 3+2, v,t,n);
 				group->indices[group->numTriangles] = numtriangles;
 				group->numTriangles++;
 				numtriangles++;
 				while(fscanf(file, "%d/%d/%d", &v, &t, &n) > 0) {
-					addIndex(numtriangles * 3, 
+					v = v < 0 ? numvertices + v : v;
+					t = t < 0 ? numtexcoords + t : t;
+					n = n < 0 ? numnormals + n : n;
+					addIndex(numtriangles * 3,
 						m_Indices[(numtriangles - 1) * 3].v,
 						m_Indices[(numtriangles - 1) * 3].t,
 						m_Indices[(numtriangles - 1) * 3].n);
@@ -508,15 +532,23 @@ OBJLoader::secondPass(FILE* file)
 			} 
 			else if (sscanf(buf, "%d/%d", &v, &t) == 2) {
 				/* v/t */
+				v = v < 0 ? numvertices + v : v;
+				t = t < 0 ? numtexcoords + t : t;
 				addIndex(numtriangles * 3,v,t,0);
 				fscanf(file, "%d/%d", &v, &t);
+				v = v < 0 ? numvertices + v : v;
+				t = t < 0 ? numtexcoords + t : t;
 				addIndex(numtriangles * 3+1, v,t,0);
 				fscanf(file, "%d/%d", &v, &t);
+				v = v < 0 ? numvertices + v : v;
+				t = t < 0 ? numtexcoords + t : t;
 				addIndex(numtriangles * 3+2, v,t,0);
 				group->indices[group->numTriangles] = numtriangles;
 				group->numTriangles++;
 				numtriangles++;
 				while(fscanf(file, "%d/%d", &v, &t) > 0) {
+					v = v < 0 ? numvertices + v : v;
+					t = t < 0 ? numtexcoords + t : t;
 					addIndex(numtriangles * 3,
 						m_Indices[(numtriangles - 1) * 3].v,
 						m_Indices[(numtriangles - 1) * 3].t,0);
@@ -532,16 +564,20 @@ OBJLoader::secondPass(FILE* file)
 			} 
 			else {
 				/* v */
+				v = v < 0 ? numvertices + v : v;
 				addIndex(numtriangles * 3, v,0,0);
 				fscanf(file, "%d", &v);
+				v = v < 0 ? numvertices + v : v;
 				addIndex(numtriangles * 3+1, v,0,0);
 				fscanf(file, "%d", &v);
+				v = v < 0 ? numvertices + v : v;
 				addIndex(numtriangles * 3+2, v,0,0);
 				group->indices[group->numTriangles] = numtriangles;
 				group->numTriangles++;
 				numtriangles++;
 				while(fscanf(file, "%d", &v) > 0) {
-					addIndex(numtriangles * 3, 
+					v = v < 0 ? numvertices + v : v;
+					addIndex(numtriangles * 3,
 						m_Indices[(numtriangles - 1) * 3].v,0,0);
 					addIndex(numtriangles * 3 + 1,
 						m_Indices[(numtriangles - 1) * 3 + 2].v,0,0);
@@ -850,6 +886,69 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 		}
 	}
 
+	std::shared_ptr<std::vector<VertexData::Attr>> tangent;
+
+	if (/*params.find("TANGENT") && */ t) {
+		tangent = std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>);
+		tangent->reserve(verts);
+		std::vector<vec3> tan1;
+		tan1.resize(v->size());
+		
+		for (unsigned int i = 0; i < obj.m_NumTriangles ; ++i) {
+
+			unsigned int i1, i2, i3;
+			i1 = obj.m_Indices[i * 3].realIndex;
+			i2 = obj.m_Indices[i * 3 + 1].realIndex;
+			i3 = obj.m_Indices[i * 3 + 2].realIndex;
+
+			VertexAttrib v1, v2, v3;
+			v1 = v->at(i1);
+			v2 = v->at(i2);
+			v3 = v->at(i3);
+
+			VertexAttrib w1, w2, w3;
+			w1 = t->at(i1);
+			w2 = t->at(i2);
+			w3 = t->at(i3);
+
+			float x1 = v2.x - v1.x;
+			float x2 = v3.x - v1.x;
+			float y1 = v2.y - v1.y;
+			float y2 = v3.y - v1.y;
+			float z1 = v2.z - v1.z;
+			float z2 = v3.z - v1.z;
+
+			float s1 = w2.x - w1.x;
+			float s2 = w3.x - w1.x;
+			float t1 = w2.y - w1.y;
+			float t2 = w3.y - w1.y;
+
+			float r = 1.0F / (s1 * t2 - s2 * t1);
+
+			vec3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r);
+			vec3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r);
+
+			tan1[i1] += sdir;
+			tan1[i2] += sdir;
+			tan1[i3] += sdir;
+		}
+
+
+		for (unsigned int a = 0; a < v->size(); a++) {
+
+				const VertexAttrib &va = n->at(a);
+				const vec3 & n = vec3(va.x, va.y, va.z);
+				const vec3 & t = tan1[a];
+				vec3 k = n.cross(n.cross(t));
+				k.normalize();
+				vec3 tt = t;
+				tt.add(-k);
+				tt.normalize();
+				tangent->push_back(VertexAttrib(tt.x, tt.y, tt.z, 0.0f));
+				//tangent[a].w = (n % t * tan2[a] < 0.0F) ? -1.0F : 1.0F;
+		}
+
+	}
 
 	unsigned int primitive;
 	if (params.find("USE_ADJACENCY") != std::string::npos)
@@ -890,7 +989,8 @@ OBJLoader::loadScene (nau::scene::IScene *aScene, std::string &aFilename, std::s
 	vdata->setDataFor(VertexData::GetAttribIndex(std::string("normal")), n);
 	if (obj.m_NumTexCoords)
 		vdata->setDataFor(VertexData::GetAttribIndex(std::string("texCoord0")), t);
-
+	if (tangent)
+		vdata->setDataFor(VertexData::GetAttribIndex(std::string("tangent")), tangent);
 
 	// ARE THERE ANY ACTUAL MATERIALS DEFINED?
 	//if (obj.m_NumMaterials==0) {

@@ -31,8 +31,9 @@ namespace nau
 			friend class nau::resource::ResourceManager;
 			~MeshBones (void);
 
+			std::string getClassName();
+
 			void addBoneWeight(unsigned int vertex, unsigned int bone, float weight);
-			virtual std::string getType (void);
 		};
 	};
 };

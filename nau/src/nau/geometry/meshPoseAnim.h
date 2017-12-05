@@ -33,7 +33,7 @@ namespace nau {
 				MeshPoseAnim(void);
 				~MeshPoseAnim(void);
 			
-				std::string getType (void);
+				std::string getClassName (void);
 
 				//void setName(std::string aName);
 				//std::string getName();

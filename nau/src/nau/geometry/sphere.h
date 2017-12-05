@@ -15,6 +15,8 @@ namespace nau
 			Sphere(void);			
 			~Sphere(void);
 
+			std::string getClassName();
+
 			static AttribSet Attribs;
 			static AttribSet &GetAttribs() { return Attribs; }
 

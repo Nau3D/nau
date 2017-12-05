@@ -158,7 +158,7 @@ OctreeByMatScene::compile (void) {
 void 
 OctreeByMatScene::add (std::shared_ptr<SceneObject> &aSceneObject) {
 
-	if (0 == aSceneObject->getType().compare ("OctreeNode")) {
+	if (0 == aSceneObject->getClassName().compare ("OctreeNode")) {
 		m_Built = true;
 		if (0 == m_pGeometry) {
 			m_pGeometry = new OctreeByMat;

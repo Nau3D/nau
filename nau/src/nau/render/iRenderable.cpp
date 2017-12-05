@@ -37,3 +37,5 @@ IRenderable::IRenderable() {
 
 	registerAndInitArrays(Attribs);
 }
+
+

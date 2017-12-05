@@ -30,8 +30,11 @@ MeshBones::addBoneWeight(unsigned int vertex, unsigned int bone, float weight)
 	
 }
 
-std::string 
-MeshBones::getType()
-{
-	return("MeshBones");
+
+std::string
+MeshBones::getClassName() {
+
+	return "MeshBones";
 }
+
+

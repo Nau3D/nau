@@ -30,20 +30,20 @@ Box::Box(void) : Primitive() {
 	vertices->at (Box::FACE_FRONT + Box::BOTTOM_RIGHT).set	( n, -n, n);
 	vertices->at (Box::FACE_FRONT + Box::BOTTOM_LEFT).set	(-n, -n, n);
 
-	tangent->at (Box::FACE_FRONT + Box::TOP_LEFT).set		(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_FRONT + Box::TOP_RIGHT).set		(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_FRONT + Box::BOTTOM_RIGHT).set	(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_FRONT + Box::BOTTOM_LEFT).set	(0.0f,  1.0f, 0.0f);
+	tangent->at (Box::FACE_FRONT + Box::TOP_LEFT).set		(1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_FRONT + Box::TOP_RIGHT).set		(1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_FRONT + Box::BOTTOM_RIGHT).set	(1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_FRONT + Box::BOTTOM_LEFT).set	(1.0f, 0.0f,  0.0f, 0.0f);
 
 	textureCoords->at (Box::FACE_FRONT + Box::TOP_LEFT).set		(0.0f, n, 0.0f);
 	textureCoords->at (Box::FACE_FRONT + Box::TOP_RIGHT).set	(n, n, 0.0f);
 	textureCoords->at (Box::FACE_FRONT + Box::BOTTOM_RIGHT).set	(n, 0.0f, 0.0f);
 	textureCoords->at (Box::FACE_FRONT + Box::BOTTOM_LEFT).set	(0.0f, 0.0f, 0.0f);
 
-	normals->at (Box::FACE_FRONT + Box::TOP_LEFT).set		(0.0f, 0.0f, n);
-	normals->at (Box::FACE_FRONT + Box::TOP_RIGHT).set		(0.0f, 0.0f, n);
-	normals->at (Box::FACE_FRONT + Box::BOTTOM_RIGHT).set	(0.0f, 0.0f, n);	
-	normals->at (Box::FACE_FRONT + Box::BOTTOM_LEFT).set	(0.0f, 0.0f, n); 	
+	normals->at (Box::FACE_FRONT + Box::TOP_LEFT).set		(0.0f, 0.0f, n, 0.0f);
+	normals->at (Box::FACE_FRONT + Box::TOP_RIGHT).set		(0.0f, 0.0f, n, 0.0f);
+	normals->at (Box::FACE_FRONT + Box::BOTTOM_RIGHT).set	(0.0f, 0.0f, n, 0.0f);	
+	normals->at (Box::FACE_FRONT + Box::BOTTOM_LEFT).set	(0.0f, 0.0f, n, 0.0f); 	
 
 	//LEFT
 	vertices->at (Box::FACE_LEFT + Box::TOP_LEFT).set		(-n, n, -n);
@@ -51,20 +51,20 @@ Box::Box(void) : Primitive() {
 	vertices->at (Box::FACE_LEFT + Box::BOTTOM_RIGHT).set	(-n, -n, n);
 	vertices->at (Box::FACE_LEFT + Box::BOTTOM_LEFT).set	(-n, -n, -n);
 
-	tangent->at (Box::FACE_LEFT + Box::TOP_LEFT).set		(0.0f,  1.0f, 0.0f);(-n, n, -n);
-	tangent->at (Box::FACE_LEFT + Box::TOP_RIGHT).set		(0.0f,  1.0f, 0.0f);(-n, n,  n);
-	tangent->at (Box::FACE_LEFT + Box::BOTTOM_RIGHT).set	(0.0f,  1.0f, 0.0f);(-n, -n, n);
-	tangent->at (Box::FACE_LEFT + Box::BOTTOM_LEFT).set		(0.0f,  1.0f, 0.0f);(-n, -n, -n);
+	tangent->at (Box::FACE_LEFT + Box::TOP_LEFT).set		(0.0f,  0.0f, 1.0f, 0.0f);
+	tangent->at (Box::FACE_LEFT + Box::TOP_RIGHT).set		(0.0f,  0.0f, 1.0f, 0.0f);
+	tangent->at (Box::FACE_LEFT + Box::BOTTOM_RIGHT).set	(0.0f,  0.0f, 1.0f, 0.0f);
+	tangent->at (Box::FACE_LEFT + Box::BOTTOM_LEFT).set		(0.0f,  0.0f, 1.0f, 0.0f);
 
 	textureCoords->at (Box::FACE_LEFT + Box::TOP_LEFT).set		(0.0f, n, 0.0f);
 	textureCoords->at (Box::FACE_LEFT + Box::TOP_RIGHT).set		(n, n, 0.0f);
 	textureCoords->at (Box::FACE_LEFT + Box::BOTTOM_RIGHT).set	(n, 0.0f, 0.0f);
 	textureCoords->at (Box::FACE_LEFT + Box::BOTTOM_LEFT).set	(0.0f, 0.0f, 0.0f);
 
-	normals->at (Box::FACE_LEFT + Box::TOP_LEFT).set		(-n, 0.0f, 0.0f);
-	normals->at (Box::FACE_LEFT + Box::TOP_RIGHT).set		(-n, 0.0f, 0.0f);
-	normals->at (Box::FACE_LEFT + Box::BOTTOM_RIGHT).set	(-n, 0.0f, 0.0f);	
-	normals->at (Box::FACE_LEFT + Box::BOTTOM_LEFT).set		(-n, 0.0f, 0.0f); 	
+	normals->at (Box::FACE_LEFT + Box::TOP_LEFT).set		(-n, 0.0f, 0.0f, 0.0f);
+	normals->at (Box::FACE_LEFT + Box::TOP_RIGHT).set		(-n, 0.0f, 0.0f, 0.0f);
+	normals->at (Box::FACE_LEFT + Box::BOTTOM_RIGHT).set	(-n, 0.0f, 0.0f, 0.0f);	
+	normals->at (Box::FACE_LEFT + Box::BOTTOM_LEFT).set		(-n, 0.0f, 0.0f, 0.0f); 	
 
 	//BACK
 	vertices->at (Box::FACE_BACK + Box::TOP_LEFT).set		( n, n, -n);
@@ -72,20 +72,20 @@ Box::Box(void) : Primitive() {
 	vertices->at (Box::FACE_BACK + Box::BOTTOM_RIGHT).set	(-n, -n,-n);
 	vertices->at (Box::FACE_BACK + Box::BOTTOM_LEFT).set	( n, -n,-n);
 
-	tangent->at (Box::FACE_BACK + Box::TOP_LEFT).set		(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_BACK + Box::TOP_RIGHT).set		(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_BACK + Box::BOTTOM_RIGHT).set	(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_BACK + Box::BOTTOM_LEFT).set		(0.0f,  1.0f, 0.0f);
+	tangent->at (Box::FACE_BACK + Box::TOP_LEFT).set		(-1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_BACK + Box::TOP_RIGHT).set		(-1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_BACK + Box::BOTTOM_RIGHT).set	(-1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_BACK + Box::BOTTOM_LEFT).set		(-1.0f, 0.0f,  0.0f, 0.0f);
 
 	textureCoords->at (Box::FACE_BACK + Box::TOP_LEFT).set		(0.0f, n, 0.0f);
 	textureCoords->at (Box::FACE_BACK + Box::TOP_RIGHT).set		(n, n, 0.0f);
 	textureCoords->at (Box::FACE_BACK + Box::BOTTOM_RIGHT).set	(n, 0.0f, 0.0f);
 	textureCoords->at (Box::FACE_BACK + Box::BOTTOM_LEFT).set	(0.0f, 0.0f, 0.0f);
 
-	normals->at (Box::FACE_BACK + Box::TOP_LEFT).set		(0.0f, 0.0f, -n);
-	normals->at (Box::FACE_BACK + Box::TOP_RIGHT).set		(0.0f, 0.0f, -n);
-	normals->at (Box::FACE_BACK + Box::BOTTOM_RIGHT).set	(0.0f, 0.0f, -n);	
-	normals->at (Box::FACE_BACK + Box::BOTTOM_LEFT).set		(0.0f, 0.0f, -n); 	
+	normals->at (Box::FACE_BACK + Box::TOP_LEFT).set		(0.0f, 0.0f, -n, 0.0f);
+	normals->at (Box::FACE_BACK + Box::TOP_RIGHT).set		(0.0f, 0.0f, -n, 0.0f);
+	normals->at (Box::FACE_BACK + Box::BOTTOM_RIGHT).set	(0.0f, 0.0f, -n, 0.0f);	
+	normals->at (Box::FACE_BACK + Box::BOTTOM_LEFT).set		(0.0f, 0.0f, -n, 0.0f); 	
 
 	//RIGHT
 	vertices->at (Box::FACE_RIGHT + Box::TOP_LEFT).set		( n, n,  n);
@@ -93,20 +93,20 @@ Box::Box(void) : Primitive() {
 	vertices->at (Box::FACE_RIGHT + Box::BOTTOM_RIGHT).set	( n, -n,-n);
 	vertices->at (Box::FACE_RIGHT + Box::BOTTOM_LEFT).set	( n, -n, n);
 
-	tangent->at (Box::FACE_RIGHT + Box::TOP_LEFT).set		(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_RIGHT + Box::TOP_RIGHT).set		(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_RIGHT + Box::BOTTOM_RIGHT).set	(0.0f,  1.0f, 0.0f);
-	tangent->at (Box::FACE_RIGHT + Box::BOTTOM_LEFT).set	(0.0f,  1.0f, 0.0f);
+	tangent->at (Box::FACE_RIGHT + Box::TOP_LEFT).set		(0.0f, 0.0f,  -1.0f, 0.0f);
+	tangent->at (Box::FACE_RIGHT + Box::TOP_RIGHT).set		(0.0f, 0.0f,  -1.0f, 0.0f);
+	tangent->at (Box::FACE_RIGHT + Box::BOTTOM_RIGHT).set	(0.0f, 0.0f,  -1.0f, 0.0f);
+	tangent->at (Box::FACE_RIGHT + Box::BOTTOM_LEFT).set	(0.0f, 0.0f,  -1.0f, 0.0f);
 
 	textureCoords->at (Box::FACE_RIGHT + Box::TOP_LEFT).set		(0.0f, n, 0.0f);
 	textureCoords->at (Box::FACE_RIGHT + Box::TOP_RIGHT).set	(n, n, 0.0f);
 	textureCoords->at (Box::FACE_RIGHT + Box::BOTTOM_RIGHT).set	(n, 0.0f, 0.0f);
 	textureCoords->at (Box::FACE_RIGHT + Box::BOTTOM_LEFT).set	(0.0f, 0.0f, 0.0f);
 
-	normals->at (Box::FACE_RIGHT + Box::TOP_LEFT).set		(n, 0.0f, 0.0f);
-	normals->at (Box::FACE_RIGHT + Box::TOP_RIGHT).set		(n, 0.0f, 0.0f);
-	normals->at (Box::FACE_RIGHT + Box::BOTTOM_RIGHT).set	(n, 0.0f, 0.0f);	
-	normals->at (Box::FACE_RIGHT + Box::BOTTOM_LEFT).set	(n, 0.0f, 0.0f); 	
+	normals->at (Box::FACE_RIGHT + Box::TOP_LEFT).set		(n, 0.0f, 0.0f, 0.0f);
+	normals->at (Box::FACE_RIGHT + Box::TOP_RIGHT).set		(n, 0.0f, 0.0f, 0.0f);
+	normals->at (Box::FACE_RIGHT + Box::BOTTOM_RIGHT).set	(n, 0.0f, 0.0f, 0.0f);	
+	normals->at (Box::FACE_RIGHT + Box::BOTTOM_LEFT).set	(n, 0.0f, 0.0f, 0.0f); 	
 
 	//TOP
 	vertices->at (Box::FACE_TOP + Box::TOP_LEFT).set	(-n, n, -n);
@@ -114,20 +114,20 @@ Box::Box(void) : Primitive() {
 	vertices->at (Box::FACE_TOP + Box::BOTTOM_RIGHT).set( n, n,  n);
 	vertices->at (Box::FACE_TOP + Box::BOTTOM_LEFT).set	(-n, n,  n);
 
-	tangent->at (Box::FACE_TOP + Box::TOP_LEFT).set			(0.0f,  0.0f, 1.0f);
-	tangent->at (Box::FACE_TOP + Box::TOP_RIGHT).set		(0.0f,  0.0f, 1.0f);
-	tangent->at (Box::FACE_TOP + Box::BOTTOM_RIGHT).set		(0.0f,  0.0f, 1.0f);
-	tangent->at (Box::FACE_TOP + Box::BOTTOM_LEFT).set		(0.0f,  0.0f, 1.0f);
+	tangent->at (Box::FACE_TOP + Box::TOP_LEFT).set			(1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_TOP + Box::TOP_RIGHT).set		(1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_TOP + Box::BOTTOM_RIGHT).set		(1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_TOP + Box::BOTTOM_LEFT).set		(1.0f, 0.0f,  0.0f, 0.0f);
 
 	textureCoords->at (Box::FACE_TOP + Box::TOP_LEFT).set		(0.0f, n, 0.0f);
 	textureCoords->at (Box::FACE_TOP + Box::TOP_RIGHT).set		(n, n, 0.0f);
 	textureCoords->at (Box::FACE_TOP + Box::BOTTOM_RIGHT).set	(n, 0.0f, 0.0f);
 	textureCoords->at (Box::FACE_TOP + Box::BOTTOM_LEFT).set	(0.0f, 0.0f, 0.0f);
 
-	normals->at (Box::FACE_TOP + Box::TOP_LEFT).set		( 0.0f, n, 0.0f);
-	normals->at (Box::FACE_TOP + Box::TOP_RIGHT).set	( 0.0f, n, 0.0f);
-	normals->at (Box::FACE_TOP + Box::BOTTOM_RIGHT).set	( 0.0f, n, 0.0f);	
-	normals->at (Box::FACE_TOP + Box::BOTTOM_LEFT).set	( 0.0f, n, 0.0f); 	
+	normals->at (Box::FACE_TOP + Box::TOP_LEFT).set		( 0.0f, n, 0.0f, 0.0f);
+	normals->at (Box::FACE_TOP + Box::TOP_RIGHT).set	( 0.0f, n, 0.0f, 0.0f);
+	normals->at (Box::FACE_TOP + Box::BOTTOM_RIGHT).set	( 0.0f, n, 0.0f, 0.0f);	
+	normals->at (Box::FACE_TOP + Box::BOTTOM_LEFT).set	( 0.0f, n, 0.0f, 0.0f); 	
 
 	//BOTTOM
 	vertices->at (Box::FACE_BOTTOM + Box::TOP_LEFT).set		(-n, -n,  n);
@@ -135,20 +135,20 @@ Box::Box(void) : Primitive() {
 	vertices->at (Box::FACE_BOTTOM + Box::BOTTOM_RIGHT).set	( n, -n,  -n);
 	vertices->at (Box::FACE_BOTTOM + Box::BOTTOM_LEFT).set	(-n, -n,  -n);
 
-	tangent->at (Box::FACE_BOTTOM + Box::TOP_LEFT).set		(0.0f,  0.0f, -1.0f);
-	tangent->at (Box::FACE_BOTTOM + Box::TOP_RIGHT).set		(0.0f,  0.0f, -1.0f);
-	tangent->at (Box::FACE_BOTTOM + Box::BOTTOM_RIGHT).set	(0.0f,  0.0f, -1.0f);
-	tangent->at (Box::FACE_BOTTOM + Box::BOTTOM_LEFT).set	(0.0f,  0.0f, -1.0f);
+	tangent->at (Box::FACE_BOTTOM + Box::TOP_LEFT).set		(-1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_BOTTOM + Box::TOP_RIGHT).set		(-1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_BOTTOM + Box::BOTTOM_RIGHT).set	(-1.0f, 0.0f,  0.0f, 0.0f);
+	tangent->at (Box::FACE_BOTTOM + Box::BOTTOM_LEFT).set	(-1.0f, 0.0f,  0.0f, 0.0f);
 
 	textureCoords->at (Box::FACE_BOTTOM + Box::TOP_LEFT).set		(0.0f, n, 0.0f);
 	textureCoords->at (Box::FACE_BOTTOM + Box::TOP_RIGHT).set		(n, n, 0.0f);
 	textureCoords->at (Box::FACE_BOTTOM + Box::BOTTOM_RIGHT).set	(n, 0.0f, 0.0f);
 	textureCoords->at (Box::FACE_BOTTOM + Box::BOTTOM_LEFT).set		(0.0f, 0.0f, 0.0f);
 
-	normals->at (Box::FACE_BOTTOM + Box::TOP_LEFT).set		( 0.0f, -n, 0.0f);
-	normals->at (Box::FACE_BOTTOM + Box::TOP_RIGHT).set		( 0.0f, -n, 0.0f);
-	normals->at (Box::FACE_BOTTOM + Box::BOTTOM_RIGHT).set	( 0.0f, -n, 0.0f);	
-	normals->at (Box::FACE_BOTTOM + Box::BOTTOM_LEFT).set	( 0.0f, -n, 0.0f); 	
+	normals->at (Box::FACE_BOTTOM + Box::TOP_LEFT).set		( 0.0f, -n, 0.0f, 0.0f);
+	normals->at (Box::FACE_BOTTOM + Box::TOP_RIGHT).set		( 0.0f, -n, 0.0f, 0.0f);
+	normals->at (Box::FACE_BOTTOM + Box::BOTTOM_RIGHT).set	( 0.0f, -n, 0.0f, 0.0f);	
+	normals->at (Box::FACE_BOTTOM + Box::BOTTOM_LEFT).set	( 0.0f, -n, 0.0f, 0.0f); 	
 
 	std::shared_ptr<VertexData> &vertexData = getVertexData();
 
@@ -223,6 +223,13 @@ Box::Box(void) : Primitive() {
 
 Box::~Box(void) {
 
+}
+
+
+std::string 
+Box::getClassName() {
+
+	return "Box";
 }
 
 

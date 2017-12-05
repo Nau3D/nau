@@ -105,11 +105,11 @@ OgreMeshLoader::loadScene (IScene* scn, std::string file) throw (std::string)
 
 		loadSubMeshNames(hRoot,scn, meshSharedGeometry);
 
-		if (scn->getType() == "ScenePoses") {
+		if (scn->getClassName() == "ScenePoses") {
 			loadPoses(hRoot,scn, meshSharedGeometry);
 			loadPoseAnimations(hRoot,(ScenePoses *)scn);
 		}
-		else if (scn->getType() == "SceneSkeleton") {
+		else if (scn->getClassName() == "SceneSkeleton") {
 			loadSkeleton(hRoot, (SceneSkeleton *)scn);
 		}
 	}

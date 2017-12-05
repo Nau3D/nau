@@ -82,6 +82,8 @@ namespace nau
 
 		public:
 
+			nau_API virtual const std::string &getClassName(void);
+
 			nau_API virtual void setPropf4(Float4Property prop, vec4& aVec);
 			nau_API virtual void setPrope(EnumProperty prop, int v);
 			nau_API vec3 &getPropf3(Float3Property prop);
@@ -123,8 +125,6 @@ namespace nau
 			nau_API virtual void transform(nau::math::mat4 &t) = 0;
 
 			nau_API virtual nau::geometry::IBoundingVolume& getBoundingVolume (void) = 0;
-
-			nau_API virtual const std::string &getType (void);
 
 			nau_API virtual ~IScene(void) {};
 

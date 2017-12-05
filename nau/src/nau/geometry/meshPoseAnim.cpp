@@ -16,7 +16,7 @@ MeshPoseAnim::~MeshPoseAnim()
 
 
 std::string 
-MeshPoseAnim::getType()
+MeshPoseAnim::getClassName()
 {
 	return("MeshPoseAnim");
 }

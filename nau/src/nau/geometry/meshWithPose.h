@@ -28,6 +28,8 @@ namespace nau
 				friend class nau::resource::ResourceManager;
 				~MeshPose(void);
 
+				std::string getClassName();
+
 				void addPose(std::string aName, PoseOffset *aPose);
 				void setPose(unsigned int index);
 				void setPose(std::string aPoseName);
@@ -40,7 +42,6 @@ namespace nau
 				void setReferencePose(std::shared_ptr<std::vector<VertexData::Attr>> &vertexData);
 				void setReferencePose();
 
-				virtual std::string getType (void);
 				void eventReceived(const std::string &sender, const std::string &eventType, 
 					const std::shared_ptr<IEventData> &evt);
 		};

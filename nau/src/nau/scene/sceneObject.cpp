@@ -298,7 +298,7 @@ SceneObject::setRenderable (std::shared_ptr<IRenderable> &renderable)
 
 
 std::string 
-SceneObject::getType (void)
+SceneObject::getClassName(void)
 {
 	return "SimpleObject";
 }

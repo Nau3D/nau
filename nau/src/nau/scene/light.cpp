@@ -64,7 +64,7 @@ Light::eventReceived(const std::string &sender,
 
 
 std::string
-Light::getType() {
+Light::getClassName() {
 
 	return("LIGHT");
 }

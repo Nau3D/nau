@@ -75,6 +75,13 @@ BoundingBox::eventReceived(const std::string &sender,
 }
 
 
+std::string
+BoundingBox::getClassName() {
+
+	return "BoundingBox";
+}
+
+
 BBox *
 BoundingBox::getGeometry()
 {
@@ -303,13 +310,6 @@ BoundingBox::isA (BoundingVolumeKind kind) const {
 		return true;
 	}
 	return false;
-}
-
-
-std::string 
-BoundingBox::getType (void) const {
-
-	return "BoundingBox";
 }
 
 

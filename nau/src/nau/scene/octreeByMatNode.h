@@ -64,7 +64,7 @@ namespace nau
 
 			void getMaterialNames(std::set<std::string> *nameList);
 
-			virtual std::string getType (void);
+			virtual std::string getClassName(void);
 			void setName(std::string name);
 			std::string getName();
 

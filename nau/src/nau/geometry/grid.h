@@ -13,6 +13,8 @@ namespace nau
 			Grid(void);
 			~Grid(void);
 
+			std::string getClassName();
+
 			static AttribSet Attribs;
 			static AttribSet &GetAttribs() { return Attribs; }
 

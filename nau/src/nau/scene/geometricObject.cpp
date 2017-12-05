@@ -54,7 +54,7 @@ GeometricObject::setMaterial(const std::string &name) {
 
 
 std::string 
-GeometricObject::getType (void) {
+GeometricObject::getClassName(void) {
 
 	return "GeometricPrimitive";
 }

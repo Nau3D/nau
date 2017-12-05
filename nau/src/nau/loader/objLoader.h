@@ -51,7 +51,7 @@ namespace nau
 			
 			unsigned int   m_NumNormals;			/* number of normals in model */
 			std::vector<VertexData::Attr> m_Normals;			/* array of normals */
-			
+
 			unsigned int   m_NumTexCoords;		/* number of texcoords in model */
 			std::vector<VertexData::Attr> m_TexCoords;			/* array of texture coordinates */
 			

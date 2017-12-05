@@ -573,7 +573,7 @@ RenderManager::getSceneNames(std::vector<std::string> *names) {
 	std::map<std::string, std::shared_ptr<IScene>>::iterator iter = m_Scenes.begin();
 
 	for( ; iter != m_Scenes.end(); ++iter ) {
-		if ((*iter).second->getType() != "SceneAux")
+		if ((*iter).second->getClassName() != "SceneAux")
       names->push_back((*iter).first); 
     }
 }

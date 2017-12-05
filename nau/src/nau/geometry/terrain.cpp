@@ -23,7 +23,14 @@ Terrain::~Terrain(void) {
 }
 
 
-void 
+std::string
+Terrain::getClassName() {
+
+	return "Terrain";
+}
+
+
+void
 Terrain::setHeightMap(const std::string &name) {
 
 	m_HeightMap = name;

@@ -47,6 +47,7 @@ namespace nau
 
 			virtual void setName(std::string name) = 0;
 			virtual std::string& getName () = 0;
+			virtual std::string getClassName() = 0;
 			virtual unsigned int getDrawingPrimitive() = 0; 
 			virtual unsigned int getRealDrawingPrimitive() = 0;
 			virtual void setDrawingPrimitive(unsigned int aDrawingPrimitive) = 0;
@@ -69,7 +70,6 @@ namespace nau
 			virtual void setNumberOfVerticesPerPatch(int i) = 0;
 			virtual int getnumberOfVerticesPerPatch(void) = 0;
 
-			virtual std::string getType (void) = 0;
 			virtual void resetCompilationFlags() = 0;
 
 			virtual ~IRenderable(void) {};
@@ -79,7 +79,6 @@ namespace nau
 			static bool Inited;
 
 			IRenderable();
-
 		};
 	};
 };

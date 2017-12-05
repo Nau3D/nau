@@ -17,6 +17,8 @@ namespace nau
 
 			~Terrain(void);
 
+			std::string getClassName();
+
 			void setHeightMap(const std::string &name);
 
 			void build();
