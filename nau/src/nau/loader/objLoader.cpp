@@ -222,7 +222,7 @@ OBJLoader::firstPass(FILE* file)
 	initGroup(s);
 	group = &m_Groups["default"];
 	groupName = "default";
-	materialName = "__nauDefault";
+	materialName = "DefaultOBJMaterial";
 	
 	m_NumVertices = m_NumNormals = m_NumTexCoords = m_NumTriangles = 0;
 	m_NumMaterials = 0;

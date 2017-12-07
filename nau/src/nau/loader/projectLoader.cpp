@@ -3163,7 +3163,6 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 
 				const char *pNameColor = pElemColor->Attribute ("name");
 				Data *v = readAttribute("internalFormat", ITexture::Attribs.get("INTERNAL_FORMAT"), pElemColor);
-				int layers = 0;
 
 				if (0 == pNameColor) {
 					NAU_THROW("File %s\nLibrary %s\nColor rendertarget has no name, in render target %s", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);							

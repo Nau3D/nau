@@ -365,11 +365,11 @@ GLTexture::build(int immutable) {
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
 				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
-					glTexStorage3DMultisample((GLenum)m_EnumProps[DIMENSION], m_EnumProps[SAMPLES], (GLenum)m_EnumProps[INTERNAL_FORMAT],
+					glTexStorage3DMultisample((GLenum)m_EnumProps[DIMENSION], m_IntProps[SAMPLES], (GLenum)m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS], GL_FALSE);
 				}
 				else {
-					glTexImage3DMultisample((GLenum)m_EnumProps[DIMENSION], m_EnumProps[SAMPLES], (GLenum)m_EnumProps[INTERNAL_FORMAT],
+					glTexImage3DMultisample((GLenum)m_EnumProps[DIMENSION], m_IntProps[SAMPLES], (GLenum)m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS], GL_FALSE);
 				}
 			}

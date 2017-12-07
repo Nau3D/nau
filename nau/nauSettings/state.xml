@@ -15,6 +15,7 @@
 			<enum value="0x92D3" name="GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS" />
 			<enum value="0x92D2" name="GL_MAX_VERTEX_ATOMIC_COUNTERS" />
 			<enum value="0x8CDF" name="GL_MAX_COLOR_ATTACHMENTS" />
+			<enum value="0x8D57" name="GL_MAX_SAMPLES" />
 			<enum value="0x8869" name="GL_MAX_VERTEX_ATTRIBS" />
 			<enum value="0x0D33" name="GL_MAX_TEXTURE_SIZE" />
 			<enum value="0x8824" name="GL_MAX_DRAW_BUFFERS" />

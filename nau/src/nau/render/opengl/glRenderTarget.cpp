@@ -163,6 +163,7 @@ GLRenderTarget::addDepthTarget (std::string name, std::string internalFormat) {
 	m_Depth = 1;
 
 	if (0 != m_DepthTexture) {
+		dettachDepthStencilTexture((GLuint)GL_DEPTH_ATTACHMENT);
 		RESOURCEMANAGER->removeTexture(m_DepthTexture->getLabel());
 		m_DepthTexture = NULL;
 	}
