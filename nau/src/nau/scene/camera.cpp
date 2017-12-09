@@ -98,31 +98,24 @@ Camera::Create(const std::string &name) {
 Camera::Camera (const std::string &name) :
 	SceneObject(),
 
-//	m_IsDynamic (false),
 	m_LookAt(false)
-	//m_LookAtPoint(0.0f, 0.0f, 0.0f),
-//	m_PositionOffset (0.0f)
-	//m_IsOrtho (false)
 {
-	//setDefault();
 	registerAndInitArrays(Attribs);
 	m_Id = 0;
 	m_Name = name;
 	m_pViewport = NAU->getDefaultViewport();
+	m_StringProps[VIEWPORT] = m_pViewport->getName();
 
 	buildViewMatrix();
 	buildInverses();
 
 	m_StaticCondition = false;
 
-	//m_BoundingVolume = new BoundingBox;
 	setVectorsFromSpherical();
 
 	// Adding a Mesh with the frustum lines
 	ResourceManager *rm = RESOURCEMANAGER;
 	std::shared_ptr<IRenderable> &renderable =  rm->createRenderable("Mesh", rm->makeMeshName(m_Name, "Camera"));
-	//int drawPrimitive = IRenderer::Attribs.getID("LINES");
-	//renderable->setDrawingPrimitive(drawPrimitive/*nau::render::IRenderer::LINES*/);
 	renderable->setDrawingPrimitive(nau::render::IRenderable::LINES);
 	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
 		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(8));
@@ -148,7 +141,6 @@ Camera::Camera (const std::string &name) :
 	renderable->addMaterialGroup (aMaterialGroup);
 
 	m_Transform = m_Mat4Props[VIEW_INVERSE_MATRIX];
-//	setRenderable (renderable);
 
 	aMaterialGroup.reset();
 	aMaterialGroup = MaterialGroup::Create(renderable.get(), "__Emission Red");
@@ -163,11 +155,6 @@ Camera::Camera (const std::string &name) :
 	renderable->addMaterialGroup (aMaterialGroup);
 
 	setRenderable (renderable);
-
-	//std::shared_ptr<IScene> &s = RENDERMANAGER->createScene(name, "SceneAux");
-	//std::shared_ptr<Camera> p = shared_from_this();
-	//s->add(std::dynamic_pointer_cast<SceneObject>(shared_from_this()));
-
 }
 
 

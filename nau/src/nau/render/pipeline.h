@@ -85,9 +85,13 @@ namespace nau
 			// -----------------------------------------------------------------
 			//		PRE POST SCRIPTS
 			// -----------------------------------------------------------------
-			void setPreScript(std::string file, std::string name);
-			void setPostScript(std::string file, std::string name);
-			void callScript(std::string &name);
+			void setTestScript(const std::string &file, const std::string &name);
+			void setPreScript(const std::string &file, const std::string &name);
+			void setPostScript(const std::string &file, const std::string &name);
+			void callPreScript();
+			void callPostScript();
+			bool callTestScript();
+
 
 		protected:
 
@@ -108,7 +112,8 @@ namespace nau
 			unsigned int m_NextPass;
 
 			std::string m_PreScriptFile, m_PreScriptName,
-				m_PostScriptFile, m_PostScriptName;
+				m_PostScriptFile, m_PostScriptName,
+				m_TestScriptFile, m_TestScriptName;
 
 			unsigned int m_FrameCount = 0;
 		};

@@ -92,11 +92,11 @@
 					<light name="Sun" />
 				</lights>
 				<materialMaps>
-					<map fromMaterial="ballMat" toLibrary="Simple" toMaterial="simpleColored" />
+					<!--map fromMaterial="ballMat" toLibrary="Simple" toMaterial="simpleColored" /-->
 					<map fromMaterial="azulejo" toLibrary="Simple" toMaterial="simpleTexturedAzulejo" />
-					<map fromMaterial="crate" toLibrary="Simple" toMaterial="simpleTexturedCrate" />
-					<map fromMaterial="crateCullFaced" toLibrary="Simple" toMaterial="simpleTexturedCrateCullFaced" />
-					<map fromMaterial="debugMat" toLibrary="Simple" toMaterial="simpleColoredDebug" />
+					<!--map fromMaterial="crate" toLibrary="Simple" toMaterial="simpleTexturedCrate" /-->
+					<!--map fromMaterial="crateCullFaced" toLibrary="Simple" toMaterial="simpleTexturedCrateCullFaced" /-->
+					<!--map fromMaterial="debugMat" toLibrary="Simple" toMaterial="simpleColoredDebug" /-->
 				</materialMaps>
 			</pass>
 		</pipeline>

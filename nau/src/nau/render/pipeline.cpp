@@ -227,8 +227,8 @@ void
 Pipeline::execute() {
 
 	unsigned int n = RENDERER->getPropui(IRenderer::FRAME_COUNT);
-	if (m_FrameCount == 0 || n == 0)
-		callScript(m_PreScriptName);
+	//if (m_FrameCount == 0 || n == 0)
+	//	callPreScript();
 
 	try {
 		PROFILE("Pipeline execute");
@@ -260,16 +260,16 @@ Pipeline::execute() {
 		SLOG("%s", e.getException().c_str());
 	}
 
-	if (m_FrameCount == 0 || n == m_FrameCount-1)
-		callScript(m_PostScriptName);
+	//if (m_FrameCount == 0 || n == m_FrameCount-1)
+	//	callPostScript();
 }
 
 
 void 
 Pipeline::executeNextPass() {
 
-	if (m_NextPass == 0)
-		callScript(m_PreScriptName);
+	//if (m_NextPass == 0)
+	//	callPreScript();
 
 	try {
 		std::shared_ptr<Pass> &p = m_Passes[m_NextPass];
@@ -282,8 +282,8 @@ Pipeline::executeNextPass() {
 	catch (Exception &e) {
 		SLOG("%s", e.getException().c_str());
 	}
-	if (m_NextPass == 0)
-		callScript(m_PostScriptName);
+	//if (m_NextPass == 0)
+	//	callPostScript();
 
 }
 
@@ -299,11 +299,23 @@ Pipeline::getCurrentPass() {
 
 
 // -----------------------------------------------------------------
-//		PRE POST SCRIPTS
+//		PRE POST AND TEST SCRIPTS
 // -----------------------------------------------------------------
 
-void 
-Pipeline::setPreScript(std::string file, std::string name) {
+void
+Pipeline::setTestScript(const std::string &file, const std::string &name) {
+
+	m_TestScriptFile = file;
+	m_TestScriptName = name;
+#if NAU_LUA == 1
+	if (file != "" && name != "")
+		NAU->initLuaScript(file, name);
+#endif
+}
+
+
+void
+Pipeline::setPreScript(const std::string &file, const std::string &name) {
 
 	m_PreScriptFile = file;
 	m_PreScriptName = name;
@@ -315,7 +327,7 @@ Pipeline::setPreScript(std::string file, std::string name) {
 
 
 void
-Pipeline::setPostScript(std::string file, std::string name) {
+Pipeline::setPostScript(const std::string &file, const std::string &name) {
 
 	m_PostScriptFile = file;
 	m_PostScriptName = name;
@@ -326,12 +338,38 @@ Pipeline::setPostScript(std::string file, std::string name) {
 }
 
 
-void 
-Pipeline::callScript(std::string &name) {
+bool 
+Pipeline::callTestScript() {
+
+	bool result = true;
+#if NAU_LUA == 1
+	if (m_TestScriptName != "") {
+		result = NAU->callLuaTestScript(m_TestScriptName);
+
+	}
+#endif
+	return result;
+}
+
+
+void
+Pipeline::callPreScript() {
 
 #if NAU_LUA == 1
-	if (name != "") {
-		NAU->callLuaScript(name);
+	if (m_PreScriptName != "") {
+		NAU->callLuaScript(m_PreScriptName);
+
+	}
+#endif
+}
+
+
+void
+Pipeline::callPostScript() {
+
+#if NAU_LUA == 1
+	if (m_PostScriptName != "") {
+		NAU->callLuaTestScript(m_PostScriptName);
 
 	}
 #endif

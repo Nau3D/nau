@@ -192,8 +192,8 @@
 					<map fromMaterial="billiardBallMat14" toLibrary="Simple" toMaterial="poolBallTextured14" />
 					<map fromMaterial="billiardBallMat15" toLibrary="Simple" toMaterial="poolBallTextured15" />
 					<map fromMaterial="billiardBallMatCue" toLibrary="Simple" toMaterial="poolBallTexturedCue" />
-					<map fromMaterial="colorMat" toLibrary="Simple" toMaterial="simpleWhite" />
-					<map fromMaterial="debugMat" toLibrary="Simple" toMaterial="simpleColoredDebug" />
+					<!--map fromMaterial="colorMat" toLibrary="Simple" toMaterial="simpleWhite" />
+					<map fromMaterial="debugMat" toLibrary="Simple" toMaterial="simpleColoredDebug" /-->
 				</materialMaps>
 			</pass>
 		</pipeline>

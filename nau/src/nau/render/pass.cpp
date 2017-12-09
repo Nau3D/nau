@@ -114,6 +114,10 @@ Pass::Init() {
 	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new NauUInt(0)));
 	Attribs.add(Attribute(BUFFER_DRAW_INDIRECT, "BUFFER_DRAW_INDIRECT", Enums::DataType::UINT, true, new NauUInt(0)));
 
+	//
+	Attribs.add(Attribute(CAMERA, "camera", "CAMERA"));
+
+
 	//#ifndef _WINDLL
 	NAU->registerAttributes("PASS", &Attribs);
 	//#endif
@@ -127,7 +131,7 @@ Pass::Init() {
 Pass::Pass (const std::string &passName) :
 	m_ClassName("default"),
 	m_Name (passName),
-	m_CameraName ("__nauDefault"),
+	//m_CameraName ("__nauDefault"),
 	m_SceneVector(),
 	m_MaterialMap(),
 	m_Viewport (0),
@@ -198,6 +202,8 @@ Pass::initVars() {
 	m_RTSizeHeight = 512;
 
 	m_UseRT = false; // enable, disable
+
+	m_StringProps[CAMERA] = NAU->getActiveCamera()->getName();
 }
 
 
@@ -342,7 +348,7 @@ Pass::doPass (void) {
 
 	prepareBuffers();
 
-	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_CameraName);
+	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_StringProps[CAMERA]);
 	const float *a = (float *)((mat4 *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4))->getMatrix();
 	camFrustum.setFromMatrix (a);
 	RENDERMANAGER->clearQueue();
@@ -699,7 +705,7 @@ Pass::setRTSize(uivec2 &v) {
 void
 Pass::setupCamera (void) {
 
-	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_CameraName);
+	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_StringProps[CAMERA]);
 	
 	std::shared_ptr<Viewport> v = aCam->getViewport();
 	// if pass has a viewport 
@@ -715,7 +721,7 @@ Pass::setupCamera (void) {
 void
 Pass::restoreCamera (void) {
 
-	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera(m_CameraName);
+	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera(m_StringProps[CAMERA]);
 
 	if (m_ExplicitViewport) {
 		aCam->setViewport (m_RestoreViewport);
@@ -726,14 +732,14 @@ Pass::restoreCamera (void) {
 const std::string& 
 Pass::getCameraName (void) {
 
-	return m_CameraName;
+	return m_StringProps[CAMERA];
 }
 
 
 void 
 Pass::setCamera (const std::string &cameraName) {
 
-	m_CameraName = cameraName;
+	m_StringProps[CAMERA] = cameraName;
 }
 
 

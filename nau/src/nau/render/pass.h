@@ -93,6 +93,8 @@ namespace nau
 			UINT_PROP(DIM_Y, 102);
 			UINT_PROP(DIM_Z, 103);
 
+			STRING_PROP(CAMERA, 0);
+
 			typedef enum {
 				KEEP,
 				ZERO,
@@ -286,7 +288,7 @@ namespace nau
 			std::string m_ClassName;
 			// pass name
 			std::string m_Name;
-			std::string m_CameraName;
+			//std::string m_CameraName;
 			std::vector<std::string> m_Lights;
 			std::vector<std::string> m_SceneVector;
 

@@ -245,6 +245,7 @@ namespace nau {
 		void setActiveCameraName(const std::string &aCamName);
 		nau::scene::Camera *getActiveCamera();
 		std::shared_ptr<Viewport> getDefaultViewport ();
+		std::shared_ptr<Camera> getDefaultCamera();
 
 		// provides linear depth at the center pixel
 		float getDepthAtCenter();
@@ -351,6 +352,7 @@ namespace nau {
 		std::string m_ActiveCameraName;
 		unsigned int m_WindowWidth, m_WindowHeight;
 		std::shared_ptr<Viewport> m_Viewport;
+		std::shared_ptr<Camera> m_Camera;
 		IState *m_DefaultState;
 
 		bool m_Inited;

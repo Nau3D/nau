@@ -181,6 +181,8 @@ Nau::init (bool trace) {
 
 	m_DefaultState = IState::create();
 	m_Viewport = m_pRenderManager->createViewport("__nauDefault");
+	m_Camera = m_pRenderManager->createCamera("__nauDefault");
+	m_Camera->setViewport(m_Viewport);
 
 	// Init LUA
 #if NAU_LUA == 1
@@ -1962,8 +1964,8 @@ Nau::getActiveCamera() {
 	if (RENDERMANAGER->hasCamera(m_ActiveCameraName)) {
 		return RENDERMANAGER->getCamera(m_ActiveCameraName).get();
 	}
-	else
-		return NULL;
+	else // 
+		return m_Camera.get();
 }
 
 
@@ -2075,6 +2077,13 @@ std::shared_ptr<Viewport>
 Nau::getDefaultViewport() {
 	
 	return m_Viewport;
+}
+
+
+std::shared_ptr<Camera>
+Nau::getDefaultCamera() {
+
+	return m_Camera;
 }
 
 

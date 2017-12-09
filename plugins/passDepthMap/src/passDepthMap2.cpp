@@ -167,7 +167,7 @@ PassDepthMap2::doPass (void) {
 	m_LightCamera->setPropf4(Camera::VIEW_VEC,l.x,l.y,l.z,l.w);
 
 
-	std::shared_ptr<Camera> aCamera = RENDERMANAGER->getCamera(m_CameraName);
+	std::shared_ptr<Camera> aCamera = RENDERMANAGER->getCamera(m_StringProps[CAMERA]);
 
 	cNear = aCamera->getPropf(Camera::NEARP);
 	cFar = aCamera->getPropf(Camera::FARP);

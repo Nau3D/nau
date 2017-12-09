@@ -39,7 +39,7 @@ PassProfiler::PassProfiler (const std::string &name) :
 {
 	m_ClassName = "profiler";
 
-	m_CameraName = "__ProfilerCamera";
+	m_StringProps[CAMERA] = "__ProfilerCamera";
 	m_pCam = RENDERMANAGER->getCamera("__ProfilerCamera");
 	m_pSO = SceneObjectFactory::Create("SimpleObject");
 	nau::resource::ResourceManager *rm = RESOURCEMANAGER;

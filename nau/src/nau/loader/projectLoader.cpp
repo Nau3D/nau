@@ -2364,7 +2364,7 @@ void
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
 	std::vector<std::string> excluded = {"testScript", "preProcess", "postProcess", "mode", "scene", "scenes", 
-		"camera", "lights", "viewport", "renderTarget",
+		"lights", "viewport", "renderTarget",
 		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits", "rayCount",
 		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
 		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes", "preScript", "postScript"};
@@ -3456,7 +3456,7 @@ ProjectLoader::loadPassMaterialMaps(TiXmlHandle hPass, Pass *aPass)
 		defLib->getMaterialNames(sss, &names);
 
 		if (names.size() == 0)
-			NAU_THROW("File %s\nPass %s\nInjection map error: No materials match %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pFromMaterial);
+			NAU_THROW("File %s\nPass %s\n;Material map error: No materials match %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pFromMaterial);
 		// check if the fromMaterial exists
 		//if (pFromMaterial) {
 		//	if (strcmp(pFromMaterial,"*") && (!MATERIALLIBMANAGER->hasMaterial(DEFAULTMATERIALLIBNAME, pFromMaterial))) {
@@ -3891,6 +3891,12 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 			readScript(pElemPass, fileName, scriptName);
 			aPipeline->setPostScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
 		}
+		pElemPass = handle.FirstChild("testScript").Element();
+		if (pElemPass != NULL) {
+
+			readScript(pElemPass, fileName, scriptName);
+			aPipeline->setTestScript(File::GetFullPath(ProjectLoader::s_Path, fileName), scriptName);
+		}
 #endif
 		pElemPass = handle.FirstChild ("pass").Element();
 		for ( ; 0 != pElemPass; pElemPass = pElemPass->NextSiblingElement("pass")) {
@@ -3932,7 +3938,7 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 			if (passClass != "optixPrime" && passClass != "quad" && passClass != "profiler") {
 
 				loadPassScenes(hPass,aPass);
-				loadPassCamera(hPass,aPass);	
+				//loadPassCamera(hPass,aPass);	
 			}
 			else if (passClass == "quad") {
 				loadPassTexture(hPass,aPass);

@@ -24,20 +24,12 @@
 		<cameras>
 			<camera name="Master" >
 				<viewport name="Left" />
-				<TYPE value="PERSPECTIVE" />
-				<FOV value=60.0 />
-				<NEAR value = 1 />
-				<FAR value="500.0" />
 				<POSITION x="0.0" y="0.5" z="2.5" />
 				<VIEW x="0.0" y="0.0" z="-1.0" />
 				<UP x="0.0" y="1.0" z="0.0" />
 			</camera>
 			<camera name="Slave" >
 				<viewport name="Right" />
-				<TYPE value="PERSPECTIVE" />
-				<FOV value=60.0 />
-				<NEAR value = 1 />
-				<FAR value="5000.0" />
 				<POSITION x="0.0" y="0.0" z="2.5" />
 				<VIEW x="0.0" y="0.0" z="-1.0" />
 				<UP x="0.0" y="1.0" z="0.0" />
@@ -47,40 +39,14 @@
 		<lights>
 			<light name="Sun" type="directional">
 				<DIRECTION x="1" y="-1" z="-1" />
-				<COLOR r="0.9" g="0.9" b="0.9" />
 			</light>
 		</lights>
 	</assets>
 	
 	<pipelines default="script test">
+	
 		<pipeline name="script test" defaultCamera="Master">
 			<pass class="default" name="master">
-				<preScript file="test.lua" script="enterPassMaster" />
-				<scenes>
-					<scene name="MainScene" />
-				</scenes>
-				<camera name="Master" />
-				<lights>
-					<light name="Sun" />
-				</lights>
-				<postScript file="test.lua" script="leavingPassMaster" />
-			</pass>
-			
-			<pass class="default" name="slave">
-				<preScript file="test.lua" script="enterPassSlave" />
-				<scenes>
-					<scene name="MainScene" />
-				</scenes>
-				<camera name="Slave" />
-				<lights>
-					<light name="Sun" />
-				</lights>
-				<postScript file="test.lua" script="leavingPassSlave" />
-			</pass>
-			<postScript file="test.lua" script="syncCamera" />
-		</pipeline>
-		<pipeline name="no script" defaultCamera="Master">
-			<pass class="default" name="master">
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
@@ -91,6 +57,7 @@
 			</pass>
 			
 			<pass class="default" name="slave">
+				<preScript file="test.lua" script="syncCamera" />
 				<scenes>
 					<scene name="MainScene" />
 				</scenes>
@@ -100,5 +67,6 @@
 				</lights>
 			</pass>
 		</pipeline>
+		
 	</pipelines>
 </project>	

@@ -384,7 +384,7 @@ PassOptix::doPass (void) {
 void
 PassOptix::setupCamera (void) {
 
-	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_CameraName);
+	std::shared_ptr<Camera> &aCam = RENDERMANAGER->getCamera (m_StringProps[CAMERA]);
 	
 	if (m_ExplicitViewport) {
 		m_RestoreViewport = aCam->getViewport();
