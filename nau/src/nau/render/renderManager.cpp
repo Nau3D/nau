@@ -322,39 +322,73 @@ RenderManager::renderActivePipelineNextPass() {
 }
 
 
+//unsigned char
+//RenderManager::renderActivePipeline () 
+//{
+//	if (!(m_ActivePipelineIndex < m_Pipelines.size()))
+//		return 0;
+//
+//	if (!m_Pipelines[m_ActivePipelineIndex]->callTestScript()) {
+//		m_ActivePipelineIndex++;
+//		m_ActivePipelineIndex = m_ActivePipelineIndex % m_Pipelines.size();
+//		if (m_ActivePipelineIndex == 0)
+//			exit(0);
+//		RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
+//	}
+//
+//	int n = RENDERER->getPropui(IRenderer::FRAME_COUNT);
+//	if (n == 0)
+//		m_Pipelines[m_ActivePipelineIndex]->callPreScript();
+//	int k = m_Pipelines[m_ActivePipelineIndex]->getFrameCount();
+//	if (m_RunMode == RUN_ALL && k > 0 && k == n) {
+//		m_Pipelines[m_ActivePipelineIndex]->callPostScript();
+//		m_ActivePipelineIndex++;
+//		if (n != 0 && m_ActivePipelineIndex < m_Pipelines.size())
+//			m_Pipelines[m_ActivePipelineIndex]->callPreScript();
+//		m_ActivePipelineIndex = m_ActivePipelineIndex % m_Pipelines.size();
+//		RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
+//		if (m_ActivePipelineIndex == 0)
+//			exit(0);
+//	}
+//
+//	m_Pipelines[m_ActivePipelineIndex]->execute ();
+//
+//	return 0;
+//}
+
+
+
 unsigned char
-RenderManager::renderActivePipeline () 
+RenderManager::renderActivePipeline()
 {
 	if (!(m_ActivePipelineIndex < m_Pipelines.size()))
 		return 0;
 
-	if (!m_Pipelines[m_ActivePipelineIndex]->callTestScript()) {
-		m_ActivePipelineIndex++;
-		m_ActivePipelineIndex = m_ActivePipelineIndex % m_Pipelines.size();
-		if (m_ActivePipelineIndex == 0)
-			exit(0);
-		RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
-	}
-
+	bool endPipeline = false;
 	int n = RENDERER->getPropui(IRenderer::FRAME_COUNT);
+
 	if (n == 0)
 		m_Pipelines[m_ActivePipelineIndex]->callPreScript();
+
+	if (!m_Pipelines[m_ActivePipelineIndex]->callTestScript()) 
+		endPipeline = true;
+	else {
+		m_Pipelines[m_ActivePipelineIndex]->execute();
+	}
+
 	int k = m_Pipelines[m_ActivePipelineIndex]->getFrameCount();
-	if (m_RunMode == RUN_ALL && k > 0 && k == n) {
+	if (endPipeline || (m_RunMode == RUN_ALL && k > 0 && k == n+1)) {
 		m_Pipelines[m_ActivePipelineIndex]->callPostScript();
 		m_ActivePipelineIndex++;
-		if (n != 0 && m_ActivePipelineIndex < m_Pipelines.size())
-			m_Pipelines[m_ActivePipelineIndex]->callPreScript();
 		m_ActivePipelineIndex = m_ActivePipelineIndex % m_Pipelines.size();
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
 		if (m_ActivePipelineIndex == 0)
 			exit(0);
+		return 1;
 	}
-
-	m_Pipelines[m_ActivePipelineIndex]->execute ();
-
 	return 0;
 }
+
 
 
 void *

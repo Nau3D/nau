@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<project name="try" width=1024 height=512>
+	<assets>
+		<attributes>
+			<attribute name="testVarPip2" type="RENDERER" data="FLOAT" value="3" />
+			<attribute name="testVarPip3" type="RENDERER" data="FLOAT" value="4" />
+		</attributes>
+		<scenes>
+			<scene name="MainScene" >
+				<file name="../../models/teapot.obj"/>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="Left" >
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=0.5 height=1 />
+				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
+			</viewport>
+			<viewport name="Right" >
+				<ORIGIN x=0.5 y=0.0 />
+				<SIZE width=0.5 height=1 />
+				<CLEAR_COLOR  r="0.4" g="0.2" b="0.2" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="Master" >
+				<viewport name="Left" />
+				<POSITION x="0.0" y="0.5" z="2.5" />
+				<VIEW x="0.0" y="0.0" z="-1.0" />
+			</camera>
+			<camera name="Slave" >
+				<viewport name="Right" />
+				<POSITION x="0.0" y="0.0" z="2.5" />
+				<VIEW x="0.0" y="0.0" z="-1.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" type="directional">
+				<DIRECTION x="1" y="-1" z="-1" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+	</assets>
+	
+	<pipelines mode="RUN_ALL">
+	
+		<pipeline name="Pip I" frameCount = 5>
+		
+			<preScript file="test.lua" script="enterPipI" />
+			
+			<pass class="default" name="Pass I">
+				<preScript file="test.lua" script="execPassI" />
+			</pass>
+			
+			<pass class="default" name="Pass I">
+				<preScript file="test.lua" script="execPassII" />
+			</pass>
+			
+			<postScript file="test.lua" script="endPipI" />
+		
+		</pipeline>
+		
+		<pipeline name="no script" defaultCamera="Master"  >
+		
+			<testScript file="test.lua" script="testPipII" />
+			<preScript file="test.lua" script="enterPipII" />
+			
+			<pass class="default" name="Pass I">
+				<preScript file="test.lua" script="execPassI" />
+				<postScript file="test.lua" script="donePassI" />
+			</pass>
+			
+			<postScript file="test.lua" script="endPipII" />
+		</pipeline>
+
+		<pipeline name="Pip III" defaultCamera="Master"  frameCount = 3>
+			<testScript file="test.lua" script="testPipIII" />
+			
+			<pass class="default" name="Pass I">
+			</pass>
+			
+			<postScript file="test.lua" script="endPipIII" />
+		</pipeline>
+
+	</pipelines>
+</project>	

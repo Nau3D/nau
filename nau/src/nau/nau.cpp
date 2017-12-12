@@ -1838,18 +1838,22 @@ Nau::step() {
 	renderer->resetCounters();
 	RESOURCEMANAGER->clearBuffers();
 
-	m_pRenderManager->renderActivePipeline();
+	unsigned char pip_changed;
+
+	pip_changed = m_pRenderManager->renderActivePipeline();
 
 	m_pEventManager->notifyEvent("FRAME_END", "Nau", "", NULL);
 
-	unsigned int k = renderer->getPropui(IRenderer::FRAME_COUNT);
-	if (k == UINT_MAX)
-		// 2 avoid issues with run_once and skip_first
-		// and allows a future implementation of odd and even frames for
-		// ping-pong rendering
-		renderer->setPropui(IRenderer::FRAME_COUNT, 2);
-	else
-		renderer->setPropui(IRenderer::FRAME_COUNT, ++k);
+	if (!pip_changed) {
+		unsigned int k = renderer->getPropui(IRenderer::FRAME_COUNT);
+		if (k == UINT_MAX)
+			// 2 avoid issues with run_once and skip_first
+			// and allows a future implementation of odd and even frames for
+			// ping-pong rendering
+			renderer->setPropui(IRenderer::FRAME_COUNT, 2);
+		else
+			renderer->setPropui(IRenderer::FRAME_COUNT, ++k);
+	}
 
 	if (m_Physics)
 		m_pPhysicsManager->update();

@@ -347,7 +347,7 @@ GLTexture::build(int immutable) {
 		max = std::max(m_IntProps[HEIGHT], std::max(m_IntProps[WIDTH], m_IntProps[DEPTH]));
 		m_IntProps[LEVELS] = (int)log2(max);
 	}
-	else if (m_IntProps[LEVELS] >= 1)
+	else if (m_IntProps[LEVELS] > 1)
 		m_BoolProps[MIPMAP] = true;
 
 	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
