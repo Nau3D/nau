@@ -1169,7 +1169,7 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 			if (s) {
 				IRenderable *r = s->getRenderable().get();
 				std::string s = r->getClassName();
-				std::transform(s.begin(), s.end(), s.begin(), toupper);
+				std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 				//std::string s = typeid(*r).name();
 				if (type == s) {
 					//Sphere *sp = (Sphere *)r;
