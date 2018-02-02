@@ -3,8 +3,7 @@
 #include "nau.h"
 #include "nau/render/iRenderable.h"
 #include "nau/geometry/boundingBox.h"
-
-#include "nau/debug/profile.h"
+#include "nau/render/opengl/glProfile.h"
 
 using namespace nau::render;
 using namespace nau::scene;

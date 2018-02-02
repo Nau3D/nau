@@ -1,7 +1,7 @@
 #include "dlgLog.h"
 
 
-#include <nau/debug/profile.h>
+#include "nau/render/opengl/glProfile.h"
 
 #include <fstream>
 

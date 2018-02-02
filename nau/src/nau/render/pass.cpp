@@ -1,10 +1,10 @@
 #include "nau/render/pass.h"
 
 #include "nau.h"
-#include "nau/debug/profile.h"
 #include "nau/geometry/axis.h"
 #include "nau/geometry/frustum.h"
 #include "nau/render/passFactory.h"
+#include "nau/render/opengl/glProfile.h"
 
 #include <algorithm>
 #include <sstream>

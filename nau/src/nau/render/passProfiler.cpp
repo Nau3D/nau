@@ -1,8 +1,8 @@
 #include "nau/render/passProfiler.h"
 
-#include "nau/debug/profile.h"
 #include "nau/geometry/mesh.h"
 #include "nau/render/passFactory.h"
+#include "nau/render/opengl/glProfile.h"
 #include "nau/resource/fontManager.h"
 #include "nau/scene/sceneObject.h"
 

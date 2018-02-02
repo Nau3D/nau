@@ -16,8 +16,8 @@
 #include <nau/errors.h>
 #include <nau/clogger.h>
 #include <nau/slogger.h>
-#include <nau/debug/profile.h>
 #include <nau/render/iAPISupport.h>
+#include "nau/render/opengl/glProfile.h"
 
 #include <wx/bitmap.h>
 #include <wx/dir.h>

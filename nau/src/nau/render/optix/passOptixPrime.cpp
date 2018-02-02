@@ -14,9 +14,9 @@ using namespace gl;
 
 #include "nau.h"
 #include "nau/slogger.h"
-#include "nau/debug/profile.h"
 #include "nau/geometry/frustum.h"
 #include "nau/render/passFactory.h"
+#include "nau/render/opengl/glProfile.h"
 
 #include <sstream>
 

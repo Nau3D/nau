@@ -1,8 +1,8 @@
 #include "nau/render/passCompute.h"
 
 #include "nau.h"
-#include "nau/debug/profile.h"
 #include "nau/render/passFactory.h"
+#include "nau/render/opengl/glProfile.h"
 
 using namespace nau::material;
 using namespace nau::scene;

@@ -8,13 +8,13 @@
 
 #include <nau.h>
 #include <nau/slogger.h>
-#include <nau/debug/profile.h>
 #include <nau/event/eventFactory.h>
 #include <nau/event/cameraMotion.h>
 #include <nau/event/cameraOrientation.h>
 #include <nau/geometry/iBoundingVolume.h>
 #include <nau/math/utils.h>
 #include <nau/render/iAPISupport.h>
+#include "nau/render/opengl/glProfile.h"
 #include <nau/scene/sceneObject.h>
 
 

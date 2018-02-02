@@ -2,7 +2,6 @@
 
 #include "nau.h"
 #include "nau/slogger.h"
-#include "nau/debug/profile.h"
 #include "nau/loader/iTextureLoader.h"
 #include "nau/material/material.h" 
 #include "nau/material/materialGroup.h"
@@ -13,6 +12,7 @@
 #include "nau/render/opengl/glDebug.h"
 #include "nau/render/opengl/glImageTexture.h"
 #include "nau/render/opengl/glMaterialGroup.h"
+#include "nau/render/opengl/glProfile.h"
 #include "nau/render/opengl/glProgram.h"
 #include "nau/render/opengl/glTexture.h"
 #include "nau/render/opengl/glVertexArray.h"

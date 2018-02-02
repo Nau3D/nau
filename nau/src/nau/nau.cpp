@@ -2,7 +2,6 @@
 
 #include "nau/config.h"
 #include "nau/slogger.h"
-#include "nau/debug/profile.h"
 #include "nau/geometry/sphere.h"
 #include "nau/interface/interface.h"
 #include "nau/event/eventFactory.h"
@@ -19,6 +18,7 @@
 #include "nau/render/passFactory.h"
 #include "nau/render/passProcessTexture.h"
 #include "nau/render/passProcessBuffer.h"
+#include "nau/render/opengl/glProfile.h"
 #include "nau/resource/fontManager.h"
 #include "nau/scene/sceneFactory.h"
 #include "nau/system/file.h"
