@@ -50,7 +50,7 @@ void main()
      else
 		 atomicCounterIncrement(at2);
 	atomicCounterIncrement(at3);
-	memoryBarrier();
+	memoryBarrier(); 
 	outColor = color;
 
 		

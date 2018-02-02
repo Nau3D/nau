@@ -7,7 +7,7 @@
 			<HEIGHT value=512 />
 			<INTERNAL_FORMAT value="RGBA" />
 		</texture>	
-		<texture name="source" filename="../../models/Texturas/CuboEstrada.tif" mipmap="0" />
+		<texture name="source" filename="textures/CuboEstrada.tif" mipmap="0" />
 	</textures>
 
 	<shaders>
@@ -16,6 +16,7 @@
 		<shader name="compute4" 	cs="shaders/contour4.comp" /> 
 		<shader name="compute8" 	cs="shaders/contour8.comp" /> 
 		<shader name="compute16" 	cs="shaders/contour16.comp" /> 
+		<shader name="compute32" 	cs="shaders/contour32.comp" /> 
 	</shaders>
 	
 	<materials>
@@ -39,6 +40,26 @@
 			</imageTextures>
 		</material>
 		
+		<material name ="computeShader32">
+			<shader name="compute32">
+				<values>									
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+														id=1 component="UNIT" />								
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="1" name="source" />				
+			</textures>
+			<imageTextures>
+				<imageTexture UNIT=1 texture="tex" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+		</material>
+
 		<material name ="computeShader8">
 			<shader name="compute8">
 				<values>									

@@ -22,6 +22,4 @@ void main() {
 
 	vec4 res = (8 * cc - tl - tc - tr - cl - cr - bl - bc - br);
 	imageStore(imageUnit, texCoord, res);
-	
-
 } 

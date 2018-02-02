@@ -25,6 +25,7 @@ GLDebug::Init() {
 	if (sInited)
 		return true;
 
+	SetTraceCallbacks();
 	sInited = true;
 
 	// check if the extension is there
@@ -47,7 +48,6 @@ GLDebug::Init() {
 		SLOG("OpenGL Debug Context not enabled");
 		sCallBackOK = false;
 	}
-	SetTraceCallbacks();
 	SetTrace(0);
 	//CLogger::GetInstance().addLog(CLogger::LEVEL_TRACE, "nau3Dtrace.txt");
 	return sCallBackOK;
@@ -160,12 +160,12 @@ GLDebug::DebugLog(GLenum source,
                        const GLchar* message,
 					   const void* userParam) {
 	
-	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION || type == GL_DEBUG_TYPE_PERFORMANCE_ARB)
 		return;
 
 	//LOG_trace(
 	SLOG(
-		"OpenGL Debug\nType: %s\nSource: %s\nID: %d\nSeverity: %s\n%s",
+		"OpenGL Debug - Type: %s - Source: %s - ID: %d - Severity: %s\n%s",
 		GetStringForType(type).c_str(),
 		GetStringForSource(source).c_str(), id,
 		GetStringForSeverity(severity).c_str(),

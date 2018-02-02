@@ -56,6 +56,8 @@ namespace nau
 
 			GLBuffer(std::string label);
 			GLBuffer() {};
+			
+			char *m_BufferMapPointer;
 
 			int m_LastBound;
 

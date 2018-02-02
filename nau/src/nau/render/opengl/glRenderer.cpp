@@ -889,6 +889,9 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 		assert(APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS));
 		int k = aRenderable.getnumberOfVerticesPerPatch();
 		glPatchParameteri(GL_PATCH_VERTICES, k);
+#ifdef PROFILE
+		glBeginQuery(GL_PRIMITIVES_GENERATED, m_TessQuery);
+#endif
 	}
 	else if (m_Shader->hasTessellationShader()) {
 		glPatchParameteri(GL_PATCH_VERTICES, getVerticesPerPrimitive(drawPrimitive));

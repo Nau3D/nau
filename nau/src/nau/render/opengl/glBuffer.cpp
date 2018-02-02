@@ -31,6 +31,7 @@ GLBuffer::GLBuffer(std::string label): IBuffer(), m_LastBound((int)GL_ARRAY_BUFF
 	IAPISupport *sup = IAPISupport::GetInstance();
 
 	m_Label = label;
+	m_BufferMapPointer = NULL;
 	glGenBuffers(1, (GLuint *)&m_IntProps[ID]);
 	
 	if (sup->apiSupport(IAPISupport::OBJECT_LABELS)) {
@@ -123,16 +124,31 @@ GLBuffer::getData(size_t offset, size_t size, void *data) {
 	if (offset + size > m_UIntProps[SIZE])
 		actualSize = (size_t)m_UIntProps[SIZE] - offset;
 
-	GLenum type = GL_UNIFORM_BUFFER;
+	GLenum type = GL_SHADER_STORAGE_BUFFER; // GL_ARRAY_BUFFER;
 	//glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	//glGetBufferSubData(type, offset, actualSize, data);
 
+	GLenum k = glGetError();
 	glBindBuffer(type, m_IntProps[ID]);
-	void *bufferData;
-	bufferData = glMapBufferRange(type, offset, actualSize, GL_MAP_READ_BIT);
-	assert(bufferData != NULL);
-	memcpy(data, bufferData, actualSize);
-	glUnmapBuffer(type);
+	//k = glGetError();
+	glGetBufferSubData(type, offset, actualSize, data);
+	//GLint res1, res2, res3, res4;
+	//glGetNamedBufferParameteriv(m_IntProps[ID], GL_BUFFER_MAPPED, &res1);
+	//glGetNamedBufferParameteriv(m_IntProps[ID], GL_BUFFER_SIZE, &res2);
+	//glGetNamedBufferParameteriv(m_IntProps[ID], GL_BUFFER_ACCESS, &res3);
+	//glGetNamedBufferParameteriv(m_IntProps[ID], GL_BUFFER_USAGE, &res4);
+	//void *bufferData;
+	//k = glGetError();
+	//glFinish();
+	//GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, GL_UNUSED_BIT);
+	//GLenum res = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 100);
+	//while (GL_TIMEOUT_EXPIRED == res)
+	//	res = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 100);
+	//bufferData = glMapNamedBufferRange(m_IntProps[ID], offset, actualSize, GL_MAP_READ_BIT );
+	//glDeleteSync(sync);
+	////k = glGetError();
+	//assert(bufferData != NULL);
+	//	memcpy(data, bufferData, actualSize);
+	//glUnmapNamedBuffer(m_IntProps[ID]);
 	glBindBuffer(type, 0);
 
 	return actualSize;
@@ -145,13 +161,16 @@ GLBuffer::setPropui(UIntProperty  prop, unsigned int value) {
 
 	if (prop == SIZE) {
 		m_UIntProps[SIZE] = value;
+		//glNamedBufferStorage(m_IntProps[ID], m_UIntProps[SIZE], NULL,
+		//		GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT | GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT);
+		//m_BufferMapPointer = (char *)glMapNamedBuffer(m_IntProps[ID], GL_READ_WRITE);
+		
 		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
-		//glBufferStorage(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT);
 		glBufferData(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_STATIC_DRAW);
 
 		IAPISupport *sup = IAPISupport::GetInstance();
 		if (sup->apiSupport(IAPISupport::CLEAR_BUFFER)) {
-			glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
+			glClearNamedBufferData(m_IntProps[ID], GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
 		}		
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}

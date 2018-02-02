@@ -7,12 +7,6 @@ enterPipI = function()
 	file:close()
 end
 
-enterPipII = function()
-
-	local file=io.open("flow", "a")
-	file:write("Enter pipeline II\n");
-	file:close()
-end
 
 execPassI = function()
 

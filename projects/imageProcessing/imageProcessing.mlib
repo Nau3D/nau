@@ -22,7 +22,7 @@
 			<HEIGHT value=512 />
 			<INTERNAL_FORMAT value="RGBA" />
 		</texture>	
-		<texture name="source" filename="../../models/Texturas/CuboEstrada.tif" mipmap="0" />
+		<texture name="source" filename="textures/CuboEstrada.tif" mipmap="0" />
 	</textures>
 
 	<shaders>
@@ -30,7 +30,7 @@
 		
 		<shader name="standard" 		vs = "shaders/standard.vert"
 										ps = "shaders/standard.frag" /> 
-		<shader name="standardImgTex" 		vs = "shaders/standard.vert"
+		<shader name="standardImgTex" 	vs = "shaders/standard.vert"
 										ps = "shaders/standardImgTex.frag" /> 
 	</shaders>
 

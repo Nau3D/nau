@@ -257,7 +257,9 @@ int main(int argc, char **argv) {
 	// the OpenGL version (major, minor)
 	glutInitContextVersion(3, 0);
 	// Profile selection, the core profile ensures no deprecated functions are used
-	//glutInitContextProfile(GLUT_CORE_PROFILE);
+	glutInitContextProfile(GLUT_CORE_PROFILE);
+	glutInitContextFlags(GLUT_DEBUG);
+
 
 
 	// standard glut settings

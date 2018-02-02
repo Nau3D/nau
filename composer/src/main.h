@@ -50,7 +50,7 @@ public:
 	FrmMainFrame (wxFrame *frame, const wxString& title);
 	~FrmMainFrame ();
 
-	void init();
+	//void init();
 
 private:
    GLCanvas *m_Canvas;

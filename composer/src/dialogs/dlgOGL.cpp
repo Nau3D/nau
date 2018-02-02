@@ -99,6 +99,12 @@ DlgOGL::DlgOGL()
 
   ------------------------------------------------------------------------ */
 
+#define WGL_CONTEXT_DEBUG_BIT_ARB               0x0001
+#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB  0x0002
+#define WGL_CONTEXT_ROBUST_ACCESS_BIT_ARB		0x0004
+
+#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB			0x00000001
+#define WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB	0x00000002
 
 void DlgOGL::setupInfoPanel(wxSizer *siz, wxWindow *parent) {
 
@@ -121,12 +127,34 @@ void DlgOGL::setupInfoPanel(wxSizer *siz, wxWindow *parent) {
 		wxStaticText *st7 = new wxStaticText(parent,-1,wxT("GL_SHADING_LANGUAGE_VERSION:"));
 		wxStaticText *st8 = new wxStaticText(parent,-1,wxString(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 
-		wxStaticText *st9 = new wxStaticText(parent, -1, wxT("Extension Count:"));
+		// Currently NVIDIA drivers do not provide the correct values
+		//wxStaticText *st9 = new wxStaticText(parent, -1, wxT("GL_CONTEXT_PROFILE_MASK:"));
+		//int flags;
+		//glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &flags);
+		//std::string s1 = "";
+		//if (flags == WGL_CONTEXT_CORE_PROFILE_BIT_ARB)
+		//	s1 += "Core Profile";
+		//if (flags == WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB)
+		//	s1 += "Compatibility Profile";
+		//wxStaticText *st10 = new wxStaticText(parent, -1, s1.c_str());
+
+		//wxStaticText *st11 = new wxStaticText(parent, -1, wxT("GL_CONTEXT_FLAGS:"));
+		//glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+		//s1 = "";
+		//if (flags & WGL_CONTEXT_DEBUG_BIT_ARB)
+		//	s1 += "DEBUG ";
+		//if (flags & WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB)
+		//	s1 += "FORWARD_COMPATIBLE";
+		//if (flags & WGL_CONTEXT_ROBUST_ACCESS_BIT_ARB)
+		//	s1 += "ROBUST_ACCESS";
+		//wxStaticText *st12 = new wxStaticText(parent, -1, s1.c_str());
+
+		wxStaticText *st13 = new wxStaticText(parent, -1, wxT("Extension Count:"));
 		int n;
 		glGetIntegerv(GL_NUM_EXTENSIONS, &n);
 		s.Printf(wxT("%d"), n);
 
-		wxStaticText *st10= new wxStaticText(parent, -1, s);
+		wxStaticText *st14= new wxStaticText(parent, -1, s);
 
 		gs ->Add(st1,0,wxALL,3);
 		gs ->Add(st2,0,wxALL,3);
@@ -136,8 +164,12 @@ void DlgOGL::setupInfoPanel(wxSizer *siz, wxWindow *parent) {
 		gs ->Add(st6,0,wxALL,3);
 		gs ->Add(st7,0,wxALL,3);
 		gs ->Add(st8,0,wxALL,3);
-		gs ->Add(st9,0,wxALL,3);
-		gs ->Add(st10,0,wxALL,3);
+		//gs ->Add(st9,0,wxALL,3);
+		//gs ->Add(st10,0,wxALL,3);
+		//gs->Add(st11, 0, wxALL, 3);
+		//gs->Add(st12, 0, wxALL, 3);
+		gs->Add(st13, 0, wxALL, 3);
+		gs->Add(st14, 0, wxALL, 3);
 
 	sizer->Add(gs,0,wxGROW|wxALL,5);
 

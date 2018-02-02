@@ -3,7 +3,7 @@
 uniform writeonly image2D imageUnit;
 uniform sampler2D texUnit;
 
-in vec4 texCoordV;
+in vec2 texCoordV;
 
 void main() {
 

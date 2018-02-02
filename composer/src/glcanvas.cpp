@@ -32,13 +32,13 @@ bool isPaused = false;
 
 GLCanvas::GLCanvas (wxWindow *parent,
                      const wxWindowID id,
-					 const int * 	attribList,
-					// const int * contextAttribs,
+					 const int *attribList,
+					 const int *contextAttribs,
                      const wxPoint &pos,
                      const wxSize &size,
                      long style,
                      const wxString &name)
-   : wxGLCanvas (parent, id, attribList/*, contextAttribs*/, pos, size, style, name), 
+   : wxGLCanvas (parent, id, attribList, contextAttribs, pos, size, style, name), 
 	init (false), m_pEngine (0), m_pCamera (0), m_CounterFps (0),
 	m_Alpha (3.14159f), m_AlphaAux (0.0f), m_Beta (0.0f), m_BetaAux (0.0f), m_OldX(0), m_OldY(0),
 	m_tracking(0), /*m_RiverAnimation (0), */m_WaterState (true), m_Stereo (false),mParent(parent)
@@ -57,12 +57,12 @@ GLCanvas::GLCanvas (wxWindow *parent,
                      const GLCanvas &other,
                      const wxWindowID id,
 					 const int * 	attribList,
-					// const int * contextAttribs,
+					 const int * contextAttribs,
                      const wxPoint &pos,
                      const wxSize &size,
                      long style,
                      const wxString &name)
-   : wxGLCanvas (parent, id, attribList /*, contextAttribs*/, pos, size, style, name), init (false), mParent(parent)
+   : wxGLCanvas(parent, id, attribList , contextAttribs, pos, size, style, name), init (false), mParent(parent)
 {
 	p_GLC = new wxGLContext(this);
 	glbinding::Binding::initialize(false);
@@ -113,10 +113,10 @@ GLCanvas::_setCamera() {
 void 
 GLCanvas::OnPaint (wxPaintEvent &event) {
 
-	if (!inited) {
-		((FrmMainFrame *)mParent)->init();
-		inited = true;
-	}
+	//if (!inited) {
+	//	((FrmMainFrame *)mParent)->init();
+	//	inited = true;
+	//}
 	if (!m_pEngine)
 		return;
 
@@ -143,10 +143,10 @@ GLCanvas::OnPaint (wxPaintEvent &event) {
 void
 GLCanvas::OnIdle(wxIdleEvent& event) {
 
-	if (!inited) {
-		((FrmMainFrame *)mParent)->init();
-		inited = true;
-	}
+	//if (!inited) {
+	//	((FrmMainFrame *)mParent)->init();
+	//	inited = true;
+	//}
 	if (!m_pEngine)
 		return;
 	{
@@ -169,11 +169,11 @@ GLCanvas::OnSize (wxSizeEvent &event) {
 
    if ( !IsShownOnScreen() )
         return;	
-    if (!inited) {
-		//wxMessageBox(_("Nau error!"), _("Resize"));
-		((FrmMainFrame *)mParent)->init();
-		inited = true;
-	}
+ //   if (!inited) {
+	//	//wxMessageBox(_("Nau error!"), _("Resize"));
+	//	((FrmMainFrame *)mParent)->init();
+	//	inited = true;
+	//}
 
 	int width;
 	int height;

@@ -352,7 +352,7 @@ int
 Nau::luaGetBuffer(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
-		LOG_trace("LUA: Calling getAttrib");
+		LOG_trace("LUA: Calling getBuffer");
 		luaStackDump(LuaState);
 	}
 	int top = lua_gettop(l);
@@ -404,7 +404,7 @@ int
 Nau::luaSetBuffer(lua_State *l) {
 
 	if (NAU->getTraceStatus()) {
-		LOG_trace("LUA: Calling getAttrib");
+		LOG_trace("LUA: Calling setBuffer");
 		luaStackDump(LuaState);
 	}
 

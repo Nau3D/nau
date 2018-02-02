@@ -595,6 +595,7 @@ void DlgPass::updateMaterialList() {
 
 	for (auto& lib : libList) {
 
+		matList.clear();
 		 MATERIALLIBMANAGER->getMaterialNames(lib, &matList);
 
 		for(auto& mat: matList) {

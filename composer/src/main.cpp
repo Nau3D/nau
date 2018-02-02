@@ -64,7 +64,6 @@ bool WndComposer::OnInit()
 {
     FrmMainFrame* frame = new FrmMainFrame (0L, wxT("nau engine"));
     frame->Show();
-//	frame->init();
     return true;
 }
 
@@ -347,179 +346,14 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	//}
 #endif
 
-	//// Dialogs //
-	//DlgOGL::SetParent(this);
-	//DlgLog::Instance()->updateDlg();
-
-	//m_pRoot = (Nau *)Nau::Create();
-
-
-	//bool nauInit (false);
         
-    Show(true);
-	int attribList[] = {
-		WX_GL_RGBA,
-	//	WX_GL_DOUBLEBUFFER,
-		WX_GL_DEPTH_SIZE, 24,
-		WX_GL_STENCIL_SIZE, 8, 
-		WX_GL_SAMPLE_BUFFERS,1,
-		WX_GL_SAMPLES,1,
-		0};
-
-
-#define WGL_CONTEXT_MAJOR_VERSION_ARB		0x2091
-#define WGL_CONTEXT_MINOR_VERSION_ARB		0x2092
-#define	WGL_CONTEXT_LAYER_PLANE_ARB			0x2093
-#define WGL_CONTEXT_FLAGS_ARB				0x2094
-#define WGL_CONTEXT_PROFILE_MASK_ARB		0x9126
-
-#define WGL_CONTEXT_DEBUG_BIT_ARB				0x0001
-#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	0x0002
-
-#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB			0x00000001
-#define	WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB	0x00000002
-	//int major = NAU_OPENGL_VERSION / 100;
-	//int minor = (NAU_OPENGL_VERSION - major * 100 ) / 10;
-	int contextAttribList[] = {
-			//WGL_CONTEXT_MAJOR_VERSION_ARB, major,
-            //WGL_CONTEXT_MINOR_VERSION_ARB, minor, 
-            WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
-            WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
- 
-			0};
-
-	m_Canvas = new GLCanvas (this , -1);//, NULL/*, contextAttribList*/);
-    //m_Canvas->DoSetCurrent();
-
-	//bool trace = false;
-	//int framesToTrace = 1;
-
-	//if (wxGetApp().argc > 1) {
-	//	int param = 1;
-	//	if (wxGetApp().argv[1].c_str()[0] != '-') {
-	//		loadProject(wxGetApp().argv[1].c_str());
-	//		param = 2;
-	//	}
-	//	for (int i = param; i < wxGetApp().argc; ++i) {
-	//		if (wxGetApp().argv[i].ToStdString() == "-trace") {
-
-	//			trace = true;
-	//			long frames;
-	//			if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
-	//				framesToTrace = (int)frames;
-	//				++i;
-	//			}
-	//		}
-	//	}
-	//}
-
-	//try {
-	//	wxMessageBox (_("Nau error!"), _("Kaput!")); 
-	//	nauInit = m_pRoot->init(trace);
-	//	wxMessageBox (_("Nau error!"), _("Kaput!")); 
-	//	if (trace)
-	//		m_pRoot->setTrace(framesToTrace);
-	//	
-	//}
-	//catch(std::string &s) {
-	//	wxMessageBox((wxString)s.c_str());
-	//	exit(1);
-	//}
-
-	//if (true != nauInit){
-	//	wxMessageBox (_("Nau error!"), _("Kaput!"));
-	//	exit (1);
-	//}
-	// 
-	//m_Canvas->setEngine (m_pRoot);
-	//m_Canvas->setCamera();
-
-	//// Dialogs //
-	//DlgOGL::SetParent(this);
-	//DlgLog::Instance()->updateDlg();
-	//if (m_pRoot->getPhysicsManager()->isPhysicsAvailable())
-	//	DlgPhysics::SetParent(this);
-	//else
-	//	mbar->EnableTop(mbar->FindMenu(_("Physics")), false);
-	//DlgTextureLib::SetParent(this);
-	//DlgCameras::SetParent(this);
-	//DlgMaterials::SetParent(this);
-	//DlgLights::SetParent(this);
-	//DlgShaders::SetParent(this);
-	//DlgScenes::SetParent(this);
-	//DlgPass::SetParent(this);
-	//DlgAtomics::SetParent(this);
-	//DlgViewports::SetParent(this);
-	//DlgTrace::SetParent(this);
-	//DlgDbgPrograms::SetParent(this);
-	//DlgDbgBuffers::SetParent(this);
-	//DlgDbgStep::SetParent(this);
-	//DlgDbgStep::SetCanvas(m_Canvas);
-	//DlgRenderTargets::SetParent(this);
-//#ifdef GLINTERCEPTDEBUG
-//	gliSetIsGLIActive(true);
-//#endif
-
-#ifdef FINAL
-	startStandAlone();
-	//delete splash;
-#endif
-	//int w, h;
-	//GetClientSize(&w, &h);
-	//SetClientSize(w+1, h+1);
-
-	//if (wxGetApp().argc > 1) {
-	//	int param = 1;
-	//	if (wxGetApp().argv[1].c_str()[0] != '-') {
-	//		loadProject(wxGetApp().argv[1].c_str());
-	//		param = 2;
-	//	}
-	//	for (int i = param; i < wxGetApp().argc; ++i) {
-	//		if (wxGetApp().argv[i].ToStdString() == "-trace") {
-	//			long frames;
-	//			if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
-	//				m_pRoot->setTrace((int)frames);
-	//				++i;
-	//			}
-	//			else
-	//				m_pRoot->setTrace(1);
-	//		}
-	//	}
-	//}
-	Show(true);
-}
-
-
-FrmMainFrame::~FrmMainFrame() {
-
-//#ifdef GLINTERCEPTDEBUG
-//	gliSetIsGLIActive(true);
-//#endif
-}
-
-
-void
-FrmMainFrame::init() {
-
-	if (m_Inited)
-		return;
-	m_Inited= true;
-
-	m_Canvas->DoSetCurrent();
-
-	// Dialogs //
-	DlgOGL::SetParent(this);
-	DlgLog::Instance()->updateDlg();
-
-	m_pRoot = (Nau *)Nau::Create();
-
-	bool nauInit(false);
-
 	bool loadProjectFlag = false;
 	bool trace = false;
 	bool pause = false;
 	int framesToTrace = 1;
 	bool invalidOptions = false;
+	bool gldebug = false;
+	bool glrobustness = false;
 
 	if (wxGetApp().argc > 1) {
 		int param = 1;
@@ -540,12 +374,77 @@ FrmMainFrame::init() {
 			else if (wxGetApp().argv[i].ToStdString() == "-pause") {
 				pause = true;
 			}
+			else if (wxGetApp().argv[i].ToStdString() == "-gldebug") {
+				gldebug = true;
+			}
+			else if (wxGetApp().argv[i].ToStdString() == "-glrobustness") {
+				glrobustness = true;
+			}
+
 			else {
 				invalidOptions = true;
-				
+
 			}
 		}
 	}
+
+
+
+    Show(true);
+	int attribList[] = {
+		WX_GL_RGBA,
+		WX_GL_DOUBLEBUFFER,
+		WX_GL_DEPTH_SIZE, 24,
+		WX_GL_STENCIL_SIZE, 8, 
+		WX_GL_SAMPLE_BUFFERS,1,
+		WX_GL_SAMPLES,1,
+		0};
+
+
+#define WGL_CONTEXT_MAJOR_VERSION_ARB		0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB		0x2092
+#define	WGL_CONTEXT_LAYER_PLANE_ARB			0x2093
+#define WGL_CONTEXT_FLAGS_ARB				0x2094
+#define WGL_CONTEXT_PROFILE_MASK_ARB		0x9126
+
+#define WGL_CONTEXT_DEBUG_BIT_ARB				0x0001
+#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	0x0002
+
+#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB			0x00000001
+#define	WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB	0x00000002
+#define WGL_CONTEXT_ROBUST_ACCESS_BIT_ARB			0x00000004
+
+	std::vector<int> contextAttribList = {
+			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB };
+
+	int contextFlags = 0;
+	if (gldebug)
+		contextFlags = WGL_CONTEXT_DEBUG_BIT_ARB;
+	if (glrobustness)
+		contextFlags |= WGL_CONTEXT_ROBUST_ACCESS_BIT_ARB;
+
+	if (gldebug || glrobustness) {
+		contextAttribList.push_back(WGL_CONTEXT_FLAGS_ARB);
+		contextAttribList.push_back(contextFlags);
+	}
+	contextAttribList.push_back(0);
+
+		
+	m_Canvas = new GLCanvas(this, -1 , NULL, &contextAttribList[0]);
+
+	
+	m_Inited = true;
+
+	m_Canvas->DoSetCurrent();
+
+	// Dialogs //
+	DlgOGL::SetParent(this);
+	DlgLog::Instance()->updateDlg();
+
+	m_pRoot = (Nau *)Nau::Create();
+
+	bool nauInit(false);
+
 	if (invalidOptions)
 		wxMessageBox("Invalid option. Valid options are -trace and -pause");
 
@@ -596,25 +495,6 @@ FrmMainFrame::init() {
 	GetClientSize(&w, &h);
 	SetClientSize(w + 1, h + 1);
 
-	//if (wxGetApp().argc > 1) {
-	//	int param = 1;
-	//	if (wxGetApp().argv[1].c_str()[0] != '-') {
-	//		loadProjectFlag = true;
-	//		//loadProject(wxGetApp().argv[1].c_str());
-	//		param = 2;
-	//	}
-	//	for (int i = param; i < wxGetApp().argc; ++i) {
-	//		if (wxGetApp().argv[i].ToStdString() == "-trace") {
-	//			long frames;
-	//			if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
-	//				m_pRoot->setTrace((int)frames);
-	//				++i;
-	//			}
-	//			else
-	//				m_pRoot->setTrace(1);
-	//		}
-	//	}
-	//}
 	if (loadProjectFlag)
 		loadProject(wxGetApp().argv[1].c_str());
 	if (pause) {
@@ -622,7 +502,151 @@ FrmMainFrame::init() {
 		debugMenu->Enable(idMenuDlgStep, true);
 		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
 	}
+
+
+#ifdef FINAL
+	startStandAlone();
+	//delete splash;
+#endif
+
+	Show(true);
+
 }
+
+
+FrmMainFrame::~FrmMainFrame() {
+
+//#ifdef GLINTERCEPTDEBUG
+//	gliSetIsGLIActive(true);
+//#endif
+}
+
+
+//void
+//FrmMainFrame::init() {
+//
+//	if (m_Inited)
+//		return;
+//	m_Inited= true;
+//
+//	m_Canvas->DoSetCurrent();
+//
+//	// Dialogs //
+//	DlgOGL::SetParent(this);
+//	DlgLog::Instance()->updateDlg();
+//
+//	m_pRoot = (Nau *)Nau::Create();
+//
+//	bool nauInit(false);
+//
+//	bool loadProjectFlag = false;
+//	bool trace = false;
+//	bool pause = false;
+//	int framesToTrace = 1;
+//	bool invalidOptions = false;
+//
+//	if (wxGetApp().argc > 1) {
+//		int param = 1;
+//		if (wxGetApp().argv[1].c_str()[0] != '-') {
+//			loadProjectFlag = true;
+//			param = 2;
+//		}
+//		for (int i = param; i < wxGetApp().argc; ++i) {
+//			if (wxGetApp().argv[i].ToStdString() == "-trace") {
+//
+//				trace = true;
+//				long frames;
+//				if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
+//					framesToTrace = (int)frames;
+//					++i;
+//				}
+//			}
+//			else if (wxGetApp().argv[i].ToStdString() == "-pause") {
+//				pause = true;
+//			}
+//			else {
+//				invalidOptions = true;
+//				
+//			}
+//		}
+//	}
+//	if (invalidOptions)
+//		wxMessageBox("Invalid option. Valid options are -trace and -pause");
+//
+//	try {
+//		nauInit = m_pRoot->init(trace);
+//		if (trace)
+//			m_pRoot->setTrace(framesToTrace);
+//
+//	}
+//	catch (std::string &s) {
+//		wxMessageBox((wxString)s.c_str());
+//		exit(1);
+//	}
+//
+//	if (true != nauInit) {
+//		wxMessageBox(_("Nau error!"), _("Kaput!"));
+//		exit(1);
+//	}
+//
+//	m_Canvas->setEngine(m_pRoot);
+//	m_Canvas->setCamera();
+//
+//	// Dialogs //
+//	DlgOGL::SetParent(this);
+//	DlgLog::Instance()->updateDlg();
+//	if (m_pRoot->getPhysicsManager()->isPhysicsAvailable())
+//		DlgPhysics::SetParent(this);
+//	else
+//		mbar->EnableTop(mbar->FindMenu(_("Physics")), false);
+//	DlgTextureLib::SetParent(this);
+//	DlgCameras::SetParent(this);
+//	DlgMaterials::SetParent(this);
+//	DlgLights::SetParent(this);
+//	DlgShaders::SetParent(this);
+//	DlgScenes::SetParent(this);
+//	DlgPass::SetParent(this);
+//	DlgAtomics::SetParent(this);
+//	DlgViewports::SetParent(this);
+//	DlgTrace::SetParent(this);
+//	DlgDbgPrograms::SetParent(this);
+//	DlgDbgBuffers::SetParent(this);
+//	DlgDbgStep::SetParent(this);
+//	DlgDbgStep::SetCanvas(m_Canvas);
+//	DlgRenderTargets::SetParent(this);
+//	DlgRenderer::SetParent(this);
+//
+//	int w, h;
+//	GetClientSize(&w, &h);
+//	SetClientSize(w + 1, h + 1);
+//
+//	//if (wxGetApp().argc > 1) {
+//	//	int param = 1;
+//	//	if (wxGetApp().argv[1].c_str()[0] != '-') {
+//	//		loadProjectFlag = true;
+//	//		//loadProject(wxGetApp().argv[1].c_str());
+//	//		param = 2;
+//	//	}
+//	//	for (int i = param; i < wxGetApp().argc; ++i) {
+//	//		if (wxGetApp().argv[i].ToStdString() == "-trace") {
+//	//			long frames;
+//	//			if (i + 1 < wxGetApp().argc && wxGetApp().argv[i + 1].ToLong(&frames)) {
+//	//				m_pRoot->setTrace((int)frames);
+//	//				++i;
+//	//			}
+//	//			else
+//	//				m_pRoot->setTrace(1);
+//	//		}
+//	//	}
+//	//}
+//	if (loadProjectFlag)
+//		loadProject(wxGetApp().argv[1].c_str());
+//	if (pause) {
+//		m_Canvas->BreakResume();
+//		debugMenu->Enable(idMenuDlgStep, true);
+//		debugMenu->SetLabel(idMenuDbgBreak, "Resume");
+//	}
+//}
 
 
 void 

@@ -84,10 +84,11 @@ private:
 		/// query indexes for the beginning 
 		/// and end of the section
 		std::vector<queryPair> queriesGL[2];
+
+		unsigned long long int totalQueryTime;
 		/** wasted time running the 
 		  * profiler code for the section
-		*/
-		unsigned long long int totalQueryTime;
+		*/		
 		pTime wastedTime;
 		/// Total number of calls
 		pTime calls;

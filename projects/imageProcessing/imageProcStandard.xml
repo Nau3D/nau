@@ -14,7 +14,7 @@
 	</assets>
 
 	<pipelines>
-		<pipeline name="Fast" >
+		<pipeline name="Immediate" >
 			<pass class="quad" name="process" >
 				<viewport name="Main" />
 				<materialMaps>
@@ -23,7 +23,7 @@
 			</pass>		
 		</pipeline>
 	
-		<pipeline name="Standard" >
+		<pipeline name="Render Target" >
 			<pass class="quad" name="process" >
 				<materialMaps>
 					<map fromMaterial="__Quad" toMaterial="standard" toLibrary="ImageProcessing" />
@@ -37,7 +37,7 @@
 			</pass>
 		</pipeline>
 
-		<pipeline name="Standard with Image Texture" >
+		<pipeline name="Image Texture" >
 			<pass class="quad" name="process" >
 				<viewport name="Main" />
 				<materialMaps>
@@ -50,5 +50,13 @@
 				<texture name="ImageProcessing::tex" />
 			</pass>
 		</pipeline>
+
 	</pipelines>
+	
+	<interface>
+		<window label="settings" >
+			<pipelineList label="effect" />
+		</window>
+	</interface>
+	
 </project>

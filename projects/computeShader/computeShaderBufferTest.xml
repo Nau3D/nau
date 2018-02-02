@@ -62,5 +62,24 @@
 				<texture name="Compute::tex" />
 			</pass>
 		</pipeline>
+
+		<pipeline name="LS = 32" >
+			<pass class="compute" name="pass1">
+				<material name="computeShader32" fromLibrary="Compute" dimX=16 dimY=16 dimZ=1 />
+			</pass>
+			<pass class="quad" name="pass2" >
+				<viewport name="Main" />
+				<texture name="Compute::tex" />
+			</pass>
+		</pipeline>
+
 	</pipelines>
+	
+	<interface>
+		<window label="settings" >
+			<pipelineList label="effect" />
+		</window>
+	</interface>
+	
+	
 </project>	

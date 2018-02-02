@@ -281,8 +281,9 @@ void Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
 					sDisp + sTotalLevels * PROFILE_LEVEL_INDENT + 2,
 					s,
 					(float)(sec->calls/calls),
-					(float)(sec->wastedTime)/(calls), (sec->totalQueryTime/(1000000.0 * calls)),
-					(float)(sec->totalTime)/(calls));
+					(float)(sec->totalTime)/(calls),
+					(sec->totalQueryTime/(1000000.0 * calls)),
+					(float)(sec->wastedTime)/(calls));
 			else
 				sprintf(s2,"%-*s %5.0f %8.2f          %8.2f\n",
 					sDisp + sTotalLevels * PROFILE_LEVEL_INDENT + 2,
@@ -349,7 +350,9 @@ Profile::CollectQueryResults() {
 				aux = 0;
 
 				for (unsigned int j = 0; j < sec->queriesGL[sFrontBuffer].size(); ++j) {
-
+					GLint ready = false;
+					//while (!ready)
+					//	glGetQueryObjectiv(sec->queriesGL[sFrontBuffer][j].queries[1], GL_QUERY_RESULT_AVAILABLE, &ready);
 					glGetQueryObjectui64v(sec->queriesGL[sFrontBuffer][j].queries[0], GL_QUERY_RESULT, &timeStart);
 					glGetQueryObjectui64v(sec->queriesGL[sFrontBuffer][j].queries[1], GL_QUERY_RESULT, &timeEnd);
 					aux +=  (timeEnd - timeStart);
