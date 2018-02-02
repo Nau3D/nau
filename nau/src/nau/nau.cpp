@@ -238,6 +238,8 @@ Nau::getProfileResetRequest() {
 	return aux;
 }
 
+
+
 #pragma region LuaStuff
 // ----------------------------------------------------
 //		Lua Stuff
