@@ -2,9 +2,9 @@
 
 #include "nau.h"
 #include "nau/slogger.h"
-#include "nau/debug/profile.h"
 #include "nau/material/materialGroup.h"
 #include "nau/render/renderManager.h"
+#include "nau/render/opengl/glProfile.h"
 
 
 using namespace nau::scene;

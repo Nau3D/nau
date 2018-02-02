@@ -14,7 +14,6 @@
 #define NAU_PROFILE NAU_PROFILE_CPU_AND_GPU
 
 
-
 // Available clocks
 // note that gettimeofday is not available on windows!
 #define PROFILE_C_CLOCK 0

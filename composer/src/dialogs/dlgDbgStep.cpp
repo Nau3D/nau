@@ -1,6 +1,6 @@
 #include "dlgDbgStep.h"
 
-#include <nau/debug/profile.h>
+#include "nau/render/opengl/glProfile.h"
 
 
 //#ifdef GLINTERCEPTDEBUG

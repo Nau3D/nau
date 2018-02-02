@@ -1,11 +1,11 @@
 #include "nau/scene/octreeUnified.h"
-#include "nau/render/renderManager.h"
-#include "nau/material/materialGroup.h"
 
-#include "nau/debug/profile.h"
 #include "nau.h"
-
 #include "nau/slogger.h"
+#include "nau/material/materialGroup.h"
+#include "nau/render/renderManager.h"
+#include "nau/render/opengl/glProfile.h"
+
 
 using namespace nau::scene;
 using namespace nau::geometry;

@@ -108,8 +108,7 @@ GLTexImage::getRGBData() {
 	unsigned int b;
 	glGenBuffers(1, &b);
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, b);
-	glBufferData(GL_PIXEL_PACK_BUFFER, dataSize, NULL, GL_STREAM_READ);
-//	glBufferData(GL_PIXEL_PACK_BUFFER, dataSize<16?16:dataSize, NULL, GL_STREAM_READ);
+	glBufferData(GL_PIXEL_PACK_BUFFER, dataSize<16?16:dataSize, NULL, GL_STREAM_READ);
 
 	unsigned char *data = (unsigned char *)malloc(dataSize);
 	if (texType == GL_TEXTURE_CUBE_MAP)

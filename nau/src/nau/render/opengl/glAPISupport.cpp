@@ -55,6 +55,10 @@ GLAPISupport::setAPISupport() {
 		m_APISupport[APIFeatureSupport::CLEAR_TEXTURE_LEVEL] = true;
 		m_APISupport[APIFeatureSupport::RESET_TEXTURES] = true;
 	}
+	if (m_Version >= 450) {
+		m_APISupport[APIFeatureSupport::DIRECT_ACCESS] = true;
+
+	}
 }
 
 

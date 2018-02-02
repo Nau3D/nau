@@ -3,9 +3,8 @@
 
 #include "dlgTrace.h"
 
-
-#include <nau/debug/profile.h>
 #include <nau/slogger.h>
+#include "nau/render/opengl/glProfile.h"
 
 #include <dirent.h>
 #include <algorithm>

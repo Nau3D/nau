@@ -39,6 +39,7 @@ namespace nau
 				TESSELATION_SHADERS,
 				TEX_STORAGE,
 				TEXTURE_SAMPLERS,
+				DIRECT_ACCESS,
 				COUNT_API_SUPPORT
 			} ;
 
