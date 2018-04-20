@@ -176,7 +176,6 @@ GLBuffer::setPropui(UIntProperty  prop, unsigned int value) {
 			glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 			glBufferData(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_STATIC_DRAW);
 
-			IAPISupport *sup = IAPISupport::GetInstance();
 			if (sup->apiSupport(IAPISupport::CLEAR_BUFFER)) {
 				glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
 			}

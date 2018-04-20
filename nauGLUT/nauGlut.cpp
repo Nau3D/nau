@@ -3,7 +3,7 @@
 #include <glbinding/gl/gl.h>
 
 #include <nau.h>
-#include <nau/debug/profile.h>
+#include <nau/render/opengl/glProfile.h>
 #include <nau/event/eventFactory.h>
 #include <nau/event/cameraMotion.h>
 #include <nau/event/cameraOrientation.h>

@@ -330,7 +330,7 @@ namespace nau {
 
 		/* 	Attributes	*/
 		typedef AttribSet *AttribSetPointer;
-		AttribSetPointer a;
+		//AttribSetPointer a;
 		std::map<std::string, AttribSet*> m_Attributes;
 
 		/*

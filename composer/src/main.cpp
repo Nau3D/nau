@@ -430,7 +430,7 @@ FrmMainFrame::FrmMainFrame (wxFrame *frame, const wxString& title)
 	contextAttribList.push_back(0);
 
 		
-	m_Canvas = new GLCanvas(this, -1 , NULL, &contextAttribList[0]);
+	m_Canvas = new GLCanvas(this, -1 , attribList, &contextAttribList[0]);
 
 	
 	m_Inited = true;

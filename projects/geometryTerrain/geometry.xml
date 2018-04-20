@@ -52,7 +52,7 @@
 					<light name="Sun" />
 				</lights>
 				<materialMaps>
-					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
+					<map fromMaterial="*" toLibrary="Simple" toMaterial="simpleTextured" />
 				</materialMaps>
 			</pass>
 			

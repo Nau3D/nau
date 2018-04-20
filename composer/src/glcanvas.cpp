@@ -47,7 +47,7 @@ GLCanvas::GLCanvas (wxWindow *parent,
 	m_Timer.Start();
 	p_GLC = new wxGLContext(this);
 	glbinding::Binding::initialize(false);
-	//SetCurrent(*p_GLC);
+	SetCurrent(*p_GLC);
 	step = 0;
 	inited = false;
 }
@@ -66,7 +66,7 @@ GLCanvas::GLCanvas (wxWindow *parent,
 {
 	p_GLC = new wxGLContext(this);
 	glbinding::Binding::initialize(false);
-	//SetCurrent(*p_GLC);
+	SetCurrent(*p_GLC);
 	step = 0;
 }
 
