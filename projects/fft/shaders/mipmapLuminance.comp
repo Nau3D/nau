@@ -1,0 +1,26 @@
+#version 430
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+uniform int destMipLevel = 0;
+layout(binding = 1, rgba32f) writeonly uniform image2D imageUnit;
+
+uniform sampler2D tex;
+
+void main()
+{
+	int srcMipLevel = destMipLevel - 1;
+	ivec2 dstPos = ivec2(gl_GlobalInvocationID);
+	ivec2 srcPos = dstPos * 2;
+	vec3 srcColor0 = texelFetch(tex, srcPos + ivec2(0, 0), srcMipLevel).rgb;
+	vec3 srcColor1 = texelFetch(tex, srcPos + ivec2(1, 0), srcMipLevel).rgb;
+	vec3 srcColor2 = texelFetch(tex, srcPos + ivec2(0, 1), srcMipLevel).rgb;
+	vec3 srcColor3 = texelFetch(tex, srcPos + ivec2(1, 1), srcMipLevel).rgb;
+	
+	float maxLum, minLum, avgLum;
+	
+	avgLum = 0.25 *(srcColor0.r + srcColor1.r + srcColor2.r + srcColor3.r);	
+	maxLum = max(max(srcColor0.g, srcColor1.g), max(srcColor2.g, srcColor3.g));
+	minLum = min(min(srcColor0.b, srcColor1.b), min(srcColor2.b, srcColor3.b));
+	
+	imageStore(imageUnit, dstPos, vec4(avgLum, maxLum,minLum,0));
+}

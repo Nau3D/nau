@@ -1,0 +1,139 @@
+<?xml version="1.0" ?>
+<materialLib name="Texture">
+
+	<textures>
+		<texture name="normal_nobumps" 
+			filename="metal_barrel/normal_no_bumps.png" mipmap=true />
+		<texture name="diffuseY" 
+			filename="metal_barrel/diffus_yellow.png" mipmap=true />
+		<texture name="specularMap" 
+			filename="metal_barrel/specular_stainless_steel.png" mipmap=true />
+		<texture name="rust" 
+			filename="metal_barrel/diffus_rust.png" mipmap=true />
+		<texture name="noise" 
+			filename="textures/fractalNoise.jpg" mipmap=true />
+	</textures>
+
+	<shaders>
+		<shader name="textured" 	vs = "shaders/textureSimple.vert" 
+									ps = "shaders/textureSimple.frag" />
+		<shader name="texturedTS" 	vs = "shaders/textureTS.vert" 
+									ps = "shaders/textureTS.frag" />
+	</shaders>
+	
+	<materials>
+		<material name="textured">
+			<shader name="textured">
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+					 			 
+					<valueof uniform="m_viewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+					 
+					<valueof uniform="m_view" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+					 
+					<valueof uniform="m_normal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+					 
+					<valueof uniform="rusting"
+							 type="RENDERER" context="CURRENT" 
+							 component="rusting" />
+
+							 <valueof uniform="l_dir"
+							 type="LIGHT" context="CURRENT" 
+							 component="DIRECTION" id=0/>
+					 
+					<valueof uniform="diffuseY"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=0 />
+
+					<valueof uniform="noise"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=1 />
+
+					<valueof uniform="specularMap"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=2 />
+
+					<valueof uniform="rust"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=3 />
+
+				 </values>
+			</shader>
+			<textures>
+				<texture name="diffuseY" UNIT = 0 />
+				<texture name="noise" UNIT = 1 />
+				<texture name="specularMap" UNIT = 2 />
+				<texture name="rust" UNIT = 3 />
+			</textures>
+		</material>
+
+
+		<material name="texturedTS">
+			<shader name="texturedTS">
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+					 			 
+					<valueof uniform="m_viewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+					 
+					<valueof uniform="m_view" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+					 
+					<valueof uniform="m_normal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+					 
+					<valueof uniform="l_dir"
+							 type="LIGHT" context="CURRENT" 
+							 component="DIRECTION" id=0/>
+					 
+					<valueof uniform="rusting"
+							 type="RENDERER" context="CURRENT" 
+							 component="rusting" />
+
+					<valueof uniform="diffuse"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=0 />
+
+					<valueof uniform="normalMap"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=1 />
+
+					<valueof uniform="specularMap"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=2 />
+
+					<valueof uniform="rust"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=3 />
+
+					<valueof uniform="noise"
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 component="UNIT" id=4 />
+
+				 </values>
+			</shader>
+			<textures>
+				<texture name="diffuseY" UNIT = 0 />
+				<texture name="normal_nobumps" UNIT = 1 />
+				<texture name="specularMap" UNIT = 2 />
+				<texture name="rust" UNIT = 3 />
+				<texture name="noise" UNIT = 4 />
+			</textures>
+		</material>
+
+	</materials>
+	
+</materialLib>

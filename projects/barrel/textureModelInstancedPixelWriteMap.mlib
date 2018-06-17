@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<materialLib name="PixelCount">
+
+
+	<shaders>
+		<shader name="countWrites" 	vs = "shaders/countWrites.vert" 
+									ps = "shaders/countWrites.frag" />
+	</shaders>
+	
+	<renderTargets>
+		<renderTarget name ="accumulator" >
+			<SIZE width=1024 height=1024/>
+			<CLEAR_VALUES r=0.0 g=0.0 b=0.0 a=0.0/>
+			<colors>
+				<color name="accum" internalFormat="R32F"  />
+			</colors>	
+			
+		</renderTarget>
+	</renderTargets>
+	
+	<states>
+		<state name="countWrites">
+			<DEPTH_MASK value="false" />
+			<BLEND_DST value="ONE" />
+			<BLEND_SRC value="ONE" />
+			<BLEND value="true" />
+		</state>
+	</states>
+	
+	<materials>
+		<material name="countWrites">
+			<shader name="countWrites">
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+					 			 
+				 </values>
+			</shader>
+			<state name = "countWrites" />
+
+		</material>
+
+	</materials>
+	
+</materialLib>

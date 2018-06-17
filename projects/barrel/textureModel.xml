@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<project name="Barrel" width=512 height=512>
+	<assets>
+		<attributes>
+			<attribute type="RENDERER" name="rusting" data="FLOAT" value=1.0/>
+		</attributes>
+		<scenes>
+			<scene name="Barrel" param="UNITIZE">
+				<TRANSLATE x=0 y=1 z= 0 />
+				<file name="metal_barrel/metal_barrel.obj"/>
+			</scene>
+			<scene name="Plane" >
+				<SCALE x=100 y=100 z=100 />
+				<file name="models/plane.obj"/>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<NEAR value= 0.1 />
+				<FAR value=100 />
+                <POSITION x="1.90969" y="2.85184" z="1.74903" w="1" />
+                <VIEW x="-0.583466" y="-0.589145" z="-0.558995" w="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=-2 y=-2 z=-2 />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="textureModel.mlib" />
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+	
+		<pipeline name="model">
+			<pass class="default" name="geometry" >
+				<scenes>
+					<scene name="Barrel" />
+					<scene name="Plane" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+			</pass>
+		</pipeline>
+				
+		<pipeline name="textured">
+			<pass class="default" name="geometry" >
+				<scenes>
+					<scene name="Barrel" />
+					<scene name="Plane" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="DefaultOBJMaterial" 
+						 toMaterial="textured" toLibrary="Texture" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+		
+		<pipeline name="normal mapping in TS">
+			<pass class="default" name="tangent space" >
+				<scenes>
+					<scene name="Barrel" />
+					<scene name="Plane" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="DefaultOBJMaterial" 
+						 toMaterial="texturedTS" toLibrary="Texture" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+	
+	<interface>
+		<window label="settings" >
+			<pipelineList label="effect" />
+			<var label="rusting" type="RENDERER" context="CURRENT" 
+					component="rusting" def="step=0.01 min=-0.5 max=1.0" />
+		</window>
+	</interface>
+	
+</project>

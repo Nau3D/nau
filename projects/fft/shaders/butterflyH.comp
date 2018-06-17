@@ -1,0 +1,103 @@
+#version 430
+
+#define M_PI 3.1415926535897932384626433832795
+
+layout (local_size_x = 4, local_size_y = 8) in;
+
+// ping pong textures
+layout (binding = 0, rg32f) uniform image2D pingpong0;
+layout (binding = 1, rg32f) uniform image2D pingpong1;
+
+uniform int pingpong;
+uniform int log_width;
+uniform int stage;
+uniform int fft_dir;
+
+
+vec2 complexMult(vec2 v0, vec2 v1) {
+	return vec2(v0.x * v1.x - v0.y * v1.y,
+				v0.x * v1.y + v0.y * v1.x);
+}
+
+
+int bitReverse(int k) {
+
+	uint x = uint(k);
+	uint n = 0;
+	uint mask = 0x1;
+	for (int i = 0; i < log_width; i++) {
+		n <<= 1;
+		n |= (x & 1);
+		x >>= 1;
+	}
+	return int(n);
+}
+
+
+vec2 w(int k, int nn, int dir) {
+
+	float it = dir * 2 * k * M_PI / nn;
+	return vec2(cos(it), sin(it));
+}
+
+
+void main() {
+
+	uint line = gl_GlobalInvocationID.x;
+	uint column = gl_GlobalInvocationID.y;
+	
+	int iter = int(pow(2,log_width));
+	
+	int groups = iter / int(pow(2, stage));
+	int groupSize = 2 * iter / groups;
+	int k = int(line) % (groupSize /2);
+	int group = int(line) / (groupSize /2);
+	int groupShift = int(pow(2, stage + 1));
+
+	int index = k + group * groupShift;
+	int shift = int(pow(2, stage));
+
+	vec2 elemk, elemks, ww;
+	
+	// alternate between textures
+	if (pingpong == 0) {
+		if (stage == 0) {
+		// when stage = 0 use bit reverse indices
+			elemk = imageLoad(pingpong0, ivec2(bitReverse(index), column)).rg;
+			elemks = imageLoad(pingpong0, ivec2(bitReverse(index + shift), column)).rg;
+		}
+		else {
+			elemk = imageLoad(pingpong0, ivec2(index, column)).rg;
+			elemks = imageLoad(pingpong0, ivec2(index + shift, column)).rg;
+		}
+		// compute the twiddle factor
+		ww = w(k, groupShift, fft_dir);
+			
+		// write the outputs
+		vec2 raux = elemk + complexMult(ww, elemks);
+		imageStore(pingpong1, ivec2(index, column), vec4(raux,0,0));
+			
+		raux = elemk - complexMult(ww, elemks);
+		imageStore(pingpong1, ivec2(index + shift, column), vec4(raux,0,0));
+
+	}
+	else {
+		if (stage == 0) {
+			elemk = imageLoad(pingpong1, ivec2(bitReverse(index), column)).rg;
+			elemks = imageLoad(pingpong1, ivec2(bitReverse(index + shift), column)).rg;
+		}
+		else {	
+			elemk = imageLoad(pingpong1, ivec2(index, column)).rg;
+			elemks = imageLoad(pingpong1, ivec2(index + shift, column)).rg;
+		}
+		ww = w(k, groupShift, fft_dir);
+			
+		vec2 raux = elemk + complexMult(ww, elemks);
+		imageStore(pingpong0, ivec2(index, column), vec4(raux,0,0));
+			
+		raux = elemk - complexMult(ww, elemks);
+		imageStore(pingpong0, ivec2(index + shift, column), vec4(raux,0,0));
+	}
+
+}
+

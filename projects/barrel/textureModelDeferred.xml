@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<project name="Normal Mapping - Deferred" width=512 height=512>
+	<assets>
+		<scenes>
+			<scene name="Barrel" param="UNITIZE">
+				<TRANSLATE x=0 y=1 z= 0 />
+				<file name="metal_barrel/metal_barrel.obj"/>
+			</scene>
+			<scene name="Plane" >
+				<SCALE x=100 y=100 z=100 />
+				<file name="models/plane.obj"/>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+                <POSITION x="71.1949" y="6.8429" z="35.6704" w="1" />
+                <VIEW x="-0.819135" y="-0.522687" z="-0.236252" w="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=-2 y=-2 z=-2 />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="textureModelDeferred.mlib" />
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+	
+		<pipeline name="textured"  defaultCamera="MainCamera">
+		
+			<pass class="default" name="plane" >
+				<scenes>
+					<scene name="Plane" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+			</pass>
+			
+			<pass class="default" name="gBuffer" >
+				<scenes instances = 30000>
+					<scene name="Barrel" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<viewport name="MainViewport" />
+				<renderTarget name = "gBuffer" fromLibrary="Texture" />
+				<materialMaps>
+					<map fromMaterial="DefaultOBJMaterial" toMaterial="gBuffer" toLibrary="Texture" />
+				</materialMaps>
+			</pass>
+			
+			<pass class="quad" name="color" >
+				<materialMaps>
+					<map fromMaterial="__Quad" 
+						 toLibrary="Texture" toMaterial="deferred" />
+				</materialMaps>							
+				<viewport name="MainViewport" />
+				<renderTarget name = "color" fromLibrary="Texture" />
+			</pass>
+			
+			<pass class="quad" name="texture" >
+				<COLOR_CLEAR value="false" />
+				<materialMaps>
+					<map fromMaterial="__Quad" 
+						 toLibrary="Texture" toMaterial="deferred2" />
+				</materialMaps>							
+			</pass>
+		</pipeline>
+		
+	</pipelines>
+</project>

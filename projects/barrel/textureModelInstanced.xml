@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<project name="Normal Mapping - Instanced" width=512 height=512>
+	<assets>
+		<scenes>
+			<scene name="Barrel" param="UNITIZE">
+				<TRANSLATE x=0 y=1 z= 0 />
+				<file name="metal_barrel/metal_barrel.obj"/>
+			</scene>
+			<scene name="Plane" >
+				<SCALE x=100 y=100 z=100 />
+				<file name="models/plane.obj"/>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+                <POSITION x="71.1949" y="6.8429" z="35.6704" w="1" />
+                <VIEW x="-0.819135" y="-0.522687" z="-0.236252" w="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=-2 y=-2 z=-2 />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="textureModelInstanced.mlib" />
+		</materialLibs>
+	</assets>
+	
+	<pipelines default="textureCS">
+	
+		<pipeline name="textureTS">
+			<pass class="default" name="plane" >
+				<scenes>
+					<scene name="Plane" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+			</pass>
+			
+			<pass class="default" name="textureTS" >
+				<COLOR_CLEAR value = false />
+				<scenes instances = 1048576>
+					<scene name="Barrel" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="DefaultOBJMaterial" toMaterial="texturedInstanceTS" toLibrary="Texture" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+		
+		<pipeline name="textureCS" >
+			<pass class="default" name="plane" >
+				<scenes>
+					<scene name="Plane" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+			</pass>
+			<pass class="default" name="texture" >
+				<COLOR_CLEAR value = false />
+				<scenes instances = 30000>
+					<scene name="Barrel" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<materialMaps>
+					<map fromMaterial="DefaultOBJMaterial" toMaterial="texturedInstanceCS" toLibrary="Texture" />
+				</materialMaps>
+			</pass>
+		</pipeline>
+		
+	</pipelines>
+	<interface>
+		<window label="settings" >
+			<pipelineList label="effect" />
+		</window>
+	</interface>
+</project>
