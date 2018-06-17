@@ -116,6 +116,7 @@
 				</injectionMaps>
 			</pass>
 			
+			
 			<pass class="depthmap" name="RSM">
 				<mode value="RUN_ONCE" />	
 				<scenes>
@@ -143,16 +144,6 @@
 				<renderTarget name="RSMTest" fromLibrary="Voxels" />
 			</pass>
 			
-			<!--pass class="quad" name="test">
-				<viewport name="MainViewport" />
-				<texture name="RSM" fromLibrary="Voxels" />
-			</pass-->
-			
-			<!--pass class="compute" name="resetOpacity" >
-				<mode value="RUN_ONCE" />	
-				<material name="resetOpacity" fromLibrary="Voxels" 
-						dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
-			</pass-->
 
 			<pass class="compute" name="mipmap" >
 				<mode value="RUN_ONCE" />	
@@ -160,6 +151,7 @@
 				<material name="mipmap" fromLibrary="Voxels" dimX=256 dimY=256 dimZ=256 />
 			</pass>
 
+			
 			<pass class="default" name="renderScene">
 				<scenes>
 					<scene name="Sponza" />
@@ -183,28 +175,14 @@
 				</injectionMaps>
 			</pass>
 			
-			<!--pass class="quad" name="test">
-				<viewport name="MainViewport" />
-				<texture name="color" fromLibrary="Voxels" />
-			</pass-->
 
-			<!--pass class="default" name="showVoxels">
-				<scenes>
-					<scene name="Cube" />
-				</scenes>	
-				<camera name="MainCamera" />
-				<viewport name="MainViewport" />
-				<materialMaps>			
-					<map fromMaterial="showRays" 
-						 toLibrary="Voxels" toMaterial="showVoxels" />
-				</materialMaps>				
-			</pass-->
-			
 			<pass class="quad" name="computeIndirectLight" >
 				<renderTarget name="preToneMap" fromLibrary="Voxels" />
 				<material name="computeIndirectLight" fromLibrary="Voxels" />
 				<viewport name="MainViewport" />
 			</pass>
+			
+			<!-- Tone mapping -->
 
 			<pass class="quad" name="computeLuminance">
 				<COLOR_CLEAR value=false />
@@ -284,11 +262,6 @@
 				<renderTarget name="RSMTest" fromLibrary="Voxels" />
 			</pass>
 			
-			<!--pass class="quad" name="test">
-				<viewport name="MainViewport" />
-				<texture name="RSMTest" fromLibrary="Voxels" />
-			</pass-->
-			
 			<pass class="compute" name="resetOpacity" >
 				<material name="resetOpacity" fromLibrary="Voxels" 
 						dimX="CompRO" dimY="CompRO" dimZ="CompRO" />
@@ -307,7 +280,6 @@
 					<light name="Sun" />
 				</lights>	
 				<camera name="MainCamera" />
-				<!--viewport name="MainViewport" /-->
 				<renderTarget name="scene" fromLibrary="Voxels" />
 				<injectionMaps>
 					<map toMaterial="*">
@@ -321,23 +293,6 @@
 					</map>
 				</injectionMaps>
 			</pass>
-			
-			<!--pass class="quad" name="test">
-				<viewport name="MainViewport" />
-				<texture name="color" fromLibrary="Voxels" />
-			</pass-->
-
-			<!--pass class="default" name="showVoxels">
-				<scenes>
-					<scene name="Dummy" />
-				</scenes>	
-				<camera name="MainCamera" />
-				<viewport name="MainViewport" />
-				<materialMaps>			
-					<map fromMaterial="showRays" 
-						 toLibrary="Voxels" toMaterial="showVoxels" />
-				</materialMaps>				
-			</pass-->
 			
 			<pass class="quad" name="computeIndirectLight" >
 				<renderTarget name="preToneMap" fromLibrary="Voxels" />

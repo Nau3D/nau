@@ -34,6 +34,7 @@ namespace nau {
 
 			T operator = (T arg) {
 				m_Number = arg;
+				return arg;
 			}
 
 			bool operator < (const T &a) const {

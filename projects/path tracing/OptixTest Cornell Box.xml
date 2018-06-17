@@ -103,7 +103,7 @@
 						<optixProgram type="Any_Hit" ray="Shadow" file="optix/pathTracer.ptx" proc="keepGoingShadow"/> 
 					</optixMap>	
 					<optixMap to="Optix Ray Tracer Render Target:Metal">
-						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="tracePathGlossy"/>
+						<optixProgram type="Closest_Hit" ray="Phong" file="optix/pathTracer.ptx" proc="tracePathMetal"/>
 						<optixProgram type="Any_Hit"  	 ray="Shadow" file="optix/pathTracer.ptx" proc="any_hit_shadow"/> 
 					</optixMap>	
 					<optixMap to="nau_material_lib:light">

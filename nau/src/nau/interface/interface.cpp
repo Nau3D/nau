@@ -392,9 +392,9 @@ ToolBar::addVar(const std::string &windowName, const std::string &varLabel,
 		break;
 	case nau::Enums::BOOL:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
-			return (TwAddVarCB(t, name.c_str(), TW_TYPE_BOOLCPP, SetBoolCallBack, GetBoolCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_BOOL32, SetBoolCallBack, GetBoolCallBack, clientData, s) == 1);
 		else
-			return (TwAddVarCB(t, name.c_str(), TW_TYPE_BOOLCPP, NULL, GetBoolCallBack, clientData, s) == 1);
+			return (TwAddVarCB(t, name.c_str(), TW_TYPE_BOOL32, NULL, GetBoolCallBack, clientData, s) == 1);
 		break;
 	case nau::Enums::BVEC4:
 		if (attrSet->get(attr, dt)->getReadOnlyFlag() == false)
@@ -595,7 +595,10 @@ TW_CALL ToolBar::SetBoolCallBack(const void *value, void *clientData) {
 
 	NauVar *v = static_cast<NauVar *>(clientData);
 	std::shared_ptr<NauInt> p = std::shared_ptr<NauInt>(new NauInt(*(int *)value));
-	NAU->setAttributeValue(v->type, v->context, v->component, v->id, p.get());
+	if (p.get()->getNumber() != 0)
+		NAU->setAttributeValue(v->type, v->context, v->component, v->id, new NauInt(0));
+	else 
+		NAU->setAttributeValue(v->type, v->context, v->component, v->id, new NauInt(1));
 	if (v->luaScript != "")
 		NAU->callLuaScript(v->luaScript);
 }
@@ -697,12 +700,14 @@ TW_CALL ToolBar::GetUIVec3CallBack(void *value, void *clientData) {
 }
 
 
-void TW_CALL nau::inter::ToolBar::GetBoolCallBack(void * value, void * clientData)
+void 
+TW_CALL ToolBar::GetBoolCallBack(void * value, void * clientData)
 {
 	NauVar *v = static_cast<NauVar *>(clientData);
-	int *v2 = (int *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
-	*(bool *)value = (*v2 == 1);
+	bool *v2 = (bool *)NAU->getAttributeValue(v->type, v->context, v->component, v->id);
+	*(bool *)value = *v2;
 }
+
 
 void
 TW_CALL ToolBar::GetBVec4CallBack(void *value, void *clientData) {

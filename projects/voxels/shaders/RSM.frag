@@ -17,7 +17,7 @@ layout (location = 1) out vec4 posRSM;
 void main() {
 
 	float intensity = max(dot(normalize(normalV),lightDirV), 0.0);
-//	float intensity = 1;
+
 	if (texCount == 0) {
 		colorOut = (intensity) * diffuse;
 	}

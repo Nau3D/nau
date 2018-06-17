@@ -247,24 +247,6 @@
 		<material name ="lightInjection">
 			<shader name="lightInjection">
 				<values>
-					<valueof uniform="CamPos"    type="CAMERA" context="voxels#RSM-LightCam" 
-														component="POSITION" />
-					<valueof uniform="RayDirection" type="CAMERA" context="voxels#RSM-LightCam" 
-														component="VIEW" />
-					<valueof uniform="upV" type="CAMERA" context="voxels#RSM-LightCam" 
-														component="NORMALIZED_UP" />
-					<valueof uniform="rightV" type="CAMERA" context="voxels#RSM-LightCam" 
-														component="NORMALIZED_RIGHT" />
-					<valueof uniform="near" type="CAMERA" context="voxels#RSM-LightCam" 
-														component="NEAR" />
-					<valueof uniform="right" type="CAMERA" context="voxels#RSM-LightCam" 
-														component="RIGHT" />
-					<valueof uniform="left" type="CAMERA" context="voxels#RSM-LightCam" 
-														component="LEFT" />
-					<valueof uniform="bottom" type="CAMERA" context="voxels#RSM-LightCam" 
-														component="BOTTOM" />
-					<valueof uniform="top" type="CAMERA" context="voxels#RSM-LightCam" 
-														component="TOP" />
 														
 					<valueof uniform="texRSM" 		type="TEXTURE_BINDING" context="CURRENT" 
 														component="UNIT" id="1" />			
@@ -272,12 +254,8 @@
 														component="UNIT" id="2" />
 					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="VM"         	type="RENDERER" context="CURRENT" 
-														component="VIEW_MODEL" />
 					<valueof uniform="grid"			type="IMAGE_TEXTURE" context="CURRENT"
 														id=1 component="UNIT" />
-					<valueof uniform="WindowSize"	type="VIEWPORT" context="CURRENT"
-														component="ABSOLUTE_SIZE" />
 					<valueof uniform="GridSize" 	type="PASS" context="CURRENT"
 														component="GridSize" />
 				</values>
@@ -303,7 +281,6 @@
 					<ACCESS value="READ_WRITE" />
 					<LEVEL value=0 />
 					<CLEAR value="false"/>
-					<INTERNAL_FORMAT value="R32UI" />
 				</imageTexture>
 			</imageTextures>
 		</material>
@@ -314,8 +291,6 @@
 				<values>
 					<valueof uniform="PVM"  		type="RENDERER" context="CURRENT" 
 														component="PROJECTION_VIEW_MODEL" />
-					<valueof uniform="NormalMat"    type="RENDERER" context="CURRENT" 
-														component="NORMAL" />
 					<valueof uniform="ViewModelMat"    type="RENDERER" context="CURRENT" 
 														component="VIEW_MODEL" />
 					<valueof uniform="diffuse" 		type="COLOR" context="CURRENT" 

@@ -38,7 +38,7 @@ GLCanvas::GLCanvas (wxWindow *parent,
                      const wxSize &size,
                      long style,
                      const wxString &name)
-   : wxGLCanvas (parent, id, attribList, contextAttribs, pos, size, style, name), 
+   : wxGLCanvas (parent, id, attribList/*, contextAttribs*/, pos, size, style, name), 
 	init (false), m_pEngine (0), m_pCamera (0), m_CounterFps (0),
 	m_Alpha (3.14159f), m_AlphaAux (0.0f), m_Beta (0.0f), m_BetaAux (0.0f), m_OldX(0), m_OldY(0),
 	m_tracking(0), /*m_RiverAnimation (0), */m_WaterState (true), m_Stereo (false),mParent(parent)
@@ -62,7 +62,7 @@ GLCanvas::GLCanvas (wxWindow *parent,
                      const wxSize &size,
                      long style,
                      const wxString &name)
-   : wxGLCanvas(parent, id, attribList , contextAttribs, pos, size, style, name), init (false), mParent(parent)
+   : wxGLCanvas(parent, id, attribList/* , contextAttribs*/, pos, size, style, name), init (false), mParent(parent)
 {
 	p_GLC = new wxGLContext(this);
 	glbinding::Binding::initialize(false);

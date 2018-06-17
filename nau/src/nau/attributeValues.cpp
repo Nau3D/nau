@@ -1757,7 +1757,7 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, Data *value) {
 		setPropui3((UInt3Property)prop, *(dynamic_cast<uivec3 *>(value)));
 		break;
 	case Enums::BOOL:
-		setPropb((BoolProperty)prop, dynamic_cast<NauInt *>(value)->getNumber() != 0);
+		setPropb((BoolProperty)prop, dynamic_cast<NauInt *>(value)->getNumber());
 		break;
 	case Enums::BVEC4:
 		setPropb4((Bool4Property)prop, *(dynamic_cast<bvec4 *>(value)));

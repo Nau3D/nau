@@ -5,7 +5,6 @@ in vec3 normal;
 in vec2 texCoord0;
 
 uniform mat4 PVM;
-uniform mat3 NormalMat;
 uniform vec3 lightDir;
 
 out vec3 lightDirV;
