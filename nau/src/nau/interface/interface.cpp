@@ -7,10 +7,11 @@
 #include "nau/math/vec3.h"
 #include "nau/math/vec4.h"
 #include "nau/math/matrix.h"
-
+#include "nau/system/textutil.h"
 
 
 #include <algorithm>
+#include <vector>
 
 using namespace nau::inter;
 using namespace nau::math;
@@ -304,6 +305,47 @@ ToolBar::addDir(const std::string &windowName, const std::string &varLabel,
 	else
 		return (TwAddVarCB(m_Windows[windowName].second, varLabel.c_str(), TW_TYPE_DIR3F, NULL, GetDirCallBack, clientData, s) == 1);
 
+}
+
+
+bool
+ToolBar::addEnum(const std::string &windowName, const std::string &varLabel,
+	const std::string &varType, const std::string &varContext,
+	const std::string &component, const std::string &enums, int id,
+	const std::string def, const std::string &luaScript, const std::string &luaScriptFile) {
+
+	std::vector<std::string> v;
+
+	nau::system::TextUtil::Split(enums, ",", v);
+	std::vector<TwEnumVal> twenum;
+	int i = 0;
+	for (auto s : v) {
+		TwEnumVal aux = {i, v[i].c_str()};
+		twenum.push_back(aux);
+		++i;
+	}
+	TwType eType = TwDefineEnum(varLabel.c_str(), (TwEnumVal *)&(twenum[0]), (unsigned int)v.size());
+	TwBar *t = m_Windows[windowName].second;
+	std::string name = varLabel;
+	name.erase(remove_if(name.begin(), name.end(), [](char c) { return !isalpha(c); }), name.end());
+	char s[256]; s[0] = '\0';
+	std::string defLocal = "";
+
+	if (name != varLabel) {
+		sprintf(s, " label='%s' ", varLabel.c_str());
+	}
+	if (defLocal != "") {
+		sprintf(s, "%s%s ", s, defLocal.c_str());
+	}
+	NauVar *clientData = new NauVar();
+	clientData->type = varType;
+	clientData->context = varContext;
+	clientData->component = component;
+	clientData->luaScript = luaScript;
+	clientData->luaScriptFile = luaScriptFile;
+
+	m_ClientDataVec.push_back(clientData);
+	return( TwAddVarCB(t, name.c_str(), eType, SetIntCallBack, GetIntCallBack, clientData, s) == 1);
 }
 
 

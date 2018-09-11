@@ -160,6 +160,7 @@ namespace nau {
 		void setProjectName(std::string name);
 		const std::string &getProjectName();
 
+		std::string getProjectFolder();
 
 		// Lua Stuff
 #if NAU_LUA == 1
@@ -196,6 +197,8 @@ namespace nau {
 		//bool validateAttribute(std::string type, std::string context, std::string component);
 		// Only validates the existence of the component in a particular type/context of object
 		bool validateShaderAttribute(std::string type, std::string context, std::string component);
+		// returns Enums::COUNT_DATATYPE if attribute does not exist
+		Enums::DataType getAttributeDataType(std::string type, std::string context, std::string component);
 		bool setAttributeValue(std::string type, std::string context,
 				 std::string component, int number,
 				 Data *values);
@@ -349,6 +352,7 @@ namespace nau {
 		nau::physics::PhysicsManager *m_pPhysicsManager;
 
 		std::string m_AppFolder;
+		std::string m_ProjectFolder;
 		std::string m_ActiveCameraName;
 		unsigned int m_WindowWidth, m_WindowHeight;
 		std::shared_ptr<Viewport> m_Viewport;

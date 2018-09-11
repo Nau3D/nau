@@ -62,14 +62,14 @@
 					<optixProgram type="Any_Hit"  	 ray="Shadow" file="optix/common.ptx" proc="any_hit_shadow"/> 
 				</optixDefaultMaterial>
 				<optixMaterialMap>
-					<optixMap to="nau_material_lib:Grade*">
+					<optixMap to="__nau_material_lib:Grade*">
 						<optixProgram type="Any_Hit" ray="Phong" file="optix/common.ptx" proc="alpha_test"/> 
 						<optixProgram type="Closest_Hit" ray="Phong" file="optix/common.ptx" proc="shade"/> 
 						<optixProgram type="Any_Hit" ray="Shadow" file="optix/common.ptx" proc="alpha_test_shadow"/> 
 					</optixMap>	
-					<optixMap to="nau_material_lib:Vidro">
+					<optixMap to="__nau_material_lib:Vidro">
 						<optixProgram type="Any_Hit" ray="Phong" file="optix/common.ptx" proc="keepGoing"/> 
-						<!--optixProgram type="Closest_Hit" ray="Phong" file="optix/common.ptx" proc="shadeBlue"/-->
+						<!--optixProgram type="Closest_Hit" ray="Phong" file="optix/common.ptx" proc="keepGoing"/-->
 						<optixProgram type="Any_Hit" ray="Shadow" file="optix/common.ptx" proc="keepGoingShadow"/> 
 					</optixMap>	
 				</optixMaterialMap>

@@ -17,9 +17,9 @@ void main () {
 	if (channels == 1)
 		luminance = texColor.r;
 	else
-	// for color images
-	//https://en.wikipedia.org/wiki/Relative_luminance
-		luminance = dot(vec3(0.2126, 0.7152, 0.0722), texColor);
+	// for color images - converto to luminance with same factors as DevIL 
+	// https://github.com/DentonW/DevIL/blob/master/DevIL/src-IL/src/il_convert.cpp
+		luminance = dot(vec3(0.212671, 0.715160, 0.072169), texColor);
 		
 	complex = vec2(luminance, 0);
 }

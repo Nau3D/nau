@@ -40,7 +40,7 @@
 		</texture>
 		
 		<!-- the original image  -->
-		<texture name="original" filename="textures/terreno.jpg" mipmap="0" />
+		<texture name="original" filename="textures/lena.jpg" mipmap="0" />
 	
 		<!-- texture do display the image reconstructed -->
 		<!-- result = ifft (fft(original)) -->
@@ -244,11 +244,11 @@
 				<values>
 					<valueof uniform="imageUnit"	
 							 type="IMAGE_TEXTURE" context="CURRENT"
-							 id=0 component="UNIT" />
+							 id=1 component="UNIT" />
 							 
 					<valueof uniform="tex"			
 							 type="TEXTURE_BINDING" context="CURRENT"
-							 id=1 component="UNIT" />
+							 id=0 component="UNIT" />
 							 
 					<valueof uniform="destMipLevel"	
 							 type="RENDERER" context="CURRENT" 

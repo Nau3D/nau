@@ -105,7 +105,7 @@ Nau::Nau() :
 	m_ProjectName(""),
 	m_DefaultState(0),
 	m_pAPISupport(0),
-
+	m_ProjectFolder(""),
 	m_ProfileResetRequest(false)
 {
 }
@@ -1330,6 +1330,23 @@ Nau::validateShaderAttribute(std::string type, std::string context, std::string 
 }
 
 
+Enums::DataType 
+Nau::getAttributeDataType(std::string type, std::string context, std::string component) {
+
+	int id;
+	Enums::DataType dt;
+
+	if (m_Attributes.count(type) == 0)
+		return Enums::COUNT_DATATYPE;
+
+	m_Attributes[type]->getPropTypeAndId(component, &dt, &id);
+	if (id != -1)
+		return dt;
+	else
+		return Enums::COUNT_DATATYPE;
+}
+
+
 bool 
 Nau::setAttributeValue(std::string type, std::string context, std::string component, int number, Data *values) {
 
@@ -1672,6 +1689,7 @@ Nau::clear() {
 void
 Nau::readProjectFile(std::string file, int *width, int *height) {
 
+	m_ProjectFolder = File::GetPath(file);
 	try {
 		ProjectLoader::load(file, width, height);
 	}
@@ -1793,6 +1811,18 @@ void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 	m_pRenderManager->setActivePipeline("MainPipeline");
 //	RENDERMANAGER->prepareTriangleIDsAndTangents(true,true);
 }
+
+
+std::string 
+Nau::getProjectFolder() {
+
+	return m_ProjectFolder;
+}
+
+// -----------------------------------------------------------
+//		RUN & DEBUG
+// -----------------------------------------------------------
+
 
 
 void 

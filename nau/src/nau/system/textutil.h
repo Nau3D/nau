@@ -43,9 +43,8 @@ namespace nau {
 	  float * ParseFloats (const std::string &InputString, int count);
 	  int *ParseInts (const std::string &InputString, int count);
 
-	  //void Join(const std::vector<std::string>& vec, const char* delim, std::string *result);
 	  void Join(const std::vector<std::string>& vec, std::string delim, std::string *result);
-
+	  void Split(const std::string &input, std::string delim, std::vector<std::string>& res);
 
 	  
 	}; // namespace TextUtil

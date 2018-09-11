@@ -19,7 +19,7 @@ void main() {
 	float lumi = texelFetch(lumiTex, tc, 0).r;
 	
 	//compute the maximum mipmap texture level
-	int level = int(log2(width)) - 1;
+	int level = int(log2(width));		
 	
 	// fetch the maximum and minimum (result from the mipmap
 	vec3 lumiAccum = texelFetch(lumiTex, ivec2(0), level).rgb;

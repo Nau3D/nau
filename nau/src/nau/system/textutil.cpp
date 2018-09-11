@@ -164,3 +164,26 @@ TextUtil::Join(const std::vector<std::string>& vec, std::string delim, std::stri
 	}
 	*result = s.substr(0, s.length() - delim.length());
 }
+
+
+void
+TextUtil::Split(const std::string &input, std::string delim, std::vector<std::string>& res) {
+	
+	// Skip delimiters at beginning.
+	std::string::size_type lastPos = input.find_first_not_of(delim, 0);
+
+	// Find first non-delimiter.
+	std::string::size_type pos = input.find_first_of(delim, lastPos);
+
+	while (std::string::npos != pos || std::string::npos != lastPos) {
+		// Found a token, add it to the vector.
+		res.push_back(input.substr(lastPos, pos - lastPos));
+
+		// Skip delimiters.
+		lastPos = input.find_first_not_of(delim, pos);
+
+		// Find next non-delimiter.
+		pos = input.find_first_of(delim, lastPos);
+	}
+}
+

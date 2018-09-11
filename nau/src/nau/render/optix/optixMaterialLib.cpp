@@ -71,8 +71,8 @@ OptixMaterialLib::isDefined(std::string matName) {
 
 		if ((iter->first)[iter->first.size()-1] == '*') {
 			aux = (iter->first).substr(0,iter->first.size()-1);
-			
-			if (matName.find(aux) != std::string::npos)
+			size_t k = matName.find(aux);
+			if (k == 0)
 				return iter->first;
 		}
 		

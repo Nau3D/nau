@@ -70,6 +70,7 @@ std::string ProjectLoader::s_File = "";
 std::string ProjectLoader::s_Dummy;
 std::string ProjectLoader::s_CurrentFile;
 std::map<std::string, float> ProjectLoader::s_Constants;
+std::map<std::string, std::string> ProjectLoader::s_StringConstants;
 
 char ProjectLoader::s_pFullName[256] = "";
 
@@ -683,12 +684,13 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 
 
 std::string &
-ProjectLoader::readChildTagString(std::string parent, TiXmlElement *pElem,	AttribSet &attribs) {
+ProjectLoader::readChildTagString(std::string parent, TiXmlElement *pElem, std::string tag) {
 
 	if (TIXML_SUCCESS != pElem->QueryStringAttribute("name", &s_Dummy_string)) {
 		NAU_THROW("File %s: Element %s: String Attribute %s without a value", ProjectLoader::s_File.c_str(), parent.c_str(), pElem->Value());
 	}
-
+	if (isStringConstantDefined(s_Dummy_string))
+		s_Dummy_string = s_StringConstants[s_Dummy_string];
 	return s_Dummy_string;
 }
 
@@ -762,6 +764,13 @@ bool
 ProjectLoader::isConstantDefined(std::string s) {
 
 	return s_Constants.count(s) != 0;
+}
+
+
+bool
+ProjectLoader::isStringConstantDefined(std::string s) {
+
+	return s_StringConstants.count(s) != 0;
 }
 
 
@@ -983,7 +992,7 @@ ProjectLoader::readChildTags(std::string parent, AttributeValues *anObj, nau::At
 				delete value;
 			}
 			else {
-				std::string &valueS = readChildTagString(parent, p, attribs);
+				std::string &valueS = readChildTagString(parent, p);
 				if (a->getMustExist() && !anObj->isValids((AttributeValues::StringProperty)id, valueS)) {
 					std::string s = "File: " + ProjectLoader::s_File;
 					addToDefferredVal(s, p->Row(), p->Column(), valueS, a->getObjType());
@@ -1091,6 +1100,7 @@ ProjectLoader::load (const std::string &file, int *width, int *height)
 	ProjectLoader::s_File = fAux;
 	ProjectLoader::s_CurrentFile = fAux;
 	s_Constants.clear();
+	s_StringConstants.clear();
 
 	TiXmlDocument doc (file.c_str());
 	bool loadOkay = doc.LoadFile();
@@ -1236,20 +1246,20 @@ ProjectLoader::loadUserAttrs(TiXmlHandle handle)
 
 
 /* ----------------------------------------------------------------
-Specification of Constants:
+Specification of Aliases:
 
-<constants>
-	<constant name="BufferDim" value=128 />
-	<constant name="PI" value=3.14 />
-</constants>
+<aliases>
+	<alias name="BufferDim" value=128 />
+	<alias name="PI" value=3.14 />
+</aliases>
 
-Constants can be used everywhere an attribute requires a number. Constants are read as floats 
+Aliases can be used everywhere an attribute requires a number. Aliases are read as floats 
 and can be used to replace any numeric type. 
 
 ----------------------------------------------------------------- */
 
 void
-ProjectLoader::loadConstants(TiXmlHandle &handle) 
+ProjectLoader::loadAliases(TiXmlHandle &handle) 
 {
 	TiXmlElement *pElem, *pElem2;
 	std::string delim="\n", s;
@@ -1276,7 +1286,66 @@ ProjectLoader::loadConstants(TiXmlHandle &handle)
 		s_Constants[pName] = value;
 
 		SLOG("Constant %s: %f", pName, value);
-				
+	}
+		// new version: aliases instead of constants
+	pElem2 = handle.FirstChild("aliases").Element();
+	std::vector<std::string> v1 = { "alias" };
+	checkForNonValidChildTags("aliases", v1, pElem2);
+
+	pElem = handle.FirstChild("aliases").FirstChild("alias").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("alias")) {
+
+		const char *pName = pElem->Attribute("name");
+
+		if (0 == pName) {
+			NAU_THROW("File %s\nAlias without a name", ProjectLoader::s_File.c_str());
+		}
+
+		float value;
+
+		if (TIXML_SUCCESS != pElem->QueryFloatAttribute("value", &value)) {
+			NAU_THROW("File %s\nAlias %s value is absent or is not a number", ProjectLoader::s_File.c_str(), pName);
+		}
+
+		s_Constants[pName] = value;
+
+		SLOG("Alias %s: %f", pName, value);
+
+	}
+}
+
+
+
+void
+ProjectLoader::loadStringAliases(TiXmlHandle &handle)
+{
+	TiXmlElement *pElem, *pElem2;
+	std::string delim = "\n", s;
+
+	// new version: aliases instead of constants
+	pElem2 = handle.FirstChild("stringAliases").Element();
+	std::vector<std::string> v1 = { "alias" };
+	checkForNonValidChildTags("stringAliases", v1, pElem2);
+
+	pElem = handle.FirstChild("stringAliases").FirstChild("alias").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("alias")) {
+
+		const char *pName = pElem->Attribute("name");
+
+		if (0 == pName) {
+			NAU_THROW("File %s\nAlias without a name", ProjectLoader::s_File.c_str());
+		}
+
+		std::string value;
+
+		if (TIXML_SUCCESS != pElem->QueryStringAttribute("value", &value)) {
+			NAU_THROW("File %s\nAlias %s value is absent or is not a valid string", ProjectLoader::s_File.c_str(), pName);
+		}
+
+		s_StringConstants[pName] = value;
+
+		SLOG("String Alias %s: %s", pName, value.c_str());
+
 	}
 }
 
@@ -1895,13 +1964,13 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 	TiXmlHandle handle (hRoot.FirstChild ("assets").Element());
 
 
-	std::vector<std::string> ok = {"constants", "attributes", "scenes", "viewports", "cameras",
+	std::vector<std::string> ok = {"constants", "aliases", "stringAliases", "attributes", "scenes", "viewports", "cameras",
 		"lights", "events", "atomics", "materialLibs", "physicsLibs", "sensors", "routes", "interpolators"};
 	checkForNonValidChildTags("Assets", ok, hRoot.FirstChild ("assets").Element());
 
 
 
-	loadConstants(handle);
+	loadAliases(handle);
 	loadUserAttrs(handle);
 
 	pElem = handle.FirstChild ("physicsLibs").FirstChild ("physicsLib").Element();
@@ -2538,6 +2607,8 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
 		const char *pName = pElem->Attribute("to");
+		//if (!MATERIALLIBMANAGER->hasMaterial(std::string(pName)))
+		//	NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Map. \nMaterial %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pName);
 
 		pElemAux = pElem->FirstChildElement("optixProgram");
 		for ( ; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
@@ -4078,6 +4149,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				const char *pDef = pElemAux->Attribute("def");
 				const char *pScript = pElemAux->Attribute("script");
 				const char *pScriptFile = pElemAux->Attribute("scriptFile");
+				const char *pEnums = pElemAux->Attribute("strings");
 
 				if (pScriptFile && pScript) {
 					if (!Nau::luaCheckScriptName(File::GetFullPath(ProjectLoader::s_Path, pScriptFile), pScript)) {
@@ -4122,10 +4194,16 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 					def = pDef;
 				}
 
-				//if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-				//	NAU_THROW("File %s\nWindow %s, Variable %s\nVariable not valid", 
-				//		s_File.c_str(), pWindowName, pLabel);
-				if (pControl) {
+				if (pEnums) {
+					Enums::DataType t = NAU->getAttributeDataType(pType, pContext, pComponent);
+					if (t != Enums::DataType::INT) {
+						NAU_THROW("File %s (line %d row %d)\nEnum usage is valid only for INT variables\n", ProjectLoader::s_File.c_str(), pElemAux->Row(), pElemAux->Column());
+					}
+					else 
+						INTERFACE_MANAGER->addEnum(pWindowName, pLabel, pType, pContext, pComponent, pEnums, id, def, script, scriptF);
+
+				}
+				else if (pControl) {
 					if (strcmp(pControl, "DIRECTION") == 0)
 						INTERFACE_MANAGER->addDir(pWindowName, pLabel, pType, pContext, pComponent, id, script, scriptF);
 					else if (strcmp(pControl, "COLOR") == 0)
@@ -4378,14 +4456,16 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 	int layers = 0;
 	pElem = hRoot.FirstChild ("textures").FirstChild ("texture").Element();
 	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("texture")) {
-		const char* pTextureName = pElem->Attribute ("name");
+		std::string &name = readChildTagString("texture", pElem);
+		//std::string &filename = readChildTagString("texture", pElem, "filename");
+		//const char* pTextureName = pElem->Attribute ("name");
 		const char* pFilename = pElem->Attribute ("filename");
 
-		if (0 == pTextureName) {
-			NAU_THROW("Mat Lib %s\nTexture has no name", aLib->getName().c_str());
-		} 
+		//if (0 == pTextureName) {
+		//	NAU_THROW("Mat Lib %s\nTexture has no name", aLib->getName().c_str());
+		//} 
 
-		sprintf(s_pFullName,"%s::%s", aLib->getName().c_str(), pTextureName);
+		sprintf(s_pFullName,"%s::%s", aLib->getName().c_str(), name.c_str());
 
 		SLOG("Texture : %s", s_pFullName);
 

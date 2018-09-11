@@ -63,6 +63,8 @@ namespace nau {
 		virtual void setProjectName(std::string name) = 0;
 		virtual const std::string &getProjectName() = 0;
 
+		virtual std::string getProjectFolder() = 0;
+
 #if NAU_LUA == 1
 		virtual void callLuaScript(std::string name) = 0;
 		virtual void initLuaScript(std::string file, std::string name) = 0;
@@ -79,6 +81,8 @@ namespace nau {
 		//virtual bool validateAttribute(std::string type, std::string context, std::string component) = 0;
 		// Only validates the existence of the component in a particular type/context of object
 		virtual bool validateShaderAttribute(std::string type, std::string context, std::string component) = 0;
+		// returns Enums::COUNT_DATATYPE if attribute does not exist
+		virtual Enums::DataType getAttributeDataType(std::string type, std::string context, std::string component) = 0;
 		virtual bool setAttributeValue(std::string type, std::string context,
 				 std::string component, int number,
 				 Data *values) = 0;

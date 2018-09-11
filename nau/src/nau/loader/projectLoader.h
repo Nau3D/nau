@@ -77,11 +77,12 @@ namespace nau
 				std::string value, std::string objType);
 			static void deferredValidation();
 
-			// load the constants section
-			static void loadConstants(TiXmlHandle &hRoot);
-			// load the assets section
+			// load aliases section
+			static void loadAliases(TiXmlHandle &hRoot);
+			static void loadStringAliases(TiXmlHandle &hRoot);
+			// load assets section
 			static void loadAssets (TiXmlHandle &hRoot, std::vector<std::string> &matLib);
-			// load the pipelines section
+			// load pipelines section
 			static void loadPipelines (TiXmlHandle &hRoots);
 			// load interface elements
 			static void loadInterface(TiXmlHandle &hRoots);
@@ -124,7 +125,7 @@ namespace nau
 			// read a child tag 
 			static Data *readChildTag(std::string parent, TiXmlElement *pElem, Enums::DataType type, 
 				AttribSet &attribs);
-			static std::string & readChildTagString(std::string parent, TiXmlElement *pElem, AttribSet &attribs);
+			static std::string & readChildTagString(std::string parent, TiXmlElement *pElem, std::string tag= "");
 			// read an attribute 
 			//static void *readAttribute(const char *name, TiXmlElement *p, Enums::DataType type, AttribSet &attribs);
 			static Data *readAttribute(std::string tag, std::unique_ptr<Attribute> &attr, TiXmlElement *p);
@@ -139,6 +140,7 @@ namespace nau
 				std::set<std::string> &included, std::vector<std::string> *excluded);
 			// checks if a constant has been defined
 			static bool isConstantDefined(std::string s);
+			static bool isStringConstantDefined(std::string s);
 
 			// read single attributes. values can be numbers of constant labels
 			static bool readFloatAttribute(TiXmlElement *p, std::string label, float *value);
@@ -248,6 +250,7 @@ namespace nau
 			static uivec2 s_Dummy_uivec2;
 			static std::string s_Dummy_string;
 			static std::map<std::string, float> s_Constants;
+			static std::map<std::string, std::string> s_StringConstants;
 		};
 	};
 };

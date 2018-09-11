@@ -964,11 +964,15 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 	}
 
 #ifdef PROFILE 
-	if (m_Shader->hasTessellationShader()) {
-		glEndQuery(GL_PRIMITIVES_GENERATED);
-		GLuint numPrimitives = 0;
-		glGetQueryObjectuiv(m_TessQuery, GL_QUERY_RESULT, &numPrimitives);
-		accumTriCounter((unsigned int)GL_TRIANGLES, numPrimitives * 3);
+	{
+		PROFILE("Get Tessellation Query");
+
+		if (m_Shader->hasTessellationShader()) {
+			glEndQuery(GL_PRIMITIVES_GENERATED);
+			GLuint numPrimitives = 0;
+			glGetQueryObjectuiv(m_TessQuery, GL_QUERY_RESULT, &numPrimitives);
+			accumTriCounter((unsigned int)GL_TRIANGLES, numPrimitives * 3);
+		}
 	}
 	accumTriCounter(drawPrimitive, size);
 #endif

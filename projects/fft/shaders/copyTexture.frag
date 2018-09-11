@@ -1,7 +1,6 @@
 #version 430
 
 uniform sampler2D texUnit0;
-uniform int log_width;
 
 in vec2 texCoord;
 

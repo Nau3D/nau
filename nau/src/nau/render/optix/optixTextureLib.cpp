@@ -45,8 +45,6 @@ OptixTextureLib::addTextures(std::shared_ptr<nau::material::Material> &m) {
 			
 			mode = m->getTextureSampler(i)->getPrope(ITextureSampler::MAG_FILTER);
 			mode1 = m->getTextureSampler(i)->getPrope(ITextureSampler::MIN_FILTER);
-		//	mode = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i), IState::TEXTURE_MAG_FILTER);
-		//	mode1 = m->getState()->getTexProp((IState::TextureUnit)(IState::TEXTURE0+i), IState::TEXTURE_MIN_FILTER);
 			m_TextureLib[s]->setFilteringModes( (RTfiltermode)translateFilterModeToOptix(mode1), 
 												(RTfiltermode)translateFilterModeToOptix(mode), 
 												RT_FILTER_LINEAR);
@@ -98,12 +96,9 @@ OptixTextureLib::addTexture(unsigned int glID) {
 	m_TextureLib[glID]->setWrapMode( 0, RT_WRAP_REPEAT );
 	m_TextureLib[glID]->setWrapMode( 1, RT_WRAP_REPEAT );
 			
-	m_TextureLib[glID]->setFilteringModes( RT_FILTER_NEAREST, 
-										RT_FILTER_NEAREST, 
+	m_TextureLib[glID]->setFilteringModes(RT_FILTER_LINEAR,
+										RT_FILTER_LINEAR,
 										RT_FILTER_LINEAR );
-	//m_TextureLib[glID]->setFilteringModes( RT_FILTER_NEAREST, 
-	//									RT_FILTER_NEAREST, 
-	//									RT_FILTER_LINEAR );	
 	m_TextureLib[glID]->setIndexingMode(RT_TEXTURE_INDEX_NORMALIZED_COORDINATES);
 	m_TextureLib[glID]->setReadMode(RT_TEXTURE_READ_NORMALIZED_FLOAT);
 	m_TextureLib[glID]->setMaxAnisotropy(1.0f);

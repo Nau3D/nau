@@ -23,10 +23,9 @@ vec2 complexMult(vec2 v0, vec2 v1) {
 int bitReverse(int k) {
 
 	uint x = uint(k);
-	int log2n = 9;
 	uint n = 0;
 	uint mask = 0x1;
-	for (int i = 0; i < log2n; i++) {
+	for (int i = 0; i < log_width; i++) {
 		n <<= 1;
 		n |= (x & 1);
 		x >>= 1;

@@ -44,6 +44,7 @@ namespace nau
 			nau_API nau::material::MaterialLib* getLib(const std::string &libName);
 
 			nau_API bool hasMaterial (const std::string &aLibrary, const std::string &name);
+			nau_API bool hasMaterial(const std::string &amat);
 			nau_API void addMaterial (const std::string &aLibrary, std::shared_ptr<Material> &aMaterial);
 			nau_API std::shared_ptr<Material> &getMaterialFromDefaultLib(const std::string &name);
 			nau_API std::shared_ptr<Material> &getMaterial(nau::material::MaterialID &materialID);

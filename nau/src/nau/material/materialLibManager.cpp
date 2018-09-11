@@ -61,6 +61,24 @@ MaterialLibManager::hasMaterial (const std::string &aLibrary, const std::string 
 }
 
 
+bool
+MaterialLibManager::hasMaterial(const std::string &fullName) {
+
+
+	std::string mat, lib;
+	size_t pos = fullName.find_first_of(":");
+	if (pos != std::string::npos) {
+		lib = fullName.substr(0, pos);
+		mat = fullName.substr(pos + 2, fullName.length());
+	}
+	else {
+		mat = fullName;
+		lib = DEFAULTMATERIALLIBNAME;
+	}
+	return getLib(lib)->hasMaterial(mat);
+}
+
+
 std::shared_ptr<Material> &
 MaterialLibManager::getMaterialFromDefaultLib(const std::string &materialName) {
 

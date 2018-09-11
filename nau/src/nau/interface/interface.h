@@ -101,9 +101,15 @@ namespace nau {
 				const std::string &varType, const std::string &varContext,
 				const std::string &component, int id = 0, const std::string &luaScript = "", const std::string &luaScriptFile = "");
 
+			bool addEnum(const std::string &windowName, const std::string &varLabel,
+				const std::string &varType, const std::string &varContext,
+				const std::string &component, const std::string &enums, int id = 0, 
+				const std::string def = "", const std::string &luaScript = "", const std::string &luaScriptFile = "");
+
 			bool addVar(const std::string &windowName, const std::string &varLabel,
 				const std::string &varType, const std::string &varContext,
-				const std::string &component, int id = 0, const std::string def = "", const std::string &luaScript = "", const std::string &luaScriptFile = "");
+				const std::string &component, int id = 0, const std::string def = "", 
+				const std::string &luaScript = "", const std::string &luaScriptFile = "");
 
 			bool addPipelineList(const std::string &windowName, const std::string &label, const std::string &luaScript = "", const std::string &luaScriptFile = "");
 

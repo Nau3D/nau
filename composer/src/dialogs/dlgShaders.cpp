@@ -133,6 +133,8 @@ DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 		m_Shader[i] = new wxFileProperty(IProgram::GetShaderNames()[i].c_str(), IProgram::GetShaderNames()[i].c_str());
 		//m_Shader[i]->SetAttribute(wxPG_FILE_WILDCARD,wxT("Vertex Shader Files (*.vert)|*.vert"));
+		//m_Shader[i]->SetAttribute("ShowFullPath", 0);
+		m_Shader[i]->SetAttribute("ShowRelativePath", NAU->getProjectFolder());
 		m_PG->Append(m_Shader[i]);
 	}
 	m_PG->Append(new wxPropertyCategory(wxT("Program properties"), wxPG_LABEL));
