@@ -25,13 +25,27 @@ namespace nau
 			static GLenum ShaderGLId[SHADER_COUNT];
 
 		private:
-			std::vector<std::string> m_File; // filenames
-			std::vector<std::string> m_Source; // source code
-			// vector of (shader ID , attached)
-			std::vector<int> m_ID;
-			std::vector<bool> m_Attached;
 
-			std::vector<bool> m_Compiled;
+			struct shader {
+				std::vector<std::string> files;
+				char ** source;
+				int id;
+				bool attached, compiled;
+
+				shader() {
+					source = NULL; id = 0; attached = false; compiled = false;
+				};
+			};
+
+			std::vector<struct shader> m_Shaders;
+
+			//std::vector<std::vector<std::string>> m_File; // filenames
+			//std::vector<std::vector<std::string>> m_Source; // source code
+			// vector of (shader ID , attached)
+			//std::vector<std::vector<int>> m_ID;
+			//std::vector<std::vector<bool>> m_Attached;
+			//std::vector<std::vector<bool>> m_Compiled;
+			
 			unsigned int  m_P; // program id
 			int m_NumUniforms;
 			int m_MaxLength;
@@ -56,8 +70,8 @@ namespace nau
 			void setName(const std::string &name);
 			const std::string &getName();
 
-			virtual const std::string &getShaderFile(ShaderType type);
-			virtual bool setShaderFile(ShaderType type, const std::string &name);
+			virtual const std::vector<std::string> &getShaderFiles(ShaderType type);
+			virtual bool setShaderFiles(ShaderType type, const std::string &name);
 
 
 			virtual bool getPropertyb(int query);

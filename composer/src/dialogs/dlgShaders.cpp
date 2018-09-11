@@ -220,22 +220,22 @@ DlgShaders::OnPropsChange(wxPropertyGridEvent& e) {
 
 	IProgram *p = RESOURCEMANAGER->getProgram(m_Active);
 	if (name == wxT("Vertex"))
-		p->setShaderFile(IProgram::VERTEX_SHADER, fn);
+		p->setShaderFiles(IProgram::VERTEX_SHADER, fn);
 	//#if NAU_OPENGL_VERSION >= 320
 	else if (name == wxT("Geometry"))
-		p->setShaderFile(IProgram::GEOMETRY_SHADER, fn);
+		p->setShaderFiles(IProgram::GEOMETRY_SHADER, fn);
 	//#endif
 	else if (name == wxT("Fragment"))
-		p->setShaderFile(IProgram::FRAGMENT_SHADER, fn);
+		p->setShaderFiles(IProgram::FRAGMENT_SHADER, fn);
 	//#if NAU_OPENGL_VERSION >= 400
 	else if (name == wxT("Tess Eval"))
-		p->setShaderFile(IProgram::TESS_EVALUATION_SHADER, fn);
+		p->setShaderFiles(IProgram::TESS_EVALUATION_SHADER, fn);
 	else if (name == wxT("Tess Control"))
-		p->setShaderFile(IProgram::TESS_CONTROL_SHADER, fn);
+		p->setShaderFiles(IProgram::TESS_CONTROL_SHADER, fn);
 	//#endif
 	//#if (NAU_OPENGL_VERSION >= 430)
 	else if (name == wxT("Compute"))
-		p->setShaderFile(IProgram::COMPUTE_SHADER, fn);
+		p->setShaderFiles(IProgram::COMPUTE_SHADER, fn);
 	//#endif
 
 	updateShaderAux();
@@ -460,7 +460,7 @@ DlgShaders::OnProcessCompileAndLinkShaders(wxCommandEvent& event) {
 	// compile individual shaders
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 
-		if (p->getShaderFile((IProgram::ShaderType)i) != "" &&p->reloadShaderFile((IProgram::ShaderType)i)) {
+		if (p->getShaderFile((IProgram::ShaderType)i) != "" && p->reloadShaderFile((IProgram::ShaderType)i)) {
 			p->compileShader((IProgram::ShaderType)i);
 		}
 	}

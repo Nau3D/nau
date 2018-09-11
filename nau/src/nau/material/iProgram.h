@@ -60,8 +60,8 @@ namespace nau
 			virtual int getAttributeLocation (const std::string &name) = 0;
 			virtual int getUniformLocation(std::string uniformName) = 0;
 
-			virtual const std::string &getShaderFile(ShaderType type) = 0;
-			virtual bool setShaderFile(ShaderType type, const std::string &name) = 0;
+			virtual const std::vector<std::string> &getShaderFiles(ShaderType type) = 0;
+			virtual bool setShaderFiles(ShaderType type, const std::string &name) = 0;
 
 			virtual ~IProgram(void) {};
 

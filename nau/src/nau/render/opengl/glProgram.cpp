@@ -7,6 +7,7 @@
 #include "nau/material/uniformBlockManager.h"
 #include "nau/render/iRenderer.h"
 #include "nau/system/file.h"
+#include "nau/system/textutil.h"
 
 //#include <GL/glew.h>
 
@@ -22,11 +23,6 @@ GLenum GLProgram::ShaderGLId[IProgram::SHADER_COUNT] =
 // CONSTRUCTORS
 
 GLProgram::GLProgram() : 
-	m_File(SHADER_COUNT,""),
-	m_Source(SHADER_COUNT,""),
-	m_ID(SHADER_COUNT,0),
-	m_Attached(SHADER_COUNT, false),
-	m_Compiled(SHADER_COUNT,false),
 	m_NumUniforms (0), 
 	m_MaxLength (0),
 	m_PLinked (false),
@@ -34,6 +30,7 @@ GLProgram::GLProgram() :
 	m_Name("default") {
 
 	m_P = glCreateProgram();
+	m_Shaders.resize(SHADER_COUNT);
 }
 
 
@@ -43,9 +40,8 @@ GLProgram::~GLProgram() {
 		glDeleteProgram(m_P);
 
 	for (int i = 0; i < SHADER_COUNT; ++i) {
-	
-		if (m_ID[i] != 0) 
-			glDeleteShader(m_ID[i]);
+			if (m_Shaders[i].id != 0)
+				glDeleteShader(m_Shaders[i].id);
 	}
 }
 
@@ -56,8 +52,8 @@ GLProgram::areCompiled() {
 	bool res = true;
 
 	for (int i = 0; i < SHADER_COUNT; ++i) {
-		if (m_ID[i] != 0) 
-			res = res && m_Compiled[i];
+			if (m_Shaders[i].id != 0)
+				res = res && m_Shaders[i].compiled;
 	}
 	return(res);
 }
@@ -66,7 +62,12 @@ GLProgram::areCompiled() {
 bool 
 GLProgram::isCompiled(IProgram::ShaderType type) {
 	
-	return m_Compiled[type];
+	bool res = true;
+
+	if (m_Shaders[type].id != 0)
+		res = res && m_Shaders[type].compiled;
+
+	return res;
 }
 
 
@@ -107,7 +108,7 @@ GLProgram::getName() {
 
 
 bool
-GLProgram::loadShader (IProgram::ShaderType type, const std::string &filename) {
+GLProgram::loadShader (IProgram::ShaderType type, const std::string &filenames) {
 
 	if (!isShaderSupported(type))
 		return false;
@@ -115,19 +116,74 @@ GLProgram::loadShader (IProgram::ShaderType type, const std::string &filename) {
 	if (type == TESS_CONTROL_SHADER || type == TESS_EVALUATION_SHADER)
 		m_HasTessShader = true;
 
-	if (true == setShaderFile(type,filename)) {
-		m_Compiled[type] = compileShader(type);
-		return m_Compiled[type];
+	if (true == setShaderFiles(type,filenames)) {
+		m_Shaders[type].compiled = compileShader(type);
+		return m_Shaders[type].compiled;
 	}
 	else
 		return false;
 }
 
 
-const std::string &
-GLProgram::getShaderFile(ShaderType type) {
+const std::vector<std::string> &
+GLProgram::getShaderFiles(ShaderType type) {
 
-	return m_File[type];
+	return m_Shaders[type].files;
+}
+
+
+bool
+GLProgram::setShaderFiles (IProgram::ShaderType type, const std::string &filenames) {
+
+	if (!isShaderSupported(type))
+		return false;
+
+	// MUST SPLIT FILENAMES - separator: comma
+	nau::system::TextUtil::Split(filenames, ",", m_Shaders[type].files);
+
+	// check if files exist
+	for (int i = 0; i < m_Shaders[type].files.size(); ++i)
+		if (!nau::system::File::Exists(m_Shaders[type].files[i]))
+			return false;
+
+	// reset shader
+	if (filenames == "" && m_Shaders[type].id != 0) {
+		glDetachShader(m_P, (GLuint)ShaderGLId[type]);
+		glDeleteShader((GLuint)ShaderGLId[type]);
+		m_Shaders[type].id = 0;
+		m_Shaders[type].attached = false;
+		m_Shaders[type].compiled = false;
+		for (int i = 0; i < m_Shaders[type].files.size(); ++i) {
+			free(m_Shaders[type].source[i]);
+		}
+		free(m_Shaders[type].source);
+		m_Shaders[type].source = NULL;
+		m_Shaders[type].files.clear();
+		return true;
+	}
+
+	// if first time
+	if (m_Shaders[type].id == 0) {
+		m_Shaders[type].id = glCreateShader(ShaderGLId[type]);
+	}
+
+	// init shader variables
+	m_Shaders[type].attached = false;
+	m_Shaders[type].compiled = false;
+	m_PLinked = false;
+
+	// loop on filenames to create string array
+	std::string source;
+	m_Shaders[type].source = (char **)malloc(sizeof (char*) * m_Shaders[type].files.size());
+	for (int i = 0; i < m_Shaders[type].files.size(); ++i) {
+		source = nau::system::File::TextRead(m_Shaders[type].files[i]);
+		m_Shaders[type].source[i] = (char *)malloc(sizeof(char) * source.size() + 1);
+		memcpy(m_Shaders[type].source[i], source.c_str(), source.size());
+	}
+	
+	// set shader source
+	glShaderSource (m_Shaders[type].id, (GLsizei)m_Shaders[type].files.size(), m_Shaders[type].source, NULL);
+	return true;
 }
 
 
@@ -174,61 +230,27 @@ GLProgram::getUniformLocation(std::string name) {
 
 
 bool
-GLProgram::setShaderFile (IProgram::ShaderType type, const std::string &filename) {
-
-	if (!isShaderSupported(type))
-		return false;
-
-	// reset shader
-	if (filename == "" && m_ID[type] != 0) {
-		glDetachShader(m_P, (GLuint)ShaderGLId[type]);
-		glDeleteShader((GLuint)ShaderGLId[type]);
-		m_File[type] = "";
-		m_ID[type] = 0;
-		m_Attached[type] = false;
-		m_Source[type] = "";
-		return true;
-	}
-
-	// if first time
-	if (m_ID[type] == 0) {
-		m_ID[type] = glCreateShader(ShaderGLId[type]);
-	}
-
-	// init shader variables
-	m_Attached[type] = false;
-	m_Compiled[type] = false;
-	m_PLinked = false;
-	m_File[type] = filename;
-	m_Source[type] = nau::system::File::TextRead(m_File[type]);
-	
-	// set shader source
-	const char * vv = m_Source[type].c_str();
-		
-	glShaderSource (m_ID[type], 1, &vv, NULL);
-	return true;
-}
-
-
-bool
 GLProgram::reloadShaderFile (IProgram::ShaderType type) {
 
 	if (!isShaderSupported(type))
 		return false;
 
-	m_Compiled[type] = false;
+	m_Shaders[type].compiled = false;
 	m_PLinked = false;
-	m_Source[type] = nau::system::File::TextRead (m_File[type]);
-	if (m_Source[type] != "") { // if read successfuly
+	for (int i = 0; i < m_Shaders[type].files.size(); ++i) {
+		free(m_Shaders[type].source[i]);
+	}
+	free(m_Shaders[type].source);
+	m_Shaders[type].source = NULL;
 
-		// set shader source
-		const char * ff = (char *)m_Source[type].c_str();
-
-		glShaderSource (m_ID[type], 1, &ff, NULL);
-		return true;
-	} 
-	else 
-		return false;
+	std::string source;
+	m_Shaders[type].source = (char **)malloc(sizeof(char*) * m_Shaders[type].files.size());
+	for (int i = 0; i < m_Shaders[type].files.size(); ++i) {
+		source = nau::system::File::TextRead(m_Shaders[type].files[i]);
+		m_Shaders[type].source[i] = (char *)malloc(sizeof(char) * source.size() + 1);
+		memcpy(m_Shaders[type].source[i], source.c_str(), source.size());
+	}
+	return true;
 }
 
 
@@ -237,7 +259,7 @@ GLProgram::reload (void)
 {
 	for (int i = 0; i < SHADER_COUNT; ++i) {
 		reloadShaderFile((IProgram::ShaderType)i);
-		m_Compiled[i] = compileShader((IProgram::ShaderType)i);
+		m_Shaders[i].compiled = compileShader((IProgram::ShaderType)i);
 	}
 	
 	if (areCompiled()) {
@@ -263,15 +285,15 @@ GLProgram::compileShader (IProgram::ShaderType type) {
 
 	int r;
 
-	if (m_ID[type] != 0) {
-		glCompileShader (m_ID[type]);
+	if (m_Shaders[type].id != 0) {
+		glCompileShader (m_Shaders[type].id);
 		
-		glGetShaderiv (m_ID[type], GL_COMPILE_STATUS, &r);
-		m_Compiled[type] = (1 == r);
+		glGetShaderiv (m_Shaders[type].id, GL_COMPILE_STATUS, &r);
+		m_Shaders[type].compiled = (1 == r);
 
 		m_PLinked = false;
 
-		return (m_Compiled[type]);
+		return (m_Shaders[type].compiled);
 	}
 	else
 		return true;
@@ -293,9 +315,9 @@ GLProgram::linkProgram()
 	}
 
 	for (int i = 0; i < SHADER_COUNT; ++i) {
-		if (m_ID[i] != 0 && m_Attached[i] == false) {
-			glAttachShader(m_P, m_ID[i]);
-			m_Attached[i] = true;
+		if (m_Shaders[i].id != 0 && m_Shaders[i].attached == false) {
+			glAttachShader(m_P, m_Shaders[i].id);
+			m_Shaders[i].id = true;
 		}
 	}
 	glLinkProgram (m_P);
@@ -337,7 +359,7 @@ GLProgram::getAttributeLocation (const std::string &name) {
 void 
 GLProgram::useProgram (void) {
 
-	if (m_ID[FRAGMENT_SHADER] == 0 && m_ID[COMPUTE_SHADER] == 0)
+	if (m_Shaders[FRAGMENT_SHADER].id == 0 && m_Shaders[COMPUTE_SHADER].id == 0)
 		glEnable(GL_RASTERIZER_DISCARD);
 	else
 		glDisable(GL_RASTERIZER_DISCARD);
@@ -709,16 +731,16 @@ GLProgram::getShaderInfoLog(ShaderType type) {
 	std::string res;
 	char *infoLog;
 
-	if (m_ID[type] == 0)
+	if (m_Shaders[type].id == 0)
 		return "";
 
 	res = IProgram::ShaderNames[type] + ": OK";
 
-	glGetShaderiv (m_ID[type], GL_INFO_LOG_LENGTH, &infologLength);
+	glGetShaderiv (m_Shaders[type].id, GL_INFO_LOG_LENGTH, &infologLength);
 
     if (infologLength > 1) {
         infoLog = new char[infologLength]; 
-        glGetShaderInfoLog (m_ID[type], infologLength, &charsWritten, infoLog);	
+        glGetShaderInfoLog (m_Shaders[type].id, infologLength, &charsWritten, infoLog);
 		res.assign(infoLog);
 		delete infoLog;
 	}
