@@ -4624,6 +4624,8 @@ SHADERS
 void 
 ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::string path)
 {
+
+
 	TiXmlElement *pElem;
 	pElem = hRoot.FirstChild ("shaders").FirstChild ("shader").Element();
 	for ( ; 0 != pElem; pElem=pElem->NextSiblingElement()) {
@@ -4639,30 +4641,116 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		if (RESOURCEMANAGER->hasProgram(s_pFullName))
 			NAU_THROW("Mat Lib %s\nShader %s is already defined", aLib->getName().c_str(), pProgramName);
 
+		std::vector<std::vector<std::string>> shaderFiles;
+		
+		shaderFiles.resize(IProgram::SHADER_COUNT);
 
-		const char *pVSFile = pElem->Attribute ("vs");
-		const char *pPSFile = pElem->Attribute ("ps");
-		const char *pGSFile = pElem->Attribute("gs");
-		const char *pTCFile = pElem->Attribute("tc");
-		const char *pTEFile = pElem->Attribute("te");
-		const char *pCSFile = pElem->Attribute("cs");
+		std::vector<std::string> tags = {"vs", "gs", "tc", "te", "ps", "cs"};
 
-		//if ((0 == pCSFile) && (0 == pVSFile || (0 == pPSFile && 0 == pGSFile))) {
-		if (0 == pCSFile && 0 == pVSFile) {
+		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
+			const char *pstr = pElem->Attribute (tags[i].c_str());
+			if (pstr)
+				shaderFiles[i].push_back(pstr);
+		}
+		
+		//const char *pPSFile = pElem->Attribute ("ps");
+		//const char *pGSFile = pElem->Attribute("gs");
+		//const char *pTCFile = pElem->Attribute("tc");
+		//const char *pTEFile = pElem->Attribute("te");
+		//const char *pCSFile = pElem->Attribute("cs");
+
+		//if (pVSFile)
+		//	shaderFiles[IProgram::VERTEX_SHADER].push_back(pVSFile);
+		//if (pPSFile)
+		//	shaderFiles[IProgram::FRAGMENT_SHADER].push_back(pPSFile);
+		//if (pGSFile)
+		//	shaderFiles[IProgram::GEOMETRY_SHADER].push_back(pGSFile);
+		//if (pTCFile)
+		//	shaderFiles[IProgram::TESS_CONTROL_SHADER].push_back(pTCFile);
+		//if (pTEFile)
+		//	shaderFiles[IProgram::TESS_EVALUATION_SHADER].push_back(pTEFile);
+		//if (pCSFile)
+		//	shaderFiles[IProgram::COMPUTE_SHADER].push_back(pCSFile);
+
+		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
+			TiXmlHandle hShader(pElem);
+			TiXmlElement *pElemAux = hShader.FirstChild(tags[i].c_str()).FirstChild("file").Element();
+			for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement("file")) {
+				const char *pstr = pElemAux->Attribute("name");
+				if (pstr)
+					shaderFiles[i].push_back(pstr);
+			}
+		}
+
+		// check if minimum set of files is present
+		if (0 == shaderFiles[IProgram::COMPUTE_SHADER].size() && 0 == shaderFiles[IProgram::VERTEX_SHADER].size()) {
 				NAU_THROW("Mat Lib %s\nShader %s missing files", aLib->getName().c_str(), pProgramName);
 		}
 
-		if (0 != pCSFile && (0 != pVSFile || 0 != pPSFile || 0 != pGSFile || 0 != pTEFile || 0 != pTCFile)) 
+		// check if not mixing compute shader with other stages
+		if (0 != shaderFiles[IProgram::COMPUTE_SHADER].size() && 
+				(0 != shaderFiles[IProgram::VERTEX_SHADER].size() || 
+				 0 != shaderFiles[IProgram::FRAGMENT_SHADER].size() || 
+				 0 != shaderFiles[IProgram::GEOMETRY_SHADER].size() || 
+				 0 != shaderFiles[IProgram::TESS_EVALUATION_SHADER].size() || 
+				 0 != shaderFiles[IProgram::TESS_CONTROL_SHADER].size()))
 			NAU_THROW("Mat Lib %s\nShader %s: Mixing Compute Shader with other shader stages",aLib->getName().c_str(), pProgramName);
 
 			
-		if (pCSFile) {
+		// check if files exist
+		for (int k = 0; k < IProgram::SHADER_COUNT; ++k) {
+			for (int i = 0; i < shaderFiles[k].size(); ++i) {
+				std::string aFilename(File::GetFullPath(path, shaderFiles[k][i]));
+				if (!File::Exists(aFilename)) {
+					NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), aFilename.c_str());
+				}
+				else
+					shaderFiles[k][i] = aFilename;
+			}
+		}
+
+		// check API support
+		if (shaderFiles[IProgram::COMPUTE_SHADER].size() && !APISupport->apiSupport(IAPISupport::COMPUTE_SHADER)) {
+			NAU_THROW("Mat Lib %s\nShader %s: Compute shader is not allowed with OpenGL < 4.3", aLib->getName().c_str(), pProgramName);
+		}
+		if (shaderFiles[IProgram::GEOMETRY_SHADER].size() && !APISupport->apiSupport(IAPISupport::GEOMETRY_SHADER)) {
+			NAU_THROW("Mat Lib %s\nShader %s: Geometry Shader shader is not allowed with OpenGL < 3.2", aLib->getName().c_str(), pProgramName);
+		}
+		if ((shaderFiles[IProgram::TESS_CONTROL_SHADER].size() || shaderFiles[IProgram::TESS_EVALUATION_SHADER].size()) &&
+						!APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS)) {
+			NAU_THROW("Mat Lib %s\nShader %s: Tesselation shaders are not allowed with OpenGL < 4.0", aLib->getName().c_str(), pProgramName);
+		}
+
+
+		IProgram *aShader = RESOURCEMANAGER->getProgram(s_pFullName);
+
+		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
+			if (shaderFiles[i].size()) {
+				aShader->loadShader((IProgram::ShaderType)i, shaderFiles[i]);
+				SLOG("Shader file %s - %s", shaderFiles[i][0].c_str(), aShader->getShaderInfoLog((IProgram::ShaderType)i).c_str());
+			}
+		}
+		aShader->linkProgram();
+		SLOG("Linker: %s", aShader->getProgramInfoLog().c_str());
+
+
+
+
+/*		if (shaderFiles[IProgram::COMPUTE_SHADER].size()) {
+			// is compute shader supported?
 			if (APISupport->apiSupport(IAPISupport::COMPUTE_SHADER)) {
-				IProgram *aShader = RESOURCEMANAGER->getProgram(s_pFullName);
-				std::string CSFilename(File::GetFullPath(path, pCSFile));
-				if (!File::Exists(CSFilename))
-					NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), pCSFile);
-				SLOG("Program %s", pProgramName);
+
+
+				// check if files exist
+				for (int i = 0; i < shaderFiles[IProgram::COMPUTE_SHADER].size(); ++i) {
+					std::string CSFilename(File::GetFullPath(path, shaderFiles[IProgram::COMPUTE_SHADER][i]));
+					if (!File::Exists(CSFilename)) {
+						NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), shaderFiles[IProgram::COMPUTE_SHADER][i].c_str());
+					}
+					else
+						shaderFiles[IProgram::COMPUTE_SHADER][i] = CSFilename;
+				}
+
 
 				aShader->loadShader(IProgram::COMPUTE_SHADER, File::GetFullPath(path, pCSFile));
 				aShader->linkProgram();
@@ -4677,9 +4765,6 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			std::string FSFilename;
 			std::string TEFilename, TCFilename;
 
-			std::string VSFilename(File::GetFullPath(path,pVSFile));
-			if (!File::Exists(VSFilename))
-				NAU_THROW("Mat Lib %s\nShader file %s does not exist", aLib->getName().c_str(), pVSFile);
 
 			if (pGSFile) {
 				if (APISupport->apiSupport(IAPISupport::GEOMETRY_SHADER)) {
@@ -4742,6 +4827,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 			aShader->linkProgram();
 			SLOG("Linker: %s", aShader->getProgramInfoLog().c_str());
 		}
+*/
 	}
 }
 

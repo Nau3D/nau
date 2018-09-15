@@ -108,7 +108,7 @@ GLProgram::getName() {
 
 
 bool
-GLProgram::loadShader (IProgram::ShaderType type, const std::string &filenames) {
+GLProgram::loadShader (IProgram::ShaderType type, const std::vector<std::string> &files) {
 
 	if (!isShaderSupported(type))
 		return false;
@@ -116,7 +116,7 @@ GLProgram::loadShader (IProgram::ShaderType type, const std::string &filenames) 
 	if (type == TESS_CONTROL_SHADER || type == TESS_EVALUATION_SHADER)
 		m_HasTessShader = true;
 
-	if (true == setShaderFiles(type,filenames)) {
+	if (true == setShaderFiles(type,files)) {
 		m_Shaders[type].compiled = compileShader(type);
 		return m_Shaders[type].compiled;
 	}
@@ -132,22 +132,39 @@ GLProgram::getShaderFiles(ShaderType type) {
 }
 
 
+void 
+GLProgram::files2source(IProgram::ShaderType type) {
+
+	// loop on filenames to create string array
+	std::string source;
+	m_Shaders[type].source = (char **)malloc(sizeof (char*) * m_Shaders[type].files.size());
+	for (int i = 0; i < m_Shaders[type].files.size(); ++i) {
+		if (i > 0)
+			source = "#line 1 " + std::to_string(i) + "\n";
+		source += nau::system::File::TextRead(m_Shaders[type].files[i]);
+		m_Shaders[type].source[i] = (char *)malloc(sizeof(char) * source.size() + 1);
+		memcpy(m_Shaders[type].source[i], source.c_str(), source.size());
+		char *aux = m_Shaders[type].source[i];
+		aux[source.size()] = '\0';
+	}
+}
+
+
 bool
-GLProgram::setShaderFiles (IProgram::ShaderType type, const std::string &filenames) {
+GLProgram::setShaderFiles (IProgram::ShaderType type, const std::vector<std::string> &files) {
 
 	if (!isShaderSupported(type))
 		return false;
 
 	// MUST SPLIT FILENAMES - separator: comma
-	nau::system::TextUtil::Split(filenames, ",", m_Shaders[type].files);
-
+	m_Shaders[type].files = files;
 	// check if files exist
 	for (int i = 0; i < m_Shaders[type].files.size(); ++i)
 		if (!nau::system::File::Exists(m_Shaders[type].files[i]))
 			return false;
 
 	// reset shader
-	if (filenames == "" && m_Shaders[type].id != 0) {
+	if (files.size() == 0 && m_Shaders[type].id != 0) {
 		glDetachShader(m_P, (GLuint)ShaderGLId[type]);
 		glDeleteShader((GLuint)ShaderGLId[type]);
 		m_Shaders[type].id = 0;
@@ -172,15 +189,7 @@ GLProgram::setShaderFiles (IProgram::ShaderType type, const std::string &filenam
 	m_Shaders[type].compiled = false;
 	m_PLinked = false;
 
-	// loop on filenames to create string array
-	std::string source;
-	m_Shaders[type].source = (char **)malloc(sizeof (char*) * m_Shaders[type].files.size());
-	for (int i = 0; i < m_Shaders[type].files.size(); ++i) {
-		source = nau::system::File::TextRead(m_Shaders[type].files[i]);
-		m_Shaders[type].source[i] = (char *)malloc(sizeof(char) * source.size() + 1);
-		memcpy(m_Shaders[type].source[i], source.c_str(), source.size());
-	}
-	
+	files2source(type);
 	// set shader source
 	glShaderSource (m_Shaders[type].id, (GLsizei)m_Shaders[type].files.size(), m_Shaders[type].source, NULL);
 	return true;
@@ -243,13 +252,8 @@ GLProgram::reloadShaderFile (IProgram::ShaderType type) {
 	free(m_Shaders[type].source);
 	m_Shaders[type].source = NULL;
 
-	std::string source;
-	m_Shaders[type].source = (char **)malloc(sizeof(char*) * m_Shaders[type].files.size());
-	for (int i = 0; i < m_Shaders[type].files.size(); ++i) {
-		source = nau::system::File::TextRead(m_Shaders[type].files[i]);
-		m_Shaders[type].source[i] = (char *)malloc(sizeof(char) * source.size() + 1);
-		memcpy(m_Shaders[type].source[i], source.c_str(), source.size());
-	}
+	files2source(type);
+	glShaderSource(m_Shaders[type].id, (GLsizei)m_Shaders[type].files.size(), m_Shaders[type].source, NULL);
 	return true;
 }
 
@@ -317,7 +321,7 @@ GLProgram::linkProgram()
 	for (int i = 0; i < SHADER_COUNT; ++i) {
 		if (m_Shaders[i].id != 0 && m_Shaders[i].attached == false) {
 			glAttachShader(m_P, m_Shaders[i].id);
-			m_Shaders[i].id = true;
+			m_Shaders[i].attached = true;
 		}
 	}
 	glLinkProgram (m_P);
@@ -659,32 +663,6 @@ GLProgram::setUniforms() {
 				uni.setLoc (loc);
 				m_Uniforms.push_back (uni);
 			}
-			//if (size > 1) {
-
-			//	for (int i = 0; i < size; i++) {
-			//		std::stringstream s;
-			//		s << n.c_str() << "[" << i << "]";
-			//		std::string Location = s.str();
-			//		index = findUniform(Location);
-
-			//		int loc;
-			//		loc = glGetUniformLocation(m_P, s.str().c_str());
-			//		if (loc != -1) {
-			//			if (-1 != index) {
-			//				m_Uniforms[index].setGLType(type, 1);
-			//				m_Uniforms[index].setLoc(loc);
-			//			}
-			//			else {
-			//				uni.reset();
-			//				std::string ProgName(s.str());
-			//				uni.setName(ProgName);
-			//				uni.setGLType(type, 1);
-			//				uni.setLoc(loc);
-			//				m_Uniforms.push_back(uni);
-			//			}
-			//		}
-			//	}
-			//}
 		}
 	}
 

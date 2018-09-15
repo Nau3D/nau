@@ -38,7 +38,7 @@ namespace nau
 
 			virtual bool isShaderSupported(IProgram::ShaderType);
 			bool hasTessellationShader();
-			virtual bool loadShader(IProgram::ShaderType type, const std::string &filename) = 0;
+			virtual bool loadShader(IProgram::ShaderType type, const std::vector<std::string> &files) = 0;
 			virtual bool reload (void) = 0;
 			
 			virtual  bool prepare (void) = 0;
@@ -61,7 +61,7 @@ namespace nau
 			virtual int getUniformLocation(std::string uniformName) = 0;
 
 			virtual const std::vector<std::string> &getShaderFiles(ShaderType type) = 0;
-			virtual bool setShaderFiles(ShaderType type, const std::string &name) = 0;
+			virtual bool setShaderFiles(ShaderType type, const std::vector<std::string> &files) = 0;
 
 			virtual ~IProgram(void) {};
 

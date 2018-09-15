@@ -58,7 +58,7 @@ protected:
 	std::string m_Active;
 
 	/* LIGHTS */
-	wxButton *bAdd, *bActivate;
+	wxButton *m_bAdd;
 	wxComboBox *m_List;
 
 	/* SPECIFIC */
@@ -68,11 +68,13 @@ protected:
 	wxPGProperty *m_LinkStatus, *m_ValidateStatus,
 		*m_ActiveAtomicBuffers, *m_ActiveAttributes, *m_ActiveUniforms;
 	wxButton *m_bValidate, *m_bCompileAndLink;
+	wxButton *m_bCompileAndLinkAll;;
 
 
 	/* EVENTS */
 	void OnListSelect(wxCommandEvent& event);
 	void OnAdd(wxCommandEvent& event);
+	void OnProcessCompileAndLinkAllShaders(wxCommandEvent& event);
 	void OnPropsChange(wxPropertyGridEvent& e);
 
 	void update();
@@ -91,6 +93,7 @@ protected:
 	enum {
 		DLG_COMBO,
 		DLG_BUTTON_ADD,
+		DLG_BUTTON_COMPILE_AND_LINK_ALL,
 		DLG_PROPS,
 
 		/* SHADERS */

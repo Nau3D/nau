@@ -9,6 +9,7 @@ BEGIN_EVENT_TABLE(DlgShaders, wxDialog)
 EVT_COMBOBOX(DLG_COMBO, DlgShaders::OnListSelect)
 EVT_PG_CHANGED(DLG_PROPS, DlgShaders::OnPropsChange)
 EVT_BUTTON(DLG_BUTTON_ADD, DlgShaders::OnAdd)
+EVT_BUTTON(DLG_BUTTON_COMPILE_AND_LINK_ALL, DlgShaders::OnProcessCompileAndLinkAllShaders)
 
 EVT_BUTTON(DLG_SHADER_COMPILE_AND_LINK, DlgShaders::OnProcessCompileAndLinkShaders)
 EVT_BUTTON(DLG_SHADER_VALIDATE, DlgShaders::OnProcessValidateShaders)
@@ -131,10 +132,11 @@ DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 	m_PG->Append(new wxPropertyCategory(wxT("Files"), wxPG_LABEL));
 
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
-		m_Shader[i] = new wxFileProperty(IProgram::GetShaderNames()[i].c_str(), IProgram::GetShaderNames()[i].c_str());
+		m_Shader[i] = new wxStringProperty(IProgram::GetShaderNames()[i].c_str(), IProgram::GetShaderNames()[i].c_str());
+		//m_Shader[i] = new wxFileProperty(IProgram::GetShaderNames()[i].c_str(), IProgram::GetShaderNames()[i].c_str());
 		//m_Shader[i]->SetAttribute(wxPG_FILE_WILDCARD,wxT("Vertex Shader Files (*.vert)|*.vert"));
 		//m_Shader[i]->SetAttribute("ShowFullPath", 0);
-		m_Shader[i]->SetAttribute("ShowRelativePath", NAU->getProjectFolder());
+		//m_Shader[i]->SetAttribute("ShowRelativePath", NAU->getProjectFolder());
 		m_PG->Append(m_Shader[i]);
 	}
 	m_PG->Append(new wxPropertyCategory(wxT("Program properties"), wxPG_LABEL));
@@ -180,10 +182,12 @@ DlgShaders::setupPanel(wxSizer *siz, wxWindow *parent) {
 
 	/* BOTTOM: Add Shader Button */
 
-	wxBoxSizer *sizH3 = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer *sizH3 = new wxBoxSizer(wxHORIZONTAL);
 
-	bAdd = new wxButton(this, DLG_BUTTON_ADD, wxT("Add Program"));
-	sizH3->Add(bAdd, 0, wxALL, 5);
+	m_bAdd = new wxButton(this, DLG_BUTTON_ADD, wxT("Add Program"));
+	m_bCompileAndLinkAll = new wxButton(this, DLG_BUTTON_COMPILE_AND_LINK_ALL, wxT("Compile and Link All"));
+	sizH3->Add(m_bCompileAndLinkAll, 0, wxALL, 5);
+	sizH3->Add(m_bAdd, 0, wxALL, 5);
 
 	siz->Add(sizH3, 0, wxEXPAND, 5);
 }
@@ -219,7 +223,7 @@ DlgShaders::OnPropsChange(wxPropertyGridEvent& e) {
 	fn = std::string(filename.mb_str());
 
 	IProgram *p = RESOURCEMANAGER->getProgram(m_Active);
-	if (name == wxT("Vertex"))
+/*	if (name == wxT("Vertex"))
 		p->setShaderFiles(IProgram::VERTEX_SHADER, fn);
 	//#if NAU_OPENGL_VERSION >= 320
 	else if (name == wxT("Geometry"))
@@ -237,7 +241,7 @@ DlgShaders::OnPropsChange(wxPropertyGridEvent& e) {
 	else if (name == wxT("Compute"))
 		p->setShaderFiles(IProgram::COMPUTE_SHADER, fn);
 	//#endif
-
+*/
 	updateShaderAux();
 	notifyUpdate(PROPS_CHANGED, m_Active, std::string(name.mb_str()));
 
@@ -277,8 +281,14 @@ DlgShaders::update() {
 		m_PG->ClearSelection();
 
 		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
-
-			m_PG->SetPropertyValue(m_Shader[i], (char *)p->getShaderFile((IProgram::ShaderType)i).c_str());
+			std::string s;
+			const std::vector<std::string> &files = p->getShaderFiles((IProgram::ShaderType)i);
+			if (files.size())
+				s = files[0];
+			for (int i = 1; i < files.size(); ++i)
+				s += ", " + files[i];
+				
+			m_PG->SetPropertyValue(m_Shader[i], (char *)s.c_str());
 			m_PG->EnableProperty(m_Shader[i]);
 		}
 
@@ -303,23 +313,14 @@ void
 DlgShaders::updateShaderAux() {
 
 	GLProgram *p = (GLProgram *)RESOURCEMANAGER->getProgram(m_Active);
-	std::string vfn = p->getShaderFile(IProgram::VERTEX_SHADER),
-		ffn = p->getShaderFile(IProgram::FRAGMENT_SHADER),
-		gfn = p->getShaderFile(IProgram::GEOMETRY_SHADER),
-		cfn = p->getShaderFile(IProgram::COMPUTE_SHADER);
 
-	if (vfn != "" || ffn != "" || gfn != "" || cfn != "") {
+	if (p->getShaderFiles(IProgram::VERTEX_SHADER).size() != 0 || p->getShaderFiles(IProgram::COMPUTE_SHADER).size() != 0) {
 		m_bCompileAndLink->Enable();
 	}
 	else {
 		m_bCompileAndLink->Disable();
 	}
 
-	/*	if (p->areCompiled() && p->isLinked())
-	m_bLink->Enable();
-	else
-	m_bLink->Disable();
-	*/
 	if (p->isLinked())
 		m_bValidate->Enable();
 	else
@@ -460,7 +461,7 @@ DlgShaders::OnProcessCompileAndLinkShaders(wxCommandEvent& event) {
 	// compile individual shaders
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 
-		if (p->getShaderFile((IProgram::ShaderType)i) != "" && p->reloadShaderFile((IProgram::ShaderType)i)) {
+		if (p->getShaderFiles((IProgram::ShaderType)i).size() != 0 && p->reloadShaderFile((IProgram::ShaderType)i)) {
 			p->compileShader((IProgram::ShaderType)i);
 		}
 	}
@@ -485,6 +486,48 @@ DlgShaders::OnProcessCompileAndLinkShaders(wxCommandEvent& event) {
 	// notify  
 	notifyUpdate(PROPS_CHANGED, m_Active, "Compiled");
 	notifyUpdate(PROPS_CHANGED, m_Active, "Linked");
+}
+
+
+void
+DlgShaders::OnProcessCompileAndLinkAllShaders(wxCommandEvent& event) {
+
+	std::string infoLog;
+	std::vector<std::string> *pns = RESOURCEMANAGER->getProgramNames();
+
+	for (auto pn : *pns) {
+		IProgram *p = RESOURCEMANAGER->getProgram(pn);
+
+		// compile individual shaders
+		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
+
+			if (p->getShaderFiles((IProgram::ShaderType)i).size() != 0 && p->reloadShaderFile((IProgram::ShaderType)i)) {
+				p->compileShader((IProgram::ShaderType)i);
+			}
+		}
+
+		// if compiled, link program
+		if (p->areCompiled())
+			p->linkProgram();
+
+		updateShaderAux();
+
+		// Display logs
+		m_Log->Clear();
+
+		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
+
+			infoLog = p->getShaderInfoLog((IProgram::ShaderType)i);
+			updateLogAux(infoLog);
+		}
+		infoLog = p->getProgramInfoLog();
+		updateLogAux(infoLog);
+
+		// notify  
+		notifyUpdate(PROPS_CHANGED, pn, "Compiled");
+		notifyUpdate(PROPS_CHANGED, pn, "Linked");
+
+	}
 }
 
 

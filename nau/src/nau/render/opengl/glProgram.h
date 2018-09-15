@@ -58,20 +58,22 @@ namespace nau
 			
 			bool m_PLinked;
 			bool m_ShowGlobalUniforms;
+
+			void files2source(IProgram::ShaderType type);
 		
 		public:
 		
 			GLProgram();
 			~GLProgram();
 
-			virtual bool loadShader(IProgram::ShaderType type, const std::string &filename);
+			virtual bool loadShader(IProgram::ShaderType type, const std::vector<std::string> &files);
 			bool reload (void);
 
 			void setName(const std::string &name);
 			const std::string &getName();
 
 			virtual const std::vector<std::string> &getShaderFiles(ShaderType type);
-			virtual bool setShaderFiles(ShaderType type, const std::string &name);
+			virtual bool setShaderFiles(ShaderType type, const std::vector<std::string> &files);
 
 
 			virtual bool getPropertyb(int query);
