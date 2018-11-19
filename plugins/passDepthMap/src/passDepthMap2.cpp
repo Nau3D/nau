@@ -4,6 +4,7 @@
 #include "nau.h"
 #include "nau/geometry/frustum.h"
 #include "nau/render/passFactory.h"
+#include "nau/material/iTexture.h"
 
 #include <glbinding/gl/gl.h>
 #include <glbinding/Binding.h>
@@ -158,6 +159,13 @@ PassDepthMap2::doPass (void) {
 	// THIS ONLY WORKS WITH ONE DIRECTIONAL LIGHT, MULTIPLE LIGHTS REQUIRE MULTIPLE PASSES //
 	
 	//RENDERMANAGER->getRenderer()->setDepthCompare();
+
+	MaterialTexture * it = MATERIALLIBMANAGER->getMaterialFromDefaultLib("__FontCourierNew10")->getMaterialTexture(0);
+	//ITexture *tt = ITexture::Create("www");;
+	it->bind();
+	//std::shared_ptr<nau::render::IRenderable> t;
+	//std::shared_ptr<std::vector<nau::geometry::VertexData::Attr>> abc = t->getVertexData()->getDataOf(0);
+
 
 	Frustum frustum;
 	float cNear, cFar;

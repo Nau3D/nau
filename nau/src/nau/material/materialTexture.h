@@ -10,6 +10,16 @@
 
 using namespace nau;
 
+#ifdef _WINDLL
+#ifdef nau_EXPORTS
+#define nau_API __declspec(dllexport)   
+#else  
+#define nau_API __declspec(dllimport)   
+#endif 
+#else
+#define nau_API
+#endif
+
 namespace nau {
 
 	namespace material {

@@ -1,4 +1,6 @@
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 file(GLOB root src/*.h src/nau/*.h src/nau/*.cpp)	
 file(GLOB debug src/nau/debug/*.h src/nau/debug/*.cpp)	
 file(GLOB event src/nau/event/*.h src/nau/event/*.cpp)	
