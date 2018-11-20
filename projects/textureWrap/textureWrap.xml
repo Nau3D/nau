@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<project name="texture wrap" width=800 height=800 >
+	<assets>
+		<viewports>
+			<viewport name="MainViewport" >
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+		
+		<materialLibs>
+			<materialLib filename="textureWrap.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="textureWrap" >
+		
+			<pass class="quad" name="textureWrap">
+				<viewport name="MainViewport" />
+				<material name="wrap" fromLibrary="TextureWrap"/>
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

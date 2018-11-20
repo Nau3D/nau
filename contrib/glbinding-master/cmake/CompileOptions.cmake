@@ -84,7 +84,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
         $<$<CONFIG:Release>: 
         /Gw           # -> whole program global optimization
         /GS-          # -> buffer security check: no 
-        /GL           # -> whole program optimization: enable link-time code generation (disables Zi)
+        #/GL           # -> whole program optimization: enable link-time code generation (disables Zi)
         /GF           # -> enable string pooling
         >
         

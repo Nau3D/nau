@@ -1,0 +1,24 @@
+#version 430
+
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+
+uniform writeonly image2D imageUnit;
+uniform sampler2D texUnit;
+
+void main()
+{
+	ivec2 texCoord = ivec2(gl_GlobalInvocationID);
+	vec4 tl = texelFetchOffset(texUnit, texCoord, 0, ivec2(-1, -1));
+	vec4 tc = texelFetchOffset(texUnit, texCoord, 0, ivec2( 0,	-1));
+	vec4 tr = texelFetchOffset(texUnit, texCoord, 0, ivec2( 1, -1));
+	vec4 cl = texelFetchOffset(texUnit, texCoord, 0, ivec2(-1,	 0));
+	vec4 cc = texelFetchOffset(texUnit, texCoord, 0, ivec2( 0,  0));
+	vec4 cr = texelFetchOffset(texUnit, texCoord, 0, ivec2( 1,	 0));
+	vec4 bl = texelFetchOffset(texUnit, texCoord, 0, ivec2(-1,	 1));
+	vec4 bc = texelFetchOffset(texUnit, texCoord, 0, ivec2( 0,	 1));
+	vec4 br = texelFetchOffset(texUnit, texCoord, 0, ivec2( 1,  1));
+	
+	vec4 res = (8 * cc - tl - tc - tr - cl - cr - bl - bc - br);
+	imageStore(imageUnit, texCoord, res);
+} 

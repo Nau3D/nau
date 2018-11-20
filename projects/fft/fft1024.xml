@@ -1,0 +1,128 @@
+<?xml version="1.0" ?>
+<project name="Fast Fourier Transform" width=2048 height=1024>
+	<assets>
+		
+		<constants>
+			<!--texture size-->
+			<!--constant name="SIZE" value="512" /--> 
+			<constant name="SIZE" value="1024" /> 
+			<!-- compute shader dimXY = SIZE/8 -->
+			<!--constant name="DSIZE" value="64" /--> 
+			<constant name="DSIZE" value="128" /> 
+			
+			<!--constant name="LOGWIDTH" value = "9" />
+			<constant name="LOGWIDTH_MINUS_1" value = "8" /-->
+			<constant name="LOGWIDTH" value = "11" />
+		</constants>
+
+		<attributes >
+			<!-- texture width -->
+			<attribute type="RENDERER" name="width" data="INT" value="SIZE" /> 
+			<!-- log of width - set by lua script -->	
+			<attribute type="RENDERER" name="log_width" data="INT" value="LOGWIDTH" /> 
+			<!-- butterfly stage -->
+			<attribute type="RENDERER" name="current_stage" data="INT" value="0" /> 
+			<!-- pingpong status - set by lua script -->
+			<attribute type="RENDERER" name="pingpong" data ="INT" value="0" /> 
+			<!-- fft dir: fft=1; invfft=-1 - set by lua script -->
+			<attribute type="RENDERER" name="fft_dir" data="INT" value = "1" /> 
+			<!-- attribute for mipampping: current level - set by lua script -->
+			<attribute type="RENDERER" name="currentLevel" data="INT" value="0" />
+		</attributes>
+		
+		<viewports>
+			<!-- to show fourier magnitude in frequency space -->
+			<viewport name="Left" >
+				<SIZE width=0.5 height=1 />
+				<CLEAR_COLOR  r="1.0" g="1.0" b="1.0" />
+			</viewport>
+			<!-- to show ifft(fft(original)) -->
+			<viewport name="Right" >
+				<ORIGIN x = 0.5 y =0 />
+				<SIZE width=0.5 height=1 />
+				<CLEAR_COLOR  r=1.0 g=1.0 b=1.0 />
+			</viewport>
+		</viewports>	
+		
+		<materialLibs>
+			<materialLib filename="fft1024.mlib"/>
+		</materialLibs>
+		
+	</assets>
+	
+	<pipelines>
+		<pipeline name="fft" >
+		
+			<!-- converts to greyscale and copies the value to the initial fourier texture -->
+			<pass class="quad" name="imageToComplex" >
+				<renderTarget name="fftStartingPoint" fromLibrary="FFT" />
+				<material name="imageToComplex" fromLibrary="FFT" />
+			</pass>
+			
+			<!-- FFT forward pass for lines-->
+			<pass class="compute" name="fftHorizontal"> 
+				<!-- script to reset all variables to proper values before computing the stages -->
+				<preScript file="scripts/fft.lua" script="resetForward" />
+				
+				<!-- script to control the stage loop and pingpong -->
+				<testScript file="scripts/fft.lua" script="fft" TEST_MODE="RUN_WHILE" />
+				
+				<!-- compute shader to perform a single butterfly -->
+				<material name="fftHorizontal" fromLibrary="FFT" dimX="DSIZE" dimY="DSIZE" dimZ=1 />
+			</pass>
+			
+			<!-- FFT forward pass for columns -->
+			<pass class="compute" name="fftVertical"> 
+				<preScript file="scripts/fft.lua" script="resetForwardVertical" />				
+				<testScript file="scripts/fft.lua" script="fft" TEST_MODE="RUN_WHILE" />
+				<material name="fftVertical" fromLibrary="FFT" dimX="DSIZE" dimY="DSIZE" dimZ=1 />
+			</pass>
+			
+			<!-- copy forward pass to texture toneMap -->
+			<pass class="quad" name="copyTexture" >
+				<material name="copyTexture" fromLibrary="FFT" />
+				<renderTarget name="toneMap" fromLibrary="FFT" />
+			</pass>
+			
+			<!-- inverse FFT horizontal pass -->
+			<pass class="compute" name="ifftHorizontal"> 
+				<preScript file="scripts/fft.lua" script="resetInverse" />
+				<testScript file="scripts/fft.lua" script="fft" TEST_MODE="RUN_WHILE" />
+				<material name="fftHorizontal" fromLibrary="FFT" dimX="DSIZE" dimY="DSIZE" dimZ=1 />
+			</pass>
+			
+			<!-- inverse FFT vertical pass -->
+			<pass class="compute" name="ifftVertical"> 
+				<preScript file="scripts/fft.lua" script="resetInverseVertical" />
+				<testScript file="scripts/fft.lua" script="fft" TEST_MODE="RUN_WHILE" />
+				<material name="fftVertical" fromLibrary="FFT" dimX="DSIZE" dimY="DSIZE" dimZ=1 />
+			</pass>
+			
+			<!-- copy the real component to texture reconstrut -->
+			<pass class="quad" name="getRealComponent" >
+				<renderTarget name="reconstruct" fromLibrary="FFT" />
+				<material name="getRealComponent" fromLibrary="FFT" />
+			</pass>
+			
+			<!-- display the reconstruction -->
+			<pass class="quad" name="displayReconst">
+				<viewport name="Right" />
+				<texture name="reconstruct" fromLibrary="FFT" />
+			</pass>
+			
+			<!-- tone mapping for the forward pass -->
+			<pass class="compute" name="mipmapLuminance">
+				<testScript file="scripts/fft.lua" script="testMipmap" TEST_MODE="RUN_WHILE"/>
+				<material name="mipmapLuminance" fromLibrary="FFT" 
+					dimX=256 dimY=256 dimZ=1/>
+			</pass>
+			
+			<!-- show tone mapped fourier magnitude -->
+			<pass class="quad" name="displayFFT">
+				<viewport name="Left" />
+				<material name="showToneMap" fromLibrary="FFT"/>
+			</pass>
+					
+		</pipeline>
+	</pipelines>
+</project>

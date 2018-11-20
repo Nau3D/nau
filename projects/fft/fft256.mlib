@@ -1,0 +1,303 @@
+<?xml version="1.0" ?>
+<materialLib name="FFT">
+
+	<renderTargets>
+		<!-- for the reconstructed image = fftinv(fft(original)) -->
+		<renderTarget name ="reconstruct">
+			<SIZE width="SIZE" height="SIZE" />
+			<colors>
+				<color name="reconstruct" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+		<!-- used to compute the magnitude, amx and min (from mipmapping) -->
+		<renderTarget name="toneMap" >
+			<SIZE width="SIZE" height="SIZE" />
+			<LEVELS value = "LOGWIDTH_PLUS_ONE" />
+			<colors>
+				<color name="toneMap" internalFormat="RGBA32F"  />
+			</colors>		
+		</renderTarget>
+		
+		<!-- Initially gets the real part as the luminance of the texture.
+			Afterwards the texture will be used in the ping pong -->
+		<renderTarget name ="fftStartingPoint">
+			<SIZE width="SIZE" height="SIZE" />
+			<colors>
+				<color name="aux1" internalFormat="RG32F" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+	
+	<textures>
+		<!-- ping pong texture for FFT computation -->
+		<!-- the aux1 texture defined in the render target above 
+			 is the other texture for the ping pong -->
+		<texture name="aux2" >
+			<WIDTH value="SIZE" />
+			<HEIGHT value="SIZE" />
+			<INTERNAL_FORMAT value="RG32F" />
+		</texture>
+		
+		<!-- the original image  -->
+		<texture name="original" filename="textures/ParedePedra256.jpg" mipmap="0" />
+	
+		<!-- texture do display the image reconstructed -->
+		<!-- result = ifft (fft(original)) -->
+		<texture name="reconst">
+			<WIDTH value="SIZE" />
+			<HEIGHT value="SIZE" />
+			<INTERNAL_FORMAT value="R8" />
+			<MIPMAP value = true />
+		</texture>
+		
+		<!-- texture do display the magnitude of the fft -->
+		<texture name="fft">
+			<WIDTH value="SIZE" />
+			<HEIGHT value="SIZE" />
+			<INTERNAL_FORMAT value="RGBA" />
+		</texture>
+		
+		
+		<!-- texture to help displaying the fft -->
+		<texture name="displayAux" >
+			<WIDTH value="SIZE" />
+			<HEIGHT value="SIZE" />
+			<INTERNAL_FORMAT value="RG32F" mipmap=1/>
+		</texture>
+		
+	</textures>
+
+	<shaders>
+		<!-- copy the luminance of the original texture to texture aux1 -->
+		<shader name="imageToComplex" 	vs="shaders/quad.vert"
+										ps="shaders/toComplex.frag"/> 
+										
+		<!-- compute shader to perform a single butterfly -->
+		<shader name="butterflyH" 	cs="shaders/butterflyH.comp" /> 
+		<shader name="butterflyV" 	cs="shaders/butterflyV.comp" /> 
+		
+		<!-- gets the real component of (fftinv(fft(image)) 
+			to display the reconstructed image -->
+		<shader name="getRealComponent" vs="shaders/quad.vert"
+										ps="shaders/getRealComponent.frag" />
+										
+		<!-- stores the magnitude of the complex after the forward pass 
+			in texture tonemap-->
+		<shader name="copyTexture"		vs="shaders/quad.vert"
+										ps="shaders/copyTexture.frag" />
+		
+		<!-- mipmap the tonemap texture to compute the max and min values --> 
+		<shader name="toneMap"			cs="shaders/mipmapLuminance.comp" />
+		
+		<!-- transforms the tonemap values to the range [0,1] to display the magnitude -->
+		<shader name="showToneMap"		vs="shaders/quad.vert"
+										ps="shaders/showToneMap.frag" />
+	</shaders>
+	
+	<materials>
+	
+		<material name ="imageToComplex">
+			<shader name="imageToComplex">
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="texUnit"		
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 id=0 component="UNIT" />														
+					<valueof uniform="channels"		
+							 type="TEXTURE" context="CURRENT"
+							 id=0 component="COMPONENT_COUNT"/>							 
+				</values>
+			</shader>
+			<textures>
+				<texture name="original" UNIT=0 />
+			</textures>
+		</material>
+		
+		<material name ="fftHorizontal">
+			<shader name="butterflyH">
+				<values>
+					<valueof uniform="pingpong" 
+							 type="RENDERER" context="CURRENT" 
+							 component="pingpong" />
+							 
+					<valueof uniform="log_width" 
+							 type="RENDERER" context="CURRENT" 
+							 component="log_width" />
+							 
+					<valueof uniform="stage" 
+							 type="RENDERER" context="CURRENT" 
+							 component="current_stage" />
+							 
+					<valueof uniform="fft_dir" 
+							 type="RENDERER" context="CURRENT" 
+							 component="fft_dir" />
+							 
+					<valueof uniform="pingpong0"
+							 type="IMAGE_TEXTURE" context="CURRENT"
+							 id=0 component="UNIT" />
+							 
+					<valueof uniform="pingpong1"
+							 type="IMAGE_TEXTURE" context="CURRENT"
+							 id=1 component="UNIT" />
+				</values>
+			</shader>
+			<imageTextures> <!-- ping pong textures -->
+				<imageTexture UNIT=0 texture="aux1" >
+					<ACCESS value="READ_WRITE" />
+					<LEVEL value=0 />
+				</imageTexture>
+				<imageTexture UNIT=1 texture="aux2" >
+					<ACCESS value="READ_WRITE" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+		</material>
+		
+		<material name ="fftVertical">
+			<shader name="butterflyV">
+				<values>
+					<valueof uniform="pingpong" 
+							 type="RENDERER" context="CURRENT" 
+							 component="pingpong" />
+							 
+					<valueof uniform="log_width" 
+							 type="RENDERER" context="CURRENT" 
+							 component="log_width" />
+							 
+					<valueof uniform="stage" 
+							 type="RENDERER" context="CURRENT" 
+							 component="current_stage" />
+							 
+					<valueof uniform="fft_dir" 
+							 type="RENDERER" context="CURRENT" 
+							 component="fft_dir" />
+							 
+					<valueof uniform="pingpong0"
+							 type="IMAGE_TEXTURE" context="CURRENT"
+							 id=0 component="UNIT" />
+							 
+					<valueof uniform="pingpong1"
+							 type="IMAGE_TEXTURE" context="CURRENT"
+							 id=1 component="UNIT" />
+				</values>
+			</shader>
+			<imageTextures> <!-- ping pong textures -->
+				<imageTexture UNIT=0 texture="aux1" >
+					<ACCESS value="READ_WRITE" />
+					<LEVEL value=0 />
+				</imageTexture>
+				<imageTexture UNIT=1 texture="aux2" >
+					<ACCESS value="READ_WRITE" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>			
+		</material>
+				
+		<material name ="getRealComponent">
+			<shader name="getRealComponent">
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="texUnit"		
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 id=0 component="UNIT" />							 
+				</values>
+			</shader>
+			<textures>
+				<texture name="aux1" UNIT=0 />
+			</textures>
+		</material>
+		<material name="copyTexture" >
+			<shader name="copyTexture">
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="texUnit0"		
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 id=0 component="UNIT" />														
+					<valueof uniform="log_width" 
+							 type="RENDERER" context="CURRENT" 
+							 component="log_width" />
+							 
+				</values>
+			</shader>	
+			<textures>
+				<texture UNIT=0 name="aux1" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		</material>
+
+		<material name="mipmapLuminance" >
+			<shader name="toneMap">
+				<values>
+					<valueof uniform="imageUnit"	
+							 type="IMAGE_TEXTURE" context="CURRENT"
+							 id=1 component="UNIT" />
+							 
+					<valueof uniform="tex"			
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 id=0 component="UNIT" />
+							 
+					<valueof uniform="destMipLevel"	
+							 type="RENDERER" context="CURRENT" 
+							 component="currentLevel" />
+				</values>
+			</shader>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="toneMap" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=0 />
+				</imageTexture>
+			</imageTextures>
+			<textures>
+				<texture UNIT=0 name="toneMap" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		</material>
+		
+		<material name="showToneMap" >
+			<shader name="showToneMap">
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="lumiTex"	
+							 type="TEXTURE_BINDING" context="CURRENT"
+							 id=1 component="UNIT" />
+
+					<valueof uniform="width" 
+							 type="RENDERER" context="CURRENT" 
+							 component="width" />
+							 
+				</values>
+			</shader>	
+			<textures>
+				<texture UNIT=1 name="toneMap" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="REPEAT" />
+					<WRAP_T value="REPEAT" />
+				</texture>
+			</textures>
+		</material>
+
+	</materials>
+
+</materialLib>

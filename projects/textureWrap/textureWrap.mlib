@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<materialLib name="TextureWrap">
+
+	<textures>
+		<texture name="tex" filename="texture.tif" mipmap="true"/>
+	</textures>
+	<shaders>
+		<shader name="texture" 
+							ps="shaders/quadShader.frag" 
+							vs="shaders/quadShader.vert" />
+		
+	</shaders>
+	
+	<materials>
+		<material name="wrap">
+			
+			<shader name="texture">
+				<values>
+													
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />		
+				</values>
+			</shader>
+			
+			<textures>
+				<texture UNIT="0" name="tex" >
+				</texture>	
+			</textures>
+		</material>		
+		
+		
+	</materials>
+</materialLib>
