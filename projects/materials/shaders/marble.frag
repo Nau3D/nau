@@ -111,7 +111,7 @@ in vec3 normalV; // camera space
 in vec3 eyeV;
 in vec4 worldPos;
 
-uniform vec4 marbleColor = vec4(0.2, 0.4, 0.2, 1.0);
+uniform vec4 marbleColor = vec4(0.2, 0.2, 0.4, 1.0);
 
 out vec4 colorOut;
 
@@ -121,6 +121,9 @@ float fnoise(vec3 pos) {
 	return n;
 }
 
+#define STRIPES 16
+#define DISTORTION 2.5
+#define STRIPE_WIDTH 2
 
 void main() {
 
@@ -143,8 +146,8 @@ void main() {
 		spec = vec4(1) * pow(intSpec,128);
 	}
 
-	float blend = 0.5 * sin(2.5+worldPos.x * 4 + fnoise(worldPos.xyz)*0.5) + 0.5;
-	blend = pow(blend, 128) + fnoise(vec3(worldPos)) * 0.1	;
+	float blend = 0.5 * sin(0.5 + worldPos.x * STRIPES + fnoise(worldPos.xyz)*DISTORTION) + 0.5;
+	blend = pow(blend, STRIPE_WIDTH) + fnoise(vec3(worldPos)) * 0.1	;
 	vec4 dif = mix(vec4(0.8), marbleColor, blend);
 	colorOut = 0.8*(intensity * dif) + spec;
 	//colorOut = vec4(fnoise(worldPos.xyz))*0.5+0.5;

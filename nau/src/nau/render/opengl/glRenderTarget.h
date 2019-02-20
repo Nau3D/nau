@@ -43,6 +43,7 @@ namespace nau
 			void resize();
 
 			void addColorTarget (std::string name, std::string internalFormat);
+			void addCubeMapTarget(std::string name, std::string internalFormat);
 			void addDepthTarget (std::string name, std::string internalFormat);
 			void addStencilTarget (std::string name);
 			void addDepthStencilTarget(std::string name);

@@ -44,15 +44,16 @@ OctreeScene::eventReceived(const std::string &sender, const std::string &eventTy
 //	SLOG("Scene %s %s %s %f %f %f", m_Name.c_str(), sender.c_str(), eventType.c_str(), p->x, p->y, p->z);
 
 	if (eventType == "SET_POSITION") {
-
-		mat4 t;
-		t.translate(p->x, p->y, p->z);
-		this->setTransform(t);
+		setPropf4(TRANSLATE, *p);
+		updateSceneObjectTransforms();
+		//mat4 t;
+		//t.translate(p->x, p->y, p->z);
+		//this->setTransform(t);
 	}
 	if (eventType == "SET_ROTATION") {
-
-		m_Mat4Props[TRANSFORM].setIdentity();
-		m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
+		setPropf4(ROTATE, *p);
+		//m_Mat4Props[TRANSFORM].setIdentity();
+		//m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();	
 	}
 }

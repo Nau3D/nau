@@ -43,6 +43,7 @@ namespace nau
 		protected:
 			unsigned int m_Id; 
 			unsigned int m_Color; // number of color targets;
+			bool m_CubeMap;
 			unsigned int m_Depth;
 			unsigned int m_Stencil;
 			//unsigned int m_Samples;
@@ -71,6 +72,7 @@ namespace nau
 			virtual void unbind (void) = 0;
 
 			nau_API virtual void addColorTarget(std::string name, std::string internalFormat) = 0;
+			nau_API virtual void addCubeMapTarget(std::string name, std::string internalFormat) = 0;
 			nau_API virtual void addDepthTarget(std::string name, std::string internalFormat) = 0;
 			nau_API virtual void addStencilTarget (std::string name) = 0;
 			nau_API virtual void addDepthStencilTarget(std::string name) = 0;

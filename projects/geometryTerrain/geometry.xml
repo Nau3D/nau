@@ -4,7 +4,7 @@
 	
 		<scenes>
 			<scene name="Terrain">
-				<terrain name = "fractal" heightMap ="SantaMonicaMountains-512.jpg"  >
+				<terrain name = "fractal" heightMap ="SantaMonicaMountains-512.jpg"  material="terrain">
 					<SCALE x=0.1 y=2.5 z =0.1 />
 				</terrain>
 			</scene>
@@ -52,7 +52,7 @@
 					<light name="Sun" />
 				</lights>
 				<materialMaps>
-					<map fromMaterial="crateBox" toLibrary="Simple" toMaterial="simpleTextured" />
+					<map fromMaterial="terrain" toLibrary="Simple" toMaterial="simpleTextured" />
 				</materialMaps>
 			</pass>
 			

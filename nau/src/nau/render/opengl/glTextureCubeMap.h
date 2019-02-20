@@ -39,6 +39,8 @@ namespace nau
 			GLTextureCubeMap (std::string label, std::vector<std::string> files, 
 				std::string internalFormat,
 				std::string aFormat, std::string aType, int width, unsigned char** data, bool mipmap = true );
+			GLTextureCubeMap(std::string label, std::string anInternalFormat, unsigned int width, bool mipmap = true);
+
 			virtual int getNumberOfComponents(void);
 			virtual int getElementSize(){return 0;};
 

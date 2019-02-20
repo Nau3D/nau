@@ -140,6 +140,7 @@ ResourceManager::createTexture(std::string label,
 	return(tex);
 }
 
+
 nau::material::ITexture*
 ResourceManager::addTexture (std::string filename, std::string label, bool mipmap) {
 
@@ -168,8 +169,20 @@ ResourceManager::addTexture (std::string filename, std::string label, bool mipma
 }
 
 
+nau::material::ITexture*
+ResourceManager::createCubeMapTexture(std::string label, std::string  internalFormat, int width) {
+
+	ITexture *tex;
+
+	tex = ITextureCubeMap::Create(label, internalFormat, width);
+	m_Textures.push_back(tex);
+
+	return tex;
+}
+
+
 nau::material::ITexture* 
-ResourceManager::addTexture (std::vector<std::string> &filenames, std::string &label, bool mipmap) {
+ResourceManager::addCubeMapTexture (std::vector<std::string> &filenames, std::string &label, bool mipmap) {
 
 	size_t siz = m_Textures.size();
 	ITexture *tex;

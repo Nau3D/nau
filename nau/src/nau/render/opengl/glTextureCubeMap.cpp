@@ -64,6 +64,43 @@ GLTextureCubeMap::GLTextureCubeMap (std::string label, std::vector<std::string> 
 }
 
 
+GLTextureCubeMap::GLTextureCubeMap(std::string label, std::string anInternalFormat, unsigned int width, bool mipmap):
+	ITextureCubeMap(label)
+{
+
+	m_IntProps[WIDTH] = width;
+	m_IntProps[HEIGHT] = width;
+	m_IntProps[DEPTH] = 1;
+	m_IntProps[SAMPLES] = 0;
+	m_IntProps[LEVELS] = 0;
+
+	m_EnumProps[DIMENSION] = (int)GL_TEXTURE_CUBE_MAP;
+	m_EnumProps[INTERNAL_FORMAT] = Attribs.getListValueOp(INTERNAL_FORMAT, anInternalFormat);
+	m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION],
+		m_EnumProps[INTERNAL_FORMAT]);
+	m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION],
+		m_EnumProps[INTERNAL_FORMAT]);
+
+	m_IntProps[COMPONENT_COUNT] = GLTexture::GetNumberOfComponents(m_EnumProps[FORMAT]);
+	m_IntProps[ELEMENT_SIZE] = GLTexture::GetElementSize(m_EnumProps[FORMAT], m_EnumProps[TYPE]);
+
+	glGenTextures(1, (GLuint *)&(m_IntProps[ID]));
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_IntProps[ID]);
+
+	for (int i = 0; i < 6; i++) {
+
+		glTexImage2D(GLTextureCubeMap::faces[i], 0, m_EnumProps[INTERNAL_FORMAT],
+			m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
+			(GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
+	}
+	m_BoolProps[MIPMAP] = mipmap;
+	if (mipmap)
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
+
+
 GLTextureCubeMap::~GLTextureCubeMap(void)
 {
 	glDeleteTextures(1, (GLuint *)&(m_IntProps[ID]));

@@ -50,6 +50,26 @@ ITextureCubeMap::Create (std::vector<std::string> files, std::string label, bool
 }
 
 
+ITextureCubeMap*
+ITextureCubeMap::Create(std::string label, std::string anInternalFormat, unsigned int width, bool mipmap) {
+
+	nau::material::ITextureCubeMap *t;
+
+#ifdef NAU_OPENGL
+	t = new GLTextureCubeMap(label, anInternalFormat, width, mipmap);
+#elif NAU_DIRECTX
+	t = new DXTexture(aDimension, aFormat, width, height);
+#endif
+
+	return t;
+}
+
+
+ITextureCubeMap::ITextureCubeMap(std::string label): ITexture(label) {
+	
+}
+
+
 ITextureCubeMap::ITextureCubeMap(std::string label, std::vector<std::string> files, 
 							   std::string internalFormat, std::string aFormat, 
 							   std::string aType, int width) :
@@ -60,15 +80,6 @@ ITextureCubeMap::ITextureCubeMap(std::string label, std::vector<std::string> fil
 		m_Files[i] = files[i];
 }
 
-
-//ITextureCubeMap::ITextureCubeMap(std::string label, std::vector<std::string> files): 
-//	ITexture(label),
-//	m_Files(6)
-//{
-//	for (int i = 0; i < 6; i++) 
-//		m_Files[i] = files[i];
-//
-//}
 
 
 ITextureCubeMap::~ITextureCubeMap() {

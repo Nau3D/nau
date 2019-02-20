@@ -37,12 +37,15 @@ OctreeByMatScene::eventReceived(const std::string &sender,
 	vec4 *p = (vec4 *)evt->getData();
 
 	if (eventType == "SET_POSITION") {
-		mat4 t;
-		t.setIdentity();
-		t.translate(p->x, p->y, p->z);
-		this->setTransform(t);
+		setPropf4(TRANSLATE, *p);
+		updateSceneObjectTransforms();
+		//		mat4 t;
+//		t.setIdentity();
+//		t.translate(p->x, p->y, p->z);
+//		this->setTransform(t);
 	}
 	if (eventType == "SET_ROTATION") {
+		setPropf4(ROTATE, *p);
 		m_Mat4Props[TRANSFORM].setIdentity();
 		m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();	

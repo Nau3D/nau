@@ -37,14 +37,17 @@ OctreeUnified::eventReceived(const std::string &sender, const std::string &event
 
 	if (eventType == "SET_POSITION") {
 
-		mat4 t;
-		t.translate(p->x, p->y, p->z);
-		this->setTransform(t);
+		setPropf4(TRANSLATE, *p);
+		//mat4 t;
+		//t.translate(p->x, p->y, p->z);
+		//this->setTransform(t);
+		updateSceneObjectTransforms();
 	}
 	if (eventType == "SET_ROTATION") {
 
-		m_Mat4Props[TRANSFORM].setIdentity();
-		m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
+		setPropf4(ROTATE, *p);
+		//m_Mat4Props[TRANSFORM].setIdentity();
+		//m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
 		updateSceneObjectTransforms();
 	}
 }

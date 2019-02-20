@@ -39,16 +39,16 @@ Scene::eventReceived(const std::string &sender, const std::string &eventType,
 	if (eventType == "SET_POSITION") {
 
 		vec4 *p = (vec4 *)evt->getData();
-		m_Mat4Props[TRANSFORM].setIdentity();
-		m_Mat4Props[TRANSFORM].translate(p->x, p->y, p->z);
+		setPropf4(TRANSLATE, *p);
+		//m_Mat4Props[TRANSFORM].setIdentity();
+		//m_Mat4Props[TRANSFORM].translate(p->x, p->y, p->z);
 //		SLOG("Scene SET_POS %f %f %f", p->x, p->y, p->z);
 	}
 	if (eventType == "SET_ROTATION") {
-
 		vec4 *p = (vec4 *)evt->getData();
-		
-		m_Mat4Props[TRANSFORM].setIdentity();
-		m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
+		setPropf4(ROTATE, *p);
+		//m_Mat4Props[TRANSFORM].setIdentity();
+		//m_Mat4Props[TRANSFORM].rotate(p->w, p->x, p->y, p->z);
 	}
 }
 

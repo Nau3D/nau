@@ -142,10 +142,11 @@ GLProgram::files2source(IProgram::ShaderType type) {
 		if (i > 0)
 			source = "#line 1 " + std::to_string(i) + "\n";
 		source += nau::system::File::TextRead(m_Shaders[type].files[i]);
-		m_Shaders[type].source[i] = (char *)malloc(sizeof(char) * source.size() + 1);
+		m_Shaders[type].source[i] = (char *)malloc(sizeof(char) * source.size() + 2);
 		memcpy(m_Shaders[type].source[i], source.c_str(), source.size());
 		char *aux = m_Shaders[type].source[i];
-		aux[source.size()] = '\0';
+		aux[source.size()] = '\n';
+		aux[source.size()+1] = '\0';
 	}
 }
 

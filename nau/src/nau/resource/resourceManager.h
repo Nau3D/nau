@@ -56,6 +56,7 @@ namespace nau
 				int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
 			nau_API ITexture* createTexture(std::string label, int internalFormat, int width,
 				int height, int depth = 1, int layers = 1, int levels = 1, int samples = 1);
+			nau_API ITexture* createCubeMapTexture(std::string label, std::string internalFormat, int width);
 
 			/// create texture with default attributes, texture requires building prior to usage
 			nau_API ITexture * createTexture(std::string label);
@@ -63,7 +64,7 @@ namespace nau
 			/// create texture from file
 			nau_API ITexture* addTexture (std::string fn, std::string label = "", bool mipmap = true);
 			/// create cube map from file
-			nau_API ITexture* addTexture (std::vector<std::string> &fn, std::string &label, bool mipmap = true);
+			nau_API ITexture* addCubeMapTexture (std::vector<std::string> &fn, std::string &label, bool mipmap = true);
 			
 			nau_API void removeTexture (const std::string &name);
 

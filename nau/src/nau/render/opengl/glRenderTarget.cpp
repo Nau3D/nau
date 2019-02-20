@@ -85,6 +85,7 @@ GLRenderTarget::checkStatus() {
 }
 
 
+
 void 
 GLRenderTarget::getErrorMessage(std::string &message) {
 
@@ -96,11 +97,23 @@ GLRenderTarget::getErrorMessage(std::string &message) {
 	case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
 		message = "Incomplete attachment";
 		break;
+	case GL_FRAMEBUFFER_UNDEFINED:
+		message = "Undefined";
+		break;
 	case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
 		message = "Not all attached images have the same width and height";
 		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+		message = "framebuffer incomplete read buffer";
+		break;
 	case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
 		message = "No images are attached to the framebuffer";
+		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+		message = "Incomplete multisample (this should not occur)";
+		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+		message = "if any framebuffer attachment is layered, and any populated attachment is not layered, or if all populated color attachments are not from textures of the same target";
 		break;
 	case GL_FRAMEBUFFER_UNSUPPORTED:
 		message = "The combination of internal formats of the attached images violates an implementation-dependent set of restrictions";
@@ -150,8 +163,32 @@ GLRenderTarget::addColorTarget (std::string name, std::string internalFormat) {
 	unbind();	
 
 	m_Color++;
-
 }
+
+
+void
+GLRenderTarget::addCubeMapTarget(std::string name, std::string internalFormat) {
+
+	assert(m_Color < (unsigned int)IRenderer::MaxColorAttachments);
+
+	if (m_Color >= (unsigned int)IRenderer::MaxColorAttachments)
+		return;
+
+	if (!m_Init)
+		init();
+
+	m_TexId[m_Color] = RESOURCEMANAGER->createCubeMapTexture
+		(name, internalFormat, m_UInt2Props[SIZE].x);
+
+	bind();
+	attachColorTexture(m_TexId[m_Color], m_Color);
+	setDrawBuffers();
+	unbind();
+
+	m_Color++;
+	m_CubeMap = true;
+}
+
 
 
 void 
@@ -168,10 +205,15 @@ GLRenderTarget::addDepthTarget (std::string name, std::string internalFormat) {
 		m_DepthTexture = NULL;
 	}
 
-	m_DepthTexture = RESOURCEMANAGER->createTexture
-		(name, internalFormat, m_UInt2Props[SIZE].x,m_UInt2Props[SIZE].y, 1, 
-		m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
-
+	if (m_CubeMap) {
+		m_DepthTexture = RESOURCEMANAGER->createCubeMapTexture
+		(name, internalFormat, m_UInt2Props[SIZE].x);
+	}
+	else {
+		m_DepthTexture = RESOURCEMANAGER->createTexture
+		(name, internalFormat, m_UInt2Props[SIZE].x, m_UInt2Props[SIZE].y, 1,
+			m_UIntProps[LAYERS], 0, m_UIntProps[SAMPLES]);
+	}
 	bind();
 	attachDepthStencilTexture(m_DepthTexture, (GLuint)GL_DEPTH_ATTACHMENT);
 	unbind();

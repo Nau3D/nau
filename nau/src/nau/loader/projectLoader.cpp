@@ -3228,6 +3228,7 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 		TiXmlNode *pElemColors;
 		pElemColors = pElem->FirstChild("colors");
 		if (pElemColors != NULL) {
+			int colors = 0, cubemaps = 0; 
 			pElemColor = pElemColors->FirstChildElement("color");
 
 			for ( ; 0 != pElemColor; pElemColor = pElemColor->NextSiblingElement()) {
@@ -3236,17 +3237,43 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 				Data *v = readAttribute("internalFormat", ITexture::Attribs.get("INTERNAL_FORMAT"), pElemColor);
 
 				if (0 == pNameColor) {
-					NAU_THROW("File %s\nLibrary %s\nColor rendertarget has no name, in render target %s", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);							
+					NAU_THROW("File %s\nLibrary %s\nRender target %s\nColor rendertarget has no name", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);							
 				}
 
 				if (v == 0) {
-					NAU_THROW("File %s\nLibrary %s\nColor rendertarget %s has no internal format, in render target %s", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pNameColor, pRTName);
+					NAU_THROW("File %s\nLibrary %s\nRender target %s\nColor rendertarget %s has no internal format", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName, pNameColor);
 				}
 
 				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pNameColor);
 					
 				rt->addColorTarget (s_pFullName, ITexture::Attribs.get("INTERNAL_FORMAT")->getOptionString(*(int *)v->getPtr()));
+				colors++;
+			}
+
+			pElemColor = pElemColors->FirstChildElement("cubemap");
+
+			for (; 0 != pElemColor; pElemColor = pElemColor->NextSiblingElement()) {
+
+				const char *pNameColor = pElemColor->Attribute("name");
+				Data *v = readAttribute("internalFormat", ITexture::Attribs.get("INTERNAL_FORMAT"), pElemColor);
+
+				if (0 == pNameColor) {
+					NAU_THROW("File %s\nLibrary %s\nRender target %s\nColor rendertarget has no name", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);
+				}
+
+				if (v == 0) {
+					NAU_THROW("File %s\nLibrary %s\nRender target %s\nColor rendertarget %s has no internal format", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName, pNameColor);
+				}
+
+				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pNameColor);
+
+				rt->addCubeMapTarget(s_pFullName, ITexture::Attribs.get("INTERNAL_FORMAT")->getOptionString(*(int *)v->getPtr()));
+				cubemaps++;
 			}//End of rendertargets color
+
+			if (cubemaps && colors) {
+				NAU_THROW("File %s\nLibrary %s\nRender target %s\ncan't have cubemap and color targets in the same render target", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);
+			}
 		}
 
 		TiXmlElement *pElemDepth;
@@ -3275,7 +3302,7 @@ ProjectLoader::loadMatLibRenderTargets(TiXmlHandle hRoot, MaterialLib *aLib, std
 			const char *pNameDepth = pElemDepth->Attribute ("name");
 
 			if (0 == pNameDepth) {
-				NAU_THROW("File %s\nLibrary %s\nDepth/Stencil rendertarget has no name, in render target %s", ProjectLoader::s_File.c_str(), aLib->getName().c_str(), pRTName);							
+				NAU_THROW("File %s\nLibrary %s\nRender Target %s\nDepth/Stencil rendertarget has no name", ProjectLoader::s_File.c_str(), pRTName, aLib->getName().c_str());							
 			}
 						
 			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pNameDepth);
@@ -4526,7 +4553,7 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 		files[4] = File::GetFullPath(path,pFilePosZ);
 		files[5] = File::GetFullPath(path,pFileNegZ);
 		std::string fullName = std::string(s_pFullName);
-		RESOURCEMANAGER->addTexture (files, fullName, mipmap);		
+		RESOURCEMANAGER->addCubeMapTexture (files, fullName, mipmap);		
 	}
 }
 

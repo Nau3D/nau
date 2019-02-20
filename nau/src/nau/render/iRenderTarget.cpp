@@ -65,6 +65,7 @@ IRenderTarget::IRenderTarget () {
 	
 	registerAndInitArrays(Attribs);
 	m_Color = 0;
+	m_CubeMap = false;
 	m_Depth = 0;
 	m_Stencil = 0;
 	m_DepthTexture = NULL;

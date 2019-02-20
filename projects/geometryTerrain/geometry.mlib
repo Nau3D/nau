@@ -14,9 +14,9 @@
 				<EMISSION r="0.0" g="0.0" b="0.0" a="1.0" />
 				<SHININESS value="0.0" />
 			</color>
-			<textures>
+			<!--textures>
 				<texture name="Crate" UNIT="0" />
-			</textures>
+			</textures-->
 		</material>
 	</materials>
 </materialLib>

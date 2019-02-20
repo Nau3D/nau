@@ -36,7 +36,8 @@ namespace nau
 				TEXTURE_CUBE_MAP_NEGATIVE_Z
 			} TextureCubeMapFaces;
 
-			static ITextureCubeMap* Create (std::vector<std::string> files, std::string label, bool mipmap = true); 
+			static ITextureCubeMap* Create(std::vector<std::string> files, std::string label, bool mipmap = true); 
+			static ITextureCubeMap* Create(std::string label, std::string anInternalFormat, unsigned int width, bool mipmap = false);
 
 		public:
 			virtual void setData(std::string internalFormat, std::string aFormat, 
@@ -62,6 +63,7 @@ namespace nau
 			ITextureCubeMap(std::string label, std::vector<std::string> files, 
 				std::string internalFormat, 
 				std::string aFormat, std::string aType, int width);
+			ITextureCubeMap(std::string label);
 		};
 	};
 };
