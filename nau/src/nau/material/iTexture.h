@@ -41,6 +41,7 @@ namespace nau
 			ENUM_PROP(FORMAT, 1);
 			ENUM_PROP(TYPE, 2);
 			ENUM_PROP(INTERNAL_FORMAT, 3);
+			ENUM_PROP(CONTENT, 4);
 			
 			INT_PROP(ID, 0);
 			INT_PROP(WIDTH, 1);
@@ -51,8 +52,11 @@ namespace nau
 			INT_PROP(LAYERS, 6);
 			INT_PROP(COMPONENT_COUNT, 7);
 			INT_PROP(ELEMENT_SIZE, 8);
+			INT_PROP(SEED, 9);
 
 			BOOL_PROP(MIPMAP, 0);
+
+			enum  {CONTENT_NONE, CONTENT_RANDOM_UNIFORM, CONTENT_RANDOM_NORMAL };
 
 			static AttribSet Attribs;
 			static nau_API AttribSet &GetAttribs();

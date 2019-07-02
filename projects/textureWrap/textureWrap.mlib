@@ -3,6 +3,11 @@
 
 	<textures>
 		<texture name="tex" filename="texture.tif" mipmap="true"/>
+		<texture name="random">
+			<WIDTH value="2048"/>
+			<HEIGHT value="2048" /> 
+			<CONTENT value="RANDOM_UNIFORM" />
+		</texture>
 	</textures>
 	<shaders>
 		<shader name="texture" 
@@ -17,14 +22,13 @@
 			<shader name="texture">
 				<values>
 													
-					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
-														component="UNIT" id="0" />		
+					<valueof uniform="texUnit" 	type="TEXTURE_BINDING" context="CURRENT" 
+												component="UNIT" id="0" />		
 				</values>
 			</shader>
 			
 			<textures>
-				<texture UNIT="0" name="tex" >
-				</texture>	
+				<texture UNIT="0" name="random" />
 			</textures>
 		</material>		
 		

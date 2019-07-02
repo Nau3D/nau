@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<project name="Brushed Steel" >
+	<assets>
+		<attributes>
+			<attribute type="RENDERER" name="roughness" data="FLOAT" value="0.04" />
+			<attribute type="RENDERER" name="ka" data="FLOAT" value = 0.55 />
+			<attribute type="RENDERER" name="ks" data="FLOAT" value= 0.35 />
+		</attributes>
+
+		<scenes>
+			<scene name="Model" param="UNITIZE SWAP_YZ">
+				<file name="../../models/Teapot.3ds"/>
+			</scene>
+   		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+				<FOV value=60/>
+				<NEAR value= 0.1/>
+				<FAR value= 100/>
+				<POSITION x=-1.0777 y=1.28672 z=-2.14476 />
+				<VIEW x=0.344886 y=-0.540044 z=0.767728 />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x=-2 y=1 z=-2 />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="brushedSteel.mlib" />
+		</materialLibs>
+	</assets>
+	
+	<pipelines default="brushedSteel">
+		<pipeline name="brushedSteel">
+			<pass class="default" name="brushedSteel">
+				<scenes>
+					<scene name="Model" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="brushedSteel" fromLibrary="Materials" />
+					</map> 
+				</injectionMaps>
+			</pass>
+		</pipeline>
+		<pipeline name="brushedSteel2">
+			<pass class="default" name="brushedSteel2">
+				<scenes>
+					<scene name="Model" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="brushedSteel2" fromLibrary="Materials" />
+					</map> 
+				</injectionMaps>
+			</pass>
+		</pipeline>
+	</pipelines>
+
+	<interface>
+		<window label="Main Window">
+			<pipelineList label="Brush Steel Params" />
+			<var label="Roughness" type="RENDERER" context="CURRENT" component="roughness" def="min=0 max=1 step=0.01"/>
+			<var label="Ka" type="RENDERER" context="CURRENT" component="ka" def="min=0 max=1 step=0.01" />
+			<var label="Ks" type="RENDERER" context="CURRENT" component="ks" def="min=0 max=1 step=0.01"/>			
+		</window>
+	</interface>
+
+</project>

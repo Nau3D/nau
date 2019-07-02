@@ -267,9 +267,9 @@ bool PassOptixPrime::Inited = PassOptixPrime::Init();
 bool
 PassOptixPrime::Init() {
 
-	Attribs.add(Attribute(RAY_COUNT, "RAY_COUNT", Enums::INT, false, new NauInt(-1)));
+//	Attribs.add(Attribute(RAY_COUNT, "RAY_COUNT", Enums::INT, false, new NauInt(-1)));
 //#ifndef _WINDLL
-	NAU->registerAttributes("PASS", &Attribs);
+//	NAU->registerAttributes("PASS", &Attribs);
 //#endif
 
 	PASSFACTORY->registerClass("optixPrime", Create);

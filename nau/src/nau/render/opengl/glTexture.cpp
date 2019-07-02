@@ -4,6 +4,9 @@
 #include "nau/render/iAPISupport.h"
 
 #include <glbinding/gl/gl.h>
+
+#include <stdlib.h> 
+
 using namespace gl;
 //#include <GL/glew.h>
 
@@ -412,7 +415,19 @@ GLTexture::build(int immutable) {
 				m_EnumProps[DIMENSION] = (int)GL_TEXTURE_2D;
 				glBindTexture((GLenum)m_EnumProps[DIMENSION], m_IntProps[ID]);
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+				if (m_EnumProps[CONTENT] != 0) {
+					if (m_EnumProps[FORMAT] == GL_RED || m_EnumProps[FORMAT] == GL_RED_INTEGER)
+						m_EnumProps[INTERNAL_FORMAT] = (int)GL_R32F;
+					else if (m_EnumProps[FORMAT] == GL_RG)
+						m_EnumProps[INTERNAL_FORMAT] = (int)GL_RG32F;
+					else {
+						m_EnumProps[INTERNAL_FORMAT] = (int)GL_RGBA32F;
+						m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
+					}
+				}
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
+
+
 				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
 					glTexStorage2D((GLenum)m_EnumProps[DIMENSION], m_IntProps[LEVELS], (GLenum)m_EnumProps[INTERNAL_FORMAT], 
 						m_IntProps[WIDTH], m_IntProps[HEIGHT]);
@@ -421,6 +436,12 @@ GLTexture::build(int immutable) {
 					glTexImage2D((GLenum)m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
 						(GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
+				}
+				std::vector<float> content;
+				if (m_EnumProps[CONTENT] != 0) {
+
+					fillContent(content);
+					glTexSubImage2D((GLenum)m_EnumProps[DIMENSION], 0, 0, 0, m_IntProps[WIDTH], m_IntProps[HEIGHT], (GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], &content[0]);
 				}
 
 			}
@@ -458,6 +479,38 @@ GLTexture::build(int immutable) {
 		//m_IntProps[LEVELS] = 0;
 	}
 	glBindTexture((GLenum)m_EnumProps[DIMENSION], 0);
+}
+
+
+void 
+GLTexture::fillContent(std::vector<float> &content) {
+
+	srand(m_IntProps[SEED]);
+
+	int dim = m_IntProps[WIDTH] * m_IntProps[HEIGHT] * getNumberOfComponents();
+	content.reserve(dim);
+
+	if (m_EnumProps[CONTENT] == CONTENT_RANDOM_UNIFORM) {
+		for (int i = 0; i < dim; ++i) {
+			content.push_back(rand() * 1.0f / RAND_MAX);
+		}
+	}
+	if (m_EnumProps[CONTENT] == CONTENT_RANDOM_NORMAL) {
+
+		float t1, t2, z1,z2;
+		for (int i = 0; i < dim / 2 + 1; ++i) {
+			t1 = rand() * 1.0f / RAND_MAX;
+			t2 = rand() * 1.0f / RAND_MAX;
+
+			t1 == 0 ? t1 = 0.00000001f : t1 = t1;
+			t2 == 0 ? t2 = 0.00000001f : t2 = t2;
+
+			z1 = (float)(sqrt(-2 * log(t1))*cos(2 * M_PI * t2));
+			z2 = (float)(sqrt(-2 * log(t1))*sin(2 * M_PI * t2));
+
+			content.push_back(z1); content.push_back(z2);
+		}
+	}
 }
 
 

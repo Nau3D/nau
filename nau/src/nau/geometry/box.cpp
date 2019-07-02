@@ -158,7 +158,7 @@ Box::Box(void) : Primitive() {
 	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("normal")), normals);
 
 
-	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "Light Grey");
+	std::shared_ptr<MaterialGroup> aMaterialGroup = MaterialGroup::Create(this, "__Light Grey");
 	
 	std::shared_ptr<std::vector<unsigned int>> indices =
 		std::shared_ptr<std::vector<unsigned int>>(new std::vector<unsigned int>(36));

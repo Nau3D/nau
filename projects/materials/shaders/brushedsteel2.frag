@@ -1,4 +1,63 @@
+// http://www.renderman.org/RMR/Shaders/SHWShaders/SHW_brushedmetal.sl
+// with added noise for enhanced stripes
+
 #version 330
+
+
+
+uniform vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);;
+uniform vec4 specular = vec4(1.0, 1.0, 1.0, 1.0);;
+
+in Data {
+	vec3 l_dir;
+	vec3 normal;
+	vec4 eye;
+	vec2 texCoord;
+	vec3 tangent;
+} DataIn;
+
+
+uniform float roughness = 0.2;
+uniform float ka = 0.25;
+uniform float ks = 0.25;
+
+out vec4 colorOut;
+
+float snoise(vec3);
+
+void main() {
+
+    vec3 t = normalize(DataIn.tangent);
+	vec3 n = normalize(DataIn.normal);
+	vec3 e = normalize(vec3(DataIn.eye));
+	float intensity = max(dot(n,DataIn.l_dir),0.0);
+	
+	vec4 spec = vec4(0.0);
+	if (intensity > 0) {
+		float cos_eye = t.t;
+		float sin_eye = sqrt(1.0 - cos_eye* cos_eye);
+		float cos_light = dot (t,DataIn.l_dir);
+		float sin_light = sqrt(1.0 - cos_light * cos_light);
+		float aniso = max(cos_light * cos_eye + sin_light*sin_eye, 0);
+		float shad = max(dot(n,e), 0) * max(dot(n,DataIn.l_dir), 0.0);
+		spec = specular * pow(aniso, 1/roughness) * shad;
+	}
+	colorOut = ka * diffuse*0.25 + ks * diffuse * intensity;//  + spec;
+	//colorOut += vec4(random(DataIn.worldPos.xyz));
+
+	vec2 a = DataIn.texCoord;
+	//a.x = a.x/40;
+//	a.z = a.z/40;
+a.y *= 256;
+
+
+	vec4 stripes = pow(vec4(snoise(vec3(a.xy,1))),vec4(2)) * 0.1 + 0.8;
+	colorOut = (ka * diffuse*0.25 + ks * diffuse * intensity) * stripes   + spec  ;
+	//colorOut = DataIn.worldPos;
+
+}
+
+
 //---------------------------------------------------------------------------------------
 //
 // Description : Array and textureless GLSL 2D/3D/4D simplex 
@@ -105,50 +164,3 @@ float snoise(vec3 v)
   
   
 //-------------------------------------------------------------------------------
-
-in vec3 lDirV; // camera space
-in vec3 normalV; // camera space
-in vec3 eyeV;
-in vec4 worldPos;
-
-uniform vec4 marbleColor = vec4(0.2, 0.2, 0.4, 1.0);
-
-out vec4 colorOut;
-
-float fnoise(vec3 pos) {
-
-	float n = snoise(pos) + 0.5 * snoise(pos*2) + 0.25 * snoise(pos*4) + 0.125 * snoise(pos*8);
-	return n;
-}
-
-#define STRIPES 32
-#define DISTORTION 5
-#define STRIPE_WIDTH 8
-
-void main() {
-
-	// set the specular term to black
-	vec4 spec = vec4(0.0);
-
-	// normalize both input vectors
-	vec3 n = normalize(normalV);
-	vec3 e = normalize(eyeV);
-
-	float intensity = max(dot(n,lDirV), 0.0);
-	intensity = intensity * 0.5 + 0.5;
-
-	// if the vertex is lit compute the specular color
-	if (intensity > 0.0) {
-		// compute the half vector
-		vec3 h = normalize(lDirV + e);	
-		// compute the specular term into spec
-		float intSpec = max(dot(h,n), 0.0);
-		spec = vec4(1) * pow(intSpec,128);
-	}
-
-	float blend = 0.5 * sin(0.5 + worldPos.x * STRIPES + fnoise(worldPos.xyz)*DISTORTION) + 0.5;
-	blend = pow(blend, STRIPE_WIDTH) + fnoise(vec3(worldPos)) * 0.1	;
-	vec4 dif = mix(vec4(0.8), marbleColor, blend);
-	colorOut = 0.8*(intensity * dif) + spec;
-	//colorOut = vec4(fnoise(worldPos.xyz))*0.5+0.5;
-}

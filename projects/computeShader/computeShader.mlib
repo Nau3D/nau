@@ -16,7 +16,7 @@
 		<shader name="compute4" 	cs="shaders/contour4.comp" /> 
 		<shader name="compute8" 	cs="shaders/contour8.comp" /> 
 		<shader name="compute16" 	cs="shaders/contour16.comp" /> 
-		<shader name="compute32" 	cs="shaders/contour32.comp" /> 
+		<!--shader name="compute32" 	cs="shaders/contour32.comp" /--> 
 	</shaders>
 	
 	<materials>
@@ -40,7 +40,7 @@
 			</imageTextures>
 		</material>
 		
-		<material name ="computeShader32">
+		<!--material name ="computeShader32">
 			<shader name="compute32">
 				<values>									
 					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
@@ -58,7 +58,7 @@
 					<LEVEL value=0 />
 				</imageTexture>
 			</imageTextures>
-		</material>
+		</material-->
 
 		<material name ="computeShader8">
 			<shader name="compute8">

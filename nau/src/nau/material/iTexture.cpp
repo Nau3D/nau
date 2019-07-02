@@ -24,6 +24,7 @@ ITexture::Init() {
 	Attribs.add(Attribute(LAYERS, "LAYERS", Enums::DataType::INT, false, new NauInt(1)));
 	Attribs.add(Attribute(COMPONENT_COUNT, "COMPONENT_COUNT", Enums::DataType::INT, true, new NauInt(0)));
 	Attribs.add(Attribute(ELEMENT_SIZE, "ELEMENT_SIZE", Enums::DataType::INT, true, new NauInt(0)));
+	Attribs.add(Attribute(SEED, "SEED", Enums::DataType::INT, true, new NauInt(0)));
 	// BOOL
 	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new NauInt(false)));
 	// ENUM
@@ -31,6 +32,13 @@ ITexture::Init() {
 	Attribs.add(Attribute(FORMAT, "FORMAT", Enums::DataType::ENUM, true));
 	Attribs.add(Attribute(TYPE, "TYPE", Enums::DataType::ENUM, true));
 	Attribs.add(Attribute(INTERNAL_FORMAT, "INTERNAL_FORMAT", Enums::DataType::ENUM, false));
+
+	Attribs.add(Attribute(CONTENT, "CONTENT", Enums::DataType::ENUM, false));
+	Attribs.listAdd("CONTENT", "NONE", CONTENT_NONE);
+	Attribs.listAdd("CONTENT", "RANDOM_UNIFORM", CONTENT_RANDOM_UNIFORM);
+	Attribs.listAdd("CONTENT", "RANDOM_NORMAL", CONTENT_RANDOM_NORMAL);
+	Attribs.setDefault("CONTENT", NauInt(0));
+
 
 	//#ifndef _WINDLL
 	// for direct access

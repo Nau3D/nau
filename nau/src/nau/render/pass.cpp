@@ -21,6 +21,8 @@ bool Pass::Inited = Init();
 
 bool
 Pass::Init() {
+	// from Pass Optix Prime
+	Attribs.add(Attribute(RAY_COUNT, "RAY_COUNT", Enums::INT, false, new NauInt(-1)));
 
 	Attribs.add(Attribute(DIM_X, "DIM_X", Enums::DataType::UINT, false, new NauUInt(1)));
 	Attribs.add(Attribute(DIM_Y, "DIM_Y", Enums::DataType::UINT, false, new NauUInt(1)));

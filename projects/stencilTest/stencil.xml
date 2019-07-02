@@ -101,7 +101,7 @@
 				</materialMaps>
 			</pass>
 
-		<pass class="default" name="Draw Reflection" >
+			<pass class="default" name="Draw Reflection" >
 				<scenes>
 					<scene name="CubeLandReflected" />
 				</scenes>
@@ -125,7 +125,7 @@
 				</materialMaps>
 			</pass>
 			
-		<pass class="default" name="Draw Ground">
+			<!--pass class="default" name="Draw Ground">
 				<scenes>
 					<scene name="Ground" />
 				</scenes>
@@ -139,7 +139,7 @@
 				<materialMaps>
 					<map fromMaterial="ground" toLibrary="Stencil" toMaterial="simpleTexturedBlend" />
 				</materialMaps>
-			</pass>
+			</pass-->
 		</pipeline>
 	</pipelines>
 </project>

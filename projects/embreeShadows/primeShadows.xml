@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+<project name="OptixPrimeShadows" width="1536" height="512">
+	<assets>
+	
+		<constants>
+			<constant name="SIZE" type="INT" value=1024 />
+			<constant name ="RAYCOUNT" type="FLOAT" value = 500000 />
+		</constants>
+		
+		<attributes>
+			<attribute type="PASS" name="SIZE" data="INT" value="SIZE" />
+		</attributes>
+		<scenes>
+			<scene name="pl3d" type="OctreeUnified" 
+				   filename="../../models/LargoCamoes/largoCamoes.nbo" />
+		</scenes>
+		
+		<viewports>
+			<viewport name="LeftViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=0.33 height=1 />
+			</viewport>
+			<viewport name="MiddleViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+				<ORIGIN x=0.33 y=0.0 />
+				<SIZE width=0.33 height=1 />
+			</viewport>
+			<viewport name="RightViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+				<ORIGIN x=0.66 y=0.0 />
+				<SIZE width=0.34 height=1 />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera" >
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
+				<POSITION x="-4.0" y="20.0" z="-29.0" />
+				<VIEW x="0.91" y="-0.29" z="0.26" />
+				<UP x="0" y="1" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x="1.0" y="-1.0" z="-1" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename = "primeShadows.mlib"/>
+		</materialLibs> 
+	</assets>
+	
+	<pipelines>
+		<pipeline name="OptixPrime" default="true" defaultCamera="MainCamera">
+			<pass class="default" name="GBuffer" >
+				<scenes>
+					<scene name="pl3d" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<renderTarget name="gBuffer" fromLibrary="PrimeShadows" />
+				<injectionMaps>
+					<map toMaterial="*">
+						<shader fromMaterial="fillGBuffers" fromLibrary="PrimeShadows" />
+					</map>
+				</injectionMaps>
+			</pass>
+			<pass class="quad" name="fillRayBuffer" >
+				<renderTarget name="dummy" fromLibrary="PrimeShadows" />
+				<materialMaps>			
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="fillRayBuffer" />
+				</materialMaps>				
+			</pass>
+			<pass name="Optix Prime" class="embree">
+				<scene name="pl3d" />
+				<rays buffer="PrimeShadows::rays" queryType = "ANY"/> 
+				<hits buffer ="PrimeShadows::hits" />
+			</pass>		
+			<pass name="showColor" class="quad" >
+				<viewport name="MiddleViewport" />
+				<texture name="color" fromLibrary="PrimeShadows" />
+			</pass>
+			<pass name="showBuffer" class="quad" >
+				<viewport name="LeftViewport" />
+				<materialMaps>
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="showBuffer" />
+				</materialMaps>				
+			</pass>
+			<pass name="showFinal" class="quad" >
+				<viewport name="RightViewport" />
+				<materialMaps>
+					<map fromMaterial="__Quad" 
+						 toLibrary="PrimeShadows" toMaterial="compose" />
+				</materialMaps>				
+			</pass>
+		</pipeline>
+	</pipelines>
+	
+	<interface>
+		<window label="Settings" >
+			<var label="Light Dir" type="LIGHT" context="Sun" component="DIRECTION" mode="DIRECTION" />
+		</window>
+	</interface>
+</project>

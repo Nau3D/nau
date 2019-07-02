@@ -63,7 +63,7 @@
 			</pass>
 		</pipeline>
 
-		<pipeline name="LS = 32" >
+		<!--pipeline name="LS = 32" >
 			<pass class="compute" name="pass1">
 				<material name="computeShader32" fromLibrary="Compute" dimX=16 dimY=16 dimZ=1 />
 			</pass>
@@ -71,7 +71,7 @@
 				<viewport name="Main" />
 				<texture name="Compute::tex" />
 			</pass>
-		</pipeline>
+		</pipeline-->
 
 	</pipelines>
 	

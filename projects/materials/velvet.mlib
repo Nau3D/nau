@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+<materialLib name="Materials">
+	<shaders>
+		<shader name="velvet"		vs = "shaders/velvet.vert" 
+										ps = "shaders/velvet.frag" />
+
+	</shaders>
+	
+	<materials>
+		<material name="velvet">
+			<shader name="velvet">
+				<values>
+					<valueof uniform="mPVM" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="mNormal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+							 
+					<valueof uniform="mView" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+							 
+					<valueof uniform="mViewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+						 
+					<valueof uniform="lDir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+
+					<valueof uniform="backScatter" 
+							 type="RENDERER" context="CURRENT" 
+							 component="backScatter" />
+					<valueof uniform="sheen" 
+							 type="RENDERER" context="CURRENT" 
+							 component="sheen" />
+					<valueof uniform="edginess" 
+							 type="RENDERER" context="CURRENT" 
+							 component="edginess" />
+					<valueof uniform="roughness" 
+							 type="RENDERER" context="CURRENT" 
+							 component="roughness" />
+					<valueof uniform="kd" 
+							 type="RENDERER" context="CURRENT" 
+							 component="kd" />
+					<valueof uniform="ka" 
+							 type="RENDERER" context="CURRENT" 
+							 component="ka" />
+					<valueof uniform="ks" 
+							 type="RENDERER" context="CURRENT" 
+							 component="ks" />
+							 
+				</values>
+			</shader>
+		</material>
+	</materials>
+</materialLib>	

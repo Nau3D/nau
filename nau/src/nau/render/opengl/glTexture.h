@@ -81,6 +81,8 @@ namespace nau
 			virtual int getNumberOfComponents(void);
 			virtual  int getElementSize();
 
+			void fillContent(std::vector<float> &content);
+
 			// for loaded images
 			GLTexture (std::string label, std::string internalFormat,
 				std::string aFormat, std::string aType, int width, int height, int depth,

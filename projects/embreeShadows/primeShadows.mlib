@@ -1,0 +1,148 @@
+<?xml version="1.0" ?>
+<materialLib name="PrimeShadows">
+	<renderTargets>
+		<renderTarget name ="gBuffer">
+			<SIZE width="SIZE" height="SIZE" />
+			<colors>
+				<color name="pos" internalFormat="RGBA32F" />
+				<color name="normal" internalFormat="RGBA" />
+				<color name="color" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name ="dummy">
+			<SIZE width="SIZE" height="SIZE" />
+			<colors>
+				<color name="dummy" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		
+	</renderTargets>
+
+	<buffers>
+		<buffer name="hits" >
+			<!--SIZE value=16777216 /-->
+			<DIM x="SIZE" y="SIZE" z=1 />
+			<structure>
+				<field value="FLOAT" />
+				<field value="INT" />
+				<field value="FLOAT" />
+				<field value="FLOAT" />
+			</structure> 
+		</buffer>	
+		<buffer name="rays" >
+			<!--SIZE value=33554432 /-->
+			<DIM x="SIZE" y="SIZE" z=1 />
+			<structure>
+				<field value="VEC4" />
+				<field value="VEC4" />
+			</structure> 
+		</buffer>	
+		<buffer name="test" >
+			<SIZE value=8 />
+		</buffer>	
+	</buffers>	
+	
+	<shaders>
+		<shader name="fillGBuffers" 	ps="shaders/fillGBuffers.frag" 
+										vs="shaders/fillGBuffers.vert" />
+		<shader name="fillRayBuffer" 	ps="shaders/fillRayBuffer.frag" 
+										vs="shaders/quadShader.vert" />						
+		<shader name="compose" 			ps="shaders/compose.frag" 
+										vs="shaders/quadShader.vert" />
+		<shader name="showBuffer" 		ps="shaders/showBuffer.frag" 
+										vs="shaders/quadShader.vert" />
+	</shaders>
+	
+	<materials>
+		<material name="fillGBuffers">
+			<shader name="fillGBuffers">
+				<values>
+					<valueof uniform="PVM"          	type="RENDERER" context="CURRENT" 
+														component="PROJECTION_VIEW_MODEL" />
+					<valueof uniform="M"          		type="RENDERER" context="CURRENT" 
+														component="MODEL" />
+					<valueof uniform="NormalMatrix"   	type="RENDERER" context="CURRENT" 
+														component="NORMAL" />
+					<valueof uniform="diffuse" 			type="COLOR" context="CURRENT" 
+														component="DIFFUSE" />
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />	
+					<valueof uniform="texCount" 		type="RENDERER" context="CURRENT" 
+														component="TEXTURE_COUNT"  />	
+				</values>
+			</shader>
+		</material>
+		
+		<material name="fillRayBuffer">			
+			<shader name="fillRayBuffer">
+				<values>
+					<valueof uniform="texUnit" 			type="TEXTURE_BINDING" context="CURRENT" 
+														component="UNIT" id="0" />	
+					<valueof uniform="lightDirection" 	type="LIGHT" context="Sun" 
+														component="DIRECTION" /> 
+					<valueof uniform="size"				type="PASS" context="CURRENT" 
+															component="SIZE" />
+				</values>
+			</shader>
+			<buffers>	
+				<buffer name="rays" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+			<textures>
+				<texture UNIT="0" name="pos" />
+			</textures>
+		</material>
+		
+		<material name="compose">
+			<shader name="compose">
+				<values>
+					<valueof uniform="texColor" 		type="TEXTURE_BINDING" context="CURRENT" 
+															component="UNIT" id="0" />	
+					<valueof uniform="texNormal" 		type="TEXTURE_BINDING" context="CURRENT" 
+															component="UNIT" id="1" />	
+					<valueof uniform="lightDir" 	type="LIGHT" context="Sun" 
+															component="DIRECTION" /> 
+					<valueof uniform="V"				type="CAMERA" context="MainCamera" 
+															component="VIEW_MATRIX" />
+					<valueof uniform="rayCount"			type="PASS" context="OptixPrime#Optix Prime"
+															component="RAY_COUNT" />
+					<valueof uniform="size"				type="PASS" context="CURRENT" 
+															component="SIZE" />
+				</values>
+			</shader>
+			<textures>
+				<texture UNIT="0" name="color" />
+				<texture UNIT="1" name="normal" />
+			</textures>
+			<buffers>	
+				<buffer name="hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="2" />
+				</buffer>
+			</buffers>	
+		</material>		
+		
+		<material name="showBuffer">			
+			<shader name="showBuffer">
+				<values>
+					<valueof uniform="size"				type="PASS" context="CURRENT" 
+															component="SIZE" />
+				</values>
+			</shader>
+			<buffers>	
+				<buffer name="rays" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+				<buffer name="hits" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="2" />
+				</buffer>
+			</buffers>	
+		</material>	
+	</materials>
+	
+</materialLib>

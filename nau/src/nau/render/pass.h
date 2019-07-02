@@ -57,6 +57,8 @@ namespace nau
 
 			friend class PassFactory;
 		public:
+			// from passOptixPrime
+			INT_PROP(RAY_COUNT, 201);
 
 			// Pass properties
 
