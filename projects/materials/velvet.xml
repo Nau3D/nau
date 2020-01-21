@@ -13,7 +13,7 @@
 
 		<scenes>
 			<scene name="Model" param="UNITIZE SWAP_YZ">
-				<file name="../../models/Teapot.3ds"/>
+				<file name="../../testModels/Teapot.3ds"/>
 			</scene>
    		</scenes>
 		
