@@ -42,6 +42,11 @@ To build composer (a wx widgets based interface for nau which provides useful in
 * Download and install wxwidgets.
 	* Alternative: For windows, instead of compiling the libs, download the binaries from here: https://github.com/wxWidgets/wxWidgets/releases/tag/v3.1.0
 		* Required: releaseDLL, Dev and headers and place them in the wxfolder (note: get the 64bit version for the releaseDLL and Dev as this is required by nvidia's optix)
+		* extract all files to a folder. This is the wx_Widgets_ROOT_DIR in the CMake options.
+		* snapshot of the wx config options for CMake
+		
+		![](images/cmake_wx.jpg?raw=true "Title")
+		
 
 		
 To built bullet plugin, download the latest release (Windows only).
