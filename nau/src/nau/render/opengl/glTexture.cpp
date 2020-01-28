@@ -338,6 +338,7 @@ GLTexture::GLTexture (std::string label, std::string anInternalFormat, std::stri
 	else {
 		build();
 	}
+
 }
 
 #include <algorithm>  

@@ -4,6 +4,12 @@
 
 using namespace nau::util;
 
+void 
+Element::clear() {
+	//if (values)
+	//	values->clear();
+}
+
 Tree::Tree() {
 
 }
@@ -13,6 +19,15 @@ void
 Tree::clear() {
 
 	t.clear();
+	//for (int i = 0; i < t.size(); ++i) {
+	//	Element* e = t[i].second;
+	//	if (e != NULL) {
+	//		e->clear();
+	//		delete (e);
+	//		//delete(t[i].second);
+	//	}
+	//}
+//	delete t;
 }
 
 

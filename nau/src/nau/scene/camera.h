@@ -48,8 +48,8 @@ namespace nau
 			//}
 
 			typedef enum {
-				ORTHO,
-				PERSPECTIVE
+				PERSPECTIVE,
+				ORTHO
 			} CameraType;
 
 			FLOAT4_PROP(POSITION, 0);
@@ -58,6 +58,8 @@ namespace nau
 			FLOAT4_PROP(NORMALIZED_UP_VEC, 4);
 			FLOAT4_PROP(NORMALIZED_RIGHT_VEC, 5);
 			FLOAT4_PROP(LOOK_AT_POINT, 6);
+			FLOAT4_PROP(NORMALIZED_VIEW_VEC, 7);
+
 
 			FLOAT_PROP(FOV, 0);
 			FLOAT_PROP(NEARP, 1);

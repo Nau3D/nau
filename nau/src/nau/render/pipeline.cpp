@@ -190,6 +190,10 @@ Pipeline::executePass(std::shared_ptr<Pass> &pass) {
 	pass->callPreScript();
 	bool keepRunning = false;
 
+	if (pass->getClassName() == "quad")
+		RENDERER->resetRenderMode();
+	else
+		RENDERER->applyRenderMode();
 	if (pass->getPrope(Pass::TEST_MODE) == Pass::RUN_WHILE)
 		keepRunning = true;
 
@@ -219,6 +223,7 @@ Pipeline::executePass(std::shared_ptr<Pass> &pass) {
 		keepRunning = keepRunning && run;
 	} while (keepRunning);
 	pass->callPostScript();
+	RENDERER->resetRenderMode();
 
 }
 

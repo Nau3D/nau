@@ -25,7 +25,6 @@ Mesh::Mesh(void) :
 	m_VertexData (0),
 	m_IndexData(0),
 	m_vMaterialGroups (),
-	m_DrawPrimitive(nau::render::IRenderable::TRIANGLES),
 	m_Name (""),
 	m_NumberOfPrimitives(-1)
 {
@@ -77,6 +76,9 @@ Mesh::getDrawingPrimitive() {
 
 	return(m_DrawPrimitive);
 }
+
+
+
 
 
 unsigned int

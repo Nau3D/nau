@@ -177,6 +177,12 @@ Attribute::getSemantics() {
 	return m_Semantics;
 }
 
+void
+Attribute::setSemantics(Attribute::Semantics s) {
+
+	m_Semantics = s;
+}
+
 
 int 
 Attribute::getId() {

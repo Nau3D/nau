@@ -1660,6 +1660,7 @@ void
 Nau::clear() {
 
 	RENDERER->setPropui(IRenderer::FRAME_COUNT, 0);
+	RENDERER->m_AtomicLabels.clear();
 	setActiveCameraName("__nauDefault");
 	SceneObject::ResetCounter();
 	MATERIALLIBMANAGER->clear();
@@ -1824,7 +1825,6 @@ Nau::getProjectFolder() {
 // -----------------------------------------------------------
 
 
-
 void 
 Nau::setTrace(int frames) {
 
@@ -1888,7 +1888,7 @@ Nau::step() {
 	if (m_Physics)
 		m_pPhysicsManager->update();
 
-	INTERFACE_MANAGER->render();
+	INTERFACE_MANAGER->render();	
 }
 
 
@@ -1952,6 +1952,8 @@ void Nau::stepPass() {
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, 2);
 	else
 		RENDERER->setPropui(IRenderer::FRAME_COUNT, ++k);
+
+
 }
 
 

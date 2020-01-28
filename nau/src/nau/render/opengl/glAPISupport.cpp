@@ -24,10 +24,11 @@ GLAPISupport::setAPISupport() {
 
 	m_APISupport[OK] = true;
 
-	const char* sExtensions = (char *)glGetString(GL_EXTENSIONS);
-	if (strstr(sExtensions, "ARB_bindless_texture") != NULL) {
-		m_APISupport[APIFeatureSupport::BINDLESS_TEXTURES] = true;
-	}
+// https://github.com/cginternals/glbinding/issues/251
+//	const char* sExtensions = (char *)glGetString(GL_EXTENSIONS);
+//	if (strstr(sExtensions, "ARB_bindless_texture") != NULL) {
+//		m_APISupport[APIFeatureSupport::BINDLESS_TEXTURES] = true;
+//	}
 
 	if (m_Version >= 310) {
 		m_APISupport[APIFeatureSupport::BUFFER_UNIFORM] = true;

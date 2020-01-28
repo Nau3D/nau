@@ -68,6 +68,7 @@ namespace nau {
 		nau_API int getId();
 		nau_API bool getRangeDefined();
 		nau_API bool getReadOnlyFlag();
+		nau_API void setSemantics(Attribute::Semantics);
 		nau_API Semantics getSemantics();
 
 		nau_API std::shared_ptr<Data> &getMax();

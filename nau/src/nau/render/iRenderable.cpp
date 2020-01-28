@@ -33,9 +33,25 @@ AttribSet IRenderable::Attribs;
 bool IRenderable::Inited = Init();
 
 
-IRenderable::IRenderable() {
+IRenderable::IRenderable(): m_DrawPrimitive(TRIANGLES) {
 
 	registerAndInitArrays(Attribs);
 }
 
 
+std::string
+IRenderable::getDrawingPrimitiveString() {
+
+	switch (m_DrawPrimitive) {
+	case TRIANGLES: return "Triangles";
+	case TRIANGLE_STRIP: return "Triangle strip";
+	case TRIANGLE_FAN: return "Traingle fan";
+	case LINES: return "Lines";
+	case LINE_LOOP: return "Line loop";
+	case POINTS: return "Points";
+	case TRIANGLES_ADJACENCY: return "Triangle adjacency";
+	case PATCHES: return "Patches";
+	default: return "unsupported";
+
+	}
+}

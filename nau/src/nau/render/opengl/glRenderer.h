@@ -184,6 +184,9 @@ namespace nau
 
 		public:
 			void setRenderMode(TRenderMode mode);
+			void resetRenderMode();
+			void applyRenderMode();
+
 			void drawGroup(std::shared_ptr<MaterialGroup> aMaterialGroup);
 			void setCullFace (Face aFace);
 			unsigned int getVerticesPerPrimitive(unsigned int primitive);
@@ -205,6 +208,7 @@ namespace nau
 			GLenum translateStencilDepthFunc(int aFunc);
 			GLenum translateStencilOp(int aFunc);
 
+			std::string translateDrawingPrimitiveString(unsigned int aDrawPrimitive);
 		protected:
 
 			GLenum translateFace (Face aFace);

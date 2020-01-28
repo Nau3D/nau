@@ -1,7 +1,7 @@
 nau
 ===
 
-nau 3D engine: OpenGL + Optix (including Optix Prime) + Lua + Anttweakbar + Bullet + PhysX
+nau 3D engine: OpenGL + Optix (including Optix Prime) + Lua + ImGui + Anttweakbar + Bullet + PhysX
 
 Documentation at http://nau3d.di.uminho.pt/
 
@@ -17,6 +17,8 @@ Besides myself, many people have contributed to this project:
 * Jaime Campos and João Meira - initial Bullet integration
 * David Leal - Bullet and PhysX plugins
 * Bruno Martins - developing a plugin for Intel's embree (not ready yet)
+
+ImGuiFileDialog from https://github.com/aiekick/ImGuiFileDialog
 
 # building
 

@@ -102,7 +102,9 @@ Pass::Init() {
 	Attribs.listAdd("DEPTH_FUNC", "NOT_EQUAL", NOT_EQUAL);
 
 	// VEC4
-	Attribs.add(Attribute(COLOR_CLEAR_VALUE, "COLOR_CLEAR_VALUE", Enums::DataType::VEC4, false, new vec4()));
+	Attribute a(COLOR_CLEAR_VALUE, "COLOR_CLEAR_VALUE", Enums::DataType::VEC4, false, new vec4());
+	a.setSemantics(Attribute::COLOR);
+	Attribs.add(a);
 
 	// FLOAT
 	Attribs.add(Attribute(DEPTH_CLEAR_VALUE, "DEPTH_CLEAR_VALUE", Enums::DataType::FLOAT, false, new NauFloat(1.0f)));

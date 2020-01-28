@@ -261,6 +261,7 @@ namespace nau {
 		nau_API void setTrace(int frames);
 		nau_API bool getTraceStatus();
 
+
 		// Stepping
 		// Executes the whole pipeline
 		nau_API void step ();

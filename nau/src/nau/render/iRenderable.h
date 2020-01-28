@@ -49,6 +49,7 @@ namespace nau
 			virtual std::string& getName () = 0;
 			virtual std::string getClassName() = 0;
 			virtual unsigned int getDrawingPrimitive() = 0; 
+			std::string getDrawingPrimitiveString();
 			virtual unsigned int getRealDrawingPrimitive() = 0;
 			virtual void setDrawingPrimitive(unsigned int aDrawingPrimitive) = 0;
 
@@ -73,6 +74,8 @@ namespace nau
 			virtual void resetCompilationFlags() = 0;
 
 			virtual ~IRenderable(void) {};
+			unsigned int m_DrawPrimitive;
+
 
 		protected:
 			static bool Init();

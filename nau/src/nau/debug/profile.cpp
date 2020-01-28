@@ -2,6 +2,7 @@
 
 #include "nau/slogger.h"
 
+
 #include <ctime>
 
 
@@ -256,7 +257,16 @@ void Profile::Reset() {
 }
 
 
-void Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
+
+Profile::level*
+Profile::GetProfilerData() {
+
+	return sLevels;
+}
+
+
+void 
+Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
 
 	size_t siz;
 	char a[2] = "";
@@ -300,6 +310,9 @@ void Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
 		
 	}
 }
+
+
+
 
 void
 Profile::DumpLevels(std::string &dump ) {

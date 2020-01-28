@@ -12,8 +12,8 @@ Light::Init() {
 	Attribs.add(Attribute(DIRECTION, "DIRECTION", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	Attribs.add(Attribute(SPOT_DIRECTION, "SPOT_DIRECTION", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	Attribs.add(Attribute(NORMALIZED_DIRECTION, "NORMALIZED_DIRECTION", Enums::DataType::VEC4,true, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
-	Attribs.add(Attribute(COLOR, "COLOR", Enums::DataType::VEC4, false, new vec4(1.0f, 1.0f, 1.0f, 1.0f)));
-	Attribs.add(Attribute(AMBIENT, "AMBIENT", Enums::DataType::VEC4, false, new vec4(0.2f, 0.2f, 0.2f, 1.0f)));
+	Attribs.add(Attribute(COLOR, "COLOR", Enums::DataType::VEC4, false, new vec4(1.0f, 1.0f, 1.0f, 1.0f), new vec4(), new vec4(1.0f), IAPISupport::OK, Attribute::COLOR));
+	Attribs.add(Attribute(AMBIENT, "AMBIENT", Enums::DataType::VEC4, false, new vec4(0.2f, 0.2f, 0.2f, 1.0f), new vec4(), new vec4(1.0f), IAPISupport::OK, Attribute::COLOR));
 	// FLOAT
 	Attribs.add(Attribute(SPOT_EXPONENT, "SPOT_EXPONENT", Enums::DataType::FLOAT, false, new NauFloat(0.0f)));
 	Attribs.add(Attribute(SPOT_CUTOFF, "SPOT_CUTOFF", Enums::DataType::FLOAT, false, new NauFloat(180.0f)));

@@ -201,6 +201,15 @@ RenderManager::getActivePipelineName() {
 		return "";
 }
 
+int
+RenderManager::getActivePipelineIndex() {
+
+	if (m_Pipelines.size() > m_ActivePipelineIndex) {
+		return m_ActivePipelineIndex;
+	}
+	else
+		return -1;
+}
 
 void
 RenderManager::setActivePipeline (const std::string &pipelineName) {
@@ -398,6 +407,22 @@ void
 RenderManager::setRenderMode (nau::render::IRenderer::TRenderMode mode) {
 
 	m_pRenderer->setRenderMode (mode);
+}
+
+
+// sets the render mode to material, without affecting the state
+void
+RenderManager::resetRenderMode() {
+
+	m_pRenderer->resetRenderMode();
+}
+
+
+// applies the render mode in the current state
+void
+RenderManager::applyRenderMode() {
+
+	m_pRenderer->applyRenderMode();
 }
 
 

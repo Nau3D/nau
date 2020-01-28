@@ -276,7 +276,7 @@ GLRenderer::getLightCount() {
 std::shared_ptr<Light> &
 GLRenderer::getLight(unsigned int i) {
 
-	assert(i < m_Lights.size());
+	//assert(i < m_Lights.size());
 	if (!(m_Lights.size() > i))
 		return RENDERMANAGER->getLight("__nauDefault");
 	else
@@ -875,6 +875,21 @@ GLRenderer::setRenderMode(TRenderMode mode) {
 	}
 
 }
+
+void
+GLRenderer::resetRenderMode() {
+
+	m_TexturingFlag = true;
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void
+GLRenderer::applyRenderMode() {
+
+	setRenderMode(m_ActualRenderMode);
+}
+
+
 
 
 void
@@ -1538,12 +1553,12 @@ GLRenderer::translateFace (Face aFace) {
 }
 
 
-unsigned int 
-GLRenderer::translateDrawingPrimitive (unsigned int aDrawPrimitive) {
+
+unsigned int
+GLRenderer::translateDrawingPrimitive(unsigned int aDrawPrimitive) {
 
 	if (IRenderer::PRIMITIVE_TYPE_COUNT > aDrawPrimitive)
 		return (unsigned int)GLPrimitiveTypes[aDrawPrimitive];
 	else
-		return (unsigned int)GL_INVALID_ENUM;	
+		return (unsigned int)GL_INVALID_ENUM;
 }
-

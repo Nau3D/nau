@@ -43,6 +43,7 @@
 #include <string>
 
 
+
 using namespace std;
 
 #define PROFILE_MAX_LEVELS 50
@@ -65,13 +66,11 @@ using namespace std;
 class Profile
 {
 public:
-
-
-private:
-	/// Contains information about a profiler section
 	typedef struct {
 		unsigned int queries[2];
 	} queryPair;
+
+	/// Contains information about a profiler section
 	typedef struct s {
 		/** Index of the parent section 
 		  * in the previous level
@@ -107,6 +106,10 @@ private:
 		int cursor;
 	}level;
 
+
+private:
+
+
 	/// space displacement for dump string formating
 	static int sDisp;
 
@@ -121,6 +124,7 @@ private:
 
 	/// Puts the profile result in sDump
 	static void DumpLevels(int l, int p, pTime calls, std::string &s);
+
 
 
 	/// Creates a new section
@@ -143,6 +147,8 @@ public:
 	static nau_API void DumpLevels(std::string &s);
 	/// resets profile data
 	static nau_API void Reset();
+	/// get profile data
+	static nau_API level* GetProfilerData();
 
 	///
 	static nau_API void CollectQueryResults();

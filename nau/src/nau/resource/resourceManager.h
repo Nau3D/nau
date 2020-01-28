@@ -107,6 +107,7 @@ namespace nau
 			nau_API bool hasBuffer(std::string name);
 			nau_API nau::material::IBuffer* getBufferByID(int id);
 			nau_API void getBufferNames(std::vector<std::string> *names);
+			nau_API unsigned int getNumBuffers();
 			nau_API void clearBuffers();
 
 			/***Arrays of Textures***/

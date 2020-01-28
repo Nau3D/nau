@@ -32,7 +32,6 @@ namespace nau
 
 			std::vector<std::pair<std::string, unsigned int>> matIndex;
 
-			unsigned int m_DrawPrimitive;
 			unsigned int m_RealDrawPrimitive;
 			std::string m_Name;
 			int m_NumberOfPrimitives;

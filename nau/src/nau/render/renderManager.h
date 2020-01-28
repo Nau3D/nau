@@ -93,6 +93,8 @@ namespace nau
 
 			//! Returns the active pipeline name
 			nau_API std::string getActivePipelineName();
+			nau_API int getActivePipelineIndex();
+
 			//! Sets the named pipeline as the active pipeline for rendering purposes
 			nau_API void setActivePipeline (const std::string &pipelineName);
 			nau_API void setActivePipeline(int index);
@@ -162,7 +164,7 @@ namespace nau
 			//! Returns a pointer to the given named light. If the light does not exist it creates one
 			nau_API std::shared_ptr<nau::scene::Light> &getLight (const std::string &lightName);
 			//! Returns the named light. If it does not exist, it creates a light of the given class
-			nau_API std::shared_ptr<nau::scene::Light> &createLight (const std::string &lightName, const std::string &lightClass);
+			nau_API std::shared_ptr<nau::scene::Light> &createLight (const std::string &lightName, const std::string &lightClass="default");
 			//! Returns the number of lights
 			nau_API unsigned int getNumLights();
 			//! Returns a vector with the name of all the lights
@@ -193,6 +195,8 @@ namespace nau
 			
 			//! Sets the RenderMode: Wireframe, point, solid or material
 			nau_API void setRenderMode (nau::render::IRenderer::TRenderMode mode);
+			nau_API void resetRenderMode();
+			nau_API void applyRenderMode();
 
 		public:
 			//! Constructor

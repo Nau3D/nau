@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 #ifdef _WINDLL
 #ifdef nau_EXPORTS
@@ -38,6 +39,8 @@ namespace nau {
 				value = "";
 				values = NULL;
 			};
+
+			void clear();
 		};
 
 		class Tree {

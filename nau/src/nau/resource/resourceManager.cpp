@@ -553,6 +553,12 @@ ResourceManager::clearBuffers() {
 }
 
 
+unsigned int 
+ResourceManager::getNumBuffers() {
+
+	return (unsigned int)m_Buffers.size();
+}
+
 nau::material::IBuffer* 
 ResourceManager::getBuffer(std::string name) {
 
