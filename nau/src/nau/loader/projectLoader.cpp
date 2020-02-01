@@ -1796,20 +1796,6 @@ ProjectLoader::loadCollection(TiXmlHandle handle, const std::string &labelCol, c
 }
 
 
-//void
-//ProjectLoader::loadViewports(TiXmlHandle handle) 
-//{
-//	TiXmlElement *pElem;
-//	std::shared_ptr<Viewport> v;
-//	std::vector<std::string> excluded;
-//
-//	pElem = handle.FirstChild ("viewports").FirstChild ("viewport").Element();
-//	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
-//		loadItem(pElem, "viewport", excluded);
-//	} 
-//}
-
-
 /* ----------------------------------------------------------------
 Specification of the cameras:
 
@@ -1862,7 +1848,7 @@ ProjectLoader::loadCameras(TiXmlHandle handle)
 
 
 /* ----------------------------------------------------------------
-Specification of the lights:
+Specification of lights:
 
 		<lights>
 			<light name="Sun">
@@ -1879,42 +1865,6 @@ direction is optional, if not specified it will be (0.0, 0.0, -1.0)
 color is optional, if not defined it will be (1.0, 1.0, 1.0)
 
 ----------------------------------------------------------------- */
-//void 
-//ProjectLoader::loadLights(TiXmlHandle handle) 
-//{
-//	TiXmlElement *pElem;
-//
-//	std::vector<std::string> ok = {"light"};
-//	checkForNonValidChildTags("lights", ok, handle.FirstChild("lights").Element());
-//
-//	pElem = handle.FirstChild ("lights").FirstChild ("light").Element();
-//	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement("light")) {
-//		const char *pName = pElem->Attribute ("name");
-//		const char *pClass = pElem->Attribute("class"); 
-//		
-//		if (0 == pName) 
-//			NAU_THROW("File %s\nLight has no name", ProjectLoader::s_File.c_str());
-//
-//		SLOG("Light: %s", pName);
-//
-//
-//		if (RENDERMANAGER->hasLight(pName))
-//			NAU_THROW("File %s\nLight %s is already defined", ProjectLoader::s_File.c_str(), pName);
-//
-//		std::vector<std::string> excluded;
-//		std::shared_ptr<Light> l;
-//		if (0 == pClass) {
-//			l = RENDERMANAGER->getLight(pName);
-//		}
-//		else {
-//			l = RENDERMANAGER->createLight(pName, pClass);
-//		}
-//			readChildTags(pName, (AttributeValues *)l.get(), Light::Attribs, excluded, pElem);
-//		
-//		// Reading Light Attributes
-//
-//	}//End of lights
-//}
 
 
 /* ----------------------------------------------------------------
@@ -2004,9 +1954,7 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 	//itemName = "camera";
 	//loadCollection(handle, collectionName, itemName);
 
-	//loadViewports(handle);
 	loadCameras(handle);
-	//loadLights(handle);
 
 	loadEvents(handle);
 

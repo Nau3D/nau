@@ -92,7 +92,7 @@ endif(WIN32)
 if (NAU_BUILD_WITH_OPTIX)
 	include_directories(${CUDA_INCLUDE_DIRS}
 		${OPTIX_DIR}/include)
-	target_link_libraries(nau 
+		target_link_libraries(nau 
 		${OPTIX_DIR}/lib64/optix.6.5.0.lib
 		${OPTIX_DIR}/lib64/optixu.6.5.0.lib
 		${OPTIX_DIR}/lib64/optix_prime.6.5.0.lib
