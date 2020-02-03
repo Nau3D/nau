@@ -33,7 +33,7 @@ Note: IF fail to compile freeglut try
 * cd /usr/include/X11/extensions
 * sudo ln –s XI.h XInput.h
 
-To build nau with nvidia's optix support (optional) both cuda and optix are required.
+To build nau with nvidia's optix 7 support (optional) both cuda and optix are required.
 * In the cmake project check the option "NAU_BUILD_WITH_OPTIX"
 * Set the variable OPTIX_DIR to optix's installation directory
 * CUDA is usually found by cmake and doesn't need any extra steps.
