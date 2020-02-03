@@ -184,8 +184,12 @@ namespace nau
 			static void loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass);
 
 #if NAU_OPTIX == 1
-			static void loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass);
+			static void loadPassOptixSettings(TiXmlHandle hPass, Pass* aPass);
 			static void loadPassOptixPrimeSettings(TiXmlHandle hPass, Pass *aPass);
+#endif
+
+#if NAU_RT == 1
+			static void loadPassRTSettings(TiXmlHandle hPass, Pass* aPass);
 #endif
 			static void loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass);
 

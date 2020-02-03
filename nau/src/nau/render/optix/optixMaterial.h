@@ -1,6 +1,9 @@
 #ifndef OPTIXMATERIAL_H
 #define OPTIXMATERIAL_H
 
+#include "nau/config.h"
+#if NAU_OPTIX = 1
+
 #include <map>
 #include <string>
 
@@ -33,5 +36,6 @@ namespace nau {
   };
 };
 
+#endif
 
 #endif

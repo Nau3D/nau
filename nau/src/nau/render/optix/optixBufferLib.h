@@ -1,6 +1,8 @@
 #ifndef OPTIXBUFFERLIB_H
 #define OPTIXBUFFERLIB_H
 
+#if NAU_OPTIX = 1
+
 #include <map>
 #include <string>
 
@@ -32,6 +34,7 @@ namespace nau {
    };
   };
 };
+#endif
 
 
 #endif

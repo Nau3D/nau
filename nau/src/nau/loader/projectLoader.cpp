@@ -29,6 +29,11 @@
 #if NAU_OPTIX == 1
 #include "nau/render/optix/passOptixPrime.h"
 #include "nau/render/optix/passOptix.h"
+#include "nau/render/optix/passOptix.h"
+#endif
+
+#if NAU_RT == 1
+#include "nau/render/rt/passRT.h"
 #endif
 
 #include "nau/render/passQuad.h"
@@ -58,6 +63,7 @@ using namespace nau::loader;
 using namespace nau::math;
 using namespace nau::material;
 using namespace nau::render;
+using namespace nau::render::rt;
 using namespace nau::scene;
 using namespace nau::geometry;
 using namespace nau::system;
@@ -2383,8 +2389,7 @@ ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 	std::vector<std::string> excluded = {"testScript", "preProcess", "postProcess", "mode", "scene", "scenes", 
 		"lights", "viewport", "renderTarget",
 		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits", "rayCount",
-		"optixEntryPoint", "optixDefaultMaterial", "optixMaterialMap", "optixInput", "optixVertexAttributes",
-		"optixGeometryProgram", "optixOutput", "optixMaterialAttributes", "optixGlobalAttributes", "preScript", "postScript"};
+		"rtRayTypes", "rtVertexAttributes", "rtEntryPoint", "rtDefaultMaterial","preScript", "postScript"};
 	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),false);
 }
 
@@ -2497,22 +2502,434 @@ ProjectLoader::loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass,std::map<std
 
 
 -------------------------------------------------------------------------------*/
+#if NAU_RT == 1
+
+void
+ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
+
+	TiXmlElement *pElem, *pElemAux, *pElemAux2;
+	PassRT *p = (PassRT *)aPass;
+
+	pElem = hPass.FirstChild("rtRayTypes").FirstChildElement("rtRayType").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		const char* pType = pElem->Attribute("name");
+		if (!pType) 
+			NAU_THROW("File: %s\nPass: %s\nRay types must have a field name", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+		p->addRayType(pType);
+	}
+
+	pElem = hPass.FirstChild("rtVertexAttributes").FirstChildElement("attribute").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+		const char* pType = pElem->Attribute("name");
+		unsigned int vi = VertexData::GetAttribIndex(std::string(pType));
+		if (!pType || (VertexData::MaxAttribs == vi))
+			NAU_THROW("File: %s\nPass: %s\nInvalid RT Vertex Attribute",
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+		p->addVertexAttribute(vi);
+	}
+
+
+	pElem = hPass.FirstChild("rtEntryPoint").FirstChildElement("rayGen").Element();
+	if (pElem != NULL) {
+		const char *pProc = pElem->Attribute ("proc");
+		std::string message = "Pass " + aPass->getName() + "\nElement rtEntryPoint";
+		std::string file = readFile(pElem, "file", message);
+	
+		if (!pProc)
+			NAU_THROW("File: %s\nPass: %s\nMissing RT entry point procedure. Tag \'proc\' is required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+		p->setRayGenProcedure(file, pProc);
+	}
+	else
+		NAU_THROW("File: %s\nPass: %s\nMissing Optix entry point. Tag	\'rayGen\' is required", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+
+
+	pElem = hPass.FirstChild("rtDefaultMaterial").FirstChildElement("rayType").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+		// must validate ray type!!!!
+		const char* pRayType = pElem->Attribute("name");
+
+		pElemAux = pElem->FirstChildElement("rtProgram");
+		for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement("rtProgram")) {
+
+			const char* pType = pElemAux->Attribute("type");
+			std::string message = "Pass " + aPass->getName() + "\nElement rtDefaultMaterial->rtProgram";
+			std::string pFile = readFile(pElemAux, "file", message);
+			const char* pProc = pElemAux->Attribute("proc");
+			int procType = RTRenderer::getProcType(pType);
+			if (procType == -1) 
+				NAU_THROW("File: %s\nPass: %s\nInvalid proc type: %s. Valid values are \"MISS\", \"ANY_HIT\" and \"CLOSEST_HIT\"", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pType);
+
+			p->setDefaultProc(pRayType, procType, pFile, pProc);
+		}
+	}
+
+	//	const char *pType = pElem->Attribute ("type");
+	//	const char *pProc = pElem->Attribute ("proc");
+	//	const char *pRay  = pElem->Attribute ("ray");
+	//	
+	//	if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")  && 0 != strcmp(pType, "Miss")))
+	//		NAU_THROW("File: %s\nPass: %s\nInvalid Optix Default Material Proc Type", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!pProc)
+	//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Default Material Proc", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!pRay)
+	//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Default Material Ray", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+	//	
+	//	std::string message = "Pass " + aPass->getName() + "\nOptix default material - Procedure " + pProc;
+	//	std::string file = readFile(pElem, "file", message);
+
+	//	if (!strcmp("Closest_Hit", pType)) 
+	//		p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
+	//	else if (!strcmp("Any_Hit", pType)) 
+	//		p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
+	//	else if (!strcmp("Miss", pType)) 
+	//		p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::MISS, pRay, file, pProc);
+	//}
+
+
+	//pElem = hPass.FirstChild("optixMaterialMap").FirstChildElement("optixMap").Element();
+	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+	//	const char *pName = pElem->Attribute("to");
+	//	//if (!MATERIALLIBMANAGER->hasMaterial(std::string(pName)))
+	//	//	NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Map. \nMaterial %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pName);
+
+	//	pElemAux = pElem->FirstChildElement("optixProgram");
+	//	for ( ; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
+
+	//	const char *pType = pElemAux->Attribute ("type");
+	//	const char *pProc = pElemAux->Attribute ("proc");
+	//	const char *pRay  = pElemAux->Attribute ("ray");
+
+	//	if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")))
+	//		NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Proc Type", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!pProc)
+	//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Proc", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!pRay)
+	//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Ray", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+	//	
+	//	std::string message = "Pass " + aPass->getName() + "\nOptix material map - Procedure " + pProc;
+	//	std::string file = readFile(pElemAux, "file", message);
+
+	//	if (!strcmp("Closest_Hit", pType)) 
+	//		p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
+	//	else if (!strcmp("Any_Hit", pType)) 
+	//		p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
+	//	}
+	//}
+
+
+	//pElem = hPass.FirstChild("optixInput").FirstChildElement("buffer").Element();
+	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+	//	const char *pVar = pElem->Attribute ("var");
+	//	const char *pTexture = pElem->Attribute ("texture");
+	//	
+	//	if (!pVar)
+	//		NAU_THROW("File: %s\nPass: %s\nOptix Variable required in Input Definition", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!pTexture)
+	//		NAU_THROW("File: %s\nPass: %s\nMissing texture in Optix Input Definitiont", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!RESOURCEMANAGER->hasTexture(pTexture))
+	//			NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(),pTexture);
+
+	//	p->setInputBuffer(pVar, pTexture);
+	//}
+
+	//pElem = hPass.FirstChild("optixOutput").FirstChildElement("buffer").Element();
+	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+	//	const char *pVar = pElem->Attribute ("var");
+	//	const char *pTexture = pElem->Attribute ("texture");
+	//	
+	//	if (!pVar)
+	//		NAU_THROW("File: %s\nPass: %s\nOptix Variable required in Input Definition", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!pTexture)
+	//		NAU_THROW("File: %s\nPass: %s\nMissing texture in Optix Input Definitiont", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!RESOURCEMANAGER->hasTexture(pTexture))
+	//			NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pTexture);
+
+	//	p->setOutputBuffer(pVar, pTexture);
+	//}
+
+	//pElem = hPass.FirstChild("optixGeometryProgram").FirstChildElement("optixProgram").Element();
+	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+	//	const char *pType = pElem->Attribute ("type");
+	//	const char *pProc = pElem->Attribute ("proc");
+	//	
+	//	if (!pType || (0 != strcmp(pType, "Geometry_Intersection") && 0 != strcmp(pType, "Bounding_Box")))
+	//		NAU_THROW("File: %s\nPass: %s\nInvalid Optix Geometry Program", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	if (!pProc)
+	//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Geometry Program Proc", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	//	std::string message = "Pass " + aPass->getName() + "\nOptix geometry program";
+	//	std::string file = readFile(pElem, "file", message);
+
+	//	if (!strcmp(pType, "Geometry_Intersection"))
+	//		p->setGeometryIntersectProc(file, pProc);
+	//	else
+	//		p->setBoundingBoxProc(file, pProc);
+	//}
+
+	//pElem = hPass.FirstChild("optixVertexAttributes").FirstChildElement("attribute").Element();
+	//for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+	//	const char *pType = pElem->Attribute ("name");
+	//	unsigned int vi = VertexData::GetAttribIndex(std::string(pType));
+	//	if (!pType || (VertexData::MaxAttribs == vi ))
+	//		NAU_THROW("File: %s\nPass: %s\nInvalid Optix Vertex Attribute", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+	//
+	//	p->addVertexAttribute(vi);
+	//}
+
+	//PassOptix *po = (PassOptix *)aPass;
+	//pElemAux2 = hPass.FirstChild("optixMaterialAttributes").FirstChildElement("valueof").Element();
+	//for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
+	//
+
+	//	const char *pUniformName = pElemAux2->Attribute ("optixVar");
+	//	const char *pComponent = pElemAux2->Attribute ("component");
+	//	const char *pContext = pElemAux2->Attribute("context");
+	//	const char *pType = pElemAux2->Attribute("type");
+	//	//const char *pId = pElemAux2->Attribute("id");
+
+	//	if (0 == pUniformName) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+	//	}
+	//	if (0 == pType) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	if (0 == pContext) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	if (0 == pComponent) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	std::string message;
+	//	validateObjectTypeAndComponent(pType, pComponent, &message);
+	//	if (message != "")
+	//		NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid\n%s",
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName, message.c_str());
+	//	//if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
+	//	//	NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+	//	//		ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+
+	//	int id = 0;
+	//	if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
+	//		if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
+	//			NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//		if (id < 0)
+	//			NAU_THROW("File: %s\nPass: %s\nid must be non negative, in optix variable %s", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	std::string s(pType);
+	//	if (s == "TEXTURE") {
+	//		if (!RESOURCEMANAGER->hasTexture(pContext)) {
+	//			NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+	//		}
+	//		else
+	//			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+	//	}
+
+	//	else if (s == "CAMERA") {
+	//		// Must consider that a camera can be defined internally in a pass, example:lightcams
+	//		/*if (!RENDERMANAGER->hasCamera(pContext))
+	//			NAU_THROW("Camera %s is not defined in the project file", pContext);*/
+	//		po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+	//	}
+	//	else if (s == "LIGHT") {
+	//		if (!RENDERMANAGER->hasLight(pContext))
+	//			NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+	//		po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+
+	//	}
+	//	else
+	//		po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+
+	//		//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
+
+	//		
+	//}
+	//	pElemAux2 = hPass.FirstChild("optixMaterialAttributes").FirstChildElement("valueof").Element();
+	//for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
+	//
+
+	//	const char *pUniformName = pElemAux2->Attribute ("optixVar");
+	//	const char *pComponent = pElemAux2->Attribute ("component");
+	//	const char *pContext = pElemAux2->Attribute("context");
+	//	const char *pType = pElemAux2->Attribute("type");
+	//	//const char *pId = pElemAux2->Attribute("id");
+
+	//	if (0 == pUniformName) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+	//	}
+	//	if (0 == pType) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	if (0 == pContext) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	if (0 == pComponent) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
+	//		NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+
+	//	int id = 0;
+	//	if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
+	//		if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
+	//			NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//		if (id < 0)
+	//			NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	std::string s(pType);
+	//	if (s == "TEXTURE") {
+	//		if (!RESOURCEMANAGER->hasTexture(pContext)) {
+	//			NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+	//		}
+	//		else
+	//			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+	//	}
+
+	//	else if (s == "CAMERA") {
+	//		// Must consider that a camera can be defined internally in a pass, example:lightcams
+	//		/*if (!RENDERMANAGER->hasCamera(pContext))
+	//			NAU_THROW("Camera %s is not defined in the project file", pContext);*/
+	//		po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+	//	}
+	//	else if (s == "LIGHT") {
+	//		if (!RENDERMANAGER->hasLight(pContext))
+	//			NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+	//		po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+
+	//	}
+	//	else
+	//		po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+
+	//		//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
+
+	//		
+	//}
+	//pElemAux2 = hPass.FirstChild("optixGlobalAttributes").FirstChildElement("valueof").Element();
+	//for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
+	//
+
+	//	const char *pUniformName = pElemAux2->Attribute ("optixVar");
+	//	const char *pComponent = pElemAux2->Attribute ("component");
+	//	const char *pContext = pElemAux2->Attribute("context");
+	//	const char *pType = pElemAux2->Attribute("type");
+	//	//const char *pId = pElemAux2->Attribute("id");
+
+	//	if (0 == pUniformName) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+	//	}
+	//	if (0 == pType) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	if (0 == pContext) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	if (0 == pComponent) {
+	//		NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
+	//		NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+	//			ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+
+	//	int id = 0;
+	//	if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
+	//		if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
+	//			NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//		if (id < 0)
+	//			NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
+	//	}
+	//	std::string s(pType);
+	//	if (s == "TEXTURE" && strcmp(pContext, "CURRENT")) {
+	//		if (!RESOURCEMANAGER->hasTexture(pContext)) {
+	//			NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+	//		}
+	//		else
+	//			po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+	//	}
+
+	//	else if (s == "CAMERA" && strcmp(pContext, "CURRENT")) {
+	//		// Must consider that a camera can be defined internally in a pass, example:lightcams
+	//		/*if (!RENDERMANAGER->hasCamera(pContext))
+	//			NAU_THROW("Camera %s is not defined in the project file", pContext);*/
+	//		po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+	//	}
+	//	else if (s == "LIGHT" && strcmp(pContext, "CURRENT")) {
+	//		if (!RENDERMANAGER->hasLight(pContext))
+	//			NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+	//				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
+	//		po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+
+	//	}
+	//	else
+	//		po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+
+	//		//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );	
+	//}
+
+
+}
+
+#endif
+
 #if NAU_OPTIX == 1
 
 void
-ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
+ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass* aPass) {
 
-	TiXmlElement *pElem, *pElemAux, *pElemAux2;
-	PassOptix *p = (PassOptix *)aPass;
+	TiXmlElement* pElem, * pElemAux, * pElemAux2;
+	PassOptix* p = (PassOptix*)aPass;
 
 	pElem = hPass.FirstChild("optixEntryPoint").FirstChildElement("optixProgram").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		const char *pType = pElem->Attribute ("type");
-		const char *pProc = pElem->Attribute ("proc");
+		const char* pType = pElem->Attribute("type");
+		const char* pProc = pElem->Attribute("proc");
 		std::string message = "Pass " + aPass->getName() + "\nElement optixEntryPoint";
 		std::string file = readFile(pElem, "file", message);
-		
+
 		if (!pType || (0 != strcmp(pType, "RayGen") && 0 != strcmp(pType, "Exception")))
 			NAU_THROW("File: %s\nPass: %s\nInvalid Optix entry point type\nValid Values are: RayGen and Exception", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
@@ -2521,17 +2938,19 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 
 		if (!strcmp(pType, "RayGen"))
 			p->setOptixEntryPointProcedure(nau::render::optixRender::OptixRenderer::RAY_GEN, file, pProc);
-		else 
+		else
 			p->setOptixEntryPointProcedure(nau::render::optixRender::OptixRenderer::EXCEPTION, file, pProc);
 	}
-	pElem = hPass.FirstChild("optixDefaultMaterial").FirstChildElement("optixProgram").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		const char *pType = pElem->Attribute ("type");
-		const char *pProc = pElem->Attribute ("proc");
-		const char *pRay  = pElem->Attribute ("ray");
-		
-		if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")  && 0 != strcmp(pType, "Miss")))
+
+	pElem = hPass.FirstChild("optixDefaultMaterial").FirstChildElement("optixProgram").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+		const char* pType = pElem->Attribute("type");
+		const char* pProc = pElem->Attribute("proc");
+		const char* pRay = pElem->Attribute("ray");
+
+		if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit") && 0 != strcmp(pType, "Miss")))
 			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Default Material Proc Type", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
 		if (!pProc)
@@ -2539,57 +2958,59 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 
 		if (!pRay)
 			NAU_THROW("File: %s\nPass: %s\nMissing Optix Default Material Ray", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		
+
 		std::string message = "Pass " + aPass->getName() + "\nOptix default material - Procedure " + pProc;
 		std::string file = readFile(pElem, "file", message);
 
-		if (!strcmp("Closest_Hit", pType)) 
+		if (!strcmp("Closest_Hit", pType))
 			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
-		else if (!strcmp("Any_Hit", pType)) 
+		else if (!strcmp("Any_Hit", pType))
 			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
-		else if (!strcmp("Miss", pType)) 
+		else if (!strcmp("Miss", pType))
 			p->setDefaultMaterialProc(nau::render::optixRender::OptixMaterialLib::MISS, pRay, file, pProc);
 	}
 
-	pElem = hPass.FirstChild("optixMaterialMap").FirstChildElement("optixMap").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		const char *pName = pElem->Attribute("to");
+	pElem = hPass.FirstChild("optixMaterialMap").FirstChildElement("optixMap").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+		const char* pName = pElem->Attribute("to");
 		//if (!MATERIALLIBMANAGER->hasMaterial(std::string(pName)))
 		//	NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Map. \nMaterial %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pName);
 
 		pElemAux = pElem->FirstChildElement("optixProgram");
-		for ( ; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
+		for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
 
-		const char *pType = pElemAux->Attribute ("type");
-		const char *pProc = pElemAux->Attribute ("proc");
-		const char *pRay  = pElemAux->Attribute ("ray");
+			const char* pType = pElemAux->Attribute("type");
+			const char* pProc = pElemAux->Attribute("proc");
+			const char* pRay = pElemAux->Attribute("ray");
 
-		if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")))
-			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Proc Type", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")))
+				NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Proc Type", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
-		if (!pProc)
-			NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Proc", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+			if (!pProc)
+				NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Proc", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
-		if (!pRay)
-			NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Ray", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		
-		std::string message = "Pass " + aPass->getName() + "\nOptix material map - Procedure " + pProc;
-		std::string file = readFile(pElemAux, "file", message);
+			if (!pRay)
+				NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Ray", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
-		if (!strcmp("Closest_Hit", pType)) 
-			p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
-		else if (!strcmp("Any_Hit", pType)) 
-			p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
+			std::string message = "Pass " + aPass->getName() + "\nOptix material map - Procedure " + pProc;
+			std::string file = readFile(pElemAux, "file", message);
+
+			if (!strcmp("Closest_Hit", pType))
+				p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
+			else if (!strcmp("Any_Hit", pType))
+				p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
 		}
 	}
 
-	pElem = hPass.FirstChild("optixInput").FirstChildElement("buffer").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		const char *pVar = pElem->Attribute ("var");
-		const char *pTexture = pElem->Attribute ("texture");
-		
+	pElem = hPass.FirstChild("optixInput").FirstChildElement("buffer").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+
+		const char* pVar = pElem->Attribute("var");
+		const char* pTexture = pElem->Attribute("texture");
+
 		if (!pVar)
 			NAU_THROW("File: %s\nPass: %s\nOptix Variable required in Input Definition", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
@@ -2597,17 +3018,17 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("File: %s\nPass: %s\nMissing texture in Optix Input Definitiont", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
 		if (!RESOURCEMANAGER->hasTexture(pTexture))
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(),pTexture);
+			NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pTexture);
 
 		p->setInputBuffer(pVar, pTexture);
 	}
 
 	pElem = hPass.FirstChild("optixOutput").FirstChildElement("buffer").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		const char *pVar = pElem->Attribute ("var");
-		const char *pTexture = pElem->Attribute ("texture");
-		
+		const char* pVar = pElem->Attribute("var");
+		const char* pTexture = pElem->Attribute("texture");
+
 		if (!pVar)
 			NAU_THROW("File: %s\nPass: %s\nOptix Variable required in Input Definition", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
@@ -2615,17 +3036,17 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 			NAU_THROW("File: %s\nPass: %s\nMissing texture in Optix Input Definitiont", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
 		if (!RESOURCEMANAGER->hasTexture(pTexture))
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pTexture);
+			NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pTexture);
 
 		p->setOutputBuffer(pVar, pTexture);
 	}
 
 	pElem = hPass.FirstChild("optixGeometryProgram").FirstChildElement("optixProgram").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		const char *pType = pElem->Attribute ("type");
-		const char *pProc = pElem->Attribute ("proc");
-		
+		const char* pType = pElem->Attribute("type");
+		const char* pProc = pElem->Attribute("proc");
+
 		if (!pType || (0 != strcmp(pType, "Geometry_Intersection") && 0 != strcmp(pType, "Bounding_Box")))
 			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Geometry Program", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
@@ -2642,42 +3063,42 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 	}
 
 	pElem = hPass.FirstChild("optixVertexAttributes").FirstChildElement("attribute").Element();
-	for ( ; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 
-		const char *pType = pElem->Attribute ("name");
+		const char* pType = pElem->Attribute("name");
 		unsigned int vi = VertexData::GetAttribIndex(std::string(pType));
-		if (!pType || (VertexData::MaxAttribs == vi ))
-			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Vertex Attribute", 
+		if (!pType || (VertexData::MaxAttribs == vi))
+			NAU_THROW("File: %s\nPass: %s\nInvalid Optix Vertex Attribute",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-	
+
 		p->addVertexAttribute(vi);
 	}
 
-	PassOptix *po = (PassOptix *)aPass;
+	PassOptix* po = (PassOptix*)aPass;
 	pElemAux2 = hPass.FirstChild("optixMaterialAttributes").FirstChildElement("valueof").Element();
-	for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
-	
+	for (; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
 
-		const char *pUniformName = pElemAux2->Attribute ("optixVar");
-		const char *pComponent = pElemAux2->Attribute ("component");
-		const char *pContext = pElemAux2->Attribute("context");
-		const char *pType = pElemAux2->Attribute("type");
+
+		const char* pUniformName = pElemAux2->Attribute("optixVar");
+		const char* pComponent = pElemAux2->Attribute("component");
+		const char* pContext = pElemAux2->Attribute("context");
+		const char* pType = pElemAux2->Attribute("type");
 		//const char *pId = pElemAux2->Attribute("id");
 
 		if (0 == pUniformName) {
-			NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+			NAU_THROW("File: %s\nPass: %s\nNo optix variable name",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		if (0 == pType) {
-			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pContext) {
-			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pComponent) {
-			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		std::string message;
@@ -2690,181 +3111,181 @@ ProjectLoader::loadPassOptixSettings(TiXmlHandle hPass, Pass *aPass) {
 		//		ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 
 		int id = 0;
-		if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
-			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
-				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+		if (((strcmp(pContext, "LIGHT") == 0) || (0 == strcmp(pContext, "TEXTURE"))) && (0 != strcmp(pComponent, "COUNT"))) {
+			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute("id", &id))
+				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 			if (id < 0)
-				NAU_THROW("File: %s\nPass: %s\nid must be non negative, in optix variable %s", 
+				NAU_THROW("File: %s\nPass: %s\nid must be non negative, in optix variable %s",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		std::string s(pType);
 		if (s == "TEXTURE") {
 			if (!RESOURCEMANAGER->hasTexture(pContext)) {
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			}
 			else
-				po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+				po->addMaterialAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 		}
 
 		else if (s == "CAMERA") {
 			// Must consider that a camera can be defined internally in a pass, example:lightcams
 			/*if (!RENDERMANAGER->hasCamera(pContext))
 				NAU_THROW("Camera %s is not defined in the project file", pContext);*/
-			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addMaterialAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 		}
 		else if (s == "LIGHT") {
 			if (!RENDERMANAGER->hasLight(pContext))
-				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
-			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addMaterialAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 
 		}
 		else
-			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addMaterialAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 
-			//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
+		//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
 
-			
+
 	}
-		pElemAux2 = hPass.FirstChild("optixMaterialAttributes").FirstChildElement("valueof").Element();
-	for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
-	
+	pElemAux2 = hPass.FirstChild("optixMaterialAttributes").FirstChildElement("valueof").Element();
+	for (; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
 
-		const char *pUniformName = pElemAux2->Attribute ("optixVar");
-		const char *pComponent = pElemAux2->Attribute ("component");
-		const char *pContext = pElemAux2->Attribute("context");
-		const char *pType = pElemAux2->Attribute("type");
+
+		const char* pUniformName = pElemAux2->Attribute("optixVar");
+		const char* pComponent = pElemAux2->Attribute("component");
+		const char* pContext = pElemAux2->Attribute("context");
+		const char* pType = pElemAux2->Attribute("type");
 		//const char *pId = pElemAux2->Attribute("id");
 
 		if (0 == pUniformName) {
-			NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+			NAU_THROW("File: %s\nPass: %s\nNo optix variable name",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		if (0 == pType) {
-			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pContext) {
-			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pComponent) {
-			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 
 		int id = 0;
-		if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
-			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
-				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+		if (((strcmp(pContext, "LIGHT") == 0) || (0 == strcmp(pContext, "TEXTURE"))) && (0 != strcmp(pComponent, "COUNT"))) {
+			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute("id", &id))
+				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 			if (id < 0)
-				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", 
+				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		std::string s(pType);
 		if (s == "TEXTURE") {
 			if (!RESOURCEMANAGER->hasTexture(pContext)) {
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			}
 			else
-				po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+				po->addMaterialAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 		}
 
 		else if (s == "CAMERA") {
 			// Must consider that a camera can be defined internally in a pass, example:lightcams
 			/*if (!RENDERMANAGER->hasCamera(pContext))
 				NAU_THROW("Camera %s is not defined in the project file", pContext);*/
-			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addMaterialAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 		}
 		else if (s == "LIGHT") {
 			if (!RENDERMANAGER->hasLight(pContext))
-				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
-			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addMaterialAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 
 		}
 		else
-			po->addMaterialAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addMaterialAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 
-			//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
+		//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
 
-			
+
 	}
 	pElemAux2 = hPass.FirstChild("optixGlobalAttributes").FirstChildElement("valueof").Element();
-	for ( ; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
-	
+	for (; 0 != pElemAux2; pElemAux2 = pElemAux2->NextSiblingElement()) {
 
-		const char *pUniformName = pElemAux2->Attribute ("optixVar");
-		const char *pComponent = pElemAux2->Attribute ("component");
-		const char *pContext = pElemAux2->Attribute("context");
-		const char *pType = pElemAux2->Attribute("type");
+
+		const char* pUniformName = pElemAux2->Attribute("optixVar");
+		const char* pComponent = pElemAux2->Attribute("component");
+		const char* pContext = pElemAux2->Attribute("context");
+		const char* pType = pElemAux2->Attribute("type");
 		//const char *pId = pElemAux2->Attribute("id");
 
 		if (0 == pUniformName) {
-			NAU_THROW("File: %s\nPass: %s\nNo optix variable name", 
+			NAU_THROW("File: %s\nPass: %s\nNo optix variable name",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
 		if (0 == pType) {
-			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo type found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pContext) {
-			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo context found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (0 == pComponent) {
-			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s", 
+			NAU_THROW("File: %s\nPass: %s\nNo component found for optix variable %s",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		if (!NAU->validateShaderAttribute(pType, pContext, pComponent))
-			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid", 
+			NAU_THROW("File: %s\nPass: %s\nOptix variable %s is not valid",
 				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 
 		int id = 0;
-		if (((strcmp(pContext,"LIGHT") == 0) || (0 == strcmp(pContext,"TEXTURE"))) &&  (0 != strcmp(pComponent,"COUNT"))) {
-			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute ("id", &id))
-				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s", 
+		if (((strcmp(pContext, "LIGHT") == 0) || (0 == strcmp(pContext, "TEXTURE"))) && (0 != strcmp(pComponent, "COUNT"))) {
+			if (TIXML_SUCCESS != pElemAux2->QueryIntAttribute("id", &id))
+				NAU_THROW("File: %s\nPass: %s\nNo id found for optix variable %s",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 			if (id < 0)
-				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s", 
+				NAU_THROW("File: %s\nPass: %s\nId must be non negative, in optix variable %s",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pUniformName);
 		}
 		std::string s(pType);
 		if (s == "TEXTURE" && strcmp(pContext, "CURRENT")) {
 			if (!RESOURCEMANAGER->hasTexture(pContext)) {
-				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined", 
+				NAU_THROW("File: %s\nPass: %s\nTexture %s is not defined",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
 			}
 			else
-				po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+				po->addGlobalAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 		}
 
 		else if (s == "CAMERA" && strcmp(pContext, "CURRENT")) {
 			// Must consider that a camera can be defined internally in a pass, example:lightcams
 			/*if (!RENDERMANAGER->hasCamera(pContext))
 				NAU_THROW("Camera %s is not defined in the project file", pContext);*/
-			po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addGlobalAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 		}
 		else if (s == "LIGHT" && strcmp(pContext, "CURRENT")) {
 			if (!RENDERMANAGER->hasLight(pContext))
-				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file", 
+				NAU_THROW("File: %s\nPass: %s\nLight %s is not defined in the project file",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pContext);
-			po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addGlobalAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 
 		}
 		else
-			po->addGlobalAttribute (pUniformName, ProgramValue (pUniformName,pType, pContext, pComponent, id));
+			po->addGlobalAttribute(pUniformName, ProgramValue(pUniformName, pType, pContext, pComponent, id));
 
-			//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
+		//sprintf(s_pFullName, "%s(%s,%s)",pType,pContext,pComponent );
 
-			
+
 	}
 
 
@@ -3993,6 +4414,10 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 #if NAU_OPTIX == 1
 			if (passClass == "optix")
 				loadPassOptixSettings(hPass, aPass);
+#endif
+#if NAU_RT == 1
+			if (passClass == "rt")
+				loadPassRTSettings(hPass, aPass);
 #endif
 			if (passClass == "compute") {
 				if (APISupport->apiSupport(IAPISupport::COMPUTE_SHADER))

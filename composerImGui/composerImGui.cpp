@@ -2692,6 +2692,10 @@ int main(int argc, char **argv) {
 	// Setup Dear ImGui style
 	//ImGui::StyleColorsDark();
 	ImGui::StyleColorsClassic();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	const char* glsl_version = "#version 460";
+	ImGui_ImplOpenGL3_Init(glsl_version);
+	renderGUI(io);
 
 	// Setup Platform/Renderer bindings
 
@@ -2728,9 +2732,6 @@ int main(int argc, char **argv) {
 	}
 
 
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	const char* glsl_version = "#version 460";
-	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	// entrar no ciclo do GLUT 
 	while (!glfwWindowShouldClose(window)) {
@@ -2752,8 +2753,6 @@ int main(int argc, char **argv) {
 						nauInstance->stepPasses(passFlowControl_framePassEnd);
 						passFlowControl_framePassRequest = false;
 					}
-
-
 				}
 			}
 		}
@@ -2761,6 +2760,7 @@ int main(int argc, char **argv) {
 			RENDERER->setPropb(IRenderer::DEBUG_DRAW_CALL, false);
 			EVENTMANAGER->notifyEvent("SHADER_DEBUG_INFO_AVAILABLE", "Renderer", "", NULL);
 		}
+		
 		renderGUI(io);
 
 		glfwSwapBuffers(window);

@@ -40,10 +40,10 @@ source_group("Source Files\\system" FILES ${system})
 source_group("Source Files\\util" FILES ${util})
 
 if (NAU_BUILD_WITH_OPTIX)
-	file(GLOB renderOptix src/nau/render/optix/*.h src/nau/render/optix/*.cpp)	
+	file(GLOB renderRT src/nau/render/rt/*.h src/nau/render/rt/*.cpp)	
 	file(GLOB nauSource 
-		${root} ${debug} ${event} ${geometry} ${interface} ${loader} ${material} ${math} ${physics} ${render} ${renderGL} ${resource} ${scene} ${system} ${util} ${renderOptix})
-	source_group("Source Files\\render\\optix" FILES ${renderOptix})
+		${root} ${debug} ${event} ${geometry} ${interface} ${loader} ${material} ${math} ${physics} ${render} ${renderGL} ${resource} ${scene} ${system} ${util} ${renderRT})
+	source_group("Source Files\\render\\rt" FILES ${renderRT})
 	set(NAU_OPTIX 1)
 else()
 file(GLOB nauSource 
@@ -93,9 +93,9 @@ if (NAU_BUILD_WITH_OPTIX)
 	include_directories(${CUDA_INCLUDE_DIRS}
 		${OPTIX_DIR}/include)
 		target_link_libraries(nau 
-		${OPTIX_DIR}/lib64/optix.6.5.0.lib
-		${OPTIX_DIR}/lib64/optixu.6.5.0.lib
-		${OPTIX_DIR}/lib64/optix_prime.6.5.0.lib
+		#${OPTIX_DIR}/lib64/optix.7.0.0.lib
+		#${OPTIX_DIR}/lib64/optixu.7.0.0.lib
+		#${OPTIX_DIR}/lib64/optix_prime.7.0.0.lib
 		${CUDA_LIBRARIES})
 endif(NAU_BUILD_WITH_OPTIX)	
 	
