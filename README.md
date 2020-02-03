@@ -22,8 +22,8 @@ ImGuiFileDialog from https://github.com/aiekick/ImGuiFileDialog
 
 # building
 
-To build nau and the GLUT demo
-The project is self-contained for Windows. For Linux install opengl, and devil
+To build nau, and GLUT and GLFW (with ImGui) demo 
+the project is self-contained for Windows. For Linux install opengl, and devil
 * Devil 
 	* sudo apt-get install libdevil-dev
 * Freeglut (as a short cut to installing opengl)
