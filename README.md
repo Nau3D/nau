@@ -1,7 +1,7 @@
 nau
 ===
 
-nau 3D engine: OpenGL + Optix (including Optix Prime) + Lua + ImGui + Anttweakbar + Bullet + PhysX
+nau 3D engine: OpenGL + Optix up to version 6.5 (including Optix Prime) + Lua + ImGui + Anttweakbar + Bullet + PhysX
 
 Documentation at http://nau3d.di.uminho.pt/
 
