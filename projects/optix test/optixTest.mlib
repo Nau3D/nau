@@ -20,8 +20,8 @@
 
 	<textures>
 		<texture name="dataBuffer">
-			<WIDTH value=2 />
-			<HEIGHT value=2 />
+			<WIDTH value=256 />
+			<HEIGHT value=256 />
 			<INTERNAL_FORMAT value="RGBA32F" />
 		</texture>	
 	</textures>

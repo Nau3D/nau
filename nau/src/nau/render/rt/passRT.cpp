@@ -36,10 +36,14 @@ PassRT::PassRT(const std::string& passName) :
 		m_VertexAttributes[i] = false;
 
 	m_RTisReady = false;
-	m_RThasIssues = true;
-	bool res = RTRenderer::Init();
-	if (res)
-		m_RThasIssues = false;
+	m_RThasIssues = false;
+
+	launchParams.frame.colorBuffer = nullptr;
+	launchParams.frame.frame = 0;
+	launchParams.frame.size = make_int2(0, 0);
+
+	m_ClassName = "rt";
+
 }
 
 PassRT::~PassRT() {
@@ -61,15 +65,19 @@ PassRT::addRayType(const std::string& name) {
 }
 
 
-void
-PassRT::addVertexAttribute(const unsigned int i) {
-
-	m_VertexAttributes[i] = true;
-}
-
 
 void 
 PassRT::rtInit() {
+
+	if (!RTRenderer::Init())
+		m_RThasIssues = true;
+
+	if (!m_Geometry.generateAccel(m_SceneVector)) {
+		m_RThasIssues = true;
+		return;
+	}
+	launchParams.traversable = m_Geometry.getTraversableHandle();
+	
 	if (!m_ProgramManager.generateModules()) {
 		m_RThasIssues = true;
 		return ;
@@ -83,11 +91,18 @@ PassRT::rtInit() {
 		m_RThasIssues = true;
 		return;
 	}
-	if (!m_ProgramManager.generateSBT()) {
+
+	if (!m_ProgramManager.processTextures()) {
 		m_RThasIssues = true;
 		return;
 	}
 
+	if (!m_ProgramManager.generateSBT(m_Geometry.getCudaVBOS())) {
+		m_RThasIssues = true;
+		return;
+	}
+
+	m_LaunchParamsBuffer.setSize(sizeof(launchParams));
 	m_RTisReady = true;
 }
 
@@ -97,6 +112,8 @@ PassRT::prepare(void) {
 
 	if (!m_RTisReady && !m_RThasIssues)
 		rtInit();
+
+	setupCamera();
 }
 
 
@@ -114,10 +131,34 @@ PassRT::setDefaultProc(const std::string& pRayType, int procType, const std::str
 
 
 
-void 
+void
 PassRT::addScene(const std::string& sceneName) {
 
+	if (m_SceneVector.end() == std::find(m_SceneVector.begin(), m_SceneVector.end(), sceneName)) {
+
+		m_SceneVector.push_back(sceneName);
+
+		const std::set<std::string>& materialNames =
+			RENDERMANAGER->getScene(sceneName)->getMaterialNames();
+
+		for (auto iter : materialNames) {
+
+			if (m_MaterialMap.count(iter) == 0)
+				m_MaterialMap[iter] = MaterialID(DEFAULTMATERIALLIBNAME, iter);
+		}
+
+		std::shared_ptr<IScene>& sc = RENDERMANAGER->getScene(sceneName);
+		sc->compile();
+	}
 }
+
+
+void 
+PassRT::addVertexAttribute(unsigned int  attr) {
+
+	m_Geometry.addVertexAttribute(attr);
+}
+
 
 
 void 
@@ -179,6 +220,37 @@ PassRT::setRenderTarget(nau::render::IRenderTarget* rt) {
 
 void 
 PassRT::restore(void) {}
+
+void
+PassRT::setupCamera(void) {
+
+	std::shared_ptr<Camera>& aCam = RENDERMANAGER->getCamera(m_StringProps[CAMERA]);
+
+	if (m_ExplicitViewport) {
+		m_RestoreViewport = aCam->getViewport();
+		aCam->setViewport(m_Viewport);
+	}
+
+	float fov = aCam->getPropf(Camera::FOV) * 0.5f;
+	float fovTan = tanf(DegToRad(fov));
+
+	vec4 pos = aCam->getPropf4(Camera::POSITION);
+	launchParams.camera.position = make_float3(pos.x, pos.y, pos.z);
+
+	vec4 dir = aCam->getPropf4(Camera::NORMALIZED_VIEW_VEC);
+	launchParams.camera.direction = make_float3(dir.x, dir.y, dir.z);
+
+	vec4 up = aCam->getPropf4(Camera::NORMALIZED_UP_VEC);
+	up *= fovTan;
+	launchParams.camera.vertical = make_float3(up.x, up.y, up.z);
+
+	vec4 right = aCam->getPropf4(Camera::NORMALIZED_RIGHT_VEC);
+	right *= fovTan;
+	launchParams.camera.horizontal = make_float3(right.x, right.y, right.z);
+
+	RENDERER->setCamera(aCam);
+}
+
 void 
 PassRT::doPass(void) {
 
@@ -194,21 +266,31 @@ PassRT::doPass(void) {
 		}
 
 		// update launch params
-		launchParams.frame = RENDERER->getPropui(IRenderer::FRAME_COUNT);
-		launchParams.fbSize.x = 1024; launchParams.fbSize.y = 1024;
-		launchParams.colorBuffer = (uint32_t*)m_OutputBufferPrs[0];
+		launchParams.frame.frame = RENDERER->getPropui(IRenderer::FRAME_COUNT);
+		launchParams.frame.size.x = 1024; launchParams.frame.size.y = 1024;
+		launchParams.frame.colorBuffer = (uint32_t*)m_OutputBufferPrs[0];
+		
+		//launchParams.camera.position = make_float3(-10.f, 2.f, -12.f);
+		//launchParams.camera.direction = make_float3(0.63f, -0.13f, 0.76f);
+		//launchParams.camera.horizontal = make_float3(-0.507f, 0.0f, 0.422f);
+		//launchParams.camera.vertical = make_float3(0.053f, 0.65f, 0.06f);
+
+		launchParams.traversable = m_Geometry.getTraversableHandle();
 
 		CUdeviceptr d_param;
 		// malloc needs to be done only once
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(launchParams)));
 		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(d_param), &launchParams, sizeof(launchParams), cudaMemcpyHostToDevice));
 
+		m_LaunchParamsBuffer.copy((void *)&launchParams);
+		CUDA_SYNC_CHECK();
+
 		// render
 		OPTIX_CHECK(optixLaunch(
 			m_ProgramManager.getPipeline(),
 			RTRenderer::getOptixStream(),
-			d_param,
-			sizeof(launchParams),
+			m_LaunchParamsBuffer.getPtr(),
+			m_LaunchParamsBuffer.getSize(),
 			&m_ProgramManager.getSBT(), 1024, 1024, 1));
 
 		

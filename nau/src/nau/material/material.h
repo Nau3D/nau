@@ -117,6 +117,7 @@ namespace nau
 			nau_API void unsetTexture(int unit);
 			nau_API void getTextureNames(std::vector<std::string> *vs);
 			nau_API void getTextureUnits(std::vector<unsigned int> *vi);
+			nau_API void getTextureIDs(std::vector<unsigned int>* vi);
 
 			nau_API void attachProgram (std::string shaderName);
 			void cloneProgramFromMaterial(std::shared_ptr<Material> &mat);

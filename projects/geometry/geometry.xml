@@ -3,7 +3,7 @@
 	<assets>
 	
 		<scenes>
-			<scene name="CubeLand" type="Scene">
+			<scene name="CubeLand" type="Scene" >
 				<SCALE x = 1.0 y=0.5 z = 1.0 />
 				<geometry name = "Sphere" type = "SPHERE" material="crateBox" SLICES=15 STACKS=15 > 
 					<TRANSLATE x =-2.5 y=0 z =0  />
@@ -25,9 +25,9 @@
 		</scenes>
 		
 		<viewports>
-			<viewport name="MainViewport">
+			<viewpcort name="MainViewport">
 				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
-			</viewport>
+			</viewpcort>
 		</viewports>
 		
 		<cameras>

@@ -33,7 +33,7 @@ Camera::Init() {
 	// VEC4
 	Attribs.add(Attribute(POSITION, "POSITION",Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 1.0f)));
 	Attribs.add(Attribute(VIEW_VEC, "VIEW", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
-	//Attribs.add(Attribute(NORMALIZED_VIEW_VEC, "NORMALIZED_VIEW_VEC", Enums::DataType::VEC4, true,new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+	Attribs.add(Attribute(NORMALIZED_VIEW_VEC, "NORMALIZED_VIEW", Enums::DataType::VEC4, true,new vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	Attribs.add(Attribute(UP_VEC, "UP", Enums::DataType::VEC4, false, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 	Attribs.add(Attribute(NORMALIZED_UP_VEC, "NORMALIZED_UP" ,Enums::DataType::VEC4, true, new vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 	Attribs.add(Attribute(NORMALIZED_RIGHT_VEC, "NORMALIZED_RIGHT" ,Enums::DataType::VEC4, true, new vec4(1.0f, 0.0f, 0.0f, 0.0f)));

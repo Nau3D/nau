@@ -535,6 +535,15 @@ Material::getImageTextureUnits(std::vector<unsigned int> *v) {
 
 
 void 
+Material::getTextureIDs(std::vector<unsigned int>* v) {
+
+	for (auto i : m_Textures) {
+		v->push_back(i.second->getTexture()->getPropi(ITexture::ID));
+	}
+}
+
+
+void 
 Material::attachBuffer(IMaterialBuffer *b) {
 
 	int bp = b->getPropi(IMaterialBuffer::BINDING_POINT);

@@ -26,7 +26,7 @@
     if( res != OPTIX_SUCCESS ) {                        \
         std::stringstream txt;                          \
 		txt << "Optix call (" << #call << 				\
-			") failed with code" << res << "(line " <<  \
+			") failed with code " << res << " (line " <<\
 			__LINE__  << ")\n";							\
 		throw std::runtime_error(txt.str());            \
 	}                                                   \

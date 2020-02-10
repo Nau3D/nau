@@ -6,7 +6,7 @@
 // For the console example, here we are using a more C++ like approach of declaring a class to hold the data and the functions.
 struct AppConsole
 {
-	char                  InputBuf[256];
+	char                  InputBuf[2048];
 	ImVector<char*>       Items;
 	ImVector<const char*> Commands;
 	ImVector<char*>       History;
@@ -51,7 +51,7 @@ struct AppConsole
 	void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
 	{
 		// FIXME-OPT
-		char buf[1024];
+		char buf[2048];
 		va_list args;
 		va_start(args, fmt);
 		vsnprintf(buf, IM_ARRAYSIZE(buf), fmt, args);

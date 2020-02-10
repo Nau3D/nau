@@ -90,8 +90,10 @@ public:
 		if (eventType == "SHADER_DEBUG_INFO_AVAILABLE") {
 			programInfo = RENDERER->getShaderDebugTree();
 		}
-		else if (eventType == "LOG")
+		else if (eventType == "LOG") {
 			console.AddLog("Nau Log: %s\n", (*(std::string*)evt->getData()).c_str());
+			printf("%s\n", (*(std::string*)evt->getData()).c_str());
+		}
 	};
 
 	void registerListeners() {
@@ -317,6 +319,10 @@ void processMouseButtons(GLFWwindow* window, int button, int action, int mods) {
 }
 
 
+bool showMessageBox = false;
+std::string messageBoxTitle = "";
+std::string messageBoxMessage = "";
+
 
 
 void loadProject(const char* s) {
@@ -326,6 +332,7 @@ void loadProject(const char* s) {
 
 	try {
 		nauInstance->clear();
+		listLog.registerListeners();
 		int width = 0, height = 0;
 		std::string ProjectFile(s);
 		nauInstance->readProjectFile(ProjectFile, &width, &height);
@@ -333,15 +340,20 @@ void loadProject(const char* s) {
 			glfwSetWindowSize(window, width, height);
 			changeSize(window, width, height);
 		}
-		listLog.registerListeners();
 
 		LOG_trace("Loading done");
 
 	}
 	catch (nau::ProjectLoaderError & e) {
+		showMessageBox = true;
+		messageBoxTitle = "Project loader message";
+		messageBoxMessage = e.getException();
 		printf("%s\n", e.getException().c_str());
 	}
 	catch (std::string s) {
+		showMessageBox = true;
+		messageBoxTitle = "Project loader message";
+		messageBoxMessage = s;
 		printf("%s\n", s.c_str());
 	}
 	LOG_trace("Project loaded");
@@ -1264,11 +1276,11 @@ void renderWindowScenes() {
 
 				std::shared_ptr<IRenderable> renderable = item->getRenderable();
 				int vert = renderable->getNumberOfVertices();
-				std::string s = "Primitive :" + renderable->getDrawingPrimitiveString();
+				std::string s = "Primitive: " + renderable->getDrawingPrimitiveString();
 				ImGui::Text(s.c_str());
 				s = "Vertices: " + std::to_string(renderable->getNumberOfVertices());
 				ImGui::Text(s.c_str());
-				if (ImGui::TreeNode("Materials:")) {
+				if (ImGui::TreeNode("Materials: ")) {
 
 					std::vector<std::shared_ptr<nau::material::MaterialGroup>>& mgs = renderable->getMaterialGroups();
 					for (auto mg : mgs) {
@@ -2321,6 +2333,22 @@ bool debugMenuTraceLogindowChecked = false;
 bool infoMenuOpenGLPropsWindowChecked = false;
 bool infoMenuAboutWindowChecked = false;
 
+
+
+void messageBox(const std::string& title, const std::string& message) {
+
+	ImGui::OpenPopup(title.c_str());
+	if (ImGui::BeginPopupModal(title.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::Text(message.c_str());
+		if (ImGui::Button("OK", ImVec2(120, 0))) { 
+			showMessageBox = false;
+			ImGui::CloseCurrentPopup(); 
+		}
+		ImGui::EndPopup();
+	}
+}
+
+
 void renderGUI(ImGuiIO& io) {
 
 	ImGui_ImplOpenGL3_NewFrame();
@@ -2592,6 +2620,9 @@ void renderGUI(ImGuiIO& io) {
 		ImGui::End();
 	}
 
+	if (showMessageBox)
+		messageBox(messageBoxTitle, messageBoxMessage);
+
 	//ImGui::End();
 	ImGui::Render();
 	int display_w, display_h;
@@ -2727,8 +2758,11 @@ int main(int argc, char **argv) {
 		}
 	}
 	catch (std::string s) {
+		showMessageBox = true;
+		messageBoxTitle = "Project loader message";
+		messageBoxMessage = s;
 		printf("%s\n", s.c_str());
-		exit(0);
+		//exit(0);
 	}
 
 
@@ -2736,6 +2770,7 @@ int main(int argc, char **argv) {
 	// entrar no ciclo do GLUT 
 	while (!glfwWindowShouldClose(window)) {
 		{
+			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 			PROFILE("Frame");
 			if (!passFlowControl_nauPaused)
 				renderScene();

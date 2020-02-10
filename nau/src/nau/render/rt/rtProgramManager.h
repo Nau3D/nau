@@ -12,7 +12,10 @@
 #include "optix.h"
 #include "optix_types.h"
 
+#include "nau/material/iTexture.h"
 #include "nau/render/rt/rtBuffer.h"
+#include "nau/render/rt/rtGeometry.h"
+
 
 namespace nau {
 	namespace render {
@@ -48,15 +51,22 @@ namespace nau {
 				bool generatePrograms();
 				bool generateModules();
 				bool generatePipeline();
-				bool generateSBT();
+				bool generateSBT(const std::map<std::string, RTGeometry::CUDABuffers> &cuBuffers);
 
 				void setRayGenProcedure(const std::string &file, const std::string &proc);
 				void setDefaultProc(const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName);
 				void addRayType(const std::string& name);
 
+				// create cuda textures from OpenGL textures
+				bool processTextures();
+
 			protected:
+				
+				bool typeIsOK(nau::material::ITexture* t);
+				
 				// vector of ptx files
 				std::vector<std::string> m_PtxFiles;
+
 
 				// stores the names of the ray types. Indices are incremental
 				std::map<std::string, unsigned int> m_RayTypes;
@@ -86,15 +96,27 @@ namespace nau {
 				};
 
 				struct RayGenData {
-					void* data;
+					int3 color;
 				};
 
 				struct MissData {
 					void* data;
 				};
 
+				struct vertexData {
+					float4* position;
+					float4* normal;
+					float4* texCoord0;
+					float4* tangent;
+					float4* bitangent;
+				};
+
 				struct HitGroupData {
-					void* data;
+					uint3* index;
+					vertexData vertexD;
+					int hasTexture;
+					cudaTextureObject_t texture;
+					float3 color;
 				};
 
 				typedef SbtRecord<RayGenData>     RaygenRecord;
@@ -102,6 +124,15 @@ namespace nau {
 				typedef SbtRecord<HitGroupData>   HitgroupRecord;
 
 				OptixShaderBindingTable m_SBT = {};
+
+
+				struct TextureData {
+					cudaGraphicsResource* cgr;
+					cudaTextureObject_t cto;
+					cudaArray *ca;
+				};
+
+				std::map<int, TextureData > m_Textures;
 			};
 		};
 	};

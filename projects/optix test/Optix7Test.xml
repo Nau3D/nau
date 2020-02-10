@@ -3,8 +3,10 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" >
-				<file name="../../models/ntg-bench/bench.obj" />
-				<!--file name="../../models/LargoCamoes/largoCamoes.nbo"/-->
+				<!--file name="../../models/ntg-bench/bench.obj" /-->
+				<file name="../../models/sponza/crytek-sponza/sponza.nbo" />
+				models\sponza\crytek-sponza
+				<!--file name="../../models/cube.obj"/-->
 			</scene>
 		</scenes>
 		<viewports>
@@ -36,7 +38,7 @@
 				<AMBIENT r="0.5" g="0.5" b="0.5" />
 			</light>
 		</lights>
-		<materialLibs>
+		<materialLibs>   
 			<materialLib filename="optixTest.mlib"/>
 		</materialLibs>
 	</assets>
@@ -54,7 +56,7 @@
 
 				<rtRayTypes>
 					<rayType name="Phong"/>
-					<rayType name="Shadow"/>
+					<!--rayType name="Shadow"/-->
 				</rtRayTypes>
 
 				<rtVertexAttributes>
@@ -64,13 +66,13 @@
 				</rtVertexAttributes>
 
 				<rtEntryPoint>
-					<rayGen file="optix/test.ptx" proc="__raygen__renderFrame"/> 
+					<rayGen file="optix/testMult.ptx" proc="__raygen__renderFrame"/> 
 				</rtEntryPoint>
 				<rtDefaultMaterial>
 					<rayType name="Phong">
-						<rtProgram type="ANY_HIT" file="optix/test.ptx" proc="__anyhit__radiance"/> 
-						<rtProgram type="CLOSEST_HIT" file="optix/test.ptx" proc="__closesthit__radiance"/> 
-						<rtProgram type="MISS" 		 file="optix/test.ptx" proc="__miss__radiance"/> 
+						<rtProgram type="ANY_HIT" file="optix/testMult.ptx" proc="__anyhit__radiance"/> 
+						<rtProgram type="CLOSEST_HIT" file="optix/testMult.ptx" proc="__closesthit__radiance"/> 
+						<rtProgram type="MISS" 		 file="optix/testMult.ptx" proc="__miss__radiance"/> 
 					</rayType>
 					<!--rayType name="Shadow" >
 						<rtProgram type="MISS" 		 file="optix/common.ptx" proc="missShadow"/>
@@ -88,11 +90,6 @@
 						<optixProgram type="Any_Hit" ray="Shadow" file="optix/common.ptx" proc="keepGoingShadow"/> 
 					</optixMap>	
 				</optixMaterialMap>
-				<optixVertexAttributes>
-					<attribute name="position"/>
-					<attribute name="normal"/>
-					<attribute name="texCoord0"/>
-				</optixVertexAttributes>
 				<optixGeometryProgram>
 					<optixProgram type="Geometry_Intersection"   file="optix/common.ptx" proc="geometryintersection"/>
 					<optixProgram type="Bounding_Box"   file="optix/common.ptx" proc="boundingbox"/>

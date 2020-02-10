@@ -53,8 +53,6 @@ RTRenderer::Init() {
 			options.logCallbackFunction = &Log;
 			options.logCallbackLevel = 4;
 			OPTIX_CHECK(optixDeviceContextCreate(cuContext, &options, &optixContext));
-
-			OPTIX_CHECK(optixDeviceContextCreate(cuContext, 0, &optixContext));
 		}
 		catch (std::exception const& e)
 		{

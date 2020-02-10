@@ -1,7 +1,7 @@
 
 #include <optix.h>
 
-#include "LaunchParams.h"
+#include "LaunchParams2.h"
 
 #include <vec_math.h>
   
@@ -45,14 +45,19 @@ extern "C" __global__ void __raygen__renderFrame()  {
 
 	//const float4 &color = *(const float4) optixGetSbtDataPointer();
 	// printf only one
-	if (optixLaunchParams.frameID == 0 &&
+	if (optixLaunchParams.frame.frame == 0 &&
 			optixGetLaunchIndex().x == 0 &&
 			optixGetLaunchIndex().y == 0) {
 
 		printf("############################################\n");
 		printf("Hello world from OptiX 7 raygen program!\n(within a %ix%i-sized launch)\n",
-				optixLaunchParams.fbSize.x,
-				optixLaunchParams.fbSize.y);
+				optixLaunchParams.frame.size.x,
+				optixLaunchParams.frame.size.y);
+		printf("Camera Direction: %f %f %f\n", 
+				optixLaunchParams.camera.direction.x,
+				optixLaunchParams.camera.direction.y,
+				optixLaunchParams.camera.direction.z
+			);
 			//	printf("Color: %f %f %f %f\n", color[0], color[1], color[2], color[3]);
 		printf("############################################\n");
 	}
@@ -68,8 +73,8 @@ extern "C" __global__ void __raygen__renderFrame()  {
 
 	// convert to 32-bit rgba value - explicitly set alpha to 0xff
 	const uint32_t rgba = 0xff000000  | (r<<0) | (g<<8) | (b<<16);
-	const unsigned int fbIndex = ix+iy*optixLaunchParams.fbSize.x;
-	optixLaunchParams.colorBuffer[fbIndex] = rgba;
+	const unsigned int fbIndex = ix+iy*optixLaunchParams.frame.size.x;
+	optixLaunchParams.frame.colorBuffer[fbIndex] = rgba;
 }
   
 }

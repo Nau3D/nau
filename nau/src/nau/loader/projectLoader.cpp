@@ -2569,6 +2569,9 @@ ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 	}
 
+
+
+
 	//	const char *pType = pElem->Attribute ("type");
 	//	const char *pProc = pElem->Attribute ("proc");
 	//	const char *pRay  = pElem->Attribute ("ray");
