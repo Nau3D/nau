@@ -22,8 +22,8 @@ ImGuiFileDialog from https://github.com/aiekick/ImGuiFileDialog
 
 # building
 
-To build nau and the GLUT demo
-The project is self-contained for Windows. For Linux install opengl, and devil
+To build nau, and GLUT and GLFW (with ImGui) demo, 
+the project is self-contained for Windows. For Linux install opengl, and devil
 * Devil 
 	* sudo apt-get install libdevil-dev
 * Freeglut (as a short cut to installing opengl)
@@ -33,7 +33,7 @@ Note: IF fail to compile freeglut try
 * cd /usr/include/X11/extensions
 * sudo ln –s XI.h XInput.h
 
-To build nau with nvidia's optix support (optional) both cuda and optix are required.
+To build nau with nvidia's optix 7 support (optional) both cuda and optix are required.
 * In the cmake project check the option "NAU_BUILD_WITH_OPTIX"
 * Set the variable OPTIX_DIR to optix's installation directory
 * CUDA is usually found by cmake and doesn't need any extra steps.
