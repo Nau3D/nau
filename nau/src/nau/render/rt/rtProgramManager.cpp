@@ -316,9 +316,13 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 			const std::map<std::string, RTGeometry::CUDABuffer> &indexB = scObj.second.indexBuffers;
 
 			std::string mat;
+			float3 color;
 			for (auto &indexBuffer:indexB) {
 				
 				std::vector<unsigned int> textureIDs;
+				std::shared_ptr<Material> &nauMaterial = MATERIALLIBMANAGER->getMaterialFromDefaultLib(indexBuffer.first);
+				nauMaterial->getTextureIDs(&textureIDs);
+
 				// if material is not in the material map use default mat
 				if (m_Materials.count(indexBuffer.first) == 0) {
 					mat = "default";
@@ -326,8 +330,8 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 				else {
 					mat = indexBuffer.first;
 				}
-				std::shared_ptr<Material> &nauMaterial = MATERIALLIBMANAGER->getMaterialFromDefaultLib(indexBuffer.first);
-				nauMaterial->getTextureIDs(&textureIDs);
+				vec4 x = nauMaterial->getColor().getPropf4(ColorMaterial::DIFFUSE);;
+				color = make_float3(x.x, x.y, x.z);
 				
 				std::map<int, ProgramInfo>& material = m_Materials[mat];
 
@@ -344,7 +348,7 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 
 					HitgroupRecord recH;
 					OPTIX_CHECK(optixSbtRecordPackHeader(pi.hitProgram, &recH));
-					recH.data.color = make_float3(1.0, 0.0, 1.0);
+					recH.data.color = color;
 					recH.data.vertexD.position = (float4 *)(vertexB.at(0).memPtr);
 					if (vertexB.size() > 1)
 						recH.data.vertexD.normal = (float4 *)vertexB.at(1).memPtr;

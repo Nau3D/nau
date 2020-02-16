@@ -31,12 +31,13 @@ namespace nau
 
 			public:
 
+
 				struct LaunchParams
 				{
 					struct {
 						int frame;
 						uint32_t* colorBuffer;
-						int2     size;
+						int raysPerPixel;
 					} frame;
 
 					struct {
@@ -58,6 +59,8 @@ namespace nau
 
 				virtual void addScene(const std::string& sceneName);
 				virtual void setRenderTarget(nau::render::IRenderTarget* rt);
+				void bindCudaRenderTarget();
+				void cleanCudaRenderTargetBindings();
 
 				virtual void prepare(void);
 				virtual void restore(void);
@@ -101,6 +104,8 @@ namespace nau
 				std::vector<unsigned char*> m_OutputBufferPrs;
 
 				RTBuffer m_LaunchParamsBuffer;
+
+				uivec2 m_LaunchSize;
 
 			};
 		};

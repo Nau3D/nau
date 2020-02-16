@@ -24,6 +24,7 @@ bool
 PassRT::Init() {
 
 	PASSFACTORY->registerClass("rt", Create);
+
 	return true;
 }
 
@@ -40,9 +41,10 @@ PassRT::PassRT(const std::string& passName) :
 
 	launchParams.frame.colorBuffer = nullptr;
 	launchParams.frame.frame = 0;
-	launchParams.frame.size = make_int2(0, 0);
-
+	launchParams.frame.raysPerPixel = 1;
 	m_ClassName = "rt";
+
+
 
 }
 
@@ -113,6 +115,20 @@ PassRT::prepare(void) {
 	if (!m_RTisReady && !m_RThasIssues)
 		rtInit();
 
+	if (0 != m_RenderTarget && true == m_UseRT) {
+
+		if (m_ExplicitViewport) {
+			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUTE_SIZE);
+			if (m_RTSizeWidth!= (int)f2.x || m_RTSizeHeight != (int)f2.y) {
+				m_RTSizeWidth = (int)f2.x;
+				m_RTSizeHeight = (int)f2.y;
+				uivec2 uiv2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight);
+				m_RenderTarget->setPropui2(IRenderTarget::SIZE, uiv2);
+				bindCudaRenderTarget();
+			}
+		}
+	}
+
 	setupCamera();
 }
 
@@ -160,6 +176,66 @@ PassRT::addVertexAttribute(unsigned int  attr) {
 }
 
 
+void 
+PassRT::cleanCudaRenderTargetBindings() {
+
+	//clean up previous PBOs
+	try {
+		for (int i = 0; i < m_OutputPBO.size(); ++i) {
+			//CUDA_CHECK(cudaGraphicsUnmapResources(1, &m_OutputCGR[i]));
+			CUDA_CHECK(cudaGraphicsUnregisterResource(m_OutputCGR[i]));
+			gl::glDeleteBuffers(1, &m_OutputPBO[i]);
+		}
+	}
+	catch (std::exception const& e) {
+		SLOG("Exception cleaning render targets: %s", e.what());
+		//m_RThasIssues = true;
+	}
+
+}
+
+
+
+void
+PassRT::bindCudaRenderTarget() {
+
+	cleanCudaRenderTargetBindings();
+
+	unsigned int n = m_RenderTarget->getNumberOfColorTargets();
+
+	m_OutputPBO.resize(n);
+	gl::glGenBuffers(n, (unsigned int*)&m_OutputPBO[0]);
+
+	m_OutputCGR.resize(n);
+	m_OutputTexIDs.resize(n);
+	m_OutputBufferPrs.resize(n);
+
+	nau::material::ITexture* tex;
+
+	try {
+		for (unsigned int i = 0; i < n; ++i) {
+
+			tex = m_RenderTarget->getTexture(i);
+			m_OutputTexIDs[i] = tex->getPropi(ITexture::ID);
+			int format = tex->getPrope(ITexture::FORMAT);
+
+			gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, m_OutputPBO[i]);
+			// need to allow different types
+			nau::math::uivec2 vec2;
+			vec2 = m_RenderTarget->getPropui2(IRenderTarget::SIZE);
+			gl::glBufferData(gl::GL_PIXEL_UNPACK_BUFFER, vec2.x * vec2.y * m_RenderTarget->getTexture(i)->getPropi(ITexture::ELEMENT_SIZE) / 8, 0, gl::GL_STREAM_READ);
+			gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, 0);
+
+			CUDA_CHECK(cudaGraphicsGLRegisterBuffer(&(m_OutputCGR[i]), m_OutputPBO[i], cudaGraphicsRegisterFlagsWriteDiscard));
+		}
+	}
+	catch (std::exception const& e) {
+		SLOG("Exception setting render target: %s", e.what());
+		m_RThasIssues = true;
+	}	
+	gl::glFinish();
+}
+
 
 void 
 PassRT::setRenderTarget(nau::render::IRenderTarget* rt) {
@@ -182,39 +258,7 @@ PassRT::setRenderTarget(nau::render::IRenderTarget* rt) {
 	}
 	m_RenderTarget = rt;
 
-	unsigned int n = rt->getNumberOfColorTargets();
-
-	m_OutputPBO.resize(n);
-	gl::glGenBuffers(n, (unsigned int*)&m_OutputPBO[0]);
-
-	m_OutputCGR.resize(n);
-	m_OutputTexIDs.resize(n);
-	m_OutputBufferPrs.resize(n);
-
-	nau::material::ITexture* tex;
-
-	try {
-		for (unsigned int i = 0; i < n; ++i) {
-
-			tex = rt->getTexture(i);
-			m_OutputTexIDs[i] = tex->getPropi(ITexture::ID);
-			int format = tex->getPrope(ITexture::FORMAT);
-
-			gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, m_OutputPBO[i]);
-			// need to allow different types
-			nau::math::uivec2 vec2;
-			vec2 = rt->getPropui2(IRenderTarget::SIZE);
-			gl::glBufferData(gl::GL_PIXEL_UNPACK_BUFFER, vec2.x * vec2.y * rt->getTexture(i)->getPropi(ITexture::ELEMENT_SIZE) / 8, 0, gl::GL_STREAM_READ);
-			gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, 0);
-
-			CUDA_CHECK(cudaGraphicsGLRegisterBuffer(&(m_OutputCGR[i]), m_OutputPBO[i], cudaGraphicsRegisterFlagsWriteDiscard));
-		}
-	}
-	catch (std::exception const& e) {
-		SLOG("Exception setting render target: %s", e.what());
-		m_RThasIssues = true;
-	}	
-	gl::glFinish();
+	bindCudaRenderTarget();
 }
 
 
@@ -224,13 +268,18 @@ PassRT::restore(void) {}
 void
 PassRT::setupCamera(void) {
 
+	float ratio;
 	std::shared_ptr<Camera>& aCam = RENDERMANAGER->getCamera(m_StringProps[CAMERA]);
+	m_LaunchSize = m_RenderTarget->getPropui2(IRenderTarget::SIZE);
 
 	if (m_ExplicitViewport) {
 		m_RestoreViewport = aCam->getViewport();
 		aCam->setViewport(m_Viewport);
+		ratio = m_Viewport->getPropf(Viewport::ABSOLUTE_RATIO);
 	}
-
+	else {
+		ratio = (float)m_LaunchSize.x / m_LaunchSize.y;
+	}
 	float fov = aCam->getPropf(Camera::FOV) * 0.5f;
 	float fovTan = tanf(DegToRad(fov));
 
@@ -245,11 +294,13 @@ PassRT::setupCamera(void) {
 	launchParams.camera.vertical = make_float3(up.x, up.y, up.z);
 
 	vec4 right = aCam->getPropf4(Camera::NORMALIZED_RIGHT_VEC);
-	right *= fovTan;
+	if (ratio != 0)
+		right *= fovTan * ratio;
 	launchParams.camera.horizontal = make_float3(right.x, right.y, right.z);
 
 	RENDERER->setCamera(aCam);
 }
+
 
 void 
 PassRT::doPass(void) {
@@ -267,14 +318,9 @@ PassRT::doPass(void) {
 
 		// update launch params
 		launchParams.frame.frame = RENDERER->getPropui(IRenderer::FRAME_COUNT);
-		launchParams.frame.size.x = 1024; launchParams.frame.size.y = 1024;
 		launchParams.frame.colorBuffer = (uint32_t*)m_OutputBufferPrs[0];
+		launchParams.frame.raysPerPixel = getPropi(Pass::RAYS_PER_PIXEL);
 		
-		//launchParams.camera.position = make_float3(-10.f, 2.f, -12.f);
-		//launchParams.camera.direction = make_float3(0.63f, -0.13f, 0.76f);
-		//launchParams.camera.horizontal = make_float3(-0.507f, 0.0f, 0.422f);
-		//launchParams.camera.vertical = make_float3(0.053f, 0.65f, 0.06f);
-
 		launchParams.traversable = m_Geometry.getTraversableHandle();
 
 		CUdeviceptr d_param;
@@ -291,7 +337,7 @@ PassRT::doPass(void) {
 			RTRenderer::getOptixStream(),
 			m_LaunchParamsBuffer.getPtr(),
 			m_LaunchParamsBuffer.getSize(),
-			&m_ProgramManager.getSBT(), 1024, 1024, 1));
+			&m_ProgramManager.getSBT(), m_LaunchSize.x, m_LaunchSize.y, 1));
 
 		
 		CUDA_SYNC_CHECK();
@@ -307,7 +353,7 @@ PassRT::doPass(void) {
 				gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, m_OutputPBO[i]);
 				gl::glPixelStorei((gl::GLenum)GL_UNPACK_ALIGNMENT, 4);
 				gl::glTexSubImage2D((gl::GLenum)GL_TEXTURE_2D, 0, 0, 0,
-					1024, 1024,
+					m_LaunchSize.x, m_LaunchSize.y,
 					(gl::GLenum)GL_RGBA,
 					(gl::GLenum)GL_UNSIGNED_BYTE, 0);
 		}
@@ -318,4 +364,5 @@ PassRT::doPass(void) {
 	}
 }
 
-#endif
+
+#endif  

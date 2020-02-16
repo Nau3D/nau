@@ -18,12 +18,12 @@ Spherical::toSpherical(float x, float y ,float z)
 	vec3 aux(x,y,z);
 	aux.normalize();
 
-	result.y = asin(aux.y);
+	result.y = asinf(aux.y);
 
 	if (aux.z >= 0)
-		result.x = asin(aux.x / sqrt(aux.x*aux.x + aux.z*aux.z));
+		result.x = asinf(aux.x / sqrtf(aux.x*aux.x + aux.z*aux.z));
 	else
-		result.x = (float)M_PI - asin(aux.x / sqrt(aux.x*aux.x + aux.z*aux.z));
+		result.x = (float)M_PI - asinf(aux.x / sqrtf(aux.x*aux.x + aux.z*aux.z));
 
 	return result;
 }
@@ -49,9 +49,9 @@ Spherical::toCartesian(float alpha, float beta)
 		alpha_aux = alpha;
 	}
 
-	v.x = cos(beta_aux) * sin(alpha_aux);
-	v.z = cos(beta_aux) * cos(alpha_aux);
-	v.y = sin(beta_aux);
+	v.x = cosf(beta_aux) * sinf(alpha_aux);
+	v.z = cosf(beta_aux) * cosf(alpha_aux);
+	v.y = sinf(beta_aux);
 
 	return v;
 }
@@ -73,9 +73,9 @@ Spherical::getRightVector(float alpha, float beta)
 		alpha_aux = alpha - (float)M_PI * 0.5f;
 	}
 
-	v.x = cos(0.0f) * sin(alpha_aux);
-	v.z = cos(0.0f) * cos(alpha_aux);
-	v.y = sin(0.0f);
+	v.x = cosf(0.0f) * sinf(alpha_aux);
+	v.z = cosf(0.0f) * cosf(alpha_aux);
+	v.y = sinf(0.0f);
 
 	return v;
 }
@@ -111,9 +111,9 @@ Spherical::getNaturalUpVector(float alpha, float beta)
 		beta_aux = beta;
 	}
 
-	v.x = (float)cos(M_PI * 0.5f - fabs(beta_aux)) * sin(alpha_aux);
-	v.z = (float)cos(M_PI * 0.5f - fabs(beta_aux)) * cos(alpha_aux);
-	v.y = (float)sin(M_PI * 0.5f - fabs(beta_aux));
+	v.x = cosf((float)(M_PI * 0.5f - fabs(beta_aux))) * sinf(alpha_aux);
+	v.z = cosf((float)(M_PI * 0.5f - fabs(beta_aux))) * cosf(alpha_aux);
+	v.y = sinf((float)(M_PI * 0.5f - fabs(beta_aux)));
 
 	return v;
 

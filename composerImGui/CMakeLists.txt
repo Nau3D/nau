@@ -12,7 +12,6 @@ endif (WIN32)
 include_directories(
 	../nau/src
 	../contrib/lua-5.3.3/include
-	../contrib/freeglut-3.0.0/include
 	${CMAKE_BINARY_DIR}/contrib/glbinding-master/source/glbinding/include
 	../contrib/glbinding-master/source/glbinding/include
 	../contrib/glfw
@@ -22,8 +21,7 @@ include_directories(
 
 add_definitions(-DTIXML_USE_STL)
 	
-target_link_libraries(
-	composerImGui 
+target_link_libraries(composerImGui 
 	nau 
 	tinyxml 
 	assimp 
