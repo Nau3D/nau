@@ -1,54 +1,36 @@
 
 #include <optix.h>
-#include "LaunchParams2.h" // our launch params
+#include "LaunchParams.h" // our launch params
 #include <vec_math.h> // NVIDIAs math utils
 
 
 extern "C" {
     __constant__ LaunchParams optixLaunchParams;
 }
-//  a single ray type
-enum { SURFACE_RAY_TYPE=0, RAY_TYPE_COUNT };
+// ray type -> these must be in the 
+// same order as the ray types in Nau's project
+enum { PHONG_RAY_TYPE=0, RAY_TYPE_COUNT };
 
-// pack and unpack payload pointer from
-// Ingo Wald Optix 7 course
-// https://gitlab.com/ingowald/optix7course
 
-static __forceinline__ __device__
-void *unpackPointer( uint32_t i0, uint32_t i1 ) {
-    const uint64_t uptr = static_cast<uint64_t>( i0 ) << 32 | i1;
-    void*           ptr = reinterpret_cast<void*>( uptr ); 
-    return ptr;
-}
-
-static __forceinline__ __device__
-void  packPointer( void* ptr, uint32_t& i0, uint32_t& i1 ) {
-    const uint64_t uptr = reinterpret_cast<uint64_t>( ptr );
-    i0 = uptr >> 32;
-    i1 = uptr & 0x00000000ffffffff;
-}
-
-template<typename T>
-static __forceinline__ __device__ T *getPRD() { 
-    const uint32_t u0 = optixGetPayload_0();
-    const uint32_t u1 = optixGetPayload_1();
-    return reinterpret_cast<T*>( unpackPointer( u0, u1 ) );
-}
 
 // -------------------------------------------------------
-// closest hit computes color based lolely on the triangle normal
+// closest hit computes color based on material color or texture
 
-extern "C" __global__ void __closesthit__radiance()
+extern "C" __global__ void __closesthit__phong()
 {
+    // get the payload variable
     float3 &prd = *(float3*)getPRD<float3>();
 
+    // get mesh data
     const TriangleMeshSBTData &sbtData
       = *(const TriangleMeshSBTData*)optixGetSbtDataPointer();  
-    // compute triangle normal:
+
+    // retrieve primitive id and indexes
     const int   primID = optixGetPrimitiveIndex();
     const uint3 index  = sbtData.index[primID];
 
-    if (sbtData.hasTexture && sbtData.vertexD.texCoord0) {  
+    if (sbtData.hasTexture && sbtData.vertexD.texCoord0) {
+
         // get barycentric coordinates
         const float u = optixGetTriangleBarycentrics().x;
         const float v = optixGetTriangleBarycentrics().y;
@@ -69,12 +51,12 @@ extern "C" __global__ void __closesthit__radiance()
   
 
 // nothing to do in here
-extern "C" __global__ void __anyhit__radiance() {
+extern "C" __global__ void __anyhit__phong() {
 }
 
 
 // miss sets the bacgground color
-extern "C" __global__ void __miss__radiance() {
+extern "C" __global__ void __miss__phong() {
 
     float3 &prd = *(float3*)getPRD<float3>();
     // set blue as background color
@@ -82,9 +64,9 @@ extern "C" __global__ void __miss__radiance() {
 }
 
 
+// ray gen program - responsible for launching primary rays
 extern "C" __global__ void __raygen__renderFrame() {
 
-    // compute a test pattern based on pixel ID
     const int ix = optixGetLaunchIndex().x;
     const int iy = optixGetLaunchIndex().y;
     const auto &camera = optixLaunchParams.camera;  
@@ -99,7 +81,7 @@ extern "C" __global__ void __raygen__renderFrame() {
     const float2 screen(make_float2(ix+.5f,iy+.5f)
                     / make_float2(optixGetLaunchDimensions().x, optixGetLaunchDimensions().y) * 2.0 - 1.0);
   
-    // note: nau already takes into account the field of view and ratio when computing 
+    // note: nau already takes into account the field of view when computing 
     // camera horizontal and vertival
     float3 rayDir = normalize(camera.direction
                            + screen.x  * camera.horizontal
@@ -113,10 +95,10 @@ extern "C" __global__ void __raygen__renderFrame() {
              1e20f,  // tmax
              0.0f,   // rayTime
              OptixVisibilityMask( 255 ),
-             OPTIX_RAY_FLAG_DISABLE_ANYHIT,//OPTIX_RAY_FLAG_NONE,
-             SURFACE_RAY_TYPE,             // SBT offset
-             RAY_TYPE_COUNT,               // SBT stride
-             SURFACE_RAY_TYPE,             // missSBTIndex 
+             OPTIX_RAY_FLAG_DISABLE_ANYHIT,
+             PHONG_RAY_TYPE,             // SBT offset
+             RAY_TYPE_COUNT,             // SBT stride
+             PHONG_RAY_TYPE,             // missSBTIndex 
              u0, u1 );
 
     //convert float (0-1) to int (0-255)
@@ -128,9 +110,10 @@ extern "C" __global__ void __raygen__renderFrame() {
     const uint32_t rgba = 0xff000000
       | (r<<0) | (g<<8) | (b<<16);
     // compute index
-    const uint32_t fbIndex = ix + iy*optixGetLaunchDimensions().x;
+    const uint32_t fbIndex = ix+iy*optixGetLaunchDimensions().x;
     // write to output buffer
     optixLaunchParams.frame.colorBuffer[fbIndex] = rgba;
 }
   
+
 

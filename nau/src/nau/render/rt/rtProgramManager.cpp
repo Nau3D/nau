@@ -310,17 +310,17 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 
 
 		// build hit and miss records
-		for (auto &scObj: cuBuffers) {
+		for (auto& scObj : cuBuffers) {
 
-			const std::map<int, RTGeometry::CUDABuffer> &vertexB = scObj.second.vertexBuffers;
-			const std::map<std::string, RTGeometry::CUDABuffer> &indexB = scObj.second.indexBuffers;
+			const std::map<int, RTGeometry::CUDABuffer>& vertexB = scObj.second.vertexBuffers;
+			const std::map<std::string, RTGeometry::CUDABuffer>& indexB = scObj.second.indexBuffers;
 
 			std::string mat;
 			float3 color;
-			for (auto &indexBuffer:indexB) {
-				
+			for (auto& indexBuffer : indexB) {
+
 				std::vector<unsigned int> textureIDs;
-				std::shared_ptr<Material> &nauMaterial = MATERIALLIBMANAGER->getMaterialFromDefaultLib(indexBuffer.first);
+				std::shared_ptr<Material>& nauMaterial = MATERIALLIBMANAGER->getMaterialFromDefaultLib(indexBuffer.first);
 				nauMaterial->getTextureIDs(&textureIDs);
 
 				// if material is not in the material map use default mat
@@ -332,7 +332,7 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 				}
 				vec4 x = nauMaterial->getColor().getPropf4(ColorMaterial::DIFFUSE);;
 				color = make_float3(x.x, x.y, x.z);
-				
+
 				std::map<int, ProgramInfo>& material = m_Materials[mat];
 
 
@@ -349,9 +349,9 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 					HitgroupRecord recH;
 					OPTIX_CHECK(optixSbtRecordPackHeader(pi.hitProgram, &recH));
 					recH.data.color = color;
-					recH.data.vertexD.position = (float4 *)(vertexB.at(0).memPtr);
+					recH.data.vertexD.position = (float4*)(vertexB.at(0).memPtr);
 					if (vertexB.size() > 1)
-						recH.data.vertexD.normal = (float4 *)vertexB.at(1).memPtr;
+						recH.data.vertexD.normal = (float4*)vertexB.at(1).memPtr;
 					if (vertexB.size() > 2)
 						recH.data.vertexD.texCoord0 = (float4*)vertexB.at(2).memPtr;
 					if (vertexB.size() > 3)
@@ -365,7 +365,7 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 					}
 					else
 						recH.data.hasTexture = 0;
-					recH.data.index = (uint3 *)indexBuffer.second.memPtr;
+					recH.data.index = (uint3*)indexBuffer.second.memPtr;
 					hitgroupRecords.push_back(recH);
 
 				}
@@ -374,15 +374,19 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 		}
 
 		RTBuffer missRecordsBuffer;
-		missRecordsBuffer.store((void*)&missRecords[0], sizeof(MissRecord) * missRecords.size());
-		m_SBT.missRecordBase = missRecordsBuffer.getPtr();
-		m_SBT.missRecordStrideInBytes = sizeof(MissRecord);
+		if (missRecords.size() > 0) {
+			missRecordsBuffer.store((void*)&missRecords[0], sizeof(MissRecord) * missRecords.size());
+			m_SBT.missRecordBase = missRecordsBuffer.getPtr();
+			m_SBT.missRecordStrideInBytes = sizeof(MissRecord);
+		}
 		m_SBT.missRecordCount = (int)missRecords.size();
 
 		RTBuffer hitgroupRecordsBuffer;
-		hitgroupRecordsBuffer.store((void*)&hitgroupRecords[0], sizeof(HitgroupRecord) * hitgroupRecords.size());
-		m_SBT.hitgroupRecordBase = hitgroupRecordsBuffer.getPtr();
-		m_SBT.hitgroupRecordStrideInBytes = sizeof(HitgroupRecord);
+		if (hitgroupRecords.size() > 0) {
+			hitgroupRecordsBuffer.store((void*)&hitgroupRecords[0], sizeof(HitgroupRecord) * hitgroupRecords.size());
+			m_SBT.hitgroupRecordBase = hitgroupRecordsBuffer.getPtr();
+			m_SBT.hitgroupRecordStrideInBytes = sizeof(HitgroupRecord);
+		}
 		m_SBT.hitgroupRecordCount = (int)hitgroupRecords.size();
 
 	}

@@ -10,20 +10,20 @@
 .target sm_30
 .address_size 64
 
-	// .globl	__closesthit__radiance
+	// .globl	__closesthit__phong
 .extern .func  (.param .b32 func_retval0) vprintf
 (
 	.param .b64 vprintf_param_0,
 	.param .b64 vprintf_param_1
 )
 ;
-.const .align 8 .b8 optixLaunchParams[80];
+.const .align 8 .b8 optixLaunchParams[88];
 .global .align 1 .b8 $str[45] = {61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 10, 0};
 .global .align 1 .b8 $str1[29] = {78, 97, 117, 32, 82, 97, 121, 45, 84, 114, 97, 99, 105, 110, 103, 32, 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 10, 0};
 .global .align 1 .b8 $str2[21] = {76, 117, 110, 99, 104, 32, 115, 105, 122, 101, 58, 32, 37, 105, 32, 120, 32, 37, 105, 10, 0};
 .global .align 1 .b8 $str3[28] = {67, 97, 109, 101, 114, 97, 32, 68, 105, 114, 101, 99, 116, 105, 111, 110, 58, 32, 37, 102, 32, 37, 102, 32, 37, 102, 10, 0};
 
-.visible .entry __closesthit__radiance(
+.visible .entry __closesthit__phong(
 
 )
 {
@@ -33,8 +33,8 @@
 	ret;
 }
 
-	// .globl	__anyhit__radiance
-.visible .entry __anyhit__radiance(
+	// .globl	__anyhit__phong
+.visible .entry __anyhit__phong(
 
 )
 {
@@ -44,8 +44,8 @@
 	ret;
 }
 
-	// .globl	__miss__radiance
-.visible .entry __miss__radiance(
+	// .globl	__miss__phong
+.visible .entry __miss__phong(
 
 )
 {
@@ -64,8 +64,8 @@
 	.reg .b64 	%SP;
 	.reg .b64 	%SPL;
 	.reg .pred 	%p<2>;
-	.reg .f32 	%f<15>;
-	.reg .b32 	%r<25>;
+	.reg .f32 	%f<13>;
+	.reg .b32 	%r<26>;
 	.reg .f64 	%fd<6>;
 	.reg .b64 	%rd<16>;
 
@@ -81,23 +81,22 @@
 	// inline asm
 	call (%r9), _optix_get_launch_dimension_x, ();
 	// inline asm
-	cvt.rn.f32.u32	%f1, %r6;
 	ld.const.u32 	%r12, [optixLaunchParams];
-	cvt.rn.f32.s32	%f2, %r12;
-	add.ftz.f32 	%f3, %f1, %f2;
-	mul.ftz.f32 	%f4, %f3, 0f3DCCCCCD;
-	cos.approx.ftz.f32 	%f5, %f4;
-	cvt.ftz.f64.f32	%fd1, %f5;
+	add.s32 	%r13, %r12, %r6;
+	cvt.rn.f32.u32	%f1, %r13;
+	mul.ftz.f32 	%f2, %f1, 0f3DCCCCCD;
+	cos.approx.ftz.f32 	%f3, %f2;
+	cvt.ftz.f64.f32	%fd1, %f3;
 	fma.rn.f64 	%fd2, %fd1, 0d3FE0000000000000, 0d3FE0000000000000;
-	cvt.rn.ftz.f32.f64	%f6, %fd2;
-	mul.ftz.f32 	%f7, %f6, 0f437F0000;
-	cvt.rzi.ftz.s32.f32	%r4, %f7;
-	mov.f32 	%f8, 0f3F800000;
-	sub.ftz.f32 	%f9, %f8, %f7;
-	cvt.rzi.ftz.s32.f32	%r5, %f9;
-	or.b32  	%r13, %r7, %r6;
-	or.b32  	%r14, %r13, %r12;
-	setp.ne.s32	%p1, %r14, 0;
+	cvt.rn.ftz.f32.f64	%f4, %fd2;
+	mul.ftz.f32 	%f5, %f4, 0f437F0000;
+	cvt.rzi.ftz.s32.f32	%r4, %f5;
+	mov.f32 	%f6, 0f3F800000;
+	sub.ftz.f32 	%f7, %f6, %f5;
+	cvt.rzi.ftz.s32.f32	%r5, %f7;
+	or.b32  	%r14, %r7, %r6;
+	or.b32  	%r15, %r14, %r12;
+	setp.ne.s32	%p1, %r15, 0;
 	@%p1 bra 	BB3_2;
 
 	mov.u64 	%rd1, $str;
@@ -118,7 +117,7 @@
 	param0, 
 	param1
 	);
-	ld.param.b32	%r15, [retval0+0];
+	ld.param.b32	%r16, [retval0+0];
 	
 	//{
 	}// Callseq End 0
@@ -139,7 +138,7 @@
 	param0, 
 	param1
 	);
-	ld.param.b32	%r16, [retval0+0];
+	ld.param.b32	%r17, [retval0+0];
 	
 	//{
 	}// Callseq End 1
@@ -163,15 +162,15 @@
 	param0, 
 	param1
 	);
-	ld.param.b32	%r17, [retval0+0];
+	ld.param.b32	%r18, [retval0+0];
 	
 	//{
 	}// Callseq End 2
-	ld.const.f32 	%f10, [optixLaunchParams+36];
-	cvt.ftz.f64.f32	%fd3, %f10;
-	ld.const.v2.f32 	{%f11, %f12}, [optixLaunchParams+40];
-	cvt.ftz.f64.f32	%fd4, %f11;
-	cvt.ftz.f64.f32	%fd5, %f12;
+	ld.const.f32 	%f8, [optixLaunchParams+36];
+	cvt.ftz.f64.f32	%fd3, %f8;
+	ld.const.v2.f32 	{%f9, %f10}, [optixLaunchParams+40];
+	cvt.ftz.f64.f32	%fd4, %f9;
+	cvt.ftz.f64.f32	%fd5, %f10;
 	st.local.f64 	[%rd7], %fd3;
 	st.local.f64 	[%rd7+8], %fd4;
 	st.local.f64 	[%rd7+16], %fd5;
@@ -192,7 +191,7 @@
 	param0, 
 	param1
 	);
-	ld.param.b32	%r18, [retval0+0];
+	ld.param.b32	%r19, [retval0+0];
 	
 	//{
 	}// Callseq End 3
@@ -211,7 +210,7 @@
 	param0, 
 	param1
 	);
-	ld.param.b32	%r19, [retval0+0];
+	ld.param.b32	%r20, [retval0+0];
 	
 	//{
 	}// Callseq End 4
@@ -219,14 +218,14 @@
 BB3_2:
 	ld.const.u64 	%rd12, [optixLaunchParams+8];
 	cvta.to.global.u64 	%rd13, %rd12;
-	mad.lo.s32 	%r20, %r7, %r9, %r6;
-	mul.wide.u32 	%rd14, %r20, 4;
+	mad.lo.s32 	%r21, %r7, %r9, %r6;
+	mul.wide.u32 	%rd14, %r21, 4;
 	add.s64 	%rd15, %rd13, %rd14;
-	shl.b32 	%r21, %r5, 16;
-	shl.b32 	%r22, %r4, 8;
-	or.b32  	%r23, %r22, %r21;
-	or.b32  	%r24, %r23, -16777216;
-	st.global.u32 	[%rd15], %r24;
+	shl.b32 	%r22, %r5, 16;
+	shl.b32 	%r23, %r4, 8;
+	or.b32  	%r24, %r23, %r22;
+	or.b32  	%r25, %r24, -16777216;
+	st.global.u32 	[%rd15], %r25;
 	ret;
 }
 

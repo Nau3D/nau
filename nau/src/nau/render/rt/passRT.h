@@ -31,6 +31,9 @@ namespace nau
 
 			public:
 
+				struct optixParams {
+					char* data;
+				};
 
 				struct LaunchParams
 				{
@@ -46,7 +49,23 @@ namespace nau
 						float3 horizontal;
 						float3 vertical;
 					} camera;
+
 					OptixTraversableHandle traversable;
+
+					optixParams *globalParams;
+
+					LaunchParams() {
+						frame.frame = 0;
+						frame.colorBuffer = nullptr;
+						frame.raysPerPixel = 1;
+
+						camera.position = make_float3(0.0f, 0.0f, 0.0f);
+						camera.direction = make_float3(0.0f, 0.0f, -1.0f);
+						camera.horizontal = make_float3(1.0f, 0.0f, 0.0f);
+						camera.vertical = make_float3(0.0f, 1.0f, 0.0f);
+
+						globalParams = nullptr;
+					}
 
 				} launchParams;
 
@@ -77,6 +96,7 @@ namespace nau
 				void setRayGenProcedure(const std::string &file, const std::string &proc);
 				void setDefaultProc(const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName);
 
+				void addParam(const std::string &name, const std::string &type, const std::string &context, const std::string &component, int id);
 			protected:
 				PassRT(const std::string& passName);
 				static bool Init();
@@ -106,6 +126,27 @@ namespace nau
 				RTBuffer m_LaunchParamsBuffer;
 
 				uivec2 m_LaunchSize;
+
+				struct Param{
+					// param properties
+					std::string name;
+					std::string type;
+					std::string context;
+					std::string component;
+					int id;
+					// used to fill the memory block
+					int offset;
+					int size;
+					Enums::DataType dt;
+					int attr;
+				} ;
+
+				int computeParamsByteSize();
+				void copyParamsToBuffer();
+				std::vector<Param> m_Params;
+				int m_ParamsSize;
+				RTBuffer m_ParamsBuffer;
+
 
 			};
 		};

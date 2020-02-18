@@ -2389,7 +2389,8 @@ ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 	std::vector<std::string> excluded = {"testScript", "preProcess", "postProcess", "mode", "scene", "scenes", 
 		"lights", "viewport", "renderTarget",
 		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits", "rayCount",
-		"rtRayTypes", "rtVertexAttributes", "rtEntryPoint", "rtDefaultMaterial","preScript", "postScript"};
+		"rtRayTypes", "rtVertexAttributes", "rtEntryPoint", "rtDefaultMaterial","preScript", "postScript",
+		"rtGlobalParams"};
 	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),false);
 }
 
@@ -2507,10 +2508,10 @@ ProjectLoader::loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass,std::map<std
 void
 ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 
-	TiXmlElement *pElem, *pElemAux, *pElemAux2;
+	TiXmlElement *pElem, *pElemAux;
 	PassRT *p = (PassRT *)aPass;
 
-	pElem = hPass.FirstChild("rtRayTypes").FirstChildElement("rtRayType").Element();
+	pElem = hPass.FirstChild("rtRayTypes").FirstChildElement("rayType").Element();
 	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char* pType = pElem->Attribute("name");
 		if (!pType) 
@@ -2570,7 +2571,83 @@ ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 	}
 
 
+	pElem = hPass.FirstChild("rtGlobalParams").FirstChild("param").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		const char* pVarName = pElem->Attribute("name");
+		const char* pComponent = pElem->Attribute("component");
+		const char* pContext = pElem->Attribute("context");
+		const char* pType = pElem->Attribute("type");
 
+		//const char *pId = pElemAux2->Attribute("id");
+
+		if (0 == pVarName) {
+			NAU_THROW("File: %s\nPass: %s\nInvalid global param: no param name", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		}
+		if (0 == pType) {
+			NAU_THROW("File: %s\nPass: %s\nInvalid global param: no type defined for param %s", 
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName);
+		}
+		if (0 == pContext) {
+			NAU_THROW("File: %s\nPass: %s\nInvalid global param: no context defined for param %s",
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName);
+		}
+		if (0 == pComponent) {
+			NAU_THROW("File: %s\nPass: %s\nInvalid global param: no component defined for param %s",
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName);
+		}
+		std::string message;
+		validateObjectTypeAndComponent(pType, pComponent, &message);
+		if (message != "")
+			NAU_THROW("File: %s\nPass: %s\nGlobal param %s is not valid\n%s",
+				ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName, message.c_str());
+
+		int id = 0;
+		if (strcmp(pContext, "CURRENT") == 0 &&
+			(strcmp(pType, "LIGHT") == 0)) {
+			if (TIXML_SUCCESS != pElem->QueryIntAttribute("id", &id))
+				NAU_THROW("File: %s\nPass: %s\nParam %s - id is required for type %s ",
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName, pType);
+			if (id < 0)
+				NAU_THROW("File: %s\nPass: %s\nParam  %s - id must be non negative",
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName);
+			
+		}
+		std::string s(pType);
+
+		if (s == "TEXTURE" && strcmp(pContext, "CURRENT")) {
+			
+			if (!RESOURCEMANAGER->hasTexture(pContext)) {
+				NAU_THROW("File: %s\nPass: %s\nParam  %s -Texture %s is not defined",
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName, pContext);
+			}
+			else {
+				p->addParam(pVarName, pType, s_pFullName, pComponent, id);
+			}
+		}
+
+		else if (s == "CAMERA" && strcmp(pContext, "CURRENT")) {
+			std::string s;
+			addToDefferredVal(s, pElemAux->Row(), pElemAux->Column(), pContext, "CAMERA");
+			// Must consider that a camera can be defined internally in a pass, example:lightcams
+			/*if (!RENDERMANAGER->hasCamera(pContext))
+				NAU_THROW("Camera %s is not defined in the project file", pContext);*/
+			p->addParam(pVarName, pType, pContext, pComponent, id);
+		}
+		else if (s == "LIGHT" && strcmp(pContext, "CURRENT")) {
+			if (!RESOURCEMANAGER->hasTexture(pContext)) {
+				NAU_THROW("File: %s\nPass: %s\nParam  %s - Light %s is not defined",
+					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName, pContext);
+			}
+			else {
+				p->addParam(pVarName, pType, s_pFullName, pComponent, id);
+			}
+		}
+		else {
+			p->addParam(pVarName, pType, pContext, pComponent, id);
+		}
+	}
+}
 
 	//	const char *pType = pElem->Attribute ("type");
 	//	const char *pProc = pElem->Attribute ("proc");
@@ -2913,7 +2990,7 @@ ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 	//}
 
 
-}
+
 
 #endif
 

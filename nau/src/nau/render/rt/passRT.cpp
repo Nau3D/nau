@@ -39,13 +39,7 @@ PassRT::PassRT(const std::string& passName) :
 	m_RTisReady = false;
 	m_RThasIssues = false;
 
-	launchParams.frame.colorBuffer = nullptr;
-	launchParams.frame.frame = 0;
-	launchParams.frame.raysPerPixel = 1;
 	m_ClassName = "rt";
-
-
-
 }
 
 PassRT::~PassRT() {
@@ -112,8 +106,11 @@ PassRT::rtInit() {
 void 
 PassRT::prepare(void) {
 
-	if (!m_RTisReady && !m_RThasIssues)
+	if (!m_RTisReady && !m_RThasIssues) {
 		rtInit();
+		m_ParamsSize = computeParamsByteSize();
+		m_ParamsBuffer.setSize(m_ParamsSize);
+	}
 
 	if (0 != m_RenderTarget && true == m_UseRT) {
 
@@ -130,6 +127,7 @@ PassRT::prepare(void) {
 	}
 
 	setupCamera();
+	setupLights();
 }
 
 
@@ -176,13 +174,81 @@ PassRT::addVertexAttribute(unsigned int  attr) {
 }
 
 
+
+void 
+PassRT::addParam(const std::string& name, const std::string& type, const std::string& context, const std::string& component, int id) {
+
+	Param p;
+	p.name = name;
+	p.type = type;
+	p.context = context;
+	p.component = component;
+	p.id = id;
+
+	p.offset = 0;
+	p.size = 0;
+
+	m_Params.push_back(p);
+}
+
+
+int 
+PassRT::computeParamsByteSize() {
+
+	int count = 0;
+	int attr;
+
+
+
+	for (auto& p : m_Params) {
+
+		AttribSet* attrSet = NAU->getAttribs(p.type);
+
+		attrSet->getPropTypeAndId(p.component, &p.dt, &attr);
+		p.offset = 0;
+		p.size = Enums::getSize(p.dt);
+		p.attr = attr;
+		count += p.size;
+	}
+	return count;
+}
+
+
+void 
+PassRT::copyParamsToBuffer() {
+
+	char* temp = (char*)malloc(m_ParamsSize);
+	int currOffset = 0;
+	for (auto& p : m_Params) {
+
+		AttributeValues* attr = NULL;
+		if (p.context != "CURRENT") {
+			attr = NAU->getObjectAttributes(p.type, p.context, p.id);
+		}
+		else {
+			attr = NAU->getCurrentObjectAttributes(p.type, p.id);
+		}
+
+		void* values;
+		if (attr != NULL) {
+			values = attr->getProp(p.attr, p.dt);
+		}
+		void* d = (Data *)((Data*)values)->getPtr();
+		memcpy(temp , d, p.size);
+		
+		currOffset += p.size;
+	}
+	m_ParamsBuffer.copy(temp);
+	free(temp);
+}
+
+
 void 
 PassRT::cleanCudaRenderTargetBindings() {
 
 	//clean up previous PBOs
 	try {
 		for (int i = 0; i < m_OutputPBO.size(); ++i) {
-			//CUDA_CHECK(cudaGraphicsUnmapResources(1, &m_OutputCGR[i]));
 			CUDA_CHECK(cudaGraphicsUnregisterResource(m_OutputCGR[i]));
 			gl::glDeleteBuffers(1, &m_OutputPBO[i]);
 		}
@@ -195,7 +261,6 @@ PassRT::cleanCudaRenderTargetBindings() {
 }
 
 
-
 void
 PassRT::bindCudaRenderTarget() {
 
@@ -204,8 +269,6 @@ PassRT::bindCudaRenderTarget() {
 	unsigned int n = m_RenderTarget->getNumberOfColorTargets();
 
 	m_OutputPBO.resize(n);
-	gl::glGenBuffers(n, (unsigned int*)&m_OutputPBO[0]);
-
 	m_OutputCGR.resize(n);
 	m_OutputTexIDs.resize(n);
 	m_OutputBufferPrs.resize(n);
@@ -213,18 +276,20 @@ PassRT::bindCudaRenderTarget() {
 	nau::material::ITexture* tex;
 
 	try {
+		gl::glGenBuffers(n, (unsigned int*)&m_OutputPBO[0]);
+
 		for (unsigned int i = 0; i < n; ++i) {
 
 			tex = m_RenderTarget->getTexture(i);
 			m_OutputTexIDs[i] = tex->getPropi(ITexture::ID);
 			int format = tex->getPrope(ITexture::FORMAT);
 
-			gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, m_OutputPBO[i]);
+			gl::glBindBuffer(gl::GL_ARRAY_BUFFER, m_OutputPBO[i]);
 			// need to allow different types
 			nau::math::uivec2 vec2;
 			vec2 = m_RenderTarget->getPropui2(IRenderTarget::SIZE);
-			gl::glBufferData(gl::GL_PIXEL_UNPACK_BUFFER, vec2.x * vec2.y * m_RenderTarget->getTexture(i)->getPropi(ITexture::ELEMENT_SIZE) / 8, 0, gl::GL_STREAM_READ);
-			gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, 0);
+			gl::glBufferData(gl::GL_ARRAY_BUFFER, vec2.x * vec2.y * m_RenderTarget->getTexture(i)->getPropi(ITexture::ELEMENT_SIZE) / 8, 0, gl::GL_STREAM_READ);
+			gl::glBindBuffer(gl::GL_ARRAY_BUFFER, 0);
 
 			CUDA_CHECK(cudaGraphicsGLRegisterBuffer(&(m_OutputCGR[i]), m_OutputPBO[i], cudaGraphicsRegisterFlagsWriteDiscard));
 		}
@@ -316,19 +381,19 @@ PassRT::doPass(void) {
 			CUDA_CHECK(cudaGraphicsResourceGetMappedPointer((void**)&m_OutputBufferPrs[i], &size, m_OutputCGR[i]));
 		}
 
+		// copy global params to buffer
+		copyParamsToBuffer();
+
 		// update launch params
 		launchParams.frame.frame = RENDERER->getPropui(IRenderer::FRAME_COUNT);
 		launchParams.frame.colorBuffer = (uint32_t*)m_OutputBufferPrs[0];
 		launchParams.frame.raysPerPixel = getPropi(Pass::RAYS_PER_PIXEL);
+		launchParams.globalParams = (optixParams *)m_ParamsBuffer.getPtr();
 		
 		launchParams.traversable = m_Geometry.getTraversableHandle();
 
-		CUdeviceptr d_param;
-		// malloc needs to be done only once
-		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(launchParams)));
-		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(d_param), &launchParams, sizeof(launchParams), cudaMemcpyHostToDevice));
-
 		m_LaunchParamsBuffer.copy((void *)&launchParams);
+
 		CUDA_SYNC_CHECK();
 
 		// render
@@ -338,10 +403,8 @@ PassRT::doPass(void) {
 			m_LaunchParamsBuffer.getPtr(),
 			m_LaunchParamsBuffer.getSize(),
 			&m_ProgramManager.getSBT(), m_LaunchSize.x, m_LaunchSize.y, 1));
-
 		
 		CUDA_SYNC_CHECK();
-
 
 		for (int i = 0; i < m_OutputPBO.size(); ++i) {
 
@@ -351,7 +414,7 @@ PassRT::doPass(void) {
 				// copy buffer to texture
 				gl::glBindTexture((gl::GLenum)GL_TEXTURE_2D, m_OutputTexIDs[i]);
 				gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, m_OutputPBO[i]);
-				gl::glPixelStorei((gl::GLenum)GL_UNPACK_ALIGNMENT, 4);
+				gl::glPixelStorei((gl::GLenum)GL_UNPACK_ALIGNMENT, 1);
 				gl::glTexSubImage2D((gl::GLenum)GL_TEXTURE_2D, 0, 0, 0,
 					m_LaunchSize.x, m_LaunchSize.y,
 					(gl::GLenum)GL_RGBA,

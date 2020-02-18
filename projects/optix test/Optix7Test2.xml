@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="Optix Test" width=1600 height=400>
+<project name="Optix Test" width=1024 height=512>
 	<assets>
 		<scenes>
 			<scene name="MainScene" >
@@ -67,9 +67,9 @@
 				</rtEntryPoint>
 				<rtDefaultMaterial>
 					<rayType name="Phong">
-						<rtProgram type="ANY_HIT" file="optix/testOptix2.ptx" proc="__anyhit__radiance"/> 
-						<rtProgram type="CLOSEST_HIT" file="optix/testOptix2.ptx" proc="__closesthit__radiance"/> 
-						<rtProgram type="MISS" 		 file="optix/testOptix2.ptx" proc="__miss__radiance"/> 
+						<rtProgram type="ANY_HIT" file="optix/testOptix2.ptx" proc="__anyhit__phong"/> 
+						<rtProgram type="CLOSEST_HIT" file="optix/testOptix2.ptx" proc="__closesthit__phong"/> 
+						<rtProgram type="MISS" 		 file="optix/testOptix2.ptx" proc="__miss__phong"/> 
 					</rayType>
 				</rtDefaultMaterial>
 			</pass>

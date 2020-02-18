@@ -52,7 +52,7 @@
 				</lights>
 
 				<rtRayTypes>
-					<rayType name="Phong"/>
+					<rayType name="Phong"/> 
 				</rtRayTypes>
 
 				<rtVertexAttributes>
@@ -66,9 +66,9 @@
 				</rtEntryPoint>
 				<rtDefaultMaterial>
 					<rayType name="Phong">
-						<rtProgram type="ANY_HIT" file="optix/testOptix0.ptx" proc="__anyhit__radiance"/> 
-						<rtProgram type="CLOSEST_HIT" file="optix/testOptix0.ptx" proc="__closesthit__radiance"/> 
-						<rtProgram type="MISS" 		 file="optix/testOptix0.ptx" proc="__miss__radiance"/> 
+						<rtProgram type="ANY_HIT" file="optix/testOptix0.ptx" proc="__anyhit__phong"/> 
+						<rtProgram type="CLOSEST_HIT" file="optix/testOptix0.ptx" proc="__closesthit__phong"/> 
+						<rtProgram type="MISS" 		 file="optix/testOptix0.ptx" proc="__miss__phong"/> 
 					</rayType>
 				</rtDefaultMaterial>
 			</pass>

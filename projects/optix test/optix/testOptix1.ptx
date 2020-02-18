@@ -10,10 +10,10 @@
 .target sm_30
 .address_size 64
 
-	// .globl	__closesthit__radiance
-.const .align 8 .b8 optixLaunchParams[80];
+	// .globl	__closesthit__phong
+.const .align 8 .b8 optixLaunchParams[88];
 
-.visible .entry __closesthit__radiance(
+.visible .entry __closesthit__phong(
 
 )
 {
@@ -85,8 +85,8 @@
 	ret;
 }
 
-	// .globl	__anyhit__radiance
-.visible .entry __anyhit__radiance(
+	// .globl	__anyhit__phong
+.visible .entry __anyhit__phong(
 
 )
 {
@@ -96,8 +96,8 @@
 	ret;
 }
 
-	// .globl	__miss__radiance
-.visible .entry __miss__radiance(
+	// .globl	__miss__phong
+.visible .entry __miss__phong(
 
 )
 {

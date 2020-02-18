@@ -1,6 +1,6 @@
 
 #include <optix.h>
-#include "LaunchParams2.h" // our launch params
+#include "LaunchParams.h" // our launch params
 #include <vec_math.h> // NVIDIAs math utils
 
 
@@ -8,61 +8,44 @@ extern "C" {
     __constant__ LaunchParams optixLaunchParams;
 }
 //  a single ray type
-enum { SURFACE_RAY_TYPE=0, RAY_TYPE_COUNT };
+enum { PHONG_RAY_TYPE=0, RAY_TYPE_COUNT };
 
-// pack and unpack payload pointer from
-// Ingo Wald Optix 7 course
-// https://gitlab.com/ingowald/optix7course
-
-static __forceinline__ __device__
-void *unpackPointer( uint32_t i0, uint32_t i1 ) {
-    const uint64_t uptr = static_cast<uint64_t>( i0 ) << 32 | i1;
-    void*           ptr = reinterpret_cast<void*>( uptr ); 
-    return ptr;
-}
-
-static __forceinline__ __device__
-void  packPointer( void* ptr, uint32_t& i0, uint32_t& i1 ) {
-    const uint64_t uptr = reinterpret_cast<uint64_t>( ptr );
-    i0 = uptr >> 32;
-    i1 = uptr & 0x00000000ffffffff;
-}
-
-template<typename T>
-static __forceinline__ __device__ T *getPRD() { 
-    const uint32_t u0 = optixGetPayload_0();
-    const uint32_t u1 = optixGetPayload_1();
-    return reinterpret_cast<T*>( unpackPointer( u0, u1 ) );
-}
 
 // -------------------------------------------------------
-// closest hit computes color based lolely on the triangle normal
+// closest hit computes color based only on the triangle normal
 
-extern "C" __global__ void __closesthit__radiance() {
+extern "C" __global__ void __closesthit__phong() {
 
+    // get mesh data
     const TriangleMeshSBTData &sbtData
       = *(const TriangleMeshSBTData*)optixGetSbtDataPointer();
 
-    // compute triangle normal:
+    // retrieve primitive id and indexes
     const int   primID = optixGetPrimitiveIndex();
     const uint3 index  = sbtData.index[primID];
+
+    // fetch vertex position for the three vertices
     const float3 &A     = make_float3(sbtData.vertexD.position[index.x]);
     const float3 &B     = make_float3(sbtData.vertexD.position[index.y]);
     const float3 &C     = make_float3(sbtData.vertexD.position[index.z]);
+
+    // compute triangle normal:
     const float3 Ng     = normalize(cross(B-A,C-A)) * 0.5 + 0.5;
 
+    // get the payload variable
     float3 &prd = *(float3*)getPRD<float3>();
+    // output will be the normal
     prd = Ng;
 }
   
 
 // nothing to do in here
-extern "C" __global__ void __anyhit__radiance() {
+extern "C" __global__ void __anyhit__phong() {
 }
 
 
 // miss sets the bacgground color
-extern "C" __global__ void __miss__radiance() {
+extern "C" __global__ void __miss__phong() {
 
     float3 &prd = *(float3*)getPRD<float3>();
     // set blue as background color
@@ -73,7 +56,6 @@ extern "C" __global__ void __miss__radiance() {
 // ray gen program - responsible for launching primary rays
 extern "C" __global__ void __raygen__renderFrame() {
 
-    // compute a test pattern based on pixel ID
     const int ix = optixGetLaunchIndex().x;
     const int iy = optixGetLaunchIndex().y;
     const auto &camera = optixLaunchParams.camera;  
@@ -102,10 +84,10 @@ extern "C" __global__ void __raygen__renderFrame() {
              1e20f,  // tmax
              0.0f,   // rayTime
              OptixVisibilityMask( 255 ),
-             OPTIX_RAY_FLAG_DISABLE_ANYHIT,//OPTIX_RAY_FLAG_NONE,
-             SURFACE_RAY_TYPE,             // SBT offset
-             RAY_TYPE_COUNT,               // SBT stride
-             SURFACE_RAY_TYPE,             // missSBTIndex 
+             OPTIX_RAY_FLAG_DISABLE_ANYHIT,
+             PHONG_RAY_TYPE,             // SBT offset
+             RAY_TYPE_COUNT,             // SBT stride
+             PHONG_RAY_TYPE,             // missSBTIndex 
              u0, u1 );
 
     //convert float (0-1) to int (0-255)

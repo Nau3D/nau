@@ -2338,8 +2338,8 @@ bool infoMenuAboutWindowChecked = false;
 void messageBox(const std::string& title, const std::string& message) {
 
 	ImGui::OpenPopup(title.c_str());
-	if (ImGui::BeginPopupModal(title.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-		ImGui::Text(message.c_str());
+	if (ImGui::BeginPopupModal(title.c_str(), NULL, 0)) { //ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::TextWrapped(message.c_str());
 		if (ImGui::Button("OK", ImVec2(120, 0))) { 
 			showMessageBox = false;
 			ImGui::CloseCurrentPopup(); 
