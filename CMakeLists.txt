@@ -9,7 +9,7 @@ option(NAU_BUILD_WITH_OPTIX "Build Nau ready for optix" OFF)
 set(CMAKE_INSTALL_LIBDIR "${CMAKE_BINARY_DIR}")
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 
-
+find_package(Threads)
 if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(-std=c++14 -g)
 endif()
