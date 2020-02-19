@@ -408,8 +408,10 @@ RTProgramManager::getPtxFiles() {
 void
 RTProgramManager::addRayType(const std::string& name) {
 
-	if (!m_RayTypes.count(name))
-		m_RayTypes[name] = (int)m_RayTypes.size();
+	if (!m_RayTypes.count(name)) {
+		int k = (int)m_RayTypes.size();
+		m_RayTypes[name] = k;
+	}
 }
 
 
