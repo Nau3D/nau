@@ -24,5 +24,6 @@
 			<HEIGHT value=256 />
 			<INTERNAL_FORMAT value="RGBA32F" />
 		</texture>	
+        <texture name="pedra" filename = "../../models/Texturas/crate.jpg" />
 	</textures>
 </materialLib>

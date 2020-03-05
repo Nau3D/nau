@@ -152,7 +152,7 @@
 	ld.const.u64 	%rd9, [optixLaunchParams+72];
 	mov.u32 	%r6, 255;
 	mov.u32 	%r7, 4;
-	mov.f32 	%f19, 0f3DCCCCCD;
+	mov.f32 	%f19, 0f3A83126F;
 	mov.f32 	%f20, 0f60AD78EC;
 	// inline asm
 	call (%r4, %r5), _optix_trace_2, (%rd9, %f13, %f14, %f15, %f16, %f17, %f18, %f19, %f20, %f21, %r6, %r7, %r10, %r9, %r10, %r11, %r12);
@@ -316,12 +316,461 @@ BB0_4:
 	ret;
 }
 
+	// .globl	__closesthit__phong_alphaTrans
+.visible .entry __closesthit__phong_alphaTrans(
+
+)
+{
+	.reg .b32 	%r<4>;
+	.reg .b64 	%rd<6>;
+
+
+	// inline asm
+	call (%r1), _optix_get_payload_0, ();
+	// inline asm
+	// inline asm
+	call (%r2), _optix_get_payload_1, ();
+	// inline asm
+	cvt.u64.u32	%rd1, %r1;
+	shl.b64 	%rd2, %rd1, 32;
+	cvt.u64.u32	%rd3, %r2;
+	or.b64  	%rd4, %rd2, %rd3;
+	mov.u64 	%rd5, 1045220557;
+	st.u32 	[%rd4+4], %rd5;
+	st.u32 	[%rd4], %rd5;
+	mov.u32 	%r3, 1045220557;
+	st.u32 	[%rd4+8], %r3;
+	ret;
+}
+
+	// .globl	__anyhit__phong_alphaTrans
+.visible .entry __anyhit__phong_alphaTrans(
+
+)
+{
+	.reg .pred 	%p<2>;
+	.reg .f32 	%f<28>;
+	.reg .b32 	%r<5>;
+	.reg .b64 	%rd<13>;
+
+
+	// inline asm
+	call (%rd1), _optix_get_sbt_data_ptr_64, ();
+	// inline asm
+	// inline asm
+	call (%r1), _optix_read_primitive_idx, ();
+	// inline asm
+	ld.u64 	%rd2, [%rd1];
+	mul.wide.s32 	%rd3, %r1, 12;
+	add.s64 	%rd4, %rd2, %rd3;
+	ld.u32 	%r2, [%rd4];
+	ld.u32 	%r3, [%rd4+4];
+	ld.u32 	%r4, [%rd4+8];
+	// inline asm
+	call (%f1, %f2), _optix_get_triangle_barycentrics, ();
+	// inline asm
+	mov.f32 	%f3, 0f3F800000;
+	sub.ftz.f32 	%f4, %f3, %f1;
+	sub.ftz.f32 	%f5, %f4, %f2;
+	ld.u64 	%rd5, [%rd1+24];
+	mul.wide.u32 	%rd6, %r2, 16;
+	add.s64 	%rd7, %rd5, %rd6;
+	ld.v2.f32 	{%f6, %f7}, [%rd7];
+	mul.ftz.f32 	%f10, %f6, %f5;
+	mul.wide.u32 	%rd8, %r3, 16;
+	add.s64 	%rd9, %rd5, %rd8;
+	ld.v2.f32 	{%f11, %f12}, [%rd9];
+	mul.ftz.f32 	%f15, %f1, %f12;
+	fma.rn.ftz.f32 	%f16, %f1, %f11, %f10;
+	fma.rn.ftz.f32 	%f17, %f7, %f5, %f15;
+	mul.wide.u32 	%rd10, %r4, 16;
+	add.s64 	%rd11, %rd5, %rd10;
+	ld.v2.f32 	{%f18, %f19}, [%rd11];
+	fma.rn.ftz.f32 	%f22, %f2, %f18, %f16;
+	fma.rn.ftz.f32 	%f23, %f2, %f19, %f17;
+	ld.u64 	%rd12, [%rd1+56];
+	tex.2d.v4.f32.f32	{%f24, %f25, %f26, %f27}, [%rd12, {%f22, %f23}];
+	setp.geu.ftz.f32	%p1, %f27, 0f3E800000;
+	@%p1 bra 	BB7_2;
+
+	// inline asm
+	call _optix_ignore_intersection, ();
+	// inline asm
+
+BB7_2:
+	ret;
+}
+
+	// .globl	__miss__phong_alphaTrans
+.visible .entry __miss__phong_alphaTrans(
+
+)
+{
+	.reg .b32 	%r<4>;
+	.reg .b64 	%rd<6>;
+
+
+	// inline asm
+	call (%r1), _optix_get_payload_0, ();
+	// inline asm
+	// inline asm
+	call (%r2), _optix_get_payload_1, ();
+	// inline asm
+	cvt.u64.u32	%rd1, %r1;
+	shl.b64 	%rd2, %rd1, 32;
+	cvt.u64.u32	%rd3, %r2;
+	or.b64  	%rd4, %rd2, %rd3;
+	mov.u64 	%rd5, 0;
+	st.u32 	[%rd4+4], %rd5;
+	st.u32 	[%rd4], %rd5;
+	mov.u32 	%r3, 1065353216;
+	st.u32 	[%rd4+8], %r3;
+	ret;
+}
+
+	// .globl	__closesthit__shadow_alphaTrans
+.visible .entry __closesthit__shadow_alphaTrans(
+
+)
+{
+
+
+
+	ret;
+}
+
+	// .globl	__anyhit__shadow_alphaTrans
+.visible .entry __anyhit__shadow_alphaTrans(
+
+)
+{
+	.reg .pred 	%p<2>;
+	.reg .f32 	%f<28>;
+	.reg .b32 	%r<8>;
+	.reg .b64 	%rd<17>;
+
+
+	// inline asm
+	call (%rd1), _optix_get_sbt_data_ptr_64, ();
+	// inline asm
+	// inline asm
+	call (%r1), _optix_read_primitive_idx, ();
+	// inline asm
+	ld.u64 	%rd2, [%rd1];
+	mul.wide.s32 	%rd3, %r1, 12;
+	add.s64 	%rd4, %rd2, %rd3;
+	ld.u32 	%r2, [%rd4];
+	ld.u32 	%r3, [%rd4+4];
+	ld.u32 	%r4, [%rd4+8];
+	// inline asm
+	call (%f1, %f2), _optix_get_triangle_barycentrics, ();
+	// inline asm
+	mov.f32 	%f3, 0f3F800000;
+	sub.ftz.f32 	%f4, %f3, %f1;
+	sub.ftz.f32 	%f5, %f4, %f2;
+	ld.u64 	%rd5, [%rd1+24];
+	mul.wide.u32 	%rd6, %r2, 16;
+	add.s64 	%rd7, %rd5, %rd6;
+	ld.v2.f32 	{%f6, %f7}, [%rd7];
+	mul.ftz.f32 	%f10, %f6, %f5;
+	mul.wide.u32 	%rd8, %r3, 16;
+	add.s64 	%rd9, %rd5, %rd8;
+	ld.v2.f32 	{%f11, %f12}, [%rd9];
+	mul.ftz.f32 	%f15, %f1, %f12;
+	fma.rn.ftz.f32 	%f16, %f1, %f11, %f10;
+	fma.rn.ftz.f32 	%f17, %f7, %f5, %f15;
+	mul.wide.u32 	%rd10, %r4, 16;
+	add.s64 	%rd11, %rd5, %rd10;
+	ld.v2.f32 	{%f18, %f19}, [%rd11];
+	fma.rn.ftz.f32 	%f22, %f2, %f18, %f16;
+	fma.rn.ftz.f32 	%f23, %f2, %f19, %f17;
+	ld.u64 	%rd12, [%rd1+56];
+	tex.2d.v4.f32.f32	{%f24, %f25, %f26, %f27}, [%rd12, {%f22, %f23}];
+	setp.lt.ftz.f32	%p1, %f27, 0f3E800000;
+	@%p1 bra 	BB10_2;
+	bra.uni 	BB10_1;
+
+BB10_2:
+	// inline asm
+	call _optix_ignore_intersection, ();
+	// inline asm
+	bra.uni 	BB10_3;
+
+BB10_1:
+	// inline asm
+	call (%r5), _optix_get_payload_0, ();
+	// inline asm
+	// inline asm
+	call (%r6), _optix_get_payload_1, ();
+	// inline asm
+	cvt.u64.u32	%rd13, %r5;
+	shl.b64 	%rd14, %rd13, 32;
+	cvt.u64.u32	%rd15, %r6;
+	or.b64  	%rd16, %rd14, %rd15;
+	mov.u32 	%r7, 0;
+	st.u32 	[%rd16], %r7;
+
+BB10_3:
+	ret;
+}
+
+	// .globl	__miss__shadow_alphaTrans
+.visible .entry __miss__shadow_alphaTrans(
+
+)
+{
+	.reg .b32 	%r<4>;
+	.reg .b64 	%rd<5>;
+
+
+	// inline asm
+	call (%r1), _optix_get_payload_0, ();
+	// inline asm
+	// inline asm
+	call (%r2), _optix_get_payload_1, ();
+	// inline asm
+	cvt.u64.u32	%rd1, %r1;
+	shl.b64 	%rd2, %rd1, 32;
+	cvt.u64.u32	%rd3, %r2;
+	or.b64  	%rd4, %rd2, %rd3;
+	mov.u32 	%r3, 1065353216;
+	st.u32 	[%rd4], %r3;
+	ret;
+}
+
+	// .globl	__closesthit__phong_glass
+.visible .entry __closesthit__phong_glass(
+
+)
+{
+	.local .align 4 .b8 	__local_depot12[12];
+	.reg .b64 	%SP;
+	.reg .b64 	%SPL;
+	.reg .f32 	%f<23>;
+	.reg .b32 	%r<13>;
+	.reg .b64 	%rd<10>;
+
+
+	mov.u64 	%SPL, __local_depot12;
+	cvta.local.u64 	%SP, %SPL;
+	add.u64 	%rd2, %SP, 0;
+	add.u64 	%rd3, %SPL, 0;
+	mov.u64 	%rd4, 1065353216;
+	st.local.u32 	[%rd3+4], %rd4;
+	st.local.u32 	[%rd3], %rd4;
+	mov.u32 	%r12, 1065353216;
+	st.local.u32 	[%rd3+8], %r12;
+	shr.u64 	%rd5, %rd2, 32;
+	cvt.u32.u64	%r8, %rd5;
+	cvt.u32.u64	%r9, %rd2;
+	// inline asm
+	call (%f1), _optix_get_world_ray_origin_x, ();
+	// inline asm
+	// inline asm
+	call (%f2), _optix_get_world_ray_origin_y, ();
+	// inline asm
+	// inline asm
+	call (%f3), _optix_get_world_ray_origin_z, ();
+	// inline asm
+	// inline asm
+	call (%f4), _optix_get_ray_tmax, ();
+	// inline asm
+	// inline asm
+	call (%f5), _optix_get_world_ray_direction_x, ();
+	// inline asm
+	// inline asm
+	call (%f6), _optix_get_world_ray_direction_y, ();
+	// inline asm
+	// inline asm
+	call (%f7), _optix_get_world_ray_direction_z, ();
+	// inline asm
+	fma.rn.ftz.f32 	%f8, %f4, %f5, %f1;
+	fma.rn.ftz.f32 	%f9, %f4, %f6, %f2;
+	fma.rn.ftz.f32 	%f10, %f4, %f7, %f3;
+	ld.const.u64 	%rd1, [optixLaunchParams+72];
+	mov.u32 	%r3, 255;
+	mov.u32 	%r6, 2;
+	mov.u32 	%r7, 0;
+	mov.f32 	%f14, 0f3A83126F;
+	mov.f32 	%f15, 0f60AD78EC;
+	mov.f32 	%f16, 0f00000000;
+	// inline asm
+	call (%r1, %r2), _optix_trace_2, (%rd1, %f8, %f9, %f10, %f5, %f6, %f7, %f14, %f15, %f16, %r3, %r7, %r7, %r6, %r7, %r8, %r9);
+	// inline asm
+	// inline asm
+	call (%r10), _optix_get_payload_0, ();
+	// inline asm
+	// inline asm
+	call (%r11), _optix_get_payload_1, ();
+	// inline asm
+	cvt.u64.u32	%rd6, %r10;
+	shl.b64 	%rd7, %rd6, 32;
+	cvt.u64.u32	%rd8, %r11;
+	or.b64  	%rd9, %rd7, %rd8;
+	ld.local.f32 	%f17, [%rd3];
+	mul.ftz.f32 	%f18, %f17, 0f3F4CCCCD;
+	ld.local.f32 	%f19, [%rd3+4];
+	mul.ftz.f32 	%f20, %f19, 0f3F4CCCCD;
+	ld.local.f32 	%f21, [%rd3+8];
+	mul.ftz.f32 	%f22, %f21, 0f3F4CCCCD;
+	st.f32 	[%rd9], %f18;
+	st.f32 	[%rd9+4], %f20;
+	st.f32 	[%rd9+8], %f22;
+	ret;
+}
+
+	// .globl	__anyhit__phong_glass
+.visible .entry __anyhit__phong_glass(
+
+)
+{
+
+
+
+	ret;
+}
+
+	// .globl	__miss__phong_glass
+.visible .entry __miss__phong_glass(
+
+)
+{
+	.reg .b32 	%r<4>;
+	.reg .b64 	%rd<6>;
+
+
+	// inline asm
+	call (%r1), _optix_get_payload_0, ();
+	// inline asm
+	// inline asm
+	call (%r2), _optix_get_payload_1, ();
+	// inline asm
+	cvt.u64.u32	%rd1, %r1;
+	shl.b64 	%rd2, %rd1, 32;
+	cvt.u64.u32	%rd3, %r2;
+	or.b64  	%rd4, %rd2, %rd3;
+	mov.u64 	%rd5, 0;
+	st.u32 	[%rd4+4], %rd5;
+	st.u32 	[%rd4], %rd5;
+	mov.u32 	%r3, 1065353216;
+	st.u32 	[%rd4+8], %r3;
+	ret;
+}
+
+	// .globl	__closesthit__shadow_glass
+.visible .entry __closesthit__shadow_glass(
+
+)
+{
+	.local .align 4 .b8 	__local_depot15[4];
+	.reg .b64 	%SP;
+	.reg .b64 	%SPL;
+	.reg .f32 	%f<19>;
+	.reg .b32 	%r<13>;
+	.reg .b64 	%rd<9>;
+
+
+	mov.u64 	%SPL, __local_depot15;
+	cvta.local.u64 	%SP, %SPL;
+	add.u64 	%rd2, %SP, 0;
+	add.u64 	%rd3, %SPL, 0;
+	mov.u32 	%r12, 1065353216;
+	st.local.u32 	[%rd3], %r12;
+	shr.u64 	%rd4, %rd2, 32;
+	cvt.u32.u64	%r8, %rd4;
+	cvt.u32.u64	%r9, %rd2;
+	// inline asm
+	call (%f1), _optix_get_world_ray_origin_x, ();
+	// inline asm
+	// inline asm
+	call (%f2), _optix_get_world_ray_origin_y, ();
+	// inline asm
+	// inline asm
+	call (%f3), _optix_get_world_ray_origin_z, ();
+	// inline asm
+	// inline asm
+	call (%f4), _optix_get_ray_tmax, ();
+	// inline asm
+	// inline asm
+	call (%f5), _optix_get_world_ray_direction_x, ();
+	// inline asm
+	// inline asm
+	call (%f6), _optix_get_world_ray_direction_y, ();
+	// inline asm
+	// inline asm
+	call (%f7), _optix_get_world_ray_direction_z, ();
+	// inline asm
+	fma.rn.ftz.f32 	%f8, %f4, %f5, %f1;
+	fma.rn.ftz.f32 	%f9, %f4, %f6, %f2;
+	fma.rn.ftz.f32 	%f10, %f4, %f7, %f3;
+	ld.const.u64 	%rd1, [optixLaunchParams+72];
+	mov.u32 	%r3, 255;
+	mov.u32 	%r4, 0;
+	mov.u32 	%r6, 2;
+	mov.u32 	%r7, 1;
+	mov.f32 	%f14, 0f3A83126F;
+	mov.f32 	%f15, 0f60AD78EC;
+	mov.f32 	%f16, 0f00000000;
+	// inline asm
+	call (%r1, %r2), _optix_trace_2, (%rd1, %f8, %f9, %f10, %f5, %f6, %f7, %f14, %f15, %f16, %r3, %r4, %r7, %r6, %r7, %r8, %r9);
+	// inline asm
+	// inline asm
+	call (%r10), _optix_get_payload_0, ();
+	// inline asm
+	// inline asm
+	call (%r11), _optix_get_payload_1, ();
+	// inline asm
+	cvt.u64.u32	%rd5, %r10;
+	shl.b64 	%rd6, %rd5, 32;
+	cvt.u64.u32	%rd7, %r11;
+	or.b64  	%rd8, %rd6, %rd7;
+	ld.local.f32 	%f17, [%rd3];
+	mul.ftz.f32 	%f18, %f17, 0f3F4CCCCD;
+	st.f32 	[%rd8], %f18;
+	ret;
+}
+
+	// .globl	__anyhit__shadow_glass
+.visible .entry __anyhit__shadow_glass(
+
+)
+{
+
+
+
+	ret;
+}
+
+	// .globl	__miss__shadow_glass
+.visible .entry __miss__shadow_glass(
+
+)
+{
+	.reg .b32 	%r<4>;
+	.reg .b64 	%rd<5>;
+
+
+	// inline asm
+	call (%r1), _optix_get_payload_0, ();
+	// inline asm
+	// inline asm
+	call (%r2), _optix_get_payload_1, ();
+	// inline asm
+	cvt.u64.u32	%rd1, %r1;
+	shl.b64 	%rd2, %rd1, 32;
+	cvt.u64.u32	%rd3, %r2;
+	or.b64  	%rd4, %rd2, %rd3;
+	mov.u32 	%r3, 1065353216;
+	st.u32 	[%rd4], %r3;
+	ret;
+}
+
 	// .globl	__raygen__renderFrame
 .visible .entry __raygen__renderFrame(
 
 )
 {
-	.local .align 16 .b8 	__local_depot6[48];
+	.local .align 16 .b8 	__local_depot18[48];
 	.reg .b64 	%SP;
 	.reg .b64 	%SPL;
 	.reg .pred 	%p<2>;
@@ -331,7 +780,7 @@ BB0_4:
 	.reg .b64 	%rd<23>;
 
 
-	mov.u64 	%SPL, __local_depot6;
+	mov.u64 	%SPL, __local_depot18;
 	cvta.local.u64 	%SP, %SPL;
 	// inline asm
 	call (%r5), _optix_get_launch_index_x, ();
@@ -349,7 +798,7 @@ BB0_4:
 	call (%r9), _optix_get_launch_dimension_y, ();
 	// inline asm
 	setp.ne.s32	%p1, %r13, 0;
-	@%p1 bra 	BB6_2;
+	@%p1 bra 	BB18_2;
 
 	mov.u64 	%rd1, $str;
 	cvta.global.u64 	%rd2, %rd1;
@@ -468,7 +917,7 @@ BB0_4:
 	//{
 	}// Callseq End 4
 
-BB6_2:
+BB18_2:
 	add.u64 	%rd15, %SP, 0;
 	add.u64 	%rd16, %SPL, 0;
 	mov.u64 	%rd17, 1065353216;

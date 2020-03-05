@@ -78,32 +78,34 @@ RTProgramManager::processTextures() {
 
 			try {
 				int id = t->getPropi(ITexture::ID);
-				m_Textures[id] = {};
+				//if (id != 39) {
+					m_Textures[id] = {};
 
-				CUDA_CHECK(cudaGraphicsGLRegisterImage(&m_Textures[id].cgr, id,
-					GL_TEXTURE_2D, cudaGraphicsRegisterFlagsReadOnly));
-				CUDA_CHECK(cudaGraphicsMapResources(1, &m_Textures[id].cgr, 0));
-				CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&m_Textures[id].ca, m_Textures[id].cgr, 0, 0));
+					CUDA_CHECK(cudaGraphicsGLRegisterImage(&m_Textures[id].cgr, id,
+						GL_TEXTURE_2D, cudaGraphicsRegisterFlagsReadOnly));
+					CUDA_CHECK(cudaGraphicsMapResources(1, &m_Textures[id].cgr, 0));
+					CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&m_Textures[id].ca, m_Textures[id].cgr, 0, 0));
 
-				cudaResourceDesc resDesc;
-				memset(&resDesc, 0, sizeof(resDesc));
-				resDesc.resType = cudaResourceTypeArray;
-				resDesc.res.array.array = m_Textures[id].ca;
+					cudaResourceDesc resDesc;
+					memset(&resDesc, 0, sizeof(resDesc));
+					resDesc.resType = cudaResourceTypeArray;
+					resDesc.res.array.array = m_Textures[id].ca;
 
-				cudaTextureDesc texDesc;
-				memset(&texDesc, 0, sizeof(texDesc));
-				texDesc.addressMode[0] = cudaAddressModeWrap;
-				texDesc.addressMode[1] = cudaAddressModeWrap;
-				texDesc.filterMode = cudaFilterModePoint;
-				texDesc.readMode = cudaReadModeNormalizedFloat;
-				texDesc.normalizedCoords = 1;
-				texDesc.maxAnisotropy = 1;
-				texDesc.maxMipmapLevelClamp = 99;
-				texDesc.minMipmapLevelClamp = 0;
-				texDesc.mipmapFilterMode = cudaFilterModePoint;
-				texDesc.borderColor[0] = 1.0f;
-				texDesc.sRGB = 0;
-				CUDA_CHECK(cudaCreateTextureObject(&m_Textures[id].cto, &resDesc, &texDesc, nullptr));
+					cudaTextureDesc texDesc;
+					memset(&texDesc, 0, sizeof(texDesc));
+					texDesc.addressMode[0] = cudaAddressModeWrap;
+					texDesc.addressMode[1] = cudaAddressModeWrap;
+					texDesc.filterMode = cudaFilterModePoint;
+					texDesc.readMode = cudaReadModeNormalizedFloat;
+					texDesc.normalizedCoords = 1;
+					texDesc.maxAnisotropy = 1;
+					texDesc.maxMipmapLevelClamp = 99;
+					texDesc.minMipmapLevelClamp = 0;
+					texDesc.mipmapFilterMode = cudaFilterModePoint;
+					texDesc.borderColor[0] = 1.0f;
+					texDesc.sRGB = 0;
+					CUDA_CHECK(cudaCreateTextureObject(&m_Textures[id].cto, &resDesc, &texDesc, nullptr));
+				//}
 			}
 			catch (std::exception const& e) {
 				SLOG("Exception generating texture: %s", e.what());
@@ -112,6 +114,62 @@ RTProgramManager::processTextures() {
 		}
 	}
 	return true;
+}
+
+
+
+void 
+RTProgramManager::registerTexture(int id) {
+
+	try {
+		m_Textures[id] = {};
+
+		CUDA_CHECK(cudaGraphicsGLRegisterImage(&m_Textures[id].cgr, id,
+			GL_TEXTURE_2D, cudaGraphicsRegisterFlagsReadOnly));
+		CUDA_CHECK(cudaGraphicsMapResources(1, &m_Textures[id].cgr, 0));
+		CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&m_Textures[id].ca, m_Textures[id].cgr, 0, 0));
+
+		cudaResourceDesc resDesc;
+		memset(&resDesc, 0, sizeof(resDesc));
+		resDesc.resType = cudaResourceTypeArray;
+		resDesc.res.array.array = m_Textures[id].ca;
+
+		cudaTextureDesc texDesc;
+		memset(&texDesc, 0, sizeof(texDesc));
+		texDesc.addressMode[0] = cudaAddressModeWrap;
+		texDesc.addressMode[1] = cudaAddressModeWrap;
+		texDesc.filterMode = cudaFilterModePoint;
+		texDesc.readMode = cudaReadModeNormalizedFloat;
+		texDesc.normalizedCoords = 1;
+		texDesc.maxAnisotropy = 1;
+		texDesc.maxMipmapLevelClamp = 99;
+		texDesc.minMipmapLevelClamp = 0;
+		texDesc.mipmapFilterMode = cudaFilterModePoint;
+		texDesc.borderColor[0] = 1.0f;
+		texDesc.sRGB = 0;
+		CUDA_CHECK(cudaCreateTextureObject(&m_Textures[id].cto, &resDesc, &texDesc, nullptr));
+	}
+	catch (std::exception const& e) {
+		SLOG("Exception generating texture: %s", e.what());
+		SLOG("Exception in texture id : %d", id);
+	}
+}
+
+
+void
+RTProgramManager::unregisterTexture(int id) {
+
+	try {
+		CUDA_CHECK(cudaDestroyTextureObject(m_Textures[id].cto));
+		CUDA_CHECK(cudaGraphicsUnmapResources(1, &m_Textures[id].cgr, 0));
+		CUDA_CHECK(cudaGraphicsUnregisterResource(m_Textures[id].cgr));
+		//CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&m_Textures[id].ca, m_Textures[id].cgr, 0, 0));
+
+	}
+	catch (std::exception const& e) {
+		SLOG("Exception unregistering texture in cuda: %s", e.what());
+		SLOG("Exception in texture id : %d", id);
+	}
 }
 
 
@@ -291,6 +349,29 @@ RTProgramManager::generatePipeline() {
 }
 
 
+
+const std::string 
+RTProgramManager::getRTMaterialName(std::string matName) {
+
+	// the lib contains exactly the material we are looking for
+	if (m_Materials.count(matName))
+		return matName;
+
+	// otherwise look for wildcards (* at the end)
+	for (auto& mat : m_Materials) {
+
+		if ((mat.first)[mat.first.size() - 1] == '*') {
+			std::string aux = (mat.first).substr(0, mat.first.size() - 1);
+			size_t k = matName.find(aux);
+			if (k == 0)
+				return mat.first;
+		}
+	}
+	// if no match apply default material
+	return "default";
+}
+
+
 /*! constructs the shader binding table */
 bool 
 RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffers> &cuBuffers) {
@@ -324,12 +405,13 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 				nauMaterial->getTextureIDs(&textureIDs);
 
 				// if material is not in the material map use default mat
-				if (m_Materials.count(indexBuffer.first) == 0) {
-					mat = "default";
-				}
-				else {
-					mat = indexBuffer.first;
-				}
+				mat = getRTMaterialName(indexBuffer.first);
+				//if (m_Materials.count(indexBuffer.first) == 0) {
+				//	mat = "default";
+				//}
+				//else {
+				//	mat = indexBuffer.first;
+				//}
 				vec4 x = nauMaterial->getColor().getPropf4(ColorMaterial::DIFFUSE);;
 				color = make_float3(x.x, x.y, x.z);
 
@@ -454,6 +536,41 @@ RTProgramManager::setDefaultProc(const std::string& pRayType, int procType, cons
 	if (!ptxFound)
 		m_PtxFiles.push_back(pFile);
 }
+
+
+void 
+RTProgramManager::setMatProc(const std::string& matName, const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName) {
+
+	int rayTypeIndex = m_RayTypes[pRayType];
+
+	assert(rayTypeIndex != -1);
+
+	switch (procType) {
+	case RTRenderer::ANY_HIT:
+		m_Materials[matName][rayTypeIndex].moduleNameAH = pFile;
+		m_Materials[matName][rayTypeIndex].programNameAH = pName;
+		break;
+	case RTRenderer::CLOSEST_HIT:
+		m_Materials[matName][rayTypeIndex].moduleNameCH = pFile;
+		m_Materials[matName][rayTypeIndex].programNameCH = pName;
+		break;
+	case RTRenderer::MISS:
+		m_Materials[matName][rayTypeIndex].moduleNameMiss = pFile;
+		m_Materials[matName][rayTypeIndex].programNameMiss = pName;
+		break;
+
+	}
+
+	bool ptxFound = false;
+	for (int i = 0; !ptxFound && i < m_PtxFiles.size(); ++i)
+		if (m_PtxFiles[i] == pFile)
+			ptxFound = true;
+
+	if (!ptxFound)
+		m_PtxFiles.push_back(pFile);
+
+}
+
 
 
 

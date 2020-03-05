@@ -72,6 +72,7 @@ PassRT::rtInit() {
 		m_RThasIssues = true;
 		return;
 	}
+
 	launchParams.traversable = m_Geometry.getTraversableHandle();
 	
 	if (!m_ProgramManager.generateModules()) {
@@ -83,6 +84,7 @@ PassRT::rtInit() {
 		m_RThasIssues = true;
 		return;
 	}
+
 	if (!m_ProgramManager.generatePipeline()) {
 		m_RThasIssues = true;
 		return;
@@ -110,17 +112,20 @@ PassRT::prepare(void) {
 		rtInit();
 		m_ParamsSize = computeParamsByteSize();
 		m_ParamsBuffer.setSize(m_ParamsSize);
+		m_ProgramManager.unregisterTexture(m_RenderTarget->getTexture(0)->getPropi(ITexture::ID));
 	}
 
 	if (0 != m_RenderTarget && true == m_UseRT) {
 
 		if (m_ExplicitViewport) {
 			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUTE_SIZE);
-			if (m_RTSizeWidth!= (int)f2.x || m_RTSizeHeight != (int)f2.y) {
+			if (m_RTSizeWidth != (int)f2.x || m_RTSizeHeight != (int)f2.y) {
 				m_RTSizeWidth = (int)f2.x;
 				m_RTSizeHeight = (int)f2.y;
 				uivec2 uiv2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight);
+
 				m_RenderTarget->setPropui2(IRenderTarget::SIZE, uiv2);
+				//m_ProgramManager.registerTexture(m_RenderTarget->getTexture(0)->getPropi(ITexture::ID));
 				bindCudaRenderTarget();
 			}
 		}
@@ -141,6 +146,13 @@ void
 PassRT::setDefaultProc(const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName) {
 
 	m_ProgramManager.setDefaultProc(pRayType, procType, pFile, pName);
+}
+
+
+void
+PassRT::setMatProc(const std::string& matName, const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName) {
+
+	m_ProgramManager.setMatProc(matName, pRayType, procType, pFile, pName);
 }
 
 
@@ -202,12 +214,20 @@ PassRT::computeParamsByteSize() {
 
 	for (auto& p : m_Params) {
 
-		AttribSet* attrSet = NAU->getAttribs(p.type);
+		if (p.type == "TEXTURE" && p.component == "ID") {
 
-		attrSet->getPropTypeAndId(p.component, &p.dt, &attr);
-		p.offset = 0;
-		p.size = Enums::getSize(p.dt);
-		p.attr = attr;
+			p.size = sizeof(cudaTextureObject_t);
+			p.id = RESOURCEMANAGER->getTexture(p.context)->getPropi(ITexture::ID);
+		}
+		else {
+			AttribSet* attrSet = NAU->getAttribs(p.type);
+
+			attrSet->getPropTypeAndId(p.component, &p.dt, &attr);
+			p.offset = 0;
+			p.size = Enums::getSize(p.dt);
+			p.attr = attr;
+		}
+
 		count += p.size;
 	}
 	return count;
@@ -221,21 +241,27 @@ PassRT::copyParamsToBuffer() {
 	int currOffset = 0;
 	for (auto& p : m_Params) {
 
-		AttributeValues* attr = NULL;
-		if (p.context != "CURRENT") {
-			attr = NAU->getObjectAttributes(p.type, p.context, p.id);
+		if (p.type == "TEXTURE" && p.component == "ID") {
+
+			memcpy(temp + currOffset, (void *)&m_ProgramManager.m_Textures[p.id].cto, p.size);
 		}
 		else {
-			attr = NAU->getCurrentObjectAttributes(p.type, p.id);
-		}
 
-		void* values;
-		if (attr != NULL) {
-			values = attr->getProp(p.attr, p.dt);
+			AttributeValues* attr = NULL;
+			if (p.context != "CURRENT") {
+				attr = NAU->getObjectAttributes(p.type, p.context, p.id);
+			}
+			else {
+				attr = NAU->getCurrentObjectAttributes(p.type, p.id);
+			}
+
+			void* values;
+			if (attr != NULL) {
+				values = attr->getProp(p.attr, p.dt);
+			}
+			void* d = (Data*)((Data*)values)->getPtr();
+			memcpy(temp + currOffset, d, p.size);
 		}
-		void* d = (Data *)((Data*)values)->getPtr();
-		memcpy(temp , d, p.size);
-		
 		currOffset += p.size;
 	}
 	m_ParamsBuffer.copy(temp);
@@ -413,6 +439,11 @@ PassRT::doPass(void) {
 
 				// copy buffer to texture
 				gl::glBindTexture((gl::GLenum)GL_TEXTURE_2D, m_OutputTexIDs[i]);
+
+				//int info;
+				//glGetTexLevelParameteriv((gl::GLenum)GL_TEXTURE_2D, 0,
+				//	(gl::GLenum)GL_TEXTURE_HEIGHT, &info);
+
 				gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, m_OutputPBO[i]);
 				gl::glPixelStorei((gl::GLenum)GL_UNPACK_ALIGNMENT, 1);
 				gl::glTexSubImage2D((gl::GLenum)GL_TEXTURE_2D, 0, 0, 0,

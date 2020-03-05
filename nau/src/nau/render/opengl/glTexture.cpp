@@ -547,6 +547,10 @@ GLTexture::resize(unsigned int x, unsigned int y, unsigned int z) {
 		glTexImage2D((GLenum)m_EnumProps[DIMENSION], 0, m_EnumProps[INTERNAL_FORMAT],
 					m_IntProps[WIDTH], m_IntProps[HEIGHT], 0,
 					(GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
+		int info;
+		glGetTexLevelParameteriv((gl::GLenum)GL_TEXTURE_2D, 0,
+			(gl::GLenum)GL_TEXTURE_HEIGHT, &info);
+		printf("%d\n", info);
 		break;
 	}
 	//if (m_BoolProps[MIPMAP])

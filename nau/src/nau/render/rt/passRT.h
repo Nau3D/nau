@@ -95,6 +95,7 @@ namespace nau
 
 				void setRayGenProcedure(const std::string &file, const std::string &proc);
 				void setDefaultProc(const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName);
+				void setMatProc(const std::string& matName, const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName);
 
 				void addParam(const std::string &name, const std::string &type, const std::string &context, const std::string &component, int id);
 			protected:

@@ -54,14 +54,18 @@ namespace nau {
 				bool generateSBT(const std::map<std::string, RTGeometry::CUDABuffers> &cuBuffers);
 
 				void setRayGenProcedure(const std::string &file, const std::string &proc);
-				void setDefaultProc(const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName);
 				void addRayType(const std::string& name);
-
+				void setDefaultProc(const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName);
+				void setMatProc(const std::string &matName, const std::string& pRayType, int procType, const std::string& pFile, const std::string& pName);
 				// create cuda textures from OpenGL textures
 				bool processTextures();
+				void unregisterTexture(int id);
+				void registerTexture(int id);
+				//bool unregisterAllTextures();
 
 			protected:
 				
+				const std::string getRTMaterialName(std::string matName);
 				bool typeIsOK(nau::material::ITexture* t);
 				
 				// vector of ptx files
@@ -132,6 +136,9 @@ namespace nau {
 					cudaArray *ca;
 				};
 
+				public:
+
+				// GL texture id -> cuda texture data
 				std::map<int, TextureData > m_Textures;
 			};
 		};

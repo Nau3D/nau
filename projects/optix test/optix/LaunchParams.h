@@ -24,6 +24,7 @@ struct RayGenData {
 
 struct GlobalParams{
     float4 lightDir;
+	cudaTextureObject_t texture;
 } ;
 
 

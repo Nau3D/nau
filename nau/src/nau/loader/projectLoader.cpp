@@ -2390,7 +2390,7 @@ ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 		"lights", "viewport", "renderTarget",
 		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits", "rayCount",
 		"rtRayTypes", "rtVertexAttributes", "rtEntryPoint", "rtDefaultMaterial","preScript", "postScript",
-		"rtGlobalParams"};
+		"rtGlobalParams", "rtMaterialMap"};
 	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),false);
 }
 
@@ -2508,7 +2508,7 @@ ProjectLoader::loadPassRenderTargets(TiXmlHandle hPass, Pass *aPass,std::map<std
 void
 ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 
-	TiXmlElement *pElem, *pElemAux;
+	TiXmlElement *pElem, *pElemAux, *pElemAux2;
 	PassRT *p = (PassRT *)aPass;
 
 	pElem = hPass.FirstChild("rtRayTypes").FirstChildElement("rayType").Element();
@@ -2569,6 +2569,64 @@ ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 			p->setDefaultProc(pRayType, procType, pFile, pProc);
 		}
 	}
+
+	pElem = hPass.FirstChild("rtMaterialMap").FirstChildElement("rtMap").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement("rtMap")) {
+
+		const char* matName = pElem->Attribute("to");
+
+		pElemAux = pElem->FirstChildElement("rayType");
+		for (; pElemAux != NULL; pElemAux = pElemAux->NextSiblingElement("rayType")) {
+
+			const char* pRayType = pElemAux->Attribute("name");
+
+			pElemAux2 = pElemAux->FirstChildElement("rtProgram");
+			for (; pElemAux2 != NULL; pElemAux2 = pElemAux2->NextSiblingElement("rtProgram")) {
+
+				const char* pType = pElemAux2->Attribute("type");
+				std::string message = "Pass " + aPass->getName() + "\nElement rtDefaultMaterial->rtProgram";
+				std::string pFile = readFile(pElemAux2, "file", message);
+				const char* pProc = pElemAux2->Attribute("proc");
+				int procType = RTRenderer::getProcType(pType);
+				if (procType == -1)
+					NAU_THROW("File: %s\nPass: %s\nInvalid proc type: %s. Valid values are \"MISS\", \"ANY_HIT\" and \"CLOSEST_HIT\"", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pType);
+
+				p->setMatProc(matName, pRayType, procType, pFile, pProc);
+			}
+
+		}
+	}
+
+//	const char *pName = pElem->Attribute("to");
+//	//if (!MATERIALLIBMANAGER->hasMaterial(std::string(pName)))
+//	//	NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Map. \nMaterial %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pName);
+
+//	pElemAux = pElem->FirstChildElement("optixProgram");
+//	for ( ; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
+
+//	const char *pType = pElemAux->Attribute ("type");
+//	const char *pProc = pElemAux->Attribute ("proc");
+//	const char *pRay  = pElemAux->Attribute ("ray");
+
+//	if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")))
+//		NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Proc Type", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+//	if (!pProc)
+//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Proc", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+//	if (!pRay)
+//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Ray", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+//	
+//	std::string message = "Pass " + aPass->getName() + "\nOptix material map - Procedure " + pProc;
+//	std::string file = readFile(pElemAux, "file", message);
+
+//	if (!strcmp("Closest_Hit", pType)) 
+//		p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
+//	else if (!strcmp("Any_Hit", pType)) 
+//		p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
+//	}
+//}
+
 
 
 	pElem = hPass.FirstChild("rtGlobalParams").FirstChild("param").Element();
