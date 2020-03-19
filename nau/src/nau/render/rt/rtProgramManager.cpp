@@ -192,7 +192,7 @@ RTProgramManager::generateModules()
 		m_PipelineCompileOptions.pipelineLaunchParamsVariableName = "optixLaunchParams";
 
 		m_PipelineLinkOptions.overrideUsesMotionBlur = false;
-		m_PipelineLinkOptions.maxTraceDepth = 10;
+		m_PipelineLinkOptions.maxTraceDepth = 20;
 
 
 		const std::vector<std::string>& ptxFiles = getPtxFiles();

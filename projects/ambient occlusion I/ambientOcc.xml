@@ -3,7 +3,7 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" param="SWAP_YZ">
-				<file name="..\..\models\Teapot.3ds"/>
+				<file name="../../models/SanMiguel/san-miguel.nbo"/>
 			</scene>
 		</scenes>
 		<viewports>

@@ -259,7 +259,19 @@ PassRT::copyParamsToBuffer() {
 			if (attr != NULL) {
 				values = attr->getProp(p.attr, p.dt);
 			}
-			void* d = (Data*)((Data*)values)->getPtr();
+			void* d;
+			switch (p.dt) {
+			case Enums::INT:
+			case Enums::BOOL:
+			case Enums::FLOAT:
+			case Enums::UINT:
+			case Enums::SAMPLER:
+			case Enums::DOUBLE:
+				d = values;
+				break;
+			default:
+				d = ((Data*)values)->getPtr();
+			}
 			memcpy(temp + currOffset, d, p.size);
 		}
 		currOffset += p.size;
