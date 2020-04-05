@@ -1,6 +1,8 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
+// From https://github.com/aiekick/ImGuiFileDialog
+
 #include "ImGuiFileDialog.h"
 #include "imgui.h"
 
@@ -464,6 +466,7 @@ void ImGuiFileDialog::OpenDialog(const std::string& vKey, const char* vName, con
 
 	dlg_defaultExt = "";
 
+
 	m_ShowDialog = true;
 }
 
@@ -526,6 +529,8 @@ void ImGuiFileDialog::OpenDialog(const std::string& vKey, const char* vName, con
 	dlg_optionsPane = 0;
 	dlg_userString = vUserString;
 	dlg_optionsPaneWidth = 0;
+
+	ScanDir(m_CurrentPath);
 
 	m_ShowDialog = true;
 }

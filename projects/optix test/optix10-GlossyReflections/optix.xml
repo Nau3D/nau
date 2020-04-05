@@ -1,12 +1,18 @@
 <?xml version="1.0" ?>
 <project name="Optix Test" width=2048 height=1024>
 	<assets>
+        <attributes>
+            <attribute type="PASS" name="GLOSSINESS" data="FLOAT" value="128" />
+            <attribute type="PASS" name="GLOSSY_RAYS" data="INT" value="1" />
+
+        </attributes>
+
 		<scenes>
 			<scene name="MainScene" >
 				<!--file name="../../models/sponza/crytek-sponza/sponza.nbo" /-->
 				<!--file name="../../models/LargoCamoes/largoCamoes.nbo" /-->
 				<!--file name="../../models/SanMiguel/san-miguel.nbo" /-->
-                <file name="../../models/cornellBox/CornellBox-Sphere2.obj" />
+                <file name="../../../models/cornellBox/CornellBox-Sphere2.obj" />
 			</scene>
 		</scenes>
 		<viewports>
@@ -32,9 +38,9 @@
 		</cameras>
 		<lights>
 			<light name="Sun" >
-   				<POSITION x="0.0" y="1.57" z="0.0" />
+   				<POSITION x="0.0" y="1.59" z="0.0" />
 
-				<!--POSITION x="-0.24" y="1.57" z="-0.22" /-->
+				<!--POSITION x="-0.20" y="1.59" z="-0.20" /-->
 			</light>
 		</lights>
 		<materialLibs>   
@@ -66,62 +72,63 @@
 				</rtVertexAttributes>
 
 				<rtEntryPoint>
-					<rayGen file="optix/testOptix8.ptx" proc="__raygen__renderFrame"/> 
+					<rayGen file="optix.ptx" proc="__raygen__renderFrame"/> 
 				</rtEntryPoint>
 				<rtDefaultMaterial>
 					<rayType name="Phong">
-						<rtProgram type="ANY_HIT" file="optix/testOptix8.ptx" proc="__anyhit__radiance"/> 
-						<rtProgram type="CLOSEST_HIT" file="optix/testOptix8.ptx" proc="__closesthit__radiance"/> 
-						<rtProgram type="MISS" 		 file="optix/testOptix8.ptx" proc="__miss__radiance"/> 
+						<rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__radiance"/> 
+						<rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__radiance"/> 
+						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__radiance"/> 
 					</rayType>
 					<rayType name="Shadow">
-						<rtProgram type="ANY_HIT" file="optix/testOptix8.ptx" proc="__anyhit__shadow"/> 
-						<rtProgram type="CLOSEST_HIT" file="optix/testOptix8.ptx" proc="__closesthit__shadow"/> 
-						<rtProgram type="MISS" 		 file="optix/testOptix8.ptx" proc="__miss__shadow"/> 
+						<rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow"/> 
+						<rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow"/> 
+						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
 					</rayType>
 				</rtDefaultMaterial>
                 <rtMaterialMap>
                     <rtMap to = "light">
                         <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix/testOptix8.ptx" proc="__anyhit__light"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix/testOptix8.ptx" proc="__closesthit__light"/> 
-                            <rtProgram type="MISS" 		 file="optix/testOptix8.ptx" proc="__miss__light"/> 
+                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__light"/> 
+                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__light"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__light"/> 
                         </rayType>
                         <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix/testOptix8.ptx" proc="__anyhit__light_shadow"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix/testOptix8.ptx" proc="__closesthit__light_shadow"/> 
-                            <rtProgram type="MISS" 		 file="optix/testOptix8.ptx" proc="__miss__light_shadow"/> 
+                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__light_shadow"/> 
+                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__light_shadow"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__light_shadow"/> 
                         </rayType>
                     </rtMap>
                     <rtMap to = "rightSphere">
                         <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix/testOptix8.ptx" proc="__anyhit__phong_glass"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix/testOptix8.ptx" proc="__closesthit__phong_glass"/> 
-                            <rtProgram type="MISS" 		 file="optix/testOptix8.ptx" proc="__miss__phong_glass"/> 
+                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__phong_glass"/> 
+                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong_glass"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__phong_glass"/> 
                         </rayType>
                         <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix/testOptix8.ptx" proc="__anyhit__shadow_glass"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix/testOptix8.ptx" proc="__closesthit__shadow_glass"/> 
-                            <rtProgram type="MISS" 		 file="optix/testOptix8.ptx" proc="__miss__shadow_glass"/> 
+                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow_glass"/> 
+                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow_glass"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow_glass"/> 
                         </rayType>
                     </rtMap>
                     <rtMap to = "leftSphere">
                         <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix/testOptix8.ptx" proc="__anyhit__radiance"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix/testOptix8.ptx" proc="__closesthit__phong_metal"/> 
-                            <rtProgram type="MISS" 		 file="optix/testOptix8.ptx" proc="__miss__radiance"/> 
+                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__radiance"/> 
+                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong_metal"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__radiance"/> 
                         </rayType>
                         <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix/testOptix8.ptx" proc="__anyhit__shadow"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix/testOptix8.ptx" proc="__closesthit__shadow"/> 
-                            <rtProgram type="MISS" 		 file="optix/testOptix8.ptx" proc="__miss__shadow"/> 
+                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow"/> 
+                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
                         </rayType>
                     </rtMap>
                 </rtMaterialMap>
                 <rtGlobalParams>
                     <param name="lightDir" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
-                    <param name="aTexture" type="TEXTURE" context="Optix Ray Tracer Render Target::pedra" component="ID" />
-              </rtGlobalParams>
+                    <param name="glossiness" type="PASS" context="CURRENT" component="GLOSSINESS" />
+                    <param name="glossy_rays" type="PASS" context="CURRENT" component="GLOSSY_RAYS" />
+               </rtGlobalParams>
 			</pass>
 			<pass class="quad" name="pass2">
 				<viewport name="RightViewport" />
@@ -139,9 +146,4 @@
 			</pass> 
 		</pipeline>
 	</pipelines>
-	<interface>
-		<window label="Main Window">
-			<var label="Rays Per Pixel" type="PASS" context="CURRENT" component="RAYS_PER_PIXEL" />
-		</window>
-	</interface>
 </project>

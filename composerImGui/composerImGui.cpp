@@ -43,6 +43,7 @@ using namespace glbinding;
 #include <nau/event/eventFactory.h>
 #include <nau/event/cameraMotion.h>
 #include <nau/event/cameraOrientation.h>
+#include <nau/loader/iTextureLoader.h>
 #include <nau/system/file.h>
 
 
@@ -1257,6 +1258,10 @@ void renderWindowScenes() {
 		index = 0;
 	combo("Scenes", scenes, scenes[index], &index);
 
+	if (ImGui::Button("Save as NBO")) {
+		ImGuiFileDialog::Instance()->OpenDialog("SaveFileDlg", "Save NBO File", ".*", ".");
+		strcpy(ImGuiFileDialog::FileNameBuffer,"");
+	}
 	separator();
 
 	std::shared_ptr<IScene>& scene = RENDERMANAGER->getScene(scenes[index]);
@@ -1293,6 +1298,19 @@ void renderWindowScenes() {
 		}
 		ImGui::TreePop();
 
+	}
+	if (ImGuiFileDialog::Instance()->FileDialog("SaveFileDlg"))
+	{
+		// action if OK
+		if (ImGuiFileDialog::Instance()->IsOk == true)
+		{
+			std::string filePathName = ImGuiFileDialog::Instance()->GetFinalFileName();
+			std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+			printf(" Saving scene: %s\n", filePathName.c_str());
+			nau::NAU->writeAssets("NBO", filePathName.c_str(), scenes[index]);
+
+		}
+		ImGuiFileDialog::Instance()->CloseDialog("SaveFileDlg");
 	}
 
 
@@ -1538,7 +1556,7 @@ void renderWindowTextureLibrary() {
 			framePadding = 3;
 		else
 			framePadding = 0;
-		if (ImGui::ImageButton((ImTextureID)id, ImVec2(96, 96), ImVec2(0, 0), ImVec2(1, 1), framePadding, ImColor(255, 0, 0, 255))) {
+		if (ImGui::ImageButton((ImTextureID)id, ImVec2(96, 96), ImVec2(0, 1), ImVec2(1, 0), framePadding, ImColor(255, 0, 0, 255))) {
 			textureIndex = id;
 		}
 		ImGui::PopID();
@@ -1547,10 +1565,29 @@ void renderWindowTextureLibrary() {
 	ImGui::NewLine();
 	ImGui::NewLine();
 	if (textureIndex != 0) {
+
 		ITexture* t = RESOURCEMANAGER->getTextureByID(textureIndex);
+
 		if (t == NULL)
 			textureIndex = 0;
 		else {
+			if (ImGui::Button("Save PNG")) {
+				std::string s = t->getLabel() + ".png";
+				std::string sname = nau::system::File::Validate(s);
+				nau::loader::ITextureLoader::Save(t, nau::loader::ITextureLoader::PNG);
+			}
+			if (ImGui::Button("Save RAW")) {
+				char name[256];
+				sprintf(name, "%s.raw", t->getLabel().c_str());
+				std::string sname = nau::system::File::Validate(name);
+				nau::loader::ITextureLoader::SaveRaw(t, sname);
+			}
+			if (ImGui::Button("Save HDR")) {
+				std::string s = t->getLabel() + ".hdr";
+				std::string sname = nau::system::File::Validate(s);
+				nau::loader::ITextureLoader::Save(t, nau::loader::ITextureLoader::HDR);
+			}
+			ImGui::NewLine();
 			ImGui::Text("Name"); ImGui::SameLine(150 - ImGui::GetCursorPos().x, 0);
 			ImGui::Text(t->getLabel().c_str());
 			ImGui::NewLine();
