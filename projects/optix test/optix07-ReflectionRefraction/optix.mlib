@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<materialLib name="Optix Ray Tracer Render Target">
+	<renderTargets>
+		<renderTarget name ="test">
+			<SIZE width=1024 height=1024 />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+</materialLib>

@@ -57,8 +57,6 @@
 
 				<rtVertexAttributes>
 					<attribute name="position"/>
-					<attribute name="normal"/>
-					<attribute name="texCoord0"/>
 				</rtVertexAttributes>
 
 				<rtEntryPoint>

@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<project name="Optix Test - Alpha Based Transparency" width=1024 height=512>
+	<assets>
+		<scenes>
+			<scene name="MainScene" >
+				<file name="../../../models/LargoCamoes/largoCamoes.nbo" />
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="RightViewport" >
+				<ORIGIN x="0.5" y="0" />
+				<SIZE width="0.5" height="1.0" />
+				<CLEAR_COLOR r="0.5" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="LeftViewport" fixed="true">
+				<ORIGIN x="0.0" y="0" />
+				<SIZE width="0.5" height="1.0" />
+				<CLEAR_COLOR r="0.0" g="0.5" b="0.0" />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="LeftViewport" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1.0 FAR=10000.0 />
+				<POSITION x="3.21" y="12.88" z="-6.26" />
+				<VIEW x="0.115" y="-0.018" z="0.993" /> 
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun" >
+				<POSITION x="-52" y="77.0" z="-27.0" />
+				<DIRECTION x="0.597" y="-0.390" z="0.700" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+				<AMBIENT r="0.5" g="0.5" b="0.5" />
+			</light>
+		</lights>
+		<materialLibs>   
+			<materialLib filename="optix.mlib"/>
+		</materialLibs>
+	</assets>
+	<pipelines>
+		<pipeline name="transparency" default="true">
+			<pass class="rt" name="pass1">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<renderTarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+                <viewport name="RightViewport" />
+
+				<rtRayTypes>
+					<rayType name="Phong"/>
+					<rayType name="Shadow"/>
+				</rtRayTypes>
+
+				<rtVertexAttributes>
+					<attribute name="position"/>
+					<attribute name="normal"/>
+					<attribute name="texCoord0"/>
+				</rtVertexAttributes>
+
+				<rtEntryPoint>
+					<rayGen file="optix.ptx" proc="__raygen__renderFrame"/> 
+				</rtEntryPoint>
+				<rtDefaultMaterial>
+					<rayType name="Phong">
+						<rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__radiance"/> 
+						<rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__radiance"/> 
+						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__radiance"/> 
+					</rayType>
+					<rayType name="Shadow">
+						<rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow"/> 
+						<rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow"/> 
+						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
+					</rayType>
+				</rtDefaultMaterial>
+                <rtMaterialMap>
+                    <rtMap to = "Grade*">
+                        <rayType name="Phong">
+                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__phong_alphaTrans"/> 
+                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong_alphaTrans"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__phong_alphaTrans"/> 
+                        </rayType>
+                        <rayType name="Shadow">
+                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow_alphaTrans"/> 
+                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow_alphaTrans"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow_alphaTrans"/> 
+                        </rayType>
+                    </rtMap>
+                </rtMaterialMap>
+                <rtGlobalParams>
+                    <param name="lightDir" type="LIGHT" context="CURRENT" id=0 component="DIRECTION" />
+                </rtGlobalParams>
+			</pass>
+			<pass class="quad" name="pass2">
+				<viewport name="RightViewport" />
+				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+			<pass class="default" name="pass3">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="LeftViewport" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+			</pass> 
+		</pipeline>
+	</pipelines>
+</project>

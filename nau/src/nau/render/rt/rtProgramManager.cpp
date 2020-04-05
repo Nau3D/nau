@@ -431,15 +431,21 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 					HitgroupRecord recH;
 					OPTIX_CHECK(optixSbtRecordPackHeader(pi.hitProgram, &recH));
 					recH.data.color = color;
-					recH.data.vertexD.position = (float4*)(vertexB.at(0).memPtr);
-					if (vertexB.size() > 1)
-						recH.data.vertexD.normal = (float4*)vertexB.at(1).memPtr;
-					if (vertexB.size() > 2)
-						recH.data.vertexD.texCoord0 = (float4*)vertexB.at(2).memPtr;
-					if (vertexB.size() > 3)
-						recH.data.vertexD.tangent = (float4*)vertexB.at(3).memPtr;
-					if (vertexB.size() > 4)
-						recH.data.vertexD.bitangent = (float4*)vertexB.at(4).memPtr;
+
+					if (vertexB.count(VertexData::GetAttribIndex("position")))
+						recH.data.vertexD.position = (float4*)vertexB.at(VertexData::GetAttribIndex("position")).memPtr;
+
+					if (vertexB.count(VertexData::GetAttribIndex("texCoord0")))
+						recH.data.vertexD.texCoord0 = (float4*)vertexB.at(VertexData::GetAttribIndex("texCoord0")).memPtr;
+
+					if (vertexB.count(VertexData::GetAttribIndex("normal")))
+						recH.data.vertexD.normal = (float4*)vertexB.at(VertexData::GetAttribIndex("normal")).memPtr;
+
+					if (vertexB.count(VertexData::GetAttribIndex("tangent")))
+						recH.data.vertexD.tangent = (float4*)vertexB.at(VertexData::GetAttribIndex("tangent")).memPtr;
+
+					if (vertexB.count(VertexData::GetAttribIndex("bitangent")))
+						recH.data.vertexD.bitangent = (float4*)vertexB.at(VertexData::GetAttribIndex("bitangent")).memPtr;
 
 					if (textureIDs.size() != 0) {
 						recH.data.hasTexture = 1;

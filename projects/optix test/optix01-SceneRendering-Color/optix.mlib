@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<materialLib name="Optix Ray Tracer Render Target">
+	<renderTargets>
+		<renderTarget name ="test">
+			<SIZE width=1024 height=1024 />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+				<!--color name="offscreenrender2" internalFormat="RGBA32F" /-->
+			</colors>
+		</renderTarget>
+		
+		<renderTarget name ="test_ubyte">
+			<SIZE width=1024 height=1024 />
+			<colors>
+				<color name="offscreenrender_ubyte" internalFormat="R8" />
+				<!--color name="offscreenrender2" internalFormat="RGBA32F" /-->
+			</colors>
+		</renderTarget>
+	</renderTargets>
+
+	<textures>
+		<texture name="dataBuffer">
+			<WIDTH value=256 />
+			<HEIGHT value=256 />
+			<INTERNAL_FORMAT value="RGBA32F" />
+		</texture>	
+        <texture name="pedra" filename = "../../models/Texturas/crate.jpg" />
+	</textures>
+</materialLib>

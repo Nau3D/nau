@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<project name="Optix Test" width=800 height=400>
+<project name="Optix Test - Texturing" width=1024 height=512>
 	<assets>
 		<scenes>
 			<scene name="MainScene" >
-				<file name="../../models/ntg-bench/bench.obj" />
+				<file name="../../../models/LargoCamoes/largoCamoes.nbo" />
 			</scene>
 		</scenes>
 		<viewports>
@@ -21,9 +21,9 @@
 		<cameras>
 			<camera name="MainCamera" >
 				<viewport name="LeftViewport" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=0.3 FAR=1000.0 />
-				<POSITION x="-40.593395" y="32.43354" z="-1.299236" />
-				<VIEW x="0.901307" y="-0.361665" z="-0.238421" /> 
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=10090.0 />
+				<POSITION x="34.12" y="11.14" z="-16.47" />
+				<VIEW x="0.989" y="-0.020" z="-0.148" /> 
 				<UP x="0.0" y="1.0" z="0.0" />
 			</camera>
 		</cameras>
@@ -36,7 +36,7 @@
 			</light>
 		</lights>
 		<materialLibs>   
-			<materialLib filename="optixTest.mlib"/>
+			<materialLib filename="optix.mlib"/>
 		</materialLibs>
 	</assets>
 	<pipelines>
@@ -52,12 +52,11 @@
 				</lights>
 
 				<rtRayTypes>
-					<rayType name="Phong"/> 
+					<rayType name="Phong"/>
 				</rtRayTypes>
 
 				<rtVertexAttributes>
 					<attribute name="position"/>
-					<attribute name="normal"/>
 					<attribute name="texCoord0"/>
 				</rtVertexAttributes>
 

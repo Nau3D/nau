@@ -80,9 +80,12 @@ RTGeometry::generateAccel(const std::vector<std::string>& sceneNames) {
 						CUDA_CHECK(cudaGraphicsGLRegisterBuffer(&cb.cgr, glBufferID, cudaGraphicsRegisterFlagsReadOnly));
 						CUDA_CHECK(cudaGraphicsMapResources(1, &cb.cgr, RTRenderer::getOptixStream()));
 						CUDA_CHECK(cudaGraphicsResourceGetMappedPointer((void**)&cb.memPtr, &size, cb.cgr));
-						cbs.vertexBuffers[i] = cb;
-						cbs.vertexBuffers[i].sizeInBytes = size;
-						cbs.vertexBuffers[i].numElements = (int)size / (4 * sizeof(float));
+//						cbs.vertexBuffers[i] = cb;
+//						cbs.vertexBuffers[i].sizeInBytes = size;
+//						cbs.vertexBuffers[i].numElements = (int)size / (4 * sizeof(float));
+						cbs.vertexBuffers[m_VertexAttributes[i]] = cb;
+						cbs.vertexBuffers[m_VertexAttributes[i]].sizeInBytes = size;
+						cbs.vertexBuffers[m_VertexAttributes[i]].numElements = (int)size / (4 * sizeof(float));
 					}
 				}
 
