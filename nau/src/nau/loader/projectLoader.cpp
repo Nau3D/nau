@@ -4743,7 +4743,7 @@ ProjectLoader::loadInterface(TiXmlHandle & hRoot) {
 				}
 				else if (pControl) {
 					if (strcmp(pControl, "DIRECTION") == 0)
-						INTERFACE_MANAGER->addDir(pWindowName, pLabel, pType, pContext, pComponent, id, script, scriptF);
+						INTERFACE_MANAGER->addVar(pWindowName, pLabel, pType, pContext, pComponent, id, def, script, scriptF);
 					else if (strcmp(pControl, "COLOR") == 0)
 						INTERFACE_MANAGER->addColor(pWindowName, pLabel, pType, pContext, pComponent, id, script, scriptF);
 				}

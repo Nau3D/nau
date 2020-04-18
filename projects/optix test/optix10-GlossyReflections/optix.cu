@@ -113,7 +113,7 @@ extern "C" __global__ void __closesthit__radiance() {
     packPointer( &shadowAttPRD, u0, u1 );  
   
     // trace shadow ray
-    int squaredShadowRays = optixLaunchParams.frame.raysPerPixel;
+    int squaredShadowRays = optixLaunchParams.global->shadowRays;
     float shadowTotal = 0.0f;
     for (int i = 0; i < squaredShadowRays; ++i) {
         for (int j = 0; j < squaredShadowRays; ++j) {
@@ -296,7 +296,7 @@ extern "C" __global__ void __closesthit__phong_metal() {
     //(1.f-u-v) * A + u * B + v * C;
     
     const float glossiness = optixLaunchParams.global->glossiness;
-    const int glossy_rays = optixLaunchParams.global->glossy_rays;
+    const int glossy_rays = optixLaunchParams.global->glossyRays;
     float3 glossy = make_float3(0.0f);
     float3 rayDir;
     float3 reflectDir = reflect(optixGetWorldRayDirection(), normal);

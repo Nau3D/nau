@@ -109,7 +109,7 @@
                     </rtMap>
                 </rtMaterialMap>
                 <rtGlobalParams>
-                    <param name="lightDir" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
+                    <param name="lightPos" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
                </rtGlobalParams>
 			</pass>
 			<pass class="quad" name="pass2">

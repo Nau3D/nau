@@ -24,7 +24,7 @@ struct RayGenData {
 
 struct GlobalParams{
     float4 lightPos;
-	cudaTextureObject_t texture;
+    int shadowRays;
 } ;
 
 

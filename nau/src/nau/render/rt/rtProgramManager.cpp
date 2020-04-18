@@ -397,23 +397,26 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 			const std::map<std::string, RTGeometry::CUDABuffer>& indexB = scObj.second.indexBuffers;
 
 			std::string mat;
-			float3 color;
+			float3 diffuse, specular, emission;
+			float shininess;
+
 			for (auto& indexBuffer : indexB) {
 
 				std::vector<unsigned int> textureIDs;
 				std::shared_ptr<Material>& nauMaterial = MATERIALLIBMANAGER->getMaterialFromDefaultLib(indexBuffer.first);
 				nauMaterial->getTextureIDs(&textureIDs);
 
-				// if material is not in the material map use default mat
 				mat = getRTMaterialName(indexBuffer.first);
-				//if (m_Materials.count(indexBuffer.first) == 0) {
-				//	mat = "default";
-				//}
-				//else {
-				//	mat = indexBuffer.first;
-				//}
-				vec4 x = nauMaterial->getColor().getPropf4(ColorMaterial::DIFFUSE);;
-				color = make_float3(x.x, x.y, x.z);
+				vec4 x = nauMaterial->getColor().getPropf4(ColorMaterial::DIFFUSE);
+				diffuse = make_float3(x.x, x.y, x.z);
+
+				x = nauMaterial->getColor().getPropf4(ColorMaterial::SPECULAR);
+				specular = make_float3(x.x, x.y, x.z);
+
+				x = nauMaterial->getColor().getPropf4(ColorMaterial::EMISSION);
+				emission = make_float3(x.x, x.y, x.z);
+
+				shininess = nauMaterial->getColor().getPropf(ColorMaterial::SHININESS);
 
 				std::map<int, ProgramInfo>& material = m_Materials[mat];
 
@@ -430,7 +433,10 @@ RTProgramManager::generateSBT(const std::map<std::string, RTGeometry::CUDABuffer
 
 					HitgroupRecord recH;
 					OPTIX_CHECK(optixSbtRecordPackHeader(pi.hitProgram, &recH));
-					recH.data.color = color;
+					recH.data.diffuse = diffuse;
+					recH.data.specular = specular;
+					recH.data.emission = emission;
+					recH.data.shininess = shininess;
 
 					if (vertexB.count(VertexData::GetAttribIndex("position")))
 						recH.data.vertexD.position = (float4*)vertexB.at(VertexData::GetAttribIndex("position")).memPtr;

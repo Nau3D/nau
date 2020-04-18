@@ -146,7 +146,7 @@
 	add.s64 	%rd7, %rd1, 12;
 	ld.u32 	%r42, [%rd1+12];
 	st.local.u32 	[%rd6+4], %r42;
-	ld.const.u32 	%r1, [optixLaunchParams+16];
+	ld.global.u32 	%r1, [%rd26+24];
 	setp.lt.s32	%p1, %r1, 1;
 	@%p1 bra 	BB0_14;
 

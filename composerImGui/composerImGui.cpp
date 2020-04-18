@@ -43,7 +43,14 @@ using namespace glbinding;
 #include <nau/event/eventFactory.h>
 #include <nau/event/cameraMotion.h>
 #include <nau/event/cameraOrientation.h>
+#include <nau/interface/interface.h>
 #include <nau/loader/iTextureLoader.h>
+#include <nau/math/matrix.h>
+#include <nau/math/number.h>
+#include <nau/math/vec2.h>
+#include <nau/math/vec3.h>
+#include <nau/math/vec4.h>
+
 #include <nau/system/file.h>
 
 
@@ -59,6 +66,8 @@ bool passFlowControl_framePassRequest = false;
 int passFlowControl_framePassEnd = 0;
 bool passFlowControl_framePassStageCompleteFrame = false;
 bool passFlowControl_stepTillEndOfPipeline = false;
+
+std::map<std::string, bool> projectWindows;
 
 bool nauLoaded = false;
 time_t nauProjectStartTime;
@@ -334,6 +343,7 @@ void loadProject(const char* s) {
 	try {
 		nauInstance->clear();
 		listLog.registerListeners();
+		projectWindows.clear();
 		int width = 0, height = 0;
 		std::string ProjectFile(s);
 		nauInstance->readProjectFile(ProjectFile, &width, &height);
@@ -368,6 +378,7 @@ void loadModel(const char* s) {
 
 	try {
 		nauInstance->clear();
+		projectWindows.clear();
 		std::string ProjectFile(s);
 		nauInstance->readModel(ProjectFile);
 		listLog.registerListeners();
@@ -399,15 +410,32 @@ int findIndex(std::vector<std::string>& a, std::string to_find) {
 
 bool combo(std::string title, std::vector<std::string> items, std::string activeItem, int* resIndex) {
 
+	bool ok;
 	int index = findIndex(items, activeItem);
-	char** itemsArray = (char**)malloc(items.size() * sizeof(char**));
-	for (int i = 0; i < items.size(); ++i)
-		itemsArray[i] = (char*)items[i].c_str();
+
+	size_t k = 0;
+	for (auto& str : items) {
+		k += str.length() + 1;
+	}
+	k++;
+
+	std::vector<char> options;
+	options.resize(k);
+	int l = 0;
+	for (auto& str : items) {
+		for (int i = 0; i < str.length(); ++i) {
+			options[l++] = str[i];
+		}
+		options[l++] = '\0';
+	}
+	options[l] = '\0';
+
 	int prevIndex = index;
-	if (ImGui::Combo(title.c_str(), resIndex, itemsArray, (int)items.size()))
-		return true;
+	if (ImGui::Combo(title.c_str(), resIndex, (char *)&options[0], (int)items.size()))
+		ok = true;
 	else
-		return false;
+		ok = false;
+	return ok;
 }
 
 
@@ -926,11 +954,27 @@ void renderWindowPass() {
 		activePipIndex = 0;
 	std::string pipName = pips[activePipIndex];
 
-	char** pipsArray = (char**)malloc(pips.size() * sizeof(char**));
-	for (int i = 0; i < pips.size(); ++i)
-		pipsArray[i] = (char*)pips[i].c_str();
+	std::vector<char> pipOptions;
+
+	size_t k = 0;
+	for (auto& str : pips) {
+		k += str.length() + 1;
+	}
+	k++;
+
+	pipOptions.resize(k);
+	int l = 0;
+	for (auto& str : pips) {
+		for (int i = 0; i < str.length(); ++i) {
+			pipOptions[l++] = str[i];
+		}
+		pipOptions[l++] = '\0';
+	}
+	pipOptions[l] = '\0';
+
+
 	int prevIndex = activePipIndex;
-	ImGui::Combo("Pipeline", &activePipIndex, pipsArray, (int)pips.size());
+	ImGui::Combo("Pipeline", &activePipIndex, (char *)&pipOptions[0], (int)pips.size());
 	if (prevIndex != activePipIndex)
 		activePassIndex = 0;
 	pipName = pips[activePipIndex];
@@ -942,12 +986,27 @@ void renderWindowPass() {
 	pip->getPassNames(&passes);
 	if (!(activePassIndex < passes.size()))
 		activePassIndex = 0;
-	char** passArray = (char**)malloc(passes.size() * sizeof(char**));
-	for (int i = 0; i < passes.size(); ++i)
-		passArray[i] = (char*)passes[i].c_str();
+
+	std::vector<char> passOptions;
+
+	k = 0;
+	for (auto& str : passes) {
+		k += str.length() + 1;
+	}
+	k++;
+
+	passOptions.resize(k);
+	l = 0;
+	for (auto& str : passes) {
+		for (int i = 0; i < str.length(); ++i) {
+			passOptions[l++] = str[i];
+		}
+		passOptions[l++] = '\0';
+	}
+	passOptions[l] = '\0';
 
 	prevIndex = activePassIndex;
-	ImGui::Combo("Pass", &activePassIndex, passArray, (int)passes.size());
+	ImGui::Combo("Pass", &activePassIndex, (char*)&passOptions[0], (int)passes.size());
 	std::string passName = passes[activePassIndex];
 
 	ImGui::Separator();
@@ -961,7 +1020,7 @@ void renderWindowPass() {
 	std::vector<std::string> cameras;
 	RENDERMANAGER->getCameraNames(&cameras);
 	std::string activeCam = p->getCameraName();
-	int index;
+	int index = findIndex(cameras, activeCam);
 	ImGui::Text("Camera:");
 	ImGui::SameLine(150);
 	if (activeCam != "") {
@@ -1087,9 +1146,23 @@ void renderWindowPass() {
 			completeList.push_back(lib + "::" + mat);
 	}
 
-	char** matArray = (char**)malloc(completeList.size() * sizeof(char**));
-	for (int i = 0; i < completeList.size(); ++i)
-		matArray[i] = (char*)completeList[i].c_str();
+	std::vector<char> matOptions;
+
+	k = 0;
+	for (auto& str : matList) {
+		k += str.length() + 1;
+	}
+	k++;
+
+	matOptions.resize(k);
+	l = 0;
+	for (auto& str : matList) {
+		for (int i = 0; i < str.length(); ++i) {
+			matOptions[l++] = str[i];
+		}
+		matOptions[l++] = '\0';
+	}
+	matOptions[l] = '\0';
 
 	std::map<std::string, nau::material::MaterialID> mm = p->getMaterialMap();
 
@@ -1097,7 +1170,7 @@ void renderWindowPass() {
 		ImVec2 dummySize(100, 10);
 		for (auto mat : mm) {
 			int index = findIndex(completeList, mat.second.getLibName() + "::" + mat.second.getMaterialName());
-			if (ImGui::Combo(mat.first.c_str(), &index, matArray, (int)completeList.size())) {
+			if (ImGui::Combo(mat.first.c_str(), &index, (char *)&matOptions[0], (int)completeList.size())) {
 			std::string result = completeList[index];
 				int pos = (int)result.find(":");
 				std::string matName = result.substr(pos + 2);
@@ -1722,6 +1795,7 @@ void renderWindowBufferLibrary() {
 						pointerIndex += Enums::getSize(stru[col]);
 					}
 				}
+				free(bufferValues);
 
 				ImGui::Columns(1);
 			}
@@ -2319,8 +2393,7 @@ void renderOpenGLProperties() {
 		if (ImGui::BeginTabItem("OpenGL Limitations")) {
 
 			nau::render::IGlobalState* gs = IGlobalState::Create();
-			nau::loader::StateLoader::LoadStateXMLFile("C:\\work\\naubin\\bin\\nauSettings\\state.xml", gs);
-			//nau::loader::StateLoader::LoadStateXMLFile("./nauSettings/state.xml", gs);
+			nau::loader::StateLoader::LoadStateXMLFile("nauSettings\\state.xml", gs);
 
 			std::vector<std::string> enumNames;
 			gs->getStateEnumNames(&enumNames);
@@ -2383,6 +2456,264 @@ void messageBox(const std::string& title, const std::string& message) {
 		}
 		ImGui::EndPopup();
 	}
+}
+
+
+
+
+
+void renderProjectWindow(const std::string& winName, const nau::inter::ToolBar::Items& winData) {
+
+	for (auto& item : winData) {
+		if (item.aClass == nau::inter::ToolBar::PIPELINE_LIST) {
+
+			int p = RENDERMANAGER->getActivePipelineIndex(); 
+			int oldP = p;
+			if (ImGui::Combo(item.label.c_str(), &p, (char*)&item.options[0])) {
+				if (oldP != p) {
+					RENDERMANAGER->setActivePipeline(p);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+		}
+		else if (item.aClass == nau::inter::ToolBar::CUSTOM_ENUM) {
+			void *d = (Data *)NAU->getAttributeValue(item.type, item.context, item.component, item.id);
+			int i = *(int*)d; int oldi = i;
+			if (ImGui::Combo(item.label.c_str(), &i, (char *)&item.options[0])) {
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)(new NauInt(i)));
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+		}
+		else {
+			void* d = (Data*)NAU->getAttributeValue(item.type, item.context, item.component, item.id);
+
+			if (item.dt == Enums::BOOL) {
+				bool b = *(bool*)d; bool old_b = b;
+				ImGui::Checkbox(item.label.c_str(), &b);
+				if (old_b != b) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)(new NauInt(b)));
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::INT) {
+				int i = *(int*)d; int oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderInt(item.label.c_str(), &i, (int)item.min, (int)item.max);
+				else
+					ImGui::InputScalar(item.label.c_str(), ImGuiDataType_S32, &i, NULL, NULL, "%d");
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data *)(new NauInt(i)));
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::IVEC2) {
+				ivec2 i = *(ivec2*)d; ivec2 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderInt2(item.label.c_str(), (int*)i.getPtr(), (int)item.min, (int)item.max);
+				else
+					ImGui::InputInt2(item.label.c_str(), (int*)i.getPtr());
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::IVEC3) {
+				ivec3 i = *(ivec3*)d; ivec3 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderInt3(item.label.c_str(), (int*)i.getPtr(), (int)item.min, (int)item.max);
+				else
+					ImGui::InputInt3(item.label.c_str(), (int*)i.getPtr());
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::IVEC4) {
+				ivec4 i = *(ivec4*)d; ivec4 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderInt3(item.label.c_str(), (int*)i.getPtr(), (int)item.min, (int)item.max);
+				else
+					ImGui::InputInt4(item.label.c_str(), (int*)i.getPtr());
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			if (item.dt == Enums::UINT) {
+				unsigned int i = *(unsigned int*)d; unsigned int oldi = i;
+				if (item.min < item.max) 
+					ImGui::SliderScalar(item.label.c_str(), ImGuiDataType_U32, &i, &item.min, &item.max, "%u");				
+				else
+					ImGui::InputScalar(item.label.c_str(), ImGuiDataType_U32, &i, NULL, NULL, "%u");
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)(new NauInt(i)));
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::UIVEC2) {
+				uivec2 i = *(uivec2*)d; uivec2 oldi = i;   
+				if (item.min < item.max)
+					ImGui::SliderScalarN(item.label.c_str(), ImGuiDataType_U32, (int*)i.getPtr(), 2, &item.min, &item.max);
+				else
+					ImGui::InputScalarN(item.label.c_str(), ImGuiDataType_U32, (int*)i.getPtr(), 2);
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::UIVEC3) {
+				uivec3 i = *(uivec3*)d; uivec3 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderScalarN(item.label.c_str(), ImGuiDataType_U32, (int*)i.getPtr(), 3, &item.min, &item.max);
+				else
+					ImGui::InputScalarN(item.label.c_str(), ImGuiDataType_U32, (int*)i.getPtr(), 3);
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::UIVEC4) {
+				uivec4 i = *(uivec4*)d; uivec4 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderScalarN(item.label.c_str(), ImGuiDataType_U32, (int*)i.getPtr(), 4, &item.min, &item.max);
+				else
+					ImGui::InputScalarN(item.label.c_str(), ImGuiDataType_U32, (int*)i.getPtr(), 4);
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+
+
+			else if (item.dt == Enums::FLOAT) {
+				float f = *(float*)d; float oldf = f;
+				if (item.min < item.max)
+					ImGui::SliderFloat(item.label.c_str(), &f, item.min, item.max);
+				else
+					ImGui::InputScalar(item.label.c_str(), ImGuiDataType_Float, &f, NULL, NULL);
+				if (oldf != f) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)(new NauFloat(f)));
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::VEC2) {
+				vec2 i = *(vec2*)d; vec2 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderFloat2(item.label.c_str(), (float*)i.getPtr(), item.min, item.max);
+				else
+					ImGui::InputFloat2(item.label.c_str(), (float*)i.getPtr());
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::VEC3) {
+				vec3 i = *(vec3*)d; vec3 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderFloat3(item.label.c_str(), (float*)i.getPtr(), item.min, item.max);
+				else
+					ImGui::InputFloat3(item.label.c_str(), (float*)i.getPtr());
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::VEC4) {
+				vec4 i = *(vec4*)d; vec4 oldi = i;
+				if (item.semantics == nau::Attribute::Semantics::COLOR) {
+					if (ImGui::ColorEdit4(item.label.c_str(), (float*)i.getPtr(), ImGuiColorEditFlags_Float)) {
+						if (oldi != i) {
+							NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+							if (item.luaScript != "")
+								NAU->callLuaScript(item.luaScript);
+						}
+					}
+
+				}
+				else {
+					if (item.min < item.max)
+						ImGui::SliderFloat4(item.label.c_str(), (float*)i.getPtr(), item.min, item.max);
+					else
+						ImGui::InputFloat4(item.label.c_str(), (float*)i.getPtr());
+					if (oldi != i) {
+						NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+						if (item.luaScript != "")
+							NAU->callLuaScript(item.luaScript);
+					}
+				}
+			}
+
+			if (item.dt == Enums::DOUBLE) {
+				double i = *(double*)d; double oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderScalar(item.label.c_str(), ImGuiDataType_Double, &i, &item.min, &item.max, "%f");
+				else
+					ImGui::InputScalar(item.label.c_str(), ImGuiDataType_Double, &i, NULL, NULL, "%f");
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)(new NauDouble(i)));
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::DVEC2) {
+				dvec2 i = *(dvec2*)d; dvec2 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderScalarN(item.label.c_str(), ImGuiDataType_Double, (int*)i.getPtr(), 2, &item.min, &item.max);
+				else
+					ImGui::InputScalarN(item.label.c_str(), ImGuiDataType_Double, (int*)i.getPtr(), 2);
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::DVEC3) {
+				dvec3 i = *(dvec3*)d; dvec3 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderScalarN(item.label.c_str(), ImGuiDataType_Double, (int*)i.getPtr(), 3, &item.min, &item.max);
+				else
+					ImGui::InputScalarN(item.label.c_str(), ImGuiDataType_Double, (int*)i.getPtr(), 3);
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+			else if (item.dt == Enums::DVEC4) {
+				uivec4 i = *(uivec4*)d; uivec4 oldi = i;
+				if (item.min < item.max)
+					ImGui::SliderScalarN(item.label.c_str(), ImGuiDataType_Double, (int*)i.getPtr(), 4, &item.min, &item.max);
+				else
+					ImGui::InputScalarN(item.label.c_str(), ImGuiDataType_Double, (int*)i.getPtr(), 4);
+				if (oldi != i) {
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)&i);
+					if (item.luaScript != "")
+						NAU->callLuaScript(item.luaScript);
+				}
+			}
+
+
+
+		}
+
+	}
+
 }
 
 
@@ -2491,18 +2822,41 @@ void renderGUI(ImGuiIO& io) {
 				}
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Info")) {
-				if (ImGui::MenuItem("OpenGL Properties", "", infoMenuOpenGLPropsWindowChecked)) {
-					infoMenuOpenGLPropsWindowChecked = !infoMenuOpenGLPropsWindowChecked;
-				}
-				if (ImGui::MenuItem("About", "", infoMenuAboutWindowChecked)) {
-					infoMenuAboutWindowChecked = !infoMenuAboutWindowChecked;
-				}
-				ImGui::EndMenu();
 
+			const std::map<std::string, nau::inter::ToolBar::Items>& projWindows = INTERFACE_MANAGER->getWindows();
+			if (projWindows.size() > 0) {
+
+				if (projectWindows.size() == 0) {
+					for (auto &proj:projWindows) {
+						projectWindows[proj.first] = true;
+					}
+				}
+
+				if (ImGui::BeginMenu("Project")) {
+
+					for (auto window : projWindows) {
+
+						if (ImGui::MenuItem(window.first.c_str(), "", projectWindows[window.first])) {
+							projectWindows[window.first] = !projectWindows[window.first];
+						}
+					}
+					ImGui::EndMenu();
+				}
 			}
 
+
 		}			
+		if (ImGui::BeginMenu("Info")) {
+			if (ImGui::MenuItem("OpenGL Properties", "", infoMenuOpenGLPropsWindowChecked)) {
+				infoMenuOpenGLPropsWindowChecked = !infoMenuOpenGLPropsWindowChecked;
+			}
+			if (ImGui::MenuItem("About", "", infoMenuAboutWindowChecked)) {
+				infoMenuAboutWindowChecked = !infoMenuAboutWindowChecked;
+			}
+			ImGui::EndMenu();
+
+		}
+
 		ImGui::EndMainMenuBar();
 
 	}
@@ -2511,6 +2865,21 @@ void renderGUI(ImGuiIO& io) {
 	// file dialog boxes
 
 	// Project
+	const std::map<std::string, nau::inter::ToolBar::Items>& projWindows = INTERFACE_MANAGER->getWindows();
+	for (auto& win : projWindows) {
+
+		if (projectWindows[win.first]) {
+
+
+			if (ImGui::Begin(win.first.c_str(), &projectWindows[win.first]))
+				renderProjectWindow(win.first, win.second);
+			ImGui::End();
+
+			
+		}
+	}
+
+
 
 	if (ImGuiFileDialog::Instance()->FileDialog("ChooseProjFileDlgKey"))
 	{

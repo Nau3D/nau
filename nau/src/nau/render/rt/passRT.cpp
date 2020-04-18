@@ -366,7 +366,15 @@ PassRT::setRenderTarget(nau::render::IRenderTarget* rt) {
 
 
 void 
-PassRT::restore(void) {}
+PassRT::restore(void) {
+
+	if (0 != m_RenderTarget && true == m_UseRT) {
+		m_RenderTarget->unbind();
+	}
+
+	restoreCamera();
+	RENDERER->removeLights();
+}
 
 void
 PassRT::setupCamera(void) {

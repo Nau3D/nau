@@ -120,7 +120,10 @@ namespace nau {
 					vertexData vertexD;
 					int hasTexture;
 					cudaTextureObject_t texture;
-					float3 color;
+					float3 diffuse;
+					float3 specular;
+					float3 emission;
+					float shininess;
 				};
 
 				typedef SbtRecord<RayGenData>     RaygenRecord;

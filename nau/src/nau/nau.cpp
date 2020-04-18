@@ -1597,7 +1597,6 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType,
 	
 		vec3 *evVec = (vec3 *)evtData->getData();
 		setWindowSize((unsigned int)evVec->x, (unsigned int)evVec->y);
-		INTERFACE_MANAGER->resize((unsigned int)evVec->x, (unsigned int)evVec->y);
 	}
 }
 
@@ -1610,7 +1609,7 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType,
 int 
 Nau::keyPressed(int key, int modifiers) {
 
-	return TwKeyPressed(key, modifiers);
+	return 0;
 }
 
 
@@ -1632,22 +1631,22 @@ Nau::mouseButton(Nau::MouseAction action, Nau::MouseButton buttonID, int x, int 
 		}
 	}
 
+	return 0;
 
-	return TwMouseButton((TwMouseAction)action, (TwMouseButtonID)buttonID);
 }
 
 
 int 
 Nau::mouseMotion(int x, int y) {
 
-	return TwMouseMotion(x, y);
+	return 0;
 }
 
 
 int 
 Nau::mouseWheel(int pos) {
 
-	return TwMouseWheel(pos);
+	return 0;
 }
 
 
@@ -2091,7 +2090,6 @@ Nau::setWindowSize (unsigned int width, unsigned int height) {
 	vec2 v2((float)m_WindowWidth, (float)m_WindowHeight);
 	m_Viewport->setPropf2(Viewport::SIZE, v2);
 
-	TwWindowSize(width, height);
 }
 
 

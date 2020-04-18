@@ -24,9 +24,9 @@ struct RayGenData {
 
 struct GlobalParams{
     float4 lightPos;
-    float glossiness;
-    int glossyRays;
-    int shadowRays;
+    float focalDistance;
+    float aperture;
+    float lensDistance;
 } ;
 
 

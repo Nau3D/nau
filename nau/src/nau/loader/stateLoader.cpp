@@ -14,7 +14,8 @@ void
 StateLoader::LoadStateXMLFile(std::string file, IGlobalState *state) {
 
 	File::FixSlashes(file);
-	TiXmlDocument doc(file.c_str());
+	const std::string filePath = File::GetFullPath(File::GetAppFolder(), file);
+	TiXmlDocument doc(filePath.c_str());
 	bool loadOkay = doc.LoadFile();
 
 	if (!loadOkay) {

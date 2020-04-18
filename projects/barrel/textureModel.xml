@@ -97,6 +97,9 @@
 			<pipelineList label="effect" />
 			<var label="rusting" type="RENDERER" context="CURRENT" 
 					component="rusting" def="step=0.01 min=-0.5 max=1.0" />
+   			<var label="l enable" type="LIGHT" context="Sun" id=0
+					component="ENABLED"  />
+
 		</window>
 	</interface>
 	

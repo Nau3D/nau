@@ -185,6 +185,12 @@ OBJLoader::readMTL(std::string &name)
 				v4.w = 1.0;
 				mat->getColor().setPropf4(ColorMaterial::AMBIENT, v4);
 				break;
+			case 'e':
+				fscanf(file, "%f %f %f", &v4.x, &v4.y, &v4.z);
+				v4.w = 1.0;
+				mat->getColor().setPropf4(ColorMaterial::EMISSION, v4);
+				break;
+
 			default:
 				/* eat up rest of line */
 				fgets(buf, sizeof(buf), file);
