@@ -1,18 +1,19 @@
 <?xml version="1.0" ?>
-<project name="Optix Test - Depth of Field" width=1024 height=1024>
+<project name="Optix Test - Iterative Path Tracing" width=1024 height=1024>
 	<assets>
         <attributes>
-            <attribute type="PASS" name="FOCAL_DISTANCE" data="FLOAT" value = "2.0" />
-            <attribute type="PASS" name="APERTURE" data="FLOAT" value = "0.0" />
-            <attribute type="PASS" name="DISTANCE_TO_LENS" data="FLOAT" value ="1.0" />
-             
+            <attribute type="PASS" name="SHADOW_RAYS" data="INT" value="1" />
+            <attribute type="PASS" name="MAX_DEPTH" data="INT" value = "3" />
+            <attribute type="PASS" name="GAMMA" data="FLOAT" value = "2.2" />
+            <attribute type="LIGHT" name="ATTENUATION" data="BOOL" value="1" />
+
        </attributes>
 		<scenes>
 			<scene name="MainScene" >
 				<!--file name="../../../models/sponza/crytek-sponza/sponza.nbo" /-->
-				<file name="../../../models/LargoCamoes/largoCamoes.nbo" />
+				<!--file name="../../../models/LargoCamoes/largoCamoes.nbo" /-->
 				<!--file name="../../../models/SanMiguel/san-miguel.nbo" /-->
-                <!--file name="../../../models/cornellBox/CornellBox-Sphere2.obj" /-->
+                <file name="../../../models/cornellBox/CornellBox-Original2.obj" />
 			</scene>
 		</scenes>
 		<viewports>
@@ -24,14 +25,16 @@
 			<camera name="MainCamera" >
 				<viewport name="MainViewport" />
 				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1.0 FAR=10000.0 />
-				<POSITION x="9.822" y="1.269" z="12.338" />
-				<VIEW x="0.871" y="-0.286" z="-0.40"  />
+				<POSITION x="0.0" y="0.75" z="2.5" />
+				<VIEW x="0.0" y="0.0" z="-1.0"  />
+				<!--POSITION x="9.822" y="1.269" z="12.338" />
+				<VIEW x="0.871" y="-0.286" z="-0.40"  /-->
 				<UP x="0.0" y="1.0" z="0.0" />
 			</camera>
 		</cameras>
 		<lights>
 			<light name="Sun" >
-   				<POSITION x="0.0" y="10" z="0.0" />
+   				<POSITION x="-0.23" y="1.98" z="-0.19" />
 			</light>
 		</lights>
 		<materialLibs>   
@@ -39,7 +42,7 @@
 		</materialLibs>
 	</assets>
 	<pipelines>
-		<pipeline name="optix" default="true" defaultCamera="MainCamera">
+		<pipeline name="softShadows" default="true" defaultCamera="MainCamera">
 			<pass class="rt" name="pass1">
 				<scenes>
 					<scene name="MainScene" />
@@ -52,7 +55,7 @@
                 <viewport name="MainViewport" />
 
 				<rtRayTypes>
-					<rayType name="Phong"/>
+					<rayType name="Lambert"/>
 					<rayType name="Shadow"/>
 				</rtRayTypes>
 
@@ -66,7 +69,7 @@
 					<rayGen file="optix.ptx" proc="__raygen__renderFrame"/> 
 				</rtEntryPoint>
 				<rtDefaultMaterial>
-					<rayType name="Phong">
+					<rayType name="Lambert">
 						<rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__radiance"/> 
 						<rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__radiance"/> 
 						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__radiance"/> 
@@ -77,7 +80,7 @@
 						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
 					</rayType>
 				</rtDefaultMaterial>
-                <rtMaterialMap>
+                <!--rtMaterialMap>
                     <rtMap to = "light">
                         <rayType name="Phong">
                             <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__light"/> 
@@ -87,7 +90,7 @@
                         <rayType name="Shadow">
                             <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__light_shadow"/> 
                             <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__light_shadow"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__light_shadow"/> 
                         </rayType>
                     </rtMap>
                     <rtMap to = "rightSphere">
@@ -99,7 +102,7 @@
                         <rayType name="Shadow">
                             <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow_glass"/> 
                             <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow_glass"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
+                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow_glass"/> 
                         </rayType>
                     </rtMap>
                     <rtMap to = "leftSphere">
@@ -114,31 +117,32 @@
                             <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
                         </rayType>
                     </rtMap>
-                </rtMaterialMap>
+                </rtMaterialMap-->
                 <rtGlobalParams>
                     <param name="lightPos" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
-                    <param name="focalDistance" type="PASS" context="CURRENT" component="FOCAL_DISTANCE" />
-                    <param name="aperture" type="PASS" context="CURRENT" component="APERTURE" />
-                    <param name="lensDistance" type="PASS" context="CURRENT" component="DISTANCE_TO_LENS" />
+                    <param name="maxDepth" type="PASS" context="CURRENT" component="MAX_DEPTH" />
+                    <param name="shadowRays" type="PASS" context="CURRENT" component= "SHADOW_RAYS" />
+                    <param name="gamma" type="PASS" context="CURRENT" component= "GAMMA" />
+                    <param name="attenuation" type="LIGHT" context="Sun" component= "ATTENUATION" />
+
                 </rtGlobalParams>
 			</pass>
 			<pass class="quad" name="pass2">
 				<viewport name="MainViewport" />
 				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
 			</pass>
-	    </pipeline>
+		</pipeline>
 	</pipelines>
     <interface>
         <window label="settings">
-            <var label="Squared rays per pixel" type="PASS" context="optix#pass1" component="RAYS_PER_PIXEL"
+            <var label="Squared rays per pixel" type="PASS" context="softShadows#pass1" component="RAYS_PER_PIXEL"
                 def="min=1 max=10" />
-            <var label="Aperture" type="PASS" context="optix#pass1" component="APERTURE"
-                def="min=0 max=0.5" />
-            <var label="Lens distance" type="PASS" context="optix#pass1" component="DISTANCE_TO_LENS"
-                def="min=0.1 max=10" />
-            <var label="Distance to focal plane" type="PASS" context="optix#pass1" component="FOCAL_DISTANCE"
-                def="min=0.001 max=10" />
+            <var label="Max depth" type="PASS" context="softShadows#pass1" component="MAX_DEPTH"
+                def="min=1 max=10" />
+            <var label="Gamma" type="PASS" context="softShadows#pass1" component="GAMMA"
+                def="min=0.1 max=3" />
+            <var label="Attenuation" type="LIGHT" context="Sun" component="ATTENUATION" />
 
         </window>
-	</interface>
+    </interface>
 </project>

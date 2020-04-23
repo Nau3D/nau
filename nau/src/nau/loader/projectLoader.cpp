@@ -2597,38 +2597,6 @@ ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 		}
 	}
 
-//	const char *pName = pElem->Attribute("to");
-//	//if (!MATERIALLIBMANAGER->hasMaterial(std::string(pName)))
-//	//	NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Map. \nMaterial %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pName);
-
-//	pElemAux = pElem->FirstChildElement("optixProgram");
-//	for ( ; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
-
-//	const char *pType = pElemAux->Attribute ("type");
-//	const char *pProc = pElemAux->Attribute ("proc");
-//	const char *pRay  = pElemAux->Attribute ("ray");
-
-//	if (!pType || (0 != strcmp(pType, "Closest_Hit") && 0 != strcmp(pType, "Any_Hit")))
-//		NAU_THROW("File: %s\nPass: %s\nInvalid Optix Material Proc Type", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-
-//	if (!pProc)
-//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Proc", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-
-//	if (!pRay)
-//		NAU_THROW("File: %s\nPass: %s\nMissing Optix Material Ray", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-//	
-//	std::string message = "Pass " + aPass->getName() + "\nOptix material map - Procedure " + pProc;
-//	std::string file = readFile(pElemAux, "file", message);
-
-//	if (!strcmp("Closest_Hit", pType)) 
-//		p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::CLOSEST_HIT, pRay, file, pProc);
-//	else if (!strcmp("Any_Hit", pType)) 
-//		p->setMaterialProc(pName, nau::render::optixRender::OptixMaterialLib::ANY_HIT, pRay, file, pProc);
-//	}
-//}
-
-
-
 	pElem = hPass.FirstChild("rtGlobalParams").FirstChild("param").Element();
 	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
 		const char* pVarName = pElem->Attribute("name");
@@ -2693,12 +2661,12 @@ ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 			p->addParam(pVarName, pType, pContext, pComponent, id);
 		}
 		else if (s == "LIGHT" && strcmp(pContext, "CURRENT")) {
-			if (!RESOURCEMANAGER->hasTexture(pContext)) {
+			if (!RENDERMANAGER->hasLight(pContext)) {
 				NAU_THROW("File: %s\nPass: %s\nParam  %s - Light %s is not defined",
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName, pContext);
 			}
 			else {
-				p->addParam(pVarName, pType, s_pFullName, pComponent, id);
+				p->addParam(pVarName, pType, pContext, pComponent, id);
 			}
 		}
 		else {
