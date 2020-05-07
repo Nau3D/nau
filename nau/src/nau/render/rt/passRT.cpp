@@ -470,6 +470,7 @@ PassRT::doPass(void) {
 					m_LaunchSize.x, m_LaunchSize.y,
 					(gl::GLenum)GL_RGBA,
 					(gl::GLenum)GL_UNSIGNED_BYTE, 0);
+				gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, 0);
 		}
 	}
 	catch (std::exception const& e) {

@@ -105,8 +105,10 @@ extern "C" __global__ void __closesthit__radiance() {
     const float3 pos = optixGetWorldRayOrigin() + optixGetRayTmax() * rayDir ;
 
 
-    if (prd.countEmitted)
+    if (prd.countEmitted && length(sbtData.emission) != 0) {
         prd.emitted = sbtData.emission ;
+        return;
+    }
     else
         prd.emitted = make_float3(0.0f);
 
@@ -123,7 +125,8 @@ extern "C" __global__ void __closesthit__radiance() {
         prd.direction = w_in;
         prd.origin    = pos;
 
-        prd.attenuation *= sbtData.diffuse / M_PIf;
+        prd.attenuation *= sbtData.diffuse ;
+        //prd.attenuation *= sbtData.diffuse/ M_PIf;
         prd.countEmitted = false;
     }
     
@@ -141,7 +144,8 @@ extern "C" __global__ void __closesthit__radiance() {
     const float  Ldist = length(light_pos - pos );
     const float3 L     = normalize(light_pos - pos );
     const float  nDl   = dot( nn, L );
-    const float  LnDl  = -dot( make_float3(0.0f,-1.0f,0.0f), L );
+    const float3 Ln    = normalize(cross(lightV1, lightV2));
+    const float  LnDl  = -dot( Ln, L );
 
     float weight = 0.0f;
     if( nDl > 0.0f && LnDl > 0.0f )
@@ -171,7 +175,7 @@ extern "C" __global__ void __closesthit__radiance() {
         }
     }
 
-    prd.radiance += make_float3(15.0f, 15.0f, 5.0f) * weight ;
+    prd.radiance += make_float3(5.0f, 5.0f, 1.660f) * weight ;
 }
 
 
@@ -262,7 +266,7 @@ extern "C" __global__ void __raygen__renderFrame() {
             uint32_t u0, u1;
             packPointer( &prd, u0, u1 );             
             
-            for (int i = 0; i < maxDepth && !prd.done; ++i) {
+            for (int k = 0; k < maxDepth && !prd.done; ++k) {
 
                 optixTrace(optixLaunchParams.traversable,
                         origin,

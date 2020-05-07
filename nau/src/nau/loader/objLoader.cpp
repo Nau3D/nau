@@ -119,7 +119,7 @@ OBJLoader::readMTL(std::string &name)
 	std::shared_ptr<Material> mat;
 	float val; vec4 v4;
 	while(fscanf(file, "%s", buf) != EOF) {
-		switch(buf[0]) {
+		switch (buf[0]) {
 		case '#':				/* comment */
 			/* eat up rest of line */
 			fgets(buf, sizeof(buf), file);
@@ -131,8 +131,8 @@ OBJLoader::readMTL(std::string &name)
 			std::string s(buf);
 			mat = MATERIALLIBMANAGER->createMaterial(s);
 		}
-			break;
-		case 'm' :		
+				break;
+		case 'm':
 			fgetc(file);
 			fgets(buf2, sizeof(buf2), file);
 			sscanf(buf2, "%s", buf2);
@@ -163,10 +163,23 @@ OBJLoader::readMTL(std::string &name)
 			mat->createTexture(1, File::BuildFullFilename(m_Dir, buf2));
 			break;
 		case 'N':
-			fscanf(file, "%f", &val);
-			/* wavefront shininess is from [0, 1000], so scale for OpenGL */
-			//model->materials[nummaterials].shininess = val * 128.0 / 1000.0;
-			mat->getColor().setPropf(ColorMaterial::SHININESS, val * 128.0f / 1000.0f);
+			switch (buf[1]) {
+			case 's':
+				fscanf(file, "%f", &val);
+				/* wavefront shininess is from [0, 1000], so scale for OpenGL */
+				//model->materials[nummaterials].shininess = val * 128.0 / 1000.0;
+				mat->getColor().setPropf(ColorMaterial::SHININESS, val * 128.0f / 1000.0f);
+				break;
+			}
+			break;
+		case 'P':
+			switch (buf[1]) {
+			case 'r':
+				fscanf(file, "%f", &val);
+				/* http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html */
+				mat->getColor().setPropf(ColorMaterial::SHININESS, 2.0f /(val*val) - 2.0f);
+				break;
+			}
 			break;
 		case 'K':
 			switch(buf[1]) {
