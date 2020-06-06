@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <project name="Optix Test - Ambient Occlusion" width=1024 height=1024>
 	<assets>
+        <attributes>
+            <attribute type="PASS" name="AO_RADIUS" data="FLOAT" value="5.0" />
+            <attribute type="PASS" name="AO_RAYS" data="INT" value="1" />
+        </attributes>
 		<scenes>
 			<scene name="MainScene" >
 				<file name="../../../models/sponza/crytek-sponza/sponza.nbo" />
@@ -74,47 +78,11 @@
 						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
 					</rayType>
 				</rtDefaultMaterial>
-                <rtMaterialMap>
-                    <rtMap to = "light">
-                        <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__light"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__light"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__light"/> 
-                        </rayType>
-                        <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__light_shadow"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__light_shadow"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__light_shadow"/> 
-                        </rayType>
-                    </rtMap>
-                    <rtMap to = "rightSphere">
-                        <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__phong_glass"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong_glass"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__phong_glass"/> 
-                        </rayType>
-                        <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow_glass"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow_glass"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow_glass"/> 
-                        </rayType>
-                    </rtMap>
-                    <rtMap to = "leftSphere">
-                        <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__radiance"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong_metal"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__radiance"/> 
-                        </rayType>
-                        <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
-                        </rayType>
-                    </rtMap>
-                </rtMaterialMap>
                 <rtGlobalParams>
                     <param name="lightDir" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
-              </rtGlobalParams>
+                    <param name="aoRays" type="PASS" context="ambient occlusion#pass1" component="AO_RAYS" />
+                    <param name="aoRadius" type="PASS" context="ambient occlusion#pass1" component="AO_RADIUS" />
+             </rtGlobalParams>
 			</pass>
 			<pass class="quad" name="pass2">
 				<viewport name="MainViewport" />
@@ -122,4 +90,14 @@
 			</pass>
 		</pipeline>
 	</pipelines>
+    <interface>
+        <window label="settings">
+            <var label="Squared rays per pixel" type="PASS" context="ambient occlusion#pass1" component="RAYS_PER_PIXEL"
+                def="min=1 max=10" />
+            <var label="AO rays" type="PASS" context="ambient occlusion#pass1" component="AO_RAYS"
+                def="min=1 max=64" />
+            <var label="AO radius" type="PASS" context="ambient occlusion#pass1" component="AO_RADIUS"
+                def="min=0.1 max=1000" />
+        </window>
+    </interface>
 </project>

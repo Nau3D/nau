@@ -123,4 +123,13 @@
 			</pass>
 		</pipeline>
 	</pipelines>
+    <interface>
+        <window label="settings">
+            <var label="Squared rays per pixel" type="PASS" context="softShadows#pass1" component="RAYS_PER_PIXEL"
+                def="min=1 max=10" />
+            <var label="Shadow rays" type="PASS" context="softShadows#pass1" component="SHADOW_RAYS"
+                def="min=1 max=10" />
+
+        </window>
+    </interface>
 </project>

@@ -1,7 +1,5 @@
+#include "optixParams.h" // our launch params
 
-#include <optix.h>
-#include "LaunchParams.h" // our launch params
-#include <vec_math.h> // NVIDIAs math utils
 
 
 extern "C" {
@@ -54,7 +52,9 @@ extern "C" __global__ void __closesthit__phong()
         prd= make_float3(fromTexture) * intensity;
     }
     else
-        prd = sbtData.color * intensity;
+        prd = sbtData.diffuse * intensity;
+// uncomment this to see the normals
+//    prd = nn*0.5 + 0.5;
 }
 
 
@@ -72,18 +72,26 @@ extern "C" __global__ void __miss__phong() {
     prd = make_float3(0.0f, 0.0f, 1.0f);
 }
 
+// -----------------------------------------------
+// Primary Rays
+
 
 extern "C" __global__ void __raygen__renderFrame() {
 
-    // compute a test pattern based on pixel ID
     const int ix = optixGetLaunchIndex().x;
     const int iy = optixGetLaunchIndex().y;
     const auto &camera = optixLaunchParams.camera;  
     
-    // ray payload
-    float3 pixelColorPRD = make_float3(1.f);
-    uint32_t u0, u1;
-    packPointer( &pixelColorPRD, u0, u1 );  
+	if (optixLaunchParams.frame.frame == 0 && ix == 0 && iy == 0) {
+
+		// print info to console
+		printf("===========================================\n");
+        printf("Nau Ray-Tracing Debug\n");
+        printf("Launch dim: %u %u\n", optixGetLaunchDimensions().x, optixGetLaunchDimensions().y);
+        const float4 &ld = optixLaunchParams.global->lightDir;
+        printf("LightDir: %f, %f %f %f\n", ld.x,ld.y,ld.z,ld.w);
+		printf("===========================================\n");
+	}
 
     // compute ray direction
     // normalized screen plane position, in [-1, 1]^2
@@ -96,32 +104,37 @@ extern "C" __global__ void __raygen__renderFrame() {
                            + screen.x  * camera.horizontal
                            + screen.y * camera.vertical);
     
+    // ray payload
+    float3 pixelColorPRD = make_float3(1.f);
+    uint32_t u0, u1;
+    packPointer( &pixelColorPRD, u0, u1 );  
+
     // trace primary ray
     optixTrace(optixLaunchParams.traversable,
              camera.position,
              rayDir,
-             0.f,    // tmin
+             0.01f,    // tmin
              1e20f,  // tmax
              0.0f,   // rayTime
              OptixVisibilityMask( 255 ),
-             OPTIX_RAY_FLAG_NONE, // any hit is used to discard back facing intersetctions
+             OPTIX_RAY_FLAG_NONE, 
              PHONG_RAY_TYPE,             // SBT offset
              RAY_TYPE_COUNT,               // SBT stride
              PHONG_RAY_TYPE,             // missSBTIndex 
              u0, u1 );
-
+             
+             
     //convert float (0-1) to int (0-255)
     const int r = int(255.0f*pixelColorPRD.x);
     const int g = int(255.0f*pixelColorPRD.y);
     const int b = int(255.0f*pixelColorPRD.z);
 
     // convert to 32-bit rgba value 
-    const uint32_t rgba = 0xff000000
-      | (r<<0) | (g<<8) | (b<<16);
+    const uint32_t rgba = 0xff000000 | (r<<0) | (g<<8) | (b<<16);
     // compute index
     const uint32_t fbIndex = ix + iy*optixGetLaunchDimensions().x;
     // write to output buffer
-    optixLaunchParams.frame.colorBuffer[fbIndex] = rgba;
+   optixLaunchParams.frame.colorBuffer[fbIndex] = rgba;
 }
   
 

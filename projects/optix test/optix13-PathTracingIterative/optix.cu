@@ -1,15 +1,12 @@
-
-#include <optix.h>
-#include "random.h"
-#include "LaunchParams7.h" // our launch params
-#include <vec_math.h> // NVIDIAs math utils
+#include "optixParams.h" // our launch params
 
 
 extern "C" {
     __constant__ LaunchParams optixLaunchParams;
 }
-//  a single ray type
-enum { LAMBERT=0, SHADOW, RAY_TYPE_COUNT };
+
+// ray types
+enum { RAIDANCE=0, SHADOW, RAY_TYPE_COUNT };
 
 struct RadiancePRD{
     float3   emitted;
@@ -28,55 +25,9 @@ struct shadowPRD{
 } ;
 
 
-struct Onb
-{
-  __forceinline__ __device__ Onb(const float3& normal)
-  {
-    m_normal = normal;
-
-    if( fabs(m_normal.x) > fabs(m_normal.z) )
-    {
-      m_binormal.x = -m_normal.y;
-      m_binormal.y =  m_normal.x;
-      m_binormal.z =  0;
-    }
-    else
-    {
-      m_binormal.x =  0;
-      m_binormal.y = -m_normal.z;
-      m_binormal.z =  m_normal.y;
-    }
-
-    m_binormal = normalize(m_binormal);
-    m_tangent = normalize(cross(m_binormal ,  m_normal));
-  }
-
-  __forceinline__ __device__ void inverse_transform(float3& p) const
-  {
-    p = p.z*m_tangent + p.x*m_binormal + p.y*m_normal;
-  }
-
-  float3 m_tangent;
-  float3 m_binormal;
-  float3 m_normal;
-};
-
-
-static __forceinline__ __device__ void cosine_sample_hemisphere(const float u1, const float u2, float3& p)
-{
-  // Uniformly sample disk.
-  const float r   = sqrtf( u1 );
-  const float phi = 2.0f*M_PIf * u2;
-  p.z = r * cosf( phi );
-  p.x = r * sinf( phi );
-
-  // Project up to hemisphere.
-  p.y = sqrtf( fmaxf( 0.0f, 1.0f - p.x*p.x - p.z*p.z ) );
-}
 
 
 // -------------------------------------------------------
-// closest hit computes color based lolely on the triangle normal
 
 extern "C" __global__ void __closesthit__radiance() {
 
@@ -126,7 +77,6 @@ extern "C" __global__ void __closesthit__radiance() {
         prd.origin    = pos;
 
         prd.attenuation *= sbtData.diffuse ;
-        //prd.attenuation *= sbtData.diffuse/ M_PIf;
         prd.countEmitted = false;
     }
     
@@ -136,8 +86,8 @@ extern "C" __global__ void __closesthit__radiance() {
     prd.seed = seed;
 
 
-    const float3 lightV1 = make_float3(0.47f, 0.0, 0.0);
-    const float3 lightV2 = make_float3(0.0f, 0.0, 0.38);
+    const float3 lightV1 = make_float3(0.47f, 0.0, 0.0f);
+    const float3 lightV2 = make_float3(0.0f, 0.0, 0.38f);
     const float3 light_pos = make_float3(optixLaunchParams.global->lightPos) + lightV1 * z1 + lightV2 * z2;
 
     // Calculate properties of light sample (for area based pdf)
@@ -166,20 +116,16 @@ extern "C" __global__ void __closesthit__radiance() {
 
         if( !occluded )
         {
-            float att = 1;
-            if (optixLaunchParams.global->attenuation)
-                att = Ldist * Ldist;
+            const float att = Ldist * Ldist;
             const float A = length(cross(lightV1, lightV2));
-            weight = nDl * LnDl * A / (M_PIf * att);
-            weight = nDl * LnDl * A * 2 / att;
+            weight = nDl * LnDl * A  / att;
         }
     }
 
-    prd.radiance += make_float3(5.0f, 5.0f, 1.660f) * weight ;
+    prd.radiance += make_float3(5.0f, 5.0f, 5.0f) * weight * optixLaunchParams.global->lightScale;
 }
 
 
-// any hit to ignore intersections with back facing geometry
 extern "C" __global__ void __anyhit__radiance() {
 
 }
@@ -218,10 +164,6 @@ extern "C" __global__ void __miss__shadow() {
 
 
 
-
-
-
-
 // -----------------------------------------------
 // Primary Rays
 
@@ -232,7 +174,7 @@ extern "C" __global__ void __raygen__renderFrame() {
     const int iy = optixGetLaunchIndex().y;
     const auto &camera = optixLaunchParams.camera;  
 
-    const int &maxDepth = optixLaunchParams.global->maxDepth;
+    const int &maxDepth = optixLaunchParams.frame.maxDepth;
  
     float squaredRaysPerPixel = float(optixLaunchParams.frame.raysPerPixel);
     float2 delta = make_float2(1.0f/squaredRaysPerPixel, 1.0f/squaredRaysPerPixel);
@@ -274,7 +216,7 @@ extern "C" __global__ void __raygen__renderFrame() {
                         0.001f,    // tmin
                         1e20f,  // tmax
                         0.0f, OptixVisibilityMask( 1 ),
-                        OPTIX_RAY_FLAG_NONE, LAMBERT, RAY_TYPE_COUNT, LAMBERT, u0, u1 );
+                        OPTIX_RAY_FLAG_NONE, RAIDANCE, RAY_TYPE_COUNT, RAIDANCE, u0, u1 );
 
                 result += prd.emitted;
                 result += prd.radiance * prd.attenuation;
@@ -287,32 +229,24 @@ extern "C" __global__ void __raygen__renderFrame() {
 
     result = result / (squaredRaysPerPixel*squaredRaysPerPixel);
     float gamma = optixLaunchParams.global->gamma;
-    //convert float (0-1) to int (0-255)
-    const int r = min(int(255.0f*pow(result.x, 1/gamma)), 255);
-    const int g = min(int(255.0f*pow(result.y, 1/gamma)), 255);
-    const int b = min(int(255.0f*pow(result.z, 1/gamma)), 255) ;
-    // convert to 32-bit rgba value 
-    const uint32_t rgba = 0xff000000
-      | (r<<0) | (g<<8) | (b<<16);
     // compute index
     const uint32_t fbIndex = ix + iy*optixGetLaunchDimensions().x;
+
+    optixLaunchParams.global->accumBuffer[fbIndex] = 
+        (optixLaunchParams.global->accumBuffer[fbIndex] * optixLaunchParams.frame.subFrame +
+        make_float4(result.x, result.y, result.z, 1)) /(optixLaunchParams.frame.subFrame+1);
+
+    
+    float4 rgbaf = optixLaunchParams.global->accumBuffer[fbIndex];
+    //convert float (0-1) to int (0-255)
+    const int r = int(255.0f*min(1.0f, pow(rgbaf.x, 1/gamma)));
+    const int g = int(255.0f*min(1.0f, pow(rgbaf.y, 1/gamma)));
+    const int b = int(255.0f*min(1.0f, pow(rgbaf.z, 1/gamma))) ;
+
+    // convert to 32-bit rgba value 
+    const uint32_t rgba = 0xff000000 | (r<<0) | (g<<8) | (b<<16);
     // write to output buffer
     optixLaunchParams.frame.colorBuffer[fbIndex] = rgba;
-
-
-	if (optixLaunchParams.frame.frame == 0 && ix == 0 && iy == 0) {
-
-		// print info to console
-		printf("===========================================\n");
-        printf("Nau Ray-Tracing Debug\n");
-        const float4 &ld = optixLaunchParams.global->lightPos;
-        printf("LightPos: %f, %f %f %f\n", ld.x,ld.y,ld.z,ld.w);
-        printf("Attenuation: %d\n", optixLaunchParams.global->attenuation);
-        printf("Launch dim: %u %u\n", optixGetLaunchDimensions().x, optixGetLaunchDimensions().y);
-        printf("Rays per pixel squared: %d \n", optixLaunchParams.frame.raysPerPixel);
-        printf("Max Depth: %d \n", optixLaunchParams.global->maxDepth);
-		printf("===========================================\n");
-	}
 }
   
 

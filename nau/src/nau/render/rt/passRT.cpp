@@ -210,8 +210,6 @@ PassRT::computeParamsByteSize() {
 	int count = 0;
 	int attr;
 
-
-
 	for (auto& p : m_Params) {
 
 		if (p.type == "TEXTURE" && p.component == "ID") {
@@ -219,6 +217,16 @@ PassRT::computeParamsByteSize() {
 			p.size = sizeof(cudaTextureObject_t);
 			p.id = RESOURCEMANAGER->getTexture(p.context)->getPropi(ITexture::ID);
 		}
+		else if (p.type == "BUFFER" && p.component == "ID") {
+			p.size = sizeof(unsigned char *);
+			IBuffer* b = RESOURCEMANAGER->getBuffer(p.context);
+			p.id = b->getPropi(IBuffer::ID);
+			m_BuffersCGR[p.id] = nullptr; 
+			m_BuffersPtrs[p.id] = nullptr;
+			CUDA_CHECK(cudaGraphicsGLRegisterBuffer(&(m_BuffersCGR[p.id]), p.id, cudaGraphicsRegisterFlagsWriteDiscard));
+			CUDA_CHECK(cudaGraphicsMapResources(1, &m_BuffersCGR[p.id], RTRenderer::getOptixStream()));
+		}
+
 		else {
 			AttribSet* attrSet = NAU->getAttribs(p.type);
 
@@ -239,11 +247,17 @@ PassRT::copyParamsToBuffer() {
 
 	char* temp = (char*)malloc(m_ParamsSize);
 	int currOffset = 0;
+	size_t size;
 	for (auto& p : m_Params) {
 
 		if (p.type == "TEXTURE" && p.component == "ID") {
 
 			memcpy(temp + currOffset, (void *)&m_ProgramManager.m_Textures[p.id].cto, p.size);
+		}
+		else if (p.type == "BUFFER" && p.component == "ID") {
+
+			CUDA_CHECK(cudaGraphicsResourceGetMappedPointer((void**)&m_BuffersPtrs[p.id], &size, m_BuffersCGR[p.id]));
+			memcpy(temp + currOffset, (void *)&m_BuffersPtrs[p.id], p.size);
 		}
 		else {
 
@@ -376,6 +390,14 @@ PassRT::restore(void) {
 	RENDERER->removeLights();
 }
 
+
+bool compare(const float3 &a, const float3 &b) {
+
+	if ((a.x != b.x) || (a.y != b.y) || (a.z != b.z))
+		return false;
+	return true;
+}
+
 void
 PassRT::setupCamera(void) {
 
@@ -394,20 +416,49 @@ PassRT::setupCamera(void) {
 	float fov = aCam->getPropf(Camera::FOV) * 0.5f;
 	float fovTan = tanf(DegToRad(fov));
 
+	launchParams.camera.changed = false;
+
 	vec4 pos = aCam->getPropf4(Camera::POSITION);
-	launchParams.camera.position = make_float3(pos.x, pos.y, pos.z);
+	const float3 cpos = make_float3(pos.x, pos.y, pos.z);
+	if (!compare(cpos, launchParams.camera.position)) {
+
+		launchParams.camera.position = cpos;
+		launchParams.camera.changed = true;
+	}
 
 	vec4 dir = aCam->getPropf4(Camera::NORMALIZED_VIEW_VEC);
-	launchParams.camera.direction = make_float3(dir.x, dir.y, dir.z);
+
+	const float3 cdir = make_float3(dir.x, dir.y, dir.z);
+	if (!compare(cdir, launchParams.camera.direction)) {
+
+		launchParams.camera.direction = cdir;
+		launchParams.camera.changed = true;
+	}
 
 	vec4 up = aCam->getPropf4(Camera::NORMALIZED_UP_VEC);
 	up *= fovTan;
-	launchParams.camera.vertical = make_float3(up.x, up.y, up.z);
+	const float3 cup = make_float3(up.x, up.y, up.z);
+	if (!compare(cup, launchParams.camera.vertical)) {
+
+		launchParams.camera.vertical = cup;
+		launchParams.camera.changed = true;
+	}
 
 	vec4 right = aCam->getPropf4(Camera::NORMALIZED_RIGHT_VEC);
 	if (ratio != 0)
 		right *= fovTan * ratio;
-	launchParams.camera.horizontal = make_float3(right.x, right.y, right.z);
+	const float3 cright = make_float3(right.x, right.y, right.z);
+	if (!compare(cright, launchParams.camera.horizontal)) {
+
+		launchParams.camera.horizontal = cright;
+		launchParams.camera.changed = true;
+	}
+
+	if (launchParams.camera.changed)
+		launchParams.frame.subFrame = 0;
+	else
+		launchParams.frame.subFrame++;
+
 
 	RENDERER->setCamera(aCam);
 }
@@ -432,8 +483,21 @@ PassRT::doPass(void) {
 
 		// update launch params
 		launchParams.frame.frame = RENDERER->getPropui(IRenderer::FRAME_COUNT);
+		if (launchParams.frame.frame == 0)
+			launchParams.frame.subFrame = 0;
 		launchParams.frame.colorBuffer = (uint32_t*)m_OutputBufferPrs[0];
-		launchParams.frame.raysPerPixel = getPropi(Pass::RAYS_PER_PIXEL);
+		//launchParams.frame.accumBuffer = (float4*)m_BuffersPtrs[3];
+		const int rpp = getPropi(Pass::RAYS_PER_PIXEL);
+		if (launchParams.frame.raysPerPixel != rpp) {
+			launchParams.frame.raysPerPixel = rpp;
+			launchParams.frame.subFrame = 0;
+		}
+		const int md = getPropi(Pass::MAX_DEPTH);
+		if (launchParams.frame.maxDepth != md) {
+			launchParams.frame.maxDepth = md;
+			launchParams.frame.subFrame = 0;
+		}
+
 		launchParams.globalParams = (optixParams *)m_ParamsBuffer.getPtr();
 		
 		launchParams.traversable = m_Geometry.getTraversableHandle();
@@ -470,6 +534,8 @@ PassRT::doPass(void) {
 					m_LaunchSize.x, m_LaunchSize.y,
 					(gl::GLenum)GL_RGBA,
 					(gl::GLenum)GL_UNSIGNED_BYTE, 0);
+				if (getPropb(COLOR_CLEAR) || launchParams.frame.subFrame == 0)
+					gl::glClearBufferData(gl::GL_PIXEL_UNPACK_BUFFER, gl::GL_R8, (gl::GLenum)GL_RED, (gl::GLenum)GL_UNSIGNED_BYTE, NULL);
 				gl::glBindBuffer(gl::GL_PIXEL_UNPACK_BUFFER, 0);
 		}
 	}

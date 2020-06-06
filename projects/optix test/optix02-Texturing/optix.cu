@@ -1,7 +1,5 @@
+#include "optixParams.h" // our launch params
 
-#include <optix.h>
-#include "LaunchParams.h" // our launch params
-#include <vec_math.h> // NVIDIAs math utils
 
 
 extern "C" {
@@ -40,7 +38,7 @@ extern "C" __global__ void __closesthit__phong()
         prd= make_float3(fromTexture);
     }
     else
-        prd = sbtData.color;
+        prd = sbtData.diffuse;
 }
 
 

@@ -11,7 +11,7 @@
 .address_size 64
 
 	// .globl	__closesthit__phong
-.const .align 8 .b8 optixLaunchParams[88];
+.const .align 8 .b8 optixLaunchParams[96];
 
 .visible .entry __closesthit__phong(
 
@@ -197,7 +197,7 @@ BB0_4:
 	mul.ftz.f32 	%f4, %f42, %f48;
 	mul.ftz.f32 	%f5, %f43, %f48;
 	mul.ftz.f32 	%f6, %f44, %f48;
-	ld.const.u64 	%rd1, [optixLaunchParams+72];
+	ld.const.u64 	%rd1, [optixLaunchParams+80];
 	ld.const.v2.f32 	{%f49, %f50}, [optixLaunchParams+24];
 	mov.u32 	%r9, 255;
 	mov.f32 	%f8, 0f60AD78EC;

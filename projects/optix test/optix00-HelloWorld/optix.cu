@@ -1,7 +1,5 @@
 
-#include <optix.h>
-#include "LaunchParams.h" // our launch params
-#include <vec_math.h> // NVIDIAs math utils
+#include "optixParams.h" // our launch params
   
 extern "C" {
 // name "optixLaunchParams" is hardcoded in Nau

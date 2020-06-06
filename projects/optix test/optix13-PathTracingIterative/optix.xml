@@ -3,17 +3,17 @@
 	<assets>
         <attributes>
             <attribute type="PASS" name="SHADOW_RAYS" data="INT" value="1" />
-            <attribute type="PASS" name="MAX_DEPTH" data="INT" value = "3" />
             <attribute type="PASS" name="GAMMA" data="FLOAT" value = "2.2" />
-            <attribute type="LIGHT" name="ATTENUATION" data="BOOL" value="1" />
-
+            <attribute type="PASS" name="LIGHT_SCALE" data="FLOAT" value = "1.0" />
+ 
        </attributes>
 		<scenes>
 			<scene name="MainScene" >
 				<!--file name="../../../models/sponza/crytek-sponza/sponza.nbo" /-->
 				<!--file name="../../../models/LargoCamoes/largoCamoes.nbo" /-->
 				<!--file name="../../../models/SanMiguel/san-miguel.nbo" /-->
-                <file name="../../../models/cornellBox/CornellBox-Original2.obj" />
+                <file name="../../../models/cornellBox/CornellBox-Sphere2.obj" />
+                <!--file name="../../../models/cornellBox/CornellBox-Original2.obj" /-->
 			</scene>
 		</scenes>
 		<viewports>
@@ -34,7 +34,7 @@
 		</cameras>
 		<lights>
 			<light name="Sun" >
-   				<POSITION x="-0.23" y="1.98" z="-0.19" />
+   				<POSITION x="-0.23" y="1.58" z="-0.19" />
 			</light>
 		</lights>
 		<materialLibs>   
@@ -42,7 +42,7 @@
 		</materialLibs>
 	</assets>
 	<pipelines>
-		<pipeline name="softShadows" default="true" defaultCamera="MainCamera">
+		<pipeline name="iterativePathTracing" default="true" defaultCamera="MainCamera">
 			<pass class="rt" name="pass1">
 				<scenes>
 					<scene name="MainScene" />
@@ -69,7 +69,7 @@
 					<rayGen file="optix.ptx" proc="__raygen__renderFrame"/> 
 				</rtEntryPoint>
 				<rtDefaultMaterial>
-					<rayType name="Lambert">
+					<rayType name="Radiance">
 						<rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__radiance"/> 
 						<rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__radiance"/> 
 						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__radiance"/> 
@@ -80,52 +80,13 @@
 						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
 					</rayType>
 				</rtDefaultMaterial>
-                <!--rtMaterialMap>
-                    <rtMap to = "light">
-                        <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__light"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__light"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__light"/> 
-                        </rayType>
-                        <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__light_shadow"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__light_shadow"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__light_shadow"/> 
-                        </rayType>
-                    </rtMap>
-                    <rtMap to = "rightSphere">
-                        <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__phong_glass"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong_glass"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__phong_glass"/> 
-                        </rayType>
-                        <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow_glass"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow_glass"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow_glass"/> 
-                        </rayType>
-                    </rtMap>
-                    <rtMap to = "leftSphere">
-                        <rayType name="Phong">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__radiance"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong_metal"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__radiance"/> 
-                        </rayType>
-                        <rayType name="Shadow">
-                            <rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__shadow"/> 
-                            <rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__shadow"/> 
-                            <rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__shadow"/> 
-                        </rayType>
-                    </rtMap>
-                </rtMaterialMap-->
-                <rtGlobalParams>
+               <rtGlobalParams>
                     <param name="lightPos" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
-                    <param name="maxDepth" type="PASS" context="CURRENT" component="MAX_DEPTH" />
+                    <param name="accumBuffer" type="BUFFER" context="Optix Ray Tracer Render Target::accumBuffer"  component="ID"/>               
                     <param name="shadowRays" type="PASS" context="CURRENT" component= "SHADOW_RAYS" />
                     <param name="gamma" type="PASS" context="CURRENT" component= "GAMMA" />
-                    <param name="attenuation" type="LIGHT" context="Sun" component= "ATTENUATION" />
-
-                </rtGlobalParams>
+                    <param name="lightScale" type="PASS" context="CURRENT" component= "LIGHT_SCALE" />
+               </rtGlobalParams>
 			</pass>
 			<pass class="quad" name="pass2">
 				<viewport name="MainViewport" />
@@ -135,14 +96,13 @@
 	</pipelines>
     <interface>
         <window label="settings">
-            <var label="Squared rays per pixel" type="PASS" context="softShadows#pass1" component="RAYS_PER_PIXEL"
+            <var label="Squared rays per pixel" type="PASS" context="iterativePathTracing#pass1" component="RAYS_PER_PIXEL"
                 def="min=1 max=10" />
-            <var label="Max depth" type="PASS" context="softShadows#pass1" component="MAX_DEPTH"
+            <var label="Max depth" type="PASS" context="iterativePathTracing#pass1" component="MAX_DEPTH"
                 def="min=1 max=10" />
-            <var label="Gamma" type="PASS" context="softShadows#pass1" component="GAMMA"
+            <var label="Gamma" type="PASS" context="iterativePathTracing#pass1" component="GAMMA"
                 def="min=0.1 max=3" />
-            <var label="Attenuation" type="LIGHT" context="Sun" component="ATTENUATION" />
-
-        </window>
+            <var label="Light Scale" type="PASS" context="iterativePathTracing#pass1" component="LIGHT_SCALE" />
+         </window>
     </interface>
 </project>

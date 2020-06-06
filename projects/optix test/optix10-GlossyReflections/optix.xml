@@ -118,10 +118,11 @@
                 </rtMaterialMap>
                 <rtGlobalParams>
                     <param name="lightDir" type="LIGHT" context="CURRENT" id=0 component="POSITION" />
+                    <param name="accumBuffer" type="BUFFER" context="Optix Ray Tracer Render Target::accumBuffer"  component="ID"/>               
                     <param name="glossiness" type="PASS" context="CURRENT" component="GLOSSINESS" />
                     <param name="glossyRays" type="PASS" context="CURRENT" component="GLOSSY_RAYS" />
                     <param name="shadowRays" type="PASS" context="CURRENT" component="SHADOW_RAYS" />
-               </rtGlobalParams>
+                </rtGlobalParams>
 			</pass>
 			<pass class="quad" name="pass2">
 				<viewport name="MainViewport" />
@@ -129,4 +130,17 @@
 			</pass>
 		</pipeline>
 	</pipelines>
+    <interface>
+        <window label="settings">
+            <var label="Squared rays per pixel" type="PASS" context="glossy#pass1" component="RAYS_PER_PIXEL"
+                def="min=1 max=10" />
+            <var label="Shadow rays" type="PASS" context="glossy#pass1" component="SHADOW_RAYS"
+                def="min=1 max=10" />
+            <var label="Glossiness" type="PASS" context="glossy#pass1" component="GLOSSINESS"
+                def="min=0.1 max=1000" />
+            <var label="Glossy rays" type="PASS" context="glossy#pass1" component="GLOSSY_RAYS" 
+               def="min=1 max=32" />
+ 
+        </window>
+    </interface>
 </project>

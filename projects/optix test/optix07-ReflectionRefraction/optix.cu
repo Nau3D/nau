@@ -1,7 +1,4 @@
-
-#include <optix.h>
-#include "LaunchParams.h" // our launch params
-#include <vec_math.h> // NVIDIAs math utils
+#include "optixParams.h" // our launch params
 
 
 extern "C" {
@@ -78,7 +75,7 @@ extern "C" __global__ void __closesthit__radiance() {
         prd = make_float3(fromTexture) * min(intensity * shadowAttPRD + 0.0, 1.0);
     }
     else
-        prd = sbtData.color * min(intensity * shadowAttPRD + 0.0, 1.0);
+        prd = sbtData.diffuse * min(intensity * shadowAttPRD + 0.0, 1.0);
 }
 
 
@@ -220,14 +217,6 @@ extern "C" __global__ void __closesthit__phong_metal() {
 // -----------------------------------------------
 // Glass Phong rays
 
-SUTIL_INLINE SUTIL_HOSTDEVICE float3 refract(const float3& i, const float3& n, const float eta) {
-
-    float k = 1.0 - eta * eta * (1.0 - dot(n, i) * dot(n, i));
-    if (k < 0.0)
-        return make_float3(0.0f);
-    else
-        return (eta * i - (eta * dot(n, i) + sqrt(k)) * n);
-}
 
 
 extern "C" __global__ void __closesthit__phong_glass() {

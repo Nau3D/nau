@@ -17,7 +17,7 @@
 	.param .b64 vprintf_param_1
 )
 ;
-.const .align 8 .b8 optixLaunchParams[88];
+.const .align 8 .b8 optixLaunchParams[96];
 .global .align 1 .b8 $str[45] = {61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 10, 0};
 .global .align 1 .b8 $str1[23] = {78, 97, 117, 32, 82, 97, 121, 45, 84, 114, 97, 99, 105, 110, 103, 32, 68, 101, 98, 117, 103, 10, 0};
 .global .align 1 .b8 $str2[22] = {76, 105, 103, 104, 116, 80, 111, 115, 58, 32, 37, 102, 44, 32, 37, 102, 44, 32, 37, 102, 10, 0};
@@ -126,7 +126,7 @@
 	fma.rn.ftz.f32 	%f14, %f10, %f11, %f7;
 	fma.rn.ftz.f32 	%f15, %f10, %f12, %f8;
 	fma.rn.ftz.f32 	%f16, %f10, %f13, %f9;
-	ld.const.u64 	%rd27, [optixLaunchParams+80];
+	ld.const.u64 	%rd27, [optixLaunchParams+88];
 	cvta.to.global.u64 	%rd28, %rd27;
 	ld.global.v4.f32 	{%f90, %f91, %f92, %f93}, [%rd28];
 	sub.ftz.f32 	%f97, %f90, %f14;
@@ -151,7 +151,7 @@
 	shr.u64 	%rd29, %rd12, 32;
 	cvt.u32.u64	%r11, %rd29;
 	cvt.u32.u64	%r12, %rd12;
-	ld.const.u64 	%rd8, [optixLaunchParams+72];
+	ld.const.u64 	%rd8, [optixLaunchParams+80];
 	ld.u32 	%r45, [%rd1+12];
 	mad.lo.s32 	%r46, %r45, 1664525, 1013904223;
 	and.b32  	%r47, %r46, 16777215;
@@ -731,7 +731,7 @@ BB0_4:
 	sub.ftz.f32 	%f13, %f7, %f65;
 	sub.ftz.f32 	%f14, %f8, %f66;
 	sub.ftz.f32 	%f15, %f9, %f67;
-	ld.const.u64 	%rd2, [optixLaunchParams+72];
+	ld.const.u64 	%rd2, [optixLaunchParams+80];
 	mov.u32 	%r6, 255;
 	mov.f32 	%f16, 0f3D23D70A;
 	mov.f32 	%f17, 0f60AD78EC;
@@ -949,7 +949,7 @@ BB12_7:
 	shr.u64 	%rd23, %rd19, 32;
 	cvt.u32.u64	%r17, %rd19;
 	cvt.u32.u64	%r16, %rd23;
-	ld.const.u64 	%rd21, [optixLaunchParams+72];
+	ld.const.u64 	%rd21, [optixLaunchParams+80];
 	mov.u32 	%r11, 255;
 	mov.u32 	%r14, 2;
 	mov.f32 	%f120, 0f3727C5AC;
@@ -984,7 +984,7 @@ BB12_11:
 	shr.u64 	%rd30, %rd24, 32;
 	cvt.u32.u64	%r27, %rd30;
 	cvt.u32.u64	%r28, %rd24;
-	ld.const.u64 	%rd28, [optixLaunchParams+72];
+	ld.const.u64 	%rd28, [optixLaunchParams+80];
 	mov.u32 	%r22, 255;
 	mov.u32 	%r25, 2;
 	mov.f32 	%f130, 0f3727C5AC;
@@ -1125,7 +1125,7 @@ BB12_12:
 	fma.rn.ftz.f32 	%f8, %f4, %f5, %f1;
 	fma.rn.ftz.f32 	%f9, %f4, %f6, %f2;
 	fma.rn.ftz.f32 	%f10, %f4, %f7, %f3;
-	ld.const.u64 	%rd1, [optixLaunchParams+72];
+	ld.const.u64 	%rd1, [optixLaunchParams+80];
 	mov.u32 	%r5, 255;
 	mov.u32 	%r6, 0;
 	mov.u32 	%r8, 2;
@@ -1189,7 +1189,7 @@ BB12_12:
 	@%p1 bra 	BB17_2;
 
 	ld.const.u32 	%r112, [optixLaunchParams+16];
-	ld.const.u64 	%rd31, [optixLaunchParams+80];
+	ld.const.u64 	%rd31, [optixLaunchParams+88];
 	bra.uni 	BB17_3;
 
 BB17_2:
@@ -1236,7 +1236,7 @@ BB17_2:
 	
 	//{
 	}// Callseq End 1
-	ld.const.u64 	%rd31, [optixLaunchParams+80];
+	ld.const.u64 	%rd31, [optixLaunchParams+88];
 	cvta.to.global.u64 	%rd13, %rd31;
 	ld.global.v4.f32 	{%f33, %f34, %f35, %f36}, [%rd13];
 	cvt.ftz.f64.f32	%fd1, %f33;
@@ -1398,7 +1398,7 @@ BB17_3:
 	@%p2 bra 	BB17_8;
 
 	ld.global.f32 	%f14, [%rd5];
-	ld.const.u64 	%rd7, [optixLaunchParams+72];
+	ld.const.u64 	%rd7, [optixLaunchParams+80];
 	mul.ftz.f32 	%f15, %f1, %f1;
 	mov.f32 	%f104, 0f00000000;
 	mov.u32 	%r28, 0;
@@ -1595,7 +1595,7 @@ BB17_8:
 	@%p1 bra 	BB18_2;
 
 	ld.const.u32 	%r110, [optixLaunchParams+16];
-	ld.const.u64 	%rd31, [optixLaunchParams+80];
+	ld.const.u64 	%rd31, [optixLaunchParams+88];
 	bra.uni 	BB18_3;
 
 BB18_2:
@@ -1642,7 +1642,7 @@ BB18_2:
 	
 	//{
 	}// Callseq End 7
-	ld.const.u64 	%rd31, [optixLaunchParams+80];
+	ld.const.u64 	%rd31, [optixLaunchParams+88];
 	cvta.to.global.u64 	%rd13, %rd31;
 	ld.global.v4.f32 	{%f33, %f34, %f35, %f36}, [%rd13];
 	cvt.ftz.f64.f32	%fd1, %f33;
@@ -1791,7 +1791,7 @@ BB18_3:
 	@%p2 bra 	BB18_8;
 
 	ld.global.f32 	%f14, [%rd5];
-	ld.const.u64 	%rd7, [optixLaunchParams+72];
+	ld.const.u64 	%rd7, [optixLaunchParams+80];
 	mul.ftz.f32 	%f15, %f1, %f1;
 	mov.f32 	%f86, 0f00000000;
 	mov.u32 	%r28, 0;

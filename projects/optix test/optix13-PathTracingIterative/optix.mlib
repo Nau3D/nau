@@ -9,5 +9,16 @@
 			</colors>
 		</renderTarget>
 	</renderTargets>
+    <buffers>
+        <buffer name="accumBuffer">
+            <DIM x=1024 y=1024 z=1 />
+            <structure>
+                <field value="FLOAT" />
+                <field value="FLOAT" />
+                <field value="FLOAT" />
+                <field value="FLOAT" />
+            </structure>  
+        </buffer> 
+    </buffers>
 
 </materialLib>

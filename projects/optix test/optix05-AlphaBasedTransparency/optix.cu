@@ -1,7 +1,6 @@
 
-#include <optix.h>
-#include "LaunchParams.h" // our launch params
-#include <vec_math.h> // NVIDIAs math utils
+#include "optixParams.h" // our launch params
+
 
 
 extern "C" {
@@ -77,7 +76,7 @@ extern "C" __global__ void __closesthit__radiance() {
         prd = make_float3(fromTexture) * min(intensity * shadowAttPRD + 0.3, 1.0);
     }
     else
-        prd = sbtData.color * min(intensity * shadowAttPRD + 0.3, 1.0);
+        prd = sbtData.diffuse * min(intensity * shadowAttPRD + 0.3, 1.0);
 }
 
 

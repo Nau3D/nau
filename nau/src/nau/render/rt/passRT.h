@@ -39,8 +39,11 @@ namespace nau
 				{
 					struct {
 						int frame;
+						int subFrame;
 						uint32_t* colorBuffer;
+						//float4* accumBuffer;
 						int raysPerPixel;
+						int maxDepth;
 					} frame;
 
 					struct {
@@ -48,6 +51,7 @@ namespace nau
 						float3 direction;
 						float3 horizontal;
 						float3 vertical;
+						bool changed;
 					} camera;
 
 					OptixTraversableHandle traversable;
@@ -56,13 +60,17 @@ namespace nau
 
 					LaunchParams() {
 						frame.frame = 0;
+						frame.subFrame = 0;
 						frame.colorBuffer = nullptr;
+						//frame.accumBuffer = nullptr;
 						frame.raysPerPixel = 1;
+						frame.maxDepth = 1;
 
 						camera.position = make_float3(0.0f, 0.0f, 0.0f);
 						camera.direction = make_float3(0.0f, 0.0f, -1.0f);
 						camera.horizontal = make_float3(1.0f, 0.0f, 0.0f);
 						camera.vertical = make_float3(0.0f, 1.0f, 0.0f);
+						camera.changed = true;
 
 						globalParams = nullptr;
 					}
@@ -108,6 +116,9 @@ namespace nau
 
 				bool m_RTisReady;
 				bool m_RThasIssues;
+
+				std::map<int, cudaGraphicsResource*> m_BuffersCGR;
+				std::map<int, unsigned char*> m_BuffersPtrs;
 
 				RTProgramManager m_ProgramManager;
 				RTGeometry m_Geometry;

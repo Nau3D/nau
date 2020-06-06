@@ -11,7 +11,7 @@
 .address_size 64
 
 	// .globl	__closesthit__phong
-.const .align 8 .b8 optixLaunchParams[88];
+.const .align 8 .b8 optixLaunchParams[96];
 
 .visible .entry __closesthit__phong(
 
@@ -80,7 +80,7 @@
 	ld.v4.f32 	{%f55, %f56, %f57, %f58}, [%rd23];
 	add.s64 	%rd24, %rd21, %rd19;
 	ld.v4.f32 	{%f62, %f63, %f64, %f65}, [%rd24];
-	ld.const.u64 	%rd25, [optixLaunchParams+80];
+	ld.const.u64 	%rd25, [optixLaunchParams+88];
 	cvta.to.global.u64 	%rd26, %rd25;
 	ld.global.v4.f32 	{%f69, %f70, %f71, %f72}, [%rd26];
 	mul.ftz.f32 	%f76, %f70, %f70;
@@ -121,7 +121,7 @@
 	fma.rn.ftz.f32 	%f6, %f5, %f62, %f98;
 	fma.rn.ftz.f32 	%f7, %f5, %f63, %f99;
 	fma.rn.ftz.f32 	%f8, %f5, %f64, %f100;
-	ld.const.u64 	%rd9, [optixLaunchParams+72];
+	ld.const.u64 	%rd9, [optixLaunchParams+80];
 	mov.u32 	%r4, 255;
 	mov.u32 	%r5, 4;
 	mov.f32 	%f12, 0f3DCCCCCD;
@@ -316,14 +316,6 @@ BB0_4:
 	// inline asm
 	call (%r2), _optix_get_launch_index_y, ();
 	// inline asm
-	mov.u64 	%rd4, 1065353216;
-	st.local.u32 	[%rd3+4], %rd4;
-	st.local.u32 	[%rd3], %rd4;
-	mov.u32 	%r16, 1065353216;
-	st.local.u32 	[%rd3+8], %r16;
-	shr.u64 	%rd5, %rd2, 32;
-	cvt.u32.u64	%r14, %rd5;
-	cvt.u32.u64	%r15, %rd2;
 	cvt.rn.f32.s32	%f10, %r1;
 	add.ftz.f32 	%f11, %f10, 0f3F000000;
 	cvt.rn.f32.s32	%f12, %r2;
@@ -359,14 +351,23 @@ BB0_4:
 	mul.ftz.f32 	%f4, %f42, %f48;
 	mul.ftz.f32 	%f5, %f43, %f48;
 	mul.ftz.f32 	%f6, %f44, %f48;
-	ld.const.u64 	%rd1, [optixLaunchParams+72];
+	mov.u64 	%rd4, 1065353216;
+	st.local.u32 	[%rd3+4], %rd4;
+	st.local.u32 	[%rd3], %rd4;
+	mov.u32 	%r16, 1065353216;
+	st.local.u32 	[%rd3+8], %r16;
+	shr.u64 	%rd5, %rd2, 32;
+	cvt.u32.u64	%r14, %rd5;
+	cvt.u32.u64	%r15, %rd2;
+	ld.const.u64 	%rd1, [optixLaunchParams+80];
 	ld.const.v2.f32 	{%f49, %f50}, [optixLaunchParams+24];
 	mov.u32 	%r9, 255;
 	mov.u32 	%r12, 2;
+	mov.f32 	%f7, 0f3C23D70A;
 	mov.f32 	%f8, 0f60AD78EC;
 	mov.f32 	%f9, 0f00000000;
 	// inline asm
-	call (%r7, %r8), _optix_trace_2, (%rd1, %f49, %f50, %f28, %f4, %f5, %f6, %f9, %f8, %f9, %r9, %r13, %r13, %r12, %r13, %r14, %r15);
+	call (%r7, %r8), _optix_trace_2, (%rd1, %f49, %f50, %f28, %f4, %f5, %f6, %f7, %f8, %f9, %r9, %r13, %r13, %r12, %r13, %r14, %r15);
 	// inline asm
 	ld.local.f32 	%f51, [%rd3];
 	mul.ftz.f32 	%f52, %f51, 0f437F0000;

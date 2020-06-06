@@ -3,7 +3,8 @@
 	<assets>
 		<scenes>
 			<scene name="MainScene" >
-				<file name="../../../models/LargoCamoes/largoCamoes.nbo" />
+				<file name="../../../models/sponza/crytek-sponza/sponza.nbo" />
+				<!--file name="../../../models/LargoCamoes/largoCamoes.nbo" /-->
 			</scene>
 		</scenes>
 		<viewports>
@@ -21,7 +22,7 @@
 		<cameras>
 			<camera name="MainCamera" >
 				<viewport name="LeftViewport" />
-				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=10090.0 />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=2000.0 />
 				<POSITION x="34.12" y="11.14" z="-16.47" />
 				<VIEW x="0.989" y="-0.020" z="-0.148" /> 
 				<UP x="0.0" y="1.0" z="0.0" />
@@ -70,10 +71,10 @@
 						<rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong"/> 
 						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__phong"/> 
 					</rayType>
+				</rtDefaultMaterial>
                 <rtGlobalParams>
                     <param name="lightDir" type="LIGHT" context="CURRENT" id=0 component="DIRECTION" />
                 </rtGlobalParams>
-				</rtDefaultMaterial>
 			</pass>
 			<pass class="quad" name="pass2">
 				<viewport name="RightViewport" />

@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<materialLib name="Optix Ray Tracer Render Target">
+	<renderTargets>
+		<renderTarget name ="test">
+			<SIZE width=1024 height=1024 />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+		<renderTarget name="luminance" >
+			<SIZE width="1024" height="1024" />
+			<LEVELS value=10 />
+			<colors>
+				<color name="luminance" internalFormat="RG32F"  />
+			</colors>		
+		</renderTarget>
+	</renderTargets>
+    <buffers>
+        <buffer name="accumBuffer">
+            <DIM x=1024 y=1024 z=1 />
+            <structure>
+                <field value="FLOAT" />
+                <field value="FLOAT" />
+                <field value="FLOAT" />
+                <field value="FLOAT" />
+            </structure>  
+        </buffer> 
+    </buffers>
+	<shaders>
+		<shader name="computeLuminance"	ps="shaders/computeLuminance.frag" 
+										vs="shaders/combine.vert" />
+		<shader name="tonemap"			ps="shaders/tonemap.frag" 
+										vs="shaders/combine.vert" />
+		<shader name="mipmap"	        cs="shaders/mipmap.comp" /> 
+	</shaders>
+
+    <materials>
+		<material name="computeLuminance" >
+			<shader name="computeLuminance">
+				<values>
+					<valueof uniform="input"	type="TEXTURE_BINDING" context="CURRENT" 
+														id=0 component="UNIT" />
+				</values>
+			</shader>
+			<buffers>	
+				<buffer name="accumBuffer" >
+					<TYPE value="SHADER_STORAGE" />
+					<BINDING_POINT value="1" />
+				</buffer>
+			</buffers>	
+			<textures>
+				<texture name="offscreenrender" UNIT = 0 />
+			</textures>
+		</material>
+		
+		<material name="mipmap" >
+			<shader name="mipmap">
+				<values>
+					<valueof uniform="imageUnit"	type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="tex"			type="TEXTURE_BINDING" context="CURRENT"
+														id=1 component="UNIT" />
+					<valueof uniform="destMipLevel"	type="PASS" context="CURRENT"
+														component="CurrentLevel" />
+				</values>
+			</shader>	
+			<imageTextures>
+				<imageTexture UNIT=1 texture="luminance" >
+					<ACCESS value="WRITE_ONLY" />
+					<LEVEL value=1 />
+				</imageTexture>
+			</imageTextures>
+			<textures>
+				<texture UNIT=1 name="luminance" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		</material>
+		
+		<material name="tonemap" >
+			<shader name="tonemap">
+				<values>
+					<valueof uniform="lumiTex"	type="TEXTURE_BINDING" context="CURRENT"
+														id=2 component="UNIT" />
+					<valueof uniform="origTex"	type="TEXTURE_BINDING" context="CURRENT"
+														id=1 component="UNIT" />
+				</values>
+			</shader>	
+			<textures>
+				<texture UNIT=1 name="offscreenrender" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+				<texture UNIT=2 name="luminance" >
+					<MIN_FILTER value="NEAREST_MIPMAP_NEAREST" />
+					<MAG_FILTER value="NEAREST" />
+					<WRAP_S value="CLAMP_TO_BORDER" />
+					<WRAP_T value="CLAMP_TO_BORDER" />
+				</texture>
+			</textures>
+		</material>
+
+    </materials>
+</materialLib>

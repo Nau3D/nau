@@ -1,8 +1,5 @@
+#include "optixParams.h" // our launch params
 
-#include <optix.h>
-#include "random.h"
-#include "LaunchParams7.h" // our launch params
-#include <vec_math.h> // NVIDIAs math utils
 
 
 extern "C" {
@@ -21,52 +18,6 @@ struct shadowPRD{
     unsigned int seed;
 } ;
 
-
-struct Onb
-{
-  __forceinline__ __device__ Onb(const float3& normal)
-  {
-    m_normal = normal;
-
-    if( fabs(m_normal.x) > fabs(m_normal.z) )
-    {
-      m_binormal.x = -m_normal.y;
-      m_binormal.y =  m_normal.x;
-      m_binormal.z =  0;
-    }
-    else
-    {
-      m_binormal.x =  0;
-      m_binormal.y = -m_normal.z;
-      m_binormal.z =  m_normal.y;
-    }
-
-    m_binormal = normalize(m_binormal);
-    m_tangent = normalize(cross( m_binormal, m_normal ));
-    //m_binormal = cross(m_normal, m_tangent);
-  }
-
-  __forceinline__ __device__ void inverse_transform(float3& p) const
-  {
-    p = p.z*m_tangent + p.x*m_binormal + p.y*m_normal;
-  }
-
-  float3 m_tangent;
-  float3 m_binormal;
-  float3 m_normal;
-};
-
-
-static __forceinline__ __device__ void cosine_power_sample_hemisphere(const float u1, const float u2, float3& p, float exponent)
-{
-    const float t = pow(u2, (1/(exponent + 1)));
-    const float aux = sqrt(1-t*t);
-    const float pi_times_2_times_u1 = 6.28318530717 * u1;
-    p.z = cos(pi_times_2_times_u1)* aux;
-    p.x = sin(pi_times_2_times_u1)* aux;
-    p.y = t;
-    
-}
 
 
 
@@ -156,7 +107,7 @@ extern "C" __global__ void __closesthit__radiance() {
         prd.color = make_float3(fromTexture) * min(intensity * shadowTotal + 0.0, 1.0);
     }
     else
-        prd.color = sbtData.color * min(intensity * shadowTotal + 0.0, 1.0);
+        prd.color = sbtData.diffuse * min(intensity * shadowTotal + 0.0, 1.0);
 }
 
 
@@ -300,11 +251,12 @@ extern "C" __global__ void __closesthit__phong_metal() {
     float3 glossy = make_float3(0.0f);
     float3 rayDir;
     float3 reflectDir = reflect(optixGetWorldRayDirection(), normal);
+    unsigned int seed = prd.seed;
     for (int i = 0; i < glossy_rays; ++i) {
         afterPRD.color = make_float3(1.0f);
         do {
-            const float z1 = rnd(prd.seed);
-            const float z2 = rnd(prd.seed);
+            const float z1 = rnd(seed);
+            const float z2 = rnd(seed);
             cosine_power_sample_hemisphere( z1, z2, rayDir, glossiness );
             Onb onb( reflectDir );
             onb.inverse_transform( rayDir );
@@ -324,6 +276,7 @@ extern "C" __global__ void __closesthit__phong_metal() {
             u0, u1 );
         glossy += afterPRD.color;
     }
+    prd.seed = seed;
     prd.color = make_float3(0.8,0.8,0.8) * glossy / glossy_rays;
 }
 
@@ -333,15 +286,6 @@ extern "C" __global__ void __closesthit__phong_metal() {
 
 // -----------------------------------------------
 // Glass Phong rays
-
-SUTIL_INLINE SUTIL_HOSTDEVICE float3 refract(const float3& i, const float3& n, const float eta) {
-
-    float k = 1.0 - eta * eta * (1.0 - dot(n, i) * dot(n, i));
-    if (k < 0.0)
-        return make_float3(0.0f);
-    else
-        return (eta * i - (eta * dot(n, i) + sqrt(k)) * n);
-}
 
 
 extern "C" __global__ void __closesthit__phong_glass() {
@@ -542,23 +486,24 @@ extern "C" __global__ void __raygen__renderFrame() {
     for (int i = 0; i < raysPerPixel; ++i) {
         for (int j = 0; j < raysPerPixel; ++j) {
 
-            uint32_t seed = tea<4>( ix * optixGetLaunchDimensions().x + iy, i*raysPerPixel + j );
+            uint32_t seed = tea<4>( (ix * optixGetLaunchDimensions().x + iy) * optixLaunchParams.frame.subFrame, (i*raysPerPixel + j ) * optixLaunchParams.frame.subFrame);
 
             pixelColorPRD.seed = seed;
             uint32_t u0, u1;
             packPointer( &pixelColorPRD, u0, u1 );  
-            //const float2 subpixel_jitter = make_float2( i * delta.x + delta.x *  rnd( seed ), j * delta.y + delta.y * rnd( seed ) );
+            const float2 subpixel_jitter = make_float2( i * delta.x + delta.x *  rnd( seed ), j * delta.y + delta.y * rnd( seed ) );
             //const float2 subpixel_jitter = make_float2( rnd( seed )-0.5f, rnd( seed )-0.5f );
-            const float2 subpixel_jitter = make_float2(i * delta.x, j * delta.y);
+            //const float2 subpixel_jitter = make_float2(i * delta.x, j * delta.y);
             const float2 screen(make_float2(ix + subpixel_jitter.x, iy + subpixel_jitter.y)
                             / make_float2(optixGetLaunchDimensions().x, optixGetLaunchDimensions().y) * 2.0 - 1.0);
         
-        // note: nau already takes into account the field of view and ratio when computing 
-        // camera horizontal and vertival
+            // note: nau already takes into account the field of view and ratio when computing 
+            // camera horizontal and vertival
             float3 rayDir = normalize(camera.direction
                                 + (screen.x ) * camera.horizontal
                                 + (screen.y ) * camera.vertical);
             
+            pixelColorPRD.seed = seed;                                
             // trace primary ray
             optixTrace(optixLaunchParams.traversable,
                     camera.position,
@@ -577,17 +522,26 @@ extern "C" __global__ void __raygen__renderFrame() {
             green += pixelColorPRD.color.y / (raysPerPixel*raysPerPixel);
             blue += pixelColorPRD.color.z / (raysPerPixel*raysPerPixel);
         }
-}
+    }
 
+    // compute index
+    const uint32_t fbIndex = ix + iy*optixGetLaunchDimensions().x;
+
+    optixLaunchParams.global->accumBuffer[fbIndex] = 
+        (optixLaunchParams.global->accumBuffer[fbIndex] * optixLaunchParams.frame.subFrame +
+        make_float4(red,green,blue,1)) /(optixLaunchParams.frame.subFrame+1);
+
+    float4 rgbaf = optixLaunchParams.global->accumBuffer[fbIndex];
     //convert float (0-1) to int (0-255)
-    const int r = int(255.0f*red);
-    const int g = int(255.0f*green);
-    const int b = int(255.0f*blue);
+    //const int r = int(255.0f*red);
+    //const int g = int(255.0f*green);
+    //const int b = int(255.0f*blue);
+    const int r = int(255.0f*rgbaf.x);
+    const int g = int(255.0f*rgbaf.y);
+    const int b = int(255.0f*rgbaf.z);
     // convert to 32-bit rgba value 
     const uint32_t rgba = 0xff000000
       | (r<<0) | (g<<8) | (b<<16);
-    // compute index
-    const uint32_t fbIndex = ix + iy*optixGetLaunchDimensions().x;
     // write to output buffer
     optixLaunchParams.frame.colorBuffer[fbIndex] = rgba;
 }

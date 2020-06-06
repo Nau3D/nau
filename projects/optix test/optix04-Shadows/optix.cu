@@ -1,7 +1,5 @@
+#include "optixParams.h" // our launch params
 
-#include <optix.h>
-#include "LaunchParams.h" // our launch params
-#include <vec_math.h> // NVIDIAs math utils
 
 
 extern "C" {
@@ -19,7 +17,7 @@ extern "C" __global__ void __closesthit__phong() {
 
     const TriangleMeshSBTData &sbtData
       = *(const TriangleMeshSBTData*)optixGetSbtDataPointer();  
-    // compute triangle normal:
+
     const int   primID = optixGetPrimitiveIndex();
     const uint3 index  = sbtData.index[primID];
 
@@ -77,7 +75,7 @@ extern "C" __global__ void __closesthit__phong() {
         prd = make_float3(fromTexture) * (intensity * shadowAttPRD + 0.3);
     }
     else
-        prd = sbtData.color * (intensity * shadowAttPRD + 0.3);
+        prd = sbtData.diffuse * (intensity * shadowAttPRD + 0.3);
 }
 
 
@@ -134,11 +132,6 @@ extern "C" __global__ void __raygen__renderFrame() {
     const int iy = optixGetLaunchIndex().y;
     const auto &camera = optixLaunchParams.camera;  
     
-    // ray payload
-    float3 pixelColorPRD = make_float3(1.f);
-    uint32_t u0, u1;
-    packPointer( &pixelColorPRD, u0, u1 );  
-
     // compute ray direction
     // normalized screen plane position, in [-1, 1]^2
     const float2 screen(make_float2(ix+.5f,iy+.5f)
@@ -150,11 +143,16 @@ extern "C" __global__ void __raygen__renderFrame() {
                            + screen.x  * camera.horizontal
                            + screen.y * camera.vertical);
     
+    // ray payload
+    float3 pixelColorPRD = make_float3(1.f);
+    uint32_t u0, u1;
+    packPointer( &pixelColorPRD, u0, u1 );  
+
     // trace primary ray
     optixTrace(optixLaunchParams.traversable,
              camera.position,
              rayDir,
-             0.f,    // tmin
+             0.01f,    // tmin
              1e20f,  // tmax
              0.0f,   // rayTime
              OptixVisibilityMask( 255 ),
@@ -170,8 +168,7 @@ extern "C" __global__ void __raygen__renderFrame() {
     const int b = int(255.0f*pixelColorPRD.z);
 
     // convert to 32-bit rgba value 
-    const uint32_t rgba = 0xff000000
-      | (r<<0) | (g<<8) | (b<<16);
+    const uint32_t rgba = 0xff000000 | (r<<0) | (g<<8) | (b<<16);
     // compute index
     const uint32_t fbIndex = ix + iy*optixGetLaunchDimensions().x;
     // write to output buffer
