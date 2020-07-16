@@ -1,20 +1,27 @@
 <?xml version="1.0" ?>
 <project name="Optix Test - Iterative Path Tracing with tone mapping" width=1024 height=1024>
 	<assets>
+        <constants>
+            <constant name="RESOLUTION" value=1024 />
+             <constant name="LEVELS" value=10 />
+       </constants>
         <attributes>
             <attribute type="PASS" name="SHADOW_RAYS" data="INT" value="1" />
             <attribute type="PASS" name="GAMMA" data="FLOAT" value = "2.2" />
             <attribute type="PASS" name="LIGHT_SCALE" data="FLOAT" value = "100000000.0" />
  
 			<attribute type="PASS" name="EXPOSURE" data="FLOAT" value = "10" />
-			<attribute type="PASS" name="Levels" data="INT" value=10 />
+			<attribute type="PASS" name="Levels" data="INT" value="LEVELS" />
 			<attribute type="PASS" name="CurrentLevel" data="INT" value=0 />
+
+            <attribute type="RENDERER" name="RESOLUTION" data = "INT" value="RESOLUTION" />
+            <attribute type="RENDERER" name="LEVELS" data = "INT" value="LEVELS" />
        </attributes>
 		<scenes>
 			<scene name="MainScene" >
-				<file name="../../../models/sponza/crytek-sponza/sponza.nbo" />
+				<!--file name="../../../models/sponza/crytek-sponza/sponza.nbo" /-->
 				<!--file name="../../../models/LargoCamoes/largoCamoes.nbo" /-->
-				<!--file name="../../../models/SanMiguel/san-miguel.nbo" /-->
+				<file name="../../../models/SanMiguel/san-miguel.nbo" />
                 <!--file name="../../../models/cornellBox/CornellBox-Sphere2.obj" /-->
                 <!--file name="../../../models/cornellBox/CornellBox-Original2.obj" /-->
 			</scene>
@@ -100,7 +107,7 @@
 			<pass class="compute" name="mipmap">
 				<testScript file="test.lua" script="testMipmap" TEST_MODE="RUN_WHILE"/>
 				<material name="mipmap" fromLibrary="Optix Ray Tracer Render Target" 
-					dimX=512 dimY=512 dimZ=1/>
+					dimX=256 dimY=256 dimZ=1/>
 			</pass>
 			<pass class="quad" name="showtonemap">
 				<viewport name="MainViewport" />

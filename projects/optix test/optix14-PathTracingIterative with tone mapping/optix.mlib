@@ -2,14 +2,14 @@
 <materialLib name="Optix Ray Tracer Render Target">
 	<renderTargets>
 		<renderTarget name ="test">
-			<SIZE width=1024 height=1024 />
+			<SIZE width="RESOLUTION" height="RESOLUTION" />
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
 			</colors>
 		</renderTarget>
 		<renderTarget name="luminance" >
-			<SIZE width="1024" height="1024" />
-			<LEVELS value=10 />
+			<SIZE width="RESOLUTION" height="RESOLUTION" />
+			<LEVELS value="LEVELS" />
 			<colors>
 				<color name="luminance" internalFormat="RG32F"  />
 			</colors>		
@@ -17,7 +17,7 @@
 	</renderTargets>
     <buffers>
         <buffer name="accumBuffer">
-            <DIM x=1024 y=1024 z=1 />
+            <DIM x="RESOLUTION" y="RESOLUTION" z=1 />
             <structure>
                 <field value="FLOAT" />
                 <field value="FLOAT" />
@@ -40,6 +40,9 @@
 				<values>
 					<valueof uniform="input"	type="TEXTURE_BINDING" context="CURRENT" 
 														id=0 component="UNIT" />
+                    <valueof uniform="res"	type="RENDERER" context="CURRENT" 
+														component="RESOLUTION" />
+
 				</values>
 			</shader>
 			<buffers>	
@@ -87,6 +90,10 @@
 														id=2 component="UNIT" />
 					<valueof uniform="origTex"	type="TEXTURE_BINDING" context="CURRENT"
 														id=1 component="UNIT" />
+                    <valueof uniform="res"	type="RENDERER" context="CURRENT" 
+														component="RESOLUTION" />
+                    <valueof uniform="levels"	type="RENDERER" context="CURRENT" 
+														component="LEVELS" />
 				</values>
 			</shader>	
 			<textures>

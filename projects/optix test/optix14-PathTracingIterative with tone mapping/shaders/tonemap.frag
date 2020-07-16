@@ -4,6 +4,7 @@ in vec2 texPos;
 
 uniform sampler2D origTex, lumiTex;
 uniform float alpha = 0.45;
+uniform int res, levels;
 
 out vec4 outColor;
 
@@ -43,9 +44,9 @@ vec3 xyY2RGB (vec3 xyY)
 
 void main() {
 	
-	ivec2 imageCoords = ivec2(texPos * vec2(1024,1024));
+	ivec2 imageCoords = ivec2(texPos * vec2(res,res));
 	vec2 lumi = texelFetch(lumiTex, imageCoords, 0).rg;
-	vec2 lumiAccum = texelFetch(lumiTex, ivec2(0), 10).rg;
+	vec2 lumiAccum = texelFetch(lumiTex, ivec2(0), levels).rg;
 	
 	vec3 c2 = texture(origTex, texPos).rgb ;
 
