@@ -4,6 +4,7 @@
 # User-specific files
 *.suo
 *.sln.docstates
+imgui.ini
 
 # Build results
 

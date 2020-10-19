@@ -3,18 +3,19 @@
 	<assets>
 	
 		<scenes>
-			<scene name="CubeLand" type="Scene" >
-				<SCALE x = 1.0 y=0.5 z = 1.0 />
+			<scene name="CubeLand" type="Scene">
+				<!--SCALE x = 1.0 y=0.5 z = 1.0 /-->
 				<geometry name = "Sphere" type = "SPHERE" material="crateBox" SLICES=15 STACKS=15 > 
 					<TRANSLATE x =-2.5 y=0 z =0  />
-					<SCALE x=1 y=2 z=2 />
+					<SCALE x=1 y=1 z=2 />
 				</geometry>								
 				<geometry name = "Box" type = "BOX" material="crateBox"   >
 					<TRANSLATE x =2.5 y=0 z =0  />
-					<SCALE x=2 y=4 z=2 />
+					<SCALE x=2 y=2 z=2 />
 					<ROTATE x=0 y=1 z=0 w=45 />
 				</geometry>
-				<geometry name = "Grid" type = "GRID" LENGTH=10  DIVISIONS=10>
+				<geometry name = "Grid" type = "GRID" LENGTH=20  DIVISIONS=10>
+					<TRANSLATE x =0.0 y=-2 z =0  />
 				</geometry>
 			</scene>
 			<scene name="Axis">
