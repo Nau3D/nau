@@ -37,18 +37,7 @@ To build nau with nvidia's optix 7 support (optional) both cuda and optix are re
 * In the cmake project check the option "NAU_BUILD_WITH_OPTIX"
 * Set the variable OPTIX_DIR to optix's installation directory
 * CUDA is usually found by cmake and doesn't need any extra steps.
-* If either CUDA or Optix are not found the process goes on without Optix support.
-
-To build composer (a wx widgets based interface for nau which provides useful information for debug and profiling)
-
-* Download and install wxwidgets.
-	* Alternative: For windows, instead of compiling the libs, download the binaries from here: https://www.wxwidgets.org/downloads/
-		* Required: releaseDLL, Dev and headers and place them in the wxfolder (note: get the 64bit version for the releaseDLL and Dev as this is required by nvidia's optix)
-		* extract all files to a folder. This is the wx_Widgets_ROOT_DIR in the CMake options.
-		* snapshot of the wx config options for CMake
-		
-		![](images/cmake_wx.jpg?raw=true "Title")
-		
+* If either CUDA or Optix are not found the process goes on without Optix support.		
 
 		
 To built bullet plugin, download the latest release (Windows only).
