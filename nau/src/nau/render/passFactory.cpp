@@ -163,6 +163,8 @@ PassFactory::create (const std::string &type, const std::string &name) {
 	IAPISupport *sup = IAPISupport::GetInstance();
 	if (type == "compute" && !sup->apiSupport(IAPISupport::COMPUTE_SHADER))
 		NAU_THROW("Compute Shader is not supported");
+	if (type == "mesh" && !sup->apiSupport(IAPISupport::MESH_SHADER))
+		NAU_THROW("Mesh Shader is not supported");
 
 	if (m_Creator.count(type))
 		return (*(std::shared_ptr<Pass>(*)(const std::string &))(m_Creator[type]))(name);
@@ -188,6 +190,8 @@ PassFactory::isClass(const std::string &name) {
 	IAPISupport *sup = IAPISupport::GetInstance();
 	if (name == "compute" && !sup->apiSupport(IAPISupport::COMPUTE_SHADER))
 		return false;
+	if (name == "mesh" && !sup->apiSupport(IAPISupport::MESH_SHADER))
+		return false;
 
 	if (m_Creator.count(name) || m_PluginCreator.count(name))
 		return true;
@@ -195,7 +199,7 @@ PassFactory::isClass(const std::string &name) {
 		return false;
 }
 
-
+/*
 std::vector<std::string> * 
 PassFactory::getClassNames() {
 
@@ -213,3 +217,4 @@ PassFactory::getClassNames() {
 
 	return names;
 }
+*/

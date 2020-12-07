@@ -1,6 +1,7 @@
 
 #include "Binding_pch.h"
 
+
 using namespace gl;
 
 
@@ -41,9 +42,10 @@ Function<void, const GLfixed *> Binding::RasterPos4xvOES("glRasterPos4xvOES");
 Function<void, GLuint, GLboolean> Binding::RasterSamplesEXT("glRasterSamplesEXT");
 Function<void, GLenum> Binding::ReadBuffer("glReadBuffer");
 Function<void, GLint> Binding::ReadInstrumentsSGIX("glReadInstrumentsSGIX");
-Function<void, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, void *> Binding::ReadPixels("glReadPixels");
 Function<void, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, GLsizei, void *> Binding::ReadnPixels("glReadnPixels");
 Function<void, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, GLsizei, void *> Binding::ReadnPixelsARB("glReadnPixelsARB");
+Function<void, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, GLsizei, void *> Binding::ReadnPixelsKHR("glReadnPixelsKHR");
+Function<void, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, void *> Binding::ReadPixels("glReadPixels");
 Function<void, GLdouble, GLdouble, GLdouble, GLdouble> Binding::Rectd("glRectd");
 Function<void, const GLdouble *, const GLdouble *> Binding::Rectdv("glRectdv");
 Function<void, GLfloat, GLfloat, GLfloat, GLfloat> Binding::Rectf("glRectf");
@@ -55,13 +57,16 @@ Function<void, const GLshort *, const GLshort *> Binding::Rectsv("glRectsv");
 Function<void, GLfixed, GLfixed, GLfixed, GLfixed> Binding::RectxOES("glRectxOES");
 Function<void, const GLfixed *, const GLfixed *> Binding::RectxvOES("glRectxvOES");
 Function<void, const GLdouble *> Binding::ReferencePlaneSGIX("glReferencePlaneSGIX");
+Function<GLboolean, GLuint, GLuint64> Binding::ReleaseKeyedMutexWin32EXT("glReleaseKeyedMutexWin32EXT");
 Function<void> Binding::ReleaseShaderCompiler("glReleaseShaderCompiler");
-Function<GLint, GLenum> Binding::RenderMode("glRenderMode");
 Function<void, GLenum, GLenum, GLsizei, GLsizei> Binding::RenderbufferStorage("glRenderbufferStorage");
 Function<void, GLenum, GLenum, GLsizei, GLsizei> Binding::RenderbufferStorageEXT("glRenderbufferStorageEXT");
 Function<void, GLenum, GLsizei, GLenum, GLsizei, GLsizei> Binding::RenderbufferStorageMultisample("glRenderbufferStorageMultisample");
+Function<void, GLenum, GLsizei, GLsizei, GLenum, GLsizei, GLsizei> Binding::RenderbufferStorageMultisampleAdvancedAMD("glRenderbufferStorageMultisampleAdvancedAMD");
 Function<void, GLenum, GLsizei, GLsizei, GLenum, GLsizei, GLsizei> Binding::RenderbufferStorageMultisampleCoverageNV("glRenderbufferStorageMultisampleCoverageNV");
 Function<void, GLenum, GLsizei, GLenum, GLsizei, GLsizei> Binding::RenderbufferStorageMultisampleEXT("glRenderbufferStorageMultisampleEXT");
+Function<void, GLbitfield> Binding::RenderGpuMaskNV("glRenderGpuMaskNV");
+Function<GLint, GLenum> Binding::RenderMode("glRenderMode");
 Function<void, GLenum, GLsizei, const void **> Binding::ReplacementCodePointerSUN("glReplacementCodePointerSUN");
 Function<void, GLubyte> Binding::ReplacementCodeubSUN("glReplacementCodeubSUN");
 Function<void, const GLubyte *> Binding::ReplacementCodeubvSUN("glReplacementCodeubvSUN");
@@ -88,6 +93,7 @@ Function<void, const GLushort *> Binding::ReplacementCodeusvSUN("glReplacementCo
 Function<void, GLsizei, const GLuint *> Binding::RequestResidentProgramsNV("glRequestResidentProgramsNV");
 Function<void, GLenum> Binding::ResetHistogram("glResetHistogram");
 Function<void, GLenum> Binding::ResetHistogramEXT("glResetHistogramEXT");
+Function<void, GLuint, GLenum> Binding::ResetMemoryObjectParameterNV("glResetMemoryObjectParameterNV");
 Function<void, GLenum> Binding::ResetMinmax("glResetMinmax");
 Function<void, GLenum> Binding::ResetMinmaxEXT("glResetMinmaxEXT");
 Function<void> Binding::ResizeBuffersMESA("glResizeBuffersMESA");

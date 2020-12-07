@@ -1,6 +1,7 @@
 
 #include "Binding_pch.h"
 
+
 using namespace gl;
 
 
@@ -13,20 +14,26 @@ Function<void, GLenum, GLenum, GLfloat> Binding::ImageTransformParameterfHP("glI
 Function<void, GLenum, GLenum, const GLfloat *> Binding::ImageTransformParameterfvHP("glImageTransformParameterfvHP");
 Function<void, GLenum, GLenum, GLint> Binding::ImageTransformParameteriHP("glImageTransformParameteriHP");
 Function<void, GLenum, GLenum, const GLint *> Binding::ImageTransformParameterivHP("glImageTransformParameterivHP");
-Function<GLsync, GLenum, GLintptr, UnusedMask> Binding::ImportSyncEXT("glImportSyncEXT");
+Function<void, GLuint, GLuint64, GLenum, GLint> Binding::ImportMemoryFdEXT("glImportMemoryFdEXT");
+Function<void, GLuint, GLuint64, GLenum, void *> Binding::ImportMemoryWin32HandleEXT("glImportMemoryWin32HandleEXT");
+Function<void, GLuint, GLuint64, GLenum, const void *> Binding::ImportMemoryWin32NameEXT("glImportMemoryWin32NameEXT");
+Function<void, GLuint, GLenum, GLint> Binding::ImportSemaphoreFdEXT("glImportSemaphoreFdEXT");
+Function<void, GLuint, GLenum, void *> Binding::ImportSemaphoreWin32HandleEXT("glImportSemaphoreWin32HandleEXT");
+Function<void, GLuint, GLenum, const void *> Binding::ImportSemaphoreWin32NameEXT("glImportSemaphoreWin32NameEXT");
+Function<GLsync, GLenum, GLintptr, GLbitfield> Binding::ImportSyncEXT("glImportSyncEXT");
+Function<void, GLdouble> Binding::Indexd("glIndexd");
+Function<void, const GLdouble *> Binding::Indexdv("glIndexdv");
+Function<void, GLfloat> Binding::Indexf("glIndexf");
 Function<void, GLenum, GLsizei> Binding::IndexFormatNV("glIndexFormatNV");
 Function<void, GLenum, GLclampf> Binding::IndexFuncEXT("glIndexFuncEXT");
+Function<void, const GLfloat *> Binding::Indexfv("glIndexfv");
+Function<void, GLint> Binding::Indexi("glIndexi");
+Function<void, const GLint *> Binding::Indexiv("glIndexiv");
 Function<void, GLuint> Binding::IndexMask("glIndexMask");
 Function<void, GLenum, GLenum> Binding::IndexMaterialEXT("glIndexMaterialEXT");
 Function<void, GLenum, GLsizei, const void *> Binding::IndexPointer("glIndexPointer");
 Function<void, GLenum, GLsizei, GLsizei, const void *> Binding::IndexPointerEXT("glIndexPointerEXT");
 Function<void, GLenum, GLint, const void **, GLint> Binding::IndexPointerListIBM("glIndexPointerListIBM");
-Function<void, GLdouble> Binding::Indexd("glIndexd");
-Function<void, const GLdouble *> Binding::Indexdv("glIndexdv");
-Function<void, GLfloat> Binding::Indexf("glIndexf");
-Function<void, const GLfloat *> Binding::Indexfv("glIndexfv");
-Function<void, GLint> Binding::Indexi("glIndexi");
-Function<void, const GLint *> Binding::Indexiv("glIndexiv");
 Function<void, GLshort> Binding::Indexs("glIndexs");
 Function<void, const GLshort *> Binding::Indexsv("glIndexsv");
 Function<void, GLubyte> Binding::Indexub("glIndexub");
@@ -53,8 +60,8 @@ Function<GLboolean, GLuint> Binding::IsBufferARB("glIsBufferARB");
 Function<GLboolean, GLenum> Binding::IsBufferResidentNV("glIsBufferResidentNV");
 Function<GLboolean, GLuint> Binding::IsCommandListNV("glIsCommandListNV");
 Function<GLboolean, GLenum> Binding::IsEnabled("glIsEnabled");
-Function<GLboolean, GLenum, GLuint> Binding::IsEnabledIndexedEXT("glIsEnabledIndexedEXT");
 Function<GLboolean, GLenum, GLuint> Binding::IsEnabledi("glIsEnabledi");
+Function<GLboolean, GLenum, GLuint> Binding::IsEnabledIndexedEXT("glIsEnabledIndexedEXT");
 Function<GLboolean, GLuint> Binding::IsFenceAPPLE("glIsFenceAPPLE");
 Function<GLboolean, GLuint> Binding::IsFenceNV("glIsFenceNV");
 Function<GLboolean, GLuint> Binding::IsFramebuffer("glIsFramebuffer");
@@ -62,6 +69,7 @@ Function<GLboolean, GLuint> Binding::IsFramebufferEXT("glIsFramebufferEXT");
 Function<GLboolean, GLuint64> Binding::IsImageHandleResidentARB("glIsImageHandleResidentARB");
 Function<GLboolean, GLuint64> Binding::IsImageHandleResidentNV("glIsImageHandleResidentNV");
 Function<GLboolean, GLuint> Binding::IsList("glIsList");
+Function<GLboolean, GLuint> Binding::IsMemoryObjectEXT("glIsMemoryObjectEXT");
 Function<GLboolean, GLenum, GLuint> Binding::IsNameAMD("glIsNameAMD");
 Function<GLboolean, GLuint> Binding::IsNamedBufferResidentNV("glIsNamedBufferResidentNV");
 Function<GLboolean, GLint, const GLchar *> Binding::IsNamedStringARB("glIsNamedStringARB");
@@ -74,11 +82,13 @@ Function<GLboolean, GLuint> Binding::IsProgram("glIsProgram");
 Function<GLboolean, GLuint> Binding::IsProgramARB("glIsProgramARB");
 Function<GLboolean, GLuint> Binding::IsProgramNV("glIsProgramNV");
 Function<GLboolean, GLuint> Binding::IsProgramPipeline("glIsProgramPipeline");
+Function<GLboolean, GLuint> Binding::IsProgramPipelineEXT("glIsProgramPipelineEXT");
 Function<GLboolean, GLuint> Binding::IsQuery("glIsQuery");
 Function<GLboolean, GLuint> Binding::IsQueryARB("glIsQueryARB");
 Function<GLboolean, GLuint> Binding::IsRenderbuffer("glIsRenderbuffer");
 Function<GLboolean, GLuint> Binding::IsRenderbufferEXT("glIsRenderbufferEXT");
 Function<GLboolean, GLuint> Binding::IsSampler("glIsSampler");
+Function<GLboolean, GLuint> Binding::IsSemaphoreEXT("glIsSemaphoreEXT");
 Function<GLboolean, GLuint> Binding::IsShader("glIsShader");
 Function<GLboolean, GLuint> Binding::IsStateNV("glIsStateNV");
 Function<GLboolean, GLsync> Binding::IsSync("glIsSync");

@@ -6,8 +6,9 @@
 #include <fstream>
 #include <cmath>
 
+#ifdef cpplocate_FOUND
 #include <cpplocate/cpplocate.h>
-#include <cpplocate/ModuleInfo.h>
+#endif
 
 #include <glbinding/gl/gl.h>
 
@@ -19,18 +20,6 @@ using namespace gl;
 namespace
 {
 
-// taken from iozeug::FilePath::toPath
-std::string normalizePath(const std::string & filepath)
-{
-    auto copy = filepath;
-    std::replace( copy.begin(), copy.end(), '\\', '/');
-    auto i = copy.find_last_of('/');
-    if (i == copy.size()-1)
-    {
-        copy = copy.substr(0, copy.size()-1);
-    }
-    return copy;
-}
 
 bool readFile(const std::string & filePath, std::string & content)
 {
@@ -45,19 +34,26 @@ bool readFile(const std::string & filePath, std::string & content)
     return true;
 }
 
-// convenience
-std::string readFile(const std::string & filePath)
+std::string determineDataPath()
 {
-    std::string content;
-    readFile(filePath, content);
+#ifdef cpplocate_FOUND
+    std::string path = cpplocate::locatePath("data/cubescape", "share/glbinding/cubescape", reinterpret_cast<void *>(&gl::glCreateShader));
+    if (path.empty()) path = "./data";
+    else              path = path + "/data";
+#else
+    const std::string path = "./data";
+#endif
 
-    return content;
+    return path;
 }
 
-}
+
+} // namespace
+
 
 CubeScape::CubeScape()
-: a_vertex(-1)
+: m_initialized(false)
+, a_vertex(-1)
 , u_transform(-1)
 , u_time(-1)
 , u_numcubes(-1)
@@ -68,21 +64,26 @@ CubeScape::CubeScape()
 , m_a(0.f)
 , m_numcubes(16)
 {
-    cpplocate::ModuleInfo moduleInfo = cpplocate::findModule("glbinding");
-
     // Get data path
-    std::string dataPath = moduleInfo.value("dataPath");
-    dataPath = normalizePath(dataPath);
-    if (dataPath.size() > 0) dataPath = dataPath + "/";
-    else                     dataPath = "data/";
+    std::string dataPath = determineDataPath();
 
     GLuint vs = glCreateShader(GL_VERTEX_SHADER);
     GLuint gs = glCreateShader(GL_GEOMETRY_SHADER);
     GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
 
-    std::string vertexSource   = readFile(dataPath + "cubescape/cubescape.vert");
-    std::string geometrySource = readFile(dataPath + "cubescape/cubescape.geom");
-    std::string fragmentSource = readFile(dataPath + "cubescape/cubescape.frag");
+    std::string vertexSource;
+    std::string geometrySource;
+    std::string fragmentSource;
+
+    auto success = readFile(dataPath + "/cubescape/cubescape.vert", vertexSource);
+    success &= readFile(dataPath + "/cubescape/cubescape.geom", geometrySource);
+    success &= readFile(dataPath + "/cubescape/cubescape.frag", fragmentSource);
+
+    if (!success)
+    {
+        std::cerr << "Could not load shaders in " << dataPath + "/cubescape/cubescape.*" << "." << std::endl;
+        return;
+    }
 
     const char * vertSource = vertexSource.c_str();
     const char * geomSource = geometrySource.c_str();
@@ -122,7 +123,7 @@ CubeScape::CubeScape()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     {
-        RawFile terrain(dataPath + "cubescape/terrain.64.64.r.ub.raw");
+        RawFile terrain(dataPath + "/cubescape/terrain.64.64.r.ub.raw");
         if (!terrain.isValid())
             std::cout << "warning: loading texture from " << terrain.filePath() << " failed.";
 
@@ -138,7 +139,7 @@ CubeScape::CubeScape()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     {
-        RawFile patches(dataPath + "cubescape/patches.64.16.rgb.ub.raw");
+        RawFile patches(dataPath + "/cubescape/patches.64.16.rgb.ub.raw");
         if (!patches.isValid())
             std::cout << "warning: loading texture from " << patches.filePath() << " failed.";
 
@@ -209,10 +210,17 @@ CubeScape::CubeScape()
     // view
 
     m_view = mat4::lookAt(0.f, 0.8f,-2.0f, 0.f, -1.2f, 0.f, 0.f, 1.f, 0.f);
+
+    m_initialized = true;
 }
 
 CubeScape::~CubeScape()
 {
+    if (!m_initialized)
+    {
+        return;
+    }
+
     glDeleteBuffers(1, &m_vertices);
     glDeleteBuffers(1, &m_indices);
 
@@ -237,6 +245,11 @@ void CubeScape::resize(int width, int height)
 
 void CubeScape::draw()
 {
+    if (!m_initialized)
+    {
+        return;
+    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - m_time);

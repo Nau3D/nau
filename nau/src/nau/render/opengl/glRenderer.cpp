@@ -61,6 +61,9 @@ GLRenderer::GLRenderer(void) :
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
+	//glEnable(GL_SAMPLE_SHADING);
+	//glMinSampleShading(1.0f);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	registerAndInitArrays(Attribs);
 #ifdef PROFILE
 	glGenQueries(1, &m_TessQuery);
@@ -320,11 +323,11 @@ GLRenderer::setViewport(std::shared_ptr<Viewport> aViewport) {
 	const vec2& vpSize = aViewport->getPropf2(Viewport::ABSOLUTE_SIZE);
 	const vec4& vpColor = aViewport->getPropf4(Viewport::CLEAR_COLOR);
 
-	glViewport((int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
+	glViewportIndexedf(0,(int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
 	glClearColor(vpColor.x, vpColor.y, vpColor.z, vpColor.w);
 
 	glEnable(GL_SCISSOR_TEST); // MARK - perform scissor test only if not using the whole window 
-	glScissor((int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
+	glScissorIndexed(0, (int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
 }
 
 
@@ -1008,6 +1011,17 @@ GLRenderer::dispatchCompute(int dimX, int dimY, int dimZ) {
 
 
 void
+GLRenderer::drawMeshTasks(int first, int count) {
+
+	glDrawMeshTasksNV(first, count);
+
+	if (m_BoolProps[DEBUG_DRAW_CALL]) {
+		showDrawDebugInfo((PassMesh*)RENDERMANAGER->getCurrentPass());
+	}
+}
+
+
+void
 GLRenderer::setCullFace(Face aFace) {
 
 	glCullFace(translateFace(aFace));
@@ -1026,6 +1040,17 @@ GLRenderer::showDrawDebugInfo(PassCompute *p) {
 	t->appendItem("Class", "Compute");
 	std::shared_ptr<Material> &mat = p->getMaterial();
 	showDrawDebugInfo(mat,t);
+	showDrawDebugInfo(mat->getProgram(), t);
+}
+
+
+void
+GLRenderer::showDrawDebugInfo(PassMesh* p) {
+
+	nau::util::Tree* t = m_ShaderDebugTree.appendBranch("Pass", p->getName());
+	t->appendItem("Class", "Mesh");
+	std::shared_ptr<Material>& mat = p->getMaterial();
+	showDrawDebugInfo(mat, t);
 	showDrawDebugInfo(mat->getProgram(), t);
 }
 

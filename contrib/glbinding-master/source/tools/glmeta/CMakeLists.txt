@@ -3,6 +3,8 @@
 # External dependencies
 # 
 
+# No external dependencies required
+
 
 # 
 # Executable name and options
@@ -67,6 +69,7 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::glbinding
+    ${META_PROJECT_NAME}::glbinding-aux
 )
 
 
@@ -97,6 +100,16 @@ target_compile_options(${target}
 target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LINKER_OPTIONS}
+)
+
+
+#
+# Target Health
+#
+
+perform_health_checks(
+    ${target}
+    ${sources}
 )
 
 

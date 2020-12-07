@@ -145,11 +145,27 @@ GLState::set() {
 						else
 							glDisable(GL_CULL_FACE);
 					break;
-			//case COLOR_MASK: 
-			//		break;
+			case SAMPLE_SHADING:
+				if (iterBool->second)
+					glEnable(GL_SAMPLE_SHADING);
+				else
+					glDisable(GL_SAMPLE_SHADING);
+				break;
 		}
 	}
 
+
+	std::map< int, float>::iterator iterFloat;
+	iterFloat = m_FloatProps.begin();
+	for (; iterFloat != m_FloatProps.end(); ++iterFloat) {
+
+		switch (iterFloat->first) {
+		case MIN_SAMPLE_SHADING:
+			glMinSampleShading(iterFloat->second);
+
+			break;
+		}
+	}
 
 	std::map< int, vec4>::iterator iterVec4;
 	iterVec4 = m_Float4Props.begin();

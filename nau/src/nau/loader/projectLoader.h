@@ -192,6 +192,7 @@ namespace nau
 			static void loadPassRTSettings(TiXmlHandle hPass, Pass* aPass);
 #endif
 			static void loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass);
+			static void loadPassMeshSettings(TiXmlHandle hPass, Pass* aPass);
 
 			//Debug Loading
 			//static void loadDebug (TiXmlHandle &hRoot);

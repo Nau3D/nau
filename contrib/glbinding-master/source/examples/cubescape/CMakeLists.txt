@@ -3,8 +3,8 @@
 # External dependencies
 # 
 
-find_package(GLFW)
-find_package(cpplocate REQUIRED)
+find_package(glfw3 QUIET)
+find_package(cpplocate QUIET)
 
 
 # 
@@ -15,12 +15,16 @@ find_package(cpplocate REQUIRED)
 set(target cubescape)
 
 # Exit here if required dependencies are not met
-if (NOT GLFW_FOUND)
-    message("Example ${target} skipped: GLFW not found")
+if (NOT glfw3_FOUND)
+    message("Example ${target} skipped: glfw3 not found")
     return()
 endif()
 
-message(STATUS "Example ${target}")
+if (NOT cpplocate_FOUND)
+    message(STATUS "Example ${target}: using static data path (cpplocate not found)")
+else()
+    message(STATUS "Example ${target}")
+endif()
 
 
 # 
@@ -44,6 +48,7 @@ set(sources
 
 # Build executable
 add_executable(${target}
+    MACOSX_BUNDLE
     ${sources}
 )
 
@@ -71,7 +76,6 @@ target_include_directories(${target}
     ${DEFAULT_INCLUDE_DIRECTORIES}
     ${PROJECT_BINARY_DIR}/source/include
     SYSTEM
-    ${GLFW_INCLUDE_DIR}
 )
 
 
@@ -82,9 +86,10 @@ target_include_directories(${target}
 target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
-    ${GLFW_LIBRARIES}
+    glfw
     ${META_PROJECT_NAME}::glbinding
-    cpplocate::cpplocate
+    ${META_PROJECT_NAME}::glbinding-aux
+    $<$<BOOL:${cpplocate_FOUND}>:cpplocate::cpplocate>
 )
 
 
@@ -96,6 +101,7 @@ target_compile_definitions(${target}
     PRIVATE
     ${DEFAULT_COMPILE_DEFINITIONS}
     GLFW_INCLUDE_NONE
+    $<$<BOOL:${cpplocate_FOUND}>:cpplocate_FOUND>
 )
 
 
@@ -116,6 +122,16 @@ target_compile_options(${target}
 target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LINKER_OPTIONS}
+)
+
+
+#
+# Target Health
+#
+
+perform_health_checks(
+    ${target}
+    ${sources}
 )
 
 

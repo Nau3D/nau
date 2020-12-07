@@ -1,6 +1,7 @@
 
 #include "Binding_pch.h"
 
+
 using namespace gl;
 
 
@@ -8,12 +9,15 @@ namespace glbinding
 {
 
 
+Function<void, GLuint, GLuint, GLuint64> Binding::NamedBufferAttachMemoryNV("glNamedBufferAttachMemoryNV");
 Function<void, GLuint, GLsizeiptr, const void *, GLenum> Binding::NamedBufferData("glNamedBufferData");
 Function<void, GLuint, GLsizeiptr, const void *, GLenum> Binding::NamedBufferDataEXT("glNamedBufferDataEXT");
 Function<void, GLuint, GLintptr, GLsizeiptr, GLboolean> Binding::NamedBufferPageCommitmentARB("glNamedBufferPageCommitmentARB");
 Function<void, GLuint, GLintptr, GLsizeiptr, GLboolean> Binding::NamedBufferPageCommitmentEXT("glNamedBufferPageCommitmentEXT");
 Function<void, GLuint, GLsizeiptr, const void *, BufferStorageMask> Binding::NamedBufferStorage("glNamedBufferStorage");
 Function<void, GLuint, GLsizeiptr, const void *, BufferStorageMask> Binding::NamedBufferStorageEXT("glNamedBufferStorageEXT");
+Function<void, GLuint, GLintptr, GLsizeiptr, GLeglClientBufferEXT, BufferStorageMask> Binding::NamedBufferStorageExternalEXT("glNamedBufferStorageExternalEXT");
+Function<void, GLuint, GLsizeiptr, GLuint, GLuint64> Binding::NamedBufferStorageMemEXT("glNamedBufferStorageMemEXT");
 Function<void, GLuint, GLintptr, GLsizeiptr, const void *> Binding::NamedBufferSubData("glNamedBufferSubData");
 Function<void, GLuint, GLintptr, GLsizeiptr, const void *> Binding::NamedBufferSubDataEXT("glNamedBufferSubDataEXT");
 Function<void, GLuint, GLuint, GLintptr, GLintptr, GLsizeiptr> Binding::NamedCopyBufferSubDataEXT("glNamedCopyBufferSubDataEXT");
@@ -26,6 +30,7 @@ Function<void, GLuint, GLenum, GLenum, GLuint> Binding::NamedFramebufferRenderbu
 Function<void, GLuint, GLenum, GLenum, GLuint> Binding::NamedFramebufferRenderbufferEXT("glNamedFramebufferRenderbufferEXT");
 Function<void, GLuint, GLuint, GLsizei, const GLfloat *> Binding::NamedFramebufferSampleLocationsfvARB("glNamedFramebufferSampleLocationsfvARB");
 Function<void, GLuint, GLuint, GLsizei, const GLfloat *> Binding::NamedFramebufferSampleLocationsfvNV("glNamedFramebufferSampleLocationsfvNV");
+Function<void, GLuint, GLuint, GLuint, const GLfloat *> Binding::NamedFramebufferSamplePositionsfvAMD("glNamedFramebufferSamplePositionsfvAMD");
 Function<void, GLuint, GLenum, GLuint, GLint> Binding::NamedFramebufferTexture("glNamedFramebufferTexture");
 Function<void, GLuint, GLenum, GLenum, GLuint, GLint> Binding::NamedFramebufferTexture1DEXT("glNamedFramebufferTexture1DEXT");
 Function<void, GLuint, GLenum, GLenum, GLuint, GLint> Binding::NamedFramebufferTexture2DEXT("glNamedFramebufferTexture2DEXT");
@@ -49,6 +54,7 @@ Function<void, GLuint, GLenum, GLenum, GLsizei, const void *> Binding::NamedProg
 Function<void, GLuint, GLenum, GLsizei, GLsizei> Binding::NamedRenderbufferStorage("glNamedRenderbufferStorage");
 Function<void, GLuint, GLenum, GLsizei, GLsizei> Binding::NamedRenderbufferStorageEXT("glNamedRenderbufferStorageEXT");
 Function<void, GLuint, GLsizei, GLenum, GLsizei, GLsizei> Binding::NamedRenderbufferStorageMultisample("glNamedRenderbufferStorageMultisample");
+Function<void, GLuint, GLsizei, GLsizei, GLenum, GLsizei, GLsizei> Binding::NamedRenderbufferStorageMultisampleAdvancedAMD("glNamedRenderbufferStorageMultisampleAdvancedAMD");
 Function<void, GLuint, GLsizei, GLsizei, GLenum, GLsizei, GLsizei> Binding::NamedRenderbufferStorageMultisampleCoverageEXT("glNamedRenderbufferStorageMultisampleCoverageEXT");
 Function<void, GLuint, GLsizei, GLenum, GLsizei, GLsizei> Binding::NamedRenderbufferStorageMultisampleEXT("glNamedRenderbufferStorageMultisampleEXT");
 Function<void, GLenum, GLint, const GLchar *, GLint, const GLchar *> Binding::NamedStringARB("glNamedStringARB");
@@ -59,9 +65,9 @@ Function<void, const GLbyte *> Binding::Normal3bv("glNormal3bv");
 Function<void, GLdouble, GLdouble, GLdouble> Binding::Normal3d("glNormal3d");
 Function<void, const GLdouble *> Binding::Normal3dv("glNormal3dv");
 Function<void, GLfloat, GLfloat, GLfloat> Binding::Normal3f("glNormal3f");
+Function<void, const GLfloat *> Binding::Normal3fv("glNormal3fv");
 Function<void, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat> Binding::Normal3fVertex3fSUN("glNormal3fVertex3fSUN");
 Function<void, const GLfloat *, const GLfloat *> Binding::Normal3fVertex3fvSUN("glNormal3fVertex3fvSUN");
-Function<void, const GLfloat *> Binding::Normal3fv("glNormal3fv");
 Function<void, GLhalfNV, GLhalfNV, GLhalfNV> Binding::Normal3hNV("glNormal3hNV");
 Function<void, const GLhalfNV *> Binding::Normal3hvNV("glNormal3hvNV");
 Function<void, GLint, GLint, GLint> Binding::Normal3i("glNormal3i");

@@ -22,7 +22,7 @@ namespace nau
 			static IProgram* create ();
 
 //#if NAU_OPENGL_VERSION >=430
-			const static int SHADER_COUNT = 6;
+			const static int SHADER_COUNT = 7;
 
 			enum ShaderType {
 				VERTEX_SHADER,
@@ -30,7 +30,8 @@ namespace nau
 				TESS_CONTROL_SHADER,
 				TESS_EVALUATION_SHADER,
 				FRAGMENT_SHADER,
-				COMPUTE_SHADER
+				COMPUTE_SHADER,
+				MESH_SHADER
 			 };
 
 			static std::vector<std::string> ShaderNames;

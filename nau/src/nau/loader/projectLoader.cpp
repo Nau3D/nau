@@ -23,6 +23,7 @@
 #include "nau/render/iAPISupport.h"
 #include "nau/render/passCompute.h"
 #include "nau/render/passFactory.h"
+#include "nau/render/passMesh.h"
 #include "nau/render/passProcessTexture.h"
 #include "nau/render/passProcessBuffer.h"
 
@@ -3649,6 +3650,77 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 	
 }
 
+
+/* ----------------------------------------------------------------------------
+
+	PASS MESH SETTINGS
+
+			<pass class="mesh" name="test">
+				<material name="meshShader" fromLibrary="myLib" dimX=256/>
+				<!-- or -->
+				<material name="meshShader" fromLibrary="myLib" buffer="tt::aa" offset=4 />
+			</pass>
+
+	The strings in the buffer(X,Y,Z) are buffer labels that must be previously defined
+	Dims and buffers can be mixed, but for each dimension there must be only one
+-------------------------------------------------------------------------------*/
+
+
+
+void
+ProjectLoader::loadPassMeshSettings(TiXmlHandle hPass, Pass* aPass) {
+
+	TiXmlElement* pElem;
+	PassMesh* p = (PassMesh*)aPass;
+
+	pElem = hPass.FirstChildElement("material").Element();
+	if (pElem != NULL) {
+		const char* pMatName = pElem->Attribute("name");
+		const char* pLibName = pElem->Attribute("fromLibrary");
+		const char* pAtX = pElem->Attribute("buffer");
+
+
+		if (pMatName != NULL && pLibName != NULL) {
+			if (!MATERIALLIBMANAGER->hasMaterial(pLibName, pMatName))
+				NAU_THROW("File %s\nPass %s\nMaterial %s::%s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pLibName, pMatName);
+		}
+		else
+			NAU_THROW("File %s\nPass %s\nMaterial not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+		IBuffer* bX = NULL;
+		unsigned int offX = 0;
+		unsigned int r1 = 1;
+		// Read value or buffer id for dimX
+		AttribSet* attrs = aPass->getAttribSet();
+		std::unique_ptr<Attribute>& attr = attrs->get(PassMesh::DIM_X, Enums::UINT);
+		bool res = TIXML_SUCCESS != pElem->QueryUnsignedAttribute("count", &r1);
+		if (!res && pAtX == NULL) {
+			NAU_THROW("File %s\nPass %s\ncount or buffer are not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		}
+		else if (res && pAtX != NULL) {
+			NAU_THROW("File %s\nPass %s\ncount and buffer are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+		}
+		// Read value or buffer id for dimX
+		if (pAtX != NULL) {
+			bX = RESOURCEMANAGER->getBuffer(pAtX);
+			if (!bX) {
+				NAU_THROW("File %s\nPass %s\nbuffer %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
+			}
+			else {
+				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("first", &offX))
+					NAU_THROW("File %s\nPass %s\nNo offset defined for buffer %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
+			}
+		}
+
+		p->setMaterialName(pLibName, pMatName);
+		p->setDimension(r1);
+		p->setDimFromBuffer(bX, offX);
+	}
+	else
+		NAU_THROW("File %s\nPass %s\nMissing material", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+}
+
 /* -----------------------------------------------------------------------------
 MATERIAL LIBRAY RENDERTARGET DEFINITION
 
@@ -4532,6 +4604,13 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 					NAU_THROW("Compute Shader is not supported");
 				}
 			}
+			if (passClass == "mesh") {
+				if (APISupport->apiSupport(IAPISupport::MESH_SHADER))
+					loadPassMeshSettings(hPass, aPass);
+				else {
+					NAU_THROW("Mesh Shader is not supported");
+				}
+		}
 #if NAU_OPTIX == 1
 			if (passClass == "optixPrime")
 				loadPassOptixPrimeSettings(hPass, aPass);
@@ -5020,7 +5099,7 @@ ProjectLoader::loadMatLibTextures(TiXmlHandle hRoot, MaterialLib *aLib, std::str
 			NAU_THROW("Mat Lib %s\nCube Map %s is already defined", aLib->getName().c_str(), s_pFullName);
 
 		bool mipmap = false;
-		if (pMipMap != 0 && strcmp(pMipMap,"1") == 0)
+		if (pMipMap != 0 && strcmp(pMipMap,"true") == 0)
 			mipmap = true;
 
 
@@ -5151,7 +5230,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		
 		shaderFiles.resize(IProgram::SHADER_COUNT);
 
-		std::vector<std::string> tags = {"vs", "gs", "tc", "te", "ps", "cs"};
+		std::vector<std::string> tags = {"vs", "gs", "tc", "te", "ps", "cs", "ms"};
 
 		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 			const char *pstr = pElem->Attribute (tags[i].c_str());
@@ -5189,7 +5268,9 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		}
 
 		// check if minimum set of files is present
-		if (0 == shaderFiles[IProgram::COMPUTE_SHADER].size() && 0 == shaderFiles[IProgram::VERTEX_SHADER].size()) {
+		if (0 == shaderFiles[IProgram::COMPUTE_SHADER].size() && 
+			0 == shaderFiles[IProgram::VERTEX_SHADER].size() && 
+			0 == shaderFiles[IProgram::MESH_SHADER].size()) {
 				NAU_THROW("Mat Lib %s\nShader %s missing files", aLib->getName().c_str(), pProgramName);
 		}
 

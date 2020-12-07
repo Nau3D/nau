@@ -1,6 +1,7 @@
 
 #include "Binding_pch.h"
 
+
 using namespace gl;
 
 
@@ -54,16 +55,18 @@ Function<GLuint, GLenum> Binding::BindParameterEXT("glBindParameterEXT");
 Function<void, GLenum, GLuint> Binding::BindProgramARB("glBindProgramARB");
 Function<void, GLenum, GLuint> Binding::BindProgramNV("glBindProgramNV");
 Function<void, GLuint> Binding::BindProgramPipeline("glBindProgramPipeline");
+Function<void, GLuint> Binding::BindProgramPipelineEXT("glBindProgramPipelineEXT");
 Function<void, GLenum, GLuint> Binding::BindRenderbuffer("glBindRenderbuffer");
 Function<void, GLenum, GLuint> Binding::BindRenderbufferEXT("glBindRenderbufferEXT");
 Function<void, GLuint, GLuint> Binding::BindSampler("glBindSampler");
 Function<void, GLuint, GLsizei, const GLuint *> Binding::BindSamplers("glBindSamplers");
+Function<void, GLuint> Binding::BindShadingRateImageNV("glBindShadingRateImageNV");
 Function<GLuint, GLenum, GLenum, GLenum> Binding::BindTexGenParameterEXT("glBindTexGenParameterEXT");
 Function<void, GLenum, GLuint> Binding::BindTexture("glBindTexture");
 Function<void, GLenum, GLuint> Binding::BindTextureEXT("glBindTextureEXT");
+Function<void, GLuint, GLsizei, const GLuint *> Binding::BindTextures("glBindTextures");
 Function<void, GLuint, GLuint> Binding::BindTextureUnit("glBindTextureUnit");
 Function<GLuint, GLenum, GLenum> Binding::BindTextureUnitParameterEXT("glBindTextureUnitParameterEXT");
-Function<void, GLuint, GLsizei, const GLuint *> Binding::BindTextures("glBindTextures");
 Function<void, GLenum, GLuint> Binding::BindTransformFeedback("glBindTransformFeedback");
 Function<void, GLenum, GLuint> Binding::BindTransformFeedbackNV("glBindTransformFeedbackNV");
 Function<void, GLuint> Binding::BindVertexArray("glBindVertexArray");
@@ -93,34 +96,37 @@ Function<void, GLfloat, GLfloat, GLfloat, GLfloat> Binding::BlendColorEXT("glBle
 Function<void, GLfixed, GLfixed, GLfixed, GLfixed> Binding::BlendColorxOES("glBlendColorxOES");
 Function<void, GLenum> Binding::BlendEquation("glBlendEquation");
 Function<void, GLenum> Binding::BlendEquationEXT("glBlendEquationEXT");
+Function<void, GLuint, GLenum> Binding::BlendEquationi("glBlendEquationi");
+Function<void, GLuint, GLenum> Binding::BlendEquationiARB("glBlendEquationiARB");
 Function<void, GLuint, GLenum> Binding::BlendEquationIndexedAMD("glBlendEquationIndexedAMD");
 Function<void, GLenum, GLenum> Binding::BlendEquationSeparate("glBlendEquationSeparate");
 Function<void, GLenum, GLenum> Binding::BlendEquationSeparateEXT("glBlendEquationSeparateEXT");
-Function<void, GLuint, GLenum, GLenum> Binding::BlendEquationSeparateIndexedAMD("glBlendEquationSeparateIndexedAMD");
 Function<void, GLuint, GLenum, GLenum> Binding::BlendEquationSeparatei("glBlendEquationSeparatei");
 Function<void, GLuint, GLenum, GLenum> Binding::BlendEquationSeparateiARB("glBlendEquationSeparateiARB");
-Function<void, GLuint, GLenum> Binding::BlendEquationi("glBlendEquationi");
-Function<void, GLuint, GLenum> Binding::BlendEquationiARB("glBlendEquationiARB");
+Function<void, GLuint, GLenum, GLenum> Binding::BlendEquationSeparateIndexedAMD("glBlendEquationSeparateIndexedAMD");
 Function<void, GLenum, GLenum> Binding::BlendFunc("glBlendFunc");
+Function<void, GLuint, GLenum, GLenum> Binding::BlendFunci("glBlendFunci");
+Function<void, GLuint, GLenum, GLenum> Binding::BlendFunciARB("glBlendFunciARB");
 Function<void, GLuint, GLenum, GLenum> Binding::BlendFuncIndexedAMD("glBlendFuncIndexedAMD");
 Function<void, GLenum, GLenum, GLenum, GLenum> Binding::BlendFuncSeparate("glBlendFuncSeparate");
 Function<void, GLenum, GLenum, GLenum, GLenum> Binding::BlendFuncSeparateEXT("glBlendFuncSeparateEXT");
-Function<void, GLenum, GLenum, GLenum, GLenum> Binding::BlendFuncSeparateINGR("glBlendFuncSeparateINGR");
-Function<void, GLuint, GLenum, GLenum, GLenum, GLenum> Binding::BlendFuncSeparateIndexedAMD("glBlendFuncSeparateIndexedAMD");
 Function<void, GLuint, GLenum, GLenum, GLenum, GLenum> Binding::BlendFuncSeparatei("glBlendFuncSeparatei");
 Function<void, GLuint, GLenum, GLenum, GLenum, GLenum> Binding::BlendFuncSeparateiARB("glBlendFuncSeparateiARB");
-Function<void, GLuint, GLenum, GLenum> Binding::BlendFunci("glBlendFunci");
-Function<void, GLuint, GLenum, GLenum> Binding::BlendFunciARB("glBlendFunciARB");
+Function<void, GLuint, GLenum, GLenum, GLenum, GLenum> Binding::BlendFuncSeparateIndexedAMD("glBlendFuncSeparateIndexedAMD");
+Function<void, GLenum, GLenum, GLenum, GLenum> Binding::BlendFuncSeparateINGR("glBlendFuncSeparateINGR");
 Function<void, GLenum, GLint> Binding::BlendParameteriNV("glBlendParameteriNV");
 Function<void, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, ClearBufferMask, GLenum> Binding::BlitFramebuffer("glBlitFramebuffer");
 Function<void, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, ClearBufferMask, GLenum> Binding::BlitFramebufferEXT("glBlitFramebufferEXT");
 Function<void, GLuint, GLuint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, ClearBufferMask, GLenum> Binding::BlitNamedFramebuffer("glBlitNamedFramebuffer");
 Function<void, GLenum, GLuint, GLuint64EXT, GLsizeiptr> Binding::BufferAddressRangeNV("glBufferAddressRangeNV");
+Function<void, GLenum, GLuint, GLuint64> Binding::BufferAttachMemoryNV("glBufferAttachMemoryNV");
 Function<void, GLenum, GLsizeiptr, const void *, GLenum> Binding::BufferData("glBufferData");
 Function<void, GLenum, GLsizeiptrARB, const void *, GLenum> Binding::BufferDataARB("glBufferDataARB");
 Function<void, GLenum, GLintptr, GLsizeiptr, GLboolean> Binding::BufferPageCommitmentARB("glBufferPageCommitmentARB");
 Function<void, GLenum, GLenum, GLint> Binding::BufferParameteriAPPLE("glBufferParameteriAPPLE");
 Function<void, GLenum, GLsizeiptr, const void *, BufferStorageMask> Binding::BufferStorage("glBufferStorage");
+Function<void, GLenum, GLintptr, GLsizeiptr, GLeglClientBufferEXT, BufferStorageMask> Binding::BufferStorageExternalEXT("glBufferStorageExternalEXT");
+Function<void, GLenum, GLsizeiptr, GLuint, GLuint64> Binding::BufferStorageMemEXT("glBufferStorageMemEXT");
 Function<void, GLenum, GLintptr, GLsizeiptr, const void *> Binding::BufferSubData("glBufferSubData");
 Function<void, GLenum, GLintptrARB, GLsizeiptrARB, const void *> Binding::BufferSubDataARB("glBufferSubDataARB");
 

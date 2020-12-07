@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<materialLib name="Mesh">
+	<shaders>
+		<shader name="meshShader" 		ms = "shaders/trianglePlus.mesh" 
+										ps = "shaders/dirdifambpix.frag" />
+	</shaders>
+	
+	<materials>
+		<material name="meshShader">
+			<shader name="meshShader" >
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="m_normal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+							 
+					<valueof uniform="m_view" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+							 
+					<valueof uniform="diffuse" 
+							 type="COLOR" context="CURRENT" 
+							 component="DIFFUSE" />
+							 
+					<valueof uniform="l_dir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+				</values>
+			</shader>
+		</material>
+	</materials>
+</materialLib>

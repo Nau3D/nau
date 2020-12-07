@@ -5,15 +5,19 @@
 
 #include <GLFW/glfw3.h>
 
+#include <glbinding/glbinding.h>
 #include <glbinding/AbstractFunction.h>
-#include <glbinding/callbacks.h>
-#include <glbinding/Meta.h>
-#include <glbinding/ContextInfo.h>
 #include <glbinding/Version.h>
-
+#include <glbinding/CallbackMask.h>
+#include <glbinding/FunctionCall.h>
 #include <glbinding/Binding.h>
 
 #include <glbinding/gl32/gl.h>
+
+#include <glbinding-aux/Meta.h>
+#include <glbinding-aux/ContextInfo.h>
+#include <glbinding-aux/ValidVersions.h>
+#include <glbinding-aux/types_to_string.h>
 
 
 using namespace gl32;
@@ -38,10 +42,10 @@ void doGLStuff(GLFWwindow * window)
 
 int main()
 {
+    glfwSetErrorCallback(error);
+
     if (!glfwInit())
         return 1;
-
-    glfwSetErrorCallback(error);
 
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, false);
@@ -60,7 +64,7 @@ int main()
         return -1;
     }
 
-    Binding::addContextSwitchCallback([](ContextHandle handle){
+    glbinding::addContextSwitchCallback([](ContextHandle handle){
         std::cout << "Activating context " << handle << std::endl;
     });
 
@@ -68,22 +72,21 @@ int main()
 
     // print some gl infos (query)
 
-    Binding::initialize(false);
+	glbinding::initialize(glfwGetProcAddress, false); // only resolve functions that are actually used (lazy)
 
     std::cout << std::endl
-        << "OpenGL Version:  " << ContextInfo::version() << std::endl
-        << "OpenGL Vendor:   " << ContextInfo::vendor() << std::endl
-        << "OpenGL Renderer: " << ContextInfo::renderer() << std::endl
-        << "OpenGL Revision: " << Meta::glRevision() << " (gl.xml)" << std::endl << std::endl;
+        << "OpenGL Version:  " << aux::ContextInfo::version() << std::endl
+        << "OpenGL Vendor:   " << aux::ContextInfo::vendor() << std::endl
+        << "OpenGL Renderer: " << aux::ContextInfo::renderer() << std::endl << std::endl;
 
-    setCallbackMask(CallbackMask::After | CallbackMask::ParametersAndReturnValue);
+    glbinding::setCallbackMask(CallbackMask::After | CallbackMask::ParametersAndReturnValue);
 
-    setAfterCallback([](const FunctionCall & call) {
+    glbinding::setAfterCallback([](const glbinding::FunctionCall & call) {
         std::cout << call.function->name() << "(";
 
         for (unsigned i = 0; i < call.parameters.size(); ++i)
         {
-            std::cout << call.parameters[i]->asString();
+            std::cout << call.parameters[i].get();
             if (i < call.parameters.size() - 1)
                 std::cout << ", ";
         }
@@ -92,7 +95,7 @@ int main()
 
         if (call.returnValue)
         {
-            std::cout << " -> " << call.returnValue->asString();
+            std::cout << " -> " << call.returnValue.get();
         }
 
         std::cout << std::endl;

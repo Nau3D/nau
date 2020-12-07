@@ -29,6 +29,19 @@ GLAPISupport::setAPISupport() {
 //	if (strstr(sExtensions, "ARB_bindless_texture") != NULL) {
 //		m_APISupport[APIFeatureSupport::BINDLESS_TEXTURES] = true;
 //	}
+	int n;
+	glGetIntegerv(GL_NUM_EXTENSIONS, &n);
+	for (int i = 0; i < n; ++i) {
+
+		const char* ext = (char*)glGetStringi(GL_EXTENSIONS, i);
+		if (strstr(ext, "ARB_bindless_texture") != NULL) {
+			m_APISupport[APIFeatureSupport::BINDLESS_TEXTURES] = true;
+		}
+		if (strstr(ext, "GL_NV_mesh_shader") != NULL) {
+			m_APISupport[APIFeatureSupport::MESH_SHADER] = true;
+		}
+
+	}
 
 	if (m_Version >= 310) {
 		m_APISupport[APIFeatureSupport::BUFFER_UNIFORM] = true;

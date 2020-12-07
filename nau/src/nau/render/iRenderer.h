@@ -272,6 +272,7 @@ namespace nau
 			nau_API virtual void drawGroup(std::shared_ptr<nau::material::MaterialGroup> aMaterialGroup) = 0;
 			nau_API virtual void setCullFace(Face aFace) = 0;
 			nau_API virtual void dispatchCompute(int dimX, int dimY, int dimZ) = 0;
+			nau_API virtual void drawMeshTasks(int first, int count) = 0;
 
 			// RENDER ATTRIBS
 

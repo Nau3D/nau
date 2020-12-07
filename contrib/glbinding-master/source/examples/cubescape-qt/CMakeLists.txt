@@ -3,10 +3,11 @@
 # External dependencies
 # 
 
-find_package(Qt5Core    5.1)
-find_package(Qt5Gui     5.1)
-find_package(Qt5Widgets 5.1)
-find_package(cpplocate  REQUIRED)
+find_package(Qt5Core    5.1 QUIET)
+find_package(Qt5Gui     5.1 QUIET)
+find_package(Qt5Widgets 5.1 QUIET)
+find_package(cpplocate      QUIET)
+
 
 # Enable automoc
 set(CMAKE_AUTOMOC ON)
@@ -29,6 +30,16 @@ set(target cubescape-qt)
 if (NOT Qt5Core_FOUND)
     message(STATUS "Example ${target} skipped: Qt5 not found")
     return()
+endif()
+
+# On macOS qt5 fails to link against opengl
+if(APPLE)
+    find_package(OpenGL     REQUIRED)
+endif()
+
+
+if (NOT cpplocate_FOUND)
+    message(STATUS "Example ${target}: using static data path (cpplocate not found)")
 else()
     message(STATUS "Example ${target}")
 endif()
@@ -106,10 +117,12 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::glbinding
+    ${META_PROJECT_NAME}::glbinding-aux
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
-    cpplocate::cpplocate
+    "$<$<BOOL:${cpplocate_FOUND}>:cpplocate::cpplocate>"
+    "$<$<PLATFORM_ID:Darwin>:${OPENGL_gl_LIBRARY}>"
 )
 
 
@@ -120,6 +133,7 @@ target_link_libraries(${target}
 target_compile_definitions(${target}
     PRIVATE
     ${DEFAULT_COMPILE_DEFINITIONS}
+    $<$<BOOL:${cpplocate_FOUND}>:cpplocate_FOUND>
 )
 
 
@@ -140,6 +154,16 @@ target_compile_options(${target}
 target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LINKER_OPTIONS}
+)
+
+
+#
+# Target Health
+#
+
+perform_health_checks(
+    ${target}
+    ${sources}
 )
 
 

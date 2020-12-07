@@ -17,6 +17,7 @@ IState::Init() {
 
 	// BOOL
 	Attribs.add(Attribute(BLEND, "BLEND", Enums::DataType::BOOL, false, new NauInt(false)));
+	Attribs.add(Attribute(SAMPLE_SHADING, "SAMPLE_SHADING", Enums::DataType::BOOL, false, new NauInt(false)));
 	Attribs.add(Attribute(DEPTH_TEST, "DEPTH_TEST", Enums::DataType::BOOL, false, new NauInt(true)));
 	Attribs.add(Attribute(CULL_FACE, "CULL_FACE", Enums::DataType::BOOL, false, new NauInt(true)));
 	Attribs.add(Attribute(DEPTH_MASK, "DEPTH_MASK", Enums::DataType::BOOL, false, new NauInt(true)));
@@ -31,6 +32,9 @@ IState::Init() {
 
 	// INT
 	Attribs.add(Attribute(ORDER, "ORDER", Enums::DataType::INT, false, new NauInt(0)));
+
+	// FLOAT
+	Attribs.add(Attribute(MIN_SAMPLE_SHADING, "MIN_SAMPLE_SHADING", Enums::DataType::FLOAT, false, new NauFloat(1.0)));
 
 	// FLOAT4
 	Attribs.add(Attribute(BLEND_COLOR, "BLEND_COLOR", Enums::DataType::VEC4, false, new vec4(0.0f, 0.0f, 0.0f, 0.0f)));

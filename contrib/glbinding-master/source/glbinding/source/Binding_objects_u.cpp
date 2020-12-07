@@ -1,6 +1,7 @@
 
 #include "Binding_pch.h"
 
+
 using namespace gl;
 
 
@@ -134,9 +135,11 @@ Function<GLboolean, GLuint> Binding::UnmapNamedBufferEXT("glUnmapNamedBufferEXT"
 Function<void, GLuint> Binding::UnmapObjectBufferATI("glUnmapObjectBufferATI");
 Function<void, GLuint, GLint> Binding::UnmapTexture2DINTEL("glUnmapTexture2DINTEL");
 Function<void, GLuint, GLuint, GLsizei, const void *, GLenum> Binding::UpdateObjectBufferATI("glUpdateObjectBufferATI");
+Function<void, GLbitfield> Binding::UploadGpuMaskNVX("glUploadGpuMaskNVX");
 Function<void, GLuint> Binding::UseProgram("glUseProgram");
 Function<void, GLhandleARB> Binding::UseProgramObjectARB("glUseProgramObjectARB");
 Function<void, GLuint, UseProgramStageMask, GLuint> Binding::UseProgramStages("glUseProgramStages");
+Function<void, GLuint, UseProgramStageMask, GLuint> Binding::UseProgramStagesEXT("glUseProgramStagesEXT");
 Function<void, GLenum, GLuint> Binding::UseShaderProgramEXT("glUseShaderProgramEXT");
 
 

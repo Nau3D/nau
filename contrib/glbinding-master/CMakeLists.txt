@@ -6,8 +6,22 @@
 # CMake version
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
-# Include cmake modules
+#
+# Configure CMake environment
+#
 
+# Register general cmake commands
+include(cmake/Custom.cmake)
+
+# Set policies
+set_policy(CMP0054 NEW) # ENABLE CMP0054: Only interpret if() arguments as variables or keywords when unquoted.
+set_policy(CMP0042 NEW) # ENABLE CMP0042: MACOSX_RPATH is enabled by default.
+set_policy(CMP0063 NEW) # ENABLE CMP0063: Honor visibility properties for all target types.
+set_policy(CMP0069 NEW) # ENABLE CMP0069: prefer to add IPO flags whenever the INTERPROCEDURAL_OPTIMIZATION target property is enabled
+set_policy(CMP0072 NEW) # ENABLE CMP0072: FindOpenGL prefers GLVND by default when available.
+set_policy(CMP0077 NEW) # ENABLE CMP0077: option() honors normal variables.
+
+# Include cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(GenerateExportHeader)
@@ -19,14 +33,15 @@ if (${CMAKE_VERSION} VERSION_GREATER "3.2")
     include(WriteCompilerDetectionHeader OPTIONAL RESULT_VARIABLE WriterCompilerDetectionHeaderFound)
 endif()
 
-include(cmake/GetGitRevisionDescription.cmake)
-include(cmake/Custom.cmake)
+if (${CMAKE_VERSION} VERSION_GREATER "3.9")
+    include(CheckIPOSupported OPTIONAL RESULT_VARIABLE CheckIPOSupportedFound)
+endif()
 
-# Set policies
-set_policy(CMP0028 NEW) # ENABLE CMP0028: Double colon in target name means ALIAS or IMPORTED target.
-set_policy(CMP0054 NEW) # ENABLE CMP0054: Only interpret if() arguments as variables or keywords when unquoted.
-set_policy(CMP0042 NEW) # ENABLE CMP0042: MACOSX_RPATH is enabled by default.
-set_policy(CMP0063 NEW) # ENABLE CMP0063: Honor visibility properties for all target types.
+
+# Include custom cmake modules
+include(cmake/GetGitRevisionDescription.cmake)
+include(cmake/HealthCheck.cmake)
+include(cmake/GenerateTemplateExportHeader.cmake)
 
 
 # 
@@ -36,19 +51,23 @@ set_policy(CMP0063 NEW) # ENABLE CMP0063: Honor visibility properties for all ta
 # Get git revision
 get_git_head_revision(GIT_REFSPEC GIT_SHA1)
 string(SUBSTRING "${GIT_SHA1}" 0 12 GIT_REV)
+if(NOT GIT_SHA1)
+    set(GIT_REV "0")
+endif()
 
 # Meta information about the project
-set(META_PROJECT_NAME         "glbinding")
-set(META_PROJECT_DESCRIPTION  "A C++ binding for the OpenGL API, generated using the gl.xml specification.")
-set(META_AUTHOR_ORGANIZATION  "CG Internals GmbH")
-set(META_AUTHOR_DOMAIN        "https://github.com/cginternals/glbinding/")
-set(META_AUTHOR_MAINTAINER    "opensource@cginternals.com")
-set(META_VERSION_MAJOR        "2")
-set(META_VERSION_MINOR        "1")
-set(META_VERSION_PATCH        "1")
-set(META_VERSION_REVISION     "${GIT_REV}")
-set(META_VERSION              "${META_VERSION_MAJOR}.${META_VERSION_MINOR}.${META_VERSION_PATCH}")
-set(META_NAME_VERSION         "${META_PROJECT_NAME} v${META_VERSION} (${META_VERSION_REVISION})")
+set(META_PROJECT_NAME        "glbinding")
+set(META_PROJECT_DESCRIPTION "A C++ binding for the OpenGL API, generated using the gl.xml specification.")
+set(META_AUTHOR_ORGANIZATION "CG Internals GmbH")
+set(META_AUTHOR_DOMAIN       "https://github.com/cginternals/glbinding/")
+set(META_AUTHOR_MAINTAINER   "opensource@cginternals.com")
+set(META_VERSION_MAJOR       "3")
+set(META_VERSION_MINOR       "2")
+set(META_VERSION_PATCH       "0")
+set(META_VERSION_REVISION    "${GIT_REV}")
+set(META_VERSION             "${META_VERSION_MAJOR}.${META_VERSION_MINOR}.${META_VERSION_PATCH}")
+set(META_NAME_VERSION        "${META_PROJECT_NAME} v${META_VERSION} (${META_VERSION_REVISION})")
+set(META_CMAKE_INIT_SHA      "c472829f01df4c99c7bd3fa96bcf6854b3dd44f1")
 
 string(MAKE_C_IDENTIFIER ${META_PROJECT_NAME} META_PROJECT_ID)
 string(TOUPPER ${META_PROJECT_ID} META_PROJECT_ID)
@@ -58,12 +77,16 @@ string(TOUPPER ${META_PROJECT_ID} META_PROJECT_ID)
 # 
 
 # Project options
-option(BUILD_SHARED_LIBS      "Build shared instead of static libraries."              ON)
-option(OPTION_SELF_CONTAINED  "Create a self-contained install with all dependencies." OFF)
-option(OPTION_BUILD_TESTS     "Build tests."                                           ON)
-option(OPTION_BUILD_GPU_TESTS "Build tests that require an OpenGL context."            ON)
-option(OPTION_BUILD_DOCS      "Build documentation."                                   OFF)
-option(OPTION_BUILD_EXAMPLES  "Build examples."                                        OFF)
+option(BUILD_SHARED_LIBS              "Build shared instead of static libraries."                ON)
+option(OPTION_SELF_CONTAINED          "Create a self-contained install with all dependencies."   OFF)
+option(OPTION_BUILD_TESTS             "Build tests."                                             OFF)
+option(OPTION_BUILD_DOCS              "Build documentation."                                     OFF)
+option(OPTION_BUILD_TOOLS             "Build tools."                                             ON)
+option(OPTION_BUILD_EXAMPLES          "Build examples."                                          ON)
+option(OPTION_BUILD_WITH_BOOST_THREAD "Use boost::thread instead of std::thread."                OFF)
+option(OPTION_BUILD_CHECK             "Enable source code check targets"                         OFF)
+option(OPTION_BUILD_OWN_KHR_HEADERS   "Build and deploy glbinding with in-source KHR headers."   OFF)
+option(OPTION_BUILD_WITH_LTO          "Build with Link-time Optimization (may break AppleClang)" OFF)
 
 
 # 
@@ -91,6 +114,20 @@ file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
 # 
 
 include(cmake/CompileOptions.cmake)
+
+
+#
+# Project Health Check Setup
+#
+
+# Add cmake-init template check cmake targets
+add_check_template_target(${META_CMAKE_INIT_SHA})
+
+# Configure health check tools
+if(OPTION_BUILD_CHECK)
+    enable_cppcheck(On)
+    enable_clang_tidy(On)
+endif()
 
 
 # 
@@ -157,9 +194,8 @@ endif()
 # 
 
 add_subdirectory(source)
-add_subdirectory(codegeneration)
 add_subdirectory(docs)
-#add_subdirectory(deploy)
+add_subdirectory(deploy)
 
 
 # 
@@ -178,4 +214,6 @@ install(FILES LICENSE   DESTINATION ${INSTALL_ROOT} COMPONENT runtime)
 install(FILES README.md DESTINATION ${INSTALL_ROOT} COMPONENT runtime)
 
 # Install runtime data
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${INSTALL_DATA} COMPONENT examples_data)
+if (TARGET cubescape OR TARGET cubescape-log OR TARGET cubescape-qt)
+    install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${INSTALL_DATA} COMPONENT examples_data)
+endif()

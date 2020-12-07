@@ -1,6 +1,7 @@
 
 #include "Binding_pch.h"
 
+
 using namespace gl;
 
 
@@ -9,17 +10,20 @@ namespace glbinding
 
 
 Function<void, GLenum, GLuint, GLsizei, const GLchar *> Binding::LabelObjectEXT("glLabelObjectEXT");
+Function<void, GLuint, GLbitfield, GLuint, GLenum, GLint, GLint, GLint, GLint, GLuint, GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei> Binding::LGPUCopyImageSubDataNVX("glLGPUCopyImageSubDataNVX");
+Function<void> Binding::LGPUInterlockNVX("glLGPUInterlockNVX");
+Function<void, GLbitfield, GLuint, GLintptr, GLsizeiptr, const void *> Binding::LGPUNamedBufferSubDataNVX("glLGPUNamedBufferSubDataNVX");
 Function<void, GLenum, GLint> Binding::LightEnviSGIX("glLightEnviSGIX");
+Function<void, GLenum, GLenum, GLfloat> Binding::Lightf("glLightf");
+Function<void, GLenum, GLenum, const GLfloat *> Binding::Lightfv("glLightfv");
+Function<void, GLenum, GLenum, GLint> Binding::Lighti("glLighti");
+Function<void, GLenum, GLenum, const GLint *> Binding::Lightiv("glLightiv");
 Function<void, GLenum, GLfloat> Binding::LightModelf("glLightModelf");
 Function<void, GLenum, const GLfloat *> Binding::LightModelfv("glLightModelfv");
 Function<void, GLenum, GLint> Binding::LightModeli("glLightModeli");
 Function<void, GLenum, const GLint *> Binding::LightModeliv("glLightModeliv");
 Function<void, GLenum, GLfixed> Binding::LightModelxOES("glLightModelxOES");
 Function<void, GLenum, const GLfixed *> Binding::LightModelxvOES("glLightModelxvOES");
-Function<void, GLenum, GLenum, GLfloat> Binding::Lightf("glLightf");
-Function<void, GLenum, GLenum, const GLfloat *> Binding::Lightfv("glLightfv");
-Function<void, GLenum, GLenum, GLint> Binding::Lighti("glLighti");
-Function<void, GLenum, GLenum, const GLint *> Binding::Lightiv("glLightiv");
 Function<void, GLenum, GLenum, GLfixed> Binding::LightxOES("glLightxOES");
 Function<void, GLenum, GLenum, const GLfixed *> Binding::LightxvOES("glLightxvOES");
 Function<void, GLint, GLushort> Binding::LineStipple("glLineStipple");

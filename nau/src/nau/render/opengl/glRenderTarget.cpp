@@ -100,7 +100,7 @@ GLRenderTarget::getErrorMessage(std::string &message) {
 	case GL_FRAMEBUFFER_UNDEFINED:
 		message = "Undefined";
 		break;
-	case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+	case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
 		message = "Not all attached images have the same width and height";
 		break;
 	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:

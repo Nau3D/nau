@@ -1559,7 +1559,7 @@ void renderWindowMaterialLibrary() {
 			space();
 
 			std::vector<std::string> order = { "DEPTH_FUNC", "DEPTH_TEST", "DEPTH_MASK", "CULL_TYPE", "CULL_FACE",
-				"ORDER", "BLEND", "BLEND_SRC", "BLEND_DST", "BLEND_EQUATION", "BLEND_COLOR", "COLOR_MASK_B4" };
+				"ORDER", "BLEND", "BLEND_SRC", "BLEND_DST", "BLEND_EQUATION", "BLEND_COLOR", "COLOR_MASK_B4", "SAMPLE_SHADING", "MIN_SAMPLE_SHADING" };
 			nau::material::IState* m_glState = mat->getState();
 
 			createOrderedGrid(nau::material::IState::GetAttribs(), (AttributeValues *)m_glState, order);
@@ -1710,10 +1710,13 @@ void renderWindowBufferLibrary() {
 						for (auto t : b->getStructure()) {
 							s += Enums::getSize(t);
 						}
+						// if no structure is available assume float
+						if (s == 0)
+							s = 4;
 						int bsize = b->getPropui(IBuffer::SIZE);
 						int totalLines = bsize / s;
-						if (bsize % s != 0)
-							totalLines++;
+						//if (bsize % s != 0)
+						//	totalLines++;
 
 						int totalPages = totalLines / lines;
 						if (totalLines % lines != 0)
@@ -1748,9 +1751,12 @@ void renderWindowBufferLibrary() {
 			combo("Buffer", bnames, bnames[activeBuffer], &activeBuffer);
 
 			int lineSize = 0;
-			for (auto t : b->getStructure()) {
-				lineSize += Enums::getSize(t);
-			}
+			if (b->getStructure().size() == 0)
+				lineSize = 4;
+			else 
+				for (auto t : b->getStructure()) {
+					lineSize += Enums::getSize(t);
+				}
 			
 			int totalLines = bsize / lineSize;
 			if (bsize % lineSize != 0)
@@ -1897,6 +1903,7 @@ void renderWindowShaderLibrary() {
 	std::vector<std::string> pgf = p->getShaderFiles(IProgram::ShaderType::GEOMETRY_SHADER);
 	std::vector<std::string> ptcf = p->getShaderFiles(IProgram::ShaderType::TESS_CONTROL_SHADER);
 	std::vector<std::string> ptef = p->getShaderFiles(IProgram::ShaderType::TESS_EVALUATION_SHADER);
+	std::vector<std::string> pmf = p->getShaderFiles(IProgram::ShaderType::MESH_SHADER);
 	std::vector<std::string> pff = p->getShaderFiles(IProgram::ShaderType::FRAGMENT_SHADER);
 	std::vector<std::string> pcf = p->getShaderFiles(IProgram::ShaderType::COMPUTE_SHADER);
 
@@ -1914,6 +1921,7 @@ void renderWindowShaderLibrary() {
 	displayGroup("Geometry:", pgf);
 	displayGroup("Tess Control:", ptcf);
 	displayGroup("Tess Eval:", ptef);
+	displayGroup("Mesh:", pmf);
 	displayGroup("Fragment:", pff);
 	displayGroup("Compute:", pcf);
 
@@ -1982,11 +1990,15 @@ void renderWindowShaderLibrary() {
 
 	separator();
 
+
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
-		std::string infoLog = p->getShaderInfoLog((IProgram::ShaderType)i);
-		if (infoLog != "")
-			ImGui::Text(infoLog.c_str());
+		std::string infoLogS = p->getShaderInfoLog((IProgram::ShaderType)i);
+		if (infoLogS != "")
+			ImGui::Text(infoLogS.c_str());
 	}
+	std::string infoLogP = p->getProgramInfoLog();
+	if (infoLogP != "")
+		ImGui::Text(infoLogP.c_str());
 }
 
 
@@ -3073,8 +3085,8 @@ int main(int argc, char **argv) {
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 	window = glfwCreateWindow(width, height, "Nau3D", NULL, NULL);
@@ -3130,7 +3142,7 @@ int main(int argc, char **argv) {
 	//ImGui::StyleColorsDark();
 	ImGui::StyleColorsClassic();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	const char* glsl_version = "#version 460";
+	const char* glsl_version = "#version 330";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 	renderGUI(io);
 

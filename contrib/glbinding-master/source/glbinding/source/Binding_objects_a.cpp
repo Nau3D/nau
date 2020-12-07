@@ -1,6 +1,7 @@
 
 #include "Binding_pch.h"
 
+
 using namespace gl;
 
 
@@ -10,8 +11,10 @@ namespace glbinding
 
 Function<void, GLenum, GLfloat> Binding::Accum("glAccum");
 Function<void, GLenum, GLfixed> Binding::AccumxOES("glAccumxOES");
+Function<GLboolean, GLuint, GLuint64, GLuint> Binding::AcquireKeyedMutexWin32EXT("glAcquireKeyedMutexWin32EXT");
 Function<void, GLuint> Binding::ActiveProgramEXT("glActiveProgramEXT");
 Function<void, GLuint, GLuint> Binding::ActiveShaderProgram("glActiveShaderProgram");
+Function<void, GLuint, GLuint> Binding::ActiveShaderProgramEXT("glActiveShaderProgramEXT");
 Function<void, GLenum> Binding::ActiveStencilFaceEXT("glActiveStencilFaceEXT");
 Function<void, GLenum> Binding::ActiveTexture("glActiveTexture");
 Function<void, GLenum> Binding::ActiveTextureARB("glActiveTextureARB");
@@ -21,6 +24,7 @@ Function<void, GLenum, GLuint, GLuint, GLuint, GLuint, GLuint, GLuint, GLuint, G
 Function<void, GLenum, GLuint, GLuint, GLuint, GLuint, GLuint, GLuint, GLuint, GLuint, GLuint, GLuint, GLuint> Binding::AlphaFragmentOp3ATI("glAlphaFragmentOp3ATI");
 Function<void, GLenum, GLfloat> Binding::AlphaFunc("glAlphaFunc");
 Function<void, GLenum, GLfixed> Binding::AlphaFuncxOES("glAlphaFuncxOES");
+Function<void, GLenum> Binding::AlphaToCoverageDitherControlNV("glAlphaToCoverageDitherControlNV");
 Function<void> Binding::ApplyFramebufferAttachmentCMAAINTEL("glApplyFramebufferAttachmentCMAAINTEL");
 Function<void, GLenum> Binding::ApplyTextureEXT("glApplyTextureEXT");
 Function<GLboolean, GLsizei, const GLuint *, GLboolean *> Binding::AreProgramsResidentNV("glAreProgramsResidentNV");
@@ -29,6 +33,8 @@ Function<GLboolean, GLsizei, const GLuint *, GLboolean *> Binding::AreTexturesRe
 Function<void, GLint> Binding::ArrayElement("glArrayElement");
 Function<void, GLint> Binding::ArrayElementEXT("glArrayElementEXT");
 Function<void, GLenum, GLint, GLenum, GLsizei, GLuint, GLuint> Binding::ArrayObjectATI("glArrayObjectATI");
+Function<GLuint, GLsizei, const GLuint *, const GLuint64 *, GLuint, GLbitfield, GLuint, GLuint, GLintptr, GLintptr, GLsizeiptr, GLsizei, const GLuint *, const GLuint64 *> Binding::AsyncCopyBufferSubDataNVX("glAsyncCopyBufferSubDataNVX");
+Function<GLuint, GLsizei, const GLuint *, const GLuint64 *, GLuint, GLbitfield, GLuint, GLenum, GLint, GLint, GLint, GLint, GLuint, GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLsizei, const GLuint *, const GLuint64 *> Binding::AsyncCopyImageSubDataNVX("glAsyncCopyImageSubDataNVX");
 Function<void, GLuint> Binding::AsyncMarkerSGIX("glAsyncMarkerSGIX");
 Function<void, GLhandleARB, GLhandleARB> Binding::AttachObjectARB("glAttachObjectARB");
 Function<void, GLuint, GLuint> Binding::AttachShader("glAttachShader");

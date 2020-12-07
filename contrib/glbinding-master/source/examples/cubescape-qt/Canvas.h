@@ -4,7 +4,7 @@
 #include <QWindow>
 
 #include <QList>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QScopedPointer>
 
 class QOpenGLContext;
@@ -15,6 +15,8 @@ class QKeyEvent;
 
 
 class Painter;
+
+using ProcAddress = void(*)();
 
 class Canvas : public QWindow
 {
@@ -67,7 +69,7 @@ protected:
     SwapInterval m_swapInterval;    ///< required for toggle
 
     QScopedPointer<QBasicTimer> m_repaintTimer;
-    QTime m_fpsTimer;
+    QElapsedTimer m_fpsTimer;
 
     long double m_swapts;
     unsigned int m_swaps;
@@ -77,4 +79,8 @@ protected:
     bool m_continuousRepaint;
 
     Painter * m_painter;
+
+protected:
+    static Canvas * s_getProcAddressHelper;
+    static ProcAddress getProcAddress(const char * name);
 };

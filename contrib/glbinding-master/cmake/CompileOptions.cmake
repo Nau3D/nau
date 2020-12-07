@@ -23,6 +23,7 @@ set(DEFAULT_PROJECT_OPTIONS
     LINKER_LANGUAGE           "CXX"
     POSITION_INDEPENDENT_CODE ON
     CXX_VISIBILITY_PRESET     "hidden"
+    CXX_EXTENSIONS            Off
 )
 
 
@@ -70,12 +71,13 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
         /MP           # -> build with multiple processes
         /W4           # -> warning level 4
         # /WX         # -> treat warnings as errors
-        /Zm114        # -> Memory size for precompiled headers
-
         /wd4251       # -> disable warning: 'identifier': class 'type' needs to have dll-interface to be used by clients of class 'type2'
         /wd4592       # -> disable warning: 'identifier': symbol will be dynamically initialized (implementation limitation)
         # /wd4201     # -> disable warning: nonstandard extension used: nameless struct/union (caused by GLM)
         /wd4127       # -> disable warning: conditional expression is constant (caused by Qt)
+
+        # /Zm114      # -> Memory size for precompiled headers (insufficient for msvc 2013)
+        /Zm200        # -> Memory size for precompiled headers
         
         #$<$<CONFIG:Debug>:
         #/RTCc         # -> value is assigned to a smaller data type and results in a data loss
@@ -84,7 +86,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
         $<$<CONFIG:Release>: 
         /Gw           # -> whole program global optimization
         /GS-          # -> buffer security check: no 
-        #/GL           # -> whole program optimization: enable link-time code generation (disables Zi)
+        /GL           # -> whole program optimization: enable link-time code generation (disables Zi)
         /GF           # -> enable string pooling
         >
         
@@ -127,8 +129,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_CXX_COMPILER_ID}" MATCH
         
         $<$<CXX_COMPILER_ID:Clang>:
             -Wpedantic
-            
-            -Wreturn-stack-address
+                
+            # -Wreturn-stack-address # gives false positives
         >
     PUBLIC
         $<$<PLATFORM_ID:Darwin>:
@@ -155,4 +157,12 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_SYSTEM_NAME}" MATCHES "L
     PUBLIC
         -pthread
     )
+endif()
+
+if(NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
+    set(DEFAULT_LINKER_OPTIONS ${DEFAULT_LINKER_OPTIONS}
+        PUBLIC
+            ${CMAKE_DL_LIBS}
+    )
+    
 endif()

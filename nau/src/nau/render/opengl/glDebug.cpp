@@ -5,6 +5,7 @@
 #include "nau/clogger.h"
 #include "nau/system/file.h"
 
+#include <glbinding/glbinding.h>
 #include <glbinding/Binding.h>
 
 #if defined(_WIN32) && defined(_DEBUG)
@@ -12,6 +13,9 @@
 #include <DbgHelp.h>
 #pragma comment(lib,"Dbghelp")
 #endif
+
+#include <iostream>
+#include <sstream>
 
 using namespace nau::render;
 
@@ -77,6 +81,8 @@ GLDebug::SetCallback(bool flag) {
 void 
 GLDebug::SetTraceCallbacks() {
 
+	//glbinding::aux::enableGetErrorCallback();
+
 	glbinding::setUnresolvedCallback([](const glbinding::AbstractFunction & call)
 	{
 		LOG_trace("UNRESOLVED: %s", call.name());
@@ -91,23 +97,28 @@ GLDebug::SetTraceCallbacks() {
 	// record parameters and return value after
 	glbinding::setAfterCallback([](const glbinding::FunctionCall & call)
 	{
+
+		std::stringstream ss;
+	
+		ss << "(";
 		std::string s = "(";
 
 	  for (unsigned i = 0; i < call.parameters.size(); ++i)
 	  {
-		s += call.parameters[i]->asString();
+		  ss << call.parameters[i].get();// ->asString();
 		if (i < call.parameters.size() - 1)
-		  s += ", ";
+		  ss << ", ";
 	  }
 
-	  s += ")";
+
+	  ss << ")";
 
 	  if (call.returnValue)
 	  {
-		s += " -> " + call.returnValue->asString();
+		  ss << " -> " << call.returnValue.get();// ->asString();
 	  }
 
-	  LOG_trace("%s%s", call.function->name() ,s.c_str());
+	  LOG_trace("%s%s", call.function->name() ,ss.str().c_str());
 	});
 
 }

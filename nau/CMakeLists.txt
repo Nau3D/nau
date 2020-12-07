@@ -56,7 +56,7 @@ add_library(nau SHARED
 
 link_directories(${Assimp_BINARY_DIR} ${glbinding_BINARY_DIR} )
 
-target_link_libraries(nau tinyxml assimp glbinding)
+target_link_libraries(nau tinyxml assimp glbinding::glbinding glbinding::glbinding-aux)
 target_link_libraries(nau ${OPENGL_LIBRARIES} )
 
 if  (WIN32)
@@ -112,7 +112,8 @@ include_directories(
 	../contrib/lua-5.3.3/include
 	../contrib/AntTweakBar/include
 	${CMAKE_BINARY_DIR}/contrib/glbinding-master/source/glbinding/include
-	../contrib/glbinding-master/source/glbinding/include)	
+	../contrib/glbinding-master/source/glbinding/include
+	${CMAKE_BINARY_DIR}/../contrib/glbinding-master/source/glbinding-aux/include)	
 	
 	
 if (WIN32)

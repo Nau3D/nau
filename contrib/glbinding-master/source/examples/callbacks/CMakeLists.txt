@@ -3,7 +3,7 @@
 # External dependencies
 # 
 
-find_package(GLFW)
+find_package(glfw3 QUIET)
 
 
 # 
@@ -14,8 +14,8 @@ find_package(GLFW)
 set(target callbacks)
 
 # Exit here if required dependencies are not met
-if (NOT GLFW_FOUND)
-    message("Example ${target} skipped: GLFW not found")
+if (NOT glfw3_FOUND)
+    message("Example ${target} skipped: glfw3 not found")
     return()
 endif()
 
@@ -64,7 +64,6 @@ target_include_directories(${target}
     ${DEFAULT_INCLUDE_DIRECTORIES}
     ${PROJECT_BINARY_DIR}/source/include
     SYSTEM
-    ${GLFW_INCLUDE_DIR}
 )
 
 
@@ -75,8 +74,9 @@ target_include_directories(${target}
 target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
-    ${GLFW_LIBRARIES}
+    glfw
     ${META_PROJECT_NAME}::glbinding
+    ${META_PROJECT_NAME}::glbinding-aux
 )
 
 
@@ -108,6 +108,16 @@ target_compile_options(${target}
 target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LINKER_OPTIONS}
+)
+
+
+#
+# Target Health
+#
+
+perform_health_checks(
+    ${target}
+    ${sources}
 )
 
 

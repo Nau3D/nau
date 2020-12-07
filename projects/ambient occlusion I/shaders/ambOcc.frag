@@ -14,6 +14,7 @@ in vec4 texPos;
 
 layout (location = 0) out vec4 occMap;
 
+float dist = 0.05;
 
 void main(void) {
 
@@ -47,7 +48,7 @@ void main(void) {
 		// ray.x = ray.x * u.x + ray.x * normal.x + ray.x * v.x;
 		// ray.y = ray.y * u.y + ray.y * normal.y + ray.y * v.y;
 		// ray.z = ray.z * u.z + ray.z * normal.z + ray.z * v.z;
-		vec4 samplePos = pos + vec4(ray,0); // in camera space
+		vec4 samplePos = pos + dist * vec4(ray,0); // in camera space
 		vec4 sampleProjPos = CamP * samplePos; // in clip space
 		sampleProjPos = sampleProjPos/sampleProjPos.w;
 		sampleProjPos = sampleProjPos * 0.5 + 0.5;

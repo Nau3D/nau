@@ -4,6 +4,13 @@
 #define GLDEBUG_H
 
 #include <glbinding/gl/gl.h>
+
+// new stuff in version 3.3
+#include <glbinding-aux/Meta.h>
+#include <glbinding-aux/ContextInfo.h>
+#include <glbinding-aux/ValidVersions.h>
+#include <glbinding-aux/types_to_string.h>
+#include <glbinding-aux/debug.h>
 using namespace gl;
 
 #ifdef _WIN32

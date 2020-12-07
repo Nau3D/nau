@@ -13,6 +13,7 @@
 #include "nau/render/iRenderer.h"
 #include "nau/render/pass.h"
 #include "nau/render/passCompute.h"
+#include "nau/render/passMesh.h"
 #include "nau/render/opengl/glState.h"
 #include "nau/scene/camera.h"
 
@@ -172,6 +173,8 @@ namespace nau
 		protected:
 			void showDrawDebugInfo(std::shared_ptr<MaterialGroup> &aMatGroup);
 			void showDrawDebugInfo(PassCompute *aPass);
+			void showDrawDebugInfo(PassMesh* aPass);
+
 			void showDrawDebugInfo(std::shared_ptr<Material> &mat, nau::util::Tree *t);
 			void showDrawDebugInfo(IProgram *p, nau::util::Tree *t);
 
@@ -192,6 +195,7 @@ namespace nau
 			unsigned int getVerticesPerPrimitive(unsigned int primitive);
 
 			void dispatchCompute(int dimX, int dimY, int dimZ);
+			void drawMeshTasks(int first, int count);
 
 			// RENDER ATTRIBS
 

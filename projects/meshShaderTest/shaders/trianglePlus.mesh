@@ -1,0 +1,50 @@
+#version 460
+#extension GL_NV_mesh_shader : require
+ 
+layout(local_size_x=1) in;
+ 
+layout(max_vertices=3, max_primitives=1) out;
+ 
+layout(triangles) out;
+ 
+out PerVertexData
+{
+  vec3 normal;
+} v_out[];   
+ 
+out gl_MeshPerVertexNV {
+    vec4 gl_Position;
+} gl_MeshVerticesNV[];
+
+out uint gl_PrimitiveCountNV;
+out uint gl_PrimitiveIndicesNV[];
+
+
+
+
+uniform mat4 m_pvm;
+uniform mat3 m_normal;
+
+const vec3 vertices[3] = {vec3(0,1,-1), vec3(-1,-1,-1), vec3(1,-1,-1)};
+const vec3 colors[3] = {vec3(1.0,0.0,0.0), vec3(0.0,1.0,0.0), vec3(0.0,0.0,1.0)};
+ 
+uniform float scale = 1;
+ 
+void main()
+{
+  gl_MeshVerticesNV[0].gl_Position = m_pvm * vec4(vertices[0] * scale, 1.0); 
+  gl_MeshVerticesNV[1].gl_Position = m_pvm * vec4(vertices[1] * scale, 1.0); 
+  gl_MeshVerticesNV[2].gl_Position = m_pvm * vec4(vertices[2] * scale, 1.0); 
+ 
+  v_out[0].normal = m_normal * vec3(0.0, 0.0, 1.0);
+  v_out[1].normal = m_normal * vec3(0.0, 0.0, 1.0);
+  v_out[2].normal = m_normal * vec3(0.0, 0.0, 1.0);
+ 
+  gl_PrimitiveIndicesNV[0] = 0;
+  gl_PrimitiveIndicesNV[1] = 1;
+  gl_PrimitiveIndicesNV[2] = 2;
+
+
+
+  gl_PrimitiveCountNV = 1;
+}

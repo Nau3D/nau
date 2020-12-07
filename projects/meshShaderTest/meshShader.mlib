@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<materialLib name="Mesh">
+	<shaders>
+		<shader name="meshShader" 		ms = "shaders/triangle.mesh" 
+										ps = "shaders/color.frag" />
+	</shaders>
+	
+	<materials>
+		<material name="meshShader">
+			<shader name="meshShader" />
+		</material>
+	</materials>
+</materialLib>
