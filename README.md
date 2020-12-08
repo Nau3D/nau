@@ -1,7 +1,7 @@
-nau
+Nau
 ===
 
-nau 3D engine: OpenGL + Optix 7 (WIP) + Lua + ImGui + Anttweakbar + Bullet + PhysX
+Nau 3D engine: OpenGL + Optix 7 (WIP) + Lua + ImGui + Bullet + PhysX
 
 
 Documentation at http://nau3d.di.uminho.pt/
@@ -14,14 +14,14 @@ Besides myself, many people have contributed to this project:
 * Pedro Ângelo - programming
 * Marta Pereira - initial implementation of the event system manager
 * Leander Beernaert - initial Linux version, initial CMake building system
-* André Lui - initial implementation of the debug features available in nau
+* André Lui - initial implementation of the debug features 
 * Jaime Campos and João Meira - initial Bullet integration
 * David Leal - Bullet and PhysX plugins
-* Bruno Martins - developing a plugin for Intel's embree (not ready yet)
+
 
 ImGuiFileDialog from https://github.com/aiekick/ImGuiFileDialog
 
-# building
+# CMAKE settings and requirements
 
 To build nau, and GLUT and GLFW (with ImGui) demo, 
 the project is self-contained for Windows. For Linux install opengl, and devil
@@ -56,3 +56,6 @@ To build PhysX plugin, in CMake gui:
 * set PHYSX_INCLUDE_DIR to the path to PhysX include dir
 * set PHYSX_LIBRARIES_DIR to the path to PhysX lib dir
 
+# before building
+
+Run project glmeta (Tools folder in VS) to retrieve the latest definitions for OpenGL
