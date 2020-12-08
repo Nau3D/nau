@@ -3,6 +3,11 @@ Nau
 
 Nau 3D engine: OpenGL + Optix 7 (WIP) + Lua + ImGui + Bullet + PhysX
 
+Nau is an API to speed up the creation of 3D shader pipelines. It integrates both rasterization and ray tracing in a single package, providing all the tools to create complex multipass graphic pipelines with shaders written in GLSL, and kernels written in CUDA for Optix7. 
+
+The accompanying interface application (Composer) has debugging features that help the construction of such pipelines. With Composer the user can explore all the settings relating to the inputs and outputs of the graphics pipeline.
+
+It can be used as a teaching tool for shader and ray tracing courses providing a seamless integration between the two rendering approaches.
 
 Documentation at http://nau3d.di.uminho.pt/
 
@@ -20,6 +25,20 @@ Besides myself, many people have contributed to this project:
 
 
 ImGuiFileDialog from https://github.com/aiekick/ImGuiFileDialog
+
+Nau3D uses the following 3rd party libraries:
+
+* Optix
+* imGui
+* glBinding for OpenGL bindings and call tracing (https://github.com/cginternals/glbinding)
+* Assimp for 3D asset loading (https://www.assimp.org/)
+* Devil for image loading (http://openil.sourceforge.net/)
+
+Interface applications:
+
+* GLFW
+* GLUT
+
 
 # CMAKE settings and requirements
 
@@ -59,3 +78,8 @@ To build PhysX plugin, in CMake gui:
 # before building
 
 Run project glmeta (Tools folder in VS) to retrieve the latest definitions for OpenGL
+
+# running
+
+* composerImGUI is an almost complete interface to NAU3D with ImGui
+* nauGLUT provides a simple example of a GLUT application working with NAU3D
