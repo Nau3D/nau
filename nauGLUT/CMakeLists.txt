@@ -27,18 +27,10 @@ if  (WIN32)
 			DESTINATION ${CMAKE_BINARY_DIR}/bin)
 		target_link_libraries(nauGLUTDemo "${CMAKE_SOURCE_DIR}/contrib/devil/lib64/DevIL.lib")
 		
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../contrib/AntTweakBar/lib/AntTweakBar64.dll 
-			DESTINATION ${CMAKE_BINARY_DIR}/bin)
-		target_link_libraries(nauGLUTDemo "${CMAKE_SOURCE_DIR}/contrib/AntTweakBar/lib/AntTweakBar64.lib")
-		
 	else()
 		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../contrib/devil/lib32/DevIL.dll 
 			DESTINATION ${CMAKE_BINARY_DIR}/bin)
 		target_link_libraries(nauGLUTDemo "${CMAKE_SOURCE_DIR}/contrib/devil/lib32/DevIL.lib")
-
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../contrib/AntTweakBar/lib/AntTweakBar.dll 
-			DESTINATION ${CMAKE_BINARY_DIR}/bin)
-		target_link_libraries(nauGLUTDemo "${CMAKE_SOURCE_DIR}/contrib/AntTweakBar/lib/AntTweakBar.lib")
 
 	endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 	target_link_libraries(nauGLUTDemo "${CMAKE_SOURCE_DIR}/contrib/lua-5.3.3/lua53.lib")
@@ -46,7 +38,6 @@ else()
 	if (IL_FOUND)
 		target_link_libraries(nauGLUTDemo ${IL_LIBRARIES} )
 	endif(IL_FOUND)
-	target_link_libraries(nauGLUTDemo ${AntTweakBar_LIBRARY})
 	target_link_libraries(nauGLUTDemo "/usr/lib/x86_64-linux-gnu/libdl.so")
 	target_link_libraries(nauGLUTDemo "${Lua_LIBRARY}")
 endif(WIN32)

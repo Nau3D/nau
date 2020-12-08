@@ -50,20 +50,20 @@ endif(NOT OPENGL_FOUND)
 
 find_package(CUDA)
 
-set(OPTIX_DIR "" CACHE PATH "Path to Optix Install Dir")
+set(NAU_OPTIX_DIR "" CACHE PATH "Path to Optix Install Dir")
 
 if (CUDA_FOUND)
-	if (OPTIX_DIR STREQUAL "" )
-		if (NOT ${OPTIX_DIR}/include)
+	if (NAU_OPTIX_DIR STREQUAL "" )
+		if (NOT ${NAU_OPTIX_DIR}/include)
 		#	message(WARNING "Can't find Otix include folder. Optix option disabled." )
 			set (NAU_BUILD_WITH_OPTIX OFF)
-		endif(NOT ${OPTIX_DIR}/include)
-	endif(OPTIX_DIR STREQUAL "")
+		endif(NOT ${NAU_OPTIX_DIR}/include)
+	endif(NAU_OPTIX_DIR STREQUAL "")
 endif(CUDA_FOUND)
 	
-if (CUDA_FOUND AND NOT OPTIX_DIR STREQUAL "")
+if (CUDA_FOUND AND NOT NAU_OPTIX_DIR STREQUAL "")
 	option(NAU_BUILD_WITH_OPTIX "Build Nau ready for optix" OFF)
-endif(CUDA_FOUND AND NOT OPTIX_DIR STREQUAL "")
+endif(CUDA_FOUND AND NOT NAU_OPTIX_DIR STREQUAL "")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -71,8 +71,10 @@ OPTION(INSTALL_PDB "" OFF)
 
 option(OPTION_BUILD_GPU_TESTS "" OFF)
 option(OPTION_BUILD_TESTS "" OFF)
+option(OPTION_BUILD_TOOLS "" OFF)
 #set(BUILD_SHARED_LIBS OFF INTERNAL)
 option (BUILD_SHARED_LIBS "" OFF )
+option (OPTION_BUILD_EXAMPLES "" OFF)
 add_subdirectory(contrib/glbinding-master)
 
 add_subdirectory(contrib/tinyxml)
@@ -105,13 +107,29 @@ if (WIN32)
 		PROPERTIES FOLDER contrib)
 	set_target_properties (zlibstatic 
 		PROPERTIES FOLDER contrib)	
+	set_target_properties (KHRplatform-sources 
+		PROPERTIES FOLDER contrib)	
+	set_target_properties (glbinding-aux 
+		PROPERTIES FOLDER contrib)	
+	set_target_properties (pack 
+		PROPERTIES FOLDER contrib)	
+	set_target_properties (pack-glbinding 
+		PROPERTIES FOLDER contrib)	
+		
 endif(WIN32)
 
 add_subdirectory(nau)
 add_subdirectory(plugins/passDepthMap)
 if (WIN32)
-add_subdirectory(plugins/bullet)
-add_subdirectory(plugins/physx)
+	option(NAU_PHYSX_PLUGIN "Add PhysX plugin" OFF)
+	if (NAU_PHYSX_PLUGIN)
+		add_subdirectory(plugins/physx)
+	endif (NAU_PHYSX_PLUGIN)
+
+	option(NAU_BULLET_PLUGIN "Add Bullet plugin" OFF)
+	if (NAU_BULLET_PLUGIN)
+		add_subdirectory(plugins/bullet)
+	endif (NAU_BULLET_PLUGIN)
 endif(WIN32)
 
 add_subdirectory(nauGLUT)

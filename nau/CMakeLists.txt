@@ -65,18 +65,10 @@ if  (WIN32)
 			DESTINATION ${CMAKE_BINARY_DIR}/bin)
 		target_link_libraries(nau "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/devil/lib64/DevIL.lib")
 		
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../contrib/AntTweakBar/lib/AntTweakBar64.dll 
-			DESTINATION ${CMAKE_BINARY_DIR}/bin)
-		target_link_libraries(nau "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/AntTweakBar/lib/AntTweakBar64.lib")
-		
 	else()
 		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../contrib/devil/lib32/DevIL.dll 
 			DESTINATION ${CMAKE_BINARY_DIR}/bin)
 		target_link_libraries(nau "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/devil/lib32/DevIL.lib")
-
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../contrib/AntTweakBar/lib/AntTweakBar.dll 
-			DESTINATION ${CMAKE_BINARY_DIR}/bin)
-		target_link_libraries(nau "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/AntTweakBar/lib/AntTweakBar.lib")
 
 	endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 	target_link_libraries(nau "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/lua-5.3.3/lua53.lib")
@@ -84,18 +76,17 @@ else()
 	if (IL_FOUND)
 		target_link_libraries(nau ${IL_LIBRARIES} )
 	endif(IL_FOUND)
-	target_link_libraries(nau ${AntTweakBar_LIBRARY})
 	target_link_libraries(nau "/usr/lib/x86_64-linux-gnu/libdl.so")
 	target_link_libraries(nau "${Lua_LIBRARY}")
 endif(WIN32)
 	
 if (NAU_BUILD_WITH_OPTIX)
 	include_directories(${CUDA_INCLUDE_DIRS}
-		${OPTIX_DIR}/include)
+		${NAU_OPTIX_DIR}/include)
 		target_link_libraries(nau 
-		#${OPTIX_DIR}/lib64/optix.7.0.0.lib
-		#${OPTIX_DIR}/lib64/optixu.7.0.0.lib
-		#${OPTIX_DIR}/lib64/optix_prime.7.0.0.lib
+		#${NAU_OPTIX_DIR}/lib64/optix.7.0.0.lib
+		#${NAU_OPTIX_DIR}/lib64/optixu.7.0.0.lib
+		#${NAU_OPTIX_DIR}/lib64/optix_prime.7.0.0.lib
 		${CUDA_LIBRARIES})
 endif(NAU_BUILD_WITH_OPTIX)	
 	
@@ -110,7 +101,6 @@ include_directories(
 	../contrib/assimp3.3.1/include
 	../contrib/tinyxml
 	../contrib/lua-5.3.3/include
-	../contrib/AntTweakBar/include
 	${CMAKE_BINARY_DIR}/contrib/glbinding-master/source/glbinding/include
 	../contrib/glbinding-master/source/glbinding/include
 	${CMAKE_BINARY_DIR}/../contrib/glbinding-master/source/glbinding-aux/include)	
