@@ -118,7 +118,7 @@ PassRT::prepare(void) {
 	if (0 != m_RenderTarget && true == m_UseRT) {
 
 		if (m_ExplicitViewport) {
-			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUTE_SIZE);
+			vec2 f2 = m_Viewport[0]->getPropf2(Viewport::ABSOLUTE_SIZE);
 			if (m_RTSizeWidth != (int)f2.x || m_RTSizeHeight != (int)f2.y) {
 				m_RTSizeWidth = (int)f2.x;
 				m_RTSizeHeight = (int)f2.y;
@@ -367,11 +367,11 @@ PassRT::setRenderTarget(nau::render::IRenderTarget* rt) {
 	else {
 		if (m_RenderTarget == NULL) {
 			std::string s = "__" + m_Name;
-			m_Viewport = RENDERMANAGER->createViewport(s);
+			m_Viewport.push_back(RENDERMANAGER->createViewport(s));
 			m_UseRT = true;
 		}
 		setRTSize(rt->getPropui2(IRenderTarget::SIZE));
-		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(IRenderTarget::CLEAR_VALUES));
+		m_Viewport[0]->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(IRenderTarget::CLEAR_VALUES));
 	}
 	m_RenderTarget = rt;
 
@@ -407,8 +407,8 @@ PassRT::setupCamera(void) {
 
 	if (m_ExplicitViewport) {
 		m_RestoreViewport = aCam->getViewport();
-		aCam->setViewport(m_Viewport);
-		ratio = m_Viewport->getPropf(Viewport::ABSOLUTE_RATIO);
+		aCam->setViewport(m_Viewport[0]);
+		ratio = m_Viewport[0]->getPropf(Viewport::ABSOLUTE_RATIO);
 	}
 	else {
 		ratio = (float)m_LaunchSize.x / m_LaunchSize.y;
@@ -460,7 +460,7 @@ PassRT::setupCamera(void) {
 		launchParams.frame.subFrame++;
 
 
-	RENDERER->setCamera(aCam);
+	RENDERER->setCamera(aCam, m_Viewport);
 }
 
 

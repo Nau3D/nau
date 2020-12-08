@@ -180,7 +180,8 @@ namespace nau
 			//
 			// VIEWPORTS
 			//
-			nau_API void setViewport (std::shared_ptr<Viewport>);
+			nau_API void setViewport (int i, std::shared_ptr<Viewport>);
+			nau_API void addViewport(std::shared_ptr<Viewport>);
 			nau_API std::shared_ptr<Viewport> getViewport();
 
 			//
@@ -300,7 +301,7 @@ namespace nau
 			bool m_ExplicitViewport;
 			// used to temporarily store the camera viewport when the pass has an explicit viewport
 			std::shared_ptr<Viewport> m_RestoreViewport;
-			std::shared_ptr<Viewport> m_Viewport;
+			std::vector<std::shared_ptr<Viewport>> m_Viewport;
 
 			nau::render::IRenderTarget *m_RenderTarget;
 			// size of render targets

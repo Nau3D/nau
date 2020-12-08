@@ -153,7 +153,7 @@ namespace nau
 			/// returns currrent viewport
 			nau_API virtual std::shared_ptr<Viewport> getViewport() = 0;
 			/// set the camera
-			nau_API virtual void setCamera(std::shared_ptr<Camera> &aCamera) = 0;
+			nau_API virtual void setCamera(std::shared_ptr<Camera> &aCamera, std::vector<std::shared_ptr<Viewport>> viewports) = 0;
 			/// returns current camera
 			nau_API virtual std::shared_ptr<Camera> &getCamera() = 0;
 

@@ -26,7 +26,7 @@ PassDepthMap::PassDepthMap (const std::string &passName) :
 
 	m_ClassName = "depthmap";
 	std::string camName = passName + "-LightCam";
-	m_Viewport = RENDERMANAGER->createViewport(camName);
+	m_Viewport.push_back(RENDERMANAGER->createViewport(camName));
 	m_LightCamera = RENDERMANAGER->getCamera(camName);
 }
 
@@ -53,9 +53,9 @@ PassDepthMap::addLight(const std::string &lightName) {
 	if (!m_ExplicitViewport) {
 		uivec2 uiv = uivec2(m_RenderTarget->getPropui2(IRenderTarget::SIZE));
 	vec2 v2((float)uiv.x, (float)uiv.y);
-		m_Viewport->setPropf2(Viewport::SIZE, v2);
+		m_Viewport[0]->setPropf2(Viewport::SIZE, v2);
 	}
-	m_LightCamera->setViewport (m_Viewport);
+	m_LightCamera->setViewport (m_Viewport[0]);
 	
 
 	// common properties to both direction and point lights
@@ -86,7 +86,7 @@ PassDepthMap::prepare (void) {
 	if (0 != m_RenderTarget && true == m_UseRT) {
 
 		if (m_ExplicitViewport) {
-			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUTE_SIZE);
+			vec2 f2 = m_Viewport[0]->getPropf2(Viewport::ABSOLUTE_SIZE);
 			m_RTSizeWidth = (int)f2.x;
 			m_RTSizeHeight = (int)f2.y;
 			uivec2 uiv2(m_RTSizeWidth, m_RTSizeHeight);
@@ -99,10 +99,10 @@ PassDepthMap::prepare (void) {
 	// if pass has a viewport 
 	if (m_ExplicitViewport ) {
 		m_RestoreViewport = m_LightCamera->getViewport();
-		m_LightCamera->setViewport (m_Viewport);
+		m_LightCamera->setViewport (m_Viewport[0]);
 	}
 	
-	RENDERER->setCamera(m_LightCamera);
+	RENDERER->setCamera(m_LightCamera, m_Viewport);
 	RENDERER->setPropui(IRenderer::INSTANCE_COUNT, m_UIntProps[INSTANCE_COUNT]);
 	RENDERER->setPropui(IRenderer::BUFFER_DRAW_INDIRECT, m_UIntProps[BUFFER_DRAW_INDIRECT]);
 
@@ -149,7 +149,7 @@ PassDepthMap::doPass (void) {
 
 	m_LightCamera->adjustMatrixPlus(cNear,cFar,aCamera);
 
-	RENDERER->setCamera(m_LightCamera);
+	RENDERER->setCamera(m_LightCamera, m_Viewport);
 	frustum.setFromMatrix ((float *)((mat4 *)RENDERER->getProp(IRenderer::PROJECTION_VIEW_MODEL, Enums::MAT4))->getMatrix());
 
 	RENDERMANAGER->clearQueue();

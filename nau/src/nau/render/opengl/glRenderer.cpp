@@ -318,12 +318,13 @@ GLRenderer::removeLights() {
 void
 GLRenderer::setViewport(std::shared_ptr<Viewport> aViewport) {
 
-	m_Viewport = aViewport;
+	m_Viewport.clear();
+	m_Viewport.push_back(aViewport);
 	const vec2& vpOrigin = aViewport->getPropf2(Viewport::ABSOLUTE_ORIGIN);
 	const vec2& vpSize = aViewport->getPropf2(Viewport::ABSOLUTE_SIZE);
 	const vec4& vpColor = aViewport->getPropf4(Viewport::CLEAR_COLOR);
 
-	glViewportIndexedf(0,(int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
+	glViewportIndexedf(0, vpOrigin.x, vpOrigin.y, vpSize.x, vpSize.y);
 	glClearColor(vpColor.x, vpColor.y, vpColor.z, vpColor.w);
 
 	glEnable(GL_SCISSOR_TEST); // MARK - perform scissor test only if not using the whole window 
@@ -331,18 +332,43 @@ GLRenderer::setViewport(std::shared_ptr<Viewport> aViewport) {
 }
 
 
+void
+GLRenderer::setViewports(std::vector<std::shared_ptr<Viewport>> viewports) {
+
+	m_Viewport.clear();
+	m_Viewport = viewports;
+	glEnable(GL_SCISSOR_TEST); // MARK - perform scissor test only if not using the whole window 
+
+	int count = 0;
+	for (auto v : viewports) {
+		const vec2& vpOrigin = v->getPropf2(Viewport::ABSOLUTE_ORIGIN);
+		const vec2& vpSize = v->getPropf2(Viewport::ABSOLUTE_SIZE);
+		const vec4& vpColor = v->getPropf4(Viewport::CLEAR_COLOR);
+		if (count == 0)
+			glClearColor(vpColor.x, vpColor.y, vpColor.z, vpColor.w);
+		glViewportIndexedf(count, vpOrigin.x, vpOrigin.y, vpSize.x, vpSize.y);
+
+		glScissorIndexed(count, (int)vpOrigin.x, (int)vpOrigin.y, (int)vpSize.x, (int)vpSize.y);
+		count++;
+	}	
+}
+
+
 std::shared_ptr<Viewport>
 GLRenderer::getViewport() {
 
-	return m_Viewport;
+	if (m_Viewport.size())
+		return m_Viewport[0];
+	else
+		return NULL;
 }
 
 
 void
-GLRenderer::setCamera(std::shared_ptr<Camera> &aCamera) {
+GLRenderer::setCamera(std::shared_ptr<Camera> &aCamera, std::vector<std::shared_ptr<Viewport>> viewports) {
 
 	m_Camera = aCamera;
-	setViewport(aCamera->getViewport());
+	setViewports(viewports);
 
 	m_Mat4Props[IRenderer::PROJECTION_MATRIX] = aCamera->getPropm4(Camera::PROJECTION_MATRIX);
 	m_Mat4Props[IRenderer::VIEW_MATRIX] = aCamera->getPropm4(Camera::VIEW_MATRIX);

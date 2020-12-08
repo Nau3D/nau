@@ -78,13 +78,14 @@ namespace nau
 			// CAMERA
 
 		protected:
-			std::shared_ptr<Viewport> m_Viewport;
+			std::vector<std::shared_ptr<Viewport>> m_Viewport;
 			std::shared_ptr<Camera> m_Camera;
 
 		public:
 			void setViewport(std::shared_ptr<Viewport>);
+			void setViewports(std::vector<std::shared_ptr<Viewport>> viewports);
 			std::shared_ptr<Viewport> getViewport();
-			void setCamera(std::shared_ptr<Camera> &aCamera);
+			void setCamera(std::shared_ptr<Camera> &aCamera, std::vector<std::shared_ptr<Viewport>> viewports);
 			std::shared_ptr<Camera> &getCamera();
 
 

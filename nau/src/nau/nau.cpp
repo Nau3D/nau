@@ -1802,7 +1802,7 @@ void Nau::loadFilesAndFoldersAux(std::string sceneName, bool unitize) {
 	Pass *aPass = aPipeline->createPass("MainPass");
 	aPass->setCamera ("MainCamera");
 
-	aPass->setViewport (v);
+	aPass->addViewport (v);
 	aPass->setPropb(Pass::COLOR_CLEAR, true);
 	aPass->setPropb(Pass::DEPTH_CLEAR, true);
 	aPass->addLight ("MainDirectionalLight");

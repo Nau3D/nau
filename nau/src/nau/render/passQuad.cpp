@@ -56,7 +56,7 @@ PassQuad::prepare (void) {
 
 	if (0 != m_RenderTarget && true == m_UseRT) {
 		if (m_ExplicitViewport) {
-			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUTE_SIZE);
+			vec2 f2 = m_Viewport[0]->getPropf2(Viewport::ABSOLUTE_SIZE);
 			m_RTSizeWidth = (int)f2.x;
 			m_RTSizeHeight = (int)f2.y;
 			uivec2 uiv2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight);
@@ -78,8 +78,8 @@ PassQuad::prepare (void) {
 	RENDERER->setPropui(IRenderer::BUFFER_DRAW_INDIRECT, m_UIntProps[BUFFER_DRAW_INDIRECT]);
 
 
-	if (m_Viewport != NULL)
-		RENDERER->setViewport(m_Viewport);
+	if (m_Viewport.size())
+		RENDERER->setViewport(m_Viewport[0]);
 
 	prepareBuffers();
 }

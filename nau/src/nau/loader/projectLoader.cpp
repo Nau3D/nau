@@ -2285,18 +2285,24 @@ ProjectLoader::loadPassViewport(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("viewport").Element();
 	if (0 != pElem) {
-		const char *pViewport = pElem->Attribute("name");
-		if (pViewport) {
-			std::shared_ptr<Viewport> vp = RENDERMANAGER->getViewport(pViewport);
-			if (!vp) {
-				NAU_THROW("File %s\nPass %s\nViewport %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pViewport);
+		for (; 0 != pElem; pElem = pElem->NextSiblingElement("viewport")) {
+
+			const char* pViewport = pElem->Attribute("name");
+			if (pViewport) {
+				std::shared_ptr<Viewport> vp = RENDERMANAGER->getViewport(pViewport);
+				if (!vp) {
+					NAU_THROW("File %s\nPass %s\nViewport %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pViewport);
+				}
+				else
+					aPass->addViewport(vp);
 			}
-			else
-				aPass->setViewport(vp);
 		}
 	}
 }
 		
+
+
+
 	
 /* -----------------------------------------------------------------------------
 TEXTURE - Used in quad pass

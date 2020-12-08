@@ -1046,7 +1046,7 @@ void renderWindowPass() {
 			std::string activeVP = vp->getName();
 			index;
 			if (combo("##hidelabelVP", viewports, activeVP, &index)) {
-				p->setViewport(RENDERMANAGER->getViewport(viewports[index]));
+				p->setViewport(0, RENDERMANAGER->getViewport(viewports[index]));
 			}
 		}
 		else {

@@ -140,7 +140,6 @@ Pass::Pass (const std::string &passName) :
 	//m_CameraName ("__nauDefault"),
 	m_SceneVector(),
 	m_MaterialMap(),
-	m_Viewport (0),
 	m_RestoreViewport (0),
 	m_RemapMode (REMAP_DISABLED),
 	m_TestScriptFile(""),
@@ -325,7 +324,7 @@ Pass::prepare (void) {
 	if (0 != m_RenderTarget && true == m_UseRT) {
 
 		if (m_ExplicitViewport) {
-			vec2 f2 = m_Viewport->getPropf2(Viewport::ABSOLUTE_SIZE);
+			vec2 f2 = m_Viewport[0]->getPropf2(Viewport::ABSOLUTE_SIZE);
 			m_RTSizeWidth = (int)f2.x;
 			m_RTSizeHeight = (int)f2.y;
 			uivec2 uiv2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight);
@@ -464,9 +463,18 @@ Pass::callPostScript() {
 
 
 void
-Pass::setViewport(std::shared_ptr<Viewport> aViewport) {
+Pass::setViewport(int i, std::shared_ptr<Viewport> aViewport) {
 
-	m_Viewport = aViewport;
+	if (i < m_Viewport.size())
+		m_Viewport[i] = aViewport;
+	m_ExplicitViewport = true;
+}
+
+
+void
+Pass::addViewport(std::shared_ptr<Viewport> aViewport) {
+
+	m_Viewport.push_back(aViewport);
 	m_ExplicitViewport = true;
 }
 
@@ -474,7 +482,7 @@ Pass::setViewport(std::shared_ptr<Viewport> aViewport) {
 std::shared_ptr<Viewport>
 Pass::getViewport() {
 
-	return (m_Viewport);
+	return (m_Viewport[0]);
 }
 
 
@@ -671,17 +679,21 @@ Pass::setRenderTarget (nau::render::IRenderTarget* rt) {
 	
 	if (rt == NULL) {
 		if (m_RenderTarget != NULL && !m_ExplicitViewport) 
-			m_Viewport.reset();
+			m_Viewport.clear();
 		m_UseRT = true;
 	}
 	else {
 		if (m_RenderTarget == NULL){
 			std::string s = "__" + m_Name;
-			m_Viewport = RENDERMANAGER->createViewport(s);
+			if (m_Viewport.size() > 0)
+				m_Viewport[0] = RENDERMANAGER->createViewport(s);
+			else
+				m_Viewport.push_back(RENDERMANAGER->createViewport(s));
 			m_UseRT = true;
 		}
 		setRTSize(rt->getPropui2(IRenderTarget::SIZE));
-		m_Viewport->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(IRenderTarget::CLEAR_VALUES));
+		if (m_Viewport.size() > 0)
+			m_Viewport[0]->setPropf4(Viewport::CLEAR_COLOR, rt->getPropf4(IRenderTarget::CLEAR_VALUES));
 	}
 	m_RenderTarget = rt;
 }
@@ -690,15 +702,15 @@ Pass::setRenderTarget (nau::render::IRenderTarget* rt) {
 void
 Pass::setRTSize(uivec2 &v) {
 
-	assert(m_Viewport != NULL);
+	assert(m_Viewport.size() != 0);
 
 	m_RTSizeWidth = v.x;
 	m_RTSizeHeight = v.y;
 	vec2 v2a((float)v.x, (float)v.y);
-	m_Viewport->setPropf2(Viewport::SIZE, v2a);
+	m_Viewport[0]->setPropf2(Viewport::SIZE, v2a);
 	vec2 v2b(0.0f, 0.0f);
-	m_Viewport->setPropf2(Viewport::ORIGIN, v2b);
-	m_Viewport->setPropb(Viewport::FULL, false);
+	m_Viewport[0]->setPropf2(Viewport::ORIGIN, v2b);
+	m_Viewport[0]->setPropb(Viewport::FULL, false);
 }
 
 
@@ -715,12 +727,12 @@ Pass::setupCamera (void) {
 	
 	std::shared_ptr<Viewport> v = aCam->getViewport();
 	// if pass has a viewport 
-	if (m_Viewport) {
+	if (m_Viewport.size()) {
 		m_RestoreViewport = v;
-		aCam->setViewport (m_Viewport);
+		aCam->setViewport (m_Viewport[0]);
 	}
 	
-	RENDERER->setCamera (aCam);
+	RENDERER->setCamera (aCam, m_Viewport);
 }
 
 
