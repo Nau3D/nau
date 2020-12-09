@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<project name="Geometry Shader with Multiple Viewports" width=1024 height=1024>
+	<assets>
+		<scenes>
+			<scene name="MainScene">
+				<file name="../../models/al.obj" />
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="TopLeft">
+				<ORIGIN x = 0.0 y = 0.5 />
+				<SIZE width=0.5 height= 0.5 />
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+			<viewport name="TopRight">
+				<ORIGIN x = 0.5 y = 0.5 />
+				<SIZE width=0.5 height= 0.5 />
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="BottomLeft">
+				<ORIGIN x = 0.0 y = 0.0 />
+				<SIZE width=0.5 height= 0.5 />
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+			<viewport name="BottomRight">
+				<ORIGIN x = 0.5 y = 0.0 />
+				<SIZE width=0.5 height= 0.5 />
+				<CLEAR_COLOR r="0.0" g="0.0" b="0.0" />
+			</viewport>
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera">
+				<viewport name="BottomRight" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="5.0" y="5.0" z="5" />
+				<LOOK_AT_POINT x="0.0" y="0.0" z="0.0" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+			<camera name="TopView">
+				<viewport name="TopLeft" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="0.0" y="10.0" z="0.0" />
+				<VIEW x="0.0" y="-1.0" z="0.0" />
+				<UP x="1.0" y="0.0" z="0.0" />
+			</camera>
+			<camera name="FrontView">
+				<viewport name="TopRight" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="0.0" y="00.0" z="10.0" />
+				<VIEW x="0.0" y="0.0" z="-1.0" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+			<camera name="SideView">
+				<viewport name="BottomLeft" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR=1000.0 />
+				<POSITION x="10.0" y="0.0" z="0.0" />
+				<VIEW x="-1.0" y="0.0" z="0.0" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<POSITION x="-52" y="77.0" z="-27.0" />
+				<DIRECTION x="1" y="1" z="1" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="geomviewports.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="multipleViewports" default="true" defaultCamera="MainCamera">
+			
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+                <viewports>
+				    <viewport name="TopLeft" />
+				    <viewport name="TopRight" />
+				    <viewport name="BottomLeft" />
+				    <viewport name="BottomRight" />
+                </viewports>
+				<lights>
+					<light name="Sun" />
+				</lights>
+				<injectionMaps>
+					<map toMaterial="*" > 
+                        <shader fromMaterial="geomViewports" 
+                                fromLibrary="Geometry Shader with Multiple Viewports" 
+                         />
+                    </map>
+				</injectionMaps>
+			</pass>
+
+		</pipeline>
+	</pipelines>
+</project>

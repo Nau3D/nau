@@ -2285,17 +2285,27 @@ ProjectLoader::loadPassViewport(TiXmlHandle hPass, Pass *aPass)
 
 	pElem = hPass.FirstChild ("viewport").Element();
 	if (0 != pElem) {
-		for (; 0 != pElem; pElem = pElem->NextSiblingElement("viewport")) {
-
-			const char* pViewport = pElem->Attribute("name");
-			if (pViewport) {
-				std::shared_ptr<Viewport> vp = RENDERMANAGER->getViewport(pViewport);
-				if (!vp) {
-					NAU_THROW("File %s\nPass %s\nViewport %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pViewport);
-				}
-				else
-					aPass->addViewport(vp);
+		const char* pViewport = pElem->Attribute("name");
+		if (pViewport) {
+			std::shared_ptr<Viewport> vp = RENDERMANAGER->getViewport(pViewport);
+			if (!vp) {
+				NAU_THROW("File %s\nPass %s\nViewport %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pViewport);
 			}
+			else
+				aPass->addViewport(vp);
+		}
+	}
+
+	pElem = hPass.FirstChild("viewports").FirstChild("viewport").Element();
+	for (; 0 != pElem; pElem = pElem->NextSiblingElement()) {
+		const char* pViewport = pElem->Attribute("name");
+		if (pViewport) {
+			std::shared_ptr<Viewport> vp = RENDERMANAGER->getViewport(pViewport);
+			if (!vp) {
+				NAU_THROW("File %s\nPass %s\nViewport %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pViewport);
+			}
+			else
+				aPass->addViewport(vp);
 		}
 	}
 }
@@ -2394,7 +2404,7 @@ void
 ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
 	std::vector<std::string> excluded = {"testScript", "preProcess", "postProcess", "mode", "scene", "scenes", 
-		"lights", "viewport", "renderTarget",
+		"lights", "viewport", "viewports", "renderTarget",
 		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits", "rayCount",
 		"rtRayTypes", "rtVertexAttributes", "rtEntryPoint", "rtDefaultMaterial","preScript", "postScript",
 		"rtGlobalParams", "rtMaterialMap"};

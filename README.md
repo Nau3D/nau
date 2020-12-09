@@ -1,7 +1,7 @@
 Nau
 ===
 
-Nau 3D engine: OpenGL + Optix 7 (WIP) + Lua + ImGui + Bullet + PhysX
+Nau 3D engine: OpenGL + Optix 7 (WIP) + Lua + ImGui 
 
 Nau is an API to speed up the creation of 3D shader pipelines. It integrates both rasterization and ray tracing in a single package, providing all the tools to create complex multipass graphic pipelines with shaders written in GLSL, and kernels written in CUDA for Optix7. 
 
@@ -30,7 +30,7 @@ ImGuiFileDialog from https://github.com/aiekick/ImGuiFileDialog
 
 Nau3D uses the following 3rd party libraries:
 
-* Optix
+* Optix (optional)
 * imGui
 * glBinding for OpenGL bindings and call tracing (https://github.com/cginternals/glbinding)
 * Assimp for 3D asset loading (https://www.assimp.org/)
@@ -57,26 +57,12 @@ Note: IF fail to compile freeglut try
 * sudo ln –s XI.h XInput.h
 
 To build nau with nvidia's optix 7 support (optional) both cuda and optix are required.
+
 * In the cmake project check the option "NAU_BUILD_WITH_OPTIX"
-* Set the variable OPTIX_DIR to optix's installation directory
+* Set the variable NAU_OPTIX_DIR to optix's installation directory
 * CUDA is usually found by cmake and doesn't need any extra steps.
 * If either CUDA or Optix are not found the process goes on without Optix support.		
 
-		
-To built bullet plugin, download the latest release (Windows only).
-
-* Four libs are required, in both debug and release mode: BulletDynamics, BulletCollision, BulletSoftBody and LinearMath. 
-*  Prior to building the libs do as follows for each lib:
-	* Go to properties (right button click on libs name)
-	* Select C/C++ -> Code Generation
-	* For the Runtime Library option elect the respective DLL version (either Multi-threaded Debug DLL or  Multi-threaded DLL)
-	* Build the named libraries.	
-* In CMake set variables in the GUI: BULLET_INCLUDE_DIR (the source files dir of the bullet install) and BULLET_ROOT (bullet build dir)
-
-To build PhysX plugin, in CMake gui:
-
-* set PHYSX_INCLUDE_DIR to the path to PhysX include dir
-* set PHYSX_LIBRARIES_DIR to the path to PhysX lib dir
 
 # running
 

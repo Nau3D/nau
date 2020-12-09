@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<materialLib name="Geometry Shader with Multiple Viewports">
+	
+	<shaders>
+		<shader name="geomViewports" 	ps="shaders/dirlightdiffambpix.frag" 
+									    gs="shaders/geomViewports.geom"
+									    vs="shaders/dirlightdiffambpix.vert" />
+	</shaders>
+
+
+	<materials>
+		<material name="geomViewports">
+			<shader name="geomViewports">
+				<values>
+					<valueof uniform="PV1"          type="CAMERA" context="TopView" 
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="PV2"          type="CAMERA" context="FrontView" 
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="PV3"          type="CAMERA" context="SideView" 
+														component="PROJECTION_VIEW_MATRIX" />
+					<valueof uniform="PV4"          type="CAMERA" context="MainCamera" 
+														component="PROJECTION_VIEW_MATRIX" />
+
+					<valueof uniform="V1"          		type="CAMERA" context="TopView" 
+														component="VIEW_MATRIX" />
+					<valueof uniform="V2"          	type="CAMERA" context="FrontView" 
+														component="VIEW_MATRIX" />
+					<valueof uniform="V3"          	type="CAMERA" context="SideView" 
+														component="VIEW_MATRIX" />
+					<valueof uniform="V4"          	type="CAMERA" context="MainCamera" 
+														component="VIEW_MATRIX" />
+
+					<valueof uniform="lightDir"		type="LIGHT" context="CURRENT"
+														component="NORMALIZED_DIRECTION" id = 0/>
+					<valueof uniform="diffuse"		type="COLOR" context="CURRENT"
+														component="DIFFUSE" />
+														
+				</values>
+			</shader>
+		</material>
+				
+	</materials>
+</materialLib>
