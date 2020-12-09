@@ -368,7 +368,10 @@ void
 GLRenderer::setCamera(std::shared_ptr<Camera> &aCamera, std::vector<std::shared_ptr<Viewport>> viewports) {
 
 	m_Camera = aCamera;
-	setViewports(viewports);
+	if (viewports.size() != 0)
+		setViewports(viewports);
+	else
+		setViewport(m_Camera->getViewport());
 
 	m_Mat4Props[IRenderer::PROJECTION_MATRIX] = aCamera->getPropm4(Camera::PROJECTION_MATRIX);
 	m_Mat4Props[IRenderer::VIEW_MATRIX] = aCamera->getPropm4(Camera::VIEW_MATRIX);
