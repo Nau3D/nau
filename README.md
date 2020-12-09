@@ -36,6 +36,7 @@ Nau3D uses the following 3rd party libraries:
 * Assimp for 3D asset loading (https://www.assimp.org/)
 * Devil for image loading (http://openil.sourceforge.net/)
 * TimyXML for project and settings loading (https://sourceforge.net/projects/tinyxml)
+
 Interface applications:
 
 * GLFW
