@@ -13,6 +13,8 @@ It can be used as a teaching tool for shader and ray tracing courses providing a
 
 Documentation at http://nau3d.di.uminho.pt/
 
+![Composer](screenshots/all_windows.png)
+
 # credits
 
 Besides myself, many people have contributed to this project:
