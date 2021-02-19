@@ -1076,7 +1076,7 @@ Nau::getCurrentObjectAttributes(const std::string &type, int number) {
 		return (AttributeValues *)renderer->getColorMaterial();
 	}
 	
-	else if (sup->apiSupport(IAPISupport::IMAGE_TEXTURE) && type == "IMAGE_TEXTURE") {
+	else if (sup->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE) && type == "IMAGE_TEXTURE") {
 		return (AttributeValues *)renderer->getImageTexture(number);
 	}
 
@@ -1289,7 +1289,7 @@ Nau::getObjectAttributes(const std::string &type, const std::string &context, in
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getMaterialTexture(number);
 	}
-	if (sup->apiSupport(IAPISupport::IMAGE_TEXTURE) && type == "IMAGE_TEXTURE") {
+	if (sup->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE) && type == "IMAGE_TEXTURE") {
 		if (m_pMaterialLibManager->hasMaterial(lib, mat))
 			return (AttributeValues *)m_pMaterialLibManager->getMaterial(lib, mat)->getImageTexture(number);
 	}

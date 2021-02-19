@@ -30,8 +30,10 @@ std::map<GLenum, GLTexture::TexFormats> GLTexture::TexFormat = {
 	{ GL_RED_INTEGER    , TexFormats("RED", 1) },
 	{ GL_RED            , TexFormats("RED",1) },
 	{ GL_RG             , TexFormats("RG", 2) },
+	{ GL_RG_INTEGER		, TexFormats("RG", 2) },
 	{ GL_RGB            , TexFormats("RGB", 3) },
 	{ GL_RGBA           , TexFormats("RGBA",4) },
+	{ GL_RGBA_INTEGER	, TexFormats("RGBA", 4) },
 	{ GL_DEPTH_COMPONENT, TexFormats("DEPTH_COMPONENT",1) },
 	{ GL_DEPTH_STENCIL  , TexFormats("DEPTH32F_STENCIL8",2) },
 };
@@ -368,7 +370,7 @@ GLTexture::build(int immutable) {
 				glBindTexture((GLenum)m_EnumProps[DIMENSION], m_IntProps[ID]);
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
-				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
+				if (immutable && APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEX_STORAGE)) {
 					glTexStorage3DMultisample((GLenum)m_EnumProps[DIMENSION], m_IntProps[SAMPLES], (GLenum)m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS], GL_FALSE);
 				}
@@ -383,7 +385,7 @@ GLTexture::build(int immutable) {
 				glBindTexture((GLenum)m_EnumProps[DIMENSION], m_IntProps[ID]);
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
-				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
+				if (immutable && APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEX_STORAGE)) {
 					glTexStorage3D((GLenum)m_EnumProps[DIMENSION], m_IntProps[LEVELS], (GLenum)m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS]);
 				}
@@ -402,7 +404,7 @@ GLTexture::build(int immutable) {
 				glBindTexture((GLenum)m_EnumProps[DIMENSION], m_IntProps[ID]);
 				m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
-				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
+				if (immutable && APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEX_STORAGE)) {
 					glTexStorage2DMultisample((GLenum)m_EnumProps[DIMENSION], m_IntProps[SAMPLES], (GLenum)m_EnumProps[INTERNAL_FORMAT],
 						m_IntProps[WIDTH], m_IntProps[HEIGHT], GL_FALSE);
 				}
@@ -429,7 +431,7 @@ GLTexture::build(int immutable) {
 				m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
 
 
-				if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
+				if (immutable && APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEX_STORAGE)) {
 					glTexStorage2D((GLenum)m_EnumProps[DIMENSION], m_IntProps[LEVELS], (GLenum)m_EnumProps[INTERNAL_FORMAT], 
 						m_IntProps[WIDTH], m_IntProps[HEIGHT]);
 				}
@@ -454,7 +456,7 @@ GLTexture::build(int immutable) {
 		glBindTexture((GLenum)m_EnumProps[DIMENSION], m_IntProps[ID]);
 		m_EnumProps[FORMAT] = GLTexture::GetCompatibleFormat(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]);
 		m_EnumProps[TYPE] = GLTexture::GetCompatibleType(m_EnumProps[DIMENSION], m_EnumProps[INTERNAL_FORMAT]); 
-		if (immutable && APISupport->apiSupport(IAPISupport::TEX_STORAGE)) {
+		if (immutable && APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEX_STORAGE)) {
 			glTexStorage3D((GLenum)m_EnumProps[DIMENSION], m_IntProps[LEVELS], (GLenum)m_EnumProps[INTERNAL_FORMAT], 
 				m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[DEPTH]);
 		}
@@ -601,7 +603,7 @@ GLTexture::clear() {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
 
-	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE))
+	if (sup->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_TEXTURE))
 		for (int i = 0; i < m_IntProps[LEVELS]; ++i)
 			glClearTexImage(m_IntProps[ID], i, (GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
 
@@ -613,7 +615,7 @@ GLTexture::clearLevel(int l) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
 
-	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) &&l < m_IntProps[LEVELS])
+	if (sup->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_TEXTURE_LEVEL) &&l < m_IntProps[LEVELS])
 		glClearTexImage(m_IntProps[ID], l, (GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
 }
 

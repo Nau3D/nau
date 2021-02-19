@@ -301,8 +301,8 @@ Camera::setPropf4(Float4Property prop, float x, float y, float z, float w) {
 			AttributeValues::setPropf4(prop, x, y, z, w);
 	}
 	buildViewMatrix();
-	buildInverses();
 	buildProjectionViewMatrix();
+	buildInverses();
 	buildTS05PVMMatrix();
 }
 
@@ -345,37 +345,16 @@ Camera::setProps(StringProperty prop, std::string & value) {
 }
 
 
-//void *
-//Camera::getProp(int prop, Enums::DataType type) {
-//
-//	switch (type) {
-//
-//// ARF: Check who calls this
-//		case Enums::MAT4:
-//			assert(m_Mat4Props.count(prop) > 0);
-//			return((void *)m_Mat4Props[prop].getMatrix());
-//		default:
-//			return AttributeValues::getProp(prop, type);
-//		}
-//}
-
-
-//const mat4&
-//Camera::getPropm4(Mat4Property prop)
-//{
-//	return m_Mat4Props[prop];
-//}
-
-
 std::shared_ptr<IRenderable> &
 Camera::getRenderable (void) {
 
 	vec3 frustumPoints[8];
 
 	/// MARK - This can be done only when modifying the camera parameters
-	std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
-		std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(8));
+	//std::shared_ptr<std::vector<VertexData::Attr>> vertices = 
+	//	std::shared_ptr<std::vector<VertexData::Attr>>(new std::vector<VertexData::Attr>(8));
 
+	std::shared_ptr<std::vector<VertexData::Attr>> &vertices = m_Renderable->getVertexData()->getDataOf(VertexData::GetAttribIndex(std::string("position")));
 	if (m_EnumProps[PROJECTION_TYPE] == ORTHO) {
 
 		vertices->at (TOP_LEFT_NEAR).set     (m_FloatProps[LEFT],  m_FloatProps[TOP],   -m_FloatProps[NEARP]);
@@ -404,11 +383,8 @@ Camera::getRenderable (void) {
 	std::shared_ptr<VertexData> &vertexData = m_Renderable->getVertexData();
 	vertexData->setDataFor (VertexData::GetAttribIndex(std::string("position")), vertices);
 
-	//std::vector<VertexData::Attr> *normals = new std::vector<VertexData::Attr>(8);
-	//for (int i = 0; i < 8 ; ++i) 
-	//	normals->at(i).set(0.0f, 0.0f, 0.0f);
-	//vertexData.setDataFor (VertexData::getAttribIndex("normal"), normals);
-
+	buildViewMatrix();
+	buildProjectionViewMatrix();
 	buildInverses();
 	m_ResultTransform.copy(m_GlobalTransform);
 	m_ResultTransform *= m_Mat4Props[VIEW_INVERSE_MATRIX];
@@ -881,23 +857,5 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType,
 }
 
 
-// Physics
-//bool 
-//Camera::isDynamic() {
-//
-//	return m_IsDynamic;
-//}
-//			
-//void 
-//Camera::setDynamic(bool value) {
-//
-//	m_IsDynamic = value;
-//}
-//
-//void 
-//Camera::setPositionOffset (float value) {
-//
-//	m_PositionOffset = value;
-//}
 
 

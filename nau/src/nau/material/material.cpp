@@ -341,7 +341,7 @@ Material::prepareNoShaders ()
 	for (auto t : m_Textures)
 		t.second->bind();
 
-	if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE)) {
 		for (auto it : m_ImageTextures)
 			it.second->prepare();
 	}
@@ -378,7 +378,7 @@ Material::prepare () {
 
 	{
 		PROFILE("Image Textures");
-		if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
+		if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE)) {
 			for (auto &it : m_ImageTextures)
 				it.second->prepare();
 		}
@@ -398,10 +398,10 @@ Material::prepare () {
 		PROFILE("Shaders");
 		if (NULL != m_Shader) {
 
-			m_Shader->prepare();
+			bool prepared = m_Shader->prepare();
 			RENDERER->setShader(m_Shader);
 
-			if (m_Shader->prepare()) {
+			if (prepared) {
 				setUniformValues();
 				setUniformBlockValues();
 			}
@@ -431,7 +431,7 @@ Material::restore() {
 	for (auto b : m_Buffers) 
 		b.second->unbind();
 	
-	if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE)) {
 		for (auto &b : m_ImageTextures)
 			b.second->restore();
 	}
@@ -452,7 +452,7 @@ Material::restoreNoShaders() {
    for (auto b : m_Buffers)
 		b.second->unbind();
 
-	if (APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE)) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE)) {
 		for (auto b : m_ImageTextures)
 			b.second->restore();
 	}
@@ -509,7 +509,7 @@ Material::setState(IState *s) {
 void
 Material::attachImageTexture(std::string label, unsigned int unit, unsigned int texID) {
 
-	assert(APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE) && "No image texture support");
+	assert(APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE) && "No image texture support");
 	IImageTexture *it = IImageTexture::Create(label, unit, texID);
 	m_ImageTextures[unit] = it;
 }

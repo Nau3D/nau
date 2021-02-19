@@ -18,11 +18,11 @@ GLAPISupport::setAPISupport() {
 
 	//m_Version = 310;
 
-	for (int i = 0; i < APIFeatureSupport::COUNT_API_SUPPORT; ++i) {
+	for (int i = 0; i < static_cast<int>(APIFeatureSupport::OK); ++i) {
 		m_APISupport[(APIFeatureSupport)i] = false;
 	}
 
-	m_APISupport[OK] = true;
+	m_APISupport[APIFeatureSupport::OK] = true;
 
 // https://github.com/cginternals/glbinding/issues/251
 //	const char* sExtensions = (char *)glGetString(GL_EXTENSIONS);
@@ -39,6 +39,7 @@ GLAPISupport::setAPISupport() {
 		}
 		if (strstr(ext, "GL_NV_mesh_shader") != NULL) {
 			m_APISupport[APIFeatureSupport::MESH_SHADER] = true;
+			m_APISupport[APIFeatureSupport::TASK_SHADER] = true;
 		}
 
 	}

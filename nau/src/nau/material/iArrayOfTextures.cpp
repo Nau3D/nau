@@ -29,7 +29,7 @@ IArrayOfTextures::Init() {
 	Attribs.add(Attribute(TEXTURE_COUNT, "TEXTURE_COUNT", Enums::DataType::UINT, false, new NauUInt(1)));
 	// BOOL
 	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new NauInt(false)));
-	Attribs.add(Attribute(CREATE_BUFFER, "CREATE_BUFFER", Enums::DataType::BOOL, false, new NauInt(false), NULL, NULL, IAPISupport::BINDLESS_TEXTURES));
+	Attribs.add(Attribute(CREATE_BUFFER, "CREATE_BUFFER", Enums::DataType::BOOL, false, new NauInt(false), NULL, NULL, IAPISupport::APIFeatureSupport::BINDLESS_TEXTURES));
 	// ENUM
 	Attribs.add(Attribute(DIMENSION, "DIMENSION", Enums::DataType::ENUM, true));
 	Attribs.add(Attribute(FORMAT, "FORMAT", Enums::DataType::ENUM, true));

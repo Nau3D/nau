@@ -34,7 +34,7 @@ void main() {
 	
 	vec4 spec = vec4(0.0);
 	if (intensity > 0) {
-		float cos_eye = t.t;
+		float cos_eye = -dot(t,e);
 		float sin_eye = sqrt(1.0 - cos_eye* cos_eye);
 		float cos_light = dot (t,DataIn.l_dir);
 		float sin_light = sqrt(1.0 - cos_light * cos_light);
@@ -48,7 +48,7 @@ void main() {
 	vec2 a = DataIn.texCoord;
 	//a.x = a.x/40;
 //	a.z = a.z/40;
-a.y *= 256;
+    a.y *= 256;
 
 
 	vec4 stripes = pow(vec4(snoise(vec3(a.xy,1))),vec4(2)) * 0.1 + 0.8;

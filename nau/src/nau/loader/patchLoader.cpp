@@ -17,7 +17,7 @@ using namespace nau::system;
 void PatchLoader::loadScene(nau::scene::IScene *aScene, std::string &aFilename) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
-	if (!sup->apiSupport(IAPISupport::TESSELATION_SHADERS))
+	if (!sup->apiSupport(IAPISupport::APIFeatureSupport::TESSELATION_SHADERS))
 		NAU_THROW("Patches are not supported");
 
 	File::FixSlashes(aFilename);

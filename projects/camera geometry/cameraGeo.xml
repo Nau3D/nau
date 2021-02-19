@@ -3,7 +3,7 @@
 	<assets>
 	
 		<scenes>
-			<scene name="CubeLand" >
+			<scene name="Axis" >
 				<SCALE x=5 y=5 z=5 />
 				<geometry name = "axis" type = "AXIS" />
 			</scene>
@@ -58,11 +58,11 @@
 	</assets>
 	
 	<pipelines>
-		<pipeline name="fixedfunction" default="true">
-			<pass class="default" name="pass1" >
+		<pipeline name="Cameras" default="true">
+			<pass class="default" name="perspective" >
 				<scenes>
 					<scene name="Perspective" />
-					<scene name="CubeLand" />
+					<scene name="Axis" />
 				</scenes>
 				<camera name="MainCamera" />
 				<viewport name="LeftViewport" />
@@ -70,9 +70,9 @@
 					<light name="Sun" />
 				</lights>
 			</pass>
-			<pass class="default" name="pass2" >
+			<pass class="default" name="ortho" >
 				<scenes>
-					<scene name="CubeLand" />
+					<scene name="Axis" />
 					<scene name="Orthographic" />
 				</scenes>
 				<camera name="MainCamera" />

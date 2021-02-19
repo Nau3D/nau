@@ -50,7 +50,7 @@ namespace nau {
 		nau_API Attribute(unsigned int id, std::string name, Enums::DataType type,
 			bool readOnlyFlag = false, Data *defaultV = NULL,
 			Data *min=NULL, Data *max = NULL, 
-			IAPISupport::APIFeatureSupport requires = IAPISupport::OK, Semantics sem=NONE);
+			IAPISupport::APIFeatureSupport requires = IAPISupport::APIFeatureSupport::OK, Semantics sem=NONE);
 		
 		nau_API Attribute(unsigned int id, std::string name, std::string objType, bool readOnlyFlag = false, bool mustExist = true, std::string defaults = "");
 
@@ -91,7 +91,7 @@ namespace nau {
 		nau_API void setRequirement(IAPISupport::APIFeatureSupport req);
 		nau_API IAPISupport::APIFeatureSupport getRequirement();
 
-		nau_API void listAdd(std::string name, int id, IAPISupport::APIFeatureSupport requires = IAPISupport::OK);
+		nau_API void listAdd(std::string name, int id, IAPISupport::APIFeatureSupport requires = IAPISupport::APIFeatureSupport::OK);
 
 		// for enum types only. Checks if it is a valid option. 
 		nau_API bool isValid(std::string value);
@@ -159,7 +159,7 @@ namespace nau {
 		nau_API std::string getListStringOp(int id, int prop);
 		nau_API int getListValueOp(std::string s, std::string prop);
 		nau_API int getListValueOp(int id, std::string prop);
-		nau_API void listAdd(std::string attrName, std::string elemS, int elem_Id, IAPISupport::APIFeatureSupport requires = IAPISupport::OK);
+		nau_API void listAdd(std::string attrName, std::string elemS, int elem_Id, IAPISupport::APIFeatureSupport requires = IAPISupport::APIFeatureSupport::OK);
 		nau_API bool isValid(std::string attr, std::string value);
 		nau_API void setDefault(std::string attr, Data &value);
 		//std::unique_ptr<Data> &getDefault(int id, Enums::DataType type);

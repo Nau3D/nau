@@ -232,7 +232,7 @@ GLRenderer::getAtomicCounterValues() {
 	int i = 0;
 	IBuffer *b;
 
-	if (!APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS)) {
+	if (!APISupport->apiSupport(IAPISupport::APIFeatureSupport::BUFFER_ATOMICS)) {
 		m_AtomicCounterValues.clear();
 		return m_AtomicCounterValues;
 	}
@@ -448,7 +448,7 @@ GLRenderer::getNumberOfPrimitives(MaterialGroup *m) {
 	case (unsigned int)GL_POINTS:
 		return indices;
 	case (unsigned int)GL_PATCHES:
-		assert(APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS) && "invalid primitive type");
+		assert(APISupport->apiSupport(IAPISupport::APIFeatureSupport::TESSELATION_SHADERS) && "invalid primitive type");
 		return indices / m->getParent().getnumberOfVerticesPerPatch();
 	default:
 		assert(false && "invalid primitive type");
@@ -644,7 +644,7 @@ GLRenderer::getAttribLocation(std::string &name) {
 void
 GLRenderer::addImageTexture(unsigned int aTexUnit, IImageTexture *t) {
 
-	assert(APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE));
+	assert(APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE));
 	m_ImageTextures[aTexUnit] = t;
 }
 
@@ -933,7 +933,7 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 	unsigned int drawPrimitive = aRenderable.getRealDrawingPrimitive();
 
 	if (drawPrimitive == GL_PATCHES) {
-		assert(APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS));
+		assert(APISupport->apiSupport(IAPISupport::APIFeatureSupport::TESSELATION_SHADERS));
 		int k = aRenderable.getnumberOfVerticesPerPatch();
 		glPatchParameteri(GL_PATCH_VERTICES, k);
 #ifdef PROFILE

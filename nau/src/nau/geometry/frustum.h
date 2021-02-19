@@ -2,6 +2,7 @@
 #define FRUSTUM_H
 
 #include "nau/math/vec3.h"
+#include "nau/math/matrix.h"
 #include "nau/math/plane.h"
 #include "nau/scene/camera.h"
 #include "nau/geometry/iBoundingVolume.h"
@@ -36,7 +37,7 @@ namespace nau
 			}FrustumTest;
 
 			/// Constructs the frustum from a PVM matrix
-			nau_API void setFromMatrix (const float *m);
+			nau_API void setFromMatrix (const float* m);
 			/// determines if the volume is inside the frustum using all 6 planes
 			/// if conservative is set to true, the near and far planes are not tested
 			nau_API int isVolumeInside (const nau::geometry::IBoundingVolume *aBoundingVolume, bool conservative=false);

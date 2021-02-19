@@ -159,7 +159,7 @@ GLTextureCubeMap::build(int immutable) {}
 void
 GLTextureCubeMap::clear() {
 
-	assert(APISupport->apiSupport(IAPISupport::CLEAR_TEXTURE) && "Clear Cubemap texture not supported");
+	assert(APISupport->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_TEXTURE) && "Clear Cubemap texture not supported");
 	for (int i = 0; i < m_IntProps[LEVELS]; ++i)
 		glClearTexImage(m_UIntProps[ID], i, (GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
 }
@@ -168,7 +168,7 @@ GLTextureCubeMap::clear() {
 void
 GLTextureCubeMap::clearLevel(int l) {
 
-	assert(APISupport->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) && "Clear Cubemap texture level not supported");
+	assert(APISupport->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_TEXTURE_LEVEL) && "Clear Cubemap texture level not supported");
 	if (l < m_IntProps[LEVELS])
 		glClearTexImage(m_UIntProps[ID], l, (GLenum)m_EnumProps[FORMAT], (GLenum)m_EnumProps[TYPE], NULL);
 }

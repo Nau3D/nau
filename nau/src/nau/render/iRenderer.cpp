@@ -92,7 +92,7 @@ IRenderer::primitiveTypeSupport(std::string primitive) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
 
-	if (primitive == "PATCHES" && !sup->apiSupport(IAPISupport::TESSELATION_SHADERS))
+	if (primitive == "PATCHES" && !sup->apiSupport(IAPISupport::APIFeatureSupport::TESSELATION_SHADERS))
 		return false;
 	else if (PrimitiveTypes.count(primitive))
 		return true;
@@ -106,7 +106,7 @@ IRenderer::primitiveTypeSupport(std::string primitive) {
 void
 IRenderer::addAtomic(std::string buffer, unsigned int offset, std::string name) {
 
-	if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS)) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::BUFFER_ATOMICS)) {
 		std::pair<std::string, unsigned int> p = std::pair<std::string, unsigned int>(buffer, offset);
 
 		if (m_AtomicLabels.count(p) == 0) {

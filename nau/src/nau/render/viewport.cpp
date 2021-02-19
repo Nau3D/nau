@@ -15,7 +15,7 @@ Viewport::Init() {
 	Attribs.add(Attribute(ABSOLUTE_SIZE, "ABSOLUTE_SIZE", Enums::DataType::VEC2, true, new vec2(1.0f, 1.0f), new vec2(0.0f, 0.0f)));
 
 	// VEC4
-	Attribs.add(Attribute(CLEAR_COLOR, "CLEAR_COLOR", Enums::DataType::VEC4, false, new vec4(), new vec4(), new vec4(1.0f),IAPISupport::OK, Attribute::COLOR));
+	Attribs.add(Attribute(CLEAR_COLOR, "CLEAR_COLOR", Enums::DataType::VEC4, false, new vec4(), new vec4(), new vec4(1.0f),IAPISupport::APIFeatureSupport::OK, Attribute::COLOR));
 
 	// BOOL
 	Attribs.add(Attribute(FULL, "FULL", Enums::DataType::BOOL, false, new NauInt(true)));

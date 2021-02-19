@@ -120,7 +120,7 @@ GLArrayOfTextures::build() {
 
 		tex->clear();
 		int texID = tex->getPropi(ITexture::ID);
-		if (APISupport->apiSupport(IAPISupport::BINDLESS_TEXTURES)) {
+		if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::BINDLESS_TEXTURES)) {
 			uint64_t texPrt = glGetTextureHandleARB(texID);
 			glMakeTextureHandleResidentARB(texPrt);
 			m_TexturePointers.push_back(texPrt);
@@ -129,7 +129,7 @@ GLArrayOfTextures::build() {
 	}
 
 	// if buffer is defined
-	if (APISupport->apiSupport(IAPISupport::BINDLESS_TEXTURES) && m_BoolProps[CREATE_BUFFER]) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::BINDLESS_TEXTURES) && m_BoolProps[CREATE_BUFFER]) {
 
 		if (RESOURCEMANAGER->hasBuffer(m_Label))
 			SLOG("Warning: Buffer %s is defined more than once", m_Label.c_str());

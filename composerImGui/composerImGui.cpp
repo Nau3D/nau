@@ -431,10 +431,11 @@ bool combo(std::string title, std::vector<std::string> items, std::string active
 	options[l] = '\0';
 
 	int prevIndex = index;
-	if (ImGui::Combo(title.c_str(), resIndex, (char *)&options[0], (int)items.size()))
+	if (ImGui::Combo(title.c_str(), &index, (char *)&options[0], (int)items.size()))
 		ok = true;
 	else
 		ok = false;
+	*resIndex = index;
 	return ok;
 }
 
@@ -1101,7 +1102,7 @@ void renderWindowPass() {
 	std::vector<std::string> scenes;
 	RENDERMANAGER->getSceneNames(&scenes);
 	if (scenes.size() == 0) {
-		ImGui::Text("Lights:");
+		ImGui::Text("Scenes:");
 		ImGui::SameLine(150);
 		ImGui::Text("None");
 	}
@@ -1201,7 +1202,7 @@ void renderWindowCameras() {
 
 	std::vector<std::string> viewports;
 	RENDERMANAGER->getViewportNames(&viewports);
-	int indexvp;
+	static int indexvp;
 	if (combo("Viewport", viewports, vpName, &indexvp))
 		c->setProps((AttributeValues::StringProperty)Camera::VIEWPORT, viewports[indexvp]);
 	ImGui::Separator();
@@ -1637,6 +1638,24 @@ void renderWindowTextureLibrary() {
 	ImGui::EndChild();
 	ImGui::NewLine();
 	ImGui::NewLine();
+
+	if (ImGui::Button("Add new texture")) {
+		ImGuiFileDialog::Instance()->OpenDialog("ChooseTextureFileDlgKey", "Choose 3D Model File", ".*\0.bmp\0.dds\0.hdr\0.gif\0.jpg\0.png\0.tga", ".");
+	}
+	if (ImGuiFileDialog::Instance()->FileDialog("ChooseTextureFileDlgKey"))
+	{
+		// action if OK
+		if (ImGuiFileDialog::Instance()->IsOk == true)
+		{
+			std::string filePathName = ImGuiFileDialog::Instance()->GetFinalFileName();
+			std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+			printf("%s %s\n", filePathName.c_str(), filePath.c_str());
+			RESOURCEMANAGER->addTexture(filePathName);
+		}
+		ImGuiFileDialog::Instance()->CloseDialog("ChooseTextureFileDlgKey");
+	}
+
+
 	if (textureIndex != 0) {
 
 		ITexture* t = RESOURCEMANAGER->getTextureByID(textureIndex);
@@ -1649,12 +1668,14 @@ void renderWindowTextureLibrary() {
 				std::string sname = nau::system::File::Validate(s);
 				nau::loader::ITextureLoader::Save(t, nau::loader::ITextureLoader::PNG);
 			}
+			ImGui::SameLine();
 			if (ImGui::Button("Save RAW")) {
 				char name[256];
 				sprintf(name, "%s.raw", t->getLabel().c_str());
 				std::string sname = nau::system::File::Validate(name);
 				nau::loader::ITextureLoader::SaveRaw(t, sname);
 			}
+			ImGui::SameLine();
 			if (ImGui::Button("Save HDR")) {
 				std::string s = t->getLabel() + ".hdr";
 				std::string sname = nau::system::File::Validate(s);
@@ -1670,7 +1691,7 @@ void renderWindowTextureLibrary() {
 			createOrderedGrid(ITexture::GetAttribs(), (AttributeValues*)t, order, true);
 		}
 	}
-		
+
 }
 
 
@@ -1903,6 +1924,7 @@ void renderWindowShaderLibrary() {
 	std::vector<std::string> pgf = p->getShaderFiles(IProgram::ShaderType::GEOMETRY_SHADER);
 	std::vector<std::string> ptcf = p->getShaderFiles(IProgram::ShaderType::TESS_CONTROL_SHADER);
 	std::vector<std::string> ptef = p->getShaderFiles(IProgram::ShaderType::TESS_EVALUATION_SHADER);
+	std::vector<std::string> ptf = p->getShaderFiles(IProgram::ShaderType::TASK_SHADER);
 	std::vector<std::string> pmf = p->getShaderFiles(IProgram::ShaderType::MESH_SHADER);
 	std::vector<std::string> pff = p->getShaderFiles(IProgram::ShaderType::FRAGMENT_SHADER);
 	std::vector<std::string> pcf = p->getShaderFiles(IProgram::ShaderType::COMPUTE_SHADER);
@@ -1921,6 +1943,7 @@ void renderWindowShaderLibrary() {
 	displayGroup("Geometry:", pgf);
 	displayGroup("Tess Control:", ptcf);
 	displayGroup("Tess Eval:", ptef);
+	displayGroup("Task:", ptf);
 	displayGroup("Mesh:", pmf);
 	displayGroup("Fragment:", pff);
 	displayGroup("Compute:", pcf);

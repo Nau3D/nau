@@ -1,9 +1,9 @@
 #version 460
 #extension GL_NV_mesh_shader : require
  
-layout(local_size_x=1) in;
+layout(local_size_x=4) in;
  
-layout(max_vertices=3, max_primitives=1) out;
+layout(triangles, max_vertices=12, max_primitives=4) out;
  
 layout(triangles) out;
  
@@ -19,9 +19,6 @@ out gl_MeshPerVertexNV {
 out uint gl_PrimitiveCountNV;
 out uint gl_PrimitiveIndicesNV[];
 
-
-
-
 uniform mat4 m_pvm;
 uniform mat3 m_normal;
 
@@ -32,19 +29,18 @@ uniform float scale = 1;
  
 void main()
 {
-  gl_MeshVerticesNV[0].gl_Position = m_pvm * vec4(vertices[0] * scale, 1.0); 
-  gl_MeshVerticesNV[1].gl_Position = m_pvm * vec4(vertices[1] * scale, 1.0); 
-  gl_MeshVerticesNV[2].gl_Position = m_pvm * vec4(vertices[2] * scale, 1.0); 
+    uint thread_id = gl_LocalInvocationID.x;
+    gl_MeshVerticesNV[0 + 3*thread_id].gl_Position = m_pvm * (vec4(vertices[0] * scale, 1.0) + vec4(thread_id,0,0,0)); 
+    gl_MeshVerticesNV[1 + 3*thread_id].gl_Position = m_pvm * (vec4(vertices[1] * scale, 1.0) + vec4(thread_id,0,0,0)); 
+    gl_MeshVerticesNV[2 + 3*thread_id].gl_Position = m_pvm * (vec4(vertices[2] * scale, 1.0) + vec4(thread_id,0,0,0)); 
  
-  v_out[0].normal = m_normal * vec3(0.0, 0.0, 1.0);
-  v_out[1].normal = m_normal * vec3(0.0, 0.0, 1.0);
-  v_out[2].normal = m_normal * vec3(0.0, 0.0, 1.0);
+    v_out[0 + 3*thread_id].normal = m_normal * vec3(0.0, 0.0, 1.0);
+    v_out[1 + 3*thread_id].normal = m_normal * vec3(0.0, 0.0, 1.0);
+    v_out[2 + 3*thread_id].normal = m_normal * vec3(0.0, 0.0, 1.0);
  
-  gl_PrimitiveIndicesNV[0] = 0;
-  gl_PrimitiveIndicesNV[1] = 1;
-  gl_PrimitiveIndicesNV[2] = 2;
+    gl_PrimitiveIndicesNV[0 + 3*thread_id] = 0 + 3*thread_id;
+    gl_PrimitiveIndicesNV[1 + 3*thread_id] = 1 + 3*thread_id;
+    gl_PrimitiveIndicesNV[2 + 3*thread_id] = 2 + 3*thread_id;
 
-
-
-  gl_PrimitiveCountNV = 1;
+    gl_PrimitiveCountNV = 4;
 }

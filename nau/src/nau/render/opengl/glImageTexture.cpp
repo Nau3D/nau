@@ -99,7 +99,7 @@ GLImageTexture::prepare() {
 	nau::material::ITexture* t = RESOURCEMANAGER->getTextureByID(m_UIntProps[TEX_ID]);
 	RENDERER->addImageTexture(m_IntProps[UNIT], this);
 	
-	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) && m_BoolProps[CLEAR]) {
+	if (sup->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_TEXTURE_LEVEL) && m_BoolProps[CLEAR]) {
 		t->clearLevel(m_UIntProps[LEVEL]);
 	}
 	glBindImageTexture(m_IntProps[UNIT], m_UIntProps[TEX_ID], m_UIntProps[LEVEL],

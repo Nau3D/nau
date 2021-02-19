@@ -364,8 +364,8 @@ Pass::doPass (void) {
 
 		std::shared_ptr<IScene> &aScene = RENDERMANAGER->getScene (*scenesIter);
 		{
-			PROFILE("View Frustum Culling");
-		//	aScene->findVisibleSceneObjects(&sceneObjects, camFrustum, *aCam);
+			//PROFILE("View Frustum Culling");
+			//aScene->findVisibleSceneObjects(&sceneObjects, camFrustum, *aCam);
 			aScene->getAllObjects(&sceneObjects);
 		}
 		
@@ -481,8 +481,10 @@ Pass::addViewport(std::shared_ptr<Viewport> aViewport) {
 
 std::shared_ptr<Viewport>
 Pass::getViewport() {
-
-	return (m_Viewport[0]);
+	if (m_Viewport.size() != 0)
+		return (m_Viewport[0]);
+	else
+		return NULL;
 }
 
 

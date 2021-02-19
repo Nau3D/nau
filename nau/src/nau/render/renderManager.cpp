@@ -598,12 +598,16 @@ RenderManager::hasScene (const std::string &sceneName) {
 void
 RenderManager::getSceneNames(std::vector<std::string> *names) {
 
-	std::map<std::string, std::shared_ptr<IScene>>::iterator iter = m_Scenes.begin();
-
-	for( ; iter != m_Scenes.end(); ++iter ) {
-		if ((*iter).second->getClassName() != "SceneAux")
-      names->push_back((*iter).first); 
-    }
+	for (auto s : m_Scenes) {
+		if (s.first.compare(0,2,"__"))
+			names->push_back(s.first);
+	}
+//	std::map<std::string, std::shared_ptr<IScene>>::iterator iter = m_Scenes.begin();
+//
+//	for( ; iter != m_Scenes.end(); ++iter ) {
+//#	if ((*iter).second->getClassName() != "SceneAux")
+//	      names->push_back((*iter).first); 
+//    }
 }
 
 

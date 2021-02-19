@@ -18,6 +18,7 @@ Frustum::~Frustum(void)
 
 #ifdef NAU_OPENGL
 #define m(row, col) m[col*4+row-5]
+//define m(row, col) m.at(col-1,row-1)
 #elif NAU_DIRECTX
 #endif
 
@@ -101,43 +102,3 @@ Frustum::isVolumeInside (const IBoundingVolume *aBoundingVolume, bool conservati
 }
 
 
-
-
-//int
-//Frustum::isVolumeInside (IBoundingVolume &aBoundingVolume)
-//{
-//	int result = Frustum::INSIDE, out, in;
-//
-//	vec3 bbMin (aBoundingVolume.getMin()), bbMax (aBoundingVolume.getMax());
-//
-//	for (int i = 0; i < 6; i++){
-//		out = 0;
-//		in = 0;
-//
-//		vec3 positiveVec (bbMin);
-//		vec3 negativeVec (bbMax);
-//
-//		const vec3& normal = m_Planes[i].getNormal();
-//
-//		if (normal.x >= 0){
-//			positiveVec.x = bbMax.x;
-//			negativeVec.x = bbMin.x;
-//		}
-//		if (normal.y >= 0){
-//			positiveVec.y = bbMax.y;
-//			negativeVec.y = bbMin.y;
-//		}
-//		if (normal.z >= 0){
-//			positiveVec.z = bbMax.z;
-//			negativeVec.z = bbMin.z;
-//		}
-//
-//		if (m_Planes[i].distance (positiveVec) < 0){
-//			return Frustum::OUTSIDE;
-//		} else if (m_Planes[i].distance (negativeVec) < 0){
-//			result = Frustum::INTERSECT;
-//		}
-//
-//	}
-//	return result;
-//}

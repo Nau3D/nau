@@ -161,9 +161,9 @@ std::shared_ptr<Pass>
 PassFactory::create (const std::string &type, const std::string &name) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
-	if (type == "compute" && !sup->apiSupport(IAPISupport::COMPUTE_SHADER))
+	if (type == "compute" && !sup->apiSupport(IAPISupport::APIFeatureSupport::COMPUTE_SHADER))
 		NAU_THROW("Compute Shader is not supported");
-	if (type == "mesh" && !sup->apiSupport(IAPISupport::MESH_SHADER))
+	if (type == "mesh" && !sup->apiSupport(IAPISupport::APIFeatureSupport::MESH_SHADER))
 		NAU_THROW("Mesh Shader is not supported");
 
 	if (m_Creator.count(type))
@@ -188,9 +188,9 @@ bool
 PassFactory::isClass(const std::string &name) {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
-	if (name == "compute" && !sup->apiSupport(IAPISupport::COMPUTE_SHADER))
+	if (name == "compute" && !sup->apiSupport(IAPISupport::APIFeatureSupport::COMPUTE_SHADER))
 		return false;
-	if (name == "mesh" && !sup->apiSupport(IAPISupport::MESH_SHADER))
+	if (name == "mesh" && !sup->apiSupport(IAPISupport::APIFeatureSupport::MESH_SHADER))
 		return false;
 
 	if (m_Creator.count(name) || m_PluginCreator.count(name))

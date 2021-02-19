@@ -11,7 +11,8 @@ std::vector<std::string> Attribute::m_DummyVS;
 
 
 Attribute::Attribute() : m_Id(-1), 
-			m_RangeDefined(false), m_ListDefined(false) {
+			m_RangeDefined(false), m_ListDefined(false), m_MustExist(false),
+			m_ReadOnlyFlag(false), m_Requires(IAPISupport::APIFeatureSupport::OK), m_Semantics(Semantics::NONE){
 
 }
 

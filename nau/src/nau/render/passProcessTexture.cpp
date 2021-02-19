@@ -10,11 +10,11 @@ bool
 PassProcessTexture::Init() {
 
 	// BOOL
-	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new NauInt(false), NULL,NULL, IAPISupport::CLEAR_TEXTURE));
+	Attribs.add(Attribute(CLEAR, "CLEAR", Enums::DataType::BOOL, false, new NauInt(false), NULL,NULL, IAPISupport::APIFeatureSupport::CLEAR_TEXTURE));
 	Attribs.add(Attribute(MIPMAP, "MIPMAP", Enums::DataType::BOOL, false, new NauInt(false)));
 
 	// INT
-	Attribs.add(Attribute(CLEAR_LEVEL, "CLEAR_LEVEL", Enums::DataType::INT, false, new NauInt(-1), NULL,NULL, IAPISupport::CLEAR_TEXTURE_LEVEL));
+	Attribs.add(Attribute(CLEAR_LEVEL, "CLEAR_LEVEL", Enums::DataType::INT, false, new NauInt(-1), NULL,NULL, IAPISupport::APIFeatureSupport::CLEAR_TEXTURE_LEVEL));
 
 	//#ifndef _WINDLL
 	NAU->registerAttributes("PASS_POST_PROCESS_TEXTURE", &Attribs);
@@ -49,9 +49,9 @@ PassProcessTexture::process() {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
 
-	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE) && m_BoolProps[CLEAR])
+	if (sup->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_TEXTURE) && m_BoolProps[CLEAR])
 		m_Tex->clear();
-	if (sup->apiSupport(IAPISupport::CLEAR_TEXTURE_LEVEL) && m_IntProps[CLEAR_LEVEL] >= 0)
+	if (sup->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_TEXTURE_LEVEL) && m_IntProps[CLEAR_LEVEL] >= 0)
 		m_Tex->clearLevel(m_IntProps[CLEAR_LEVEL]);
 	if (m_BoolProps[MIPMAP])
 		m_Tex->generateMipmaps();

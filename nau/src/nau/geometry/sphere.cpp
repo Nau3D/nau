@@ -73,7 +73,7 @@ Sphere::build() {
 			float cosBeta = cos( i * stepStack - (float)M_PI * 0.5f);
 			vertices->at(i * (slices) + j).set(sinAlpha*cosBeta, sinBeta, cosAlpha*cosBeta);
 			tangents->at(i * (slices) + j).set(cosAlpha, 0, -sinAlpha);
-			normals->at(i * (slices) + j).set(sinAlpha*cosBeta, sinBeta, cosAlpha*cosBeta);
+			normals->at(i * (slices) + j).set(sinAlpha*cosBeta, sinBeta, cosAlpha*cosBeta, 0.0f);
 			textureCoords->at(i * (slices) + j).set(j*1.0f/(slices-1),i*1.0f/(stacks-1), 0.0f);
 		}
 	}

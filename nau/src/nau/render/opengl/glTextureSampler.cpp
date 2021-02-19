@@ -68,7 +68,7 @@ using namespace nau::render;
 
 GLTextureSampler::GLTextureSampler(ITexture *t): ITextureSampler() {
 
-	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS))
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEXTURE_SAMPLERS))
 		glGenSamplers(1, (GLuint *)&(m_IntProps[ID]));
 
 	m_BoolProps[MIPMAP] = t->getPropb(ITexture::MIPMAP);	
@@ -85,7 +85,7 @@ GLTextureSampler::GLTextureSampler(ITexture *t): ITextureSampler() {
 void 
 GLTextureSampler::update() {
 
-	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS)) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEXTURE_SAMPLERS)) {
 		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_MIN_FILTER, m_EnumProps[MIN_FILTER]);
 		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_MAG_FILTER, m_EnumProps[MAG_FILTER]);
 		glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_S, m_EnumProps[WRAP_S]);
@@ -102,7 +102,7 @@ GLTextureSampler::update() {
 void 
 GLTextureSampler::prepare(unsigned int aUnit, int aDim) {
 
-	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS)) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEXTURE_SAMPLERS)) {
 		glBindSampler(aUnit, m_IntProps[ID]);
 	}
 	else {
@@ -125,7 +125,7 @@ GLTextureSampler::prepare(unsigned int aUnit, int aDim) {
 void 
 GLTextureSampler::restore(unsigned int aUnit, int aDim) {
 
-	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS)) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEXTURE_SAMPLERS)) {
 		glBindSampler(aUnit, 0);
 	}
 	else {
@@ -176,7 +176,7 @@ GLTextureSampler::setPrope(EnumProperty prop, int value) {
 
 	m_EnumProps[prop] = (int)v2;
 
-	if (APISupport->apiSupport(IAPISupport::TEXTURE_SAMPLERS)) {
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::TEXTURE_SAMPLERS)) {
 		switch (prop) {
 		case WRAP_S:
 			glSamplerParameteri(m_IntProps[ID], GL_TEXTURE_WRAP_S, m_EnumProps[prop]);

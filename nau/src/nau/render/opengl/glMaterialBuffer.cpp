@@ -14,9 +14,12 @@ GLMaterialBuffer::Init() {
 
 	//Attribs.setDefault("TYPE", new int(GL_ATOMIC_COUNTER_BUFFER));
 
-	Attribs.listAdd("TYPE", "ATOMIC_COUNTER", (int)GL_ATOMIC_COUNTER_BUFFER, IAPISupport::BUFFER_ATOMICS);
-	Attribs.listAdd("TYPE", "SHADER_STORAGE", (int)GL_SHADER_STORAGE_BUFFER, IAPISupport::BUFFER_SHADER_STORAGE);
-	Attribs.listAdd("TYPE", "UNIFORM", (int)GL_UNIFORM_BUFFER, IAPISupport::BUFFER_UNIFORM);
+	Attribs.listAdd("TYPE", "ATOMIC_COUNTER", (int)GL_ATOMIC_COUNTER_BUFFER, IAPISupport::APIFeatureSupport::BUFFER_ATOMICS);
+	Attribs.listAdd("TYPE", "ATOMIC_COUNTER", (int)GL_ATOMIC_COUNTER_BUFFER, IAPISupport::APIFeatureSupport::BUFFER_ATOMICS);
+	Attribs.listAdd("TYPE", "ATOMIC_COUNTER", (int)GL_ATOMIC_COUNTER_BUFFER, IAPISupport::APIFeatureSupport::BUFFER_ATOMICS);
+	Attribs.listAdd("TYPE", "SHADER_STORAGE", (int)GL_SHADER_STORAGE_BUFFER, IAPISupport::APIFeatureSupport::BUFFER_SHADER_STORAGE);
+	Attribs.listAdd("TYPE", "ATOMIC_COUNTER", (int)GL_ATOMIC_COUNTER_BUFFER, IAPISupport::APIFeatureSupport::BUFFER_ATOMICS);
+	Attribs.listAdd("TYPE", "UNIFORM", (int)GL_UNIFORM_BUFFER, IAPISupport::APIFeatureSupport::BUFFER_UNIFORM);
 
 	return true;
 }

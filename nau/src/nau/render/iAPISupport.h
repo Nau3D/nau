@@ -22,8 +22,7 @@ namespace nau
 		{
 		public:	
 
-			enum APIFeatureSupport {
-				OK, // this is required for attribute setting
+			enum class APIFeatureSupport: int {
 				BINDLESS_TEXTURES,
 				BUFFER_ATOMICS,
 				BUFFER_SHADER_STORAGE,
@@ -40,8 +39,9 @@ namespace nau
 				TEX_STORAGE,
 				TEXTURE_SAMPLERS,
 				MESH_SHADER,
-				COUNT_API_SUPPORT
-			} ;
+				TASK_SHADER,
+				OK // this is required for attribute setting. Always keep at the end of the enum
+			};
 
 			static nau_API IAPISupport *GetInstance();
 			virtual void setAPISupport() = 0;

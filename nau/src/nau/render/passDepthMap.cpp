@@ -126,7 +126,7 @@ PassDepthMap::restore (void) {
 void 
 PassDepthMap::doPass (void) {
 
-	// THIS ONLY WORKS WITH ONE DIRECTIONAL LIGHT, MULTIPLE LIGHTS REQUIRE MULTIPLE PASSES //
+	// THIS ONLY WORKS WITH A SINGLE DIRECTIONAL LIGHT
 	
 	Frustum frustum;
 	float cNear, cFar;
@@ -161,7 +161,8 @@ PassDepthMap::doPass (void) {
 		std::shared_ptr<IScene> &aScene = RENDERMANAGER->getScene (*scenesIter);
 
 		std::vector<std::shared_ptr<SceneObject>> sceneObjects;
-		aScene->findVisibleSceneObjects(&sceneObjects, frustum, *m_LightCamera, true);
+		//aScene->findVisibleSceneObjects(&sceneObjects, frustum, *m_LightCamera, true);
+		aScene->getAllObjects(&sceneObjects);
 		
 		for (auto &so: sceneObjects) {
 			RENDERMANAGER->addToQueue (so, m_MaterialMap);

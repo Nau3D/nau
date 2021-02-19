@@ -73,7 +73,7 @@ PassMesh::restore (void) {
 void
 PassMesh::doPass (void) {
 
-	PROFILE_GL("Mesh shader");
+	PROFILE_GL("Task-Mesh shader");
 	RENDERER->drawMeshTasks(m_Offset, m_UIntProps[DIM_X]);
 }
 

@@ -29,7 +29,7 @@ void main() {
 	
 	vec4 spec = vec4(0.0);
 	if (intensity > 0) {
-		float cos_eye = -t.t;
+		float cos_eye = -dot(t,e);
 		float sin_eye = sqrt(1.0 - cos_eye* cos_eye);
 		float cos_light = dot (t,DataIn.l_dir);
 		float sin_light = sqrt(1.0 - cos_light * cos_light);

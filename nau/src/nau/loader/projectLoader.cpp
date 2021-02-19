@@ -1965,7 +1965,7 @@ ProjectLoader::loadAssets (TiXmlHandle &hRoot, std::vector<std::string>  &matLib
 
 	loadEvents(handle);
 
-	if (APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
+	if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::BUFFER_ATOMICS))
 		loadAtomicSemantics(handle);
 
 	pElem = handle.FirstChild("materialLibs").FirstChild("materialLib").Element();
@@ -3709,7 +3709,7 @@ ProjectLoader::loadPassMeshSettings(TiXmlHandle hPass, Pass* aPass) {
 		// Read value or buffer id for dimX
 		AttribSet* attrs = aPass->getAttribSet();
 		std::unique_ptr<Attribute>& attr = attrs->get(PassMesh::DIM_X, Enums::UINT);
-		bool res = TIXML_SUCCESS != pElem->QueryUnsignedAttribute("count", &r1);
+		bool res = TIXML_SUCCESS == pElem->QueryUnsignedAttribute("count", &r1);
 		if (!res && pAtX == NULL) {
 			NAU_THROW("File %s\nPass %s\ncount or buffer are not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 		}
@@ -4255,7 +4255,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 					NAU_THROW("File %s\nPass %s\nInjection map error: arrayOfImageTextures map error", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 				}
 
-				if (!APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE))
+				if (!APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE))
 					NAU_THROW("File %s\nPass %s\nImage Texture Not Supported with OpenGL Version %d", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), APISupport->getVersion());
 
 				int unit;
@@ -4369,7 +4369,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 		pElemNode = pElem->FirstChild("imageTextures");
 		if (pElemNode) {
 
-			if (!APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE))
+			if (!APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE))
 				NAU_THROW("Image textures require OpenGL 4.2 or greater. Current version is %d", APISupport->getVersion());
 
 			pElemAux = pElemNode->FirstChildElement("imageTexture");
@@ -4407,7 +4407,7 @@ ProjectLoader::loadPassInjectionMaps(TiXmlHandle hPass, Pass *aPass)
 
 		pElemNode = pElem->FirstChild("buffers");
 		if (pElemNode) {
-			if (!APISupport->apiSupport(IAPISupport::BUFFER_ATOMICS))
+			if (!APISupport->apiSupport(IAPISupport::APIFeatureSupport::BUFFER_ATOMICS))
 				NAU_THROW("Buffers require OpenGL 4.2 or greater. Current version is %d", APISupport->getVersion());
 
 			pElemAux = pElemNode->FirstChildElement("buffer");
@@ -4614,14 +4614,14 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 				loadPassRTSettings(hPass, aPass);
 #endif
 			if (passClass == "compute") {
-				if (APISupport->apiSupport(IAPISupport::COMPUTE_SHADER))
+				if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::COMPUTE_SHADER))
 					loadPassComputeSettings(hPass, aPass);
 				else {
 					NAU_THROW("Compute Shader is not supported");
 				}
 			}
 			if (passClass == "mesh") {
-				if (APISupport->apiSupport(IAPISupport::MESH_SHADER))
+				if (APISupport->apiSupport(IAPISupport::APIFeatureSupport::MESH_SHADER))
 					loadPassMeshSettings(hPass, aPass);
 				else {
 					NAU_THROW("Mesh Shader is not supported");
@@ -5246,7 +5246,7 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		
 		shaderFiles.resize(IProgram::SHADER_COUNT);
 
-		std::vector<std::string> tags = {"vs", "gs", "tc", "te", "ps", "cs", "ms"};
+		std::vector<std::string> tags = {"vs", "gs", "tc", "te", "ps", "cs", "ts", "ms"};
 
 		for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 			const char *pstr = pElem->Attribute (tags[i].c_str());
@@ -5313,14 +5313,14 @@ ProjectLoader::loadMatLibShaders(TiXmlHandle hRoot, MaterialLib *aLib, std::stri
 		}
 
 		// check API support
-		if (shaderFiles[IProgram::COMPUTE_SHADER].size() && !APISupport->apiSupport(IAPISupport::COMPUTE_SHADER)) {
+		if (shaderFiles[IProgram::COMPUTE_SHADER].size() && !APISupport->apiSupport(IAPISupport::APIFeatureSupport::COMPUTE_SHADER)) {
 			NAU_THROW("Mat Lib %s\nShader %s: Compute shader is not allowed with OpenGL < 4.3", aLib->getName().c_str(), pProgramName);
 		}
-		if (shaderFiles[IProgram::GEOMETRY_SHADER].size() && !APISupport->apiSupport(IAPISupport::GEOMETRY_SHADER)) {
+		if (shaderFiles[IProgram::GEOMETRY_SHADER].size() && !APISupport->apiSupport(IAPISupport::APIFeatureSupport::GEOMETRY_SHADER)) {
 			NAU_THROW("Mat Lib %s\nShader %s: Geometry Shader shader is not allowed with OpenGL < 3.2", aLib->getName().c_str(), pProgramName);
 		}
 		if ((shaderFiles[IProgram::TESS_CONTROL_SHADER].size() || shaderFiles[IProgram::TESS_EVALUATION_SHADER].size()) &&
-						!APISupport->apiSupport(IAPISupport::TESSELATION_SHADERS)) {
+						!APISupport->apiSupport(IAPISupport::APIFeatureSupport::TESSELATION_SHADERS)) {
 			NAU_THROW("Mat Lib %s\nShader %s: Tesselation shaders are not allowed with OpenGL < 4.0", aLib->getName().c_str(), pProgramName);
 		}
 
@@ -5488,7 +5488,7 @@ ProjectLoader::loadMaterialImageTextures(TiXmlHandle handle, MaterialLib *aLib, 
 	for ( ; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
 		//const char *pTextureName = pElemAux->GetText();
 
-		if (!APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE))
+		if (!APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE))
 			NAU_THROW("MatLib %s\nMaterial %s: Image Texture Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), APISupport->getVersion());
 
 		int unit;
@@ -5545,7 +5545,7 @@ ProjectLoader::loadMaterialArrayOfImageTextures(TiXmlHandle handle, MaterialLib 
 	for (; 0 != pElemAux; pElemAux = pElemAux->NextSiblingElement()) {
 		//const char *pTextureName = pElemAux->GetText();
 
-		if (!APISupport->apiSupport(IAPISupport::IMAGE_TEXTURE))
+		if (!APISupport->apiSupport(IAPISupport::APIFeatureSupport::IMAGE_TEXTURE))
 			NAU_THROW("MatLib %s\nMaterial %s: Image Texture Not Supported with OpenGL Version %d", aLib->getName().c_str(), aMat->getName().c_str(), APISupport->getVersion());
 
 		int unit;

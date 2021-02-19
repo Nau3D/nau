@@ -34,7 +34,7 @@ GLBuffer::GLBuffer(std::string label): IBuffer(), m_LastBound((int)GL_ARRAY_BUFF
 	m_BufferMapPointer = NULL;
 	glGenBuffers(1, (GLuint *)&m_IntProps[ID]);
 	
-	if (sup->apiSupport(IAPISupport::OBJECT_LABELS)) {
+	if (sup->apiSupport(IAPISupport::APIFeatureSupport::OBJECT_LABELS)) {
 		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 		glObjectLabel(GL_BUFFER, m_IntProps[ID], (GLsizei)m_Label.size(), m_Label.c_str());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -78,7 +78,7 @@ void
 GLBuffer::clear() {
 
 	IAPISupport *sup = IAPISupport::GetInstance();
-	if (sup->apiSupport(IAPISupport::CLEAR_BUFFER)) {
+	if (sup->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_BUFFER)) {
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_IntProps[ID]);
 		glClearBufferData(GL_ARRAY_BUFFER, GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
@@ -169,7 +169,7 @@ GLBuffer::setPropui(UIntProperty  prop, unsigned int value) {
 		glBufferData(GL_ARRAY_BUFFER, m_UIntProps[SIZE], NULL, GL_STATIC_DRAW);
 
 		IAPISupport *sup = IAPISupport::GetInstance();
-		if (sup->apiSupport(IAPISupport::CLEAR_BUFFER)) {
+		if (sup->apiSupport(IAPISupport::APIFeatureSupport::CLEAR_BUFFER)) {
 			glClearNamedBufferData(m_IntProps[ID], GL_R8, GL_RED, GL_UNSIGNED_BYTE, NULL);
 		}		
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

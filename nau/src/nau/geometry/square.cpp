@@ -39,10 +39,10 @@ Square::Square(void) : Primitive() {
 	textureCoords->at (Square::BOTTOM_RIGHT).set	(n,    0.0f, 0.0f);
 	textureCoords->at (Square::BOTTOM_LEFT).set	(0.0f, 0.0f, 0.0f);
 
-	normals->at (Square::TOP_LEFT).set		( 0.0f, 1.0f, 0.0f);
-	normals->at (Square::TOP_RIGHT).set		( 0.0f, 1.0f, 0.0f);
-	normals->at (Square::BOTTOM_RIGHT).set	( 0.0f, 1.0f, 0.0f);	
-	normals->at (Square::BOTTOM_LEFT).set	( 0.0f, 1.0f, 0.0f); 	
+	normals->at (Square::TOP_LEFT).set		( 0.0f, 1.0f, 0.0f, 0.0f);
+	normals->at (Square::TOP_RIGHT).set		( 0.0f, 1.0f, 0.0f, 0.0f);
+	normals->at (Square::BOTTOM_RIGHT).set	( 0.0f, 1.0f, 0.0f, 0.0f);
+	normals->at (Square::BOTTOM_LEFT).set	( 0.0f, 1.0f, 0.0f, 0.0f);
 
 	std::shared_ptr<VertexData> &vertexData = getVertexData();
 

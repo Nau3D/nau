@@ -9,6 +9,7 @@
 			fileNegY="TextureCubeMaps/cubemaphouse/cm_bottom.jpg"
 			filePosZ="TextureCubeMaps/cubemaphouse/cm_front.jpg"
 			fileNegZ="TextureCubeMaps/cubemaphouse/cm_back.jpg"	
+            mipmap="true"
 		/>
 	</textures>
 
