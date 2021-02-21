@@ -64,7 +64,9 @@ using namespace nau::loader;
 using namespace nau::math;
 using namespace nau::material;
 using namespace nau::render;
+#if NAU_RT == 1
 using namespace nau::render::rt;
+#endif
 using namespace nau::scene;
 using namespace nau::geometry;
 using namespace nau::system;
