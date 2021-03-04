@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<project name="Optix Test" width=512 height=512>
+	<assets>
+        <attributes>
+            <attribute name="slice" type="RENDERER" data="FLOAT" value=0.0 />
+        </attributes>
+		<scenes>
+			<scene name="MainScene" >
+				<file name="../../../models/cube.obj" />
+			</scene>
+		</scenes>
+		<materialLibs>   
+			<materialLib filename="optix.mlib"/>
+		</materialLibs>
+	</assets>
+	<pipelines>
+		<pipeline name="optix test" default="true">
+
+            <pass class="compute" name="fillTexture">
+                <material name="fillTexture" fromLibrary="Optix Ray Tracer Render Target" dimX=256, dimY=256 dimZ=256 />
+            </pass>
+
+			<pass class="rt" name="pass1">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<renderTarget name="test" fromLibrary="Optix Ray Tracer Render Target" />
+
+				<rtRayTypes>
+					<rayType name="Phong"/> 
+				</rtRayTypes>
+
+				<rtVertexAttributes>
+					<attribute name="position"/>
+				</rtVertexAttributes>
+
+				<rtEntryPoint>
+					<rayGen file="optix.ptx" proc="__raygen__renderFrame"/> 
+				</rtEntryPoint>
+                
+				<rtDefaultMaterial>
+					<rayType name="Phong">
+						<rtProgram type="ANY_HIT" file="optix.ptx" proc="__anyhit__phong"/> 
+						<rtProgram type="CLOSEST_HIT" file="optix.ptx" proc="__closesthit__phong"/> 
+						<rtProgram type="MISS" 		 file="optix.ptx" proc="__miss__phong"/> 
+					</rayType>
+				</rtDefaultMaterial>
+                <rtGlobalParams>
+                    <param name="tex" type="TEXTURE" context="Optix Ray Tracer Render Target::a3dtex" component="ID" />
+                    <param name="slice" type="RENDERER" context="CURRENT" component="slice" />
+                </rtGlobalParams>
+			</pass>
+
+
+			<pass class="quad" name="pass2">
+				<texture name="offscreenrender" fromLibrary="Optix Ray Tracer Render Target" />
+			</pass>
+
+
+		</pipeline>
+	</pipelines>
+    <interface>
+        <window label="settings">
+            <var label="Slice" type="RENDERER" context="CURRENT" component="slice"
+                def="min=0 max=1" />
+        </window>
+    </interface>
+</project>

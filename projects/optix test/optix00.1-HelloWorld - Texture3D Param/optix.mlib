@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<materialLib name="Optix Ray Tracer Render Target">
+
+    <textures>
+        <texture name="a3dtex" >
+            <WIDTH value =256/>
+            <HEIGHT value =256/>
+            <DEPTH value =256/>
+            <INTERNAL_FORMAT value = "RG32F" />
+        </texture>
+    </textures>
+
+
+	<renderTargets>
+		<renderTarget name ="test">
+			<SIZE width=512 height=512 />
+			<colors>
+				<color name="offscreenrender" internalFormat="RGBA" />
+			</colors>
+		</renderTarget>
+	</renderTargets>
+
+
+    <shaders>
+        <shader name="fillTexture" cs="fillTexture.comp" />
+    </shaders>
+
+    <materials>
+        <material name = "fillTexture" >
+
+            <shader name="fillTexture" >
+				<values>
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+														id=1 component="UNIT" />
+				</values>
+            </shader>
+            <imageTextures>
+                <imageTexture UNIT=1 texture="a3dtex" >
+                    <ACCESS value="WRITE_ONLY" />
+                    <LEVEL value=0 />
+                    <CLEAR value=true />
+                </imageTexture>
+            </imageTextures>
+
+        </material>
+    </materials>
+</materialLib>

@@ -60,7 +60,7 @@ namespace nau {
 				// create cuda textures from OpenGL textures
 				bool processTextures();
 				void unregisterTexture(int id);
-				void registerTexture(int id);
+				//void registerTexture(int id);
 				//bool unregisterAllTextures();
 
 			protected:

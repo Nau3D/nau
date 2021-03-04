@@ -2665,7 +2665,7 @@ ProjectLoader::loadPassRTSettings(TiXmlHandle hPass, Pass *aPass) {
 					ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pVarName, pContext);
 			}
 			else {
-				p->addParam(pVarName, pType, s_pFullName, pComponent, id);
+				p->addParam(pVarName, pType, pContext, pComponent, id);
 			}
 		}
 

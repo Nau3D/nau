@@ -52,8 +52,8 @@ RTProgramManager::getSBT()
 bool
 RTProgramManager::typeIsOK(ITexture* t) {
 
-	if (t->getPrope(ITexture::DIMENSION) != GL_TEXTURE_2D)
-		return false;
+	//if (t->getPrope(ITexture::DIMENSION) != GL_TEXTURE_2D)
+	//	return false;
 
 	int format = t->getPrope(ITexture::FORMAT);
 
@@ -73,16 +73,24 @@ RTProgramManager::processTextures() {
 
 		ITexture *t = RESOURCEMANAGER->getTexture(i);
 
+		int dim = t->getPrope(ITexture::DIMENSION);
 		// initially offer support for 2D textures only
-		if (t->getPrope(ITexture::DIMENSION) == GL_TEXTURE_2D && typeIsOK(t)) {
+		if ((dim == GL_TEXTURE_2D || dim == gl::GL_TEXTURE_3D) && typeIsOK(t)) {
 
 			try {
 				int id = t->getPropi(ITexture::ID);
 				//if (id != 39) {
 					m_Textures[id] = {};
 
-					CUDA_CHECK(cudaGraphicsGLRegisterImage(&m_Textures[id].cgr, id,
-						GL_TEXTURE_2D, cudaGraphicsRegisterFlagsReadOnly));
+					if (dim == GL_TEXTURE_2D) {
+						CUDA_CHECK(cudaGraphicsGLRegisterImage(&m_Textures[id].cgr, id,
+							GL_TEXTURE_2D, cudaGraphicsRegisterFlagsReadOnly));
+					}
+					else {
+						CUDA_CHECK(cudaGraphicsGLRegisterImage(&m_Textures[id].cgr, id,
+							(int)gl::GL_TEXTURE_3D, cudaGraphicsRegisterFlagsReadOnly));
+					}
+
 					CUDA_CHECK(cudaGraphicsMapResources(1, &m_Textures[id].cgr, 0));
 					CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&m_Textures[id].ca, m_Textures[id].cgr, 0, 0));
 
@@ -95,13 +103,19 @@ RTProgramManager::processTextures() {
 					memset(&texDesc, 0, sizeof(texDesc));
 					texDesc.addressMode[0] = cudaAddressModeWrap;
 					texDesc.addressMode[1] = cudaAddressModeWrap;
-					texDesc.filterMode = cudaFilterModePoint;
-					texDesc.readMode = cudaReadModeNormalizedFloat;
+					texDesc.addressMode[2] = cudaAddressModeWrap;
+					if (t->getPrope(ITexture::TYPE) == GL_UNSIGNED_BYTE) {
+						texDesc.filterMode = cudaFilterModeLinear;
+						texDesc.readMode = cudaReadModeNormalizedFloat;
+					}
+					else {
+						texDesc.readMode = cudaReadModeElementType;
+					}
 					texDesc.normalizedCoords = 1;
 					texDesc.maxAnisotropy = 1;
 					texDesc.maxMipmapLevelClamp = 99;
 					texDesc.minMipmapLevelClamp = 0;
-					texDesc.mipmapFilterMode = cudaFilterModePoint;
+					texDesc.mipmapFilterMode = cudaFilterModeLinear;
 					texDesc.borderColor[0] = 1.0f;
 					texDesc.sRGB = 0;
 					CUDA_CHECK(cudaCreateTextureObject(&m_Textures[id].cto, &resDesc, &texDesc, nullptr));
@@ -117,45 +131,6 @@ RTProgramManager::processTextures() {
 }
 
 
-
-void 
-RTProgramManager::registerTexture(int id) {
-
-	try {
-		m_Textures[id] = {};
-
-		CUDA_CHECK(cudaGraphicsGLRegisterImage(&m_Textures[id].cgr, id,
-			GL_TEXTURE_2D, cudaGraphicsRegisterFlagsReadOnly));
-		CUDA_CHECK(cudaGraphicsMapResources(1, &m_Textures[id].cgr, 0));
-		CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&m_Textures[id].ca, m_Textures[id].cgr, 0, 0));
-
-		cudaResourceDesc resDesc;
-		memset(&resDesc, 0, sizeof(resDesc));
-		resDesc.resType = cudaResourceTypeArray;
-		resDesc.res.array.array = m_Textures[id].ca;
-
-		cudaTextureDesc texDesc;
-		memset(&texDesc, 0, sizeof(texDesc));
-		texDesc.addressMode[0] = cudaAddressModeWrap;
-		texDesc.addressMode[1] = cudaAddressModeWrap;
-		texDesc.filterMode = cudaFilterModePoint;
-		texDesc.readMode = cudaReadModeNormalizedFloat;
-		texDesc.normalizedCoords = 1;
-		texDesc.maxAnisotropy = 1;
-		texDesc.maxMipmapLevelClamp = 99;
-		texDesc.minMipmapLevelClamp = 0;
-		texDesc.mipmapFilterMode = cudaFilterModePoint;
-		texDesc.borderColor[0] = 1.0f;
-		texDesc.sRGB = 0;
-		CUDA_CHECK(cudaCreateTextureObject(&m_Textures[id].cto, &resDesc, &texDesc, nullptr));
-	}
-	catch (std::exception const& e) {
-		SLOG("Exception generating texture: %s", e.what());
-		SLOG("Exception in texture id : %d", id);
-	}
-}
-
-
 void
 RTProgramManager::unregisterTexture(int id) {
 
@@ -163,7 +138,7 @@ RTProgramManager::unregisterTexture(int id) {
 		CUDA_CHECK(cudaDestroyTextureObject(m_Textures[id].cto));
 		CUDA_CHECK(cudaGraphicsUnmapResources(1, &m_Textures[id].cgr, 0));
 		CUDA_CHECK(cudaGraphicsUnregisterResource(m_Textures[id].cgr));
-		//CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&m_Textures[id].ca, m_Textures[id].cgr, 0, 0));
+		//CUDA_CHECK(cudaGraphicsSubResourceGetMappedArray(&m_zTextures[id].ca, m_Textures[id].cgr, 0, 0));
 
 	}
 	catch (std::exception const& e) {
