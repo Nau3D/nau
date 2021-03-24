@@ -56,7 +56,7 @@ PassFactory::loadPlugins() {
 
 
 	std::vector<std::string> files;
-	std::string path = "./nauSettings/plugins/";
+	std::string path = nau::system::File::GetAppFolder() + "/nauSettings/plugins/";
 #ifdef WIN32	
 	path += MY_CONFIG;
 	path += "/";

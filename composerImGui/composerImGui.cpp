@@ -1844,11 +1844,12 @@ void renderWindowBufferLibrary() {
 
 						nau::render::opengl::GLMaterialGroup* g = (nau::render::opengl::GLMaterialGroup*)mg.get();
 						int vao = g->getVAO();
-						if (ImGui::TreeNode(std::to_string(vao).c_str())) {
+						std::string title = g->getName() + " - VAO:" + std::to_string(vao);
+						if (ImGui::TreeNode(title.c_str())) {
 							unsigned int indexID = g->getIndexData()->getBufferID();
-							if (ImGui::TreeNode("Index Array")) {
+							if (indexID != 0 && ImGui::TreeNode("Index Array")) {
 								ImGui::Text("ID"); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-								ImGui::Text("Scene # Material"); 
+								ImGui::Text("Scene : Material"); 
 								ImGui::Text(std::to_string(indexID).c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
 								ImGui::Text(nau::system::File::GetName(g->getName()).c_str());
 

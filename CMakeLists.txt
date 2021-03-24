@@ -120,6 +120,9 @@ endif(WIN32)
 
 add_subdirectory(nau)
 add_subdirectory(plugins/passDepthMap)
+
+add_subdirectory(plugins/passGeometry)
+
 if (WIN32)
 	option(NAU_PHYSX_PLUGIN "Add PhysX plugin" OFF)
 	if (NAU_PHYSX_PLUGIN)
