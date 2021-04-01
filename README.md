@@ -81,5 +81,5 @@ To build nau with nvidia's optix 7 support (optional) both cuda and optix are re
 
 # running
 
-* composerImGUI is an almost complete interface to NAU3D with ImGui
+* composerImGUI is an almost complete interface to NAU3D using GLFW and ImGui
 * nauGLUT provides a simple example of a GLUT application working with NAU3D

@@ -154,6 +154,7 @@ RTProgramManager::generateModules()
 	char log[2048];
 	size_t sizeof_log = sizeof(log);
 	try {
+		m_ModuleCompileOptions = {};
 		m_ModuleCompileOptions.maxRegisterCount = OPTIX_COMPILE_DEFAULT_MAX_REGISTER_COUNT;
 		m_ModuleCompileOptions.optLevel = OPTIX_COMPILE_OPTIMIZATION_DEFAULT;
 		m_ModuleCompileOptions.debugLevel = OPTIX_COMPILE_DEBUG_LEVEL_LINEINFO;
@@ -166,7 +167,7 @@ RTProgramManager::generateModules()
 		m_PipelineCompileOptions.exceptionFlags = OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW | OPTIX_EXCEPTION_FLAG_TRACE_DEPTH  | OPTIX_EXCEPTION_FLAG_DEBUG; // TODO: should be OPTIX_EXCEPTION_FLAG_STACK_OVERFLOW;
 		m_PipelineCompileOptions.pipelineLaunchParamsVariableName = "optixLaunchParams";
 
-		m_PipelineLinkOptions.overrideUsesMotionBlur = false;
+		//m_PipelineLinkOptions.overrideUsesMotionBlur = false;
 		m_PipelineLinkOptions.maxTraceDepth = 20;
 
 
