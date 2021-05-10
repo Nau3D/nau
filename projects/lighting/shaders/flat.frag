@@ -6,7 +6,7 @@ uniform	float shininess;
 
 in Data {
 	vec4 eye;
-	vec3 normal;
+	flat vec3 normal;
 	vec3 l_dir;
 } DataIn;
 

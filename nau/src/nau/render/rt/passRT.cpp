@@ -358,7 +358,7 @@ void
 PassRT::setRenderTarget(nau::render::IRenderTarget* rt) {
 
 	// do I havo to use this? compiler complains if no namespace is defined ...
-	GLuint k = (GLuint)gl::glGetError();
+	//GLuint k = (GLuint)gl::glGetError();
 	if (rt == NULL) {
 		//if (m_RenderTarget != NULL) 
 		//	delete m_Viewport;

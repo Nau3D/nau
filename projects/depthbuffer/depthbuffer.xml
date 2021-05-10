@@ -49,6 +49,7 @@
 					<scene name="MainScene" />
 				</scenes>
 				<camera name="MainCamera" />
+                <viewport name="SmallViewport1" />
 				<renderTarget name="depth" fromLibrary="Depth Buffer"/>
 				<materialMaps>
 					<map fromMaterial="*" toLibrary="Depth Buffer" toMaterial="depthOnlyNoCull" />

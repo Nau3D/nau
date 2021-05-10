@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<project name="Side by side" width=1024 height=768 >
+	<assets>
+        <attributes>
+            <attribute name="shininess" type="RENDERER" data="FLOAT" value="128" />
+        </attributes>
+		<scenes>
+			<scene name="MainScene" param="UNITIZE">
+				<file name="../../models/geom.obj"/>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="MainViewport" >
+				<ORIGIN x = 0 y = 0 />
+				<SIZE width="0.66" height="1"/>
+				<CLEAR_COLOR r="1" g="1.0" b="1.0" />
+			</viewport>
+			
+			<viewport name="SmallViewport1" >
+				<ORIGIN  x="0.66" y="0.5" />
+				<SIZE width=".34"  height="0.5" />
+				<CLEAR_COLOR  r="1.0" g="1.0" b="0.95" />
+			</viewport>
+			
+			<viewport name="SmallViewport2" >
+				<ORIGIN x=".66" y="0.0" />
+				<SIZE width=".34"  height="0.5" />
+				<CLEAR_COLOR  r="1.0" g="0.95" b="1.0" />
+			</viewport>
+			
+		</viewports>
+		
+		<cameras>
+			<camera name="MainCamera">
+				<viewport name="MainViewport" />
+				<projection TYPE="PERSPECTIVE" FOV="60.0" NEAR="0.1" FAR="100.0" />
+				<POSITION x="1.2" y="0.845" z="-1.32" />
+				<VIEW x="-0.49" y="-0.59" z="0.64" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun" >
+				<DIRECTION x="1" y="-1" z="1" />
+			</light>
+		</lights>
+		
+		<materialLibs>
+			<materialLib filename="lighting.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="lighting" defaultCamera="MainCamera">
+
+			<pass class="default" name="amb">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="SmallViewport1" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+                <injectionMaps>
+                    <map toMaterial="*" >
+                        <shader fromLibrary = "Lighting" fromMaterial="amb" />
+                    </map>
+                </injectionMaps>
+			</pass> 
+
+			<pass class="default" name="diffuse">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="SmallViewport2" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+                <injectionMaps>
+                    <map toMaterial="*" >
+                        <shader fromLibrary = "Lighting" fromMaterial="diffPerPixel" />
+                    </map>
+                </injectionMaps>
+			</pass> 
+			
+			<pass class="default" name="combined">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<viewport name="MainViewport" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+                <injectionMaps>
+                    <map toMaterial="*" >
+                        <shader fromLibrary = "Lighting" fromMaterial="diffAmbPerPixel" />
+                    </map>
+                </injectionMaps>
+			</pass> 
+
+		</pipeline>
+	</pipelines>
+</project>

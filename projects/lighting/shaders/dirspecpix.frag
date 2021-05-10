@@ -33,5 +33,5 @@ void main() {
 		// compute the specular term into spec
 		spec = specular * pow(intSpec,shininess);
 	}
-	colorOut = max(intensity *  diffuse + spec, diffuse * 0.35);
+	colorOut = spec;
 }

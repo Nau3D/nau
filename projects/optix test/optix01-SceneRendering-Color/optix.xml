@@ -51,7 +51,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-
+                <viewport name="RightViewport" />
 				<rtRayTypes>
 					<rayType name="Phong"/>
 				</rtRayTypes>

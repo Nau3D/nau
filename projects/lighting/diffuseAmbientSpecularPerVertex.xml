@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
 <project name="D+A+S Light Per Vertex" >
-	<assets><!-- width="512" height="512" -->
+	<assets>
+        <attributes>
+            <attribute name="shininess" type="RENDERER" data="FLOAT" value="128" />
+        </attributes>
 		<scenes>
 			<scene name="MySceneT" param="UNITIZE SWAP_YZ">
 				<file name="../../models/Teapot.3ds"/>

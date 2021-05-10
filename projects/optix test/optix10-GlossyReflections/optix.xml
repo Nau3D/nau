@@ -40,7 +40,7 @@
 		</materialLibs>
 	</assets>
 	<pipelines>
-		<pipeline name="glossy" default="true">
+		<pipeline name="glossy" default="true"  defaultCamera="MainCamera">
 			<pass class="rt" name="pass1">
 				<scenes>
 					<scene name="MainScene" />
@@ -50,7 +50,7 @@
 				<lights>
 					<light name="Sun" />
 				</lights>
-                <viewport name="MainViewport" />
+                <!--viewport name="MainViewport" /-->
 
 				<rtRayTypes>
 					<rayType name="Phong"/>

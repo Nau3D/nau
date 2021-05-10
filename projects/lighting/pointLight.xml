@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
 <project name="Point Light" >
-	<assets><!-- width="512" height="512" -->
+	<assets>
+        <attributes>
+            <attribute name="shininess" type="RENDERER" data="FLOAT" value="128" />
+        </attributes>
 		<scenes>
 			<scene name="MySceneC" param="UNITIZE">
 				<file name="../../models/geom.obj"/>
@@ -54,4 +57,6 @@
 			</pass>
 		</pipeline>
 	</pipelines>
+
+
 </project>

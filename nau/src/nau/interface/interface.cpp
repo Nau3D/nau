@@ -207,7 +207,7 @@ ToolBar::addEnum(const std::string& windowName, const std::string& varLabel,
 	var.luaScriptFile = luaScriptFile;
 	var.semantics = Attribute::Semantics::NONE;
 
-	size_t k = enums.length() + 1;
+	size_t k = enums.length() + 2;
 	var.options.resize(k);
 	int l = 0;
 	for (int i = 0; i < enums.length(); ++i) {

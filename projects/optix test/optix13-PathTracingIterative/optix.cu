@@ -6,7 +6,7 @@ extern "C" {
 }
 
 // ray types
-enum { RAIDANCE=0, SHADOW, RAY_TYPE_COUNT };
+enum { RADIANCE=0, SHADOW, RAY_TYPE_COUNT };
 
 struct RadiancePRD{
     float3   emitted;
@@ -14,6 +14,7 @@ struct RadiancePRD{
     float3   attenuation;
     float3   origin;
     float3   direction;
+    float4   normal;
     bool done;
     uint32_t seed;
     int32_t  countEmitted;
@@ -64,6 +65,9 @@ extern "C" __global__ void __closesthit__radiance() {
         prd.emitted = make_float3(0.0f);
 
     uint32_t seed = prd.seed;
+
+
+    prd.normal = n;
 
     {
         const float z1 = rnd(seed);
@@ -180,6 +184,7 @@ extern "C" __global__ void __raygen__renderFrame() {
     float2 delta = make_float2(1.0f/squaredRaysPerPixel, 1.0f/squaredRaysPerPixel);
 
     float3 result = make_float3(0.0f);
+    float4 normal = make_float4(0.0f);
 
     uint32_t seed = tea<4>( ix * optixGetLaunchDimensions().x + iy, optixLaunchParams.frame.frame );
 
@@ -216,8 +221,10 @@ extern "C" __global__ void __raygen__renderFrame() {
                         0.001f,    // tmin
                         1e20f,  // tmax
                         0.0f, OptixVisibilityMask( 1 ),
-                        OPTIX_RAY_FLAG_NONE, RAIDANCE, RAY_TYPE_COUNT, RAIDANCE, u0, u1 );
+                        OPTIX_RAY_FLAG_NONE, RADIANCE, RAY_TYPE_COUNT, RADIANCE, u0, u1 );
 
+                if (k == 0)
+                    normal = prd.normal;
                 result += prd.emitted;
                 result += prd.radiance * prd.attenuation;
 
@@ -232,12 +239,12 @@ extern "C" __global__ void __raygen__renderFrame() {
     // compute index
     const uint32_t fbIndex = ix + iy*optixGetLaunchDimensions().x;
 
-    optixLaunchParams.global->accumBuffer[fbIndex] = 
-        (optixLaunchParams.global->accumBuffer[fbIndex] * optixLaunchParams.frame.subFrame +
-        make_float4(result.x, result.y, result.z, 1)) /(optixLaunchParams.frame.subFrame+1);
+    //optixLaunchParams.global->accumBuffer[fbIndex]  = 
+    //    (optixLaunchParams.global->accumBuffer[fbIndex] * optixLaunchParams.frame.subFrame +
+    //    make_float4(result.x, result.y, result.z, 1)) /(optixLaunchParams.frame.subFrame+1);
 
     
-    float4 rgbaf = optixLaunchParams.global->accumBuffer[fbIndex];
+    float4 rgbaf = make_float4(result.x, result.y, result.z, 1); //optixLaunchParams.global->accumBuffer[fbIndex];
     //convert float (0-1) to int (0-255)
     const int r = int(255.0f*min(1.0f, pow(rgbaf.x, 1/gamma)));
     const int g = int(255.0f*min(1.0f, pow(rgbaf.y, 1/gamma)));
@@ -247,6 +254,7 @@ extern "C" __global__ void __raygen__renderFrame() {
     const uint32_t rgba = 0xff000000 | (r<<0) | (g<<8) | (b<<16);
     // write to output buffer
     optixLaunchParams.frame.colorBuffer[fbIndex] = rgba;
+
 }
   
 

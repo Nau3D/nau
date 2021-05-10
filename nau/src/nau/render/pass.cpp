@@ -688,7 +688,8 @@ Pass::setRenderTarget (nau::render::IRenderTarget* rt) {
 		if (m_RenderTarget == NULL){
 			std::string s = "__" + m_Name;
 			if (m_Viewport.size() > 0)
-				m_Viewport[0] = RENDERMANAGER->createViewport(s);
+				m_Viewport.push_back(RENDERMANAGER->createViewport(s));
+				//m_Viewport[0] = RENDERMANAGER->createViewport(s);
 			else
 				m_Viewport.push_back(RENDERMANAGER->createViewport(s));
 			m_UseRT = true;
@@ -704,15 +705,16 @@ Pass::setRenderTarget (nau::render::IRenderTarget* rt) {
 void
 Pass::setRTSize(uivec2 &v) {
 
-	assert(m_Viewport.size() != 0);
+	int k = m_Viewport.size();
+	assert(k != 0);
 
 	m_RTSizeWidth = v.x;
 	m_RTSizeHeight = v.y;
 	vec2 v2a((float)v.x, (float)v.y);
-	m_Viewport[0]->setPropf2(Viewport::SIZE, v2a);
+	m_Viewport[k-1]->setPropf2(Viewport::SIZE, v2a);
 	vec2 v2b(0.0f, 0.0f);
-	m_Viewport[0]->setPropf2(Viewport::ORIGIN, v2b);
-	m_Viewport[0]->setPropb(Viewport::FULL, false);
+	m_Viewport[k-1]->setPropf2(Viewport::ORIGIN, v2b);
+	m_Viewport[k-1]->setPropb(Viewport::FULL, false);
 }
 
 

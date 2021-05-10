@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
 <project name="Spot Light" >
-	<assets><!-- width="512" height="512" -->
+	<assets>
+        <attributes>
+            <attribute name="shininess" type="RENDERER" data="FLOAT" value="128" />
+        </attributes>
 		<scenes>
 			<scene name="MySceneC" param="UNITIZE">
 				<file name="../../models/geom.obj"/>

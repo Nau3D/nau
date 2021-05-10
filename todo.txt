@@ -1,1 +1,5 @@
-Add instances field to scenes documentation
+- Add instances field to scenes documentation
+- Add multiple outputs in rendertarget as surf2d
+- Add denoiser as a separate pass
+- Resize viewport in RT passes
+	

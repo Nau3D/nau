@@ -36,7 +36,7 @@
 		</materialLibs>
 	</assets>
 	<pipelines>
-		<pipeline name="softShadows" default="true">
+		<pipeline name="softShadows" default="true"  defaultCamera="MainCamera">
 			<pass class="rt" name="pass1">
 				<scenes>
 					<scene name="MainScene" />

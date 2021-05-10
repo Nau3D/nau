@@ -4636,8 +4636,8 @@ ProjectLoader::loadPipelines (TiXmlHandle &hRoot) {
 
 			loadPassParams(hPass, aPass);
 			//loadPassClearDepthAndColor(hPass, aPass);
-			loadPassRenderTargets(hPass, aPass, passMapper);
 			loadPassViewport(hPass, aPass);
+			loadPassRenderTargets(hPass, aPass, passMapper);
 			loadPassLights(hPass, aPass);
 
 			loadPassInjectionMaps(hPass, aPass);
