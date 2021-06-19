@@ -19,9 +19,9 @@
        </attributes>
 		<scenes>
 			<scene name="MainScene" >
-				<!--file name="../../../models/sponza/crytek-sponza/sponza.nbo" /-->
+				<file name="../../../models/sponza/crytek-sponza/sponza.nbo" />
 				<!--file name="../../../models/LargoCamoes/largoCamoes.nbo" /-->
-				<file name="../../../models/SanMiguel/san-miguel.nbo" />
+				<!--file name="../../../models/SanMiguel/san-miguel.nbo" /-->
                 <!--file name="../../../models/cornellBox/CornellBox-Sphere2.obj" /-->
                 <!--file name="../../../models/cornellBox/CornellBox-Original2.obj" /-->
 			</scene>

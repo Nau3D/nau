@@ -87,13 +87,19 @@ MaterialLib::getMaterial (const std::string &materialName) {
 void
 MaterialLib::getMaterialNames(const std::string &aName, std::vector<std::string>* ret) {
 
+	bool wildCard = false;
 	size_t len = aName.size();
-	if (aName[len-1] == '*')
+	if (aName[len - 1] == '*') {
+		wildCard = true;
 		len--;
+	}
 
 	for (auto& mat : m_MaterialLib) {
-		if (0 == aName.substr(0,len).compare(mat.first.substr(0,len)))
-			ret->push_back(mat.first);   
+		if (wildCard && 0 == aName.substr(0,len).compare(mat.first.substr(0,len)))
+			ret->push_back(mat.first); 
+		else if (0 == aName.substr(0, len).compare(mat.first))
+			ret->push_back(mat.first);
+
 	}
 }
 

@@ -126,6 +126,8 @@ extern "C" __global__ void __closesthit__radiance() {
         }
     }
 
+
+
     prd.radiance += make_float3(5.0f, 5.0f, 5.0f) * weight * optixLaunchParams.global->lightScale;
 }
 
