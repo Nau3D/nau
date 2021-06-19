@@ -60,7 +60,7 @@ All source code or libs is provided in the package (apart from Opix) to prevent 
 
 # CMAKE settings and requirements
 
-To build nau, and GLUT and GLFW (with ImGui) demo, 
+To build nau, with GLUT and GLFW (with ImGui) demo, 
 the project is self-contained for Windows. For Linux install opengl, and devil
 * Devil 
 	* sudo apt-get install libdevil-dev
