@@ -56,7 +56,7 @@ Interface applications:
 * GLFW
 * GLUT
 
-All source code or libs is provided in the package (apart from Opix) to prevent disruption when any of those packages is updates.
+All source code or libs is provided in the package (apart from Opix) to prevent disruption when any of those packages is updated.
 
 # CMAKE settings and requirements
 
