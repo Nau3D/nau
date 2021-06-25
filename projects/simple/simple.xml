@@ -15,7 +15,7 @@
 
 		<cameras>
 			<camera name="MainCamera" >
-				<viewport name="MainViewport" />
+				<viewpoort name="MainViewport" />
 				<TYPE value="PERSPECTIVE"/>
 				<FOV value = "60"/>
 				<NEAR value= "1"/>

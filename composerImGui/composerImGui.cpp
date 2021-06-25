@@ -2485,7 +2485,34 @@ void messageBox(const std::string& title, const std::string& message) {
 
 	ImGui::OpenPopup(title.c_str());
 	if (ImGui::BeginPopupModal(title.c_str(), NULL, 0)) { //ImGuiWindowFlags_AlwaysAutoResize)) {
-		ImGui::TextWrapped(message.c_str());
+
+		ImGui::SetCursorPosX(500);
+		ImGui::SetCursorPosX(10.0f);
+
+		size_t pos = 0;
+		std::string m = message;
+		std::string token;
+		while ((pos = m.find("\n")) != std::string::npos) {
+			token = m.substr(0, pos);
+			ImGui::Text(token.c_str());
+			m.erase(0, pos + 1);
+		}
+
+		int length = 0;
+		int lastpos = 0;
+		while ((pos = m.find(" ", length)) != std::string::npos) {
+
+			
+			if (pos- lastpos > 60) {
+				ImGui::Text(m.substr(lastpos, length-lastpos).c_str());
+				lastpos = length;
+			}
+			length = pos+1;
+		}
+		ImGui::Text(m.substr(lastpos, length).c_str());
+
+
+		//ImGui::TextWrapped(message.c_str());
 		if (ImGui::Button("OK", ImVec2(120, 0))) { 
 			showMessageBox = false;
 			ImGui::CloseCurrentPopup(); 
