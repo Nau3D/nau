@@ -1061,12 +1061,18 @@ GLRenderer::setCullFace(Face aFace) {
 //		DEBUG
 // -----------------------------------------------------------------
 
-
+// Both the compute and mesh shader info need to be fixed to provide correct information
 void 
 GLRenderer::showDrawDebugInfo(PassCompute *p) {
 
 	nau::util::Tree *t = m_ShaderDebugTree.appendBranch("Pass", p->getName());
 	t->appendItem("Class", "Compute");
+	unsigned int dimX = p->getPropui(Pass::DIM_X);
+	unsigned int dimY = p->getPropui(Pass::DIM_Y);
+	unsigned int dimZ = p->getPropui(Pass::DIM_Z);
+	char s[64];
+	sprintf(s, "%u, %u, %u", dimX, dimY, dimZ);
+	t->appendItem("Dims", s);
 	std::shared_ptr<Material> &mat = p->getMaterial();
 	showDrawDebugInfo(mat,t);
 	showDrawDebugInfo(mat->getProgram(), t);
@@ -1076,9 +1082,18 @@ GLRenderer::showDrawDebugInfo(PassCompute *p) {
 void
 GLRenderer::showDrawDebugInfo(PassMesh* p) {
 
-	nau::util::Tree* t = m_ShaderDebugTree.appendBranch("Pass", p->getName());
-	t->appendItem("Class", "Mesh");
+	nau::util::Tree* t;
+	nau::util::Tree* tree = &m_ShaderDebugTree;
+
+	if (!tree->hasElement("Pass", p->getName())) {
+		t = m_ShaderDebugTree.appendBranch("Pass", p->getName());
+		t->appendItem("Class", "Mesh");
+	}
+	else {
+		t = tree->getBranch("Pass", p->getName());
+	}
 	std::shared_ptr<Material>& mat = p->getMaterial();
+	t = t->appendBranch("Material", mat->getName());
 	showDrawDebugInfo(mat, t);
 	showDrawDebugInfo(mat->getProgram(), t);
 }
