@@ -21,7 +21,7 @@ PassMesh::Init() {
 
 
 PassMesh::PassMesh(const std::string &passName) : Pass(passName),
-m_Buffer(0), m_Offset(0) {
+m_Buffer(0), m_ActiveMat(0) {
 
 	m_ClassName = "mesh";
 
@@ -51,12 +51,9 @@ PassMesh::eventReceived(const std::string &sender, const std::string &eventType,
 void
 PassMesh::prepare (void) {
 
-	RENDERER->setMaterial(m_Mat);
 	//m_Mat->prepare();	
 
-	if (m_Buffer) {
-		m_Buffer->getData(m_Offset, 4, &m_UIntProps[DIM_X]);
-	}
+	
 	setupCamera();
 	setupLights();
 
@@ -66,7 +63,7 @@ PassMesh::prepare (void) {
 void
 PassMesh::restore (void) {
 
-	m_Mat->restore();
+	m_Mat[0].material->restore();
 }
 
 
@@ -74,14 +71,33 @@ void
 PassMesh::doPass (void) {
 
 	PROFILE_GL("Task-Mesh shader");
-	RENDERER->drawMeshTasks(m_Offset, m_UIntProps[DIM_X]);
+
+	unsigned int count;
+	for (auto &m : m_Mat) {
+		m_ActiveMat = m.material;
+		if (m_Buffer) {
+			m_Buffer->getData(m.offset, 4, &count);
+		}
+		else count = m.count;
+		RENDERER->setMaterial(m.material);
+
+		RENDERER->drawMeshTasks(0, m.count);
+	}
 }
 
 
 void 
-PassMesh::setMaterialName(const std::string &lName,const std::string &mName) {
+PassMesh::addMaterial(const std::string &lName,const std::string &mName, unsigned int count, IBuffer* buf, unsigned int offset) {
 
-	m_Mat = MATERIALLIBMANAGER->getMaterial(lName, mName);
+	materials m;
+
+	m.material = MATERIALLIBMANAGER->getMaterial(lName, mName);
+	m.count = count;
+	m.offset = offset;
+
+	m_Buffer = buf;
+
+	m_Mat.push_back(m);
 	m_MaterialMap[mName] = MaterialID(lName, mName);
 }
 
@@ -89,20 +105,20 @@ PassMesh::setMaterialName(const std::string &lName,const std::string &mName) {
 std::shared_ptr<Material> &
 PassMesh::getMaterial() {
 
-	return m_Mat;
+	return m_ActiveMat;
 }
 
 
-void
-PassMesh::setDimension(unsigned int dimX) {
-
-	m_UIntProps[DIM_X] = dimX;
-}
-
-
-void
-PassMesh::setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX) {
-
-	m_Buffer = buffNameX;
-	m_Offset = offX;
-}
+//void
+//PassMesh::setDimension(unsigned int dimX) {
+//
+//	m_UIntProps[DIM_X] = dimX;
+//}
+//
+//
+//void
+//PassMesh::setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX) {
+//
+//	m_Buffer = buffNameX;
+//	m_Offset = offX;
+//}

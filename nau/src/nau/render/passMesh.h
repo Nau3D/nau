@@ -34,21 +34,29 @@ namespace nau
 			void restore();
 			void doPass();
 
-			void setMaterialName(const std::string &lName,const std::string &mName);
+			void addMaterial(const std::string &lName,const std::string &mName, unsigned int count, IBuffer *buf, unsigned int offset);
 			std::shared_ptr<Material> &getMaterial();
 
-			void setDimension(unsigned int dimX);
-			void setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX);
+			//void setDimension(unsigned int dimX);
+			//void setDimFromBuffer(IBuffer  *buffNameX, unsigned int offX);
 
 		protected:
+
+			struct materials {
+				std::shared_ptr<Material> material;
+				unsigned int count;
+				unsigned int offset;
+			};
 
 			PassMesh(const std::string &passName);
 			static bool Init();
 			static bool Inited;
 
-			std::shared_ptr<Material> m_Mat;
+			std::vector<materials> m_Mat;
+			// the active material is only used for debug purposes when tracing
+			std::shared_ptr<Material> m_ActiveMat;
 			IBuffer  *m_Buffer;
-			unsigned int m_Offset;
+
 
 		};
 	};

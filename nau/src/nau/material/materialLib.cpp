@@ -99,7 +99,6 @@ MaterialLib::getMaterialNames(const std::string &aName, std::vector<std::string>
 			ret->push_back(mat.first); 
 		else if (0 == aName.substr(0, len).compare(mat.first))
 			ret->push_back(mat.first);
-
 	}
 }
 

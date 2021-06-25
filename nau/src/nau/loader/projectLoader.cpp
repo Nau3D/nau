@@ -2407,7 +2407,7 @@ ProjectLoader::loadPassParams(TiXmlHandle hPass, Pass *aPass)
 {
 	std::vector<std::string> excluded = {"testScript", "preProcess", "postProcess", "mode", "scene", "scenes", 
 		"lights", "viewport", "viewports", "renderTarget",
-		"materialMaps", "injectionMaps", "texture", "material", "rays", "hits", "rayCount",
+		"materialMaps", "injectionMaps", "texture", "material", "materials", "rays", "hits", "rayCount",
 		"rtRayTypes", "rtVertexAttributes", "rtEntryPoint", "rtDefaultMaterial","preScript", "postScript",
 		"rtGlobalParams", "rtMaterialMap"};
 	readChildTags(aPass->getName(), (AttributeValues *)aPass, Pass::Attribs, excluded, hPass.Element(),false);
@@ -3684,6 +3684,53 @@ ProjectLoader::loadPassComputeSettings(TiXmlHandle hPass, Pass *aPass) {
 -------------------------------------------------------------------------------*/
 
 
+void 
+ProjectLoader::loadPassMeshMaterial(TiXmlElement* pElem, Pass* aPass) {
+
+	PassMesh* p = (PassMesh*)aPass;
+
+	const char* pMatName = pElem->Attribute("name");
+	const char* pLibName = pElem->Attribute("fromLibrary");
+	const char* pAtX = pElem->Attribute("buffer");
+
+
+	if (pMatName != NULL && pLibName != NULL) {
+		if (!MATERIALLIBMANAGER->hasMaterial(pLibName, pMatName))
+			NAU_THROW("File %s\nPass %s\nMaterial %s::%s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pLibName, pMatName);
+	}
+	else
+		NAU_THROW("File %s\nPass %s\nMaterial not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+
+	IBuffer* bX = NULL;
+	unsigned int offX = 0;
+	unsigned int r1 = 1;
+	// Read value or buffer id for dimX
+	AttribSet* attrs = aPass->getAttribSet();
+	std::unique_ptr<Attribute>& attr = attrs->get(PassMesh::DIM_X, Enums::UINT);
+	bool res = TIXML_SUCCESS == pElem->QueryUnsignedAttribute("count", &r1);
+	if (!res && pAtX == NULL) {
+		NAU_THROW("File %s\nPass %s\ncount or buffer are not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+	}
+	else if (res && pAtX != NULL) {
+		NAU_THROW("File %s\nPass %s\ncount and buffer are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+	}
+	// Read value or buffer id for dimX
+	if (pAtX != NULL) {
+		bX = RESOURCEMANAGER->getBuffer(pAtX);
+		if (!bX) {
+			NAU_THROW("File %s\nPass %s\nbuffer %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
+		}
+		else {
+			if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("first", &offX))
+				NAU_THROW("File %s\nPass %s\nNo offset defined for buffer %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
+		}
+	}
+
+	p->addMaterial(pLibName, pMatName, r1, bX, offX);
+	//p->setDimension(r1);
+	//p->setDimFromBuffer(bX, offX);
+
+}
 
 void
 ProjectLoader::loadPassMeshSettings(TiXmlHandle hPass, Pass* aPass) {
@@ -3691,53 +3738,77 @@ ProjectLoader::loadPassMeshSettings(TiXmlHandle hPass, Pass* aPass) {
 	TiXmlElement* pElem;
 	PassMesh* p = (PassMesh*)aPass;
 
+	pElem = hPass.FirstChild("materials").FirstChild("material").Element();
+
+	if (pElem != NULL) {
+
+		for (; 0 != pElem; pElem = pElem->NextSiblingElement("material")) {
+			loadPassMeshMaterial(pElem, aPass);
+		}
+		return;
+	}
 	pElem = hPass.FirstChildElement("material").Element();
 	if (pElem != NULL) {
-		const char* pMatName = pElem->Attribute("name");
-		const char* pLibName = pElem->Attribute("fromLibrary");
-		const char* pAtX = pElem->Attribute("buffer");
-
-
-		if (pMatName != NULL && pLibName != NULL) {
-			if (!MATERIALLIBMANAGER->hasMaterial(pLibName, pMatName))
-				NAU_THROW("File %s\nPass %s\nMaterial %s::%s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pLibName, pMatName);
-		}
-		else
-			NAU_THROW("File %s\nPass %s\nMaterial not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-
-		IBuffer* bX = NULL;
-		unsigned int offX = 0;
-		unsigned int r1 = 1;
-		// Read value or buffer id for dimX
-		AttribSet* attrs = aPass->getAttribSet();
-		std::unique_ptr<Attribute>& attr = attrs->get(PassMesh::DIM_X, Enums::UINT);
-		bool res = TIXML_SUCCESS == pElem->QueryUnsignedAttribute("count", &r1);
-		if (!res && pAtX == NULL) {
-			NAU_THROW("File %s\nPass %s\ncount or buffer are not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		}
-		else if (res && pAtX != NULL) {
-			NAU_THROW("File %s\nPass %s\ncount and buffer are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
-		}
-		// Read value or buffer id for dimX
-		if (pAtX != NULL) {
-			bX = RESOURCEMANAGER->getBuffer(pAtX);
-			if (!bX) {
-				NAU_THROW("File %s\nPass %s\nbuffer %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
-			}
-			else {
-				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("first", &offX))
-					NAU_THROW("File %s\nPass %s\nNo offset defined for buffer %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
-			}
-		}
-
-		p->setMaterialName(pLibName, pMatName);
-		p->setDimension(r1);
-		p->setDimFromBuffer(bX, offX);
+		loadPassMeshMaterial(pElem, aPass);
 	}
 	else
 		NAU_THROW("File %s\nPass %s\nMissing material", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
 
 }
+
+//void
+//ProjectLoader::loadPassMeshSettings(TiXmlHandle hPass, Pass* aPass) {
+//
+//	TiXmlElement* pElem;
+//	PassMesh* p = (PassMesh*)aPass;
+//
+//	pElem = hPass.FirstChildElement("material").Element();
+//	if (pElem != NULL) {
+//		const char* pMatName = pElem->Attribute("name");
+//		const char* pLibName = pElem->Attribute("fromLibrary");
+//		const char* pAtX = pElem->Attribute("buffer");
+//
+//
+//		if (pMatName != NULL && pLibName != NULL) {
+//			if (!MATERIALLIBMANAGER->hasMaterial(pLibName, pMatName))
+//				NAU_THROW("File %s\nPass %s\nMaterial %s::%s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pLibName, pMatName);
+//		}
+//		else
+//			NAU_THROW("File %s\nPass %s\nMaterial not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+//
+//		IBuffer* bX = NULL;
+//		unsigned int offX = 0;
+//		unsigned int r1 = 1;
+//		// Read value or buffer id for dimX
+//		AttribSet* attrs = aPass->getAttribSet();
+//		std::unique_ptr<Attribute>& attr = attrs->get(PassMesh::DIM_X, Enums::UINT);
+//		bool res = TIXML_SUCCESS == pElem->QueryUnsignedAttribute("count", &r1);
+//		if (!res && pAtX == NULL) {
+//			NAU_THROW("File %s\nPass %s\ncount or buffer are not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+//		}
+//		else if (res && pAtX != NULL) {
+//			NAU_THROW("File %s\nPass %s\ncount and buffer are both defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+//		}
+//		// Read value or buffer id for dimX
+//		if (pAtX != NULL) {
+//			bX = RESOURCEMANAGER->getBuffer(pAtX);
+//			if (!bX) {
+//				NAU_THROW("File %s\nPass %s\nbuffer %s is not defined", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
+//			}
+//			else {
+//				if (TIXML_SUCCESS != pElem->QueryUnsignedAttribute("first", &offX))
+//					NAU_THROW("File %s\nPass %s\nNo offset defined for buffer %s", ProjectLoader::s_File.c_str(), aPass->getName().c_str(), pAtX);
+//			}
+//		}
+//
+//		p->setMaterialName(pLibName, pMatName);
+//		p->setDimension(r1);
+//		p->setDimFromBuffer(bX, offX);
+//	}
+//	else
+//		NAU_THROW("File %s\nPass %s\nMissing material", ProjectLoader::s_File.c_str(), aPass->getName().c_str());
+//
+//}
 
 /* -----------------------------------------------------------------------------
 MATERIAL LIBRAY RENDERTARGET DEFINITION
