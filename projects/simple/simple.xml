@@ -15,12 +15,12 @@
 
 		<cameras>
 			<camera name="MainCamera" >
-				<viewpoort name="MainViewport" />
+				<viewport name="MainViewport" />
 				<TYPE value="PERSPECTIVE"/>
 				<FOV value = "60"/>
 				<NEAR value= "1"/>
 				<FAR value= "100"/>
-               <POSITION x="0.460277" y="-0.0375654" z="1.76627" w="1" />
+                <POSITION x="0.460277" y="-0.0375654" z="1.76627" w="1" />
                 <VIEW x="-0.095234" y="0.0245173" z="-0.995153" w="0" />
 			</camera>
 		</cameras>
@@ -34,7 +34,7 @@
 	</assets>
 	
 	<pipelines>
-		<pipeline name="fixedfunction" default="true">
+		<pipeline name="simple" default="true">
 			<pass class="default" name="pass1">
 				<scenes>
 					<scene name="Al" />

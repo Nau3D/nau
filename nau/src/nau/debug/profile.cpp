@@ -4,6 +4,8 @@
 
 
 #include <ctime>
+#include <fstream>
+
 
 
 #if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
@@ -126,6 +128,23 @@ Profile::~Profile() {
 	accumulate();
 	// decrease current level
 	sCurrLevel--;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Save Profiler
+//////////////////////////////////////////////////////////////////////
+
+void 
+Profile::SaveProfiler(std::string& filename) {
+
+	std::string prof;
+	Profile::DumpLevels(prof);
+
+	fstream s;
+	s.open(filename, fstream::out);
+	s << prof << "\n";
+	s.close();
 }
 
 

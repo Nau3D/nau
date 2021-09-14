@@ -705,7 +705,7 @@ Pass::setRenderTarget (nau::render::IRenderTarget* rt) {
 void
 Pass::setRTSize(uivec2 &v) {
 
-	int k = m_Viewport.size();
+	int k = (int)m_Viewport.size();
 	assert(k != 0);
 
 	m_RTSizeWidth = v.x;

@@ -44,6 +44,7 @@ using namespace glbinding;
 #include <nau/event/cameraMotion.h>
 #include <nau/event/cameraOrientation.h>
 #include <nau/interface/interface.h>
+#include <nau/loader/bufferLoader.h>
 #include <nau/loader/iTextureLoader.h>
 #include <nau/math/matrix.h>
 #include <nau/math/number.h>
@@ -1771,6 +1772,11 @@ void renderWindowBufferLibrary() {
 			unsigned int bsize = b->getPropui(IBuffer::SIZE);
 			combo("Buffer", bnames, bnames[activeBuffer], &activeBuffer);
 
+			if (ImGui::Button("Save Buffer")) { 
+				int k = nau::loader::BufferLoader::SaveBuffer(b);
+			}
+
+
 			int lineSize = 0;
 			if (b->getStructure().size() == 0)
 				lineSize = 4;
@@ -2077,12 +2083,23 @@ void renderProfiler(int l, int p, pTime calls, Profile::level* level, std::strin
 	}
 }
 
+#include <nau/debug/profile.h>
+#include <nau/system/file.h>
 
 void renderWindowProfiler() {
 
 	Profile::level* level;
 	if (ImGui::Button("Reset Profile"))
 		NAU->setProfileResetRequest();
+	ImGui::SameLine();
+	if (ImGui::Button("Save Profiler")) {
+		char s[200];
+		sprintf(s, "profiler.%d.txt", RENDERER->getPropui(IRenderer::FRAME_COUNT));
+		std::string sname = nau::system::File::Validate(s);
+		nau::system::File::FixSlashes(sname);
+
+		Profile::SaveProfiler(sname);
+	}
 	ImGui::Columns(5, "mycolumns");
 	ImGui::Separator();
 	ImGui::Text("ID"); ImGui::NextColumn();

@@ -150,6 +150,8 @@ public:
 	/// get profile data
 	static nau_API level* GetProfilerData();
 
+	static nau_API void SaveProfiler(std::string& filename);
+
 	///
 	static nau_API void CollectQueryResults();
 
