@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+<project name="Simple" >
+
+	<assets>
+        <attributes>
+            <attribute type="RENDERER" name="flag" data="INT" value="0" />
+        </attributes>
+		<scenes>
+			<scene name="Al" param="UNITIZE">
+				<file name="../../models/al.obj"/>
+			</scene>
+		</scenes>
+		
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>		
+
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+				<FOV value = "60"/>
+				<NEAR value= "1"/>
+				<FAR value= "100"/>
+                <POSITION x="0.460277" y="-0.0375654" z="1.76627" w="1" />
+                <VIEW x="-0.095234" y="0.0245173" z="-0.995153" w="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x="-2" y="-1" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="simple" default="true">
+			<pass class="default" name="pass1">
+                <preScript script="screenshot_test" file="screenshot.lua" />
+				<scenes>
+					<scene name="Al" />
+				</scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+			</pass>
+		</pipeline>
+	</pipelines>
+    <interface>
+        <window label = "Control">
+            <var label="Take Screen shots" type="RENDERER" context="CURRENT" component="flag" def="min=0 max=1"/>
+        </window>
+    </interface>
+</project>

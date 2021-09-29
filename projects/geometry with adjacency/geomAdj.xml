@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
 <project name="Simple" width="512" height="512">
 	<assets>
+        <attributes>
+            <attribute type="RENDERER" name="flag" data="INT" value="0" />
+        </attributes>
 		<scenes>
 			<scene name="Al"  param="USE_ADJACENCY" >
 				<file name="..\..\models\sponza/crytek-sponza/sponza.nbo"/>
@@ -50,4 +53,13 @@
 			</pass>
 		</pipeline>
 	</pipelines>
+
+    <interface>
+        <window label = "Control">
+            <var label="Take Screen shots" type="RENDERER" context="CURRENT" component="flag" def="min=0 max=1"/>
+            <var label="Light Dir" type="LIGHT" context="Sun" component="DIRECTION" mode="DIRECTION"/>
+            <var label="Spot Exponent" type="LIGHT" context="Sun" component="SPOT_EXPONENT" def="min=0.0 max=1024.0"/>
+            <var label="mode" type="RENDERER" context="CURRENT" component="mode" strings="Blinn-Phong,Ivory" />
+        </window>
+</interface>
 </project>

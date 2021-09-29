@@ -181,6 +181,7 @@ namespace nau {
 		static int luaSaveTexture(lua_State *l);
 		static int luaSaveBuffer(lua_State *l);
 		static int luaSaveProfile(lua_State *l);
+		static int luaScreenshot(lua_State* l);
 
 		static bool luaCheckScriptName(std::string fileName, std::string scriptName);
 		static std::map<std::string, std::string> LuaScriptNames;

@@ -871,9 +871,11 @@ GLRenderer::saveScreenShot() {
 	pixels = (unsigned char *)malloc(w * h * 4);
 
 	glFlush();
+	glReadBuffer(GL_FRONT);
 	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	nau::loader::ITextureLoader::Save(w, h, pixels);
 	free (pixels);
+	glReadBuffer(GL_BACK);
 }
 
 

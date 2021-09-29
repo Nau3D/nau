@@ -854,6 +854,14 @@ Nau::luaSaveProfile(lua_State *l) {
 }
 
 
+int
+Nau::luaScreenshot(lua_State* l) {
+
+	RENDERER->saveScreenShot();
+	return 0;
+}
+
+
 bool 
 Nau::luaCheckScriptName(std::string fileName, std::string scriptName) {
 
@@ -899,6 +907,8 @@ Nau::initLua() {
 	lua_setglobal(LuaState, "setBuffer");
 	lua_pushcfunction(LuaState, Nau::luaSaveProfile);
 	lua_setglobal(LuaState, "saveProfiler");
+	lua_pushcfunction(LuaState, Nau::luaScreenshot);
+	lua_setglobal(LuaState, "screenshot");
 }
 
 
