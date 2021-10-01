@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<materialLib name="Simple">
+
+	<renderTargets>
+		<renderTarget name="result" >
+			<SIZE width=640 height=360 />
+			<colors>
+				<color name = "result" internalFormat="RGBA" />
+			</colors>	
+		</renderTarget>
+	</renderTargets>
+
+   
+	<shaders>
+		<shader name="diffAmbSpecPerPixel" 	vs = "shaders/dirdifambspecpix.vert" 
+											ps = "shaders/dirdifambspecpix.frag" />
+	</shaders>
+    <materials>
+
+		<material name="diffAmbSpecPerPixel">
+			<shader name="diffAmbSpecPerPixel">
+				<values>
+					<valueof uniform="m_pvm" 
+							 type="RENDERER" context="CURRENT" 
+							 component="PROJECTION_VIEW_MODEL" />
+							 
+					<valueof uniform="m_normal" 
+							 type="RENDERER" context="CURRENT" 
+							 component="NORMAL" />
+							 
+					<valueof uniform="m_view" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW" />
+							 
+					<valueof uniform="m_viewModel" 
+							 type="RENDERER" context="CURRENT" 
+							 component="VIEW_MODEL" />
+							 
+					<valueof uniform="diffuse" 
+							 type="COLOR" context="CURRENT" 
+							 component="DIFFUSE" />
+							 
+					<valueof uniform="specular" 
+							 type="COLOR" context="CURRENT" 
+							 component="SPECULAR" />
+							 
+					<valueof uniform="shininess" 
+							 type="COLOR" context="CURRENT" 
+							 component="SHININESS" />
+							 
+					<valueof uniform="l_dir" 
+							 type="LIGHT" context="Sun"
+							 component="DIRECTION" />
+                    
+
+
+
+				</values>
+			</shader>
+		</material>
+    </materials>
+
+
+</materialLib>

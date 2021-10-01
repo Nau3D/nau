@@ -645,7 +645,7 @@ Camera::adjustMatrixPlus(float cNear, float cFar, std::shared_ptr<Camera> &aCame
 	vec4 rightWNear (rightVector);
 	rightWNear *= (wNear * 0.5f);
 
-	vec4 view = aCamera->getPropf4(VIEW_VEC);
+	vec4 view = aCamera->getPropf4(NORMALIZED_VIEW_VEC);
 	vec4 fc = view;
 	fc *= cFar;
 	fc += aCamera->getPropf4(POSITION);
@@ -769,7 +769,7 @@ Camera::eventReceived(const std::string &sender, const std::string &eventType,
 		float vel=f->getVelocity();
 
 		vec4 vPos = m_Float4Props[POSITION];
-		vec4 vView = m_Float4Props[VIEW_VEC];
+		vec4 vView = m_Float4Props[NORMALIZED_VIEW_VEC];
 		vec4 vRight = m_Float4Props[NORMALIZED_RIGHT_VEC];
 		vec4 vUp = m_Float4Props[UP_VEC];
 

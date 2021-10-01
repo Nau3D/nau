@@ -20,8 +20,8 @@
 				<FOV value = "60"/>
 				<NEAR value= "1"/>
 				<FAR value= "100"/>
-                <POSITION x="0.460277" y="-0.0375654" z="1.76627" w="1" />
-                <VIEW x="-0.095234" y="0.0245173" z="-0.995153" w="0" />
+                <POSITION x="1.460277" y="-1.0375654" z="1.76627" w="1" />
+                <LOOK_AT_POINT x = 0 y=0 z=0 />
 			</camera>
 		</cameras>
 		

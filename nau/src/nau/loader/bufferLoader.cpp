@@ -96,7 +96,7 @@ BufferLoader::LoadBuffer(IBuffer *aBuffer, std::string &aFilename) {
 
 
 int
-BufferLoader::SaveBuffer(IBuffer *aBuffer) {
+BufferLoader::SaveBuffer(IBuffer *aBuffer, bool forceBinary) {
 
 	void *data;
 
@@ -106,15 +106,20 @@ BufferLoader::SaveBuffer(IBuffer *aBuffer) {
 	std::vector<Enums::DataType> &structure = aBuffer->getStructure();
 
 	char s[200];
+	
 	sprintf(s, "%s.%d.txt", aBuffer->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
 	std::string sname = nau::system::File::Validate(s);
 	File::FixSlashes(sname);
 
-	if (structure.size()) {
+	if (!forceBinary && structure.size()) {
 		// save as text
+		sprintf(s, "%s.%d.txt", aBuffer->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+		std::string sname = nau::system::File::Validate(s);
+		File::FixSlashes(sname);
+
 		int pointerIndex = 0;
 		std::string value;
-		FILE *fp = fopen(sname.c_str(), "wb");
+		FILE *fp = fopen(sname.c_str(), "wt");
 		while (pointerIndex < (int)bsize) {
 			for (auto t : structure) {
 				value = Enums::pointerToString(t, (char *)data + pointerIndex);
@@ -127,9 +132,15 @@ BufferLoader::SaveBuffer(IBuffer *aBuffer) {
 	}
 	else {
 		// save as binary
+		sprintf(s, "%s.%d.nbb", aBuffer->getLabel().c_str(), RENDERER->getPropui(IRenderer::FRAME_COUNT));
+		std::string sname = nau::system::File::Validate(s);
+		File::FixSlashes(sname);
+
 		FILE *fp = fopen(sname.c_str(), "wb");
 		std::fwrite(data, bsize, 1, fp);
 		std::fclose(fp);
 	}
 	return 0;	
 }
+
+

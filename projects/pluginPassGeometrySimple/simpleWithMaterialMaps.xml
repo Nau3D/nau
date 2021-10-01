@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<project name="Simple" >
+	<assets>
+		<scenes>
+            <scene name="Bench" filename = "bench.obj" />
+        </scenes>
+		<viewports>
+			<viewport name="MainViewport">
+				<CLEAR_COLOR r="1.0" g="1.0" b="1.0" />
+			</viewport>
+		</viewports>		
+
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="MainViewport" />
+				<TYPE value="PERSPECTIVE"/>
+				<FOV value = "60"/>
+				<NEAR value= "1"/>
+				<FAR value= "100"/>
+                <POSITION x="5" y="5" z="5" />
+                <LOOK_AT_POINT x="0" y="0" z="0" />
+			</camera>
+		</cameras>
+		
+		<lights>
+			<light name="Sun">
+				<DIRECTION x="-2" y="-1" z="-2" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+        <materialLibs>
+            <materialLib filename="simple.mlib"/>
+        </materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="test" defaultCamera="MainCamera">
+			<pass class="geometryPI" name="pass1">
+ 			<!-- <pass class="default" name="pass1"> -->
+               <scenes>
+                    <scene name="Bench" />
+                </scenes>
+				<camera name="MainCamera" />
+				<lights>
+					<light name="Sun" />
+				</lights>
+                <viewport name = "MainViewport" />
+                <materialMaps>
+                    <map fromMaterial="*"
+                                 toLibrary="Simple" toMaterial="diffAmbSpecPerPixel" />
+                </materialMaps>
+                <renderTarget name="result" fromLibrary="Simple" />  
+			</pass>
+
+			<pass class="quad" name="pass2">
+				<viewport name="MainViewport" />
+				<texture name="result" fromLibrary="Simple" /> 
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>

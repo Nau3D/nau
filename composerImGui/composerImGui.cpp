@@ -1772,8 +1772,12 @@ void renderWindowBufferLibrary() {
 			unsigned int bsize = b->getPropui(IBuffer::SIZE);
 			combo("Buffer", bnames, bnames[activeBuffer], &activeBuffer);
 
-			if (ImGui::Button("Save Buffer")) { 
+			if (ImGui::Button("Save Buffer (Text)")) { 
 				int k = nau::loader::BufferLoader::SaveBuffer(b);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Save Buffer (Binary)")) {
+					int k = nau::loader::BufferLoader::SaveBuffer(b,true);
 			}
 
 

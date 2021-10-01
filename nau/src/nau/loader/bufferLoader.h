@@ -26,7 +26,8 @@ namespace nau
 			// Load Scene
 			/// returns the number of bytes read 
 			static int LoadBuffer (nau::material::IBuffer *aBuffer, std::string &aFilename);
-			static nau_API int SaveBuffer(nau::material::IBuffer *aBuffer);
+			static nau_API int SaveBuffer(nau::material::IBuffer *aBuffer, bool forceBinary = false);
+
 		};
 	};
 };

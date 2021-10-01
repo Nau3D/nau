@@ -141,6 +141,18 @@ PassGeometry::prepare (void) {
 
 		prepareGeometry();
 	}
+	if (0 != m_RenderTarget && true == m_UseRT) {
+
+		if (m_ExplicitViewport) {
+			vec2 f2 = m_Viewport[0]->getPropf2(Viewport::ABSOLUTE_SIZE);
+			m_RTSizeWidth = (int)f2.x;
+			m_RTSizeHeight = (int)f2.y;
+			uivec2 uiv2((unsigned int)m_RTSizeWidth, (unsigned int)m_RTSizeHeight);
+			m_RenderTarget->setPropui2(IRenderTarget::SIZE, uiv2);
+		}
+		m_RenderTarget->bind();
+	}
+
 	prepareBuffers();
 	setupCamera();
 
@@ -149,6 +161,10 @@ PassGeometry::prepare (void) {
 
 void
 PassGeometry::restore (void) {
+
+	if (0 != m_RenderTarget && true == m_UseRT) {
+		m_RenderTarget->unbind();
+	}
 
 }
 
