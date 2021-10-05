@@ -67,6 +67,7 @@ GLRenderer::GLRenderer(void) :
 	registerAndInitArrays(Attribs);
 #ifdef PROFILE
 	glGenQueries(1, &m_TessQuery);
+	glGenQueries(1, &m_MeshQuery);
 #endif
 }
 
@@ -1044,11 +1045,26 @@ GLRenderer::dispatchCompute(int dimX, int dimY, int dimZ) {
 void
 GLRenderer::drawMeshTasks(int first, int count) {
 
+#ifdef PROFILE
+	glBeginQuery(GL_PRIMITIVES_GENERATED, m_MeshQuery);
+#endif
+
 	glDrawMeshTasksNV(first, count);
 
 	if (m_BoolProps[DEBUG_DRAW_CALL]) {
 		showDrawDebugInfo((PassMesh*)RENDERMANAGER->getCurrentPass());
 	}
+
+#ifdef PROFILE 
+	{
+		PROFILE("Get Mesh Shaders Query");
+
+		glEndQuery(GL_PRIMITIVES_GENERATED);
+		GLuint numPrimitives = 0;
+		glGetQueryObjectuiv(m_MeshQuery, GL_QUERY_RESULT, &numPrimitives);
+		accumTriCounter((unsigned int)GL_TRIANGLES, numPrimitives * 3);
+	}
+#endif
 }
 
 
