@@ -3143,7 +3143,7 @@ static void error_callback(int error, const char* description) {
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
 
 	//if (argc == 1) {
@@ -3157,13 +3157,20 @@ int main(int argc, char **argv) {
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-	window = glfwCreateWindow(width, height, "Nau3D", NULL, NULL);
+	std::vector<std::pair<int,int>> contexts = { {4,6},{4,5}, {4,4}, {4,2}, {4,1},{4,0},{3,3} };
+
+	for (auto c : contexts) {
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, c.first);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, c.second);
+		glfwWindowHint(GLFW_SAMPLES, 4);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+		window = glfwCreateWindow(width, height, "Nau3D", NULL, NULL);
+		if (window) break;
+	}
+
 	if (!window)
 	{
+		printf("Nau requires at least OpenGL 3.3\n");
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
