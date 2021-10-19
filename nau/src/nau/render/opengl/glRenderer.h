@@ -94,7 +94,7 @@ namespace nau
 		protected:
 			int m_TriCounter;
 			void accumTriCounter(unsigned int drawPrimitive, unsigned int size);
-			GLuint m_TessQuery, m_MeshQuery;
+			GLuint m_TessQuery[2], m_MeshQuery[2];
 		public:
 			void resetCounters(void);
 			unsigned int getCounter(Counters c);

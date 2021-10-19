@@ -66,8 +66,8 @@ GLRenderer::GLRenderer(void) :
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	registerAndInitArrays(Attribs);
 #ifdef PROFILE
-	glGenQueries(1, &m_TessQuery);
-	glGenQueries(1, &m_MeshQuery);
+	glGenQueries(2, m_TessQuery);
+	glGenQueries(2, m_MeshQuery);
 #endif
 }
 
@@ -940,14 +940,14 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 		int k = aRenderable.getnumberOfVerticesPerPatch();
 		glPatchParameteri(GL_PATCH_VERTICES, k);
 #ifdef PROFILE
-		glBeginQuery(GL_PRIMITIVES_GENERATED, m_TessQuery);
+		glBeginQuery(GL_PRIMITIVES_GENERATED, m_TessQuery[m_UIntProps[IRenderer::FRAME_COUNT ]% 2]);
 #endif
 	}
 	else if (m_Shader->hasTessellationShader()) {
 		glPatchParameteri(GL_PATCH_VERTICES, getVerticesPerPrimitive(drawPrimitive));
 		drawPrimitive = (unsigned int)GL_PATCHES;
 #ifdef PROFILE
-		glBeginQuery(GL_PRIMITIVES_GENERATED, m_TessQuery);
+		glBeginQuery(GL_PRIMITIVES_GENERATED, m_TessQuery[m_UIntProps[IRenderer::FRAME_COUNT ]% 2]);
 #endif
 	}
 	// this forces compilation for everything that is rendered!
@@ -1016,11 +1016,12 @@ GLRenderer::drawGroup(std::shared_ptr<MaterialGroup> aMatGroup) {
 #ifdef PROFILE 
 	{
 		PROFILE("Get Tessellation Query");
+			
+		glEndQuery(GL_PRIMITIVES_GENERATED);
 
-		if (m_Shader->hasTessellationShader()) {
-			glEndQuery(GL_PRIMITIVES_GENERATED);
+		if (m_Shader->hasTessellationShader()  && m_UIntProps[IRenderer::FRAME_COUNT] > 0) {
 			GLuint numPrimitives = 0;
-			glGetQueryObjectuiv(m_TessQuery, GL_QUERY_RESULT, &numPrimitives);
+			glGetQueryObjectuiv(m_TessQuery[(m_UIntProps[IRenderer::FRAME_COUNT]-1) % 2], GL_QUERY_RESULT, &numPrimitives);
 			accumTriCounter((unsigned int)GL_TRIANGLES, numPrimitives * 3);
 		}
 	}
@@ -1046,7 +1047,7 @@ void
 GLRenderer::drawMeshTasks(int first, int count) {
 
 #ifdef PROFILE
-	glBeginQuery(GL_PRIMITIVES_GENERATED, m_MeshQuery);
+	glBeginQuery(GL_PRIMITIVES_GENERATED, m_MeshQuery[m_UIntProps[IRenderer::FRAME_COUNT] % 2]);
 #endif
 
 	glDrawMeshTasksNV(first, count);
@@ -1060,9 +1061,11 @@ GLRenderer::drawMeshTasks(int first, int count) {
 		PROFILE("Get Mesh Shaders Query");
 
 		glEndQuery(GL_PRIMITIVES_GENERATED);
-		GLuint numPrimitives = 0;
-		glGetQueryObjectuiv(m_MeshQuery, GL_QUERY_RESULT, &numPrimitives);
-		accumTriCounter((unsigned int)GL_TRIANGLES, numPrimitives * 3);
+		if (m_UIntProps[IRenderer::FRAME_COUNT] > 0) {
+			GLuint numPrimitives = 0;
+			glGetQueryObjectuiv(m_MeshQuery[(m_UIntProps[IRenderer::FRAME_COUNT] - 1) % 2], GL_QUERY_RESULT, &numPrimitives);
+			accumTriCounter((unsigned int)GL_TRIANGLES, numPrimitives * 3);
+		}
 	}
 #endif
 }
