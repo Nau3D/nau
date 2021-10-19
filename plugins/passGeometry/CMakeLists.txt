@@ -15,8 +15,7 @@ if (WIN32)
 	add_definitions(-D_WINDLL)
 endif(WIN32)
 	
-target_link_libraries( nauPassGeometry $<TARGET_LINKER_FILE:nau> glbinding ${CUDA_LIBRARIES})
-include_directories(${CUDA_INCLUDE_DIRS})
+target_link_libraries( nauPassGeometry $<TARGET_LINKER_FILE:nau> glbinding )
 
 
 install (TARGETS nauPassGeometry DESTINATION lib)
