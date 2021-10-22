@@ -123,6 +123,8 @@ add_subdirectory(nau)
 add_subdirectory(plugins/passDepthMap)
 add_subdirectory(plugins/passGeometry)
 
+add_subdirectory(attribute_info)
+
 if (WIN32)
 	option(NAU_PHYSX_PLUGIN "Add PhysX plugin" OFF)
 	if (NAU_PHYSX_PLUGIN)
@@ -147,6 +149,14 @@ set_target_properties(
         RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_BINARY_DIR}/bin)
 set_target_properties(
 	composerImGui PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin
+        RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_BINARY_DIR}/bin
+        RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_BINARY_DIR}/bin)
+		
+set_target_properties(
+	attributes PROPERTIES
 		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin
         RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin

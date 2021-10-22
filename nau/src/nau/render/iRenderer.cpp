@@ -65,6 +65,7 @@ IRenderer::Init() {
 
 	// BOOL
 	Attribs.add(Attribute(DEBUG_DRAW_CALL, "DEBUG_DRAW_CALL", Enums::DataType::BOOL, true, new NauInt(false)));
+	Attribs.add(Attribute(PRIMITIVE_COUNTER_MODE, "PRIMITVE_COUNTER_MODE", Enums::DataType::BOOL, false, new NauInt(true)));
 
 	// FLOAT
 	Attribs.add(Attribute(TIMER, "TIMER", Enums::DataType::FLOAT, true, new NauFloat(0.0f)));
@@ -156,3 +157,5 @@ IRenderer::setPropb(BoolProperty prop, bool value) {
 			AttributeValues::setPropb(prop, value);
 	}
 }
+
+

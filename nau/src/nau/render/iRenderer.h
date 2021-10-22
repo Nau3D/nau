@@ -72,6 +72,7 @@ namespace nau
 			INT2_PROP(MOUSE_RIGHT_CLICK, 2);
 
 			BOOL_PROP(DEBUG_DRAW_CALL, 0);
+			BOOL_PROP(PRIMITIVE_COUNTER_MODE, 1);
 
 			static int MaxTextureUnits;
 			static int MaxColorAttachments;

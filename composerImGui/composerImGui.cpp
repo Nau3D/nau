@@ -2482,6 +2482,7 @@ void renderAbout() {
 bool renderMenuRenderPropsWindowChecked = false;
 bool renderMenuWireframeChecked = false;
 bool renderMenuShowBB = false;
+bool renderMenuUpdatePrimitiveCounters = true;
 bool renderMenuRenderPassWindowChecked = false;
 bool assetsMenuCameraWindowChecked = false;
 bool assetsMenuLightWindowChecked = false;
@@ -2847,6 +2848,12 @@ void renderGUI(ImGuiIO& io) {
 					renderMenuShowBB = !renderMenuShowBB;
 					NAU->setRenderFlag(nau::Nau::BOUNDING_BOX_RENDER_FLAG, renderMenuShowBB);
 				}
+				if (ImGui::MenuItem("Update Primitive Counters", "", renderMenuUpdatePrimitiveCounters)) {
+					renderMenuUpdatePrimitiveCounters = !renderMenuUpdatePrimitiveCounters;
+					RENDERER->setPropb(IRenderer::PRIMITIVE_COUNTER_MODE, renderMenuUpdatePrimitiveCounters);
+				}
+
+
 				if (ImGui::MenuItem("Recompile Lua Scripts", "CTRL+B")) {
 					NAU->compileLuaScripts();
 				}
