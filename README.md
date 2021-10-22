@@ -13,7 +13,7 @@ Nau3D supports the reading of XML files describing both scenes and graphics pipe
 
 Note that Nau3D does not include any prebuilt effects in the lib itself. The lib is built not to provide these effects out of the box, but instead to allow the creation of any desired effect (almost :-) ). 
 
-Currently Nau3D supports vertex, tessellation, geometry, mesh and task shaders, fragment and compute shaders. It also supports NVIDIA's Optix ray tracer.
+Currently Nau3D supports vertex, tessellation, geometry, mesh and task shaders, fragment, and compute shaders. It also supports NVIDIA's Optix ray tracer.
 
 The main goal is to focus on the shaders and kernels. All the C++ stuff, including OpenGL and Optix stuff is handled by Nau3D. 
 
