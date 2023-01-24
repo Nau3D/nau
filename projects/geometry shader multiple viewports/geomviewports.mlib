@@ -30,9 +30,9 @@
 					<valueof uniform="V4"          	type="CAMERA" context="MainCamera" 
 														component="VIEW_MATRIX" />
 
-					<valueof uniform="lightDir"		type="LIGHT" context="CURRENT"
+					<valueof uniform="lightDir"		type="LIGHT" 
 														component="NORMALIZED_DIRECTION" id = 0/>
-					<valueof uniform="diffuse"		type="COLOR" context="CURRENT"
+					<valueof uniform="diffuse"		type="COLOR" 
 														component="DIFFUSE" />
 														
 				</values>

@@ -1,23 +1,33 @@
 #version 460
+// required extension, this is a NVIDIA contribution and
+// is not part of OpenGL 4.6
 #extension GL_NV_mesh_shader : require
  
+// local work group size, similar to compute shader local workgroups
 layout(local_size_x=4) in;
  
+// output limits and type
+// max vertices is limited to 256
+//  type can be traingles, lines, or points.
 layout(triangles, max_vertices=12, max_primitives=4) out;
- 
-layout(triangles) out;
- 
+
+// per vertex data to be sent to the rasterizer
 out PerVertexData
 {
   vec3 normal;
 } v_out[];   
  
+// vertices for the meshlet
 out gl_MeshPerVertexNV {
     vec4 gl_Position;
 } gl_MeshVerticesNV[];
-
-out uint gl_PrimitiveCountNV;
+ 
+// vertex indices for the meshlet
 out uint gl_PrimitiveIndicesNV[];
+
+// number of primitives
+out uint gl_PrimitiveCountNV;
+
 
 uniform mat4 m_pvm;
 uniform mat3 m_normal;
@@ -29,6 +39,7 @@ uniform float scale = 1;
  
 void main()
 {
+    // the position of the triangle is determined by the local work group index 
     uint thread_id = gl_LocalInvocationID.x;
     gl_MeshVerticesNV[0 + 3*thread_id].gl_Position = m_pvm * (vec4(vertices[0] * scale, 1.0) + vec4(thread_id,0,0,0)); 
     gl_MeshVerticesNV[1 + 3*thread_id].gl_Position = m_pvm * (vec4(vertices[1] * scale, 1.0) + vec4(thread_id,0,0,0)); 

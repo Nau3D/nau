@@ -5844,6 +5844,12 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 			const char *pBlock = pElemAux2->Attribute("block");
 			//const char *pId = pElemAux2->Attribute("id");
 
+			char context[256];
+			if (pContext == 0)
+				strncpy(context, "CURRENT\0", 255);
+			else
+				strncpy(context, pContext, 255);
+
 			if (0 == pUniformName) {
 				NAU_THROW("MatLib %s\nMaterial %s\nNo uniform name", 
 					aLib->getName().c_str(), aMat->getName().c_str());
@@ -5852,10 +5858,10 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 				NAU_THROW("MatLib %s\nMaterial %s\nNo type found for uniform %s", 
 					aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
 			}
-			if (0 == pContext) {
+			/*if (0 == pContext) {
 				NAU_THROW("MatLib %s\nMaterial %s\nNo context found for uniform %s", 
 					aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
-			}
+			}*/
 			if (0 == pComponent) {
 				NAU_THROW("MatLib %s\nMaterial %s\nNo component found for uniform %s", 
 					aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
@@ -5871,7 +5877,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 			//		aLib->getName().c_str(), aMat->getName().c_str(), pUniformName);
 
 			int id = 0;
-			if ((strcmp(pContext,"CURRENT") == 0) && 
+			if ((strcmp(context,"CURRENT") == 0) && 
 						((strcmp(pType,"LIGHT") == 0) || (0 == strcmp(pType,"TEXTURE_BINDING")) || (0 == strcmp(pType,"IMAGE_TEXTURE")) ||
 						 (0 == strcmp(pType, "ARRAY_OF_IMAGE_TEXTURES")) || (0 == strcmp(pType, "ARRAY_OF_TEXTURES_BINDING")))
 						&&  (0 != strcmp(pComponent,"COUNT"))) {
@@ -5901,8 +5907,8 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 			}
 			std::string s(pType);
 
-			if (s == "TEXTURE" && strcmp(pContext, "CURRENT")) {
-				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(),pContext);
+			if (s == "TEXTURE" && strcmp(context, "CURRENT")) {
+				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(),context);
 				if (!RESOURCEMANAGER->hasTexture(s_pFullName)) {
 					NAU_THROW("MatLib %s\nMaterial %s\nTexture %s is not defined", 
 						aLib->getName().c_str(), aMat->getName().c_str(), s_pFullName);
@@ -5917,39 +5923,39 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 				}
 			}
 
-			else if (s == "CAMERA" && strcmp(pContext, "CURRENT")) {
+			else if (s == "CAMERA" && strcmp(context, "CURRENT")) {
 				std::string s;
 				s += "MatLib " + aLib->getName();
-				addToDefferredVal(s, pElemAux2->Row(), pElemAux2->Column(), pContext, "CAMERA");
+				addToDefferredVal(s, pElemAux2->Row(), pElemAux2->Column(),context, "CAMERA");
 				// Must consider that a camera can be defined internally in a pass, example:lightcams
 				/*if (!RENDERMANAGER->hasCamera(pContext))
 					NAU_THROW("Camera %s is not defined in the project file", pContext);*/
 					if (pBlock)
 						aMat->addProgramBlockValue(pBlock, pUniformName, 
-							ProgramBlockValue(pUniformName, pBlock, pType, pContext, pComponent, id));
+							ProgramBlockValue(pUniformName, pBlock, pType, context, pComponent, id));
 					else
 						aMat->addProgramValue(pUniformName, 
-							ProgramValue(pUniformName, pType, pContext, pComponent, id));
+							ProgramValue(pUniformName, pType, context, pComponent, id));
 			}
-			else if (s == "LIGHT" && strcmp(pContext, "CURRENT")) {
-				if (!RENDERMANAGER->hasLight(pContext))
+			else if (s == "LIGHT" && strcmp(context, "CURRENT")) {
+				if (!RENDERMANAGER->hasLight(context))
 					NAU_THROW("MatLib %s\nMaterial %s\nUniform %s: Light %s is not defined in the project file", 
-						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName, pContext);
+						aLib->getName().c_str(), aMat->getName().c_str(), pUniformName, context);
 				if (pBlock)
 					aMat->addProgramBlockValue(pBlock, pUniformName, 
-						ProgramBlockValue(pUniformName, pBlock, pType, pContext, pComponent, id));
+						ProgramBlockValue(pUniformName, pBlock, pType, context, pComponent, id));
 				else
 					aMat->addProgramValue(pUniformName, 
-						ProgramValue(pUniformName, pType, pContext, pComponent, id));
+						ProgramValue(pUniformName, pType, context, pComponent, id));
 
 			}
 			else {
 				if (pBlock)
 					aMat->addProgramBlockValue(pBlock, pUniformName, 
-						ProgramBlockValue(pUniformName, pBlock, pType, pContext, pComponent, id));
+						ProgramBlockValue(pUniformName, pBlock, pType, context, pComponent, id));
 				else
 					aMat->addProgramValue(pUniformName, 
-						ProgramValue(pUniformName, pType, pContext, pComponent, id));
+						ProgramValue(pUniformName, pType, context, pComponent, id));
 			}
 		}
 	}

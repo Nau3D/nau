@@ -1,38 +1,48 @@
 #version 460
+// required extension, this is a NVIDIA contribution and
+// is not part of OpenGL 4.6
 #extension GL_NV_mesh_shader : require
  
+// local work group size, similar to compute shader local workgroups
 layout(local_size_x=1) in;
  
+// output limits and type
+// max vertices is limited to 256
+//  type can be traingles, lines, or points.
 layout(triangles, max_vertices=3, max_primitives=1) out;
  
-layout(triangles) out;
- 
-out PerVertexData
-{
-  vec3 normal;
+// per vertex data to be sent to the rasterizer
+out PerVertexData {
+    vec3 normal;
 } v_out[];   
- 
+
+
+// vertices for the meshlet
 out gl_MeshPerVertexNV {
     vec4 gl_Position;
 } gl_MeshVerticesNV[];
-
-out uint gl_PrimitiveCountNV;
+ 
+// vertex indices for the meshlet
 out uint gl_PrimitiveIndicesNV[];
 
-
+// number of primitives
+out uint gl_PrimitiveCountNV;
 
 
 uniform mat4 m_pvm;
 uniform mat3 m_normal;
+uniform float scale = 1;
 
 const vec3 vertices[3] = {vec3(0,1,-1), vec3(-1,-1,-1), vec3(1,-1,-1)};
 const vec3 colors[3] = {vec3(1.0,0.0,0.0), vec3(0.0,1.0,0.0), vec3(0.0,0.0,1.0)};
  
-uniform float scale = 1;
  
 void main()
 {
+    // get workgroup id to know where to draw the traingle
     uint thread_id = gl_WorkGroupID.x;
+
+    // position is shifted according to the work group id
     gl_MeshVerticesNV[0].gl_Position = m_pvm * (vec4(vertices[0] * scale, 1.0) + vec4(thread_id,0,0,0)); 
     gl_MeshVerticesNV[1].gl_Position = m_pvm * (vec4(vertices[1] * scale, 1.0) + vec4(thread_id,0,0,0)); 
     gl_MeshVerticesNV[2].gl_Position = m_pvm * (vec4(vertices[2] * scale, 1.0) + vec4(thread_id,0,0,0)); 

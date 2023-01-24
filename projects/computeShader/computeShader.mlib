@@ -23,9 +23,9 @@
 		<material name ="computeShader16">
 			<shader name="compute16">
 				<values>									
-					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" 
 														id=1 component="UNIT" />
-					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" 
 														id=1 component="UNIT" />								
 				</values>
 			</shader>
@@ -63,9 +63,9 @@
 		<material name ="computeShader8">
 			<shader name="compute8">
 				<values>									
-					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" 
 														id=1 component="UNIT" />
-					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" 
 														id=1 component="UNIT" />								
 				</values>
 			</shader>
@@ -83,9 +83,9 @@
 		<material name ="computeShader4">
 			<shader name="compute4">
 				<values>									
-					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" 
 														id=1 component="UNIT" />
-					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" 
 														id=1 component="UNIT" />								
 				</values>
 			</shader>
@@ -103,9 +103,9 @@
 		<material name ="computeShader2">
 			<shader name="compute2">
 				<values>									
-					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" 
 														id=1 component="UNIT" />
-					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" 
 														id=1 component="UNIT" />								
 				</values>
 			</shader>
@@ -123,9 +123,9 @@
 		<material name ="computeShader">
 			<shader name="compute">
 				<values>									
-					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
+					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" 
 														id=1 component="UNIT" />
-					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
+					<valueof uniform="texUnit"		type="TEXTURE_BINDING" 
 														id=1 component="UNIT" />								
 				</values>
 			</shader>

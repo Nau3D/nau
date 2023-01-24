@@ -31,7 +31,7 @@
 			<shader name="testImageLS">
 				<values>
 					<valueof uniform="imageUnit"		type="IMAGE_TEXTURE" context="CURRENT"
-														id=1 component="UNIT" />
+														id=0 component="UNIT" />
 					<valueof uniform="texUnit"		type="TEXTURE_BINDING" context="CURRENT"
 														id=0 component="UNIT" />														
 				</values>
@@ -40,7 +40,7 @@
 				<texture name="offscreenrender" UNIT=0 />
 			</textures>
 			<imageTextures>
-				<imageTexture UNIT=1 texture="tex" >
+				<imageTexture UNIT=0 texture="tex" >
 					<ACCESS value="WRITE_ONLY" />
 					<LEVEL value=0 />
 					<CLEAR value=true />

@@ -35,6 +35,7 @@
     <pipelines>
 		<pipeline name="mesh" default="true">
 			<pass class="mesh" name="pass1">
+                <!-- count is the number of instance task/mesh shaders to launch -->
                 <material name="meshShader" fromLibrary="Mesh" count=1 />
 				<camera name="MainCamera" />
 				<lights>

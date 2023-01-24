@@ -19,13 +19,13 @@
 			<viewport name="SmallViewport1" >
 				<ORIGIN  x="0.66" y="0.5" />
 				<SIZE width=".34"  height="0.5" />
-				<CLEAR_COLOR  r="1.0" g="1.0" b="0.95" />
+				<CLEAR_COLOR  r="1.0" g="1.0" b="1" />
 			</viewport>
 			
 			<viewport name="SmallViewport2" >
 				<ORIGIN x=".66" y="0.0" />
 				<SIZE width=".34"  height="0.5" />
-				<CLEAR_COLOR  r="1.0" g="0.95" b="1.0" />
+				<CLEAR_COLOR  r="1.0" g="1" b="1.0" />
 			</viewport>
 			
 		</viewports>

@@ -1,23 +1,34 @@
 #version 460
+// required extension, this is a NVIDIA contribution and
+// is not part of OpenGL 4.6
 #extension GL_NV_mesh_shader : require
  
+// local work group size, similar to compute shader local workgroups
 layout(local_size_x=1) in;
  
+// output limits
 layout(max_vertices=3, max_primitives=1) out;
  
+// type of output. can be :points, lines or triangles
 layout(triangles) out;
  
-out PerVertexData
-{
+// per vertex data to be sent to the rasterizer
+out PerVertexData {
   vec4 color;
 } v_out[];   
  
+
+// vertices for the meshlet
 out gl_MeshPerVertexNV {
     vec4 gl_Position;
 } gl_MeshVerticesNV[];
 
-out uint gl_PrimitiveCountNV;
+// vertex indices for the meshlet
 out uint gl_PrimitiveIndicesNV[];
+
+// number of primitives
+out uint gl_PrimitiveCountNV;
+
 
 const vec3 vertices[3] = {vec3(0,1,-1), vec3(-1,-1,-1), vec3(1,-1,-1)};
 const vec3 colors[3] = {vec3(1.0,0.0,0.0), vec3(0.0,1.0,0.0), vec3(0.0,0.0,1.0)};
