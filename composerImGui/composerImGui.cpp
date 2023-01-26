@@ -2520,8 +2520,8 @@ void messageBox(const std::string& title, const std::string& message) {
 			m.erase(0, pos + 1);
 		}
 
-		int length = 0;
-		int lastpos = 0;
+		size_t length = 0;
+		size_t lastpos = 0;
 		while ((pos = m.find(" ", length)) != std::string::npos) {
 
 			

@@ -615,7 +615,20 @@ Camera::adjustMatrixPlus(float cNear, float cFar, std::shared_ptr<Camera> &aCame
 
 	float ratio, fov, hNear, hFar, wNear, wFar;
 	int camType = aCamera->getPrope(Camera::PROJECTION_TYPE);
+	vec4 points[8];
 	
+	vec4 rightVector = aCamera->getPropf4(NORMALIZED_RIGHT_VEC);
+	vec4 upVector (aCamera->getPropf4(NORMALIZED_UP_VEC));
+	vec4 view = aCamera->getPropf4(NORMALIZED_VIEW_VEC);
+
+	vec4 fc = view;
+	fc *= cFar;
+	fc += aCamera->getPropf4(POSITION);
+
+	vec4 nc = view;
+	nc *= cNear;
+	nc += aCamera->getPropf4(POSITION);
+
 	if (camType == Camera::PERSPECTIVE) {
 		ratio = aCamera->getViewport()->getPropf(Viewport::ABSOLUTE_RATIO);
 		fov = aCamera->getPropf(FOV);
@@ -623,77 +636,105 @@ Camera::adjustMatrixPlus(float cNear, float cFar, std::shared_ptr<Camera> &aCame
 		wNear = hNear * ratio;
 		hFar = 2.0f * tan(DegToRad(fov * 0.5f)) * cFar;
 		wFar = hFar * ratio;
+		vec4 upHFar = upVector;
+		upHFar *= (hFar * 0.5f);
+
+		vec4 upHNear = upVector;
+		upHNear *= (hNear * 0.5f);
+
+		vec4 rightWFar (rightVector);
+		rightWFar *= (wFar * 0.5f);
+
+		vec4 rightWNear (rightVector);
+		rightWNear *= (wNear * 0.5f);
+
+		vec4 view = aCamera->getPropf4(NORMALIZED_VIEW_VEC);
+		vec4 fc = view;
+		fc *= cFar;
+		fc += aCamera->getPropf4(POSITION);
+
+
+		points[0] = fc;
+		points[0] += upHFar;
+		points[0] -= rightWFar;
+
+		points[1] = fc;
+		points[1] += upHFar;
+		points[1] += rightWFar;
+
+		points[2] = fc;
+		points[2] -= upHFar;
+		points[2] -= rightWFar;
+
+		points[3] = fc;
+		points[3] -= upHFar;
+		points[3] += rightWFar;
+
+		vec4 nc = view;
+		nc *= cNear;
+		nc += aCamera->getPropf4(POSITION);
+
+		points[4] = nc;
+		points[4] += upHNear;
+		points[4] -= rightWNear;
+
+		points[5] = nc;
+		points[5] += upHNear;
+		points[5] += rightWNear;
+
+		points[6] = nc;
+		points[6] -= upHNear;
+		points[6] -= rightWNear;
+
+		points[7] = nc;
+		points[7] -= upHNear;
+		points[7] += rightWNear;
 	}
 	else if (camType == Camera::ORTHO) {
-		hNear = aCamera->getPropf(Camera::TOP) - aCamera->getPropf(Camera::BOTTOM);
-		hFar = hNear;
-		wNear = aCamera->getPropf(Camera::RIGHT) - aCamera->getPropf(Camera::LEFT);
-		wFar = wNear;
+		float hBottom = aCamera->getPropf(Camera::BOTTOM);
+		float hTop = aCamera->getPropf(Camera::TOP);
+		float hLeft = aCamera->getPropf(Camera::LEFT);
+		float hRight = aCamera->getPropf(Camera::RIGHT);
+
+
+		points[0] = fc;
+		points[0] += (upVector * hBottom);
+		points[0] += rightVector * hLeft;
+
+		points[1] = fc;
+		points[1] += (upVector * hBottom);
+		points[1] += rightVector * hRight;
+
+		points[2] = fc;
+		points[2] += (upVector * hTop);
+		points[2] += rightVector * hLeft;
+
+		points[3] = fc;
+		points[3] += (upVector * hTop);
+		points[3] += rightVector * hRight;
+
+
+		points[4] = nc;
+		points[4] += (upVector * hBottom);
+		points[4] += rightVector * hLeft;
+
+		points[5] = nc;
+		points[5] += (upVector * hBottom);
+		points[5] += rightVector * hRight;
+
+		points[6] = nc;
+		points[6] += (upVector * hTop);
+		points[6] += rightVector * hLeft;
+
+		points[7] = nc;
+		points[7] += (upVector * hTop);
+		points[7] += rightVector * hRight;
+
+
 	}
 
-	vec4 rightVector = aCamera->getPropf4(NORMALIZED_RIGHT_VEC);
-
-	vec4 upHFar (aCamera->getPropf4(NORMALIZED_UP_VEC));
-	upHFar *= (hFar * 0.5f);
-
-	vec4 upHNear (aCamera->getPropf4(NORMALIZED_UP_VEC));
-	upHNear *= (hNear * 0.5f);
-
-	vec4 rightWFar (rightVector);
-	rightWFar *= (wFar * 0.5f);
-
-	vec4 rightWNear (rightVector);
-	rightWNear *= (wNear * 0.5f);
-
-	vec4 view = aCamera->getPropf4(NORMALIZED_VIEW_VEC);
-	vec4 fc = view;
-	fc *= cFar;
-	fc += aCamera->getPropf4(POSITION);
-
-	vec4 points[8];
-
-	points[0] = fc;
-	points[0] += upHFar;
-	points[0] -= rightWFar;
-
-	points[1] = fc;
-	points[1] += upHFar;
-	points[1] += rightWFar;
-
-	points[2] = fc;
-	points[2] -= upHFar;
-	points[2] -= rightWFar;
-
-	points[3] = fc;
-	points[3] -= upHFar;
-	points[3] += rightWFar;
-
-	vec4 nc = view;
-	nc *= cNear;
-	nc += aCamera->getPropf4(POSITION);
-
-	points[4] = nc;
-	points[4] += upHNear;
-	points[4] -= rightWNear;
-
-	points[5] = nc;
-	points[5] += upHNear;
-	points[5] += rightWNear;
-
-	points[6] = nc;
-	points[6] -= upHNear;
-	points[6] -= rightWNear;
-
-	points[7] = nc;
-	points[7] -= upHNear;
-	points[7] += rightWNear;
 
 
-	//for (int i = 0; i < 8; i++) {
-	//	if (points[i].y < 4.0f) {
-	//		points[i].y = 4.0f;
-	//	}
-	//}
 
 //	m_UpVector = aCamera->getUpVector();
 	mat4 &viewMatrix = m_Mat4Props[VIEW_MATRIX];

@@ -252,8 +252,12 @@ namespace nau
 			static int s_Dummy_int;
 			static unsigned int s_Dummy_uint;
 			static bool s_Dummy_bool;
+			static uivec4 s_Dummy_uivec4;
 			static uivec3 s_Dummy_uivec3;
 			static uivec2 s_Dummy_uivec2;
+			static ivec4 s_Dummy_ivec4;
+			static ivec3 s_Dummy_ivec3;
+			static ivec2 s_Dummy_ivec2;
 			static std::string s_Dummy_string;
 			static std::map<std::string, float> s_Constants;
 			static std::map<std::string, std::string> s_StringConstants;

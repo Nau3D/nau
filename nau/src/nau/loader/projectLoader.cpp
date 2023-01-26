@@ -95,8 +95,12 @@ dvec4 ProjectLoader::s_Dummy_dvec4;
 int ProjectLoader::s_Dummy_int;
 unsigned int ProjectLoader::s_Dummy_uint;
 bool ProjectLoader::s_Dummy_bool;
+uivec4 ProjectLoader::s_Dummy_uivec4;
 uivec3 ProjectLoader::s_Dummy_uivec3;
 uivec2 ProjectLoader::s_Dummy_uivec2;
+ivec4 ProjectLoader::s_Dummy_ivec4;
+ivec3 ProjectLoader::s_Dummy_ivec3;
+ivec2 ProjectLoader::s_Dummy_ivec2;
 std::string ProjectLoader::s_Dummy_string;
 
 std::vector<ProjectLoader::DeferredValidation> ProjectLoader::s_DeferredVal;
@@ -643,6 +647,38 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 				NAU_THROW("File %s: Element %s: Int Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
 			return new NauInt(s_Dummy_int);
 			break;
+		case Enums::IVEC2:
+
+			if ((readIntAttribute(p, "x", &s_Dummy_ivec2.x) || readIntAttribute(p, "width", &s_Dummy_ivec2.x)) &&
+				(readIntAttribute(p, "y", &s_Dummy_ivec2.y) || readIntAttribute(p, "height", &s_Dummy_ivec2.y))) {
+				return new ivec2(s_Dummy_ivec2);
+			}
+			else
+				NAU_THROW("File %s: Element %s: UIVec2Attribute %s has absent or incomplete value (x,y   or width,height are required are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+		case Enums::IVEC3:
+
+			if (readIntAttribute(p, "x", &(s_Dummy_ivec3.x)) &&
+				readIntAttribute(p, "y", &(s_Dummy_ivec3.y)) &&
+				readIntAttribute(p, "z", &(s_Dummy_ivec3.z))) {
+
+				return new ivec3(s_Dummy_ivec3);
+			}
+			else
+				NAU_THROW("File %s: Element %s: UIVec3Attribute %s has absent or incomplete value (x,y,z are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+		case Enums::IVEC4:
+
+			if (readIntAttribute(p, "x", &(s_Dummy_ivec4.x)) &&
+				readIntAttribute(p, "y", &(s_Dummy_ivec4.y)) &&
+				readIntAttribute(p, "z", &(s_Dummy_ivec4.z)) &&
+				readIntAttribute(p, "w", &(s_Dummy_ivec4.w))) {
+
+				return new ivec4(s_Dummy_ivec4);
+			}
+			else
+				NAU_THROW("File %s: Element %s: UIVec3Attribute %s has absent or incomplete value (x,y,z,w are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
 		case Enums::UINT:
 			if (!readUIntAttribute(p, "value", &s_Dummy_uint))
 				NAU_THROW("File %s: Element %s: UInt Attribute %s without a value", ProjectLoader::s_File.c_str(),pName.c_str(), p->Value()); 
@@ -667,6 +703,18 @@ ProjectLoader::readChildTag(std::string pName, TiXmlElement *p, Enums::DataType 
 			}
 			else
 				NAU_THROW("File %s: Element %s: UIVec3Attribute %s has absent or incomplete value (x,y,z are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
+			break;
+		case Enums::UIVEC4:
+
+			if (readUIntAttribute(p, "x", &(s_Dummy_uivec4.x)) &&
+				readUIntAttribute(p, "y", &(s_Dummy_uivec4.y)) &&
+				readUIntAttribute(p, "z", &(s_Dummy_uivec4.z)) &&
+				readUIntAttribute(p, "w", &(s_Dummy_uivec4.w))) {
+
+				return new uivec4(s_Dummy_uivec4);
+			}
+			else
+				NAU_THROW("File %s: Element %s: UIVec3Attribute %s has absent or incomplete value (x,y,z,w are required)", ProjectLoader::s_File.c_str(), pName.c_str(), p->Value());
 			break;
 
 		case Enums::BOOL:

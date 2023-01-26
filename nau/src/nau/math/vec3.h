@@ -119,6 +119,15 @@ namespace nau
 				return *this;
 			};
 
+			const vector3
+				operator*(float f) {
+				vec3 res;
+				res.x = this->x * f;
+				res.y = this->y * f;
+				res.z = this->z * f;
+				return res;
+			}
+
 			const vector3&
 			operator /=(T t) {
 
