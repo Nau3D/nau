@@ -27,11 +27,6 @@ if(WIN32)
 	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/vsconfig.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/composer/composer.vcxproj.user @ONLY)
 else()
 	find_package(DevIL REQUIRED)
-	find_library(AntTweakBar_LIBRARY NAMES
-		AntTweakBar
-		PATHS
-		${PROJECT_SOURCE_DIR}/contrib/AntTweakBar/lib
-		NO_DEFAULT_PATH )
 	find_library(Lua_LIBRARY NAMES
 		lua53
 		PATHS

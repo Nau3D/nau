@@ -21,7 +21,7 @@ It further supports Lua scrippting to provide an easy way to expand functionalit
 
 The accompanying interface application (Composer) has debugging features that help the construction of such pipelines. With Composer the user can explore all the settings relating to the inputs and outputs of the graphics pipeline.
 
-It can be used as a teaching tool for shader and ray tracing courses providing a seamless integration between the two rendering approaches.
+It was designed be used as a teaching tool for shader and ray tracing courses providing a seamless integration between the two rendering approaches.
 
 Some documentation is available at http://nau3d.di.uminho.pt/
 
@@ -52,21 +52,24 @@ Nau3D uses the following 3rd party libraries:
 
 Interface applications:
 
-* GLFW
-* GLUT
+* GLFW (composerImGui app)
+* GLUT (nauGLUTDemo app)
 
-All source code or libs is provided in the package (apart from Opix) to prevent disruption when any of those packages is updated.
+For windows source code or libs are provided in the package (apart from Opix) to prevent disruption when any of those packages is updated. In Linux, it is required to install freeglut (to run nauGLUTDeno) or glfw3 (to run composerImGui), and DevIL for the texture handling.
 
 # CMAKE settings and requirements
 
 To build nau, with GLUT and GLFW (with ImGui) demo, 
-the project is self-contained for Windows. For Linux install opengl, and devil
+the project is self-contained for Windows. For Linux install opengl, devil, and glfw3
 * Devil 
 	* sudo apt-get install libdevil-dev
 * Freeglut (as a short cut to installing opengl)
 	* sudo apt-get install freeglut3-dev
+* GLFW3
+    * sudo apt-get install libglfw3
+    * sudo apt-get install libglfw3-dev
 	
-Note: IF fail to compile freeglut try
+Note: IF it fails to compile freeglut try
 * cd /usr/include/X11/extensions
 * sudo ln –s XI.h XInput.h
 
@@ -78,7 +81,8 @@ To build nau with nvidia's optix 7 support (optional) both cuda and optix are re
 * If either CUDA or Optix are not found the process goes on without Optix support.		
 
 
+
 # running
 
-* composerImGUI is an almost complete interface to NAU3D using GLFW and ImGui
+* composerImGUI is an almost complete interface to Nau3D using GLFW and ImGui
 * nauGLUT provides a simple example of a GLUT application working with NAU3D

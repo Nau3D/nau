@@ -127,8 +127,8 @@ namespace nau
 			};
 
 			const vector4 
-			operator*(float f) {
-				vec4 res;
+			operator *(float f) {
+				vector4 res;
 				res.x = this->x * f;
 				res.y = this->y * f;
 				res.z = this->z * f;

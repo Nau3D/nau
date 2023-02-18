@@ -63,9 +63,9 @@ void main() {
 		imageStore(imageUnit, pos, vec4(0,0,0,1));
 		//imageAtomicRGBA8Avg(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,1));
 //<<<<<<< HEAD
-//		imageStore(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,1));
+		imageStore(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,1));
 //=======
-		imageStore(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,shininess));
+//		imageStore(imageUnitN, pos, vec4(normalG * 0.5 + 0.5,shininess));
 //>>>>>>> 0b818b2817ac18a0f7140f42f70abfb77d8570c2
 	 }
 	 else 

@@ -1,11 +1,11 @@
 #include "nau.h"
 
-#include "nau/config.h"
+//#include "nau/config.h"
 #include "nau/slogger.h"
 #include "nau/debug/profile.h"
-#include "nau/geometry/sphere.h"
+//#include "nau/geometry/sphere.h"
 #include "nau/interface/interface.h"
-#include "nau/event/eventFactory.h"
+//#include "nau/event/eventFactory.h"
 #include "nau/loader/bufferLoader.h"
 #include "nau/loader/cboLoader.h"
 #include "nau/loader/iTextureLoader.h"
@@ -15,13 +15,13 @@
 #include "nau/loader/patchLoader.h"
 #include "nau/loader/projectLoader.h"
 #include "nau/material/uniformBlockManager.h"
-#include "nau/render/iAPISupport.h"
+//#include "nau/render/iAPISupport.h"
 #include "nau/render/passFactory.h"
 #include "nau/render/passProcessTexture.h"
 #include "nau/render/passProcessBuffer.h"
 #include "nau/resource/fontManager.h"
 #include "nau/scene/sceneFactory.h"
-#include "nau/system/file.h"
+//#include "nau/system/file.h"
 
 
 #if NAU_LUA == 1
@@ -52,7 +52,7 @@ using namespace nau::scene;
 using namespace nau::system;
 
 
-nau::Nau *Nau::Instance = NULL;
+nau::Nau *Nau::Instance = nullptr;
 
 #if NAU_LUA == 1
 lua_State *Nau::LuaState = NULL;
@@ -165,7 +165,7 @@ Nau::init (bool trace) {
 	try {
 		ProjectLoader::loadMatLib(m_AppFolder + File::PATH_SEPARATOR + "nauSettings/nauSystem.mlib");
 	}
-	catch (std::string s) {
+	catch (std::string &s) {
 		clear();
 		throw(s);
 	}
@@ -609,7 +609,7 @@ Nau::luaSet(lua_State *l) {
 			AttributeValues *av = NAU->getCurrentObjectAttributes(tipo);
 			attr = av->getAttribSet();
 		}
-		catch (std::string e) {
+		catch (std::string &e) {
 			SLOG("Lua script %s ERROR: Lua set -> Invalid type: %s", 
 				LuaCurrentScript.c_str(), tipo);
 			LuaFilesWithIssues.insert(LuaScriptNames[LuaCurrentScript]);
@@ -905,7 +905,9 @@ Nau::initLua() {
 	lua_setglobal(LuaState, "saveTexture");
 	lua_pushcfunction(LuaState, Nau::luaSetBuffer);
 	lua_setglobal(LuaState, "setBuffer");
-	lua_pushcfunction(LuaState, Nau::luaSaveProfile);
+    lua_pushcfunction(LuaState, Nau::luaSaveBuffer);
+    lua_setglobal(LuaState, "saveBuffer");
+    lua_pushcfunction(LuaState, Nau::luaSaveProfile);
 	lua_setglobal(LuaState, "saveProfiler");
 	lua_pushcfunction(LuaState, Nau::luaScreenshot);
 	lua_setglobal(LuaState, "screenshot");
@@ -2037,7 +2039,7 @@ Nau::getDepthAtCenter() {
 
 
 void
-Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params) throw (std::string) {
+Nau::loadAsset (std::string aFilename, std::string sceneName, std::string params) {//throw (std::string) {
 
 	File file (aFilename);
 	std::string fullPath = file.getFullPath();

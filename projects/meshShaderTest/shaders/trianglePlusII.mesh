@@ -18,15 +18,15 @@ out PerVertexData {
 
 
 // vertices for the meshlet
-out gl_MeshPerVertexNV {
-    vec4 gl_Position;
-} gl_MeshVerticesNV[];
+//out gl_MeshPerVertexNV {
+//    vec4 gl_Position;
+//} gl_MeshVerticesNV[];
  
 // vertex indices for the meshlet
-out uint gl_PrimitiveIndicesNV[];
+//out uint gl_PrimitiveIndicesNV[];
 
 // number of primitives
-out uint gl_PrimitiveCountNV;
+//out uint gl_PrimitiveCountNV;
 
 
 uniform mat4 m_pvm;

@@ -121,7 +121,7 @@ namespace nau
 
 			const vector3
 				operator*(float f) {
-				vec3 res;
+				vector3 res;
 				res.x = this->x * f;
 				res.y = this->y * f;
 				res.z = this->z * f;

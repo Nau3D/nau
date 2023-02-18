@@ -277,7 +277,7 @@ namespace nau {
 		nau_API void stepPasses(int n);
 
 
-		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") throw (std::string);
+		void loadAsset (std::string aFilename, std::string sceneName, std::string params = "") ;//throw (std::string);
 		void writeAssets (std::string fileType, std::string aFilename, std::string sceneName);
 		nau_API void enablePhysics (void);
 		nau_API void disablePhysics (void);

@@ -135,7 +135,7 @@ namespace nau {
 
 		virtual IAPISupport* getAPISupport(void) = 0;
 
-		virtual void loadAsset(std::string aFilename, std::string sceneName, std::string params = "") throw (std::string) = 0;
+		virtual void loadAsset(std::string aFilename, std::string sceneName, std::string params = "") = 0;//throw (std::string) = 0;
 		virtual void writeAssets(std::string fileType, std::string aFilename, std::string sceneName) = 0;
 
 		virtual bool getTraceStatus() = 0;

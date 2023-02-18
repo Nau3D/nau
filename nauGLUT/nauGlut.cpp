@@ -277,7 +277,7 @@ int main(int argc, char **argv) {
 	glutMotionFunc(processMouseMotion);
 	glutPassiveMotionFunc(processPassiveMouseMotion);
 
-	glbinding::Binding::initialize(false);
+	glbinding::Binding::initialize(nullptr, false);
 
 	// Display some general info
 	printf("Vendor: %s\n", glGetString(GL_VENDOR));

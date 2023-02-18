@@ -9,7 +9,10 @@
 using namespace nau::math;
 using namespace nau::geometry;
 
+#ifdef WIN32
 float MAXFLOAT = 0xffffff;
+#endif
+
 
 #ifdef NAU_RENDER_FLAGS
 

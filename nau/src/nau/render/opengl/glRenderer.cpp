@@ -81,7 +81,7 @@ GLRenderer::~GLRenderer(void) {
 bool 
 GLRenderer::init() {
 
-	glbinding::Binding::initialize(false);
+	glbinding::Binding::initialize(nullptr, false);
 
 //	glbinding::setCallbackMask(glbinding::CallbackMask::BeforeAndAfter | glbinding::CallbackMask::ParametersAndReturnValue);
 

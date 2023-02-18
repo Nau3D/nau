@@ -37,7 +37,8 @@ ITexture::Init() {
 	Attribs.listAdd("CONTENT", "NONE", CONTENT_NONE);
 	Attribs.listAdd("CONTENT", "RANDOM_UNIFORM", CONTENT_RANDOM_UNIFORM);
 	Attribs.listAdd("CONTENT", "RANDOM_NORMAL", CONTENT_RANDOM_NORMAL);
-	Attribs.setDefault("CONTENT", NauInt(0));
+    NauInt n = NauInt(0);
+	Attribs.setDefault("CONTENT", n);
 
 
 	//#ifndef _WINDLL

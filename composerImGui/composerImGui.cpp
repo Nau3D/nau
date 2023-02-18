@@ -1,6 +1,5 @@
 ﻿
 
-#include <math.h>
 #include <fstream>
 #include <map>
 #include <set>
@@ -9,12 +8,10 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <time.h>
 
-#define M_PIf float(M_PI)
-
 #include <dirent.h>
-
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -1293,7 +1290,7 @@ void renderWindowViewports() {
 	combo("Viewport", viewports, viewports[index], &index);
 	ImGui::Separator();
 
-	std::shared_ptr<Viewport>& c = RENDERMANAGER->getViewport(viewports[index]);
+	const std::shared_ptr<Viewport>& c = RENDERMANAGER->getViewport(viewports[index]);
 
 	std::vector<std::string> order = {  };
 	createOrderedGrid(Viewport::GetAttribs(), (AttributeValues*)c.get(), order);
@@ -2081,8 +2078,10 @@ void renderProfiler(int l, int p, pTime calls, Profile::level* level, std::strin
 			else
 				ImGui::NextColumn();
 			ImGui::Text(std::to_string((float)(sec->wastedTime) / (calls)).c_str()); ImGui::NextColumn();
-			if (l + 1 < 50)
-				renderProfiler(l + 1, (int)cur, calls, level, indent + "  ");
+			if (l + 1 < 50) {
+                std::string s = indent + "  ";
+                renderProfiler(l + 1, (int) cur, calls, level, s);
+            }
 		}
 	}
 }
@@ -3194,7 +3193,7 @@ int main(int argc, char** argv) {
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(0);
 
-	glbinding::Binding::initialize(false);
+	glbinding::Binding::initialize(nullptr, false);
 	// Display some general info
 	printf("Vendor: %s\n", glGetString(GL_VENDOR));
 	printf("Renderer: %s\n", glGetString(GL_RENDERER));

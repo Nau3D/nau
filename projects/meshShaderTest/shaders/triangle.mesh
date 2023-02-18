@@ -1,7 +1,7 @@
 #version 460
+#extension GL_NV_mesh_shader : require
 // required extension, this is a NVIDIA contribution and
 // is not part of OpenGL 4.6
-#extension GL_NV_mesh_shader : require
  
 // local work group size, similar to compute shader local workgroups
 layout(local_size_x=1) in;
@@ -18,16 +18,17 @@ out PerVertexData {
 } v_out[];   
  
 
+// The following variables are predeclared in GLSL
 // vertices for the meshlet
-out gl_MeshPerVertexNV {
-    vec4 gl_Position;
-} gl_MeshVerticesNV[];
+//out gl_MeshPerVertexNV {
+//    vec4 gl_Position;
+//} gl_MeshVerticesNV[];
 
 // vertex indices for the meshlet
-out uint gl_PrimitiveIndicesNV[];
+//out uint gl_PrimitiveIndicesNV[];
 
 // number of primitives
-out uint gl_PrimitiveCountNV;
+//out uint gl_PrimitiveCountNV;
 
 
 const vec3 vertices[3] = {vec3(0,1,-1), vec3(-1,-1,-1), vec3(1,-1,-1)};

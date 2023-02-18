@@ -36,7 +36,7 @@ init(void *nauInst) {
 	//NAU_INTERFACE = (nau::INau *)nauInst;
 	INau::SetInterface((nau::INau *)nauInst);
 	nau::Nau::SetInstance((nau::Nau *)nauInst);
-	glbinding::Binding::initialize(false);
+	glbinding::Binding::initialize(nullptr, false);
 }
 
 

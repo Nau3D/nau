@@ -76,7 +76,7 @@ else()
 	if (IL_FOUND)
 		target_link_libraries(nau ${IL_LIBRARIES} )
 	endif(IL_FOUND)
-	target_link_libraries(nau "/usr/lib/x86_64-linux-gnu/libdl.so")
+	#target_link_libraries(nau "/usr/lib/x86_64-linux-gnu/libdl.so")
 	target_link_libraries(nau "${Lua_LIBRARY}")
 endif(WIN32)
 	

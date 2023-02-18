@@ -17,7 +17,7 @@ add_definitions(-DTIXML_USE_STL)
 
 link_directories(${Assimp_BINARY_DIR} ${glbinding_BINARY_DIR} ${freeglut})
 
-target_link_libraries(nauGLUTDemo nau tinyxml assimp freeglut_static glbinding)
+
 target_link_libraries(nauGLUTDemo ${OPENGL_LIBRARIES} )
 
 	
@@ -34,11 +34,18 @@ if  (WIN32)
 
 	endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 	target_link_libraries(nauGLUTDemo "${CMAKE_SOURCE_DIR}/contrib/lua-5.3.3/lua53.lib")
+	target_link_libraries(nauGLUTDemo nau tinyxml assimp freeglut_static glbinding)
 else()
+	find_package(GLUT REQUIRED)
+	include_directories(${GLUT_INCLUDE_DIRS})
+	link_directories(${GLUT_LIBRARY_DIRS})
+	target_link_libraries(nauGLUTDemo ${GLUT_LIBRARIES})
+	target_link_libraries(nauGLUTDemo nau tinyxml assimp glbinding)
+
 	if (IL_FOUND)
 		target_link_libraries(nauGLUTDemo ${IL_LIBRARIES} )
 	endif(IL_FOUND)
-	target_link_libraries(nauGLUTDemo "/usr/lib/x86_64-linux-gnu/libdl.so")
+	#target_link_libraries(nauGLUTDemo "/usr/lib/x86_64-linux-gnu/libdl.so")
 	target_link_libraries(nauGLUTDemo "${Lua_LIBRARY}")
 endif(WIN32)
 

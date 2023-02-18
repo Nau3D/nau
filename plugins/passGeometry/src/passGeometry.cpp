@@ -41,7 +41,7 @@ init(void *nauInst) {
 
 	INau::SetInterface((nau::INau *)nauInst);
 	nau::Nau::SetInstance((nau::Nau *)nauInst);
-	glbinding::Binding::initialize(false);
+	glbinding::Binding::initialize(nullptr, false);
 }
 
 
@@ -120,7 +120,8 @@ PassGeometry::prepareGeometry() {
 	aMaterialGroup->setIndexList(indices);
 	m_Renderable->addMaterialGroup(aMaterialGroup);
 
-	std::shared_ptr<SceneObject> &m_SceneObject = nau::scene::SceneObjectFactory::Create("SimpleObject");
+    const std::string simple="SimpleObject";
+	std::shared_ptr<SceneObject> m_SceneObject = nau::scene::SceneObjectFactory::Create(simple);
 
 	m_SceneObject->setRenderable(m_Renderable);
 	
