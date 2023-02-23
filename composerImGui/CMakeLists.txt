@@ -48,6 +48,7 @@ if  (WIN32)
 	target_link_libraries(composerImGui nau tinyxml assimp 	glbinding ${CMAKE_SOURCE_DIR}/contrib/glfw/glfw3.lib)
 
 else()
+	list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/contrib/cmake")
 	find_package(GLFW3 REQUIRED)
 	if (IL_FOUND)
 		target_link_libraries(composerImGui ${IL_LIBRARIES} )

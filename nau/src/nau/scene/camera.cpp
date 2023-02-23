@@ -108,6 +108,10 @@ Camera::Camera (const std::string &name) :
 	m_StringProps[VIEWPORT] = m_pViewport->getName();
 
 	buildViewMatrix();
+	buildProjectionMatrix();
+	buildProjectionViewMatrix();
+	buildTS05PVMMatrix();
+
 	buildInverses();
 
 	m_StaticCondition = false;
