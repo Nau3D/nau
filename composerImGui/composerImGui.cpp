@@ -439,6 +439,15 @@ bool combo(std::string title, std::vector<std::string> items, std::string active
 
 
 
+void separator(float space = 10) {
+	ImGui::Dummy(ImVec2(0.0f, space));
+	ImGui::Separator();
+	ImGui::Dummy(ImVec2(0.0f, space));
+}
+
+void space(float space = 10) {
+	ImGui::Dummy(ImVec2(0.0f, space));
+}
 
 
 void createInt(std::unique_ptr<Attribute>& attr, AttributeValues* attribVal, bool readOnly) {
@@ -606,6 +615,55 @@ void createVec4(std::unique_ptr<Attribute>& attr, AttributeValues* attribVal, bo
 	}
 }
 
+
+void createMat3(std::unique_ptr<Attribute>& attr, AttributeValues* attribVal, bool readOnly) {
+
+	space();
+	bool editable = !attr->getReadOnlyFlag();
+	int step = 1;
+	nau::math::mat3 m3 = attribVal->getPropm3((AttributeValues::Mat3Property)attr->getId());
+	if (editable && !readOnly) {
+		// must get it ready to edit matrices
+	}
+	else {
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(1.0f, 0.0f, 0.5f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(1.0f, 0.0f, 0.5f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(1.0f, 0.0f, 0.5f));
+		ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor::HSV(1.0f, 0.0f, 0.9f));
+
+		ImGui::InputFloat3(attr->getName().c_str(), (float*)(m3.getPtr()));
+		ImGui::InputFloat3("", (float*)(m3.getPtr()) + 3);
+		ImGui::InputFloat3("", (float*)(m3.getPtr()) + 6);
+
+		ImGui::PopStyleColor(4);
+	}
+	space();
+}
+
+
+void createMat4(std::unique_ptr<Attribute>& attr, AttributeValues* attribVal, bool readOnly) {
+
+	space();
+	bool editable = !attr->getReadOnlyFlag();
+	int step = 1;
+	nau::math::mat4 m4 = attribVal->getPropm4((AttributeValues::Mat4Property)attr->getId());
+	if (editable && !readOnly) {
+		// must get it ready to edit matrices
+	}
+	else {
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(1.0f, 0.0f, 0.5f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(1.0f, 0.0f, 0.5f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(1.0f, 0.0f, 0.5f));
+		ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor::HSV(1.0f, 0.0f, 0.9f));
+
+		ImGui::InputFloat4(attr->getName().c_str(), (float*)(m4.getPtr()));
+		ImGui::InputFloat4("", (float*)(m4.getPtr())+4);
+		ImGui::InputFloat4("", (float*)(m4.getPtr()) + 8);
+		ImGui::InputFloat4("", (float*)(m4.getPtr()) + 12);
+		ImGui::PopStyleColor(4);
+	}
+	space();
+}
 
 void createColor(std::unique_ptr<Attribute>& attr, AttributeValues* attribVal, bool readOnly) {
 
@@ -885,8 +943,8 @@ void addAttribute(std::unique_ptr<Attribute>& a, AttributeValues* attribVal, boo
 		case Enums::DVEC2: createDVec2(a, attribVal, allReadOnly); break;
 		case Enums::DVEC3: createDVec3(a, attribVal, allReadOnly); break;
 		case Enums::DVEC4: createDVec4(a, attribVal, allReadOnly); break;
-		//case Enums::MAT3: createMat3(pg, a); break;
-		//case Enums::MAT4: createMat4(pg, a); break;
+		case Enums::MAT3: createMat3(a, attribVal, allReadOnly); break;
+		case Enums::MAT4: createMat4(a, attribVal, allReadOnly); break;
 		//case Enums::STRING: createString(pg, a); break;
 		//default: assert(false && "Missing datatype in property manager");
 
@@ -931,15 +989,7 @@ void createOrderedGrid(nau::AttribSet& attribs, AttributeValues* attribVal, std:
 }
 
 
-void separator(float space = 10) {
-	ImGui::Dummy(ImVec2(0.0f, space));
-	ImGui::Separator();
-	ImGui::Dummy(ImVec2(0.0f, space));
-}
 
-void space(float space = 10) {
-	ImGui::Dummy(ImVec2(0.0f, space));
-}
 
 
 void renderWindowPass() {
