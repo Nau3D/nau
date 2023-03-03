@@ -30,7 +30,7 @@ MaterialLibManager::clear() {
 		m_LibManager.erase(m_LibManager.begin());
 	}
 	m_DefaultLib = getLib (DEFAULTMATERIALLIBNAME);
-
+	printf("Material Lib size: %d\n", m_LibManager.size());
 }
 
 

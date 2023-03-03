@@ -344,12 +344,7 @@ SceneObject::_getTransformPtr (void)
 void SceneObject::unitize(vec3 &center, vec3 &min, vec3 &max) {
 	
 	m_Renderable->unitize(center, min,max);
-
-	if (!m_BoundingVolume)
-		m_BoundingVolume = new BoundingBox();
-
-	m_BoundingVolume->
-		calculate(m_Renderable->getVertexData()->getDataOf(VertexData::GetAttribIndex(std::string("position"))));
+	calculateBoundingVolume();
 }
 
 
