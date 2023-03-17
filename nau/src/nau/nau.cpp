@@ -1620,7 +1620,7 @@ Nau::eventReceived(const std::string &sender, const std::string &eventType,
 
 int 
 Nau::keyPressed(int key, int modifiers) {
-
+	
 	return 0;
 }
 
@@ -1633,15 +1633,26 @@ Nau::mouseButton(Nau::MouseAction action, Nau::MouseButton buttonID, int x, int 
 		switch (buttonID) {
 		case LEFT:
 			RENDERER->setPropi2(IRenderer::MOUSE_LEFT_CLICK, iv2);
+			RENDERER->setPropb(IRenderer::MOUSE_LEFT_PRESSED, true);
 			break;
 		case MIDDLE:
 			RENDERER->setPropi2(IRenderer::MOUSE_MIDDLE_CLICK, iv2);
+			RENDERER->setPropb(IRenderer::MOUSE_MIDDLE_PRESSED, true);
 			break;
 		case RIGHT:
 			RENDERER->setPropi2(IRenderer::MOUSE_RIGHT_CLICK, iv2);
+			RENDERER->setPropb(IRenderer::MOUSE_RIGHT_PRESSED, true);
 			break;
 		}
+		RENDERER->setPropi2(IRenderer::MOUSE_POS, iv2);
+		m_MouseButton = buttonID;
 	}
+	else {
+		RENDERER->setPropb(IRenderer::MOUSE_LEFT_PRESSED, false);
+		RENDERER->setPropb(IRenderer::MOUSE_MIDDLE_PRESSED, false);
+		RENDERER->setPropb(IRenderer::MOUSE_RIGHT_PRESSED, false);
+	}
+	m_MouseButton = MouseButton::NONE;
 
 	return 0;
 
@@ -1651,6 +1662,9 @@ Nau::mouseButton(Nau::MouseAction action, Nau::MouseButton buttonID, int x, int 
 int 
 Nau::mouseMotion(int x, int y) {
 
+	ivec2 iv2(x, y);
+
+	RENDERER->setPropi2(IRenderer::MOUSE_POS, iv2);
 	return 0;
 }
 

@@ -78,6 +78,8 @@ bool tracking = false;
 int oldX, oldY;
 float oldAlpha, oldBeta;
 
+int mouse_button_pressed;
+
 nau::util::Tree* programInfo = NULL;
 
 bool shaderDebugLogAvailable = false;
@@ -265,11 +267,11 @@ void processMouseMotion(GLFWwindow* window, double xx, double yy) {
 	if (nauInstance->mouseMotion((int)xx, (int)yy))
 		return;
 
-	float alpha, beta;
 
 	if (!tracking)
 		return;
 
+	float alpha, beta;
 	float m_ScaleFactor = 1.0f / 100.0f;
 
 	alpha = oldAlpha - (float)(xx - oldX) * m_ScaleFactor;
@@ -280,6 +282,13 @@ void processMouseMotion(GLFWwindow* window, double xx, double yy) {
 	e->setData(&c);
 	EVENTMANAGER->notifyEvent("CAMERA_ORIENTATION", "MainCanvas", "", e);
 
+
+}
+
+
+void processOtherMouseMotion(GLFWwindow* window, double xx, double yy) {
+
+	nauInstance->mouseMotion((int)xx, (int)yy);
 }
 
 
@@ -295,8 +304,12 @@ void processMouseButtons(GLFWwindow* window, int button, int action, int mods) {
 	}
 	Nau::MouseAction nauAction;
 	switch (action) {
-	case GLFW_PRESS: nauAction = Nau::MouseAction::PRESSED; break;
-	case GLFW_RELEASE: nauAction = Nau::MouseAction::RELEASED; break;
+	case GLFW_PRESS: nauAction = Nau::MouseAction::PRESSED;
+		mouse_button_pressed = nauButton;
+		break;
+	case GLFW_RELEASE: nauAction = Nau::MouseAction::RELEASED; 
+		mouse_button_pressed = 0;
+		break;
 	}
 	if (nauInstance->mouseButton(nauAction, nauButton, (int)xx, (int)yy))
 		return;
@@ -318,6 +331,8 @@ void processMouseButtons(GLFWwindow* window, int button, int action, int mods) {
 			oldX = (int)xx;
 			oldY = (int)yy;
 		}
+		else
+			glfwSetCursorPosCallback(window, processOtherMouseMotion);
 	}
 	else {
 		tracking = false;

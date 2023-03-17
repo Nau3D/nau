@@ -57,6 +57,7 @@ IRenderer::Init() {
 	Attribs.add(Attribute(MOUSE_LEFT_CLICK, "MOUSE_LEFT_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
 	Attribs.add(Attribute(MOUSE_MIDDLE_CLICK, "MOUSE_MIDDLE_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
 	Attribs.add(Attribute(MOUSE_RIGHT_CLICK, "MOUSE_RIGHT_CLICK", Enums::DataType::IVEC2, false, new ivec2(0)));
+	Attribs.add(Attribute(MOUSE_POS, "MOUSE_POS", Enums::DataType::IVEC2, false, new ivec2(0)));
 
 	//UINT		
 	Attribs.add(Attribute(INSTANCE_COUNT, "INSTANCE_COUNT", Enums::DataType::UINT, false, new NauUInt(0)));
@@ -66,6 +67,9 @@ IRenderer::Init() {
 	// BOOL
 	Attribs.add(Attribute(DEBUG_DRAW_CALL, "DEBUG_DRAW_CALL", Enums::DataType::BOOL, true, new NauInt(false)));
 	Attribs.add(Attribute(PRIMITIVE_COUNTER_MODE, "PRIMITVE_COUNTER_MODE", Enums::DataType::BOOL, false, new NauInt(true)));
+	Attribs.add(Attribute(MOUSE_LEFT_PRESSED, "MOUSE_LEFT_PRESSED", Enums::DataType::BOOL, false, new NauInt(false)));
+	Attribs.add(Attribute(MOUSE_RIGHT_PRESSED, "MOUSE_RIGHT_PRESSED", Enums::DataType::BOOL, false, new NauInt(false)));
+	Attribs.add(Attribute(MOUSE_MIDDLE_PRESSED, "MOUSE_MIDDLE_PRESSED", Enums::DataType::BOOL, false, new NauInt(false)));
 
 	// FLOAT
 	Attribs.add(Attribute(TIMER, "TIMER", Enums::DataType::FLOAT, true, new NauFloat(0.0f)));
@@ -131,7 +135,7 @@ IRenderer::getPropf(FloatProperty prop) {
 
 	switch (prop) {
 	case TIMER:
-		m_FloatProps[TIMER] = (float)clock();// *1000.0 / CLOCKS_PER_SEC;
+		m_FloatProps[TIMER] = (float)clock() * 1000.0f/ CLOCKS_PER_SEC;
 		return m_FloatProps[TIMER];
 
 	default:return(AttributeValues::getPropf(prop));

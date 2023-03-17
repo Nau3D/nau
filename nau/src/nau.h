@@ -97,7 +97,8 @@ namespace nau {
 		} MouseAction;
 
 		typedef enum  {
-			LEFT = 1,
+			NONE = 0,
+			LEFT,
 			MIDDLE,
 			RIGHT
 		} MouseButton;
@@ -332,6 +333,8 @@ namespace nau {
 		bool m_ProfileResetRequest;
 		int m_TraceFrames;
 		bool m_TraceOn;
+
+		MouseButton m_MouseButton;
 
 		/* 	Attributes	*/
 		typedef AttribSet *AttribSetPointer;
