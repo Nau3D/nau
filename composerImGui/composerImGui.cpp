@@ -80,6 +80,9 @@ float oldAlpha, oldBeta;
 
 int mouse_button_pressed;
 
+bool screenshotFlag = false;
+int screenshotCount = 0;
+
 nau::util::Tree* programInfo = NULL;
 
 bool shaderDebugLogAvailable = false;
@@ -2973,7 +2976,8 @@ void renderGUI(ImGuiIO& io) {
 					debugMenuTraceLogindowChecked = !debugMenuTraceLogindowChecked;
 				}
 				if (ImGui::MenuItem("Screen Shot", "")) {
-					RENDERER->saveScreenShot();;
+					screenshotFlag = true;
+					//RENDERER->saveScreenShot();;
 				}
 				ImGui::EndMenu();
 			}
@@ -3365,9 +3369,18 @@ int main(int argc, char** argv) {
 			EVENTMANAGER->notifyEvent("SHADER_DEBUG_INFO_AVAILABLE", "Renderer", "", NULL);
 		}
 		
-		renderGUI(io);
+		if (!screenshotFlag)
+			renderGUI(io);
+		else
+			screenshotCount++;
 
 		glfwSwapBuffers(window);
+
+		if (screenshotFlag && screenshotCount == 2) {
+			RENDERER->saveScreenShot();
+			screenshotFlag = false;
+			screenshotCount = 0;
+		}
 
 #if NAU_PROFILE == NAU_PROFILE_CPU_AND_GPU
 		Profile::CollectQueryResults();
