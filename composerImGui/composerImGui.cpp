@@ -267,6 +267,12 @@ void processKeys(GLFWwindow* window, int key, int scancode, int action, int mods
 // Track mouse motion while buttons are pressed
 void processMouseMotion(GLFWwindow* window, double xx, double yy) {
 
+	auto& io = ImGui::GetIO();
+	if (io.WantCaptureMouse) {
+		tracking = false;
+		return;
+	}
+
 	if (nauInstance->mouseMotion((int)xx, (int)yy))
 		return;
 
@@ -296,6 +302,10 @@ void processOtherMouseMotion(GLFWwindow* window, double xx, double yy) {
 
 
 void processMouseButtons(GLFWwindow* window, int button, int action, int mods) {
+
+	auto& io = ImGui::GetIO();
+	if (io.WantCaptureMouse)
+		return;
 
 	double xx, yy;
 	glfwGetCursorPos(window, &xx, &yy);	
@@ -1560,7 +1570,33 @@ void renderWindowMaterialLibrary() {
 
 			static int textureUnit = 0;
 
-			for (int i = 0; i < 8; ++i) {
+			ImGui::BeginChild("scrollingTextures", ImVec2(0, 130), true, ImGuiWindowFlags_HorizontalScrollbar);
+			static int textureIndex = 1;
+			int framePadding;
+
+			for (int i = 0; i < 32; ++i) {
+				nau::material::ITexture* t = mat->getTexture(i);
+				if (t == NULL) {
+					std::string label = "##" + std::to_string(i);
+					if (ImGui::Button(label.c_str(), ImVec2(96, 96)))
+						textureUnit = i;
+
+				}
+				else {
+					unsigned int id = (unsigned int)t->getPropi((AttributeValues::IntProperty)ITexture::ID);
+					ImGui::PushID(i);
+					if (ImGui::ImageButton((ImTextureID)id, ImVec2(96, 96), ImVec2(0, 0), ImVec2(1, 1), 0))
+						textureUnit = i;
+					ImGui::PopID();
+				}
+				if ( (i+1) % 8 != 0)
+					ImGui::SameLine();
+			}
+			ImGui::EndChild();
+			ImGui::NewLine();
+			ImGui::NewLine();
+
+/*			for (int i = 0; i < 8; ++i) {
 				nau::material::ITexture* t = mat->getTexture(i);
 				if (t == NULL) {
 					std::string label = "##" + std::to_string(i);
@@ -1577,7 +1613,7 @@ void renderWindowMaterialLibrary() {
 				}
 				if (i != 3 && i != 7) ImGui::SameLine();
 			}
-
+*/
 			ITextureSampler* ts = mat->getTextureSampler(textureUnit);
 			nau::material::ITexture* t = mat->getTexture(textureUnit);
 			ImGui::Combo("Texture Unit", &textureUnit, " 0\0 1\0 2\0 3\0 4\0 5\0 6\0 7\0\0");
@@ -1619,6 +1655,10 @@ void renderWindowMaterialLibrary() {
 					"COMPARE_FUNC", "BORDER_COLOR" };
 
 				createOrderedGrid(ITextureSampler::GetAttribs(), (AttributeValues*)ts, order);
+
+				std::vector<std::string> order2 = { "ID", "FORMAT", "TYPE", "INTERNAL_FORMAT", "DIMENSION",
+					 "LAYERS", "SAMPLES", "LEVELS", "MIPMAP", "COMPONENT_COUNT", "ELEMENT_SIZE" };
+				createOrderedGrid(ITexture::GetAttribs(), (AttributeValues*)t, order2, true);
 			}
 			ImGui::EndTabItem();
 		}
@@ -1630,7 +1670,11 @@ void renderWindowMaterialLibrary() {
 			nau::material::IState* m_glState = mat->getState();
 
 			createOrderedGrid(nau::material::IState::GetAttribs(), (AttributeValues *)m_glState, order);
+			
+
 			ImGui::EndTabItem();
+
+
 		}
 		if (ImGui::BeginTabItem("Buffers")) {
 			space();
@@ -3279,6 +3323,7 @@ int main(int argc, char** argv) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.WantCaptureMouse = true;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
