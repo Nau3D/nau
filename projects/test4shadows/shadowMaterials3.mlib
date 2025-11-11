@@ -3,28 +3,28 @@
 
 	<renderTargets>
 		<renderTarget name="shadowMap1">
-			<SIZE width=2048 height=2048 />
+			<SIZE width="2048" height="2048" />
 			<depth name="shadowMap1" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 		
 		<renderTarget name="shadowMap2">
-			<SIZE width=2048 height=2048 />
+			<SIZE width="2048" height="2048" />
 			<depth name="shadowMap2" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 		
 		<renderTarget name="shadowMap3">
-			<SIZE width=2048 height=2048 />
+			<SIZE width="2048" height="2048" />
 			<depth name="shadowMap3" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 		
 		<renderTarget name="shadowMap4">
-			<SIZE width=2048 height=2048 />
+			<SIZE width="2048" height="2048" />
 			<depth name="shadowMap4" internalFormat="DEPTH_COMPONENT32F" />
 		</renderTarget>
 
 				
 		<renderTarget name="simple">
-			<SIZE width=1024 height=1024 />
+			<SIZE width="2048" height="2048" />
 			<CLEAR_VALUES r="0.0" g = "0.0" b = "0.0" a = "0.0"/>
 			<colors>
 				<color name="offscreenrender" internalFormat="RGBA" />
@@ -58,16 +58,16 @@
 			</color>
 			<shader name="perpixel-color-shadow-4-depths">
 				<values>
-					<valueof uniform="PVM"          type="RENDERER" context="CURRENT" 
+					<valueof uniform="PVM"          type="RENDERER" 
 													component="PROJECTION_VIEW_MODEL" />
 														
-					<valueof uniform="V"          	type="RENDERER" context="CURRENT" 
+					<valueof uniform="V"          	type="RENDERER" 
 													component="VIEW" />
 														
-					<valueof uniform="M"          	type="RENDERER" context="CURRENT" 
+					<valueof uniform="M"          	type="RENDERER" 
 													component="MODEL" />
 														
-					<valueof uniform="NormalMatrix" type="RENDERER" context="CURRENT" 
+					<valueof uniform="NormalMatrix" type="RENDERER" 
 													component="NORMAL" />
 					
 					<valueof uniform="lightDirection" 	type="LIGHT" 
@@ -94,24 +94,17 @@
 					<valueof uniform="split2" type="PASS" context="shadow#pass2" component="TO" />
 					<valueof uniform="split3" type="PASS" context="shadow#pass3" component="TO" />
 					<valueof uniform="split4" type="PASS" context="shadow#pass4" component="TO" />
-					<!--valueof uniform="split[0]" type="PASS" context="shadow#pass1" component="TO" />
-					<valueof uniform="split[1]" type="PASS" context="shadow#pass2" component="TO" />
-					<valueof uniform="split[2]" type="PASS" context="shadow#pass3" component="TO" />
-					<valueof uniform="split[3]" type="PASS" context="shadow#pass4" component="TO" /-->
-					<!--valueof uniform="split[1]" type="DATA" context="15" component="FLOAT" />
-					<valueof uniform="split[2]" type="DATA" context="50" component="FLOAT" />
-					<valueof uniform="split[3]" type="DATA" context="500" component="FLOAT" /-->
-					<valueof uniform="shadowMap1" 	type="TEXTURE_BINDING" context="CURRENT" 
-														id=0 component="UNIT" />
+					<valueof uniform="shadowMap1" 	type="TEXTURE_BINDING" 
+														id="0" component="UNIT" />
 														
-					<valueof uniform="shadowMap2" 	type="TEXTURE_BINDING" context="CURRENT" 
-														id=1 component="UNIT" />
+					<valueof uniform="shadowMap2" 	type="TEXTURE_BINDING" 
+														id="1" component="UNIT" />
 														
-					<valueof uniform="shadowMap3" 	type="TEXTURE_BINDING" context="CURRENT" 
-														id=2 component="UNIT" />
+					<valueof uniform="shadowMap3" 	type="TEXTURE_BINDING" 
+														id="2" component="UNIT" />
 														
-					<valueof uniform="shadowMap4" 	type="TEXTURE_BINDING" context="CURRENT" 
-														id=3 component="UNIT" />
+					<valueof uniform="shadowMap4" 	type="TEXTURE_BINDING" 
+														id="3" component="UNIT" />
 				</values>
 			</shader>
 			<textures>
