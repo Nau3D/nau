@@ -8,7 +8,9 @@
 	</method>
 	<method function="Integerv">
 		<enums>
-			<enum value="0x92D7" name="GL_MAX_COMBINED_ATOMIC_COUNTERS" />
+      <enum value="0x846E" name="GL_ALIASED_LINE_WIDTH_RANGE" length="2"/>
+      <enum value="0x846E" name="GL_SMOOTH_LINE_WIDTH_RANGE" length="2"/>
+      <enum value="0x92D7" name="GL_MAX_COMBINED_ATOMIC_COUNTERS" />
 			<enum value="0x92D6" name="GL_MAX_FRAGMENT_ATOMIC_COUNTERS" />
 			<enum value="0x92D5" name="GL_MAX_GEOMETRY_ATOMIC_COUNTERS" />
 			<enum value="0x92D4" name="GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS" />

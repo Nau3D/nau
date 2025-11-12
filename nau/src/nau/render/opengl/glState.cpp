@@ -115,6 +115,9 @@ GLState::set() {
 	
 		switch(iterInt->first) {
 			case ORDER: break;
+			case LINE_WIDTH:
+				glLineWidth(GLfloat(iterInt->second));
+				break;
 		}
 	}
 
@@ -125,31 +128,37 @@ GLState::set() {
 	
 		switch(iterBool->first) {
 			case BLEND: 
-						if (iterBool->second)
-							glEnable(GL_BLEND);
-						else
-							glDisable(GL_BLEND);
+					if (iterBool->second)
+						glEnable(GL_BLEND);
+					else
+						glDisable(GL_BLEND);
 					break;
 			case DEPTH_TEST:
-						if (iterBool->second)
-							glEnable(GL_DEPTH_TEST);
-						else
-							glDisable(GL_DEPTH_TEST);
+					if (iterBool->second)
+						glEnable(GL_DEPTH_TEST);
+					else
+						glDisable(GL_DEPTH_TEST);
 					break;
 			case DEPTH_MASK:
 						glDepthMask((GLboolean)iterBool->second);
 						break;
 			case CULL_FACE: 
-						if (iterBool->second)
-							glEnable(GL_CULL_FACE);
-						else
-							glDisable(GL_CULL_FACE);
+					if (iterBool->second)
+						glEnable(GL_CULL_FACE);
+					else
+						glDisable(GL_CULL_FACE);
 					break;
 			case SAMPLE_SHADING:
 				if (iterBool->second)
 					glEnable(GL_SAMPLE_SHADING);
 				else
 					glDisable(GL_SAMPLE_SHADING);
+				break;
+			case LINE_SMOOTH: 
+				if (iterBool->second)
+					glEnable(GL_LINE_SMOOTH);
+				else
+					glDisable(GL_LINE_SMOOTH);
 				break;
 		}
 	}
@@ -166,6 +175,7 @@ GLState::set() {
 			break;
 		}
 	}
+
 
 	std::map< int, vec4>::iterator iterVec4;
 	iterVec4 = m_Float4Props.begin();

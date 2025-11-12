@@ -51,7 +51,7 @@ PassMesh::eventReceived(const std::string &sender, const std::string &eventType,
 void
 PassMesh::prepare (void) {
 
-	//m_Mat->prepare();	
+	//m_Mat[0].material->prepare();
 
 	
 	setupCamera();
@@ -63,7 +63,8 @@ PassMesh::prepare (void) {
 void
 PassMesh::restore (void) {
 
-	m_Mat[0].material->restore();
+	//m_Mat[0].material->restore();
+	RENDERER->removeLights();
 }
 
 

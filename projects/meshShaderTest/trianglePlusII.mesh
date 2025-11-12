@@ -20,8 +20,6 @@ out uint gl_PrimitiveCountNV;
 out uint gl_PrimitiveIndicesNV[];
 
 
-
-
 uniform mat4 m_pvm;
 uniform mat3 m_normal;
 

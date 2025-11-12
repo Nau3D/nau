@@ -450,7 +450,7 @@ using gl::GL_RGB5;
 using gl::GL_RGB5_A1;
 using gl::GL_RGB8;
 using gl::GL_RGB_SCALE;
-using gl::GL_RGBA;
+using gl::GL_RGBA;GL_ALIASED_LINE_WIDTH_RANGE
 using gl::GL_RGBA12;
 using gl::GL_RGBA16;
 using gl::GL_RGBA2;
