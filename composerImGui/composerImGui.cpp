@@ -2586,7 +2586,7 @@ void renderAbout() {
 	ImGui::Separator();
 	ImGui::Text("Nau3D - A 3D engine for OpenGL + Optix, plus Lua scripting");
 	ImGui::Text("https://github.com/Nau3D");
-	ImGui::Text("http://nau3d.di.uminoh.pt");
+	ImGui::Text("http://nau3d.di.uminho.pt");
 }
 
 
