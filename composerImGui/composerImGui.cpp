@@ -3272,7 +3272,9 @@ int main(int argc, char** argv) {
 
 	int width = 640, height = 360;
 	glfwSetErrorCallback(error_callback);
-
+#ifdef __linux__
+    glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+#endif
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
 
