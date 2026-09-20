@@ -1,4 +1,5 @@
 cmake_minimum_required (VERSION 3.5)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
 project(NauDemo)
 
@@ -80,6 +81,9 @@ set_target_properties (tinyxml PROPERTIES
 option(ASSIMP_INSTALL_PDB "" OFF)
 option(ASSIMP_BUILD_ASSIMP_TOOLS "" OFF)
 option(ASSIMP_BUILD_TESTS "" OFF)
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error=incompatible-pointer-types")
+endif()
 add_subdirectory(contrib/assimp3.3.1)
 
 option(FREEGLUT_BUILD_DEMOS "" OFF)
