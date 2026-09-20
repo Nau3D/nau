@@ -7,20 +7,30 @@ add_executable(composerImGui
 	composerImGui.cpp ${imgui})
 
 if (WIN32)	
-set_target_properties(composerImGui PROPERTIES DEBUG_POSTFIX 
-${CMAKE_DEBUG_POSTFIX})
+	set_target_properties(composerImGui PROPERTIES DEBUG_POSTFIX 
+	${CMAKE_DEBUG_POSTFIX})
+	
+	include_directories(
+		../nau/src
+		../contrib/lua-5.3.3/include
+		${CMAKE_BINARY_DIR}/contrib/glbinding-master/source/glbinding/include
+		../contrib/glbinding-master/source/glbinding/include
+		../contrib/glfw
+		../contrib/imgui
+		${OpenGL_INCLUDE_DIRS}
+	)	
+else()
+	include_directories(
+		../nau/src
+		../contrib/lua-5.3.3/include
+		${CMAKE_BINARY_DIR}/contrib/glbinding-master/source/glbinding/include
+		../contrib/glbinding-master/source/glbinding/include
+		../contrib/imgui
+		${OpenGL_INCLUDE_DIRS}
+	)	
+
 endif (WIN32)
-
-include_directories(
-	../nau/src
-	../contrib/lua-5.3.3/include
-	${CMAKE_BINARY_DIR}/contrib/glbinding-master/source/glbinding/include
-	../contrib/glbinding-master/source/glbinding/include
-	../contrib/glfw
-	../contrib/imgui
-	${OpenGL_INCLUDE_DIRS}
-)	
-
+	
 add_definitions(-DTIXML_USE_STL)
 	
 target_link_libraries(composerImGui ${OPENGL_LIBRARIES} )
@@ -50,6 +60,8 @@ if  (WIN32)
 else()
 	list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/contrib/cmake")
 	find_package(GLFW3 REQUIRED)
+	target_include_directories(composerImGui PRIVATE ${GLFW3_INCLUDE_DIR})
+
 	if (IL_FOUND)
 		target_link_libraries(composerImGui ${IL_LIBRARIES} )
 	endif(IL_FOUND)
