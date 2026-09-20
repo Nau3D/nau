@@ -2568,8 +2568,8 @@ void renderOpenGLProperties() {
 			std::string value;
 			for (std::string enumName : enumNames) {
 				value = gs->getState(enumName);
-				ImGui::Text(enumName.c_str()); ImGui::SameLine(300 - ImGui::GetCursorPos().x, 0);
-				ImGui::Text(value.c_str());
+				ImGui::TextUnformatted(enumName.c_str()); ImGui::SameLine(300 - ImGui::GetCursorPos().x, 0);
+				ImGui::TextUnformatted(value.c_str());
 			}
 			ImGui::EndTabItem();
 		}
@@ -2627,7 +2627,7 @@ void messageBox(const std::string& title, const std::string& message) {
 		std::string token;
 		while ((pos = m.find("\n")) != std::string::npos) {
 			token = m.substr(0, pos);
-			ImGui::Text(token.c_str());
+			ImGui::TextUnformatted(token.c_str());
 			m.erase(0, pos + 1);
 		}
 
@@ -2637,12 +2637,12 @@ void messageBox(const std::string& title, const std::string& message) {
 
 			
 			if (pos- lastpos > 60) {
-				ImGui::Text(m.substr(lastpos, length-lastpos).c_str());
+				ImGui::Text("%s", m.substr(lastpos, length-lastpos).c_str());
 				lastpos = length;
 			}
 			length = pos+1;
 		}
-		ImGui::Text(m.substr(lastpos, length).c_str());
+		ImGui::Text("%s", m.substr(lastpos, length).c_str());
 
 
 		//ImGui::TextWrapped(message.c_str());
