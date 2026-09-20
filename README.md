@@ -80,7 +80,10 @@ To build nau with nvidia's optix 7 support (optional) both cuda and optix are re
 * CUDA is usually found by cmake and doesn't need any extra steps.
 * If either CUDA or Optix are not found the process goes on without Optix support.		
 
+Then:
 
+* make nau
+* make composerImGui
 
 # running
 
