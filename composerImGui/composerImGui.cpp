@@ -2751,7 +2751,7 @@ void renderProjectWindow(const std::string& winName, const nau::inter::ToolBar::
 				else
 					ImGui::InputScalar(item.label.c_str(), ImGuiDataType_U32, &i, NULL, NULL, "%u");
 				if (oldi != i) {
-					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)(new NauInt(i)));
+					NAU->setAttributeValue(item.type, item.context, item.component, item.id, (Data*)(new NauUInt(i)));
 					if (item.luaScript != "")
 						NAU->callLuaScript(item.luaScript);
 				}
@@ -3445,4 +3445,3 @@ int main(int argc, char** argv) {
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
 }
-

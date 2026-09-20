@@ -113,6 +113,11 @@ Sphere::build() {
 void 
 Sphere::setPropui(UIntProperty prop, int unsigned value) {
 
+	printf("%i %i\n", prop,value);
+	if ((prop == SLICES && value < 3)  || (prop == STACKS && value < 2)) {
+		printf("Error - Low number of slices or stacks\n");
+		return;
+	}
 	m_UIntProps[prop] = value;
 	if (m_Built)
 		rebuild();
