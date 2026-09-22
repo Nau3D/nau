@@ -1091,7 +1091,7 @@ void renderWindowPass() {
 	Pass* p = RENDERMANAGER->getPipeline(pipName)->getPass(passName);
 	std::string className = p->getClassName();
 	ImGui::Text("Class:");
-	ImGui::SameLine(150); ImGui::Text(className.c_str());
+	ImGui::SameLine(150); ImGui::TextUnformatted(className.c_str());
 
 	// cameras
 	std::vector<std::string> cameras;
@@ -1136,7 +1136,7 @@ void renderWindowPass() {
 	ImGui::SameLine(150);
 	nau::render::IRenderTarget* rt = p->getRenderTarget();
 	if (rt)
-		ImGui::Text(rt->getName().c_str());
+		ImGui::TextUnformatted(rt->getName().c_str());
 	else
 		ImGui::Text("None");
 
@@ -1153,7 +1153,7 @@ void renderWindowPass() {
 			ImVec2 dummySize(100, 10);
 			for (int i = 0; i < lights.size(); i++) {
 				ImGui::Dummy(dummySize); ImGui::SameLine();
-				//ImGui::Text(lights[i].c_str());
+				//ImGui::TextUnformatted(lights[i].c_str());
 				//ImGui::SameLine();
 				bool checked;
 				if (p->hasLight(lights[i]))
@@ -1187,7 +1187,7 @@ void renderWindowPass() {
 			ImVec2 dummySize(100, 10);
 			for (int i = 0; i < scenes.size(); i++) {
 				ImGui::Dummy(dummySize); ImGui::SameLine();
-				//ImGui::Text(lights[i].c_str());
+				//ImGui::TextUnformatted(lights[i].c_str());
 				//ImGui::SameLine();
 				bool checked;
 				if (p->hasScene(scenes[i]))
@@ -1432,14 +1432,14 @@ void renderWindowScenes() {
 				std::shared_ptr<IRenderable> renderable = item->getRenderable();
 				int vert = renderable->getNumberOfVertices();
 				std::string s = "Primitive: " + renderable->getDrawingPrimitiveString();
-				ImGui::Text(s.c_str());
+				ImGui::TextUnformatted(s.c_str());
 				s = "Vertices: " + std::to_string(renderable->getNumberOfVertices());
-				ImGui::Text(s.c_str());
+				ImGui::TextUnformatted(s.c_str());
 				if (ImGui::TreeNode("Materials: ")) {
 
 					std::vector<std::shared_ptr<nau::material::MaterialGroup>>& mgs = renderable->getMaterialGroups();
 					for (auto mg : mgs) {
-						ImGui::Text((mg->getMaterialName() + std::string(" - indices: ") + std::to_string(mg->getIndexData()->getIndexSize())).c_str());
+						ImGui::TextUnformatted((mg->getMaterialName() + std::string(" - indices: ") + std::to_string(mg->getIndexData()->getIndexSize())).c_str());
 					}
 					ImGui::TreePop();
 				}
@@ -1512,13 +1512,13 @@ void renderWindowMaterialLibrary() {
 						for (auto prog : progValues) {
 							if (ImGui::TreeNode(prog.first.c_str())) {
 								std::string s = "data type: " + Enums::GetDataTypeToString()[prog.second.getValueType()];
-								ImGui::Text(s.c_str());
+								ImGui::TextUnformatted(s.c_str());
 								s = "type: " + prog.second.getType();
-								ImGui::Text(s.c_str());
+								ImGui::TextUnformatted(s.c_str());
 								s = "context: " + prog.second.getContext();
-								ImGui::Text(s.c_str());
+								ImGui::TextUnformatted(s.c_str());
 								s = "component: " + prog.second.getValueOf();
-								ImGui::Text(s.c_str());
+								ImGui::TextUnformatted(s.c_str());
 								ImGui::TreePop();
 							}
 						}
@@ -1539,13 +1539,13 @@ void renderWindowMaterialLibrary() {
 									if (pbv.first.first == b) {
 										if (ImGui::TreeNode(pbv.first.second.c_str())) {
 											std::string s = "data type: " + Enums::GetDataTypeToString()[pbv.second.getValueType()];
-											ImGui::Text(s.c_str());
+											ImGui::TextUnformatted(s.c_str());
 											s = "type: " + pbv.second.getType();
-											ImGui::Text(s.c_str());
+											ImGui::TextUnformatted(s.c_str());
 											s = "context: " + pbv.second.getContext();
-											ImGui::Text(s.c_str());
+											ImGui::TextUnformatted(s.c_str());
 											s = "component: " + pbv.second.getValueOf();
-											ImGui::Text(s.c_str());
+											ImGui::TextUnformatted(s.c_str());
 											ImGui::TreePop();
 										}
 									}
@@ -1585,7 +1585,7 @@ void renderWindowMaterialLibrary() {
 				else {
 					unsigned int id = (unsigned int)t->getPropi((AttributeValues::IntProperty)ITexture::ID);
 					ImGui::PushID(i);
-					if (ImGui::ImageButton((ImTextureID)id, ImVec2(96, 96), ImVec2(0, 0), ImVec2(1, 1), 0))
+					if (ImGui::ImageButton((ImTextureID)(intptr_t)id, ImVec2(96, 96), ImVec2(0, 0), ImVec2(1, 1), 0))
 						textureUnit = i;
 					ImGui::PopID();
 				}
@@ -1740,7 +1740,7 @@ void renderWindowTextureLibrary() {
 			framePadding = 3;
 		else
 			framePadding = 0;
-		if (ImGui::ImageButton((ImTextureID)id, ImVec2(96, 96), ImVec2(0, 1), ImVec2(1, 0), framePadding, ImColor(255, 0, 0, 255))) {
+		if (ImGui::ImageButton((ImTextureID)(intptr_t)id, ImVec2(96, 96), ImVec2(0, 1), ImVec2(1, 0), framePadding, ImColor(255, 0, 0, 255))) {
 			textureIndex = id;
 		}
 		ImGui::PopID();
@@ -1793,7 +1793,7 @@ void renderWindowTextureLibrary() {
 			}
 			ImGui::NewLine();
 			ImGui::Text("Name"); ImGui::SameLine(150 - ImGui::GetCursorPos().x, 0);
-			ImGui::Text(t->getLabel().c_str());
+			ImGui::TextUnformatted(t->getLabel().c_str());
 			ImGui::NewLine();
 
 			std::vector<std::string> order = { "ID", "FORMAT", "TYPE", "INTERNAL_FORMAT", "DIMENSION",
@@ -1852,12 +1852,12 @@ void renderWindowBufferLibrary() {
 						int totalPages = totalLines / lines;
 						if (totalLines % lines != 0)
 							totalPages++;
-						ImGui::Text(std::to_string(b->getPropi(IBuffer::ID)).c_str()); ImGui::SameLine(50 + distSmall - ImGui::GetCursorPos().x, 0);
-						ImGui::Text(std::to_string(b->getPropui(IBuffer::SIZE)).c_str()); ImGui::SameLine(50 + distSmall * 2 - ImGui::GetCursorPos().x, 0);
+						ImGui::TextUnformatted(std::to_string(b->getPropi(IBuffer::ID)).c_str()); ImGui::SameLine(50 + distSmall - ImGui::GetCursorPos().x, 0);
+						ImGui::TextUnformatted(std::to_string(b->getPropui(IBuffer::SIZE)).c_str()); ImGui::SameLine(50 + distSmall * 2 - ImGui::GetCursorPos().x, 0);
 						//ImGui::Text(std::to_string(totalLines).c_str()); ImGui::SameLine(50 + distSmall * 3 - ImGui::GetCursorPos().x, 0);
-						ImGui::Text(std::to_string(totalPages).c_str()); ImGui::SameLine(50 + distSmall * 3 - ImGui::GetCursorPos().x, 0);
+						ImGui::TextUnformatted(std::to_string(totalPages).c_str()); ImGui::SameLine(50 + distSmall * 3 - ImGui::GetCursorPos().x, 0);
 
-						ImGui::Text(std::to_string(s).c_str());
+						ImGui::TextUnformatted(std::to_string(s).c_str());
 						ImGui::TreePop();
 
 						activeBuffer = i;
@@ -1916,7 +1916,7 @@ void renderWindowBufferLibrary() {
 				ImGui::Text("Row\\Type"); ImGui::NextColumn();
 				
 				for (auto t : stru) {
-					ImGui::Text(enumsString[t].c_str()); ImGui::NextColumn();
+					ImGui::TextUnformatted(enumsString[t].c_str()); ImGui::NextColumn();
 				}
 				ImGui::Separator();
 
@@ -1931,13 +1931,13 @@ void renderWindowBufferLibrary() {
 				currentLine = 16 * currentPage;
 				int maxRow = currentLine + 16 > totalLines ? totalLines : currentLine + 16;
 				for (int row = currentLine; row < maxRow; ++row) {
-					ImGui::Text(std::to_string(row).c_str()); ImGui::NextColumn();
+					ImGui::TextUnformatted(std::to_string(row).c_str()); ImGui::NextColumn();
 					for (int col = 0; col < stru.size(); ++col) {
 						if (pointerIndex < dataRead) {
 							void* ptr = (char*)bufferValues + pointerIndex;
 							value = Enums::pointerToString(stru[col], ptr);
 						}
-						ImGui::Text(value.c_str()); ImGui::NextColumn();
+						ImGui::TextUnformatted(value.c_str()); ImGui::NextColumn();
 						pointerIndex += Enums::getSize(stru[col]);
 					}
 				}
@@ -1969,8 +1969,8 @@ void renderWindowBufferLibrary() {
 							if (indexID != 0 && ImGui::TreeNode("Index Array")) {
 								ImGui::Text("ID"); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
 								ImGui::Text("Scene : Material"); 
-								ImGui::Text(std::to_string(indexID).c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-								ImGui::Text(nau::system::File::GetName(g->getName()).c_str());
+								ImGui::TextUnformatted(std::to_string(indexID).c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
+								ImGui::TextUnformatted(nau::system::File::GetName(g->getName()).c_str());
 
 								ImGui::TreePop();
 							}
@@ -1981,8 +1981,8 @@ void renderWindowBufferLibrary() {
 									unsigned int vid = g->getParent().getVertexData()->getBufferID(i);
 									
 									if (vid != 0) {
-										ImGui::Text(std::to_string(vid).c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-										ImGui::Text(nau::system::File::GetName(RESOURCEMANAGER->getBufferByID(vid)->getLabel()).c_str());
+										ImGui::TextUnformatted(std::to_string(vid).c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
+										ImGui::TextUnformatted(nau::system::File::GetName(RESOURCEMANAGER->getBufferByID(vid)->getLabel()).c_str());
 
 									}
 
@@ -2006,13 +2006,13 @@ void renderWindowBufferLibrary() {
 void displayGroup(std::string type, std::vector<std::string> files) {
 
 	ImGui::BeginGroup();
-	ImGui::Text(type.c_str()); 
+	ImGui::TextUnformatted(type.c_str()); 
 	ImGui::Dummy(ImVec2(200 - ImGui::GetCursorPos().x, 0 ));
 	ImGui::EndGroup();
 	ImGui::SameLine();
 	ImGui::BeginGroup();
 	for (int i = 0; i < files.size(); ++i) {
-		ImGui::Text(files[i].c_str());
+		ImGui::TextUnformatted(files[i].c_str());
 	}
 	ImGui::EndGroup();
 }
@@ -2077,11 +2077,11 @@ void renderWindowShaderLibrary() {
 	ImGui::Text("Validate status"); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
 	b = p->getPropertyb((int)GL_VALIDATE_STATUS); displayBool(b);
 	ImGui::Text("Active atomic counter buffers"); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-	int c  = p->getPropertyi((int)GL_ACTIVE_ATOMIC_COUNTER_BUFFERS); ImGui::Text(std::to_string(c).c_str());
+	int c  = p->getPropertyi((int)GL_ACTIVE_ATOMIC_COUNTER_BUFFERS); ImGui::TextUnformatted(std::to_string(c).c_str());
 	ImGui::Text("Active attributes"); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-	c = p->getPropertyi((int)GL_ACTIVE_ATTRIBUTES); ImGui::Text(std::to_string(c).c_str());
+	c = p->getPropertyi((int)GL_ACTIVE_ATTRIBUTES); ImGui::TextUnformatted(std::to_string(c).c_str());
 	ImGui::Text("Active uniforms"); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-	c = p->getPropertyi((int)GL_ACTIVE_UNIFORMS); ImGui::Text(std::to_string(c).c_str());
+	c = p->getPropertyi((int)GL_ACTIVE_UNIFORMS); ImGui::TextUnformatted(std::to_string(c).c_str());
 	ImGui::Separator();
 
 	std::vector<std::string> blockNames, uniformNames;
@@ -2093,8 +2093,8 @@ void renderWindowShaderLibrary() {
 		int uni = p->getNumberOfUniforms();
 		for (int i = 0; i < uni; i++) {
 			u = pgl->getUniform(i);
-			ImGui::Text(u.getName().c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-			ImGui::Text(u.getStringSimpleType().c_str());
+			ImGui::TextUnformatted(u.getName().c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
+			ImGui::TextUnformatted(u.getStringSimpleType().c_str());
 		}
 
 
@@ -2107,8 +2107,8 @@ void renderWindowShaderLibrary() {
 			ub = UNIFORMBLOCKMANAGER->getBlock(b);
 			ub->getUniformNames(&uniformNames);
 			for (auto n : uniformNames) {
-				ImGui::Text(n.c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-				ImGui::Text(Enums::GetDataTypeToString()[ub->getUniformType(n)].c_str());
+				ImGui::TextUnformatted(n.c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
+				ImGui::TextUnformatted(Enums::GetDataTypeToString()[ub->getUniformType(n)].c_str());
 			}
 			ImGui::TreePop();
 		}
@@ -2137,11 +2137,11 @@ void renderWindowShaderLibrary() {
 	for (int i = 0; i < IProgram::SHADER_COUNT; ++i) {
 		std::string infoLogS = p->getShaderInfoLog((IProgram::ShaderType)i);
 		if (infoLogS != "")
-			ImGui::Text(infoLogS.c_str());
+			ImGui::TextUnformatted(infoLogS.c_str());
 	}
 	std::string infoLogP = p->getProgramInfoLog();
 	if (infoLogP != "")
-		ImGui::Text(infoLogP.c_str());
+		ImGui::TextUnformatted(infoLogP.c_str());
 }
 
 
@@ -2158,8 +2158,8 @@ void renderWindowAtomics() {
 		ImGui::TextColored(ImVec4(0.4f,0.4f,0.4f,1.0f), "No atomics defined in project");
 	else
 		for (unsigned int i = 0; i < RENDERER->m_AtomicLabels.size(); ++i, ++iter) {
-			ImGui::Text(iter->second.c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
-			ImGui::Text(std::to_string(atValues[i]).c_str());
+			ImGui::TextUnformatted(iter->second.c_str()); ImGui::SameLine(dist - ImGui::GetCursorPos().x, 0);
+			ImGui::TextUnformatted(std::to_string(atValues[i]).c_str());
 		}
 
 }
@@ -2181,15 +2181,15 @@ void renderProfiler(int l, int p, pTime calls, Profile::level* level, std::strin
 
 		if ((p == -1) || (sec->parent == p)) {
 
-			ImGui::Text((indent + sec->name).c_str()); ImGui::NextColumn();
-			ImGui::Text(std::to_string((int)(sec->calls / calls)).c_str()); ImGui::NextColumn();
-			ImGui::Text(std::to_string((float)(sec->totalTime) / (calls)).c_str()); ImGui::NextColumn();
+			ImGui::TextUnformatted((indent + sec->name).c_str()); ImGui::NextColumn();
+			ImGui::TextUnformatted(std::to_string((int)(sec->calls / calls)).c_str()); ImGui::NextColumn();
+			ImGui::TextUnformatted(std::to_string((float)(sec->totalTime) / (calls)).c_str()); ImGui::NextColumn();
 			if (sec->profileGL) {
-				ImGui::Text(std::to_string(sec->totalQueryTime / (1000000.0 * calls)).c_str()); ImGui::NextColumn();
+				ImGui::TextUnformatted(std::to_string(sec->totalQueryTime / (1000000.0 * calls)).c_str()); ImGui::NextColumn();
 			}
 			else
 				ImGui::NextColumn();
-			ImGui::Text(std::to_string((float)(sec->wastedTime) / (calls)).c_str()); ImGui::NextColumn();
+			ImGui::TextUnformatted(std::to_string((float)(sec->wastedTime) / (calls)).c_str()); ImGui::NextColumn();
 			if (l + 1 < 50) {
                 std::string s = indent + "  ";
                 renderProfiler(l + 1, (int) cur, calls, level, s);
@@ -2253,7 +2253,7 @@ void updateTree(nau::util::Tree* t) {
 		}
 		else {
 				s = t->getKey(i) + std::string(": ") + t->getValue(i);
-				ImGui::Text(s.c_str());
+				ImGui::TextUnformatted(s.c_str());
 		}
 	}
 }
@@ -2283,7 +2283,7 @@ void renderWindowPassFlow() {
 	std::shared_ptr<Pipeline>& pip = RENDERMANAGER->getActivePipeline();
 	std::string pipName = pip->getName();
 	std::string s = "Pipeline: " + pipName;
-	ImGui::Text(s.c_str());
+	ImGui::TextUnformatted(s.c_str());
 
 	std::vector<std::string> passes;
 	pip->getPassNames(&passes);
@@ -2366,8 +2366,8 @@ void traceShow() {
 		if (ImGui::TreeNode("Ordered by name")) {
 
 			for (auto item : traceResult.functionCountSortdByName) {
-				ImGui::Text(item.first.c_str()); ImGui::SameLine(400 - ImGui::GetCursorPos().x, 0);
-				ImGui::Text(std::to_string(item.second).c_str());
+				ImGui::TextUnformatted(item.first.c_str()); ImGui::SameLine(400 - ImGui::GetCursorPos().x, 0);
+				ImGui::TextUnformatted(std::to_string(item.second).c_str());
 			}
 
 			ImGui::TreePop();
@@ -2376,8 +2376,8 @@ void traceShow() {
 		if (ImGui::TreeNode("Ordered by call count")) {
 
 			for (auto item : traceResult.functionSortedByCount) {
-				ImGui::Text(item.first.c_str()); ImGui::SameLine(400 - ImGui::GetCursorPos().x, 0);
-				ImGui::Text(std::to_string(item.second).c_str());
+				ImGui::TextUnformatted(item.first.c_str()); ImGui::SameLine(400 - ImGui::GetCursorPos().x, 0);
+				ImGui::TextUnformatted(std::to_string(item.second).c_str());
 			}
 			ImGui::TreePop();
 		}
@@ -2396,13 +2396,13 @@ void traceShow() {
 
 					for (int i = 0; i < taux->getElementCount(); ++i) {
 
-						ImGui::Text(taux->getKey(i).c_str());
+						ImGui::TextUnformatted(taux->getKey(i).c_str());
 					}
 					ImGui::TreePop();
 				}
 			}
 			else {
-				ImGui::Text(traceResult.callLog.getKey(i).c_str());
+				ImGui::TextUnformatted(traceResult.callLog.getKey(i).c_str());
 			}
 		}
 		ImGui::TreePop();
@@ -2493,24 +2493,27 @@ void renderWindowTraceLog() {
 			while ((ent = readdir(dir)) != NULL) {
 
 				// Filters files starting with Frame_* only
-				if (ent->d_type == S_IFREG && strstr(ent->d_name, "Frame_")) {
-					// Corresponding logfile with path
-					filename = std::string(ent->d_name);
-					logfile = std::string("./__nau3Dtrace/") + filename;
+				if (strstr(ent->d_name, "Frame_") == NULL)
+					continue;
+					
+				filename = std::string(ent->d_name);
+				logfile = std::string("./__nau3Dtrace/") + filename;
 
-					// if file is at least as recent as project loading
-					if (stat(logfile.c_str(), &fst) == 0 && fst.st_mtime >= nauProjectStartTime) {
+				if (stat(logfile.c_str(), &fst) != 0)
+					continue;
+				if (!S_ISREG(fst.st_mode))          // reliable type test, from stat
+					continue;
+				if (fst.st_mtime < nauProjectStartTime)
+					continue;
 
-						if (ImGui::TreeNode(filename.c_str())) {
-							if (currentFile != logfile) {
-								traceProcess(logfile);
-								currentFile = logfile;
-							}
-							traceShow();
-
-							ImGui::TreePop();
-						}
+				if (ImGui::TreeNode(filename.c_str())) {
+					if (currentFile != logfile) {
+						traceProcess(logfile);
+						currentFile = logfile;
 					}
+					traceShow();
+
+					ImGui::TreePop();
 				}
 			}
 			closedir(dir);
@@ -2529,16 +2532,16 @@ void renderOpenGLProperties() {
 		if (ImGui::BeginTabItem("System")) {
 
 			ImGui::Text("GL_VENDOR"); ImGui::SameLine(300 - ImGui::GetCursorPos().x, 0);
-			ImGui::Text((char*)glGetString(GL_VENDOR));
+			ImGui::TextUnformatted((char*)glGetString(GL_VENDOR));
 
 			ImGui::Text("GL_RENDERER"); ImGui::SameLine(300 - ImGui::GetCursorPos().x, 0);
-			ImGui::Text((char*)glGetString(GL_RENDERER));
+			ImGui::TextUnformatted((char*)glGetString(GL_RENDERER));
 
 			ImGui::Text("GL_VERSION"); ImGui::SameLine(300 - ImGui::GetCursorPos().x, 0);
-			ImGui::Text((char*)glGetString(GL_VERSION));
+			ImGui::TextUnformatted((char*)glGetString(GL_VERSION));
 
 			ImGui::Text("GL_SHADING_LANGUAGE_VERSION"); ImGui::SameLine(300 - ImGui::GetCursorPos().x, 0);
-			ImGui::Text((char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+			ImGui::TextUnformatted((char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 			int n;
 			glGetIntegerv(GL_NUM_EXTENSIONS, &n);
@@ -2552,7 +2555,7 @@ void renderOpenGLProperties() {
 			{
 				for (int i = 0; i < n; ++i) {
 
-					ImGui::Text((char*)(char*)glGetStringi(GL_EXTENSIONS, i));
+					ImGui::TextUnformatted((char*)(char*)glGetStringi(GL_EXTENSIONS, i));
 				}
 			}
 			ImGui::EndTabItem();

@@ -1735,6 +1735,7 @@ AttributeValues::setProp(unsigned int prop, Enums::DataType type, Data *value) {
 		break;
 	case Enums::INTARRAY:
 		setPropiv((IntArrayProperty)prop, *(dynamic_cast<NauIntArray *>(value)));
+		break;
 	case Enums::INT:
 		setPropi((IntProperty)prop, dynamic_cast<NauInt *>(value)->getNumber());
 		break;

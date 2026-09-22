@@ -1013,42 +1013,42 @@ Nau::callLuaTestScript(std::string name) {
 		LuaFilesWithIssues.find(LuaScriptNames[name]) != LuaFilesWithIssues.end())
 		return false;
 
-	{
-		PROFILE("LUA");
-		LuaCurrentScript = name;
+	
+	PROFILE("LUA");
+	LuaCurrentScript = name;
 
-		int errIndex = 0;
+	int errIndex = 0;
 
-		if (m_TraceOn) {
-			LOG_trace("#LUA: call script %s", name.c_str());
+	if (m_TraceOn) {
+		LOG_trace("#LUA: call script %s", name.c_str());
 
-			lua_getglobal(LuaState, "debug");
-			lua_getfield(LuaState, -1, "traceback");
-			lua_remove(LuaState, -2);
-			errIndex = -2;
-		}
+		lua_getglobal(LuaState, "debug");
+		lua_getfield(LuaState, -1, "traceback");
+		lua_remove(LuaState, -2);
+		errIndex = -2;
+	}
 
-		lua_getglobal(LuaState, name.c_str());
+	lua_getglobal(LuaState, name.c_str());
 
-		if (lua_pcall(LuaState, 0, 1, errIndex)) {
-			if (!lua_isnil(LuaState, -1)) {
-				const char *msg = lua_tostring(LuaState, -1);
-				if (msg != NULL) {
-					SLOG("Lua script %s ERROR: %s", name.c_str(), msg);
-					LuaFilesWithIssues.insert(LuaScriptNames[name]);
-				}
+	if (lua_pcall(LuaState, 0, 1, errIndex)) {
+		if (!lua_isnil(LuaState, -1)) {
+			const char *msg = lua_tostring(LuaState, -1);
+			if (msg != NULL) {
+				SLOG("Lua script %s ERROR: %s", name.c_str(), msg);
+				LuaFilesWithIssues.insert(LuaScriptNames[name]);
 			}
 		}
-
-		int result = lua_toboolean(LuaState, -1);
-		lua_pop(LuaState, 1);
-
-		if (m_TraceOn) {
-			lua_pop(LuaState, 1);
-		}
-		return (result != 0);
-		LuaCurrentScript = "";
 	}
+
+	int result = lua_toboolean(LuaState, -1);
+	lua_pop(LuaState, 1);
+
+	if (m_TraceOn) {
+		lua_pop(LuaState, 1);
+	}
+	return (result != 0);
+	//LuaCurrentScript = "";
+	
 }
 
 
@@ -1760,7 +1760,7 @@ Nau::saveProject(std::string filename) {
 
 
 void
-Nau::readModel (std::string filename) throw (std::string) {
+Nau::readModel (std::string filename) { // throw (std::string) {
 
 	clear();
 	bool result = true;

@@ -164,7 +164,7 @@ File::CreateDir(std::string path) {
 #ifdef WIN32
 	int res = _mkdir(path.c_str());
 #else
-	int res = mkdir(path.c_str(), DEFFILEMODE);
+	int res = mkdir(path.c_str(), 0777);
 #endif
 	return (res == 0);
 }

@@ -291,7 +291,7 @@ namespace nau {
 
 
 		// Readers 
-		nau_API void readModel (std::string filename) throw (std::string);
+		nau_API void readModel (std::string filename); // throw (std::string);
 		void appendModel(std::string filename);
 		nau_API void readProjectFile (std::string file, int *width, int *height);
 		nau_API void readDirectory (std::string dirName);
