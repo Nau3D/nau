@@ -6,6 +6,28 @@
 *.sln.docstates
 imgui.ini
 
+composer.old/*
+project/*
+images/*
+aux_projects/*
+Sponza/*
+projectV1/*
+projects/optix test
+projects/voxels2
+projects/voxels_to*
+models/bistro*
+models/rungholt
+models/SanMiguel
+project
+plugins/passCuda*
+VTR*
+Sponza
+models/powerplant*
+models/sponza*
+projects/vodels/.vs*
+
+
+
 # Build results
 
 [Dd]ebug/
