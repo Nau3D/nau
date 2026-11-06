@@ -49,12 +49,13 @@ CLogger::Log (LogLevel logLevel, std::string sourceFile, int line, std::string m
 	result += LogNames[logLevel];
 	result += "]";
 
-	ftime(&time);
-	struct tm*	tempTm = localtime(&time.time);
-	strftime(tempBuffer, 255, "(%d/%m/%Y %H:%M:%S.", tempTm);
+	struct timespec ts;
+	clock_gettime(CLOCK_REALTIME, &ts);
+	struct tm*	tempTm = localtime(&ts.tv_sec);
+	strftime(tempBuffer, sizeof(tempBuffer), "(%d/%m/%Y %H:%M:%S.", tempTm);
 	
 	result += tempBuffer;
-	sprintf (tempBuffer,"%d", time.millitm);
+	snprintf(tempBuffer, sizeof(tempBuffer),"%03d", (int)(ts.tv_nsec / 1000000));
 	result += tempBuffer;
 	result += ")";
 

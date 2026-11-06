@@ -9,7 +9,7 @@
 
 #include "nau.h"
 
-using namespace nau::render;
+using namespace nau::render; 
 using namespace nau;
 
 bool
@@ -21,6 +21,7 @@ IState::Init() {
 	Attribs.add(Attribute(DEPTH_TEST, "DEPTH_TEST", Enums::DataType::BOOL, false, new NauInt(true)));
 	Attribs.add(Attribute(CULL_FACE, "CULL_FACE", Enums::DataType::BOOL, false, new NauInt(true)));
 	Attribs.add(Attribute(DEPTH_MASK, "DEPTH_MASK", Enums::DataType::BOOL, false, new NauInt(true)));
+	Attribs.add(Attribute(LINE_SMOOTH, "LINE_SMOOTH", Enums::DataType::BOOL, false, new NauInt(false)));
 
 	// ENUM
 	Attribs.add(Attribute(DEPTH_FUNC, "DEPTH_FUNC", Enums::DataType::ENUM, false));
@@ -32,6 +33,7 @@ IState::Init() {
 
 	// INT
 	Attribs.add(Attribute(ORDER, "ORDER", Enums::DataType::INT, false, new NauInt(0)));
+	Attribs.add(Attribute(LINE_WIDTH, "ALIASED_LINE_WIDTH", Enums::DataType::INT, false, new NauInt(1)));
 
 	// FLOAT
 	Attribs.add(Attribute(MIN_SAMPLE_SHADING, "MIN_SAMPLE_SHADING", Enums::DataType::FLOAT, false, new NauFloat(1.0)));

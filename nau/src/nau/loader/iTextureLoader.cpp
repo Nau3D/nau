@@ -54,18 +54,16 @@ ITextureLoader::Save(ITexture *t, FileType ft) {
 void
 ITextureLoader::Save(int width, int height, unsigned char *data, std::string filename) {
 
-
 	if (filename == "") {
-		time_t rawtime;
-		struct tm * timeinfo;
 		char buffer[256];
 		char buffer2[256];
-	
-		time(&rawtime);
-		timeinfo = localtime(&rawtime);
-		float k = (float)clock();
-		strftime(buffer, 80, "%Y-%m-%d_%H-%M-%S", timeinfo);
-		snprintf(buffer2, sizeof(buffer2), "%s.%f.jpg", buffer, k);
+
+		struct timespec ts;
+		clock_gettime(CLOCK_REALTIME, &ts);
+		struct tm* timeinfo = localtime(&ts.tv_sec);
+
+		strftime(buffer, sizeof(buffer), "%Y-%m-%d_%H-%M-%S", timeinfo);
+		snprintf(buffer2, sizeof(buffer2), "%s.%03ld.jpg", buffer, ts.tv_nsec / 1000000);
 		filename = std::string(buffer2);
 	}
 
@@ -77,7 +75,7 @@ ITextureLoader::Save(int width, int height, unsigned char *data, std::string fil
 
 
 void 
-ITextureLoader::SaveRaw(ITexture *texture, std::string filename){
+ITextureLoader::SaveRaw(ITexture *texture, std::string filename) {
 
 	//ITexImage *ti = RESOURCEMANAGER->createTexImage(texture);
 	ITexImage *ti = ITexImage::create(texture);

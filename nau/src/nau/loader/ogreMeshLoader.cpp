@@ -53,7 +53,7 @@ Project Specification
 -------------------------------------------------------------------*/
 
 void
-OgreMeshLoader::loadScene (IScene* scn, std::string file) throw (std::string)
+OgreMeshLoader::loadScene (IScene* scn, std::string file)  // throw (std::string)
 {
 	File::FixSlashes(file);
 	OgreMeshLoader::m_Path = File::GetPath(file);
@@ -120,7 +120,7 @@ OgreMeshLoader::loadScene (IScene* scn, std::string file) throw (std::string)
 }
 
 void
-OgreMeshLoader::loadSkeleton(TiXmlHandle hRoot, SceneSkeleton *sk)  throw (std::string)
+OgreMeshLoader::loadSkeleton(TiXmlHandle hRoot, SceneSkeleton *sk)  // throw (std::string)
 {
 	TiXmlElement *pElem;
 
@@ -167,7 +167,7 @@ OgreMeshLoader::loadSkeleton(TiXmlHandle hRoot, SceneSkeleton *sk)  throw (std::
 }
 
 void
-OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  throw (std::string)
+OgreMeshLoader::loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk) // throw (std::string)
 {
 	// load bones
 

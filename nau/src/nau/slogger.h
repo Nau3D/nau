@@ -36,15 +36,15 @@ public:
 
 #define SLOG(message, ...) \
 {\
-  char m[512];\
-  snprintf(m, 512, message, ## __VA_ARGS__);\
+  char m[1024];\
+  snprintf(m, 1024, message, ## __VA_ARGS__);\
   (SLogger::GetInstance())->log(m);\
 };
 
 #define SLOG_INFO(message, ...) \
 {\
-  char m[512];\
-  snprintf(m, 512, message, ## __VA_ARGS__);\
+  char m[1024];\
+  snprintf(m, 1024, message, ## __VA_ARGS__);\
   (SLogger::GetInstance())->log(m);\
 };
 

@@ -27,6 +27,6 @@ void main()
 	
 	outputF = max(diffuse * 0.25, diffuse * intensity);
 //    outputF = vec4(light_dir,0);
-    //outputF = vec4(light_dir,0);
+    //outputF = vec4(1);
 
 }

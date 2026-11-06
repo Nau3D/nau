@@ -81,7 +81,7 @@ std::string ProjectLoader::s_CurrentFile;
 std::map<std::string, float> ProjectLoader::s_Constants;
 std::map<std::string, std::string> ProjectLoader::s_StringConstants;
 
-char ProjectLoader::s_pFullName[256] = "";
+char ProjectLoader::s_pFullName[512] = "";
 
 vec4 ProjectLoader::s_Dummy_vec4;
 vec3 ProjectLoader::s_Dummy_vec3; 
@@ -118,7 +118,7 @@ unsigned int ProjectLoader::s_Errors;
   snprintf(m , 256, "ERROR: File %s (line %d, column %d) ", s_CurrentFile.c_str(), p->Row(), p->Column()); \
   snprintf(mes, 256, message, ## __VA_ARGS__); \
   strcat(m, mes); \
-  NAU_THROW(m); \
+  NAU_THROW("%s", m); \
 }
 
 #define REPORT_WARNING(p, message, ...) \
@@ -5956,7 +5956,7 @@ ProjectLoader::loadMaterialShader(TiXmlHandle handle, MaterialLib *aLib, std::sh
 			std::string s(pType);
 
 			if (s == "TEXTURE" && strcmp(context, "CURRENT")) {
-				sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(),context);
+				snprintf(s_pFullName, sizeof(s_pFullName), "%s::%s", aLib->getName().c_str(),context);
 				if (!RESOURCEMANAGER->hasTexture(s_pFullName)) {
 					NAU_THROW("MatLib %s\nMaterial %s\nTexture %s is not defined", 
 						aLib->getName().c_str(), aMat->getName().c_str(), s_pFullName);

@@ -238,7 +238,7 @@ namespace nau
 
 			// aux pre alocated variables
 			static unsigned int s_Errors;
-			static char s_pFullName[256];
+			static char s_pFullName[512];
 			static string s_Dummy;
 			static vec4 s_Dummy_vec4;
 			static vec3 s_Dummy_vec3;

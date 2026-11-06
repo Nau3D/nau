@@ -30,7 +30,7 @@ namespace nau
 		class OgreMeshLoader
 		{
 		public:
-			static void loadScene (IScene* aScene, std::string file) throw (std::string);
+			static void loadScene (IScene* aScene, std::string file); // throw (std::string);
 			static std::string m_Path;
 			static std::string m_MeshFile;
 			static std::string m_SkeletonFile;
@@ -59,8 +59,8 @@ namespace nau
 			static void loadPoses(TiXmlHandle hRoot, IScene *scn, bool meshSharedGeometry);
 			static void loadPoseAnimations(TiXmlHandle hRoot, ScenePoses *scn);
 			static void loadBoneAssignements(TiXmlElement *pElem, nau::geometry::MeshBones *mb);
-			static void loadSkeleton(TiXmlHandle hRoot, SceneSkeleton *sk) throw (std::string);
-			static void loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk)  throw (std::string);
+			static void loadSkeleton(TiXmlHandle hRoot, SceneSkeleton *sk); // throw (std::string);
+			static void loadSkeletonElements(TiXmlHandle hRoot, SceneSkeleton *sk); //  throw (std::string);
 
 			static std::shared_ptr<IRenderable> m_Temp;
 

@@ -290,7 +290,7 @@ Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
 	size_t siz;
 	char a[2] = "";
 	char s[200];
-	char s2[200];
+	char s2[512];
 	section *sec;
 
 	siz = sLevels[l].sec.size();
@@ -306,7 +306,7 @@ Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
 			sprintf(s,"%*s%s", l * PROFILE_LEVEL_INDENT ," ",sec->name.c_str());
 
 			if (sec->profileGL)
-				sprintf(s2,"%-*s %5.0f %8.2f %8.2f %8.2f\n",
+				snprintf(s2, sizeof(s2),"%-*s %5.0f %8.2f %8.2f %8.2f\n",
 					sDisp + sTotalLevels * PROFILE_LEVEL_INDENT + 2,
 					s,
 					(float)(sec->calls/calls),
@@ -314,7 +314,7 @@ Profile::DumpLevels(int l, int p, pTime calls, std::string &dump) {
 					(sec->totalQueryTime/(1000000.0 * calls)),
 					(float)(sec->wastedTime)/(calls));
 			else
-				sprintf(s2,"%-*s %5.0f %8.2f          %8.2f\n",
+				snprintf(s2, sizeof(s2),"%-*s %5.0f %8.2f          %8.2f\n",
 					sDisp + sTotalLevels * PROFILE_LEVEL_INDENT + 2,
 					s,
 					(float)(sec->calls/calls),

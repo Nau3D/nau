@@ -9,5 +9,5 @@ in PerVertexData
  
 void main()
 {
-  colorOut = fragIn.color;
+  colorOut = vec4(1);//fragIn.color;
 }
