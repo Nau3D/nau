@@ -3,6 +3,7 @@
 
 #include <sys/timeb.h>
 #include <ctime>
+#include <time.h>
 
 const std::vector<std::string> CLogger::LogNames = { "CONFIG", "INFO", "WARN", "ERROR", "CRITICAL", "TRACE" };
 std::map <CLogger::LogLevel, CLogHandler> CLogger::Logs;
@@ -41,7 +42,7 @@ CLogger::Log (LogLevel logLevel, std::string sourceFile, int line, std::string m
 	if (Logs.count(logLevel) == 0)
 		Logs[logLevel] = CLogHandler();
 
-	timeb time;
+	//timeb time;
 	std::string result;
 	char tempBuffer[256];
 
@@ -50,7 +51,8 @@ CLogger::Log (LogLevel logLevel, std::string sourceFile, int line, std::string m
 	result += "]";
 
 	struct timespec ts;
-	clock_gettime(CLOCK_REALTIME, &ts);
+	timespec_get(&ts, TIME_UTC);
+	//clock_gettime(CLOCK_REALTIME, &ts);
 	struct tm*	tempTm = localtime(&ts.tv_sec);
 	strftime(tempBuffer, sizeof(tempBuffer), "(%d/%m/%Y %H:%M:%S.", tempTm);
 	

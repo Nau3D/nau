@@ -43,8 +43,24 @@ GLUniform::setValues(void *v) {
 	
 	if (m_ArraySize == 1) {
 		switch (m_SimpleType) {
+		case Enums::BOOL: {
+			GLint b = *(bool*)v ? 1 : 0;
+			memcpy(m_Values.get(), &b, sizeof(GLint));
+			break;
+			
+		}
+		case Enums::BVEC2:
+		case Enums::BVEC3:
+		case Enums::BVEC4: {
+			bool* src = (bool*)((Data*)v)->getPtr();
+			GLint * dst = (GLint*)m_Values.get();
+			int n = Enums::getCardinality(m_SimpleType);
+			for (int i = 0; i < n; ++i)
+				 dst[i] = src[i] ? 1 : 0;
+			break;
+			
+		}
 		case Enums::INT:
-		case Enums::BOOL:
 		case Enums::FLOAT:
 		case Enums::UINT:
 		case Enums::SAMPLER:

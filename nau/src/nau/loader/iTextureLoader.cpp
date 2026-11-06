@@ -6,6 +6,7 @@
 #include "nau/system/file.h"
 
 #include <ctime>
+#include<time.h>
 
 using namespace nau::loader;
 using namespace nau::system;
@@ -59,7 +60,8 @@ ITextureLoader::Save(int width, int height, unsigned char *data, std::string fil
 		char buffer2[256];
 
 		struct timespec ts;
-		clock_gettime(CLOCK_REALTIME, &ts);
+		timespec_get(&ts, TIME_UTC);
+		//clock_gettime(CLOCK_REALTIME, &ts);
 		struct tm* timeinfo = localtime(&ts.tv_sec);
 
 		strftime(buffer, sizeof(buffer), "%Y-%m-%d_%H-%M-%S", timeinfo);
