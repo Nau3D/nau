@@ -528,7 +528,7 @@ GLTexture::resize(unsigned int x, unsigned int y, unsigned int z) {
 
 	switch (m_EnumProps[DIMENSION]) {
 	case (int)GL_TEXTURE_2D_MULTISAMPLE_ARRAY:
-		glTexImage3DMultisample((GLenum)m_EnumProps[DIMENSION], m_EnumProps[SAMPLES], (GLenum)m_EnumProps[INTERNAL_FORMAT],
+		glTexImage3DMultisample((GLenum)m_EnumProps[DIMENSION], m_IntProps[SAMPLES], (GLenum)m_EnumProps[INTERNAL_FORMAT],
 					m_IntProps[WIDTH], m_IntProps[HEIGHT], m_IntProps[LAYERS], GL_FALSE);
 		break;
 	case (int)GL_TEXTURE_2D_ARRAY:

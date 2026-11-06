@@ -5730,9 +5730,9 @@ ProjectLoader::loadMaterialBuffers(TiXmlHandle handle, MaterialLib *aLib, std::s
 			sprintf(s_pFullName, "%s::%s", aLib->getName().c_str(), pName);
 		else
 			sprintf(s_pFullName, "%s", pName);
-		if (!RESOURCEMANAGER->hasBuffer(s_pFullName))
+		/*if (!RESOURCEMANAGER->hasBuffer(s_pFullName))
 			NAU_THROW("MatLib %s\nMaterial %s: Buffer %s is not defined", aLib->getName().c_str(), aMat->getName().c_str(), pName);
-
+		*/
 		IBuffer *buffer = RESOURCEMANAGER->getBuffer(s_pFullName);
 		IMaterialBuffer *imb = IMaterialBuffer::Create(buffer);
 
